@@ -1,6 +1,6 @@
 /** Markup Pattern Library.
  *
- * Copyright 2009-2011 W. Akkerman & Cornelis G.A. Kolbach
+ * Created by Wichert Akkerman, Humberto Sermeño, Alexander Pilz. To a design of Cornelis G. A. Kolbach.
  */
 
 /*jslint browser: true, undef: true, eqeqeq: true, regexp: true */
