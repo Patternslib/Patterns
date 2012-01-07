@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+<style>
+/* tooltip styling */
+.tooltip {
+	background-color:#000;
+	border:1px solid #fff;
+	padding:10px 15px;
+	width:200px;
+	display:none;
+	color:#fff;
+	text-align:left;
+	font-size:12px;
+
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:0 0 10px #000;
+}
+
+.tooltip.bottom {
+	background:url(http://static.flowplayer.org/tools/img/tooltip/black_arrow_bottom.png);
+	padding-top:40px;
+	height:55px;
+}
+
+.tooltip.bottom {
+	background:url(http://static.flowplayer.org/tools/img/tooltip/black_arrow_bottom.png);
+}
+
+.bigTooltip {
+	display:none;
+	background:url(http://static.flowplayer.org/tools/img/tooltip/black_arrow_big.png);
+	height:163px;
+	padding:40px 30px 10px 30px;
+	width:310px;
+	font-size:11px;
+	color:#fff;
+}
+
+/* a .label element inside tooltip */
+.bigTooltip .label {
+	color:yellow;
+	width:35px;
+}
+
+.bigTooltip a {
+	color:#ad4;
+	font-size:11px;
+	font-weight:bold;
+}
+
+#panel.panel1 {
+	background-color: red;
+	color: white;
+}
+
+#panel.panel2 {
+	background-color: blue;
+	color: white;
+}
+
+.blue { 
+	background-color: blue;
+	color: white;
+}
+
+.red {
+	background-color: red;
+	color: white;
+}
+
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Demo page</title>
+    <link rel="stylesheet" href="../../../Style/base.css" type="text/css">
+
+    <script src="../../../Behaviour/jquery-1.5.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../Behaviour/jquery.tools.min.js"></script>
+    <script src="../../../Behaviour/jquery-ext.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../Behaviour/jquery.form.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../Behaviour/base.js" type="text/javascript" charset="utf-8"></script>  
+    <script src="../../../Behaviour/jwplayer/jwplayer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../Behaviour/jquery.fancybox-1.3.4.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+
+<ul>
+<li><a href="pattern-test-response.html#login-success" rel=".modal!class='loginModal'">Login with channels</a></li>
+<li><a href="pattern-test-response.html#login-no-channels" rel=".modal!class='loginModal'">Login without channels</a></li>
+<li><button data-toggle="id='toToggle'!attr='class'!values='red:blue'!store=true">toggle</button> <span id="toToggle">this is getting toggled</span></li>
+<li><a class="facebook" rel=".fancybox!iframe" href="http://www.facebook.com/sharer.php?u=http%3A%2F%2Fdev.griddeo.com%2Fchannel%2F17218%2Fclip%2F540052121">Share on Facebook</a></li>
+<li><a href="pattern-test-response.html#hola" rel=".modal!class='panel1'">Modal Window, class panel1</a></li>
+<li><a href="pattern-test-response.html#hola" rel=".modal!class='panel2'">Modal Window, class panel2</a></li>
+<li><a href="pattern-test-response.html#message" rel=".selfHealing">SelfHealing</a></li>
+
+<li>
+Tooltip tests
+<ul>
+<li><a href="#" title="This is the tooltip" class="tooltipTrigger">Simple Tooltip</a></li>
+<li><a href="#myBigTooltip" rel=".floatingPanelContextual!position='right center'" >HTML Tooltip</a>
+</li>
+</ul>
+</li>
+<li>Testing tab .current behaviour
+<ul class="navigation">
+<li><a href="pattern-test-response.html#inject-tab-1" rel="#content-tab:content">Tab 1</a></li>
+<li><a href="pattern-test-response.html#inject-tab-2" rel="#content-tab:content">Tab 2</a></li>
+</ul>
+<div id="content-tab"></div>
+</li>
+
+</ul>
+
+<div id="autoLoading-test" style="overflow-y:auto; overflow-x: hidden; height: 200px; position:absolute; width:200px;">
+AutoLoading example. Scroll down and the list should grow automatically.
+
+<ul id="listToUpdate" style="display:block; margin:0;">
+	<li>0</li>
+	<li>1</li>
+	<li>2</li>
+	<li>3</li>
+	<li>4</li>
+	<li>5</li>
+	<li>6</li>
+	<li>7</li>
+	<li>8</li>
+	<li>9</li>
+</ul>
+<p id="buttonBarMore" style="width:150px;">
+	<a href="pattern-test-response.html#listToUpdate#buttonBarMore" rel="#listToUpdate:after #buttonBarMore" class="autoLoading-visible">More&hellip;</a>
+</p>
+</div>
+
+	<div class="bigTooltip somethingElse" id="myBigTooltip">
+		<img src="http://static.flowplayer.org/img/title/eye.png" alt="Flying screens" 
+			style="float:left;margin:0 15px 20px 0" />
+	
+		<table style="margin:0">
+			<tr>
+				<td class="label">File</td>
+				<td>flowplayer-3.2.7.zip</td>
+			</tr>
+			<tr>
+				<td class="label">Date</td>
+				<td>2011-03-03</td>
+			</tr>
+			<tr>
+				<td class="label">Size</td>
+				<td>112 kB</td>
+			</tr>
+			<tr>
+				<td class="label">OS</td>
+				<td>all</td>
+			</tr>		
+		</table>
+	
+		<a href="/3.2/">What's new in 3.2</a>
+		
+		<!-- AddThis Button BEGIN -->
+    <div class="addthis_toolbox addthis_default_style ">
+    <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    <a class="addthis_button_tweet"></a>
+    <a class="addthis_button_google_plusone"></a>
+    </div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=cornae"></script>
+    <!-- AddThis Button END -->
+		
+	</div>
+
+
+	<div id="panel1">
+		<ul>
+			<li><a href="pattern-test-response.html#cata-panel2" data-injection="#panel2:content">Cat A</a></li>
+			<li><a href="pattern-test-response.html#catb-panel2" data-injection="#panel2:content">Cat B</a></li>
+			<li>etc...</li>
+		</ul>
+	</div>
+	
+	<div id="panel2">
+	</div>
+	
+	<div id="panel3"></div>
+	<div id="panel4"></div>
+
+</body>
+</html>
