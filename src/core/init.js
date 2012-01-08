@@ -687,7 +687,7 @@ var mapal = {
         
         // Enable DOM-injection from anchors
         init: function () {
-            // iniitalize the listeners for each of the patterns
+            // initalize the listeners for each of the patterns
             for (var key in mapal.patterns) {
                 if (mapal.patterns[key].execute) {
                     mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners ); 
@@ -796,8 +796,8 @@ var mapal = {
                     } else if (p[i].indexOf('=') > 0) {
                         var tmp = p[i].split('=');
                         
-                        if (/^'[^']*'/.test(tmp[1]) || /^[0-9]+$/.test(tmp[1])) {
-                            paramObjs[tmp[0]] = eval(tmp[1]);
+                        if (/^'[^']*'/.test(tmp[1]) || /^"["]*"$/.test(tmp[1])) {
+                            paramObjs[tmp[0]] = tmp[1].slice(1, -1);
                         } else {
                             paramObjs[tmp[0]] = tmp[1];
                         }
