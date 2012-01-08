@@ -1,12 +1,10 @@
 /**
  * @license
- * Patterns @VERSION selfhealing - self healing messages (like growl)
+ * Patterns @VERSION@ selfhealing - self healing messages (like growl)
  *
  * Copyright 2008-2012 Simplon B.V.
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
- * 
- * Date: @DATE
  */
 $.extend( mapal.patterns, {
 	"selfHealing": {
