@@ -20,4 +20,4 @@ The available patterns are:
    fancybox
    modal
    selfhealing
-
+   tooltip
