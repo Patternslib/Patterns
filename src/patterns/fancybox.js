@@ -1,3 +1,13 @@
+/**
+ * @license
+ * Patterns @VERSION fancybox - automatic fancybox setup
+ *
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ * 
+ * Date: @DATE
+ */
 $.extend( mapal.patterns, {
 	"fancybox": {
 		execute: function(elem, url, sources, params, event) {

@@ -1,10 +1,13 @@
-/** Markup Pattern Library.
+/**
+ * @license
+ * Patterns @VERSION core - library infrastructure
  *
- * Created by Wichert Akkerman, Humberto Sermeño, Alexander Pilz. To a design of Cornelis G. A. Kolbach.
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ * 
+ * Date: @DATE
  */
-
-/*jslint browser: true, undef: true, eqeqeq: true, regexp: true */
-
 var mapal = {
     widthClasses: {},
 
