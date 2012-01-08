@@ -1,7 +1,7 @@
 <project name="jQuery.Tools" default="min">
   <taskdef resource="net/sf/antcontrib/antlib.xml"/>
   <property name="version" value="1.0.0"/>
-  <property name="build" value="build/${version}"/>
+  <property name="build" value="build"/>
   <property name="file" value="none"/>
 
   <target name="library">
