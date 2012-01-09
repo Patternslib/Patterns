@@ -54,7 +54,7 @@ preferences are:
 An example::
 
    <a href="#" rel=".tooltip!position=lt-lm-rt-rm">
-     ...
+     …
    </a>
 
 This specifies that the preferred position of the tooltip is at the top
@@ -69,7 +69,7 @@ It is possible to force a specific tooltip position by adding the
 ``force-position`` hint::
 
    <a href="#" rel=".tooltip!position-lt!force-position">
-     ...
+     …
    </a>
    
 Display trigger
