@@ -51,9 +51,7 @@ preferences are:
 * ``lm``: tip placed at the middle of the left side tooltip
 * ``lb``: tip placed at the bottom corner of the left side of the tooltip
 
-An example:
-
-.. code-block:: html
+An example::
 
    <a href="#" rel=".tooltip!position=lt-lm-rt-rm">
      ...
@@ -68,9 +66,7 @@ positioned at the location that has the most space, even if this is not
 one of the preferred positions.
 
 It is possible to force a specific tooltip position by adding the
-``force-position`` hint.
-
-.. code-block::  html
+``force-position`` hint::
 
    <a href="#" rel=".tooltip!position-lt!force-position">
      ...
@@ -81,8 +77,7 @@ Display trigger
 
 The tooltip is by default triggered when the user hovers over the trigger element. When the cursor is moved away from the trigger element, the tooltip will disappear again. 
 
-There is also the option to display the tooltip on click by adding an extra class `click`.::
-
+There is also the option to display the tooltip on click by adding an extra class `click`::
 
    <a href="#" class="tooltip click">
 
