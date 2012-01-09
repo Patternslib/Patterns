@@ -45,7 +45,7 @@ If automatic positioning is not desired, the position may be forced with the `fo
 Sticky
 ------
 
-By default, the tooltip disappears when the cursor is moved off the element. If this is not desired behaviour, there is the option to have a 'sticky' tooltip. This only disapears when a closebutton on the tooltip is clicked.When the sticky option is chosen, the closebutton will be inserted for you automatically.
+By default, the tooltip disappears when the cursor is moved off the element. If this is not desired behaviour, there is the option to have a 'sticky' tooltip. This only disapears when a closebutton on the tooltip is clicked. When the sticky option is chosen, the closebutton will be inserted for you automatically.
 
 ``<a href="#" class="tooltip sticky">``
 
