@@ -14,8 +14,9 @@ The tooltip is by default triggered when the user hovers over the trigger elemen
 
 There is also the option to display the tooltip on click by adding an extra class `click`. 
 
-::
+"""
 	<a href="#" class="tooltip click">
+"""
 
 Positioning
 -----------
