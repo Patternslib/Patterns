@@ -127,6 +127,6 @@ Injection
 
 Tooltips can also be used with Injection. This works like any other panel::
 
-   <a href="myModule.html" data-injection="#myPanel.tooltip">
+   <a href="source-file.html" data-injection="#myTip.tooltip">
     …
    </a>
