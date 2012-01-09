@@ -125,8 +125,8 @@ By default, the tooltip disappears when the cursor is moved off the element. If 
 Injection
 ---------
 
-Tooltips can also be used with Injection. This works like any other panel::
+Tooltips be used in combination with the Injection pattern::
 
-   <a href="source-file.html" data-injection="#myTip.tooltip">
+   <a href="balloon-contents.html" data-injection="#myTip.tooltip">
     …
    </a>
