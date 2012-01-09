@@ -1,13 +1,82 @@
 Dynamically positioned tooltips
-=========================================================
+===============================
 
 Tooltips are intended to display contextual information and function about the trigger element. 
 
-The default content displayed in the tooltip is the element's title attribute value. Populating the tooltip by means of module-injection is also possible.
+Markup structure
+----------------
 
-The tooltip is automatically positioned and tries to position itself in the most optimal way within the browser's viewport.
+.. code-block:: html
 
-Disply trigger
+   <label>Website address
+     <a href="#" rel=".tooltip!click">More information</a>
+   </label>
+   <div id="tip">
+     <p>
+       Please enter the full URL for the website. Please note that only HTTP
+       and HTTPS addresses are supported.
+     </p>
+   </div>
+
+Display
+-------
+Tooltips are shown when the mouse hovers over the triggering element, and
+are hidden when the mouse leaves the triggering element.
+
+
+Positioning
+-----------
+Tooltips will be positioned close to the element that triggered them, with
+an arrow tip pointing to the centre of the triggering item. The placement
+of the tip on the tooltip determines the positioning of the tooltip. For
+example if the tip is placed at the right side of the tooltip, it naturally
+follows that the tooltip itself will be placed to the left of the triggering
+element.
+
+The position of the tip within the tooltip can be specified with a
+*position hint*: a CSS class which specifies the preferred positions. This
+is formatted as ``position-<preference>[-preference]*``. The possible
+preferences are:
+
+* ``tl``: tip placed at the leftmost corner of the top side of the tooltip
+* ``tm``: tip placed at the middle of the top side tooltip
+* ``tr``: tip placed at the rightmost corner of the top side of the tooltip
+* ``rt``: tip placed at the top corner of the right side of the tooltip
+* ``rm``: tip placed at the middle of the right side tooltip
+* ``rb``: tip placed at the bottom corner of the right side of the tooltip
+* ``bl``: tip placed at the leftmost corner of the bottom side of the tooltip
+* ``bm``: tip placed at the middle of the bottom side tooltip
+* ``br``: tip placed at the rightmost corner of the bottom side of the tooltip
+* ``lt``: tip placed at the top corner of the left side of the tooltip
+* ``lm``: tip placed at the middle of the left side tooltip
+* ``lb``: tip placed at the bottom corner of the left side of the tooltip
+
+An example:
+
+.. code-block:: html
+
+   <a href="#" rel=".tooltip!position=lt-lm-rt-rm">
+     ...
+   </a>
+
+This specifies that the preferred position of the tooltip is at the top
+left side of the tooltip. If the tooltip does not fit at that position
+the left-middle position should be tried, than the right-top or if
+all previous options failed the middle of the right side. If the tooltip does
+not fit at any none of the preferred positions the tooltip will be
+positioned at the location that has the most space, even if this is not
+one of the preferred positions.
+
+It is possible to force a specific tooltip position by adding the
+``force-position`` hint.
+
+.. code-block::  html
+
+   <a href="#" rel=".tooltip!position-lt!force-position">
+     ...
+   </a>
+   
+Display trigger
 --------------
 
 The tooltip is by default triggered when the user hovers over the trigger element. When the cursor is moved away from the trigger element, the tooltip will disappear again. 
@@ -46,7 +115,7 @@ If automatic positioning is not desired, the position may be forced with the `fo
 Sticky
 ------
 
-By default, the tooltip disappears when the cursor is moved off the element. If this is not desired behaviour, there is the option to have a 'sticky' tooltip. This only disapears when a closebutton on the tooltip is clicked. When the sticky option is chosen, the closebutton will be inserted for you automatically.
+By default, the tooltip disappears when the cursor is moved off the element. If this is not desired behaviour, there is the option to have a 'sticky' tooltip. This only disappears when a close button on the tooltip is clicked. When the sticky option is chosen, the close button will be inserted for you automatically.
 
 ``<a href="#" class="tooltip sticky">``
 
