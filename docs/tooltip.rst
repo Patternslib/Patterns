@@ -12,10 +12,10 @@ Disply trigger
 
 The tooltip is by default triggered when the user hovers over the trigger element. When the cursor is moved away from the trigger element, the tooltip will disappear again. 
 
-There is also the option to display the tooltip on click by adding an extra class `click`. 
+There is also the option to display the tooltip on click by adding an extra class `click`.::
 
 
-``<a href="#" class="tooltip click">``
+   <a href="#" class="tooltip click">
 
 Positioning
 -----------
