@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Demo page</title>
+    <style type="text/css">
+      .tooltip {
+        display: none;
+      }
+    </style>
+    <script src="http://code.jquery.com/jquery-1.7.1.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../lib/jquery.tools.min.js"></script>
+    <script src="../lib/jquery-ext.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../src/core/init.js" type="text/javascript" charset="utf-8"></script> 
+    <script src="../src/patterns/tooltip.js" type="text/javascript" charset="utf-8"></script> 
+  </head>
+  <body>
+    <h1>Tooltip tests</h1>
+    <ul>
+      <li>
+        <a href="#tooltip1" rel=".tooltip">Hover to show tooltip</a></li>
+        <div id="tooltip1" class="tooltip">
+          <p>In XHTML5 the HTML5 doctype html is optional and may simply be omitted. HTML that has been written to conform to both the HTML and XHTML.</p>
+        </div>
+      </li>
+      <li>
+        <a href="#tooltip2" rel=".tooltip!click">Click to show tooltip</a></li>
+        <div id="tooltip2" class="tooltip">
+          <p>In XHTML5 the HTML5 doctype html is optional and may simply be omitted. HTML that has been written to conform to both the HTML and XHTML.</p>
+        </div>
+      </li>
+    </ul>
+  </body>
+</html>

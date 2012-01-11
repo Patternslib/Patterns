@@ -84,24 +84,22 @@ It is possible to force a specific tooltip position by adding the
 Generated markup
 ----------------
 
+The first time the tooltip is shown the tip itself will be wrapped in a
+new tooltip container. This container will be positioned correctly.
+
 .. code-block:: html
 
    <label>Website address
      <a href="#tip" rel=".tooltip">More information</a>
-     <div class="tooltip-container contextPanel"
-          style="z-index: 1100; top: 208px; left: 750px; visibility: visible">
-       <div id="tip" style="display: block">
-         <p>
-           Please enter the full URL for the website. Please note that only HTTP
-           and HTTPS addresses are supported.
-         </p>
-       </div>
-       <span class="pointer" style="top: 111px; left: -22px"></span>
-     </div>
    </label>
-   <div id="tip">
-     <p>
-       Please enter the full URL for the website. Please note that only HTTP
-       and HTTPS addresses are supported.
-     </p>
+   <div class="tooltip-container"
+        style="z-index: 1100; top: 208px; left: 750px; visibility: visible">
+     <div id="tip" style="display: block">
+       <p>
+         Please enter the full URL for the website. Please note that only HTTP
+         and HTTPS addresses are supported.
+       </p>
+     </div>
+     <span class="pointer" style="top: 111px; left: -22px"></span>
    </div>
+
