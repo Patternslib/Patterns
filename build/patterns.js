@@ -344,15 +344,15 @@ var mapal = {
     },
 
     injection: {
-    	options: {
-    		defaultModifier: "replace",
-    		modifiers: {
-    			
-    		},
-    		
-    		bodyInjectionId: "__original_body"
-    	},
-    	load: function($elem, url, targets, sources, callback, instant) {
+        options: {
+            defaultModifier: "replace",
+            modifiers: {
+                
+            },
+            
+            bodyInjectionId: "__original_body"
+        },
+        load: function($elem, url, targets, sources, callback, instant) {
             instant = instant || false;
 
             // to have more versatility when calling the function
@@ -360,144 +360,144 @@ var mapal = {
             if (typeof targets == "string") targets = [ targets ];
 
             if ( sources.length > targets.length ) {
-            	mapal.injection.completeArray(sources, targets);
+                mapal.injection.completeArray(sources, targets);
             } else {
-				// empty source will use content of <body> instead.
-				// (exclamation mark is to make sure an id with value "body" will still work as well)
-				for (var i = sources.length; i < targets.length; i++) {
-        			sources.push(mapal.injection.options.bodyInjectionId);
-				}
+                // empty source will use content of <body> instead.
+                // (exclamation mark is to make sure an id with value "body" will still work as well)
+                for (var i = sources.length; i < targets.length; i++) {
+                    sources.push(mapal.injection.options.bodyInjectionId);
+                }
             }
             
             var target_ids = [];
             var modifiers = [], modifier;
-        	var modifier_re = /:[a-zA-Z]+/;
-        	
+            var modifier_re = /:[a-zA-Z]+/;
+            
             for (var i = 0; i < targets.length; i++) {
-            	if (typeof targets[i] == "string") {
-            		// does the specifier contain a parent?
-            		if (targets[i].indexOf(">") > 0) {
-            			var both = targets[i].split(">");
-            			target_ids.push( both[0] + ">#" + both[1].replace( modifier_re, "" ) );
-            		} else {
-            			target_ids.push( targets[i].replace(modifier_re, "") );
-            		}
-            	
-            		modifier =  (modifier_re.exec(targets[i]) || [":" + mapal.injection.options.defaultModifier]);
-            	} else {
-            		target_ids.push( $(targets[i]).attr("id") );
-            		modifier = ":" + mapal.injection.options.defaultModifier;
-            	}
-            	
-        		if (modifier.length > 0) {
-        			modifier = modifier[0];
-        			
-        			if (modifier.length > 0) modifier = modifier.slice(1);
-        		}
-        		
-        		if (sources[i] == mapal.injection.options.bodyInjectionId) {
-        			modifier.push("content");
-        		} else {
-        			modifiers.push(modifier);
-        		}
+                if (typeof targets[i] == "string") {
+                    // does the specifier contain a parent?
+                    if (targets[i].indexOf(">") > 0) {
+                        var both = targets[i].split(">");
+                        target_ids.push( both[0] + ">#" + both[1].replace( modifier_re, "" ) );
+                    } else {
+                        target_ids.push( targets[i].replace(modifier_re, "") );
+                    }
+                
+                    modifier =  (modifier_re.exec(targets[i]) || [":" + mapal.injection.options.defaultModifier]);
+                } else {
+                    target_ids.push( $(targets[i]).attr("id") );
+                    modifier = ":" + mapal.injection.options.defaultModifier;
+                }
+                
+                if (modifier.length > 0) {
+                    modifier = modifier[0];
+                    
+                    if (modifier.length > 0) modifier = modifier.slice(1);
+                }
+                
+                if (sources[i] == mapal.injection.options.bodyInjectionId) {
+                    modifier.push("content");
+                } else {
+                    modifiers.push(modifier);
+                }
             }
             
             function htmlLoaded(response, textStatus, responseText) {
-            	if ( typeof response == "string" ) {
-            		responseText = response;
-            		textStatus = 200;
-            	} else {
-            		responseText = response.responseText;
-            	
-	                if (response.status < 200 || response.status >= 400) {
-	                    return;
-	                }
-            	}
-            	
-            	if ($elem.get(0).tagName == 'FORM') {
-            		var $panel = $elem.parents('#panel');
-            		
-            		if ($panel.length > 0) {
-            			$panel.overlay().close();
-            			$panel.remove();
-            		}
-            	}
-            	
+                if ( typeof response == "string" ) {
+                    responseText = response;
+                    textStatus = 200;
+                } else {
+                    responseText = response.responseText;
+                
+                    if (response.status < 200 || response.status >= 400) {
+                        return;
+                    }
+                }
+                
+                if ($elem.get(0).tagName == 'FORM') {
+                    var $panel = $elem.parents('#panel');
+                    
+                    if ($panel.length > 0) {
+                        $panel.overlay().close();
+                        $panel.remove();
+                    }
+                }
+                
                 // get the actual response in case a dataFilter is present in ajaxSettings
                 //if ( response.done )
-                //	response.done(function(r) { responseText = r; });
+                //  response.done(function(r) { responseText = r; });
                 
                 // create a dummy div to hold the results
                 // and get rid of all the scripts
-				//
-				// also remove complete head and rename body to a standard div. this is necessary
-				// because a second body element is not allowed.
+                //
+                // also remove complete head and rename body to a standard div. this is necessary
+                // because a second body element is not allowed.
                 var $factory = $("<div/>").append(
-                	responseText.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-								.replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-								.replace(/<body(.*)>/gi,'<div id="__original_body">')
-								.replace(/<\/body(.*)>/gi,'</div>')
+                    responseText.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                                .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                                .replace(/<body(.*)>/gi,'<div id="__original_body">')
+                                .replace(/<\/body(.*)>/gi,'</div>')
                 );
                 
 //                var sourceIds = [];
                 var len = targets.length;
                 
-                for (var idx = 0; idx < len; idx++) {                	
-                	var modifier = modifiers[idx];
-             		
-                	var $target = $( "#" + target_ids[idx] );
-                	var appendTo = false;
-                	
-                	if ( $target.length === 0 ) {
-                	    appendTo = document.body;
-                		if (target_ids[idx].indexOf(">") > 0) {
-                			var both = target_ids[idx].split(">");
-                			
-                			appendTo = $("#" + both[0]);
-                			if ( appendTo.length ===  0) {
-                				appendTo = $("<div/>").appendTo(document.body);
-                				appendTo.attr("id", both[0]);
-                			}
-                		}
-                		
-                		$target = $("<div/>").css("opacity", 0);
-                	}
-                	
-					// empty source IDs will have been replaced with !body. Use the <body> tag as a source
-					if (sources[idx] == mapal.injection.options.bodyInjectionId) {
-						var $source = $factory.find('#'+mapal.injection.options.bodyInjectionId);
-						modifier = "content";
-					} else {
-                		var $source = $factory.find( '#' + sources[idx] );
-					}
-                	
-                	if ( mapal.injection.modifiers[modifier] && $.isFunction(mapal.injection.modifiers[modifier].execute) ) {
-                		$target = mapal.injection.modifiers[modifier].execute( $source, $target, appendTo );
-                    	
-                		if (appendTo) $target.appendTo(appendTo);
-                		
-                		mapal.initContent($target);
-                		
-                		if (typeof callback == 'function') {
-                			callback($target);
-                		} else {
-                			(callback['onFinished']||$.noop)($target);
-                		}
-                		
-                		//$target.animate({"opacity": 1}, "fast");
-                	} else {
-                		alert('Injection[WARN]: Could not find modifier "' + modifier + '"' );
-                	}
+                for (var idx = 0; idx < len; idx++) {                   
+                    var modifier = modifiers[idx];
+                    
+                    var $target = $( "#" + target_ids[idx] );
+                    var appendTo = false;
+                    
+                    if ( $target.length === 0 ) {
+                        appendTo = document.body;
+                        if (target_ids[idx].indexOf(">") > 0) {
+                            var both = target_ids[idx].split(">");
+                            
+                            appendTo = $("#" + both[0]);
+                            if ( appendTo.length ===  0) {
+                                appendTo = $("<div/>").appendTo(document.body);
+                                appendTo.attr("id", both[0]);
+                            }
+                        }
+                        
+                        $target = $("<div/>").css("opacity", 0);
+                    }
+                    
+                    // empty source IDs will have been replaced with !body. Use the <body> tag as a source
+                    if (sources[idx] == mapal.injection.options.bodyInjectionId) {
+                        var $source = $factory.find('#'+mapal.injection.options.bodyInjectionId);
+                        modifier = "content";
+                    } else {
+                        var $source = $factory.find( '#' + sources[idx] );
+                    }
+                    
+                    if ( mapal.injection.modifiers[modifier] && $.isFunction(mapal.injection.modifiers[modifier].execute) ) {
+                        $target = mapal.injection.modifiers[modifier].execute( $source, $target, appendTo );
+                        
+                        if (appendTo) $target.appendTo(appendTo);
+                        
+                        mapal.initContent($target);
+                        
+                        if (typeof callback == 'function') {
+                            callback($target);
+                        } else {
+                            (callback['onFinished']||$.noop)($target);
+                        }
+                        
+                        //$target.animate({"opacity": 1}, "fast");
+                    } else {
+                        alert('Injection[WARN]: Could not find modifier "' + modifier + '"' );
+                    }
                 }
                 
                 // check if this was a navigation call
                 var $uls = $elem.parents("ul.navigation");
                 if ($uls.length > 0) {
-                	$uls.find('li').removeClass('current');
-                	var $li = $elem.parents("li");
-                	if ($li.length > 0) {
-                		$($li[0]).addClass('current');
-                	}
+                    $uls.find('li').removeClass('current');
+                    var $li = $elem.parents("li");
+                    if ($li.length > 0) {
+                        $($li[0]).addClass('current');
+                    }
                 }
             }
             
@@ -507,207 +507,207 @@ var mapal = {
             var count = 0;
             var opacityTargets = [];
             for (var idx = 0; idx < target_ids.length; idx++) {
-            	if ( mapal.injection.modifiers[modifiers[idx]].setTargetOpacity ) {
-            		opacityTargets.push(target_ids[idx]);
-            	}
+                if ( mapal.injection.modifiers[modifiers[idx]].setTargetOpacity ) {
+                    opacityTargets.push(target_ids[idx]);
+                }
             }
             
             var $targets = $("#" + opacityTargets.join(",#")); 
             
             if ($targets.length > 0 && !instant) {
-            	$targets.animate({"opacity": 0}, "slow", function() {
-		            			count += 1;
-		            			if (count == $targets.length) {
-		            				mapal.injection.ajax($elem, url, htmlLoaded);
-		            			}
-		            		}
-				       );
+                $targets.animate({"opacity": 0}, "slow", function() {
+                                count += 1;
+                                if (count == $targets.length) {
+                                    mapal.injection.ajax($elem, url, htmlLoaded);
+                                }
+                            }
+                       );
             } else {
-            	mapal.injection.ajax($elem, url, htmlLoaded);
+                mapal.injection.ajax($elem, url, htmlLoaded);
             }
         },
         
         ajax: function($elem, url, params, callback) {
-        	var type = "GET";
-        	        	
-        	if ( $elem.get(0).tagName == 'FORM') {
-        		type = 'POST';
-        		
-        		$elem.ajaxSubmit({
-        			url: url,
-        			type: 'POST',
-        			success: params
-        		});
-        	} else {
-            	// if the second parameter was provided
-            	if (params) {
-            		// if it's a function
-            		if ($.isFunction(params)) {
-            			// we assume that it's the callback
-            			callback = params;
-            			params = undefined;
-            		} else if (typeof params === "object") {
-            			// build a param string
-            			params = $.param(params, $.ajaxSettings.traditional);
-            			type = "POST";
-            		}
-            	}
+            var type = "GET";
+                        
+            if ( $elem.get(0).tagName == 'FORM') {
+                type = 'POST';
+                
+                $elem.ajaxSubmit({
+                    url: url,
+                    type: 'POST',
+                    success: params
+                });
+            } else {
+                // if the second parameter was provided
+                if (params) {
+                    // if it's a function
+                    if ($.isFunction(params)) {
+                        // we assume that it's the callback
+                        callback = params;
+                        params = undefined;
+                    } else if (typeof params === "object") {
+                        // build a param string
+                        params = $.param(params, $.ajaxSettings.traditional);
+                        type = "POST";
+                    }
+                }
 
-	        	jQuery.ajax({
-	        		url: url,
-	        		type: type,
-	        		dataType: "html",
-	        		data: params,
-	        		complete: function(jqXHR, textStatus) {
-	                	var header = jqXHR.getResponseHeader('X-Griddeo-Action');
-	                	var callCallback = true;
-	                	if (header) {
-	                		var parts = header.split(';');
-	                		
-	                		if ( parts.length > 0 && $.isFunction(mapal.injection.griddeoActions[parts[0]]) ) {
- 	                			callCallback = mapal.injection.griddeoActions[parts[0]]( parts.slice(1) );
-	                		}
-	                	}
-	                	
-	                	if (callCallback) callback(jqXHR, textStatus);
-	        		},
-	        		error: function(xhr, status, errorThrown) {
-	        			return;
-	        		}
-	        	});
-        	}
-        	
+                jQuery.ajax({
+                    url: url,
+                    type: type,
+                    dataType: "html",
+                    data: params,
+                    complete: function(jqXHR, textStatus) {
+                        var header = jqXHR.getResponseHeader('X-Griddeo-Action');
+                        var callCallback = true;
+                        if (header) {
+                            var parts = header.split(';');
+                            
+                            if ( parts.length > 0 && $.isFunction(mapal.injection.griddeoActions[parts[0]]) ) {
+                                callCallback = mapal.injection.griddeoActions[parts[0]]( parts.slice(1) );
+                            }
+                        }
+                        
+                        if (callCallback) callback(jqXHR, textStatus);
+                    },
+                    error: function(xhr, status, errorThrown) {
+                        return;
+                    }
+                });
+            }
+            
         },
         
         griddeoActions: {
-        	'force-redirect': function(params) {
-        		window.location = params[0].trim();
-        		return false;
-        	}
+            'force-redirect': function(params) {
+                window.location = params[0].trim();
+                return false;
+            }
         },
         
         modifiers: {
-        	"replace": {
-        		"execute": function( $source, $target, appendTo ) {
-	        		if (appendTo) {
-	        			return $source.css("opacity", 0);
-	        		}
-	        		
-	        		$target.replaceWith( $source.css("opacity", 0) );
-	        		
-	        		return $("#" + $source.attr("id") );
-	        	},
-	        	
-	        	setTargetOpacity: true
-        	},
-        	
-        	"content": {
-        		"execute": function( $source, $target ) {
-	        		$target.html($source.html());
-	        		
-	        		return $target;
-        		},
-        		
-        		setTargetOpacity: true
-        	},
-        	
-        	"after": {
-        		"execute": function( $source, $target  ) {
-	        		$children = $($source[0].children).css('opacity', 0);
-	
-	        		$target.append($children);
-	        		
-	        		return $children;
-        		},
-        		
-        		setTargetOpacity: false
-        	},
-        	
-        	"before": { 
-        		"execute": function( $source, $target ) {
-	        		$children = $($source[0].children).css('opacity', 0);
-	
-	        		$target.append($children);
-	        		        		
-	        		return $children;
-        		},
-        		
-        		setTargetOpacity: false
-	        },
-        	
-        	"prepend": { 
-        		"execute": function( $source, $target ) {
-	        		$target.before($source);
-	        		
-	        		return $source;
-	        	},
-	        	
-	        	setTargetOpacity: false
-        	},
-        	"append": { 
-        		"execute": function( $source, $target ) {
-	        		$target.after($source);
-	        		
-	        		return $source;
-	        	},
-	        	
-	        	setTargetOpacity: false
-        	}
+            "replace": {
+                "execute": function( $source, $target, appendTo ) {
+                    if (appendTo) {
+                        return $source.css("opacity", 0);
+                    }
+                    
+                    $target.replaceWith( $source.css("opacity", 0) );
+                    
+                    return $("#" + $source.attr("id") );
+                },
+                
+                setTargetOpacity: true
+            },
+            
+            "content": {
+                "execute": function( $source, $target ) {
+                    $target.html($source.html());
+                    
+                    return $target;
+                },
+                
+                setTargetOpacity: true
+            },
+            
+            "after": {
+                "execute": function( $source, $target  ) {
+                    $children = $($source[0].children).css('opacity', 0);
+    
+                    $target.append($children);
+                    
+                    return $children;
+                },
+                
+                setTargetOpacity: false
+            },
+            
+            "before": { 
+                "execute": function( $source, $target ) {
+                    $children = $($source[0].children).css('opacity', 0);
+    
+                    $target.append($children);
+                                    
+                    return $children;
+                },
+                
+                setTargetOpacity: false
+            },
+            
+            "prepend": { 
+                "execute": function( $source, $target ) {
+                    $target.before($source);
+                    
+                    return $source;
+                },
+                
+                setTargetOpacity: false
+            },
+            "append": { 
+                "execute": function( $source, $target ) {
+                    $target.after($source);
+                    
+                    return $source;
+                },
+                
+                setTargetOpacity: false
+            }
         },
         
         completeArray: function( larger, smaller ) {
-        	var len = larger.length;
-        	for (var i = smaller.length; i < len; i ++ ) {
-        		smaller.push( larger[i] );
-        	}
+            var len = larger.length;
+            for (var i = smaller.length; i < len; i ++ ) {
+                smaller.push( larger[i] );
+            }
         }
     },
 
     patterns: {
-    	"options": {
-    		search: {
-    			click:[
-    			       "a[rel^=#]",
-    			       "a[rel^='.']",
-    			       "a[data-injection^='.']",
-    			       "a[data-injection^=#]"
-    			     ],
-    			submit: [
-    			      "form[data-injection^='.']",
-    			      "form[data-injection^=#]"
-    			      ]  
-    		}
-    	},
-    	
-    	'listeners': {
-    		'onBeforeStart': [],
-    		'onFinished': [],
-    		'onExecuted': []
-    	},
-    	
+        "options": {
+            search: {
+                click:[
+                       "a[rel^=#]",
+                       "a[rel^='.']",
+                       "a[data-injection^='.']",
+                       "a[data-injection^=#]"
+                     ],
+                submit: [
+                      "form[data-injection^='.']",
+                      "form[data-injection^=#]"
+                      ]  
+            }
+        },
+        
+        'listeners': {
+            'onBeforeStart': [],
+            'onFinished': [],
+            'onExecuted': []
+        },
+        
         // Enable DOM-injection from anchors
         init: function () {
-        	// iniitalize the listeners for each of the patterns
+            // initalize the listeners for each of the patterns
             for (var key in mapal.patterns) {
-            	if (mapal.patterns[key].execute) {
-            		mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners ); 
-            	}
+                if (mapal.patterns[key].execute) {
+                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners ); 
+                }
             }
             
             // Call the initialization function for each of the patterns
             for (var key in mapal.patterns) {
-            	(mapal.patterns[key].init||$.noop)();
-            	
-            	if (mapal.patterns[key].dataAttr) {
-            		//mapal.patterns.options.search.click.push('[data-' + key + ']');
-            	}
+                (mapal.patterns[key].init||$.noop)();
+                
+                if (mapal.patterns[key].dataAttr) {
+                    //mapal.patterns.options.search.click.push('[data-' + key + ']');
+                }
             }
 
             function handlePattern(e) {
-            	// First we get the source IDs, whether optional or not
+                // First we get the source IDs, whether optional or not
                 var targets, $a = $(this),
-                	sources = ($a.attr("href")||$a.attr("action")).split("#"), 
-                	attrVal = ($a.attr("rel") || $a.attr("data-injection"));
+                    sources = ($a.attr("href")||$a.attr("action")).split("#"), 
+                    attrVal = ($a.attr("rel") || $a.attr("data-injection"));
                 
                 // make sure we don't interfere with openPanels below
                 if ( $a.hasClass('openPanel') || $a.hasClass('closePanel') ) return;
@@ -719,45 +719,45 @@ var mapal = {
                 // We treat injection differently than the other patterns
                 // namely: injection will always be here!
                 if ( attrVal.startsWith("#") ) {
-                	// this means injection
+                    // this means injection
                     if ( attrVal.length > 1 )
-                    	targets = attrVal.replace(/\s/g,"").split("#").slice(1);
+                        targets = attrVal.replace(/\s/g,"").split("#").slice(1);
                     else
-                    	targets = [];
+                        targets = [];
 
                     // let injection handle the rest
                     mapal.injection.load($a, url, targets, sources, function($target) {
                         $target.animate({opacity: 1}, "fast");
                     });                
                 } else {
-                	// this means some other pattern, so let the pattern handle what the attribute means
-                	var re = /^[\.][a-zA-Z]+/;
-                	var patt = re.exec(attrVal);
-                	
-                	if ( patt.length == 0 ) {
-                		// the pattern was malformed. Inform the designer
-                		alert("Pattern[ERROR]: malformed pattern: " + attrVal);
-                	} else {
-                		patt = patt[0].slice(1);
+                    // this means some other pattern, so let the pattern handle what the attribute means
+                    var re = /^[\.][a-zA-Z]+/;
+                    var patt = re.exec(attrVal);
+                    
+                    if ( patt.length == 0 ) {
+                        // the pattern was malformed. Inform the designer
+                        alert("Pattern[ERROR]: malformed pattern: " + attrVal);
+                    } else {
+                        patt = patt[0].slice(1);
 
-                		var params = attrVal.replace(re, "");
-                		var paramObjs = mapal.patterns.extractParameters(params, sources);
-                		if ( mapal.patterns[patt]  ) {
-                			// only do something if we found the pattern
-                			if (!mapal.patterns[patt].passive) {
-                				// ignore the pattern if it is not active
-                				if (mapal.patterns.callListener($a, patt, 'onBeforeStart')) {
-                					mapal.patterns[patt].execute($a, url, sources, paramObjs, e);
-                					mapal.patterns.callListener($a, patt, 'onExecuted');
-                				}
-                			}
-                		} else {
-                			alert('Pattern[WARN]: the pattern "' + patt + '" was not found');
-                		}
-                	}
+                        var params = attrVal.replace(re, "");
+                        var paramObjs = mapal.patterns.extractParameters(params, sources);
+                        if ( mapal.patterns[patt]  ) {
+                            // only do something if we found the pattern
+                            if (!mapal.patterns[patt].passive) {
+                                // ignore the pattern if it is not active
+                                if (mapal.patterns.callListener($a, patt, 'onBeforeStart')) {
+                                    mapal.patterns[patt].execute($a, url, sources, paramObjs, e);
+                                    mapal.patterns.callListener($a, patt, 'onExecuted');
+                                }
+                            }
+                        } else {
+                            alert('Pattern[WARN]: the pattern "' + patt + '" was not found');
+                        }
+                    }
                 }
-        		e.preventDefault();
-        		return false;
+                e.preventDefault();
+                return false;
             };
             
             $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
@@ -765,15 +765,15 @@ var mapal = {
         },
         
         extractParameters: function(params, sources) {
-        	var tmp;
-    		var paramObjs = {};
-    		if (params.length > 0) {
-				var p = params.slice(1).split('!');
-				for (var i = p.length-1; i >= 0; i--) {
+            var tmp;
+            var paramObjs = {};
+            if (params.length > 0) {
+                var p = params.slice(1).split('!');
+                for (var i = p.length-1; i >= 0; i--) {
                     // support injection parameters in other patterns
                     if (p[i][0] == '#') {
-                    	var param, effect;
-                    	
+                        var param, effect;
+                        
                         if (p[i].indexOf('.') > 0) {
                             tmp = p[i].split('.');
                             param = tmp[0];
@@ -794,47 +794,47 @@ var mapal = {
                             });
                         }
                     } else if (p[i].indexOf('=') > 0) {
-						var tmp = p[i].split('=');
-						
-						if (/^'[^']*'/.test(tmp[1]) || /^[0-9]+$/.test(tmp[1])) {
-							paramObjs[tmp[0]] = eval(tmp[1]);
-						} else {
-							paramObjs[tmp[0]] = tmp[1];
-						}
-					} else {
-						paramObjs[p[i]] = true;
-					}
-				}
-			}
-    		return paramObjs;
+                        var tmp = p[i].split('=');
+                        
+                        if (/^'[^']*'/.test(tmp[1]) || /^"["]*"$/.test(tmp[1])) {
+                            paramObjs[tmp[0]] = tmp[1].slice(1, -1);
+                        } else {
+                            paramObjs[tmp[0]] = tmp[1];
+                        }
+                    } else {
+                        paramObjs[p[i]] = true;
+                    }
+                }
+            }
+            return paramObjs;
         },
         
         callListener: function( elem, pattern, event ) {
-        	var weContinue = true;
-        	$(mapal.patterns[pattern].listeners[event]).each(function(){
-        		if (weContinue && !this(elem) ) {
-        			weContinue = false;
-        			return;
-        		};
-        	});
-        	
-        	return weContinue;
+            var weContinue = true;
+            $(mapal.patterns[pattern].listeners[event]).each(function(){
+                if (weContinue && !this(elem) ) {
+                    weContinue = false;
+                    return;
+                };
+            });
+            
+            return weContinue;
         },
         
         registerListener: function(patterns, event, listener) {
-        	if (typeof patterns == 'string') {
-        		if (mapal.patterns[patterns].listeners[event]) {
-        			mapal.patterns[patterns].listeners[event].push(listener);
-        		}
-        	} else {
-	        	$(patterns).each( function() {
-	        		if (mapal.patterns[this]) {
-	        			if (mapal.patterns[this].listeners[event]) {
-	        				mapal.patterns[this].listeners[event].push(listener);
-	        			}
-	        		}
-	        	});
-        	}
+            if (typeof patterns == 'string') {
+                if (mapal.patterns[patterns].listeners[event]) {
+                    mapal.patterns[patterns].listeners[event].push(listener);
+                }
+            } else {
+                $(patterns).each( function() {
+                    if (mapal.patterns[this]) {
+                        if (mapal.patterns[this].listeners[event]) {
+                            mapal.patterns[this].listeners[event].push(listener);
+                        }
+                    }
+                });
+            }
         }
     },
 
@@ -844,10 +844,10 @@ var mapal = {
     },
 
     initTooltip: function(root) {
-    	$(root).find(".tooltipTrigger").each( function() {
-    		$(this).tooltip({relative: true}).dynamic();
-    	});
-    	
+        $(root).find(".tooltipTrigger").each( function() {
+            $(this).tooltip({relative: true}).dynamic();
+        });
+        
         $("dfn.infoPanel:not(span)").each(function() {
             var $panel = $(this),
                 title = $panel.attr("title");
@@ -947,68 +947,68 @@ var mapal = {
     },
     
     initSorts: function( root ) {
-    	$sorting = $(root).find('ul.sorting');
-    	
-    	if ($sorting.length > 0) {
-	    	$sorting.sortable({
-	    		'axis': 'y',
-	    		'items': 'li',
-	    		'update': function(event, ui){
-	    			var $this = $(this); 
-	    			var order = $this.sortable("serialize");
-	    			
-	    			$.post($this.attr("data-injection"), order);
-	    		}
-	    	});
-    	}
+        $sorting = $(root).find('ul.sorting');
+        
+        if ($sorting.length > 0) {
+            $sorting.sortable({
+                'axis': 'y',
+                'items': 'li',
+                'update': function(event, ui){
+                    var $this = $(this); 
+                    var order = $this.sortable("serialize");
+                    
+                    $.post($this.attr("data-injection"), order);
+                }
+            });
+        }
     },
     
     initButtonSets: function(root) {
-    	if ( $(root).buttonset ) {
-    		$(root).find('.buttonSet').removeClass('buttonSet').buttonset();
-    	}
+        if ( $(root).buttonset ) {
+            $(root).find('.buttonSet').removeClass('buttonSet').buttonset();
+        }
     },
     
     initAutoLoads: function( root ) {
-    	$(root).find('.autoLoading-visible').parents(":scrollable").each(function() {    		
-			var $data = $(this).data("autoLoading");
-			
-			if (!$data) {
-				$(this).data("autoLoading", true);
-				$(this).bind("scroll", function() {
-					var $window = $(this);
-					var elems = $window.find( '.autoLoading-visible' );
-		    		var ret = false;
-		    		
-		    		$(elems).each(function() {
-		    			var $this = $(this);
-		    			var offset = $this.position();
-		    			var doTrigger = $window.height() >= offset.top;
-		    			
-		    			if (doTrigger && !$this.data("autoLoading")) {
-		    				$this.data("autoLoading", true);
-		    				$this.trigger('click');
-		    				ret = true;
-		    			}
-		    		});
-		    		
-		    		return ret;
-	    		});
-			}
-    	});
+        $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {           
+            var $data = $(this).data("autoLoading");
+            
+            if (!$data) {
+                $(this).data("autoLoading", true);
+                $(this).bind("scroll", function() {
+                    var $window = $(this);
+                    var elems = $window.find( '.autoLoading-visible' );
+                    var ret = false;
+                    
+                    $(elems).each(function() {
+                        var $this = $(this);
+                        var offset = $this.position();
+                        var doTrigger = $window.height() >= offset.top;
+                        
+                        if (doTrigger && !$this.data("autoLoading")) {
+                            $this.data("autoLoading", true);
+                            $this.trigger('click');
+                            ret = true;
+                        }
+                    });
+                    
+                    return ret;
+                });
+            }
+        });
     },
     
     passivePatterns: {
-    	'selectSiblingRadio': {
-    		init: function() {},
-    		initContent: function(root) {
-    			$(root).find('.selectSiblingRadio').focus(function() {
-    				var $this = $(this);
-    				
-    				$this.parent().find('input[type=radio]').attr('checked', true);
-    			});
-    		}
-    	}
+        'selectSiblingRadio': {
+            init: function() {},
+            initContent: function(root) {
+                $(root).find('.selectSiblingRadio').focus(function() {
+                    var $this = $(this);
+                    
+                    $this.parent().find('input[type=radio]').attr('checked', true);
+                });
+            }
+        }
     },
     
     // Setup a DOM tree.
@@ -1026,10 +1026,10 @@ var mapal = {
         //
         
         for (passivePatternName in mapal.passivePatterns) {
-        	var passivePattern = mapal.passivePatterns[passivePatternName];
-        	if ( passivePattern.initContent && $.isFunction(passivePattern['initContent']) ) {
-        		passivePattern.initContent(root);
-        	}
+            var passivePattern = mapal.passivePatterns[passivePatternName];
+            if ( passivePattern.initContent && $.isFunction(passivePattern['initContent']) ) {
+                passivePattern.initContent(root);
+            }
         }
         
         
@@ -1056,53 +1056,53 @@ var mapal = {
     ui: {},
     
     'store': {
-    	'getPatternAttributes': function(pattern) {
-    		if (!mapal.store.hasStorage()) return [];
-    		
-    		var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
-    		var attrs = [];
-    		
-    		for (var i = 1; i <= count; i++ ) {
-    			attrs.push(window.sessionStorage.getItem( pattern + '-' + i ));
-    		}
-    		
-    		return attrs;
-    	},
-    	
-    	'addPatternAttribute': function(pattern, value) {
-    		if (!mapal.store.hasStorage()) return;
-    		
-    		var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0") + 1;
-    		
-    		window.sessionStorage.setItem( pattern + '-count', count );
-    		window.sessionStorage.setItem( pattern + '-' + count, value );
-    	},
-    	
-    	'setPatternAttribute': function(pattern, index, value) {
-    		if (!mapal.store.hasStorage()) return;
-    		
-    		var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
-    		
-    		if (index > 0 && index <= count) {
-    			window.sessionStorage.setItem( pattern + '-' + index, value);
-    			
-    			return true;
-    		}
-    		
-    		return false;
-    	},
-    	
-    	'initPatternStore': function(pattern) {
-    		if (!mapal.store.hasStorage()) return;
-    		
-    		if (window.sessionStorage.getItem( pattern+'-count' ) === null) {
-    			window.sessionStorage.setItem( pattern+'-count', '0' );
-    		}
-    	},
-    	
-    	'hasStorage': function() {
-    		return typeof window.sessionStorage !== 'undefined';
-    	}
+        'getPatternAttributes': function(pattern) {
+            if (!mapal.store.hasStorage()) return [];
+            
+            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
+            var attrs = [];
+            
+            for (var i = 1; i <= count; i++ ) {
+                attrs.push(window.sessionStorage.getItem( pattern + '-' + i ));
+            }
+            
+            return attrs;
+        },
+        
+        'addPatternAttribute': function(pattern, value) {
+            if (!mapal.store.hasStorage()) return;
+            
+            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0") + 1;
+            
+            window.sessionStorage.setItem( pattern + '-count', count );
+            window.sessionStorage.setItem( pattern + '-' + count, value );
+        },
+        
+        'setPatternAttribute': function(pattern, index, value) {
+            if (!mapal.store.hasStorage()) return;
+            
+            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
+            
+            if (index > 0 && index <= count) {
+                window.sessionStorage.setItem( pattern + '-' + index, value);
+                
+                return true;
+            }
+            
+            return false;
+        },
+        
+        'initPatternStore': function(pattern) {
+            if (!mapal.store.hasStorage()) return;
+            
+            if (window.sessionStorage.getItem( pattern+'-count' ) === null) {
+                window.sessionStorage.setItem( pattern+'-count', '0' );
+            }
+        },
+        
+        'hasStorage': function() {
+            return typeof window.sessionStorage !== 'undefined';
+        }
     }
 };
 
@@ -1110,21 +1110,21 @@ var mapal = {
 
 
 $.extend( mapal.ui, {
-	"modal": function( url, options ) {
-		var opts = '.modal';
-		if (options) {
-			for (opt in options) {
-				opts += '!' + opt + "=";
-				if (typeof options[opt] == 'string') {
-					opts += "'" + options[opt] + "'";
-				} else {
-					opts += options[opt];
-				}
-			}
-		}
-		var $a = $('<a>').attr('href', url).attr('rel', opts);
-		$a.click();
-	}
+    "modal": function( url, options ) {
+        var opts = '.modal';
+        if (options) {
+            for (opt in options) {
+                opts += '!' + opt + "=";
+                if (typeof options[opt] == 'string') {
+                    opts += "'" + options[opt] + "'";
+                } else {
+                    opts += options[opt];
+                }
+            }
+        }
+        var $a = $('<a>').attr('href', url).attr('rel', opts);
+        $a.click();
+    }
 });
 
 
@@ -1136,6 +1136,303 @@ $(document).ready(function() {
     mapal.initContent(document.body);
     $(document).trigger("setupFinished", document);
 });
+
+/**
+ * @license
+ * Patterns 1.0.0 jquery-ext - various jQuery extensions
+ *
+ * Copyright 2011 Humberto Sermeño
+ */
+(function( $ ){
+	var methods = {
+		init: function( options ) {
+			var settings = {
+				time: 3, /* time it will wait before moving to 'timeout' after a move event */
+				initialTime: 8, /* time it will wait before first adding the 'timeout' class */
+				exceptionAreas: [] /* IDs of elements that, if the mouse is over them, will reset the timer */
+			};
+			return this.each(function() {
+				var $this = $(this),
+				    data = $this.data('timeout');
+				
+				if (!data) {
+					if ( options ) {
+						$.extend( settings, options );
+					};
+					$this.data('timeout', {
+						'lastEvent': new Date(),
+						'trueTime': settings.time,
+						'time': settings.initialTime,
+						'untouched': true,
+						'inExceptionArea': false
+					});
+					
+					$this.bind( 'mouseover.timeout', methods.mouseMoved );
+					$this.bind( 'mouseenter.timeout', methods.mouseMoved );
+					
+					$(settings.exceptionAreas).each(function() {
+						$this.find(this)
+							 .live( 'mouseover.timeout', {'parent':$this}, methods.enteredException )
+							 .live( 'mouseleave.timeout', {'parent':$this}, methods.leftException );
+					});
+					
+					if (settings.initialTime > 0) 
+						$this.timeout('startTimer');
+					else 
+						$this.addClass('timeout');
+				}
+			});
+		},
+		
+		enteredException: function(event) {
+			var data = event.data.parent.data('timeout');
+			data.inExceptionArea = true;
+			event.data.parent.data('timeout', data);
+			event.data.parent.trigger('mouseover');
+		},
+		
+		leftException: function(event) {
+			var data = event.data.parent.data('timeout');
+			data.inExceptionArea = false;
+			event.data.parent.data('timeout', data);
+		},
+		
+		destroy: function() {
+			return this.each( function() {
+				var $this = $(this),
+				    data = $this.data('timeout');
+				
+				$(window).unbind('.timeout');
+				data.timeout.remove();
+				$this.removeData('timeout');
+			});
+		},
+		
+		mouseMoved: function(event) {
+			var $this = $(this), data = $this.data('timeout');
+			
+			if ($this.hasClass('timeout')) {
+				$this.removeClass('timeout');
+				$this.timeout('startTimer');
+			} else if ( data.untouched ) {
+				data.untouched = false;
+				data.time = data.trueTime;
+			}
+			
+			data.lastEvent = new Date();
+			$this.data('timeout', data);
+		},
+		
+		startTimer: function( event ) {
+			var $this = $(this), data = $this.data('timeout');
+			var fn = function(){
+				var data = $this.data('timeout');
+				if ( data && data.lastEvent ) {
+					if ( data.inExceptionArea ) {
+						setTimeout( fn, Math.floor( data.time*1000 ) );
+					} else {
+						var now = new Date();
+						var diff = Math.floor(data.time*1000) - ( now - data.lastEvent );
+						if ( diff > 0 ) {
+							// the timeout has not ocurred, so set the timeout again
+							setTimeout( fn, diff+100 );
+						} else {
+							// timeout ocurred, so set the class
+							$this.addClass('timeout');
+						}
+					}
+				}
+			};
+			
+			setTimeout( fn, Math.floor( data.time*1000 ) );
+		}
+	};
+	
+	$.fn.timeout = function( method ) {
+		if ( methods[method] ) {
+			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method == 'object' || !method ) {
+			return methods.init.apply( this, arguments );
+		} else {
+			$.error( 'Method ' + method + ' does not exist on jQuery.timeout' );
+		}
+	};
+
+})( jQuery );
+
+// Custom jQuery selector to find elements with scrollbars
+(function($) {
+	   $.extend($.expr[":"], {
+	    scrollable: function(element) {
+	     var vertically_scrollable, horizontally_scrollable;
+	     if ($(element).css('overflow') == 'scroll' || $(element).css('overflowX') == 'scroll' || $(element).css('overflowY') == 'scroll') return true;
+	  
+	     vertically_scrollable = (element.clientHeight < element.scrollHeight) && (
+	     $.inArray($(element).css('overflowY'), ['scroll', 'auto']) != -1 || $.inArray($(element).css('overflow'), ['scroll', 'auto']) != -1);
+	  
+	     if (vertically_scrollable) return true;
+	  
+	     horizontally_scrollable = (element.clientWidth < element.scrollWidth) && (
+	     $.inArray($(element).css('overflowX'), ['scroll', 'auto']) != -1 || $.inArray($(element).css('overflow'), ['scroll', 'auto']) != -1);
+	     return horizontally_scrollable;
+	    }
+	   });
+	  })(jQuery);
+
+// Make Visible in scroll
+(function($) {
+	$.fn.makeVisibleInScroll = function( parent_id ) {
+		var absoluteParent = null;
+		if ( typeof parent_id == 'string' ) {
+			absoluteParent = $("#" + parent_id);
+		} else if ( parent_id ) {
+			absoluteParent = $(parent_id);
+		}
+		
+		return this.each(function() {
+			var $this = $(this), parent;
+			if (!absoluteParent) {
+				parent = $this.parents(":scrollable");
+				if (parent.length > 0) {
+					parent = $(parent[0]);
+				} else {
+					parent = $(window);
+				}
+			} else {
+				parent = absoluteParent;
+			}
+			
+			var elemTop = $this.position().top;
+			var elemBottom = $this.height() + elemTop;
+			
+			var viewTop = parent.scrollTop();
+			var viewBottom = parent.height() + viewTop;
+			
+			if (elemTop < viewTop) {
+				parent.scrollTop(elemTop);
+			} else if ( elemBottom > viewBottom - parent.height()/2 ) {
+				parent.scrollTop( elemTop - (parent.height() - $this.height())/2 );
+			}
+		});
+	};
+})( jQuery );
+
+//Make absolute location
+(function($) {
+$.fn.setPositionAbsolute = function(element,offsettop,offsetleft) {
+    return this.each(function() {			
+    // set absolute location for based on the element passed
+	// dynamically since every browser has different settings	    
+	var $this = $(this), 
+	    pos, width;
+
+	var thiswidth = $(this).width();
+	
+	var    pos   = element.offset();
+	var    width = element.width();
+	var    height = element.height();
+	var setleft = (pos.left + width - thiswidth + offsetleft);
+	var settop = (pos.top + height + offsettop);
+	$this.css({ "z-index" : 1, "position": "absolute", "marginLeft": 0, "marginTop": 0, "left": setleft + "px", "top":settop + "px" ,"width":thiswidth});
+	$this.remove().appendTo("body").show();
+	});
+};
+})( jQuery );
+
+(function($) {
+$.fn.positionAncestor = function(selector) {
+    var left = 0;
+    var top = 0;
+    this.each(function(index, element) {
+        // check if current element has an ancestor matching a selector
+        // and that ancestor is positioned
+        var $ancestor = $(this).closest(selector);
+        if ($ancestor.length && $ancestor.css("position") !== "static") {
+            var $child = $(this);
+            var childMarginEdgeLeft = $child.offset().left - parseInt($child.css("marginLeft"), 10);
+            var childMarginEdgeTop = $child.offset().top - parseInt($child.css("marginTop"), 10);
+            var ancestorPaddingEdgeLeft = $ancestor.offset().left + parseInt($ancestor.css("borderLeftWidth"), 10);
+            var ancestorPaddingEdgeTop = $ancestor.offset().top + parseInt($ancestor.css("borderTopWidth"), 10);
+            left = childMarginEdgeLeft - ancestorPaddingEdgeLeft;
+            top = childMarginEdgeTop - ancestorPaddingEdgeTop;
+            // we have found the ancestor and computed the position
+            // stop iterating
+            return false;
+        }
+    });
+    return {
+        left:    left,
+        top:    top
+    }
+};
+})( jQuery );
+
+String.prototype.startsWith = function(str) { return (this.match("^"+str) !== null); };
+String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null); };
+
+
+/******************************
+
+Simple Placeholder
+
+******************************/
+
+
+(function($) {
+	$.simplePlaceholder = {
+		placeholder_class: null,
+
+		hide_placeholder: function(){
+			var $this = $(this);
+			if($this.val() == $this.attr('placeholder')){
+				$this.val("").removeClass($.simplePlaceholder.placeholder_class);
+			}
+		},
+
+		show_placeholder: function(){
+			var $this = $(this);
+			if($this.val() == ""){
+				$this.val($this.attr('placeholder')).addClass($.simplePlaceholder.placeholder_class);
+			}
+		},
+
+		prevent_placeholder_submit: function(){
+			$(this).find(".simple-placeholder").each(function(e){
+				var $this = $(this);
+				if($this.val() == $this.attr('placeholder')){
+					$this.val('');
+				}
+			});
+			return true;
+		}
+	};
+
+	$.fn.simplePlaceholder = function(options) {
+		if(document.createElement('input').placeholder == undefined){
+			var config = {
+				placeholder_class : 'placeholding'
+			};
+
+			if(options) $.extend(config, options);
+			$.simplePlaceholder.placeholder_class = config.placeholder_class;
+
+			this.each(function() {
+				var $this = $(this);
+				$this.focus($.simplePlaceholder.hide_placeholder);
+				$this.blur($.simplePlaceholder.show_placeholder);
+				if($this.val() == '') {
+					$this.val($this.attr("placeholder"));
+					$this.addClass($.simplePlaceholder.placeholder_class);
+				}
+				$this.addClass("simple-placeholder");
+				$(this.form).submit($.simplePlaceholder.prevent_placeholder_submit);
+			});
+		}
+
+		return this;
+	};
+
+})(jQuery);
 
 /**
  * @license
