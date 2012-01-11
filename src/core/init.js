@@ -766,7 +766,7 @@ var mapal = {
         
         extractParameters: function(params, sources) {
             var tmp,
-	        i,
+	        j,
                 paramObjs = {};
             if (params.length > 0) {
                 var p = params.slice(1).split('!');
@@ -795,8 +795,8 @@ var mapal = {
                             });
                         }
                     } else if (p[i].indexOf('=') > 0) {
-			i = p[i].indexOf('=');
-			paramsObj[p[i].slice(0, 2)] = p[i].slice(i+1);
+			j = p[i].indexOf('=');
+			paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
                     } else {
                         paramObjs[p[i]] = true;
                     }
