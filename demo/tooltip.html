@@ -1,34 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Demo page</title>
-    <style type="text/css">
-      .tooltip {
-        display: none;
-      }
-    </style>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Demo page</title>
+    <link rel="stylesheet" href="base.css" type="text/css">
     <script src="http://code.jquery.com/jquery-1.7.1.js" type="text/javascript" charset="utf-8"></script>
     <script src="../lib/jquery.tools.min.js"></script>
-    <script src="../lib/jquery-ext.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../src/core/init.js" type="text/javascript" charset="utf-8"></script> 
-    <script src="../src/patterns/tooltip.js" type="text/javascript" charset="utf-8"></script> 
-  </head>
-  <body>
-    <h1>Tooltip tests</h1>
-    <ul>
-      <li>
-        <a href="#tooltip1" rel=".tooltip">Hover to show tooltip</a></li>
-        <div id="tooltip1" class="tooltip">
-          <p>In XHTML5 the HTML5 doctype html is optional and may simply be omitted. HTML that has been written to conform to both the HTML and XHTML.</p>
-        </div>
-      </li>
-      <li>
-        <a href="#tooltip2" rel=".tooltip!click">Click to show tooltip</a></li>
-        <div id="tooltip2" class="tooltip">
-          <p>In XHTML5 the HTML5 doctype html is optional and may simply be omitted. HTML that has been written to conform to both the HTML and XHTML.</p>
-        </div>
-      </li>
-    </ul>
-  </body>
+    <script src="../lib/jquery.form.js" type="text/javascript" charset="utf-8"></script> 
+    
+    <script src="../lib/jquery.fancybox-1.3.4.js" type="text/javascript" charset="utf-8"></script>
+    
+    <script src="../build/patterns.js" type="text/javascript" charset="utf-8"></script> 
+</head>
+<body>
+	<p>
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+		Ut <a href="#" title="This tooltip prefers to be in the top-middle position" class="tooltip position-tm-rt-rm-rb-lt">tooltip top middle, show on hover</a> gravida ligula quis feugiat. Mauris tellus purus, venenatis non faucibus dignissim,
+		imperdiet eget purus. Sed imperdiet, libero eu dignissim sollicitudin, dui augue porta orci,
+		commodo malesuada diam diam eu ligula.<br/>
+		Donec <a href="#" title="This is one sticky tooltip" class="tooltip sticky">tooltip right middle</a>, neque eu congue commodo, magna elit luctus elit, ut semper quam elit nec nisi.
+		Aenean accumsan ultrices porta. Etiam at tristique mi.
+	</p>
+	<p>
+		<img src="http://www.placehold.it/220x150" class="tooltip sticky floatBefore" title="this is a sticky tooltip" alt="starwars meeting"/>
+		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+		Aenean malesuada laoreet magna, et vulputate magna tempus eleifend.
+		In posuere nunc eros. Curabitur odio enim, rutrum id cursus ut, dapibus feugiat mi.<br/>
+		<a href="pattern-test-response.html" data-injection="#myTip.tooltip" title="some title" class="tooltip dynamic">this content is dynamically loaded in a tooltip</a>, interdum sit amet fringilla sit amet, pellentesque non nisl.
+		Quisque egestas aliquam scelerisque. Phasellus ligula lectus, rutrum in gravida hendrerit,
+		rutrum sit amet felis.
+	</p>
+	<p>
+		Nam aliquet sodales risus, sed vulputate ligula ullamcorper et.
+		Pellentesque egestas imperdiet erat viverra lacinia. Aliquam magna orci, lobortis eu aliquam quis,
+		tempor at tortor. <br/><a href="#" title="Duis gravida odio show on hover" class="tooltip">tooltip top middle</a> vel mauris pharetra a tempor turpis rhoncus.
+		Vivamus rutrum blandit leo, a vehicula leo condimentum accumsan.
+		Vestibulum sodales accumsan est, a luctus turpis auctor sit amet.
+		Etiam vehicula ligula ac libero pulvinar nec ultrices dolor rutrum.
+		Aenean at ultrices erat. Fusce sollicitudin euismod congue. Cras eu elit augue.<br />
+		<img src="http://www.placehold.it/220x150" class="tooltip floatBefore" title="Yes we can! Tooltip right middle, show on hover" alt="starwars"/>
+		Nunc a ante non justo pretium imperdiet. Praesent diam nunc, sodales in pretium sit amet,
+		auctor nec orci. Ut commodo magna at diam tempor nec sodales augue sagittis. Suspendisse potenti.
+	</p>
+	<p>
+		Proin eu metus ante, quis sagittis justo. Aenean magna mi, ultrices at tincidunt id, volutpat non eros.
+		<a href="#"  class="tooltip" title="tooltip left top, show on click">Nunc interdum venenatis eros, et lacinia turpis ornare non.
+		Suspendisse quis sem varius felis convallis feugiat non id lorem.</a>
+		Aliquam lobortis porta sapien, vel vehicula augue dapibus at.
+		Nam turpis nibh, mollis quis mollis a, dictum quis elit. Fusce feugiat dapibus lacus,
+		non condimentum ante varius at. Cras at nunc elit, quis tempor quam
+	</p>
+</body>
 </html>

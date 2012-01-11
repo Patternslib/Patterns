@@ -1,0 +1,716 @@
+body {	
+	font: 14px/24px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	padding: 60px 40px 40px;
+	width: 910px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	outline: none;
+}
+
+/* @group Anchor */
+
+a {
+	color: #7291ff;
+}
+
+
+
+/* @end */
+
+/* @group Link */
+
+
+
+/* @end */
+
+/* @group Floats */
+
+.floatBefore {
+	float: left;
+}
+
+.floatAfter {
+	float: right;
+}
+
+img.floatBefore {
+	margin-right: 10px;
+}
+
+img.floatAfter {
+	margin-left: 10px;
+}
+
+
+
+/* @end */
+
+/* @group Tooltip */
+
+.tooltip .closePanel{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    text-indent: 100px;
+    overflow: hidden;
+    padding: 0px;
+    background: #6F5A44 url(close.png) 2px no-repeat;
+    -webkit-border-radius: 3px;
+    display: block;
+    height: 15px;
+    width: 15px;
+    z-index: 3;
+    border: none;
+  }
+
+  .tooltip-container {
+    position: absolute;
+    z-index: 1001;
+    border: none;
+    min-height: 50px;
+    overflow: visible;
+    overflow-x: visible;
+    margin: 0;
+    border: 1px solid silver;
+-webkit-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+-moz-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+	width: 300px;
+}
+
+  .tooltip-container .pointer{
+    height: 20px;
+    width: 20px;
+    display: block;
+    background-color: #fdfdc8;
+    border: 1px solid #e9df63;
+    z-index: 0;
+    position: absolute;
+    -webkit-transform: rotate(45deg);
+    -webkit-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
+    -moz-transform: rotate(45deg);
+    -moz-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
+  }
+
+  .tooltip-container > div{
+    padding: 10px!important;
+    z-index: 1;
+    position: relative;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    min-height: 50px;
+    background-color: #FDFDC8;
+  }
+
+  .tooltip-container.bl .pointer,
+  .tooltip-container.bm .pointer,
+  .tooltip-container.br .pointer{
+    margin-top: -12px;
+  }
+  .tooltip-container.lt .pointer,
+  .tooltip-container.lm .pointer,
+  .tooltip-container.lb .pointer{
+    margin-left: 12px;
+
+  }
+  .tooltip-container.tl .pointer,
+  .tooltip-container.tm .pointer,
+  .tooltip-container.tr .pointer{
+    margin-top: 12px;
+  }
+  .tooltip-container.rt .pointer,
+  .tooltip-container.rm .pointer,
+  .tooltip-container.rb .pointer{
+    margin-left: -12px;
+  }
+
+  .tooltip-container.lt .pointer,
+  .tooltip-container.rt .pointer{
+    margin-top: 20px;
+  }
+  .tooltip-container.lb .pointer,
+  .tooltip-container.rb .pointer{
+    margin-top: -20px;
+  }
+  .tooltip-container.tl .pointer,
+  .tooltip-container.bl .pointer{
+    margin-left: 20px;
+  }
+  .tooltip-container.tr .pointer,
+  .tooltip-container.br .pointer{
+    margin-left: -20px;
+  }
+
+  .tooltip-container h4{
+    color: #fff;
+  }
+
+
+
+/* @end */
+
+/* @group Forms */
+
+input[type="text"],
+input[type="password"]
+,textarea {
+	vertical-align: baseline;
+	-webkit-transition: all 0.7s;
+	-moz-transition: all 0.7s;
+	-ms-transition: all 0.7s;
+	-o-transition: all 0.7s;
+	transition: all 0.7s;
+	-webkit-box-shadow: 0 0 0 rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 0 0 rgba(0,0,0,0.4);
+	box-shadow: 0 0 0 rgba(0,0,0,0.4);
+	outline: none;
+	-webkit-background-size: auto 100%;
+	-moz-background-size: auto 100%;
+	background-size: auto 100%;
+	font: 12px/20px Verdana, "Lucida Grande", Lucida, sans-serif;
+	padding-left: 4px;
+	display: inline-block;
+	margin: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	border: 1px solid #dedede;
+	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
+	-moz-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
+	box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
+}
+
+textarea {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-bottom: 1px;
+}
+
+input[type="text"],input[type="password"] {
+	line-height: 20px;
+	width: 230px;
+}
+
+input[type="text"],textarea,label.superImpose {
+	cursor: text;
+}
+
+label.superImpose,
+.concise .superImpose {
+	color: #707070;
+	display: block;
+	margin-left: 7px;
+	margin-top: 1px;
+	padding: 0 0 1px;
+	position: absolute;
+	white-space: nowrap;
+	border-style: none;
+}
+
+input:focus,
+textarea:focus {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
+	background: -o-gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
+	background:-moz-linear-gradient(19% 75% 90deg,whiteFFF, whiteFFF, whiteFFF 100%);
+	background: gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
+	-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+input[type="file"] {
+	margin-left: 0px !important;
+	background-image: none;
+	background-color: transparent;
+	border-style: none;
+}
+
+select {
+	position: relative;
+	top: -1px;
+	margin-top: -1px;
+	margin-bottom: -1px;
+}
+
+input[type="checkbox"],
+input[type="radio"]{
+	background: none!important;
+	border: none;
+}
+
+form fieldset em.message {
+	clear: left;
+	float: left;
+	margin-bottom: 10px;
+	margin-top: 4px;
+	padding: 3px 10px;
+	color: red;
+	font-weight: bold;
+}
+
+sup.required {
+	color: red;
+	display: inline-block;
+	margin-top: -10px;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+/* @group Info panels */
+
+.concise .infoPanel {
+	margin-left: -16px;
+	z-index: 1000;
+	position: absolute;
+	left: 100%;
+	top: auto;
+	margin-top: 3px;
+}
+
+.concise .infoPanel.open {
+	margin-top: 27px;
+}
+
+.comprehensive .infoPanel {
+	top: 0;
+	margin-left: -16px;
+}
+
+.comprehensive .infoPanel.open,
+.concise .infoPanel.open {
+	z-index: 999;
+}
+
+fieldset.richInput .infoPanel {
+	top: -1px;
+}
+
+/* Next statement is to compensate for Firefox' absolute positioning behaviour where it counts in the padding with the positioning */
+
+html.gecko .comprehensive .infoPanel {
+	left: 65%;
+}
+
+
+
+/* @end */
+
+/* @group Fieldsets */
+
+fieldset {
+	padding: 0 0 2px;
+	border-style: none;
+	margin: 0 0 20px;
+}
+
+fieldset p.question,
+fieldset p.legend {
+	width: 95% !important;
+	font-weight: bold;
+	color: #3f3f3f;
+	margin-bottom: 20px;
+	margin-top: 0;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+/* @group Fieldset Concise */
+
+fieldset.concise,
+form.concise fieldset {
+	clear: left;
+	position: relative;
+}
+
+fieldset.concise p.question,
+form.concise fieldset p.question,
+fieldset.concise legend,
+form.concise fieldset legend {
+	width: auto;
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+fieldset.concise label,
+form.concise label {
+	position: relative;
+	float: left;
+	padding-right: 65%;
+	width: 35%;
+	left: 0;
+	margin-bottom: 10px;
+	padding-top: 1px;
+}
+
+form.concise fieldset label *,
+fieldset.concise label *,
+form.concise fieldset label *,
+fieldset.concise label * {
+	position: relative;
+	vertical-align: top;
+	max-width: 320px;
+	left: 100%;
+	margin-right: -200%;
+	margin-left: 0;
+	float: left;
+}
+
+form.concise fieldset label sup.required,
+fieldset.concise label sup.required,
+form.concise fieldset label sup.required,
+fieldset.concise label sup.required {
+	float: none;
+	display: inline;
+	position: static;
+	line-height: 20px;
+}
+
+form.concise fieldset label input[type=checkbox],
+fieldset.concise label input[type=checkbox] {
+	top: 3px;
+}
+
+form.concise fieldset label select {
+	top: 1px;
+}
+
+.concise label textarea {
+	width: 170%;
+}
+
+.comprehensive textarea {
+	width: 100%;
+}
+
+/* @end */
+
+/* @group Fieldset Comprehensive */
+
+.comprehensive,
+.comprehensive fieldset,
+.concise fieldset.comprehensive,
+.compact fieldset.comprehensive {
+	width: 65%;
+	clear: left;
+	border-style: none;
+	margin: 0;
+	margin-bottom: 10px;
+	padding-left: 35%;
+	padding-bottom: 0;
+	position: relative;
+	padding-top: 1px;
+}
+
+fieldset.comprehensive legend {
+	position: absolute;
+	left: 260px;
+	font-weight: normal;
+	font-style: normal;
+}
+
+fieldset.comprehensive label,
+form.comprehensive fieldset label,
+form.concise fieldset.comprehensive label,
+form.compact fieldset.comprehensive label {
+	font-weight: normal;
+	font-style: normal;
+	position: static;
+	margin: 0;
+	border-style: none;
+	width: auto;
+	padding: 0;
+	float: none;
+}
+
+.concise fieldset.comprehensive,
+.condensed fieldset.comprehensive {
+	border-bottom-style: none;
+	margin: 0 0 10px;
+	padding-bottom: 0 !important;
+	padding-top: 1px;
+	height: auto;
+}
+
+fieldset.comprehensive label *,
+form.comprehensive fieldset label *,
+form.concise fieldset.comprehensive label *,
+form.compact fieldset.comprehensive label * {
+	position: static !important;
+	margin: 0;
+	float: none;
+}
+
+fieldset.comprehenisve input[type="radio"],
+.concise fieldset.comprehensive input[type="radio"] {
+	margin-top: 3px;
+}
+
+fieldset.comprehenisve input[type="checkbox"],
+.concise fieldset.comprehensive input[type="checkbox"] {
+	margin-top: 3px;
+}
+
+fieldset.comprehensive p.question,
+form.comprehensive fieldset p.question,
+fieldset.comprehensive p.legend,
+form.comprehensive fieldset p.legend,
+form.concise fieldset.comprehensive p.question,
+form.compact fieldset.comprehensive p.question {
+	width: 48% !important;
+	display: inline;
+	text-align: left;
+	padding: 0;
+	position: relative;
+	float: left;
+	font-weight: normal;
+	font-style: normal;
+	color: black;
+	margin: 0 0 0 -54%;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+fieldset.comprehensive label a.floatAfter {
+	float: right;
+	margin-right: 22px;
+}
+
+/* @end */
+
+/* @group Fieldset Condensed */
+
+fieldset.condensed,
+form.condensed fieldset {
+	clear: left;
+	border-style: none;
+	margin: 0 0 20px;
+}
+
+fieldset.condensed label,
+form.condensed fieldset label {
+	clear: left;
+	font-weight: normal;
+	font-style: normal;
+	display: inline-block;
+	margin-bottom: 20px;
+}
+
+fieldset.condensed p.question {
+	width: auto;
+	margin: 0;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+fieldset.condensed label input,
+form.condensed fieldset label input,
+fieldset.condensed label textarea {
+	float: left;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+fieldset.condensed fieldset p.question {
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Form Components */
+
+/* @group date-eu */
+
+.date-eu {
+
+}
+
+.date-eu label {
+	display: none;
+}
+
+.date-eu input.day {
+	width: 21px;
+}
+
+.date-eu input.year {
+	width: 38px;
+}
+
+/* @end */
+
+/* @group Radio List */
+
+.radioList {
+	list-style-type: none !important;
+	margin: 0 0 20px;
+	padding-bottom: 4px !important;
+}
+
+.radioList label {
+	display: block;
+	width: auto !important;
+	padding-left: 18px !important;
+}
+
+.radioList label input {
+	float: left;
+	margin: 3px 5px 0 -18px !important;
+}
+
+.portlet .radioList label input {
+	margin-top: 2px !important;
+}
+
+/* @end */
+
+/* @group Radio Row */
+
+.radioRow {
+
+}
+
+.radioRow label,
+label.radioRow {
+	display: inline;
+	width: auto !important;
+	float: left;
+	padding-right: 10px !important;
+}
+
+.radioRow input,
+label.radioRow input {
+	margin-top: 4px;
+	margin-right: 5px;
+	margin-bottom: 0;
+	position: static !important;
+}
+
+/* @end */
+
+/* @group Input Row */
+
+ul.inputRow,
+ol.inputRow {
+	display: inline;
+	margin-top: 0;
+	padding-top: 0;
+	margin-left: 0;
+	padding-left: 0;
+	list-style-type: none !important;
+}
+
+/* @end */
+
+/* @group Input List */
+
+ul.inputList,
+ol.inputList,
+ol.radioList,
+ul.radioList,
+ol.checkList,
+ul.checkList {
+	margin-top: 0;
+	padding-top: 0;
+	margin-left: 0;
+	padding-left: 0;
+	list-style-type: none !important;
+}
+
+ul.inputList li,
+ol.radioList li,
+ul.radioList li,
+ol.checkList li,
+ul.checkList li {
+	margin-left: 0;
+	padding-left: 0;
+	display: block;
+}
+
+/* @end */
+
+/* @group Check List */
+
+.checkList {
+	list-style-type: none !important;
+	margin: 0 0 20px;
+	padding-bottom: 4px !important;
+}
+
+.checkList label,
+html>body fieldset.comprehensive.checkList label {
+	display: block;
+	width: auto !important;
+	padding-left: 20px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.checkList label:hover {
+	background-color: #efefef;
+}
+
+html>body fieldset.comprehensive.checkList label input {
+	float: left;
+	position: static !important;
+	margin: 4px 5px 0 0 !important;
+	margin-left: -20px!important;
+}
+
+.portlet .checkList input {
+	margin-top: 3px;
+}
+
+.checkList .column-1-of-3,
+.checkList .column-2-of-3,
+.checkList .column-3-of-3 {
+	padding: 0;
+	float: left;
+	width: 140px;
+	clear: none;
+	font-size: 10px;
+}
+
+/* @end */
+
+/* @group Check Row */
+
+ol.checkRow li,
+ul.checkRow li,
+ol.radioRow li,
+ul.radioRow li {
+	float: none;
+	margin-left: 0;
+	padding-left: 0;
+	display: inline;
+}
+
+ol.checkRow li label,
+ul.checkRow li label,
+ol.radioRow li label,
+ul.radioRow li label {
+	display: inline;
+}
+
+/* @end */
+
+/* @end */
+
+/* @end */
