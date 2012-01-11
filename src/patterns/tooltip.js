@@ -61,7 +61,7 @@
 
         removeShowEvents: function($trigger) {
             $trigger.off("click.tooltip");
-            $trigger.on("mouseover.tooltip");
+            $trigger.off("mouseover.tooltip");
         },
 
         setupHideEvents: function($trigger) {
@@ -76,7 +76,7 @@
 
         removeHideEvents: function($trigger) {
             $trigger.off("click.tooltip");
-            $trigger.on("mouseleave.tooltip");
+            $trigger.off("mouseleave.tooltip");
         },
 
         show: function(event) {
@@ -84,9 +84,9 @@
                 $trigger = event.data,
                 $container = $trigger.data("mapal.tooltip.container");
 
+            tooltip.removeShowEvents($trigger);
             tooltip.positionContainer($trigger, $container);
             $container.css("visibility", "visible");
-            tooltip.removeShowEvents($trigger);
             tooltip.setupHideEvents($trigger);
         },
 
@@ -94,8 +94,8 @@
             var tooltip = mapal.passivePatterns.tooltip,
                 $trigger = event.data,
                 $container = $trigger.data("mapal.tooltip.container");
-            $container.css("visibility", "hidden");
             tooltip.removeHideEvents($trigger);
+            $container.css("visibility", "hidden");
             tooltip.setupShowEvents($trigger);
         },
 
