@@ -7,7 +7,7 @@ Markup structure
 .. code-block:: html
 
    <label>Website address
-     <a href="#" rel=".tooltip!click">More information</a>
+     <a href="#tip" rel=".tooltip">More information</a>
    </label>
    <div id="tip">
      <p>
@@ -20,6 +20,13 @@ Display
 -------
 Tooltips are shown when the mouse hovers over the triggering element, and
 are hidden when the mouse leaves the triggering element.
+
+The trigger can be changed to require a click on the triggering element by
+adding a ``click`` option.
+
+.. code-block:: html
+
+   <a href="#tip" rel=".tooltip!click">More information</a>
 
 
 Positioning
@@ -53,7 +60,7 @@ An example:
 
 .. code-block:: html
 
-   <a href="#" rel=".tooltip!position=lt-lm-rt-rm">
+   <a href="#tip" rel=".tooltip!position=lt-lm-rt-rm">
      ...
    </a>
 
@@ -70,6 +77,31 @@ It is possible to force a specific tooltip position by adding the
 
 .. code-block::  html
 
-   <a href="#" rel=".tooltip!position-lt!forcePosition">
+   <a href="#tip" rel=".tooltip!position=lt!forcePosition">
      ...
    </a>
+
+Generated markup
+----------------
+
+.. code-block:: html
+
+   <label>Website address
+     <a href="#tip" rel=".tooltip">More information</a>
+     <div class="tooltip-container contextPanel"
+          style="z-index: 1100; top: 208px; left: 750px; visibility: visible">
+       <div id="tip" style="display: block">
+         <p>
+           Please enter the full URL for the website. Please note that only HTTP
+           and HTTPS addresses are supported.
+         </p>
+       </div>
+       <span class="pointer" style="top: 111px; left: -22px"></span>
+     </div>
+   </label>
+   <div id="tip">
+     <p>
+       Please enter the full URL for the website. Please note that only HTTP
+       and HTTPS addresses are supported.
+     </p>
+   </div>
