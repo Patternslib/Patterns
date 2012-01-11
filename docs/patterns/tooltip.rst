@@ -1,6 +1,8 @@
 Tooltip
 =======
 
+Tooltips are intended to display contextual information and function about the trigger element. 
+
 Markup structure
 ----------------
 
@@ -110,3 +112,32 @@ will be transformed into:
      </div>
      <span class="pointer" style="top: 111px; left: -22px"></span>
    </div>
+
+Display trigger
+--------------
+
+The tooltip is by default triggered when the user hovers over the trigger element. When the cursor is moved away from the trigger element, the tooltip will disappear again. 
+
+There is also the option to display the tooltip on click by adding an extra class `click`::
+
+   <a href="#" class="tooltip click">
+     …
+   </a>
+
+Sticky
+------
+
+By default, the tooltip disappears when the cursor is moved off the element. If this is not desired behaviour, there is the option to have a 'sticky' tooltip. This only disappears when a close button on the tooltip is clicked. When the sticky option is chosen, the close button will be inserted for you automatically::
+
+   <a href="#" class="tooltip sticky">
+    …
+   </a>
+
+Injection
+---------
+
+Tooltips can be used in combination with the Injection pattern::
+
+   <a href="balloon-contents.html" data-injection="#myTip.tooltip">
+    …
+   </a>
