@@ -13,11 +13,21 @@ body {
 	outline: none;
 }
 
+/* @group Typography */
+
+ul,ol,p,table,dl {
+	margin-bottom: 24px;
+}
+
+
+
+/* @end */
+
 /* @group Headers */
 
 h1 {
 	font-size: 30px;
-	margin-bottom: 20px;
+	margin-bottom: 24px;
 	font-weight: normal;
 	font-style: normal;
 	letter-spacing: 1px;
@@ -59,6 +69,11 @@ img.floatBefore {
 
 img.floatAfter {
 	margin-left: 10px;
+}
+
+p img {
+	margin-top: 5px;
+	margin-bottom: -5px;
 }
 
 
