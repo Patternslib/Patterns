@@ -18,7 +18,6 @@ Contents:
    depends
    panels
    patterns/index
-   tooltips
 
 Indices and tables
 ==================
