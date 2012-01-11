@@ -130,7 +130,7 @@ will be transformed into:
    <label>Website address
      <a href="#" data-tooltip="sticky">More information</a>
    </label>
-   ...
+   …
    <div class="tooltip-container rt"
         style="z-index: 1100; top: 208px; left: 750px; visibility: visible">
      <div style="display: block">
