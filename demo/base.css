@@ -13,6 +13,20 @@ body {
 	outline: none;
 }
 
+/* @group Headers */
+
+h1 {
+	font-size: 30px;
+	margin-bottom: 20px;
+	font-weight: normal;
+	font-style: normal;
+	letter-spacing: 1px;
+}
+
+
+
+/* @end */
+
 /* @group Anchor */
 
 a {
