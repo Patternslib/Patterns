@@ -1,3 +1,9 @@
+/**
+ * @license
+ * Patterns @VERSION@ jquery-ext - various jQuery extensions
+ *
+ * Copyright 2011 Humberto Sermeño
+ */
 (function( $ ){
 	var methods = {
 		init: function( options ) {
