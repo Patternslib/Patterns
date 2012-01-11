@@ -7,14 +7,9 @@ Markup structure
 .. code-block:: html
 
    <label>Website address
-     <a href="#tip" rel=".tooltip">More information</a>
+     <a href="#" title="Please enter the full URL for the website"
+         class="tooltip" >More information</a>
    </label>
-   <div id="tip">
-     <p>
-       Please enter the full URL for the website. Please note that only HTTP
-       and HTTPS addresses are supported.
-     </p>
-   </div>
 
 Display
 -------
@@ -26,7 +21,8 @@ adding a ``click`` option.
 
 .. code-block:: html
 
-   <a href="#tip" rel=".tooltip!click">More information</a>
+   <a href="#" title="Please enter the full URL for the website"
+      class="tooltip" data-tooltip="click">More information</a>
 
 
 Positioning
@@ -60,7 +56,7 @@ An example:
 
 .. code-block:: html
 
-   <a href="#tip" rel=".tooltip!position=lt-lm-rt-rm">
+   <a href="#tip" class="tooltip" data-tooltip="position=lt-lm-rt-rm">
      ...
    </a>
 
@@ -77,7 +73,8 @@ It is possible to force a specific tooltip position by adding the
 
 .. code-block::  html
 
-   <a href="#tip" rel=".tooltip!position=lt!forcePosition">
+   <a href="#" title="Please enter the full URL for the website"
+      class="tooltip" data-position="position=lt!forcePosition">
      ...
    </a>
 
@@ -87,19 +84,29 @@ Generated markup
 The first time the tooltip is shown the tip itself will be wrapped in a
 new tooltip container. This container will be positioned correctly.
 
+Source markup:
+
 .. code-block:: html
 
    <label>Website address
-     <a href="#tip" rel=".tooltip">More information</a>
+     <a href="#" title="Please enter the full URL for the website."
+        class="tooltip">More information</a>
    </label>
-   <div class="tooltip-container"
+
+will be transformed into:
+
+.. code-block:: html
+
+   <label>Website address
+     <a href="#" class="tooltip">More information</a>
+   </label>
+   ...
+   <div class="tooltip-container rt"
         style="z-index: 1100; top: 208px; left: 750px; visibility: visible">
-     <div id="tip" style="display: block">
+     <div style="display: block">
        <p>
-         Please enter the full URL for the website. Please note that only HTTP
-         and HTTPS addresses are supported.
+         Please enter the full URL for the website.
        </p>
      </div>
      <span class="pointer" style="top: 111px; left: -22px"></span>
    </div>
-

@@ -21,23 +21,41 @@
 
         initContent: function(root) {
             var tooltip = mapal.passivePatterns.tooltip;
-            $('a[rel^=".tooltip"]', root).each(function() {
-                var $trigger = $(this),
-                    rel = $trigger.attr("rel"),
-                    parameters = mapal.patterns.extractParameters(rel, []);
+            $(".tooltip", root).each(function() {
+                var $trigger = $(this);
 
-                $trigger.data("mapal.tooltip", parameters);
+                tooltip.parseOptions($trigger);
+                tooltip.createContainer($trigger);
                 tooltip.setupShowEvents($trigger);
             });
+        },
+
+        parseOptions: function($trigger) {
+            var input = $trigger.data("tooltip") || "",
+                params = input.split("!"),
+                options = {}, name, value, index;
+
+            for (var i=0; i<params.length; i++) {
+                index = params[i].indexOf("=");
+                if (index === -1) {
+                    name = params[i];
+                    value = true;
+                } else {
+                    name = params[i].slice(0, index);
+                    value = params[i].slice(index+1);
+                }
+                options[name] = value;
+            }
+            $trigger.data("mapal.tooltip", options);
         },
 
         setupShowEvents: function($trigger) {
             var tooltip = mapal.passivePatterns.tooltip,
                 parameters = $trigger.data("mapal.tooltip");
             if (parameters.click) {
-                $trigger.on("click.tooltip", tooltip.show);
+                $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
-                $trigger.on("mouseover.tooltip", tooltip.show);
+                $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
             }
         },
 
@@ -46,15 +64,13 @@
             $trigger.on("mouseover.tooltip");
         },
 
-        setupHideEvents: function($trigger, $container) {
+        setupHideEvents: function($trigger) {
             var tooltip = mapal.passivePatterns.tooltip,
-                parameters = $trigger.data("mapal.tooltip"),
-                data = {trigger: $trigger,
-                        container: $container};
+                parameters = $trigger.data("mapal.tooltip");
             if (parameters.click) {
-                $trigger.on("click.tooltip", data, tooltip.hide);
+                $trigger.on("click.tooltip", $trigger, tooltip.hide);
             } else {
-                $trigger.on("mouseleave.tooltip", data, tooltip.hide);
+                $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
             }
         },
 
@@ -65,45 +81,36 @@
 
         show: function(event) {
             var tooltip = mapal.passivePatterns.tooltip,
-                $trigger = $(this),
-                $target = $($trigger.attr("href")),
-                $container;
+                $trigger = event.data,
+                $container = $trigger.data("mapal.tooltip.container");
 
-            if ($target.length===0) {
-                return;
-            }
-
-            $container=tooltip.getContainer($target);
             tooltip.positionContainer($trigger, $container);
             $container.css("visibility", "visible");
             tooltip.removeShowEvents($trigger);
-            tooltip.setupHideEvents($trigger, $container);
+            tooltip.setupHideEvents($trigger);
         },
 
         hide: function(event) {
             var tooltip = mapal.passivePatterns.tooltip,
-                $trigger = event.data.trigger,
-                $container = event.data.container;
-
+                $trigger = event.data,
+                $container = $trigger.data("mapal.tooltip.container");
             $container.css("visibility", "hidden");
             tooltip.removeHideEvents($trigger);
             tooltip.setupShowEvents($trigger);
         },
 
-        getContainer: function($target) {
-            var $container = $target.data("mapal.tooltip.container");
-
-            if ($container!==undefined) {
-                return $container;
-            }
+        createContainer: function($trigger) {
+            var content = $trigger.attr("title");
+            $trigger.removeAttr("title");
 
             $container = $("<div/>", {class: "tooltip-container"});
             $container.css("visibility", "hidden");
-            $target.wrap($container).show(); // 
-            $container = $target.parent()
-            $container.append($("<span></span>", {class: "pointer"}));
-            $target.data("mapal.tooltip.container", $container);
-            return $container;
+            $container.append(
+                $("<div/>").css("display", "block")
+                    .append($("<p/>").text(content)))
+                .append($("<span></span>", {class: "pointer"}));
+            $("body").append($container);
+            $trigger.data("mapal.tooltip.container", $container);
         },
 
         boundingBox: function($el) {

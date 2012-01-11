@@ -11,19 +11,21 @@
     
     <script src="../lib/jquery.fancybox-1.3.4.js" type="text/javascript" charset="utf-8"></script>
     
-    <script src="../build/patterns.js" type="text/javascript" charset="utf-8"></script> 
+    <script src="../src/core/init.js" type="text/javascript" charset="utf-8"></script> 
+    <script src="../src/core/jquery-ext.js" type="text/javascript" charset="utf-8"></script> 
+    <script src="../src/patterns/tooltip.js" type="text/javascript" charset="utf-8"></script> 
 </head>
 <body>
 	<p>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-		Ut <a href="#" title="This tooltip prefers to be in the top-middle position" class="tooltip position-tm-rt-rm-rb-lt">tooltip top middle, show on hover</a> gravida ligula quis feugiat. Mauris tellus purus, venenatis non faucibus dignissim,
+		Ut <a href="#" title="This tooltip prefers to be in the top-middle position" class="tooltip" data-tooltip="position=tm-rt-rm-rb-lt">tooltip top middle, show on hover</a> gravida ligula quis feugiat. Mauris tellus purus, venenatis non faucibus dignissim,
 		imperdiet eget purus. Sed imperdiet, libero eu dignissim sollicitudin, dui augue porta orci,
 		commodo malesuada diam diam eu ligula.<br/>
 		Donec <a href="#" title="This is one sticky tooltip" class="tooltip sticky">tooltip right middle</a>, neque eu congue commodo, magna elit luctus elit, ut semper quam elit nec nisi.
 		Aenean accumsan ultrices porta. Etiam at tristique mi.
 	</p>
 	<p>
-		<img src="placeholder.gif" class="tooltip sticky floatBefore" title="this is a sticky tooltip" alt="starwars meeting"/>
+		<img src="placeholder.gif" class="tooltip floatBefore" data-tooltip="stick" title="this is a sticky tooltip" alt="starwars meeting"/>
 		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
 		Aenean malesuada laoreet magna, et vulputate magna tempus eleifend.
 		In posuere nunc eros. Curabitur odio enim, rutrum id cursus ut, dapibus feugiat mi.<br/>
