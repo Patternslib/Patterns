@@ -116,7 +116,7 @@
         boundingBox: function($el) {
             var box = $el.offset();
             box.height = $el.height();
-            box.width = $el.height();
+            box.width = $el.width();
             box.bottom = box.top + box.height;
             box.right = box.left + box.width;
             return box;
@@ -124,19 +124,19 @@
 
         positionContainer: function($trigger, $container) {
             var tooltip = mapal.passivePatterns.tooltip,
-                trigger_center = $trigger.offset(),
                 trigger_box = tooltip.boundingBox($trigger),
                 tooltip_box = tooltip.boundingBox($container),
                 $window = $(window),
                 window_width = $window.width(),
                 window_height = $window.height(),
+                trigger_center,
                 space_top, space_right, space_bottom, space_left,
                 container_offset = {},
                 tip_offset = {}
                 cls = "";
 
-            trigger_center.top += trigger_box.height/2;
-            trigger_center.left += trigger_box.width/2;
+            trigger_center = {top: trigger_box.top + (trigger_box.height/2),
+                              left: trigger_box.left + (trigger_box.width/2)};
             space_top = trigger_box.top - $window.scrollTop();
             space_bottom = window_height - space_top - trigger_box.height;
             space_left = trigger_box.left - $window.scrollLeft();
@@ -147,11 +147,11 @@
                 tip_offset.top = tooltip_box.height;
                 cls = "t";
             } else if (space_right > Math.max(space_bottom, space_left, space_top)) {
-                container_offset.left = trigger_box.right;
+                container_offset.left = trigger_box.right + 20;
                 tip_offset.left = 0;
                 cls = "r";
             } else if (space_bottom > Math.max(space_left, space_top, space_right)) {
-                container_offset.top = trigger_box.bottom;
+                container_offset.top = trigger_box.bottom + 20;
                 tip_offset.top = 0;
                 cls = "b";
             } else {
@@ -163,29 +163,29 @@
             if (container_offset.left===undefined) {
                 if (Math.abs(space_left-space_right) < 20) {
                     cls += "m";
-                    container_offset.left = trigger_center - (tooltip_box.width/2);
+                    container_offset.left = trigger_center.left - (tooltip_box.width/2);
                     tip_offset.left = tooltip_box.width/2;
                 } else if (space_left > space_right) {
                     cls += "r";
-                    container_offset.left = trigger_box.left + 20 - tooltip_box.width;
+                    container_offset.left = trigger_center.left + 20 - tooltip_box.width;
                     tip_offset.left = tooltip_box.width - 20;
                 } else {
                     cls += "l";
-                    container_offset.left = trigger_box.right;
+                    container_offset.left = trigger_center.left - 20;
                     tip_offset.left = 0;
                 }
             } else {
                 if (Math.abs(space_top-space_bottom) < 20) {
                     cls += "m";
-                    container_offset.top = trigger_center - (tooltip_box.height/2);
+                    container_offset.top = trigger_center.top - (tooltip_box.height/2);
                     tip_offset.top = tooltip_box.height/2;
                 } else if (space_top > space_bottom) {
                     cls += "b";
-                    container_offset.top = trigger_box.top + 20 - tooltip_box.height;
+                    container_offset.top = trigger_center.top + 20 - tooltip_box.height;
                     tip_offset.top = tooltip_box.height - 20;
                 } else {
                     cls += "t";
-                    container_offset.top = trigger_box.top;
+                    container_offset.top = trigger_center.top - 30;
                     tip_offset.top = 0;
                 }
             }
