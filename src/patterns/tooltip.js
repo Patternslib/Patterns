@@ -60,14 +60,16 @@
         },
 
         removeShowEvents: function($trigger) {
-            $trigger.off("click.tooltip");
-            $trigger.off("mouseover.tooltip");
+            $trigger.off(".tooltip");
         },
 
         setupHideEvents: function($trigger) {
             var tooltip = mapal.passivePatterns.tooltip,
                 parameters = $trigger.data("mapal.tooltip");
-            if (parameters.click) {
+            if (parameters.sticky) {
+                $trigger.data("mapal.tooltip.container").find(".closePanel")
+                    .on("click.tooltip", $trigger, tooltip.hide);
+            } else if (parameters.click) {
                 $trigger.on("click.tooltip", $trigger, tooltip.hide);
             } else {
                 $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
@@ -75,8 +77,8 @@
         },
 
         removeHideEvents: function($trigger) {
-            $trigger.off("click.tooltip");
-            $trigger.off("mouseleave.tooltip");
+            $trigger.find(".closePanel").off(".tooltip");
+            $trigger.off(".tooltip");
         },
 
         show: function(event) {
@@ -100,15 +102,21 @@
         },
 
         createContainer: function($trigger) {
-            var content = $trigger.attr("title");
+            var content = $trigger.attr("title"),
+                options = $trigger.data("mapal.tooltip");
             $trigger.removeAttr("title");
 
-            $container = $("<div/>", {class: "tooltip-container"});
+            $container = $("<div/>", {"class": "tooltip-container"});
             $container.css("visibility", "hidden");
             $container.append(
                 $("<div/>").css("display", "block")
                     .append($("<p/>").text(content)))
-                .append($("<span></span>", {class: "pointer"}));
+                .append($("<span></span>", {"class": "pointer"}));
+            if (options.sticky) {
+                $("<button/>", {"class": "closePanel"})
+                    .text("Close")
+                    .insertBefore($container.find("p"));
+            }
             $("body").append($container);
             $trigger.data("mapal.tooltip.container", $container);
         },
