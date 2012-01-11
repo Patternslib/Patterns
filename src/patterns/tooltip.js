@@ -21,7 +21,7 @@
 
         initContent: function(root) {
             var tooltip = mapal.passivePatterns.tooltip;
-            $(".tooltip", root).each(function() {
+            $("*[data-tooltip]", root).each(function() {
                 var $trigger = $(this);
 
                 tooltip.parseOptions($trigger);
