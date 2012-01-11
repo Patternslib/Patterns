@@ -30,7 +30,7 @@ adding a ``click`` option.
 Positioning
 -----------
 Tooltips will be positioned close to the element that triggered them, with
-an arrowtip pointing to the center of the triggering item. The placement
+an arrow tip pointing to the centre of the triggering item. The placement
 of the tip on the tooltip determines the positioning of the tooltip. For
 example if the tip is placed at the right side of the tooltip, it naturally
 follows that the tooltip itself will be placed to the left of the triggering
@@ -64,9 +64,9 @@ An example:
 
 This specifies that the preferred position of the tooltip is at the top
 left side of the tooltip. If the tooltip does not fit at that position
-the left-middle positition should be tried, than the right-top or if
+the left-middle position should be tried, than the right-top or if
 all previous options failed the middle of the right side. If the tooltip does
-not fit at any none of the prefererred positions the tooltip will be
+not fit at any none of the preferred positions the tooltip will be
 positioned at the location that has the most space, even if this is not
 one of the preferred positions.
 
@@ -120,7 +120,7 @@ The tooltip is by default triggered when the user hovers over the trigger elemen
 
 There is also the option to display the tooltip on click by adding an extra class `click`::
 
-   <a href="#" class="tooltip click">
+   <a href="#" class="tooltip" data-tooltip="click">
      …
    </a>
 
@@ -129,7 +129,7 @@ Sticky
 
 By default, the tooltip disappears when the cursor is moved off the element. If this is not desired behaviour, there is the option to have a 'sticky' tooltip. This only disappears when a close button on the tooltip is clicked. When the sticky option is chosen, the close button will be inserted for you automatically::
 
-   <a href="#" class="tooltip sticky">
+   <a href="#" class="tooltip" data-tooltip="sticky">
     …
    </a>
 
