@@ -10,7 +10,7 @@ Markup structure
 
    <label>Website address
      <a href="#" title="Please enter the full URL for the website"
-         data-tooltip="" >More information</a>
+         data-tooltip="">More information</a>
    </label>
 
 Display
