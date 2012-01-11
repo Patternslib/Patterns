@@ -10,7 +10,7 @@ Markup structure
 
    <label>Website address
      <a href="#" title="Please enter the full URL for the website"
-         class="tooltip" >More information</a>
+         data-tooltip="" >More information</a>
    </label>
 
 Display
@@ -24,7 +24,7 @@ adding a ``click`` option.
 .. code-block:: html
 
    <a href="#" title="Please enter the full URL for the website"
-      class="tooltip" data-tooltip="click">More information</a>
+      data-tooltip="click">More information</a>
 
 
 Positioning
@@ -58,8 +58,8 @@ An example:
 
 .. code-block:: html
 
-   <a href="#tip" class="tooltip" data-tooltip="position=lt-lm-rt-rm">
-     ...
+   <a href="#tip" data-tooltip="position=lt-lm-rt-rm">
+    …
    </a>
 
 This specifies that the preferred position of the tooltip is at the top
@@ -76,9 +76,37 @@ It is possible to force a specific tooltip position by adding the
 .. code-block::  html
 
    <a href="#" title="Please enter the full URL for the website"
-      class="tooltip" data-position="position=lt!forcePosition">
-     ...
+      data-position="position=lt!forcePosition">
+    …
    </a>
+
+Sticky tooltips
+---------------
+
+By default, the tooltip disappears when the cursor is moved off the element or
+the triggering element is clicked. If this is not desired behaviour, there is
+the option to have a 'sticky' tooltip.  This only disappears when a close
+button on the tooltip is clicked. When the sticky option is chosen, the close
+button will be inserted for you automatically.
+
+.. code-block:: html
+
+   <a href="#" data-tooltip="sticky">
+    …
+   </a>
+
+
+Injection
+---------
+
+Tooltips can be used in combination with the Injection pattern:
+
+.. code-block:: html
+
+   <a href="balloon-contents.html" data-injection="#myTip.tooltip">
+    …
+   </a>
+
 
 Generated markup
 ----------------
@@ -92,7 +120,7 @@ Source markup:
 
    <label>Website address
      <a href="#" title="Please enter the full URL for the website."
-        class="tooltip">More information</a>
+        data-tooltip="sticky">More information</a>
    </label>
 
 will be transformed into:
@@ -100,44 +128,16 @@ will be transformed into:
 .. code-block:: html
 
    <label>Website address
-     <a href="#" class="tooltip">More information</a>
+     <a href="#" data-tooltip="sticky">More information</a>
    </label>
    ...
    <div class="tooltip-container rt"
         style="z-index: 1100; top: 208px; left: 750px; visibility: visible">
      <div style="display: block">
+       <button class="closePanel">Close</button>
        <p>
          Please enter the full URL for the website.
        </p>
      </div>
      <span class="pointer" style="top: 111px; left: -22px"></span>
    </div>
-
-Display trigger
---------------
-
-The tooltip is by default triggered when the user hovers over the trigger element. When the cursor is moved away from the trigger element, the tooltip will disappear again. 
-
-There is also the option to display the tooltip on click by adding an extra class `click`::
-
-   <a href="#" class="tooltip" data-tooltip="click">
-     …
-   </a>
-
-Sticky
-------
-
-By default, the tooltip disappears when the cursor is moved off the element. If this is not desired behaviour, there is the option to have a 'sticky' tooltip. This only disappears when a close button on the tooltip is clicked. When the sticky option is chosen, the close button will be inserted for you automatically::
-
-   <a href="#" class="tooltip" data-tooltip="sticky">
-    …
-   </a>
-
-Injection
----------
-
-Tooltips can be used in combination with the Injection pattern::
-
-   <a href="balloon-contents.html" data-injection="#myTip.tooltip">
-    …
-   </a>
