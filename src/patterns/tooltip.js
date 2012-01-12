@@ -151,8 +151,8 @@
             space_right = window_width - space_left - trigger_box.width;
 
             if (space_top > Math.max(space_right, space_bottom, space_left)) {
-                container_offset.top = trigger_box.top - tooltip_box.height;
-                tip_offset.top = tooltip_box.height;
+                container_offset.top = trigger_box.top - tooltip_box.height + 10;
+                tip_offset.top = tooltip_box.height - 23;
                 cls = "t";
             } else if (space_right > Math.max(space_bottom, space_left, space_top)) {
                 container_offset.left = trigger_box.right + 20;
