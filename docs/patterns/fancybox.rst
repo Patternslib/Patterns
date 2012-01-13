@@ -31,6 +31,7 @@ Requirements
 
 * `Fancybox <http://fancybox.net/>`_
 
-In order to have selective injection (injection of a single element from the page), you
-need the modified version of fancybox that's currently on SVN.
+In order to have selective injection (injection of a single element
+from the page), you need the modified version of fancybox that's
+currently on SVN.
 
