@@ -16,6 +16,8 @@
 
     $.extend(mapal.passivePatterns, {
     "tooltip": {
+        count: 0,
+
         init: function() {
         },
 
@@ -84,12 +86,29 @@
         show: function(event) {
             var tooltip = mapal.passivePatterns.tooltip,
                 $trigger = event.data,
-                $container = $trigger.data("mapal.tooltip.container");
+                $container = $trigger.data("mapal.tooltip.container"),
+                options = $trigger.data("mapal.tooltip");
 
             tooltip.removeShowEvents($trigger);
-            tooltip.positionContainer($trigger, $container);
-            $container.css("visibility", "visible");
-            tooltip.setupHideEvents($trigger);
+
+            function _show() {
+                tooltip.positionContainer($trigger, $container);
+                $container.css("visibility", "visible");
+                tooltip.setupHideEvents($trigger);
+            }
+
+            if (options.ajax) {
+                var source = $trigger.attr("href").split("#"),
+                    target_id = $container.find("div").attr("id") + ":content";
+
+                mapal.injection.load($trigger, source[0], target_id, source[1] || [], _show, true);
+                delete options.ajax;
+                $trigger.data("mapal.tooltip", options);
+            } else {
+                _show();
+            }
+
+            event.preventDefault();
         },
 
         hide: function(event) {
@@ -102,15 +121,17 @@
         },
 
         createContainer: function($trigger) {
-            var content = $trigger.attr("title"),
+            var tooltip = mapal.passivePatterns.tooltip,
+                content = $trigger.attr("title"),
                 options = $trigger.data("mapal.tooltip");
             $trigger.removeAttr("title");
 
             $container = $("<div/>", {"class": "tooltip-container"});
             $container.css("visibility", "hidden");
             $container.append(
-                $("<div/>").css("display", "block")
-                    .append($("<p/>").text(content)))
+                $("<div/>", {"id": "tooltip-" + ++tooltip.count})
+                    .css("display", "block")
+                    .append($("<p/>").text(content || "")))
                 .append($("<span></span>", {"class": "pointer"}));
             if (options.sticky) {
                 $("<button/>", {"class": "closePanel"})
