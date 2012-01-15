@@ -492,12 +492,19 @@ var mapal = {
                 }
                 
                 // check if this was a navigation call
-                var $uls = $elem.parents("ul.navigation");
-                if ($uls.length > 0) {
-                    $uls.find('li').removeClass('current');
-                    var $li = $elem.parents("li");
-                    if ($li.length > 0) {
-                        $($li[0]).addClass('current');
+                var $navs = $elem.parents("nav,.navigation"), $items, $item;
+                if ($navs.length > 0) {
+                    $items = $navs.find('li');
+                    if ($items.length === 0) {
+                        $items = $navs.find('a');
+                    }
+                    $items.removeClass('current');
+
+                    var $item = $elem.parents("li");
+                    if ($item.length > 0) {
+                        $($item[0]).addClass('current');
+                    } else if ($item.length === 0) {
+                        $elem.addClass('current');
                     }
                 }
             }
