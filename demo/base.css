@@ -13,6 +13,133 @@ body {
 	outline: none;
 }
 
+/* @group Messages */
+
+.message {
+	padding: 8px;
+	margin-bottom: 20px;
+	-webkit-box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+	-moz-box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+	box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+	display: block;
+}
+
+.message *:last-child {
+	margin-bottom: 0;
+}
+
+.message.notice {
+	background-color: #fdfdc8;
+	color: #6f5a44;
+	border: 1px solid #d3d4a7;
+	padding: 9px;
+}
+
+.message.success {
+	background-color: #b4ff8e;
+	color: #405f31;
+}
+
+.message.warning {
+	background-color: #ff8100;
+	color: white;
+}
+
+.message.warning * {
+	color: white !important;
+}
+
+.message.error {
+	background-color: red;
+	color: white;
+}
+
+.message.error * {
+	color: white !important;
+}
+
+/* @group Form messages */
+
+.concise .message {
+	width: 100%;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	padding: 0;
+}
+
+.comprehensive .message {
+	width: 100%;
+}
+
+.concise .message.warning {
+	background-color: transparent;
+	color: #ff8100;
+}
+
+/* @end */
+
+/* @group Self healings */
+
+#selfhealing-messages {
+  position: fixed;
+  top: 15px;
+  width: 320px;
+  z-index: 10;
+	left: 15px;
+}
+
+#selfhealing-messages div {
+ 	background-color: rgba(0,0,0,0.8);
+  	-moz-border-radius: 5px; /* Firefox */
+  	-webkit-border-radius: 5px;
+  	border-radius: 5px; /* CSS3 */
+	border: 1px solid gray;
+	-webkit-box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+	box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+#selfhealing-messages div {
+	color: #cccccc;
+	padding: 7px;
+}
+
+#selfhealing-messages div p {
+	margin: 0;
+}
+/* @end */
+
+
+
+/* @end */
+
+/* @group Typography */
+
+ul,ol,p,table,dl {
+	margin-bottom: 24px;
+}
+
+
+
+/* @end */
+
+/* @group Headers */
+
+h1 {
+	font-size: 30px;
+	margin-bottom: 24px;
+	font-weight: normal;
+	font-style: normal;
+	letter-spacing: 1px;
+}
+
+
+
+/* @end */
+
 /* @group Anchor */
 
 a {
@@ -47,113 +174,10 @@ img.floatAfter {
 	margin-left: 10px;
 }
 
-
-
-/* @end */
-
-/* @group Tooltip */
-
-.tooltip .closePanel{
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    text-indent: 100px;
-    overflow: hidden;
-    padding: 0px;
-    background: #6F5A44 url(close.png) 2px no-repeat;
-    -webkit-border-radius: 3px;
-    display: block;
-    height: 15px;
-    width: 15px;
-    z-index: 3;
-    border: none;
-  }
-
-  .tooltip-container {
-    position: absolute;
-    z-index: 1001;
-    border: none;
-    min-height: 50px;
-    overflow: visible;
-    overflow-x: visible;
-    margin: 0;
-    border: 1px solid silver;
--webkit-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
--moz-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-	width: 300px;
+p img {
+	margin-top: 5px;
+	margin-bottom: -5px;
 }
-
-  .tooltip-container .pointer{
-    height: 20px;
-    width: 20px;
-    display: block;
-    background-color: #fdfdc8;
-    border: 1px solid #e9df63;
-    z-index: 0;
-    position: absolute;
-    -webkit-transform: rotate(45deg);
-    -webkit-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
-    -moz-transform: rotate(45deg);
-    -moz-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
-  }
-
-  .tooltip-container > div{
-    padding: 10px!important;
-    z-index: 1;
-    position: relative;
-    padding: 0;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-    min-height: 50px;
-    background-color: #FDFDC8;
-  }
-
-  .tooltip-container.bl .pointer,
-  .tooltip-container.bm .pointer,
-  .tooltip-container.br .pointer{
-    margin-top: -12px;
-  }
-  .tooltip-container.lt .pointer,
-  .tooltip-container.lm .pointer,
-  .tooltip-container.lb .pointer{
-    margin-left: 12px;
-
-  }
-  .tooltip-container.tl .pointer,
-  .tooltip-container.tm .pointer,
-  .tooltip-container.tr .pointer{
-    margin-top: 12px;
-  }
-  .tooltip-container.rt .pointer,
-  .tooltip-container.rm .pointer,
-  .tooltip-container.rb .pointer{
-    margin-left: -12px;
-  }
-
-  .tooltip-container.lt .pointer,
-  .tooltip-container.rt .pointer{
-    margin-top: 20px;
-  }
-  .tooltip-container.lb .pointer,
-  .tooltip-container.rb .pointer{
-    margin-top: -20px;
-  }
-  .tooltip-container.tl .pointer,
-  .tooltip-container.bl .pointer{
-    margin-left: 20px;
-  }
-  .tooltip-container.tr .pointer,
-  .tooltip-container.br .pointer{
-    margin-left: -20px;
-  }
-
-  .tooltip-container h4{
-    color: #fff;
-  }
 
 
 
@@ -712,5 +736,119 @@ ul.radioRow li label {
 /* @end */
 
 /* @end */
+
+/* @end */
+
+/* @group Patterns */
+
+/* @group Tooltip */
+
+.tooltip .closePanel{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    text-indent: 100px;
+    overflow: hidden;
+    padding: 0px;
+    background: #6F5A44 url(close.png) 2px no-repeat;
+    -webkit-border-radius: 3px;
+    display: block;
+    height: 15px;
+    width: 15px;
+    z-index: 3;
+    border: none;
+  }
+
+  .tooltip-container {
+    position: absolute;
+    z-index: 1001;
+    border: none;
+    min-height: 50px;
+    overflow: visible;
+    overflow-x: visible;
+    margin: 0;
+    border: 1px solid silver;
+-webkit-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+-moz-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+	width: 300px;
+}
+
+  .tooltip-container .pointer{
+    height: 20px;
+    width: 20px;
+    display: block;
+    background-color: #fdfdc8;
+    border: 1px solid #e9df63;
+    z-index: 0;
+    position: absolute;
+    -webkit-transform: rotate(45deg);
+    -webkit-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
+    -moz-transform: rotate(45deg);
+    -moz-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
+  }
+
+  .tooltip-container > div{
+    padding: 10px!important;
+    z-index: 1;
+    position: relative;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    min-height: 50px;
+    background-color: #FDFDC8;
+  }
+
+  .tooltip-container.bl .pointer,
+  .tooltip-container.bm .pointer,
+  .tooltip-container.br .pointer{
+    margin-top: -12px;
+  }
+  .tooltip-container.lt .pointer,
+  .tooltip-container.lm .pointer,
+  .tooltip-container.lb .pointer{
+    margin-left: 12px;
+
+  }
+  .tooltip-container.tl .pointer,
+  .tooltip-container.tm .pointer,
+  .tooltip-container.tr .pointer{
+    margin-top: 12px;
+  }
+  .tooltip-container.rt .pointer,
+  .tooltip-container.rm .pointer,
+  .tooltip-container.rb .pointer{
+    margin-left: -12px;
+  }
+
+  .tooltip-container.lt .pointer,
+  .tooltip-container.rt .pointer{
+    margin-top: 20px;
+  }
+  .tooltip-container.lb .pointer,
+  .tooltip-container.rb .pointer{
+    margin-top: -20px;
+  }
+  .tooltip-container.tl .pointer,
+  .tooltip-container.bl .pointer{
+    margin-left: 20px;
+  }
+  .tooltip-container.tr .pointer,
+  .tooltip-container.br .pointer{
+    margin-left: -20px;
+  }
+
+  .tooltip-container h4{
+    color: #fff;
+  }
+
+
+
+/* @end */
+
+
 
 /* @end */
