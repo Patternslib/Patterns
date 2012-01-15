@@ -352,6 +352,7 @@ var mapal = {
             
             bodyInjectionId: "__original_body"
         },
+
         load: function($elem, url, targets, sources, callback, instant) {
             instant = instant || false;
 
