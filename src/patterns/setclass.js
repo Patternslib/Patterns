@@ -175,7 +175,7 @@ $.extend( mapal.patterns, {
                 var $this = $(this);
                 var obj = mapal.patterns.toggle.getObjFromParams(
                               $this,
-                              mapal.patterns.extractParameters('!' + $this.attr('data-toggle'))
+                              mapal.patterns.parseOptions($this.attr('data-toggle'))
                           );
                 
                 if (obj === null) return;
