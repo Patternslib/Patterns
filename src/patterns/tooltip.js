@@ -163,8 +163,8 @@
                 tip_offset.top = 0;
                 cls = "b";
             } else {
-                container_offset.right = trigger_box.left - tooltip_box.width;
-                tip_offset.left = tooltip_box.width;
+                container_offset.left = trigger_box.left - tooltip_box.width - 20;
+                tip_offset.left = tooltip_box.width - 23;
                 cls = "l";
             }
 
