@@ -96,16 +96,19 @@ button will be inserted for you automatically.
    </a>
 
 
-Injection
----------
+AJAX tooltips
+-------------
 
-Tooltips can be used in combination with the Injection pattern:
+The tooltip content can be loaded via an AJAX request by proving an ajax option:
 
 .. code-block:: html
 
-   <a href="balloon-contents.html" data-injection="#myTip.tooltip">
+   <a href="balloon-contents.html#myTip" data-tooltip="ajax">
     …
    </a>
+
+This will load the contents of the ``#myTip`` element of balloon-contents.html and
+display it in a tooltip.
 
 
 Generated markup
