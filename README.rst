@@ -4,6 +4,6 @@ are triggered by classes and other attributes in the HTML, without abusing the
 HTML as a programming language. Accessibility, SEO and well structured HTML are
 core values of Patterns.
 
-A recent version of `jQuery <http://jquery.com>`_ and jQuery ext are required
+A recent version of `jQuery <http://jquery.com>`_ is required
 to use the library.
 
