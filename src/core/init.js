@@ -397,7 +397,7 @@ var mapal = {
                 }
                 
                 if (sources[i] == mapal.injection.options.bodyInjectionId) {
-                    modifier.push("content");
+                    modifiers.push("content");
                 } else {
                     modifiers.push(modifier);
                 }
