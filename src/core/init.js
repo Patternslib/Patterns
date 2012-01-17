@@ -58,14 +58,14 @@ var mapal = {
     // A simple autocomplete pattern
     initAutocomplete: function(root) {
           $("input.autocomplete", root).each(function() {
-              var $input = $(this), 
+              var $input = $(this),
                   name = $input.attr("name"),
                   $storage;
               $input.attr("name", "_"+name);
               $storage=$("<input type='hidden'/>").attr("name", name).insertBefore($input);
               $input.autocomplete({source: $input.attr("src"),
                                    minLength: 2,
-                                   select: function(event, ui) { 
+                                   select: function(event, ui) {
                                         $storage.val(ui.item.value);
                                         $input.val(ui.item.label);
                                         return false;
@@ -80,7 +80,7 @@ var mapal = {
     verifyDependencies: function($slave, command) {
         var result=[],
             $form = $slave.closest("form"),
-            $input, i, value, parts; 
+            $input, i, value, parts;
 
         if (!$form.length) {
             $form=$(document);
@@ -114,7 +114,7 @@ var mapal = {
                     result.push(false);
                     continue;
                 }
-            } 
+            }
             result.push(true);
         }
 
@@ -232,7 +232,7 @@ var mapal = {
     },
 
 
-    // check if an input element has a value. 
+    // check if an input element has a value.
     hasContent: function($el) {
         if ($el.is(":input")) {
             return $el.val();
@@ -347,9 +347,9 @@ var mapal = {
         options: {
             defaultModifier: "replace",
             modifiers: {
-                
+
             },
-            
+
             bodyInjectionId: "__original_body"
         },
 
@@ -369,11 +369,11 @@ var mapal = {
                     sources.push(mapal.injection.options.bodyInjectionId);
                 }
             }
-            
+
             var target_ids = [];
             var modifiers = [], modifier;
             var modifier_re = /:[a-zA-Z]+/;
-            
+
             for (var i = 0; i < targets.length; i++) {
                 if (typeof targets[i] == "string") {
                     // does the specifier contain a parent?
@@ -383,51 +383,51 @@ var mapal = {
                     } else {
                         target_ids.push( targets[i].replace(modifier_re, "") );
                     }
-                
+
                     modifier =  (modifier_re.exec(targets[i]) || [":" + mapal.injection.options.defaultModifier]);
                 } else {
                     target_ids.push( $(targets[i]).attr("id") );
                     modifier = ":" + mapal.injection.options.defaultModifier;
                 }
-                
+
                 if (modifier.length > 0) {
                     modifier = modifier[0];
-                    
+
                     if (modifier.length > 0) modifier = modifier.slice(1);
                 }
-                
+
                 if (sources[i] == mapal.injection.options.bodyInjectionId) {
                     modifiers.push("content");
                 } else {
                     modifiers.push(modifier);
                 }
             }
-            
+
             function htmlLoaded(response, textStatus, responseText) {
                 if ( typeof response == "string" ) {
                     responseText = response;
                     textStatus = 200;
                 } else {
                     responseText = response.responseText;
-                
+
                     if (response.status < 200 || response.status >= 400) {
                         return;
                     }
                 }
-                
+
                 if ($elem.get(0).tagName == 'FORM') {
                     var $panel = $elem.parents('#panel');
-                    
+
                     if ($panel.length > 0) {
                         $panel.overlay().close();
                         $panel.remove();
                     }
                 }
-                
+
                 // get the actual response in case a dataFilter is present in ajaxSettings
                 //if ( response.done )
                 //  response.done(function(r) { responseText = r; });
-                
+
                 // create a dummy div to hold the results
                 // and get rid of all the scripts
                 //
@@ -439,31 +439,31 @@ var mapal = {
                                 .replace(/<body(.*)>/gi,'<div id="__original_body">')
                                 .replace(/<\/body(.*)>/gi,'</div>')
                 );
-                
+
 //                var sourceIds = [];
                 var len = targets.length;
-                
-                for (var idx = 0; idx < len; idx++) {                   
+
+                for (var idx = 0; idx < len; idx++) {
                     var modifier = modifiers[idx];
-                    
+
                     var $target = $( "#" + target_ids[idx] );
                     var appendTo = false;
-                    
+
                     if ( $target.length === 0 ) {
                         appendTo = document.body;
                         if (target_ids[idx].indexOf(">") > 0) {
                             var both = target_ids[idx].split(">");
-                            
+
                             appendTo = $("#" + both[0]);
                             if ( appendTo.length ===  0) {
                                 appendTo = $("<div/>").appendTo(document.body);
                                 appendTo.attr("id", both[0]);
                             }
                         }
-                        
+
                         $target = $("<div/>").css("opacity", 0);
                     }
-                    
+
                     // empty source IDs will have been replaced with !body. Use the <body> tag as a source
                     if (sources[idx] == mapal.injection.options.bodyInjectionId) {
                         var $source = $factory.find('#'+mapal.injection.options.bodyInjectionId);
@@ -471,26 +471,26 @@ var mapal = {
                     } else {
                         var $source = $factory.find( '#' + sources[idx] );
                     }
-                    
+
                     if ( mapal.injection.modifiers[modifier] && $.isFunction(mapal.injection.modifiers[modifier].execute) ) {
                         $target = mapal.injection.modifiers[modifier].execute( $source, $target, appendTo );
-                        
+
                         if (appendTo) $target.appendTo(appendTo);
-                        
+
                         mapal.initContent($target);
-                        
+
                         if (typeof callback == 'function') {
                             callback($target);
                         } else {
                             (callback['onFinished']||$.noop)($target);
                         }
-                        
+
                         //$target.animate({"opacity": 1}, "fast");
                     } else {
                         alert('Injection[WARN]: Could not find modifier "' + modifier + '"' );
                     }
                 }
-                
+
                 // check if this was a navigation call
                 var $navs = $elem.parents("nav,.navigation"), $items, $item;
                 if ($navs.length > 0) {
@@ -508,8 +508,8 @@ var mapal = {
                     }
                 }
             }
-            
-            // 
+
+            //
             // Set the opacity of allowed targets
             //
             var count = 0;
@@ -519,9 +519,9 @@ var mapal = {
                     opacityTargets.push(target_ids[idx]);
                 }
             }
-            
-            var $targets = $("#" + opacityTargets.join(",#")); 
-            
+
+            var $targets = $("#" + opacityTargets.join(",#"));
+
             if ($targets.length > 0 && !instant) {
                 $targets.animate({"opacity": 0}, "slow", function() {
                                 count += 1;
@@ -534,13 +534,13 @@ var mapal = {
                 mapal.injection.ajax($elem, url, htmlLoaded);
             }
         },
-        
+
         ajax: function($elem, url, params, callback) {
             var type = "GET";
-                        
+
             if ( $elem.get(0).tagName == 'FORM') {
                 type = 'POST';
-                
+
                 $elem.ajaxSubmit({
                     url: url,
                     type: 'POST',
@@ -571,12 +571,12 @@ var mapal = {
                         var callCallback = true;
                         if (header) {
                             var parts = header.split(';');
-                            
+
                             if ( parts.length > 0 && $.isFunction(mapal.injection.griddeoActions[parts[0]]) ) {
                                 callCallback = mapal.injection.griddeoActions[parts[0]]( parts.slice(1) );
                             }
                         }
-                        
+
                         if (callCallback) callback(jqXHR, textStatus);
                     },
                     error: function(xhr, status, errorThrown) {
@@ -584,85 +584,85 @@ var mapal = {
                     }
                 });
             }
-            
+
         },
-        
+
         griddeoActions: {
             'force-redirect': function(params) {
                 window.location = params[0].trim();
                 return false;
             }
         },
-        
+
         modifiers: {
             "replace": {
                 "execute": function( $source, $target, appendTo ) {
                     if (appendTo) {
                         return $source.css("opacity", 0);
                     }
-                    
+
                     $target.replaceWith( $source.css("opacity", 0) );
-                    
+
                     return $("#" + $source.attr("id") );
                 },
-                
+
                 setTargetOpacity: true
             },
-            
+
             "content": {
                 "execute": function( $source, $target ) {
                     $target.html($source.html());
-                    
+
                     return $target;
                 },
-                
+
                 setTargetOpacity: true
             },
-            
+
             "after": {
                 "execute": function( $source, $target  ) {
                     $children = $($source[0].children).css('opacity', 0);
-    
+
                     $target.append($children);
-                    
+
                     return $children;
                 },
-                
+
                 setTargetOpacity: false
             },
-            
-            "before": { 
+
+            "before": {
                 "execute": function( $source, $target ) {
                     $children = $($source[0].children).css('opacity', 0);
-    
+
                     $target.append($children);
-                                    
+
                     return $children;
                 },
-                
+
                 setTargetOpacity: false
             },
-            
-            "prepend": { 
+
+            "prepend": {
                 "execute": function( $source, $target ) {
                     $target.before($source);
-                    
+
                     return $source;
                 },
-                
+
                 setTargetOpacity: false
             },
-            "append": { 
+            "append": {
                 "execute": function( $source, $target ) {
                     $target.after($source);
-                    
+
                     return $source;
                 },
-                
+
                 setTargetOpacity: false
             }
         },
-        
+
         completeArray: function( larger, smaller ) {
             var len = larger.length;
             for (var i = smaller.length; i < len; i ++ ) {
@@ -683,29 +683,29 @@ var mapal = {
                 submit: [
                       "form[data-injection^='.']",
                       "form[data-injection^=#]"
-                      ]  
+                      ]
             }
         },
-        
+
         'listeners': {
             'onBeforeStart': [],
             'onFinished': [],
             'onExecuted': []
         },
-        
+
         // Enable DOM-injection from anchors
         init: function () {
             // initalize the listeners for each of the patterns
             for (var key in mapal.patterns) {
                 if (mapal.patterns[key].execute) {
-                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners ); 
+                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners );
                 }
             }
-            
+
             // Call the initialization function for each of the patterns
             for (var key in mapal.patterns) {
                 (mapal.patterns[key].init||$.noop)();
-                
+
                 if (mapal.patterns[key].dataAttr) {
                     //mapal.patterns.options.search.click.push('[data-' + key + ']');
                 }
@@ -714,12 +714,12 @@ var mapal = {
             function handlePattern(e) {
                 // First we get the source IDs, whether optional or not
                 var targets, $a = $(this),
-                    sources = ($a.attr("href")||$a.attr("action")).split("#"), 
+                    sources = ($a.attr("href")||$a.attr("action")).split("#"),
                     attrVal = ($a.attr("rel") || $a.attr("data-injection"));
-                
+
                 // make sure we don't interfere with openPanels below
                 if ( $a.hasClass('openPanel') || $a.hasClass('closePanel') ) return;
-                
+
                 // HREF="http://url.to/follow#source1#source2";
                 var url = sources[0];
                 sources = sources.slice(1);
@@ -736,12 +736,12 @@ var mapal = {
                     // let injection handle the rest
                     mapal.injection.load($a, url, targets, sources, function($target) {
                         $target.animate({opacity: 1}, "fast");
-                    });                
+                    });
                 } else {
                     // this means some other pattern, so let the pattern handle what the attribute means
                     var re = /^[\.][a-zA-Z]+/;
                     var patt = re.exec(attrVal);
-                    
+
                     if ( patt.length == 0 ) {
                         // the pattern was malformed. Inform the designer
                         alert("Pattern[ERROR]: malformed pattern: " + attrVal);
@@ -767,14 +767,14 @@ var mapal = {
                 e.preventDefault();
                 return false;
             };
-            
+
             $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
             $(mapal.patterns.options.search.submit.join(", ")).live("submit.mapal", handlePattern );
         },
-        
+
         extractParameters: function(params, sources) {
             var tmp,
-	        j,
+                j,
                 paramObjs = {};
             if (params.length > 0) {
                 var p = params.slice(1).split('!');
@@ -782,7 +782,7 @@ var mapal = {
                     // support injection parameters in other patterns
                     if (p[i][0] == '#') {
                         var param, effect;
-                        
+
                         if (p[i].indexOf('.') > 0) {
                             tmp = p[i].split('.');
                             param = tmp[0];
@@ -803,8 +803,8 @@ var mapal = {
                             });
                         }
                     } else if (p[i].indexOf('=') > 0) {
-			j = p[i].indexOf('=');
-			paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
+                        j = p[i].indexOf('=');
+                        paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
                     } else {
                         paramObjs[p[i]] = true;
                     }
@@ -812,7 +812,7 @@ var mapal = {
             }
             return paramObjs;
         },
-        
+
         callListener: function( elem, pattern, event ) {
             var weContinue = true;
             $(mapal.patterns[pattern].listeners[event]).each(function(){
@@ -821,10 +821,10 @@ var mapal = {
                     return;
                 };
             });
-            
+
             return weContinue;
         },
-        
+
         registerListener: function(patterns, event, listener) {
             if (typeof patterns == 'string') {
                 if (mapal.patterns[patterns].listeners[event]) {
@@ -851,7 +851,7 @@ var mapal = {
         $(root).find(".tooltipTrigger").each( function() {
             $(this).tooltip({relative: true}).dynamic();
         });
-        
+
         $("dfn.infoPanel:not(span)").each(function() {
             var $panel = $(this),
                 title = $panel.attr("title");
@@ -910,7 +910,7 @@ var mapal = {
 
 
     // No browser supports all DOM methods to get from an object to its
-    // parent window and document and back again, so we convert all 
+    // parent window and document and back again, so we convert all
     // html objects to iframes.
     initIframes: function(root) {
         $("object[type=text/html]", root).each(function() {
@@ -949,72 +949,72 @@ var mapal = {
         });
 
     },
-    
+
     initSorts: function( root ) {
         $sorting = $(root).find('ul.sorting');
-        
+
         if ($sorting.length > 0) {
             $sorting.sortable({
                 'axis': 'y',
                 'items': 'li',
                 'update': function(event, ui){
-                    var $this = $(this); 
+                    var $this = $(this);
                     var order = $this.sortable("serialize");
-                    
+
                     $.post($this.attr("data-injection"), order);
                 }
             });
         }
     },
-    
+
     initButtonSets: function(root) {
         if ( $(root).buttonset ) {
             $(root).find('.buttonSet').removeClass('buttonSet').buttonset();
         }
     },
-    
+
     initAutoLoads: function( root ) {
-        $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {           
+        $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {
             var $data = $(this).data("autoLoading");
-            
+
             if (!$data) {
                 $(this).data("autoLoading", true);
                 $(this).bind("scroll", function() {
                     var $window = $(this);
                     var elems = $window.find( '.autoLoading-visible' );
                     var ret = false;
-                    
+
                     $(elems).each(function() {
                         var $this = $(this);
                         var offset = $this.position();
                         var doTrigger = $window.height() >= offset.top;
-                        
+
                         if (doTrigger && !$this.data("autoLoading")) {
                             $this.data("autoLoading", true);
                             $this.trigger('click');
                             ret = true;
                         }
                     });
-                    
+
                     return ret;
                 });
             }
         });
     },
-    
+
     passivePatterns: {
         'selectSiblingRadio': {
             init: function() {},
             initContent: function(root) {
                 $(root).find('.selectSiblingRadio').focus(function() {
                     var $this = $(this);
-                    
+
                     $this.parent().find('input[type=radio]').attr('checked', true);
                 });
             }
         }
     },
-    
+
     // Setup a DOM tree.
     initContent: function(root) {
         mapal.initTransforms(root);
@@ -1028,16 +1028,16 @@ var mapal = {
         mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
         //
-        
+
         for (passivePatternName in mapal.passivePatterns) {
             var passivePattern = mapal.passivePatterns[passivePatternName];
             if ( passivePattern.initContent && $.isFunction(passivePattern['initContent']) ) {
                 passivePattern.initContent(root);
             }
         }
-        
-        
-        
+
+
+
         // Replace objects with iframes for IE 8 and older.
         if ($.browser.msie ) {
             var version = Number( $.browser.version.split(".", 2).join(""));
@@ -1056,54 +1056,54 @@ var mapal = {
         mapal.patterns.init();
         //mapal.initIEButtons();
     },
-    
+
     ui: {},
-    
+
     'store': {
         'getPatternAttributes': function(pattern) {
             if (!mapal.store.hasStorage()) return [];
-            
+
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
             var attrs = [];
-            
+
             for (var i = 1; i <= count; i++ ) {
                 attrs.push(window.sessionStorage.getItem( pattern + '-' + i ));
             }
-            
+
             return attrs;
         },
-        
+
         'addPatternAttribute': function(pattern, value) {
             if (!mapal.store.hasStorage()) return;
-            
+
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0") + 1;
-            
+
             window.sessionStorage.setItem( pattern + '-count', count );
             window.sessionStorage.setItem( pattern + '-' + count, value );
         },
-        
+
         'setPatternAttribute': function(pattern, index, value) {
             if (!mapal.store.hasStorage()) return;
-            
+
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
-            
+
             if (index > 0 && index <= count) {
                 window.sessionStorage.setItem( pattern + '-' + index, value);
-                
+
                 return true;
             }
-            
+
             return false;
         },
-        
+
         'initPatternStore': function(pattern) {
             if (!mapal.store.hasStorage()) return;
-            
+
             if (window.sessionStorage.getItem( pattern+'-count' ) === null) {
                 window.sessionStorage.setItem( pattern+'-count', '0' );
             }
         },
-        
+
         'hasStorage': function() {
             return typeof window.sessionStorage !== 'undefined';
         }
