@@ -2244,6 +2244,7 @@ $.extend( mapal.patterns, {
             tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
             tooltip.setupShowEvents($trigger);
+            event.preventDefault();
         },
 
         createContainer: function($trigger) {
