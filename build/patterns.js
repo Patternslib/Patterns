@@ -987,7 +987,7 @@ var mapal = {
                     $(elems).each(function() {
                         var $this = $(this);
                         var offset = $this.position();
-                        var doTrigger = $window.height() >= offset.top;
+                        var doTrigger = $window.innerHeight() >= offset.top;
 
                         if (doTrigger && !$this.data("autoLoading")) {
                             $this.data("autoLoading", true);
