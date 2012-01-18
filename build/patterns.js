@@ -973,6 +973,28 @@ var mapal = {
         }
     },
 
+    initCollapsible: function(root) {
+        $(root).find('.collapsible').each(function() {
+            var $this = $(this),
+                $data = $this.data('collapsible');
+
+            if (!$data) {
+                $this.data('collapsible', true);
+                $this.addClass("open");
+                $this.children(':gt(0)').wrapAll('<div class="panel-content" />');
+                $this.children(':first').bind("click", function() {
+                    if ($this.hasClass('open')) {
+                        $this.removeClass('open');
+                        $this.addClass('closed');
+                    } else {
+                        $this.removeClass('closed');
+                        $this.addClass('open');
+                    }
+                });
+            }
+        });
+    },
+
     initAutoLoads: function( root ) {
         $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {
             var $data = $(this).data("autoLoading");
@@ -1027,6 +1049,7 @@ var mapal = {
         mapal.initSorts(root);
         mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
+        mapal.initCollapsible(root);
         //
 
         for (passivePatternName in mapal.passivePatterns) {
