@@ -58,6 +58,8 @@
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
                 $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             }
         },
 
@@ -71,16 +73,23 @@
             if (parameters.sticky) {
                 $trigger.data("mapal.tooltip.container").find(".closePanel")
                     .on("click.tooltip", $trigger, tooltip.hide);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else if (parameters.click) {
                 $trigger.on("click.tooltip", $trigger, tooltip.hide);
             } else {
                 $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             }
         },
 
         removeHideEvents: function($trigger) {
             $trigger.find(".closePanel").off(".tooltip");
             $trigger.off(".tooltip");
+        },
+
+        blockDefault: function(event) {
+            event.preventDefault();
         },
 
         show: function(event) {
