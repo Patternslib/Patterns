@@ -98,17 +98,22 @@
                 $container = $trigger.data("mapal.tooltip.container"),
                 options = $trigger.data("mapal.tooltip");
 
+            $trigger.data("tooltip.visible", true);
             tooltip.removeShowEvents($trigger);
+            tooltip.setupHideEvents($trigger);
 
             function _show() {
-                tooltip.positionContainer($trigger, $container);
-                $container.css("visibility", "visible");
-                tooltip.setupHideEvents($trigger);
+                if ($trigger.data("tooltip.visible")) {
+                    // A hide-trigger happened before the tooltip loaded.
+                    tooltip.positionContainer($trigger, $container);
+                    $container.css("visibility", "visible");
+                    $container.find("p").css('opacity', 1);
+                }
             }
 
             if (options.ajax) {
                 var source = $trigger.attr("href").split("#"),
-                    target_id = $container.find("div").attr("id") + ":content";
+                    target_id = $container.find("div").attr("id") + ":after";
 
                 mapal.injection.load($trigger, source[0], target_id, source[1] || [], _show, true);
                 delete options.ajax;
@@ -127,6 +132,7 @@
             tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
             tooltip.setupShowEvents($trigger);
+            $trigger.data("tooltip.visible", false);
             event.preventDefault();
         },
 
@@ -147,6 +153,9 @@
                 $("<button/>", {"class": "closePanel"})
                     .text("Close")
                     .insertBefore($container.find("p"));
+            }
+            if (options.ajax) {
+                $container.find("p").remove();
             }
             $("body").append($container);
             $trigger.data("mapal.tooltip.container", $container);
