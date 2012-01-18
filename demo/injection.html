@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+<style>
+
+.blue { 
+	background-color: blue;
+	color: white;
+}
+
+.red {
+	background-color: red;
+	color: white;
+}
+
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Demo page</title>
+    <link rel="stylesheet" href="css/base.css" type="text/css">
+
+    <script src="../lib/jquery-1.7.1.js" type="text/javascript" charset="utf-8"></script>   
+    <script src="../build/patterns.js" type="text/javascript" charset="utf-8"></script> 
+</head>
+<body>
+
+	<ul>
+		<li>
+			<a href="pattern-test-response.html#login-success" rel=".modal!class='loginModal'">Modal test with injection source and extra class</a>
+		</li>		
+		<li>
+			<a href="pattern-test-response.html#hola" rel=".modal!class='panel1'">Modal Window, class panel1</a>
+		</li>
+		<li>
+			<a href="pattern-test-response.html#hola" rel=".modal!class='panel2'">Modal Window, class panel2</a>
+		</li>	
+	</ul>
+
+	<hr/>
+	<div id="autoLoading-test" style="overflow-y:auto; overflow-x: hidden; height: 200px; width:200px;">
+		AutoLoading example. Scroll down and the list should grow automatically.
+
+		<ul id="listToUpdate" style="display:block; margin:0;">
+			<li>0</li>
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+			<li>6</li>
+			<li>7</li>
+			<li>8</li>
+			<li>9</li>
+		</ul>
+		<p id="buttonBarMore" style="width:150px;">
+			<a href="pattern-test-response.html#listToUpdate#buttonBarMore" rel="#listToUpdate:after #buttonBarMore" class="autoLoading-visible">More&hellip;</a>
+		</p>
+	</div>
+
+	<div id="panel1">
+		<ul>
+			<li><a href="pattern-test-response.html#cata-panel2" data-injection="#panel2:content">Cat A</a></li>
+			<li><a href="pattern-test-response.html#catb-panel2" data-injection="#panel2:content">Cat B</a></li>
+			<li>etc...</li>
+		</ul>
+	</div>
+	
+	<div id="panel2">
+	</div>
+	
+	<div id="panel3"></div>
+	<div id="panel4"></div>
+
+</body>
+</html>
