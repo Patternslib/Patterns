@@ -980,12 +980,13 @@ var mapal = {
 
             if (!$data) {
                 var $ctrl = $this.children(':first'),
-                    $content = $this.children(':gt(0)');
+                    $panel = $this.children(':gt(0)')
+                        .wrapAll('<div class="panel-content" />')
+                        .parent();
 
                 $this.data('collapsible', true);
                 $this.addClass("open");
 
-                $content.wrapAll('<div class="panel-content" />');
                 $ctrl.bind("click", function() {
                     if ($this.hasClass('open')) {
                         $this.removeClass('open');
@@ -994,7 +995,7 @@ var mapal = {
                         $this.removeClass('closed');
                         $this.addClass('open');
                     }
-                    $content.slideToggle();
+                    $panel.slideToggle();
                 });
             }
         });
