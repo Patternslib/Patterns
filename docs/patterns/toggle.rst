@@ -6,7 +6,7 @@ used to toggle a CSS class.
 
 .. code-block:: html
 
-   <a href="#" data-toggle="id=work|attr=class|values=active">Start working</a>
+   <a href="#" data-toggle="selector#=work!attr=class!value=active">Start working</a>
    </a>
    <div id="work">
      Working..
@@ -15,15 +15,21 @@ used to toggle a CSS class.
 If a user clicks on the *Start working* link the ``active`` class is added to the div. If the
 link is clicked again the ``active`` class is removed again.
 
-When updating attributes the value is replaced directly. When updating the ``class`` attribute
-special care is taken to only toggle the selected classes.
-
-For CSS classes it is also possible to specify a class to be removed by adding it to the value
-parameter, prefixed by a colon.
+When updating attributes the value is set if the attribute does not exist or has
+a different value, or removed if the attribute already has the provided value. This
+can be used to check the selected state of a checkbox:
 
 .. code-block:: html
 
-   <a href="#" data-toggle="id=work|attr=class|values=active:inactive">Start working</a>
+  <input type="checkbox" id="toCheck" />
+  <button data-toggle="selector=#toCheck!attr=checked!value=checked">toggle checkbox</button>
+
+If you are manipulating the ``class`` attribute you can specify multiple classes separated
+by spaces to toggle multiple classes.
+
+.. code-block:: html
+
+   <a href="#" data-toggle="selector=#work!attr=class!value=active inactive">Start working</a>
    </a>
    <div id="work" class="inactive">
      Working..
