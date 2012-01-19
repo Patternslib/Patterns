@@ -135,12 +135,29 @@ will be transformed into:
    </label>
    …
    <div class="tooltip-container rt"
-        style="z-index: 1100; top: 208px; left: 750px; visibility: visible">
+        style="top: 208px; left: 750px; visibility: visible">
      <div style="display: block">
        <button class="closePanel">Close</button>
        <p>
          Please enter the full URL for the website.
        </p>
      </div>
+     <span class="pointer" style="top: 111px; left: -22px"></span>
+   </div>
+
+for tooltips which fetch their content with an AJAX call the tooltip may be
+temporarily shown with a progress indicator:
+
+.. code-block:: html
+
+   <label>Website address
+     <a href="/tips/#info" data-tooltip="sticky">More information</a>
+   </label>
+   …
+   <div class="tooltip-container rt"
+        style="top: 208px; left: 750px; visibility: visible">
+     <div style="display: block">
+       <button class="closePanel">Close</button>
+       <progress/>
      <span class="pointer" style="top: 111px; left: -22px"></span>
    </div>
