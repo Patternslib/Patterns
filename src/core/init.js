@@ -1004,7 +1004,11 @@ var mapal = {
                         .parent();
 
                 $this.data('collapsible', true);
-                $this.addClass("open");
+                if ($this.hasClass("closed")) {
+                    $panel.toggle();
+                } else if (!$this.hasClass("open")) {
+                    $this.addClass("open");
+                }
 
                 $ctrl.bind("click", function() {
                     if ($this.hasClass('open')) {
