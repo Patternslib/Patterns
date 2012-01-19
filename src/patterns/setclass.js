@@ -20,17 +20,17 @@ $.extend( mapal.patterns, {
                         'value': values[2],
                         'other': values[3]
                     };
-                
-                mapal.patterns.setclass.store[obj.id + "." + obj.attr] = obj; 
+
+                mapal.patterns.setclass.store[obj.id + "." + obj.attr] = obj;
             });
 
             $('[data-setclass]').live('click', mapal.patterns.setclass.handleClick).each(function() {
                 var $this = $(this);
                 var obj = mapal.patterns.setclass.getObjFromParams(
                               $this,
-                              mapal.patterns.extractParameters('!' + $this.attr('data-setclass'))
+                                mapal.patterns.extractParameters('!' + $this.attr('data-setclass'))
                           );
-                
+
                 if (obj === null) return;
 
                 if ( !obj.store ) {
@@ -41,16 +41,16 @@ $.extend( mapal.patterns, {
                      if (mapal.patterns.setclass.store[obj.id + "." + obj.attr] ) return;
                 }
                 if ( obj.attr === 'class' ) {
-                //  $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
+                //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
                 } else {
                     $( "#" + obj.id ).attr( obj.attr, obj.value );
                 }
-                
+
                 if (obj.store) {
                     mapal.patterns.setclass.storeValue(obj.id, obj.attr, obj.value, obj.other);
                 }
             });
-            
+
             for (key in mapal.patterns.setclass.store ) {
                 var obj = mapal.patterns.setclass.store[key];
                 if ( obj.attr === 'class' ) {
@@ -82,7 +82,6 @@ $.extend( mapal.patterns, {
 
             obj.value = values[0];
             obj.other = values[1];
-            
             return obj;
         },
         
