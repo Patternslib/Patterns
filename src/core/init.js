@@ -1105,7 +1105,7 @@ var mapal = {
         //mapal.initIEButtons();
     },
 
-    ui: {},
+    ui: {}
 };
 
 $.extend( mapal.ui, {
