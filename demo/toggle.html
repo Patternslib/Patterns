@@ -23,10 +23,14 @@
     </style>
 </head>
 <body>
-	<span id="toToggle">This is getting toggled</span>
-	<button data-toggle="id=toToggle!attr=class!values=red:blue!store=true">toggle</button> 
-    <script src="../lib/jquery-1.7.1.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../build/patterns.js" type="text/javascript" charset="utf-8"></script> 
-    
+  <span class="red" id="toToggle">This is getting toggled</span>
+  <button data-toggle="selector=#toToggle!attr=class!value=red blue">change colour</button> 
+  <hr/>
+  <input type="checkbox" id="toCheck" />
+  <button data-toggle="selector=#toCheck!attr=checked!value=checked">toggle checkbox</button>
+
+  <script src="../lib/jquery-1.7.1.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../src/core/init.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="../src/patterns/toggle.js" type="text/javascript" charset="utf-8"></script> 
 </body>
 </html>
