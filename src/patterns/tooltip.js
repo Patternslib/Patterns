@@ -29,7 +29,6 @@
                 $trigger.data("mapal.tooltip",
                     mapal.patterns.parseOptions($trigger.data("tooltip"));
                 tooltip.parseOptions($trigger);
-                tooltip.createContainer($trigger);
                 tooltip.setupShowEvents($trigger);
             });
         },
@@ -41,6 +40,8 @@
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
                 $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             }
         },
 
@@ -50,46 +51,61 @@
 
         setupHideEvents: function($trigger) {
             var tooltip = mapal.passivePatterns.tooltip,
+                $container = tooltip.getContainer($trigger),
                 parameters = $trigger.data("mapal.tooltip");
             if (parameters.sticky) {
-                $trigger.data("mapal.tooltip.container").find(".closePanel")
+                $container.find(".closePanel")
                     .on("click.tooltip", $trigger, tooltip.hide);
-            } else if (parameters.click) {
-                $trigger.on("click.tooltip", $trigger, tooltip.hide);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else {
-                $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
+                $container.on("click.tooltip", $trigger, tooltip.hide);
+                if (parameters.click) {
+                    $trigger.on("click.tooltip", $trigger, tooltip.hide);
+                } else {
+                    $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
+                    $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+                }
             }
         },
 
         removeHideEvents: function($trigger) {
-            $trigger.find(".closePanel").off(".tooltip");
+            var tooltip = mapal.passivePatterns.tooltip,
+                $container = tooltip.getContainer($trigger);
+            $container.off(".tooltip");
+            $container.find(".closePanel").off(".tooltip");
             $trigger.off(".tooltip");
+        },
+
+        blockDefault: function(event) {
+            event.preventDefault();
         },
 
         show: function(event) {
             var tooltip = mapal.passivePatterns.tooltip,
                 $trigger = event.data,
-                $container = $trigger.data("mapal.tooltip.container"),
+                $container = tooltip.getContainer($trigger),
                 options = $trigger.data("mapal.tooltip");
 
             tooltip.removeShowEvents($trigger);
+            tooltip.setupHideEvents($trigger);
 
-            function _show() {
+            function ajax_show() {
+                $container.find(">div >*").css("opacity", 1);
                 tooltip.positionContainer($trigger, $container);
-                $container.css("visibility", "visible");
-                tooltip.setupHideEvents($trigger);
             }
 
             if (options.ajax) {
                 var source = $trigger.attr("href").split("#"),
-                    target_id = $container.find("div").attr("id") + ":content";
-
-                mapal.injection.load($trigger, source[0], target_id, source[1] || [], _show, true);
+                    target_id = $container.find("progress").attr("id");
+                mapal.injection.load($trigger, source[0], target_id+":replace", source[1] || [],
+                        ajax_show, true);
                 delete options.ajax;
                 $trigger.data("mapal.tooltip", options);
-            } else {
-                _show();
             }
+
+            tooltip.positionContainer($trigger, $container);
+            $container.css("visibility", "visible");
 
             event.preventDefault();
         },
@@ -97,32 +113,45 @@
         hide: function(event) {
             var tooltip = mapal.passivePatterns.tooltip,
                 $trigger = event.data,
-                $container = $trigger.data("mapal.tooltip.container");
+                $container = tooltip.getContainer($trigger);
             tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
             tooltip.setupShowEvents($trigger);
+            event.preventDefault();
+        },
+
+        getContainer: function($trigger) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                $container = $trigger.data("mapal.tooltip.container");
+            if ($container===undefined) {
+                $container=tooltip.createContainer($trigger);
+                $trigger.data("mapal.tooltip.container", $container);
+            }
+            return $container;
         },
 
         createContainer: function($trigger) {
             var tooltip = mapal.passivePatterns.tooltip,
-                content = $trigger.attr("title"),
-                options = $trigger.data("mapal.tooltip");
-            $trigger.removeAttr("title");
+                options = $trigger.data("mapal.tooltip"),
+                $content;
 
             $container = $("<div/>", {"class": "tooltip-container"});
             $container.css("visibility", "hidden");
+            if (options.ajax) {
+                $content = $("<progress/>", {"id": "tooltip-" + ++tooltip.count});
+            } else {
+                $content = $("<p/>").text(options.title);
+            }
             $container.append(
-                $("<div/>", {"id": "tooltip-" + ++tooltip.count})
-                    .css("display", "block")
-                    .append($("<p/>").text(content || "")))
+                $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
             if (options.sticky) {
                 $("<button/>", {"class": "closePanel"})
                     .text("Close")
-                    .insertBefore($container.find("p"));
+                    .insertBefore($container.find("*"));
             }
             $("body").append($container);
-            $trigger.data("mapal.tooltip.container", $container);
+            return $container;
         },
 
         boundingBox: function($el) {
@@ -134,7 +163,7 @@
             return box;
         },
 
-        positionContainer: function($trigger, $container) {
+        positionStatus: function($trigger, $container) {
             var tooltip = mapal.passivePatterns.tooltip,
                 trigger_box = tooltip.boundingBox($trigger),
                 tooltip_box = tooltip.boundingBox($container),
@@ -142,67 +171,229 @@
                 window_width = $window.width(),
                 window_height = $window.height(),
                 trigger_center,
-                space_top, space_right, space_bottom, space_left,
+                space = {}
                 container_offset = {},
                 tip_offset = {}
                 cls = "";
 
             trigger_center = {top: trigger_box.top + (trigger_box.height/2),
                               left: trigger_box.left + (trigger_box.width/2)};
-            space_top = trigger_box.top - $window.scrollTop();
-            space_bottom = window_height - space_top - trigger_box.height;
-            space_left = trigger_box.left - $window.scrollLeft();
-            space_right = window_width - space_left - trigger_box.width;
+            space.top = trigger_box.top - $window.scrollTop();
+            space.bottom = window_height - space.top - trigger_box.height;
+            space.left = trigger_box.left - $window.scrollLeft();
+            space.right = window_width - space.left - trigger_box.width;
 
-            if (space_top > Math.max(space_right, space_bottom, space_left)) {
-                container_offset.top = trigger_box.top - tooltip_box.height + 10;
-                tip_offset.top = tooltip_box.height - 23;
+            return {"space": space,
+                    "trigger_center": trigger_center,
+                    "trigger_box": trigger_box,
+                    "tooltip_box": tooltip_box}
+        },
+
+        // Help function to determine the best position for a tooltip.  Takes
+        // the positioning status (as generated by positionStatus) as input
+        // and returns a two-character position indiciator.
+        findBestPosition: function(status) {
+            var space = status.space,
+                 cls="";
+
+            if (space.top > Math.max(space.right, space.bottom, space.left)) {
                 cls = "t";
-            } else if (space_right > Math.max(space_bottom, space_left, space_top)) {
-                container_offset.left = trigger_box.right + 20;
-                tip_offset.left = 0;
+            } else if (space.right > Math.max(space.bottom, space.left, space.top)) {
                 cls = "r";
-            } else if (space_bottom > Math.max(space_left, space_top, space_right)) {
-                container_offset.top = trigger_box.bottom + 20;
-                tip_offset.top = 0;
+            } else if (space.bottom > Math.max(space.left, space.top, space.right)) {
                 cls = "b";
             } else {
-                container_offset.left = trigger_box.left - tooltip_box.width - 20;
-                tip_offset.left = tooltip_box.width - 23;
                 cls = "l";
             }
 
-            if (container_offset.left===undefined) {
-                if (Math.abs(space_left-space_right) < 20) {
+            switch (cls[0]) {
+            case "t":
+            case "b":
+                if (Math.abs(space.left-space.right) < 20) {
                     cls += "m";
-                    container_offset.left = trigger_center.left - (tooltip_box.width/2);
-                    tip_offset.left = tooltip_box.width/2;
-                } else if (space_left > space_right) {
+                } else if (space.left > space.right) {
                     cls += "r";
-                    container_offset.left = trigger_center.left + 20 - tooltip_box.width;
-                    tip_offset.left = tooltip_box.width - 20;
                 } else {
                     cls += "l";
-                    container_offset.left = trigger_center.left - 20;
-                    tip_offset.left = 0;
                 }
-            } else {
-                if (Math.abs(space_top-space_bottom) < 20) {
+                break;
+            case "l":
+            case "r":
+                if (Math.abs(space.top-space.bottom) < 20) {
                     cls += "m";
-                    container_offset.top = trigger_center.top - (tooltip_box.height/2);
-                    tip_offset.top = tooltip_box.height/2;
-                } else if (space_top > space_bottom) {
+                } else if (space.top > space.bottom) {
                     cls += "b";
-                    container_offset.top = trigger_center.top + 20 - tooltip_box.height;
-                    tip_offset.top = tooltip_box.height - 20;
                 } else {
                     cls += "t";
-                    container_offset.top = trigger_center.top - 30;
-                    tip_offset.top = 0;
+                }
+            }
+            return cls;
+        },
+
+        isVisible: function(status, position) {
+            var space = status.space,
+                tooltip_box = status.tooltip_box;
+
+            switch (position[0]) {
+            case "t":
+                if (tooltip_box.height > space.top) {
+                    return false;
+                }
+                break;
+            case "r":
+                if (tooltip_box.width > space.right) {
+                    return false;
+                }
+                break;
+            case "b":
+                if (tooltip_box.height > space.bottom) {
+                    return false;
+                }
+                break;
+            case "l":
+                if (tooltip_box.width > space.right) {
+                    return false;
+                }
+                break;
+            default:
+                return false;
+            }
+
+            switch (position[0]) {
+            case "t":
+            case "b":
+                switch (position[1]) {
+                    case "l":
+                        if ((tooltip_box.width-20)>space.right) {
+                            return false;
+                        }
+                        break;
+                    case "m":
+                        if ((tooltip_box.width/2)>space.left || (tooltip_box.width/2)>space.right) {
+                            return false;
+                        }
+                        break;
+                    case "r":
+                        if ((tooltip_box.width-20)>space.left) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+                break;
+            case "l":
+            case "r":
+                switch (position[1]) {
+                    case "t":
+                        if ((tooltip_box.height-20)>space.bottom) {
+                            return false;
+                        }
+                        break;
+                    case "m":
+                        if ((tooltip_box.height/2)>space.top || (tooltip_box.height/2)>space.bottom) {
+                            return false;
+                        }
+                        break;
+                    case "b":
+                        if ((tooltip_box.height-20)>space.top) {
+                            return false;
+                        }
+                    default:
+                        return false;
+                }
+                break;
+            }
+            return true;
+        },
+
+        VALIDPOSITION: /^([lr][tmb]|[tb][lmr])$/,
+
+        positionContainer: function($trigger, $container) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                status = tooltip.positionStatus($trigger, $container),
+                options = $trigger.data("mapal.tooltip"),
+                container_offset = {},
+                tip_offset = {},
+                position;
+
+            if (tooltip.VALIDPOSITION.test(options.forcePosition)) {
+                position = options.forcePosition;
+            } else if (options.position) {
+                var positions = options.position.split("-"), i;
+                for (i=0; i<positions.length; i++) {
+                    if (tooltip.VALIDPOSITION.test(positions[i]) && tooltip.isVisible(status, positions[i])) {
+                        position = positions[i];
+                        break;
+                    }
                 }
             }
 
-            $container.attr("class", "tooltip-container " + cls);
+            if (!position) {
+                position = tooltip.findBestPosition(status);
+            }
+
+            var trigger_box = status.trigger_box,
+                tooltip_box = status.tooltip_box,
+                trigger_center = status.trigger_center;
+
+            switch (position[0]) {
+            case "t":
+                container_offset.top = trigger_box.top - tooltip_box.height + 10;
+                tip_offset.top = tooltip_box.height - 23;
+                break;
+            case "r":
+                container_offset.left = trigger_box.right + 20;
+                tip_offset.left = 0;
+                break;
+            case "b":
+                container_offset.top = trigger_box.bottom + 20;
+                tip_offset.top = 0;
+                break;
+            case "l":
+                container_offset.left = trigger_box.left - tooltip_box.width - 20;
+                tip_offset.left = tooltip_box.width - 23;
+                break;
+            }
+
+            switch (position[0]) {
+            case "t":
+            case "b":
+                switch (position[1]) {
+                case "l":
+                    container_offset.left = trigger_center.left - 20;
+                    tip_offset.left = 0;
+                    break;
+                case "m":
+                    container_offset.left = trigger_center.left - (tooltip_box.width/2);
+                    tip_offset.left = tooltip_box.width/2;
+                    break;
+                case "r":
+                    container_offset.left = trigger_center.left + 20 - tooltip_box.width;
+                    tip_offset.left = tooltip_box.width - 20;
+                    break;
+                }
+                break;
+            case "l":
+            case "r":
+                switch (position[1]) {
+                    case "t":
+                        container_offset.top = trigger_center.top - 30;
+                        tip_offset.top = 0;
+                        break;
+                    case "m":
+                        container_offset.top = trigger_center.top - (tooltip_box.height/2);
+                        tip_offset.top = tooltip_box.height/2;
+                        break;
+                    case "b":
+                        container_offset.top = trigger_center.top + 20 - tooltip_box.height;
+                        tip_offset.top = tooltip_box.height - 20;
+                        break;
+                }
+                break;
+            }
+
+            $container.attr("class", "tooltip-container " + position);
             $container.css({
                 top: container_offset.top+"px",
                 left: container_offset.left+"px"});

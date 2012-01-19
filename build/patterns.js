@@ -58,14 +58,14 @@ var mapal = {
     // A simple autocomplete pattern
     initAutocomplete: function(root) {
           $("input.autocomplete", root).each(function() {
-              var $input = $(this), 
+              var $input = $(this),
                   name = $input.attr("name"),
                   $storage;
               $input.attr("name", "_"+name);
               $storage=$("<input type='hidden'/>").attr("name", name).insertBefore($input);
               $input.autocomplete({source: $input.attr("src"),
                                    minLength: 2,
-                                   select: function(event, ui) { 
+                                   select: function(event, ui) {
                                         $storage.val(ui.item.value);
                                         $input.val(ui.item.label);
                                         return false;
@@ -80,7 +80,7 @@ var mapal = {
     verifyDependencies: function($slave, command) {
         var result=[],
             $form = $slave.closest("form"),
-            $input, i, value, parts; 
+            $input, i, value, parts;
 
         if (!$form.length) {
             $form=$(document);
@@ -114,7 +114,7 @@ var mapal = {
                     result.push(false);
                     continue;
                 }
-            } 
+            }
             result.push(true);
         }
 
@@ -232,7 +232,7 @@ var mapal = {
     },
 
 
-    // check if an input element has a value. 
+    // check if an input element has a value.
     hasContent: function($el) {
         if ($el.is(":input")) {
             return $el.val();
@@ -347,11 +347,12 @@ var mapal = {
         options: {
             defaultModifier: "replace",
             modifiers: {
-                
+
             },
-            
+
             bodyInjectionId: "__original_body"
         },
+
         load: function($elem, url, targets, sources, callback, instant) {
             instant = instant || false;
 
@@ -368,11 +369,11 @@ var mapal = {
                     sources.push(mapal.injection.options.bodyInjectionId);
                 }
             }
-            
+
             var target_ids = [];
             var modifiers = [], modifier;
             var modifier_re = /:[a-zA-Z]+/;
-            
+
             for (var i = 0; i < targets.length; i++) {
                 if (typeof targets[i] == "string") {
                     // does the specifier contain a parent?
@@ -382,51 +383,51 @@ var mapal = {
                     } else {
                         target_ids.push( targets[i].replace(modifier_re, "") );
                     }
-                
+
                     modifier =  (modifier_re.exec(targets[i]) || [":" + mapal.injection.options.defaultModifier]);
                 } else {
                     target_ids.push( $(targets[i]).attr("id") );
                     modifier = ":" + mapal.injection.options.defaultModifier;
                 }
-                
+
                 if (modifier.length > 0) {
                     modifier = modifier[0];
-                    
+
                     if (modifier.length > 0) modifier = modifier.slice(1);
                 }
-                
+
                 if (sources[i] == mapal.injection.options.bodyInjectionId) {
-                    modifier.push("content");
+                    modifiers.push("content");
                 } else {
                     modifiers.push(modifier);
                 }
             }
-            
+
             function htmlLoaded(response, textStatus, responseText) {
                 if ( typeof response == "string" ) {
                     responseText = response;
                     textStatus = 200;
                 } else {
                     responseText = response.responseText;
-                
+
                     if (response.status < 200 || response.status >= 400) {
                         return;
                     }
                 }
-                
+
                 if ($elem.get(0).tagName == 'FORM') {
                     var $panel = $elem.parents('#panel');
-                    
+
                     if ($panel.length > 0) {
                         $panel.overlay().close();
                         $panel.remove();
                     }
                 }
-                
+
                 // get the actual response in case a dataFilter is present in ajaxSettings
                 //if ( response.done )
                 //  response.done(function(r) { responseText = r; });
-                
+
                 // create a dummy div to hold the results
                 // and get rid of all the scripts
                 //
@@ -438,31 +439,31 @@ var mapal = {
                                 .replace(/<body(.*)>/gi,'<div id="__original_body">')
                                 .replace(/<\/body(.*)>/gi,'</div>')
                 );
-                
+
 //                var sourceIds = [];
                 var len = targets.length;
-                
-                for (var idx = 0; idx < len; idx++) {                   
+
+                for (var idx = 0; idx < len; idx++) {
                     var modifier = modifiers[idx];
-                    
+
                     var $target = $( "#" + target_ids[idx] );
                     var appendTo = false;
-                    
+
                     if ( $target.length === 0 ) {
                         appendTo = document.body;
                         if (target_ids[idx].indexOf(">") > 0) {
                             var both = target_ids[idx].split(">");
-                            
+
                             appendTo = $("#" + both[0]);
                             if ( appendTo.length ===  0) {
                                 appendTo = $("<div/>").appendTo(document.body);
                                 appendTo.attr("id", both[0]);
                             }
                         }
-                        
+
                         $target = $("<div/>").css("opacity", 0);
                     }
-                    
+
                     // empty source IDs will have been replaced with !body. Use the <body> tag as a source
                     if (sources[idx] == mapal.injection.options.bodyInjectionId) {
                         var $source = $factory.find('#'+mapal.injection.options.bodyInjectionId);
@@ -470,38 +471,45 @@ var mapal = {
                     } else {
                         var $source = $factory.find( '#' + sources[idx] );
                     }
-                    
+
                     if ( mapal.injection.modifiers[modifier] && $.isFunction(mapal.injection.modifiers[modifier].execute) ) {
                         $target = mapal.injection.modifiers[modifier].execute( $source, $target, appendTo );
-                        
+
                         if (appendTo) $target.appendTo(appendTo);
-                        
+
                         mapal.initContent($target);
-                        
+
                         if (typeof callback == 'function') {
                             callback($target);
                         } else {
                             (callback['onFinished']||$.noop)($target);
                         }
-                        
+
                         //$target.animate({"opacity": 1}, "fast");
                     } else {
                         alert('Injection[WARN]: Could not find modifier "' + modifier + '"' );
                     }
                 }
-                
+
                 // check if this was a navigation call
-                var $uls = $elem.parents("ul.navigation");
-                if ($uls.length > 0) {
-                    $uls.find('li').removeClass('current');
-                    var $li = $elem.parents("li");
-                    if ($li.length > 0) {
-                        $($li[0]).addClass('current');
+                var $navs = $elem.parents("nav,.navigation"), $items, $item;
+                if ($navs.length > 0) {
+                    $items = $navs.find('li');
+                    if ($items.length === 0) {
+                        $items = $navs.find('a');
+                    }
+                    $items.removeClass('current');
+
+                    var $item = $elem.parents("li");
+                    if ($item.length > 0) {
+                        $($item[0]).addClass('current');
+                    } else if ($item.length === 0) {
+                        $elem.addClass('current');
                     }
                 }
             }
-            
-            // 
+
+            //
             // Set the opacity of allowed targets
             //
             var count = 0;
@@ -511,9 +519,9 @@ var mapal = {
                     opacityTargets.push(target_ids[idx]);
                 }
             }
-            
-            var $targets = $("#" + opacityTargets.join(",#")); 
-            
+
+            var $targets = $("#" + opacityTargets.join(",#"));
+
             if ($targets.length > 0 && !instant) {
                 $targets.animate({"opacity": 0}, "slow", function() {
                                 count += 1;
@@ -526,13 +534,13 @@ var mapal = {
                 mapal.injection.ajax($elem, url, htmlLoaded);
             }
         },
-        
+
         ajax: function($elem, url, params, callback) {
             var type = "GET";
-                        
+
             if ( $elem.get(0).tagName == 'FORM') {
                 type = 'POST';
-                
+
                 $elem.ajaxSubmit({
                     url: url,
                     type: 'POST',
@@ -563,12 +571,12 @@ var mapal = {
                         var callCallback = true;
                         if (header) {
                             var parts = header.split(';');
-                            
+
                             if ( parts.length > 0 && $.isFunction(mapal.injection.griddeoActions[parts[0]]) ) {
                                 callCallback = mapal.injection.griddeoActions[parts[0]]( parts.slice(1) );
                             }
                         }
-                        
+
                         if (callCallback) callback(jqXHR, textStatus);
                     },
                     error: function(xhr, status, errorThrown) {
@@ -576,85 +584,85 @@ var mapal = {
                     }
                 });
             }
-            
+
         },
-        
+
         griddeoActions: {
             'force-redirect': function(params) {
                 window.location = params[0].trim();
                 return false;
             }
         },
-        
+
         modifiers: {
             "replace": {
                 "execute": function( $source, $target, appendTo ) {
                     if (appendTo) {
                         return $source.css("opacity", 0);
                     }
-                    
+
                     $target.replaceWith( $source.css("opacity", 0) );
-                    
+
                     return $("#" + $source.attr("id") );
                 },
-                
+
                 setTargetOpacity: true
             },
-            
+
             "content": {
                 "execute": function( $source, $target ) {
                     $target.html($source.html());
-                    
+
                     return $target;
                 },
-                
+
                 setTargetOpacity: true
             },
-            
+
             "after": {
                 "execute": function( $source, $target  ) {
                     $children = $($source[0].children).css('opacity', 0);
-    
+
                     $target.append($children);
-                    
+
                     return $children;
                 },
-                
+
                 setTargetOpacity: false
             },
-            
-            "before": { 
+
+            "before": {
                 "execute": function( $source, $target ) {
                     $children = $($source[0].children).css('opacity', 0);
-    
+
                     $target.append($children);
-                                    
+
                     return $children;
                 },
-                
+
                 setTargetOpacity: false
             },
-            
-            "prepend": { 
+
+            "prepend": {
                 "execute": function( $source, $target ) {
                     $target.before($source);
-                    
+
                     return $source;
                 },
-                
+
                 setTargetOpacity: false
             },
-            "append": { 
+            "append": {
                 "execute": function( $source, $target ) {
                     $target.after($source);
-                    
+
                     return $source;
                 },
-                
+
                 setTargetOpacity: false
             }
         },
-        
+
         completeArray: function( larger, smaller ) {
             var len = larger.length;
             for (var i = smaller.length; i < len; i ++ ) {
@@ -675,29 +683,29 @@ var mapal = {
                 submit: [
                       "form[data-injection^='.']",
                       "form[data-injection^=#]"
-                      ]  
+                      ]
             }
         },
-        
+
         'listeners': {
             'onBeforeStart': [],
             'onFinished': [],
             'onExecuted': []
         },
-        
+
         // Enable DOM-injection from anchors
         init: function () {
             // initalize the listeners for each of the patterns
             for (var key in mapal.patterns) {
                 if (mapal.patterns[key].execute) {
-                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners ); 
+                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners );
                 }
             }
-            
+
             // Call the initialization function for each of the patterns
             for (var key in mapal.patterns) {
                 (mapal.patterns[key].init||$.noop)();
-                
+
                 if (mapal.patterns[key].dataAttr) {
                     //mapal.patterns.options.search.click.push('[data-' + key + ']');
                 }
@@ -706,12 +714,12 @@ var mapal = {
             function handlePattern(e) {
                 // First we get the source IDs, whether optional or not
                 var targets, $a = $(this),
-                    sources = ($a.attr("href")||$a.attr("action")).split("#"), 
+                    sources = ($a.attr("href")||$a.attr("action")).split("#"),
                     attrVal = ($a.attr("rel") || $a.attr("data-injection"));
-                
+
                 // make sure we don't interfere with openPanels below
                 if ( $a.hasClass('openPanel') || $a.hasClass('closePanel') ) return;
-                
+
                 // HREF="http://url.to/follow#source1#source2";
                 var url = sources[0];
                 sources = sources.slice(1);
@@ -728,12 +736,12 @@ var mapal = {
                     // let injection handle the rest
                     mapal.injection.load($a, url, targets, sources, function($target) {
                         $target.animate({opacity: 1}, "fast");
-                    });                
+                    });
                 } else {
                     // this means some other pattern, so let the pattern handle what the attribute means
                     var re = /^[\.][a-zA-Z]+/;
                     var patt = re.exec(attrVal);
-                    
+
                     if ( patt.length == 0 ) {
                         // the pattern was malformed. Inform the designer
                         alert("Pattern[ERROR]: malformed pattern: " + attrVal);
@@ -759,21 +767,22 @@ var mapal = {
                 e.preventDefault();
                 return false;
             };
-            
+
             $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
             $(mapal.patterns.options.search.submit.join(", ")).live("submit.mapal", handlePattern );
         },
-        
+
         extractParameters: function(params, sources) {
-            var tmp;
-            var paramObjs = {};
+            var tmp,
+                j,
+                paramObjs = {};
             if (params.length > 0) {
                 var p = params.slice(1).split('!');
                 for (var i = p.length-1; i >= 0; i--) {
                     // support injection parameters in other patterns
                     if (p[i][0] == '#') {
                         var param, effect;
-                        
+
                         if (p[i].indexOf('.') > 0) {
                             tmp = p[i].split('.');
                             param = tmp[0];
@@ -794,13 +803,8 @@ var mapal = {
                             });
                         }
                     } else if (p[i].indexOf('=') > 0) {
-                        var tmp = p[i].split('=');
-                        
-                        if (/^'[^']*'/.test(tmp[1]) || /^"["]*"$/.test(tmp[1])) {
-                            paramObjs[tmp[0]] = tmp[1].slice(1, -1);
-                        } else {
-                            paramObjs[tmp[0]] = tmp[1];
-                        }
+                        j = p[i].indexOf('=');
+                        paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
                     } else {
                         paramObjs[p[i]] = true;
                     }
@@ -808,7 +812,7 @@ var mapal = {
             }
             return paramObjs;
         },
-        
+
         callListener: function( elem, pattern, event ) {
             var weContinue = true;
             $(mapal.patterns[pattern].listeners[event]).each(function(){
@@ -817,10 +821,10 @@ var mapal = {
                     return;
                 };
             });
-            
+
             return weContinue;
         },
-        
+
         registerListener: function(patterns, event, listener) {
             if (typeof patterns == 'string') {
                 if (mapal.patterns[patterns].listeners[event]) {
@@ -847,7 +851,7 @@ var mapal = {
         $(root).find(".tooltipTrigger").each( function() {
             $(this).tooltip({relative: true}).dynamic();
         });
-        
+
         $("dfn.infoPanel:not(span)").each(function() {
             var $panel = $(this),
                 title = $panel.attr("title");
@@ -906,7 +910,7 @@ var mapal = {
 
 
     // No browser supports all DOM methods to get from an object to its
-    // parent window and document and back again, so we convert all 
+    // parent window and document and back again, so we convert all
     // html objects to iframes.
     initIframes: function(root) {
         $("object[type=text/html]", root).each(function() {
@@ -945,72 +949,100 @@ var mapal = {
         });
 
     },
-    
+
     initSorts: function( root ) {
         $sorting = $(root).find('ul.sorting');
-        
+
         if ($sorting.length > 0) {
             $sorting.sortable({
                 'axis': 'y',
                 'items': 'li',
                 'update': function(event, ui){
-                    var $this = $(this); 
+                    var $this = $(this);
                     var order = $this.sortable("serialize");
-                    
+
                     $.post($this.attr("data-injection"), order);
                 }
             });
         }
     },
-    
+
     initButtonSets: function(root) {
         if ( $(root).buttonset ) {
             $(root).find('.buttonSet').removeClass('buttonSet').buttonset();
         }
     },
-    
+
+    initCollapsible: function(root) {
+        $(root).find('.collapsible').each(function() {
+            var $this = $(this),
+                $data = $this.data('collapsible');
+
+            if (!$data) {
+                var $ctrl = $this.children(':first'),
+                    $panel = $this.children(':gt(0)')
+                        .wrapAll('<div class="panel-content" />')
+                        .parent();
+
+                $this.data('collapsible', true);
+                $this.addClass("open");
+
+                $ctrl.bind("click", function() {
+                    if ($this.hasClass('open')) {
+                        $this.removeClass('open');
+                        $this.addClass('closed');
+                    } else {
+                        $this.removeClass('closed');
+                        $this.addClass('open');
+                    }
+                    $panel.slideToggle();
+                });
+            }
+        });
+    },
+
     initAutoLoads: function( root ) {
-        $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {           
+        $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {
             var $data = $(this).data("autoLoading");
-            
+
             if (!$data) {
                 $(this).data("autoLoading", true);
                 $(this).bind("scroll", function() {
                     var $window = $(this);
                     var elems = $window.find( '.autoLoading-visible' );
                     var ret = false;
-                    
+
                     $(elems).each(function() {
                         var $this = $(this);
                         var offset = $this.position();
-                        var doTrigger = $window.height() >= offset.top;
-                        
+                        var doTrigger = $window.innerHeight() >= offset.top;
+
                         if (doTrigger && !$this.data("autoLoading")) {
                             $this.data("autoLoading", true);
                             $this.trigger('click');
                             ret = true;
                         }
                     });
-                    
+
                     return ret;
                 });
             }
         });
     },
-    
+
     passivePatterns: {
         'selectSiblingRadio': {
             init: function() {},
             initContent: function(root) {
                 $(root).find('.selectSiblingRadio').focus(function() {
                     var $this = $(this);
-                    
+
                     $this.parent().find('input[type=radio]').attr('checked', true);
                 });
             }
         }
     },
-    
+
     // Setup a DOM tree.
     initContent: function(root) {
         mapal.initTransforms(root);
@@ -1023,17 +1055,18 @@ var mapal = {
         mapal.initSorts(root);
         mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
+        mapal.initCollapsible(root);
         //
-        
+
         for (passivePatternName in mapal.passivePatterns) {
             var passivePattern = mapal.passivePatterns[passivePatternName];
             if ( passivePattern.initContent && $.isFunction(passivePattern['initContent']) ) {
                 passivePattern.initContent(root);
             }
         }
-        
-        
-        
+
+
+
         // Replace objects with iframes for IE 8 and older.
         if ($.browser.msie ) {
             var version = Number( $.browser.version.split(".", 2).join(""));
@@ -1052,54 +1085,54 @@ var mapal = {
         mapal.patterns.init();
         //mapal.initIEButtons();
     },
-    
+
     ui: {},
-    
+
     'store': {
         'getPatternAttributes': function(pattern) {
             if (!mapal.store.hasStorage()) return [];
-            
+
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
             var attrs = [];
-            
+
             for (var i = 1; i <= count; i++ ) {
                 attrs.push(window.sessionStorage.getItem( pattern + '-' + i ));
             }
-            
+
             return attrs;
         },
-        
+
         'addPatternAttribute': function(pattern, value) {
             if (!mapal.store.hasStorage()) return;
-            
+
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0") + 1;
-            
+
             window.sessionStorage.setItem( pattern + '-count', count );
             window.sessionStorage.setItem( pattern + '-' + count, value );
         },
-        
+
         'setPatternAttribute': function(pattern, index, value) {
             if (!mapal.store.hasStorage()) return;
-            
+
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
-            
+
             if (index > 0 && index <= count) {
                 window.sessionStorage.setItem( pattern + '-' + index, value);
-                
+
                 return true;
             }
-            
+
             return false;
         },
-        
+
         'initPatternStore': function(pattern) {
             if (!mapal.store.hasStorage()) return;
-            
+
             if (window.sessionStorage.getItem( pattern+'-count' ) === null) {
                 window.sessionStorage.setItem( pattern+'-count', '0' );
             }
         },
-        
+
         'hasStorage': function() {
             return typeof window.sessionStorage !== 'undefined';
         }
@@ -1698,123 +1731,123 @@ $.extend( mapal.patterns, {
  * Copyright 2011 SYSLAB.COM GmbH
  */
 $.extend( mapal.patterns, {
-	"selfHealing": {
-		options: {
-			confirm: null,
-			"show": null,
-			"remove": null,
-			"disable": null,
-			removeOnClick: true,
-			displayTime: 8
-		},
-		
-		execute: function( elem, url, sources, params, event ) {
-			var container = $("#selfhealing-messages"), paramObjs = {}, p = {};
-			
-			var options = $.extend({}, mapal.patterns.selfHealing.options);
-			
-			// split up the params
-			$.extend(options, params);
-			
-			if (typeof options["disable"] !== 'string' ) {
-				options['disable'] = elem;
-			}
-			
-			if (container.length == 0) {
-				container = $("<div />").attr("id", "selfhealing-messages").appendTo(document.body);
-			}
-			
-			var count = ++mapal.patterns.selfHealing.count;
-			
-		//	$("<div />").attr("id", "selfhealing-message-" + count).attr("opacity", 0).appendTo(container);
-			
-			if ( typeof options['confirm'] == 'string' ) {
-				if (!confirm(options['confirm'])) return;
-			}
-			
-			if (options['disable'] !== null) {
-				$(options['disable']).attr('disabled', 'disabled');
-			}
-			
-			// create the message element
-	        mapal.injection.load(elem, url, "selfhealing-messages>selfhealing-message-" + count, sources, function($target) {
-	        	var doMouseLeave = function() {
-	        		var $this = $(this);
-	        		$this.data("persistent", false);
-	        		mapal.patterns.selfHealing.remove($this);
-	        	};
-	        	
-	        	$target.attr("id", "selfhealing-message-" + count).bind(
-	        		{
-	        			"mouseenter.mapal-selfHealing": function(event) {
-	        				$(this).data("persistent", true);
-	        			},
-	        			"mouseleave.mapal-selfHealing.": doMouseLeave,
-	        			"click": function(event) {
-	        				$(this).unbind('.mapal-selfHealing');
-	        				doMouseLeave.apply(this, []);
-	        			}
-	        		}	
-	        	);
-	        	
-	        	$target.appendTo(container);
-	        	
-	        	if (options['remove'] !== null ) {
-	        		// we have an ID to delete
-	        		if (typeof options['remove'] == 'string') {
-	        			$('#' + options['remove']).slideUp('slow');
-	        		} else {
-	        			$(options['remove']).slideUp('slow');
-	        		}
-	        	}
-	        	
-	        	if (options['show'] !== null ) {
-	        		// we have an ID to delete
-	        		if (typeof options['show'] == 'string') {
-	        			$('#' + options['show']).slideDown('slow');
-	        		} else {
-	        			$(options['show']).slideDown('slow');
-	        		}
-	        	}
-	        	
-	        	$target.animate({"opacity": 1}, "fast", function() {
-          			$target.data("timer", setTimeout(function() {
-          				mapal.patterns.selfHealing.remove($target);
-          			}, mapal.patterns.selfHealing.options.displayTime*1000));
-          		});
-	        	
-	        	mapal.patterns.callListener($(elem), 'selfHealing', 'onFinished');
-	        });
-		},
-		
-		remove: function($element) {
-			if ( $element.data("persistent") || $element.data("inFx") ) return;
-			$element.animate({"opacity": 0}, {
-				step: function() {
-					if ( $element.data("persistent") ) { 
-						// remove the timer
-						clearTimeout($element.data("timer"));
-						
-						// cancel hiding
-						$element.stop(true);
-						$element.css({"opacity": 1});
-						
-						return false;
-					}
-				},
-				
-				complete: function() {
-					var $this = $(this); 
-					$this.slideUp('slow', function() {
-						$this.data("inFx", false);
-						$this.remove();
-					}).data("inFx", true);
-				}
-			});
-		},
-		
-		count: 0
-	}
+    "selfHealing": {
+        options: {
+            confirm: null,
+            "show": null,
+            "remove": null,
+            "disable": null,
+            removeOnClick: true,
+            displayTime: 8
+        },
+        
+        execute: function( elem, url, sources, params, event ) {
+            var container = $("#selfhealing-messages"), paramObjs = {}, p = {};
+            
+            var options = $.extend({}, mapal.patterns.selfHealing.options);
+            
+            // split up the params
+            $.extend(options, params);
+            
+            if (typeof options["disable"] !== 'string' ) {
+                options['disable'] = elem;
+            }
+            
+            if (container.length == 0) {
+                container = $("<div />").attr("id", "selfhealing-messages").appendTo(document.body);
+            }
+            
+            var count = ++mapal.patterns.selfHealing.count;
+            
+        //  $("<div />").attr("id", "selfhealing-message-" + count).attr("opacity", 0).appendTo(container);
+            
+            if ( typeof options['confirm'] == 'string' ) {
+                if (!confirm(options['confirm'])) return;
+            }
+            
+            if (options['disable'] !== null) {
+                $(options['disable']).attr('disabled', 'disabled');
+            }
+            
+            // create the message element
+            mapal.injection.load(elem, url, "selfhealing-messages>selfhealing-message-" + count, sources, function($target) {
+                var doMouseLeave = function() {
+                    var $this = $(this);
+                    $this.data("persistent", false);
+                    mapal.patterns.selfHealing.remove($this);
+                };
+                
+                $target.attr("id", "selfhealing-message-" + count).bind(
+                    {
+                        "mouseenter.mapal-selfHealing": function(event) {
+                            $(this).data("persistent", true);
+                        },
+                        "mouseleave.mapal-selfHealing.": doMouseLeave,
+                        "click": function(event) {
+                            $(this).unbind('.mapal-selfHealing');
+                            doMouseLeave.apply(this, []);
+                        }
+                    }   
+                );
+                
+                $target.appendTo(container);
+                
+                if (options['remove'] !== null ) {
+                    // we have an ID to delete
+                    if (typeof options['remove'] == 'string') {
+                        $('#' + options['remove']).slideUp('slow');
+                    } else {
+                        $(options['remove']).slideUp('slow');
+                    }
+                }
+                
+                if (options['show'] !== null ) {
+                    // we have an ID to delete
+                    if (typeof options['show'] == 'string') {
+                        $('#' + options['show']).slideDown('slow');
+                    } else {
+                        $(options['show']).slideDown('slow');
+                    }
+                }
+                
+                $target.animate({"opacity": 1}, "fast", function() {
+                    $target.data("timer", setTimeout(function() {
+                        mapal.patterns.selfHealing.remove($target);
+                    }, mapal.patterns.selfHealing.options.displayTime*1000));
+                });
+                
+                mapal.patterns.callListener($(elem), 'selfHealing', 'onFinished');
+            });
+        },
+        
+        remove: function($element) {
+            if ( $element.data("persistent") || $element.data("inFx") ) return;
+            $element.animate({"opacity": 0}, {
+                step: function() {
+                    if ( $element.data("persistent") ) { 
+                        // remove the timer
+                        clearTimeout($element.data("timer"));
+                        
+                        // cancel hiding
+                        $element.stop(true);
+                        $element.css({"opacity": 1});
+                        
+                        return false;
+                    }
+                },
+                
+                complete: function() {
+                    var $this = $(this); 
+                    $this.slideUp('slow', function() {
+                        $this.data("inFx", false);
+                        $this.remove();
+                    }).data("inFx", true);
+                }
+            });
+        },
+        
+        count: 0
+    }
 });
 /**
  * @license
@@ -1826,297 +1859,721 @@ $.extend( mapal.patterns, {
  */
 $.extend( mapal.patterns, {
     "setclass": {
-		init: function() {
-			mapal.store.initPatternStore('setclass');
+        init: function() {
+            mapal.store.initPatternStore('setclass');
 
-			$(mapal.store.getPatternAttributes('setclass')).each(function(index) {
-				var values = this.split('!'); // 0: id, 1: attribute, 2: value, 3: other
-				var obj = {
-						'index': index+1,
-						"id": values[0],
-						"attr": values[1],
-						'value': values[2],
-						'other': values[3]
-					};
-				
-				mapal.patterns.setclass.store[obj.id + "." + obj.attr] = obj; 
-			});
+            $(mapal.store.getPatternAttributes('setclass')).each(function(index) {
+                var values = this.split('!'); // 0: id, 1: attribute, 2: value, 3: other
+                var obj = {
+                        'index': index+1,
+                        "id": values[0],
+                        "attr": values[1],
+                        'value': values[2],
+                        'other': values[3]
+                    };
 
-			$('[data-setclass]').live('click', mapal.patterns.setclass.handleClick).each(function() {
-				var $this = $(this);
-				var obj = mapal.patterns.setclass.getObjFromParams(
-							  $this,
-						  	  mapal.patterns.extractParameters('!' + $this.attr('data-setclass'))
-						  );
-				
-				if (obj === null) return;
+                mapal.patterns.setclass.store[obj.id + "." + obj.attr] = obj;
+            });
 
-				if ( !obj.store ) {
-					 if (mapal.patterns.setclass.store[obj.id + "." + obj.attr] ) {
-						delete mapal.patterns.setclass.store[obj.id + "." + obj.attr];
-					 }
-				} else {
-					 if (mapal.patterns.setclass.store[obj.id + "." + obj.attr] ) return;
-				}
-				if ( obj.attr === 'class' ) {
-				//	$( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
-				} else {
-					$( "#" + obj.id ).attr( obj.attr, obj.value );
-				}
-				
-				if (obj.store) {
-					mapal.patterns.setclass.storeValue(obj.id, obj.attr, obj.value, obj.other);
-				}
-			});
-			
-			for (key in mapal.patterns.setclass.store ) {
-				var obj = mapal.patterns.setclass.store[key];
-				if ( obj.attr === 'class' ) {
-					$( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
-				} else {
-					$( "#" + obj.id ).attr( obj.attr, obj.value );
-				}
-			}
-		},
-		
-		getObjFromParams: function($elem, params) {
-			var values = params['values'];
-			var obj = {};
-			
-			obj.id = params['id'] || $elem.attr("id");			
-			obj.attr = params['attr'] || 'class';
-			obj.store = params['store'] || false;
-			
-			if (typeof obj.id !== "string" || obj.id.length == 0 ||
-				typeof obj.attr !== 'string' || obj.attr.length == 0 || 
-				typeof values  !== 'string' || values.length == 0 ) {
-				return null;
-			}
+            $('[data-setclass]').live('click', mapal.patterns.setclass.handleClick).each(function() {
+                var $this = $(this);
+                var obj = mapal.patterns.setclass.getObjFromParams(
+                              $this,
+                                mapal.patterns.extractParameters('!' + $this.attr('data-setclass'))
+                          );
 
-			values = values.split(':');
-			if ( values.length == 1) {
-				values.push('');
-			}
+                if (obj === null) return;
 
-			obj.value = values[0];
-			obj.other = values[1];
-			
-			return obj;
-		},
-		
-		handleClick: function(event) {
-			var $this = $(this);
-			var params = mapal.patterns.extractParameters('!' + $this.attr('data-setclass'));
-			
-			mapal.patterns.setclass.execute($this, '', '', params, event);
-			
-			event.preventDefault();			
-		},
-		
-		store: {},
-		
-		dataAttr: true,
-		
-		execute: function( elem, url, sources, params, event ) {
-			var value, other;
-			var obj = mapal.patterns.setclass.getObjFromParams( elem, params );
-			if (obj === null) return false;
-			
-			var $setclass = $("#" + obj.id);			
-			if ($setclass.length == 0) return false;
-			
-			if (obj.attr === 'class') {
-			    if (obj.other.length > 0 ) {
-			        var cls = $setclass.attr('class').split(' ');
-			        regval = new RegExp(obj.value);
-			        for (i=0;i<cls.length;i++){
-			            if (cls[i].match(regval)) {
-            			    $setclass.removeClass(cls[i]);
-			            }
-			        }	
-		            $setclass.addClass(obj.other);
-		        } else if ($setclass.hasClass(obj.value) || $setclass.hasClass(obj.other)) {
-		            /* obj.value already set and no other present. pass */
-				} else {
-				    $setclass.addClass(obj.value);
-				}
-			} else {
-			    /* cave, haven't touched that yet, is still behaving like toggle */
-			/*	var current = $setclass.attr(obj.attr);
-				if (current === obj.value) {
-					$setclass.attr(obj.attr, obj.other);
-					value = obj.other;
-					other = obj.value;
-				} else if (current === obj.other) {
-					$setclass.attr(obj.attr, obj.value);
-					value = obj.value;
-					other = obj.other;
-				} else {
-					$setclass.attr(obj.attr, obj.other);
-					value = obj.other;
-					other = obj.value;
-				}*/
-			}
-			
-			if (obj.store) mapal.patterns.setclass.storeValue(obj.id, obj.attr, value, other);
-			
-			return true;
-		},
-		
-		storeValue: function(id, attr, value, other) {
-			var store = mapal.patterns.setclass.store[id + '.' + attr];
-			if ( store ) {
-				mapal.store.setPatternAttribute('setclass', store.index, id + "!" + attr + "!" + value + "!" + other);
-			} else {
-				mapal.store.addPatternAttribute('setclass', id + "!" + attr + "!" + value + "!" + other);
-			}
-		}
-	},
-	"toggle": {
-		init: function() {
-			mapal.store.initPatternStore('toggle');
+                if ( !obj.store ) {
+                     if (mapal.patterns.setclass.store[obj.id + "." + obj.attr] ) {
+                        delete mapal.patterns.setclass.store[obj.id + "." + obj.attr];
+                     }
+                } else {
+                     if (mapal.patterns.setclass.store[obj.id + "." + obj.attr] ) return;
+                }
+                if ( obj.attr === 'class' ) {
+                //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
+                } else {
+                    $( "#" + obj.id ).attr( obj.attr, obj.value );
+                }
 
-			$(mapal.store.getPatternAttributes('toggle')).each(function(index) {
-				var values = this.split('!'); // 0: id, 1: attribute, 2: value, 3: other
-				var obj = {
-						'index': index+1,
-						"id": values[0],
-						"attr": values[1],
-						'value': values[2],
-						'other': values[3]
-					};
-				
-				mapal.patterns.toggle.store[obj.id + "." + obj.attr] = obj; 
-			});
+                if (obj.store) {
+                    mapal.patterns.setclass.storeValue(obj.id, obj.attr, obj.value, obj.other);
+                }
+            });
 
-			$('[data-toggle]').live('click', mapal.patterns.toggle.handleClick).each(function() {
-				var $this = $(this);
-				var obj = mapal.patterns.toggle.getObjFromParams(
-							  $this,
-						  	  mapal.patterns.extractParameters('!' + $this.attr('data-toggle'))
-						  );
-				
-				if (obj === null) return;
+            for (key in mapal.patterns.setclass.store ) {
+                var obj = mapal.patterns.setclass.store[key];
+                if ( obj.attr === 'class' ) {
+                    $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
+                } else {
+                    $( "#" + obj.id ).attr( obj.attr, obj.value );
+                }
+            }
+        },
 
-				if ( !obj.store ) {
-					 if (mapal.patterns.toggle.store[obj.id + "." + obj.attr] ) {
-						delete mapal.patterns.toggle.store[obj.id + "." + obj.attr];
-					 }
-				} else {
-					 if (mapal.patterns.toggle.store[obj.id + "." + obj.attr] ) return;
-				}
-				
-				if ( obj.attr === 'class' ) {
-					$( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
-				} else {
-					$( "#" + obj.id ).attr( obj.attr, obj.value );
-				}
-				
-				if (obj.store) {
-					mapal.patterns.toggle.storeValue(obj.id, obj.attr, obj.value, obj.other);
-				}
-			});
-			
-			for (key in mapal.patterns.toggle.store ) {
-				var obj = mapal.patterns.toggle.store[key];
-				if ( obj.attr === 'class' ) {
-					$( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
-				} else {
-					$( "#" + obj.id ).attr( obj.attr, obj.value );
-				}
-			}
-		},
-		
-		getObjFromParams: function($elem, params) {
-			var values = params['values'];
-			var obj = {};
-			
-			obj.id = params['id'] || $elem.attr("id");			
-			obj.attr = params['attr'] || 'class';
-			obj.store = params['store'] || false;
-			
-			if (typeof obj.id !== "string" || obj.id.length == 0 ||
-				typeof obj.attr !== 'string' || obj.attr.length == 0 || 
-				typeof values  !== 'string' || values.length == 0 ) {
-				return null;
-			}
+        getObjFromParams: function($elem, params) {
+            var values = params['values'];
+            var obj = {};
 
-			values = values.split(':');
-			if ( values.length == 1) {
-				values.push('');
-			}
+            obj.id = params['id'] || $elem.attr("id");
+            obj.attr = params['attr'] || 'class';
+            obj.store = params['store'] || false;
 
-			obj.value = values[0];
-			obj.other = values[1];
-			
-			return obj;
-		},
-		
-		handleClick: function(event) {
-			var $this = $(this);
-			var params = mapal.patterns.extractParameters('!' + $this.attr('data-toggle'));
-			
-			mapal.patterns.toggle.execute($this, '', '', params, event);
-			
-			event.preventDefault();			
-		},
-		
-		store: {},
-		
-		dataAttr: true,
-		
-		execute: function( elem, url, sources, params, event ) {
-			var value, other;
-			var obj = mapal.patterns.toggle.getObjFromParams( elem, params );
-			if (obj === null) return false;
-			
-			var $toggle = $("#" + obj.id);			
-			if ($toggle.length == 0) return false;
-			
-			if (obj.attr === 'class') {
-				if ($toggle.hasClass(obj.value)) {
-					$toggle.removeClass(obj.value).addClass(obj.other);
-					value = obj.other;
-					other = obj.value;
-				} else if ( obj.other.length > 0 && $toggle.hasClass(obj.other)) {
-					$toggle.removeClass(obj.other).addClass(obj.value);
-					value = obj.value;
-					other = obj.other;
-				} else {
-					$toggle.addClass(obj.value);
-					value = obj.value;
-					other = obj.other;
-				}
-			} else {
-				var current = $toggle.attr(obj.attr);
-				
-				if (current === obj.value) {
-					$toggle.attr(obj.attr, obj.other);
-					value = obj.other;
-					other = obj.value;
-				} else if (current === obj.other) {
-					$toggle.attr(obj.attr, obj.value);
-					value = obj.value;
-					other = obj.other;
-				} else {
-					$toggle.attr(obj.attr, obj.other);
-					value = obj.other;
-					other = obj.value;
-				}
-			}
-			
-			if (obj.store) mapal.patterns.toggle.storeValue(obj.id, obj.attr, value, other);
-			
-			return true;
-		},
-		
-		storeValue: function(id, attr, value, other) {
-			var store = mapal.patterns.toggle.store[id + '.' + attr];
-			if ( store ) {
-				mapal.store.setPatternAttribute('toggle', store.index, id + "!" + attr + "!" + value + "!" + other);
-			} else {
-				mapal.store.addPatternAttribute('toggle', id + "!" + attr + "!" + value + "!" + other);
-			}
-		}
-	}
+            if (typeof obj.id !== "string" || obj.id.length == 0 ||
+                typeof obj.attr !== 'string' || obj.attr.length == 0 ||
+                typeof values  !== 'string' || values.length == 0 ) {
+                return null;
+            }
+
+            values = values.split(':');
+            if ( values.length == 1) {
+                values.push('');
+            }
+
+            obj.value = values[0];
+            obj.other = values[1];
+
+            return obj;
+        },
+
+        handleClick: function(event) {
+            var $this = $(this);
+            var params = mapal.patterns.extractParameters('!' + $this.attr('data-setclass'));
+
+            mapal.patterns.setclass.execute($this, '', '', params, event);
+
+            event.preventDefault();
+        },
+
+        store: {},
+
+        dataAttr: true,
+
+        execute: function( elem, url, sources, params, event ) {
+            var value, other;
+            var obj = mapal.patterns.setclass.getObjFromParams( elem, params );
+            if (obj === null) return false;
+
+            var $setclass = $("#" + obj.id);
+            if ($setclass.length == 0) return false;
+
+            if (obj.attr === 'class') {
+                if (obj.other.length > 0 ) {
+                    var cls = $setclass.attr('class').split(' ');
+                    regval = new RegExp(obj.value);
+                    for (i=0;i<cls.length;i++){
+                        if (cls[i].match(regval)) {
+                            $setclass.removeClass(cls[i]);
+                        }
+                    }
+                    $setclass.addClass(obj.other);
+                } else if ($setclass.hasClass(obj.value) || $setclass.hasClass(obj.other)) {
+                    /* obj.value already set and no other present. pass */
+                } else {
+                    $setclass.addClass(obj.value);
+                }
+            } else {
+                /* cave, haven't touched that yet, is still behaving like toggle */
+            /*    var current = $setclass.attr(obj.attr);
+                if (current === obj.value) {
+                    $setclass.attr(obj.attr, obj.other);
+                    value = obj.other;
+                    other = obj.value;
+                } else if (current === obj.other) {
+                    $setclass.attr(obj.attr, obj.value);
+                    value = obj.value;
+                    other = obj.other;
+                } else {
+                    $setclass.attr(obj.attr, obj.other);
+                    value = obj.other;
+                    other = obj.value;
+                }*/
+            }
+
+            if (obj.store) mapal.patterns.setclass.storeValue(obj.id, obj.attr, value, other);
+
+            return true;
+        },
+
+        storeValue: function(id, attr, value, other) {
+            var store = mapal.patterns.setclass.store[id + '.' + attr];
+            if ( store ) {
+                mapal.store.setPatternAttribute('setclass', store.index, id + "!" + attr + "!" + value + "!" + other);
+            } else {
+                mapal.store.addPatternAttribute('setclass', id + "!" + attr + "!" + value + "!" + other);
+            }
+        }
+    },
+    "toggle": {
+        init: function() {
+            mapal.store.initPatternStore('toggle');
+
+            $(mapal.store.getPatternAttributes('toggle')).each(function(index) {
+                var values = this.split('!'); // 0: id, 1: attribute, 2: value, 3: other
+                var obj = {
+                        'index': index+1,
+                        "id": values[0],
+                        "attr": values[1],
+                        'value': values[2],
+                        'other': values[3]
+                    };
+
+                mapal.patterns.toggle.store[obj.id + "." + obj.attr] = obj;
+            });
+
+            $('[data-toggle]').live('click', mapal.patterns.toggle.handleClick).each(function() {
+                var $this = $(this);
+                var obj = mapal.patterns.toggle.getObjFromParams(
+                              $this,
+                                mapal.patterns.extractParameters('!' + $this.attr('data-toggle'))
+                          );
+
+                if (obj === null) return;
+
+                if ( !obj.store ) {
+                     if (mapal.patterns.toggle.store[obj.id + "." + obj.attr] ) {
+                        delete mapal.patterns.toggle.store[obj.id + "." + obj.attr];
+                     }
+                } else {
+                     if (mapal.patterns.toggle.store[obj.id + "." + obj.attr] ) return;
+                }
+
+                if ( obj.attr === 'class' ) {
+                    $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
+                } else {
+                    $( "#" + obj.id ).attr( obj.attr, obj.value );
+                }
+
+                if (obj.store) {
+                    mapal.patterns.toggle.storeValue(obj.id, obj.attr, obj.value, obj.other);
+                }
+            });
+
+            for (key in mapal.patterns.toggle.store ) {
+                var obj = mapal.patterns.toggle.store[key];
+                if ( obj.attr === 'class' ) {
+                    $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
+                } else {
+                    $( "#" + obj.id ).attr( obj.attr, obj.value );
+                }
+            }
+        },
+
+        getObjFromParams: function($elem, params) {
+            var values = params['values'];
+            var obj = {};
+
+            obj.id = params['id'] || $elem.attr("id");
+            obj.attr = params['attr'] || 'class';
+            obj.store = params['store'] || false;
+
+            if (typeof obj.id !== "string" || obj.id.length == 0 ||
+                typeof obj.attr !== 'string' || obj.attr.length == 0 ||
+                typeof values  !== 'string' || values.length == 0 ) {
+                return null;
+            }
+
+            values = values.split(':');
+            if ( values.length == 1) {
+                values.push('');
+            }
+
+            obj.value = values[0];
+            obj.other = values[1];
+
+            return obj;
+        },
+
+        handleClick: function(event) {
+            var $this = $(this);
+            var params = mapal.patterns.extractParameters('!' + $this.attr('data-toggle'));
+
+            mapal.patterns.toggle.execute($this, '', '', params, event);
+
+            event.preventDefault();
+        },
+
+        store: {},
+
+        dataAttr: true,
+
+        execute: function( elem, url, sources, params, event ) {
+            var value, other;
+            var obj = mapal.patterns.toggle.getObjFromParams( elem, params );
+            if (obj === null) return false;
+
+            var $toggle = $("#" + obj.id);
+            if ($toggle.length == 0) return false;
+
+            if (obj.attr === 'class') {
+                if ($toggle.hasClass(obj.value)) {
+                    $toggle.removeClass(obj.value).addClass(obj.other);
+                    value = obj.other;
+                    other = obj.value;
+                } else if ( obj.other.length > 0 && $toggle.hasClass(obj.other)) {
+                    $toggle.removeClass(obj.other).addClass(obj.value);
+                    value = obj.value;
+                    other = obj.other;
+                } else {
+                    $toggle.addClass(obj.value);
+                    value = obj.value;
+                    other = obj.other;
+                }
+            } else {
+                var current = $toggle.attr(obj.attr);
+
+                if (current === obj.value) {
+                    $toggle.attr(obj.attr, obj.other);
+                    value = obj.other;
+                    other = obj.value;
+                } else if (current === obj.other) {
+                    $toggle.attr(obj.attr, obj.value);
+                    value = obj.value;
+                    other = obj.other;
+                } else {
+                    $toggle.attr(obj.attr, obj.other);
+                    value = obj.other;
+                    other = obj.value;
+                }
+            }
+
+            if (obj.store) mapal.patterns.toggle.storeValue(obj.id, obj.attr, value, other);
+
+            return true;
+        },
+
+        storeValue: function(id, attr, value, other) {
+            var store = mapal.patterns.toggle.store[id + '.' + attr];
+            if ( store ) {
+                mapal.store.setPatternAttribute('toggle', store.index, id + "!" + attr + "!" + value + "!" + other);
+            } else {
+                mapal.store.addPatternAttribute('toggle', id + "!" + attr + "!" + value + "!" + other);
+            }
+        }
+    }
 });
+/**
+ * @license
+ * Patterns 1.0.0 tooltip - tooltips
+ *
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ */
+(function($) {
+    mapal = mapal || {passivePatterns: {}};
+    // Register as active pattern to prevent errors on clicks.
+    $.extend(mapal.patterns, {
+    "tooltip": {
+        execute: function() {}
+    }});
+
+    $.extend(mapal.passivePatterns, {
+    "tooltip": {
+        count: 0,
+
+        init: function() {
+        },
+
+        initContent: function(root) {
+            var tooltip = mapal.passivePatterns.tooltip;
+            $("*[data-tooltip]", root).each(function() {
+                var $trigger = $(this);
+
+                tooltip.parseOptions($trigger);
+                tooltip.setupShowEvents($trigger);
+            });
+        },
+
+        parseOptions: function($trigger) {
+            var input = $trigger.data("tooltip") || "",
+                params = input.split("!"),
+                options = {}, name, value, index;
+
+            for (var i=0; i<params.length; i++) {
+                index = params[i].indexOf("=");
+                if (index === -1) {
+                    name = params[i];
+                    value = true;
+                } else {
+                    name = params[i].slice(0, index);
+                    value = params[i].slice(index+1);
+                }
+                options[name] = value;
+            }
+            options.title = $trigger.attr("title") || "";
+            $trigger.removeAttr("title");
+            $trigger.data("mapal.tooltip", options);
+        },
+
+        setupShowEvents: function($trigger) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                parameters = $trigger.data("mapal.tooltip");
+            if (parameters.click) {
+                $trigger.on("click.tooltip", $trigger, tooltip.show);
+            } else {
+                $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+            }
+        },
+
+        removeShowEvents: function($trigger) {
+            $trigger.off(".tooltip");
+        },
+
+        setupHideEvents: function($trigger) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                $container = tooltip.getContainer($trigger),
+                parameters = $trigger.data("mapal.tooltip");
+            if (parameters.sticky) {
+                $container.find(".closePanel")
+                    .on("click.tooltip", $trigger, tooltip.hide);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+            } else {
+                $container.on("click.tooltip", $trigger, tooltip.hide);
+                if (parameters.click) {
+                    $trigger.on("click.tooltip", $trigger, tooltip.hide);
+                } else {
+                    $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
+                    $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+                }
+            }
+        },
+
+        removeHideEvents: function($trigger) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                $container = tooltip.getContainer($trigger);
+            $container.off(".tooltip");
+            $container.find(".closePanel").off(".tooltip");
+            $trigger.off(".tooltip");
+        },
+
+        blockDefault: function(event) {
+            event.preventDefault();
+        },
+
+        show: function(event) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                $trigger = event.data,
+                $container = tooltip.getContainer($trigger),
+                options = $trigger.data("mapal.tooltip");
+
+            tooltip.removeShowEvents($trigger);
+            tooltip.setupHideEvents($trigger);
+
+            function ajax_show() {
+                $container.find(">div >*").css("opacity", 1);
+                tooltip.positionContainer($trigger, $container);
+            }
+
+            if (options.ajax) {
+                var source = $trigger.attr("href").split("#"),
+                    target_id = $container.find("progress").attr("id");
+                mapal.injection.load($trigger, source[0], target_id+":replace", source[1] || [],
+                        ajax_show, true);
+                delete options.ajax;
+                $trigger.data("mapal.tooltip", options);
+            }
+
+            tooltip.positionContainer($trigger, $container);
+            $container.css("visibility", "visible");
+
+            event.preventDefault();
+        },
+
+        hide: function(event) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                $trigger = event.data,
+                $container = tooltip.getContainer($trigger);
+            tooltip.removeHideEvents($trigger);
+            $container.css("visibility", "hidden");
+            tooltip.setupShowEvents($trigger);
+            event.preventDefault();
+        },
+
+        getContainer: function($trigger) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                $container = $trigger.data("mapal.tooltip.container");
+            if ($container===undefined) {
+                $container=tooltip.createContainer($trigger);
+                $trigger.data("mapal.tooltip.container", $container);
+            }
+            return $container;
+        },
+
+        createContainer: function($trigger) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                options = $trigger.data("mapal.tooltip"),
+                $content;
+
+            $container = $("<div/>", {"class": "tooltip-container"});
+            $container.css("visibility", "hidden");
+            if (options.ajax) {
+                $content = $("<progress/>", {"id": "tooltip-" + ++tooltip.count});
+            } else {
+                $content = $("<p/>").text(options.title);
+            }
+            $container.append(
+                $("<div/>").css("display", "block").append($content))
+                .append($("<span></span>", {"class": "pointer"}));
+            if (options.sticky) {
+                $("<button/>", {"class": "closePanel"})
+                    .text("Close")
+                    .insertBefore($container.find("*"));
+            }
+            $("body").append($container);
+            return $container;
+        },
+
+        boundingBox: function($el) {
+            var box = $el.offset();
+            box.height = $el.height();
+            box.width = $el.width();
+            box.bottom = box.top + box.height;
+            box.right = box.left + box.width;
+            return box;
+        },
+
+        positionStatus: function($trigger, $container) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                trigger_box = tooltip.boundingBox($trigger),
+                tooltip_box = tooltip.boundingBox($container),
+                $window = $(window),
+                window_width = $window.width(),
+                window_height = $window.height(),
+                trigger_center,
+                space = {}
+                container_offset = {},
+                tip_offset = {}
+                cls = "";
+
+            trigger_center = {top: trigger_box.top + (trigger_box.height/2),
+                              left: trigger_box.left + (trigger_box.width/2)};
+            space.top = trigger_box.top - $window.scrollTop();
+            space.bottom = window_height - space.top - trigger_box.height;
+            space.left = trigger_box.left - $window.scrollLeft();
+            space.right = window_width - space.left - trigger_box.width;
+
+            return {"space": space,
+                    "trigger_center": trigger_center,
+                    "trigger_box": trigger_box,
+                    "tooltip_box": tooltip_box}
+        },
+
+        // Help function to determine the best position for a tooltip.  Takes
+        // the positioning status (as generated by positionStatus) as input
+        // and returns a two-character position indiciator.
+        findBestPosition: function(status) {
+            var space = status.space,
+                 cls="";
+
+            if (space.top > Math.max(space.right, space.bottom, space.left)) {
+                cls = "t";
+            } else if (space.right > Math.max(space.bottom, space.left, space.top)) {
+                cls = "r";
+            } else if (space.bottom > Math.max(space.left, space.top, space.right)) {
+                cls = "b";
+            } else {
+                cls = "l";
+            }
+
+            switch (cls[0]) {
+            case "t":
+            case "b":
+                if (Math.abs(space.left-space.right) < 20) {
+                    cls += "m";
+                } else if (space.left > space.right) {
+                    cls += "r";
+                } else {
+                    cls += "l";
+                }
+                break;
+            case "l":
+            case "r":
+                if (Math.abs(space.top-space.bottom) < 20) {
+                    cls += "m";
+                } else if (space.top > space.bottom) {
+                    cls += "b";
+                } else {
+                    cls += "t";
+                }
+            }
+            return cls;
+        },
+
+        isVisible: function(status, position) {
+            var space = status.space,
+                tooltip_box = status.tooltip_box;
+
+            switch (position[0]) {
+            case "t":
+                if (tooltip_box.height > space.top) {
+                    return false;
+                }
+                break;
+            case "r":
+                if (tooltip_box.width > space.right) {
+                    return false;
+                }
+                break;
+            case "b":
+                if (tooltip_box.height > space.bottom) {
+                    return false;
+                }
+                break;
+            case "l":
+                if (tooltip_box.width > space.right) {
+                    return false;
+                }
+                break;
+            default:
+                return false;
+            }
+
+            switch (position[0]) {
+            case "t":
+            case "b":
+                switch (position[1]) {
+                    case "l":
+                        if ((tooltip_box.width-20)>space.right) {
+                            return false;
+                        }
+                        break;
+                    case "m":
+                        if ((tooltip_box.width/2)>space.left || (tooltip_box.width/2)>space.right) {
+                            return false;
+                        }
+                        break;
+                    case "r":
+                        if ((tooltip_box.width-20)>space.left) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+                break;
+            case "l":
+            case "r":
+                switch (position[1]) {
+                    case "t":
+                        if ((tooltip_box.height-20)>space.bottom) {
+                            return false;
+                        }
+                        break;
+                    case "m":
+                        if ((tooltip_box.height/2)>space.top || (tooltip_box.height/2)>space.bottom) {
+                            return false;
+                        }
+                        break;
+                    case "b":
+                        if ((tooltip_box.height-20)>space.top) {
+                            return false;
+                        }
+                    default:
+                        return false;
+                }
+                break;
+            }
+            return true;
+        },
+
+        VALIDPOSITION: /^([lr][tmb]|[tb][lmr])$/,
+
+        positionContainer: function($trigger, $container) {
+            var tooltip = mapal.passivePatterns.tooltip,
+                status = tooltip.positionStatus($trigger, $container),
+                options = $trigger.data("mapal.tooltip"),
+                container_offset = {},
+                tip_offset = {},
+                position;
+
+            if (tooltip.VALIDPOSITION.test(options.forcePosition)) {
+                position = options.forcePosition;
+            } else if (options.position) {
+                var positions = options.position.split("-"), i;
+                for (i=0; i<positions.length; i++) {
+                    if (tooltip.VALIDPOSITION.test(positions[i]) && tooltip.isVisible(status, positions[i])) {
+                        position = positions[i];
+                        break;
+                    }
+                }
+            }
+
+            if (!position) {
+                position = tooltip.findBestPosition(status);
+            }
+
+            var trigger_box = status.trigger_box,
+                tooltip_box = status.tooltip_box,
+                trigger_center = status.trigger_center;
+
+            switch (position[0]) {
+            case "t":
+                container_offset.top = trigger_box.top - tooltip_box.height + 10;
+                tip_offset.top = tooltip_box.height - 23;
+                break;
+            case "r":
+                container_offset.left = trigger_box.right + 20;
+                tip_offset.left = 0;
+                break;
+            case "b":
+                container_offset.top = trigger_box.bottom + 20;
+                tip_offset.top = 0;
+                break;
+            case "l":
+                container_offset.left = trigger_box.left - tooltip_box.width - 20;
+                tip_offset.left = tooltip_box.width - 23;
+                break;
+            }
+
+            switch (position[0]) {
+            case "t":
+            case "b":
+                switch (position[1]) {
+                case "l":
+                    container_offset.left = trigger_center.left - 20;
+                    tip_offset.left = 0;
+                    break;
+                case "m":
+                    container_offset.left = trigger_center.left - (tooltip_box.width/2);
+                    tip_offset.left = tooltip_box.width/2;
+                    break;
+                case "r":
+                    container_offset.left = trigger_center.left + 20 - tooltip_box.width;
+                    tip_offset.left = tooltip_box.width - 20;
+                    break;
+                }
+                break;
+            case "l":
+            case "r":
+                switch (position[1]) {
+                    case "t":
+                        container_offset.top = trigger_center.top - 30;
+                        tip_offset.top = 0;
+                        break;
+                    case "m":
+                        container_offset.top = trigger_center.top - (tooltip_box.height/2);
+                        tip_offset.top = tooltip_box.height/2;
+                        break;
+                    case "b":
+                        container_offset.top = trigger_center.top + 20 - tooltip_box.height;
+                        tip_offset.top = tooltip_box.height - 20;
+                        break;
+                }
+                break;
+            }
+
+            $container.attr("class", "tooltip-container " + position);
+            $container.css({
+                top: container_offset.top+"px",
+                left: container_offset.left+"px"});
+            $container.find(".pointer").css({
+                top: tip_offset.top+"px",
+                left: tip_offset.left+"px"});
+        }
+    }});
+})(jQuery);
