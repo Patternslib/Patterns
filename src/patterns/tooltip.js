@@ -28,7 +28,6 @@
 
                 $trigger.data("mapal.tooltip",
                     mapal.patterns.parseOptions($trigger.data("tooltip")));
-                tooltip.parseOptions($trigger);
                 tooltip.setupShowEvents($trigger);
             });
         },
