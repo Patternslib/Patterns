@@ -47,6 +47,8 @@
                 }
                 options[name] = value;
             }
+            options.title = $trigger.attr("title") || "";
+            $trigger.removeAttr("title");
             $trigger.data("mapal.tooltip", options);
         },
 
@@ -149,17 +151,15 @@
 
         createContainer: function($trigger) {
             var tooltip = mapal.passivePatterns.tooltip,
-                title = $trigger.attr("title"),
                 options = $trigger.data("mapal.tooltip"),
                 $content;
-            $trigger.removeAttr("title");
 
             $container = $("<div/>", {"class": "tooltip-container"});
             $container.css("visibility", "hidden");
             if (options.ajax) {
                 $content = $("<progress/>", {"id": "tooltip-" + ++tooltip.count});
             } else {
-                $content = $("<p/>").text(title || "");
+                $content = $("<p/>").text(options.title);
             }
             $container.append(
                 $("<div/>").css("display", "block").append($content))
