@@ -37,7 +37,7 @@ follows that the tooltip itself will be placed to the left of the triggering
 element.
 
 The position of the tip within the tooltip can be specified with a
-*position hint*: a CSS class which specifies the preferred positions. This
+*position hint*: a parameter which specifies the preferred positions. This
 is formatted as ``position-<preference>[-preference]*``. The possible
 preferences are:
 
