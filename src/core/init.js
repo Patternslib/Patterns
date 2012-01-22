@@ -500,7 +500,7 @@ var mapal = {
                     }
                     $items.removeClass('current');
 
-                    var $item = $elem.parents("li");
+                    $item = $elem.parents("li");
                     if ($item.length > 0) {
                         $($item[0]).addClass('current');
                     } else if ($item.length === 0) {
