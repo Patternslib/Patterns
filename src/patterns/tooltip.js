@@ -318,12 +318,14 @@
                 tip_offset = {},
                 position;
 
-            if (tooltip.VALIDPOSITION.test(options.forcePosition)) {
-                position = options.forcePosition;
-            } else if (options.position) {
+            if (options.position) {
                 var positions = options.position.split("-"), i;
                 for (i=0; i<positions.length; i++) {
-                    if (tooltip.VALIDPOSITION.test(positions[i]) && tooltip.isVisible(status, positions[i])) {
+                    if (!tooltip.VALIDPOSITION.test(positions[i])) {
+                        continue;
+                    }
+
+                    if (options.forcePosition || tooltip.isVisible(status, positions[i])) {
                         position = positions[i];
                         break;
                     }
