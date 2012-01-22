@@ -2470,7 +2470,7 @@ $.extend( mapal.patterns, {
                     break;
                 case "m":
                     container_offset.left = trigger_center.left - (tooltip_box.width/2);
-                    tip_offset.left = tooltip_box.width/2;
+                    tip_offset.left = tooltip_box.width/2 - 10;
                     break;
                 case "r":
                     container_offset.left = trigger_center.left + 20 - tooltip_box.width;
@@ -2487,7 +2487,7 @@ $.extend( mapal.patterns, {
                         break;
                     case "m":
                         container_offset.top = trigger_center.top - (tooltip_box.height/2);
-                        tip_offset.top = tooltip_box.height/2;
+                        tip_offset.top = tooltip_box.height/2 - 10;
                         break;
                     case "b":
                         container_offset.top = trigger_center.top + 20 - tooltip_box.height;
