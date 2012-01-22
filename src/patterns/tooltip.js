@@ -172,9 +172,9 @@
                 window_width = $window.width(),
                 window_height = $window.height(),
                 trigger_center,
-                space = {}
+                space = {},
                 container_offset = {},
-                tip_offset = {}
+                tip_offset = {},
                 cls = "";
 
             trigger_center = {top: trigger_box.top + (trigger_box.height/2),
@@ -187,7 +187,7 @@
             return {"space": space,
                     "trigger_center": trigger_center,
                     "trigger_box": trigger_box,
-                    "tooltip_box": tooltip_box}
+                    "tooltip_box": tooltip_box};
         },
 
         // Help function to determine the best position for a tooltip.  Takes
