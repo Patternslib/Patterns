@@ -353,9 +353,8 @@ var mapal = {
             bodyInjectionId: "__original_body"
         },
 
-        load: function($elem, url, targets, sources, callback, instant) {
-            instant = instant || false;
-
+        load: function($elem, url, targets, sources, callback) {
+            callback = callback || function() {};
             // to have more versatility when calling the function
             if (typeof sources == "string") sources = [ sources ];
             if (typeof targets == "string") targets = [ targets ];
@@ -460,8 +459,6 @@ var mapal = {
                                 appendTo.attr("id", both[0]);
                             }
                         }
-
-                        $target = $("<div/>").css("opacity", 0);
                     }
 
                     // empty source IDs will have been replaced with !body. Use the <body> tag as a source
@@ -484,8 +481,6 @@ var mapal = {
                         } else {
                             (callback['onFinished']||$.noop)($target);
                         }
-
-                        //$target.animate({"opacity": 1}, "fast");
                     } else {
                         alert('Injection[WARN]: Could not find modifier "' + modifier + '"' );
                     }
@@ -508,31 +503,7 @@ var mapal = {
                     }
                 }
             }
-
-            //
-            // Set the opacity of allowed targets
-            //
-            var count = 0;
-            var opacityTargets = [];
-            for (var idx = 0; idx < target_ids.length; idx++) {
-                if ( mapal.injection.modifiers[modifiers[idx]].setTargetOpacity ) {
-                    opacityTargets.push(target_ids[idx]);
-                }
-            }
-
-            var $targets = $("#" + opacityTargets.join(",#"));
-
-            if ($targets.length > 0 && !instant) {
-                $targets.animate({"opacity": 0}, "slow", function() {
-                                count += 1;
-                                if (count == $targets.length) {
-                                    mapal.injection.ajax($elem, url, htmlLoaded);
-                                }
-                            }
-                       );
-            } else {
-                mapal.injection.ajax($elem, url, htmlLoaded);
-            }
+            mapal.injection.ajax($elem, url, htmlLoaded);
         },
 
         ajax: function($elem, url, params, callback) {
@@ -598,68 +569,47 @@ var mapal = {
             "replace": {
                 "execute": function( $source, $target, appendTo ) {
                     if (appendTo) {
-                        return $source.css("opacity", 0);
+                        return $source;
                     }
-
-                    $target.replaceWith( $source.css("opacity", 0) );
-
-                    return $("#" + $source.attr("id") );
-                },
-
-                setTargetOpacity: true
+                    $target.replaceWith($source);
+                    return $("#" + $source.attr("id"));
+                }
             },
 
             "content": {
                 "execute": function( $source, $target ) {
                     $target.html($source.html());
-
                     return $target;
-                },
-
-                setTargetOpacity: true
+                }
             },
 
             "after": {
                 "execute": function( $source, $target  ) {
-                    $children = $($source[0].children).css('opacity', 0);
-
+                    $children = $($source[0].children);
                     $target.append($children);
-
                     return $children;
-                },
-
-                setTargetOpacity: false
+                }
             },
 
             "before": {
                 "execute": function( $source, $target ) {
-                    $children = $($source[0].children).css('opacity', 0);
-
+                    $children = $($source[0].children);
                     $target.prepend($children);
-
                     return $children;
-                },
-
-                setTargetOpacity: false
+                }
             },
 
             "prepend": {
                 "execute": function( $source, $target ) {
                     $target.before($source);
-
                     return $source;
-                },
-
-                setTargetOpacity: false
+                }
             },
             "append": {
                 "execute": function( $source, $target ) {
                     $target.after($source);
-
                     return $source;
-                },
-
-                setTargetOpacity: false
+                }
             }
         },
 
@@ -753,9 +703,7 @@ var mapal = {
                         targets = [];
 
                     // let injection handle the rest
-                    mapal.injection.load($a, url, targets, sources, function($target) {
-                        $target.animate({opacity: 1}, "fast");
-                    });
+                    mapal.injection.load($a, url, targets, sources);
                 } else {
                     // this means some other pattern, so let the pattern handle what the attribute means
                     var re = /^[\.][a-zA-Z]+/;
@@ -811,16 +759,7 @@ var mapal = {
                             effect = undefined;
                         }
                         var source = [sources.pop()];
-
-                        if (effect == 'instant') {
-                            mapal.injection.load($a, url, param.slice(1), source, function($target) {
-                                $target.css("opacity", 1);
-                            }, true);
-                        } else {
-                            mapal.injection.load($a, url, param.slice(1), source, function($target) {
-                                $target.animate({opacity: 1}, "fast");
-                            });
-                        }
+                        mapal.injection.load($a, url, param.slice(1), source);
                     } else if (p[i].indexOf('=') > 0) {
                         j = p[i].indexOf('=');
                         paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
