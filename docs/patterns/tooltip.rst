@@ -136,7 +136,7 @@ will be transformed into:
    …
    <div class="tooltip-container rt"
         style="top: 208px; left: 750px; visibility: visible">
-     <div style="display: block">
+     <div>
        <button class="closePanel">Close</button>
        <p>
          Please enter the full URL for the website.
@@ -156,7 +156,7 @@ temporarily shown with a progress indicator:
    …
    <div class="tooltip-container rt"
         style="top: 208px; left: 750px; visibility: visible">
-     <div style="display: block">
+     <div>
        <button class="closePanel">Close</button>
        <progress/>
      <span class="pointer" style="top: 111px; left: -22px"></span>
