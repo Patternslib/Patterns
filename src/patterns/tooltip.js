@@ -237,17 +237,17 @@
 
             switch (position[0]) {
             case "t":
-                if (tooltip_box.height > space.top) {
+                if (tooltip_box.height > space.bottom) {
                     return false;
                 }
                 break;
             case "r":
-                if (tooltip_box.width > space.right) {
+                if (tooltip_box.width > space.left) {
                     return false;
                 }
                 break;
             case "b":
-                if (tooltip_box.height > space.bottom) {
+                if (tooltip_box.height > space.top) {
                     return false;
                 }
                 break;
@@ -340,16 +340,16 @@
 
             switch (position[0]) {
             case "t":
-                container_offset.top = trigger_box.top - tooltip_box.height + 10;
-                tip_offset.top = tooltip_box.height - 23;
+                container_offset.top = trigger_box.bottom + 20;
+                tip_offset.top = -23;
                 break;
             case "r":
                 container_offset.left = trigger_box.right + 20;
                 tip_offset.left = 0;
                 break;
             case "b":
-                container_offset.top = trigger_box.bottom + 20;
-                tip_offset.top = 0;
+                container_offset.top = trigger_box.top - tooltip_box.height + 10;
+                tip_offset.top = tooltip_box.height - 23;
                 break;
             case "l":
                 container_offset.left = trigger_box.left - tooltip_box.width - 20;

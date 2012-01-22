@@ -2123,10 +2123,12 @@ $.extend( mapal.patterns, {
         initContent: function(root) {
             var tooltip = mapal.passivePatterns.tooltip;
             $("*[data-tooltip]", root).each(function() {
-                var $trigger = $(this);
+                var $trigger = $(this),
+                    options = mapal.patterns.parseOptions($trigger.data("tooltip"));
 
-                $trigger.data("mapal.tooltip",
-                    mapal.patterns.parseOptions($trigger.data("tooltip")));
+                options.title = $trigger.attr("title");
+                $trigger.removeAttr("title");
+                $trigger.data("mapal.tooltip", options);
                 tooltip.setupShowEvents($trigger);
             });
         },
@@ -2334,17 +2336,17 @@ $.extend( mapal.patterns, {
 
             switch (position[0]) {
             case "t":
-                if (tooltip_box.height > space.top) {
+                if (tooltip_box.height > space.bottom) {
                     return false;
                 }
                 break;
             case "r":
-                if (tooltip_box.width > space.right) {
+                if (tooltip_box.width > space.left) {
                     return false;
                 }
                 break;
             case "b":
-                if (tooltip_box.height > space.bottom) {
+                if (tooltip_box.height > space.top) {
                     return false;
                 }
                 break;
@@ -2437,16 +2439,16 @@ $.extend( mapal.patterns, {
 
             switch (position[0]) {
             case "t":
-                container_offset.top = trigger_box.top - tooltip_box.height + 10;
-                tip_offset.top = tooltip_box.height - 23;
+                container_offset.top = trigger_box.bottom + 20;
+                tip_offset.top = -23;
                 break;
             case "r":
                 container_offset.left = trigger_box.right + 20;
                 tip_offset.left = 0;
                 break;
             case "b":
-                container_offset.top = trigger_box.bottom + 20;
-                tip_offset.top = 0;
+                container_offset.top = trigger_box.top - tooltip_box.height + 10;
+                tip_offset.top = tooltip_box.height - 23;
                 break;
             case "l":
                 container_offset.left = trigger_box.left - tooltip_box.width - 20;
