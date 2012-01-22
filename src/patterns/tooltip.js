@@ -24,10 +24,12 @@
         initContent: function(root) {
             var tooltip = mapal.passivePatterns.tooltip;
             $("*[data-tooltip]", root).each(function() {
-                var $trigger = $(this);
+                var $trigger = $(this),
+                    options = mapal.patterns.parseOptions($trigger.data("tooltip"));
 
-                $trigger.data("mapal.tooltip",
-                    mapal.patterns.parseOptions($trigger.data("tooltip")));
+                options.title = $trigger.attr("title");
+                $trigger.removeAttr("title");
+                $trigger.data("mapal.tooltip", options);
                 tooltip.setupShowEvents($trigger);
             });
         },
