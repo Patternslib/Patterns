@@ -505,7 +505,10 @@ var mapal = {
             }
             var $targets = $('#' + target_ids.join(',#'));
             $targets.addClass('injection-loading');
-            mapal.injection.ajax($elem, url, htmlLoaded);
+            mapal.injection.ajax($elem, url, function() {
+                htmlLoaded.apply(this, arguments);
+                $targets.removeClass('injection-loading');
+            });
         },
 
         ajax: function($elem, url, params, callback) {
