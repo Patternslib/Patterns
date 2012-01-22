@@ -62,10 +62,11 @@
             } else {
                 $container.on("click.tooltip", $trigger, tooltip.hide);
                 if (parameters.click) {
-                    $trigger.on("click.tooltip", $trigger, tooltip.hide);
+                    $(window).on("click.tooltip", $trigger, tooltip.hide);
+                    $trigger.on("click.tooltip", tooltip.blockDefault);
                 } else {
                     $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+                    $trigger.on("click.tooltip", tooltip.blockDefault);
                 }
             }
         },
@@ -73,6 +74,7 @@
         removeHideEvents: function($trigger) {
             var tooltip = mapal.passivePatterns.tooltip,
                 $container = tooltip.getContainer($trigger);
+            $(window).off(".tooltip");
             $container.off(".tooltip");
             $container.find(".closePanel").off(".tooltip");
             $trigger.off(".tooltip");
@@ -109,6 +111,7 @@
             $container.css("visibility", "visible");
 
             event.preventDefault();
+            event.stopPropagation();
         },
 
         hide: function(event) {
@@ -118,7 +121,6 @@
             tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
             tooltip.setupShowEvents($trigger);
-            event.preventDefault();
         },
 
         getContainer: function($trigger) {
