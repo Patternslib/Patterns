@@ -503,6 +503,8 @@ var mapal = {
                     }
                 }
             }
+            var $targets = $('#' + target_ids.join(',#'));
+            $targets.addClass('injection-loading');
             mapal.injection.ajax($elem, url, htmlLoaded);
         },
 
