@@ -635,7 +635,7 @@ var mapal = {
                 "execute": function( $source, $target ) {
                     $children = $($source[0].children).css('opacity', 0);
 
-                    $target.append($children);
+                    $target.prepend($children);
 
                     return $children;
                 },
