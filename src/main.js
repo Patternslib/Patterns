@@ -1,6 +1,5 @@
 define([
     'require',
-    'patternregistry',
     './core/init',
     './patterns/toggle',
     '../../lib/jquery',
