@@ -2,6 +2,7 @@ define([
     'require',
     './core/init',
     './patterns/toggle',
+    './patterns/tooltip',
     '../lib/jquery',
     '../lib/domReady!'
 ], function(require) {
@@ -13,6 +14,11 @@ define([
     // register our patterns
     // rethink naming once all patterns are migrated to this style
     mapal.passivePatterns.toggle = require('./patterns/toggle');
+    mapal.passivePatterns.tooltip = require('./patterns/tooltip');
+
+    // Register as active pattern to prevent errors on clicks.
+    // XXX: hack, what does this do?
+    mapal.patterns.tooltip = { execute: function() {} };
 
     // wait for the DOM to be ready and initialize
     var doc = require('../lib/domReady!');
