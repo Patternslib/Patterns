@@ -13,7 +13,7 @@ define([
 
     // register our patterns
     // rethink naming once all patterns are migrated to this style
-    var mapal.passivePatterns.toggle = require('./patterns/toggle');
+    mapal.passivePatterns.toggle = require('./patterns/toggle');
 
     // wait for the DOM to be ready and initialize
     var doc = require('../lib/domReady!');
