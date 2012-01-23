@@ -1991,15 +1991,15 @@ $.extend( mapal.patterns, {
  */
 
 (function($) {
-    mapal = mapal || {patterns: {}};
-    $.extend(mapal.patterns, {
+    mapal = mapal || {passivePatterns: {}};
+    $.extend(mapal.passivePatterns, {
     "toggle": {
-        init: function() {
-            $("[data-toggle]").on("click", mapal.patterns.toggle.onClick);
+        initContent: function(root) {
+            $("[data-toggle]", root).on("click", mapal.passivePatterns.toggle.onClick);
         },
 
         onClick: function(event) {
-            var toggle = mapal.patterns.toggle,
+            var toggle = mapal.passivePatterns.toggle,
                 $trigger = $(event.target),
                 options = toggle.getOptions($trigger),
                 $targets = $(options.selector),
