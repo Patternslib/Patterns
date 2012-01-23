@@ -6,6 +6,10 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
+define([
+    '../../lib/jquery'
+], function() {
+
 var mapal = {
     widthClasses: {},
 
@@ -1055,13 +1059,5 @@ $.extend( mapal.ui, {
     }
 });
 
-
-$(document).ready(function() {
-    mapal.registerWidthClass("narrow", 0, 780);
-    mapal.registerWidthClass("medium", 0, 1109);
-    mapal.registerWidthClass("wide", 1110, null);
-    mapal.init();
-    mapal.initContent(document.body);
-    $(document).trigger("setupFinished", document);
+    return mapal;
 });
-
