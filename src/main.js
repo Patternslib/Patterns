@@ -2,7 +2,7 @@ define([
     'require',
     './core/init',
     './patterns/toggle',
-    '../../lib/jquery',
+    '../lib/jquery',
     '../lib/domReady!'
 ], function(require) {
     var mapal = require('./core/init');
