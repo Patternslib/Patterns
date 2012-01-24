@@ -5,6 +5,7 @@ define([
     './core/init',
     './core/store',
     './patterns/collapsible',
+    './patterns/fancybox',
     './patterns/setclass',
     './patterns/selfhealing',
     './patterns/toggle',
@@ -26,6 +27,7 @@ define([
     // Register as active pattern to prevent errors on clicks.
     // XXX: hack, what does this do?
     mapal.patterns.tooltip = { execute: function() {} };
+    mapal.patterns.fancybox = require('./patterns/fancybox');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
     mapal.patterns.setclass = require('./patterns/setclass');
 
