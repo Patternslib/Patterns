@@ -8,11 +8,12 @@
  */
 define([
     'require',
-    '../../lib/jquery',
-    '../utils'
+    'lib/jquery',
+    'core/init',
+    'utils'
 ], function(require) {
-    var utils = require('../utils'),
-        mapal = require('../core/init');
+    var utils = require('utils'),
+        mapal = require('core/init');
 
     var tooltip = {
         count: 0,
