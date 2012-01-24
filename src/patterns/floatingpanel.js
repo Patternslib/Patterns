@@ -6,8 +6,11 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-$.extend( mapal.patterns, {
-    "floatingPanelContextual": {
+define([
+    'require',
+    '../lib/jquery'
+], function(require) {
+    var floatingPanelContextual = {
         options: {
             events: {
                 def: ",mouseleave"
@@ -20,12 +23,12 @@ $.extend( mapal.patterns, {
             if (!api) {
                 // we haven't initialized the tooltip for this element
                 // dot it now
-                var opts = $.extend({}, mapal.patterns.floatingPanelContextual.options, params);
+                var opts = $.extend({}, floatingPanelContextual.options, params);
 
                 if ( sources.length > 0 ) {
                     opts['tip'] = "#" + sources[0];
                 }
-                opts['onHide'] = mapal.patterns.floatingPanelContextual.handleOnHide;
+                opts['onHide'] = floatingPanelContextual.handleOnHide;
                 $elem.tooltip(opts).dynamic();
 
                 api = $elem.data("tooltip");
@@ -50,5 +53,6 @@ $.extend( mapal.patterns, {
                 $($parents[0]).removeClass('tipped');
             }
         }
-    }
+    };
+    return floatingPanelContextual;
 });
