@@ -6,12 +6,20 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-$.extend( mapal.patterns, {
-    "setclass": {
-        init: function() {
-            mapal.store.initPatternStore('setclass');
+define([
+    'require',
+    '../lib/jquery',
+    '../core/store',
+    '../utils'
+], function(require) {
+    var store = require('../core/store');
+    var utils = require('../utils');
 
-            $(mapal.store.getPatternAttributes('setclass')).each(function(index) {
+    var setclass = {
+        init: function() {
+            store.initPatternStore('setclass');
+
+            $(store.getPatternAttributes('setclass')).each(function(index) {
                 var values = this.split('!'); // 0: id, 1: attribute, 2: value, 3: other
                 var obj = {
                         'index': index+1,
@@ -21,24 +29,24 @@ $.extend( mapal.patterns, {
                         'other': values[3]
                     };
 
-                mapal.patterns.setclass.store[obj.id + "." + obj.attr] = obj;
+                setclass.store[obj.id + "." + obj.attr] = obj;
             });
 
-            $('[data-setclass]').live('click', mapal.patterns.setclass.handleClick).each(function() {
+            $('[data-setclass]').live('click', setclass.handleClick).each(function() {
                 var $this = $(this);
-                var obj = mapal.patterns.setclass.getObjFromParams(
+                var obj = setclass.getObjFromParams(
                               $this,
-                                mapal.patterns.extractParameters('!' + $this.attr('data-setclass'))
+                                utils.extractParameters('!' + $this.attr('data-setclass'))
                           );
 
                 if (obj === null) return;
 
                 if ( !obj.store ) {
-                     if (mapal.patterns.setclass.store[obj.id + "." + obj.attr] ) {
-                        delete mapal.patterns.setclass.store[obj.id + "." + obj.attr];
+                     if (setclass.store[obj.id + "." + obj.attr] ) {
+                        delete setclass.store[obj.id + "." + obj.attr];
                      }
                 } else {
-                     if (mapal.patterns.setclass.store[obj.id + "." + obj.attr] ) return;
+                     if (setclass.store[obj.id + "." + obj.attr] ) return;
                 }
                 if ( obj.attr === 'class' ) {
                 //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
@@ -47,12 +55,12 @@ $.extend( mapal.patterns, {
                 }
 
                 if (obj.store) {
-                    mapal.patterns.setclass.storeValue(obj.id, obj.attr, obj.value, obj.other);
+                    setclass.storeValue(obj.id, obj.attr, obj.value, obj.other);
                 }
             });
 
-            for (key in mapal.patterns.setclass.store ) {
-                var obj = mapal.patterns.setclass.store[key];
+            for (key in setclass.store ) {
+                var obj = setclass.store[key];
                 if ( obj.attr === 'class' ) {
                     $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
                 } else {
@@ -87,9 +95,9 @@ $.extend( mapal.patterns, {
 
         handleClick: function(event) {
             var $this = $(this);
-            var params = mapal.patterns.extractParameters('!' + $this.attr('data-setclass'));
+            var params = utils.extractParameters('!' + $this.attr('data-setclass'));
 
-            mapal.patterns.setclass.execute($this, '', '', params, event);
+            setclass.execute($this, '', '', params, event);
 
             event.preventDefault();
         },
@@ -100,7 +108,7 @@ $.extend( mapal.patterns, {
 
         execute: function( elem, url, sources, params, event ) {
             var value, other;
-            var obj = mapal.patterns.setclass.getObjFromParams( elem, params );
+            var obj = setclass.getObjFromParams( elem, params );
             if (obj === null) return false;
 
             var $setclass = $("#" + obj.id);
@@ -139,18 +147,19 @@ $.extend( mapal.patterns, {
                 }*/
             }
 
-            if (obj.store) mapal.patterns.setclass.storeValue(obj.id, obj.attr, value, other);
+            if (obj.store) setclass.storeValue(obj.id, obj.attr, value, other);
 
             return true;
         },
 
         storeValue: function(id, attr, value, other) {
-            var store = mapal.patterns.setclass.store[id + '.' + attr];
-            if ( store ) {
-                mapal.store.setPatternAttribute('setclass', store.index, id + "!" + attr + "!" + value + "!" + other);
+            var aStore = setclass.store[id + '.' + attr];
+            if ( aStore ) {
+                store.setPatternAttribute('setclass', aStore.index, id + "!" + attr + "!" + value + "!" + other);
             } else {
-                mapal.store.addPatternAttribute('setclass', id + "!" + attr + "!" + value + "!" + other);
+                store.addPatternAttribute('setclass', id + "!" + attr + "!" + value + "!" + other);
             }
         }
-    }
+    };
+    return setclass;
 });
