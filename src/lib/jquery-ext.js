@@ -4,6 +4,9 @@
  *
  * Copyright 2011 Humberto Sermeño
  */
+define([
+    './jquery'
+], function() {
 (function( $ ){
     var methods = {
         init: function( options ) {
@@ -294,4 +297,4 @@ String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null
     };
 
 })(jQuery);
-
+});
