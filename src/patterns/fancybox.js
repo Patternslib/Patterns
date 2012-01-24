@@ -6,8 +6,12 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-$.extend( mapal.patterns, {
-    "fancybox": {
+define([
+    'require',
+    '../lib/jquery',
+    '../lib/jquery.fancybox'
+], function(require) {
+    var fancybox = {
         execute: function(elem, url, sources, params, event) {
             //var $this = $(event.target);
 
@@ -27,5 +31,6 @@ $.extend( mapal.patterns, {
             $.fancybox( options );
             $.fancybox.resize();
         }
-    }
+    };
+    return fancybox;
 });
