@@ -8,10 +8,10 @@
  */
 define([
     'require',
-    '../../lib/jquery',
-    '../utils'
+    'lib/jquery',
+    'utils'
 ], function(require) {
-    var utils = require('../utils');
+    var utils = require('utils');
 
     var toggle = {
         initContent: function(root) {

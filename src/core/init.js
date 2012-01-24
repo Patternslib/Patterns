@@ -7,7 +7,7 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    '../../lib/jquery'
+    'lib/jquery'
 ], function() {
 
 var mapal = {
