@@ -21,7 +21,7 @@ require([
     mapal.patterns.tooltip = { execute: function() {} };
 
     // wait for the DOM to be ready and initialize
-    var doc = require('lib/domReady');
+    var doc = require('lib/domReady!');
     mapal.init();
     mapal.initContent(doc.body);
     $(doc).trigger("setupFinished", doc);
