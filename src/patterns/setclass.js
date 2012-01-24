@@ -60,17 +60,17 @@ $.extend( mapal.patterns, {
                 }
             }
         },
-        
+
         getObjFromParams: function($elem, params) {
             var values = params['values'];
             var obj = {};
-            
-            obj.id = params['id'] || $elem.attr("id");          
+
+            obj.id = params['id'] || $elem.attr("id");
             obj.attr = params['attr'] || 'class';
             obj.store = params['store'] || false;
-            
+
             if (typeof obj.id !== "string" || obj.id.length == 0 ||
-                typeof obj.attr !== 'string' || obj.attr.length == 0 || 
+                typeof obj.attr !== 'string' || obj.attr.length == 0 ||
                 typeof values  !== 'string' || values.length == 0 ) {
                 return null;
             }
@@ -84,28 +84,28 @@ $.extend( mapal.patterns, {
             obj.other = values[1];
             return obj;
         },
-        
+
         handleClick: function(event) {
             var $this = $(this);
             var params = mapal.patterns.extractParameters('!' + $this.attr('data-setclass'));
-            
+
             mapal.patterns.setclass.execute($this, '', '', params, event);
-            
-            event.preventDefault();         
+
+            event.preventDefault();
         },
-        
+
         store: {},
-        
+
         dataAttr: true,
-        
+
         execute: function( elem, url, sources, params, event ) {
             var value, other;
             var obj = mapal.patterns.setclass.getObjFromParams( elem, params );
             if (obj === null) return false;
-            
-            var $setclass = $("#" + obj.id);            
+
+            var $setclass = $("#" + obj.id);
             if ($setclass.length == 0) return false;
-            
+
             if (obj.attr === 'class') {
                 if (obj.other.length > 0 ) {
                     var cls = $setclass.attr('class').split(' ');
@@ -114,7 +114,7 @@ $.extend( mapal.patterns, {
                         if (cls[i].match(regval)) {
                             $setclass.removeClass(cls[i]);
                         }
-                    }   
+                    }
                     $setclass.addClass(obj.other);
                 } else if ($setclass.hasClass(obj.value) || $setclass.hasClass(obj.other)) {
                     /* obj.value already set and no other present. pass */
@@ -138,12 +138,12 @@ $.extend( mapal.patterns, {
                     other = obj.value;
                 }*/
             }
-            
+
             if (obj.store) mapal.patterns.setclass.storeValue(obj.id, obj.attr, value, other);
-            
+
             return true;
         },
-        
+
         storeValue: function(id, attr, value, other) {
             var store = mapal.patterns.setclass.store[id + '.' + attr];
             if ( store ) {
