@@ -6,6 +6,7 @@ define([
     './core/store',
     './patterns/collapsible',
     './patterns/fancybox',
+    './patterns/floatingpanel',
     './patterns/selfhealing',
     './patterns/setclass',
     './patterns/toggle',
@@ -28,6 +29,7 @@ define([
     // XXX: hack, what does this do?
     mapal.patterns.tooltip = { execute: function() {} };
     mapal.patterns.fancybox = require('./patterns/fancybox');
+    mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
     mapal.patterns.setclass = require('./patterns/setclass');
 
