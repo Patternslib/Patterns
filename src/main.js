@@ -5,6 +5,7 @@ define([
     './core/init',
     './core/store',
     './patterns/collapsible',
+    './patterns/setclass',
     './patterns/toggle',
     './patterns/tooltip'
 ], function(require) {
@@ -24,6 +25,7 @@ define([
     // Register as active pattern to prevent errors on clicks.
     // XXX: hack, what does this do?
     mapal.patterns.tooltip = { execute: function() {} };
+    mapal.patterns.setclass = require('./patterns/setclass');
 
     // wait for the DOM to be ready and initialize
     var doc = require('./lib/domReady!');
