@@ -1,9 +1,9 @@
 define([
     'require',
-    '../core/store'
+    './core/store'
 ], function(require) {
     // XXX: not nice
-    var mapal = require('../core/store');
+    var mapal = require('./core/store');
     var utils = {
         extractParameters: function(params, sources) {
             var tmp,
@@ -25,7 +25,7 @@ define([
                             effect = undefined;
                         }
                         var source = [sources.pop()];
-                        // XXX: $a and url where also not defined in the old context
+                        // XXX: $a and url were also not defined in the old context
                         // We need automated tests
                         mapal.injection.load($a, url, param.slice(1), source);
                     } else if (p[i].indexOf('=') > 0) {
@@ -57,4 +57,5 @@ define([
             return options;
         }
     };
+    return utils;
 });
