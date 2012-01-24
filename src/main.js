@@ -3,6 +3,7 @@ require([
     'lib/jquery',
     'lib/domReady!',
     'core/init',
+    'patterns/collapsible',
     'patterns/toggle',
     'patterns/tooltip'
 ], function(require) {
@@ -13,6 +14,7 @@ require([
 
     // register our patterns
     // rethink naming once all patterns are migrated to this style
+    mapal.passivePatterns.collapsible = require('patterns/collapsible');
     mapal.passivePatterns.toggle = require('patterns/toggle');
     mapal.passivePatterns.tooltip = require('patterns/tooltip');
 

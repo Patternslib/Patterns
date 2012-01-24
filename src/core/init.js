@@ -921,38 +921,6 @@ var mapal = {
         }
     },
 
-    initCollapsible: function(root) {
-        $(root).find('.collapsible').each(function() {
-            var $this = $(this),
-                $data = $this.data('collapsible');
-
-            if (!$data) {
-                var $ctrl = $this.children(':first'),
-                    $panel = $this.children(':gt(0)')
-                        .wrapAll('<div class="panel-content" />')
-                        .parent();
-
-                $this.data('collapsible', true);
-                if ($this.hasClass("closed")) {
-                    $panel.toggle();
-                } else if (!$this.hasClass("open")) {
-                    $this.addClass("open");
-                }
-
-                $ctrl.bind("click", function() {
-                    if ($this.hasClass('open')) {
-                        $this.removeClass('open');
-                        $this.addClass('closed');
-                    } else {
-                        $this.removeClass('closed');
-                        $this.addClass('open');
-                    }
-                    $panel.slideToggle();
-                });
-            }
-        });
-    },
-
     initAutoLoads: function( root ) {
         $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {
             var $data = $(this).data("autoLoading");
@@ -1007,7 +975,6 @@ var mapal = {
         mapal.initSorts(root);
         mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
-        mapal.initCollapsible(root);
         //
 
         for (passivePatternName in mapal.passivePatterns) {
