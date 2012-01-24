@@ -1,6 +1,6 @@
 define([
     'require',
-    'lib/jquery',
+    '../lib/jquery'
 ], function(require) {
     var collapsible = {
         initContent: function(root) {

@@ -7,7 +7,13 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'lib/jquery'
+    '../lib/jquery',
+    // XXX: belong to the patterns once they are done
+    '../lib/jquery-ext',
+    '../lib/jquery.fancybox',
+    '../lib/jquery.form',
+    '../lib/jquery.jcarousel',
+    '../lib/jquery.tools'
 ], function() {
 
 var mapal = {
