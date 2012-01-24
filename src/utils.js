@@ -5,56 +5,56 @@ define([
     // XXX: not nice
     var mapal = require('../core/store');
     var utils = {
-    extractParameters: function(params, sources) {
-        var tmp,
-            j,
-            paramObjs = {};
-        if (params.length > 0) {
-            var p = params.slice(1).split('!');
-            for (var i = p.length-1; i >= 0; i--) {
-                // support injection parameters in other patterns
-                if (p[i][0] == '#') {
-                    var param, effect;
+        extractParameters: function(params, sources) {
+            var tmp,
+                j,
+                paramObjs = {};
+            if (params.length > 0) {
+                var p = params.slice(1).split('!');
+                for (var i = p.length-1; i >= 0; i--) {
+                    // support injection parameters in other patterns
+                    if (p[i][0] == '#') {
+                        var param, effect;
 
-                    if (p[i].indexOf('.') > 0) {
-                        tmp = p[i].split('.');
-                        param = tmp[0];
-                        effect = tmp[1];
+                        if (p[i].indexOf('.') > 0) {
+                            tmp = p[i].split('.');
+                            param = tmp[0];
+                            effect = tmp[1];
+                        } else {
+                            param = p[i];
+                            effect = undefined;
+                        }
+                        var source = [sources.pop()];
+                        // XXX: $a and url where also not defined in the old context
+                        // We need automated tests
+                        mapal.injection.load($a, url, param.slice(1), source);
+                    } else if (p[i].indexOf('=') > 0) {
+                        j = p[i].indexOf('=');
+                        paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
                     } else {
-                        param = p[i];
-                        effect = undefined;
+                        paramObjs[p[i]] = true;
                     }
-                    var source = [sources.pop()];
-                    // XXX: $a and url where also not defined in the old context
-                    // We need automated tests
-                    mapal.injection.load($a, url, param.slice(1), source);
-                } else if (p[i].indexOf('=') > 0) {
-                    j = p[i].indexOf('=');
-                    paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
-                } else {
-                    paramObjs[p[i]] = true;
                 }
             }
-        }
-        return paramObjs;
-    },
+            return paramObjs;
+        },
 
-    parseOptions: function(input) {
-        var params = input.split("!"),
-            options = {}, name, value, index;
+        parseOptions: function(input) {
+            var params = input.split("!"),
+                options = {}, name, value, index;
 
-        for (var i=0; i<params.length; i++) {
-            index = params[i].indexOf("=");
-            if (index === -1) {
-                name = params[i];
-                value = true;
-            } else {
-                name = params[i].slice(0, index);
-                value = params[i].slice(index+1);
+            for (var i=0; i<params.length; i++) {
+                index = params[i].indexOf("=");
+                if (index === -1) {
+                    name = params[i];
+                    value = true;
+                } else {
+                    name = params[i].slice(0, index);
+                    value = params[i].slice(index+1);
+                }
+                options[name] = value;
             }
-            options[name] = value;
+            return options;
         }
-        return options;
-    }
-        };
+    };
 });
