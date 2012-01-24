@@ -6,12 +6,13 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-(function($){
-    mapal = mapal || {};
-    $.extend(mapal, {
-    'store': {
+define([
+    'require',
+    '../lib/jquery'
+], function(require) {
+    var store = {
         'getPatternAttributes': function(pattern) {
-            if (!mapal.store.hasStorage()) return [];
+            if (!store.hasStorage()) return [];
 
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
             var attrs = [];
@@ -24,7 +25,7 @@
         },
 
         'addPatternAttribute': function(pattern, value) {
-            if (!mapal.store.hasStorage()) return;
+            if (!store.hasStorage()) return;
 
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0") + 1;
 
@@ -33,7 +34,7 @@
         },
 
         'setPatternAttribute': function(pattern, index, value) {
-            if (!mapal.store.hasStorage()) return;
+            if (!store.hasStorage()) return;
 
             var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
 
@@ -47,7 +48,7 @@
         },
 
         'initPatternStore': function(pattern) {
-            if (!mapal.store.hasStorage()) return;
+            if (!store.hasStorage()) return;
 
             if (window.sessionStorage.getItem( pattern+'-count' ) === null) {
                 window.sessionStorage.setItem( pattern+'-count', '0' );
@@ -57,6 +58,6 @@
         'hasStorage': function() {
             return typeof window.sessionStorage !== 'undefined';
         }
-    }
-    });
-})(jQuery);
+    };
+    return store;
+});

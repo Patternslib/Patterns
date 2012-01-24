@@ -3,6 +3,7 @@ define([
     './lib/jquery',
     './lib/domReady!',
     './core/init',
+    './core/store',
     './patterns/collapsible',
     './patterns/toggle',
     './patterns/tooltip'
@@ -11,6 +12,8 @@ define([
     mapal.registerWidthClass("narrow", 0, 780);
     mapal.registerWidthClass("medium", 0, 1109);
     mapal.registerWidthClass("wide", 1110, null);
+
+    mapal.store = require('./core/store');
 
     // register our patterns
     // rethink naming once all patterns are migrated to this style
