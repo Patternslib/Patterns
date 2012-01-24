@@ -6,8 +6,15 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-$.extend( mapal.patterns, {
-    "selfHealing": {
+define([
+    'require',
+    '../lib/jquery',
+    '../core/init',
+    '../core/store',
+    '../utils'
+], function(require) {
+    var mapal = require('../core/init');
+    var selfHealing = {
         options: {
             confirm: null,
             "show": null,
@@ -20,7 +27,7 @@ $.extend( mapal.patterns, {
         execute: function( elem, url, sources, params, event ) {
             var container = $("#selfhealing-messages"), paramObjs = {}, p = {};
 
-            var options = $.extend({}, mapal.patterns.selfHealing.options);
+            var options = $.extend({}, selfHealing.options);
 
             // split up the params
             $.extend(options, params);
@@ -33,7 +40,7 @@ $.extend( mapal.patterns, {
                 container = $("<div />").attr("id", "selfhealing-messages").appendTo(document.body);
             }
 
-            var count = ++mapal.patterns.selfHealing.count;
+            var count = ++selfHealing.count;
 
             //  $("<div />").attr("id", "selfhealing-message-" + count).attr("opacity", 0).appendTo(container);
 
@@ -50,7 +57,7 @@ $.extend( mapal.patterns, {
                 var doMouseLeave = function() {
                     var $this = $(this);
                     $this.data("persistent", false);
-                    mapal.patterns.selfHealing.remove($this);
+                    selfHealing.remove($this);
                 };
 
                 $target.attr("id", "selfhealing-message-" + count).bind(
@@ -88,8 +95,8 @@ $.extend( mapal.patterns, {
 
                 $target.animate({"opacity": 1}, "fast", function() {
                     $target.data("timer", setTimeout(function() {
-                        mapal.patterns.selfHealing.remove($target);
-                    }, mapal.patterns.selfHealing.options.displayTime*1000));
+                        selfHealing.remove($target);
+                    }, selfHealing.options.displayTime*1000));
                 });
 
                 mapal.patterns.callListener($(elem), 'selfHealing', 'onFinished');
@@ -123,5 +130,6 @@ $.extend( mapal.patterns, {
         },
 
         count: 0
-    }
+    };
+    return selfHealing;
 });
