@@ -6,8 +6,8 @@ define([
     './core/store',
     './patterns/collapsible',
     './patterns/fancybox',
-    './patterns/setclass',
     './patterns/selfhealing',
+    './patterns/setclass',
     './patterns/toggle',
     './patterns/tooltip'
 ], function(require) {
