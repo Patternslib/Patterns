@@ -4,7 +4,6 @@ define([
 ], function(require) {
     var collapsible = {
         initContent: function(root) {
-            debugger;
             $(root).find('.collapsible').each(function() {
                 var $this = $(this),
                 $data = $this.data('collapsible');
