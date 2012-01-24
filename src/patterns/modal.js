@@ -6,8 +6,14 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-$.extend( mapal.patterns, {
-    "modal": {
+define([
+    'require',
+    '../lib/jquery',
+    '../core/init'
+], function(require) {
+    var mapal = require('../core/init');
+
+    var modal = {
         options: {
             "class": "",
             "loadingText": "Loading...",
@@ -17,7 +23,7 @@ $.extend( mapal.patterns, {
 
         init: function() {
             $("#panel .closePanel").live('click.mapalModal', function(e) {
-                mapal.patterns.modal._findClose($(this));
+                modal._findClose($(this));
                 e.preventDefault();
                 return false;
             });
@@ -28,7 +34,7 @@ $.extend( mapal.patterns, {
             if ( $elem.hasClass('closePanel') ) {
                 var $panel = $elem.parents( "#panel" );
                 if ( $panel.length > 0 ) {
-                    mapal.patterns.modal.close($panel);
+                    modal.close($panel);
                 }
             }
         },
@@ -40,7 +46,7 @@ $.extend( mapal.patterns, {
                 $panel = $("#panel");
             var source = (parts[1] == undefined) ? [] : parts[1];
 
-            var opts = $.extend({}, mapal.patterns.modal.options, params);
+            var opts = $.extend({}, modal.options, params);
 
             if ($panel.length===0) {
                 $panel = $("<div/>")
@@ -51,7 +57,7 @@ $.extend( mapal.patterns, {
 
             $panel.data('modal', opts);
 
-            mapal.patterns.modal.pauseVideo(opts, true);
+            modal.pauseVideo(opts, true);
 
             if (opts['showLoading']) {
                 var $loading = $("<div>").text(opts['loadingText']).attr("id", "panel-loading");
@@ -60,8 +66,8 @@ $.extend( mapal.patterns, {
 
                 $panel.addClass('loading');
 
-                mapal.patterns.modal.apiInit($panel, opts);
-                mapal.patterns.modal.centerOverlay($panel);
+                modal.apiInit($panel, opts);
+                modal.centerOverlay($panel);
             }
 
             mapal.injection.load(elem, parts[0], "panel-content:content", source, {
@@ -77,7 +83,7 @@ $.extend( mapal.patterns, {
                         mapal.injection.apiInit($panel, opts);
                     }
 
-                    mapal.patterns.modal.centerOverlay($panel);
+                    modal.centerOverlay($panel);
                 }
             });
         },
@@ -90,7 +96,7 @@ $.extend( mapal.patterns, {
             api = $panel.overlay({api: true,
                                   closeOnClick: false,
                                   onClose: function() {
-                                      mapal.patterns.modal.pauseVideo(opts, false);
+                                      modal.pauseVideo(opts, false);
                                   },
                                   top: 'center',
                                   mask: {color: "#ebecff", loadSpeed: 200, opacity: 0.9}});
@@ -143,13 +149,13 @@ $.extend( mapal.patterns, {
                     if (reply.action==="reload") {
                         location.reload();
                     } else if (reply.action==="close" || !reply.action) {
-                        mapal.patterns.modal.close($panel);
+                        modal.close($panel);
                     }
                     return;
                 } else {
                     $trigger.trigger("ajaxFormResult");
                 }
-                mapal.patterns.modal.close($panel);
+                modal.close($panel);
                 return;
             }
 
@@ -164,7 +170,8 @@ $.extend( mapal.patterns, {
             mapal.initContent(target);
             $("#panel-content").replaceWith($tree);
             $panel.find("form").ajaxForm({context: this.context,
-                                          success: mapal.patterns.modal.formHandler});
+                                          success: modal.formHandler});
         }
-    }
+    };
+    return modal;
 });
