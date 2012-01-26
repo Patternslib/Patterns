@@ -5,7 +5,7 @@
  * Copyright 2011 Humberto Sermeño
  */
 define([
-    './jquery'
+    './lib/jquery'
 ], function() {
 (function( $ ){
     var methods = {

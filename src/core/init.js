@@ -10,11 +10,11 @@ define([
     'require',
     '../lib/jquery',
     // XXX: belong to the patterns once they are done
-    '../lib/jquery-ext',
     '../lib/jquery.fancybox',
     '../lib/jquery.form',
     '../lib/jquery.jcarousel',
     '../lib/jquery.tools',
+    '../jquery-ext',
     '../utils'
 ], function(require) {
 
