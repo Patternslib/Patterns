@@ -6,26 +6,25 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-(function($) {
-    mapal = mapal || {passivePatterns: {}};
-    // Register as active pattern to prevent errors on clicks.
-    $.extend(mapal.patterns, {
-    "tooltip": {
-        execute: function() {}
-    }});
+define([
+    'require',
+    '../lib/jquery',
+    '../core/init',
+    '../utils'
+], function(require) {
+    var utils = require('../utils'),
+        mapal = require('../core/init');
 
-    $.extend(mapal.passivePatterns, {
-    "tooltip": {
+    var tooltip = {
         count: 0,
 
         init: function() {
         },
 
         initContent: function(root) {
-            var tooltip = mapal.passivePatterns.tooltip;
             $("*[data-tooltip]", root).each(function() {
                 var $trigger = $(this),
-                    options = mapal.patterns.parseOptions($trigger.data("tooltip"));
+                    options = utils.parseOptions($trigger.data("tooltip"));
 
                 options.title = $trigger.attr("title");
                 $trigger.removeAttr("title");
@@ -35,8 +34,7 @@
         },
 
         setupShowEvents: function($trigger) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                parameters = $trigger.data("mapal.tooltip");
+            var parameters = $trigger.data("mapal.tooltip");
             if (parameters.click) {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
@@ -51,8 +49,7 @@
         },
 
         setupHideEvents: function($trigger) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                $container = tooltip.getContainer($trigger),
+            var $container = tooltip.getContainer($trigger),
                 parameters = $trigger.data("mapal.tooltip");
             if (parameters.sticky) {
                 $container.find(".closePanel")
@@ -72,8 +69,7 @@
         },
 
         removeHideEvents: function($trigger) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                $container = tooltip.getContainer($trigger);
+            var $container = tooltip.getContainer($trigger);
             $(window).off(".tooltip");
             $container.off(".tooltip");
             $container.find(".closePanel").off(".tooltip");
@@ -85,8 +81,7 @@
         },
 
         show: function(event) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                $trigger = event.data,
+            var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
                 options = $trigger.data("mapal.tooltip");
 
@@ -116,8 +111,7 @@
         },
 
         hide: function(event) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                $trigger = event.data,
+            var $trigger = event.data,
                 $container = tooltip.getContainer($trigger);
             tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
@@ -125,8 +119,7 @@
         },
 
         getContainer: function($trigger) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                $container = $trigger.data("mapal.tooltip.container");
+            var $container = $trigger.data("mapal.tooltip.container");
             if ($container===undefined) {
                 $container=tooltip.createContainer($trigger);
                 $trigger.data("mapal.tooltip.container", $container);
@@ -135,8 +128,7 @@
         },
 
         createContainer: function($trigger) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                options = $trigger.data("mapal.tooltip"),
+            var options = $trigger.data("mapal.tooltip"),
                 $content;
 
             $container = $("<div/>", {"class": "tooltip-container"});
@@ -168,8 +160,7 @@
         },
 
         positionStatus: function($trigger, $container) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                trigger_box = tooltip.boundingBox($trigger),
+            var trigger_box = tooltip.boundingBox($trigger),
                 tooltip_box = tooltip.boundingBox($container),
                 $window = $(window),
                 window_width = $window.width(),
@@ -314,8 +305,7 @@
         VALIDPOSITION: /^([lr][tmb]|[tb][lmr])$/,
 
         positionContainer: function($trigger, $container) {
-            var tooltip = mapal.passivePatterns.tooltip,
-                status = tooltip.positionStatus($trigger, $container),
+            var status = tooltip.positionStatus($trigger, $container),
                 options = $trigger.data("mapal.tooltip"),
                 container_offset = {},
                 tip_offset = {},
@@ -407,5 +397,7 @@
                 top: tip_offset.top+"px",
                 left: tip_offset.left+"px"});
         }
-    }});
-})(jQuery);
+    };
+
+    return tooltip;
+});

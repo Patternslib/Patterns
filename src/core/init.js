@@ -6,6 +6,20 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
+define([
+    'require',
+    '../lib/jquery',
+    // XXX: belong to the patterns once they are done
+    '../lib/jquery-ext',
+    '../lib/jquery.fancybox',
+    '../lib/jquery.form',
+    '../lib/jquery.jcarousel',
+    '../lib/jquery.tools',
+    '../utils'
+], function(require) {
+
+var utils = require('../utils');
+
 var mapal = {
     widthClasses: {},
 
@@ -648,25 +662,6 @@ var mapal = {
             'onExecuted': []
         },
 
-        parseOptions: function(input) {
-            var params = input.split("!"),
-                options = {}, name, value, index;
-
-            for (var i=0; i<params.length; i++) {
-                index = params[i].indexOf("=");
-                if (index === -1) {
-                    name = params[i];
-                    value = true;
-                } else {
-                    name = params[i].slice(0, index);
-                    value = params[i].slice(index+1);
-                }
-                options[name] = value;
-            }
-            return options;
-        },
-
-        
         // Enable DOM-injection from anchors
         init: function () {
             // initalize the listeners for each of the patterns
@@ -721,7 +716,7 @@ var mapal = {
                         patt = patt[0].slice(1);
 
                         var params = attrVal.replace(re, "");
-                        var paramObjs = mapal.patterns.extractParameters(params, sources);
+                        var paramObjs = utils.extractParameters(params, sources);
                         if ( mapal.patterns[patt]  ) {
                             // only do something if we found the pattern
                             if (!mapal.patterns[patt].passive) {
@@ -742,38 +737,6 @@ var mapal = {
 
             $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
             $(mapal.patterns.options.search.submit.join(", ")).live("submit.mapal", handlePattern );
-        },
-
-        extractParameters: function(params, sources) {
-            var tmp,
-                j,
-                paramObjs = {};
-            if (params.length > 0) {
-                var p = params.slice(1).split('!');
-                for (var i = p.length-1; i >= 0; i--) {
-                    // support injection parameters in other patterns
-                    if (p[i][0] == '#') {
-                        var param, effect;
-
-                        if (p[i].indexOf('.') > 0) {
-                            tmp = p[i].split('.');
-                            param = tmp[0];
-                            effect = tmp[1];
-                        } else {
-                            param = p[i];
-                            effect = undefined;
-                        }
-                        var source = [sources.pop()];
-                        mapal.injection.load($a, url, param.slice(1), source);
-                    } else if (p[i].indexOf('=') > 0) {
-                        j = p[i].indexOf('=');
-                        paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
-                    } else {
-                        paramObjs[p[i]] = true;
-                    }
-                }
-            }
-            return paramObjs;
         },
 
         callListener: function( elem, pattern, event ) {
@@ -936,38 +899,6 @@ var mapal = {
         }
     },
 
-    initCollapsible: function(root) {
-        $(root).find('.collapsible').each(function() {
-            var $this = $(this),
-                $data = $this.data('collapsible');
-
-            if (!$data) {
-                var $ctrl = $this.children(':first'),
-                    $panel = $this.children(':gt(0)')
-                        .wrapAll('<div class="panel-content" />')
-                        .parent();
-
-                $this.data('collapsible', true);
-                if ($this.hasClass("closed")) {
-                    $panel.toggle();
-                } else if (!$this.hasClass("open")) {
-                    $this.addClass("open");
-                }
-
-                $ctrl.bind("click", function() {
-                    if ($this.hasClass('open')) {
-                        $this.removeClass('open');
-                        $this.addClass('closed');
-                    } else {
-                        $this.removeClass('closed');
-                        $this.addClass('open');
-                    }
-                    $panel.slideToggle();
-                });
-            }
-        });
-    },
-
     initAutoLoads: function( root ) {
         $(root).find('.autoLoading-visible').parents(":scrollable").each(function() {
             var $data = $(this).data("autoLoading");
@@ -1022,7 +953,6 @@ var mapal = {
         mapal.initSorts(root);
         mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
-        mapal.initCollapsible(root);
         //
 
         for (passivePatternName in mapal.passivePatterns) {
@@ -1074,13 +1004,5 @@ $.extend( mapal.ui, {
     }
 });
 
-
-$(document).ready(function() {
-    mapal.registerWidthClass("narrow", 0, 780);
-    mapal.registerWidthClass("medium", 0, 1109);
-    mapal.registerWidthClass("wide", 1110, null);
-    mapal.init();
-    mapal.initContent(document.body);
-    $(document).trigger("setupFinished", document);
+    return mapal;
 });
-

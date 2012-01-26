@@ -1,0 +1,3 @@
+- proxies for unaltered dist/ libraries
+- adapted libraries (preferably these should be unaltered in dist)
+- libraries that do not be adapted (requirejs and it's plugins)
