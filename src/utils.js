@@ -39,6 +39,8 @@ define([
             return paramObjs;
         },
 
+        // input = "a!b=1 2!c=x"
+        // --> options = {a: true, b: '1 2', c: 'x'}
         parseOptions: function(input) {
             var params = input.split("!"),
                 options = {}, name, value, index;
