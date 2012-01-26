@@ -6,18 +6,20 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
+define([
+    'require',
+    '../lib/jquery',
+    '../utils'
+], function(require) {
+    var utils = require('../utils');
 
-(function($) {
-    mapal = mapal || {passivePatterns: {}};
-    $.extend(mapal.passivePatterns, {
-    "toggle": {
+    var toggle = {
         initContent: function(root) {
-            $("[data-toggle]", root).on("click", mapal.passivePatterns.toggle.onClick);
+            $("[data-toggle]", root).on("click", toggle.onClick);
         },
 
         onClick: function(event) {
-            var toggle = mapal.passivePatterns.toggle,
-                $trigger = $(event.target),
+            var $trigger = $(event.target),
                 options = toggle.getOptions($trigger),
                 $targets = $(options.selector),
                 $target;
@@ -49,12 +51,14 @@
                 return options;
             }
 
-            options = mapal.patterns.parseOptions($trigger.data("toggle"));
+            options = utils.parseOptions($trigger.data("toggle"));
             if (!options.selector || !options.attr || !options.value) {
                 alert("Toggle pattern error: not all mandatory parameters provided.");
             }
             $trigger.data("mapal.toggle", options);
             return options;
         }
-    }});
-})(jQuery);
+    };
+
+    return toggle;
+});
