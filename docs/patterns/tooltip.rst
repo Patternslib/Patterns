@@ -76,7 +76,7 @@ It is possible to force a specific tooltip position by adding the
 .. code-block::  html
 
    <a href="#" title="Please enter the full URL for the website"
-      data-position="position=lt!forcePosition">
+      data-tooltip="position=lt!forcePosition">
     …
    </a>
 
