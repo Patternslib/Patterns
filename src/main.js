@@ -2,6 +2,7 @@ define([
     'require',
     './lib/jquery',
     './lib/domReady!',
+    './lib/modernizr',
     './core/init',
     './core/store',
     './patterns/collapsible',
