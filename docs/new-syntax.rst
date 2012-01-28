@@ -11,8 +11,8 @@ Collapsible
   <div class="collapsible closed">
 
 
-Changing attribute
-------------------
+Changing attributes
+-------------------
 
 Adding
 ~~~~~~
@@ -143,8 +143,27 @@ Methods (under discussion)
 Tooltip
 -------
 
-Inconsistency: .tooltip should turn something into a tooltip,
-.spawn-tooltip could spawn a tooltip for something, actually a
-data-injection that sets the correct data on the tooltip.
+::
 
-not sure - just a thought
+  <a id="sourceid" href="tooltips.html#myTip" data-injection="#myTip.tooltip[data-tooltip-info='rt forcePosition']">
+  <button id="targetid" class="tooltip" data-tooltip="rt" title="Tooltip content">
+
+
+
+  <button id="targetid">
+
+At some point, the block below here is injected somewhere on the same page. The block is hidden with CSS. 
+
+    <div class="tooltip-interim" data-tooltip="rt force-position auto-show; target: selector">
+      <p>
+         This button is new. It's really cool, you should check it out now! <a href="somewhere.html">Learn more…</a>
+      </p>
+      <a href="#targetid" class="no-js">Jump to section.</a>
+    </div>
+    <img src="foo.png" title="Tooltip content" alt="Descriptive text
+      on image for blind people" class="tooltip" />
+
+above will be turned into below during loading (the :
+
+    <div class="tooltip-container rt forcePosition"  style="top: 208px ....; display: hidden">
+  </body>
