@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Demo page</title>
+    <link rel="stylesheet" href="base.css" type="text/css">
+    <script src="../lib/jquery-1.7.1.js" type="text/javascript" charset="utf-8"></script>    
+    <script src="../src/core/init.js" type="text/javascript" charset="utf-8"></script> 
+</head>
+<body>
+	<form action="pattern-test-response#paragraphs" data-injection="#main-content" class="concise auto-submit">
+		<fieldset>
+			<label>
+				Take your pick
+				<select>
+					<option>
+						Item A
+					</option>
+					<option>
+						Item B
+					</option>
+				</select>
+			</label>
+			<label><input type="checkbox" name="myCheckbox" /> My checkbox</label>
+			<fieldset class="comprehensive radio-list">
+				<legend>Choose your flavour</legend>
+				<label><input type="radio" name="radio" /> Strawberry flavoured</label>
+				<label><input type="radio" name="radio" /> Banana flavoured</label>
+				<label><input type="radio" name="radio" /> Raspberry flavoured</label>
+			</fieldset>
+			<label>Free text shouldn't do anything for now <input type="text" name="myFreeField" />
+		</fieldset>
+	</form>
+	<hr/>
+	<div id="main-content">
+		<p>Main content will appear here…</p>
+	</div>
+</body>
+</html>

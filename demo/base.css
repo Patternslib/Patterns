@@ -473,7 +473,7 @@ fieldset.comprehensive label *,
 form.comprehensive fieldset label *,
 form.concise fieldset.comprehensive label *,
 form.compact fieldset.comprehensive label * {
-	position: static !important;
+	position: static;
 	margin: 0;
 	float: none;
 }
@@ -581,24 +581,25 @@ fieldset.condensed fieldset p.question {
 
 /* @group Radio List */
 
-.radioList {
+.radio-list {
 	list-style-type: none !important;
 	margin: 0 0 20px;
 	padding-bottom: 4px !important;
 }
 
-.radioList label {
+.radio-list label {
 	display: block;
 	width: auto !important;
 	padding-left: 18px !important;
 }
 
-.radioList label input {
+.radio-list label input[type="radio"],
+form.concise fieldset.radio-list label input[type="radio"] {
+	margin-left: -18px;
 	float: left;
-	margin: 3px 5px 0 -18px !important;
 }
 
-.portlet .radioList label input {
+.portlet .radio-list label input {
 	margin-top: 2px !important;
 }
 
@@ -646,8 +647,8 @@ ol.inputRow {
 
 ul.inputList,
 ol.inputList,
-ol.radioList,
-ul.radioList,
+ol.radio-list,
+ul.radio-list,
 ol.checkList,
 ul.checkList {
 	margin-top: 0;
@@ -658,8 +659,8 @@ ul.checkList {
 }
 
 ul.inputList li,
-ol.radioList li,
-ul.radioList li,
+ol.radio-list li,
+ul.radio-list li,
 ol.checkList li,
 ul.checkList li {
 	margin-left: 0;
