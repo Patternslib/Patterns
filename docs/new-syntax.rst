@@ -4,7 +4,7 @@ Patterns overview (with new syntax)
 Collapsible
 -----------
 
-.. code-block:: html
+::
 
   <div class="collapsible">
   <div class="collapsible open">
