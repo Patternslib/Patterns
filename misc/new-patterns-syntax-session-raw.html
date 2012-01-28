@@ -1,0 +1,444 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>CMfa8KxCQz</title>
+</head>
+<body>Old syntax<br
+/>==========<br
+/><br
+/>&lt;div class="collapsible"&gt;<br
+/>&lt;div class="collapsible open"&gt;<br
+/>&lt;div class="collapsible closed"&gt;<br
+/><br
+/><br
+/>&lt;a href="foo.html#id" rel=".modal!class=loginModal"&gt;content&lt;/a&gt;<br
+/>&lt;a href="foo.html#id1#id2 rel="#listToUpdate:after #buttonBarMore" class="autoLoading-visible"&gt;More&amp;hellip;&lt;/a&gt;<br
+/>&lt;li&gt;&lt;a href="foo.html#cata-panel2" data-injection="#panel2:content"&gt;Cat A&lt;/a&gt;&lt;/li&gt;<br
+/><br
+/><br
+/>&lt;a href="#" title="Tittle attribute content" data-tooltip=""&gt;tooltip default&lt;/a&gt;<br
+/>&lt;a href="#" title="tooltip left top, show on click" data-tooltip="click!position=tl"&gt;<br
+/>&lt;a href="#" title="This is one sticky tooltip" data-tooltip="sticky!position=rm"&gt;tooltip right middle&lt;/a&gt;<br
+/>&lt;a href="#" title="title" data-tooltip="position=tm-rt-rm-rb-lt"&gt;foo&lt;/a&gt;<br
+/>&lt;a href="foo.html#myTip" data-tooltip="ajax!click" title="Tittle attribute content"&gt;<br
+/>&lt;a href="foo.html#myTip" data-tooltip="ajax" title="Tittle attribute content"&gt;<br
+/>&lt;img src="placeholder.gif" class="floatBefore" data-tooltip="stick" title="foo" alt="foo" /&gt;<br
+/>&lt;img src="placeholder.gif" class="floatAfter" data-tooltip="" title="foo" alt="foo" /&gt;<br
+/><br
+/><br
+/>&lt;button data-toggle="selector=#toCheck!attr=checked!value=checked"&gt;toggle checkbox&lt;/button&gt;<br
+/>&lt;button data-toggle="selector=#toToggle!attr=class!value=red blue"&gt;change colour&lt;/button&gt;<br
+/><br
+/><br
+/>&lt;a href="index.html#mainContent#appendix" data-injection="#mainContent#appendix" data-setclass="id=body!values=template-*:template-home"&gt;Healthy&lt;br/&gt;Workplaces&lt;/a&gt;<br
+/><br
+/>&lt;a href="index.html#mainContent#appendix" data-injection="#mainContent#appendix" data-setclass="id=body!values=template-*:template-home"&gt;Healthy&lt;br/&gt;Workplaces&lt;/a&gt;<br
+/><br
+/><br
+/><br
+/><br
+/>Carousel<br
+/>========<br
+/><br
+/>carrousel: triggered by class presence, but how to handle the options?<br
+/>&lt;ul class="carousel"&gt;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&lt;ul class="carousel" data-carousel="method: loop; step: 2; speed: 0.3s; controls: slider buttons; direction: vertical"&gt;&nbsp; &lt;-- individual properties method<br
+/>&lt;ul class="carousel" data-carousel="options: loop 2 0.3s slider buttons vertical"&gt; &lt;-- shorthand method<br
+/><br
+/>data-caroussel="options: loop slider buttons vertical; step: 2; speed: 0.3s"<br
+/>data-caroussel="loop slider buttons vertical; step: 2; speed: 0.3s"<br
+/><br
+/>&lt;ul class="caroussel" adta-caroussel="effect -- easeIn"&gt;<br
+/>&lt;/ul&gt;<br
+/><br
+/><b>Carousel options</b><br
+/>----------------<br
+/><br
+/>* Loop (Default off)<br
+/>* Steps (Default 1 step)<br
+/>* Controls (Buttons, slider, default buttons only and touch as standard)<br
+/>* Speed (Default 0.2s)<br
+/>* Direction (Default horizontal)<br
+/>* More?<br
+/><br
+/><br
+/>Toggle<br
+/>======<br
+/><br
+/>data-toggle="#id h3; speed: 0.3"<br
+/><br
+/>data-tooltip="options: slow sticky ajax" &lt;- positional with short-hand second parameter<br
+/>data-tooltip="slow sticky ajax"<br
+/>data-tooltip="options: slow sticky ajax"<br
+/><br
+/>&lt;img title="Lorem ipsum" class="tooltip" data-tooltip="sticky"&gt;&nbsp;<br
+/><br
+/>&lt;button disabled="disabled" data-toggle="&lt;selector&gt;;&lt;values&gt;;&lt;attr&gt;"&gt; ?<br
+/>or:<br
+/>&lt;button disabled="disabled" data-toggle="&lt;values&gt;;&lt;attr&gt;;&lt;selector&gt;"&gt; ?<br
+/><br
+/>&lt;button class="disabled" data-toggle="disabled enabled"&gt; -- same as line 91<br
+/>&lt;button class="disabled" data-toggle="values: disabled enabled; attr: class; selector: #someID"&gt;<br
+/>&lt;button class="disabled" data-toggle="disabled enabled; attr: class; selector: #someID"&gt;<br
+/>&lt;button class="disabled" data-toggle="disabled enabled; class; selector: #someID"&gt;<br
+/>&lt;button class="disabled" data-toggle="disabled enabled; selector: #someID"&gt;<br
+/>&lt;button class="disabled" data-toggle="disabled enabled; ; #someID"&gt;<br
+/><br
+/>&lt;button disabled="disabled" data-toggle="values: disabled enabled"&gt;<br
+/>&lt;button disabled="disabled" data-toggle="attr: disabled; values: disabled enabled"&gt;<br
+/><br
+/><br
+/>Tooltip (With Ajax)<br
+/>===================<br
+/><br
+/>&lt;a href="balloon-contents.html#myTip" data-tooltip="ajax"&gt;<br
+/>&lt;a href="balloon-contents.html#myTip" data-injection="as -- .toolip"&gt;<br
+/><br
+/>- fetch ballon-contents<br
+/>- take #myTip content<br
+/>- create div<br
+/>- add content to div<br
+/>- add class tooltip to div<br
+/><br
+/>&lt;a href="balloon-contents.html#myTip" class="tooltip"&gt;<br
+/><br
+/>&lt;a href="balloon-contents.html#myTip" data-injection="as -- .collapsible"&gt;<br
+/><br
+/><br
+/>&lt;a href="foo.html#id1#id2" data-injection="#listToUpdate:after #buttonBarMore" class="autoLoading-visible"&gt;More&amp;hellip;&lt;/a&gt; &lt;-- Current syntax<br
+/><br
+/>&lt;a href="foo.html" data-injection="#listToUpdate:after #buttonBarMore" class="autoLoading-visible"&gt;More&amp;hellip;&lt;/a&gt;<br
+/><br
+/><br
+/><b>Change</b><br
+/>======<br
+/><br
+/><i>Adding:</i><br
+/>&lt;button data-add=".someClass; space sep list of values to be added"&gt;<br
+/>&lt;button data-add=".someClass; space sep list of values to be added; class"&gt; (same as above)<br
+/>&lt;button data-add=".someClass; space sep list of values to be added; attr: class"&gt; (same as above)<br
+/>&lt;button data-change=".someClass; add: space sep list of attr values to be added; attr: class"&gt;<br
+/><br
+/>&lt;button data-add=".someClass; space sep list of attr values to be added; attr: attrname"&gt;<br
+/>&lt;button data-change=".someClass; add: space sep list of attr values to be added; attr: attrname"&gt;<br
+/><br
+/><br
+/><i>Removing:</i><br
+/>&lt;button data-remove=".someClass; space sep list of values to be removed"&gt;<br
+/>&lt;button data-remove=".someClass; space sep list of values to be removed; class"&gt; (same as above)<br
+/>&lt;button data-remove=".someClass; space sep list of values to be removed; attr: class"&gt; (same as above)<br
+/>&lt;button data-change=".someClass; remove: space sep list of attr values to be removed; attr: class"&gt;<br
+/><br
+/>&lt;button data-remove=".someClass; space sep list of attr values to be added; attr: attrname"&gt;<br
+/>&lt;button data-change=".someClass; remove: space sep list of attr values to be added; attr: attrname"&gt;<br
+/><br
+/><br
+/><i>Switching:</i><br
+/>&lt;a data-switch="body; <i>a b</i>"&gt; (switch the two classes)<br
+/>&lt;a data-switch="body; <i>a-* b</i>"&gt; (switch the two classes - If a-* does not exist, never mind)<br
+/>&lt;a data-change="body; <i>switch: a-* b</i>"&gt; (switch the two classes - If a-* does not exist, never mind)<br
+/><br
+/><br
+/><i>toggle/rotate elements independently:</i><br
+/>&lt;a data-toggle="body; a" (set/unset a)<br
+/>&lt;a data-toggle="body; a b" (toggle between a and b, start with a if not there)<br
+/>&lt;a data-toggle="body; a b c" (rotate, start with a if not there)<br
+/><br
+/><br
+/><i>All together:</i><br
+/>&lt;a data-change="body; toggle: e f; <i>switch: a b</i>; remove: c; add: d"&gt;<br
+/>&lt;a data-change="body; toggle: e f; <i>switch: a b</i>; remove: c; add: d; attr=attrname"&gt; (attr valid for whole directive, separate with &amp;&amp; if you need different)<br
+/><br
+/><br
+/><s>&lt;a data-set="body; <i>a b</s></i><s>; add"&gt; (adds the two classes)</s><br
+/><s>&lt;a data-set="body; <i>a b</s></i><s>; method: add"&gt; (Equal to above line)</s><br
+/><br
+/><s>&lt;a data-add="body; <i>a b</s></i><s>"&gt; (adds the two classes - doesn't matter whether there already)</s><br
+/><br
+/><s>&lt;a data-set="body; <i>a b</s></i><s>; remove"&gt; (Removes the two classes)</s><br
+/><s>&lt;a data-set="body; <i>a b</s></i><s>; method: remove"&gt; (Equal to above line)</s><br
+/><br
+/><s>&lt;a data-remove="body; <i>a b</s></i><s>"&gt; (Removes the two classes - no failure if non-existant)</s><br
+/><br
+/><s>&lt;a data-set="body; <i>a b</s></i><s>; switch"&gt; (switch the two classes)</s><br
+/><s>&lt;a data-set="body; <i>a b</s></i><s>; method: switch"&gt; (switch the two classes)</s><br
+/>or:<br
+/>&lt;a data-change="body; <i>switch: a b</i>" (switch the two classes)<br
+/><br
+/><br
+/><br
+/><br
+/>&lt;a data-set="body; a b &amp;&amp; body; c e; switch &amp;&amp; body; x y; remove"&gt;<br
+/>&lt;a data-set="body; a b &amp;&amp; body; switch: c e &amp;&amp; body; remove: x y"&gt;<br
+/><br
+/><br
+/>&lt;a data-set="body; switch: <i>template-* mode-*, template-home and-another</i>"; attr=class&gt; (same as above)<br
+/><br
+/><br
+/>directive -&gt; option<br
+/>option -&gt; boolean, key-val<br
+/>val -&gt;&nbsp;<br
+/><br
+/><br
+/><br
+/>data-add=".some<br
+/>data-remove=<br
+/>data-change<br
+/><br
+/><br
+/><s>&lt;button data-set=".someClass; mode-* mode-A"&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Replacing with wildcards)</s><br
+/><s>&lt;button data-set=".someClass; replace: mode-* mode-A"&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Equal to line above)</s><br
+/><br
+/><s>&lt;button data-set=".someClass; replace: mode-* mode-A; add: space sep list of values to be added"&gt;</s><br
+/><br
+/><s>&lt;button data-set=".someClass; mode-A"&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Just adds the class mode-A to element with .someClass. Other classes on target element remain intact?)</s><br
+/><s>&lt;button data-set=".someClass; mode-A &amp;&amp; .someOtherClass; mode-A"&gt;</s><br
+/><s>&lt;button data-set=".someClass; mode-A"&gt;</s><br
+/><br
+/><s>&lt;button data-set="#someID; checked; attr: value"&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Sets an &lt;input type="checkbox" to checked="checked")</s><br
+/><br
+/><s>&lt;a data-set="id=body!values=template-*:template-home"&gt; (Current syntax)</s><br
+/><br
+/><s>&lt;a data-set="body; values: template-* NEWNEEDED template-home"&gt;</s><br
+/><s>&lt;a data-set="body; template-* mode-* -- to -- template-home and-another"&gt;</s><br
+/><s>&lt;a data-set="body; remove: template-* mode-*; add: template-home and-another"&gt;</s><br
+/><s>&lt;a data-set="body; replace: template-* mode-*; template-home and-another"&gt; (BAD)</s><br
+/><s>&lt;a data-set="body; switch: template-* mode-*; template-home and-another"&gt; (BAD)</s><br
+/><s>&lt;a data-set="body; switch-from: template-* mode-*; switch-to: template-home and-another"&gt; (BAD)</s><br
+/><s>&lt;a data-set="body; switch: <i>template-* mode-*, template-home and-another</s></i><s>"&gt; (Maybe? - Should work)</s><br
+/><br
+/><s>&lt;a data-set="body; switch: mode<i>-* mode-B &amp;&amp; body; switch view-* view-B"</s></i><s>&gt;</s><br
+/><br
+/><br
+/><br
+/><br
+/><br
+/><b>Data injection</b><br
+/>==============<br
+/><br
+/>80% use case single id to inject into same id<br
+/><br
+/>&lt;a href="foo.html#id" class="inject"&gt;<br
+/><br
+/>&lt;a href="foo.html" data-injection="#id"&gt;&nbsp; Bad, because it does not jump to #id in text browsers<br
+/><br
+/>&lt;a href="foot.html#id1#id2" class="inject"&gt;<br
+/><br
+/>&lt;a href="foot.html#id" class="inject"&gt;<br
+/>&lt;a href="foot.html#id1#id2" class="inject"&gt;<br
+/><br
+/>Injection copies the content from the source tag into the target tag.<br
+/><br
+/><br
+/><b>Single injection</b><br
+/>&nbsp; &lt;a href="snippets.html#source" class="inject"&gt; (source and target with same id)<br
+/>&nbsp; &lt;a href="snippets.html#source" data-inject="#target"&gt; (source and target with different id)<br
+/>&nbsp; &lt;a href="snippets.html#source" data-inject="#source #target"&gt; (more verbose)<br
+/><br
+/><b>Multiple injection</b><br
+/>&nbsp; &lt;a href="snippets.html" data-inject="#source1 #target1 &amp;&amp; #source2 #target2"&gt;<br
+/>&nbsp; &lt;a href="snippets.html#source1" data-inject="#target1 &amp;&amp; #source2 #target2"&gt;<br
+/>&nbsp; &lt;a href="snippets.html#source2" data-inject="#source1 #target1 &amp;&amp; #target2"&gt;<br
+/>&nbsp; &lt;a href="snippets.html#source" data-inject="#target1 &amp;&amp; #target2"&gt; (one source into two targets)<br
+/>&nbsp;&nbsp;&nbsp; same as: &lt;a href="snippets.html#source" data-inject="#target1,#target2"&gt;<br
+/><br
+/>&nbsp; &lt;a href="snippets.html#default_source data-inject="#target1 &amp;&amp; #source2 #target2 &amp;&amp; #target3"&gt;<br
+/>&nbsp; #default_source would be used for #target1 and #target3<br
+/><br
+/><br
+/><b>Binding other patterns</b><br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="#myWizard.modal"&gt;&nbsp; (target has id #target and class modal)<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="a#myLink[data-injection='#myTarget']"&gt;&nbsp;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="a#myLink[data-injection='#myTarget'] &amp;&amp; a#anotherLink[data-injection='#anotherTarget']"&gt;&nbsp;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="a#myLink[data-injection='#myTarget'], a#anotherLink[data-injection='#anotherTarget']"&gt; (one target, that can be passed to jquery and returns two elements to put the content in)<br
+/>&nbsp;&nbsp;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="a#myLink[data-injection='#myTarget &amp;&amp; #myotherTarget'] &amp;&amp; a#anotherLink[data-injection='#anotherTarget']"&gt; (WONTWORK)<br
+/>&nbsp;&nbsp;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="#myWizard; class: modal"&gt; (target has id #target, class modal is added to the target tag)<br
+/><br
+/><br
+/><b>Options</b><br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="&lt;target_that_either_exist_in_full_or_is_created&gt;"&gt;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="#myWizard.modal; replace"&gt;<br
+/>&nbsp; <s>&lt;a href="snippets.html#foo" data-inject="#ul.modal:after"&gt;</s>&nbsp; &lt;-- not supported<br
+/>&nbsp; <s>&lt;a href="snippets.html#foo" data-inject="#ul.modal:before"&gt;</s>&nbsp; &lt;-- not supported<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="ul#myUl; method: append"&gt;&nbsp;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="ul#myUl; method: prepend"&gt;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="#myWizard.modal; method: replace"&gt;<br
+/>&nbsp; &lt;a href="snippets.html#foo" data-inject="#myWizard.modal; class: foo; method: append"&gt;<br
+/><br
+/><br
+/><b>Methods</b><br
+/>- prepend: insert as first child of matched element (programmer: prepend, designer: before, jquery: prepend)<br
+/>- append: insert as last child of matched element (programmer: append, designer: after, jquery: append)<br
+/>- replace: replace matched element<br
+/>- content: replace content of matched element (default)<br
+/>- before-tag?: insert before matched element (programmer: before, jquery: before)<br
+/>- after-tag?: insert after matched element (programmer: after, jquery: after)<br
+/><br
+/><br
+/>General discussion<br
+/>==================<br
+/><br
+/><br
+/>Patterns syntax new?<br
+/><br
+/>collapsible: triggered by class presence<br
+/>&lt;div class="collapsible"&gt;<br
+/><br
+/>collapsible is a toggle "open closed" that is auto-triggered if neither open nor closed are set.<br
+/><br
+/>toggle pattern: triggered by data-toggle attribute<br
+/>Simple case: no selector means element itself, no attr defaults to class<br
+/><br
+/>&nbsp;&nbsp;&nbsp; &lt;button class="red" data-toggle="values=red blue"&gt;Click me&lt;/button&gt;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>Complex case: other element, other attribute<br
+/><br
+/>&nbsp;&nbsp; &lt;button data-toggle="selector=#other, #moreother ; attr=disabled ; values=disabled"&gt;Click me&lt;/button&gt;<br
+/>&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp; &lt;button data-toggle="value=disabled &amp;&amp; selector=#other ; attr=disabled ; values=disabled"&gt;<br
+/>&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp; &lt;button class="red" data-toggle="values=red blue &amp;&nbsp; "&gt;Click me&lt;/button&gt;&nbsp;&nbsp;<br
+/><br
+/><br
+/>&nbsp;&nbsp;&nbsp; &lt;a data-confirm="message='An example of using toggle is: 'selector=#other, #moreother ; attr=disabled ; values=disabled''"&gt;...&lt;/a&gt;<br
+/><br
+/>&nbsp;&nbsp;&nbsp; data-xyz="&lt;directives&gt;"<br
+/>&nbsp;&nbsp;&nbsp; directives = &lt;directive&gt;[ &amp;&amp; &lt;directives&gt;]<br
+/>&nbsp;&nbsp;&nbsp; directive = &lt;option&gt; [; &lt;directive&gt;]<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp; title="bla &amp;quot;sdfsdf&amp;quot;"&nbsp;<br
+/>&nbsp;&nbsp;&nbsp;<br
+/>&nbsp;&nbsp; &lt;button data-toggle="&lt;toggle_directive_1&gt;;&lt;toggle_some_other_element_too&gt;"<br
+/><br
+/>Inspiration for syntax<br
+/>-----------<br
+/><br
+/>something {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; border-style: solid;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; border-width: 1px;<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; border-color: red;<br
+/>}<br
+/><br
+/>something {<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; border: 1px solid red;<br
+/>&nbsp;&nbsp;&nbsp; }<br
+/><br
+/><br
+/>&lt;button data-toggle="selector=#toRotate!attr=class!value=red green blue"&gt;change colour&lt;/button&gt;<br
+/><br
+/>&lt;a href="foo.html#foo" data-injection="#container -- as -- .modal.loginModal"<br
+/><br
+/>&lt;a href="foo.html" data-injection="#foo:first-child.source -- into -- #container -- as -- .modal.loginModal"<br
+/><br
+/>&lt;a href="foo.html" data-injection="#foo:first-child.source -- into -- #container -- as -- .tooltip[data-something='…']"<br
+/><br
+/>a href="foo.html" data-injection="#something :: #something; #sthelse :: #sthelse"<br
+/><br
+/>&lt;a href="....." class="tooltip" data-tooltip="click" title="Hello my lovely"&gt;…&lt;/a&gt;<br
+/>&lt;a href="foo.html#something" data-injection="as -- .tooltip"<br
+/>&lt;a href="foo.html#something" data-injection="#foo -- as -- .modal"<br
+/><br
+/>&lt;div class="modal"&gt;<br
+/><br
+/>&lt;a hef="#tip" rel="tooltip" data-tooltip="click"&gt;...&lt;/a&gt;<br
+/><br
+/>tooltip-click&nbsp;<br
+/><br
+/>Parameter requirements:<br
+/>- boolean options - key only, no value (for example: sticky or click for tooltips)<br
+/>- valued options: both key and value (for example: attr: disabled for toggle)<br
+/>- separate options with semi-colon (for example: ajax; click)<br
+/>- create multiple instances of the same pattern on a single element by separating options with &amp;&amp;<br
+/>- no support for quoting/escaping in parameters. If human-visible text is needed use a separate<br
+/>&nbsp;&nbsp; attribute or element<br
+/><br
+/>an example:<br
+/>data-toggle="selector=#id; attr=class; value=red"<br
+/>data-toggle="#id; red"<br
+/>data-toggle=";red"<br
+/>data-toggle="#id; selector=#other"<br
+/>--&gt; data-toggle="selector=#id; selector=#other"<br
+/><br
+/>- always needs selector --&gt; selector is the first&nbsp;<br
+/><br
+/>-&gt; positional parameters first (for toggle: selector, value)<br
+/>-&gt; followed by key/value parameters and boolean parameters<br
+/><br
+/>data-tooltip="forcePosition ; tm"<br
+/><br
+/>data-tooltip="forcePosition; pos: tm"<br
+/>data-tooltip="forcePosition; tm"<br
+/>data-tooltip="tm; rt; rm" &lt;- problem: no order of parameters kept<br
+/>&nbsp; { tm: true, rt: true, rm: true}<br
+/>&nbsp;&nbsp;<br
+/>&nbsp; data-tooltip="forcePosition ; tm :: rt :: rm"<br
+/>&nbsp;&nbsp;<br
+/>&nbsp; data-tooltip="pos: tm rt rm forcePosition"&nbsp; &lt;-- CSS like syntax. Parser has knowledge of meaning of property values. Like in CSS: box-shadow: 0 1px 0 white;<br
+/>&nbsp;&nbsp;<br
+/>&nbsp; data-tooltip="forcePosition=tm rt rm"<br
+/>&nbsp; data-tooltip="tm rt rm"<br
+/>&nbsp; data-tooltip="tm rt rm forcePosition"<br
+/><br
+/>data-tooltip="tm rt rm"<br
+/><br
+/>data-toggle="selector=&lt;selector&gt;;"<br
+/>data-tooltip="position=&lt;list_of_flags&gt;"<br
+/><br
+/>selector="arbitrary selector" directly passed to jquery, therefore the value must not be parsed by the generic parser but instead handed over to the pattern.<br
+/><br
+/>values are not to be parsed?<br
+/>generic parser only to split down to single options and leave it to the pattern to interpret these?<br
+/><br
+/>stage 1:<br
+/>- split &amp;&amp;<br
+/>- split ;<br
+/>- handover list to pattern<br
+/><br
+/>-&gt; what positional parameters<br
+/>-&gt; names of positional parameters<br
+/>-&gt; value type of each parameters (list, single string, boolean)<br
+/>-&gt; list values: allowed options and allowed booleans<br
+/><br
+/><br
+/>parser = new Parser()<br
+/>parser.add_argument("selector", {required: true, type: "string"})<br
+/>parser.add_argument("position", {type: "list",<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "allowed-values": ["lt", "lm", "lb", ...],<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; flags: ["forcePosition"]})<br
+/>options = parser.parse(this.dataset.tooltip)<br
+/><br
+/>Possible extension to allow short-hand format combining multiple options in one:<br
+/>parser.add_argument("behaviour": {type: "combined",<br
+/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; parameters: ["method", "step", "speed", "controls", "vertical"]})<br
+/>-&gt; this only works of all options that take a list have fixed allowed values that do not overlap<br
+/>&nbsp;&nbsp; and if options that take a list are *after* all other values<br
+/>&nbsp;&nbsp; and only one option (the last) can be a list?<br
+/><br
+/>data-tooltip="tm forcePosition rt rm" &lt;-- input from messy designer ;)<br
+/>options = {options: ["tm", "rt", "rm"], forcePosition: true} &lt;-- strict output for javascript<br
+/><br
+/><br
+/>Things that work well:<br
+/>- classes to trigger behaviour<br
+/>- data-xyz attributes per pattern<br
+/><br
+/>Questions:<br
+/>- conflict with other class names: do not worry about conflicts for now, assume<br
+/>&nbsp; use mostly in new projects, not existing projects that may use same classes.<br
+/>[12:54:34 PM CEST] Florian Friesdorf: &lt;a href="foo.html#id" class="inject"&gt;<br
+/><br
+/>&lt;a href="foo.html" data-injection="#id"&gt;&nbsp; Bad, because it does not jump to #id in text browsers<br
+/><br
+/>&lt;a href="foot.html#id1#id2" class="inject"&gt;<br
+/><br
+/>&lt;a href="foot.html#id" class="inject"&gt;<br
+/>&lt;a href="foot.html#id1#id2" class="inject"&gt;<br
+/><br
+/></body>
+</html>
