@@ -16,7 +16,7 @@ Changing attribute
 
 Adding
 ~~~~~~
-.. code-block:: html
+::
 
   <button data-add=".someClass; space sep list of values to be added">
   <button data-add=".someClass; space sep list of values to be added; class"> (same as above)
@@ -29,7 +29,7 @@ Adding
 
 Removing
 ~~~~~~~~
-.. code-block:: html
+::
 
   <button data-remove=".someClass; space sep list of values to be removed">
   <button data-remove=".someClass; space sep list of values to be removed; class"> (same as above)
@@ -42,7 +42,7 @@ Removing
 
 Switching
 ~~~~~~~~~
-.. code-block:: html
+::
 
   <a data-switch="body; a b"> (switch the two classes)
   <a data-switch="body; a-* b"> (switch the two classes - If a-* does not exist, never mind)
@@ -51,7 +51,7 @@ Switching
 
 toggle/rotate elements independently
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: html
+::
 
   <a data-toggle="body; a" (set/unset a)
   <a data-toggle="body; a b" (toggle between a and b, start with a if not there)
@@ -61,7 +61,7 @@ toggle/rotate elements independently
 
 All together
 ~~~~~~~~~~~~
-.. code-block:: html
+::
 
   <a data-change="body; toggle: e f; switch: a b; remove: c; add: d">
   <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; attr=attr1">
