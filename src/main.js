@@ -5,6 +5,7 @@ define([
     './lib/modernizr',
     './core/init',
     './core/store',
+    './patterns/autosubmit',
     './patterns/collapsible',
     './patterns/fancybox',
     './patterns/floatingpanel',
@@ -23,6 +24,7 @@ define([
 
     // register our patterns
     // rethink naming once all patterns are migrated to this style
+    mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
     mapal.passivePatterns.collapsible = require('./patterns/collapsible');
     mapal.passivePatterns.toggle = require('./patterns/toggle');
     mapal.passivePatterns.tooltip = require('./patterns/tooltip');
