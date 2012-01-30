@@ -10,6 +10,10 @@ body {
 	outline: none;
 }
 
+.injection-loading {
+	opacity: 0;
+}
+
 /* @group Messages */
 
 .message {
