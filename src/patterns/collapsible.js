@@ -6,15 +6,14 @@ define([
         initContent: function(root) {
             $(root).find('.collapsible').each(function() {
                 var $this = $(this),
-                $data = $this.data('collapsible');
+                    $data = $this.data('collapsible');
 
                 if (!$data) {
                     var $ctrl = $this.children(':first'),
-                    $panel = $this.children(':gt(0)')
-                        .wrapAll('<div class="panel-content" />')
-                        .parent();
+                        $panel = $this.children(':gt(0)')
+                            .wrapAll('<div class="panel-content" />')
+                            .parent();
 
-                    $this.data('collapsible', true);
                     if ($this.hasClass("closed")) {
                         $panel.toggle();
                     } else if (!$this.hasClass("open")) {
@@ -31,9 +30,11 @@ define([
                         }
                         $panel.slideToggle();
                     });
+
+                    $this.data('collapsible', true);
                 }
             });
         }
-    }
+    };
     return collapsible;
 });
