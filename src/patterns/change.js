@@ -16,9 +16,9 @@ define([
                     prefix = true;
                 }
                 $targets.removeClass(function(idx, cls) {
-                    return (((prefix) &&
-                             (cls.slice(0, remove.length) === remove)) ||
-                            (cls === remove)) ? cls : "";
+                    if (!prefix) return remove;
+                    var re = new RegExp("\\b" + remove + "\\S*", "g");
+                    return (cls.match(re) || []).join(' ');
                 }).addClass(add);
             });
         }
