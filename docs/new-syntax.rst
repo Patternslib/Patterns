@@ -23,6 +23,10 @@ Adding
   <button data-add=".someClass; space sep list of values to be added; attr: class"> (same as above)
   <button data-change=".someClass; add: space sep list of attr values to be added; attr: class">
 
+  <button data-add="; space sep list of attr values to be added; attr: class"> (button itself)
+  <button data-add="values: space sep list of attr values to be added; attr: class"> (button itself)
+  <button data-change="add: space sep list of attr values to be added; attr: class"> (button itself)
+
   <button data-add=".someClass; space sep list of attr values to be added; attr: attrname">
   <button data-change=".someClass; add: space sep list of attr values to be added; attr: attrname">
 
