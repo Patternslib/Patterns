@@ -1,84 +1,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
 		<link rel="stylesheet" href="base.css" type="text/css">
+		<link rel="stylesheet" href="../src/lib/dist/fullcalendar/fullcalendar.css" type="text/css">
 		<script data-main="../src/main" src="../src/lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-
-		<h1>Proposal 1</h1>
-		<p>Downside: there is no container for the event</p>
-		<dl class="calendar">
-			<dt class="event-title">
-				<a href="#" class="external">Event of the year</a>
-			</dt>
-			<dd class="event-details">
-				<ul>
-					<li>Starts <time class="start-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">18 April 2012, 9:00</time></li>
-					<li>Ends <time class="end-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">18 April 2012, 17:00</time></li>
-				</ul>
-			</dd>
-			<dt class="event-title">
-				<a href="#" class="external">Lorem ipsum</a>
-			</dt>
-			<dd class="event-details">
-				<ul>
-					<li>Starts <time class="start-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">22 May 2012</time></li>
-					<li>Ends <time class="end-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">30 May 2012</time></li>
-
-				</ul>
-			</dd>
-			<dt class="event-title">
-				<a href="#" class="external">Dolor sit amet consectetuer</a>
-			</dt>
-			<dd class="event-details">
-				<ul>
-					<li>Starts <time class="start-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">5 June 2012</time></li>
-					<li>Ends <time class="end-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">15 June 2012</time></li>
-				</ul>
-			</dd>
-		</dl>
-
-		<h1>Proposal 2</h1>
-		<p>Container for event, container for event details, class on time tag</p>
-		<ul class="events">
-			<li class="event">
-				<div class="event-title">
-					<a href="#" class="external">Event of the year</a>
-				</div>
-				<ul class="event-details">
-					<li>Starts <time class="event-start-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">18 April 2012, 9:00</time></li>
-					<li>Ends <time class="event-end-date" datetime="yyyy-mm-ddThr:mi:ss.fracTZ">18 April 2012, 17:00</time></li>
-				</ul>
+		<ul class="events full-calendar">
+			<li class="event all-day">
+				<a href="#" class="external">
+					<h4 class="title">
+						Event of the year
+					</h4>
+					<p class="description">
+						Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+					<ul class="details">
+						<li>Starts <time class="start" datetime="<machine readable date and time here">18 April 2012, 9:00</time></li>
+						<li>Ends <time class="end" datetime="<machine readable date and time here">18 April 2012, 17:00</time></li>
+					</ul>
+				</a>
+			</li>
+			<li class="event all-day editable">
+				<a href="some-event-details.html" class="external" data-injection".modal">
+					<h4 class="title">
+						Event of the year
+					</h4>
+					<p class="description">
+						Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+					<ul class="details">
+						<li><time class="start" datetime="<machine readable date here">18 April 2012</time></li>
+					</ul>
+				</a>
 			</li>
 		</ul>
-		<h1>Proposal 3</h1>
-		<p>Container for event, container for event details, class on li tag - chaoflow prefers either this or 4</p>
-		<ul class="events">
-			<li class="event">
-				<div class="event-title">
-					<a href="#" class="external">Lorem ipsum</a>
-				</div>
-				<ul class="event-details">
-					<li class="event-start-date">Starts <time datetime="yyyy-mm-ddThr:mi:ss.fracTZ">22 May 2012</time></li>
-					<li class="event-end-date">Ends <time datetime="yyyy-mm-ddThr:mi:ss.fracTZ">30 May 2012</time></li>
-				</ul>
-			</li>
-		</ul>
-		<h1>Proposal 4</h1>
-		<p>Container for event, no container for event details, class on li tag - chaoflow prefers either this or 3</p>
-		<ul class="events">
-			<li class="event">
-				<div class="event-title">
-					<a href="#" class="external">Dolor sit amet consectetuer</a>
-				</div>
-				<div class="event-start-date">Starts <time datetime="yyyy-mm-ddThr:mi:ss.fracTZ">5 June 2012</time></div>
-				<div class="event-end-date">Ends <time datetime="yyyy-mm-ddThr:mi:ss.fracTZ">15 June 2012</time></div>
-			</li>
-		</ul>
-
 	</body>
 </html>
