@@ -10,6 +10,7 @@ define([
     './patterns/collapsible',
     './patterns/fancybox',
     './patterns/floatingpanel',
+    './patterns/fullcalendar',
     './patterns/modal',
     './patterns/selfhealing',
     './patterns/setclass',
@@ -28,6 +29,7 @@ define([
     mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
     mapal.passivePatterns.change = require('./patterns/change');
     mapal.passivePatterns.collapsible = require('./patterns/collapsible');
+    mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
     mapal.passivePatterns.toggle = require('./patterns/toggle');
     mapal.passivePatterns.tooltip = require('./patterns/tooltip');
 
