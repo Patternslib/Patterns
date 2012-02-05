@@ -8,10 +8,25 @@ define([
             $(root).find('.full-calendar').each(function() {
                 var $this = $(this),
                     $calendar = $('<div class="calendar">\n</div>')
-                        .insertAfter(this);
+                        .insertAfter(this),
+                    events = fullcalendar.parseEvents(root);
                 $this.css('display', 'None');
-                $calendar.fullCalendar({});
+                $calendar.fullCalendar({
+                    events: events
+                });
             });
+        },
+        parseEvents: function(root) {
+            var events = $('.event', root).map(function(idx, event) {
+                return {
+                    title: $('.title', event).html().trim(),
+                    start: $('.start', event).attr('datetime'),
+                    end: $('.end', event).attr('datetime'),
+                    allDay: $(event).hasClass('all-day'),
+                    url: $('a', event).attr('href')
+                };
+            }).toArray();
+            return events;
         }
     };
     return fullcalendar;
