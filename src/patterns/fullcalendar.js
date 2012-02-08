@@ -18,13 +18,17 @@ define([
         },
         parseEvents: function(root) {
             var events = $('.event', root).map(function(idx, event) {
-                return {
+                var ev = {
                     title: $('.title', event).html().trim(),
                     start: $('.start', event).attr('datetime'),
                     end: $('.end', event).attr('datetime'),
                     allDay: $(event).hasClass('all-day'),
                     url: $('a', event).attr('href')
                 };
+                if (!ev.title) console.error('No event title for:', event);
+                if (!ev.start) console.error('No event start for:', event);
+                if (!ev.url) console.error('No event url for:', event);
+                return ev;
             }).toArray();
             return events;
         }
