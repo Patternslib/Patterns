@@ -824,6 +824,12 @@ box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
     background-color: #FDFDC8;
   }
 
+.tooltip-container > div:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
   .tooltip-container.bl .pointer,
   .tooltip-container.bm .pointer,
   .tooltip-container.br .pointer{
