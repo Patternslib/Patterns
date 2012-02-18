@@ -1,0 +1,3 @@
+[submodule "src/lib/jquery.mutations"]
+	path = src/lib/jquery.mutations
+	url = git@github.com:chaoflow/jquery.mutation-events.git
