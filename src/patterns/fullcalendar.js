@@ -18,12 +18,25 @@ define([
         },
         parseEvents: function(root) {
             var events = $('.event', root).map(function(idx, event) {
+                var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
+                    return (cls !== 'event');
+                });
+                var allattrs = $('a', event)[0].attributes,
+                    attrs = {};
+                for (var attr, i=0; i<allattrs.length; i++){
+                    attr = allattrs.item(i);
+                    if (attr.nodeName.slice(0,5) === "data-") {
+                        attrs[attr.nodeName] = attr.nodeValue;
+                    }
+                }
                 var ev = {
                     title: $('.title', event).html().trim(),
                     start: $('.start', event).attr('datetime'),
                     end: $('.end', event).attr('datetime'),
                     allDay: $(event).hasClass('all-day'),
-                    url: $('a', event).attr('href')
+                    url: $('a', event).attr('href'),
+                    className: classNames,
+                    attrs: attrs
                 };
                 if (!ev.title) console.error('No event title for:', event);
                 if (!ev.start) console.error('No event start for:', event);
