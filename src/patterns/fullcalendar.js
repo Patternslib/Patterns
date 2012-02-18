@@ -8,11 +8,16 @@ define([
             $(root).find('.full-calendar').each(function() {
                 var $this = $(this),
                     $calendar = $('<div class="calendar">\n</div>')
-                        .insertAfter(this),
-                    events = fullcalendar.parseEvents(root);
+                        .insertAfter(this);
+                $this.bind('html', function() {
+                    $calendar.fullCalendar('refetchEvents');
+                });
                 $this.css('display', 'None');
                 $calendar.fullCalendar({
-                    events: events
+                    events: function(start, end, callback) {
+                        var events = fullcalendar.parseEvents(root);
+                        callback(events);
+                    }
                 });
             });
         },
