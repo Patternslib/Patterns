@@ -3902,6 +3902,13 @@ function AgendaEventRenderer() {
 		}else{
 			html += "div";
 		}
+            html += function(attrs) {
+                var html = "";
+                for (var key in attrs) {
+                    html += key + '="' + attrs[key] + '"';
+                }
+                return html;
+            }(event.attrs);
 		html +=
 			" class='" + classes.join(' ') + "'" +
 			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
@@ -4647,6 +4654,13 @@ function DayEventRenderer() {
 			}else{
 				html += "<div";
 			}
+            html += function(attrs) {
+                var html = "";
+                for (var key in attrs) {
+                    html += key + '="' + attrs[key] + '"';
+                }
+                return html;
+            }(event.attrs);
 			html +=
 				" class='" + classes.join(' ') + "'" +
 				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
