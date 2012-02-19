@@ -1,6 +1,7 @@
 define([
     'require',
     '../lib/jquery',
+    '../jqueryPlugin!../lib/jquery.mutations/src/mutations.html',
     '../lib/fullcalendar'
 ], function(require) {
     var fullcalendar = {

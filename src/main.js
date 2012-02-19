@@ -1,7 +1,6 @@
 define([
     'require',
     './lib/jquery',
-    './jqueryPlugin!./lib/jquery.mutations/src/mutations.html',
     './lib/domReady!',
     './lib/modernizr',
     './core/init',
