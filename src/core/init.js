@@ -367,7 +367,7 @@ var mapal = {
             bodyInjectionId: "__original_body"
         },
 
-        load: function($elem, url, targets, sources, callback) {
+        load: function($elem, url, targets, sources, callback, $filter) {
             callback = callback || function() {};
             // to have more versatility when calling the function
             if (typeof sources == "string") sources = [ sources ];
@@ -481,6 +481,14 @@ var mapal = {
                         modifier = "content";
                     } else {
                         var $source = $factory.find( '#' + sources[idx] );
+                    }
+
+                    // apply filters to source
+                    if ($filter.length > 0) {
+                        var searchText = $('.searchText', $filter).val();
+                        if (searchText) {
+                            $source.find($filter.attr('data-filter') + ':not(:Contains(' + searchText + '))').remove();
+                        }
                     }
 
                     if ( mapal.injection.modifiers[modifier] && $.isFunction(mapal.injection.modifiers[modifier].execute) ) {
@@ -684,7 +692,8 @@ var mapal = {
                 // First we get the source IDs, whether optional or not
                 var targets, $a = $(this),
                     sources = ($a.attr("href")||$a.attr("action")).split("#"),
-                    attrVal = ($a.attr("rel") || $a.attr("data-injection"));
+                    attrVal = ($a.attr("rel") || $a.attr("data-injection")),
+                    $filter = $a.find('.filter');
 
                 // make sure we don't interfere with openPanels below
                 if ( $a.hasClass('openPanel') || $a.hasClass('closePanel') ) return;
@@ -703,7 +712,7 @@ var mapal = {
                         targets = [];
 
                     // let injection handle the rest
-                    mapal.injection.load($a, url, targets, sources);
+                    mapal.injection.load($a, url, targets, sources, undefined, $filter);
                 } else {
                     // this means some other pattern, so let the pattern handle what the attribute means
                     var re = /^[\.][a-zA-Z]+/;
