@@ -9,9 +9,11 @@ define([
             $(root).find('.full-calendar').each(function() {
                 var $this = $(this),
                     $calendar = $('<div class="calendar">\n</div>')
-                        .insertAfter(this);
+                        .insertAfter(this),
+                    mapal = require('../core/init');
                 $this.bind('html', function() {
                     $calendar.fullCalendar('refetchEvents');
+                    mapal.initContent($calendar);
                 });
                 $this.css('display', 'None');
                 $calendar.fullCalendar({
