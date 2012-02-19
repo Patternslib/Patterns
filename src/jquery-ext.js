@@ -297,4 +297,12 @@ String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null
     };
 
 })(jQuery);
+
+// case-insensitive :contains
+(function($) {
+    $.expr[':'].Contains = function(a, i, m) {
+        return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+    };
+})( jQuery );
+
 });
