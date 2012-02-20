@@ -70,8 +70,8 @@ define([
                 modal.centerOverlay($panel);
             }
 
-            mapal.injection.load(elem, parts[0], "panel-content:content", source, {
-                'onFinished': function($target) {
+            mapal.injection.load(elem, parts[0], "panel-content:content", source, 
+                                 function($target) {
                     $panel.attr('class', opts['class']);
 
                     $target.css("opacity", 1).addClass("panel");
@@ -85,7 +85,7 @@ define([
 
                     modal.centerOverlay($panel);
                 }
-            });
+            );
         },
 
         apiInit: function($panel, opts) {
