@@ -4,6 +4,7 @@ define([
     './lib/domReady!',
     './lib/modernizr',
     './core/init',
+    './core/parser',
     './core/store',
     './patterns/autosubmit',
     './patterns/change',
