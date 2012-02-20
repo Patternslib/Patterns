@@ -484,7 +484,7 @@ var mapal = {
                     }
 
                     // apply filters to source
-                    if ($filter.length > 0) {
+                    if ($filter && $filter.length > 0) {
                         var searchText = $('.searchText', $filter).val();
                         if (searchText) {
                             $source.find($filter.attr('data-filter') + ':not(:Contains(' + searchText + '))').remove();
