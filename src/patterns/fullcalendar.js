@@ -22,7 +22,7 @@ define([
                         // XXX: add event
                     },
                     events: function(start, end, callback) {
-                        var events = fullcalendar.parseEvents(root);
+                        var events = fullcalendar.parseEvents($this);
                         callback(events);
                     },
                     eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
