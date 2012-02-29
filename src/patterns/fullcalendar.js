@@ -6,7 +6,7 @@ define([
 ], function(require) {
     var fullcalendar = {
         initContent: function(root) {
-            $(root).find('.full-calendar').each(function() {
+            $(root).find('.full-calendar .events').each(function() {
                 var $this = $(this),
                     $calendar = $('<div class="calendar">\n</div>')
                         .insertAfter(this),
@@ -16,7 +16,7 @@ define([
                     // XXX: replace with mutator event listener
                     mapal.initContent($calendar);
                 });
-                $this.find('.events').css('display', 'None');
+                $this.css('display', 'None');
                 $calendar.fullCalendar({
                     dayDblClick: function(date, allDay, jsEvent, view) {
                         // XXX: add event
