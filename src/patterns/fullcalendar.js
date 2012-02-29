@@ -13,14 +13,28 @@ define([
                     mapal = require('../core/init');
                 $this.bind('html', function() {
                     $calendar.fullCalendar('refetchEvents');
+                    // XXX: replace with mutator event listener
                     mapal.initContent($calendar);
                 });
-                $this.css('display', 'None');
+                $this.find('.events').css('display', 'None');
                 $calendar.fullCalendar({
+                    dayDblClick: function(date, allDay, jsEvent, view) {
+                        // XXX: add event
+                    },
                     events: function(start, end, callback) {
                         var events = fullcalendar.parseEvents(root);
                         callback(events);
-                    }
+                    },
+                    eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                        // XXX: change event
+                        revertFunc();
+                    },
+                    eventResize: function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) {
+                        // XXX: change event
+                        revertFunc();
+                    },
+                    header: { left: '', right: '' }
+                    // XXX: consume calendar-control and pass to fullCalendar
                 });
             });
         },
@@ -44,7 +58,8 @@ define([
                     allDay: $(event).hasClass('all-day'),
                     url: $('a', event).attr('href'),
                     className: classNames,
-                    attrs: attrs
+                    attrs: attrs,
+                    editable: $(event).hasClass('editable')
                 };
                 if (!ev.title) console.error('No event title for:', event);
                 if (!ev.start) console.error('No event start for:', event);
