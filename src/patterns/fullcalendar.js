@@ -6,23 +6,27 @@ define([
 ], function(require) {
     var fullcalendar = {
         initContent: function(root) {
-            $(root).find('.full-calendar .events').each(function() {
-                var $this = $(this),
+            $(root).find('.full-calendar .month').each(function() {
+                var $month = $(this),
+                    $events = $('.events', $month),
+                    ym = $('time', $month).attr('datetime').split('-'),
+                    year = ym[0],
+                    month = Number(ym[1]) - 1,
                     $calendar = $('<div class="calendar">\n</div>')
-                        .insertAfter(this),
+                        .insertAfter($events),
                     mapal = require('../core/init');
-                $this.bind('html', function() {
-                    $calendar.fullCalendar('refetchEvents');
-                    // XXX: replace with mutator event listener
-                    mapal.initContent($calendar);
-                });
-                $this.css('display', 'None');
+                // $this.bind('html', function() {
+                //     $calendar.fullCalendar('refetchEvents');
+                //     // XXX: replace with mutator event listener
+                //     mapal.initContent($calendar);
+                // });
+                $events.css('display', 'None');
                 $calendar.fullCalendar({
                     dayDblClick: function(date, allDay, jsEvent, view) {
                         // XXX: add event
                     },
                     events: function(start, end, callback) {
-                        var events = fullcalendar.parseEvents($this);
+                        var events = fullcalendar.parseEvents($events);
                         callback(events);
                     },
                     eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
@@ -33,7 +37,9 @@ define([
                         // XXX: change event
                         revertFunc();
                     },
-                    header: { left: '', right: '' }
+                    header: { left: '', right: '' },
+                    month: month,
+                    year: year
                     // XXX: consume calendar-control and pass to fullCalendar
                 });
             });
