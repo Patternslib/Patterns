@@ -2370,7 +2370,8 @@ function BasicView(element, calendar, viewName) {
 	
 	function dayBind(days) {
 		days.click(dayClick)
-			.mousedown(daySelectionMousedown);
+			.mousedown(daySelectionMousedown)
+			.dblclick(dayDblClick);
 	}
 	
 	
@@ -2382,7 +2383,13 @@ function BasicView(element, calendar, viewName) {
 		}
 	}
 	
-	
+	function dayDblClick(ev) {
+		if (!opt('selectable')) { // if selectable, SelectionManager will worry about dayClick
+			var index = parseInt(this.className.match(/fc\-day(\d+)/)[1]); // TODO: maybe use .data
+			var date = indexDate(index);
+			trigger('dayDblClick', this, date, true, ev);
+		}
+	}
 	
 	/* Semi-transparent Overlay Helpers
 	------------------------------------------------------*/
