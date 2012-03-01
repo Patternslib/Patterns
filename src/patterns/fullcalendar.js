@@ -6,7 +6,9 @@ define([
 ], function(require) {
     var fullcalendar = {
         initContent: function(root) {
-            $(root).find('.full-calendar .month').each(function() {
+            var $calroot = $(root).find('.full-calendar'),
+                $filter = $calroot.find('.calendar-filters');
+            $calroot.find('.month').each(function() {
                 var $month = $(this),
                     $events = $('.events', $month),
                     ym = $('time', $month).attr('datetime').split('-'),
@@ -15,18 +17,24 @@ define([
                     $calendar = $('<div class="calendar">\n</div>')
                         .insertAfter($events),
                     mapal = require('../core/init');
-                $events.bind('html', function() {
+                var refetch = function() {
                     $calendar.fullCalendar('refetchEvents');
                     // XXX: replace with mutator event listener
                     mapal.initContent($calendar);
-                });
+                };
+                var refetch_deb = _.debounce(refetch, 400);
+                $events.bind('html', refetch);
+                if ($filter && $filter.length > 0) {
+                    $('.searchText', $filter).on("keyup", refetch_deb);
+                    $('.searchText[type=search]', $filter).on("click", refetch_deb);
+                }
                 $events.css('display', 'None');
                 $calendar.fullCalendar({
                     dayDblClick: function(date, allDay, jsEvent, view) {
                         // XXX: add event
                     },
                     events: function(start, end, callback) {
-                        var events = fullcalendar.parseEvents($events);
+                        var events = fullcalendar.parseEvents($events, $filter);
                         callback(events);
                     },
                     eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
@@ -45,8 +53,14 @@ define([
                 mapal.initContent($calendar);
             });
         },
-        parseEvents: function(root) {
-            var events = $('.event', root).map(function(idx, event) {
+        parseEvents: function($events, $filter) {
+            // apply filters to source
+            if ($filter && $filter.length > 0) {
+                var searchText = $('.searchText', $filter).val();
+            }
+            var events = $(
+                '.event' + (searchText ? (':Contains(' + searchText + ')') : ''), $events
+            ).map(function(idx, event) {
                 var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
                     return (cls !== 'event');
                 });
