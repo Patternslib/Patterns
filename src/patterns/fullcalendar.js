@@ -27,6 +27,7 @@ define([
                 if ($filter && $filter.length > 0) {
                     $('.searchText', $filter).on("keyup", refetch_deb);
                     $('.searchText[type=search]', $filter).on("click", refetch_deb);
+                    $('select[name=state]', $filter).on("change", refetch);
                 }
                 $events.css('display', 'None');
                 $calendar.fullCalendar({
@@ -57,9 +58,13 @@ define([
             // apply filters to source
             if ($filter && $filter.length > 0) {
                 var searchText = $('.searchText', $filter).val();
+                var state = $('select[name=state]').val();
             }
             var events = $(
-                '.event' + (searchText ? (':Contains(' + searchText + ')') : ''), $events
+                '.event'
+                    + ((state !== "all") ? ('.state-' + state) : '')
+                    + (searchText ? (':Contains(' + searchText + ')') : ''),
+                $events
             ).map(function(idx, event) {
                 var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
                     return (cls !== 'event');
