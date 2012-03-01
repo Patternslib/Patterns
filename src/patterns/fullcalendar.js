@@ -62,7 +62,7 @@ define([
             }
             var events = $(
                 '.event'
-                    + ((state !== "all") ? ('.state-' + state) : '')
+                    + ((state && state !== "all") ? ('.state-' + state) : '')
                     + (searchText ? (':Contains(' + searchText + ')') : ''),
                 $events
             ).map(function(idx, event) {
