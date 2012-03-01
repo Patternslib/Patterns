@@ -635,6 +635,7 @@ var mapal = {
             "append": {
                 "execute": function( $source, $target ) {
                     $target.after($source);
+                    $target.trigger('injection', $source);
                     return $source;
                 }
             }
