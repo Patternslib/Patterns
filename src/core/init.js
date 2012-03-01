@@ -629,6 +629,7 @@ var mapal = {
             "prepend": {
                 "execute": function( $source, $target ) {
                     $target.before($source);
+                    $target.trigger('injection', $source);
                     return $source;
                 }
             },
