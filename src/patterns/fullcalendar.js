@@ -1,7 +1,6 @@
 define([
     'require',
     '../lib/jquery',
-    '../jqueryPlugin!../lib/jquery.mutations/src/mutations.html',
     '../lib/fullcalendar'
 ], function(require) {
     var fullcalendar = {
@@ -24,7 +23,6 @@ define([
                     mapal.initContent($calendar);
                 };
                 var refetch_deb = _.debounce(refetch, 400);
-                $events.bind('html', refetch);
                 if ($filter && $filter.length > 0) {
                     $('.searchText', $filter).on("keyup", refetch_deb);
                     $('.searchText[type=search]', $filter).on("click", refetch_deb);
