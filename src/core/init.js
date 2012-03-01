@@ -923,6 +923,12 @@ var mapal = {
             var trigger = function() {
                 $autoload.data('autoLoading', true);
                 $autoload.trigger('click');
+                var $nexthref = $autoload.attr('data-href-next');
+                if ($nexthref) {
+                    $autoload.attr({'href': $nexthref,
+                                    'data-injection': '',
+                                    'data-href-next': ''});
+                }
                 return true;
             };
 
