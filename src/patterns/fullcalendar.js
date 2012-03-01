@@ -93,11 +93,6 @@ define([
             }).toArray();
             return events;
         }
-        // XXX: pimp fullcalendar to set further attributes
-        // XXX: initContent on whatever fullcalendar creates
-        // XXX: support update if original container changes
-        // XXX: make hiding of original optional
-        // XXX: provide solgemafullcalendar as alternative, use fullcalendar as fallback or sth like that
     };
     return fullcalendar;
 });
