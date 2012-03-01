@@ -141,7 +141,7 @@ define([
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.sticky) {
+            if (options.sticky && !options.noclose) {
                 $("<button/>", {"class": "closePanel"})
                     .text("Close")
                     .insertBefore($container.find("*"));
