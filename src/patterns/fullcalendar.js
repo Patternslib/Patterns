@@ -15,11 +15,11 @@ define([
                     $calendar = $('<div class="calendar">\n</div>')
                         .insertAfter($events),
                     mapal = require('../core/init');
-                // $this.bind('html', function() {
-                //     $calendar.fullCalendar('refetchEvents');
-                //     // XXX: replace with mutator event listener
-                //     mapal.initContent($calendar);
-                // });
+                $events.bind('html', function() {
+                    $calendar.fullCalendar('refetchEvents');
+                    // XXX: replace with mutator event listener
+                    mapal.initContent($calendar);
+                });
                 $events.css('display', 'None');
                 $calendar.fullCalendar({
                     dayDblClick: function(date, allDay, jsEvent, view) {
@@ -42,6 +42,7 @@ define([
                     year: year
                     // XXX: consume calendar-control and pass to fullCalendar
                 });
+                mapal.initContent($calendar);
             });
         },
         parseEvents: function(root) {
