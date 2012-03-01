@@ -129,7 +129,7 @@ define([
 
         createContainer: function($trigger) {
             var options = $trigger.data("mapal.tooltip"),
-                $content;
+                $content, $container;
 
             $container = $("<div/>", {"class": "tooltip-container"});
             $container.css("visibility", "hidden");
