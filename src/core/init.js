@@ -498,6 +498,13 @@ var mapal = {
 
                         mapal.initContent($target);
 
+                        var $nexthref = $elem.attr('data-href-next');
+                        if ($nexthref) {
+                            $elem.attr({'href': $nexthref,
+                                        'data-injection': '',
+                                        'data-href-next': ''});
+                        }
+
                         if (typeof callback == 'function') {
                             callback($target);
                         } else {
@@ -923,12 +930,6 @@ var mapal = {
             var trigger = function() {
                 $autoload.data('autoLoading', true);
                 $autoload.trigger('click');
-                var $nexthref = $autoload.attr('data-href-next');
-                if ($nexthref) {
-                    $autoload.attr({'href': $nexthref,
-                                    'data-injection': '',
-                                    'data-href-next': ''});
-                }
                 return true;
             };
 
