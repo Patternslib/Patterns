@@ -612,7 +612,7 @@ var mapal = {
 
             "after": {
                 "execute": function( $source, $target  ) {
-                    $children = $($source[0].children);
+                    var $children = $($source[0].children);
                     $target.append($children);
                     return $children;
                 }
@@ -620,7 +620,7 @@ var mapal = {
 
             "before": {
                 "execute": function( $source, $target ) {
-                    $children = $($source[0].children);
+                    var $children = $($source[0].children);
                     $target.prepend($children);
                     return $children;
                 }
