@@ -915,14 +915,14 @@ var mapal = {
             if (!$data) {
                 $(this).data("autoLoading", true);
                 $(this).bind("scroll", function() {
-                    var $window = $(this);
-                    var elems = $window.find( '.autoLoading-visible' );
-                    var ret = false;
+                    var $scrollable = $(this),
+                        elems = $scrollable.find( '.autoLoading-visible' ),
+                        ret = false;
 
                     $(elems).each(function() {
-                        var $this = $(this);
-                        var offset = $this.position();
-                        var doTrigger = $window.innerHeight() >= offset.top;
+                        var $this = $(this),
+                            reltop = $this.offset().top - $scrollable.offset().top,
+                            doTrigger = reltop <= $scrollable.innerHeight();
 
                         if (doTrigger && !$this.data("autoLoading")) {
                             $this.data("autoLoading", true);
