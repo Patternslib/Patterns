@@ -10,8 +10,9 @@ define([
                 $filter = $calroot.find('.calendar-filters');
             $calroot.find('.month').each(function() {
                 var $month = $(this),
-                    $events = $('.events', $month),
-                    ym = $('time', $month).attr('datetime').split('-'),
+                    $events = $('.events', $month);
+                if ($events.length === 0) { return; }
+                var ym = $('time', $month).attr('datetime').split('-'),
                     year = ym[0],
                     month = Number(ym[1]) - 1,
                     $calendar = $('<div class="calendar">\n</div>')
