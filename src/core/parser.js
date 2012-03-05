@@ -6,12 +6,19 @@
  */
 define([], function() {
 
+    // older browsers - factor out if more need it
+    // source: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim
+    if (!String.prototype.trim) {
+        String.prototype.trim = function () {
+            return this.replace(/^\s+|\s+$/g,'');
+        };
+    }
+
     function ArgumentParser() {
         this.options = {};
         this.parameters = [];
         this.named_parameters = {};
     }
-
 
     ArgumentParser.prototype = {
         log: function(msg) {
@@ -26,17 +33,6 @@ define([], function() {
                              "default": default_value};
             this.parameters.push(parameter);
             this.named_parameters[name] = parameter;
-        },
-
-        trim:  function(string) {
-            if (String.prototype.trim) {
-                // Firefox 3.5+, Safari 5+, IE9+ in standards mode, Chrome 5+,
-                // Opera 10.5+
-                return string.trim();
-            } else {
-                // All the rest
-                return string.replace(/^\s+|\s+$/g, "");
-            }
         },
 
         parse: function(parameter) {
@@ -56,14 +52,14 @@ define([], function() {
                 if (i>=this.parameters.length) {
                     break;
                 }
-                part=this.trim(parts.shift());
+                part = parts.shift().trim();
                 if (!part)
                     continue;
                 if (named_param_pattern.test(part)) {
                     parts.unshift(part);
                     break;
                 }
-                this.options[this.parameters[i].name] = this.trim(part);
+                this.options[this.parameters[i].name] = part.trim();
             }
 
             // Handle all named parameters
@@ -77,7 +73,7 @@ define([], function() {
                     this.log("Unknown named parameter " + matches[1]);
                     continue;
                 }
-                this.options[matches[1]] = this.trim(matches[2]);
+                this.options[matches[1]] = matches[2].trim();
             }
         }
     };
