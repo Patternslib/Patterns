@@ -158,6 +158,15 @@ define([
                 expect(opts[0].attr).toEqual("class");
                 expect(opts[1].attr).toEqual("foo");
             });
+
+            it("Parse time default", function() {
+                var parser=new ArgumentParser("selector; attr");
+                var opts = parser.parse("attr: class && ;foo", {"selector": "bar"});
+                expect(opts[0].attr).toEqual("class");
+                expect(opts[0].selector).toEqual("bar");
+                expect(opts[1].attr).toEqual("foo");
+                expect(opts[1].selector).toEqual("bar");
+            });
         });
     });
 });
