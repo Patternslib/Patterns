@@ -7,23 +7,19 @@ define([
     describe("ArgumentParser", function() {
         describe("trim", function() {
             it("No whitespace", function() {
-                var parser=new ArgumentParser();
-                expect(parser.trim("foo")).toEqual("foo");
+                expect("foo".trim()).toEqual("foo");
             });
 
             it("Leading whitespace", function() {
-                var parser=new ArgumentParser();
-                expect(parser.trim("  foo")).toEqual("foo");
+                expect("  foo".trim()).toEqual("foo");
             });
 
             it("Trailing whitespace", function() {
-                var parser=new ArgumentParser();
-                expect(parser.trim("foo  ")).toEqual("foo");
+                expect("foo  ".trim()).toEqual("foo");
             });
 
             it("Whitespace everywhere", function() {
-                var parser=new ArgumentParser();
-                expect(parser.trim("  f o o  ")).toEqual("f o o");
+                expect("  f o o  ".trim()).toEqual("f o o");
             });
         });
 
