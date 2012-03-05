@@ -63,6 +63,7 @@ define([
                 expect(opts.selector).toEqual("nav:first");
             });
 
+            // XXX: this should raise an error or at least a warning
             it("Ignore extra positional parameters", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("foo");
@@ -70,9 +71,51 @@ define([
                 expect(opts.foo).toEqual("bar");
             });
 
+            // XXX: this should raise an error or at least a warning
             it("Ignore unknown named parameter", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("selector");
+                var opts = parser.parse("attr: class");
+                expect(opts.attr).not.toBeDefined();
+            });
+        });
+
+        describe("parse - params via init", function() {
+            it("Positional argument", function() {
+                var parser=new ArgumentParser("selector");
+                var opts = parser.parse(".MyClass");
+                expect(opts.selector).toEqual(".MyClass");
+            });
+
+            it("Default value", function() {
+                var parser=new ArgumentParser("selector: default");
+                var opts = parser.parse("");
+                expect(opts.selector).toEqual("default");
+            });
+
+            it("Use default for empty value", function() {
+                var parser=new ArgumentParser("first: default; second");
+                var opts = parser.parse("; bar");
+                expect(opts.first).toEqual("default");
+                expect(opts.second).toEqual("bar");
+            });
+
+            it("Named argument", function() {
+                var parser=new ArgumentParser("selector; attr");
+                var opts = parser.parse("attr: class");
+                expect(opts.attr).toEqual("class");
+            });
+
+            // XXX: this should raise an error or at least a warning
+            it("Ignore extra positional parameters", function() {
+                var parser=new ArgumentParser("foo");
+                var opts = parser.parse("bar; buz");
+                expect(opts.foo).toEqual("bar");
+            });
+
+            // XXX: this should raise an error or at least a warning
+            it("Ignore unknown named parameter", function() {
+                var parser=new ArgumentParser("selector");
                 var opts = parser.parse("attr: class");
                 expect(opts.attr).not.toBeDefined();
             });

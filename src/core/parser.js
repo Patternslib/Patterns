@@ -23,11 +23,27 @@ define([], function() {
         }
     };
 
-    function ArgumentParser() {
+
+    function ArgumentParser(spec) {
         this.parameters = [];
         this.named_parameters = {};
-    }
+        if (spec) {
+            var parts = spec.split(';'),
+                parser = this;
+            for (var i=0, part; i<parts.length; i++) {
+                part = parts[i].trim();
+                var match = part.match(parser.named_param_pattern);
+                if (match) {
+                    parser.add_argument(match[1], match[2].trim());
+                } else {
+                    parser.add_argument(part);
+                }
+            }
+        }
+    };
     ArgumentParser.prototype = {
+        named_param_pattern: /^\s*([a-zA-z]+)\s*:(.*)/,
+
         add_argument: function(name, default_value) {
             var parameter = {"name" : name,
                              "default": default_value};
@@ -37,7 +53,6 @@ define([], function() {
 
         parse: function(parameter) {
             var parts = parameter.split(";"),
-                named_param_pattern = /^\s*([a-zA-z]+)\s*:(.*)/,
                 opts = {},
                 part, matches, i, name;
 
@@ -57,7 +72,7 @@ define([], function() {
                 part = parts.shift().trim();
                 if (!part)
                     continue;
-                if (named_param_pattern.test(part)) {
+                if (this.named_param_pattern.test(part)) {
                     parts.unshift(part);
                     break;
                 }
@@ -66,7 +81,7 @@ define([], function() {
 
             // Handle all named parameters
             for (i=0; i<parts.length; i++) {
-                matches = parts[i].match(named_param_pattern);
+                matches = parts[i].match(this.named_param_pattern);
                 if (!matches) {
                     log("Positional parameters not allowed after named parameters");
                     break;
