@@ -103,8 +103,8 @@ define([], function() {
 
 
     function ArgumentParser(spec) {
-        this.parameters = [];
-        this.named_parameters = {};
+        this.params = [];
+        this.named_params = {};
         if (spec) {
             var parts = spec.split(';'),
                 parser = this;
@@ -125,8 +125,8 @@ define([], function() {
         add_argument: function(name, default_value) {
             var parameter = {"name" : name,
                              "default": default_value};
-            this.parameters.push(parameter);
-            this.named_parameters[name] = parameter;
+            this.params.push(parameter);
+            this.named_params[name] = parameter;
         },
 
         parse: function(parameter) {
@@ -139,16 +139,16 @@ define([], function() {
                 part, matches, i, name;
 
             // Popuplate options with default values
-            for (i=0; i<this.parameters.length; i++) {
-                name = this.parameters[i].name;
-                opts[name] = this.parameters[i].default;
+            for (i=0; i<this.params.length; i++) {
+                name = this.params[i].name;
+                opts[name] = this.params[i].default;
             }
 
             // Grab all positional parameters
             i=-1;
             while (parts.length) {
                 i++;
-                if (i>=this.parameters.length) {
+                if (i>=this.params.length) {
                     break;
                 }
                 part = parts.shift().trim();
@@ -158,7 +158,7 @@ define([], function() {
                     parts.unshift(part);
                     break;
                 }
-                opts[this.parameters[i].name] = part.trim();
+                opts[this.params[i].name] = part.trim();
             }
 
             // Handle all named parameters
@@ -168,7 +168,7 @@ define([], function() {
                     warn("Positional parameters not allowed after named parameters");
                     break;
                 }
-                if (this.named_parameters[matches[1]]===undefined) {
+                if (this.named_params[matches[1]]===undefined) {
                     warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
