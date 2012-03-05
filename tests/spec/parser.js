@@ -100,6 +100,13 @@ define([
                 expect(opts.second).toEqual("bar");
             });
 
+            it("Default value for second", function() {
+                var parser=new ArgumentParser("first; selector: default");
+                var opts = parser.parse("abc");
+                expect(opts.first).toEqual("abc");
+                expect(opts.selector).toEqual("default");
+            });
+
             it("Named argument", function() {
                 var parser=new ArgumentParser("selector; attr");
                 var opts = parser.parse("attr: class");
