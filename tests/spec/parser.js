@@ -120,5 +120,37 @@ define([
                 expect(opts.attr).not.toBeDefined();
             });
         });
+
+        describe("parse - multiple with &&", function() {
+            it("Positional argument", function() {
+                var parser=new ArgumentParser("selector");
+                var opts = parser.parse(".MyClass && .MyOther");
+                expect(opts[0].selector).toEqual(".MyClass");
+                expect(opts[1].selector).toEqual(".MyOther");
+            });
+
+            it("Default value", function() {
+                var parser=new ArgumentParser("selector: default");
+                var opts = parser.parse("&&");
+                expect(opts[0].selector).toEqual("default");
+                expect(opts[1].selector).toEqual("default");
+            });
+
+            it("Use default for empty value", function() {
+                var parser=new ArgumentParser("first: default; second");
+                var opts = parser.parse("; bar && ;baz");
+                expect(opts[0].first).toEqual("default");
+                expect(opts[0].second).toEqual("bar");
+                expect(opts[1].first).toEqual("default");
+                expect(opts[1].second).toEqual("baz");
+            });
+
+            it("Named argument", function() {
+                var parser=new ArgumentParser("selector; attr");
+                var opts = parser.parse("attr: class && ;foo");
+                expect(opts[0].attr).toEqual("class");
+                expect(opts[1].attr).toEqual("foo");
+            });
+        });
     });
 });

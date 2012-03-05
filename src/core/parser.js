@@ -130,6 +130,10 @@ define([], function() {
         },
 
         parse: function(parameter) {
+            if (parameter.match(/&&/)) {
+                return parameter.split(/\s*&&\s*/).map(this.parse, this);
+            }
+
             var parts = parameter.split(";"),
                 opts = {},
                 part, matches, i, name;
