@@ -29,7 +29,6 @@ define([
     // rethink naming once all patterns are migrated to this style
     mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
     mapal.passivePatterns.change = require('./patterns/change');
-    mapal.passivePatterns.collapsible = require('./patterns/collapsible');
     mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
     mapal.passivePatterns.toggle = require('./patterns/toggle');
     mapal.passivePatterns.tooltip = require('./patterns/tooltip');
@@ -42,6 +41,31 @@ define([
     mapal.patterns.modal = require('./patterns/modal');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
     mapal.patterns.setclass = require('./patterns/setclass');
+
+    // new-style patterns
+    mapal.newstyle = {};
+    mapal.newstyle.collapsible = require('./patterns/collapsible');
+
+    // hook in new-style patterns
+    mapal.passivePatterns.newstyle = { initContent: function(root) {
+        for (var name in mapal.newstyle) {
+            var pattern = mapal.newstyle[name],
+                initialization = name + '-initialized',
+                trigger = '.' + name + (
+                    pattern.trigger ? (',' + pattern.trigger) : ''
+                );
+            $(root).find(trigger).each(function(idx) {
+                var $this = $(this), ret,
+                    loaded = $this.data(initialization);
+                if (!loaded) {
+                    if (!$this.hasClass(name)) $this.addClass(name);
+                    ret = (pattern.init ? pattern.init : pattern)($this, idx);
+                    $this.data(initialization, true);
+                }
+                return ret;
+            });
+        }
+    }};
 
     // wait for the DOM to be ready and initialize
     var doc = require('./lib/domReady!');
