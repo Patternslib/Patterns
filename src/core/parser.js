@@ -130,9 +130,12 @@ define([], function() {
             }
         },
 
-        parse: function(parameter) {
+        parse: function(parameter, defaults) {
+            defaults = defaults || {};
             if (parameter.match(/&&/)) {
-                return parameter.split(/\s*&&\s*/).map(this.parse, this);
+                return parameter.split(/\s*&&\s*/).map(function(parameter) {
+                    return this.parse(parameter, defaults);
+                }, this);
             }
 
             var parts = parameter.split(";"),
@@ -142,7 +145,7 @@ define([], function() {
             // Popuplate options with default values
             for (i=0; i<this.params.length; i++) {
                 name = this.params[i];
-                opts[name] = this.defaults[name];
+                opts[name] = defaults[name] || this.defaults[name];
             }
 
             // Grab all positional parameters
