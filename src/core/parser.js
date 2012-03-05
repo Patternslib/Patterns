@@ -3,6 +3,7 @@
  * Patterns @VERSION@ parser - argument parser
  *
  * Copyright 2012 Simplon B.V.
+ * Copyright 2012 Florian Friesdorf
  */
 define([], function() {
 
@@ -23,11 +24,9 @@ define([], function() {
     };
 
     function ArgumentParser() {
-        this.options = {};
         this.parameters = [];
         this.named_parameters = {};
     }
-
     ArgumentParser.prototype = {
         add_argument: function(name, default_value) {
             var parameter = {"name" : name,
@@ -39,11 +38,13 @@ define([], function() {
         parse: function(parameter) {
             var parts = parameter.split(";"),
                 named_param_pattern = /^\s*([a-zA-z]+)\s*:(.*)/,
-                part, matches, i;
+                opts = {},
+                part, matches, i, name;
 
             // Popuplate options with default values
             for (i=0; i<this.parameters.length; i++) {
-                this.options[this.parameters[i].name] = this.parameters[i]["default"];
+                name = this.parameters[i].name;
+                opts[name] = this.parameters[i].default;
             }
 
             // Grab all positional parameters
@@ -60,7 +61,7 @@ define([], function() {
                     parts.unshift(part);
                     break;
                 }
-                this.options[this.parameters[i].name] = part.trim();
+                opts[this.parameters[i].name] = part.trim();
             }
 
             // Handle all named parameters
@@ -74,8 +75,10 @@ define([], function() {
                     log("Unknown named parameter " + matches[1]);
                     continue;
                 }
-                this.options[matches[1]] = matches[2].trim();
+                opts[matches[1]] = matches[2].trim();
             }
+
+            return opts;
         }
     };
 
