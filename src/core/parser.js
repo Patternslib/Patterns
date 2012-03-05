@@ -104,8 +104,19 @@ define([], function() {
 
     function ArgumentParser(spec) {
         this.params = [];
-        this.named_params = {};
-        if (spec) {
+        this.defaults = {};
+        if (spec) this.add_spec(spec);
+    };
+    ArgumentParser.prototype = {
+        named_param_pattern: /^\s*([a-zA-z]+)\s*:(.*)/,
+
+        add_argument: function(name, default_value) {
+            if (default_value === undefined) default_value = null;
+            this.params.push(name);
+            this.defaults[name] = default_value;
+        },
+
+        add_spec: function(spec) {
             var parts = spec.split(';'),
                 parser = this;
             for (var i=0, part; i<parts.length; i++) {
@@ -117,16 +128,6 @@ define([], function() {
                     parser.add_argument(part);
                 }
             }
-        }
-    };
-    ArgumentParser.prototype = {
-        named_param_pattern: /^\s*([a-zA-z]+)\s*:(.*)/,
-
-        add_argument: function(name, default_value) {
-            var parameter = {"name" : name,
-                             "default": default_value};
-            this.params.push(parameter);
-            this.named_params[name] = parameter;
         },
 
         parse: function(parameter) {
@@ -140,8 +141,8 @@ define([], function() {
 
             // Popuplate options with default values
             for (i=0; i<this.params.length; i++) {
-                name = this.params[i].name;
-                opts[name] = this.params[i].default;
+                name = this.params[i];
+                opts[name] = this.defaults[name];
             }
 
             // Grab all positional parameters
@@ -158,7 +159,7 @@ define([], function() {
                     parts.unshift(part);
                     break;
                 }
-                opts[this.params[i].name] = part.trim();
+                opts[this.params[i]] = part.trim();
             }
 
             // Handle all named parameters
@@ -168,7 +169,7 @@ define([], function() {
                     warn("Positional parameters not allowed after named parameters");
                     break;
                 }
-                if (this.named_params[matches[1]]===undefined) {
+                if (this.defaults[matches[1]] === undefined) {
                     warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
