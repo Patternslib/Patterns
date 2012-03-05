@@ -15,10 +15,11 @@ define([], function() {
         };
     }
 
+
     // XXX: move to dedicated module
-    var log = function(msg) {
+    var warn = function(msg) {
         try {
-            console.log(msg);
+            console.warn(msg);
         } catch(e) {
         }
     };
@@ -83,11 +84,11 @@ define([], function() {
             for (i=0; i<parts.length; i++) {
                 matches = parts[i].match(this.named_param_pattern);
                 if (!matches) {
-                    log("Positional parameters not allowed after named parameters");
+                    warn("Positional parameters not allowed after named parameters");
                     break;
                 }
                 if (this.named_parameters[matches[1]]===undefined) {
-                    log("Unknown named parameter " + matches[1]);
+                    warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
                 opts[matches[1]] = matches[2].trim();

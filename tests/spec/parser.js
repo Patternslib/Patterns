@@ -63,7 +63,7 @@ define([
                 expect(opts.selector).toEqual("nav:first");
             });
 
-            // XXX: this should raise an error or at least a warning
+            // XXX: test for warn message
             it("Ignore extra positional parameters", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("foo");
@@ -71,7 +71,7 @@ define([
                 expect(opts.foo).toEqual("bar");
             });
 
-            // XXX: this should raise an error or at least a warning
+            // XXX: test for warn message
             it("Ignore unknown named parameter", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("selector");
@@ -106,14 +106,14 @@ define([
                 expect(opts.attr).toEqual("class");
             });
 
-            // XXX: this should raise an error or at least a warning
+            // XXX: test for warn message
             it("Ignore extra positional parameters", function() {
                 var parser=new ArgumentParser("foo");
                 var opts = parser.parse("bar; buz");
                 expect(opts.foo).toEqual("bar");
             });
 
-            // XXX: this should raise an error or at least a warning
+            // XXX: test for warn message
             it("Ignore unknown named parameter", function() {
                 var parser=new ArgumentParser("selector");
                 var opts = parser.parse("attr: class");
