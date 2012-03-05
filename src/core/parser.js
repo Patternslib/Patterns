@@ -14,6 +14,14 @@ define([], function() {
         };
     }
 
+    // XXX: move to dedicated module
+    var log = function(msg) {
+        try {
+            console.log(msg);
+        } catch(e) {
+        }
+    };
+
     function ArgumentParser() {
         this.options = {};
         this.parameters = [];
@@ -21,13 +29,6 @@ define([], function() {
     }
 
     ArgumentParser.prototype = {
-        log: function(msg) {
-            try {
-                console.log(msg);
-            } catch(e) {
-            }
-        },
-
         add_argument: function(name, default_value) {
             var parameter = {"name" : name,
                              "default": default_value};
@@ -66,11 +67,11 @@ define([], function() {
             for (i=0; i<parts.length; i++) {
                 matches = parts[i].match(named_param_pattern);
                 if (!matches) {
-                    this.log("Positional parameters not allowed after named parameters");
+                    log("Positional parameters not allowed after named parameters");
                     break;
                 }
                 if (this.named_parameters[matches[1]]===undefined) {
-                    this.log("Unknown named parameter " + matches[1]);
+                    log("Unknown named parameter " + matches[1]);
                     continue;
                 }
                 this.options[matches[1]] = matches[2].trim();
