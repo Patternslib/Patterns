@@ -6,9 +6,9 @@ define([
     './core/init',
     './core/parser',
     './core/store',
+    './patterns',
     './patterns/autosubmit',
     './patterns/change',
-    './patterns/collapsible',
     './patterns/fancybox',
     './patterns/floatingpanel',
     './patterns/fullcalendar',
@@ -43,29 +43,22 @@ define([
     mapal.patterns.setclass = require('./patterns/setclass');
 
     // new-style patterns
-    mapal.newstyle = {};
-    mapal.newstyle.collapsible = require('./patterns/collapsible');
+    mapal.newstyle = require('./patterns');
 
     // hook in new-style patterns
-    mapal.passivePatterns.newstyle = { initContent: function(root) {
-        for (var name in mapal.newstyle) {
-            var pattern = mapal.newstyle[name],
-                initialization = name + '-initialized',
-                trigger = '.' + name + (
-                    pattern.trigger ? (',' + pattern.trigger) : ''
-                );
-            $(root).find(trigger).each(function(idx) {
-                var $this = $(this), ret,
-                    loaded = $this.data(initialization);
-                if (!loaded) {
-                    if (!$this.hasClass(name)) $this.addClass(name);
-                    ret = (pattern.init ? pattern.init : pattern)($this, idx);
-                    $this.data(initialization, true);
+    mapal.passivePatterns.newstyle = {
+        initContent: function(root) {
+            for (var name in mapal.newstyle) {
+                var pattern = mapal.newstyle[name],
+                    trigger = pattern.markup_trigger;
+                if (trigger) {
+                    $(root).find(trigger).each(function(idx) {
+                        pattern.init($(this));
+                    });
                 }
-                return ret;
-            });
+            }
         }
-    }};
+    };
 
     // wait for the DOM to be ready and initialize
     var doc = require('./lib/domReady!');
