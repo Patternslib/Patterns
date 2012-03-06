@@ -111,7 +111,7 @@ define([], function() {
         named_param_pattern: /^\s*([a-zA-Z0-9]+)\s*:(.*)/,
 
         add_argument: function(name, default_value) {
-            if (default_value === undefined) default_value = null;
+            if (default_value === undefined) default_value = "";
             this.params.push(name);
             this.defaults[name] = default_value;
         },
@@ -177,6 +177,12 @@ define([], function() {
                     continue;
                 }
                 opts[matches[1]] = matches[2].trim();
+            }
+
+            for (name in opts) {
+                if (opts[name].slice(0,1) === "$") {
+                    opts[name] = opts[opts[name].slice(1)];
+                }
             }
 
             return opts;
