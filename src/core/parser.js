@@ -108,7 +108,7 @@ define([], function() {
         if (spec) this.add_spec(spec);
     };
     ArgumentParser.prototype = {
-        named_param_pattern: /^\s*([a-zA-z]+)\s*:(.*)/,
+        named_param_pattern: /^\s*([a-zA-Z0-9]+)\s*:(.*)/,
 
         add_argument: function(name, default_value) {
             if (default_value === undefined) default_value = null;
