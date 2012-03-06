@@ -126,6 +126,13 @@ define([
                 var opts = parser.parse("attr: class");
                 expect(opts.attr).not.toBeDefined();
             });
+
+            it("Reference other param for default value", function() {
+                var parser=new ArgumentParser("p1; p2: $p1");
+                var opts = parser.parse("foo");
+                expect(opts.p1).toEqual("foo");
+                expect(opts.p2).toEqual("foo");
+            });
         });
 
         describe("parse - multiple with &&", function() {
