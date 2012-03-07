@@ -4,3 +4,6 @@
 [submodule "lib/jasmine-jquery"]
 	path = lib/jasmine-jquery
 	url = git://github.com/velesin/jasmine-jquery.git
+[submodule "lib/jasmine"]
+	path = lib/jasmine
+	url = git://github.com/pivotal/jasmine.git
