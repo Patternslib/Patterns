@@ -2,6 +2,10 @@ require([
     'require',
     '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine',
     '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine-html',
+    '../src/lib/order!../src/lib/jquery',
+    '../src/lib/order!../lib/jasmine-jquery/lib/jasmine-jquery',
+    '../src/lib/order!./jasmine-settings',
+    '../src/lib/order!./spec/collapsible',
     '../src/lib/order!./spec/parser'
 ], function(require) {
     var jasmineEnv = jasmine.getEnv();
