@@ -46,19 +46,7 @@ define([
     mapal.newstyle = require('./patterns');
 
     // hook in new-style patterns
-    mapal.passivePatterns.newstyle = {
-        initContent: function(root) {
-            for (var name in mapal.newstyle) {
-                var pattern = mapal.newstyle[name],
-                    trigger = pattern.markup_trigger;
-                if (trigger) {
-                    $(root).find(trigger).each(function(idx) {
-                        pattern.init($(this));
-                    });
-                }
-            }
-        }
-    };
+    mapal.passivePatterns.newstyle = { initContent: mapal.newstyle.scan };
 
     // wait for the DOM to be ready and initialize
     var doc = require('./lib/domReady!');
