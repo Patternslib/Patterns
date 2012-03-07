@@ -1,7 +1,7 @@
 define([
     'require',
     './lib/jquery',
-    './patterns/collapsible'
+    './patterns/collapsible',
     './utils'
 ], function(require) {
     var utils = require('./utils'),
@@ -9,8 +9,7 @@ define([
         pimp_pattern = utils.pimp_pattern;
 
     var plain_patterns = {
-        collapsible: require('./patterns/collapsible'),
-        inject: require('./patterns/inject')
+        collapsible: require('./patterns/collapsible')
     };
 
     var patterns = {};
