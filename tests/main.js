@@ -1,18 +1,18 @@
 require([
     'require',
-    '../src/lib/order!../lib/jasmine/jasmine',
-    '../src/lib/order!../lib/jasmine/jasmine-html',
+    '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine',
+    '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine-html',
     '../src/lib/order!./spec/parser'
 ], function(require) {
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
 
-    var trivialReporter = new jasmine.TrivialReporter();
+    var reporter = new jasmine.HtmlReporter();
 
-    jasmineEnv.addReporter(trivialReporter);
+    jasmineEnv.addReporter(reporter);
 
     jasmineEnv.specFilter = function(spec) {
-        return trivialReporter.specFilter(spec);
+        return reporter.specFilter(spec);
     };
 
     var currentWindowOnload = window.onload;
