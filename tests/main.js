@@ -1,6 +1,8 @@
 require([
     'require',
-    './spec/parser'
+    '../src/lib/order!../lib/jasmine/jasmine',
+    '../src/lib/order!../lib/jasmine/jasmine-html',
+    '../src/lib/order!./spec/parser'
 ], function(require) {
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
