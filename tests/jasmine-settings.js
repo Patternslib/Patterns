@@ -1,3 +1,3 @@
 define([], function() {
-    jasmine.getFixtures().fixturesPath = '../demo';
+    jasmine.getFixtures().fixturesPath = './';
 });
