@@ -5,8 +5,10 @@ require([
     '../src/lib/order!../src/lib/jquery',
     '../src/lib/order!../lib/jasmine-jquery/lib/jasmine-jquery',
     '../src/lib/order!./jasmine-settings',
-    '../src/lib/order!./spec/collapsible',
-    '../src/lib/order!./spec/parser'
+    // XXX: the order matters for some reason
+    '../src/lib/order!./spec/inject',
+    '../src/lib/order!./spec/parser',
+    '../src/lib/order!./spec/collapsible'
 ], function(require) {
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
