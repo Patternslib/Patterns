@@ -14,6 +14,19 @@ Collapsible
 Changing attributes
 -------------------
 
+Setting
+~~~~~~~
+
+Not sure whether setting is needed.
+
+::
+
+  <button data-set=".someClass; space sep list of values to be set">
+  <button data-set=".someClass; space sep list of values to be set; class"> (same as above)
+  <button data-set=".someClass; space sep list of values to be set; attr: class"> (same as above)
+  <button data-change=".someClass; set: space sep list of attr values to be set; attr: class">
+
+
 Adding
 ~~~~~~
 ::
@@ -67,10 +80,10 @@ All together
 ~~~~~~~~~~~~
 ::
 
-  <a data-change="body; toggle: e f; switch: a b; remove: c; add: d">
-  <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; attr=attr1">
-  <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; attr=attr1 &&
-                  body; toggle: e f; switch: a b; remove: c; add: d; attr=attr2">
+  <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; set: g">
+  <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; set: g; attr=attr1">
+  <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; set: g; attr=attr1 &&
+                  body; toggle: e f; switch: a b; remove: c; add: d; set: g; attr=attr2">
 
 
 
