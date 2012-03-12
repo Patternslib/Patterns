@@ -149,14 +149,19 @@ Multiple injection
   <a href="snippets.html#default_source" data-inject="#target1 && #source2 #target2 && #target3">
 
 
-Changing the target while injecting
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Changing the target while injecting (discusss)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
   <a href="snippets.html#source" class="inject" data-add="modal">
   <a href="snippets.html#source" class="inject" data-change="add: modal">
   <a href="snippets.html#source" class="inject" data-change="data-foo = abc">
   <a href="snippets.html#source" data-inject="#target" data-add="modal">
+
+not so sure about these::
+
+  <a href="snippets.html#source" data-inject="#target; change: class="modal">
+  <a href="snippets.html#source" data-inject="#target; change: class+="modal">
 
 
 
