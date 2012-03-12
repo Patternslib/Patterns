@@ -26,6 +26,10 @@ Not sure whether setting is needed.
   <button data-set=".someClass; space sep list of values to be set; attr: class"> (same as above)
   <button data-change=".someClass; set: space sep list of attr values to be set; attr: class">
 
+  <button data-set=".someClass; class = space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; class = space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; set: class = space sep list of values to be set"> (**discuss**)
+
 
 Adding
 ~~~~~~
@@ -43,6 +47,11 @@ Adding
   <button data-add=".someClass; space sep list of attr values to be added; attr: attrname">
   <button data-change=".someClass; add: space sep list of attr values to be added; attr: attrname">
 
+  <button data-add=".someClass; class += space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; class += space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; add: class = space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; add: class += space sep list of values to be set"> (**discuss**)
+
 
 Removing
 ~~~~~~~~
@@ -56,6 +65,11 @@ Removing
   <button data-remove=".someClass; space sep list of attr values to be added; attr: attrname">
   <button data-change=".someClass; remove: space sep list of attr values to be added; attr: attrname">
 
+  <button data-add=".someClass; class -= space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; class -= space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; remove: class = space sep list of values to be set"> (**discuss**)
+  <button data-change=".someClass; remove: class -= space sep list of values to be set"> (**discuss**)
+
 
 Switching
 ~~~~~~~~~
@@ -64,6 +78,10 @@ Switching
   <a data-switch="body; a b"> (switch the two classes)
   <a data-switch="body; a-* b"> (switch the two classes - If a-* does not exist, never mind)
   <a data-change="body; switch: a-* b"> (switch the two classes - If a-* does not exist, never mind)
+
+  <a data-switch="body; class = a b"> (**discuss**)
+  <a data-switch="body; class = a-* b"> (**discuss**)
+  <a data-change="body; switch: class = a-* b"> (**discuss**)
 
 
 toggle/rotate elements independently
@@ -75,6 +93,11 @@ toggle/rotate elements independently
   <a data-toggle="body; a b c" (rotate, start with a if not there)
   <a data-change="body; toggle: a b c">
 
+  <a data-toggle="body; class = a" (**discuss**)
+  <a data-toggle="body; class = a b" (**discuss**)
+  <a data-toggle="body; class = a b c" (**discuss**)
+  <a data-change="body; toggle: class = a b c"> (**discuss**)
+
 
 All together
 ~~~~~~~~~~~~
@@ -84,6 +107,9 @@ All together
   <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; set: g; attr=attr1">
   <a data-change="body; toggle: e f; switch: a b; remove: c; add: d; set: g; attr=attr1 &&
                   body; toggle: e f; switch: a b; remove: c; add: d; set: g; attr=attr2">
+
+  <a data-change="body; toggle: attrX = e f; switch: attrY = a b;
+                        attrZ -= c; attrK += d; class = g"> (**discuss**)
 
 
 
@@ -129,7 +155,9 @@ Changing the target while injecting
 
   <a href="snippets.html#source" class="inject" data-add="modal">
   <a href="snippets.html#source" class="inject" data-change="add: modal">
+  <a href="snippets.html#source" class="inject" data-change="data-foo = abc">
   <a href="snippets.html#source" data-inject="#target" data-add="modal">
+
 
 
 Non-existent target
