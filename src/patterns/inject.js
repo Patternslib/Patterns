@@ -1,7 +1,8 @@
 define([
     'require',
     '../core/parser',
-    '../lib/jquery'
+    '../lib/jquery',
+    '../lib/jquery.form'
 ], function(require) {
     var Parser = require('../core/parser'),
         parser = new Parser("source; target: $source");
@@ -62,7 +63,9 @@ define([
 
     var trigger = function($el) {
         // retrieve href and split into url and default srcid
-        var href = $el.attr('href').split('#'),
+        var href = ($el.is('form')
+                    ? $el.attr('action')
+                    : $el.attr('href')).split('#'),
             srcid = '#' + href.pop(),
             url = href.pop(0);
         if (href.length > 0) console.log('inject: only one #source in href');
@@ -77,19 +80,25 @@ define([
             method = pattern[method_name];
 
         // perform ajax call
-        $.ajax({
+        var params = {
             url: url,
+            type: $el.is('form') ? 'POST' : 'GET',
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
             success: injector(method, opts)
-        });
+        };
+        if ($el.is('form')) {
+            $el.ajaxSubmit(params);
+        } else {
+            $.ajax(params);
+        }
     };
 
     var pattern = {
         initialised_class: 'inject',
-        markup_trigger: '.inject,[data-inject]',
-        supported_els: ['a'],
+        markup_trigger: 'a.inject, a[data-inject], form.inject, form[data-inject]',
+        supported_tags: ['a', 'form'], // XXX: unsupported
         init: init,
         content: content,
         replace: replace,
