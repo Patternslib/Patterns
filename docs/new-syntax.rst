@@ -91,7 +91,7 @@ Injection
 ---------
 
 Injection by default will take the content from source and replace the
-target'ss content with it.
+target's content with it.
 
 
 Single injection
