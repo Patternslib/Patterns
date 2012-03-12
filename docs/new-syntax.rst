@@ -125,6 +125,7 @@ Multiple injection
 
 Changing the target while injecting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
   <a href="snippets.html#source" class="inject" data-add="modal">
   <a href="snippets.html#source" class="inject" data-change="add: modal">
