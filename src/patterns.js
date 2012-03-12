@@ -3,6 +3,7 @@ define([
     './lib/jquery',
     './patterns/collapsible',
     './patterns/inject',
+    './patterns/inject_log_old',
     './utils'
 ], function(require) {
     var utils = require('./utils'),
@@ -11,7 +12,8 @@ define([
 
     var plain_patterns = {
         collapsible: require('./patterns/collapsible'),
-        inject: require('./patterns/inject')
+        inject: require('./patterns/inject'),
+        inject_log_old: require('./patterns/inject_log_old')
     };
 
     var patterns = {};
