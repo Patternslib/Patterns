@@ -12,7 +12,7 @@ define([
     './patterns/fancybox',
     './patterns/floatingpanel',
     './patterns/fullcalendar',
-    './patterns/modal',
+    './patterns/old_modal',
     './patterns/selfhealing',
     './patterns/setclass',
     './patterns/toggle',
@@ -38,7 +38,7 @@ define([
     mapal.patterns.tooltip = { execute: function() {} };
     mapal.patterns.fancybox = require('./patterns/fancybox');
     mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
-    mapal.patterns.modal = require('./patterns/modal');
+    mapal.patterns.old_modal = require('./patterns/old_modal');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
     mapal.patterns.setclass = require('./patterns/setclass');
 
