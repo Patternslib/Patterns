@@ -4,6 +4,7 @@ define([
     './patterns/collapsible',
     './patterns/inject',
     './patterns/inject_log_old',
+    './patterns/modal',
     './utils'
 ], function(require) {
     var utils = require('./utils'),
@@ -13,7 +14,8 @@ define([
     var plain_patterns = {
         collapsible: require('./patterns/collapsible'),
         inject: require('./patterns/inject'),
-        inject_log_old: require('./patterns/inject_log_old')
+        inject_log_old: require('./patterns/inject_log_old'),
+        modal: require('./patterns/modal')
     };
 
     var patterns = {};
@@ -29,14 +31,20 @@ define([
     }
 
     patterns.scan = function(root) {
+        var $root = $(root);
         for (var name in patterns) {
             if (name === "scan") continue;
             var pattern = patterns[name],
                 trigger = pattern.markup_trigger;
             if (!trigger) continue;
-            $(root).find(trigger).each(function() { pattern.init($(this)); });
+            if ($root.is(trigger)) pattern.init($root);
+            $root.find(trigger).each(function() { pattern.init($(this)); });
         }
     };
+
+    $(document).on('inject.patterns.scan', function(ev, opts) {
+        patterns.scan(ev.target);
+    });
 
     return patterns;
 });
