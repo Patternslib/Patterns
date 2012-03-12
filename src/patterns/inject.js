@@ -18,11 +18,18 @@ define([
 
 
     var _injectmethod = function(name, method) {
-        var injectwrapper = function($sources, $targets) {
+        var injectwrapper = function($sources, $targets, suppress) {
             // no $targets -> called as a jquery method
             // XXX: is it good to have that here?
             if ($targets === undefined) $targets = this;
-            return method($sources, $targets).trigger('inject', name, $sources);
+            $targets = method($sources, $targets);
+            if (!suppress) {
+                $targets.trigger('inject', {
+                    method: name,
+                    $sources: $sources
+                });
+            }
+            return $targets;
         };
         return injectwrapper;
     };
@@ -44,8 +51,9 @@ define([
 
 
     // create an injector to be run on ajax success
-    var injector = function(method, opts) {
-        var $targets = $(opts.target);
+    var injector = function(method_name, opts, callback) {
+        var $targets = $(opts.target),
+            method = pattern[method_name];
         var inject = function(data, textStatus, jqXHR) {
             // just copied from old inject code
             var cleaned = data
@@ -55,8 +63,16 @@ define([
                     .replace(/<\/body(.*)>/gi,'</div>'),
                 $sources = $('<div/>').html(data).find(opts.source);
 
-            // perform injection
-            method($sources, $targets);
+            // perform injection, suppressing event
+            $targets = method($sources, $targets, true);
+
+            if (callback) callback($targets);
+
+            // trigger inject event
+            $targets.trigger('inject', {
+                method: method_name,
+                $sources: $sources
+            });
         };
         return inject;
     };
@@ -73,11 +89,17 @@ define([
         // set default source id and parse opts
         var defaults = { source: srcid },
             opts_str = $el.attr('data-inject') || "",
-            opts = parser.parse(opts_str, defaults);
+            opts = parser.parse(opts_str, defaults),
+            callback;
 
         // default: replace targets content with sources content
-        var method_name = "content",
-            method = pattern[method_name];
+        var method_name = "content";
+
+        if ($el.hasClass('modal')) {
+            callback = function($targets) {
+                $targets.addClass('modal');
+            };
+        }
 
         // perform ajax call
         var params = {
@@ -86,7 +108,7 @@ define([
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
-            success: injector(method, opts)
+            success: injector(method_name, opts, callback)
         };
         if ($el.is('form')) {
             $el.ajaxSubmit(params);
