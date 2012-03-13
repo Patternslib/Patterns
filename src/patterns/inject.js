@@ -20,7 +20,6 @@ define([
         }
     };
 
-
     var _injectmethod = function(name, method) {
         var injectwrapper = function($sources, $targets, suppress) {
             // no $targets -> called as a jquery method
@@ -60,8 +59,17 @@ define([
 
     // create an injector to be run on ajax success
     var injector = function($el, method_name, opts, callback) {
-        var $targets = $(opts.target),
-            method = pattern[method_name];
+        var method = pattern[method_name],
+            $targets = $(opts.target);
+
+        if ($targets.length === 0) {
+            if (opts.target.slice(0,1) !== '#') {
+                console.error('only id supported for non-existing target');
+            }
+            $targets = $('<div />').attr({id: opts.target.slice(1)});
+            $('body').append($targets);
+        }
+
         var inject = function(data, textStatus, jqXHR) {
             // just copied from old inject code
             var cleaned = data
