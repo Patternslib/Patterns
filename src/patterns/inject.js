@@ -63,13 +63,22 @@ define([
 
 
     // create an injector to be run on ajax success
-    var injector = function($el, method_name, opts, callback) {
+    var injector = function($el, method_name, opts) {
+        // hack to support modals
+        var modal = $el.hasClass('modal');
+        if (modal) {
+            if (opts.target) console.warn('Overriding target for modal');
+            opts.target = '#modal';
+            method_name = "replace";
+        }
+
         if (!opts.target) {
             opts.target = opts.source;
         }
 
         var method = pattern[method_name],
             $targets = $(opts.target);
+
 
         if ($targets.length === 0) {
             if (opts.target.slice(0,1) !== '#') {
@@ -88,10 +97,14 @@ define([
                 .replace(/<\/body(.*)>/gi,'</div>');
             var $sources = $('<div/>').html(data).find(opts.source);
 
+            if (modal) {
+                // wrap $sources into modal div
+                $sources.wrapAll('<div id="modal" class="modal" />');
+                $sources = $sources.parent();
+            }
+
             // perform injection, suppressing event
             $targets = method($sources, $targets, true);
-
-            if (callback) callback($targets);
 
             // trigger inject event
             $targets.trigger('inject', {
@@ -130,15 +143,6 @@ define([
             opts.source = '#__original_body';
         }
 
-        // hack to support modals
-        if ($el.hasClass('modal')) {
-            callback = function($targets) {
-                $targets.addClass('modal');
-            };
-            method_name = "replace";
-            if (!opts.target) opts.target = '#modal';
-        }
-
         // perform ajax call
         var params = {
             url: url,
@@ -146,7 +150,7 @@ define([
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
-            success: injector($el, method_name, opts, callback)
+            success: injector($el, method_name, opts)
         };
         if ($el.is('form')) {
             $el.ajaxSubmit(params);
