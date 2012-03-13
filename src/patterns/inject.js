@@ -104,12 +104,12 @@ define([
         var href = ($el.is('form')
                     ? $el.attr('action')
                     : $el.attr('href')).split('#'),
-            srcid = '#' + href.pop(),
-            url = href.pop(0);
+            url = href.shift(),
+            srcid = href.pop();
         if (href.length > 0) console.log('inject: only one #source in href');
 
         // set default source id and parse opts
-        var defaults = { source: srcid },
+        var defaults = { source: srcid && ('#' + srcid) },
             opts_str = $el.attr('data-inject') || "",
             opts = parser.parse(opts_str, defaults),
             callback;
@@ -121,6 +121,9 @@ define([
         if (opts.replace) {
             opts.target = opts.replace;
             method_name = "replace";
+        }
+        if (!opts.source) {
+            opts.source = '#__original_body';
         }
 
         // hack to support modals
