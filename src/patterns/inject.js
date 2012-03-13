@@ -10,7 +10,7 @@ define([
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
 
-        $el.on("click", "a", function(ev) {
+        if ($el.is('a')) $el.click(function(ev) {
             ev.preventDefault();
             trigger($el);
         });
