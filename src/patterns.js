@@ -32,20 +32,20 @@ define([
         $.fn[name] = jquery_plugin(name, patterns[name]);
     }
 
-    patterns.scan = function(content) {
+    patterns.scan = function(content, opts) {
         var $content = $(content);
         for (var name in patterns) {
             if (name === "scan") continue;
             var pattern = patterns[name],
                 trigger = pattern.markup_trigger;
             if (!trigger) continue;
-            if ($content.is(trigger)) pattern.init($content);
-            $content.find(trigger).each(function() { pattern.init($(this)); });
+            if ($content.is(trigger)) pattern.init($content, opts);
+            $content.find(trigger).each(function() { pattern.init($(this), opts); });
         }
     };
 
     $(document).on('inject.patterns.scan', function(ev, opts) {
-        patterns.scan(ev.target);
+        patterns.scan(ev.target, opts);
     });
 
     return patterns;

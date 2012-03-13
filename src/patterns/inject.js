@@ -59,7 +59,7 @@ define([
 
 
     // create an injector to be run on ajax success
-    var injector = function(method_name, opts, callback) {
+    var injector = function($el, method_name, opts, callback) {
         var $targets = $(opts.target),
             method = pattern[method_name];
         var inject = function(data, textStatus, jqXHR) {
@@ -79,7 +79,8 @@ define([
             // trigger inject event
             $targets.trigger('inject', {
                 method: method_name,
-                $sources: $sources
+                $sources: $sources,
+                $trigger_el: $el
             });
         };
         return inject;
@@ -122,7 +123,7 @@ define([
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
-            success: injector(method_name, opts, callback)
+            success: injector($el, method_name, opts, callback)
         };
         if ($el.is('form')) {
             $el.ajaxSubmit(params);
