@@ -36,7 +36,7 @@ define([
     mapal.patterns.tooltip = { execute: function() {} };
     mapal.patterns.fancybox = require('./patterns/fancybox');
     mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
-    mapal.patterns.old_modal = require('./patterns/old_modal');
+    mapal.patterns.modal = require('./patterns/old_modal');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
     mapal.patterns.setclass = require('./patterns/setclass');
 
