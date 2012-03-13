@@ -107,6 +107,11 @@ define([
             tooltip.positionContainer($trigger, $container);
             $container.css("visibility", "visible");
 
+	    // reposition tooltip everytime we scroll
+	    $trigger.parents(':scrollable').scroll(function () {
+                 tooltip.positionContainer($trigger, $container);
+	    });
+
             event.preventDefault();
         },
 
@@ -189,7 +194,7 @@ define([
         // and returns a two-character position indiciator.
         findBestPosition: function(status) {
             var space = status.space,
-                 cls="";
+                 cls = "";
 
             if (space.top > Math.max(space.right, space.bottom, space.left)) {
                 cls = "t";
