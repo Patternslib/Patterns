@@ -4,29 +4,29 @@ define([
     '../lib/dist/underscore'
 ], function(require) {
 
-    var autosubmit = {
-        initContent: function(root) {
-            $(root).find('.auto-submit').each(function() {
-                var $this = $(this),
-                    $data = $this.data('auto-submit');
-                if (!$data) {
-                    var submit = _.debounce(function(event) {
-                        $this.submit();
-                    }, 400);
-                    $this.on("change", submit);
-                    if ($this.hasClass('on-keyup')) {
-                        $this.find('input').on("keyup", submit);
-                    }
-
-                    // XXX: test whether on webkit and enable only if supported
-                    // XXX: add code to check whether the click actually changed
-                    // something
-                    $this.find('input[type=search]').on("click", submit);
-
-                    $this.data('auto-submit', true);
-                }
-            });
+    var init = function($el) {
+        var submit = _.debounce(function(event) {
+            $el.submit();
+        }, 400);
+        $el.on("change", submit);
+        if ($el.hasClass('on-keyup')) {
+            $el.find('input').on("keyup", submit);
         }
+
+        // XXX: test whether on webkit and enable only if supported
+        // XXX: add code to check whether the click actually changed
+        // something
+        $el.find('input[type=search]').on("click", submit);
+
+        // allow for chaining
+        return $el;
     };
-    return autosubmit;
+
+    var pattern = {
+        markup_trigger: ".auto-submit",
+        initialised_class: "auto-submit",
+        init: init
+    };
+
+    return pattern;
 });

@@ -1,6 +1,7 @@
 define([
     'require',
     './lib/jquery',
+    './patterns/autosubmit',
     './patterns/collapsible',
     './patterns/inject',
     './patterns/inject_log_old',
@@ -12,6 +13,7 @@ define([
         pimp_pattern = utils.pimp_pattern;
 
     var plain_patterns = {
+        autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
         inject: require('./patterns/inject'),
         inject_log_old: require('./patterns/inject_log_old'),

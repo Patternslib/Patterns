@@ -20,16 +20,25 @@ define([
 
         // bind to click events
         $ctrl.bind("click", function() { toggle($el, "fast"); });
+
+        // allow for chaining
+        return $el;
     };
 
     var open = function($el, duration) {
         if ($el.hasClass("open")) return;
         toggle($el, duration);
+
+        // allow for chaining
+        return $el;
     };
 
     var close = function($el, duration) {
         if ($el.hasClass("closed")) return;
         toggle($el, duration);
+
+        // allow for chaining
+        return $el;
     };
 
     var transit = function($el, $panel, from_cls, to_cls, duration) {
@@ -48,6 +57,9 @@ define([
         } else {
             transit($el, $panel, "open", "closed", duration);
         }
+
+        // allow for chaining
+        return $el;
     };
 
     var pattern = {
