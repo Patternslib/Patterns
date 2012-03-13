@@ -30,15 +30,15 @@ define([
         $.fn[name] = jquery_plugin(name, patterns[name]);
     }
 
-    patterns.scan = function(root) {
-        var $root = $(root);
+    patterns.scan = function(content) {
+        var $content = $(content);
         for (var name in patterns) {
             if (name === "scan") continue;
             var pattern = patterns[name],
                 trigger = pattern.markup_trigger;
             if (!trigger) continue;
-            if ($root.is(trigger)) pattern.init($root);
-            $root.find(trigger).each(function() { pattern.init($(this)); });
+            if ($content.is(trigger)) pattern.init($content);
+            $content.find(trigger).each(function() { pattern.init($(this)); });
         }
     };
 
