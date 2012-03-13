@@ -77,12 +77,12 @@ define([
 
         var inject = function(data, textStatus, jqXHR) {
             // just copied from old inject code
-            var cleaned = data
-                    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                    .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                    .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                    .replace(/<\/body(.*)>/gi,'</div>'),
-                $sources = $('<div/>').html(data).find(opts.source);
+            data = data
+                .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                .replace(/<body(.*)>/gi, '<div id="__original_body">')
+                .replace(/<\/body(.*)>/gi,'</div>');
+            var $sources = $('<div/>').html(data).find(opts.source);
 
             // perform injection, suppressing event
             $targets = method($sources, $targets, true);
