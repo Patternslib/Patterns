@@ -10,7 +10,12 @@ define([
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
 
-        $el.on("click", function(ev) {
+        $el.on("click", "a", function(ev) {
+            ev.preventDefault();
+            trigger($el);
+        });
+
+        if ($el.is('form')) $el.submit(function(ev) {
             ev.preventDefault();
             trigger($el);
         });
