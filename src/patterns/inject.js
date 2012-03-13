@@ -110,10 +110,12 @@ define([
             method_name = "replace";
         }
 
+        // hack to support modals
         if ($el.hasClass('modal')) {
             callback = function($targets) {
                 $targets.addClass('modal');
             };
+            method_name = "replace";
         }
 
         // perform ajax call
