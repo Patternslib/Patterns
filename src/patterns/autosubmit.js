@@ -3,6 +3,7 @@ define([
     '../lib/jquery',
     '../lib/dist/underscore'
 ], function(require) {
+
     var autosubmit = {
         initContent: function(root) {
             $(root).find('.auto-submit').each(function() {
@@ -13,7 +14,9 @@ define([
                         $this.submit();
                     }, 400);
                     $this.on("change", submit);
-                    $this.find('input').on("keyup", submit);
+                    if ($this.hasClass('on-keyup')) {
+                        $this.find('input').on("keyup", submit);
+                    }
 
                     // XXX: test whether on webkit and enable only if supported
                     // XXX: add code to check whether the click actually changed
