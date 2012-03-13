@@ -85,7 +85,7 @@ define([
             ).map(function(idx, event) {
                 var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
                     return (cls !== 'event');
-                });
+                }).concat($('a', event).attr('class').split(/\s+/));
                 var allattrs = $('a', event)[0].attributes,
                     attrs = {};
                 for (var attr, i=0; i<allattrs.length; i++){
