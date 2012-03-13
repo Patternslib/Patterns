@@ -21,10 +21,17 @@ define([
         //     });
         // }
         $(document).on('keyup.hide.modal', function(ev) {
-            ev.which == 27 && $el.hide();
+            ev.which == 27 && remove($el);
+        });
+        $el.find('.close-panel').on('click', function(ev) {
+            ev.preventDefault();
+            remove($el);
         });
     };
 
+    var remove = function($el) {
+        $el.remove();
+    };
 
 
 

@@ -124,6 +124,7 @@ define([
                 $targets.addClass('modal');
             };
             method_name = "replace";
+            if (!opts.target) opts.target = '#modal';
         }
 
         // perform ajax call
