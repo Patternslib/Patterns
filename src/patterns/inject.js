@@ -5,7 +5,7 @@ define([
     '../lib/jquery.form'
 ], function(require) {
     var Parser = require('../core/parser'),
-        parser = new Parser("source; target: $source; replace");
+        parser = new Parser("source; target; replace");
 
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
@@ -64,6 +64,10 @@ define([
 
     // create an injector to be run on ajax success
     var injector = function($el, method_name, opts, callback) {
+        if (!opts.target) {
+            opts.target = opts.source;
+        }
+
         var method = pattern[method_name],
             $targets = $(opts.target);
 
