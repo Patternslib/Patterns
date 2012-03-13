@@ -5,7 +5,7 @@ define([
     '../lib/jquery.form'
 ], function(require) {
     var Parser = require('../core/parser'),
-        parser = new Parser("source; target: $source");
+        parser = new Parser("source; target: $source; replace");
 
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
@@ -45,11 +45,15 @@ define([
         return $targets;
     });
 
-    var replace = _injectmethod(function($sources, $targets) {
+    var replace = _injectmethod("replace", function($sources, $targets) {
+        if ($targets.length === 1) {
+            $targets.replaceWith($sources);
+            return $sources;
+        }
         $targets.each(function() {
-            $(this).replaceWidth($sources.clone().addClass(replace.marker));
+            $(this).replaceWith($sources.clone().addClass(replace.marker));
         });
-        return $(replace.marker).removClass(replace.marker);
+        return $("." + replace.marker).removeClass(replace.marker);
     });
     replace.marker = 'tmp-injection-marker';
 
@@ -98,6 +102,12 @@ define([
 
         // default: replace targets content with sources content
         var method_name = "content";
+
+        // post-process options
+        if (opts.replace) {
+            opts.target = opts.replace;
+            method_name = "replace";
+        }
 
         if ($el.hasClass('modal')) {
             callback = function($targets) {
