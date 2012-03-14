@@ -7,3 +7,6 @@
 [submodule "lib/jasmine"]
 	path = lib/jasmine
 	url = git://github.com/pivotal/jasmine.git
+[submodule "src/lib/dist/history.js"]
+	path = src/lib/dist/history.js
+	url = git://github.com/balupton/history.js.git
