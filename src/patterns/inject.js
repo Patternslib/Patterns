@@ -98,9 +98,9 @@ define([
             var $sources = $('<div/>').html(data).find(opts.source);
 
             if (modal) {
-                // wrap $sources into modal div
-                $sources.wrapAll('<div id="modal" class="modal" />');
-                $sources = $sources.parent();
+                if ($sources.length > 1) console.error('Only taking first source');
+                var $modal = $('<div id="modal" class="modal" />');
+                $sources = $modal.html($sources.html());
             }
 
             // perform injection, suppressing event
