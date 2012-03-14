@@ -97,10 +97,17 @@ define([
                 .replace(/<\/body(.*)>/gi,'</div>');
             var $sources = $('<div/>').html(data).find(opts.source);
 
+            if ($sources.length === 0) console.error('inject: Sources are empty');
+
             if (modal) {
-                if ($sources.length > 1) console.error('Only taking first source');
                 var $modal = $('<div id="modal" class="modal" />');
-                $sources = $modal.html($sources.html());
+                if ($sources.length === 1) {
+                    // for single source copy its content into the modal
+                    $sources = $modal.html($sources.html());
+                } else {
+                    // for multiple sources wrap them into a modal
+                    $sources = $modal.html($sources);
+                }
             }
 
             // perform injection, suppressing event
