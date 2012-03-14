@@ -10,14 +10,14 @@ define([
         var submit = function(event) {
             $form.submit();
         };
-        var submit_debounced = _.debounce(submit, 400);
 
         // submit if a (specific) form element changed
         $el.on("change", submit);
 
+        // debounced keyup submit, if enabled
         if ($el.hasClass('auto-submit-keyup')) {
             ($el.is('input') ? $el : $el.find('input'))
-                .on("keyup", submit_debounced);
+                .on("keyup", _.debounce(submit, 400));
         }
 
         // XXX: test whether on webkit and enable only if supported
