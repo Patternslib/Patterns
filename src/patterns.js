@@ -44,9 +44,11 @@ define([
         }
     };
 
-    $(document).on('inject.patterns.scan', function(ev, opts) {
-        patterns.scan(ev.target, opts);
-    });
+    // for now this happens in main.js
+    //
+    // $(document).on('inject.patterns.scan', function(ev, opts) {
+    //     patterns.scan(ev.target, opts);
+    // });
 
     return patterns;
 });
