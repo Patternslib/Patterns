@@ -23,14 +23,21 @@ define([
         // add close-panel button to header
         $('.header', $el).append($closebutton);
 
-        // remove on ESC and close-panel button click
-        $(document).on('keyup.hide.modal', function(ev) {
-            ev.which == 27 && $el.remove();
-        });
-        $el.find('.close-panel').on('click', function(ev) {
+        // event handler to remove element
+        var remove = function(ev) {
             ev.preventDefault();
+            $(ev.currentTarget).off('.remove.modal');
             $el.remove();
+        };
+
+        // remove on ESC
+        $(document).on('keyup.remove.modal', function(ev) {
+            if (ev.which == 27) remove(ev);
         });
+        // remove on close-panel button click
+        $el.find('.close-panel').on('click.remove.modal', remove);
+        // remove on click of triggering element
+        if (opts.$trigger_el) opts.$trigger_el.on('click.remove.modal', remove);
     };
 
     var pattern = {
