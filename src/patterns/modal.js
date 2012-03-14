@@ -4,45 +4,26 @@ define([
 ], function(require) {
 
     var init = function($el, opts) {
-        var $first = $(':first-child', $el); // ':first' could perhaps also be used, difference may be important
-        var $rest = $(':not(:first-child)', $el);
-        var $header = $('<div class="header" />');
-        var $body = $('<div class="panel-content" />');
-        //	$rest.length = 0; just for simple manuell testing
+        var $first = $el.children(':first'),
+            $rest = $el.children(':not(:first)'),
+            $header = $('<div class="header" />'),
+            $body = $('<div class="body" />'),
+            $closebutton = $(
+                '<button type="button" class="close-panel">Close</button>');
 
-        if ($rest.length !== 0) {
-            $first.wrap($header);
-            $rest.wrapAll($body);
-        } else {
+        // separate into header and body
+        if ($rest.length === 0) {
             $first.wrap($body);
             $el.prepend($header);
+        } else {
+            $first.wrap($header);
+            $rest.wrapAll($body);
         }
 
-        $('.header', $el).append('<button class="close-panel">Button</button>');
-        // If this is seen:
-        //  <div class="modal">
-        //    <first element />
-        //    <further elements />
-        //  </div>
-        //
-        // it shall be turned into:
-        //
-        //  <div class="modal">
-        //    <div class="header">
-        //      <first element />
-        //      <button class="close-panel">Button</button>
-        //    </div>
-        //    <div class="panel-content">
-        //      <further elements />
-        //    </div>
-        //  </div>
-        //
-        // The first child of $el is only placed into the header, if
-        // it has more than one child. Otherwise the single child is
-        // put into the panel-content.
-        //
-        // task: transform $el structure using jquery
+        // add close-panel button to header
+        $('.header', $el).append($closebutton);
 
+        // remove on ESC and close-panel button click
         $(document).on('keyup.hide.modal', function(ev) {
             ev.which == 27 && $el.remove();
         });
