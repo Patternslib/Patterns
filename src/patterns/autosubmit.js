@@ -6,7 +6,7 @@ define([
 
     // can be called on a form or an element in a form
     var init = function($el) {
-        var $form = $el.is('form') ? $form : $el.parents('form').first();
+        var $form = $el.is('form') ? $el : $el.parents('form').first();
         var submit = function(event) {
             $form.submit();
         };
