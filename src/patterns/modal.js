@@ -4,21 +4,21 @@ define([
 ], function(require) {
 
     var init = function($el, opts) {
-	var $first = $(':first-child', $el); // ':first' could perhaps also be used, difference may be important
-	var $rest = $(':not(:first-child)', $el);
-	var $header = $('<div class="header" />');
-	var $body = $('<div class="panel-content" />');
-//	$rest.length = 0; just for simple manuell testing
+        var $first = $(':first-child', $el); // ':first' could perhaps also be used, difference may be important
+        var $rest = $(':not(:first-child)', $el);
+        var $header = $('<div class="header" />');
+        var $body = $('<div class="panel-content" />');
+        //	$rest.length = 0; just for simple manuell testing
 
-	if ($rest.length !== 0) {
-	    $first.wrap($header);
-	    $rest.wrapAll($body);
-	} else {
-	    $first.wrap($body);
-	    $el.prepend($header);
-	}
+        if ($rest.length !== 0) {
+            $first.wrap($header);
+            $rest.wrapAll($body);
+        } else {
+            $first.wrap($body);
+            $el.prepend($header);
+        }
 
-	$('.header', $el).append('<button class="close-panel">Button</button>');
+        $('.header', $el).append('<button class="close-panel">Button</button>');
         // If this is seen:
         //  <div class="modal">
         //    <first element />
