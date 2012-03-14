@@ -43,8 +43,9 @@ define([
     // new-style patterns
     mapal.newstyle = require('./patterns');
 
-    // hook in new-style patterns
-    mapal.passivePatterns.newstyle = { initContent: mapal.newstyle.scan };
+    $(document).on('inject.patterns.scan', function(ev, opts) {
+        mapal.initContent(ev.target, opts);
+    });
 
     // wait for the DOM to be ready and initialize
     var doc = require('./lib/domReady!');
