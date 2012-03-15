@@ -50,7 +50,7 @@ define([
                     console.error(jqXHR, textStatus, errorThrown);
                 },
                 success: function(data, textStatus, jqXHR) {
-                    consoe.log(data, textStatus, jqXHR);
+                    console.log(data, textStatus, jqXHR);
                     //$el.remove();
                 }
             };
