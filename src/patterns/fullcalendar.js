@@ -23,6 +23,9 @@ define([
             initMonths($calroot);
 
             // wait for additional months
+            $calroot.bind('inject', function(ev, opts) {
+                initMonths($(ev.target));
+            });
             $calroot.bind('injection', function(event, month) {
                 initMonths($(month));
             });
