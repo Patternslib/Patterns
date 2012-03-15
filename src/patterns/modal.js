@@ -42,13 +42,11 @@ define([
 
         // close forms that are successfully submitted or show error
         if ($form) {
-            var url = $form.attr('action');
             // prepare ajax request and submit function
             var params = {
-                url: url,
                 type: 'POST',
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.error(url, jqXHR, textStatus, errorThrown);
+                    console.error(jqXHR, textStatus, errorThrown);
                 },
                 success: function(data, textStatus, jqXHR) {
                     $el.remove();
