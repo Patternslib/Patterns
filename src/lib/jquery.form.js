@@ -1,4 +1,4 @@
 define([
     './order!./jquery',
-    './order!./dist/jquery.form'
+    './order!./jquery.form/jquery.form'
 ], {});
