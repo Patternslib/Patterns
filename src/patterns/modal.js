@@ -50,7 +50,8 @@ define([
                     console.error(jqXHR, textStatus, errorThrown);
                 },
                 success: function(data, textStatus, jqXHR) {
-                    $el.remove();
+                    consoe.log(data, textStatus, jqXHR);
+                    //$el.remove();
                 }
             };
             var submit = function(ev) {
