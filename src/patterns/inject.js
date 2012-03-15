@@ -5,7 +5,7 @@ define([
     '../lib/jquery.form'
 ], function(require) {
     var Parser = require('../core/parser'),
-        parser = new Parser("source; target; replace");
+        parser = new Parser("source; target; replace; pre; post");
 
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
@@ -63,6 +63,21 @@ define([
     });
     replace.marker = 'tmp-injection-marker';
 
+    // XXX: name under discussion
+    var pre = _injectmethod("pre", function($sources, $targets) {
+        $targets.each(function() {
+            $(this).before($sources);
+        });
+        return $sources;
+    });
+
+    // XXX: name under discussion
+    var post = _injectmethod("post", function($sources, $targets) {
+        $targets.each(function() {
+            $(this).after($sources);
+        });
+        return $sources;
+    });
 
     // create an injector to be run on ajax success
     var injector = function($el, method_name, opts) {
@@ -155,6 +170,14 @@ define([
             opts.target = opts.replace;
             method_name = "replace";
         }
+        if (opts.pre) {
+            opts.target = opts.pre;
+            method_name = "pre";
+        }
+        if (opts.post) {
+            opts.target = opts.post;
+            method_name = "post";
+        }
         if (!opts.source) {
             opts.source = '#__original_body';
         }
@@ -181,6 +204,8 @@ define([
         supported_tags: ['a', 'form'], // XXX: unsupported
         init: init,
         content: content,
+        pre: pre,
+        post: post,
         replace: replace,
         trigger: trigger
     };
