@@ -181,12 +181,12 @@ $.fn.ajaxSubmit = function(options) {
 	function fileUpload() {
 		var form = $form[0];
 
-		if ($(':input[name=submit],:input[id=submit]', form).length) {
-			// if there is an input with a name or id of 'submit' then we won't be
-			// able to invoke the submit fn on the form (at least not x-browser)
-			alert('Error: Form elements must not have name or id of "submit".');
-			return;
-		}
+		// if ($(':input[name=submit],:input[id=submit]', form).length) {
+		// 	// if there is an input with a name or id of 'submit' then we won't be
+		// 	// able to invoke the submit fn on the form (at least not x-browser)
+		// 	alert('Error: Form elements must not have name or id of "submit".');
+		// 	return;
+		// }
 		
 		var s = $.extend(true, {}, $.ajaxSettings, options);
 		s.context = s.context || s;
