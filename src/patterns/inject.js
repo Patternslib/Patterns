@@ -19,10 +19,6 @@ define([
             ev.preventDefault();
             trigger($el);
         });
-
-        if ($el.hasClass('autoLoading-visible')) {
-            trigger($el);
-        }
     };
 
     var _injectmethod = function(name, method) {
