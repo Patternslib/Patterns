@@ -968,6 +968,8 @@ var mapal = {
 
     // Setup a DOM tree.
     initContent: function(root, opts) {
+        mapal.newstyle.scan(root, opts);
+
         mapal.initTransforms(root);
         mapal.initAutofocus(root);
         mapal.initAutocomplete(root);
@@ -986,9 +988,6 @@ var mapal = {
                 passivePattern.initContent(root);
             }
         }
-
-        mapal.newstyle.scan(root, opts);
-
 
         // Replace objects with iframes for IE 8 and older.
         if ($.browser.msie ) {
