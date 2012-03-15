@@ -42,11 +42,15 @@ define([
         if (opts.$trigger_el) opts.$trigger_el.on('click.remove.modal', remove);
 
         // close forms that are successfully submitted or show error
+        var url = $form.attr('action');
         if ($form) {
             // prepare ajax request and submit function
             var params = {
+                url: url,
                 type: 'POST',
                 error: function(jqXHR, textStatus, errorThrown) {
+                    var msg = [jqXHR.status, textStatus, url].join(' ');
+                    $form.replaceWith($('<div />').html(msg));
                     console.error(jqXHR, textStatus, errorThrown);
                 },
                 success: function(data, textStatus, jqXHR) {
