@@ -10,3 +10,6 @@
 [submodule "src/lib/dist/history.js"]
 	path = src/lib/dist/history.js
 	url = git://github.com/balupton/history.js.git
+[submodule "src/lib/jquery.form"]
+	path = src/lib/jquery.form
+	url = git@github.com:chaoflow/form.git
