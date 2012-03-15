@@ -6,6 +6,7 @@ define([
     './patterns/inject',
     './patterns/inject_log_old',
     './patterns/modal',
+    './patterns/richeditor',
     './utils'
 ], function(require) {
     var utils = require('./utils'),
@@ -17,7 +18,8 @@ define([
         collapsible: require('./patterns/collapsible'),
         inject: require('./patterns/inject'),
         inject_log_old: require('./patterns/inject_log_old'),
-        modal: require('./patterns/modal')
+        modal: require('./patterns/modal'),
+        richeditor: require('./patterns/richeditor')
     };
 
     var patterns = {};

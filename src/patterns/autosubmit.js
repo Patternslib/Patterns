@@ -1,14 +1,29 @@
 define([
     'require',
     '../lib/jquery',
+    '../lib/jquery.form',
     '../lib/dist/underscore'
 ], function(require) {
 
     // can be called on a form or an element in a form
     var init = function($el) {
-        var $form = $el.is('form') ? $el : $el.parents('form').first();
+        // get parameters from markup
+        var $form = $el.is('form') ? $el : $el.parents('form').first(),
+            url = $form.attr('action');
+
+        // prepare ajax request and submit function
+        var params = {
+            url: url,
+            type: 'POST',
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error(url, jqXHR, textStatus, errorThrown);
+            },
+            success: function(data, textStatus, jqXHR) {
+                console.log(jqXHR);
+            }
+        };
         var submit = function(event) {
-            $form.submit();
+            $form.ajaxSubmit(params);
         };
 
         // submit if a (specific) form element changed
