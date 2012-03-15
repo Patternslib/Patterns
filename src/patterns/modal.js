@@ -56,8 +56,7 @@ define([
                 ev.preventDefault();
                 $form.ajaxSubmit(params);
             };
-
-            $form.submit(submit);
+            $form.find('[type=submit]').on('click', submit);
         }
     };
 
