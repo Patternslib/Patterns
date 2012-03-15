@@ -8,6 +8,7 @@ define([
             $rest = $el.children(':not(:first)'),
             $header = $('<div class="header" />'),
             $body = $('<div class="body" />'),
+            $form = $el.find('form'),
             $closebutton = $(
                 '<button type="button" class="close-panel">Close</button>');
 
@@ -38,6 +39,28 @@ define([
         $el.find('.close-panel').on('click.remove.modal', remove);
         // remove on click of triggering element
         if (opts.$trigger_el) opts.$trigger_el.on('click.remove.modal', remove);
+
+        // close forms that are successfully submitted or show error
+        if ($form) {
+            var url = $form.attr('action');
+            // prepare ajax request and submit function
+            var params = {
+                url: url,
+                type: 'POST',
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(url, jqXHR, textStatus, errorThrown);
+                },
+                success: function(data, textStatus, jqXHR) {
+                    $el.remove();
+                }
+            };
+            var submit = function(ev) {
+                ev.preventDefault();
+                $form.ajaxSubmit(params);
+            };
+
+            $form.on('submit', submit);
+        }
     };
 
     var pattern = {
