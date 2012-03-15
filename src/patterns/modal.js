@@ -51,7 +51,7 @@ define([
                 },
                 success: function(data, textStatus, jqXHR) {
                     console.log(data, textStatus, jqXHR);
-                    //$el.remove();
+                    $el.remove();
                 }
             };
             var submit = function(ev) {
