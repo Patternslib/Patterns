@@ -59,7 +59,7 @@ define([
                 $form.ajaxSubmit(params);
             };
 
-            $form.on('submit', submit);
+            $form.submit(submit);
         }
     };
 
