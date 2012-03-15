@@ -115,6 +115,13 @@ define([
             // perform injection, suppressing event
             $targets = method($sources, $targets, true);
 
+            // XXX: think about making the href-next thing implicit
+            var hrefnext = $el.data('href-next');
+            if (hrefnext) {
+                $el.attr({href: hrefnext});
+                $el.addClass('disabled-inject');
+            }
+
             // trigger inject event
             $targets.trigger('inject', {
                 method: method_name,
