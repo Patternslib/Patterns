@@ -10,15 +10,21 @@ define([
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
 
-        if ($el.is('a')) $el.click(function(ev) {
-            ev.preventDefault();
-            trigger($el);
-        });
+        // if the element referenced by href-next exists already,
+        // point to it and disable injection
+        var hrefnext = $el.data('href-next');
+        if (hrefnext && ($(hrefnext).length > 0)) {
+            $el.attr({href: hrefnext}).addClass('disabled-inject');
+        }
 
-        if ($el.is('form')) $el.submit(function(ev) {
+        var trigger = function(ev) {
+            if ($el.hasClass('disabled-inject')) return;
             ev.preventDefault();
-            trigger($el);
-        });
+            pattern.trigger($el);
+        };
+
+        if ($el.is('a')) $el.click(trigger);
+        if ($el.is('form')) $el.submit(trigger);
     };
 
     var _injectmethod = function(name, method) {
