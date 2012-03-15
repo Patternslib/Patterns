@@ -3,10 +3,10 @@ define([
     './lib/jquery',
     './patterns/autosubmit',
     './patterns/collapsible',
+    './patterns/edit',
     './patterns/inject',
     './patterns/inject_log_old',
     './patterns/modal',
-    './patterns/richeditor',
     './utils'
 ], function(require) {
     var utils = require('./utils'),
@@ -16,10 +16,10 @@ define([
     var plain_patterns = {
         autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
+        edit: require('./patterns/edit'),
         inject: require('./patterns/inject'),
         inject_log_old: require('./patterns/inject_log_old'),
-        modal: require('./patterns/modal'),
-        richeditor: require('./patterns/richeditor')
+        modal: require('./patterns/modal')
     };
 
     var patterns = {};
