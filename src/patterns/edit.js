@@ -1,10 +1,11 @@
 define([
     'require',
-    '../lib/aloha/src/lib/aloha'
+    '../lib/aloha-loader'
 ], function(require) {
     var init = function($el, opts) {
         // find editor controls
-        var $ctrls = $('.editor-ctrls'),
+        var $form = $el.parents('form'),
+            $ctrls = $('.editor-ctrls'),
             $strong = $ctrls.find('.strong');
 
         // activate aloha on element
@@ -15,10 +16,11 @@ define([
             ev.preventDefault();
             Aloha.execCommand('bold', false, '');
         });
+
     };
 
     var pattern = {
-        markup_trigger: '.edit',
+        markup_trigger: 'form textarea.edit',
         initialised_class: 'edit',
         init: init
     };
