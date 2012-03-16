@@ -50,12 +50,13 @@ define([
                 error: function(jqXHR, textStatus, errorThrown) {
                     var msg = [jqXHR.status, textStatus,
                                $form.attr('action')].join(' '),
-                        $div = $el.find('.error-msg');
-                    if ($div.length === 0) {
-                        $div = $('<div class="error-msg"/>');
-                        $div.prependTo($el.find('.body'));
+                        $errdiv = $el.find('.error-msg');
+                    if ($errdiv.length === 0) {
+                        $errdiv = $('<div class="error-msg"/>');
+                        $errdiv.prependTo($el.find('.body'));
                     }
-                    $div.html(msg);
+                    $el.removeClass('ajax-in-progress');
+                    $errdiv.html(msg);
                     console.error(jqXHR, textStatus, errorThrown);
                 },
                 success: function(data, textStatus, jqXHR) {
@@ -63,6 +64,7 @@ define([
                 }
             };
             var submit = function(ev) {
+                $el.addClass('ajax-in-progress');
                 ev.preventDefault();
                 $form.ajaxSubmit(params);
             };
