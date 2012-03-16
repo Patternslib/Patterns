@@ -27,8 +27,9 @@ define([
 
         // event handler to remove element
         var remove = function(ev) {
-            ev.preventDefault();
-            $(ev.currentTarget).off('.remove.modal');
+            if (ev) ev.preventDefault();
+            // the modal will be gone, but unhooked from document
+            $(document).off('.modal');
             $el.remove();
         };
 
@@ -61,6 +62,9 @@ define([
                 $form.ajaxSubmit(params);
             };
             $form.find('[type=submit]').on('click', submit);
+            $(document).on('keyup.submit.modal', function(ev) {
+                if (ev.which == 13) submit(ev);
+            });
         }
     };
 
