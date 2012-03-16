@@ -47,8 +47,9 @@ define([
             var params = {
                 data: { submit: "submit" },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    var msg = [jqXHR.status, textStatus, url].join(' ');
-                    $form.replaceWith($('<div />').html(msg));
+                    var msg = [jqXHR.status, textStatus,
+                               $form.attr('action')].join(' ');
+                    $form.before($('<div />').html(msg));
                     console.error(jqXHR, textStatus, errorThrown);
                 },
                 success: function(data, textStatus, jqXHR) {
