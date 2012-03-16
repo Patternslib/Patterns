@@ -50,9 +50,9 @@ define([
                 error: function(jqXHR, textStatus, errorThrown) {
                     var msg = [jqXHR.status, textStatus,
                                $form.attr('action')].join(' '),
-                        $errdiv = $el.find('.error-msg');
+                        $errdiv = $el.find('.message.error');
                     if ($errdiv.length === 0) {
-                        $errdiv = $('<div class="error-msg"/>');
+                        $errdiv = $('<div class="message error"/>');
                         $errdiv.prependTo($el.find('.body'));
                     }
                     $el.removeClass('ajax-in-progress');
