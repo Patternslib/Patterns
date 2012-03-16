@@ -968,9 +968,10 @@ var mapal = {
 
     // Setup a DOM tree.
     initContent: function(root, opts) {
+        mapal.initTransforms(root);
+
         mapal.newstyle.scan(root, opts);
 
-        mapal.initTransforms(root);
         mapal.initAutofocus(root);
         mapal.initAutocomplete(root);
         mapal.initDepends(root);
