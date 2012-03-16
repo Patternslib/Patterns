@@ -49,8 +49,13 @@ define([
                 data: { submit: "submit" },
                 error: function(jqXHR, textStatus, errorThrown) {
                     var msg = [jqXHR.status, textStatus,
-                               $form.attr('action')].join(' ');
-                    $form.before($('<div />').html(msg));
+                               $form.attr('action')].join(' '),
+                        $div = $el.find('.error-msg');
+                    if ($div.length === 0) {
+                        $div = $('<div class="error-msg"/>');
+                        $div.prependTo($el.find('.body'));
+                    }
+                    $div.html(msg);
                     console.error(jqXHR, textStatus, errorThrown);
                 },
                 success: function(data, textStatus, jqXHR) {
