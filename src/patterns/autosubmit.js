@@ -7,8 +7,7 @@ define([
     './modal'
 ], function(require) {
     // those two for error messages
-    var inject = require('./inject'),
-        modal = require('./modal');
+    var inject = require('./inject');
 
     // can be called on a form or an element in a form
     var init = function($el) {
@@ -24,8 +23,8 @@ define([
                 var msg = [jqXHR.status, textStatus,
                            $form.attr('action')].join(' '),
                     // XXX: error notification pattern!
-                    $error = $('<h3>Error</h3><div class="error message">'+msg+'</div>');
-                inject.append(modal.init($error), $('body'));
+                    $error = $('<div class="modal"><h3>Error</h3><div class="error message">'+msg+'</div></div>');
+                inject.append($error, $('body'));
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
             success: function(data, textStatus, jqXHR) {
