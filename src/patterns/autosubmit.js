@@ -2,8 +2,13 @@ define([
     'require',
     '../lib/jquery',
     '../lib/jquery.form',
-    '../lib/dist/underscore'
+    '../lib/dist/underscore',
+    './inject',
+    './modal'
 ], function(require) {
+    // those two for error messages
+    var inject = require('./inject'),
+        modal = require('./modal');
 
     // can be called on a form or an element in a form
     var init = function($el) {
@@ -16,6 +21,11 @@ define([
             url: url,
             type: 'POST',
             error: function(jqXHR, textStatus, errorThrown) {
+                var msg = [jqXHR.status, textStatus,
+                           $form.attr('action')].join(' '),
+                    // XXX: error notification pattern!
+                    $error = $('<h3>Error</h3><div class="error message">'+msg+'</div>');
+                inject.append(modal.init($error), $('body'));
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
             success: function(data, textStatus, jqXHR) {
