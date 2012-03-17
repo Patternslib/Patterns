@@ -25,6 +25,8 @@ define([
 
         if ($el.is('a')) $el.click(trigger);
         if ($el.is('form')) $el.submit(trigger);
+
+        return $el;
     };
 
     var _injectmethod = function(name, method) {
