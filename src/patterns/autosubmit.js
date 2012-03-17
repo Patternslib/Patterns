@@ -17,8 +17,6 @@ define([
 
         // prepare ajax request and submit function
         var params = {
-            url: url,
-            type: 'POST',
             error: function(jqXHR, textStatus, errorThrown) {
                 var msg = [jqXHR.status, textStatus,
                            $form.attr('action')].join(' '),
