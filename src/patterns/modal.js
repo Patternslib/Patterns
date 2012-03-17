@@ -40,7 +40,7 @@ define([
         // remove on close-panel button click
         $el.find('.close-panel').on('click.remove.modal', remove);
         // remove on click of triggering element
-        if (opts.$trigger_el) opts.$trigger_el.on('click.remove.modal', remove);
+        if (opts && opts.$trigger_el) opts.$trigger_el.on('click.remove.modal', remove);
 
         // close forms that are successfully submitted or show error
         if ($form) {
