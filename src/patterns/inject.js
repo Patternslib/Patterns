@@ -5,7 +5,7 @@ define([
     '../lib/jquery.form'
 ], function(require) {
     var Parser = require('../core/parser'),
-        parser = new Parser("source; target; replace; pre; post");
+        parser = new Parser("source; target; replace; pre; post; append; prepend");
 
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
@@ -75,6 +75,21 @@ define([
     var post = _injectmethod("post", function($sources, $targets) {
         $targets.each(function() {
             $(this).after($sources);
+        });
+        return $sources;
+    });
+
+    // XXX: name under discussion
+    var append = _injectmethod("append", function($sources, $targets) {
+        $targets.each(function() {
+            $(this).append($sources);
+        });
+        return $sources;
+    });
+
+    var prepend = _injectmethod("prepend", function($sources, $targets) {
+        $targets.each(function() {
+            $(this).append($sources);
         });
         return $sources;
     });
@@ -206,6 +221,8 @@ define([
         content: content,
         pre: pre,
         post: post,
+        append: append,
+        prepend: prepend,
         replace: replace,
         trigger: trigger
     };
