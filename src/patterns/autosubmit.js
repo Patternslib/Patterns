@@ -35,6 +35,13 @@ define([
                 .on("keyup", _.debounce(submit, 400));
         }
 
+        $form.on('keyup', function(ev) {
+            if (ev.which === 13) {
+                ev.preventDefault();
+                submit(ev);
+            }
+        });
+
         // XXX: test whether on webkit and enable only if supported
         // XXX: add code to check whether the click actually changed
         // something
