@@ -73,6 +73,8 @@ define([
                 if (ev.which == 13) submit(ev);
             });
         }
+
+        return $el;
     };
 
     var pattern = {
