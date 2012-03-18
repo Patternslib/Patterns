@@ -26,7 +26,15 @@ define([
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
             success: function(data, textStatus, jqXHR) {
-                console.log(jqXHR);
+                var ourid = $form.attr('id');
+                if (data && !ourid) {
+                    console.warn('Ignored response data because our has no id', $form);
+                    return;
+                }
+                var new_action = $(data).find('#' + ourid).attr('action');
+                if (new_action) {
+                    $form.attr({action: new_action});
+                }
             }
         };
         var submit = function(event) {
