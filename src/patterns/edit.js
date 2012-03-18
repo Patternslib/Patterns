@@ -22,6 +22,7 @@ define([
 
         // prepare ajax request and submit function
         var params = {
+            data: {submit: "submit"},
             error: function(jqXHR, textStatus, errorThrown) {
                 var msg = [jqXHR.status, textStatus,
                            $form.attr('action')].join(' '),
@@ -48,7 +49,8 @@ define([
         };
         var submit = function(ev) {
             ev.preventDefault();
-            $el.html($('.aloha-edit').html());
+            // XXX: hackish - supports only one per page
+            $el.html($('.aloha-textarea').html());
             $form.ajaxSubmit(params);
         };
 
