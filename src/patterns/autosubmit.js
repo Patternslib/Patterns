@@ -26,15 +26,19 @@ define([
                 console.error(url, jqXHR, textStatus, errorThrown);
             },
             success: function(data, textStatus, jqXHR) {
-                var ourid = $form.attr('id');
-                if (data && !ourid) {
-                    console.warn('Ignored response data because our has no id', $form);
-                    return;
-                }
-                var new_action = $(data).find('#' + ourid).attr('action');
-                if (new_action) {
-                    $form.attr({action: new_action});
-                }
+                if (!data) return;
+                var $forms = $(data).find('form[id]');
+                $forms.each(function() {
+                    var $form = $(this),
+                        id = $(this).attr('id'),
+                        $ourform = $('#' + id);
+                    if ($ourform.length > 0) {
+                        $ourform.attr({action: $form.attr('action')});
+                    } else {
+                        console.warn(
+                            'Ignored form in respone data: not matching id', $form);
+                    }
+                });
             }
         };
         var submit = function(event) {
