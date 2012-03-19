@@ -42,7 +42,11 @@ define([
             }
         };
         var submit = function(event) {
-            $form.ajaxSubmit(params);
+            if ($el.hasClass('inject')) {
+                inject.trigger($el);
+            } else {
+                $form.ajaxSubmit(params);
+            }
         };
 
         // submit if a (specific) form element changed
