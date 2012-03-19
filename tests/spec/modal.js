@@ -6,41 +6,42 @@ define([
     '../../src/lib/jquery',
     '../../src/patterns'
 ], function(require) {
-    var patterns = require('../../src/patterns');
-    var finds = function(selector) {
-        selector = selector || '';
-        return $('#jasmine-fixtures ' + selector);
-    };
+    var patterns = require('../../src/patterns'),
+        // localize our jquery to the loaded fixtures
+        $ = function(selector) {
+            selector = selector || '';
+            return jQuery('#jasmine-fixtures ' + selector);
+        };
 
     describe('modal', function() {
         beforeEach(function() {
             loadFixtures('modal.html');
-            patterns.scan(finds());
+            patterns.scan($());
         });
-        for (i=1; i<=3; i++) {
+        for (var i=1; i<=3; i++) {
             var id = '#modal' + i;
             describe('init '+id, function() {
                 it("creates body", function() {
-                    expect(finds(id)).toContain('.body');
+                    expect($(id)).toContain('.body');
                 });
                 it("creates header", function() {
-                    expect(finds(id)).toContain('.header');
+                    expect($(id)).toContain('.header');
                 });
                 it("insert closebutton into header", function() {
-                    expect($('.header',finds(id))).toContain('.close-panel');
+                    expect($('.header',$(id))).toContain('.close-panel');
                 });
                 it("function remove modal", function() {
-                    $('.modal', finds(id)).remove();
-                    expect(finds(id)).not.toContain('.modal');
+                    $('.modal', $(id)).remove();
+                    expect($(id)).not.toContain('.modal');
                 });
                 it("remove modal on button click", function() {
-                    finds(id).find('.close-panel').click();
-                    expect(finds(id)).not.toContain('.modal');
+                    $(id).find('.close-panel').click();
+                    expect($(id)).not.toContain('.modal');
                 });
                 // last test doesn't work properly yet
                 /*		it("remove modal on ESC", function() {
-                 finds(id).find('.modal').keyup(27);
-                 expect(finds(id)).not.toContain('.modal');
+                 $(id).find('.modal').keyup(27);
+                 expect($(id)).not.toContain('.modal');
                  });*/
             });
         }
