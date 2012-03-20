@@ -1,16 +1,46 @@
 require([
     'require',
-    '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine',
-    '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine-html',
-    '../src/lib/order!../src/lib/jquery',
-    '../src/lib/order!../lib/jasmine-jquery/lib/jasmine-jquery',
-    '../src/lib/order!./jasmine-settings',
-    // XXX: the order matters for some reason
-    '../src/lib/order!./spec/inject',
-    '../src/lib/order!./spec/modal',
-    '../src/lib/order!./spec/parser',
-    '../src/lib/order!./spec/collapsible'
+    '../src/lib/dist/underscore',
+    '../src/lib/jquery',
+    // '../src/lib/order!./spec/inject',
+    // '../src/lib/order!./spec/parser',
+    // '../src/lib/order!./spec/collapsible',
+    '../src/patterns',
+    '../src/utils',
+    './jasmine-settings',
+    './spec/modal'
 ], function(require) {
+    var load_modules = function(prefix, names, suffix) {
+        prefix = prefix || '';
+        suffix = suffix || '';
+        var modules = _.reduce(names, function(acc, name) {
+            acc[name] = require(prefix + name + suffix);
+            return acc;
+        }, {});
+        return modules;
+    };
+
+    var patterns = require('../src/patterns'),
+        specs = load_modules('./spec/', [
+            'modal'
+        ]);
+
+    // a jquery local to the fixtures container will be passed to the specs
+    var $$ = function(selector) {
+        selector = selector || '';
+        return $('#jasmine-fixtures ' + selector);
+    };
+    for (var name in specs) {
+        var spec = specs[name];
+        describe(name, function() {
+            beforeEach(function() {
+                loadFixtures(name + '.html');
+                patterns.scan($$());
+            });
+            spec.describe($$);
+        });
+    };
+
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
 
