@@ -5,17 +5,19 @@ require([
     '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine',
     '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine-html',
     '../src/lib/order!../lib/jasmine-jquery/lib/jasmine-jquery',
-    // '../src/lib/order!./spec/inject',
-    // '../src/lib/order!./spec/parser',
     '../src/patterns',
     '../src/utils',
     './spec/collapsible',
-    './spec/modal'
+    './spec/inject',
+    './spec/modal',
+    './spec/parser'
 ], function(require) {
     var patterns = require('../src/patterns'),
         spec_names = [
             'collapsible',
-            'modal'
+            'inject',
+            'modal',
+            'parser'
         ];
 
     // jasmine settings
@@ -42,11 +44,13 @@ require([
         var spec = specs[name];
         describe(name, function() {
             (function(name) {
-                beforeEach(function() {
-                    loadFixtures(name + '.html');
-                    patterns.scan($$());
-                });
-                spec.describe($$);
+                if (!spec.nofixture) {
+                    beforeEach(function() {
+                        loadFixtures(name + '.html');
+                        patterns.scan($$());
+                    });
+                }
+                spec($$);
             })(name);
         });
     };

@@ -4,7 +4,7 @@ define([
 ], function(require) {
     var ArgumentParser = require('../../src/core/parser');
 
-    describe("ArgumentParser", function() {
+    var spec = function() {
         describe("trim", function() {
             it("No whitespace", function() {
                 expect("foo".trim()).toEqual("foo");
@@ -175,5 +175,7 @@ define([
                 expect(opts[1].selector).toEqual("bar");
             });
         });
-    });
+    };
+    spec.nofixture = true;
+    return spec;
 });
