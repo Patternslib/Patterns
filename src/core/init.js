@@ -11,7 +11,7 @@ define([
     '../lib/jquery',
     // XXX: belong to the patterns once they are done
     '../lib/jquery.fancybox',
-    '../lib/jquery.form',
+    '../lib/jquery.form/jquery.form',
     '../lib/jquery.jcarousel',
     '../lib/jquery.tools',
     '../jquery-ext',

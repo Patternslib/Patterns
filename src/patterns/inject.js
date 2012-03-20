@@ -2,7 +2,7 @@ define([
     'require',
     '../core/parser',
     '../lib/jquery',
-    '../lib/jquery.form'
+    '../lib/jquery.form/jquery.form'
 ], function(require) {
     var Parser = require('../core/parser'),
         parser = new Parser("source; target; replace; pre; post; append; prepend");
