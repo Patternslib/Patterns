@@ -1,6 +1,6 @@
 define([
     'require',
-    '../lib/aloha-loader'
+    '../lib/aloha/src/lib/aloha'
 ], function(require) {
     var init = function($el, opts) {
         // find editor controls
