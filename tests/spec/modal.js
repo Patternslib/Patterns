@@ -1,8 +1,8 @@
 // documentation on jasmine and jasmine-jquery:
 //   https://github.com/pivotal/jasmine/wiki
 //   https://github.com/velesin/jasmine-jquery
-define({
-    describe: function($) {
+define(function() {
+    return function($) {
         for (var i=1; i<=3; i++) {
             var id = '#modal' + i;
             describe('init '+id, function() {
@@ -30,5 +30,5 @@ define({
                  });*/
             });
         }
-    }
+    };
 });
