@@ -1,23 +1,8 @@
 // documentation on jasmine and jasmine-jquery:
 //   https://github.com/pivotal/jasmine/wiki
 //   https://github.com/velesin/jasmine-jquery
-define([
-    'require',
-    '../../src/lib/jquery',
-    '../../src/patterns'
-], function(require) {
-    var patterns = require('../../src/patterns'),
-        // localize our jquery to the loaded fixtures
-        $ = function(selector) {
-            selector = selector || '';
-            return jQuery('#jasmine-fixtures ' + selector);
-        };
-
-    describe('modal', function() {
-        beforeEach(function() {
-            loadFixtures('modal.html');
-            patterns.scan($());
-        });
+define({
+    describe: function($) {
         for (var i=1; i<=3; i++) {
             var id = '#modal' + i;
             describe('init '+id, function() {
@@ -45,5 +30,5 @@ define([
                  });*/
             });
         }
-    });
+    }
 });

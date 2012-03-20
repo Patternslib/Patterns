@@ -1,6 +1,7 @@
 define([
     'require',
     './core/store',
+    './lib/dist/underscore',
     './lib/jquery'
 ], function(require) {
     // XXX: not nice
@@ -129,9 +130,24 @@ define([
         return plugin;
     };
 
+    // XXX: need to understand require magic to make this work here
+    // require paths are local to where it is called, we would need to
+    // pass the path of the module that called load_modules
+    var load_modules = function(prefix, names, suffix) {
+        prefix = prefix || '';
+        suffix = suffix || '';
+        var modules = _.reduce(names, function(acc, name) {
+            acc[name] = require(prefix + name + suffix);
+            return acc;
+        }, {});
+        return modules;
+    };
+
     var utils = {
         extractParameters: extractParameters,
         parseOptions: parseOptions,
+        //load_modules: load_modules,
+        // pattern pimping - own module?
         set_initialised_class: set_initialised_class,
         once: once,
         turnstiled: turnstiled,
