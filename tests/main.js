@@ -7,11 +7,17 @@ require([
     '../src/lib/order!../lib/jasmine-jquery/lib/jasmine-jquery',
     // '../src/lib/order!./spec/inject',
     // '../src/lib/order!./spec/parser',
-    // '../src/lib/order!./spec/collapsible',
     '../src/patterns',
     '../src/utils',
+    './spec/collapsible',
     './spec/modal'
 ], function(require) {
+    var patterns = require('../src/patterns'),
+        spec_names = [
+            'collapsible',
+            'modal'
+        ];
+
     // jasmine settings
     jasmine.getFixtures().fixturesPath = './';
 
@@ -25,10 +31,7 @@ require([
         return modules;
     };
 
-    var patterns = require('../src/patterns'),
-        specs = load_modules('./spec/', [
-            'modal'
-        ]);
+    var specs = load_modules('./spec/', spec_names);
 
     // a jquery local to the fixtures container will be passed to the specs
     var $$ = function(selector) {
@@ -38,11 +41,13 @@ require([
     for (var name in specs) {
         var spec = specs[name];
         describe(name, function() {
-            beforeEach(function() {
-                loadFixtures(name + '.html');
-                patterns.scan($$());
-            });
-            spec.describe($$);
+            (function(name) {
+                beforeEach(function() {
+                    loadFixtures(name + '.html');
+                    patterns.scan($$());
+                });
+                spec.describe($$);
+            })(name);
         });
     };
 
