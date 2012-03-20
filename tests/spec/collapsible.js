@@ -1,39 +1,30 @@
-define([
-    'require',
-    '../../src/lib/jquery',
-    '../../src/patterns'
-], function(require) {
-    var patterns = require('../../src/patterns');
-    var dom = function() {
-        return $('#jasmine-fixtures');
-    };
-
-    describe('collapsible', function() {
-        beforeEach(function() {
-            loadFixtures('collapsible.html');
-            patterns.scan(dom());
-        });
-
+// documentation on jasmine and jasmine-jquery:
+//   https://github.com/pivotal/jasmine/wiki
+//   https://github.com/velesin/jasmine-jquery
+define({
+    describe: function($) {
         describe('init', function() {
             it("creates panel-content", function() {
-                expect(dom()).toContain('.panel-content');
+                expect($('#implicit-open')).toContain('.panel-content');
             });
             it("implicit open", function() {
-                var $el = $('#implicit-open', dom()),
+                var $el = $('#implicit-open'),
                     $panel = $('.panel-content', $el);
                 expect($el).toHaveClass('open');
-                expect($panel).not.toHaveAttr('style', 'display: none; ');
+                //expect($panel).not.toHaveAttr('style', 'display: none; ');
             });
             it("explicit open", function() {
-                var $el = $('#explicit-open', dom()),
+                var $el = $('#explicit-open'),
                     $panel = $('.panel-content', $el);
-                expect($panel).not.toHaveAttr('style', 'display: none; ');
+                expect($el).toHaveClass('open');
+                //expect($panel).not.toHaveAttr('style', 'display: none; ');
             });
             it("explicit closed", function() {
-                var $el = $('#explicit-closed', dom()),
+                var $el = $('#explicit-closed'),
                     $panel = $('.panel-content', $el);
-                expect($panel).toHaveAttr('style', 'display: none; ');
+                expect($el).toHaveClass('closed');
+                //expect($panel).toHaveAttr('style', 'display: none; ');
             });
         });
-    });
+    }
 });
