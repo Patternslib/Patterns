@@ -1,15 +1,20 @@
 require([
     'require',
     '../src/lib/dist/underscore',
-    '../src/lib/jquery',
+    '../src/lib/order!../src/lib/jquery',
+    '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine',
+    '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine-html',
+    '../src/lib/order!../lib/jasmine-jquery/lib/jasmine-jquery',
     // '../src/lib/order!./spec/inject',
     // '../src/lib/order!./spec/parser',
     // '../src/lib/order!./spec/collapsible',
     '../src/patterns',
     '../src/utils',
-    './jasmine-settings',
     './spec/modal'
 ], function(require) {
+    // jasmine settings
+    jasmine.getFixtures().fixturesPath = './';
+
     var load_modules = function(prefix, names, suffix) {
         prefix = prefix || '';
         suffix = suffix || '';
@@ -40,6 +45,7 @@ require([
             spec.describe($$);
         });
     };
+
 
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
