@@ -1,7 +1,7 @@
 define([
     'require',
     '../lib/jquery',
-    '../lib/jquery.form'
+    '../lib/jquery.form/jquery.form'
 ], function(require) {
 
     var init = function($el, opts) {

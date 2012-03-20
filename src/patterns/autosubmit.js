@@ -1,10 +1,9 @@
 define([
     'require',
-    '../lib/jquery',
-    '../lib/jquery.form',
     '../lib/dist/underscore',
-    './inject',
-    './modal'
+    '../lib/jquery',
+    '../lib/jquery.form/jquery.form',
+    './inject'
 ], function(require) {
     // those two for error messages
     var inject = require('./inject');
