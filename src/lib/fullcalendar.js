@@ -1,4 +1,4 @@
 define([
-    './order!./jquery',
-    './order!./dist/fullcalendar/fullcalendar'
+    'order!./jquery',
+    'order!./dist/fullcalendar/fullcalendar'
 ],{});

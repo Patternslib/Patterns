@@ -16,3 +16,6 @@
 [submodule "src/lib/aloha"]
 	path = src/lib/aloha
 	url = git://github.com/chaoflow/Aloha-Editor.git
+[submodule "lib/requirejs"]
+	path = lib/requirejs
+	url = git://github.com/chaoflow/requirejs.git

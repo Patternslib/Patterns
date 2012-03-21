@@ -1,4 +1,4 @@
 define([
-    './order!./jquery',
-    './order!./dist/jquery.jcarousel.min'
+    'order!./jquery',
+    'order!./dist/jquery.jcarousel.min'
 ], {});
