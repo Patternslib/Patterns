@@ -19,3 +19,6 @@
 [submodule "lib/requirejs"]
 	path = lib/requirejs
 	url = git://github.com/chaoflow/requirejs.git
+[submodule "lib/qunit"]
+	path = lib/qunit
+	url = git://github.com/chaoflow/qunit.git
