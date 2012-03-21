@@ -7,26 +7,26 @@ define(function() {
             var id = '#modal' + i;
             describe('init '+id, function() {
                 it("creates body", function() {
-                    expect($(id)).toContain('.body');
+                    assert($(id)).contains('.body');
                 });
                 it("creates header", function() {
-                    expect($(id)).toContain('.header');
+                    assert($(id)).contains('.header');
                 });
                 it("insert closebutton into header", function() {
-                    expect($('.header',$(id))).toContain('.close-panel');
+                    assert($('.header',$(id))).contains('.close-panel');
                 });
                 it("function remove modal", function() {
                     $('.modal', $(id)).remove();
-                    expect($(id)).not.toContain('.modal');
+                    assert($(id)).lacks('.modal');
                 });
                 it("remove modal on button click", function() {
                     $(id).find('.close-panel').click();
-                    expect($(id)).not.toContain('.modal');
+                    assert($(id)).lacks('.modal');
                 });
                 // last test doesn't work properly yet
                 /*		it("remove modal on ESC", function() {
                  $(id).find('.modal').keyup(27);
-                 expect($(id)).not.toContain('.modal');
+                 assert($(id)).lacks('.modal');
                  });*/
             });
         }

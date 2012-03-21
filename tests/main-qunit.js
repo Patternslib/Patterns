@@ -1,45 +1,68 @@
 require([
     'require',
     'domReady',
-    '../lib/qunit'
-    // '../src/lib/dist/underscore',
-    // '../src/lib/order!../src/lib/jquery',
-    // '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine',
-    // '../src/lib/order!../lib/jasmine/lib/jasmine-core/jasmine-html',
-    // '../src/lib/order!../lib/jasmine-jquery/lib/jasmine-jquery',
-    // '../src/patterns',
-    // '../src/utils',
-    // './spec/collapsible',
-    // './spec/edit',
-    // './spec/inject',
-    // './spec/modal',
-    // './spec/parser'
+    '../lib/jquery',
+    '../lib/pavlov',
+    '../lib/qunit',
+    '../src/lib/dist/underscore',
+    '../src/patterns',
+    'spec!./spec/collapsible',
+//    'spec!./spec/edit',
+    'spec!./spec/inject',
+    'spec!./spec/modal',
+    'spec!./spec/parser'
 ], function(require) {
-    // wait for the dom to be ready
-    require('domReady');
+    var patterns = require('../src/patterns'),
+        qunit = require('../lib/qunit'),
+        spec_names = [
+            'collapsible',
+            //'edit',
+            'inject',
+            'modal',
+            'parser'
+        ];
 
-    test("a basic test example", function() {
-        ok( true, "this test is fine" );
-        var value = "hello";
-        equal( value, "hello", "We expect value to be hello" );
+    // a jquery local to the fixtures container will be passed to the specs
+    var $$ = function(selector) {
+        selector = selector || '';
+        return $('#qunit-fixture ' + selector);
+    };
+
+    var load_modules = function(prefix, names, suffix) {
+        prefix = prefix || '';
+        suffix = suffix || '';
+        var modules = _.reduce(names, function(acc, name) {
+            acc[name] = require(prefix + name + suffix);
+            return acc;
+        }, {});
+        return modules;
+    };
+
+    var specs = load_modules('./spec/', spec_names);
+
+    pavlov.specify("Patterns", function() {
+        for (var name in specs) {
+            var spec = specs[name];
+            describe(name, function() {
+                (function(name) {
+                    if (!spec.nofixture) {
+                        before(function() {
+                            $.ajax({
+                                async: false,
+                                url: name + '.html',
+                                error: function(xhr, text, error) {
+                                    console.error(xhr, text, error);
+                                },
+                                success: function(data, text, xhr) {
+                                    $('#qunit-fixture').html(data);
+                                }
+                            });
+                            patterns.scan($$());
+                        });
+                    }
+                    spec($$);
+                })(name);
+            });
+        };
     });
-
-    module("Module A");
-
-    test("first test within module", function() {
-        ok( true, "all pass" );
-    });
-
-    test("second test within module", function() {
-        ok( true, "all pass" );
-    });
-
-    module("Module B");
-
-    test("some other test", function() {
-        expect(2);
-        equal( true, false, "failing test" );
-        equal( true, true, "passing test" );
-    });
-
 });
