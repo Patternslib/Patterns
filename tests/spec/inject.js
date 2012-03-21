@@ -1,6 +1,3 @@
-// documentation on jasmine and jasmine-jquery:
-//   https://github.com/pivotal/jasmine/wiki
-//   https://github.com/velesin/jasmine-jquery
 define(function() {
     return function($) {
         describe('single injection with same id', function() {
