@@ -1,8 +1,8 @@
 define([
     'require',
+    'domReady!',
     './lib/jquery',
-    './jqueryPlugin!./lib/dist/history.js/scripts/bundled/html4+html5/jquery.history',
-    './lib/domReady!',
+//    './jqueryPlugin!./lib/dist/history.js/scripts/bundled/html4+html5/jquery.history',
     './lib/modernizr',
     './core/init',
     './core/parser',
@@ -49,7 +49,7 @@ define([
     });
 
     // wait for the DOM to be ready and initialize
-    var doc = require('./lib/domReady!');
+    var doc = require('domReady!');
     mapal.init();
     mapal.initContent(doc.body);
     $(doc).trigger("setupFinished", doc);
