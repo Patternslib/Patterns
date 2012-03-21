@@ -5,21 +5,14 @@ define(function() {
     return function($) {
         describe('single injection with same id', function() {
             it("handles id as part of href", function() {
-                runs(function() {
-                    var $el = $('#id-in-href'),
-                        $target = $('#srctgt');
-                    spyOnEvent($target, 'inject');
+                var $el = $('#id-in-href'),
+                    $target = $('#srctgt');
                     $el.click();
-                });
-                // XXX: properly wait for injection/ajax to finish
-                waits(500);
-                runs(function() {
+                // XXX: check for inject event
+                // XXX: instead of wait, switch inject into synchronous mode
+                wait(500, function() {
                     var $target = $('#srctgt');
-                    expect('inject').toHaveBeenTriggeredOn($target);
-                });
-                runs(function() {
-                    var $target = $('#srctgt');
-                    expect($target).toContain('#srctgt-content');
+                    assert($target).contains('#srctgt-content');
                 });
             });
         });
