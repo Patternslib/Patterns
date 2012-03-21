@@ -1,27 +1,32 @@
 require([
     'require',
-    'order!../src/lib/jquery',
-    'order!../lib/jasmine/lib/jasmine-core/jasmine',
-    'order!../lib/jasmine/lib/jasmine-core/jasmine-html',
-    'order!../lib/jasmine-jquery/lib/jasmine-jquery',
+    'domReady',
+    '../lib/jquery',
+    '../lib/pavlov',
+    '../lib/qunit',
     '../src/lib/dist/underscore',
     '../src/patterns',
-    '../src/utils',
-    './spec/collapsible',
-    './spec/inject',
-    './spec/modal',
-    './spec/parser'
+    'spec!./spec/collapsible',
+//    'spec!./spec/edit',
+    'spec!./spec/inject',
+    'spec!./spec/modal',
+    'spec!./spec/parser'
 ], function(require) {
     var patterns = require('../src/patterns'),
+        qunit = require('../lib/qunit'),
         spec_names = [
             'collapsible',
+            //'edit',
             'inject',
             'modal',
             'parser'
         ];
 
-    // jasmine settings
-    jasmine.getFixtures().fixturesPath = './';
+    // a jquery local to the fixtures container will be passed to the specs
+    var $$ = function(selector) {
+        selector = selector || '';
+        return $('#qunit-fixture ' + selector);
+    };
 
     var load_modules = function(prefix, names, suffix) {
         prefix = prefix || '';
@@ -35,48 +40,29 @@ require([
 
     var specs = load_modules('./spec/', spec_names);
 
-    // a jquery local to the fixtures container will be passed to the specs
-    var $$ = function(selector) {
-        selector = selector || '';
-        return $('#jasmine-fixtures ' + selector);
-    };
-    for (var name in specs) {
-        var spec = specs[name];
-        describe(name, function() {
-            (function(name) {
-                if (!spec.nofixture) {
-                    beforeEach(function() {
-                        loadFixtures(name + '.html');
-                        patterns.scan($$());
-                    });
-                }
-                spec($$);
-            })(name);
-        });
-    };
-
-
-    var jasmineEnv = jasmine.getEnv();
-    jasmineEnv.updateInterval = 1000;
-
-    var reporter = new jasmine.HtmlReporter();
-
-    jasmineEnv.addReporter(reporter);
-
-    jasmineEnv.specFilter = function(spec) {
-        return reporter.specFilter(spec);
-    };
-
-    var currentWindowOnload = window.onload;
-
-    window.onload = function() {
-        if (currentWindowOnload) {
-            currentWindowOnload();
-        }
-        execJasmine();
-    };
-
-    function execJasmine() {
-        jasmineEnv.execute();
-    }
+    pavlov.specify("Patterns", function() {
+        for (var name in specs) {
+            var spec = specs[name];
+            describe(name, function() {
+                (function(name) {
+                    if (!spec.nofixture) {
+                        before(function() {
+                            $.ajax({
+                                async: false,
+                                url: name + '.html',
+                                error: function(xhr, text, error) {
+                                    console.error(xhr, text, error);
+                                },
+                                success: function(data, text, xhr) {
+                                    $('#qunit-fixture').html(data);
+                                }
+                            });
+                            patterns.scan($$());
+                        });
+                    }
+                    spec($$);
+                })(name);
+            });
+        };
+    });
 });
