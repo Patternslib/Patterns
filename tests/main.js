@@ -7,7 +7,7 @@ require([
     '../src/lib/dist/underscore',
     '../src/patterns',
     'spec!./spec/collapsible',
-//    'spec!./spec/edit',
+    'spec!./spec/edit',
     'spec!./spec/inject',
     'spec!./spec/modal',
     'spec!./spec/parser'
@@ -16,7 +16,7 @@ require([
         qunit = require('../lib/qunit'),
         spec_names = [
             'collapsible',
-            //'edit',
+            'edit',
             'inject',
             'modal',
             'parser'
