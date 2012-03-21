@@ -22,3 +22,6 @@
 [submodule "lib/qunit"]
 	path = lib/qunit
 	url = git://github.com/chaoflow/qunit.git
+[submodule "lib/pavlov"]
+	path = lib/pavlov
+	url = git://github.com/chaoflow/pavlov.git
