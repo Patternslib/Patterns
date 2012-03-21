@@ -24,8 +24,8 @@ require([
 
     // a jquery local to the fixtures container will be passed to the specs
     var $$ = function(selector) {
-        selector = selector || '';
-        return $('#qunit-fixture ' + selector);
+        var $fix = $('#qunit-fixture');
+        return selector ? $fix.find(selector) : $fix;
     };
 
     var load_modules = function(prefix, names, suffix) {
