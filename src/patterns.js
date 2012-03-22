@@ -1,6 +1,7 @@
 define([
     'require',
     './lib/jquery',
+    './patterns/ajaxify',
     './patterns/autosubmit',
     './patterns/collapsible',
     './patterns/edit',
@@ -14,6 +15,7 @@ define([
         pimp_pattern = utils.pimp_pattern;
 
     var plain_patterns = {
+        ajaxify: require('./patterns/ajaxify'),
         autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
         edit: require('./patterns/edit'),
