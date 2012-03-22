@@ -1,7 +1,7 @@
 require([
     'require',
     'domReady',
-    '../lib/jquery',
+    '../src/lib/jquery',
     '../lib/pavlov',
     '../lib/qunit',
     '../src/lib/dist/underscore',
