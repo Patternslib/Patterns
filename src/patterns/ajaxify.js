@@ -3,9 +3,6 @@ define([
     '../lib/jquery.form/jquery.form',
     './inject'
 ], function(require) {
-    // those two for error messages
-    var inject = require('./inject');
-
     var init = function($form, opts) {
         // ajaxify form
         $form.ajaxForm({
@@ -27,6 +24,7 @@ define([
                            + '<h3>Error</h3>'
                            + '<div class="error message">'+msg+'</div>'
                            + '</div>');
+            var inject = require('./inject');
             inject.append($error, $('body'));
             console.error(msg, xhr, opts);
         });
