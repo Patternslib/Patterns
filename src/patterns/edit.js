@@ -1,8 +1,10 @@
 define([
     'require',
-    '../lib/aloha/src/lib/aloha',
+    '../lib/aloha-loader',
     '../lib/jquery.form/jquery.form'
 ], function(require) {
+    var Aloha = window.Aloha;
+
     var init = function($el, opts) {
         // find editor controls
         var $form = $el.parents('form'),
@@ -10,7 +12,7 @@ define([
             $strong = $ctrls.find('.strong');
 
         // activate aloha on element
-        Aloha.jQuery($el).aloha();
+        $el.aloha();
 
         // bind editor controls to aloha commands
         $strong.on('click', function(ev) {
