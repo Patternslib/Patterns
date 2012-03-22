@@ -14,17 +14,16 @@ define([
         // point to it and disable injection
         var hrefnext = $el.data('href-next');
         if (hrefnext && ($(hrefnext).length > 0)) {
-            $el.attr({href: hrefnext}).addClass('disabled-inject');
+            return $el.attr({href: hrefnext});
         }
 
         var trigger = function(ev) {
-            if ($el.hasClass('disabled-inject')) return;
             ev.preventDefault();
             pattern.trigger($el);
         };
 
-        if ($el.is('a')) $el.click(trigger);
-        if ($el.is('form')) $el.submit(trigger);
+        if ($el.is('a')) $el.on('click.inject', trigger);
+        if ($el.is('form')) $el.on('submit.inject', trigger);
 
         return $el;
     };
@@ -151,7 +150,7 @@ define([
             var hrefnext = $el.data('href-next');
             if (hrefnext) {
                 $el.attr({href: hrefnext});
-                $el.addClass('disabled-inject');
+                $el.off('.inject');
             }
 
             // trigger inject event
