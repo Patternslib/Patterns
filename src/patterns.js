@@ -23,21 +23,22 @@ define([
     };
 
     var patterns = {};
-    for (var name in plain_patterns) {
-        patterns[name] = pimp_pattern(name, plain_patterns[name]);
-    }
 
-    // make available as jquery plugins - this is optional and not
-    // needed for the functionality of the patterns library. Should be
-    // configurable.
-    for (name in patterns) {
-        $.fn[name] = jquery_plugin(name, patterns[name]);
-    }
+    // If you use this to register custom patterns make sure to prefix
+    // their names to avoid name collision.
+    patterns.register = function(name, pattern) {
+        patterns[name] = pattern = pimp_pattern(name, pattern);
+        // make available as jquery plugins - this is optional and not
+        // needed for the functionality of the patterns library. Should be
+        // configurable.
+        $.fn[name] = jquery_plugin(name, pattern);
+    };
 
     patterns.scan = function(content, opts) {
         var $content = $(content);
         for (var name in patterns) {
             if (name === "scan") continue;
+            if (name === "register") continue;
             var pattern = patterns[name],
                 trigger = pattern.markup_trigger;
             if (!trigger) continue;
@@ -45,6 +46,10 @@ define([
             $content.find(trigger).each(function() { pattern.init($(this), opts); });
         }
     };
+
+    for (var name in plain_patterns) {
+        patterns.register(name, plain_patterns[name]);
+    }
 
     // for now this happens in main.js
     //
