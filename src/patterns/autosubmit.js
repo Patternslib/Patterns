@@ -3,10 +3,9 @@ define([
     '../lib/dist/underscore',
     '../lib/jquery',
     '../lib/jquery.form/jquery.form',
-    './inject'
+    './ajaxify'
 ], function(require) {
-    // those two for error messages
-    var inject = require('./inject');
+    var ajaxify = require('./ajaxify').init;
 
     // can be called on a form or an element in a form
     var init = function($el) {
@@ -14,38 +13,10 @@ define([
         var $form = $el.is('form') ? $el : $el.parents('form').first(),
             url = $form.attr('action');
 
-        // prepare ajax request and submit function
-        var params = {
-            error: function(jqXHR, textStatus, errorThrown) {
-                var msg = [jqXHR.status, textStatus,
-                           $form.attr('action')].join(' '),
-                    // XXX: error notification pattern!
-                    $error = $('<div class="modal"><h3>Error</h3><div class="error message">'+msg+'</div></div>');
-                inject.append($error, $('body'));
-                console.error(url, jqXHR, textStatus, errorThrown);
-            },
-            success: function(data, textStatus, jqXHR) {
-                if (!data) return;
-                var $forms = $(data).find('form[id]');
-                $forms.each(function() {
-                    var $form = $(this),
-                        id = $(this).attr('id'),
-                        $ourform = $('#' + id);
-                    if ($ourform.length > 0) {
-                        $ourform.attr({action: $form.attr('action')});
-                    } else {
-                        console.warn(
-                            'Ignored form in respone data: not matching id', $form);
-                    }
-                });
-            }
-        };
+        ajaxify($form);
+
         var submit = function(event) {
-            if ($el.hasClass('inject')) {
-                inject.trigger($el);
-            } else {
-                $form.ajaxSubmit(params);
-            }
+            $form.submit();
         };
 
         // submit if a (specific) form element changed
@@ -57,12 +28,13 @@ define([
                 .on("keyup", _.debounce(submit, 400));
         }
 
-        $form.on('keyup', function(ev) {
-            if (ev.which === 13) {
-                ev.preventDefault();
-                submit(ev);
-            }
-        });
+        // XXX: this should anyway work
+        // $form.on('keyup', function(ev) {
+        //     if (ev.which === 13) {
+        //         ev.preventDefault();
+        //         submit(ev);
+        //     }
+        // });
 
         // XXX: test whether on webkit and enable only if supported
         // XXX: add code to check whether the click actually changed
