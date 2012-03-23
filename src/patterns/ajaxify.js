@@ -1,21 +1,35 @@
 define([
     'require',
     '../lib/jquery.form/jquery.form',
+    '../logging',
     './inject'
 ], function(require) {
-    var init = function($form, opts) {
-        // ajaxify form
-        $form.ajaxForm({
-            // in plone we use this to figure out whether a form is
-            // requested or submitted
-            // XXX: consider setting this via $.ajaxSetup in a
-            // specific application
-            data: {submit: "submit"}
-        });
+    var log = require('../logging').getLogger('ajaxify');
 
-        $form.ajaxError(function(ev, jqxhr, opts, error) {
+    var init = function($el, opts) {
+        // ajaxify form
+        if ($el.is('form')) {
+            $el.ajaxForm({
+                // in plone we use this to figure out whether a form is
+                // requested or submitted
+                // XXX: consider setting this via $.ajaxSetup in a
+                // specific application
+                data: {submit: "submit"}
+            });
+        } else {
+            $el.on('click.ajaxify', function(ev, opts) {
+                ev.preventDefault();
+                $.ajax({
+                    context: $el,
+                    url: $el.attr('href')
+                });
+            });
+        }
+
+        $el.ajaxError(function(ev, jqxhr, opts, error) {
+            log.debug('error', ev, jqxhr, opts, error);
             // ajaxHandlers are global, we are only interested in our form
-            if (!(ev.target === $form[0])) return;
+            if (!(ev.target === $el[0])) return;
 
             // XXX: this needs to be solved differently
             var msg = [jqxhr.status, jqxhr.statusText, error, opts.url].join(' '),
@@ -29,9 +43,11 @@ define([
             console.error(msg, jqxhr, opts);
         });
 
-        $form.ajaxSuccess(function(ev, jqxhr, opts, data) {
+        $el.ajaxSuccess(function(ev, jqxhr, opts, data) {
+            log.debug('success', ev, jqxhr, opts);
             // ajaxHandlers are global, we are only interested in our form
-            if (!(ev.target === $form[0])) return;
+            // XXX: figure out how much of this is true with a multi-form test
+            if (!(ev.target === $el[0])) return;
 
             // XXX: this needs to be solved differently
             if (!data) return;
@@ -51,7 +67,7 @@ define([
     };
 
     return {
-        markup_trigger: 'form.ajaxify',
+        markup_trigger: 'form.ajaxify, a.ajaxify',
         initialised_class: 'ajaxified',
         init: init
     };
