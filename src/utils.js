@@ -2,10 +2,12 @@ define([
     'require',
     './core/store',
     './lib/dist/underscore',
-    './lib/jquery'
+    './lib/jquery',
+    './logging'
 ], function(require) {
     // XXX: not nice
-    var mapal = require('./core/store');
+    var mapal = require('./core/store'),
+        getLogger = require('./logging').getLogger;
 
     var extractParameters = function(params, sources) {
         var tmp,
@@ -61,6 +63,15 @@ define([
         return options;
     };
 
+    var log_init = function(name, method) {
+        var log_wrapper = function($el) {
+            getLogger(name).debug('Initialising:', $el);
+            var ret = method.apply(this, arguments);
+            getLogger(name).debug('initialised:', $el);
+        };
+        return log_wrapper;
+    };
+
     var set_initialised_class = function(method, pattern) {
         var cls = pattern.initialised_class;
         if (!cls) return method;
@@ -104,6 +115,7 @@ define([
         for (var mname in pattern) {
             var method = pattern[mname];
             if (mname === "init") {
+                method = log_init(pname, method);
                 method = set_initialised_class(method, pattern);
                 method = once(pname + '-' + mname, method);
             }
