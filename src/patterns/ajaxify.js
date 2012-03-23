@@ -13,12 +13,12 @@ define([
             data: {submit: "submit"}
         });
 
-        $form.ajaxError(function(ev, xhr, opts, error) {
+        $form.ajaxError(function(ev, jqxhr, opts, error) {
             // ajaxHandlers are global, we are only interested in our form
             if (!(ev.target === $form[0])) return;
 
             // XXX: this needs to be solved differently
-            var msg = [xhr.status, xhr.statusText, error, opts.url].join(' '),
+            var msg = [jqxhr.status, jqxhr.statusText, error, opts.url].join(' '),
                 // XXX: error notification pattern!
                 $error = $('<div class="modal">'
                            + '<h3>Error</h3>'
@@ -26,10 +26,10 @@ define([
                            + '</div>');
             var inject = require('./inject');
             inject.append($error, $('body'));
-            console.error(msg, xhr, opts);
+            console.error(msg, jqxhr, opts);
         });
 
-        $form.ajaxSuccess(function(ev, xhr, opts, data) {
+        $form.ajaxSuccess(function(ev, jqxhr, opts, data) {
             // ajaxHandlers are global, we are only interested in our form
             if (!(ev.target === $form[0])) return;
 
