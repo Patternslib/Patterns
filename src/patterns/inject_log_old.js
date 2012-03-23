@@ -1,14 +1,11 @@
 define([
     'require',
-    '../lib/jquery'
+    '../logging'
 ], function(require) {
+    var log = require('logging').getLogger('old-injection');
+
     var init = function($el, opts) {
-        // deprecation code
-        console.info("old data-injection:",
-                     "href=" + $el.attr('href'),
-                     "rel=" + $el.attr('rel'),
-                     "action=" + $el.attr('action'),
-                     "data-injection=" + $el.attr('data-injection'));
+        log.info($el);
     };
 
     return {
@@ -16,4 +13,3 @@ define([
         init: init
     };
 });
-
