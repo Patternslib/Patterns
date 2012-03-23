@@ -67,7 +67,9 @@ define([
     var logging = {
         level: level,
         getLogger: function(name) {
-            return l4js.getLogger(rootname + (name ? '.' + name : '') );
+            var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
+            if (name === 'inject_log_old') logger.setLevel(level.INFO);
+            return logger;
         }
     };
 
