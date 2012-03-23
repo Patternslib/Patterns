@@ -1,6 +1,7 @@
 define([
     'require',
     './lib/jquery',
+    './logging',
     './patterns/ajaxify',
     './patterns/autosubmit',
     './patterns/collapsible',
@@ -10,7 +11,8 @@ define([
     './patterns/modal',
     './utils'
 ], function(require) {
-    var utils = require('./utils'),
+    var log = require('./logging').getLogger(),
+        utils = require('./utils'),
         jquery_plugin = utils.jquery_plugin,
         pimp_pattern = utils.pimp_pattern;
 
@@ -34,6 +36,7 @@ define([
         // needed for the functionality of the patterns library. Should be
         // configurable.
         $.fn[name] = jquery_plugin(name, pattern);
+        log.info('Registered pattern:', name, pattern);
     };
 
     patterns.scan = function(content, opts) {
