@@ -3,9 +3,11 @@ define([
     '../lib/dist/underscore',
     '../lib/jquery',
     '../lib/jquery.form/jquery.form',
+    '../logging',
     './ajaxify'
 ], function(require) {
-    var ajaxify = require('./ajaxify').init;
+    var ajaxify = require('./ajaxify').init,
+        log = require('../logging').getLogger('autosubmit');
 
     // can be called on a form or an element in a form
     var init = function($el) {
@@ -16,6 +18,7 @@ define([
         ajaxify($form);
 
         var submit = function(event) {
+            log.info("triggered by " + event.type);
             $form.submit();
         };
 
@@ -27,14 +30,6 @@ define([
             ($el.is('input') ? $el : $el.find('input'))
                 .on("keyup", _.debounce(submit, 400));
         }
-
-        // XXX: this should anyway work
-        // $form.on('keyup', function(ev) {
-        //     if (ev.which === 13) {
-        //         ev.preventDefault();
-        //         submit(ev);
-        //     }
-        // });
 
         // XXX: test whether on webkit and enable only if supported
         // XXX: add code to check whether the click actually changed
