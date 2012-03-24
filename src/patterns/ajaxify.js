@@ -10,7 +10,7 @@ define([
         // skip elements that are covered by old-style injection
         if ($el.is('.injection,[data-injection]')) {
             log.debug('skipping element claimed by old injection', $el);
-            return;
+            return false;
         }
 
         // ajaxify form
@@ -73,6 +73,8 @@ define([
                 }
             });
         });
+
+        return $el;
     };
 
     return {
