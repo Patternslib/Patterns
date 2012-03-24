@@ -26,6 +26,10 @@ define([
             });
         }
 
+        $el.ajaxSend(function(ev, jqxhr, opts) {
+            log.debug('send', ev, jqxhr, opts);
+        });
+
         $el.ajaxError(function(ev, jqxhr, opts, error) {
             log.debug('error', ev, jqxhr, opts, error);
             // ajaxHandlers are global, we are only interested in our form
