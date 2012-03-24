@@ -65,9 +65,15 @@ define([
 
     var log_init = function(name, method) {
         var log_wrapper = function($el) {
-            getLogger(name).debug('Initialising:', $el);
+            var log = getLogger(name);
+            log.debug('Initialising:', $el);
             var ret = method.apply(this, arguments);
-            getLogger(name).debug('initialised:', $el);
+            if (ret === false) {
+                log.debug('skipped', $el);
+            } else {
+                log.debug('initialised:', $el);
+            }
+            return ret;
         };
         return log_wrapper;
     };
@@ -77,7 +83,7 @@ define([
         if (!cls) return method;
         var initialised_class_wrapper = function($el) {
             var ret = method.apply(this, arguments);
-            $el.addClass(cls);
+            if (ret !== false) $el.addClass(cls);
             return ret;
         };
         return initialised_class_wrapper;
@@ -89,7 +95,7 @@ define([
             var initialised = $el.data(key);
             if (initialised) return undefined;
             var ret = method.apply(this, arguments);
-            $el.data(key, true);
+            if (ret !== false) $el.data(key, true);
             return ret;
         };
         return once_wrapper;
