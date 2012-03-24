@@ -7,6 +7,11 @@ define([
     var log = require('../logging').getLogger('ajaxify');
 
     var init = function($el, opts) {
+        // skip elements that are covered by old-style injection
+        if ($el.is('.injection,[data-injection]')) {
+            log.debug('skipping element claimed by old injection', $el);
+        }
+
         // ajaxify form
         if ($el.is('form')) {
             $el.ajaxForm({
