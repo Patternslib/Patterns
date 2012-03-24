@@ -4,7 +4,7 @@ define([
     '../lib/jquery',
     '../lib/jquery.form/jquery.form',
     '../logging',
-    './ajaxify'
+    '../patterns'
 ], function(require) {
     var Parser = require('../core/parser'),
         parser = new Parser("source; target; replace; pre; post; append; prepend"),
@@ -20,9 +20,11 @@ define([
             return $el.attr({href: hrefnext});
         }
 
-        var ajaxify = require('./ajaxify').init;
+        // ensure element is ajaxified
+        var ajaxify = require('../patterns').ajaxify.init;
         ajaxify($el);
 
+        // inject in case of successfull ajax request
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
             // retrieve href and split into url and default srcid
             var href = ($el.is('form')
