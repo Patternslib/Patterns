@@ -20,7 +20,8 @@ define([
                 // requested or submitted
                 // XXX: consider setting this via $.ajaxSetup in a
                 // specific application
-                data: {submit: "submit"}
+                data: {submit: "submit"},
+                url: $el.attr('action')
             });
         } else {
             $el.on('click.ajaxify', function(ev, opts) {
