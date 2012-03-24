@@ -17,6 +17,7 @@ define([
         // point to it and disable injection
         var hrefnext = $el.data('href-next');
         if (hrefnext && ($(hrefnext).length > 0)) {
+            log.debug('Skipping as href-next already exists', $(hrefnext));
             return $el.attr({href: hrefnext});
         }
 
@@ -145,7 +146,7 @@ define([
         // hack to support modals
         var modal = $el.hasClass('modal');
         if (modal) {
-            if (opts.target) console.warn('Overriding target for modal');
+            if (opts.target) log.warn('Overriding target for modal');
             opts.target = '#modal';
             method_name = "replace";
         }
@@ -160,7 +161,7 @@ define([
 
         if ($targets.length === 0) {
             if (opts.target.slice(0,1) !== '#') {
-                console.error('only id supported for non-existing target');
+                log.error('only id supported for non-existing target');
             }
             $targets = $('<div />').attr({id: opts.target.slice(1)});
             $('body').append($targets);
@@ -175,7 +176,7 @@ define([
                 .replace(/<\/body(.*)>/gi,'</div>');
             var $sources = $('<div/>').html(data).find(opts.source);
 
-            if ($sources.length === 0) console.error('inject: Sources are empty');
+            if ($sources.length === 0) log.error('Sources are empty for selector:', opts.source);
 
             if (modal) {
                 var $modal = $('<div id="modal" class="modal" />');
