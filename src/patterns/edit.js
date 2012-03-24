@@ -1,16 +1,19 @@
 define([
     'require',
     '../lib/aloha-loader',
-    './ajaxify'
+    '../patterns'
 ], function(require) {
-    var Aloha = window.Aloha,
-        ajaxify = require('./ajaxify').init;
+    var Aloha = window.Aloha;
 
     var init = function($el, opts) {
         // find editor controls
         var $form = $el.parents('form'),
             $ctrls = $('.editor-ctrls'),
             $strong = $ctrls.find('.strong');
+
+        // ensure form is ajaxified
+        var ajaxify = require('../patterns').ajaxify.init;
+        ajaxify($form);
 
         // activate aloha on element
         $el.aloha();
@@ -20,8 +23,6 @@ define([
             ev.preventDefault();
             Aloha.execCommand('bold', false, '');
         });
-
-        ajaxify($form);
 
         // copy aloha textareas to originals before serialization
         // XXX: is there an aloha function for that?

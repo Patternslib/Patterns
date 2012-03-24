@@ -44,7 +44,6 @@ define([
                            + '</div>');
             var inject = require('./inject');
             inject.append($error, $('body'));
-            console.error(msg, jqxhr, opts);
         });
 
         $el.ajaxSuccess(function(ev, jqxhr, opts, data) {
@@ -71,7 +70,7 @@ define([
     };
 
     return {
-        markup_trigger: 'form.ajaxify, a.ajaxify',
+        markup_trigger: 'form, a.ajaxify',
         initialised_class: 'ajaxified',
         init: init
     };

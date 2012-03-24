@@ -3,11 +3,9 @@ define([
     '../lib/dist/underscore',
     '../lib/jquery',
     '../lib/jquery.form/jquery.form',
-    '../logging',
-    './ajaxify'
+    '../logging'
 ], function(require) {
-    var ajaxify = require('./ajaxify').init,
-        log = require('../logging').getLogger('autosubmit');
+    var log = require('../logging').getLogger('autosubmit');
 
     // can be called on a form or an element in a form
     var init = function($el) {
