@@ -15,8 +15,6 @@ define([
         var $form = $el.is('form') ? $el : $el.parents('form').first(),
             url = $form.attr('action');
 
-        ajaxify($form);
-
         var submit = function(event) {
             log.info("triggered by " + event.type);
             $form.submit();
