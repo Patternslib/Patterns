@@ -12,8 +12,7 @@ define([
     // can be called on a form or an element in a form
     var init = function($el) {
         // get parameters from markup
-        var $form = $el.is('form') ? $el : $el.parents('form').first(),
-            url = $form.attr('action');
+        var $form = $el.is('form') ? $el : $el.parents('form').first();
 
         var submit = function(event) {
             log.info("triggered by " + event.type);
