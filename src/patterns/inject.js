@@ -25,14 +25,6 @@ define([
         var ajaxify = require('../patterns').ajaxify.init;
         ajaxify($el);
 
-        $el.ajaxStart(function() {
-            log.group('inject triggered');
-        });
-
-        $el.ajaxStop(function() {
-            log.groupEnd();
-        });
-
         // inject in case of successfull ajax request
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
             log.debug('starting on', $el);

@@ -35,14 +35,6 @@ define([
             });
         }
 
-        $el.ajaxSend(function() {
-            log.group('Inject triggered');
-        });
-
-        $el.ajaxComplete(function() {
-            log.groupEnd();
-        });
-
         $el.ajaxError(function(ev, jqxhr, opts, error) {
             log.debug('error', ev, jqxhr, opts, error);
             // ajaxHandlers are global, we are only interested in our form
