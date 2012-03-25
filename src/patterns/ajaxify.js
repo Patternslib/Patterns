@@ -35,8 +35,12 @@ define([
             });
         }
 
-        $el.ajaxSend(function(ev, jqxhr, opts) {
-            log.debug('send', ev, jqxhr, opts);
+        $el.ajaxSend(function() {
+            log.group('Inject triggered');
+        });
+
+        $el.ajaxComplete(function() {
+            log.groupEnd();
         });
 
         $el.ajaxError(function(ev, jqxhr, opts, error) {
