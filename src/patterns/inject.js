@@ -27,6 +27,7 @@ define([
 
         // inject in case of successfull ajax request
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
+            log.debug('starting on', $el);
             // retrieve href and split into url and default srcid
             var href = ($el.is('form')
                         ? $el.attr('action')
