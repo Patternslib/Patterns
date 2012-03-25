@@ -16,6 +16,7 @@ define([
         // ajaxify form
         if ($el.is('form')) {
             $el.ajaxForm({
+                context: $el,
                 // in plone we use this to figure out whether a form is
                 // requested or submitted
                 // XXX: consider setting this via $.ajaxSetup in a
