@@ -21,6 +21,7 @@ define([
                 // XXX: consider setting this via $.ajaxSetup in a
                 // specific application
                 data: {submit: "submit"},
+                type: $el.attr('method') || 'POST',
                 url: $el.attr('action')
             });
         } else {
