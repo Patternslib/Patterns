@@ -1,6 +1,3 @@
-[submodule "src/lib/jquery.mutations"]
-	path = src/lib/jquery.mutations
-	url = git@github.com:chaoflow/jquery.mutation-events.git
 [submodule "src/lib/dist/history.js"]
 	path = src/lib/dist/history.js
 	url = git://github.com/balupton/history.js.git
