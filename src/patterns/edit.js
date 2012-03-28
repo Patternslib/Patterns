@@ -72,6 +72,12 @@ define([
             document.execCommand('insertunorderedlist');
         });
 
+        buttons.link_image.on('click', function(ev) {
+            var source = prompt('URL of Image');
+            if(source) { document.execCommand('insertImage', false, source); }; 
+        });
+
+
 
         var setstate = function(selection) {
             var markup = selection.markupEffectiveAtStart;
