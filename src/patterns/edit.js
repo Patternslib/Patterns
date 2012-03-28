@@ -29,13 +29,17 @@ define([
         buttons.inserth2            = $ctrls.find('.header_2');
         buttons.h3                  = $ctrls.find('.header_3');
         buttons.inserth3            = $ctrls.find('.header_3');
+        buttons.upload_image        = $ctrls.find('.upload_image');
+        buttons.link_image          = $ctrls.find('.link_image');
 
         // ensure form is ajaxified
         var ajaxify = require('../patterns').ajaxify.init;
         ajaxify($form);
         
         // Enables contentEditable
+        // FIX $form to whatever it should be 
         $form.attr('contenteditable','true');
+
         // log editor control clicks
         $ctrls.find('button').on('click', function(ev) {
             log.debug('clicked', $(ev.target), ev);
@@ -44,22 +48,26 @@ define([
         // execCommand is invoked upon a document
         // the last selected contenteditable is what
         // recieves the application of execution.
-       
-        // shit happens
+      
+        // This would be better implemented as subclass of
+        // buttons I haven't researched how to implement singletons
+        // in javascript
         buttons.b.on('click', function(ev) {
-            log.debug('bold', $(ev.target), ev);
-            document.execCommand("Bold");
+            document.execCommand('bold');
         });
         
         buttons.i.on('click', function(ev) {
-            document.execCommand('italic', false, '');
+            document.execCommand('italic');
         });
+
         buttons.ol.on('click', function(ev) {
             document.execCommand('insertorderedlist');
         });
+        
         buttons.ol.on('click', function(ev) {
             document.execCommand('insertorderedlist');
         });
+        
         buttons.ul.on('click', function(ev) {
             document.execCommand('insertunorderedlist');
         });
