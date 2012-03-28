@@ -64,14 +64,28 @@ define([
             document.execCommand('insertorderedlist');
         });
         
-        buttons.ol.on('click', function(ev) {
-            document.execCommand('insertorderedlist');
-        });
-        
         buttons.ul.on('click', function(ev) {
             document.execCommand('insertunorderedlist');
         });
+        
+        buttons.p.on('click', function(ev) {
+            // the behavior of this differs greatly between browsers 
+            document.execCommand('insertparagraph');
+        });
 
+        //
+        // XXX: These don't work in the way you'd think
+        //  heading is another option but support is eh 
+        buttons.h1.on('click', function(ev) {
+            document.execCommand('formatblock', false, 'h1');
+        });
+        buttons.h2.on('click', function(ev) {
+            document.execCommand('formatblock', false, 'h2');
+        });
+        buttons.h3.on('click', function(ev) {
+            document.execCommand('formatblock', false, 'h2');
+        });
+        
         buttons.link_image.on('click', function(ev) {
             var source = prompt('URL of Image');
             if(source) { document.execCommand('insertImage', false, source); }; 
