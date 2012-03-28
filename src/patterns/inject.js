@@ -1,6 +1,7 @@
 define([
     'require',
     '../core/parser',
+    '../lib/dist/underscore',
     '../lib/jquery',
     '../lib/jquery.form/jquery.form',
     '../logging',
@@ -37,11 +38,19 @@ define([
                 log.warn('Ignoring additional source ids:', href.slice(2), $el);
             }
 
-            // set default source id and parse opts
-            var defaults = { source: srcid && ('#' + srcid) },
-                opts_str = $el.attr('data-inject') || "",
-                opts = parser.parse(opts_str, defaults),
-                callback;
+            // fetch defaults from parents
+            var defaults = _.reduce(
+                $el.parents('[data-inject-defaults]').toArray().reverse(),
+                function(acc, el) {
+                    var opts_str = $(el).attr('data-inject-defaults');
+                    return parser.parse(opts_str, acc);
+                }, {}
+            );
+
+            if (srcid) defaults.source = '#' + srcid;
+
+            var opts_str = $el.attr('data-inject') || "",
+                opts = parser.parse(opts_str, defaults);
 
             // default: replace targets content with sources content
             var method_name = "content";
@@ -213,6 +222,11 @@ define([
     var pattern = {
         initialised_class: 'inject',
         markup_trigger: 'a.inject, a[data-inject], form.inject, form[data-inject]',
+        // XXX: unsupported
+        opts: {
+            "data-inject":
+            "source; target; replace; pre; post; append; prepend"
+        },
         supported_tags: ['a', 'form'], // XXX: unsupported
         init: init,
         content: content,
