@@ -38,7 +38,7 @@ define([
         
         // Enables contentEditable
         // FIX $form to whatever it should be 
-        $form.attr('contenteditable','true');
+        $('form').attr('contenteditable','true');
 
         // log editor control clicks
         $ctrls.find('button').on('click', function(ev) {
@@ -77,7 +77,11 @@ define([
             if(source) { document.execCommand('insertImage', false, source); }; 
         });
 
-
+        buttons.upload_image.on('click', function(ev) {
+            // The easiest way to do this here is to upload the content somewhere and then link
+            // with insertImage, LocalStorage.save then pushing the image data as a 
+            // multipart form is also an option
+        });
 
         var setstate = function(selection) {
             var markup = selection.markupEffectiveAtStart;
