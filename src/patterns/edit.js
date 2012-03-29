@@ -58,9 +58,6 @@ define([
         buttons.ol.on('click', function(ev) {
             Aloha.execCommand('insertorderedlist');
         });
-        buttons.ol.on('click', function(ev) {
-            Aloha.execCommand('insertorderedlist');
-        });
         buttons.ul.on('click', function(ev) {
             Aloha.execCommand('insertunorderedlist');
         });
