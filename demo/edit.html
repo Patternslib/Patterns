@@ -6,9 +6,8 @@
 		<link rel="stylesheet" href="../src/lib/aloha/src/css/aloha.css" type="text/css">
 		<script data-main="../src/main" src="../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
-	<body>
-		<form>
-			<div class="editor-ctrls">
+    <body>
+        <div class="editor-ctrls">
 				<fieldset>
 					<button title="Strong text" class="icon strong">Strong</button>
 					<button title="Emphasised text" class="icon emphasised">Emphasised</button>
@@ -18,7 +17,9 @@
 					<button title="Ordered list" class="icon list-ordered">Ordered list</button>
 				</fieldset>
 				<fieldset>
-					<button title="Insert media" class="icon media">Media</button>
+					<button title="Insert media" class="icon image_upload">Media (Link)</button>
+                    <button title="Insert media" class="icon image_link">Media   (Upload) </button>
+
 				</fieldset>
 				<fieldset>
 					<button class="icon paragraph">Paragraph</button>
@@ -28,6 +29,7 @@
 				</fieldset>
 			</div>
 
+		<form>
 			<h1>Rich Editor</h1>
 			<textarea id="edit1" class="edit">bla</textarea>
 			<div id="edit2" class="edit">
