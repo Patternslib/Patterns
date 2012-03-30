@@ -6,6 +6,7 @@ define([
     './patterns/aloha',
     './patterns/autosubmit',
     './patterns/collapsible',
+    './patterns/edit',
     './patterns/inject',
     './patterns/inject_log_old',
     './patterns/modal',
@@ -21,6 +22,7 @@ define([
         aloha: require('./patterns/aloha'),
         autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
+        edit: require('./patterns/edit'),
         inject: require('./patterns/inject'),
         inject_log_old: require('./patterns/inject_log_old'),
         modal: require('./patterns/modal')

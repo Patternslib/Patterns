@@ -8,6 +8,7 @@ require([
     '../src/patterns',
     'spec!./spec/aloha',
     'spec!./spec/collapsible',
+    'spec!./spec/edit',
     'spec!./spec/inject',
     'spec!./spec/modal',
     'spec!./spec/parser'
@@ -17,6 +18,7 @@ require([
         spec_names = [
             'aloha',
             'collapsible',
+            'edit',
             'inject',
             'modal',
             'parser'
