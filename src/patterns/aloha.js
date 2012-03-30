@@ -99,8 +99,8 @@ define([
     };
 
     var pattern = {
-        markup_trigger: 'form textarea.edit',
-        initialised_class: 'edit',
+        markup_trigger: 'form textarea.edit-aloha',
+        initialised_class: 'edit-aloha',
         init: init
     };
     return pattern;
