@@ -3,9 +3,9 @@ define([
     './lib/jquery',
     './logging',
     './patterns/ajaxify',
+    './patterns/aloha',
     './patterns/autosubmit',
     './patterns/collapsible',
-    './patterns/edit',
     './patterns/inject',
     './patterns/inject_log_old',
     './patterns/modal',
@@ -18,9 +18,9 @@ define([
 
     var plain_patterns = {
         ajaxify: require('./patterns/ajaxify'),
+        aloha: require('./patterns/aloha'),
         autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
-        edit: require('./patterns/edit'),
         inject: require('./patterns/inject'),
         inject_log_old: require('./patterns/inject_log_old'),
         modal: require('./patterns/modal')
