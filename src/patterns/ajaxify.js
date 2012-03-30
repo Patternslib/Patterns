@@ -77,7 +77,7 @@ define([
     };
 
     return {
-        markup_trigger: 'form, a.ajaxify',
+        markup_trigger: 'form.ajaxify, a.ajaxify',
         initialised_class: 'ajaxified',
         init: init
     };
