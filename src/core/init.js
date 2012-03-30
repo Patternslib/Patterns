@@ -661,14 +661,14 @@ var mapal = {
         "options": {
             search: {
                 click:[
-                       "a[rel^=#]",
-                       "a[rel^='.']",
-                       "a[data-injection^='.']",
-                       "a[data-injection^=#]"
+                       "a[rel^=#]:not(.record-history)",
+                       "a[rel^='.']:not(.record-history)",
+                       "a[data-injection^='.']:not(.record-history)",
+                       "a[data-injection^=#]:not(.record-history)"
                      ],
                 submit: [
-                      "form[data-injection^='.']",
-                      "form[data-injection^=#]"
+                      "form[data-injection^='.']:not(.record-history)",
+                      "form[data-injection^=#]:not(.record-history)"
                       ]
             }
         },
