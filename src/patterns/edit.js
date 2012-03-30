@@ -8,110 +8,148 @@ define([
     
     // Grab a element of the editor controls
     var init = function($el, opts) {
-        
         var $form    = $el.parents('form'),
             $ctrls   = $('.editor-ctrls'),
             buttons  = {};
-        
-        buttons.b                   = $ctrls.find('.strong');
-        buttons.bold                = $ctrls.find('.strong');
-        buttons.i                   = $ctrls.find('.emphasised');
-        buttons.italic              = $ctrls.find('.emphasised');
-        buttons.ol                  = $ctrls.find('.list-ordered');
-        buttons.insertorderedlist   = $ctrls.find('.list-ordered');
-        buttons.ul                  = $ctrls.find('.list-unordered');
-        buttons.insertunorderedlist = $ctrls.find('.list-unordered');
-        buttons.p                   = $ctrls.find('.paragraph');
-        buttons.insertparagraph     = $ctrls.find('.paragraph');
-        buttons.h1                  = $ctrls.find('.header_1');
-        buttons.inserth1            = $ctrls.find('.header_1');
-        buttons.h2                  = $ctrls.find('.header_2');
-        buttons.inserth2            = $ctrls.find('.header_2');
-        buttons.h3                  = $ctrls.find('.header_3');
-        buttons.inserth3            = $ctrls.find('.header_3');
-        buttons.upload_image        = $ctrls.find('.upload_image');
-        buttons.link_image          = $ctrls.find('.link_image');
-
+                
+ 
         // ensure form is ajaxified
         var ajaxify = require('../patterns').ajaxify.init;
         ajaxify($form);
+  
+        // I have taken the liberty of commenting out buttons
+        // that I believe serve no purpose, if they end up being
+        // critical, just uncomment.
         
-        // Enables contentEditable
-        // FIX $form to whatever it should be 
-        $('form').attr('contenteditable','true');
-
-        // log editor control clicks
-        $ctrls.find('button').on('click', function(ev) {
-            log.debug('clicked', $(ev.target), ev);
-        });
-
-        // execCommand is invoked upon a document
-        // the last selected contenteditable is what
-        // recieves the application of execution.
-      
-        // This would be better implemented as subclass of
-        // buttons I haven't researched how to implement singletons
-        // in javascript
-        buttons.b.on('click', function(ev) {
-            document.execCommand('bold');
-        });
+        // buttons.b                   = $ctrls.find('.strong');
+        buttons.bold                = $ctrls.find('.strong');
+        // buttons.i                   = $ctrls.find('.emphasised');
+        buttons.italic              = $ctrls.find('.emphasised');
+        // buttons.ol                  = $ctrls.find('.list-ordered');
+        buttons.insertorderedlist   = $ctrls.find('.list-ordered');
+        // buttons.ul                  = $ctrls.find('.list-unordered');
+        buttons.insertunorderedlist = $ctrls.find('.list-unordered');
+        //buttons.insertparagraph     = $ctrls.find('.paragraph');
+        buttons.clear               = $ctrls.find('.clear');
+        // buttons.h1                  = $ctrls.find('.header_1');
+        buttons.inserth1            = $ctrls.find('.header_1');
+        // buttons.h2                  = $ctrls.find('.header_2');
+        buttons.inserth2            = $ctrls.find('.header_2');
+        // buttons.h3                  = $ctrls.find('.header_3');
+        buttons.inserth3            = $ctrls.find('.header_3');
+        buttons.upload_image        = $ctrls.find('.upload_image');
+        buttons.link_image          = $ctrls.find('.link_image');
         
-        buttons.i.on('click', function(ev) {
-            document.execCommand('italic');
-        });
+        var button_handler = {
+                'bold'                  : function(){ document.execCommand('bold'); }, 
+                
+                'italic'                : function(){ document.execCommand('italic'); },
+                
+                'insertparagraph'       : function(){ return 0; },
+                
+                'insertorderedlist'     : function(){ document.execCommand('insertorderedlist'); },
+                
+                'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist'); },
+                
+                'inserth1'              : function(){ wrap_selection('h1') },
+                
+                'inserth2'              : function(){ wrap_selection('h2') },
+                
+                'inserth3'              : function(){ wrap_selection('h3') },
 
-        buttons.ol.on('click', function(ev) {
-            document.execCommand('insertorderedlist');
-        });
+                'clear'                 : function(){ 
+                                                var selection_node = $(window.getSelection().anchorNode);
+                                                document.execCommand('removeformat'); 
+                                                if (is_contenteditable(selection_node)) { 
+                                                    selection_node.unwrap(); 
+                                                    if (!$(selection_node).parent().is("p")) { 
+                                                        $(selection_node).wrap('<p>'); 
+                                                    }
+                                                }
+                                          },
+                
+                'upload_image'          : function(){ document.execCommand(); },
+
+                'link_image'            : function(){ 
+                                                var source = prompt('URL of Image');
+                                                if(source) { 
+                                                  document.execCommand('insertImage', false, source); 
+                                                }
+                                          }
+            };
         
-        buttons.ul.on('click', function(ev) {
-            document.execCommand('insertunorderedlist');
-        });
+
+        // utility method for determining if something is contenteditable
+        var is_contenteditable = function(element) {
+            mapped_elements = $(element).parents().map(function() {
+                            if ($(this).is("[contenteditable='true']")) {
+                                        return true;
+                            }
+                              }).get();
+            
+            // mapped_element[0] is the closest parent
+            // in the document tree -- If it's true
+            // the element will inherit contentEditable
+            if (mapped_elements[0]) { return true; }
+            return false;
+         }
         
-        buttons.p.on('click', function(ev) {
-            // the behavior of this differs greatly between browsers 
-            document.execCommand('insertparagraph');
-        });
-
-        //
-        // XXX: These don't work in the way you'd think
-        //  heading is another option but support is eh 
-        buttons.h1.on('click', function(ev) {
-            document.execCommand('formatblock', false, 'h1');
-        });
-        buttons.h2.on('click', function(ev) {
-            document.execCommand('formatblock', false, 'h2');
-        });
-        buttons.h3.on('click', function(ev) {
-            document.execCommand('formatblock', false, 'h2');
-        });
-        
-        buttons.link_image.on('click', function(ev) {
-            var source = prompt('URL of Image');
-            if(source) { document.execCommand('insertImage', false, source); }; 
-        });
-
-        buttons.upload_image.on('click', function(ev) {
-            // The easiest way to do this here is to upload the content somewhere and then link
-            // with insertImage, LocalStorage.save then pushing the image data as a 
-            // multipart form is also an option
-        });
-
-        var setstate = function(selection) {
-            var markup = selection.markupEffectiveAtStart;
-            if (!markup) return;
-            $ctrls.find('*').removeClass('selected');
-            $.each(markup, function(idx, el) {
-                var tag = el.nodeName.toLowerCase(),
-                    $button = buttons[tag];
-                if ($button) $button.addClass('selected');
-                log.debug('selected', tag);
-            });
+        // simply replaces
+        // rather than toggles, but 
+        // theres no reason you couldn't have
+        // it do both!
+        var wrap_selection = function(wrap_html){
+            var selection_node = $(window.getSelection().anchorNode);
+            if(is_contenteditable(selection_node)) { 
+                // You just want to unwrap if your
+                // parent is already selected
+                if(selection_node.parent().is(wrap_html)) { 
+                    selection_node.unwrap();
+                } 
+                else { 
+                    selection_node.wrap("<" + wrap_html + ">");
+                }
+            }
+            // wrap() normally breaks contentEditable
+            // this is a hacky replacement
+            selection_node.attr('contenteditable', true);
         };
-    };
+        
+        // lame helper that 
+        // toggles the class,
+        // triggers the handler
+        var button_click = function(element) {
+            buttons[element].toggleClass('selected'); 
+            button_handler[element]();
+        }
+ 
+        // bind click to button_click()/1
+        for (var key in buttons) {
+                buttons[key].click(function(element){
+                 return function() {
+                        log.debug('clicked', element); 
+                        button_click(element);
+                        };
+            }(key));
+        }
+
+        // Enables contentEditable
+        $('form').attr('contenteditable','true');
+       
+         var setstate = function(selection) {
+             var markup = selection.markupEffectiveAtStart;
+          if (!markup) return;
+             $ctrls.find('*').removeClass('selected');
+             $.each(markup, function(idx, el) {
+                 var tag = el.nodeName.toLowerCase(),
+                 $button = buttons[tag];
+                 if ($button) $button.addClass('selected');
+                 log.debug('selected', tag);
+             });
+         };
+     };
     
-    
-    var pattern = {
+     var pattern = {
         markup_trigger: 'form textarea.edit',
         initialised_class: 'edit',
         init: init
