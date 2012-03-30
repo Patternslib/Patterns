@@ -39,35 +39,35 @@ define([
         buttons.inserth3            = $ctrls.find('.header_3');
         buttons.upload_image        = $ctrls.find('.upload_image');
         buttons.link_image          = $ctrls.find('.link_image');
-
-        // This doesn't check if we're in a ContentEditable :S 
-        // It replaces headings rather than toggling as well,
-        // both of these are pretty easy fixes 
-        var wrap_selection = function(wrap_html){
-            var selection_node = $(window.getSelection().anchorNode);
-            selection_node.unwrap();
-            selection_node.wrap(wrap_html); 
-        };
         
-        // Just keeps a table of functions for handling different keys of buttons
         var button_handler = {
+                
                 'bold'                  : function(){ document.execCommand('bold'); }, 
+                
                 'italic'                : function(){ document.execCommand('italic'); },
+                
                 'insertparagraph'       : function(){ return 0; },
+                
                 'insertorderedlist'     : function(){ document.execCommand('insertorderedlist'); },
+                
                 'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist'); },
+                
                 'inserth1'              : function(){ wrap_selection('<h1>') },
+                
                 'inserth2'              : function(){ wrap_selection('<h2>') },
+                
                 'inserth3'              : function(){ wrap_selection('<h3>') },
 
                 'clear'                 : function(){ 
                                                 var selection_node = $(window.getSelection().anchorNode);
                                                 document.execCommand('removeformat'); 
-                                                if (!$(selection_node).parent().is("p")) { 
-                                                    $(selection_node).wrap('<p>'); 
+                                                if (is_contenteditable(selection_node)) { 
+                                                    if (!$(selection_node).parent().is("p")) { 
+                                                        $(selection_node).wrap('<p>'); 
+                                                    }
                                                 }
                                           },
-
+                
                 'upload_image'          : function(){ document.execCommand(); },
 
                 'link_image'            : function(){ 
@@ -77,7 +77,42 @@ define([
                                                 }
                                           }
             };
+        
 
+        // utility method for determining if something is contenteditable
+        var is_contenteditable = function(element) {
+            mapped_elements = $(element).parents().map(function() {
+                            if ($(this).is("[contenteditable='true']")) {
+                                        return true;
+                            }
+                              }).get();
+            
+            // mapped_element[0] is the closest parent
+            // in the document tree -- If it's true
+            // the element will inherit contentEditable
+            if (mapped_elements[0]) { return true; }
+            return false;
+         }
+        
+        // simply replaces
+        // rather than toggles, but 
+        // theres no reason you couldn't have
+        // it do both!
+        var wrap_selection = function(wrap_html){
+            var selection_node = $(window.getSelection().anchorNode);
+            if(is_contenteditable(selection_node)) { 
+                selection_node.unwrap();
+                selection_node.wrap(wrap_html);
+            }
+            // wrap() normally breaks contentEditable
+            // this is a hacky replacement
+            selection_node.attr('contenteditable', true);
+        };
+        
+        
+        // lame helper that 
+        // toggles the class,
+        // triggers the handler
         var button_click = function(element) {
             buttons[element].toggleClass('selected'); 
             button_handler[element]();
