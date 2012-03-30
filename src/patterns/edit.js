@@ -43,24 +43,33 @@ define([
         // This doesn't check if we're in a ContentEditable :S 
         // It replaces headings rather than toggling as well,
         // both of these are pretty easy fixes 
-        // - Zephyr
         var wrap_selection = function(wrap_html){
             var selection_node = $(window.getSelection().anchorNode);
             selection_node.unwrap();
             selection_node.wrap(wrap_html); 
         };
-
+        
+        // Just keeps a table of functions for handling different keys of buttons
         var button_handler = {
                 'bold'                  : function(){ document.execCommand('bold'); }, 
                 'italic'                : function(){ document.execCommand('italic'); },
-                'clear'                 : function(){ return 0; },
-                'insertparagraph'       ; function(){ return 0; },
+                'insertparagraph'       : function(){ return 0; },
                 'insertorderedlist'     : function(){ document.execCommand('insertorderedlist'); },
                 'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist'); },
                 'inserth1'              : function(){ wrap_selection('<h1>') },
                 'inserth2'              : function(){ wrap_selection('<h2>') },
                 'inserth3'              : function(){ wrap_selection('<h3>') },
+
+                'clear'                 : function(){ 
+                                                var selection_node = $(window.getSelection().anchorNode);
+                                                document.execCommand('removeformat'); 
+                                                if (!$(selection_node).parent().is("p")) { 
+                                                    $(selection_node).wrap('<p>'); 
+                                                }
+                                          },
+
                 'upload_image'          : function(){ document.execCommand(); },
+
                 'link_image'            : function(){ 
                                                 var source = prompt('URL of Image');
                                                 if(source) { 
@@ -77,16 +86,13 @@ define([
         // bind click to button_click()/1
         for (var key in buttons) {
                 buttons[key].click(function(element){
-                 // I'm returning within to generate
-                 // a closure so key doesn't end up 
-                 // capturing the last value of
-                 // buttons[]
                  return function() {
-                        log.debug(element); 
+                        log.debug('clicked', element); 
                         button_click(element);
                         };
             }(key));
         }
+
         // Enables contentEditable
         $('form').attr('contenteditable','true');
        
