@@ -41,7 +41,6 @@ define([
         buttons.link_image          = $ctrls.find('.link_image');
         
         var button_handler = {
-                
                 'bold'                  : function(){ document.execCommand('bold'); }, 
                 
                 'italic'                : function(){ document.execCommand('italic'); },
@@ -62,6 +61,7 @@ define([
                                                 var selection_node = $(window.getSelection().anchorNode);
                                                 document.execCommand('removeformat'); 
                                                 if (is_contenteditable(selection_node)) { 
+                                                    selection_node.unwrap(); 
                                                     if (!$(selection_node).parent().is("p")) { 
                                                         $(selection_node).wrap('<p>'); 
                                                     }
