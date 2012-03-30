@@ -51,11 +51,11 @@ define([
                 
                 'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist'); },
                 
-                'inserth1'              : function(){ wrap_selection('<h1>') },
+                'inserth1'              : function(){ wrap_selection('h1') },
                 
-                'inserth2'              : function(){ wrap_selection('<h2>') },
+                'inserth2'              : function(){ wrap_selection('h2') },
                 
-                'inserth3'              : function(){ wrap_selection('<h3>') },
+                'inserth3'              : function(){ wrap_selection('h3') },
 
                 'clear'                 : function(){ 
                                                 var selection_node = $(window.getSelection().anchorNode);
@@ -101,14 +101,19 @@ define([
         var wrap_selection = function(wrap_html){
             var selection_node = $(window.getSelection().anchorNode);
             if(is_contenteditable(selection_node)) { 
-                selection_node.unwrap();
-                selection_node.wrap(wrap_html);
+                // You just want to unwrap if your
+                // parent is already selected
+                if(selection_node.parent().is(wrap_html)) { 
+                    selection_node.unwrap();
+                } 
+                else { 
+                    selection_node.wrap("<" + wrap_html + ">");
+                }
             }
             // wrap() normally breaks contentEditable
             // this is a hacky replacement
             selection_node.attr('contenteditable', true);
         };
-        
         
         // lame helper that 
         // toggles the class,
