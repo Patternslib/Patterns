@@ -5,6 +5,7 @@ define([
     var change = {
         initContent: function(root) {
             $("[data-switch]", root).on("click", function() {
+                if ($(this).hasClass('leave-me-alone')) return;
                 var options = $(this).attr('data-switch').trim().split(/\s*;\s*/),
                     selector = options[0],
                     $targets = $(selector),
