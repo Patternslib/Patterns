@@ -13,7 +13,9 @@ define([
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
 
-        if ($el.hasClass('record-history')) return $el;
+        if ($el.hasClass('record-history')) {
+            return $el.addClass('leave-me-alone');
+        }
 
         // if the element referenced by href-next exists already,
         // point to it and disable injection
