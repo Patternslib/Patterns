@@ -4,7 +4,7 @@ define([
     '../logging',
     '../patterns'
 ], function(require) {
-    log = require('../logging').getLogger('edit');
+    var log = require('../logging').getLogger('edit');
 
     // Grab a element of the editor controls
     var init = function($el, opts) {
@@ -92,7 +92,7 @@ define([
             // the element will inherit contentEditable
             if (mapped_elements[0]) { return true; }
             return false;
-        }
+        };
 
         // simply replaces
         // rather than toggles, but
@@ -121,7 +121,7 @@ define([
         var button_click = function(element) {
             buttons[element].toggleClass('selected');
             button_handler[element]();
-        }
+        };
 
         // bind click to button_click()/1
         for (var key in buttons) {
