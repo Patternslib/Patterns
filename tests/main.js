@@ -6,6 +6,7 @@ require([
     '../lib/qunit',
     '../src/lib/dist/underscore',
     '../src/patterns',
+    'spec!./spec/aloha',
     'spec!./spec/collapsible',
     'spec!./spec/edit',
     'spec!./spec/inject',
@@ -15,6 +16,7 @@ require([
     var patterns = require('../src/patterns'),
         qunit = require('../lib/qunit'),
         spec_names = [
+            'aloha',
             'collapsible',
             'edit',
             'inject',
