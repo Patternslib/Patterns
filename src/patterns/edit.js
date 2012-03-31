@@ -38,6 +38,35 @@ define([
         return $edit;
     };
 
+    // utility method for determining if something is contenteditable
+    var is_contenteditable = function(el) {
+        return $(el).is("[contenteditable=true]") || (
+            $(el).parents("[contenteditable=true]").length > 0
+        );
+    };
+
+    // simply replaces
+    // rather than toggles, but
+    // theres no reason you couldn't have
+    // it do both!
+    var wrap_selection = function(wrap_html){
+        var selection_node = $(window.getSelection().anchorNode);
+        if(is_contenteditable(selection_node)) {
+            // You just want to unwrap if your
+            // parent is already selected
+            if(selection_node.parent().is(wrap_html)) {
+                selection_node.unwrap();
+            }
+            else {
+                selection_node.wrap("<" + wrap_html + ">");
+            }
+        }
+        // wrap() normally breaks contentEditable
+        // this is a hacky replacement
+        selection_node.attr('contenteditable', true);
+    };
+
+
     var init = function($el, opts) {
         var $edit = text2div($el);
 
@@ -82,34 +111,6 @@ define([
                     document.execCommand('insertImage', false, source);
                 }
             }
-        };
-
-        // utility method for determining if something is contenteditable
-        var is_contenteditable = function(el) {
-            return $(el).is("[contenteditable=true]") || (
-                $(el).parents("[contenteditable=true]").length > 0
-            );
-        };
-
-        // simply replaces
-        // rather than toggles, but
-        // theres no reason you couldn't have
-        // it do both!
-        var wrap_selection = function(wrap_html){
-            var selection_node = $(window.getSelection().anchorNode);
-            if(is_contenteditable(selection_node)) {
-                // You just want to unwrap if your
-                // parent is already selected
-                if(selection_node.parent().is(wrap_html)) {
-                    selection_node.unwrap();
-                }
-                else {
-                    selection_node.wrap("<" + wrap_html + ">");
-                }
-            }
-            // wrap() normally breaks contentEditable
-            // this is a hacky replacement
-            selection_node.attr('contenteditable', true);
         };
 
         // lame helper that
