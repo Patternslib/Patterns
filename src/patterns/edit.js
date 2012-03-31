@@ -67,17 +67,58 @@ define([
     };
 
 
+    /*
+     * controls and functions to handle them
+     */
+
+    var ctrls = {
+        bold: { selector: '.strong' },
+        italic: { selector: '.emphasised' },
+        insertorderedlist: { selector: '.list-ordered' },
+        insertunorderedlist: { selector: '.list-unordered' }
+    };
+
+    // generate a cmd function to be used as an event handler
+    var cmd = function(name, cmd, opts) {
+        opts = opts || {};
+        return function(ev) {
+            var $ctrl = $(ev.target);
+
+            // execute command and log about it
+            log.debug('exec:', name, 'triggered by', $ctrl);
+            document.execCommand(name, opts.showui || false, opts.val || '');
+
+            // remove selected if control is in a exclusive group
+            $ctrl.parents('.exclusive').each(function() {
+                $(this).find('.selected').each(function() {
+                    // don't remove selected for the clicked control
+                    // it is toggle later on
+                    if (this !== ev.target) $(this).removeClass('selected');
+                });
+            });
+
+            // toggle selected
+            $ctrl.toggleClass('selected');
+        };
+    };
+
+    var initctrls = function(selector) {
+        var $ctrls = $(selector);
+        for (var name in ctrls) {
+            var ctrl = ctrls[name],
+                $ctrl = $ctrls.find(ctrl.selector);
+            if ($ctrl.length === 0) continue;
+            log.debug('found control:', name, $ctrl);
+            $ctrl.on('click', cmd(name, ctrl));
+        }
+        return $ctrls;
+    };
+
     var init = function($el, opts) {
-        var $edit = text2div($el);
+        var $edit = text2div($el),
+            $ctrls = initctrls('.editor-controls');
 
-        var $ctrls   = $('.editor-controls'),
-            buttons  = {};
-
-        buttons.bold                = $ctrls.find('.strong');
-        buttons.italic              = $ctrls.find('.emphasised');
-        buttons.insertorderedlist   = $ctrls.find('.list-ordered');
-        buttons.insertunorderedlist = $ctrls.find('.list-unordered');
-        //buttons.insertparagraph     = $ctrls.find('.paragraph');
+        var buttons  = {};
         buttons.clear               = $ctrls.find('.clear');
         buttons.inserth1            = $ctrls.find('.header_1');
         buttons.inserth2            = $ctrls.find('.header_2');
@@ -86,11 +127,7 @@ define([
         buttons.link_image          = $ctrls.find('.link_image');
 
         var button_handler = {
-            'bold'                  : function(){ document.execCommand('bold', false, ''); },
-            'italic'                : function(){ document.execCommand('italic', false, ''); },
             'insertparagraph'       : function(){ return 0; },
-            'insertorderedlist'     : function(){ document.execCommand('insertorderedlist', false, ''); },
-            'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist', false, ''); },
             'inserth1'              : function(){ wrap_selection('h1') },
             'inserth2'              : function(){ wrap_selection('h2') },
             'inserth3'              : function(){ wrap_selection('h3') },
