@@ -5,15 +5,43 @@ define([
 ], function(require) {
     var log = require('../logging').getLogger('edit');
 
+    var text2div = function($el) {
+        // hide textarea
+        $el.hide();
+
+        // make sure textarea has an id
+        // XXX: generate something proper
+        var id = $el.attr('id');
+        if (!id) {
+            id = "my-id-that-should-be-replaced-by-something-unique";
+            $el.attr({id: id});
+        }
+
+        // create contenteditable div
+        var editid = 'edit-' + id,
+            $edit = $('<div id="' + editid + '" contenteditable="true"/>').insertAfter($el);
+        $edit.html($el.val());
+        $edit.attr({style: 'min-height: 50px'});
+
+        // ensure form is ajaxified and copy content back before serialize
+        var ajaxify = require('../patterns').ajaxify.init,
+            $form    = $el.parents('form');
+        ajaxify($form);
+        $form.on('form-pre-serialize', function() {
+            $el.html($edit.html());
+        });
+
+        return $edit;
+    };
+
     // Grab a element of the editor controls
     var init = function($el, opts) {
-        var $form    = $el.parents('form'),
-            $ctrls   = $('.editor-ctrls'),
+        // copy textarea content to div and hide textarea
+        var $edit = text2div($el);
+
+        var $ctrls   = $('.editor-ctrls'),
             buttons  = {};
 
-        // ensure form is ajaxified
-        var ajaxify = require('../patterns').ajaxify.init;
-        ajaxify($form);
 
         buttons.bold                = $ctrls.find('.strong');
         buttons.italic              = $ctrls.find('.emphasised');
