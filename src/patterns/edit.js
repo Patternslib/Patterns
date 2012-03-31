@@ -1,6 +1,5 @@
 define([
     'require',
-    '../lib/aloha-loader',
     '../logging',
     '../patterns'
 ], function(require) {
