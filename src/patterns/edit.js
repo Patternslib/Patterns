@@ -86,11 +86,11 @@ define([
         buttons.link_image          = $ctrls.find('.link_image');
 
         var button_handler = {
-            'bold'                  : function(){ document.execCommand('bold'); },
-            'italic'                : function(){ document.execCommand('italic'); },
+            'bold'                  : function(){ document.execCommand('bold', false, ''); },
+            'italic'                : function(){ document.execCommand('italic', false, ''); },
             'insertparagraph'       : function(){ return 0; },
-            'insertorderedlist'     : function(){ document.execCommand('insertorderedlist'); },
-            'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist'); },
+            'insertorderedlist'     : function(){ document.execCommand('insertorderedlist', false, ''); },
+            'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist', false, ''); },
             'inserth1'              : function(){ wrap_selection('h1') },
             'inserth2'              : function(){ wrap_selection('h2') },
             'inserth3'              : function(){ wrap_selection('h3') },
