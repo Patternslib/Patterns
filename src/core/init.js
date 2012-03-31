@@ -55,7 +55,7 @@ var mapal = {
 
     // Give the first input element with the autofocus class the focus
     initAutofocus: function(root) {
-        var $elements = $(":input.autofocus", root),
+        var $elements = $(":input.autofocus:not(.cant-touch-this)", root),
             i;
 
         for (i=0; i < $elements.length; i+=1) {
@@ -71,7 +71,7 @@ var mapal = {
 
     // A simple autocomplete pattern
     initAutocomplete: function(root) {
-          $("input.autocomplete", root).each(function() {
+          $("input.autocomplete:not(.cant-touch-this)", root).each(function() {
               var $input = $(this),
                   name = $input.attr("name"),
                   $storage;
@@ -257,7 +257,7 @@ var mapal = {
 
     // Support for superimposing labels on input elements
     initSuperImpose: function(root) {
-        $("label.superImpose", root).each(function() {
+        $("label.superImpose:not(.cant-touch-this)", root).each(function() {
             var $label = $(this),
                 forInput = $label.attr("for").replace(/([.\[\]])/g, "\\$1"),
                 $myInput = forInput ? $(":input#"+forInput+", .rich[id="+forInput+"]") : $(":input", this);
@@ -289,13 +289,17 @@ var mapal = {
 
     // Apply some standard markup transformations
     initTransforms: function(root) {
+        // record history disables mostly everything for now
+        $(".record-history", root).addClass('cant-touch-this');
+        $(root).is(".record-history") && $(root).addClass('cant-touch-this');
+
         $(".jsOnly", root).show();
 
-        $("legend", root).each(function() {
+        $("legend:not(.cant-touch-this)", root).each(function() {
             $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
         });
 
-        $("label dfn.infoPanel", root).each(function() {
+        $("label dfn.infoPanel:not(.cant-touch-this)", root).each(function() {
             var $panel = $(this),
                 $label = $panel.closest("label"),
                 $body = $("body"),
@@ -311,7 +315,7 @@ var mapal = {
 
     // Manage open/close/hasChild classes for a ul-based menu tree
     initMenu: function(root) {
-        $("ul.menu").each(function() {
+        $("ul.menu:not(.cant-touch-this)").each(function() {
             var $menu = $(this),
                 timer,
                 closeMenu, openMenu,
@@ -661,14 +665,14 @@ var mapal = {
         "options": {
             search: {
                 click:[
-                       "a[rel^=#]:not(.record-history)",
-                       "a[rel^='.']:not(.record-history)",
-                       "a[data-injection^='.']:not(.record-history)",
-                       "a[data-injection^=#]:not(.record-history)"
+                       "a[rel^=#]:not(.cant-touch-this)",
+                       "a[rel^='.']:not(.cant-touch-this)",
+                       "a[data-injection^='.']:not(.cant-touch-this)",
+                       "a[data-injection^=#]:not(.cant-touch-this)"
                      ],
                 submit: [
-                      "form[data-injection^='.']:not(.record-history)",
-                      "form[data-injection^=#]:not(.record-history)"
+                      "form[data-injection^='.']:not(.cant-touch-this)",
+                      "form[data-injection^=#]:not(.cant-touch-this)"
                       ]
             }
         },
@@ -919,7 +923,7 @@ var mapal = {
 
     initAutoLoads: function( root ) {
         // find all autoloads
-        $(root).find('.autoLoading-visible').each(function() {
+        $(root).find('.autoLoading-visible:not(.cant-touch-this)').each(function() {
             var $autoload = $(this),
                 $scrollable = $autoload.parents(":scrollable");
 
