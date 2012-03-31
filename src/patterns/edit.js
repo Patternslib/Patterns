@@ -5,6 +5,10 @@ define([
 ], function(require) {
     var log = require('../logging').getLogger('edit');
 
+    // create a div after the textarea
+    // copy the textarea's content unquoted to the div
+    // hide the textarea
+    // copy content back before form is serialized
     var text2div = function($el) {
         // hide textarea
         $el.hide();
@@ -34,14 +38,11 @@ define([
         return $edit;
     };
 
-    // Grab a element of the editor controls
     var init = function($el, opts) {
-        // copy textarea content to div and hide textarea
         var $edit = text2div($el);
 
         var $ctrls   = $('.editor-ctrls'),
             buttons  = {};
-
 
         buttons.bold                = $ctrls.find('.strong');
         buttons.italic              = $ctrls.find('.emphasised');
@@ -57,21 +58,13 @@ define([
 
         var button_handler = {
             'bold'                  : function(){ document.execCommand('bold'); },
-
             'italic'                : function(){ document.execCommand('italic'); },
-
             'insertparagraph'       : function(){ return 0; },
-
             'insertorderedlist'     : function(){ document.execCommand('insertorderedlist'); },
-
             'insertunorderedlist'   : function(){ document.execCommand('insertunorderedlist'); },
-
             'inserth1'              : function(){ wrap_selection('h1') },
-
             'inserth2'              : function(){ wrap_selection('h2') },
-
             'inserth3'              : function(){ wrap_selection('h3') },
-
             'clear'                 : function(){
                 var selection_node = $(window.getSelection().anchorNode);
                 document.execCommand('removeformat');
@@ -82,9 +75,7 @@ define([
                     }
                 }
             },
-
             'upload_image'          : function(){ document.execCommand(); },
-
             'link_image'            : function(){
                 var source = prompt('URL of Image');
                 if(source) {
@@ -92,7 +83,6 @@ define([
                 }
             }
         };
-
 
         // utility method for determining if something is contenteditable
         var is_contenteditable = function(element) {
