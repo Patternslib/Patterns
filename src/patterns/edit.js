@@ -72,21 +72,33 @@ define([
      */
 
     var ctrls = {
-        bold: { selector: '.strong' },
-        italic: { selector: '.emphasised' },
-        insertorderedlist: { selector: '.list-ordered' },
-        insertunorderedlist: { selector: '.list-unordered' }
+        b: {
+            cmd: 'bold',
+            selector: '.strong'
+        },
+        i: {
+            cmd: 'italic',
+            selector: '.emphasised'
+        },
+        ol: {
+            cmd: 'insertorderedlist',
+            selector: '.list-ordered'
+        },
+        ul: {
+            cmd: 'insertunorderedlist',
+            selector: '.list-unordered'
+        }
     };
 
     // generate a cmd function to be used as an event handler
-    var cmd = function(name, cmd, opts) {
+    var cmd = function(ctrl, opts) {
         opts = opts || {};
         return function(ev) {
             var $ctrl = $(ev.target);
 
             // execute command and log about it
-            log.debug('exec:', name, 'triggered by', $ctrl);
-            document.execCommand(name, opts.showui || false, opts.val || '');
+            log.debug('exec:', ctrl.cmd, 'triggered by', $ctrl);
+            document.execCommand(ctrl.cmd, opts.showui || false, opts.val || '');
 
             // remove selected if control is in a exclusive group
             $ctrl.parents('.exclusive').each(function() {
@@ -104,12 +116,12 @@ define([
 
     var initctrls = function(selector) {
         var $ctrls = $(selector);
-        for (var name in ctrls) {
-            var ctrl = ctrls[name],
+        for (var tag in ctrls) {
+            var ctrl = ctrls[tag],
                 $ctrl = $ctrls.find(ctrl.selector);
             if ($ctrl.length === 0) continue;
-            log.debug('found control:', name, $ctrl);
-            $ctrl.on('click', cmd(name, ctrl));
+            log.debug('found control:', tag, $ctrl);
+            $ctrl.on('click', cmd(ctrl));
         }
         return $ctrls;
     };
