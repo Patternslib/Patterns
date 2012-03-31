@@ -24,6 +24,7 @@ define([
         // create contenteditable div
         var editid = 'edit-' + id,
             $edit = $('<div id="' + editid + '" contenteditable="true"/>').insertAfter($el);
+        // XXX: filter to avoid scripting attacks
         $edit.html($el.val());
         $edit.attr({style: 'min-height: 50px'});
 
