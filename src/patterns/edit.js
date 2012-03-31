@@ -131,9 +131,6 @@ define([
             }(key));
         }
 
-        // Enables contentEditable
-        $('form').attr('contenteditable','true');
-
         var setstate = function(selection) {
             var markup = selection.markupEffectiveAtStart;
             if (!markup) return;
