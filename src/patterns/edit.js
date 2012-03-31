@@ -91,7 +91,7 @@ define([
     };
 
     // generate a cmd function to be used as an event handler
-    var cmd = function(ctrl, opts) {
+    var cmdfn = function(ctrl, opts) {
         opts = opts || {};
         return function(ev) {
             var $ctrl = $(ev.target);
@@ -121,14 +121,33 @@ define([
                 $ctrl = $ctrls.find(ctrl.selector);
             if ($ctrl.length === 0) continue;
             log.debug('found control:', tag, $ctrl);
-            $ctrl.on('click', cmd(ctrl));
+            $ctrl.on('click', cmdfn(ctrl));
         }
         return $ctrls;
     };
 
+    var updatectrls = function($ctrls) {
+        // unselect all controls - XXX: is there seriously no better way?
+        //$ctrls.find('.selected').removeClass('selected');
+
+        for (var tag in ctrls) {
+            var ctrl = ctrls[tag];
+            $ctrls.find(ctrl.selector)[
+                document.queryCommandState(ctrl.cmd)
+                    ? 'addClass'
+                    : 'removeClass'
+            ]('selected');
+        }
+    };
+
+
     var init = function($el, opts) {
         var $edit = text2div($el),
             $ctrls = initctrls('.editor-controls');
+
+        $edit.on('keyup mouseup', function() {
+            updatectrls($ctrls);
+        });
 
         var buttons  = {};
         buttons.clear               = $ctrls.find('.clear');
@@ -180,17 +199,6 @@ define([
             }(key));
         }
 
-        var setstate = function(selection) {
-            var markup = selection.markupEffectiveAtStart;
-            if (!markup) return;
-            $ctrls.find('*').removeClass('selected');
-            $.each(markup, function(idx, el) {
-                var tag = el.nodeName.toLowerCase(),
-                    $button = buttons[tag];
-                if ($button) $button.addClass('selected');
-                log.debug('selected', tag);
-            });
-        };
     };
 
     var pattern = {
