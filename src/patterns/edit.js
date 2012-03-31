@@ -11,30 +11,18 @@ define([
             $ctrls   = $('.editor-ctrls'),
             buttons  = {};
 
-
         // ensure form is ajaxified
         var ajaxify = require('../patterns').ajaxify.init;
         ajaxify($form);
 
-        // I have taken the liberty of commenting out buttons
-        // that I believe serve no purpose, if they end up being
-        // critical, just uncomment.
-
-        // buttons.b                   = $ctrls.find('.strong');
         buttons.bold                = $ctrls.find('.strong');
-        // buttons.i                   = $ctrls.find('.emphasised');
         buttons.italic              = $ctrls.find('.emphasised');
-        // buttons.ol                  = $ctrls.find('.list-ordered');
         buttons.insertorderedlist   = $ctrls.find('.list-ordered');
-        // buttons.ul                  = $ctrls.find('.list-unordered');
         buttons.insertunorderedlist = $ctrls.find('.list-unordered');
         //buttons.insertparagraph     = $ctrls.find('.paragraph');
         buttons.clear               = $ctrls.find('.clear');
-        // buttons.h1                  = $ctrls.find('.header_1');
         buttons.inserth1            = $ctrls.find('.header_1');
-        // buttons.h2                  = $ctrls.find('.header_2');
         buttons.inserth2            = $ctrls.find('.header_2');
-        // buttons.h3                  = $ctrls.find('.header_3');
         buttons.inserth3            = $ctrls.find('.header_3');
         buttons.upload_image        = $ctrls.find('.upload_image');
         buttons.link_image          = $ctrls.find('.link_image');
