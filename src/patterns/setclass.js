@@ -95,7 +95,7 @@ define([
 
         handleClick: function(event) {
             var $this = $(this);
-            if ($this.hasClass('cant-touch-this')) return;
+            if ($this.hasClass('leave-me-alone')) return;
             var params = utils.extractParameters('!' + $this.attr('data-setclass'));
 
             setclass.execute($this, '', '', params, event);
