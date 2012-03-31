@@ -6,8 +6,9 @@
 		<link rel="stylesheet" href="../src/lib/aloha/src/css/aloha.css" type="text/css">
 		<script data-main="../src/main" src="../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
-    <body>
-        <div class="editor-ctrls">
+	<body>
+		<form>
+			<div class="editor-ctrls">
 				<fieldset>
 					<button title="Strong text" class="icon strong">Strong</button>
 					<button title="Emphasised text" class="icon emphasised">Emphasised</button>
@@ -17,22 +18,19 @@
 					<button title="Ordered list" class="icon list-ordered">Ordered list</button>
 				</fieldset>
 				<fieldset>
-					<button title="Insert media" class="icon image_upload">Media (Link)</button>
-                    <button title="Insert media" class="icon image_link">Media   (Upload) </button>
-
+					<button title="Insert media" class="icon media">Media</button>
 				</fieldset>
 				<fieldset>
-					<button class="icon clear">Clear</button>
-					<button class="icon header_1">Header 1</button>
-					<button class="icon header_2">Header 2</button>
-					<button class="icon header_3">Header 3</button>
+					<button class="icon paragraph">Paragraph</button>
+					<button class="icon h1">Header 1</button>
+					<button class="icon h2">Header 2</button>
+					<button class="icon h3">Header 3</button>
 				</fieldset>
 			</div>
 
-		<form>
 			<h1>Rich Editor</h1>
-			<textarea id="edit1" class="edit">bla</textarea>
-			<div id="edit2" class="edit">
+			<textarea id="edit1" class="edit-aloha">bla</textarea>
+			<div id="edit2" class="edit-aloha">
 				<h3>Some structure to be edited</h3>
 				<p>
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
@@ -42,8 +40,8 @@
 				</p>
 			</div>
 			<!--
-					<textarea class="edit allow-p-ul-ol-h1-h2-h3">bla</textarea>
-					<textarea class="edit" data-allow="p-ul-ol-h1-h2-h3">bla</textarea>
+					<textarea class="edit-aloha allow-p-ul-ol-h1-h2-h3">bla</textarea>
+					<textarea class="edit-aloha" data-allow="p-ul-ol-h1-h2-h3">bla</textarea>
 					-->
 		</form>
 	</body>
