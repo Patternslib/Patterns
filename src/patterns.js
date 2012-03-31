@@ -49,7 +49,7 @@ define([
             var pattern = patterns[name],
                 trigger = pattern.markup_trigger;
             if (!trigger) continue;
-            trigger = trigger.split(',').map(function(idx, el) {
+            trigger = trigger.split(',').map(function(el, idx) {
                 return el + ':not(.cant-touch-this)';
             }).join(',');
             if ($content.is(trigger)) pattern.init($content, opts);
