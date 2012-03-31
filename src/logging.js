@@ -28,7 +28,7 @@ define([
         var hasobjects = false;
         loggingEvent.messages = $.map(loggingEvent.messages, function(item) {
             if ($.isPlainObject(item)) hasobjects = true;
-            if (item.jquery) {
+            if (item && item.jquery) {
                 hasobjects = true;
                 item = item.clone();
             }
