@@ -41,7 +41,7 @@ define([
     var init = function($el, opts) {
         var $edit = text2div($el);
 
-        var $ctrls   = $('.editor-ctrls'),
+        var $ctrls   = $('.editor-controls'),
             buttons  = {};
 
         buttons.bold                = $ctrls.find('.strong');
