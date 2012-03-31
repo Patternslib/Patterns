@@ -85,18 +85,10 @@ define([
         };
 
         // utility method for determining if something is contenteditable
-        var is_contenteditable = function(element) {
-            mapped_elements = $(element).parents().map(function() {
-                if ($(this).is("[contenteditable='true']")) {
-                    return true;
-                }
-            }).get();
-
-            // mapped_element[0] is the closest parent
-            // in the document tree -- If it's true
-            // the element will inherit contentEditable
-            if (mapped_elements[0]) { return true; }
-            return false;
+        var is_contenteditable = function(el) {
+            return $(el).is("[contenteditable=true]") || (
+                $(el).parents("[contenteditable=true]").length > 0
+            );
         };
 
         // simply replaces
