@@ -27,19 +27,19 @@ define([
 
     // register our patterns
     // rethink naming once all patterns are migrated to this style
-    mapal.passivePatterns.change = require('./patterns/oldstyle/change');
-    mapal.passivePatterns.fullcalendar = require('./patterns/oldstyle/fullcalendar');
-    mapal.passivePatterns.toggle = require('./patterns/oldstyle/toggle');
-    mapal.passivePatterns.tooltip = require('./patterns/oldstyle/tooltip');
+    mapal.passivePatterns.change = require('./patterns/change');
+    mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
+    mapal.passivePatterns.toggle = require('./patterns/toggle');
+    mapal.passivePatterns.tooltip = require('./patterns/tooltip');
 
     // Register as active pattern to prevent errors on clicks.
     // XXX: hack, what does this do?
     mapal.patterns.tooltip = { execute: function() {} };
-    mapal.patterns.fancybox = require('./patterns/oldstyle/fancybox');
-    mapal.patterns.floatingPanelContextual = require('./patterns/oldstyle/floatingpanel');
-    mapal.patterns.modal = require('./patterns/oldstyle/modal');
-    mapal.patterns.selfHealing = require('./patterns/oldstyle/selfhealing');
-    mapal.patterns.setclass = require('./patterns/oldstyle/setclass');
+    mapal.patterns.fancybox = require('./patterns/fancybox');
+    mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
+    mapal.patterns.modal = require('./patterns/old_modal');
+    mapal.patterns.selfHealing = require('./patterns/selfhealing');
+    mapal.patterns.setclass = require('./patterns/setclass');
 
     // new-style patterns
     mapal.newstyle = require('./patterns');
