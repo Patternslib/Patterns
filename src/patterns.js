@@ -50,7 +50,7 @@ define([
                 trigger = pattern.markup_trigger;
             if (!trigger) continue;
             trigger = trigger.split(',').map(function(idx, el) {
-                return el + ':not(.cant-touch-this';
+                return el + ':not(.cant-touch-this)';
             }).join(',');
             if ($content.is(trigger)) pattern.init($content, opts);
             $content.find(trigger).each(function() { pattern.init($(this), opts); });
