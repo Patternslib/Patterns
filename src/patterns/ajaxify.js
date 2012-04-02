@@ -17,7 +17,7 @@ define([
 
         // ajaxify form
         if ($el.is('form')) {
-            if ($el.attr('method').toLowerCase() === 'get') {
+            if (($el.attr('method') || '').toLowerCase() === 'get') {
                 log.warn('Ignoring form method GET, enforcing POST');
             }
             $el.ajaxForm({
