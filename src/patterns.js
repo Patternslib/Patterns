@@ -6,6 +6,7 @@ define([
     './patterns/autosubmit',
     './patterns/collapsible',
     './patterns/edit',
+//    './patterns/edit-aloha',
     './patterns/inject',
     './patterns/inject_log_old',
     './patterns/modal',
@@ -21,6 +22,7 @@ define([
         autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
         edit: require('./patterns/edit'),
+//        "edit-aloha": require('./patterns/edit-aloha'),
         inject: require('./patterns/inject'),
         inject_log_old: require('./patterns/inject_log_old'),
         modal: require('./patterns/modal')
@@ -47,6 +49,9 @@ define([
             var pattern = patterns[name],
                 trigger = pattern.markup_trigger;
             if (!trigger) continue;
+            trigger = trigger.split(',').map(function(el, idx) {
+                return el + ':not(.cant-touch-this)';
+            }).join(',');
             if ($content.is(trigger)) pattern.init($content, opts);
             $content.find(trigger).each(function() { pattern.init($(this), opts); });
         }

@@ -1,6 +1,7 @@
 define([
     'require',
     '../core/parser',
+    '../lib/dist/underscore',
     '../lib/jquery',
     '../lib/jquery.form/jquery.form',
     '../logging',
@@ -27,21 +28,35 @@ define([
 
         // inject in case of successfull ajax request
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
-            log.debug('starting on', $el);
             // retrieve href and split into url and default srcid
             var href = ($el.is('form')
                         ? $el.attr('action')
                         : $el.attr('href')).split('#'),
                 srcid = href[1];
+
+            if (href[0] !== ajaxopts.url) {
+                log.debug('ignoring ajax event', ajaxopts.url, href[0]);
+                return;
+            }
+            log.debug('starting on', $el);
+
             if (href.length > 2) {
                 log.warn('Ignoring additional source ids:', href.slice(2), $el);
             }
 
-            // set default source id and parse opts
-            var defaults = { source: srcid && ('#' + srcid) },
-                opts_str = $el.attr('data-inject') || "",
-                opts = parser.parse(opts_str, defaults),
-                callback;
+            // fetch defaults from parents
+            var defaults = _.reduce(
+                $el.parents('[data-inject-defaults]').toArray().reverse(),
+                function(acc, el) {
+                    var opts_str = $(el).attr('data-inject-defaults');
+                    return parser.parse(opts_str, acc);
+                }, {}
+            );
+
+            if (srcid) defaults.source = '#' + srcid;
+
+            var opts_str = $el.attr('data-inject') || "",
+                opts = parser.parse(opts_str, defaults);
 
             // default: replace targets content with sources content
             var method_name = "content";
@@ -177,7 +192,10 @@ define([
                 .replace(/<\/body(.*)>/gi,'</div>');
             var $sources = $('<div/>').html(data).find(opts.source);
 
-            if ($sources.length === 0) log.error('Sources are empty for selector:', opts.source);
+            if ($sources.length === 0) {
+                log.error('Sources are empty for selector:', opts.source);
+                return;
+            }
 
             if (modal) {
                 var $modal = $('<div id="modal" class="modal" />');
@@ -213,6 +231,11 @@ define([
     var pattern = {
         initialised_class: 'inject',
         markup_trigger: 'a.inject, a[data-inject], form.inject, form[data-inject]',
+        // XXX: unsupported
+        opts: {
+            "data-inject":
+            "source; target; replace; pre; post; append; prepend"
+        },
         supported_tags: ['a', 'form'], // XXX: unsupported
         init: init,
         content: content,
