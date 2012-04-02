@@ -49,8 +49,9 @@ define([
     });
 
     // wait for the DOM to be ready and initialize
-    var doc = require('domReady!');
-    mapal.init();
-    mapal.initContent(doc.body);
-    $(doc).trigger("setupFinished", doc);
+    $(document).ready(function(){
+        mapal.init();
+        mapal.initContent(document.body);
+    });
+    $(document).trigger("setupFinished", document);
 });
