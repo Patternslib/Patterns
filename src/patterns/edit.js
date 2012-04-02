@@ -156,9 +156,9 @@ define([
         var $edit = text2div($el),
             $ctrls = initctrls('.editor-controls');
 
-        $edit.on('keyup mouseup', function() {
-            updatectrls($ctrls);
-        });
+        // $edit.on('keyup mouseup', function() {
+        //     updatectrls($ctrls);
+        // });
 
         var buttons  = {};
         buttons.clear               = $ctrls.find('.clear');
