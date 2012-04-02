@@ -28,12 +28,18 @@ define([
 
         // inject in case of successfull ajax request
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
-            log.debug('starting on', $el);
             // retrieve href and split into url and default srcid
             var href = ($el.is('form')
                         ? $el.attr('action')
                         : $el.attr('href')).split('#'),
                 srcid = href[1];
+
+            if (href[0] !== ajaxopts.url) {
+                log.debug('ignoring ajax event', ajaxopts.url, href[0]);
+                return;
+            }
+            log.debug('starting on', $el);
+
             if (href.length > 2) {
                 log.warn('Ignoring additional source ids:', href.slice(2), $el);
             }
@@ -186,7 +192,10 @@ define([
                 .replace(/<\/body(.*)>/gi,'</div>');
             var $sources = $('<div/>').html(data).find(opts.source);
 
-            if ($sources.length === 0) log.error('Sources are empty for selector:', opts.source);
+            if ($sources.length === 0) {
+                log.error('Sources are empty for selector:', opts.source);
+                return;
+            }
 
             if (modal) {
                 var $modal = $('<div id="modal" class="modal" />');
