@@ -13,7 +13,11 @@ define([
             return false;
         }
 
-        var url = ($el.attr('action') || $el.attr('href')).split('#')[0];
+        var url = ($el.attr('action') || $el.attr('href') || '').split('#')[0];
+        if (!url) {
+            log.error('Element has neither action nor href', $el);
+            return false;
+        }
 
         // ajaxify form
         if ($el.is('form')) {
