@@ -13,8 +13,17 @@ define([
             return false;
         }
 
+        var url = ($el.attr('action') || $el.attr('href') || '').split('#')[0];
+        if (!url) {
+            log.error('Element has neither action nor href', $el);
+            return false;
+        }
+
         // ajaxify form
         if ($el.is('form')) {
+            if (($el.attr('method') || '').toLowerCase() === 'get') {
+                log.warn('Ignoring form method GET, enforcing POST');
+            }
             $el.ajaxForm({
                 context: $el,
                 // in plone we use this to figure out whether a form is
@@ -22,23 +31,29 @@ define([
                 // XXX: consider setting this via $.ajaxSetup in a
                 // specific application
                 data: {submit: "submit"},
-                type: $el.attr('method') || 'POST',
-                url: $el.attr('action')
+                // enforce POST, as we compare the url to figure out
+                // who was triggered
+                //type: $el.attr('method') || 'POST',
+                type: 'POST',
+                url: url
             });
         } else {
             $el.on('click.ajaxify', function(ev, opts) {
                 ev.preventDefault();
                 $.ajax({
                     context: $el,
-                    url: $el.attr('href')
+                    url: url
                 });
             });
         }
 
-        $el.ajaxError(function(ev, jqxhr, opts, error) {
-            log.debug('error', ev, jqxhr, opts, error);
+        $el.ajaxError(function(ev, jqxhr, ajaxopts, error) {
             // ajaxHandlers are global, we are only interested in our form
-            if (!(ev.target === $el[0])) return;
+            if (url !== ajaxopts.url) {
+                log.debug('ignoring ajax event', ajaxopts.url, url);
+                return;
+            }
+            log.debug('error', ev, jqxhr, opts, error);
 
             // XXX: this needs to be solved differently
             var msg = [jqxhr.status, jqxhr.statusText, error, opts.url].join(' '),
@@ -51,11 +66,14 @@ define([
             inject.append($error, $('body'));
         });
 
-        $el.ajaxSuccess(function(ev, jqxhr, opts, data) {
-            log.debug('success', ev, jqxhr, opts);
+        $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
             // ajaxHandlers are global, we are only interested in our form
             // XXX: figure out how much of this is true with a multi-form test
-            if (!(ev.target === $el[0])) return;
+            if (url !== ajaxopts.url) {
+                log.debug('ignoring ajax event', ajaxopts.url, url);
+                return;
+            }
+            log.debug('success', ev, jqxhr, opts);
 
             // XXX: this needs to be solved differently
             if (!data) return;

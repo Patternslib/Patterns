@@ -1,104 +1,215 @@
 define([
     'require',
-    '../lib/aloha-loader',
     '../logging',
     '../patterns'
 ], function(require) {
-    var Aloha = window.Aloha,
-        log = require('../logging').getLogger('edit');
+    var log = require('../logging').getLogger('edit');
 
-    // var buttons = {
-    //     emphasise: "i",
-    //     strong: "b",
-    //     "list-ordered": ["<ol />", "<li />"],
-    //     "list-unordered": ["<ul />", "<li />"],
-    //     paragraph: "p",
-    //     h1: "h1",
-    //     h2: "h2",
-    //     h3: "h3"
-    // };
+    // create a div after the textarea
+    // copy the textarea's content unquoted to the div
+    // hide the textarea
+    // copy content back before form is serialized
+    var text2div = function($el) {
+        // hide textarea
+        $el.hide();
+
+        // make sure textarea has an id
+        // XXX: generate something proper
+        var id = $el.attr('id');
+        if (!id) {
+            id = "my-id-that-should-be-replaced-by-something-unique";
+            $el.attr({id: id});
+        }
+
+        // create contenteditable div
+        var editid = 'edit-' + id,
+            $edit = $('<div id="' + editid + '" contenteditable="true"/>').insertAfter($el);
+        // XXX: filter to avoid scripting attacks
+        $edit.html($el.val());
+        $edit.attr({style: 'min-height: 50px'});
+
+        // ensure form is ajaxified and copy content back before serialize
+        var ajaxify = require('../patterns').ajaxify.init,
+            $form    = $el.parents('form');
+        ajaxify($form);
+        $form.on('form-pre-serialize', function() {
+            $el.html($edit.html());
+        });
+
+        return $edit;
+    };
+
+    // utility method for determining if something is contenteditable
+    var is_contenteditable = function(el) {
+        return $(el).is("[contenteditable=true]") || (
+            $(el).parents("[contenteditable=true]").length > 0
+        );
+    };
+
+    // simply replaces
+    // rather than toggles, but
+    // theres no reason you couldn't have
+    // it do both!
+    var wrap_selection = function(wrap_html){
+        var selection_node = $(window.getSelection().anchorNode);
+        if(is_contenteditable(selection_node)) {
+            // You just want to unwrap if your
+            // parent is already selected
+            if(selection_node.parent().is(wrap_html)) {
+                selection_node.unwrap();
+            }
+            else {
+                selection_node.wrap("<" + wrap_html + ">");
+            }
+        }
+        // wrap() normally breaks contentEditable
+        // this is a hacky replacement
+        selection_node.attr('contenteditable', true);
+    };
+
+
+    /*
+     * controls and functions to handle them
+     */
+
+    var ctrls = {
+        strong: {
+            cmd: function() {
+                var selection = window.getSelection(),
+                    range = selection.getRangeAt(0);
+                log.debug($(selection.anchorNode), selection.anchorOffset, log.debug(selection.isCollapsed));
+                log.debug($(range.startContainer), range.startOffset);
+                log.debug($(range.endContainer), range.endOffset, range.collapsed);
+            },
+            selector: '.strong'
+        },
+        i: {
+            cmd: 'italic',
+            selector: '.emphasised'
+        },
+        ol: {
+            cmd: 'insertorderedlist',
+            selector: '.list-ordered'
+        },
+        ul: {
+            cmd: 'insertunorderedlist',
+            selector: '.list-unordered'
+        }
+    };
+
+    // generate a cmd function to be used as an event handler
+    var cmdfn = function(ctrl, opts) {
+        opts = opts || {};
+        return function(ev) {
+            var $ctrl = $(ev.target);
+
+            if ($.isFunction(ctrl.cmd)) {
+                ctrl.cmd();
+            } else {
+                // execute command and log about it
+                log.debug('exec:', ctrl.cmd, 'triggered by', $ctrl);
+                document.execCommand(ctrl.cmd, opts.showui || false, opts.val || '');
+            }
+
+            // remove selected if control is in a exclusive group
+            $ctrl.parents('.exclusive').each(function() {
+                $(this).find('.selected').each(function() {
+                    // don't remove selected for the clicked control
+                    // it is toggle later on
+                    if (this !== ev.target) $(this).removeClass('selected');
+                });
+            });
+
+            // toggle selected
+            $ctrl.toggleClass('selected');
+        };
+    };
+
+    var initctrls = function(selector) {
+        var $ctrls = $(selector);
+        for (var tag in ctrls) {
+            var ctrl = ctrls[tag],
+                $ctrl = $ctrls.find(ctrl.selector);
+            if ($ctrl.length === 0) continue;
+            log.debug('found control:', tag, $ctrl);
+            $ctrl.on('click', cmdfn(ctrl));
+        }
+        return $ctrls;
+    };
+
+    var updatectrls = function($ctrls) {
+        // unselect all controls - XXX: is there seriously no better way?
+        //$ctrls.find('.selected').removeClass('selected');
+
+        for (var tag in ctrls) {
+            var ctrl = ctrls[tag];
+            $ctrls.find(ctrl.selector)[
+                document.queryCommandState(ctrl.cmd)
+                    ? 'addClass'
+                    : 'removeClass'
+            ]('selected');
+        }
+    };
+
 
     var init = function($el, opts) {
-        // find editor controls
-        var $form = $el.parents('form'),
-            $ctrls = $('.editor-controls'),
-            buttons = {};
+        var $edit = text2div($el),
+            $ctrls = initctrls('.editor-controls');
 
-        buttons.b = $ctrls.find('.strong');
-        buttons.bold = $ctrls.find('.strong');
-        buttons.i = $ctrls.find('.emphasised');
-        buttons.italic = $ctrls.find('.emphasised');
-        buttons.ol = $ctrls.find('.list-ordered');
-        buttons.insertorderedlist = $ctrls.find('.list-ordered');
-        buttons.ul = $ctrls.find('.list-unordered');
-        buttons.insertunorderedlist = $ctrls.find('.list-unordered');
-        buttons.p = $ctrls.find('.paragraph');
-        buttons.insertparagraph = $ctrls.find('.paragraph');
+        // $edit.on('keyup mouseup', function() {
+        //     updatectrls($ctrls);
+        // });
 
-        // ensure form is ajaxified
-        var ajaxify = require('../patterns').ajaxify.init;
-        ajaxify($form);
+        var buttons  = {};
+        buttons.clear               = $ctrls.find('.clear');
+        buttons.inserth1            = $ctrls.find('.header_1');
+        buttons.inserth2            = $ctrls.find('.header_2');
+        buttons.inserth3            = $ctrls.find('.header_3');
+        buttons.upload_image        = $ctrls.find('.upload_image');
+        buttons.link_image          = $ctrls.find('.link_image');
 
-        // activate aloha on element
-        $el.aloha();
-        log.debug(Aloha.querySupportedCommands());
-
-        // log editor control clicks
-        $ctrls.find('button').on('click', function(ev) {
-            log.debug('clicked', $(ev.target), ev);
-        });
-
-        // bind editor controls to aloha commands
-        buttons.b.on('click', function(ev) {
-            Aloha.execCommand('bold', false, '');
-        });
-        buttons.i.on('click', function(ev) {
-            Aloha.execCommand('italic', false, '');
-        });
-        buttons.ol.on('click', function(ev) {
-            Aloha.execCommand('insertorderedlist');
-        });
-        buttons.ol.on('click', function(ev) {
-            Aloha.execCommand('insertorderedlist');
-        });
-        buttons.ul.on('click', function(ev) {
-            Aloha.execCommand('insertunorderedlist');
-        });
-
-
-        var setstate = function(selection) {
-            var markup = selection.markupEffectiveAtStart;
-            if (!markup) return;
-            $ctrls.find('*').removeClass('selected');
-            $.each(markup, function(idx, el) {
-                var tag = el.nodeName.toLowerCase(),
-                    $button = buttons[tag];
-                if ($button) $button.addClass('selected');
-                log.debug('selected', tag);
-            });
+        var button_handler = {
+            'insertparagraph'       : function(){ return 0; },
+            'inserth1'              : function(){ wrap_selection('h1') },
+            'inserth2'              : function(){ wrap_selection('h2') },
+            'inserth3'              : function(){ wrap_selection('h3') },
+            'clear'                 : function(){
+                var selection_node = $(window.getSelection().anchorNode);
+                document.execCommand('removeformat');
+                if (is_contenteditable(selection_node)) {
+                    selection_node.unwrap();
+                    if (!$(selection_node).parent().is("p")) {
+                        $(selection_node).wrap('<p>');
+                    }
+                }
+            },
+            'upload_image'          : function(){ document.execCommand(); },
+            'link_image'            : function(){
+                var source = prompt('URL of Image');
+                if(source) {
+                    document.execCommand('insertImage', false, source);
+                }
+            }
         };
 
-        // toggle button according to selection
-        // Aloha.bind('aloha-selection-changed', function(ev, selection) {
-        //     setstate(selection);
-        // });
+        // lame helper that
+        // toggles the class,
+        // triggers the handler
+        var button_click = function(element) {
+            buttons[element].toggleClass('selected');
+            button_handler[element]();
+        };
 
-        // Aloha.bind('aloha-command-executed', function(ev, cmd) {
-        //     log.debug('executed', cmd);
-        //     var $button = buttons[cmd];
-        //     if ($button) $button.toggleClass('selected');
-        // });
+        // bind click to button_click()/1
+        for (var key in buttons) {
+            buttons[key].click(function(element){
+                return function() {
+                    log.debug('clicked', element);
+                    button_click(element);
+                };
+            }(key));
+        }
 
-        // copy aloha textareas to originals before serialization
-        // XXX: is there an aloha function for that?
-        $form.on('form-pre-serialize', function(ev, $form, opts, veto) {
-            $form.find('.aloha-textarea').each(function() {
-                var $this = $(this),
-                    id = $this.attr('id').slice(0, - '-aloha'.length),
-                    $target = $('#' + id);
-                $target.html($this.html());
-            });
-        });
     };
 
     var pattern = {
@@ -108,34 +219,3 @@ define([
     };
     return pattern;
 });
-
-//         Aloha.settings = {
-//             locale: 'en',
-//             plugins: {
-//                 format: {
-//                     config: [  'b', 'i', 'p', 'sub', 'sup', 'del', 'title', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'removeFormat' ]
-//                 }
-//             },
-//             sidebar: {
-//                 disabled: true
-//             }
-//         };
-
-// Aloha.settings.toolbar = {
-//     tabs: {
-//         format : {
-//             inline: [ 'bold', 'italic', 'striketrough',
-//                 'abbreviation', 'spacer', 'metaview' ],
-//             paragraph: [ 'formatparagraph' ]
-//         },
-//         insert: {
-//             general: [ 'insertable', 'charakterpicker', 'insertlink' ],
-//             media: [ 'image', 'video' ]
-//         },
-//         link: {
-//             link: [ 'editlink' ]
-//         }
-//     }
-// };
-
-
