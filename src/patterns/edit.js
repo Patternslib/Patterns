@@ -73,8 +73,14 @@ define([
      */
 
     var ctrls = {
-        b: {
-            cmd: 'bold',
+        strong: {
+            cmd: function() {
+                var selection = window.getSelection(),
+                    range = selection.getRangeAt(0);
+                log.debug($(selection.anchorNode), selection.anchorOffset, log.debug(selection.isCollapsed));
+                log.debug($(range.startContainer), range.startOffset);
+                log.debug($(range.endContainer), range.endOffset, range.collapsed);
+            },
             selector: '.strong'
         },
         i: {
@@ -97,9 +103,13 @@ define([
         return function(ev) {
             var $ctrl = $(ev.target);
 
-            // execute command and log about it
-            log.debug('exec:', ctrl.cmd, 'triggered by', $ctrl);
-            document.execCommand(ctrl.cmd, opts.showui || false, opts.val || '');
+            if ($.isFunction(ctrl.cmd)) {
+                ctrl.cmd();
+            } else {
+                // execute command and log about it
+                log.debug('exec:', ctrl.cmd, 'triggered by', $ctrl);
+                document.execCommand(ctrl.cmd, opts.showui || false, opts.val || '');
+            }
 
             // remove selected if control is in a exclusive group
             $ctrl.parents('.exclusive').each(function() {
