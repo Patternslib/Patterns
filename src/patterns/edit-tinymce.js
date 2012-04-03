@@ -35,7 +35,8 @@ define([
             log.info('data-tinymce-json empty, using default config', $el);
             cfg_str = '{}';
         }
-        cfg = JSON.parse(cfg_str);
+        /*cfg = JSON.parse(cfg_str);*/
+        cfg = cfg_str;  /* data seems already to parse this */
         cfg.elements = id;
         cfg.mode = 'exact';
         tinyMCE.init(cfg);
