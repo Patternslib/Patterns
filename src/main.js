@@ -52,6 +52,6 @@ define([
     $(document).ready(function(){
         mapal.init();
         mapal.initContent(document.body);
+        $(document).trigger("setupFinished", document);
     });
-    $(document).trigger("setupFinished", document);
 });
