@@ -213,8 +213,8 @@ define([
     };
 
     var pattern = {
-        markup_trigger: 'form textarea.edit',
-        initialised_class: 'edit',
+        markup_trigger: 'form textarea.edit-plain',
+        initialised_class: 'edit-plain',
         init: init
     };
     return pattern;
