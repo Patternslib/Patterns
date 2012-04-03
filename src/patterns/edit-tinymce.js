@@ -39,6 +39,18 @@ define([
         cfg = cfg_str;  /* data seems already to parse this */
         cfg.elements = id;
         cfg.mode = 'exact';
+        var TinyMCE_minimal = {
+            getInfo : function() {
+                return {
+                        longname : 'minimal',
+                        author : 'minimal',
+                        authorurl : 'http://www.yoursite.com',
+                        infourl : 'http://www.yoursite.com/docs/template.html',
+                        version : "1.0"
+                };
+            },
+        };
+        tinyMCE.addTheme("minimal", TinyMCE_minimal);
         tinyMCE.init(cfg);
         return $el;
     };
