@@ -1,9 +1,12 @@
 define([
     'require',
+    '../../lib/rangy-core',
     '../logging',
     '../patterns'
 ], function(require) {
-    var log = require('../logging').getLogger('edit');
+    var log = require('../logging').getLogger('edit'),
+        rangy = window.rangy,
+        STACK = {};
 
     // create a div after the textarea
     // copy the textarea's content unquoted to the div
@@ -72,15 +75,9 @@ define([
      * controls and functions to handle them
      */
 
+    // key will be set as tag
     var ctrls = {
         strong: {
-            cmd: function() {
-                var selection = window.getSelection(),
-                    range = selection.getRangeAt(0);
-                log.debug($(selection.anchorNode), selection.anchorOffset, log.debug(selection.isCollapsed));
-                log.debug($(range.startContainer), range.startOffset);
-                log.debug($(range.endContainer), range.endOffset, range.collapsed);
-            },
             selector: '.strong'
         },
         i: {
@@ -98,18 +95,43 @@ define([
     };
 
     // generate a cmd function to be used as an event handler
-    var cmdfn = function(ctrl, opts) {
-        opts = opts || {};
+    var ctrlhandler = function(ctrl, $edit) {
+        var id = $edit.attr('id'),
+            tag = ctrl.tag,
+            stack = STACK[id] || (STACK[id] = []);
+
+        var cmd = function($edit) {
+            var selection = rangy.getSelection(),
+                // clone to get consitent behaviour across browsers
+                range = selection.getRangeAt(0).cloneRange();
+
+            // nothing is selected
+            if (range.collapsed) {
+                // if inside the same tag, end it and reopen
+
+                log.debug('stack:', stack || 'empty');
+                if (stack.slice(-1) === tag) {
+                    stack.pop();
+                } else {
+                    stack.push(tag);
+                }
+                log.debug('stack:', stack || 'empty');
+            } else if (range.startContainer === range.endContainer) {
+                // wrap the selection into the specified node
+                var $tag = $('<' + tag + '/>');
+                range.surroundContents($tag[0]);
+                range.selectNodeContents($tag[0]);
+                selection.setSingleRange(range);
+            } else {
+                var c = range.extractContents();
+                log.debug(c);
+            }
+        };
+
         return function(ev) {
             var $ctrl = $(ev.target);
 
-            if ($.isFunction(ctrl.cmd)) {
-                ctrl.cmd();
-            } else {
-                // execute command and log about it
-                log.debug('exec:', ctrl.cmd, 'triggered by', $ctrl);
-                document.execCommand(ctrl.cmd, opts.showui || false, opts.val || '');
-            }
+            cmd($edit);
 
             // remove selected if control is in a exclusive group
             $ctrl.parents('.exclusive').each(function() {
@@ -125,14 +147,18 @@ define([
         };
     };
 
-    var initctrls = function(selector) {
+    var initctrls = function(selector, $edit) {
         var $ctrls = $(selector);
         for (var tag in ctrls) {
-            var ctrl = ctrls[tag],
-                $ctrl = $ctrls.find(ctrl.selector);
+            var ctrl = ctrls[tag];
+            ctrl.tag = tag;
+            var $ctrl = $ctrls.find(ctrl.selector);
             if ($ctrl.length === 0) continue;
             log.debug('found control:', tag, $ctrl);
-            $ctrl.on('click', cmdfn(ctrl));
+            $ctrl.attr({
+                unselectable: "on"
+            });
+            $ctrl.on('click', ctrlhandler(ctrl, $edit));
         }
         return $ctrls;
     };
@@ -154,11 +180,30 @@ define([
 
     var init = function($el, opts) {
         var $edit = text2div($el),
-            $ctrls = initctrls('.editor-controls');
+            $ctrls = initctrls('.editor-controls', $edit),
+            id = $edit.attr('id'),
+            stack = STACK[id] || (STACK[id] = []);
 
         // $edit.on('keyup mouseup', function() {
         //     updatectrls($ctrls);
         // });
+
+        $edit.on('keypress', function(ev) {
+            if (stack.length) {
+                var chr = String.fromCharCode(ev.which);
+                log.debug('stack:', stack || 'empty');
+                log.debug('key:', chr);
+                var tag = stack.pop(),
+                    selection = rangy.getSelection(),
+                    range = selection.getRangeAt(0).cloneRange(),
+                    node = $('<' + tag + '>' + chr + '</' + tag + '>')[0];
+                range.insertNode(node);
+                range.collapseToPoint(node, 1);
+                selection.setSingleRange(range);
+                ev.preventDefault();
+                log.debug('stack:', stack || 'empty');
+            }
+        });
 
         var buttons  = {};
         buttons.clear               = $ctrls.find('.clear');
@@ -213,8 +258,8 @@ define([
     };
 
     var pattern = {
-        markup_trigger: 'form textarea.edit',
-        initialised_class: 'edit',
+        markup_trigger: 'form textarea.edit-plain',
+        initialised_class: 'edit-plain',
         init: init
     };
     return pattern;
