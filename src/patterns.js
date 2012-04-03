@@ -11,6 +11,7 @@ define([
     './patterns/inject',
     './patterns/inject_log_old',
     './patterns/modal',
+    './patterns/validate',
     './utils'
 ], function(require) {
     var log = require('./logging').getLogger(),
@@ -27,7 +28,8 @@ define([
         "edit-tinymce": require('./patterns/edit-tinymce'),
         inject: require('./patterns/inject'),
         inject_log_old: require('./patterns/inject_log_old'),
-        modal: require('./patterns/modal')
+        modal: require('./patterns/modal'),
+        validate: require('./patterns/validate')
     };
 
     var patterns = {};
@@ -39,7 +41,12 @@ define([
         // make available as jquery plugins - this is optional and not
         // needed for the functionality of the patterns library. Should be
         // configurable.
-        $.fn[name] = jquery_plugin(name, pattern);
+        if (pattern.register_jquery_plugin === undefined) {
+            pattern.register_jquery_plugin = true;
+        }
+        if (pattern.register_jquery_plugin) {
+            $.fn[name] = jquery_plugin(name, pattern);
+        }
         log.info('Registered pattern:', name, pattern);
     };
 
