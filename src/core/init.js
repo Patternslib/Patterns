@@ -293,6 +293,9 @@ var mapal = {
         $(".record-history", root).addClass('cant-touch-this');
         $(root).is(".record-history") && $(root).addClass('cant-touch-this');
 
+        // default editor is tinymce for now
+        $(root).parent().find('.edit').addClass('edit-tinymce');
+
         $(".jsOnly", root).show();
 
         $("legend:not(.cant-touch-this)", root).each(function() {
