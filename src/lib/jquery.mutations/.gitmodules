@@ -1,3 +1,0 @@
-[submodule "build"]
-	path = build
-	url = git://github.com/jollytoad/js-common-build.git

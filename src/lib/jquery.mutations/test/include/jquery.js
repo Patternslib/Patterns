@@ -1,1 +1,0 @@
-/home/mark/Work/jquery/dist/jquery.js
