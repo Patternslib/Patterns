@@ -1,0 +1,54 @@
+/* ---- Generic ---- */
+
+[aria-hidden=true] {
+	display: none !important;
+	visibility: hidden !important;
+}
+
+[aria-busy=true] {
+	cursor: wait;
+}
+
+[aria-disabled=true] {
+	opacity: 0.5;
+	cursor: default !important;
+}
+
+/* ---- tablist, tab, tabpanel ---- */
+
+[role~=tablist] {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+[role~=tab] {
+	float: left;
+	margin: 1px;
+	padding: 0.8ex 1.2ex;
+	cursor: pointer;
+}
+
+[role~=tab]:focus {
+	outline: 1px dotted black;
+}
+
+[role~=tabpanel] {
+	clear: both;
+}
+
+/* ---- tree, treeitem, group ---- */
+
+[role~=tree], [role~=tree] [role~=group] {
+	margin: 0; padding:0;
+	list-style-type: none;
+}
+
+[role~=treeitem] {
+	cursor: pointer;
+}
+
+[role~=tree] [role~=group] {
+	padding-left: 1em;
+}
+
