@@ -1,3 +1,12 @@
+/*jslint regexp: true,
+         browser: true,
+         sloppy: true,
+         white: true,
+         plusplus: true,
+         indent: 4,
+         maxlen: 200 */
+/*global define, $ */
+
 define([
     'require',
     './lib/jquery',
@@ -18,9 +27,12 @@ define([
     var log = require('./logging').getLogger(),
         utils = require('./utils'),
         jquery_plugin = utils.jquery_plugin,
-        pimp_pattern = utils.pimp_pattern;
+        pimp_pattern = utils.pimp_pattern,
+        plain_patterns,
+        patterns = {},
+        name;
 
-    var plain_patterns = {
+    plain_patterns = {
         ajaxify: require('./patterns/ajaxify'),
         autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
@@ -33,8 +45,6 @@ define([
         navigation: require('./patterns/navigation'),
         validate: require('./patterns/validate')
     };
-
-    var patterns = {};
 
     // If you use this to register custom patterns make sure to prefix
     // their names to avoid name collision.
@@ -53,22 +63,32 @@ define([
     };
 
     patterns.scan = function(content, opts) {
-        var $content = $(content);
-        for (var name in patterns) {
-            if (name === "scan") continue;
-            if (name === "register") continue;
-            var pattern = patterns[name],
-                trigger = pattern.markup_trigger;
-            if (!trigger) continue;
-            trigger = trigger.split(',').map(function(el, idx) {
+        var $content = $(content),
+            name,
+            pattern,
+            trigger;
+
+        for (name in patterns) {
+            if (name === "scan") { continue; }
+            if (name === "register") { continue; }
+
+            pattern = patterns[name];
+            trigger = pattern.markup_trigger;
+            if (!trigger) { continue; }
+
+            trigger = trigger.split(',').map(function(el) {
                 return el + ':not(.cant-touch-this)';
             }).join(',');
-            if ($content.is(trigger)) pattern.init($content, opts);
-            $content.find(trigger).each(function() { pattern.init($(this), opts); });
+            if ($content.is(trigger)) {
+                pattern.init($content, opts);
+            }
+            $content.find(trigger).each(function() {
+                pattern.init($(this), opts);
+            });
         }
     };
 
-    for (var name in plain_patterns) {
+    for (name in plain_patterns) {
         patterns.register(name, plain_patterns[name]);
     }
 

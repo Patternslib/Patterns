@@ -1,3 +1,12 @@
+/*jslint regexp: true,
+         browser: true,
+         sloppy: true,
+         white: true,
+         plusplus: true,
+         indent: 4,
+         maxlen: 200 */
+/*global define, $, console */
+
 define([
     'require',
     '../lib/dist/underscore',
@@ -5,14 +14,17 @@ define([
     '../lib/jquery.form/jquery.form',
     '../logging'
 ], function(require) {
-    var log = require('../logging').getLogger('autosubmit');
+    var log = require('../logging').getLogger('autosubmit'),
+        init,
+        pattern;
 
     // can be called on a form or an element in a form
-    var init = function($el) {
+    init = function($el) {
         // get parameters from markup
-        var $form = $el.is('form') ? $el : $el.parents('form').first();
+        var $form = $el.is('form') ? $el : $el.parents('form').first(),
+            submit;
 
-        var submit = function(event) {
+        submit = function(event) {
             log.info("triggered by " + event.type);
             $form.submit();
         };
@@ -36,7 +48,7 @@ define([
         return $el;
     };
 
-    var pattern = {
+    pattern = {
         markup_trigger: ".auto-submit, .auto-submit-keyup",
         initialised_class: "auto-submit",
         init: init

@@ -1,17 +1,31 @@
+/*jslint regexp: true,
+         browser: true,
+         sloppy: true,
+         white: true,
+         plusplus: true,
+         indent: 4,
+         maxlen: 200 */
+/*global define, $, tinyMCE */
+
 define([
     'require',
     '../../lib/tiny_mce/tiny_mce',
     '../logging'
 ], function(require) {
-    var log = require('../logging').getLogger('edit-tinymce');
+    var log = require('../logging').getLogger('edit-tinymce'),
+        init,
+        pattern;
 
-    var init = function($el, opts) {
+    init = function($el, opts) {
         // make sure the textarea has an id
-        var id = $el.attr('id');
+        var id = $el.attr('id'),
+            cfg,
+            cfg_str,
+            $form = $el.parents('form'),
+            formid = $form.attr('id'),
+            name = $el.attr('name');
+
         if (!id) {
-            var $form = $el.parents('form'),
-                formid = $el.parents('form').attr('id'),
-                name = $el.attr('name');
             if (!formid) {
                 log.error('Textarea or parent form needs an id', $el, $form);
                 return false;
@@ -29,8 +43,8 @@ define([
         }
 
         // read configuration
-        var cfg = {},
-            cfg_str = $el.data('tinymce-json');
+        cfg = {};
+        cfg_str = $el.data('tinymce-json');
         if (!cfg_str) {
             log.info('data-tinymce-json empty, using default config', $el);
             cfg_str = '{}';
@@ -43,7 +57,7 @@ define([
         return $el;
     };
 
-    var pattern = {
+    pattern = {
         markup_trigger: 'form textarea.edit-tinymce',
         initialised_class: 'edit-tinymce',
         init: init
