@@ -1,15 +1,29 @@
+/*jslint regexp: true,
+         browser: true,
+         sloppy: true,
+         white: true,
+         plusplus: true,
+         indent: 4,
+         maxlen: 200 */
+/*global define, $, console */
+
 define([
     'require',
     '../lib/jquery',
     '../lib/jquery.form/jquery.form'
 ], function(require) {
+    var init,
+        pattern;
 
-    var init = function($el, opts) {
+    init = function($el, opts) {
         var $first = $el.children(':first'),
             $rest = $el.children(':not(:first)'),
             $header = $('<div class="header" />'),
             $body = $('<div class="body" />'),
             $form = $el.find('form'),
+            remove,
+            params,
+            submit,
             $closebutton = $(
                 '<button type="button" class="close-panel">Close</button>');
 
@@ -26,8 +40,10 @@ define([
         $('.header', $el).append($closebutton);
 
         // event handler to remove element
-        var remove = function(ev) {
-            if (ev) ev.preventDefault();
+        remove = function(ev) {
+            if (ev) {
+                ev.preventDefault();
+            }
             // the modal will be gone, but unhooked from document
             $(document).off('.modal');
             $el.remove();
@@ -35,7 +51,9 @@ define([
 
         // remove on ESC
         $(document).on('keyup.remove.modal', function(ev) {
-            if (ev.which == 27) remove(ev);
+            if (ev.which === 27) {
+                remove(ev);
+            }
         });
         // remove on close-panel button click
         $el.find('.close-panel').on('click.remove.modal', remove);
@@ -47,7 +65,7 @@ define([
         // close forms that are successfully submitted or show error
         if ($form) {
             // prepare ajax request and submit function
-            var params = {
+            params = {
                 data: { submit: "submit" },
                 error: function(jqXHR, textStatus, errorThrown) {
                     var msg = [jqXHR.status, textStatus,
@@ -65,21 +83,23 @@ define([
                     $el.remove();
                 }
             };
-            var submit = function(ev) {
+            submit = function(ev) {
                 $el.addClass('ajax-in-progress');
                 ev.preventDefault();
                 $form.ajaxSubmit(params);
             };
             $form.find('[type=submit]').on('click', submit);
             $(document).on('keyup.submit.modal', function(ev) {
-                if (ev.which == 13) submit(ev);
+                if (ev.which === 13) {
+                    submit(ev);
+                }
             });
         }
 
         return $el;
     };
 
-    var pattern = {
+    pattern = {
         markup_trigger: "div.modal",
         initialised_class: "modal",
         default_opts: {

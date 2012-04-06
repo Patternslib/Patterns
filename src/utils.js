@@ -1,3 +1,12 @@
+/*jslint regexp: true,
+         browser: true,
+         sloppy: true,
+         white: true,
+         plusplus: true,
+         indent: 4,
+         maxlen: 200 */
+/*global define, $ */
+
 define([
     'require',
     './core/store',
@@ -7,19 +16,33 @@ define([
 ], function(require) {
     // XXX: not nice
     var mapal = require('./core/store'),
-        getLogger = require('./logging').getLogger;
+        getLogger = require('./logging').getLogger,
+        extractParameters,
+        pimp_pattern,
+        jquery_plugin,
+        utils,
+        once,
+        parseOptions,
+        log_init,
+        turnstiled,
+        set_initialised_class;
 
-    var extractParameters = function(params, sources) {
+    extractParameters = function(params, sources) {
         var tmp,
             j,
-            paramObjs = {};
-        if (params.length > 0) {
-            var p = params.slice(1).split('!');
-            for (var i = p.length-1; i >= 0; i--) {
-                // support injection parameters in other patterns
-                if (p[i][0] == '#') {
-                    var param, effect;
+            paramObjs = {},
+            p,
+            i,
+            param,
+            effect,
+            source;
 
+        if (params.length > 0) {
+            p = params.slice(1).split('!');
+
+            for (i = p.length-1; i >= 0; i--) {
+                // support injection parameters in other patterns
+                if (p[i][0] === '#') {
                     if (p[i].indexOf('.') > 0) {
                         tmp = p[i].split('.');
                         param = tmp[0];
@@ -28,7 +51,8 @@ define([
                         param = p[i];
                         effect = undefined;
                     }
-                    var source = [sources.pop()];
+                    source = [sources.pop()];
+
                     // XXX: $a and url were also not defined in the old context
                     // We need automated tests
                     mapal.injection.load($a, url, param.slice(1), source);
@@ -45,11 +69,17 @@ define([
 
     // input = "a!b=1 2!c=x"
     // --> options = {a: true, b: '1 2', c: 'x'}
-    var parseOptions = function(input) {
+    parseOptions = function(input) {
         var params = input.split("!"),
-            options = {}, name, value, index;
+            options = {},
+            name,
+            value,
+            index,
+            i,
+            params_length;
 
-        for (var i=0; i<params.length; i++) {
+        params_length = params.length;
+        for (i=0; i<params_length; i++) {
             index = params[i].indexOf("=");
             if (index === -1) {
                 name = params[i];
@@ -63,11 +93,12 @@ define([
         return options;
     };
 
-    var log_init = function(name, method) {
+    log_init = function(name, method) {
         var log_wrapper = function($el) {
-            var log = getLogger(name);
+            var log = getLogger(name),
+                ret;
             log.debug('Initialising:', $el);
-            var ret = method.apply(this, arguments);
+            ret = method.apply(this, arguments);
             if (ret === false) {
                 log.debug('skipped', $el);
             } else {
@@ -78,31 +109,42 @@ define([
         return log_wrapper;
     };
 
-    var set_initialised_class = function(method, pattern) {
-        var cls = pattern.initialised_class;
-        if (!cls) return method;
-        var initialised_class_wrapper = function($el) {
+    set_initialised_class = function(method, pattern) {
+        var cls = pattern.initialised_class,
+            initialised_class_wrapper;
+        if (!cls) {
+            return method;
+        }
+        initialised_class_wrapper = function($el) {
             var ret = method.apply(this, arguments);
-            if (ret !== false) $el.addClass(cls);
+            if (ret !== false) { 
+                $el.addClass(cls);
+            }
             return ret;
         };
         return initialised_class_wrapper;
     };
 
     // run a method on an element only once
-    var once = function(key, method) {
+    once = function(key, method) {
         var once_wrapper = function($el) {
-            var initialised = $el.data(key);
-            if (initialised) return undefined;
-            var ret = method.apply(this, arguments);
-            if (ret !== false) $el.data(key, true);
+            var initialised = $el.data(key),
+                ret;
+
+            if (initialised) {
+                return undefined;
+            }
+            ret = method.apply(this, arguments);
+            if (ret !== false) {
+                $el.data(key, true);
+            }
             return ret;
         };
         return once_wrapper;
     };
 
     // work on elements single file
-    var turnstiled = function(method) {
+    turnstiled = function(method) {
         var turnstile = function($el) {
             var rest = Array.prototype.slice.call(arguments, 1);
             $el.each(function() {
@@ -116,22 +158,27 @@ define([
     // return a pimpéd pattern
     // - init only once
     // - put multiple elements through a turnstile
-    var pimp_pattern = function(pname, pattern) {
-        var pimped = {};
-        for (var mname in pattern) {
-            var method = pattern[mname];
+    pimp_pattern = function(pname, pattern) {
+        var pimped = {},
+            mname,
+            method;
+
+        for (mname in pattern) {
+            method = pattern[mname];
             if (mname === "init") {
                 method = log_init(pname, method);
                 method = set_initialised_class(method, pattern);
                 method = once(pname + '-' + mname, method);
             }
-            if (typeof method === "function") method = turnstiled(method);
+            if (typeof method === "function") {
+                method = turnstiled(method);
+            }
             pimped[mname] = method;
         }
         return pimped;
     };
 
-    var jquery_plugin = function(name, pattern) {
+    jquery_plugin = function(name, pattern) {
         var plugin = function(method) {
             if (!method || typeof method === "object") {
                 pattern.init.apply(this, [this].concat(arguments));
@@ -151,7 +198,7 @@ define([
     // XXX: need to understand require magic to make this work here
     // require paths are local to where it is called, we would need to
     // pass the path of the module that called load_modules
-    var load_modules = function(prefix, names, suffix) {
+    /*var load_modules = function(prefix, names, suffix) {
         prefix = prefix || '';
         suffix = suffix || '';
         var modules = _.reduce(names, function(acc, name) {
@@ -159,9 +206,9 @@ define([
             return acc;
         }, {});
         return modules;
-    };
+    };*/
 
-    var utils = {
+    utils = {
         extractParameters: extractParameters,
         parseOptions: parseOptions,
         //load_modules: load_modules,
