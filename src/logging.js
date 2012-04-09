@@ -1,12 +1,3 @@
-/*jslint regexp: true,
-         browser: true,
-         sloppy: true,
-         white: true,
-         plusplus: true,
-         indent: 4,
-         maxlen: 200 */
-/*global define, $, log4javascript */
-
 define([
     'require',
     '../lib/log4javascript',
@@ -14,12 +5,7 @@ define([
 ], function(require) {
     var l4js = log4javascript,
         level = l4js.Level,
-        rootname = 'patterns',
-        bca,
-        root,
-        Layout,
-        layout,
-        logging;
+        rootname = 'patterns';
 
     // enable/disable all logging
     l4js.setEnabled(true);
@@ -27,24 +13,21 @@ define([
     // enable debugging info for ajaxSubmit - untested
     //$.fn.ajaxSubmit.debug = true;
 
-    bca = new l4js.BrowserConsoleAppender();
-    root = l4js.getLogger(rootname);
+    var bca = new l4js.BrowserConsoleAppender(),
+        root = l4js.getLogger(rootname);
     root.addAppender(bca);
 
 
-    Layout = function() {
+    var Layout = function() {
         this.customFields = [];
         this.layout_noobjects = new l4js.PatternLayout('%p %c: %m');
         this.layout_objects = new l4js.PatternLayout('%p %c:');
     };
     Layout.prototype = new l4js.Layout();
     Layout.prototype.format = function(loggingEvent) {
-        var hasobjects = false,
-            prefix;
+        var hasobjects = false;
         loggingEvent.messages = $.map(loggingEvent.messages, function(item) {
-            if ($.isPlainObject(item)) {
-                hasobjects = true;
-            }
+            if ($.isPlainObject(item)) hasobjects = true;
             if (item && item.jquery) {
                 hasobjects = true;
                 item = item.clone();
@@ -52,7 +35,7 @@ define([
             return item;
         });
         if (hasobjects) {
-            prefix = this.layout_objects.format(loggingEvent);
+            var prefix = this.layout_objects.format(loggingEvent);
             loggingEvent.messages.unshift(prefix);
             return loggingEvent.messages;
         } else {
@@ -66,7 +49,7 @@ define([
         return "NullLayout";
     };
 
-    layout = new Layout();
+    var layout = new Layout();
     bca.setLayout(layout);
 
     //// Available log levels:
@@ -81,17 +64,13 @@ define([
     root.setLevel(level.ALL);
     bca.setThreshold(level.ALL);
 
-    logging = {
+    var logging = {
         level: level,
         getLogger: function(name) {
             var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
-            if (name === 'inject_log_old') {
-                logger.setLevel(level.INFO);
-            }
+            if (name === 'inject_log_old') logger.setLevel(level.INFO);
             // disable old injection logging for now
-            if (name === 'old-injection') {
-                logger.setLevel(level.WARN);
-            }
+            if (name === 'old-injection') logger.setLevel(level.WARN);
             return logger;
         }
     };

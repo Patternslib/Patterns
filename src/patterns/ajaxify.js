@@ -1,29 +1,19 @@
-/*jslint regexp: true,
-         browser: true,
-         sloppy: true,
-         white: true,
-         plusplus: true,
-         indent: 4,
-         maxlen: 200 */
-/*global define, $, console */
-
 define([
     'require',
     '../lib/jquery.form/jquery.form',
     '../logging',
     './inject'
 ], function(require) {
-    var log = require('../logging').getLogger('ajaxify'),
-        init;
+    var log = require('../logging').getLogger('ajaxify');
 
-    init = function($el, opts) {
-        var url = ($el.attr('action') || $el.attr('href') || '').split('#')[0];
+    var init = function($el, opts) {
         // skip elements that are covered by old-style injection
         if ($el.is('.injection,[data-injection]')) {
             log.debug('skipping element claimed by old injection', $el);
             return false;
         }
 
+        var url = ($el.attr('action') || $el.attr('href') || '').split('#')[0];
         if (!url) {
             log.error('Element has neither action nor href', $el);
             return false;
@@ -48,7 +38,7 @@ define([
                 url: url
             });
         } else {
-            $el.on('click.ajaxify', function(ev) {
+            $el.on('click.ajaxify', function(ev, opts) {
                 ev.preventDefault();
                 $.ajax({
                     context: $el,
@@ -58,10 +48,6 @@ define([
         }
 
         $el.ajaxError(function(ev, jqxhr, ajaxopts, error) {
-            var inject = require('./inject'),
-                msg,
-                $error;
-
             // ajaxHandlers are global, we are only interested in our form
             if (url !== ajaxopts.url) {
                 log.debug('ignoring ajax event', ajaxopts.url, url);
@@ -70,12 +56,13 @@ define([
             log.debug('error', ev, jqxhr, opts, error);
 
             // XXX: this needs to be solved differently
-            msg = [jqxhr.status, jqxhr.statusText, error, opts.url].join(' ');
-            // XXX: error notification pattern!
-            $error = $('<div class="modal">'
-                       + '<h3>Error</h3>'
-                       + '<div class="error message">'+msg+'</div>'
-                       + '</div>');
+            var msg = [jqxhr.status, jqxhr.statusText, error, opts.url].join(' '),
+                // XXX: error notification pattern!
+                $error = $('<div class="modal">'
+                           + '<h3>Error</h3>'
+                           + '<div class="error message">'+msg+'</div>'
+                           + '</div>');
+            var inject = require('./inject');
             inject.append($error, $('body'));
         });
 
@@ -89,10 +76,7 @@ define([
             log.debug('success', ev, jqxhr, opts);
 
             // XXX: this needs to be solved differently
-            if (!data) {
-                return;
-            }
-
+            if (!data) return;
             var $forms = $(data).find('form[id]');
             $forms.each(function() {
                 var $form = $(this),

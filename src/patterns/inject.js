@@ -1,12 +1,3 @@
-/*jslint regexp: true,
-         browser: true,
-         sloppy: true,
-         white: true,
-         plusplus: true,
-         indent: 4,
-         maxlen: 200 */
-/*global define, $, _ */
-
 define([
     'require',
     '../core/parser',
@@ -18,32 +9,21 @@ define([
 ], function(require) {
     var Parser = require('../core/parser'),
         parser = new Parser("source; target; replace; pre; post; append; prepend"),
-        log = require('../logging').getLogger('inject'),
-        init,
-        post,
-        pre,
-        prepend,
-        append,
-        replace,
-        content,
-        injector,
-        _injectmethod,
-        pattern;
+        log = require('../logging').getLogger('inject');
 
-    init = function($el, opts) {
-        var hrefnext = $el.data('href-next'),
-            ajaxify;
+    var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
 
         // if the element referenced by href-next exists already,
         // point to it and disable injection
+        var hrefnext = $el.data('href-next');
         if (hrefnext && ($(hrefnext).length > 0)) {
             log.debug('Skipping as href-next already exists', $(hrefnext));
             return $el.attr({href: hrefnext});
         }
 
         // ensure element is ajaxified
-        ajaxify = require('../patterns').ajaxify.init;
+        var ajaxify = require('../patterns').ajaxify.init;
         ajaxify($el);
 
         // inject in case of successfull ajax request
@@ -52,11 +32,7 @@ define([
             var href = ($el.is('form')
                         ? $el.attr('action')
                         : $el.attr('href')).split('#'),
-                srcid = href[1],
-                defaults,
-                opts,
-                opts_str,
-                method_name;
+                srcid = href[1];
 
             if (href[0] !== ajaxopts.url) {
                 log.debug('ignoring ajax event', ajaxopts.url, href[0]);
@@ -69,7 +45,7 @@ define([
             }
 
             // fetch defaults from parents
-            defaults = _.reduce(
+            var defaults = _.reduce(
                 $el.parents('[data-inject-defaults]').toArray().reverse(),
                 function(acc, el) {
                     var opts_str = $(el).attr('data-inject-defaults');
@@ -77,15 +53,13 @@ define([
                 }, {}
             );
 
-            if (srcid) {
-                defaults.source = '#' + srcid;
-            }
+            if (srcid) defaults.source = '#' + srcid;
 
-            opts_str = $el.attr('data-inject') || "";
-            opts = parser.parse(opts_str, defaults);
+            var opts_str = $el.attr('data-inject') || "",
+                opts = parser.parse(opts_str, defaults);
 
             // default: replace targets content with sources content
-            method_name = "content";
+            var method_name = "content";
 
             // post-process options
             if (opts.replace) {
@@ -114,13 +88,11 @@ define([
      * Injection methods
      */
 
-    _injectmethod = function(name, method) {
+    var _injectmethod = function(name, method) {
         var injectwrapper = function($sources, $targets, suppress) {
             // no $targets -> called as a jquery method
             // XXX: is it good to have that here?
-            if ($targets === undefined) {
-                $targets = this;
-            }
+            if ($targets === undefined) $targets = this;
             $targets = method($sources, $targets);
             if (!suppress) {
                 $targets.trigger('inject', {
@@ -133,14 +105,14 @@ define([
         return injectwrapper;
     };
 
-    content = _injectmethod("content", function($sources, $targets) {
+    var content = _injectmethod("content", function($sources, $targets) {
         $targets.each(function() {
             $(this).html($sources.html());
         });
         return $targets;
     });
 
-    replace = _injectmethod("replace", function($sources, $targets) {
+    var replace = _injectmethod("replace", function($sources, $targets) {
         if ($targets.length === 1) {
             $targets.replaceWith($sources);
             return $sources;
@@ -153,7 +125,7 @@ define([
     replace.marker = 'tmp-injection-marker';
 
     // XXX: name under discussion
-    pre = _injectmethod("pre", function($sources, $targets) {
+    var pre = _injectmethod("pre", function($sources, $targets) {
         $targets.each(function() {
             $(this).before($sources);
         });
@@ -161,7 +133,7 @@ define([
     });
 
     // XXX: name under discussion
-    post = _injectmethod("post", function($sources, $targets) {
+    var post = _injectmethod("post", function($sources, $targets) {
         $targets.each(function() {
             $(this).after($sources);
         });
@@ -169,14 +141,14 @@ define([
     });
 
     // XXX: name under discussion
-    append = _injectmethod("append", function($sources, $targets) {
+    var append = _injectmethod("append", function($sources, $targets) {
         $targets.each(function() {
             $(this).append($sources);
         });
         return $sources;
     });
 
-    prepend = _injectmethod("prepend", function($sources, $targets) {
+    var prepend = _injectmethod("prepend", function($sources, $targets) {
         $targets.each(function() {
             $(this).append($sources);
         });
@@ -186,17 +158,11 @@ define([
 
 
     // create an injector to be run on ajax success
-    injector = function($el, method_name, opts) {
+    var injector = function($el, method_name, opts) {
         // hack to support modals
-        var modal = $el.hasClass('modal'),
-            method,
-            inject,
-            $targets;
-
+        var modal = $el.hasClass('modal');
         if (modal) {
-            if (opts.target) {
-                log.warn('Overriding target for modal');
-            }
+            if (opts.target) log.warn('Overriding target for modal');
             opts.target = '#modal';
             method_name = "replace";
         }
@@ -205,8 +171,9 @@ define([
             opts.target = opts.source;
         }
 
-        method = pattern[method_name];
-        $targets = $(opts.target);
+        var method = pattern[method_name],
+            $targets = $(opts.target);
+
 
         if ($targets.length === 0) {
             if (opts.target.slice(0,1) !== '#') {
@@ -216,19 +183,14 @@ define([
             $('body').append($targets);
         }
 
-        inject = function(data) {
-            var $sources,
-                $modal,
-                hrefnext;
-
-
+        var inject = function(data) {
             // just copied from old inject code
             data = data
                 .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
                 .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
                 .replace(/<body(.*)>/gi, '<div id="__original_body">')
                 .replace(/<\/body(.*)>/gi,'</div>');
-            $sources = $('<div/>').html(data).find(opts.source);
+            var $sources = $('<div/>').html(data).find(opts.source);
 
             if ($sources.length === 0) {
                 log.error('Sources are empty for selector:', opts.source);
@@ -236,7 +198,7 @@ define([
             }
 
             if (modal) {
-                $modal = $('<div id="modal" class="modal" />');
+                var $modal = $('<div id="modal" class="modal" />');
                 if ($sources.length === 1) {
                     // for single source copy its content into the modal
                     $sources = $modal.html($sources.html());
@@ -250,7 +212,7 @@ define([
             $targets = method($sources, $targets, true);
 
             // XXX: think about making the href-next thing implicit
-            hrefnext = $el.data('href-next');
+            var hrefnext = $el.data('href-next');
             if (hrefnext) {
                 $el.attr({href: hrefnext});
                 $el.off('.inject');
@@ -266,7 +228,7 @@ define([
         return inject;
     };
 
-    pattern = {
+    var pattern = {
         initialised_class: 'inject',
         markup_trigger: 'a.inject, a[data-inject], form.inject, form[data-inject]',
         // XXX: unsupported
