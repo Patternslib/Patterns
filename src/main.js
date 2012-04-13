@@ -1,6 +1,7 @@
 define([
     'require',
     'domReady!',
+    '../lib/css3-mediaqueries',
     './lib/jquery',
 //    './jqueryPlugin!./lib/dist/history.js/scripts/bundled/html4+html5/jquery.history',
     './lib/modernizr',
