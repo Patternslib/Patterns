@@ -4,8 +4,8 @@ define([
 ], function(require) {
 
     var init = function($el, opts) {
-        // find all folders
-        var $folders = $el.find('li.folder');
+        // find all folders that contain a ul
+        var $folders = $el.find('li.folder:contains(ul)');
 
         // inject span.toggle as first child of each folder
         $folders.prepend('<span class="toggle"></span>');
