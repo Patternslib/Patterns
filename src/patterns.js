@@ -4,6 +4,7 @@ define([
     './logging',
     './patterns/ajaxify',
     './patterns/autosubmit',
+    './patterns/autosuggest',
     './patterns/collapsible',
 //    './patterns/edit',
 //    './patterns/edit-aloha',
@@ -24,6 +25,7 @@ define([
     var plain_patterns = {
         ajaxify: require('./patterns/ajaxify'),
         autosubmit: require('./patterns/autosubmit'),
+        autosuggest: require('./patterns/autosuggest'),
         collapsible: require('./patterns/collapsible'),
 //        edit: require('./patterns/edit'),
 //        "edit-aloha": require('./patterns/edit-aloha'),
