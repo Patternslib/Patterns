@@ -6,13 +6,16 @@ define([
 
     var init = function($el, opts) {
         $el.autoSuggest([
-            {value: "1", name: "test1"},
-            {value: "2", name: "test2"},
-            {value: "3", name: "test3"},
-            {value: "10", name: "fest1"},
-            {value: "20", name: "fest2"},
-            {value: "30", name: "fest3"}
-        ]);
+            {value: "test1", name: "test1"},
+            {value: "test2", name: "test2"},
+            {value: "test3", name: "test3"},
+            {value: "fest1", name: "fest1"},
+            {value: "fest2", name: "fest2"},
+            {value: "fest3", name: "fest3"}
+        ], {
+            selectedValueProp: "name",
+            searchObjProp: "name"
+        });
     };
 
     var pattern = {
