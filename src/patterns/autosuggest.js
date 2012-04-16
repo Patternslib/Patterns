@@ -7,7 +7,10 @@ define([
     var init = function($el, opts) {
         // fetch words for auto-suggestion
         var $cfg = $el.parents('[data-auto-suggest-config]:first');
-        var words = $cfg.data('auto-suggest-config').split(':')[1].split(/\s*,\s*/);
+
+        // XXX: do this properly
+        var words = (($cfg.data('auto-suggest-config') || '')
+                     .split(':')[1] || '').split(/\s*,\s*/);
         var data = words.map(function(word) {
             return {value: word, name: word};
         });
