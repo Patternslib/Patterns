@@ -1,3 +1,10 @@
+// uncomment following to disable caching - good for develoment
+// we still need a way to configure this, needs some thinking
+
+//require.config({
+//    urlArgs: "bust=" +  (new Date()).getTime()
+//});
+
 define([
     'require',
     'domReady!',
