@@ -71,6 +71,18 @@ define([
             if (name === 'inject_log_old') logger.setLevel(level.INFO);
             // disable old injection logging for now
             if (name === 'old-injection') logger.setLevel(level.WARN);
+
+            // return this instead of logger, if logging causes
+            // problems for you please file tickets about the errors
+            // so we can cover these issues in the future
+            var mocklogger = {
+                trace: function() {},
+                debug: function() {},
+                info: function() {},
+                log: function() {},
+                warn: function() {},
+                error: function() {}
+            };
             return logger;
         }
     };
