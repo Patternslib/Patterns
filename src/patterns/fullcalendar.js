@@ -97,8 +97,10 @@ define([
                         attrs[attr.nodeName] = attr.nodeValue;
                     }
                 }
+                var location = $('.location', event).html().trim();
                 var ev = {
-                    title: $('.title', event).html().trim(),
+                    title: $('.title', event).html().trim()
+                        + (location ? (' (' + location + ')') : ''),
                     start: $('.start', event).attr('datetime'),
                     end: $('.end', event).attr('datetime'),
                     allDay: $(event).hasClass('all-day'),
