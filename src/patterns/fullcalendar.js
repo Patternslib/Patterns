@@ -71,7 +71,6 @@ define([
                 header: { left: '', right: '' },
                 month: month,
                 year: year
-                // XXX: consume calendar-control and pass to fullCalendar
             });
             mapal.initContent($calendar);
         },
