@@ -97,7 +97,7 @@ define([
                         attrs[attr.nodeName] = attr.nodeValue;
                     }
                 }
-                var location = $('.location', event).html().trim();
+                var location = ($('.location', event).html() || '').trim();
                 var ev = {
                     title: $('.title', event).html().trim()
                         + (location ? (' (' + location + ')') : ''),
