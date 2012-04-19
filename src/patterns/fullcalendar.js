@@ -8,7 +8,8 @@ define([
             var $calroot = $(root).find('.full-calendar');
             if (!$calroot || $calroot.length === 0) return;
 
-            var $filter = $calroot.find('.calendar-filters');
+            // XXX: should be within the calendar
+            var $filter = $('.calendar-filters');
             var initMonths = function($root) {
                 if ($root.hasClass('month')) {
                     fullcalendar.initMonth($root, $filter);
