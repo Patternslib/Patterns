@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+		<link rel="stylesheet" href="base.css" type="text/css">
+
+		<style>
+			.green {
+			background-color: #23bf42;
+			}
+
+			.blue {
+			background-color: #94bfdd;
+			}
+
+			.red {
+			background-color: #cf6400;
+			}
+
+			.blue, .red, .green {
+			display: inline-block;
+			padding: 5px 15px;
+			color: white;
+			}
+		</style>
+	</head>
+	<body>
+		<span class="green" id="toRotate">This is rotating through</span>
+		<button data-toggle="selector=#toRotate!attr=class!value=red green blue">change colour</button>
+		<hr/>
+		<span class="red" id="toToggle">This is getting toggled</span>
+		<button data-toggle="selector=#toToggle!attr=class!value=red blue">change colour</button>
+		<hr/>
+		<input type="checkbox" id="toCheck" />
+		<button data-toggle="selector=#toCheck!attr=checked!value=checked">toggle checkbox</button>
+		<script data-main="../src2-build/main" src="../lib/require.js"></script>
+	</body>
+</html>
