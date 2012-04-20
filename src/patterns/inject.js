@@ -215,7 +215,8 @@ define([
             var hrefnext = $el.data('href-next');
             if (hrefnext) {
                 $el.attr({href: hrefnext});
-                $el.off('.inject');
+                $el.off('.ajaxify');
+                $el.off('.inject.ajaxify');
             }
 
             // trigger inject event
