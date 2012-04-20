@@ -73,21 +73,25 @@ define([
                 log.debug('ignoring ajax event - not ours', ajaxopts.url, url);
                 return;
             }
-            log.debug('success', ev, jqxhr, opts);
+            var redirect = jqxhr.getResponseHeader('X-Patterns-Redirect-Url'),
+                oldurl = jqxhr.getResponseHeader('X-Patterns-Previous-Url');
+            if (!redirect) {
+                // We are done
+                log.debug('success', ev, jqxhr, opts);
+                return;
+            }
+            log.debug('received redirect', redirect);
+            if (!oldurl) {
+                log.error('Missing header: X-Patterns-Previous-Url');
+                return;
+            }
+            if (!oldurl.slice(-1) === '/') oldurl = oldurl + '/';
 
-            // XXX: this needs to be solved differently
-            if (!data) return;
-            var $forms = $(data).find('form[id]');
-            $forms.each(function() {
+            $('form[action^="' + oldurl + '"]').each(function() {
                 var $form = $(this),
-                    id = $(this).attr('id'),
-                    $ourform = $('#' + id);
-                if ($ourform.length > 0) {
-                    $ourform.attr({action: $form.attr('action')});
-                } else {
-                    console.warn(
-                        'Ignored form in respone data: not matching id', $form);
-                }
+                    action = $form.attr('action').replace(oldurl, redirect);
+                $form.attr({action: action});
+                log.debug('rewrote form action: s:', oldurl, ":", redirect, ":", $form);
             });
         });
 
