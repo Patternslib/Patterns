@@ -21,14 +21,14 @@ define([
         });
 
         $el.on('change', 'input[type=checkbox]', function(ev) {
-            if (($el.find('input[type=checkbox]:checked').length === 0) &&
+            if (($el.find('input[type=checkbox]:visible:checked').length === 0) &&
                 (!deselectallctrl.prop('disabled'))) {
                 deselectallctrl.attr({disabled: 'disabled'});
             } else if (deselectallctrl.prop('disabled')) {
                 deselectallctrl.prop('disabled', false);
             }
 
-            if (($el.find('input[type=checkbox]:not(:checked)').length === 0) &&
+            if (($el.find('input[type=checkbox]:visible:not(:checked)').length === 0) &&
                 (!selectallctrl.prop('disabled'))) {
                 selectallctrl.attr({disabled: 'disabled'});
             } else if (selectallctrl.prop('disabled')) {
