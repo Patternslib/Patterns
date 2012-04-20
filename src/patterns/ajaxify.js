@@ -70,7 +70,7 @@ define([
             // ajaxHandlers are global, we are only interested in our form
             // XXX: figure out how much of this is true with a multi-form test
             if (url !== ajaxopts.url) {
-                log.debug('ignoring ajax event', ajaxopts.url, url);
+                log.debug('ignoring ajax event - not ours', ajaxopts.url, url);
                 return;
             }
             log.debug('success', ev, jqxhr, opts);
