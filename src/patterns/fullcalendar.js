@@ -1,8 +1,11 @@
 define([
     'require',
     '../lib/jquery',
-    '../lib/fullcalendar'
+    '../lib/fullcalendar',
+    '../logging'
 ], function(require) {
+    var log = require('../logging').getLogger('fullcalendar');
+
     var fullcalendar = {
         initContent: function(root) {
             var $calroot = $(root).find('.full-calendar');
@@ -20,8 +23,8 @@ define([
                 }
             };
 
-            // hide all checkboxes, will be shown if mentioned
-            $filter.find('.check-list label').hide();
+            // hide all group checkboxes, will be shown if mentioned
+            $filter.find('.check-list .groups label').hide();
 
             // initialize existing months
             initMonths($calroot);
@@ -53,6 +56,7 @@ define([
                 $('.searchText', $filter).on("keyup", refetch_deb);
                 $('.searchText[type=search]', $filter).on("click", refetch_deb);
                 $('select[name=state]', $filter).on("change", refetch);
+                $('.check-list', $filter).on("change", refetch);
             }
             $events.css('display', 'None');
             $calendar.fullCalendar({
@@ -79,27 +83,65 @@ define([
         },
         parseEvents: function($events, $filter) {
             // show groups that are mentioned
-            $events.each(function(idx, event) {
-                $('.attendees .group', event).each(function(idx, group) {
-                    var name = $(group).attr('id').replace(/_._/g, ' ').slice(6);
-                    $filter.find('.check-list label:has([name="' + name + '"])').show();
-                });
+            $filter.find(
+                '.check-list .groups label:hidden'
+            ).each(function() {
+                var $label = $(this),
+                    id = $label.find('input').attr('name'),
+                    groupsel = '.group-' + id;
+                if ($events.find(groupsel).length > 0) $label.show();
             });
 
             // OPTINAL: go through other filters and gray out groups that would
             // result in zero matches
 
-            // apply filters to source
+            // parse filters
             if ($filter && $filter.length > 0) {
-                var searchText = $('.searchText', $filter).val();
-                var state = $('select[name=state]').val();
+                var searchText = $('.searchText', $filter).val(),
+                    state = $('select[name=state]').val(),
+                    $attendees = $('.attendees', $filter),
+                    noattendees = $attendees.is(':has([name="no-attendees"]:checked)'),
+                    onlyusers = $attendees.is(':has([name="only-users"])'),
+                    // XXX: only take visible groups into account
+                    groupsel = $('.groups input:checked', $attendees).map(function() {
+                        var id = $(this).attr('name');
+                        return '.attendees .group-' + id;
+                    }).toArray().join(',');
             }
-            var events = $(
-                '.event'
-                    + ((state && state !== "all") ? ('.state-' + state) : '')
-                    + (searchText ? (':Contains(' + searchText + ')') : ''),
-                $events
-            ).map(function(idx, event) {
+            var events = $events.find('.event').filter(function() {
+                var $event = $(this);
+                // workflow state
+                if (state && state !== "all") {
+                    if (!$event.hasClass('.state-' + state)) {
+                        log.debug('filter denied state', $event);
+                        return false;
+                    }
+                }
+
+                // attendees
+                if ($event.find('.attendees *').length > 0) {
+                    if ($event.find('.attendees .group').length > 0) {
+                        if ($event.find(groupsel).length === 0) {
+                            log.debug('filter denied groups', $event);
+                            return false;
+                        }
+                    } else if (!onlyusers) {
+                        log.debug('filter denied onlyusers', $event);
+                        return false;
+                    }
+                } else if (!noattendees) {
+                    log.debug('filter denied noattendees', $event);
+                    return false;
+                }
+
+                // full text search
+                if (searchText && !$event.is(':Contains(' + searchText + ')')) {
+                    log.debug('filter denied fulltext', $event);
+                    return false;
+                }
+
+                return true;
+            }).map(function(idx, event) {
                 var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
                     return (cls !== 'event');
                 }).concat($('a', event).attr('class').split(/\s+/));
