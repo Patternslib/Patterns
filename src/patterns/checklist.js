@@ -21,34 +21,40 @@ define([
         });
 
         $el.on('change', 'input[type=checkbox]', function(ev) {
-            if ($el.find('input[type=checkbox]:checked').length === 0) {
-                log.debug('disabling deselect-all');
+            if (($el.find('input[type=checkbox]:checked').length === 0) &&
+                (!deselectallctrl.prop('disabled'))) {
                 deselectallctrl.attr({disabled: 'disabled'});
-            } else {
-                log.debug('enabling deselect-all');
+            } else if (deselectallctrl.prop('disabled')) {
                 deselectallctrl.prop('disabled', false);
             }
 
-            if ($el.find('input[type=checkbox]:not(:checked)').length === 0) {
-                log.debug('disabling select-all');
+            if (($el.find('input[type=checkbox]:not(:checked)').length === 0) &&
+                (!selectallctrl.prop('disabled'))) {
                 selectallctrl.attr({disabled: 'disabled'});
-            } else {
-                log.debug('enabling select-all');
+            } else if (selectallctrl.prop('disabled')) {
                 selectallctrl.prop('disabled', false);
             }
         });
     };
 
     var selectall = function($el) {
-        var $unchecked = $el.find('input[type=checkbox]:not(:checked)');
+        var $unchecked = $el.find('input[type=checkbox]:not(:checked)'),
+            deselectallctrl = $el.find('.functions .deselect-all'),
+            selectallctrl = $el.find('.functions .select-all');
         $unchecked.prop("checked", true);
-        $unchecked.change();
+        deselectallctrl.prop('disabled', false);
+        selectallctrl.attr({disabled: 'disabled'});
+        $el.change();
     };
 
     var deselectall = function($el) {
-        var $checked = $el.find('input[type=checkbox]:checked');
+        var $checked = $el.find('input[type=checkbox]:checked'),
+            deselectallctrl = $el.find('.functions .deselect-all'),
+            selectallctrl = $el.find('.functions .select-all');
         $checked.prop("checked", false);
-        $checked.change();
+        deselectallctrl.attr({disabled: 'disabled'});
+        selectallctrl.prop('disabled', false);
+        $el.change();
     };
 
     var pattern = {
