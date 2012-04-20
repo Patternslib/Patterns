@@ -8,7 +8,8 @@ define([
             var $calroot = $(root).find('.full-calendar');
             if (!$calroot || $calroot.length === 0) return;
 
-            var $filter = $calroot.find('.calendar-filters');
+            // XXX: should be within the calendar
+            var $filter = $('.calendar-filters');
             var initMonths = function($root) {
                 if ($root.hasClass('month')) {
                     fullcalendar.initMonth($root, $filter);
@@ -70,7 +71,6 @@ define([
                 header: { left: '', right: '' },
                 month: month,
                 year: year
-                // XXX: consume calendar-control and pass to fullCalendar
             });
             mapal.initContent($calendar);
         },
@@ -97,8 +97,10 @@ define([
                         attrs[attr.nodeName] = attr.nodeValue;
                     }
                 }
+                var location = ($('.location', event).html() || '').trim();
                 var ev = {
-                    title: $('.title', event).html().trim(),
+                    title: $('.title', event).html().trim()
+                        + (location ? (' (' + location + ')') : ''),
                     start: $('.start', event).attr('datetime'),
                     end: $('.end', event).attr('datetime'),
                     allDay: $(event).hasClass('all-day'),
