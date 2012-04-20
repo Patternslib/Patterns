@@ -33,9 +33,15 @@ define([
                 data: {submit: "submit"},
                 // enforce POST, as we compare the url to figure out
                 // who was triggered
+                // XXX: this should not be needed anymore, leaving it
+                // in for now not to cause additional problems
                 //type: $el.attr('method') || 'POST',
-                type: 'POST',
-                url: url
+                type: 'POST'
+                // XXX: url may not be set here but needs to be
+                // determined upon submit in jquery.forms, as a
+                // redirect will change the action of already
+                // ajaxified forms
+                //url: url
             });
         } else {
             $el.on('click.ajaxify', function(ev, opts) {
@@ -93,6 +99,8 @@ define([
                 $form.attr({action: action});
                 log.debug('rewrote form action: s:', oldurl, ":", redirect, ":", $form);
             });
+
+            // XXX: rewrite anchors that point to the old url?
         });
 
         return $el;
