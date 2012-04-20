@@ -20,6 +20,9 @@ define([
                 }
             };
 
+            // hide all checkboxes, will be shown if mentioned
+            $filter.find('.check-list label').hide();
+
             // initialize existing months
             initMonths($calroot);
 
@@ -75,6 +78,17 @@ define([
             mapal.initContent($calendar);
         },
         parseEvents: function($events, $filter) {
+            // show groups that are mentioned
+            $events.each(function(idx, event) {
+                $('.attendees .group', event).each(function(idx, group) {
+                    var name = $(group).attr('id').replace(/_._/g, ' ').slice(6);
+                    $filter.find('.check-list label:has([name="' + name + '"])').show();
+                });
+            });
+
+            // OPTINAL: go through other filters and gray out groups that would
+            // result in zero matches
+
             // apply filters to source
             if ($filter && $filter.length > 0) {
                 var searchText = $('.searchText', $filter).val();
