@@ -30,7 +30,10 @@ define([
 
         // event handler to remove element
         var remove = function(ev) {
-            if (ev) ev.preventDefault();
+            if (ev) {
+                ev.preventDefault();
+            }
+
             // the modal will be gone, but unhooked from document
             $(document).off('.modal');
             $el.remove();
@@ -42,6 +45,13 @@ define([
         });
         // remove on close-panel button click
         $el.find('.close-panel').on('click.remove.modal', remove);
+
+        // close dialog if form is submitted
+        // TODO: one might want to display errors on modal dialog
+        // instead of closing it, provide that option somehow
+        $form.submit(function (e) {
+            remove();
+        });
 
 
         // ensure element is ajaxified
