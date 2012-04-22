@@ -6,9 +6,14 @@ define([
     var init = function($el, opts) {
         // create collapsible structure
         var $ctrl = $el.children(':first'),
-            $panel = $el.children(':gt(0)')
-                .wrapAll('<div class="panel-content" />')
+            $content = $el.children(':gt(0)'),
+            $panel;
+        if ($content.length > 0) {
+            $panel = $content.wrapAll('<div class="panel-content" />')
                 .parent();
+        } else {
+            $panel = $('<div class="panel-content" />').insertAfter($ctrl);
+        }
 
         // set initial state
         if ((opts && opts.closed) || $el.hasClass("closed")) {
