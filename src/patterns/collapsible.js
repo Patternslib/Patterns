@@ -1,7 +1,12 @@
 define([
     'require',
+    '../core/parser',
+    '../logging',
     '../lib/jquery'
 ], function(require) {
+    var Parser = require('../core/parser'),
+        parser = new Parser("injectcontent"),
+        log = require('../logging').getLogger('collapsible');
 
     var init = function($el, opts) {
         // create collapsible structure
@@ -21,6 +26,7 @@ define([
             close($el, 0);
         } else {
             $el.addClass("open");
+            loadcontent($el);
         }
 
         // bind to click events
@@ -30,8 +36,46 @@ define([
         return $el;
     };
 
+    var loadcontent = function($el) {
+        // check whether we have to fetch content
+        var opts_str = $el.data('collapsible'),
+            src, href, id, $panel, $sources;
+        if (opts_str) {
+            src = parser.parse(opts_str)["injectcontent"] || "";
+            href = src.split('#')[0];
+            id = src.split('#')[1];
+            log.debug(href, id);
+            if (!id) {
+                log.error('Need id to fetch content for panel');
+            } else {
+                $panel = $el.find('.panel-content');
+                $.ajax({
+                    context: $el,
+                    url: href,
+                    error: function(jqxhr, status, error) {
+                        log.error('Error loading panel content', jqxhr, status, error);
+                        $panel.html(
+                            status + ': Failed to load panel content from: ' + href
+                        );
+                    },
+                    success: function(data, status, jqxhr) {
+                        // just copied from old inject code
+                        data = data
+                            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                            .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                            .replace(/<body(.*)>/gi, '<div id="__original_body">')
+                            .replace(/<\/body(.*)>/gi,'</div>');
+                        var $src = $('<div/>').html(data).find('#' + id);
+                        $panel.html($src.html());
+                    }
+                });
+            }
+        }
+    };
+
     var open = function($el, duration) {
         if ($el.hasClass("open")) return;
+
         toggle($el, duration);
 
         // allow for chaining
@@ -58,6 +102,7 @@ define([
     var toggle = function($el, duration) {
         var $panel = $el.find('.panel-content');
         if ($el.hasClass("closed")) {
+            loadcontent($el);
             transit($el, $panel, "closed", "open", duration);
         } else {
             transit($el, $panel, "open", "closed", duration);
