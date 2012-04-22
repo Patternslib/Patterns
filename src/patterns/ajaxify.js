@@ -62,7 +62,7 @@ define([
             log.debug('error', ev, jqxhr, opts, error);
 
             // XXX: this needs to be solved differently
-            var msg = [jqxhr.status, jqxhr.statusText, error, opts.url].join(' '),
+            var msg = [jqxhr.status, jqxhr.statusText, error, opts && opts.url].join(' '),
                 // XXX: error notification pattern!
                 $error = $('<div class="modal">'
                            + '<h3>Error</h3>'
