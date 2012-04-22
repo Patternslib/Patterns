@@ -116,6 +116,7 @@ define([
         markup_trigger: ".collapsible",
         initialised_class: "collapsible",
         init: init,
+        loadcontent: loadcontent,
         open: open,
         close: close,
         toggle: toggle
