@@ -219,6 +219,14 @@ define([
                 $el.off('.inject.ajaxify');
             }
 
+            // check whether we are inside a navigation element and
+            // set .current accordingly
+            var $nav = $el.parent('.navigation');
+            if ($nav.length > 0) {
+                $nav.children('.current').removeClass('current');
+                $el.addClass('current');
+            }
+
             // trigger inject event
             $targets.trigger('inject', {
                 method: method_name,
