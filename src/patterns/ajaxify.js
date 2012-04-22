@@ -87,6 +87,12 @@ define([
                 return;
             }
             log.debug('received redirect', redirect);
+
+            // perform redirect
+            window.location.href = redirect;
+
+            return;
+            // XXX: below here disabled for now
             if (!oldurl) {
                 log.error('Missing header: X-Patterns-Previous-Url');
                 return;
