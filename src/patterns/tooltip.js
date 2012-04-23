@@ -22,14 +22,17 @@ define([
         },
 
         initContent: function(root) {
-            $("*[data-tooltip]", root).each(function() {
-                var $trigger = $(this),
-                    options = utils.parseOptions($trigger.data("tooltip"));
-
+            var $root = $(root);
+            var init = function($trigger) {
+                var options = utils.parseOptions($trigger.data("tooltip"));
                 options.title = $trigger.attr("title");
                 $trigger.removeAttr("title");
                 $trigger.data("mapal.tooltip", options);
                 tooltip.setupShowEvents($trigger);
+            };
+            if ($root.is('[data-tooltip]')) init($root);
+            $("*[data-tooltip]", $root).each(function() {
+                init($(this));
             });
         },
 
