@@ -36,6 +36,11 @@ define([
         var curpath = window.location.pathname;
         log.debug('current path:', curpath);
 
+        // check whether to load
+        if ($el.hasClass('navigation-load-current')) {
+            $el.find('a.current').click();
+        }
+
         $el.find('li a').each(function() {
             var $a = $(this),
                 $li = $a.parents('li:first'),
