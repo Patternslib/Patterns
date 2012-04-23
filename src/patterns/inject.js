@@ -34,11 +34,15 @@ define([
                         : $el.attr('href')).split('#'),
                 srcid = href[1];
 
-            if (href[0] !== ajaxopts.url) {
-                log.debug('ignoring ajax event', ajaxopts.url, href[0]);
+            if (ev.target !== $el[0]) {
+                //log.debug('ignoring ajax event for', $(ev.target), 'not',  $el[0]);
                 return;
             }
-            log.debug('starting on', $el);
+            if (href[0] !== ajaxopts.url) {
+                //log.debug('ignoring ajax event', ajaxopts.url, href[0]);
+                return;
+            }
+            log.debug('executing', $el);
 
             if (href.length > 2) {
                 log.warn('Ignoring additional source ids:', href.slice(2), $el);

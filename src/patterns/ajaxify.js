@@ -75,8 +75,12 @@ define([
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
             // ajaxHandlers are global, we are only interested in our form
             // XXX: figure out how much of this is true with a multi-form test
+            if (ev.target !== $el[0]) {
+                //log.debug('ignoring ajax event for', $(ev.target), 'not',  $el[0]);
+                return;
+            }
             if (url !== ajaxopts.url) {
-                log.debug('ignoring ajax event - not ours', ajaxopts.url, url);
+                //log.debug('ignoring ajax event', ajaxopts.url, href[0]);
                 return;
             }
             var redirect = jqxhr.getResponseHeader('X-Patterns-Redirect-Url'),
