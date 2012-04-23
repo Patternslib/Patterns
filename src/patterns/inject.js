@@ -225,7 +225,11 @@ define([
 
             // check whether we are inside a navigation element and
             // set .current accordingly
-            var $nav = $el.parent('.navigation');
+            var $nav = $el.parents('.navigation');
+            if ($nav.length > 1) {
+                $nav = $($nav[0]);
+                log.warn('Inside multiple navigations, using innermost', $nav);
+            }
             if ($nav.length > 0) {
                 $nav.children('.current').removeClass('current');
                 $el.addClass('current');
