@@ -612,8 +612,12 @@ var mapal = {
                     if (appendTo) {
                         return $source;
                     }
+                    // in an ideal world ids are unique, we can't rely on that
+                    $source.addClass('tmp-injection-marker');
                     $target.replaceWith($source);
-                    return $("#" + $source.attr("id"));
+                    $target = $(".tmp-injection-marker");
+                    $target.removeClass('tmp-injection-marker');
+                    return $target;
                 }
             },
 
