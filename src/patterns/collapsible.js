@@ -46,7 +46,7 @@ define([
             id = src.split('#')[1];
             log.debug(href, id);
             if (!id) {
-                log.error('Need id to fetch content for panel');
+                log.error('injectcontent url needs id to fetch content for panel', src);
             } else {
                 $panel = $el.find('.panel-content');
                 $.ajax({
