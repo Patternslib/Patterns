@@ -83,32 +83,39 @@ define([
                 //log.debug('ignoring ajax event', ajaxopts.url, href[0]);
                 return;
             }
+
             var redirect = jqxhr.getResponseHeader('X-Patterns-Redirect-Url'),
                 oldurl = jqxhr.getResponseHeader('X-Patterns-Previous-Url');
-            if (!redirect) {
-                // We are done
-                log.debug('success', ev, jqxhr, opts);
-                return;
+            if (redirect) {
+                log.debug('received redirect', redirect);
+
+                // perform redirect
+                window.location.href = redirect;
             }
-            log.debug('received redirect', redirect);
 
-            // perform redirect
-            window.location.href = redirect;
+            var reload = jqxhr.getResponseHeader('X-Patterns-Reload');
+            if ((reload !== null) && (reload !== undefined)) {
+                $('form.inject.reload').submit();
+                $('a.inject.reload:not(.navigation a)').click();
+                $('.navigation a.inject.reload.current').click();
+            }
 
-            return;
+            // We are done
+            log.debug('success', ev, jqxhr, opts);
+
             // XXX: below here disabled for now
-            if (!oldurl) {
-                log.error('Missing header: X-Patterns-Previous-Url');
-                return;
-            }
-            if (!oldurl.slice(-1) === '/') oldurl = oldurl + '/';
+            // if (!oldurl) {
+            //     log.error('Missing header: X-Patterns-Previous-Url');
+            //     return;
+            // }
+            // if (!oldurl.slice(-1) === '/') oldurl = oldurl + '/';
 
-            $('form[action^="' + oldurl + '"]').each(function() {
-                var $form = $(this),
-                    action = $form.attr('action').replace(oldurl, redirect);
-                $form.attr({action: action});
-                log.debug('rewrote form action: s:', oldurl, ":", redirect, ":", $form);
-            });
+            // $('form[action^="' + oldurl + '"]').each(function() {
+            //     var $form = $(this),
+            //         action = $form.attr('action').replace(oldurl, redirect);
+            //     $form.attr({action: action});
+            //     log.debug('rewrote form action: s:', oldurl, ":", redirect, ":", $form);
+            // });
 
             // XXX: rewrite anchors that point to the old url?
         });
