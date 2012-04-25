@@ -26,8 +26,8 @@ define([
 
     var plain_patterns = {
         ajaxify: require('./patterns/ajaxify'),
-        autosubmit: require('./patterns/autosubmit'),
         autosuggest: require('./patterns/autosuggest'),
+        autosubmit: require('./patterns/autosubmit'),
         collapsible: require('./patterns/collapsible'),
         checklist: require('./patterns/checklist'),
         chosen: require('./patterns/chosen'),
