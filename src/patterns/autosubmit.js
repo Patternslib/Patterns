@@ -13,6 +13,12 @@ define([
         var $form = $el.is('form') ? $el : $el.parents('form').first();
 
         var submit = function(event) {
+            // ignore auto-suggest fields, the change event will be
+            // triggered on the hidden input
+            if ($(event.target).is('.auto-suggest')) {
+                log.debug('ignored event from autosuggest field');
+                return;
+            }
             log.info("triggered by " + event.type);
             $form.submit();
         };
