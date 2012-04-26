@@ -2,7 +2,6 @@ define([
     'require',
     '../core/parser',
     '../lib/dist/underscore',
-    '../lib/jquery',
     '../lib/jquery.form/jquery.form',
     '../logging',
     '../patterns'

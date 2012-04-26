@@ -8,8 +8,7 @@
  */
 define([
     'require',
-    '../lib/jquery',
-    '../lib/jquery.fancybox'
+    '../lib/dist/jquery.fancybox-1.3.4'
 ], function(require) {
     var fancybox = {
         execute: function(elem, url, sources, params, event) {

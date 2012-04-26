@@ -8,7 +8,6 @@
  */
 define([
     'require',
-    '../lib/jquery',
     '../core/init',
     '../core/store',
     '../utils'

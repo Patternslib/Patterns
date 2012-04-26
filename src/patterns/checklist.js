@@ -1,6 +1,5 @@
 define([
     'require',
-    '../lib/jquery',
     '../logging'
 ], function(require) {
     var log = require('../logging').getLogger('checklist');

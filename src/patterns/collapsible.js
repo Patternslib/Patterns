@@ -1,8 +1,7 @@
 define([
     'require',
     '../core/parser',
-    '../logging',
-    '../lib/jquery'
+    '../logging'
 ], function(require) {
     var Parser = require('../core/parser'),
         parser = new Parser("injectcontent"),

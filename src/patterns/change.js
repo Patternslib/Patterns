@@ -1,6 +1,5 @@
 define([
-    'require',
-    '../lib/jquery'
+    'require'
 ], function(require) {
     var change = {
         initContent: function(root) {

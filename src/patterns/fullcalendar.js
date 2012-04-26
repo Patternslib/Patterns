@@ -1,7 +1,6 @@
 define([
     'require',
-    '../lib/jquery',
-    '../lib/fullcalendar',
+    '../lib/dist/fullcalendar/fullcalendar',
     '../logging'
 ], function(require) {
     var log = require('../logging').getLogger('fullcalendar');

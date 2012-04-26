@@ -1,6 +1,5 @@
 define([
     'require',
-    './lib/jquery',
     './logging',
     './patterns/ajaxify',
     './patterns/autosuggest',

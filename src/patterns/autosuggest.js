@@ -2,7 +2,6 @@
 // http://code.drewwilson.com/entry/autosuggest-jquery-plugin
 define([
     'require',
-    '../lib/jquery',
     '../logging',
     '../../lib/jquery.autoSuggest'
 ], function(require) {

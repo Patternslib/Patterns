@@ -8,7 +8,6 @@
  */
 define([
     'require',
-    '../lib/jquery',
     '../core/init'
 ], function(require) {
     var mapal = require('../core/init');

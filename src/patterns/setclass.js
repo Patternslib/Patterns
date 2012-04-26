@@ -8,7 +8,6 @@
  */
 define([
     'require',
-    '../lib/jquery',
     '../core/store',
     '../utils'
 ], function(require) {
