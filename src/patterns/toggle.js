@@ -8,7 +8,6 @@
  */
 define([
     'require',
-    '../lib/jquery',
     '../utils'
 ], function(require) {
     var utils = require('../utils');

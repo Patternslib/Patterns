@@ -7,8 +7,7 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
-    '../lib/jquery'
+    'require'
 ], function(require) {
     var store = {
         'getPatternAttributes': function(pattern) {

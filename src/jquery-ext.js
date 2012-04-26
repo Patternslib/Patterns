@@ -4,9 +4,6 @@
  *
  * Copyright 2011 Humberto Sermeño
  */
-define([
-    './lib/jquery'
-], function() {
 (function( $ ){
     var methods = {
         init: function( options ) {
@@ -304,5 +301,3 @@ String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null
         return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
 })( jQuery );
-
-});

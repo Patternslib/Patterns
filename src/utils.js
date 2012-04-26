@@ -2,7 +2,6 @@ define([
     'require',
     './core/store',
     './lib/dist/underscore',
-    './lib/jquery',
     './logging'
 ], function(require) {
     // XXX: not nice

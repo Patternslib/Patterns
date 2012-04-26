@@ -1,7 +1,6 @@
 define([
     'require',
     '../lib/dist/underscore',
-    '../lib/jquery',
     '../lib/jquery.form/jquery.form',
     '../logging'
 ], function(require) {
