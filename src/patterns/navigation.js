@@ -66,7 +66,7 @@ define([
     };
 
     var pattern = {
-        markup_trigger: '.navigation',
+        markup_trigger: 'nav, .navigation',
         init: init
     };
     return pattern;
