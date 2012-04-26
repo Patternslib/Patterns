@@ -41,19 +41,24 @@ define([
             $el.find('a.current').click();
         }
 
-        $el.find('li a').each(function() {
-            var $a = $(this),
-                $li = $a.parents('li:first'),
-                url = $a.attr('href'),
-                path = pathfromurl(url);
-            log.debug('checking url:', url, 'extracted path:', path);
-            if (!match(curpath, path)) {
-                $li.removeClass('current');
-                return;
-            }
-            log.debug('found match', $li);
-            $li.addClass('current');
-        });
+        // XXX: this code adjusted the current tag of newly page, this
+        // should not happen client side but is the responsibility of
+        // the server-side template. Client-side only for ajax
+        // injections which is handled in the inject pattern
+        //
+        // $el.find('li a').each(function() {
+        //     var $a = $(this),
+        //         $li = $a.parents('li:first'),
+        //         url = $a.attr('href'),
+        //         path = pathfromurl(url);
+        //     log.debug('checking url:', url, 'extracted path:', path);
+        //     if (!match(curpath, path)) {
+        //         $li.removeClass('current');
+        //         return;
+        //     }
+        //     log.debug('found match', $li);
+        //     $li.addClass('current');
+        // });
 
 
         // TODO: bind handler to url changes ?
