@@ -518,25 +518,23 @@ var mapal = {
                     }
                 }
 
-                // XXX: this should be reenable as part of the
-                // navigation pattern reacting to url changes only.
-                //
                 // check if this was a navigation call
-                // var $navs = $elem.parents("nav,.navigation"), $items, $item;
-                // if ($navs.length > 0) {
-                //     $items = $navs.find('li');
-                //     if ($items.length === 0) {
-                //         $items = $navs.find('a');
-                //     }
-                //     $items.removeClass('current');
+                var $navs = $elem.parents("nav, .navigation"),
+                    $items, $item;
+                if ($navs.length > 0) {
+                    $items = $navs.find('li');
+                    if ($items.length === 0) {
+                        $items = $navs.find('a');
+                    }
+                    $items.removeClass('current');
 
-                //     $item = $elem.parents("li");
-                //     if ($item.length > 0) {
-                //         $($item[0]).addClass('current');
-                //     } else if ($item.length === 0) {
-                //         $elem.addClass('current');
-                //     }
-                // }
+                    $item = $elem.parents("li");
+                    if ($item.length > 0) {
+                        $($item[0]).addClass('current');
+                    } else if ($item.length === 0) {
+                        $elem.addClass('current');
+                    }
+                }
             }
             var $targets = $('#' + target_ids.join(',#'));
             $targets.addClass('injection-loading');
