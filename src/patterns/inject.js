@@ -224,7 +224,7 @@ define([
 
             // check whether we are inside a navigation element and
             // set .current accordingly
-            var $nav = $el.parents('.navigation');
+            var $nav = $el.parents('nav, .navigation');
             if ($nav.length > 1) {
                 $nav = $($nav[0]);
                 log.warn('Inside multiple navigations, using innermost', $nav);
