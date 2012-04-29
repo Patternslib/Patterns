@@ -1,12 +1,12 @@
 define([
     'require',
-    '../lib/log4javascript',
+//    '../lib/log4javascript',
     './lib/jquery.form/jquery.form'
 ], function(require) {
-    var l4js = log4javascript,
-        level = l4js.Level,
-        rootname = 'patterns',
-        root = l4js.getLogger(rootname);
+    // var l4js = log4javascript,
+    //     level = l4js.Level,
+    //     rootname = 'patterns',
+    //     root = l4js.getLogger(rootname);
 
     var init_console_logging = function() {
         // enable/disable all logging
@@ -66,12 +66,12 @@ define([
     };
 
     var logging = {
-        level: level,
+//        level: level,
         getLogger: function(name) {
-            var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
-            if (name === 'inject_log_old') logger.setLevel(level.INFO);
-            // disable old injection logging for now
-            if (name === 'old-injection') logger.setLevel(level.WARN);
+            // var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
+            // if (name === 'inject_log_old') logger.setLevel(level.INFO);
+            // // disable old injection logging for now
+            // if (name === 'old-injection') logger.setLevel(level.WARN);
 
             // return this instead of logger, if logging causes
             // problems for you please file tickets about the errors
@@ -84,7 +84,7 @@ define([
                 warn: function() {},
                 error: function() {}
             };
-            return logger;
+            return mocklogger;
         }
     };
 
