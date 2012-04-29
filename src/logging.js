@@ -84,7 +84,7 @@ define([
                 warn: function() {},
                 error: function() {}
             };
-            return mocklogger;
+            return logger;
         }
     };
 
