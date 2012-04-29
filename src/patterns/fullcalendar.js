@@ -164,9 +164,9 @@ define([
                     attrs: attrs,
                     editable: $(event).hasClass('editable')
                 };
-                if (!ev.title) console.error('No event title for:', event);
-                if (!ev.start) console.error('No event start for:', event);
-                if (!ev.url) console.error('No event url for:', event);
+                if (!ev.title) log.error('No event title for:', event);
+                if (!ev.start) log.error('No event start for:', event);
+                if (!ev.url) log.error('No event url for:', event);
                 return ev;
             }).toArray();
             return events;
