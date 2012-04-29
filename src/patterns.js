@@ -1,5 +1,6 @@
 define([
     'require',
+    './compat',
     './logging',
     './patterns/ajaxify',
     './patterns/autosuggest',
