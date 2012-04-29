@@ -5,7 +5,11 @@
  * Copyright 2012 Simplon B.V.
  * Copyright 2012 Florian Friesdorf
  */
-define([], function() {
+define([
+    'require',
+    '../logging'
+], function(require) {
+    var log = require('../logging').getLogger('parser');
 
     // older browsers - factor out if more need it
     // source: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim
@@ -92,16 +96,6 @@ define([], function() {
         };
     }
 
-
-    // XXX: move to dedicated module
-    var warn = function(msg) {
-        try {
-            console.warn(msg);
-        } catch(e) {
-        }
-    };
-
-
     function ArgumentParser(spec) {
         this.params = [];
         this.defaults = {};
@@ -169,11 +163,11 @@ define([], function() {
             for (i=0; i<parts.length; i++) {
                 matches = parts[i].match(this.named_param_pattern);
                 if (!matches) {
-                    warn("Positional parameters not allowed after named parameters");
+                    log.warn("Positional parameters not allowed after named parameters");
                     break;
                 }
                 if (this.defaults[matches[1]] === undefined) {
-                    warn("Unknown named parameter " + matches[1]);
+                    log.warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
                 opts[matches[1]] = matches[2].trim();
