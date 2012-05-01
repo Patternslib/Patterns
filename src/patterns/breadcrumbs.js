@@ -7,12 +7,12 @@ define([
     var log = require('../logging').getLogger('breadcrumbs');
 
     var init = function($el, opts) {
-        // wrap elements in a DIV
+        // wrap elements in a DIV that will be shifted around
         $el.children().wrapAll('<div class="breadcrumbs-content"></div>');
 
-        // put content into a container that can be shifted around
+        // shift ctrl
         var $shift = $('<span class="shift shift-right">shift</span>')
-                .prependTo($el).hide();
+                .prependTo($el);
     };
 
     var pattern = {
