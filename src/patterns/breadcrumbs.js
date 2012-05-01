@@ -8,11 +8,21 @@ define([
 
     var init = function($el, opts) {
         // wrap elements in a DIV that will be shifted around
-        $el.children().wrapAll('<div class="breadcrumbs-content"></div>');
+        var $content = $el.children()
+                .wrapAll('<div class="breadcrumbs-content"></div>').parent();
+
+        // set fixed width on content
+        var width = $content.children().toArray().reduce(function(acc, el) {
+            var $el = $(el);
+            console.log(acc + $el.outerWidth(true));
+            return acc + $el.outerWidth(true);
+        }, 0);
+        $content.width(width);
 
         // shift ctrl
-        var $shift = $('<span class="shift shift-right">shift</span>')
+        var $shift = $('<span class="button shift">shift</span>')
                 .prependTo($el);
+
     };
 
     var pattern = {
