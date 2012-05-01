@@ -22,7 +22,9 @@ define([
             {}
         );
         log.debug('rules:', rules);
-        $el.validate({rules: rules, debug: true});
+        // ATTENTION: adding the debug option to validate, disables
+        // form submission
+        $el.validate({rules: rules});
         return $el;
     };
 
