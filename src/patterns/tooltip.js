@@ -61,7 +61,7 @@ define([
             } else {
                 $container.on("click.tooltip", $trigger, tooltip.hide);
                 if (parameters.click) {
-                    $(window).on("click.tooltip", $trigger, tooltip.hide);
+                    $(document).on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("click.tooltip", tooltip.blockDefault);
                 } else {
                     $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
@@ -72,7 +72,7 @@ define([
 
         removeHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger);
-            $(window).off(".tooltip");
+            $(document).off(".tooltip");
             $container.off(".tooltip");
             $container.find(".closePanel").off(".tooltip");
             $trigger.off(".tooltip");
