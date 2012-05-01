@@ -7,11 +7,8 @@ define([
     var log = require('../logging').getLogger('breadcrumbs');
 
     var init = function($el, opts) {
-        // wrap elements in a UL in case none exists
-        if (!$el.is(':has(ul)')) {
-            $el.children().wrapAll('<ul></ul>').wrap('<li></li>');
-        }
-        var $ul = $el.find('ul');
+        // wrap elements in a DIV
+        $el.children().wrapAll('<div class="breadcrumbs-content"></div>');
 
         // put content into a container that can be shifted around
         var $shift = $('<span class="shift shift-right">shift</span>')
