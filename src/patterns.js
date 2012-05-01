@@ -15,6 +15,7 @@ define([
     './patterns/inject_log_old',
     './patterns/modal',
     './patterns/navigation',
+    './patterns/placeholder',
     './patterns/validate',
     './utils'
 ], function(require) {
@@ -37,6 +38,7 @@ define([
         inject_log_old: require('./patterns/inject_log_old'),
         modal: require('./patterns/modal'),
         navigation: require('./patterns/navigation'),
+        placeholder: require('./patterns/placeholder'),
         validate: require('./patterns/validate')
     };
 
