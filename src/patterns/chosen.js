@@ -1,6 +1,5 @@
 define([
     'require',
-    '../lib/dist/underscore',
     '../../lib/chosen.jquery',
     '../logging'
 ], function(require) {

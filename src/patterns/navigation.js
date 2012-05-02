@@ -1,6 +1,5 @@
 define([
     'require',
-    '../lib/dist/underscore',
     '../logging'
 ], function(require) {
     var log = require('../logging').getLogger('navigation');

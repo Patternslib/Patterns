@@ -1,9 +1,11 @@
 define([
     'require',
     '../lib/dist/fullcalendar/fullcalendar',
-    '../logging'
+    '../logging',
+    '../utils'
 ], function(require) {
-    var log = require('../logging').getLogger('fullcalendar');
+    var log = require('../logging').getLogger('fullcalendar'),
+        utils = require('../utils');
 
     var fullcalendar = {
         initContent: function(root) {
@@ -50,7 +52,7 @@ define([
                 // XXX: replace with mutator event listener
                 mapal.initContent($calendar);
             };
-            var refetch_deb = _.debounce(refetch, 400);
+            var refetch_deb = utils.debounce(refetch, 400);
             if ($filter && $filter.length > 0) {
                 $('.searchText', $filter).on("keyup", refetch_deb);
                 $('.searchText[type=search]', $filter).on("click", refetch_deb);

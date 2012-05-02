@@ -1,7 +1,6 @@
 define([
     'require',
     './core/store',
-    './lib/dist/underscore',
     './logging'
 ], function(require) {
     // XXX: not nice
@@ -153,12 +152,39 @@ define([
     var load_modules = function(prefix, names, suffix) {
         prefix = prefix || '';
         suffix = suffix || '';
-        var modules = _.reduce(names, function(acc, name) {
+        var modules = names.reduce(function(acc, name) {
             acc[name] = require(prefix + name + suffix);
             return acc;
         }, {});
         return modules;
     };
+
+
+    //     Underscore.js 1.3.1
+    //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
+    //     Underscore is freely distributable under the MIT license.
+    //     Portions of Underscore are inspired or borrowed from Prototype,
+    //     Oliver Steele's Functional, and John Resig's Micro-Templating.
+    //     For all details and documentation:
+    //     http://documentcloud.github.com/underscore
+    //
+    // Returns a function, that, as long as it continues to be invoked, will not
+    // be triggered. The function will be called after it stops being called for
+    // N milliseconds.
+    var debounce = function(func, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                func.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    };
+
+
 
     var utils = {
         extractParameters: extractParameters,
@@ -169,7 +195,8 @@ define([
         once: once,
         turnstiled: turnstiled,
         pimp_pattern: pimp_pattern,
-        jquery_plugin: jquery_plugin
+        jquery_plugin: jquery_plugin,
+        debounce: debounce
     };
 
     return utils;
