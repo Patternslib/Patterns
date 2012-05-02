@@ -1,25 +1,6 @@
-define([
-    'require',
-    './compat',
-    './logging',
-    './patterns/ajaxify',
-    './patterns/autosuggest',
-    './patterns/autosubmit',
-    './patterns/breadcrumbs',
-    './patterns/collapsible',
-    './patterns/checklist',
-    './patterns/chosen',
-//    './patterns/edit',
-    './patterns/edit-tinymce',
-    './patterns/expandable',
-    './patterns/inject',
-    './patterns/inject_log_old',
-    './patterns/modal',
-    './patterns/navigation',
-    './patterns/placeholder',
-    './patterns/validate',
-    './utils'
-], function(require) {
+define(function(require) {
+    require('./compat');
+
     var log = require('./logging').getLogger(),
         utils = require('./utils'),
         jquery_plugin = utils.jquery_plugin,
