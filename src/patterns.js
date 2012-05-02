@@ -18,6 +18,7 @@ define(function(require) {
         "edit-tinymce": require('./patterns/edit-tinymce'),
         expandable: require('./patterns/expandable'),
         inject: require('./patterns/inject'),
+        inject2: require('./patterns/inject2'),
         inject_log_old: require('./patterns/inject_log_old'),
         modal: require('./patterns/modal'),
         navigation: require('./patterns/navigation'),
