@@ -1,6 +1,5 @@
 define([
     'require',
-    '../lib/dist/underscore',
     '../../lib/chosen.jquery',
     '../logging'
 ], function(require) {
@@ -13,16 +12,62 @@ define([
 
         // set fixed width on content
         var width = $content.children().toArray().reduce(function(acc, el) {
-            var $el = $(el);
-            console.log(acc + $el.outerWidth(true));
-            return acc + $el.outerWidth(true);
+            return acc + $(el).outerWidth(true);
         }, 0);
         $content.width(width);
 
         // shift ctrl
-        var $shift = $('<span class="button shift">shift</span>')
+        var $ctrl = $('<span class="button shift">shift</span>')
                 .prependTo($el);
 
+        var shifted = false,
+            shifting = false,
+            difference = 0;
+        var shifter = function(toggle) {
+            return function() {
+                var margin;
+                if (toggle) {
+                    margin = shifted ? 0 : difference;
+                    $content.animate({"margin-left": margin}, function() {
+                        $ctrl.toggleClass('shift-right shift-left');
+                        shifted = !shifted;
+                    });
+                } else {
+                    margin = shifted ? difference : 0;
+                    $content.css({"margin-left": margin});
+                }
+            };
+        };
+
+        var maybeshift = function() {
+            // account for other stuff on the same line (100px)
+            difference = $el.innerWidth() - $content.width() - 100;
+
+            if (difference < 0) {
+                // we should be shifting
+                if (!shifting) {
+                    shifting = true;
+                    $el.addClass('shifting');
+                    $ctrl.addClass('shift-left');
+                    $ctrl.on('click.breadcrumbs', shifter(true));
+                    $ctrl.click();
+                } else {
+                    // a shifter that keeps state
+                    shifter(false)();
+                }
+            } else {
+                // we should not be shifting
+                if (shifting) {
+                    if (shifted) $ctrl.click();
+                    shifting = false;
+                    $el.removeClass('shifting');
+                    $ctrl.removeClass('shift-left shift-right');
+                    $ctrl.off('.breadcrumbs');
+                }
+            }
+        };
+        maybeshift();
+        $(window).on('resize.breadcrumbs', maybeshift);
     };
 
     var pattern = {
