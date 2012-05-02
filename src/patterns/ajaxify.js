@@ -59,6 +59,10 @@ define([
                 log.debug('ignoring ajax event', ajaxopts.url, url);
                 return;
             }
+            if (jqxhr.status === 0) {
+                log.debug('ignoring error due to canceled request');
+                return;
+            }
             log.debug('error', ev, jqxhr, opts, error);
 
             // XXX: this needs to be solved differently
