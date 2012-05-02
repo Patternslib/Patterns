@@ -1,10 +1,11 @@
 define([
     'require',
-    '../lib/dist/underscore',
     '../lib/jquery.form/jquery.form',
-    '../logging'
+    '../logging',
+    '../utils'
 ], function(require) {
-    var log = require('../logging').getLogger('autosubmit');
+    var log = require('../logging').getLogger('autosubmit'),
+        utils = require('../utils');
 
     // can be called on a form or an element in a form
     var init = function($el) {
@@ -28,7 +29,7 @@ define([
         // debounced keyup submit, if enabled
         if ($el.hasClass('auto-submit-keyup')) {
             ($el.is('input') ? $el : $el.find('input'))
-                .on("keyup", _.debounce(submit, 400));
+                .on("keyup", utils.debounce(submit, 400));
         }
 
         // XXX: test whether on webkit and enable only if supported

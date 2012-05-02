@@ -1,7 +1,6 @@
 define([
     'require',
     '../core/parser',
-    '../lib/dist/underscore',
     '../lib/jquery.form/jquery.form',
     '../logging',
     '../patterns'
@@ -48,13 +47,11 @@ define([
             }
 
             // fetch defaults from parents
-            var defaults = _.reduce(
-                $el.parents('[data-inject-defaults]').toArray().reverse(),
-                function(acc, el) {
+            var $defaults = $el.parents('[data-inject-defaults]'),
+                defaults = $defaults.toArray().reduceRight(function(acc, el) {
                     var opts_str = $(el).attr('data-inject-defaults');
                     return parser.parse(opts_str, acc);
-                }, {}
-            );
+                }, {});
 
             if (srcid) defaults.source = '#' + srcid;
 

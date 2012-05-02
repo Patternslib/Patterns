@@ -4,7 +4,6 @@ require([
     '../src/lib/jquery',
     '../lib/pavlov',
     '../lib/qunit',
-    '../src/lib/dist/underscore',
     '../src/patterns',
 //    'spec!./spec/aloha',
     'spec!./spec/collapsible',
@@ -33,7 +32,7 @@ require([
     var load_modules = function(prefix, names, suffix) {
         prefix = prefix || '';
         suffix = suffix || '';
-        var modules = _.reduce(names, function(acc, name) {
+        var modules = names.reduce(function(acc, name) {
             acc[name] = require(prefix + name + suffix);
             return acc;
         }, {});
