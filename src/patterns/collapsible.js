@@ -81,7 +81,7 @@ define([
     };
 
     var open = function($el, duration) {
-        if ($el.hasClass("open")) return;
+        if ($el.hasClass("open")) return null;
 
         toggle($el, duration);
 
@@ -90,7 +90,7 @@ define([
     };
 
     var close = function($el, duration) {
-        if ($el.hasClass("closed")) return;
+        if ($el.hasClass("closed")) return null;
         toggle($el, duration);
 
         // allow for chaining
