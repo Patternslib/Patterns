@@ -1,5 +1,4 @@
-define([
-], function() {
+define(function() {
 
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/filter (JS 1.6)
     if (!Array.prototype.filter) {
@@ -201,6 +200,5 @@ define([
             return this.replace(/^\s+|\s+$/g,'');
         };
     }
-
 
 });
