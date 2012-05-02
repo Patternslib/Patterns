@@ -25,6 +25,7 @@ define([
             close($el, 0);
         } else {
             $el.addClass("open");
+            $el.trigger('patterns-collapsible-open');
             loadcontent($el);
         }
 
@@ -110,6 +111,7 @@ define([
         var $panel = $el.find('.panel-content');
         if ($el.hasClass("closed")) {
             loadcontent($el);
+            $el.trigger('patterns-collapsible-open');
             transit($el, $panel, "closed", "open", duration);
         } else {
             transit($el, $panel, "open", "closed", duration);
