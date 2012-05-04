@@ -28,6 +28,17 @@ define([
                 ($el.parents('.auto-submit').length > 0);
         log.debug('auto-submit', autosubmit, $el);
 
+        $el.on('keydown', function(ev) {
+            if (ev.which === 13) {
+                ev.preventDefault();
+                var newev = $.Event("keydown");
+                newev.ctrlKey = false;
+                newev.which = 188;
+                newev.keyCode = 188;
+                $el.trigger(newev);
+            }
+        });
+
         var cfg = {
             asHtmlID: asHtmlID,
             preFill: prefill,
