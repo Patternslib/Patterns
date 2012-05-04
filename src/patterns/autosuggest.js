@@ -33,20 +33,22 @@ define([
             preFill: prefill,
             selectedValueProp: "name",
             searchObjProp: "name",
-            startText: "Enter name here"
+            startText: $el.attr('readonly') ? "" : "Enter name here"
         };
         var $form;
         if (autosubmit) {
             $form = $el.parents('form');
-            cfg.selectionAdded = function($el) {
-                log.debug('submit because selection was added', $el);
+            cfg.selectionAdded = function($item) {
+                log.debug('submit because selection was added', $item);
                 // trigger the form
                 $form.submit();
             };
-            cfg.selectionRemoved = function($el) {
-                log.debug('submit because selection was removed', $el);
+            cfg.selectionRemoved = function($item) {
+                // ignore removal request if readonly
+                if ($el.attr('readonly')) return;
+                log.debug('submit because selection was removed', $item);
                 // trigger the form
-                $el.remove();
+                $item.remove();
                 $form.submit();
             };
         }
