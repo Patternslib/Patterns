@@ -39,6 +39,7 @@ define([
         cfg = cfg_str;  /* data seems already to parse this */
         cfg.elements = id;
         cfg.mode = 'exact';
+        cfg.readonly = Boolean($el.attr('readonly'));
         tinyMCE.init(cfg);
         return $el;
     };
