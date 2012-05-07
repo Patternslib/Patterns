@@ -59,11 +59,14 @@ define([
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else {
-                $container.on("click.tooltip", $trigger, tooltip.hide);
                 if (parameters.click) {
+                    $container.on("click.tooltip", $trigger, function(ev) {
+                        ev.stopPropagation();
+                    });
                     $(document).on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("click.tooltip", tooltip.blockDefault);
                 } else {
+                    $container.on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
                     $trigger.on("click.tooltip", tooltip.blockDefault);
                 }
