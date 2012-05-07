@@ -521,7 +521,7 @@ var mapal = {
                 // check if this was a navigation call
                 var $navs = $elem.parents("nav, .navigation"),
                     $items, $item;
-                if ($navs.length > 0) {
+                if (($navs.length > 0) && (!$elem.is('[data-tooltip]'))) {
                     $items = $navs.find('li');
                     if ($items.length === 0) {
                         $items = $navs.find('a');
