@@ -7,8 +7,7 @@
 
 define([
     'require',
-    'domReady!',
-//    '../lib/css3-mediaqueries',
+    // '../lib/css3-mediaqueries',
     '../lib/modernizr-2.0.6',
     './core/init',
     './core/parser',
