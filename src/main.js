@@ -59,4 +59,6 @@ define([
         mapal.initContent(document.body);
         $(document).trigger("setupFinished", document);
     });
+
+    return mapal;
 });
