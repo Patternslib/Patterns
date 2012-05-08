@@ -30,7 +30,11 @@ define([
 
         $el.on('keydown', function(ev) {
             if (ev.which === 13) {
+                var $results = $el.parents('.as-selections').next();
                 ev.preventDefault();
+                // skip ENTER->comma translation, if selection is active
+                if (($results.is(':visible')) &&
+                    ($results.find('.active').length > 0)) return;
                 var newev = $.Event("keydown");
                 newev.ctrlKey = false;
                 newev.which = 188;
