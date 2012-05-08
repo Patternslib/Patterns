@@ -38,7 +38,7 @@ define([
     var loadcontent = function($el) {
         // check whether we have to fetch content
         var opts_str = $el.data('collapsible'),
-            src, href, id, $panel, $sources;
+            src, href, id, $panel;
 
         if (!opts_str) return;
 
@@ -68,6 +68,13 @@ define([
                         .replace(/<\/body(.*)>/gi,'</div>');
                     var $src = $('<div/>').html(data).find('#' + id);
                     $panel.html($src.html());
+
+                    // trigger inject event
+                    $panel.trigger('inject', {
+                        method: 'content',
+                        $sources: $src,
+                        $trigger_el: $el
+                    });
                 }
             });
         }
