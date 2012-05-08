@@ -39,36 +39,37 @@ define([
         // check whether we have to fetch content
         var opts_str = $el.data('collapsible'),
             src, href, id, $panel, $sources;
-        if (opts_str) {
-            src = parser.parse(opts_str)["injectcontent"] || "";
-            href = src.split('#')[0];
-            id = src.split('#')[1];
-            log.debug(href, id);
-            if (!id) {
-                log.error('injectcontent url needs id to fetch content for panel', src);
-            } else {
-                $panel = $el.find('.panel-content');
-                $.ajax({
-                    context: $el,
-                    url: href,
-                    error: function(jqxhr, status, error) {
-                        log.error('Error loading panel content', jqxhr, status, error);
-                        $panel.html(
-                            status + ': Failed to load panel content from: ' + href
-                        );
-                    },
-                    success: function(data, status, jqxhr) {
-                        // just copied from old inject code
-                        data = data
-                            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                            .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                            .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                            .replace(/<\/body(.*)>/gi,'</div>');
-                        var $src = $('<div/>').html(data).find('#' + id);
-                        $panel.html($src.html());
-                    }
-                });
-            }
+
+        if (!opts_str) return;
+
+        src = parser.parse(opts_str)["injectcontent"] || "";
+        href = src.split('#')[0];
+        id = src.split('#')[1];
+        log.debug(href, id);
+        if (!id) {
+            log.error('injectcontent url needs id to fetch content for panel', src);
+        } else {
+            $panel = $el.find('.panel-content');
+            $.ajax({
+                context: $el,
+                url: href,
+                error: function(jqxhr, status, error) {
+                    log.error('Error loading panel content', jqxhr, status, error);
+                    $panel.html(
+                        status + ': Failed to load panel content from: ' + href
+                    );
+                },
+                success: function(data, status, jqxhr) {
+                    // just copied from old inject code
+                    data = data
+                        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                        .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                        .replace(/<body(.*)>/gi, '<div id="__original_body">')
+                        .replace(/<\/body(.*)>/gi,'</div>');
+                    var $src = $('<div/>').html(data).find('#' + id);
+                    $panel.html($src.html());
+                }
+            });
         }
     };
 
