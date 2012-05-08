@@ -945,7 +945,7 @@ var mapal = {
             if ($scrollable.length === 0) return trigger();
 
             // if scrollable parent and visible -> trigger it
-            // we only look at the immediate scrollable parent, no nesting
+            // we only look at the closest scrollable parent, no nesting
             var checkVisibility = function() {
                 if ($autoload.data('autoLoading')) return false;
                 var reltop = $autoload.offset().top - $scrollable.offset().top,
@@ -957,6 +957,7 @@ var mapal = {
 
             // wait to become visible - again only immediate scrollable parent
             $($scrollable[0]).on("scroll", checkVisibility);
+            $(window).on('resize', checkVisibility);
             return false;
         });
     },
