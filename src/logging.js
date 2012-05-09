@@ -1,19 +1,69 @@
-define([
-    'require',
-//    '../lib/log4javascript',
-    './lib/jquery.form/jquery.form'
-], function(require) {
-    // var l4js = log4javascript,
-    //     level = l4js.Level,
-    //     rootname = 'patterns',
-    //     root = l4js.getLogger(rootname);
+define(function(require) {
+    // a mock logger in case logging makes problems
+    var mocklogger = {
+        trace: function() {},
+        debug: function() {},
+        info: function() {},
+        log: function() {},
+        warn: function() {},
+        error: function() {}
+    };
+
+
+    // for now, no logging for internet explorers
+    if ($.browser.msie) {
+        // levels copied from log4javascript as it currently does not load
+        // in IE8 - keep in sync or better make log4javascript work with IE8
+        var Level = function(level, name) {
+            this.level = level;
+            this.name = name;
+        };
+
+        Level.prototype = {
+            toString: function() {
+                return this.name;
+            },
+            equals: function(level) {
+                return this.level == level.level;
+            },
+            isGreaterOrEqual: function(level) {
+                return this.level >= level.level;
+            }
+        };
+
+        Level.ALL = new Level(Number.MIN_VALUE, "ALL");
+        Level.TRACE = new Level(10000, "TRACE");
+        Level.DEBUG = new Level(20000, "DEBUG");
+        Level.INFO = new Level(30000, "INFO");
+        Level.WARN = new Level(40000, "WARN");
+        Level.ERROR = new Level(50000, "ERROR");
+        Level.FATAL = new Level(60000, "FATAL");
+        Level.OFF = new Level(Number.MAX_VALUE, "OFF");
+
+        return {
+            level: Level,
+            getLogger: function(name) {
+                return mocklogger;
+            }
+        };
+    }
+
+
+    /*
+     * below here the real logging stuff
+     *
+     * We said good bye to IE above
+     */
+
+    require('../lib/log4javascript');
+    var l4js = log4javascript,
+        level = l4js.Level,
+        rootname = 'patterns',
+        root = l4js.getLogger(rootname);
 
     var init_console_logging = function() {
         // enable/disable all logging
         l4js.setEnabled(true);
-
-        // enable debugging info for ajaxSubmit - untested
-        //$.fn.ajaxSubmit.debug = true;
 
         var bca = new l4js.BrowserConsoleAppender();
         root.addAppender(bca);
@@ -52,39 +102,21 @@ define([
         var layout = new Layout();
         bca.setLayout(layout);
 
-        //// Available log levels:
-        // level.ALL
-        // level.TRACE
-        // level.DEBUG
-        // level.INFO
-        // level.WARN
-        // level.ERROR
-        // level.FATAL
-        // level.OFF
         root.setLevel(level.ALL);
         bca.setThreshold(level.ALL);
     };
 
-    var logging = {
-//        level: level,
-        getLogger: function(name) {
-            // var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
-            // if (name === 'inject_log_old') logger.setLevel(level.INFO);
-            // // disable old injection logging for now
-            // if (name === 'old-injection') logger.setLevel(level.WARN);
+    init_console_logging();
 
-            // return this instead of logger, if logging causes
-            // problems for you please file tickets about the errors
-            // so we can cover these issues in the future
-            var mocklogger = {
-                trace: function() {},
-                debug: function() {},
-                info: function() {},
-                log: function() {},
-                warn: function() {},
-                error: function() {}
-            };
-            return mocklogger;
+    var logging = {
+        level: Level,
+        getLogger: function(name) {
+            var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
+            if (name === 'inject_log_old') logger.setLevel(level.INFO);
+            // disable old injection logging for now
+            if (name === 'old-injection') logger.setLevel(level.WARN);
+
+            return logger;
         }
     };
 
