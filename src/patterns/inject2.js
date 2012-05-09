@@ -45,7 +45,6 @@ define(function(require) {
             return acc;
         }, {});
 
-        console.log(opts);
         return opts;
     };
 

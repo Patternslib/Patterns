@@ -1,5 +1,5 @@
 define(function(require) {
-    var log = require('../logging').getLogger('inject2');
+    var log = require('../logging').getLogger('ajaxlib');
 
     var submit = function($el, opts) {
         if ($el.is('form')) {
@@ -10,7 +10,7 @@ define(function(require) {
         // XXX: make these only defaults
         opts.context = $el;
         opts.error = function(a,b,c,d) {
-            console.error(arguments);
+            log.error(arguments);
         };
 
         $.ajax(opts);
