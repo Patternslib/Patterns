@@ -131,6 +131,8 @@ define(function(require) {
             return;
         }
 
+        var injecting = 'injecting injecting-' + method_name;
+        $targets.addClass(injecting);
         ajax($el, {
             url: opts.url,
             success: function(data, status, jqxhr) {
@@ -148,6 +150,7 @@ define(function(require) {
                     return;
                 }
                 method($sources, $targets);
+                $targets.removeClass(injecting);
             }
         });
     };
