@@ -7,7 +7,10 @@ define(function(require) {
             // XXX: is it good to have that here?
             if ($targets === undefined) $targets = this;
             $targets = method($sources, $targets);
+
+            // XXX: not sure whether that is the right place
             if (!suppress) {
+                // XXX: probably better patterns-injected or sth
                 $targets.trigger('inject', {
                     method: name,
                     $sources: $sources
@@ -113,8 +116,8 @@ define(function(require) {
         // injection method to use
         method = injectlib[method_name];
 
-        // perform injection, suppressing event
-        $targets = method($sources, $targets, true);
+        // perform injection
+        $targets = method($sources, $targets);
     };
 
     var injectlib = {
