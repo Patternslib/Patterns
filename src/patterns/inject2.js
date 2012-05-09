@@ -82,11 +82,15 @@ define(function(require) {
         ];
 
         var opts = extract_opts($el, opts_spec),
+            modal = false,
             $targets;
 
         // special target cases
         if ($el.is('.collapsible')) {
             $targets = $el.find('.panel-content');
+        } else if ($el.is('.modal')) {
+            modal = true;
+            opts.replace = '#modal';
         }
 
         var source = opts.source || '#__original_body';
@@ -117,12 +121,16 @@ define(function(require) {
             } else {
                 target = opts.source;
             }
+            log.error('not target selector, aborting');
             $targets = $(target);
         }
         method = inject[method_name];
         if ($targets.length === 0) {
-            log.error('empty targets, aborting');
-            return;
+            if (opts.target.slice(0,1) !== '#') {
+                log.error('only id supported for non-existing target');
+            }
+            $targets = $('<div />').attr({id: opts.target.slice(1)});
+            $('body').append($targets);
         }
 
         if (!opts.url) {
@@ -149,6 +157,18 @@ define(function(require) {
                         'Aborting, sources are empty for selector:', opts.source, data);
                     return;
                 }
+
+                if (modal) {
+                    var $modal = $('<div id="modal" class="modal" />');
+                    if ($sources.length === 1) {
+                        // for single source copy its content into the modal
+                        $sources = $modal.html($sources.html());
+                    } else {
+                        // for multiple sources wrap them into a modal
+                        $sources = $modal.html($sources);
+                    }
+                }
+
                 method($sources, $targets);
                 $targets.removeClass(injecting);
 
