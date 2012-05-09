@@ -82,8 +82,7 @@ define(function(require) {
         ];
 
         var opts = extract_opts($el, opts_spec),
-            modal = false,
-            $targets;
+            modal = false;
 
         // special target cases
         if ($el.is('.collapsible')) {
@@ -92,7 +91,7 @@ define(function(require) {
                 log.error('Multi injection not supported for .collapsible');
                 return;
             }
-            $targets = $el.find('.panel-content');
+            opts.$targets = $el.find('.panel-content');
         } else if ($el.is('.modal')) {
             // poor array detection
             if (opts.slice) {
@@ -103,56 +102,77 @@ define(function(require) {
             opts.replace = '#modal';
         }
 
-        var source = opts.source || '#__original_body';
+        if (!opts.slice) opts = [opts];
 
-        // default: replace targets content with sources content
-        var method_name = "content",
-            method, target;
+        var prev_url;
+        opts.forEach(function(opts) {
+            opts.source = opts.source || '#__original_body';
 
-        // find targets
-        if (!$targets) {
-            if (opts.replace) {
-                target = opts.replace;
-                method_name = "replace";
-            } else if (opts.pre) {
-                target = opts.pre;
-                method_name = "pre";
-            } else if (opts.post) {
-                target = opts.post;
-                method_name = "post";
-            } else if (opts.append) {
-                target = opts.append;
-                method_name = "append";
-            } else if (opts.prepend) {
-                target = opts.prepend;
-                method_name = "prepend";
-            } else if (opts.target) {
-                target = opts.target;
-            } else {
-                target = opts.source;
+            // default: replace targets content with sources content
+            var method_name = "content",
+                target;
+
+            // find targets
+            if (!opts.$targets) {
+                if (opts.replace) {
+                    target = opts.replace;
+                    method_name = "replace";
+                } else if (opts.pre) {
+                    target = opts.pre;
+                    method_name = "pre";
+                } else if (opts.post) {
+                    target = opts.post;
+                    method_name = "post";
+                } else if (opts.append) {
+                    target = opts.append;
+                    method_name = "append";
+                } else if (opts.prepend) {
+                    target = opts.prepend;
+                    method_name = "prepend";
+                } else if (opts.target) {
+                    target = opts.target;
+                } else {
+                    target = opts.source;
+                }
+                opts.$targets = $(target);
             }
-            log.error('not target selector, aborting');
-            $targets = $(target);
-        }
-        method = inject[method_name];
-        if ($targets.length === 0) {
-            if (opts.target.slice(0,1) !== '#') {
-                log.error('only id supported for non-existing target');
+            opts.method = inject[method_name];
+            if (opts.$targets.length === 0) {
+                if (opts.target.slice(0,1) !== '#') {
+                    log.error('only id supported for non-existing target');
+                }
+                opts.$targets = $('<div />').attr({id: opts.target.slice(1)});
+                $('body').append(opts.$targets);
             }
-            $targets = $('<div />').attr({id: opts.target.slice(1)});
-            $('body').append($targets);
-        }
 
-        if (!opts.url) {
-            log.error(
-                'local source not supported yet, need url for now', $el, opts);
+            if (!opts.url) {
+                log.error(
+                    'local source not supported yet, need url for now', $el, opts);
+                return;
+            }
+
+            opts.classes = 'injecting injecting-' + method_name;
+            opts.$targets.addClass(opts.classes);
+        });
+
+        // XXX: key options by url and support url per opts
+        var url = opts[0].url;
+        if (!opts.every(function(opts) {
+            return opts.url === url;
+        })) {
+            log.error('Unsupported different urls for inject');
+            return;
+        };
+
+        if (!opts.every(function(opts) {
+            return opts.$targets.length;
+        })) {
+            log.error('Missing targets, aborting');
             return;
         }
 
-        var injecting = 'injecting injecting-' + method_name;
-        $targets.addClass(injecting);
         ajax($el, {
-            url: opts.url,
+            url: opts[0].url,
             success: function(data, status, jqxhr) {
                 var $data = $('<div/>').html(
                     data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
@@ -160,28 +180,29 @@ define(function(require) {
                         .replace(/<body(.*)>/gi, '<div id="__original_body">')
                         .replace(/<\/body(.*)>/gi,'</div>')
                 );
-                var $sources = $data.find(source);
+                opts.forEach(function(opts) {
+                    var $sources = $data.find(opts.source);
 
-                if ($sources.length === 0) {
-                    log.error(
-                        'Aborting, sources are empty for selector:', opts.source, data);
-                    return;
-                }
-
-                if (modal) {
-                    var $modal = $('<div id="modal" class="modal" />');
-                    if ($sources.length === 1) {
-                        // for single source copy its content into the modal
-                        $sources = $modal.html($sources.html());
-                    } else {
-                        // for multiple sources wrap them into a modal
-                        $sources = $modal.html($sources);
+                    if ($sources.length === 0) {
+                        log.error(
+                            'Aborting, sources are empty for selector:', opts.source, data);
+                        return;
                     }
-                }
 
-                method($sources, $targets);
-                $targets.removeClass(injecting);
+                    if (modal) {
+                        var $modal = $('<div id="modal" class="modal" />');
+                        if ($sources.length === 1) {
+                            // for single source copy its content into the modal
+                            $sources = $modal.html($sources.html());
+                        } else {
+                            // for multiple sources wrap them into a modal
+                            $sources = $modal.html($sources);
+                        }
+                    }
 
+                    opts.method($sources, opts.$targets);
+                    opts.$targets.removeClass(opts.classes);
+                });
                 $el.trigger('patterns-inject-triggered');
 
                 // XXX: think about making the href-next thing implicit
