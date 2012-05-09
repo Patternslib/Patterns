@@ -114,6 +114,7 @@ define([
             // loadcontent($el);
             transit($el, $panel, "closed", "open", duration);
         } else {
+            $el.trigger('patterns-collapsible-close');
             transit($el, $panel, "open", "closed", duration);
         }
 
