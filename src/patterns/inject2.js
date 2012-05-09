@@ -40,7 +40,7 @@ define(function(require) {
             // - foo.html#source -> href, source
             var tmp = acc.url.split('#');
             acc.url = tmp[0];
-            acc.source = tmp[1] ? "#" + tmp[1] : "";
+            if (tmp[1]) acc.source = '#' + tmp[1];
             if (tmp.length > 2) {
                 log.error('Ignoring additional source ids:', tmp.slice(2));
             }
