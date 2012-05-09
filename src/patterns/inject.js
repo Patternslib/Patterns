@@ -166,7 +166,7 @@ define(function(require) {
 
     var pattern = {
         initialised_class: 'inject',
-        markup_trigger: 'a.inject, a[data-inject], form.inject, form[data-inject]',
+        markup_trigger: 'form.inject, form[data-inject]',
         // XXX: unsupported
         opts: {
             "data-inject":
