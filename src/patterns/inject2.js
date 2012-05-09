@@ -20,10 +20,10 @@ define(function(require) {
 
         if ($el.is('.collapsible')) {
             log.debug('will trigger on patterns-collapsible-open', $el);
-            $el.on('patterns-collapsible-open', injecthandler);
+            $el.on('patterns-collapsible-open.inject', injecthandler);
         } else if ($el.is('a')) {
             log.debug('will trigger on click', $el);
-            $el.on('click', injecthandler);
+            $el.on('click.inject', injecthandler);
         }
 
         return $el;
@@ -153,6 +153,13 @@ define(function(require) {
                 $targets.removeClass(injecting);
 
                 $el.trigger('patterns-inject-triggered');
+
+                // XXX: think about making the href-next thing implicit
+                var hrefnext = $el.data('href-next');
+                if (hrefnext) {
+                    $el.attr({href: hrefnext});
+                    $el.off('.inject');
+                }
             }
         });
     };
