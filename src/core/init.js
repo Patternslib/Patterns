@@ -948,7 +948,7 @@ var mapal = {
             // we only look at the closest scrollable parent, no nesting
             var checkVisibility = function() {
                 if ($autoload.data('autoLoading')) return false;
-                var reltop = $autoload.offset().top - $scrollable.offset().top,
+                var reltop = $autoload.offset().top - $scrollable.offset().top - 1000,
                     doTrigger = reltop <= $scrollable.innerHeight();
                 if (doTrigger) return trigger();
                 return false;
