@@ -4,31 +4,31 @@ define([
 ], function(require) {
     var log = require('../logging').getLogger('navigation');
 
-    var match = function(curpath, path) {
-        if (!path) {
-            log.debug('path empty');
-            return false;
-        }
+    // var match = function(curpath, path) {
+    //     if (!path) {
+    //         log.debug('path empty');
+    //         return false;
+    //     }
 
-        // current path needs to end in the anchor's path
-        if (path !== curpath.slice(- path.length)) {
-            log.debug(curpath, 'does not end in', path);
-            return false;
-        }
+    //     // current path needs to end in the anchor's path
+    //     if (path !== curpath.slice(- path.length)) {
+    //         log.debug(curpath, 'does not end in', path);
+    //         return false;
+    //     }
 
-        // XXX: we might need more exclusion tests
-        return true;
-    };
+    //     // XXX: we might need more exclusion tests
+    //     return true;
+    // };
 
-    var pathfromurl = function(url) {
-        var path = url.split('#')[0].split('://');
-        if (path.length > 2) {
-            log.error('weird url', url);
-            return '';
-        }
-        if (path.length === 1) return path[0];
-        return path[1].split('/').slice(1).join('/');
-    };
+    // var pathfromurl = function(url) {
+    //     var path = url.split('#')[0].split('://');
+    //     if (path.length > 2) {
+    //         log.error('weird url', url);
+    //         return '';
+    //     }
+    //     if (path.length === 1) return path[0];
+    //     return path[1].split('/').slice(1).join('/');
+    // };
 
     var init = function($el, opts) {
         var curpath = window.location.pathname;
