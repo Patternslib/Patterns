@@ -32,7 +32,7 @@ define(function(require) {
 
     var replace = _injectmethod("replace", function($sources, $targets) {
         if ($targets.length === 1) {
-            $targets.replaceWith($sources);
+            $targets.replaceWith($sources.clone());
             return $sources;
         }
         $targets.each(function() {
@@ -45,7 +45,7 @@ define(function(require) {
     // XXX: name under discussion
     var pre = _injectmethod("pre", function($sources, $targets) {
         $targets.each(function() {
-            $(this).before($sources);
+            $(this).before($sources.clone());
         });
         return $sources;
     });
@@ -53,7 +53,7 @@ define(function(require) {
     // XXX: name under discussion
     var post = _injectmethod("post", function($sources, $targets) {
         $targets.each(function() {
-            $(this).after($sources);
+            $(this).after($sources.clone());
         });
         return $sources;
     });
@@ -61,14 +61,14 @@ define(function(require) {
     // XXX: name under discussion
     var append = _injectmethod("append", function($sources, $targets) {
         $targets.each(function() {
-            $(this).append($sources);
+            $(this).append($sources.clone());
         });
         return $sources;
     });
 
     var prepend = _injectmethod("prepend", function($sources, $targets) {
         $targets.each(function() {
-            $(this).append($sources);
+            $(this).append($sources.clone());
         });
         return $sources;
     });
