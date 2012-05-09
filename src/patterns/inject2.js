@@ -78,7 +78,8 @@ define(function(require) {
             // href -> url + source
             ["href"],
             ["data-inject",
-             "source; target; replace; pre; post; prepend; append; url"]
+             "source; target; replace; pre; post; "
+             + "prepend; append; url; replacetagwithcontent"]
         ];
 
         var opts = extract_opts($el, opts_spec),
@@ -117,6 +118,9 @@ define(function(require) {
                 if (opts.replace) {
                     target = opts.replace;
                     method_name = "replace";
+                } else if (opts["replacetagwithcontent"]) {
+                    target = opts["replacetagwithcontent"];
+                    method_name = "replacetagwithcontent";
                 } else if (opts.pre) {
                     target = opts.pre;
                     method_name = "pre";

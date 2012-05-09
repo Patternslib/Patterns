@@ -42,6 +42,17 @@ define(function(require) {
     });
     replace.marker = 'tmp-injection-marker';
 
+    var replacetagwithcontent = _injectmethod("replacetagwithcontent", function($sources, $targets) {
+        $targets.each(function() {
+            var $tmp = $sources.clone().children()
+                    .addClass(replacetagwithcontent.marker);
+            $(this).replaceWith($tmp);
+        });
+        return $("." + replacetagwithcontent.marker)
+            .removeClass(replacetagwithcontent.marker);
+    });
+    replacetagwithcontent.marker = 'tmp-injection-marker';
+
     // XXX: name under discussion
     var pre = _injectmethod("pre", function($sources, $targets) {
         $targets.each(function() {
@@ -79,6 +90,7 @@ define(function(require) {
         post: post,
         append: append,
         prepend: prepend,
+        replacetagwithcontent: replacetagwithcontent,
         replace: replace
     };
 
