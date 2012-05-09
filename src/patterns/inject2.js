@@ -151,6 +151,8 @@ define(function(require) {
                 }
                 method($sources, $targets);
                 $targets.removeClass(injecting);
+
+                $el.trigger('patterns-inject-triggered');
             }
         });
     };

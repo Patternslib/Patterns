@@ -39,6 +39,11 @@ define([
             $el.find('a.current').click();
         }
 
+        $el.on('patterns-inject-triggered', function(ev) {
+            $el.find('a.current').removeClass('current');
+            $(ev.target).addClass('current');
+        });
+
         // XXX: this code adjusted the current tag of newly page, this
         // should not happen client side but is the responsibility of
         // the server-side template. Client-side only for ajax
