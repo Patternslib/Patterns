@@ -26,7 +26,7 @@ define([
         } else {
             $el.addClass("open");
             $el.trigger('patterns-collapsible-open');
-            loadcontent($el);
+            // loadcontent($el);
         }
 
         // bind to click events
@@ -36,50 +36,50 @@ define([
         return $el;
     };
 
-    var loadcontent = function($el) {
-        // check whether we have to fetch content
-        var opts_str = $el.data('collapsible'),
-            src, href, id, $panel;
+    // var loadcontent = function($el) {
+    //     // check whether we have to fetch content
+    //     var opts_str = $el.data('collapsible'),
+    //         src, href, id, $panel;
 
-        if (!opts_str) return;
+    //     if (!opts_str) return;
 
-        src = parser.parse(opts_str)["injectcontent"] || "";
-        href = src.split('#')[0];
-        id = src.split('#')[1];
-        log.debug(href, id);
-        if (!id) {
-            log.error('injectcontent url needs id to fetch content for panel', src);
-        } else {
-            $panel = $el.find('.panel-content');
-            $.ajax({
-                context: $el,
-                url: href,
-                error: function(jqxhr, status, error) {
-                    log.error('Error loading panel content', jqxhr, status, error);
-                    $panel.html(
-                        status + ': Failed to load panel content from: ' + href
-                    );
-                },
-                success: function(data, status, jqxhr) {
-                    // just copied from old inject code
-                    data = data
-                        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                        .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                        .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                        .replace(/<\/body(.*)>/gi,'</div>');
-                    var $src = $('<div/>').html(data).find('#' + id);
-                    $panel.html($src.html());
+    //     src = parser.parse(opts_str)["injectcontent"] || "";
+    //     href = src.split('#')[0];
+    //     id = src.split('#')[1];
+    //     log.debug(href, id);
+    //     if (!id) {
+    //         log.error('injectcontent url needs id to fetch content for panel', src);
+    //     } else {
+    //         $panel = $el.find('.panel-content');
+    //         $.ajax({
+    //             context: $el,
+    //             url: href,
+    //             error: function(jqxhr, status, error) {
+    //                 log.error('Error loading panel content', jqxhr, status, error);
+    //                 $panel.html(
+    //                     status + ': Failed to load panel content from: ' + href
+    //                 );
+    //             },
+    //             success: function(data, status, jqxhr) {
+    //                 // just copied from old inject code
+    //                 data = data
+    //                     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+    //                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+    //                     .replace(/<body(.*)>/gi, '<div id="__original_body">')
+    //                     .replace(/<\/body(.*)>/gi,'</div>');
+    //                 var $src = $('<div/>').html(data).find('#' + id);
+    //                 $panel.html($src.html());
 
-                    // trigger inject event
-                    $panel.trigger('inject', {
-                        method: 'content',
-                        $sources: $src,
-                        $trigger_el: $el
-                    });
-                }
-            });
-        }
-    };
+    //                 // trigger inject event
+    //                 $panel.trigger('inject', {
+    //                     method: 'content',
+    //                     $sources: $src,
+    //                     $trigger_el: $el
+    //                 });
+    //             }
+    //         });
+    //     }
+    // };
 
     var open = function($el, duration) {
         if ($el.hasClass("open")) return null;
@@ -110,8 +110,8 @@ define([
     var toggle = function($el, duration) {
         var $panel = $el.find('.panel-content');
         if ($el.hasClass("closed")) {
-            loadcontent($el);
             $el.trigger('patterns-collapsible-open');
+            // loadcontent($el);
             transit($el, $panel, "closed", "open", duration);
         } else {
             transit($el, $panel, "open", "closed", duration);
@@ -125,7 +125,6 @@ define([
         markup_trigger: ".collapsible",
         initialised_class: "collapsible",
         init: init,
-        loadcontent: loadcontent,
         open: open,
         close: close,
         toggle: toggle
