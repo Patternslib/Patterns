@@ -87,8 +87,18 @@ define(function(require) {
 
         // special target cases
         if ($el.is('.collapsible')) {
+            // poor array detection
+            if (opts.slice) {
+                log.error('Multi injection not supported for .collapsible');
+                return;
+            }
             $targets = $el.find('.panel-content');
         } else if ($el.is('.modal')) {
+            // poor array detection
+            if (opts.slice) {
+                log.error('Multi injection not supported for modals');
+                return;
+            }
             modal = true;
             opts.replace = '#modal';
         }
