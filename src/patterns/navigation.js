@@ -36,12 +36,17 @@ define([
 
         // check whether to load
         if ($el.hasClass('navigation-load-current')) {
-            $el.find('a.current').click();
+            $el.find('a.current, .current a').click();
         }
 
         $el.on('patterns-inject-triggered', function(ev) {
-            $el.find('a.current').removeClass('current');
-            $(ev.target).addClass('current');
+            var $target = $(ev.target);
+            $el.find('.current').removeClass('current');
+            if ($target.parent('li')) {
+                $target.parent().addClass('current');
+            } else {
+                $target.addClass('current');
+            }
         });
 
         // XXX: this code adjusted the current tag of newly page, this
