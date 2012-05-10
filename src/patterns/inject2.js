@@ -142,10 +142,10 @@ define(function(require) {
             }
             opts.method = inject[method_name];
             if (opts.$targets.length === 0) {
-                if (opts.target.slice(0,1) !== '#') {
+                if (target.slice(0,1) !== '#') {
                     log.error('only id supported for non-existing target');
                 }
-                opts.$targets = $('<div />').attr({id: opts.target.slice(1)});
+                opts.$targets = $('<div />').attr({id: target.slice(1)});
                 $('body').append(opts.$targets);
             }
 
