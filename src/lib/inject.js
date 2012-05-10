@@ -32,7 +32,7 @@ define(function(require) {
 
     var replace = _injectmethod("replace", function($sources, $targets) {
         if ($targets.length === 1) {
-            $targets.replaceWith($sources.clone());
+            $targets.replaceWith($sources);
             return $sources;
         }
         $targets.each(function() {
