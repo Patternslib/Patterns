@@ -1,6 +1,6 @@
 define([
     'require',
-    '../../lib/tiny_mce/tiny_mce',
+    '../../lib/tiny_mce/tiny_mce_src',
     '../logging'
 ], function(require) {
     var log = require('../logging').getLogger('edit-tinymce');
