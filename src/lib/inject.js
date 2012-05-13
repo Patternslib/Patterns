@@ -30,58 +30,59 @@ define(function(require) {
         return $targets;
     });
 
+    // temporary mark sources for injection
+    var MARKER = "tmp-inject-marker";
+
     var replace = _injectmethod("replace", function($sources, $targets) {
+        // XXX: consider removal of special case
+        // this needs tests!
         if ($targets.length === 1) {
             $targets.replaceWith($sources);
             return $sources;
         }
         $targets.each(function() {
-            $(this).replaceWith($sources.clone().addClass(replace.marker));
+            $(this).replaceWith($sources.clone().addClass(MARKER));
         });
-        return $("." + replace.marker).removeClass(replace.marker);
+        return $("." + MARKER).removeClass(MARKER);
     });
-    replace.marker = 'tmp-injection-marker';
 
     var replacetagwithcontent = _injectmethod("replacetagwithcontent", function($sources, $targets) {
         $targets.each(function() {
-            var $tmp = $sources.clone().children()
-                    .addClass(replacetagwithcontent.marker);
+            var $tmp = $sources.clone().children().addClass(MARKER);
             $(this).replaceWith($tmp);
         });
-        return $("." + replacetagwithcontent.marker)
-            .removeClass(replacetagwithcontent.marker);
+        return $("." + MARKER).removeClass(MARKER);
     });
-    replacetagwithcontent.marker = 'tmp-injection-marker';
 
     // XXX: name under discussion
     var pre = _injectmethod("pre", function($sources, $targets) {
         $targets.each(function() {
-            $(this).before($sources.clone());
+            $(this).before($sources.clone().addClass(MARKER));
         });
-        return $sources;
+        return $("." + MARKER).removeClass(MARKER);
     });
 
     // XXX: name under discussion
     var post = _injectmethod("post", function($sources, $targets) {
         $targets.each(function() {
-            $(this).after($sources.clone());
+            $(this).after($sources.clone().addClass(MARKER));
         });
-        return $sources;
+        return $("." + MARKER).removeClass(MARKER);
     });
 
     // XXX: name under discussion
     var append = _injectmethod("append", function($sources, $targets) {
         $targets.each(function() {
-            $(this).append($sources.clone());
+            $(this).append($sources.clone().addClass(MARKER));
         });
-        return $sources;
+        return $("." + MARKER).removeClass(MARKER);
     });
 
     var prepend = _injectmethod("prepend", function($sources, $targets) {
         $targets.each(function() {
-            $(this).append($sources.clone());
+            $(this).append($sources.clone().addClass(MARKER));
         });
-        return $sources;
+        return $("." + MARKER).removeClass(MARKER);
     });
 
     var injectlib = {
