@@ -12,14 +12,35 @@ define([
         // get parameters from markup
         var $form = $el.is('form') ? $el : $el.parents('form').first();
 
-        var submit = function(event) {
+        var submit = function(ev) {
+            var $target = $(ev.target);
+
             // ignore auto-suggest fields, the change event will be
             // triggered on the hidden input
-            if ($(event.target).is('.auto-suggest')) {
+            if ($target.is('.auto-suggest')) {
                 log.debug('ignored event from autosuggest field');
                 return;
             }
-            log.info("triggered by " + event.type);
+
+            if ($target.is('input[type=search]')) {
+                // clicking X on type=search deletes data attrs,
+                // therefore we store the old value on the form.
+                var name = $target.attr('name'),
+                    key = name + '-autosubmit-oldvalue',
+                    oldvalue = $form.data(key) || "",
+                    curvalue = $target[0].value || "";
+
+                if (!name) {
+                    log.warn('type=search without name, will be a problem'
+                             + ' if there are multiple', $target);
+                }
+                if (oldvalue === curvalue) return;
+
+                $form.data(key, curvalue);
+            }
+
+            log.info("triggered by " + ev.type);
+
             $form.submit();
         };
 
@@ -33,8 +54,6 @@ define([
         }
 
         // XXX: test whether on webkit and enable only if supported
-        // XXX: add code to check whether the click actually changed
-        // something
         ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
             .on("click", submit);
 
