@@ -39,14 +39,18 @@ define([
             $el.find('a.current, .current a').click();
         }
 
+        // An element within this navigation triggered injection
         $el.on('patterns-inject-triggered', function(ev) {
             var $target = $(ev.target);
+
+            // remove all set current classes
             $el.find('.current').removeClass('current');
-            if ($target.parent('li')) {
-                $target.parent().addClass('current');
-            } else {
-                $target.addClass('current');
-            }
+
+            // set .current on target
+            $target.addClass('current');
+
+            // If target's parent is an LI, also set current there
+            $target.parent('li').addClass('current');
         });
 
         // XXX: this code adjusted the current tag of newly page, this
