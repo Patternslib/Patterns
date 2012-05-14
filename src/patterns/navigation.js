@@ -38,7 +38,7 @@ define([
         if ($el.hasClass('navigation-load-current')) {
             $el.find('a.current, .current a').click();
             // check for current elements injected here
-            $el.on('inject', function(ev) {
+            $el.on('patterns-inject-scanned', function(ev) {
                 var $target = $(ev.target);
                 $target.is('a.current') && $target.click();
                 $target.is('.current') && $target.find('a').click();

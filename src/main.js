@@ -51,6 +51,7 @@ define([
 
     $(document).on('inject.patterns.scan', function(ev, opts) {
         mapal.initContent(ev.target, opts);
+        $(ev.target).trigger('patterns-inject-scanned', opts);
     });
 
     // wait for the DOM to be ready and initialize
