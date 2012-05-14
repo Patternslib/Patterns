@@ -37,6 +37,11 @@ define([
         // check whether to load
         if ($el.hasClass('navigation-load-current')) {
             $el.find('a.current, .current a').click();
+            // check for current elements injected here
+            $el.on('inject', function(ev) {
+                var $target = $(ev.target);
+                $target.find('a.current, .current a').click();
+            });
         }
 
         // An element within this navigation triggered injection
