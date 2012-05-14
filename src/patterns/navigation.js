@@ -40,7 +40,8 @@ define([
             // check for current elements injected here
             $el.on('inject', function(ev) {
                 var $target = $(ev.target);
-                $target.find('a.current, .current a').click();
+                $target.is('a.current') && $target.click();
+                $target.is('.current') && $target.find('a').click();
             });
         }
 
