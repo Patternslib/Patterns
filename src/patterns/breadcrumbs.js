@@ -48,6 +48,7 @@ define([
                 if (!shifting) {
                     shifting = true;
                     $el.addClass('shifting');
+                    $ctrl.removeClass('shift-right');
                     $ctrl.addClass('shift-left');
                     $ctrl.on('click.breadcrumbs', shifter(true));
                     $ctrl.click();
@@ -58,11 +59,13 @@ define([
             } else {
                 // we should not be shifting
                 if (shifting) {
-                    if (shifted) $ctrl.click();
-                    shifting = false;
-                    $el.removeClass('shifting');
-                    $ctrl.removeClass('shift-left shift-right');
-                    $ctrl.off('.breadcrumbs');
+                    $content.animate({"margin-left": 0}, function() {
+                        shifted = false;
+                        shifting = false;
+                        $el.removeClass('shifting');
+                        $ctrl.removeClass('shift-left shift-right');
+                        $ctrl.off('.breadcrumbs');
+                    });
                 }
             }
         };
