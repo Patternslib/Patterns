@@ -89,19 +89,20 @@ define([
             }
 
             var redirect = jqxhr.getResponseHeader('X-Patterns-Redirect-Url'),
-                oldurl = jqxhr.getResponseHeader('X-Patterns-Previous-Url');
-            if (redirect) {
-                log.debug('received redirect', redirect);
+                oldurl = jqxhr.getResponseHeader('X-Patterns-Previous-Url'),
+                reload = jqxhr.getResponseHeader('X-Patterns-Reload');
 
-                // perform redirect
-                window.location.href = redirect;
-            }
-
-            var reload = jqxhr.getResponseHeader('X-Patterns-Reload');
             if ((reload !== null) && (reload !== undefined)) {
+                log.debug('received reload request');
+
                 $('form.inject.reload').submit();
                 $('a.inject.reload:not(.navigation a)').click();
                 $('.navigation a.inject.reload.current').click();
+            } else if (redirect) {
+                log.debug('received redirect request', redirect);
+
+                // perform redirect
+                window.location.href = redirect;
             }
 
             // We are done
