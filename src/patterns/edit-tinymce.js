@@ -1,16 +1,20 @@
 define([
     'require',
-    '../../lib/tiny_mce/tiny_mce',
+    '../../lib/tiny_mce/tiny_mce_src',
+    '../lib/ajax',
     '../logging'
 ], function(require) {
-    var log = require('../logging').getLogger('edit-tinymce');
+    var log = require('../logging').getLogger('edit-tinymce'),
+        ajax = require('../lib/ajax');
 
     var init = function($el, opts) {
+        var $form = $el.parents('form'),
+            $resetbtn = $form.find('[type=reset]'),
+            id = $el.attr('id');
+
         // make sure the textarea has an id
-        var id = $el.attr('id');
         if (!id) {
-            var $form = $el.parents('form'),
-                formid = $el.parents('form').attr('id'),
+            var formid = $form.attr('id'),
                 name = $el.attr('name');
             if (!formid) {
                 log.error('Textarea or parent form needs an id', $el, $form);
@@ -29,18 +33,41 @@ define([
         }
 
         // read configuration
-        var cfg = {},
-            cfg_str = $el.data('tinymce-json');
-        if (!cfg_str) {
+        var cfg = $el.data('tinymce-json');
+        if (!cfg) {
             log.info('data-tinymce-json empty, using default config', $el);
-            cfg_str = '{}';
+            cfg = '{}';
         }
-        /*cfg = JSON.parse(cfg_str);*/
-        cfg = cfg_str;  /* data seems already to parse this */
         cfg.elements = id;
         cfg.mode = 'exact';
         cfg.readonly = Boolean($el.attr('readonly'));
-        tinyMCE.init(cfg);
+
+        // initialize editor
+        var tinymce = tinyMCE.init(cfg);
+
+        // ajaxify form
+        var ajaxopts = {
+            beforeSerialize: (function(id) {
+                return function() {
+                    tinyMCE.editors[id].save();
+                };
+            })(id)
+        };
+
+        $form.on('submit', function(ev) {
+            ev.preventDefault();
+            ajax($form, ajaxopts);
+        });
+
+        // XXX: we hijack the reset button, but currently only reset
+        // the tiny textarea.
+        $resetbtn.on('click', (function(id) {
+            return function(ev) {
+                ev.preventDefault();
+                tinyMCE.editors[id].load();
+            };
+        })(id));
+
         return $el;
     };
 
