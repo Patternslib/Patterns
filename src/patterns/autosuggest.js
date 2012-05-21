@@ -20,7 +20,9 @@ define([
             return {value: word, name: word};
         });
         var $prefillcfg = $el.parents('[data-auto-suggest-prefill]:first');
-        var prefill = $prefillcfg.data('auto-suggest-prefill') || '';
+        var prefill = $prefillcfg.data('auto-suggest-prefill');
+        if (prefill === undefined) prefill = '';
+        if (prefill.slice(0,1) === ',') prefill = prefill.slice(1);
 
         var $asHtmlIDcfg = $el.parents('[data-auto-suggest-ashtmlid]:first');
         var asHtmlID = $asHtmlIDcfg.data('auto-suggest-ashtmlid') || false;
