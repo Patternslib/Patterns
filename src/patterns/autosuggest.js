@@ -57,7 +57,7 @@ define([
             $form = $el.parents('form');
             var submit_debounced = utils.debounce(function() {
                 $form.submit();
-            }, 1500);
+            }, 400);
             cfg.selectionAdded = function($item) {
                 log.debug('submit because selection was added', $item);
                 // trigger the form
