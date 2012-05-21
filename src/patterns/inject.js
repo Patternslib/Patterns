@@ -160,6 +160,7 @@ define(function(require) {
                 $sources: $sources,
                 $trigger_el: $el
             });
+            $el.trigger('patterns-inject_interim-triggered');
         };
         return inject;
     };

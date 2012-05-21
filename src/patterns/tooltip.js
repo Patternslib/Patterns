@@ -68,6 +68,8 @@ define([
                     // close if something inside the tooltip triggered an injection
                     $container.on('patterns-inject-triggered.tooltip',
                                   $trigger, tooltip.hide);
+                    $container.on('patterns-inject_interim-triggered.tooltip',
+                                  $trigger, tooltip.hide);
                 } else {
                     $container.on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
