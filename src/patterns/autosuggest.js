@@ -3,9 +3,11 @@
 define([
     'require',
     '../logging',
+    '../utils',
     '../../lib/jquery.autoSuggest'
 ], function(require) {
-    var log = require('../logging').getLogger('autosuggest');
+    var log = require('../logging').getLogger('autosuggest'),
+        utils = require('../utils');
 
     var init = function($el, opts) {
         // fetch words for auto-suggestion
@@ -53,10 +55,13 @@ define([
         var $form;
         if (autosubmit) {
             $form = $el.parents('form');
+            var submit_debounced = utils.debounce(function() {
+                $form.submit();
+            }, 1500);
             cfg.selectionAdded = function($item) {
                 log.debug('submit because selection was added', $item);
                 // trigger the form
-                $form.submit();
+                submit_debounced();
             };
             cfg.selectionRemoved = function($item) {
                 // ignore removal request if readonly
@@ -64,7 +69,7 @@ define([
                 log.debug('submit because selection was removed', $item);
                 // trigger the form
                 $item.remove();
-                $form.submit();
+                submit_debounced();
             };
         }
 
