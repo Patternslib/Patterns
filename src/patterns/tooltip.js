@@ -111,7 +111,8 @@ define([
                     target_id = $container.find("progress").attr("id");
                 mapal.injection.load($trigger, source[0], target_id+":replace", source[1] || [],
                         ajax_show, true);
-                delete options.ajax;
+                // always load fresh tooltips
+                // delete options.ajax;
                 $trigger.data("mapal.tooltip", options);
             }
 
