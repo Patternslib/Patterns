@@ -30,6 +30,11 @@ define([
         return path[1].split('/').slice(1).join('/');
     };
 
+    var updatenavpath = function($el) {
+        $el.find('.navigation-in-path').removeClass('navigation-in-path');
+        $el.find('li:has(.current)').addClass('navigation-in-path');
+    };
+
     var init = function($el, opts) {
         var curpath = window.location.pathname;
         log.debug('current path:', curpath);
@@ -42,6 +47,7 @@ define([
                 var $target = $(ev.target);
                 $target.is('a.current') && $target.click();
                 $target.is('.current') && $target.find('a').click();
+                updatenavpath($el);
             });
         }
 
@@ -57,6 +63,8 @@ define([
 
             // If target's parent is an LI, also set current there
             $target.parent('li').addClass('current');
+
+            updatenavpath($el);
         });
 
         // set current class if it is not set
@@ -73,6 +81,8 @@ define([
                 }
             });
         }
+
+        updatenavpath($el);
 
         return $el;
     };
