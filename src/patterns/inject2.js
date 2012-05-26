@@ -21,6 +21,12 @@ define(function(require) {
         if ($el.is('.collapsible')) {
             log.debug('will trigger on patterns-collapsible-open', $el);
             $el.on('patterns-collapsible-open.inject', injecthandler);
+        } else if ($el.is('.folder')) {
+            log.debug('will trigger on patterns-folder-open', $el);
+            $el.on('patterns-folder-open.inject', function(ev) {
+                if (ev.target !== ev.currentTarget) return;
+                injecthandler(ev);
+            });
         } else if ($el.is('a')) {
             log.debug('will trigger on click', $el);
             $el.on('click.inject', injecthandler);
@@ -93,6 +99,13 @@ define(function(require) {
                 return;
             }
             opts.$targets = $el.find('.panel-content');
+        } else if ($el.is('.folder')) {
+            // poor array detection
+            if (opts.slice) {
+                log.error('Multi injection not supported for .folder');
+                return;
+            }
+            opts.$targets = $el.children('ul');
         } else if ($el.is('.modal')) {
             // poor array detection
             if (opts.slice) {
@@ -222,6 +235,7 @@ define(function(require) {
     var pattern = {
         initialised_class: 'inject',
         markup_trigger: '.collapsible[data-inject],'
+            + '.folder[data-inject],'
             + 'a.inject, a[data-inject]',
         init: init,
         triggerinject: triggerinject
