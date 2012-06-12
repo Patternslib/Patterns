@@ -35,7 +35,7 @@ define([
 
             // the modal will be gone, but unhooked from document
             $(document).off('.modal');
-            $el.remove();
+            $el.hide();
         };
 
         // remove on ESC
