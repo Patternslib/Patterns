@@ -1,6 +1,7 @@
 define([
     'require',
     '../../lib/jquery.validate',
+    '../../lib/jquery-validation-1.9.0/additional-methods.min',
     '../logging'
 ], function(require) {
     var log = require('../logging').getLogger('validate');
