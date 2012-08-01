@@ -52,7 +52,7 @@ define([
             preFill: prefill,
             selectedValueProp: "name",
             searchObjProp: "name",
-            startText: $el.attr('readonly') ? "" : "Enter name here"
+            startText: $el.attr('readonly') ? "" : "Click to add labels"
         };
         var $form;
         if (autosubmit) {
