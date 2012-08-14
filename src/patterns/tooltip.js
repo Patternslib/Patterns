@@ -209,13 +209,13 @@ define([
                  cls = "";
 
             if (space.top > Math.max(space.right, space.bottom, space.left)) {
-                cls = "t";
-            } else if (space.right > Math.max(space.bottom, space.left, space.top)) {
-                cls = "r";
-            } else if (space.bottom > Math.max(space.left, space.top, space.right)) {
                 cls = "b";
-            } else {
+            } else if (space.right > Math.max(space.bottom, space.left, space.top)) {
                 cls = "l";
+            } else if (space.bottom > Math.max(space.left, space.top, space.right)) {
+                cls = "t";
+            } else {
+                cls = "r";
             }
 
             switch (cls[0]) {
@@ -355,17 +355,17 @@ define([
                 container_offset.top = trigger_box.bottom + 20;
                 tip_offset.top = -23;
                 break;
-            case "r":
+            case "l":
                 container_offset.left = trigger_box.right + 20;
-                tip_offset.left = 0;
+                tip_offset.left = -23;
                 break;
             case "b":
                 container_offset.top = trigger_box.top - tooltip_box.height + 10;
-                tip_offset.top = tooltip_box.height - 23;
+                tip_offset.top = tooltip_box.height;
                 break;
-            case "l":
+            case "r":
                 container_offset.left = trigger_box.left - tooltip_box.width - 20;
-                tip_offset.left = tooltip_box.width - 23;
+                tip_offset.left = tooltip_box.width;
                 break;
             }
 
