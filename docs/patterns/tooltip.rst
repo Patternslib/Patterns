@@ -62,13 +62,13 @@ An example:
     …
    </a>
 
-This specifies that the preferred position of the tooltip is at the top
-left side of the tooltip. If the tooltip does not fit at that position
-the left-middle position should be tried, than the right-top or if
-all previous options failed the middle of the right side. If the tooltip does
-not fit at any none of the preferred positions the tooltip will be
-positioned at the location that has the most space, even if this is not
-one of the preferred positions.
+This specifies that the preferred position of the tip is at the top left
+side of the tooltip (placing the tooltip itself on the right side of the
+link). If the tooltip does not fit at that position the left-middle position
+should be tried, than the right-top or if all previous options failed the
+middle of the right side. If the tooltip does not fit at any none of the
+preferred positions the tooltip will be positioned at the location that has
+the most space, even if this is not one of the preferred positions.
 
 It is possible to force a specific tooltip position by adding the
 ``forcePosition`` hint.
