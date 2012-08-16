@@ -1,9 +1,7 @@
 require([
     'require',
     'domReady',
-    '../src/lib/jquery',
     '../lib/pavlov',
-    '../lib/qunit',
     '../src/patterns',
 //    'spec!./spec/aloha',
     'spec!./spec/collapsible',
@@ -13,7 +11,6 @@ require([
     'spec!./spec/parser'
 ], function(require) {
     var patterns = require('../src/patterns'),
-        qunit = require('../lib/qunit'),
         spec_names = [
 //            'aloha',
             'collapsible',
