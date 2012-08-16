@@ -1,10 +1,7 @@
-define([
-    'require',
-    '../../lib/jquery.validate',
-    '../../lib/jquery-validation-1.9.0/additional-methods',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('validate');
+define(function(require) {
+    var log = require('../logging').getLogger('validate'),
+        _ = require('../../lib/jquery.validate'),
+        __ = require('../../lib/jquery-validation-1.9.0/additional-methods');
 
     var init = function($el, opts) {
         var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
