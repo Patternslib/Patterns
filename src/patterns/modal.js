@@ -15,6 +15,16 @@ define([
             $closebutton = $(
                 '<button type="button" class="close-panel">Close</button>');
 
+        if (opts.$trigger) {
+            var Parser = require('../core/parser'),
+                parser = new Parser(),
+                trigger_opts;
+            parser.add_argument("class");
+            trigger_opts = parser.parse(opts.$trigger.data("modal"));
+            if (trigger_opts["class"]) {
+                $el.addClass(trigger_opts["class"]);
+            }
+        }
         // separate into header and body
         if ($rest.length === 0) {
             $first.wrap($body);

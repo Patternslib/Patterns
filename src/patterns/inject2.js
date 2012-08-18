@@ -91,7 +91,7 @@ define(function(require) {
         var opts = extract_opts($el, opts_spec),
             modal = false;
 
-	opts.trigger = $el;
+	opts.$trigger = $el;
 
         // special target cases
         if ($el.is('.collapsible')) {
