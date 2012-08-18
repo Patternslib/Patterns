@@ -41,6 +41,9 @@ define([
 
         parse: function(parameter, defaults) {
             defaults = defaults || {};
+            if (!parameter) {
+                return defaults;
+            }
             if (parameter.match(/&&/)) {
                 return parameter.split(/\s*&&\s*/).map(function(parameter) {
                     return this.parse(parameter, defaults);
