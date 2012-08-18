@@ -4,20 +4,16 @@ define(function(require) {
     var log = require('../logging').getLogger('injectlib');
 
     var _injectmethod = function(name, method) {
-        var injectwrapper = function($sources, $targets, suppress) {
+        var injectwrapper = function($sources, $targets, opts) {
             // no $targets -> called as a jquery method
             // XXX: is it good to have that here?
             if ($targets === undefined) $targets = this;
             $targets = method($sources, $targets);
 
-            // XXX: not sure whether that is the right place
-            if (!suppress) {
-                // XXX: probably better patterns-injected or sth
-                $targets.trigger('inject', {
-                    method: name,
-                    $sources: $sources
-                });
-            }
+	    opts = opts || {};
+	    opts.method = name;
+	    opts["$sources"] = $sources;
+	    $targets.trigger('inject', opts);
             return $targets;
         };
         return injectwrapper;

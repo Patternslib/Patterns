@@ -91,6 +91,8 @@ define(function(require) {
         var opts = extract_opts($el, opts_spec),
             modal = false;
 
+	opts.trigger = $el;
+
         // special target cases
         if ($el.is('.collapsible')) {
             // poor array detection
@@ -217,7 +219,7 @@ define(function(require) {
                         }
                     }
 
-                    opts.method($sources, opts.$targets);
+                    opts.method($sources, opts.$targets, opts);
                     opts.$targets.removeClass(opts.classes);
                 });
                 $el.trigger('patterns-inject-triggered');
