@@ -14,7 +14,9 @@ define(function(require) {
         },
 
         initContent: function(root) {
-            focus._markFocus(document.activeElement);
+            if ($(document.activeElement).is(":input")) {
+                focus._markFocus(document.activeElement);
+            }
         },
 
         _markFocus: function(el) {
