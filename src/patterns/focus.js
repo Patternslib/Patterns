@@ -9,22 +9,29 @@ define(function(require) {
     var focus = {
         init: function() {
             $(document)
-               .on("focusin", "fieldset", focus.onFocusin)
-               .on("focusout", "fieldset", focus.onFocusout);
+               .on("focus", ":input", focus.onFocus)
+               .on("blur", ":input", focus.onBlur);
         },
 
         initContent: function(root) {
-            $(document.activeElement).closest("fieldset").addClass("pt-focus");
+            focus._markFocus(document.activeElement);
         },
 
-        onFocusin: function(e) {
-            $(this).addClass("pt-focus");
+        _markFocus: function(el) {
+            var $el = $(el);
+            $el.closest("label").addClass("pt-focus");
+            $el.closest("fieldset").addClass("pt-focus");
+
         },
 
-        onFocusout: function(e) {
-            if ($(":focus", this).length===0) {
-                $(this).removeClass("pt-focus");
-            }
+        onFocus: function(e) {
+            focus._markFocus(this);
+        },
+
+        onBlur: function(e) {
+            var $el = $(this);
+            $el.closest("label").removeClass("pt-focus");
+            $el.closest("fieldset").removeClass("pt-focus");
         },
     };
 
