@@ -980,15 +980,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 /* @group Focus pattern demo */
 
 fieldset.pt-focus {
-    background-color: yellow;
+    background-color: #efefef;
     -webkit-transition: background-color 1s ease;
     transition: background-color 1s ease;
 }
 
 label.pt-focus {
-    color: red;
     -webkit-transition: color 1s ease;
     transition: color 1s ease;
+	background-color: #ddeefe;
 }
 
 /* @end */
