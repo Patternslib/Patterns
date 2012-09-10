@@ -979,9 +979,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 /* @group Focus pattern demo */
 
 .pt-focus {
-    background: yellow;
-    -webkit-transition: opacity 1s ease;
-    transition: opacity 1s ease;
+    background-color: yellow;
+    -webkit-transition: background-color 1s ease;
+    transition: background-color 1s ease;
 }
 
 /* @end */
