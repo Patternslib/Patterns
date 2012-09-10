@@ -477,6 +477,13 @@ form.concise fieldset label select {
 
 /* @group Fieldset Comprehensive */
 
+fieldset.condensed p.question {
+	width: auto;
+	margin: 0;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
 .comprehensive,
 .comprehensive fieldset,
 .concise fieldset.comprehensive,
@@ -579,18 +586,12 @@ form.condensed fieldset {
 
 fieldset.condensed label,
 form.condensed fieldset label {
-	clear: left;
 	font-weight: normal;
 	font-style: normal;
 	display: inline-block;
 	margin-bottom: 20px;
-}
-
-fieldset.condensed p.question {
-	width: auto;
-	margin: 0;
-	letter-spacing: 0;
-	text-transform: none;
+	float: left;
+	clear: left;
 }
 
 fieldset.condensed label input,
