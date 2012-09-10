@@ -21,7 +21,8 @@ define([
     './patterns/selfhealing',
     './patterns/setclass',
     './patterns/toggle',
-    './patterns/tooltip'
+    './patterns/tooltip',
+    './patterns/focus'
 ], function(require) {
     var mapal = require('./core/init');
     mapal.registerWidthClass("narrow", 0, 780);
@@ -36,6 +37,7 @@ define([
     mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
     mapal.passivePatterns.toggle = require('./patterns/toggle');
     mapal.passivePatterns.tooltip = require('./patterns/tooltip');
+    mapal.passivePatterns.focus = require('./patterns/focus');
 
     // Register as active pattern to prevent errors on clicks.
     // XXX: hack, what does this do?
@@ -45,6 +47,7 @@ define([
     mapal.patterns.modal = require('./patterns/old_modal');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
     mapal.patterns.setclass = require('./patterns/setclass');
+    mapal.patterns.focus = require('./patterns/focus');
 
     // new-style patterns
     mapal.newstyle = require('./patterns');
