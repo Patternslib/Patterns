@@ -5,7 +5,6 @@
  * Copyright 2012 Simplon B.V.
  */
 define(function(require) {
-
     var focus = {
         init: function() {
             $(document)
@@ -23,7 +22,6 @@ define(function(require) {
             var $el = $(el);
             $el.closest("label").addClass("pt-focus");
             $el.closest("fieldset").addClass("pt-focus");
-
         },
 
         onFocus: function(e) {
@@ -33,11 +31,11 @@ define(function(require) {
         onBlur: function(e) {
             var $el = $(this);
 
-            $(document).one("mouseup", function() {
+            $(document).one("mouseup keyup", function() {
                 $el.closest("label").removeClass("pt-focus");
-                $el.closest("fieldset").removeClass("pt-focus");
+                $el.closest("fieldset").filter(":not(:has(:input:focus))").removeClass("pt-focus");
             });
-        },
+        }
     };
 
     return focus;
