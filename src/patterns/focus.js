@@ -1,6 +1,6 @@
 /**
  * @license
- * Patterns @VERSION@ tooltip - tooltips
+ * Patterns @VERSION@ focus - Manage focus class on fieldsets
  *
  * Copyright 2012 Simplon B.V.
  */
