@@ -993,3 +993,19 @@ label.pt-focus {
 
 /* @end */
 
+/* @group Checkedflag pattern demo */
+
+label.pt-checked {
+    color: #000;
+    -webkit-transition: color 0.1s ease;
+    transition: color 0.1s ease;
+}
+
+label.pt-unchecked {
+    color: #ccc;
+    -webkit-transition: color 1s ease;
+    transition: color 1s ease;
+}
+
+/* @end */
+
