@@ -32,8 +32,11 @@ define(function(require) {
 
         onBlur: function(e) {
             var $el = $(this);
-            $el.closest("label").removeClass("pt-focus");
-            $el.closest("fieldset").removeClass("pt-focus");
+
+            $(document).one("mouseup", function() {
+                $el.closest("label").removeClass("pt-focus");
+                $el.closest("fieldset").removeClass("pt-focus");
+            });
         },
     };
 
