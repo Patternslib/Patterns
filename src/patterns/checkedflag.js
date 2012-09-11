@@ -12,7 +12,7 @@ define(function(require) {
         },
 
         initContent: function(root) {
-             $("input[type=checkbox]").each(checkedflag.onChange);
+             $("input[type=checkbox]", root).each(checkedflag.onChange);
         },
 
         onChange: function(e) {
