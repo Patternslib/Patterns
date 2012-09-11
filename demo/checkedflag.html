@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Checked flag demo page</title>
+  <link rel="stylesheet" href="base.css" type="text/css">
+</head>
+  <body>
+    <fieldset>
+      <legend>Build your sandwich</legend>
+
+      <fieldset class="condensed">
+        <legend>Type of bread</legend>
+        <label><input type="radio" name="radio"/> Brown</label>
+        <label><input type="radio" name="radio"/> Wheat</label>
+        <label><input type="radio" name="radio"/> White</label>
+      </fieldset>
+
+
+      <fieldset class="condensed">
+        <legend>Toppings</legend>
+        <label><input type="checkbox" name="checkbox"/> Cheese</label>
+        <label><input type="checkbox" name="checkbox"/> Peanutbutter</label>
+        <label><input type="checkbox" name="checkbox"/> Salami</label>
+      </fieldset>
+    </fieldset>
+
+    <script data-main="../src/main" src="../lib/require.js" charset="utf-8"></script>
+  </body>
+</html>
