@@ -92,8 +92,10 @@ define([
         },
 
         show: function(event) {
+            event.preventDefault();
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
+                namespace = $container.attr("id"),
                 options = $trigger.data("mapal.tooltip");
 
             tooltip.removeShowEvents($trigger);
@@ -119,19 +121,19 @@ define([
             tooltip.positionContainer($trigger, $container);
             $container.css("visibility", "visible");
 
-	    // reposition tooltip everytime we scroll
-	    $trigger.parents(':scrollable').scroll(function () {
+            // reposition tooltip everytime we scroll or resize
+            $(window).on("scroll." + namespace + " resize." + namespace, function () {
                  tooltip.positionContainer($trigger, $container);
-	    });
-
-            event.preventDefault();
+            });
         },
 
         hide: function(event) {
             var $trigger = event.data,
-                $container = tooltip.getContainer($trigger);
+                $container = tooltip.getContainer($trigger),
+                namespace = $container.attr("id");
             tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
+            $(window).off("." + namespace);
             tooltip.setupShowEvents($trigger);
         },
 
@@ -146,12 +148,14 @@ define([
 
         createContainer: function($trigger) {
             var options = $trigger.data("mapal.tooltip"),
+                count = ++tooltip.count,
                 $content, $container;
 
-            $container = $("<div/>", {"class": "tooltip-container"});
+            $container = $("<div/>", {"class": "tooltip-container",
+                                     "id": "tooltip" + count});
             $container.css("visibility", "hidden");
             if (options.ajax) {
-                $content = $("<progress/>", {"id": "tooltip-" + ++tooltip.count});
+                $content = $("<progress/>", {"id": "tooltip-load-" + count});
             } else {
                 $content = $("<p/>").text(options.title);
             }
@@ -348,7 +352,9 @@ define([
 
             var trigger_box = status.trigger_box,
                 tooltip_box = status.tooltip_box,
-                trigger_center = status.trigger_center;
+                trigger_center = status.trigger_center,
+                $window = $(window),
+                max_height;
 
             switch (position[0]) {
             case "t":
@@ -406,10 +412,18 @@ define([
                 break;
             }
 
+            if (position[0]==="t" || position[1]==="t") {
+                var bottom_row = $window.scrollTop() + $window.height(),
+                    max_height = bottom_row - container_offset.top - 30;
+                $container.find("div").css("max-height", max_height + "px");
+            } else {
+                $container.find("div").css("max-height", "");
+            }
             $container.attr("class", "tooltip-container " + position);
             $container.css({
                 top: container_offset.top+"px",
-                left: container_offset.left+"px"});
+                left: container_offset.left+"px",
+            });
             $container.find(".pointer").css({
                 top: tip_offset.top+"px",
                 left: tip_offset.left+"px"});
