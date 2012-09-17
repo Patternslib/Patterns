@@ -99,9 +99,9 @@ define([
                 options = $trigger.data("mapal.tooltip");
 
             tooltip.removeShowEvents($trigger);
-	    // Wrap in a timeout to make sure this click is not used to
-	    // trigger a hide as well.
-	    setTimeout(function() { tooltip.setupHideEvents($trigger) }, 50);
+            // Wrap in a timeout to make sure this click is not used to
+            // trigger a hide as well.
+            setTimeout(function() { tooltip.setupHideEvents($trigger) }, 50);
 
             function ajax_show() {
                 $container.find(">div >*").css("opacity", 1);
@@ -432,3 +432,5 @@ define([
 
     return tooltip;
 });
+
+// vim: sw=4 expandtab
