@@ -373,6 +373,8 @@ define([
             case "l":
                 container_offset.left = trigger_box.right + 20;
                 tip_offset.left = -23;
+                x = status.window.width + status.scroll.left;
+                content_css["max-width"] = (x - container_offset.left - 30) + "px";
                 break;
             case "b":
                 container_offset.top = trigger_box.top - tooltip_box.height + 10;
