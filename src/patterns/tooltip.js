@@ -187,22 +187,28 @@ define([
                 window_width = $window.width(),
                 window_height = $window.height(),
                 trigger_center,
+                scroll = {},
                 space = {},
                 container_offset = {},
                 tip_offset = {},
                 cls = "";
 
+            scroll.top = $window.scrollTop();
+            scroll.left = $window.scrollLeft();
             trigger_center = {top: trigger_box.top + (trigger_box.height/2),
                               left: trigger_box.left + (trigger_box.width/2)};
-            space.top = trigger_box.top - $window.scrollTop();
+            space.top = trigger_box.top - scroll.top;
             space.bottom = window_height - space.top - trigger_box.height;
-            space.left = trigger_box.left - $window.scrollLeft();
+            space.left = trigger_box.left - scroll.left;
             space.right = window_width - space.left - trigger_box.width;
 
-            return {"space": space,
-                    "trigger_center": trigger_center,
-                    "trigger_box": trigger_box,
-                    "tooltip_box": tooltip_box};
+            return {space: space,
+                    trigger_center: trigger_center,
+                    trigger_box: trigger_box,
+                    tooltip_box: tooltip_box,
+                    scroll: scroll,
+                    window: {width: window_width, height: window_height}
+            };
         },
 
         // Help function to determine the best position for a tooltip.  Takes
@@ -353,13 +359,16 @@ define([
             var trigger_box = status.trigger_box,
                 tooltip_box = status.tooltip_box,
                 trigger_center = status.trigger_center,
+                content_css = {"max-height": "", "max-width": ""},
                 $window = $(window),
-                max_height;
+                bottom_row, x;
 
             switch (position[0]) {
             case "t":
                 container_offset.top = trigger_box.bottom + 20;
                 tip_offset.top = -23;
+                bottom_row = status.scroll.top + status.window.height,
+                content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
                 break;
             case "l":
                 container_offset.left = trigger_box.right + 20;
@@ -368,6 +377,12 @@ define([
             case "b":
                 container_offset.top = trigger_box.top - tooltip_box.height + 10;
                 tip_offset.top = tooltip_box.height;
+                x = (status.scroll.top + 10) - container_offset.top;
+                if (x>0) {
+                    tip_offset.top -= x;
+                    content_css["max-height"] = (tooltip_box.height - x) + "px";
+                    container_offset.top += x;
+                }
                 break;
             case "r":
                 container_offset.left = trigger_box.left - tooltip_box.width - 20;
@@ -412,13 +427,7 @@ define([
                 break;
             }
 
-            if (position[0]==="t" || position[1]==="t") {
-                var bottom_row = $window.scrollTop() + $window.height(),
-                    max_height = bottom_row - container_offset.top - 30;
-                $container.find("div").css("max-height", max_height + "px");
-            } else {
-                $container.find("div").css("max-height", "");
-            }
+            $container.find("> div").css(content_css);
             $container.attr("class", "tooltip-container " + position);
             $container.css({
                 top: container_offset.top+"px",
