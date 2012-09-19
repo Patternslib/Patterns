@@ -31,11 +31,11 @@ define([
             // split up the params
             $.extend(options, params);
 
-            if (typeof options["disable"] !== 'string' ) {
-                options['disable'] = elem;
+            if (typeof options.disable !== 'string' ) {
+                options.disable = elem;
             }
 
-            if (container.length == 0) {
+            if (container.length === 0) {
                 container = $("<div />").attr("id", "selfhealing-messages").appendTo(document.body);
             }
 
@@ -43,12 +43,12 @@ define([
 
             //  $("<div />").attr("id", "selfhealing-message-" + count).attr("opacity", 0).appendTo(container);
 
-            if ( typeof options['confirm'] == 'string' ) {
-                if (!confirm(options['confirm'])) return;
+            if ( typeof options.confirm === 'string' ) {
+                if (!confirm(options.confirm)) return;
             }
 
-            if (options['disable'] !== null) {
-                $(options['disable']).attr('disabled', 'disabled');
+            if (options.disable !== null) {
+                $(options.disable).attr('disabled', 'disabled');
             }
 
             // create the message element
@@ -74,21 +74,21 @@ define([
 
                 $target.appendTo(container);
 
-                if (options['remove'] !== null ) {
+                if (options.remove !== null ) {
                     // we have an ID to delete
-                    if (typeof options['remove'] == 'string') {
-                        $('#' + options['remove']).slideUp('slow');
+                    if (typeof options.remove == 'string') {
+                        $('#' + options.remove).slideUp('slow');
                     } else {
-                        $(options['remove']).slideUp('slow');
+                        $(options.remove).slideUp('slow');
                     }
                 }
 
-                if (options['show'] !== null ) {
+                if (options.show !== null ) {
                     // we have an ID to delete
-                    if (typeof options['show'] == 'string') {
-                        $('#' + options['show']).slideDown('slow');
+                    if (typeof options.show == 'string') {
+                        $('#' + options.show).slideDown('slow');
                     } else {
-                        $(options['show']).slideDown('slow');
+                        $(options.show).slideDown('slow');
                     }
                 }
 
@@ -132,3 +132,5 @@ define([
     };
     return selfHealing;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

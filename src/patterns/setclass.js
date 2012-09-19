@@ -58,6 +58,7 @@ define([
                 }
             });
 
+            var key;
             for (key in setclass.store ) {
                 var obj = setclass.store[key];
                 if ( obj.attr === 'class' ) {
@@ -69,16 +70,16 @@ define([
         },
 
         getObjFromParams: function($elem, params) {
-            var values = params['values'];
+            var values = params.values;
             var obj = {};
 
-            obj.id = params['id'] || $elem.attr("id");
-            obj.attr = params['attr'] || 'class';
-            obj.store = params['store'] || false;
+            obj.id = params.id || $elem.attr("id");
+            obj.attr = params.attr || 'class';
+            obj.store = params.store || false;
 
-            if (typeof obj.id !== "string" || obj.id.length == 0 ||
-                typeof obj.attr !== 'string' || obj.attr.length == 0 ||
-                typeof values  !== 'string' || values.length == 0 ) {
+            if (typeof obj.id !== "string" || obj.id.length === 0 ||
+                typeof obj.attr !== 'string' || obj.attr.length === 0 ||
+                typeof values  !== 'string' || values.length === 0 ) {
                 return null;
             }
 
@@ -112,7 +113,7 @@ define([
             if (obj === null) return false;
 
             var $setclass = $("#" + obj.id);
-            if ($setclass.length == 0) return false;
+            if ($setclass.length === 0) return false;
 
             if (obj.attr === 'class') {
                 if (obj.other.length > 0 ) {
@@ -163,3 +164,5 @@ define([
     };
     return setclass;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

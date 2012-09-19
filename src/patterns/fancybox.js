@@ -21,8 +21,8 @@ define([
             //if (modifier && modifier.length > 0) {
             //options.type = modifier[0].slice(1);
             //} else {
-            if (params['type'])
-                options.type = params['type'];
+            if (params.type)
+                options.type = params.type;
             //}
 
             options.href = url + (sources.length > 0 ? '#' + sources[0] : '');
@@ -33,3 +33,5 @@ define([
     };
     return fancybox;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

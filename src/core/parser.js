@@ -15,7 +15,8 @@ define([
         this.params = [];
         this.defaults = {};
         if (spec) this.add_spec(spec);
-    };
+    }
+
     ArgumentParser.prototype = {
         named_param_pattern: /^\s*([a-zA-Z0-9]+)\s*:(.*)/,
 
@@ -105,5 +106,5 @@ define([
 
 });
 
-/* jslint devel: true, browser: true, continue: true, sloppy: true, white: true, plusplus: true, regexp: true, indent: 8
- */
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

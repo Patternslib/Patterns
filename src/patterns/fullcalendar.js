@@ -156,8 +156,8 @@ define([
                 }
                 var location = ($('.location', event).html() || '').trim();
                 var ev = {
-                    title: $('.title', event).html().trim()
-                        + (location ? (' (' + location + ')') : ''),
+                    title: $('.title', event).html().trim() +
+                        (location ? (' (' + location + ')') : ''),
                     start: $('.start', event).attr('datetime'),
                     end: $('.end', event).attr('datetime'),
                     allDay: $(event).hasClass('all-day'),
@@ -176,3 +176,5 @@ define([
     };
     return fullcalendar;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

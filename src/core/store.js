@@ -13,7 +13,7 @@ define([
         'getPatternAttributes': function(pattern) {
             if (!store.hasStorage()) return [];
 
-            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
+            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0", 10);
             var attrs = [];
 
             for (var i = 1; i <= count; i++ ) {
@@ -26,7 +26,7 @@ define([
         'addPatternAttribute': function(pattern, value) {
             if (!store.hasStorage()) return;
 
-            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0") + 1;
+            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0", 10) + 1;
 
             window.sessionStorage.setItem( pattern + '-count', count );
             window.sessionStorage.setItem( pattern + '-' + count, value );
@@ -35,7 +35,7 @@ define([
         'setPatternAttribute': function(pattern, index, value) {
             if (!store.hasStorage()) return;
 
-            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0");
+            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0", 10);
 
             if (index > 0 && index <= count) {
                 window.sessionStorage.setItem( pattern + '-' + index, value);
@@ -60,3 +60,5 @@ define([
     };
     return store;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

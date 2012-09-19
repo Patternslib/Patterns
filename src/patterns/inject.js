@@ -22,9 +22,7 @@ define(function(require) {
         // inject in case of successfull ajax request
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
             // retrieve href and split into url and default srcid
-            var href = ($el.is('form')
-                        ? $el.attr('action')
-                        : $el.attr('href')).split('#'),
+            var href = ($el.is('form') ? $el.attr('action') : $el.attr('href')).split('#'),
                 srcid = href[1];
 
             if (ev.target !== $el[0]) {
@@ -179,3 +177,5 @@ define(function(require) {
 
     return pattern;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

@@ -68,10 +68,10 @@ define([
             // XXX: this needs to be solved differently
             var msg = [jqxhr.status, jqxhr.statusText, error, opts && opts.url].join(' '),
                 // XXX: error notification pattern!
-                $error = $('<div class="modal">'
-                           + '<h3>Error</h3>'
-                           + '<div class="error message">'+msg+'</div>'
-                           + '</div>');
+                $error = $('<div class="modal">' +
+                           '<h3>Error</h3>' +
+                           '<div class="error message">'+msg+'</div>' +
+                           '</div>');
             var inject = require('./inject');
             inject.append($error, $('body'));
         });
@@ -134,3 +134,5 @@ define([
         init: init
     };
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

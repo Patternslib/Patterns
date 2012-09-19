@@ -31,8 +31,8 @@ define([
                     curvalue = $target[0].value || "";
 
                 if (!name) {
-                    log.warn('type=search without name, will be a problem'
-                             + ' if there are multiple', $target);
+                    log.warn('type=search without name, will be a problem' +
+                             ' if there are multiple', $target);
                 }
                 if (oldvalue === curvalue) return;
 
@@ -69,3 +69,5 @@ define([
 
     return pattern;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

@@ -26,3 +26,5 @@ define(function(require) {
 
     return submit;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
