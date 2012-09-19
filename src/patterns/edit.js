@@ -170,9 +170,7 @@ define([
         for (var tag in ctrls) {
             var ctrl = ctrls[tag];
             $ctrls.find(ctrl.selector)[
-                document.queryCommandState(ctrl.cmd)
-                    ? 'addClass'
-                    : 'removeClass'
+                document.queryCommandState(ctrl.cmd) ? 'addClass' : 'removeClass'
             ]('selected');
         }
     };
@@ -215,9 +213,9 @@ define([
 
         var button_handler = {
             'insertparagraph'       : function(){ return 0; },
-            'inserth1'              : function(){ wrap_selection('h1') },
-            'inserth2'              : function(){ wrap_selection('h2') },
-            'inserth3'              : function(){ wrap_selection('h3') },
+            'inserth1'              : function(){ wrap_selection('h1'); },
+            'inserth2'              : function(){ wrap_selection('h2'); },
+            'inserth3'              : function(){ wrap_selection('h3'); },
             'clear'                 : function(){
                 var selection_node = $(window.getSelection().anchorNode);
                 document.execCommand('removeformat');
@@ -264,3 +262,5 @@ define([
     };
     return pattern;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

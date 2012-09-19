@@ -25,9 +25,9 @@ define([
                 var opts = $.extend({}, floatingPanelContextual.options, params);
 
                 if ( sources.length > 0 ) {
-                    opts['tip'] = "#" + sources[0];
+                    opts.tip = "#" + sources[0];
                 }
-                opts['onHide'] = floatingPanelContextual.handleOnHide;
+                opts.onHide = floatingPanelContextual.handleOnHide;
                 $elem.tooltip(opts).dynamic();
 
                 api = $elem.data("tooltip");
@@ -55,3 +55,5 @@ define([
     };
     return floatingPanelContextual;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

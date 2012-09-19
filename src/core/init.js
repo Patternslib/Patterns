@@ -290,7 +290,8 @@ var mapal = {
     initTransforms: function(root) {
         // record history disables mostly everything for now
         $(".record-history", root).addClass('cant-touch-this');
-        $(root).is(".record-history") && $(root).addClass('cant-touch-this');
+        if ($(root).is(".record-history"))
+            $(root).addClass('cant-touch-this');
 
         $(".jsOnly", root).show();
 
@@ -371,6 +372,7 @@ var mapal = {
         },
 
         load: function($elem, url, targets, sources, callback, $filter) {
+            var i;
             callback = callback || function() {};
             // to have more versatility when calling the function
             if (typeof sources == "string") sources = [ sources ];
@@ -381,7 +383,7 @@ var mapal = {
             } else {
                 // empty source will use content of <body> instead.
                 // (exclamation mark is to make sure an id with value "body" will still work as well)
-                for (var i = sources.length; i < targets.length; i++) {
+                for (i = sources.length; i < targets.length; i++) {
                     sources.push(mapal.injection.options.bodyInjectionId);
                 }
             }
@@ -390,7 +392,7 @@ var mapal = {
             var modifiers = [], modifier;
             var modifier_re = /:[a-zA-Z]+/;
 
-            for (var i = 0; i < targets.length; i++) {
+            for (i = 0; i < targets.length; i++) {
                 if (typeof targets[i] == "string") {
                     // does the specifier contain a parent?
                     if (targets[i].indexOf(">") > 0) {
@@ -461,7 +463,7 @@ var mapal = {
 
                 for (var idx = 0; idx < len; idx++) {
                     var modifier = modifiers[idx];
-
+                    var $source;
                     var $target = $( "#" + target_ids[idx] );
                     var appendTo = false;
 
@@ -480,10 +482,10 @@ var mapal = {
 
                     // empty source IDs will have been replaced with !body. Use the <body> tag as a source
                     if (sources[idx] == mapal.injection.options.bodyInjectionId) {
-                        var $source = $factory.find('#'+mapal.injection.options.bodyInjectionId);
+                        $source = $factory.find('#'+mapal.injection.options.bodyInjectionId);
                         modifier = "content";
                     } else {
-                        var $source = $factory.find( '#' + sources[idx] );
+                        $source = $factory.find( '#' + sources[idx] );
                     }
 
                     // apply filters to source
@@ -511,7 +513,7 @@ var mapal = {
                         if (typeof callback == 'function') {
                             callback($target);
                         } else {
-                            (callback['onFinished']||$.noop)($target);
+                            (callback.onFinished||$.noop)($target);
                         }
                     } else {
                         alert('Injection[WARN]: Could not find modifier "' + modifier + '"' );
@@ -689,15 +691,16 @@ var mapal = {
 
         // Enable DOM-injection from anchors
         init: function () {
+            var key;
             // initalize the listeners for each of the patterns
-            for (var key in mapal.patterns) {
+            for (key in mapal.patterns) {
                 if (mapal.patterns[key].execute) {
                     mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners );
                 }
             }
 
             // Call the initialization function for each of the patterns
-            for (var key in mapal.patterns) {
+            for (key in mapal.patterns) {
                 (mapal.patterns[key].init||$.noop)();
 
                 if (mapal.patterns[key].dataAttr) {
@@ -735,7 +738,7 @@ var mapal = {
                     var re = /^[\.][a-zA-Z]+/;
                     var patt = re.exec(attrVal);
 
-                    if ( patt.length == 0 ) {
+                    if ( patt.length === 0 ) {
                         // the pattern was malformed. Inform the designer
                         alert("Pattern[ERROR]: malformed pattern: " + attrVal);
                     } else {
@@ -759,7 +762,7 @@ var mapal = {
                 }
                 e.preventDefault();
                 return false;
-            };
+            }
 
             $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
             $(mapal.patterns.options.search.submit.join(", ")).live("submit.mapal", handlePattern );
@@ -771,7 +774,7 @@ var mapal = {
                 if (weContinue && !this(elem) ) {
                     weContinue = false;
                     return;
-                };
+                }
             });
 
             return weContinue;
@@ -992,9 +995,9 @@ var mapal = {
         mapal.initAutoLoads(root);
         //
 
-        for (passivePatternName in mapal.passivePatterns) {
+        for (var passivePatternName in mapal.passivePatterns) {
             var passivePattern = mapal.passivePatterns[passivePatternName];
-            if ( passivePattern.initContent && $.isFunction(passivePattern['initContent']) ) {
+            if (passivePattern.initContent && $.isFunction(passivePattern.initContent) ) {
                 passivePattern.initContent(root);
             }
         }
@@ -1025,7 +1028,7 @@ $.extend( mapal.ui, {
     "modal": function( url, options ) {
         var opts = '.modal';
         if (options) {
-            for (opt in options) {
+            for (var opt in options) {
                 opts += '!' + opt + "=";
                 if (typeof options[opt] == 'string') {
                     opts += "'" + options[opt] + "'";
@@ -1041,3 +1044,5 @@ $.extend( mapal.ui, {
 
     return mapal;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

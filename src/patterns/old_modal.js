@@ -43,7 +43,7 @@ define([
                 href = event.target.tagName.toLowerCase()==="a" ? $trigger.attr("href") : $trigger.attr("name"),
                 parts = href.split("#", 2),
                 $panel = $("#panel");
-            var source = (parts[1] == undefined) ? [] : parts[1];
+            var source = (parts[1] === undefined) ? [] : parts[1];
 
             var opts = $.extend({}, modal.options, params);
 
@@ -58,8 +58,8 @@ define([
 
             modal.pauseVideo(opts, true);
 
-            if (opts['showLoading']) {
-                var $loading = $("<div>").text(opts['loadingText']).attr("id", "panel-loading");
+            if (opts.showLoading) {
+                var $loading = $("<div>").text(opts.loadingText).attr("id", "panel-loading");
                 $('<span>').appendTo($loading);
                 $loading.appendTo($panel);
 
@@ -76,7 +76,7 @@ define([
                     $target.css("opacity", 1).addClass("panel");
 
 
-                    if (opts['showLoading']) {
+                    if (opts.showLoading) {
                         $("#panel-loading").remove();
                     } else {
                         mapal.injection.apiInit($panel, opts);
@@ -174,3 +174,5 @@ define([
     };
     return modal;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

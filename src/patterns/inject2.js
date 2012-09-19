@@ -84,14 +84,13 @@ define(function(require) {
             // href -> url + source
             ["href"],
             ["data-inject",
-             "source; target; replace; pre; post; "
-             + "prepend; append; url; replacetagwithcontent"]
+             "source; target; replace; pre; post; prepend; append; url; replacetagwithcontent"]
         ];
 
         var opts = extract_opts($el, opts_spec),
             modal = false;
 
-	opts.$trigger = $el;
+        opts.$trigger = $el;
 
         // special target cases
         if ($el.is('.collapsible')) {
@@ -133,8 +132,8 @@ define(function(require) {
                 if (opts.replace) {
                     target = opts.replace;
                     method_name = "replace";
-                } else if (opts["replacetagwithcontent"]) {
-                    target = opts["replacetagwithcontent"];
+                } else if (opts.replacetagwithcontent) {
+                    target = opts.replacetagwithcontent;
                     method_name = "replacetagwithcontent";
                 } else if (opts.pre) {
                     target = opts.pre;
@@ -236,12 +235,12 @@ define(function(require) {
 
     var pattern = {
         initialised_class: 'inject',
-        markup_trigger: '.collapsible[data-inject],'
-            + '.folder[data-inject],'
-            + 'a.inject, a[data-inject]',
+        markup_trigger: '.collapsible[data-inject], .folder[data-inject], a.inject, a[data-inject]',
         init: init,
         triggerinject: triggerinject
     };
 
     return pattern;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab

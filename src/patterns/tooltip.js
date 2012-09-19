@@ -101,7 +101,7 @@ define([
             tooltip.removeShowEvents($trigger);
             // Wrap in a timeout to make sure this click is not used to
             // trigger a hide as well.
-            setTimeout(function() { tooltip.setupHideEvents($trigger) }, 50);
+            setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
 
             function ajax_show() {
                 $container.find(">div >*").css("opacity", 1);
@@ -321,6 +321,7 @@ define([
                         if ((tooltip_box.height-20)>space.top) {
                             return false;
                         }
+                        break;
                     default:
                         return false;
                 }
@@ -433,7 +434,7 @@ define([
             $container.attr("class", "tooltip-container " + position);
             $container.css({
                 top: container_offset.top+"px",
-                left: container_offset.left+"px",
+                left: container_offset.left+"px"
             });
             $container.find(".pointer").css({
                 top: tip_offset.top+"px",
@@ -444,4 +445,5 @@ define([
     return tooltip;
 });
 
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

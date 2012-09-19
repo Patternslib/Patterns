@@ -45,8 +45,10 @@ define([
             // check for current elements injected here
             $el.on('patterns-inject-scanned', function(ev) {
                 var $target = $(ev.target);
-                $target.is('a.current') && $target.click();
-                $target.is('.current') && $target.find('a').click();
+                if ($target.is('a.current'))
+                    $target.click();
+                if ($target.is('.current'))
+                    $target.find('a').click();
                 updatenavpath($el);
             });
         }
@@ -93,3 +95,5 @@ define([
     };
     return pattern;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
