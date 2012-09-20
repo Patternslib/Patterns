@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jasmine Test Runner</title>
+    <link rel="stylesheet" type="text/css" href="../../lib/phantom-jasmine/vendor/jasmine-1.2.0/jasmine.css"/>
+    <script type="text/javascript" src="../../lib/phantom-jasmine/vendor/jasmine-1.2.0/jasmine.js"></script>
+    <script type="text/javascript" src="../../lib/phantom-jasmine/vendor/jasmine-1.2.0/jasmine-html.js"></script>
+    <script type="text/javascript" src="../../lib/phantom-jasmine/lib/console-runner.js"></script>
+    <script type="text/javascript" src="../../lib/requireHelper.js"></script>
+    <script type="text/javascript" src="../../lib/require.js"></script>
+    <script type="text/javascript" src="parser.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // This has to be a global.
+      var console_reporter = new jasmine.ConsoleReporter();
+
+      require.config({baseUrl: "../../src"});
+      require(["main"], function() {
+          jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+          jasmine.getEnv().addReporter(console_reporter);
+          jasmine.getEnv().execute();
+      });
+    </script>
+  </body>
+</html>
+
