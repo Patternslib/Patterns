@@ -2,7 +2,7 @@ PHANTOMJS	?= phantomjs
 
 all:: build/patterns.js
 
-build/patterns.js: $(wildcard src/*.js) $(wildcard src/*/*.js)
+build/patterns.js: src/lib/jquery.form lib/requirejs $(wildcard src/*.js) $(wildcard src/*/*.js)
 	node lib/r.js -o name=main out=$@ baseUrl=src/
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
