@@ -1,0 +1,10 @@
+language: node_js
+before_install:
+- git submodule update --init --recursive
+script: make check
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#patterns"
+    on_success: always
+    on_failure: always
