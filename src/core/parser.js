@@ -14,14 +14,16 @@ define([
     function ArgumentParser(spec) {
         this.params = [];
         this.defaults = {};
-        if (spec) this.add_spec(spec);
+        if (spec)
+            this.add_spec(spec);
     }
 
     ArgumentParser.prototype = {
         named_param_pattern: /^\s*([a-zA-Z0-9]+)\s*:(.*)/,
 
         add_argument: function(name, default_value) {
-            if (default_value === undefined) default_value = "";
+            if (default_value === undefined)
+                default_value = null;
             this.params.push(name);
             this.defaults[name] = default_value;
         },
@@ -41,25 +43,26 @@ define([
         },
 
         parse: function(parameter, defaults) {
-            defaults = defaults || {};
-            if (!parameter) {
-                return defaults;
-            }
-            if (parameter.match(/&&/)) {
+            if (parameter && parameter.match(/&&/)) {
                 return parameter.split(/\s*&&\s*/).map(function(parameter) {
                     return this.parse(parameter, defaults);
                 }, this);
             }
 
-            var parts = parameter.split(";"),
-                opts = {},
-                part, matches, i, name;
+            var opts = {}, i, name;
 
-            // Popuplate options with default values
-            for (i=0; i<this.params.length; i++) {
-                name = this.params[i];
-                opts[name] = defaults[name] || this.defaults[name];
-            }
+            // Copy all defaults to opts.
+            if (typeof defaults === "object")
+                for (i in defaults)
+                    opts[i] = defaults[i];
+            for (i in this.defaults)
+                opts[i] = opts[i] || this.defaults[i];
+
+            if (!parameter)
+                return opts;
+
+            var parts = parameter.split(";"),
+                part, matches;
 
             // Grab all positional parameters
             i=-1;
@@ -93,9 +96,8 @@ define([
             }
 
             for (name in opts) {
-                if (opts[name].slice(0,1) === "$") {
+                if (typeof opts[name]==="string" && opts[name].slice(0,1) === "$")
                     opts[name] = opts[opts[name].slice(1)];
-                }
             }
 
             return opts;
