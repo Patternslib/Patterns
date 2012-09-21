@@ -12,6 +12,9 @@ Install
     git clone git://github.com/cornae/Patterns.git
     git submodule update --init --recursive
 
+or::
+
+    make
 
 Development
 -----------
