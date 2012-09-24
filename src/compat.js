@@ -372,6 +372,13 @@ define(function() {
     }
 
 
+    // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray (JS 1.8.5)
+    if (!Array.isArray) {
+	Array.isArray = function (arg) {
+            return Object.prototype.toString.call(arg) == '[object Array]';
+	};
+    }
+
     // source: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim (JS 1.8.1)
     if (!String.prototype.trim) {
         String.prototype.trim = function () {
