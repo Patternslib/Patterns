@@ -8,9 +8,16 @@
  */
 define([
     'require',
-    '../utils'
+    '../logging',
+    '../patterns'
 ], function(require) {
-    var utils = require('../utils');
+    var log = require('../logging').getLogger('switch'),
+        Parser = require('../core/parser'),
+        parser = new Parser();
+
+    parser.add_argument("selector");
+    parser.add_argument("attr", "class");
+    parser.add_argument("value");
 
     var toggle = {
         initContent: function(root) {
@@ -18,44 +25,41 @@ define([
         },
 
         onClick: function(event) {
-            var $trigger = $(event.target),
-                options = toggle.getOptions($trigger),
-                $targets = $(options.selector),
-                $target;
+            var $trigger = $(this),
+                options, option, $targets, $target, i;
 
-
-            if ($targets.length===0) {
-                return;
+            options=parser.parse($trigger.data("toggle"));
+            if (!Array.isArray(options)) 
+                options = [options];
+            for (i=0; i<options.length; i++) {
+                option=options[i];
+                if (option.selector && option.attr && option.value)
+                    toggle._update(option.selector, option.attr, option.value);
+                else
+                    log.error('Toggle pattern requires selector, attr and value.');
             }
+            event.preventDefault();
+        },
 
-            if (options.attr==="class") {
-                $targets.toggleClass(options.value);
+        _update: function(selector, attr, value) {
+            var $targets = $(selector);
+
+            if (!$targets.length)
+                return;
+
+            if (attr==="class") {
+                $targets.toggleClass(value);
             } else {
                 for (var i=0; i<$targets.length; i++) {
                     $target=$targets.eq(i);
-                    if ($target.attr(options.attr)===options.attr) {
-                        $target.removeAttr(options.attr);
+                    if ($target.attr(attr)===attr) {
+                        $target.removeAttr(attr);
                     } else {
-                        $target.attr(options.attr, options.value);
+                        $target.attr(attr, value);
                     }
                 }
             }
 
-            event.preventDefault();
-        },
-
-        getOptions: function($trigger) {
-            var options = $trigger.data("mapal.toggle");
-            if (options!==undefined) {
-                return options;
-            }
-
-            options = utils.parseOptions($trigger.data("toggle"));
-            if (!options.selector || !options.attr || !options.value) {
-                alert("Toggle pattern error: not all mandatory parameters provided.");
-            }
-            $trigger.data("mapal.toggle", options);
-            return options;
         }
     };
 
