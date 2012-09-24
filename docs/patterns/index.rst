@@ -20,5 +20,6 @@ The available patterns are:
    fancybox
    modal
    selfhealing
+   switch
    toggle
    tooltip
