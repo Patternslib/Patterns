@@ -26,4 +26,12 @@ wildcard (the ``*`` character) in the class name.
 
 .. code-block:: html
 
-   <button data-switch=".toolbar icon-*">Remove icons</button>
+   <button data-switch=".toolbar; icon-*">Remove icons</button>
+
+Multiple changes can be provided if desired by separating them using the ``&&``
+separator. The example below uses this to remove all icon classes in both the
+toolbar and the navigation tree.
+
+.. code-block:: html
+
+   <button data-switch=".toolbar; icon-* && .navtree; icon-*">Remove icons</button>
