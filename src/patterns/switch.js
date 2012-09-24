@@ -5,7 +5,7 @@ define([
 
 ], function(require) {
     var log = require('../logging').getLogger('switch'),
-        Parser = require('../core/parser');
+        Parser = require('../core/parser'),
         parser = new Parser();
 
     parser.add_argument("selector");
