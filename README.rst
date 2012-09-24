@@ -1,3 +1,6 @@
+.. image:: https://secure.travis-ci.org/Patternslib/Patterns.png
+   :target: http://travis-ci.org/Patternslib/Patterns
+
 Patterns is a JavaScript library that enables designers to build rich
 interactive prototypes without the need for writing any Javascript. All events
 are triggered by classes and other attributes in the HTML, without abusing the
