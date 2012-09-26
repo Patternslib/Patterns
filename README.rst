@@ -7,22 +7,21 @@ are triggered by classes and other attributes in the HTML, without abusing the
 HTML as a programming language. Accessibility, SEO and well structured HTML are
 core values of Patterns.
 
+For more information please see the `documentation
+<http://patterns.readthedocs.org/>`_.
+
 Install
 -------
 
 ::
 
     git clone git://github.com/cornae/Patterns.git
-    git submodule update --init --recursive
-
-or::
-
     make
 
 Development
 -----------
 
-To develop on Patterns or one of it's submodules, fork the repository
+To develop on Patterns or one of it's submodules, clone the repository
 and set it's push-url to your fork::
 
     git set-url --push origin <url_to_your_fork>
