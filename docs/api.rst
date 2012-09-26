@@ -34,6 +34,7 @@ Patterns are implemented as javascript objects that are registered with the
 patterns library. Below is a minimal skeleton for a pattern.
 
 .. code-block:: javascript
+   :linenos:
 
    define([
        'require'
@@ -50,9 +51,10 @@ patterns library. Below is a minimal skeleton for a pattern.
 
 This skeleton does two things:
 
-* It uses `RequireJS <http://requirejs.org/>`_ to load the core patterns logic.
-* It creates a object which defines this pattern and registers is with the
-  patterns system.
+* lines 1-4 use `RequireJS <http://requirejs.org/>`_ to load the core patterns
+  logic.
+* lines 5-8 create an object which defines this pattern.
+* line 10 registers the pattern.
 
 The pattern also returns the pattern object itself. While not required this
 is recommended behaviour: it makes it easier to write tests for patterns and
@@ -80,6 +82,8 @@ its `getLogger` method to get a log utility. This is typically done as part
 of the pattern definition: 
 
 .. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 4,6,7
 
    define([
        'require'
@@ -87,7 +91,6 @@ of the pattern definition:
        '../logging',
    ], function(require, patterns, logging) {
       var log = logging.getLogger("mypattern");
-
       log.info("Hello, world");
    });
 
