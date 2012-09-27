@@ -9,55 +9,78 @@
 define([
     'require'
 ], function(require) {
+    function Storage(backend, prefix) {
+        this.prefix=prefix;
+        this.backend=backend;
+    }
+
+    Storage.prototype._key = function(name) {
+        return this.prefix + ":" + name;
+    };
+
+    Storage.prototype._allKeys = function() {
+        var keys = [],
+            prefix = this.prefix + ":",
+            prefix_length = prefix.length,
+            key, i;
+
+        for (i=0; i<this.backend.length; i++) {
+            key=this.backend.key(i);
+            if (key.slice(0, prefix_length)===prefix)
+                keys.push(key);
+        }
+        return keys;
+    };
+
+    Storage.prototype.get = function(name) {
+        var key = this._key(name),
+            value = this.backend.getItem(key);
+        if (value!==null)
+            value=JSON.parse(value);
+        return value;
+    };
+
+    Storage.prototype.set = function(name, value) {
+        var key = this._key(name);
+        return this.backend.setItem(key, JSON.stringify(value));
+    };
+
+    Storage.prototype.remove = function(name) {
+        var key = this._key(name);
+        return this.backend.removeItem(key);
+    };
+
+    Storage.prototype.clear = function() {
+        var keys = this._allKeys();
+        for (var i=0; i<keys.length; i++)
+            this.backend.removeItem(keys[i]);
+    };
+
+    Storage.prototype.all = function() {
+        var keys = this._allKeys(),
+            prefix_length = this.prefix.length + 1,
+            lk,
+            data = {};
+
+        for (var i=0; i<keys.length; i++) {
+            lk = keys[i].slice(prefix_length);
+            data[lk]=JSON.parse(this.backend.getItem(keys[i]));
+        }
+        return data;
+    };
+
     var store = {
-        'getPatternAttributes': function(pattern) {
-            if (!store.hasStorage()) return [];
+        supported: typeof window.sessionStorage !== 'undefined',
 
-            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0", 10);
-            var attrs = [];
-
-            for (var i = 1; i <= count; i++ ) {
-                attrs.push(window.sessionStorage.getItem( pattern + '-' + i ));
-            }
-
-            return attrs;
+        local: function (name) {
+            return new Storage(window.localStorage, name);
         },
 
-        'addPatternAttribute': function(pattern, value) {
-            if (!store.hasStorage()) return;
-
-            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0", 10) + 1;
-
-            window.sessionStorage.setItem( pattern + '-count', count );
-            window.sessionStorage.setItem( pattern + '-' + count, value );
-        },
-
-        'setPatternAttribute': function(pattern, index, value) {
-            if (!store.hasStorage()) return;
-
-            var count = parseInt(window.sessionStorage.getItem( pattern + '-count' ) || "0", 10);
-
-            if (index > 0 && index <= count) {
-                window.sessionStorage.setItem( pattern + '-' + index, value);
-
-                return true;
-            }
-
-            return false;
-        },
-
-        'initPatternStore': function(pattern) {
-            if (!store.hasStorage()) return;
-
-            if (window.sessionStorage.getItem( pattern+'-count' ) === null) {
-                window.sessionStorage.setItem( pattern+'-count', '0' );
-            }
-        },
-
-        'hasStorage': function() {
-            return typeof window.sessionStorage !== 'undefined';
+        session: function (name) {
+            return new Storage(window.sessionStorage, name);
         }
     };
+
     return store;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

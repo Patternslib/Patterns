@@ -17,7 +17,7 @@ describe("trim", function() {
 });
 
 
-describe("Parser", function() {
+describe("Core / Parser", function() {
     var ArgumentParser;
 
     requireDependencies(["core/parser"], function(cls) {
