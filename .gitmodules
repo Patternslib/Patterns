@@ -10,3 +10,6 @@
 [submodule "lib/pavlov"]
 	path = lib/pavlov
 	url = git://github.com/chaoflow/pavlov.git
+[submodule "lib/phantom-jasmine"]
+	path = lib/phantom-jasmine
+	url = git://github.com/jcarver989/phantom-jasmine.git
