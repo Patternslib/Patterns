@@ -9,7 +9,6 @@
 define([
     'require',
     '../core/init',
-    '../core/store',
     '../utils'
 ], function(require) {
     var mapal = require('../core/init');
