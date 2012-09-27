@@ -18,7 +18,7 @@ Contents:
    depends
    panels
    patterns/index
-   api
+   api/index
 
 Indices and tables
 ==================
