@@ -28,6 +28,49 @@ this pattern is requested. Finally in line 8 the log utility is used to log
 a message.
 
 
+Logging API
+-----------
+
+.. js:attribute:: logging.Level
+
+   The log4javascript Level object which defines all available logging levels.
+
+
+.. js:function:: logging.setEnabled(enabled)
+
+   :param boolean enabled: flag indicating if logging should be enabled
+
+   This function disables or enables all logging functionality.
+
+
+.. js:function:: logging.setLevel(level)
+
+   :param level: new logging level
+
+   Use this function to change the root logging level. The default level is INFO. To
+   change the level to DEBUG you can use this:
+
+   .. code-block:: javascript
+
+      logging.setLevel(logging.Level.DEBUG);
+
+   Please note that this only changes the root logging level. You can set a
+   different logging for individual lggers as well:
+
+   .. code-block:: javascript
+
+      var log = logging.getLogger("mypattern");
+      log.setLevel(logging.Level.DEBUG);
+
+
+.. js:function:: logging.getLogger(name)
+
+   :param string name: name of the logger
+   :returns: a log4javascript logger instance
+
+   Retrieve, and optionally create, a named logger instance.
+
+
 The logging object (`log` in the code example) exposes several methods to log
 information at various log levels: 
 

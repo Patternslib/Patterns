@@ -59,6 +59,16 @@ define(function(require) {
     init_console_logging();
 
     var logging = {
+        Level: l4js.Level,
+
+        setEnabled: function(enabled) {
+            l4js.setEnabled(true);
+        },
+
+        setLevel: function(level) {
+            root.setLevel(level);
+        },
+
         getLogger: function(name) {
             var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
             if (name === 'inject_log_old') logger.setLevel(level.INFO);
