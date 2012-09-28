@@ -333,7 +333,7 @@
 						</li>
 						<li class="method">
 							<div class="name">getRootLogger</div>
-							<div class="methodsignature"><code>Logger <strong>getNullLogger</strong>()</code></div>
+							<div class="methodsignature"><code>Logger <strong>getRootLogger</strong>()</code></div>
 							<div class="summary">
 								Returns the root logger from which all other loggers derive.
 							</div>
@@ -493,7 +493,7 @@
 						<li><code>log4javascript.Level.WARN</code></li>
 						<li><code>log4javascript.Level.ERROR</code></li>
 						<li><code>log4javascript.Level.FATAL</code></li>
-						<li><code>log4javascript.Level.NONE</code></li>
+						<li><code>log4javascript.Level.OFF</code></li>
 					</ol>
 					<p class="linktotop">
 						<a href="#container">Top</a>
@@ -1105,13 +1105,15 @@
 							</li>
 							<li>
 								<p>
-									Also from version 1.4, any outstanding log messages are sent when the main page unloads
-									(i.e. user follows a link, closes the window or refreshes the page). This behaviour may
-									be disabled using <code>setSendAllOnUnload</code>; see below.
+									Also from version 1.4, any outstanding log messages may optionally be sent when the
+									main page unloads (i.e. user follows a link, closes the window or refreshes the
+									page). This behaviour may be enabled using <code>setSendAllOnUnload</code>; see
+									below.
 								</p>
 								<p>
-									This behaviour is dependent on <code>window.unload</code>; unfortunately, Opera does
-									not always raise this event, so this feature does not work reliably in Opera.
+									This behaviour is dependent on <code>window.onbeforeunload</code>; unfortunately,
+									Opera does not always raise this event, so this feature does not work reliably in
+									Opera.
 								</p>
 							</li>
 						</ul>
@@ -1145,11 +1147,27 @@
 										[<em>not available after first message logged</em>]
 									</p>
 									<p>
-										Whether to send all remaining unsent log messages to the server when the page unloads.
+										Whether to send all remaining unsent log messages to the server when the page
+										unloads.
 									</p>
 									<p>
-										Default value is <code>true</code>.
+										Since version 1.4.3, the default value is <code>false</code>. Previously the
+										default was <code>true</code>.
 									</p>
+									<p><strong>Notes</strong></p>
+									<ul>
+										<li>
+											This feature was found not to work prior to version 1.4.3 in WebKit
+											browsers (e.g. Google Chrome, Safari). As a result, a workaround was
+											implemented in 1.4.3 which has the unfortunate side effect of popping up a
+											confirmation dialog to the user if there are any log messages to send when
+											the page unloads. As a result, this feature is now obtrusive for the user
+											and is therefore disabled by default.
+										</li>
+										<li>
+											This feature does not work in any version of Opera.
+										</li>
+									</ul>
 								</div>
 							</li>
 							<li class="method">
@@ -1351,6 +1369,31 @@
 								<div class="methodsignature"><code>String <strong>getSessionId</strong>()</code></div>
 								<div class="summary">
 									Returns the session id sent to the server each time a request is made.
+								</div>
+							</li>
+							<li class="method">
+								<div class="name">addHeader</div>
+								<div class="methodsignature"><code>void <strong>addHeader</strong>(String <em>name</em>,
+									String <em>value</em>)</code></div>
+								<div class="summary">
+									<p>
+										Adds an HTTP header that is sent with each request.
+									</p>
+									<p>
+										<strong>Since: 1.4.3</strong>
+									</p>
+								</div>
+							</li>
+							<li class="method">
+								<div class="name">getHeaders</div>
+								<div class="methodsignature"><code>Array <strong>getHeaders</strong>()</code></div>
+								<div class="summary">
+									Returns an array of the additional headers that are sent with each HTTP request.
+									Each array item is an object with properties <code>name</code> and
+									<code>value</code>.
+									<p>
+										<strong>Since: 1.4.3</strong>
+									</p>
 								</div>
 							</li>
 							<li class="method">
@@ -3038,8 +3081,8 @@
 								</div>
 							</li>
 							<li class="method">
-								<div class="name">setShowAllErrors</div>
-								<div class="methodsignature"><code>void <strong>setShowAllErrors</strong>(Boolean <em>showAllErrors</em>)</code></div>
+								<div class="name">setAlertAllErrors</div>
+								<div class="methodsignature"><code>void <strong>setAlertAllErrors</strong>(Boolean <em>alertAllErrors</em>)</code></div>
 								<div class="paramsheading">Parameters:</div>
 								<ul class="params">
 									<li class="param">
@@ -3112,7 +3155,7 @@
 								</ul>
 								<div class="summary">
 									Generates an alert to the user if and only if the error is the first one
-									encountered and <code>setShowAllErrors(true)</code> has not been called.
+									encountered and <code>setAlertAllErrors(true)</code> has not been called.
 								</div>
 							</li>
 						</ul>

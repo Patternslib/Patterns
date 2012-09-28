@@ -34,7 +34,7 @@ body{background-color:white;color:black;padding:0;margin:0;font-family:tahoma,ve
 Options:
 <input type="checkbox" id="enableLogging" onclick="toggleLoggingEnabled()" class="stateful" checked="checked" title="Enable/disable logging" /><label for="enableLogging" id="enableLoggingLabel">Enable logging</label>
 <input type="button" id="clearButton" value="Clear" onclick="clearLog()" class="stateful button" title="Clear all log messages"  />
-<input type="button" id="closeButton" value="Close" onclick="closeWindow()" class="stateful button" title="Close the window" />
+<input type="button" id="closeButton" value="Close" onclick="window.close()" class="stateful button" title="Close the window" />
 </div>
 <div id="log" class="TRACE DEBUG INFO WARN ERROR FATAL"></div>
 </body>
