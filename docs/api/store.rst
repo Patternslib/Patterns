@@ -52,8 +52,8 @@ be JSON serialized instead of only strings.
    :param string name: name of the stored variable to retrieve
    :returns: stored variable
 
-   Retrieve a stored value from the storage. If no value for the given name
-   was stored `null` will be returned.
+   Retrieve (a copy of) a stored value from the storage. If no value for the
+   given name was stored `null` will be returned.
 
 
 .. js:function:: storage.set(name, value)
@@ -100,6 +100,6 @@ Example
        alert("Your browser does not support storage.");
    else {
        var storage = store.local("mypattern");
-       storage.setItem("key", true);
-       alert("The stored value is: " + storage.getItem("key"));
+       storage.set("key", true);
+       alert("The stored value is: " + storage.get("key"));
    }
