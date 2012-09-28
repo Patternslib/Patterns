@@ -52,8 +52,7 @@ define(function(require) {
         var layout = new Layout();
         bca.setLayout(layout);
 
-        root.setLevel(level.ALL);
-        bca.setThreshold(level.ALL);
+        root.setLevel(level.INFO);
     };
 
     init_console_logging();
@@ -78,6 +77,7 @@ define(function(require) {
             return logger;
         }
     };
+
 
     return logging;
 });
