@@ -16,19 +16,6 @@ define([
     var setclass = {
         init: function() {
 
-            $(store.getPatternAttributes('setclass')).each(function(index) {
-                var values = this.split('!'); // 0: id, 1: attribute, 2: value, 3: other
-                var obj = {
-                        'index': index+1,
-                        "id": values[0],
-                        "attr": values[1],
-                        'value': values[2],
-                        'other': values[3]
-                    };
-
-                setclass.store[obj.id + "." + obj.attr] = obj;
-            });
-
             $(document).on("click", '[data-setclass]').live('click', setclass.handleClick);
             $("[data-setclass]").each(function() {
                 var $this = $(this);
