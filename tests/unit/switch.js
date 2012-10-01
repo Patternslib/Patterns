@@ -113,6 +113,16 @@ describe("switch-plugin", function() {
         });
     });
 
+    it("Execute changes", function() {
+        $("#lab")
+            .append("<button data-switch='#victim; foo'>Click me</button>")
+            .append("<div id='victim' class='foo'/>");
+        var $trigger = $("#lab button").patternSwitch();
+        $trigger.patternSwitch("execute");
+        expect($("#victim").hasClass("foo")).toBeFalsy();
+
+    });
+
     describe("Destroy all hooks", function() {
         it("Setup click event handler", function() {
             $("#lab").html("<button data-switch='#victim; foo'>Click me</button>");

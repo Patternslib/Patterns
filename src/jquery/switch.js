@@ -100,7 +100,7 @@ function($, logging, Parser) {
             });
         },
 
-        "switch": function() {
+        "execute": function() {
             return this.each(function() {
                 $.patterns["switch"].go($(this));
             });
