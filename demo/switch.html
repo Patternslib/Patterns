@@ -1,25 +1,25 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
-		<link rel="stylesheet" href="change.css" type="text/css">
+		<link rel="stylesheet" href="switch.css" type="text/css">
 		<script data-main="../src/main" src="../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<h1>Switch classes test</h1>
 		<h2>Selectively remove class</h2>
-		<button data-switch="ul.test1 li; mode-Blue mode-Green" title="Make all green">Green</button>
-		<button data-switch="ul.test1 li; mode-Green mode-Blue" title="Make all blue">Blue</button>
+		<button data-switch="ul.test1 li; mode-Blue ; mode-Green" title="Make all green">Green</button>
+		<button data-switch="ul.test1 li; mode-Green ; mode-Blue" title="Make all blue">Blue</button>
 		<ul class="test1">
 			<li class="foo mode-Blue bar">Entry 1</li>
 			<li class="mode-Green">Entry 2</li>
 			<li class="mode-Red">Stays red</li>
 		</ul>
 		<h2>Remove using prefix</h2>
-		<button data-switch="ul.test2 li; mode-* mode-Red" title="Make all red">Red</button>
-		<button data-switch="ul.test2 li; mode-* mode-Green" title="Make all green">Green</button>
-		<button data-switch="ul.test2 li; mode-* mode-Blue" title="Make all blue">Blue</button>
+		<button data-switch="ul.test2 li; mode-* ; mode-Red" title="Make all red">Red</button>
+		<button data-switch="ul.test2 li; mode-* ; mode-Green" title="Make all green">Green</button>
+		<button data-switch="ul.test2 li; mode-* ; mode-Blue" title="Make all blue">Blue</button>
 		<ul class="test2">
 			<li class="foo mode-Blue bar">Entry 1</li>
 			<li class="mode-Green">Entry 2</li>
@@ -27,3 +27,4 @@
 		</ul>
 	</body>
 </html>
+
