@@ -14,6 +14,7 @@ define([
     './core/store',
     './patterns',
     './patterns/autosubmit',
+    './patterns/checklist',
     './patterns/switch',
     './patterns/fancybox',
     './patterns/floatingpanel',
@@ -36,6 +37,7 @@ define([
     // register our patterns
     // rethink naming once all patterns are migrated to this style
     mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
+    mapal.passivePatterns.checklist = require('./patterns/checklist');
     mapal.passivePatterns.switcher = require('./patterns/switch');
     mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
     mapal.passivePatterns.toggle = require('./patterns/toggle');
