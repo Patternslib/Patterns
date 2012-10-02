@@ -17,6 +17,7 @@ The available patterns are:
 .. toctree::
    :maxdepth: 1
 
+   autosubmit
    fancybox
    modal
    selfhealing
