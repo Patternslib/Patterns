@@ -57,6 +57,12 @@ describe("switch-plugin", function() {
             expect($("#lab div").hasClass("on")).toBe(false);
         });
 
+        it("Keep other classes", function() {
+            $("#lab").html("<div class='one two'/>");
+            pattern.update("#lab div", "one");
+            expect($("#lab div").attr("class")).toBe("two");
+        });
+
         it("Remove uses whole words", function() {
             $("#lab").html("<div class='cheese-on-bread'/>");
             pattern.update("#lab div", "on");
@@ -69,18 +75,18 @@ describe("switch-plugin", function() {
             expect($("#lab div").attr("class")).toBeFalsy();
         });
 
-        it("Keep other classes", function() {
-            $("#lab").html("<div class='one two'/>");
-            pattern.update("#lab div", "one");
-            expect($("#lab div").attr("class")).toBe("two");
-        });
-
-
         it("Remove wildcard infix class", function() {
             $("#lab").html("<div class='icon-small-alert'/>");
             pattern.update("#lab div", "icon-*-alert");
             expect($("#lab div").attr("class")).toBeFalsy();
         });
+
+        it("Keep other classes when removing wildcards", function() {
+            $("#lab").html("<div class='icon-alert foo'/>");
+            pattern.update("#lab div", "icon-*");
+            expect($("#lab div").attr("class")).toBe("foo");
+        });
+
 
         it("Add class", function() {
             $("#lab").html("<div/>");

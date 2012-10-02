@@ -42,8 +42,18 @@ function($, logging, Parser) {
                 else {
                     remove = remove.replace(/[-[\]{}()+?.,\\^$|#\s]/g, "\\$&");
                     remove = remove.replace(/[*]/g, ".*");
-                    $targets.removeClass(function(idx, cls) {
-                        return (cls.match(remove) || []).join(' ');
+                    remove = new RegExp("^" + remove + "$");
+                    $targets.filter("[class]").each(function() {
+                        var $this = $(this),
+                            classes = $this.attr("class").split(/\s+/),
+                            ok=[];
+                        for (var i=0; i<classes.length; i++)
+                            if (!remove.test(classes[i]))
+                                ok.push(classes[i]);
+                        if (ok.length)
+                            $this.attr("class", ok.join(" "));
+                        else
+                            $this.removeAttr("class");
                     });
                 }
             }
