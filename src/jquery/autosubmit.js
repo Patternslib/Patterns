@@ -81,7 +81,7 @@ function($, logging, Parser, utils) {
             defaults = defaults || {};
             return this.each(function() {
                 var $trigger = $(this),
-                    options = $.extend({}, defaults, $.patterns.autosubmit.parse($trigger));
+                    options = $.extend({}, $.patterns.autosubmit.parse($trigger), defaults);
                 options=$.patterns.autosubmit.validateOptions(options);
                 if (!options)
                     return;
