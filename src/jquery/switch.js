@@ -1,8 +1,16 @@
+/* Explicitly requiring jquery should work like this, but currently breaks
+ * when using build.sh.
 define([
         "jquery",
         "../logging",
         "../core/parser"],
 function($, logging, Parser) {
+*/
+define([
+        "../logging",
+        "../core/parser"],
+function(logging, Parser) {
+    $ = jQuery;
     var log = logging.getLogger("switch"),
         parser = new Parser();
     parser.add_argument("selector");
