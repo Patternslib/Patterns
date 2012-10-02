@@ -34,7 +34,7 @@ describe("checklist-plugin", function() {
         });
 
         it("Parse options from DOM", function() {
-            $("#lab").html("<div data-checkList='.one; .two'></div>");
+            $("#lab").html("<div data-checklist='.one; .two'></div>");
             $("#lab div").patternChecklist();
             var $trigger = $("#lab div");
             expect($trigger.data("patternChecklist")).toEqual({select: ".one", deselect: ".two"});
