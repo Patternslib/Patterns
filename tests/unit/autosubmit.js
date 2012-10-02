@@ -57,7 +57,7 @@ describe("autosubmit-plugin", function() {
 
         it("Negative delay", function() {
             var options = pattern.validateOptions({delay: -500});
-            expect(options.delay).toBeFalsy();
+            expect(options).toBeFalsy();
         });
 
     });
