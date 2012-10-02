@@ -69,6 +69,13 @@ describe("switch-plugin", function() {
             expect($("#lab div").attr("class")).toBeFalsy();
         });
 
+        it("Keep other classes", function() {
+            $("#lab").html("<div class='one two'/>");
+            pattern.update("#lab div", "one");
+            expect($("#lab div").attr("class")).toBe("two");
+        });
+
+
         it("Remove wildcard infix class", function() {
             $("#lab").html("<div class='icon-small-alert'/>");
             pattern.update("#lab div", "icon-*-alert");
