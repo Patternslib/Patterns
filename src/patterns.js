@@ -9,7 +9,6 @@ define(function(require) {
     var patterns_order = [
         'ajaxify',
         'autosuggest',
-        'autosubmit',
         'breadcrumbs',
         'collapsible',
         'checklist',
@@ -29,7 +28,6 @@ define(function(require) {
     var plain_patterns = {
         ajaxify: require('./patterns/ajaxify'),
         autosuggest: require('./patterns/autosuggest'),
-        autosubmit: require('./patterns/autosubmit'),
         breadcrumbs: require('./patterns/breadcrumbs'),
         collapsible: require('./patterns/collapsible'),
         checklist: require('./patterns/checklist'),
