@@ -63,6 +63,16 @@ describe("Core / Parser", function() {
             expect(opts.attr).toBe("class");
         });
 
+        it("Numeric value only", function() {
+            // This is likely to happen since $().data("name") will return a
+            // number of a digits-only value was used. Simple test case:
+            // typeof $("<div/>", {"data-xyz": "500"}).data("xyz") === "number"
+            var parser=new ArgumentParser();
+            parser.add_argument("delay");
+            var opts = parser.parse(500);
+            expect(opts.delay).toBe("500");
+        });
+
         it("Extra colons in named argument", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
