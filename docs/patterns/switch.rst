@@ -42,7 +42,7 @@ Javascript API
 
 The javascript API is entirely optional since patterns already autmoatically
 enables the switching behaviour for all elements with a ``data-switch``
-attribute. Developers may be interestined in using the API to add behaviour
+attribute. Developers may be interested in using the API to add behaviour
 to other elements or trigger switches manually.
 
 .. js:function:: jQuery.patternSwitch([options])
@@ -51,7 +51,7 @@ to other elements or trigger switches manually.
 
    Setup switching behaviour for the selected elements. If no options are
    provided they are taken from the ``data-switch`` attributes. Options
-   can be provided as a (array of) javascript object(s) with he following
+   can be provided as a (array of) javascript object(s) with the following
    keys:
 
    * ``selector``: the CSS selector identifying the elements that must be updated
