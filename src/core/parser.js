@@ -43,6 +43,8 @@ define([
         },
 
         parse: function(parameter, defaults) {
+            if (typeof parameter==="number")
+                parameter = parameter.toString();
             if (parameter && parameter.match(/&&/)) {
                 return parameter.split(/\s*&&\s*/).map(function(parameter) {
                     return this.parse(parameter, defaults);
