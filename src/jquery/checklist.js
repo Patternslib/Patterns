@@ -1,9 +1,11 @@
 define([
         "jquery",
+        "../logging",
         "../core/parser"
         ],
-function($, Parser) {
-    var parser = new Parser();
+function($, logging, Parser) {
+    var log = logging.getLogger("checklist"),
+        parser = new Parser();
     parser.add_argument("select", ".functions .select-all");
     parser.add_argument("deselect", ".functions .deselect-all");
 
@@ -21,10 +23,9 @@ function($, Parser) {
 
         onChange: function(event) {
             var $trigger = event.data.trigger,
-                options = $trigger.data("patterns.checklist"),
+                options = $trigger.data("patternChecklist"),
                 deselect = $trigger.find(options.deselect),
                 select = $trigger.find(options.select);
-
 
             if (($trigger.find('input[type=checkbox]:visible:checked').length===0) &&
                 (!deselect.prop('disabled'))) {
@@ -43,7 +44,7 @@ function($, Parser) {
 
         onSelectAll: function(event) {
             var $trigger = event.data.trigger,
-                options = $trigger.data("patterns.checklist");
+                options = $trigger.data("patternChecklist");
             $trigger.find("input[type=checkbox]:not(:checked)").prop("checked", true);
             $trigger.find(options.deselect).prop("disabled", false);
             $trigger.find(options.select).attr({disabled: "disabled"});
@@ -53,7 +54,7 @@ function($, Parser) {
 
         onDeselectAll: function(event) {
             var $trigger = event.data.trigger,
-                options = $trigger.data("patterns.checklist");
+                options = $trigger.data("patternChecklist");
             $trigger.find("input[type=checkbox]:checked").prop("checked", false);
             $trigger.find(options.select).prop("disabled", false);
             $trigger.find(options.deselect).attr({disabled: "disabled"});
@@ -67,9 +68,9 @@ function($, Parser) {
             defaults = defaults || {};
             return this.each(function() {
                 var $trigger = $(this),
-                    options = $.extend({}, defaults, $.patterns.checklist.parse($trigger));
+                    options = $.extend({}, $.patterns.checklist.parse($trigger), defaults);
 
-                $trigger.data("patterns.checklist", options);
+                $trigger.data("patternChecklist", options);
                 $trigger.find(options.select)
                     .on("click.checklist", {trigger: $trigger}, $.patterns.checklist.onSelectAll);
                 $trigger.find(options.deselect)
@@ -81,11 +82,11 @@ function($, Parser) {
         destroy: function() {
             return this.each(function() {
                 var $trigger = $(this),
-                    options = $trigger.data("patterns.checklist");
+                    options = $trigger.data("patternChecklist");
                 $trigger.find(options.select).off("click.checklist");
                 $trigger.find(options.deselect).off("click.checklist");
                 $trigger.off("change.checklist", "input[type=checkbox]");
-                $trigger.data("patterns.checklist", null);
+                $trigger.data("patternChecklist", null);
             });
         }
     };
