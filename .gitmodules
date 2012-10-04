@@ -1,15 +1,15 @@
 [submodule "src/lib/jquery.form"]
 	path = src/lib/jquery.form
-	url = git://github.com/chaoflow/form.git
+	url = git://github.com/Patternslib/form.git
 [submodule "lib/requirejs"]
 	path = lib/requirejs
-	url = git://github.com/chaoflow/requirejs.git
+	url = git://github.com/Patternslib/requirejs.git
 [submodule "lib/qunit"]
 	path = lib/qunit
-	url = git://github.com/chaoflow/qunit.git
+	url = git://github.com/Patternslib/qunit.git
 [submodule "lib/pavlov"]
 	path = lib/pavlov
-	url = git://github.com/chaoflow/pavlov.git
+	url = git://github.com/Patternslib/pavlov.git
 [submodule "lib/phantom-jasmine"]
 	path = lib/phantom-jasmine
 	url = git://github.com/jcarver989/phantom-jasmine.git
