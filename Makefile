@@ -6,7 +6,7 @@ build/patterns.js: src/lib/jquery.form lib/requirejs $(wildcard src/*.js) $(wild
 	node lib/r.js -o name=main out=$@ baseUrl=src/
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
-	git git submodule update --init --recursive
+	git submodule update --init --recursive
 
 all:: build/docs/index.html
 
