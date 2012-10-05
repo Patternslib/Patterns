@@ -1,6 +1,19 @@
 log4javascript change log
 -------------------------
 
+1.4.3 (18/9/2012)
+- Added addHeader() and getHeaders() methods to AjaxAppender
+
+- Modified sendAllOnUnload feature of AjaxAppender. It now works in WebKit but
+  at the expense of popping up a confirm dialog. That being the case, it is now
+  disabled by default.
+
+- Removed leaked global variable "initialized" 
+
+- Fixed bugs #3528265, #3560924, #3560922, #2805479, #3510639 on Sourceforge
+  Tracker
+
+
 1.4.2 (13/10/2011)
 - Fixed JsonLayout trailing comma issue. See
   http://stackoverflow.com/questions/7735382/asmx-weirdness-deserializing-json-

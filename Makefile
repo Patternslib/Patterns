@@ -1,12 +1,13 @@
 PHANTOMJS	?= phantomjs
 
-all:: build/patterns.js
+all:: dist/patterns.js
 
-build/patterns.js: src/lib/jquery.form lib/requirejs $(wildcard src/*.js) $(wildcard src/*/*.js)
-	node lib/r.js -o name=main out=$@ baseUrl=src/
+dist/patterns.js dist/patterns.min.js: src/lib/jquery.form lib/requirejs $(wildcard src/*.js) $(wildcard src/*/*.js)
+	node lib/r.js -o src/app.build.js out=dist/patterns.js optimize=none
+	node lib/r.js -o src/app.build.js out=dist/patterns.min.js optimize=uglify
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
-	git git submodule update --init --recursive
+	git submodule update --init --recursive
 
 all:: build/docs/index.html
 
@@ -15,6 +16,5 @@ build/docs/index.html: docs/conf.py $(wildcard docs/*.rst) $(wildcard docs/*/*.r
 
 check: lib/phantom-jasmine
 	$(PHANTOMJS) lib/phantom-jasmine/lib/run_jasmine_test.coffee tests/unit/runner.html
-
 
 .PHONY: all check

@@ -1,10 +1,4 @@
 define(function(require) {
-    /*
-     * below here the real logging stuff
-     *
-     * We said good bye to IE above
-     */
-
     require('../lib/log4javascript');
     var l4js = log4javascript,
         level = l4js.Level,
