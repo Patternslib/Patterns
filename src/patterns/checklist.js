@@ -1,5 +1,5 @@
 define([
-    '../jquery/checklist'
+    '../jqplugins/checklist'
 ], function() {
     var checklist = {
         initContent: function(root) {
