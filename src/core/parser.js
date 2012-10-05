@@ -19,7 +19,7 @@ define([
     }
 
     ArgumentParser.prototype = {
-        named_param_pattern: /^\s*([a-zA-Z0-9]+)\s*:(.*)/,
+        named_param_pattern: /^\s*([a-zA-Z0-9\-]+)\s*:(.*)/,
 
         add_argument: function(name, default_value) {
             if (default_value === undefined)
