@@ -48,7 +48,7 @@ describe("carousel-plugin", function() {
 
         it("Tweak options via DOM", function() {
             $("#lab").html(
-                "<ul class='pt-carousel' data-carousel='auto-play: false; loop: false; delay: 50'>" +
+                "<ul class='pt-carousel' data-carousel='auto-play: false; loop: false; time-delay: 50'>" +
                 "  <li>Panel 1</li>" +
                 "  <li>Panel 2</li>" +
                 "</ul>");
@@ -59,7 +59,7 @@ describe("carousel-plugin", function() {
             var options = $.fn.anythingSlider.calls[0].args[0];
             expect(options.autoPlay).toBe(false);
             expect(options.stopAtEnd).toBe(true);
-            expect(options.delay).toBe(60);
+            expect(options.delay).toBe(50);
         });
     });
 });
