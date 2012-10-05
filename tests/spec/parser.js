@@ -25,7 +25,7 @@ define([
 
 
         describe("parse", function() {
-            it("Empty paramter", functino() {
+            it("Empty paramter", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("selector");
                 var opts = parser.parse(undefined, {default: true});
