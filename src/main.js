@@ -2,10 +2,15 @@ requirejs.config({
     paths: {
         "jquery": "3rdparty/require-jquery",
         "modernizr": "3rdparty/modernizr-2.0.6",
+	"jquery.anythingslider": "3rdparty/jquery.anythingslider",
         "jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
         "jquery.tools": "3rdparty/jquery.tools.min"
     },
     shim: {
+        "jquery.anythingslider": {
+            deps: ["jquery"],
+            exports: "jQuery.fn.anythingSlider"
+        },
         "jquery.autoSuggests": {
             deps: ["jquery"],
             exports: "jQuery.fn.autoSuggest"
