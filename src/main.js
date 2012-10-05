@@ -1,31 +1,41 @@
-// uncomment following to disable caching - good for develoment
-// we still need a way to configure this, needs some thinking
+requirejs.config({
+    shim: {
+        "jquery.autoSuggests": {
+            deps: ["jquery"],
+            exports: "jQuery.fn.autoSuggest"
+        },
+        "jquery.placeholder": {
+            deps: ["jquery"],
+            exports: "jQuery.fn.placeholder"
+        },
+        "jquery-ext": {
+            deps: ["jquery"],
+            exports: "jQuery.fn.simplePlaceholder"
+        }
+    }
+});
 
-//require.config({
-//    urlArgs: "bust=" +  (new Date()).getTime()
-//});
 
 define([
     'require',
-    // '../lib/css3-mediaqueries',
-    '../lib/modernizr-2.0.6',
-    './core/init',
-    './core/parser',
-    './core/store',
-    './patterns',
-    './patterns/autosubmit',
-    './patterns/checklist',
-    './patterns/switch',
-    './patterns/fancybox',
-    './patterns/floatingpanel',
-    './patterns/fullcalendar',
-    './patterns/old_modal',
-    './patterns/selfhealing',
-    './patterns/setclass',
-    './patterns/toggle',
-    './patterns/tooltip',
-    './patterns/focus',
-    './patterns/checkedflag'
+    'modernizr',
+    'core/init',
+    'core/parser',
+    'core/store',
+    'patterns',
+    'patterns/autosubmit',
+    'patterns/checklist',
+    'patterns/switch',
+    'patterns/fancybox',
+    'patterns/floatingpanel',
+    'patterns/fullcalendar',
+    'patterns/old_modal',
+    'patterns/selfhealing',
+    'patterns/setclass',
+    'patterns/toggle',
+    'patterns/tooltip',
+    'patterns/focus',
+    'patterns/checkedflag'
 ], function(require) {
     var mapal = require('./core/init');
     mapal.registerWidthClass("narrow", 0, 780);
