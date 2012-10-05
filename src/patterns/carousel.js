@@ -29,7 +29,7 @@ define([
         init: function($el) {
             return $el.each(function() {
                 var options = parser.parse(this.dataset.carousel),
-                    settings = {};
+                    settings = {hashTags: false};
 
                 if (Array.isArray(options)) {
                     log.warn("Multiple options not supported for carousels.");
@@ -52,7 +52,7 @@ define([
                 $carousel.children().each(function(index, el) {
                     if (!this.id)
                         return;
-                    $("#" + this.id).on("click.carousel", function(event) {
+                    $("a[href=#" + this.id+"]").on("click.carousel", function(event) {
                         control.gotoPage(index, false);
                         event.preventDefault();
                     });
