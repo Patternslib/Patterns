@@ -1,9 +1,6 @@
 [submodule "src/lib/jquery.form"]
 	path = src/lib/jquery.form
 	url = git://github.com/Patternslib/form.git
-[submodule "lib/requirejs"]
-	path = lib/requirejs
-	url = git://github.com/Patternslib/requirejs.git
 [submodule "lib/qunit"]
 	path = lib/qunit
 	url = git://github.com/Patternslib/qunit.git
