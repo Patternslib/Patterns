@@ -1,5 +1,5 @@
 define([
-    '../jquery/switch'
+    '../jqplugins/switch'
 
 ], function() {
     var switcher = {

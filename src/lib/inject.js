@@ -1,3 +1,5 @@
+// XXX: not sure whether this abstraction makes sense or whether it
+// should be moved into the inject2 pattern
 define(function(require) {
     var _injectmethod = function(name, method) {
         var injectwrapper = function($sources, $targets, opts) {
