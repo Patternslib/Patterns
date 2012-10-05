@@ -3,7 +3,6 @@
   <head>
     <title>Demo page</title>
     <link rel="stylesheet" href="carousel.css" type="text/css">
-    <link rel="stylesheet" href="http://css-tricks.github.com/AnythingSlider/css/anythingcarousel.css"/>
   </head>
   <body>
     <h1>Carousel in a list</h1>
@@ -18,7 +17,7 @@
 
     <h1>Carousel as divs</h1>
 
-    <div class="pt-carousel">
+    <div class="pt-carousel" data-carousel="control-arrows: true; time-delay: 5000; time-animation: 100">
       <div><img alt="" src="carousel-1.jpg"/></div>
       <div>
         <h2>Non-image content</h2>
@@ -28,26 +27,7 @@
       <div><img alt="" src="carousel-2.jpg"/></div>
       <div><img alt="" src="carousel-3.jpg"/></div>
     </div>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script type="text/javascript" src="http://css-tricks.github.com/AnythingSlider/js/jquery.anythingcarousel.js"></script>
-    <script type="text/javascript">
-      var options = {resizeContents: false};
-
-      $(document).ready(function() {
-          $(".pt-carousel").each(function() {
-              var $carousel = $(this).anythingSlider(options),
-                  control = $carousel.data("AnythingSlider");
-
-              $carousel.children().each(function(index, el) {
-                if (!this.id)
-                    return;
-                $("#" + this.id).on("click.carousel", function(event) {
-                    control.gotoPage(index, false);
-                    event.preventDefault();
-                });
-              });
-          });
-      });
-    </script>
+    <script data-main="../src/main" src="../lib/require.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://css-tricks.github.com/AnythingSlider/js/jquery.anythingslider.js"></script>
   </body>
 </html>
