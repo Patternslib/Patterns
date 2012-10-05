@@ -4,12 +4,6 @@
     mainConfigFile: "main.js",
     out: "../dist/patterns.js",
     optimize: "none",
-    paths: {
-        "jquery": "3rdparty/require-jquery",
-        "modernizr": "3rdparty/modernizr-2.0.6",
-        "jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
-        "jquery.tools": "3rdparty/jquery.tools.min"
-    },
 
     name: "main",
     exclude: ["jquery"]
