@@ -63,6 +63,13 @@ describe("Core / Parser", function() {
             expect(opts.attr).toBe("class");
         });
 
+        it("Dash in key", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("time-delay");
+            var opts = parser.parse("15");
+            expect(opts["time-delay"]).toBeDefined();
+        });
+
         it("Numeric value only", function() {
             // This is likely to happen since $().data("name") will return a
             // number of a digits-only value was used. Simple test case:
