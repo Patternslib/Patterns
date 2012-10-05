@@ -2,8 +2,8 @@
     logLevel: 1,
     baseUrl: ".",
     mainConfigFile: "main.js",
-    out: "../build/patterns.min.js",
-//    optimize: "none",
+    out: "../dist/patterns.js",
+    optimize: "none",
     paths: {
         "jquery": "3rdparty/require-jquery",
         "modernizr": "3rdparty/modernizr-2.0.6",
