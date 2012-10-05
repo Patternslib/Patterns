@@ -1,7 +1,7 @@
 describe("switch-plugin", function() {
     var pattern;
 
-    requireDependencies(["jquery/switch"], function(cls) {
+    requireDependencies(["jqplugins/switch"], function(cls) {
         pattern = cls;
     });
 
