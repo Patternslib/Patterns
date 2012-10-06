@@ -5,9 +5,15 @@ requirejs.config({
         "modernizr": "3rdparty/modernizr-2.0.6",
 	"jquery.anythingslider": "3rdparty/jquery.anythingslider",
         "jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
+        "jquery.form": "lib/jquery.form/jquery.form",
         "jquery.tools": "3rdparty/jquery.tools.min"
     },
     shim: {
+        "jquery.form": {
+            deps: ["jquery"],
+            exports: "jQuery.fn.ajaxSubmit"
+        },
+
         "jquery.anythingslider": {
             deps: ["jquery"],
             exports: "jQuery.fn.anythingSlider"

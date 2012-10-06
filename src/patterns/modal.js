@@ -1,6 +1,6 @@
 define([
     'require',
-    '../lib/jquery.form/jquery.form',
+    'jquery.form',
     '../logging',
     '../patterns'
 ], function(require) {
