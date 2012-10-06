@@ -1,10 +1,22 @@
 PHANTOMJS	?= phantomjs
+SOURCES		= src/lib/jquery.form $(wildcard src/*.js) $(wildcard src/*/*.js)
+TARGETS		= dist/patterns.js dist/patterns.min.js dist/require-patterns.js dist/require-patterns.min.js
 
-all:: dist/patterns.js
+all:: $(TARGETS)
 
-dist/patterns.js dist/patterns.min.js: src/lib/jquery.form lib/requirejs $(wildcard src/*.js) $(wildcard src/*/*.js)
-	node lib/r.js -o src/app.build.js out=dist/patterns.js optimize=none
-	node lib/r.js -o src/app.build.js out=dist/patterns.min.js optimize=uglify
+dist/patterns.js: $(SOURCES)
+	node lib/r.js -o src/app.build.js out=$@ optimize=none
+
+dist/patterns.min.js: $(SOURCES)
+	node lib/r.js -o src/app.build.js out=$@ optimize=uglify
+
+dist/require-patterns.js: 
+	node lib/r.js -o src/app.build.js out=$@ \
+		name=3rdparty/almond include=main wrap=true optimize=none
+
+dist/require-patterns.min.js: 
+	node lib/r.js -o src/app.build.js out=$@ \
+		name=3rdparty/almond include=main wrap=true optimize=uglify
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
 	git submodule update --init --recursive
