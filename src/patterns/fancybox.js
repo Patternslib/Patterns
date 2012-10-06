@@ -7,9 +7,9 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
-    '../lib/dist/jquery.fancybox-1.3.4'
-], function(require) {
+    'jquery',
+    'jquery.fancybox'
+], function($) {
     var fancybox = {
         execute: function(elem, url, sources, params, event) {
             //var $this = $(event.target);

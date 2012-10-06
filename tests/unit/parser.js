@@ -63,6 +63,13 @@ describe("Core / Parser", function() {
             expect(opts.attr).toBe("class");
         });
 
+        it("Dash in key", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("time-delay");
+            var opts = parser.parse("15");
+            expect(opts["time-delay"]).toBeDefined();
+        });
+
         it("Numeric value only", function() {
             // This is likely to happen since $().data("name") will return a
             // number of a digits-only value was used. Simple test case:
@@ -190,6 +197,47 @@ describe("Core / Parser", function() {
             expect(opts[0].selector).toBe("bar");
             expect(opts[1].attr).toBe("foo");
             expect(opts[1].selector).toBe("bar");
+        });
+    });
+
+    describe("parse - type coercion", function() {
+        it("Convert to number", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("value", 0);
+            expect(parser.parse("15").value).toBe(15);
+        });
+
+        it("Always use decimal notation for numbers", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("value", 0);
+            expect(parser.parse("010").value).toBe(10);
+        });
+
+        it("Convert to boolean", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("value", false);
+            expect(parser.parse("1").value).toBe(true);
+            expect(parser.parse("TRUE").value).toBe(true);
+            expect(parser.parse("YeS").value).toBe(true);
+            expect(parser.parse("0").value).toBe(false);
+            expect(parser.parse("False").value).toBe(false);
+            expect(parser.parse("n").value).toBe(false);
+            expect(parser.parse("unknown").value).toBe(false);
+        });
+
+        it("Convert to number", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("value", 15);
+            expect(parser.parse("1").value).toBe(1);
+            expect(parser.parse("0").value).toBe(0);
+            expect(parser.parse("010").value).toBe(10);
+            expect(isNaN(parser.parse("ZZZ").value)).toBe(true);
+        });
+
+        it("Coerce defaults", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("value", false);
+            expect(parser.parse("", {value: 15}).value).toBe(true);
         });
     });
 });

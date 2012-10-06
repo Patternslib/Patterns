@@ -1,7 +1,7 @@
 describe("checklist-plugin", function() {
     var pattern;
 
-    requireDependencies(["jquery/checklist"], function(cls) {
+    requireDependencies(["jqplugins/checklist"], function(cls) {
         pattern = cls;
     });
 

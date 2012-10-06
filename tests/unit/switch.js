@@ -1,7 +1,7 @@
 describe("switch-plugin", function() {
     var pattern;
 
-    requireDependencies(["jquery/switch"], function(cls) {
+    requireDependencies(["jqplugins/switch"], function(cls) {
         pattern = cls;
     });
 
@@ -118,9 +118,11 @@ describe("switch-plugin", function() {
         });
 
         it("Setup click event handler", function() {
+            // Note that this relies on jQuery implementation details to check
+            // for registered event handlers.
             $("#lab").html("<button data-switch='#victim; foo'>Click me</button>");
             var $trigger = $("#lab button").patternSwitch(),
-                 events = $trigger.data("events");
+                 events = $._data($trigger[0]).events;
             expect(events.click).toBeDefined();
             expect(events.click[0].namespace).toBe("patternSwitch");
         });
@@ -138,9 +140,11 @@ describe("switch-plugin", function() {
 
     describe("Destroy all hooks", function() {
         it("Setup click event handler", function() {
+            // Note that this relies on jQuery implementation details to check
+            // for registered event handlers.
             $("#lab").html("<button data-switch='#victim; foo'>Click me</button>");
             var $trigger = $("#lab button").patternSwitch(),
-                 events = $trigger.data("events");
+                 events = $._data($trigger[0]).events;
             expect(events.click).toBeDefined();
             $trigger.patternSwitch("destroy");
             expect(events.click).not.toBeDefined();

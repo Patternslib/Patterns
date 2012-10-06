@@ -9,10 +9,8 @@
 define([
     'require',
     // XXX: belong to the patterns once they are done
-    '../lib/dist/jquery.fancybox-1.3.4',
-    '../lib/jquery.form/jquery.form',
-    '../lib/dist/jquery.jcarousel.min',
-    '../lib/dist/jquery.tools.min',
+    'jquery.form',
+    'jquery.tools',
     '../jquery-ext',
     '../utils'
 ], function(require) {
