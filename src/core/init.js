@@ -9,7 +9,7 @@
 define([
     'require',
     // XXX: belong to the patterns once they are done
-    '../lib/jquery.form/jquery.form',
+    'jquery.form',
     'jquery.tools',
     '../jquery-ext',
     '../utils'
