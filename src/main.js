@@ -36,6 +36,7 @@ requirejs.config({
 
 define([
     'require',
+    'jquery',
     'prefixfree',
     'modernizr',
     'core/init',
@@ -55,7 +56,7 @@ define([
     'patterns/tooltip',
     'patterns/focus',
     'patterns/checkedflag'
-], function(require) {
+], function(require, $) {
     var mapal = require('./core/init');
     mapal.registerWidthClass("narrow", 0, 780);
     mapal.registerWidthClass("medium", 0, 1109);
