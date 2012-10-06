@@ -1,6 +1,7 @@
 requirejs.config({
     paths: {
         "jquery": "3rdparty/require-jquery",
+	"prefixfree": "3rdparty/prefixfree.min",
         "modernizr": "3rdparty/modernizr-2.0.6",
 	"jquery.anythingslider": "3rdparty/jquery.anythingslider",
         "jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
@@ -29,6 +30,7 @@ requirejs.config({
 
 define([
     'require',
+    'prefixfree',
     'modernizr',
     'core/init',
     'core/parser',
