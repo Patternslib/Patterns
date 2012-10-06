@@ -43810,4 +43810,6 @@ define('main',[
 
     return mapal;
 });
+
+require(["main"]);
 }());

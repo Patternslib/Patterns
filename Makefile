@@ -12,11 +12,11 @@ dist/patterns.min.js: $(SOURCES)
 
 dist/require-patterns.js: 
 	node lib/r.js -o src/app.build.js out=$@ \
-		name=3rdparty/almond include=main wrap=true optimize=none
+		name=3rdparty/almond include=main wrap=true insertRequire=main optimize=none
 
 dist/require-patterns.min.js: 
 	node lib/r.js -o src/app.build.js out=$@ \
-		name=3rdparty/almond include=main wrap=true optimize=uglify
+		name=3rdparty/almond include=main wrap=true insertRequire=main optimize=uglify
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
 	git submodule update --init --recursive
@@ -29,4 +29,7 @@ build/docs/index.html: docs/conf.py $(wildcard docs/*.rst) $(wildcard docs/*/*.r
 check: lib/phantom-jasmine
 	$(PHANTOMJS) lib/phantom-jasmine/lib/run_jasmine_test.coffee tests/unit/runner.html
 
-.PHONY: all check
+clean:
+	rm -f $(TARGETS)
+
+.PHONY: all clean check
