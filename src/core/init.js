@@ -508,11 +508,6 @@ var mapal = {
         }
     },
 
-    closeTooltips: function() {
-        $("dfn.infoPanel.open").removeClass("open");
-        $("body").unbind("click.tooltip");
-    },
-
     // Utility method to update the width classes on the body
     updateWidthClasses: function() {
         var width = $(window).width(),
