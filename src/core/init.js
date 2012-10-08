@@ -483,12 +483,6 @@ var mapal = {
         $(window).bind("resize.mapal", mapal.updateWidthClasses);
     },
 
-    initButtonSets: function(root) {
-        if ( $(root).buttonset ) {
-            $(root).find('.buttonSet').removeClass('buttonSet').buttonset();
-        }
-    },
-
     initAutoLoads: function( root ) {
         // find all autoloads
         $(root).find('.autoLoading-visible:not(.cant-touch-this)').each(function() {
@@ -543,9 +537,7 @@ var mapal = {
     initContent: function(root, opts) {
         mapal.newstyle.scan(root, opts);
 
-        mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
-        //
 
         for (var passivePatternName in mapal.passivePatterns) {
             var passivePattern = mapal.passivePatterns[passivePatternName];
