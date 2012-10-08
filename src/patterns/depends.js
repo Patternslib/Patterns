@@ -75,34 +75,40 @@ define([
             return $result;
         },
 
+        parse: function(data) {
+            var classes = data.split(" "),
+                command = {"on" : [],
+                           "action" : "show",
+                           "type": "and"
+                           },
+                i, a, parts;
+
+            for (i=0; i<classes.length; i++) {
+                parts=classes[i].split("-");
+                if (parts[0].indexOf("depends")===0) {
+                    a=parts[0].substr(7).toLowerCase();
+                    if (a==="on") {
+                        if (parts.length>4) {
+                            parts=parts.slice(0,3).concat(parts.slice(3).join("-"));
+                        }
+                        command.on.push(parts.slice(1));
+                    } else {
+                        command[a]=parts[1];
+                    }
+                }
+            }
+            return command;
+        },
+
         initContent: function(root) {
             $("*[class*='dependsOn-']", root).each(function() {
                 var slave = this,
                     $slave = $(this),
                     $visible = $(this),
                     $panel = $slave.data("mapal.infoPanel"),
-                    classes = $slave.attr("class").split(" "),
-                    command = {"on" : [],
-                               "action" : "show",
-                               "type": "and"
-                               };
-                var i, a, parts, state;
+                    command, state;
 
-                for (i=0; i<classes.length; i++) {
-                    parts=classes[i].split("-");
-                    if (parts[0].indexOf("depends")===0) {
-                        a=parts[0].substr(7).toLowerCase();
-                        if (a==="on") {
-                            if (parts.length>4) {
-                                parts=parts.slice(0,3).concat(parts.slice(3).join("-"));
-                            }
-                            command.on.push(parts.slice(1));
-                        } else {
-                            command[a]=parts[1];
-                        }
-                    }
-                }
-
+                command=depends.parse($slave.attr("class"));
                 state=depends.verify($slave, command);
                 if ($panel!==undefined)
                     $visible=$visible.add($panel);
@@ -122,7 +128,7 @@ define([
                     }
                 }
 
-                depends.getMasters($slave, command).bind("change.mapal", function() {
+                depends.getMasters($slave, command).on("change.patterns", function() {
                     state=depends.verify($slave, command);
                     if (command.action==="show") {
                         if (state)
