@@ -10,8 +10,8 @@ define([
     'require',
     '../utils',
     // XXX: belong to the patterns once they are done
-    'jquery.form',
-    'jquery.tools',
+    '../lib/jquery.form/jquery.form',
+    '../3rdparty/jquery.tools.min',
     '../jquery-ext'
 ], function(require, utils) {
 var mapal = {

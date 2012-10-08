@@ -1,37 +1,42 @@
 requirejs.config({
     paths: {
-        "jquery": "3rdparty/require-jquery",
-	"prefixfree": "3rdparty/prefixfree.min",
-        "modernizr": "3rdparty/modernizr-2.0.6",
-	"jquery.anythingslider": "3rdparty/jquery.anythingslider",
-        "jquery.autoSuggest": "3rdparty/jquery.autosuggest",
-        "jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
-        "jquery.form": "lib/jquery.form/jquery.form",
-        "jquery.placeholder": "3rdparty/jquery.placeholder",
-        "jquery.tools": "3rdparty/jquery.tools.min"
-    },
-    shim: {
-        "jquery.form": {
-            deps: ["jquery"],
-            exports: "jQuery.fn.ajaxSubmit"
-        },
+        "jquery": "3rdparty/require-jquery"
+        //
+        // XXX: we do not have a nested config solution yet. Until
+        // then we stick with require-jquery and relative dependency
+        // paths.
+        //
+        //"prefixfree": "3rdparty/prefixfree.min",
+        //"modernizr": "3rdparty/modernizr-2.0.6",
+        //"jquery.anythingslider": "3rdparty/jquery.anythingslider",
+        //"jquery.autoSuggest": "3rdparty/jquery.autosuggest",
+        //"jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
+        //"jquery.form": "lib/jquery.form/jquery.form",
+        //"jquery.placeholder": "3rdparty/jquery.placeholder",
+        //"jquery.tools": "3rdparty/jquery.tools.min"
+    // },
+    // shim: {
+    //     "jquery.form": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.ajaxSubmit"
+    //     },
 
-        "jquery.anythingslider": {
-            deps: ["jquery"],
-            exports: "jQuery.fn.anythingSlider"
-        },
-        "jquery.autoSuggests": {
-            deps: ["jquery"],
-            exports: "jQuery.fn.autoSuggest"
-        },
-        "jquery.placeholder": {
-            deps: ["jquery"],
-            exports: "jQuery.fn.placeholder"
-        },
-        "jquery-ext": {
-            deps: ["jquery"],
-            exports: "jQuery.fn.simplePlaceholder"
-        }
+    //     "jquery.anythingslider": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.anythingSlider"
+    //     },
+    //     "jquery.autoSuggests": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.autoSuggest"
+    //     },
+    //     "jquery.placeholder": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.placeholder"
+    //     },
+    //     "jquery-ext": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.simplePlaceholder"
+    //     }
     }
 });
 
@@ -39,8 +44,8 @@ requirejs.config({
 define([
     'require',
     'jquery',
-    'prefixfree',
-    'modernizr',
+    './3rdparty/prefixfree.min',
+    './3rdparty/modernizr-2.0.6',
     './core/init',
     './core/parser',
     './core/store',
