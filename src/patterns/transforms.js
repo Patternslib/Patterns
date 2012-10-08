@@ -7,8 +7,6 @@ define([
             if ($root.is(".record-history"))
                 $root.addClass('cant-touch-this');
 
-            $(".jsOnly", root).show();
-
             $("legend:not(.cant-touch-this)", root).each(function() {
                 $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
             });
