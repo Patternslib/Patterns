@@ -18,6 +18,7 @@ The available patterns are:
    :maxdepth: 1
 
    autosubmit
+   carousel
    checklist
    fancybox
    modal

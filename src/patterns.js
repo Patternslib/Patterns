@@ -20,7 +20,8 @@ define(function(require) {
         'modal',
         'navigation',
         'placeholder',
-        'validate'
+        'validate',
+	'carousel'
     ];
 
 
@@ -39,7 +40,8 @@ define(function(require) {
         modal: require('./patterns/modal'),
         navigation: require('./patterns/navigation'),
         placeholder: require('./patterns/placeholder'),
-        validate: require('./patterns/validate')
+        validate: require('./patterns/validate'),
+	carousel: require('./patterns/carousel')
     };
 
     var patterns = {};
