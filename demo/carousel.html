@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Demo page</title>
+    <link rel="stylesheet" href="carousel.css" type="text/css">
+  </head>
+  <body>
+    <h1>Carousel in a list</h1>
+
+    <ul class="pt-carousel">
+      <li id="list1"><img alt="" src="carousel-1.jpg"/></li>
+      <li id="list2"><img alt="" src="carousel-2.jpg"/></li>
+      <li id="list3"><img alt="" src="carousel-3.jpg"/></li>
+    </ul>
+
+    <p>You can jump directly to <a href="#list3">slide 3</a>.</p>
+
+    <h1>Carousel as divs</h1>
+
+    <div class="pt-carousel" data-carousel="control-arrows: true; time-delay: 5000; time-animation: 100">
+      <div><img alt="" src="carousel-1.jpg"/></div>
+      <div>
+        <h2>Non-image content</h2>
+        <p>A slide can contain other things than images. For example just a bunch of HTML.</p>
+        <p>Nulla facilisi. Ut mollis lectus ac nisl tincidunt quis varius arcu mattis. Etiam augue erat, suscipit eget rhoncus vitae, semper at massa. Etiam elementum, metus euismod tempus ultrices, magna mauris bibendum augue, in vestibulum enim sem lobortis magna. Pellentesque auctor, erat ut tempus vestibulum, velit nisi ultrices purus, ac sodales ipsum sapien sed ligula.</p>
+      </div>
+      <div><img alt="" src="carousel-2.jpg"/></div>
+      <div><img alt="" src="carousel-3.jpg"/></div>
+    </div>
+    <footer>
+      All image are copyright 2012 by <a href="http://www.wiggy.net/">Wichert Akkerman</a>.
+    </footer>
+    <script data-main="../src/main" src="../lib/require.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="../lib/jquery.anythingslider.js"></script>
+  </body>
+</html>
