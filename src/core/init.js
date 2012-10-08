@@ -23,25 +23,6 @@ var mapal = {
                                     maximum: maximum };
     },
 
-    // A simple autocomplete pattern
-    initAutocomplete: function(root) {
-          $("input.autocomplete:not(.cant-touch-this)", root).each(function() {
-              var $input = $(this),
-                  name = $input.attr("name"),
-                  $storage;
-              $input.attr("name", "_"+name);
-              $storage=$("<input type='hidden'/>").attr("name", name).insertBefore($input);
-              $input.autocomplete({source: $input.attr("src"),
-                                   minLength: 2,
-                                   select: function(event, ui) {
-                                        $storage.val(ui.item.value);
-                                        $input.val(ui.item.label);
-                                        return false;
-                                   }
-                                   });
-          });
-    },
-
     // Support for superimposing labels on input elements
     initSuperImpose: function(root) {
         $("label.superImpose:not(.cant-touch-this)", root).each(function() {
@@ -664,7 +645,6 @@ var mapal = {
     initContent: function(root, opts) {
         mapal.newstyle.scan(root, opts);
 
-        mapal.initAutocomplete(root);
         mapal.initSuperImpose(root);
         mapal.initMenu(root);
         mapal.initSorts(root);
