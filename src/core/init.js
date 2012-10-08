@@ -616,25 +616,6 @@ var mapal = {
         $(window).bind("resize.mapal", mapal.updateWidthClasses);
     },
 
-
-    // No browser supports all DOM methods to get from an object to its
-    // parent window and document and back again, so we convert all
-    // html objects to iframes.
-    initIframes: function(root) {
-        $("object[type=text/html]", root).each(function() {
-            var $object = $(this),
-                $iframe = $("<iframe allowtransparency='true'/>");
-
-            $iframe
-                .attr("id", $object.attr("id"))
-                .attr("class", $object.attr("class"))
-                .attr("src", $object.attr("data"))
-                .attr("frameborder", "0")
-                .attr("style", "background-color:transparent");
-            $object.replaceWith($iframe);
-        });
-    },
-
     initSorts: function( root ) {
         $sorting = $(root).find('ul.sorting');
 
@@ -725,14 +706,6 @@ var mapal = {
             var passivePattern = mapal.passivePatterns[passivePatternName];
             if (passivePattern.initContent && $.isFunction(passivePattern.initContent) ) {
                 passivePattern.initContent(root);
-            }
-        }
-
-        // Replace objects with iframes for IE 8 and older.
-        if ($.browser.msie ) {
-            var version = Number( $.browser.version.split(".", 2).join(""));
-            if (version<=80) {
-                mapal.initIframes(root);
             }
         }
 
