@@ -45,6 +45,7 @@ define([
     'patterns',
     'patterns/autosubmit',
     'patterns/checklist',
+    'patterns/depends',
     'patterns/switch',
     'patterns/fancybox',
     'patterns/floatingpanel',
