@@ -1,9 +1,9 @@
 define([
     'require',
-    '../../lib/jquery.placeholder',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('placeholder');
+    '../logging',
+    'jquery.placeholder'
+], function(require, logging) {
+    var log = logging.getLogger('placeholder');
 
     var init = function($el, opts) {
         $el.placeholder();

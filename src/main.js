@@ -7,6 +7,7 @@ requirejs.config({
         "jquery.autoSuggest": "3rdparty/jquery.autosuggest",
         "jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
         "jquery.form": "lib/jquery.form/jquery.form",
+        "jquery.placeholder": "3rdparty/jquery.placeholder",
         "jquery.tools": "3rdparty/jquery.tools.min"
     },
     shim: {
