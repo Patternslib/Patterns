@@ -185,6 +185,14 @@ define([
     }
 
 
+    function hasContent($el) {
+        if ($el.is(":input")) {
+            return $el.val();
+        } else {
+            return $el.text().replace(/\s*/g, "") || $el.find("img,object,video,audio").length;
+        }
+    }
+
 
     //     Underscore.js 1.3.1
     //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
@@ -221,7 +229,8 @@ define([
         pimp_pattern: pimp_pattern,
         jquery_plugin: jquery_plugin,
         debounce: debounce,
-	renumber: renumber
+	renumber: renumber,
+	hasContent: hasContent
     };
 
     return utils;

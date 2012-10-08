@@ -8,15 +8,12 @@
  */
 define([
     'require',
+    '../utils',
     // XXX: belong to the patterns once they are done
     'jquery.form',
     'jquery.tools',
-    '../jquery-ext',
-    '../utils'
-], function(require) {
-
-var utils = require('../utils');
-
+    '../jquery-ext'
+], function(require, utils) {
 var mapal = {
     widthClasses: {},
 
@@ -45,16 +42,6 @@ var mapal = {
           });
     },
 
-
-    // check if an input element has a value.
-    hasContent: function($el) {
-        if ($el.is(":input")) {
-            return $el.val();
-        } else {
-            return $el.text().replace(/\s*/g, "") || $el.find("img,object,video,audio").length;
-        }
-    },
-
     // Support for superimposing labels on input elements
     initSuperImpose: function(root) {
         $("label.superImpose:not(.cant-touch-this)", root).each(function() {
@@ -67,18 +54,18 @@ var mapal = {
             }
 
             $label
-                .css("display", mapal.hasContent($myInput) ? "none" : "block")
+                .css("display", utils.hasContent($myInput) ? "none" : "block")
                 .click(function() {
                     $myInput.focus();
                 });
 
             setTimeout(function() {
-                $label.css("display", mapal.hasContent($myInput) ? "none" : "block");
+                $label.css("display", utils.hasContent($myInput) ? "none" : "block");
                 }, 250);
 
             $myInput
                 .bind("blur.mapal", function() {
-                    $label.css("display", mapal.hasContent($myInput) ? "none" : "block");
+                    $label.css("display", utils.hasContent($myInput) ? "none" : "block");
                 })
                 .bind("focus.mapal", function() {
                     $label.css("display", "none");
