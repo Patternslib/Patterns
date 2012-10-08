@@ -483,23 +483,6 @@ var mapal = {
         $(window).bind("resize.mapal", mapal.updateWidthClasses);
     },
 
-    initSorts: function( root ) {
-        $sorting = $(root).find('ul.sorting');
-
-        if ($sorting.length > 0) {
-            $sorting.sortable({
-                'axis': 'y',
-                'items': 'li',
-                'update': function(event, ui){
-                    var $this = $(this);
-                    var order = $this.sortable("serialize");
-
-                    $.post($this.attr("data-injection"), order);
-                }
-            });
-        }
-    },
-
     initButtonSets: function(root) {
         if ( $(root).buttonset ) {
             $(root).find('.buttonSet').removeClass('buttonSet').buttonset();
@@ -560,7 +543,6 @@ var mapal = {
     initContent: function(root, opts) {
         mapal.newstyle.scan(root, opts);
 
-        mapal.initSorts(root);
         mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
         //
