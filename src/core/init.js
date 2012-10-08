@@ -23,55 +23,6 @@ var mapal = {
                                     maximum: maximum };
     },
 
-
-    // Manage open/close/hasChild classes for a ul-based menu tree
-    initMenu: function(root) {
-        $("ul.menu:not(.cant-touch-this)").each(function() {
-            var $menu = $(this),
-                timer,
-                closeMenu, openMenu,
-                mouseOverHandler, mouseOutHandler;
-
-            openMenu = function($li) {
-                if (timer) {
-                    clearTimeout(timer);
-                    timer = null;
-                }
-
-                if (!$li.hasClass("open")) {
-                    $li.siblings("li.open").each(function() { closeMenu($menu);});
-                    $li.addClass("open").removeClass("closed");
-                }
-            };
-
-            closeMenu = function($li) {
-                $li.find("li.open").andSelf().removeClass("open").addClass("closed");
-            };
-
-            mouseOverHandler = function() {
-                var $li = $(this);
-                openMenu($li);
-            };
-
-            mouseOutHandler = function() {
-                var $li = $(this);
-
-                if (timer) {
-                    clearTimeout(timer);
-                    timer=null;
-                }
-
-                timer = setTimeout(function() { closeMenu($li); }, 1000);
-            };
-
-            $("ul.menu li", root)
-                .addClass("closed")
-                .filter(":has(ul)").addClass("hasChildren").end()
-                .bind("mouseover.mapal", mouseOverHandler)
-                .bind("mouseout.mapal", mouseOutHandler);
-        });
-    },
-
     injection: {
         options: {
             defaultModifier: "replace",
@@ -609,7 +560,6 @@ var mapal = {
     initContent: function(root, opts) {
         mapal.newstyle.scan(root, opts);
 
-        mapal.initMenu(root);
         mapal.initSorts(root);
         mapal.initButtonSets(root);
         mapal.initAutoLoads(root);
