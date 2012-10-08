@@ -8,7 +8,7 @@
  */
 define([
     'jquery',
-    'jquery.fancybox'
+    '../3rdparty/jquery.fancybox-1.3.4'
 ], function($) {
     var fancybox = {
         execute: function(elem, url, sources, params, event) {

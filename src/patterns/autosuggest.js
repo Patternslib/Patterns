@@ -4,7 +4,7 @@ define([
     'require',
     '../logging',
     '../utils',
-    'jquery.autoSuggest'
+    '../3rdparty/jquery.autoSuggest'
 ], function(require, logging, utils) {
     var log = logging.getLogger('autosuggest');
 

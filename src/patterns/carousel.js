@@ -8,7 +8,7 @@ define([
     "jquery",
     "../logging",
     "../core/parser",
-    "jquery.anythingslider"
+    "../3rdparty/jquery.anythingslider"
 ], function($, logging, Parser) {
     var log = logging.getLogger("carousel"),
         parser = new Parser();

@@ -1,7 +1,7 @@
 define([
     'require',
     '../logging',
-    'jquery.placeholder'
+    '../3rdparty/jquery.placeholder'
 ], function(require, logging) {
     var log = logging.getLogger('placeholder');
 
