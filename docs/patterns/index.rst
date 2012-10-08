@@ -20,6 +20,7 @@ The available patterns are:
    autosubmit
    carousel
    checklist
+   depends
    fancybox
    modal
    selfhealing
