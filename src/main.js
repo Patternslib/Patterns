@@ -43,6 +43,7 @@ define([
     'core/parser',
     'core/store',
     'patterns',
+    'patterns/transforms',
     'patterns/autosubmit',
     'patterns/checklist',
     'patterns/depends',
@@ -67,6 +68,7 @@ define([
 
     // register our patterns
     // rethink naming once all patterns are migrated to this style
+    mapal.passivePatterns.transforms = require('./patterns/transforms');
     mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
     mapal.passivePatterns.checklist = require('./patterns/checklist');
     mapal.passivePatterns.depends = require('./patterns/depends');
