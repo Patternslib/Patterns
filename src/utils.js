@@ -159,6 +159,32 @@ define([
         return modules;
     };
 
+    function _renumberAttribute(el, attr, i) {
+        var $el = $(el),
+            buf = $el.attr(attr);
+        if (buf) {
+            $el.attr(attr, buf.replace(/[0-9]+/, i));
+        }
+    }
+
+    function _renumberEl() {
+	_renumberAttribute(this, "for", i);
+	_renumberAttribute(this, "id", i);
+	_renumberAttribute(this, "name", i);
+    }
+
+    function renumber($container, selector) {
+        var $entries = $container.find(selector ? selector : "fieldset,tr,dd"),
+            entry, i;
+
+        for (i=0; i<$entries.length; i++) {
+            entry = $entries.get(i);
+            _renumberAttribute(entry, "id", i);
+            $("label, :input", entry).each(_renumberEl);
+        }
+    }
+
+
 
     //     Underscore.js 1.3.1
     //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
@@ -184,8 +210,6 @@ define([
         };
     };
 
-
-
     var utils = {
         extractParameters: extractParameters,
         parseOptions: parseOptions,
@@ -196,7 +220,8 @@ define([
         turnstiled: turnstiled,
         pimp_pattern: pimp_pattern,
         jquery_plugin: jquery_plugin,
-        debounce: debounce
+        debounce: debounce,
+	renumber: renumber
     };
 
     return utils;
