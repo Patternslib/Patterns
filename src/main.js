@@ -50,6 +50,7 @@ define([
     './patterns/autosubmit',
     './patterns/checklist',
     './patterns/depends',
+    './patterns/menu',
     './patterns/switch',
     './patterns/fancybox',
     './patterns/floatingpanel',
@@ -76,6 +77,7 @@ define([
     mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
     mapal.passivePatterns.checklist = require('./patterns/checklist');
     mapal.passivePatterns.depends = require('./patterns/depends');
+    mapal.passivePatterns.menu = require('./patterns/menu');
     mapal.passivePatterns.switcher = require('./patterns/switch');
     mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
     mapal.passivePatterns.toggle = require('./patterns/toggle');

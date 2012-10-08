@@ -23,6 +23,7 @@ The available patterns are:
    checklist
    depends
    fancybox
+   menu
    modal
    selfhealing
    switch
