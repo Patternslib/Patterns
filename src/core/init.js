@@ -103,21 +103,6 @@ var mapal = {
     },
 
 
-    // Apply some standard markup transformations
-    initTransforms: function(root) {
-        // record history disables mostly everything for now
-        $(".record-history", root).addClass('cant-touch-this');
-        if ($(root).is(".record-history"))
-            $(root).addClass('cant-touch-this');
-
-        $(".jsOnly", root).show();
-
-        $("legend:not(.cant-touch-this)", root).each(function() {
-            $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
-        });
-    },
-
-
     // Manage open/close/hasChild classes for a ul-based menu tree
     initMenu: function(root) {
         $("ul.menu:not(.cant-touch-this)").each(function() {
@@ -725,8 +710,6 @@ var mapal = {
 
     // Setup a DOM tree.
     initContent: function(root, opts) {
-        mapal.initTransforms(root);
-
         mapal.newstyle.scan(root, opts);
 
         mapal.initAutofocus(root);
