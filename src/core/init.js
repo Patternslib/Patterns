@@ -483,43 +483,6 @@ var mapal = {
         $(window).bind("resize.mapal", mapal.updateWidthClasses);
     },
 
-    initAutoLoads: function( root ) {
-        // find all autoloads
-        $(root).find('.autoLoading-visible:not(.cant-touch-this)').each(function() {
-            var $autoload = $(this),
-                $scrollable = $autoload.parents(":scrollable");
-
-            // ignore executed autoloads
-            if ($autoload.data('autoLoading')) return false;
-
-            // function to trigger the autoload and mark as triggered
-            var trigger = function() {
-                $autoload.data('autoLoading', true);
-                $autoload.trigger('click');
-                return true;
-            };
-
-            // if autoload has no scrollable parent -> trigger it, it is visible
-            if ($scrollable.length === 0) return trigger();
-
-            // if scrollable parent and visible -> trigger it
-            // we only look at the closest scrollable parent, no nesting
-            var checkVisibility = function() {
-                if ($autoload.data('autoLoading')) return false;
-                var reltop = $autoload.offset().top - $scrollable.offset().top - 1000,
-                    doTrigger = reltop <= $scrollable.innerHeight();
-                if (doTrigger) return trigger();
-                return false;
-            };
-            if (checkVisibility()) return true;
-
-            // wait to become visible - again only immediate scrollable parent
-            $($scrollable[0]).on("scroll", checkVisibility);
-            $(window).on('resize', checkVisibility);
-            return false;
-        });
-    },
-
     passivePatterns: {
         'selectSiblingRadio': {
             init: function() {},
@@ -536,8 +499,6 @@ var mapal = {
     // Setup a DOM tree.
     initContent: function(root, opts) {
         mapal.newstyle.scan(root, opts);
-
-        mapal.initAutoLoads(root);
 
         for (var passivePatternName in mapal.passivePatterns) {
             var passivePattern = mapal.passivePatterns[passivePatternName];
