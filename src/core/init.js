@@ -26,30 +26,6 @@ var mapal = {
                                     maximum: maximum };
     },
 
-    _renumberAttribute: function(el, attr, i) {
-        var $el = $(el),
-            buf = $el.attr(attr);
-        if (buf) {
-            $el.attr(attr, buf.replace(/[0-9]+/, i));
-        }
-    },
-
-    renumber: function($container, selector) {
-        var $entries = $container.find(selector ? selector : "fieldset,tr,dd"),
-            entry, i;
-
-        for (i=0; i<$entries.length; i++) {
-            entry = $entries.get(i);
-            mapal._renumberAttribute(entry, "id", i);
-            $("label, :input", entry).each(function() {
-                mapal._renumberAttribute(this, "for", i);
-                mapal._renumberAttribute(this, "id", i);
-                mapal._renumberAttribute(this, "name", i);
-            });
-        }
-    },
-
-
     // Give the first input element with the autofocus class the focus
     initAutofocus: function(root) {
         var $elements = $(":input.autofocus:not(.cant-touch-this)", root),
