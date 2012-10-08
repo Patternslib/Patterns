@@ -27,3 +27,4 @@ The available patterns are:
    switch
    toggle
    tooltip
+   transforms
