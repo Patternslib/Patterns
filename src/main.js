@@ -44,6 +44,7 @@ define([
     'core/store',
     'patterns',
     'patterns/transforms',
+    'patterns/autofocus',
     'patterns/autosubmit',
     'patterns/checklist',
     'patterns/depends',
@@ -69,6 +70,7 @@ define([
     // register our patterns
     // rethink naming once all patterns are migrated to this style
     mapal.passivePatterns.transforms = require('./patterns/transforms');
+    mapal.passivePatterns.autofocus = require('./patterns/autofocus');
     mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
     mapal.passivePatterns.checklist = require('./patterns/checklist');
     mapal.passivePatterns.depends = require('./patterns/depends');

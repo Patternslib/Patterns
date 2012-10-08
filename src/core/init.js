@@ -26,22 +26,6 @@ var mapal = {
                                     maximum: maximum };
     },
 
-    // Give the first input element with the autofocus class the focus
-    initAutofocus: function(root) {
-        var $elements = $(":input.autofocus:not(.cant-touch-this)", root),
-            i;
-
-        for (i=0; i < $elements.length; i+=1) {
-            if (!$elements.eq(i).val()) {
-                $elements.get(i).focus();
-                break;
-            }
-        }
-        if (i===$elements.length) {
-            $elements.eq(0).focus();
-        }
-    },
-
     // A simple autocomplete pattern
     initAutocomplete: function(root) {
           $("input.autocomplete:not(.cant-touch-this)", root).each(function() {
@@ -693,7 +677,6 @@ var mapal = {
     initContent: function(root, opts) {
         mapal.newstyle.scan(root, opts);
 
-        mapal.initAutofocus(root);
         mapal.initAutocomplete(root);
         mapal.initSuperImpose(root);
         mapal.initMenu(root);
