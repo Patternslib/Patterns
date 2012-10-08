@@ -26,6 +26,7 @@ The available patterns are:
    menu
    modal
    selfhealing
+   sorting
    switch
    toggle
    tooltip
