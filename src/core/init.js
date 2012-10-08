@@ -23,37 +23,6 @@ var mapal = {
                                     maximum: maximum };
     },
 
-    // Support for superimposing labels on input elements
-    initSuperImpose: function(root) {
-        $("label.superImpose:not(.cant-touch-this)", root).each(function() {
-            var $label = $(this),
-                forInput = $label.attr("for").replace(/([.\[\]])/g, "\\$1"),
-                $myInput = forInput ? $(":input#"+forInput+", .rich[id="+forInput+"]") : $(":input", this);
-
-            if (!$myInput.length) {
-                return;
-            }
-
-            $label
-                .css("display", utils.hasContent($myInput) ? "none" : "block")
-                .click(function() {
-                    $myInput.focus();
-                });
-
-            setTimeout(function() {
-                $label.css("display", utils.hasContent($myInput) ? "none" : "block");
-                }, 250);
-
-            $myInput
-                .bind("blur.mapal", function() {
-                    $label.css("display", utils.hasContent($myInput) ? "none" : "block");
-                })
-                .bind("focus.mapal", function() {
-                    $label.css("display", "none");
-                });
-        });
-    },
-
 
     // Manage open/close/hasChild classes for a ul-based menu tree
     initMenu: function(root) {
@@ -645,7 +614,6 @@ var mapal = {
     initContent: function(root, opts) {
         mapal.newstyle.scan(root, opts);
 
-        mapal.initSuperImpose(root);
         mapal.initMenu(root);
         mapal.initSorts(root);
         mapal.initButtonSets(root);
