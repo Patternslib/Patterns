@@ -115,18 +115,6 @@ var mapal = {
         $("legend:not(.cant-touch-this)", root).each(function() {
             $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
         });
-
-        $("label dfn.infoPanel:not(.cant-touch-this)", root).each(function() {
-            var $panel = $(this),
-                $label = $panel.closest("label"),
-                $body = $("body"),
-                offset = $panel.offset();
-            $panel
-                .remove()
-                .appendTo($body)
-                .css({position: "absolute", left: offset.left, top: offset.top});
-            $label.data("mapal.infoPanel", $panel);
-        });
     },
 
 
@@ -619,43 +607,6 @@ var mapal = {
         $("body").unbind("click.tooltip");
     },
 
-    initTooltip: function(root) {
-        $(root).find(".tooltipTrigger").each( function() {
-            $(this).tooltip({relative: true}).dynamic();
-        });
-
-        $("dfn.infoPanel:not(span)").each(function() {
-            var $panel = $(this),
-                title = $panel.attr("title");
-
-            if ($panel.data("mapal.tooltip")) {
-                return;
-            }
-
-            if (title) {
-                $("<span/>")
-                    .addClass("title")
-                    .text(title)
-                    .prependTo($panel);
-                $panel.removeAttr("title");
-            }
-
-            $panel
-                .click(function(event) {
-                    if ($panel.hasClass("open")) {
-                        $panel.removeClass("open");
-                        $("body").unbind("click.tooltip");
-                    } else {
-                        mapal.closeTooltips();
-                        $panel.addClass("open");
-                        $("body").one("click.tooltip", mapal.closeTooltips);
-                    }
-                    event.stopPropagation();
-                })
-                .data("mapal.tooltip", true);
-        });
-    },
-
     // Utility method to update the width classes on the body
     updateWidthClasses: function() {
         var width = $(window).width(),
@@ -781,7 +732,6 @@ var mapal = {
         mapal.initAutofocus(root);
         mapal.initAutocomplete(root);
         mapal.initSuperImpose(root);
-        mapal.initTooltip(root);
         mapal.initMenu(root);
         mapal.initSorts(root);
         mapal.initButtonSets(root);

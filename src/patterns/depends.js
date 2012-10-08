@@ -104,20 +104,16 @@ define([
             return $("*[class*='dependsOn-']", root).each(function() {
                 var slave = this,
                     $slave = $(this),
-                    $visible = $(this),
-                    $panel = $slave.data("mapal.infoPanel"),
                     command, state;
 
                 command=depends.parse($slave.attr("class"));
                 state=depends.verify($slave, command);
-                if ($panel!==undefined)
-                    $visible=$visible.add($panel);
 
                 if (command.action==="show") {
                     if (state)
-                        $visible.show();
+                        $slave.show();
                     else
-                        $visible.hide();
+                        $slave.hide();
                 } else if (command.action==="enable") {
                     if (state) {
                         slave.disabled=null;
@@ -132,9 +128,9 @@ define([
                     state=depends.verify($slave, command);
                     if (command.action==="show") {
                         if (state)
-                            $visible.slideDown();
+                            $slave.slideDown();
                         else
-                            $visible.slideUp();
+                            $slave.slideUp();
                     } else if (command.action==="enable" ) {
                         if (state) {
                             slave.disabled=null;
