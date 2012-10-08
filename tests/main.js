@@ -1,6 +1,14 @@
+require.config({
+    // define module dependencies for modules not using define
+    shim: {
+        '../lib/pavlov/pavlov': {
+            // XXX: not sure why not: ../lib/qunit/qunit/qunit
+            deps: ['../qunit/qunit/qunit']
+        }
+    }
+});
 require([
     'require',
-    'domReady',
     '../lib/pavlov',
     '../src/patterns',
 //    'spec!./spec/aloha',
