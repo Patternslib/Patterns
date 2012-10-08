@@ -101,7 +101,7 @@ define([
         },
 
         initContent: function(root) {
-            $("*[class*='dependsOn-']", root).each(function() {
+            return $("*[class*='dependsOn-']", root).each(function() {
                 var slave = this,
                     $slave = $(this),
                     $visible = $(this),
