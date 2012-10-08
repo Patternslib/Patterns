@@ -4,6 +4,7 @@ requirejs.config({
 	"prefixfree": "3rdparty/prefixfree.min",
         "modernizr": "3rdparty/modernizr-2.0.6",
 	"jquery.anythingslider": "3rdparty/jquery.anythingslider",
+        "jquery.autoSuggest": "3rdparty/jquery.autosuggest",
         "jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
         "jquery.form": "lib/jquery.form/jquery.form",
         "jquery.tools": "3rdparty/jquery.tools.min"
