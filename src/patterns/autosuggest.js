@@ -4,10 +4,9 @@ define([
     'require',
     '../logging',
     '../utils',
-    '../../lib/jquery.autoSuggest'
-], function(require) {
-    var log = require('../logging').getLogger('autosuggest'),
-        utils = require('../utils');
+    '../3rdparty/jquery.autoSuggest'
+], function(require, logging, utils) {
+    var log = logging.getLogger('autosuggest');
 
     var init = function($el, opts) {
         // fetch words for auto-suggestion

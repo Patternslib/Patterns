@@ -18,6 +18,20 @@ Install
     git clone git://github.com/cornae/Patterns.git
     make
 
+Browser support
+---------------
+
+Patterns aims to support the two latest major versions of all popular browsers.
+Currently that means:
+
+* Apple Safari 5
+* Apple Safari 6
+* Google Chrome 20
+* Google Chrome 21
+* Microsoft Internet Explorer 8
+* Microsoft Internet Explorer 9
+
+
 Development
 -----------
 
