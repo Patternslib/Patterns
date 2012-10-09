@@ -21,7 +21,7 @@ define(function(require) {
         'navigation',
         'placeholder',
         'validate',
-	'carousel'
+        'carousel'
     ];
 
 
@@ -41,7 +41,7 @@ define(function(require) {
         navigation: require('./patterns/navigation'),
         placeholder: require('./patterns/placeholder'),
         validate: require('./patterns/validate'),
-	carousel: require('./patterns/carousel')
+        carousel: require('./patterns/carousel')
     };
 
     var patterns = {};
