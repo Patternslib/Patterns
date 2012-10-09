@@ -77,8 +77,6 @@ define([
     width.register("medium", 0, 1109);
     width.register("wide", 1110, null);
 
-    mapal.store = require('./core/store');
-
     // register our patterns
     // rethink naming once all patterns are migrated to this style
     mapal.passivePatterns.transforms = require('./patterns/transforms');
