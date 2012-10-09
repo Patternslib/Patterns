@@ -1,0 +1,107 @@
+URL: http://titanpad.com/YKU4cvarTd
+WHO: Wichert, Florian
+
+/* XXX: look into later - transforms for init */
+has data-inject -> set class inject
+
+
+define([
+    "require",
+    "patterns/registry"
+], function(require, patterns) {
+    
+    var pattern_spec = {
+        name: "inject",
+        trigger: ".inject",
+        
+        // Will be called with a single element in a jQuery wrapper and should initialise it
+        // will also be called for $element.patternInject(opts)
+        // init/destroy form a pair and the combination is idempotent - destroy reverts all changes made by init
+        init: function($el, opts) {
+            // I see this fulfilling:
+            // - perform a transformation in case of a transform pattern, nothing else
+            // - merge opts with opts stored on the DOM element and persist on DOM element
+            // - setup event handlers
+            // - Perform other one-time setup actions (ie tooltips may play with title attributes)
+            // - Invoke other jQuery plugins to setup behaviour
+            // I understand this as corresponding to a python's __init__ method - agreed
+            
+            // opts are read from the DOM element (and it's childrens),
+            // merged with opts passed to init and stored on the DOM element
+            // not overwriting any existing markup: $el.data('patterns.inject') vs. $el.data('inject')
+            
+            // If opts are given, they need to be stored onto the DOM element
+            // Opts should be used to extend settings on the object itself
+            var config = $.extend({}, parser.parse($el.data("mypattern")), opts);
+            // XXX some patterns can deal with multiple options, others can't, so this
+            // can change per pattern
+            // also depends whether opts need to be persisted. When the pattern is triggered/executed,
+            // e.g. for injection it should read the options from the DOM element,
+            // i.e. the DOM element is our instance of the pattern in contrast
+            // to having a javascript object keeping instance data (this).
+            $el.data("patterns.mypattern", config);
+                        
+            // hook up event handlers
+            $el.on("click.mypattern", pattern.onClick);
+            $el.on("patterns-collapsible-open.mypattern', pattern.onCollapsableOpen);
+            $el.on("patterns-expandable-open.mypattern', pattern.onExpandableOpen);
+        },
+        // Unregister all event handlers and other things that init has done. DOM modifications are not rolled back.
+        destroy: function($el) {
+            $el.off(".mypattern");
+            $el.data("patterns.mypattern", ); // Remove parsed options (if present), *NOT* the data-mypattern attribute
+        },
+        
+        // event handlers prefixed with "on", camelcase notation
+        onCollapsableOpen: function(event) {
+            
+        },
+        onExpandableOpen: function(event) {
+            
+        },
+        onClick: function(event) {
+            // this is the element the event handler was registered on
+            var options = $(this).data("patterns.mypattern");
+            pattern_spec.update(this, options);
+        },
+        
+        // public API: functions that are not event handlers and start with a lower-case letter
+        // XXX: what is update doing?
+        update: function(el, options) {
+        }
+        
+        // private API: helper functions prefixed with _
+    };
+    
+    var public_api = {
+        method1: function() { },
+        method2: function() { }
+    };
+    
+    patterns.register(pattern_spec);    
+    return public_api;
+});
+
+
+// width pattern
+define([
+    "jquery"
+], function($) {
+    var widthClasses = {};
+
+    var width = {
+        register: function(cls, minimum, maximum) {
+            widthClasses[cls] = { minimum: minimum,
+                                  maximum: maximum };
+        },
+
+        onResize: function() {
+            // ...
+        },
+    };
+
+    width.update();
+    $(window).bind("resize.width", width.onResize);
+
+    return width;
+});

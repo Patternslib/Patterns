@@ -10,57 +10,40 @@ define([
     'require',
     '../core/store',
     '../utils'
-], function(require) {
-    var store = require('../core/store');
-    var utils = require('../utils');
+], function(require, store, utils) {
+    var storage = store.session("setclass");
 
     var setclass = {
         init: function() {
-            store.initPatternStore('setclass');
 
-            $(store.getPatternAttributes('setclass')).each(function(index) {
-                var values = this.split('!'); // 0: id, 1: attribute, 2: value, 3: other
-                var obj = {
-                        'index': index+1,
-                        "id": values[0],
-                        "attr": values[1],
-                        'value': values[2],
-                        'other': values[3]
-                    };
-
-                setclass.store[obj.id + "." + obj.attr] = obj;
-            });
-
-            $('[data-setclass]').live('click', setclass.handleClick).each(function() {
+            $(document).on("click", '[data-setclass]').live('click', setclass.handleClick);
+            $("[data-setclass]").each(function() {
                 var $this = $(this);
                 var obj = setclass.getObjFromParams(
                               $this,
-                                utils.extractParameters('!' + $this.attr('data-setclass'))
-                          );
+                              utils.extractParameters('!' + $this.attr('data-setclass')));
 
-                if (obj === null) return;
+                if (obj === null)
+                    return;
 
                 if ( !obj.store ) {
-                     if (setclass.store[obj.id + "." + obj.attr] ) {
-                        delete setclass.store[obj.id + "." + obj.attr];
-                     }
-                } else {
-                     if (setclass.store[obj.id + "." + obj.attr] ) return;
-                }
-                if ( obj.attr === 'class' ) {
+                    storage.remove(obj.id + "." + obj.attr);
+                } else if (storage.get(obj.id + "." + obj.attr))
+                    return;
+
+                if (obj.attr === 'class') {
                 //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
                 } else {
                     $( "#" + obj.id ).attr( obj.attr, obj.value );
                 }
 
-                if (obj.store) {
-                    setclass.storeValue(obj.id, obj.attr, obj.value, obj.other);
-                }
+                if (obj.store)
+                    storage.set(obj.id + "." + obj.attr, obj);
             });
 
-            var key;
-            for (key in setclass.store ) {
-                var obj = setclass.store[key];
+            var all = storage.all();
+            for (var key in all ) {
+                var obj = all[key];
                 if ( obj.attr === 'class' ) {
                     $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
                 } else {
@@ -148,18 +131,10 @@ define([
                 }*/
             }
 
-            if (obj.store) setclass.storeValue(obj.id, obj.attr, value, other);
+            if (obj.store)
+                storage.set(obj.id + "." + obj.attr, obj);
 
             return true;
-        },
-
-        storeValue: function(id, attr, value, other) {
-            var aStore = setclass.store[id + '.' + attr];
-            if ( aStore ) {
-                store.setPatternAttribute('setclass', aStore.index, id + "!" + attr + "!" + value + "!" + other);
-            } else {
-                store.addPatternAttribute('setclass', id + "!" + attr + "!" + value + "!" + other);
-            }
         }
     };
     return setclass;

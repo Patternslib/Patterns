@@ -9,10 +9,8 @@ define(function(require) {
     var patterns_order = [
         'ajaxify',
         'autosuggest',
-        'autosubmit',
         'breadcrumbs',
         'collapsible',
-        'checklist',
         'chosen',
         'edit-tinymce',
         'expandable',
@@ -22,17 +20,16 @@ define(function(require) {
         'modal',
         'navigation',
         'placeholder',
-        'validate'
+        'validate',
+	'carousel'
     ];
 
 
     var plain_patterns = {
         ajaxify: require('./patterns/ajaxify'),
         autosuggest: require('./patterns/autosuggest'),
-        autosubmit: require('./patterns/autosubmit'),
         breadcrumbs: require('./patterns/breadcrumbs'),
         collapsible: require('./patterns/collapsible'),
-        checklist: require('./patterns/checklist'),
         chosen: require('./patterns/chosen'),
 //        edit: require('./patterns/edit'),
         "edit-tinymce": require('./patterns/edit-tinymce'),
@@ -43,7 +40,8 @@ define(function(require) {
         modal: require('./patterns/modal'),
         navigation: require('./patterns/navigation'),
         placeholder: require('./patterns/placeholder'),
-        validate: require('./patterns/validate')
+        validate: require('./patterns/validate'),
+	carousel: require('./patterns/carousel')
     };
 
     var patterns = {};

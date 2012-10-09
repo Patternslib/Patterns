@@ -1,18 +1,63 @@
-// uncomment following to disable caching - good for develoment
-// we still need a way to configure this, needs some thinking
+requirejs.config({
+    paths: {
+        "jquery": "3rdparty/require-jquery"
+        //
+        // XXX: we do not have a nested config solution yet. Until
+        // then we stick with require-jquery and relative dependency
+        // paths.
+        //
+        //"prefixfree": "3rdparty/prefixfree.min",
+        //"modernizr": "3rdparty/modernizr-2.0.6",
+        //"jquery.anythingslider": "3rdparty/jquery.anythingslider",
+        //"jquery.autoSuggest": "3rdparty/jquery.autosuggest",
+        //"jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
+        //"jquery.form": "lib/jquery.form/jquery.form",
+        //"jquery.placeholder": "3rdparty/jquery.placeholder",
+        //"jquery.tools": "3rdparty/jquery.tools.min"
+    // },
+    // shim: {
+    //     "jquery.form": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.ajaxSubmit"
+    //     },
 
-//require.config({
-//    urlArgs: "bust=" +  (new Date()).getTime()
-//});
+    //     "jquery.anythingslider": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.anythingSlider"
+    //     },
+    //     "jquery.autoSuggests": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.autoSuggest"
+    //     },
+    //     "jquery.placeholder": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.placeholder"
+    //     },
+    //     "jquery-ext": {
+    //         deps: ["jquery"],
+    //         exports: "jQuery.fn.simplePlaceholder"
+    //     }
+    }
+});
+
 
 define([
     'require',
-    // '../lib/css3-mediaqueries',
-    '../lib/modernizr-2.0.6',
+    'jquery',
+    './3rdparty/prefixfree.min',
+    './3rdparty/modernizr-2.0.6',
     './core/init',
     './core/parser',
     './core/store',
     './patterns',
+    './patterns/transforms',
+    './patterns/autofocus',
+    './patterns/autoload',
+    './patterns/autosubmit',
+    './patterns/checklist',
+    './patterns/depends',
+    './patterns/menu',
+    './patterns/sorting',
     './patterns/switch',
     './patterns/fancybox',
     './patterns/floatingpanel',
@@ -24,7 +69,7 @@ define([
     './patterns/tooltip',
     './patterns/focus',
     './patterns/checkedflag'
-], function(require) {
+], function(require, $) {
     var mapal = require('./core/init');
     mapal.registerWidthClass("narrow", 0, 780);
     mapal.registerWidthClass("medium", 0, 1109);
@@ -34,6 +79,14 @@ define([
 
     // register our patterns
     // rethink naming once all patterns are migrated to this style
+    mapal.passivePatterns.transforms = require('./patterns/transforms');
+    mapal.passivePatterns.autofocus = require('./patterns/autofocus');
+    mapal.passivePatterns.autoload = require('./patterns/autoload');
+    mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
+    mapal.passivePatterns.checklist = require('./patterns/checklist');
+    mapal.passivePatterns.depends = require('./patterns/depends');
+    mapal.passivePatterns.menu = require('./patterns/menu');
+    mapal.passivePatterns.sorting = require('./patterns/sorting');
     mapal.passivePatterns.switcher = require('./patterns/switch');
     mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
     mapal.passivePatterns.toggle = require('./patterns/toggle');
