@@ -68,12 +68,14 @@ define([
     './patterns/toggle',
     './patterns/tooltip',
     './patterns/focus',
-    './patterns/checkedflag'
+    './patterns/checkedflag',
+    './patterns/width'
 ], function(require, $) {
-    var mapal = require('./core/init');
-    mapal.registerWidthClass("narrow", 0, 780);
-    mapal.registerWidthClass("medium", 0, 1109);
-    mapal.registerWidthClass("wide", 1110, null);
+    var mapal = require('./core/init'),
+        width = require('./patterns/width');
+    width.register("narrow", 0, 780);
+    width.register("medium", 0, 1109);
+    width.register("wide", 1110, null);
 
     mapal.store = require('./core/store');
 
@@ -104,6 +106,7 @@ define([
     mapal.patterns.setclass = require('./patterns/setclass');
     mapal.patterns.focus = require('./patterns/focus');
     mapal.patterns.checkedflag = require('./patterns/checkedflag');
+    mapal.patterns.width = require('./patterns/width');
 
     // new-style patterns
     mapal.newstyle = require('./patterns');

@@ -1,7 +1,15 @@
 Width classes
 =============
 
-.. js:function:: mapal.registerWidthClass(class, minimum, maximum)
+The width pattern can be accessed through ``patterns/width``
+
+.. code-block:: javascript
+
+   var width = require("patterns/width");
+   width.register("wide", 1200, null);
+
+
+.. js:function:: width.register(class, minimum, maximum)
 
    :param string class: class to set to the document body
    :param int minimum: minimum window width in pixels

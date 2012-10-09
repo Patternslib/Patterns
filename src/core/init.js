@@ -15,14 +15,6 @@ define([
     '../jquery-ext'
 ], function(require, utils) {
 var mapal = {
-    widthClasses: {},
-
-    // Utility methods
-    registerWidthClass: function(cls, minimum, maximum) {
-        mapal.widthClasses[cls] = { minimum: minimum,
-                                    maximum: maximum };
-    },
-
     injection: {
         options: {
             defaultModifier: "replace",
@@ -459,30 +451,6 @@ var mapal = {
         }
     },
 
-    // Utility method to update the width classes on the body
-    updateWidthClasses: function() {
-        var width = $(window).width(),
-            $body = $("body"),
-            limits;
-
-        for (var cls in mapal.widthClasses) {
-            if (mapal.widthClasses.hasOwnProperty(cls)) {
-                limits=mapal.widthClasses[cls];
-                if ((limits.minimum===null || limits.minimum<=width) && (limits.maximum===null || width<=limits.maximum)) {
-                    $body.addClass(cls);
-                } else {
-                    $body.removeClass(cls);
-                }
-            }
-        }
-    },
-
-
-    initWidthClasses: function() {
-        mapal.updateWidthClasses();
-        $(window).bind("resize.mapal", mapal.updateWidthClasses);
-    },
-
     passivePatterns: {
         'selectSiblingRadio': {
             init: function() {},
@@ -513,7 +481,6 @@ var mapal = {
 
     // Setup global behaviour
     init: function() {
-        mapal.initWidthClasses();
         mapal.patterns.init();
     },
 
