@@ -47,10 +47,6 @@ define([
     './3rdparty/prefixfree.min',
     './3rdparty/modernizr-2.0.6',
     './core/init',
-    './core/parser',
-    './core/store',
-    './registry',
-    './patterns',
     './patterns/transforms',
     './patterns/autofocus',
     './patterns/autoload',
@@ -106,8 +102,6 @@ define([
     mapal.patterns.setclass = require('./patterns/setclass');
     mapal.patterns.focus = require('./patterns/focus');
     mapal.patterns.checkedflag = require('./patterns/checkedflag');
-
-    mapal.registry = require('./registry');
 
     $(document).on('inject.patterns.scan', function(ev, opts) {
         mapal.initContent(ev.target, opts);

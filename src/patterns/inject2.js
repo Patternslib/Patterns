@@ -1,7 +1,11 @@
-define(function(require) {
-    var log = require('../logging').getLogger('inject2'),
-        inject = require('../lib/inject'),
-        ajax = require('../lib/ajax');
+define([
+        "require",
+        "../logging",
+        "../core/parser",
+        "../lib/inject",
+        "../lib/ajax"
+], function(require, logging, Parser, inject, ajax) {
+    var log = logging.getLogger('inject2');
 
     var init = function($el, opts) {
         var injecthandler = function(ev) {
@@ -52,7 +56,6 @@ define(function(require) {
             }
         };
 
-        var Parser = require('../core/parser');
         var opts = opts_spec.reduce(function(acc, opts_src) {
             var attr = opts_src[0],
                 spec = opts_src[1],

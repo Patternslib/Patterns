@@ -2,9 +2,9 @@ define([
     'require',
     '../../lib/rangy-core',
     '../logging',
-    '../patterns'
-], function(require) {
-    var log = require('../logging').getLogger('edit'),
+    '../patterns/ajaxify'
+], function(require, _, logging, ajaxify) {
+    var log = logging.getLogger('edit'),
         rangy = window.rangy,
         STACK = {};
 
@@ -32,9 +32,8 @@ define([
         $edit.attr({style: 'min-height: 50px'});
 
         // ensure form is ajaxified and copy content back before serialize
-        var ajaxify = require('../patterns').ajaxify.init,
-            $form    = $el.parents('form');
-        ajaxify($form);
+        var $form    = $el.parents('form');
+        ajaxify.init($form);
         $form.on('form-pre-serialize', function() {
             $el.html($edit.html());
         });

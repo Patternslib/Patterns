@@ -9,10 +9,9 @@
 define([
     'require',
     '../logging',
-    '../patterns'
-], function(require) {
-    var log = require('../logging').getLogger('switch'),
-        Parser = require('../core/parser'),
+    "../core/parser"
+], function(require, logging, Parser) {
+    var log = logging.getLogger('switch'),
         parser = new Parser();
 
     parser.add_argument("selector");
