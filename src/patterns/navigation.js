@@ -1,8 +1,8 @@
 define([
     'require',
     '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('navigation');
+], function(require, logging) {
+    var log = logging.getLogger('navigation');
 
     var match = function(curpath, path) {
         if (!path) {

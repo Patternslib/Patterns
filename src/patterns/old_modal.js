@@ -9,9 +9,7 @@
 define([
     'require',
     '../core/init'
-], function(require) {
-    var mapal = require('../core/init');
-
+], function(require, mapal) {
     var modal = {
         options: {
             "class": "",

@@ -1,9 +1,9 @@
 define([
     'require',
-    '../../lib/chosen.jquery',
-    '../logging'
+    '../logging',
+    '../../lib/chosen.jquery'
 ], function(require) {
-    var log = require('../logging').getLogger('breadcrumbs');
+    var log = logging.getLogger('breadcrumbs');
 
     var init = function($el, opts) {
         // wrap elements in a DIV that will be shifted around

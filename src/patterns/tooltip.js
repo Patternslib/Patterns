@@ -10,10 +10,7 @@ define([
     'require',
     '../core/init',
     '../utils'
-], function(require) {
-    var utils = require('../utils'),
-        mapal = require('../core/init');
-
+], function(require, mapal, utils) {
     var tooltip = {
         count: 0,
 

@@ -1,11 +1,10 @@
 define([
     'require',
-    '../../lib/tiny_mce/tiny_mce_src',
     '../lib/ajax',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('edit-tinymce'),
-        ajax = require('../lib/ajax');
+    '../logging',
+    '../../lib/tiny_mce/tiny_mce_src'
+], function(require, ajax, logging) {
+    var log = logging.getLogger('edit-tinymce');
 
     var init = function($el, opts) {
         var $form = $el.parents('form'),

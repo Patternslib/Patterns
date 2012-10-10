@@ -1,5 +1,8 @@
-define(function(require) {
-    var log = require('../logging').getLogger('collapsible');
+define([
+    'require',
+    '../logging'
+], function(require, logging) {
+    var log = logging.getLogger('collapsible');
 
     var init = function($el, opts) {
         // create collapsible structure

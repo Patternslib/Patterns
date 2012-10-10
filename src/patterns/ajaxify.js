@@ -1,10 +1,10 @@
 define([
     'require',
-    '../lib/jquery.form/jquery.form',
     '../logging',
-    './inject'
-], function(require) {
-    var log = require('../logging').getLogger('ajaxify');
+    './inject',
+    '../lib/jquery.form/jquery.form'
+], function(require, logging, inject) {
+    var log = logging.getLogger('ajaxify');
 
     var init = function($el, opts) {
         // skip elements that are covered by old-style injection
@@ -72,7 +72,6 @@ define([
                            '<h3>Error</h3>' +
                            '<div class="error message">'+msg+'</div>' +
                            '</div>');
-            var inject = require('./inject');
             inject.append($error, $('body'));
         });
 

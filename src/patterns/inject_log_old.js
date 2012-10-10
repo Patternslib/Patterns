@@ -1,8 +1,8 @@
 define([
     'require',
     '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('old-injection');
+], function(require, logging) {
+    var log = logging.getLogger('old-injection');
 
     var init = function($el, opts) {
         log.info($el);

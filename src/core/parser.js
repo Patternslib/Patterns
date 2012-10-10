@@ -8,8 +8,8 @@
 define([
     'require',
     '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('parser');
+], function(require, logging) {
+    var log = logging.getLogger('parser');
 
     function ArgumentParser(spec) {
         this.params = [];
