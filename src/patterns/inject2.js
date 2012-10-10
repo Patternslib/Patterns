@@ -180,7 +180,7 @@ define(function(require) {
         })) {
             log.error('Unsupported different urls for inject');
             return;
-        };
+        }
 
         if (!opts.every(function(opts) {
             return opts.$targets.length;
