@@ -452,30 +452,9 @@ var mapal = {
         }
     },
 
-    passivePatterns: {
-        'selectSiblingRadio': {
-            init: function() {},
-            initContent: function(root) {
-                $(root).find('.selectSiblingRadio').focus(function() {
-                    var $this = $(this);
-
-                    $this.parent().find('input[type=radio]').attr('checked', true);
-                });
-            }
-        }
-    },
-
     // Setup a DOM tree.
     initContent: function(root) {
         registry.scan(root);
-
-        for (var passivePatternName in mapal.passivePatterns) {
-            var passivePattern = mapal.passivePatterns[passivePatternName];
-            if (passivePattern.initContent && $.isFunction(passivePattern.initContent) ) {
-                passivePattern.initContent(root);
-            }
-        }
-
         $(root).trigger("newContent", root);
     },
 
