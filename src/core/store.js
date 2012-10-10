@@ -6,9 +6,7 @@
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
-define([
-    'require'
-], function(require) {
+define(function() {
     function Storage(backend, prefix) {
         this.prefix=prefix;
         this.backend=backend;

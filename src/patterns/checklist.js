@@ -1,6 +1,7 @@
 define([
-    '../jqplugins/checklist'
-], function() {
+        "jquery",
+        "../jqplugins/checklist"
+], function($) {
     var checklist = {
         initContent: function(root) {
             $("[data-checklist]").patternChecklist();

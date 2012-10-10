@@ -1,9 +1,9 @@
 define([
-    'require',
+    'jquery',
     '../logging',
     './inject',
     '../lib/jquery.form/jquery.form'
-], function(require, logging, inject) {
+], function($, logging, inject) {
     var log = logging.getLogger('ajaxify');
 
     var init = function($el, opts) {

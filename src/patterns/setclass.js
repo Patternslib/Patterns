@@ -7,10 +7,10 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
     '../core/store',
     '../utils'
-], function(require, store, utils) {
+], function($, store, utils) {
     var storage = store.session("setclass");
 
     var setclass = {

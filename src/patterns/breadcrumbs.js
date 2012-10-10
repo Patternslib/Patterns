@@ -1,8 +1,8 @@
 define([
-    'require',
+    'jquery',
     '../logging',
     '../../lib/chosen.jquery'
-], function(require) {
+], function($) {
     var log = logging.getLogger('breadcrumbs');
 
     var init = function($el, opts) {

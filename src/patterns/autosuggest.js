@@ -1,11 +1,11 @@
 // auto-suggest docs:
 // http://code.drewwilson.com/entry/autosuggest-jquery-plugin
 define([
-    'require',
+    'jquery',
     '../logging',
     '../utils',
     '../3rdparty/jquery.autoSuggest'
-], function(require, logging, utils) {
+], function($, logging, utils) {
     var log = logging.getLogger('autosuggest');
 
     var init = function($el, opts) {

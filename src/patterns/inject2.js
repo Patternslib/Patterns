@@ -1,10 +1,10 @@
 define([
-        "require",
+        "jquery",
         "../logging",
         "../core/parser",
         "../lib/inject",
         "../lib/ajax"
-], function(require, logging, Parser, inject, ajax) {
+], function($, logging, Parser, inject, ajax) {
     var log = logging.getLogger('inject2');
 
     var init = function($el, opts) {

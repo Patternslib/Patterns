@@ -1,9 +1,9 @@
 define([
-    'require',
-    '../../lib/rangy-core',
+    'jquery',
     '../logging',
-    '../patterns/ajaxify'
-], function(require, _, logging, ajaxify) {
+    '../patterns/ajaxify',
+    '../../lib/rangy-core'
+], function($, logging, ajaxify) {
     var log = logging.getLogger('edit'),
         rangy = window.rangy,
         STACK = {};

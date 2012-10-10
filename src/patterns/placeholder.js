@@ -1,8 +1,7 @@
 define([
-    'require',
     '../logging',
     '../3rdparty/jquery.placeholder'
-], function(require, logging) {
+], function(logging) {
     var log = logging.getLogger('placeholder');
 
     var init = function($el, opts) {

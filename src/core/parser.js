@@ -6,9 +6,8 @@
  * Copyright 2012 Florian Friesdorf
  */
 define([
-    'require',
     '../logging'
-], function(require, logging) {
+], function(logging) {
     var log = logging.getLogger('parser');
 
     function ArgumentParser(spec) {

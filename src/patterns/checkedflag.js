@@ -4,7 +4,9 @@
  *
  * Copyright 2012 Simplon B.V.
  */
-define(function(require) {
+define([
+        "jquery"
+], function($) {
     var checkedflag = {
         init: function() {
             $(document)

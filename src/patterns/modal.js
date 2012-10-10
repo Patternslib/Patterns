@@ -1,9 +1,9 @@
 define([
-    'require',
+    'jquery',
     '../logging',
     "../core/parser",
     '../lib/jquery.form/jquery.form'
-], function(require, logging, Parser) {
+], function($, logging, Parser) {
     var log = ogging.getLogger('modal');
 
     var init = function($el, opts) {

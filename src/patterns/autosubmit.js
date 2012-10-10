@@ -1,6 +1,7 @@
 define([
-    '../jqplugins/autosubmit'
-], function() {
+        "jquery",
+        "../jqplugins/autosubmit"
+], function($) {
     var autosubmit = {
         initContent: function(root) {
             $("[data-autosubmit]", root)

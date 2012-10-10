@@ -1,12 +1,8 @@
 define([
     'require',
-    './core/store',
-    './logging'
-], function(require) {
-    // XXX: not nice
-    var mapal = require('./core/store'), // XXX Should this be core/init ?
-        getLogger = require('./logging').getLogger;
-
+    "jquery",
+    './core/init'
+], function(require, $, mapal) {
     var extractParameters = function(params, sources) {
         var tmp,
             j,

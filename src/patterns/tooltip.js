@@ -7,10 +7,10 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
     '../core/init',
     '../utils'
-], function(require, mapal, utils) {
+], function($, mapal, utils) {
     var tooltip = {
         count: 0,
 

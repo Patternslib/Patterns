@@ -7,9 +7,9 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
     '../core/init'
-], function(require, mapal) {
+], function($, mapal) {
     var selfHealing = {
         options: {
             confirm: null,
