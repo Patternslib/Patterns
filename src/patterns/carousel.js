@@ -57,15 +57,14 @@ define([
                     
                         var $links = $("a[href=#" + this.id+"]");
                         $panel_links = $panel_links.add($links);
-                        $links.on("click.carousel", null, control, carousel.onPanelLinkClick);
+                        $links.on("click.carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
                     }).end()
                     .on("slide_complete.carousel", null, $panel_links, carousel.onSlideComplete);
             });
         },
 
         onPanelLinkClick: function(event) {
-            var control = event.data;
-            control.gotoPage(index, false);
+            event.data.control.gotoPage(event.data.index, false);
             event.preventDefault();
         },
 
