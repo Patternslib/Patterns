@@ -75,8 +75,7 @@ define([
     width.register("medium", 0, 1109);
     width.register("wide", 1110, null);
 
-    // Register as active pattern to prevent errors on clicks.
-    // XXX: hack, what does this do?
+    // Register these so data-injection can execute actions from these patterns
     mapal.patterns.fancybox = require('./patterns/fancybox');
     mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
     mapal.patterns.modal = require('./patterns/old_modal');
