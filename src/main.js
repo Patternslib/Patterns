@@ -67,6 +67,7 @@ define([
     './patterns/focus',
     './patterns/checkedflag',
     './patterns/width',
+    './patterns/placeholder',
     './patterns/validate'
 ], function(require, $) {
     var mapal = require('./core/init'),
