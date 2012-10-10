@@ -4,7 +4,7 @@ define([
     './logging'
 ], function(require) {
     // XXX: not nice
-    var mapal = require('./core/store'),
+    var mapal = require('./core/store'), // XXX Should this be core/init ?
         getLogger = require('./logging').getLogger;
 
     var extractParameters = function(params, sources) {
