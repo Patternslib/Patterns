@@ -10,7 +10,7 @@ patterns library. Below is a minimal skeleton for a pattern.
    define([
        'require'
        '../registry'
-   ], function(require, registry) {
+   ], function(require, patterns) {
        var pattern_spec = {
            name: "mypattern",
        };
@@ -18,23 +18,12 @@ patterns library. Below is a minimal skeleton for a pattern.
        patterns.register(mypattern);
    });
 
-This skeleton does two things:
+This skeleton does several things:
 
 * lines 1-4 use `RequireJS <http://requirejs.org/>`_ to load the patterns
   registry.
 * lines 5-8 create an object which defines this pattern.
 * line 10 registers the pattern.
-
-
-.. js:function:: patterns.register(specification)
-
-   :param object specification: Object specifying how pattern interfaces
-
-   The required options in the definition object are:
-
-   * ``name``:: short (one-word) name of the pattern.
-
-   Any other keys are ignored.
 
 
 Markup patterns
@@ -79,11 +68,10 @@ Patterns can also act as jQuery plugins. This can be done by providing a
 
 .. code-block:: javascript
    :linenos:
-   :emphasize-lines: 4
+   :emphasize-lines: 3
 
    var pattern_spec = {
        name: "mypattern",
-       trigger: ".tooltip, [data-tooltip]",
        jquery_plugin: true,
 
        init: function($el) {
@@ -100,10 +88,10 @@ Patterns can also act as jQuery plugins. This can be done by providing a
    };
 
 
-Line 4 tells the patterns framework that this pattern can also be used as a
-jQuery plugin. In order to prevent conflicts the name of the jQuery function
-will be created by combining the word ``pattern`` with the capitalized name
-of the pattern. You can then interact with it using the standard jQuery API:
+Line 3 tells the patterns framework that this pattern can be used as a jQuery
+plugin. In order to prevent conflicts the name of the jQuery function will be
+created by combining the word ``pattern`` with the capitalized name of the
+pattern. You can then interact with it using the standard jQuery API:
 
 .. code-block:: javascript
 
@@ -125,15 +113,14 @@ example pattern to do this.
 
 .. code-block:: javascript
    :linenos:
-   :emphasize-lines: 3,7,8,9,13
+   :emphasize-lines: 3,6,7,8,12
 
    define([
        'require',
        'core/parser',
        '../registry'
-   ], function(require, Parser, registry) {
+   ], function(require, Parser, patterns) {
        var Parser = new Parser();
-
        parser.add_argument("delay", 500);
        parser.add_argument("auto-play", true);
 
@@ -151,3 +138,43 @@ parser instance and add our options with their default values. In the init
 method we use the parser to parse the ``data-mypattern`` attribute for the
 element. Finally we combine that with the options might have been provided
 through the jQuery plugin API.
+
+Creating a JavaScript API
+-------------------------
+
+Sometimes you may want to create a JavaScript API that is not tied to DOM
+elements, so exposing it as a jQuery plugin does not make sense. This can
+be done using the standard RequireJS mechanism by creating returning an
+API object form.
+
+.. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 13-17
+
+   define([
+       'require',
+       '../registry'
+   ], function(require, registry) {
+       var pattern_spec = {
+           init: function($el) {
+               ...
+           };
+       };
+
+       registry.register(pattern_spec);
+
+       var public_api = {
+           method1: function() { .... },
+           method2: function() { .... }
+       };
+       return public_api;
+   });
+
+
+You can then use the API by using require to retrieve the API object for
+the pattern
+
+.. code-block:: javascript
+
+  var pattern_api = require("patterns/mypattern");
+  pattern_api.method1();
