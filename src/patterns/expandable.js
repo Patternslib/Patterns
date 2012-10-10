@@ -1,6 +1,6 @@
 define([
-    'require'
-], function(require) {
+    'jquery'
+], function($) {
     var init = function($el, opts) {
         // make sure inject folders have a ul
         $el.find('.folder[data-inject]:not(:has(ul))').append('<ul />');

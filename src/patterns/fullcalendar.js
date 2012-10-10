@@ -1,10 +1,10 @@
 define([
-    'require',
+    'jquery',
     '../logging',
     '../utils',
     "../core/init",
     '../lib/dist/fullcalendar/fullcalendar'
-], function(require, logging, utils, mapal) {
+], function($, logging, utils, mapal) {
     var log = logging.getLogger('fullcalendar');
 
     var fullcalendar = {

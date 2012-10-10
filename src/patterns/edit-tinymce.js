@@ -1,9 +1,9 @@
 define([
-    'require',
+    'jquery',
     '../lib/ajax',
     '../logging',
     '../../lib/tiny_mce/tiny_mce_src'
-], function(require, ajax, logging) {
+], function($, ajax, logging) {
     var log = logging.getLogger('edit-tinymce');
 
     var init = function($el, opts) {

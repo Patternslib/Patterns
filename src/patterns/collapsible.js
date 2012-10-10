@@ -1,7 +1,7 @@
 define([
-    'require',
+    'jquery',
     '../logging'
-], function(require, logging) {
+], function($, logging) {
     var log = logging.getLogger('collapsible');
 
     var init = function($el, opts) {

@@ -1,7 +1,7 @@
 define([
-    '../jqplugins/switch'
-
-], function() {
+        "jquery",
+        "../jqplugins/switch"
+], function($) {
     var switcher = {
         initContent: function(root) {
             $("[data-switch]", root).patternSwitch();

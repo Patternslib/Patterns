@@ -7,8 +7,8 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require'
-], function(require) {
+    'jquery'
+], function($) {
     var floatingPanelContextual = {
         options: {
             events: {

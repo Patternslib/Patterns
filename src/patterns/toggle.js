@@ -7,10 +7,10 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
     '../logging',
     "../core/parser"
-], function(require, logging, Parser) {
+], function($, logging, Parser) {
     var log = logging.getLogger('switch'),
         parser = new Parser();
 

@@ -1,10 +1,10 @@
 define([
-        "require",
+        "jquery",
         "../logging",
         "../core/parser",
         "../lib/inject",
         "ajaxify"
-], function(require, logging, Parser, injectlib, ajaxify) {
+], function($, logging, Parser, injectlib, ajaxify) {
     var parser = new parser.Parser("source; target; replace; pre; post; append; prepend"),
         log = logging.getLogger('inject');
 

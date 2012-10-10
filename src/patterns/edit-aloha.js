@@ -1,9 +1,9 @@
 define([
-    'require',
-    '../lib/aloha-loader',
+    'jquery',
     '../logging',
-    'ajaxify'
-], function(require, _, logging, ajaxify) {
+    'ajaxify',
+    '../lib/aloha-loader'
+], function($, logging, ajaxify) {
     var Aloha = window.Aloha,
         log = logging.getLogger('edit');
 

@@ -7,14 +7,14 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
     '../utils',
     '../registry',
     // XXX: belong to the patterns once they are done
     '../lib/jquery.form/jquery.form',
     '../3rdparty/jquery.tools.min',
     '../jquery-ext'
-], function(require, utils, registry) {
+], function($, utils, registry) {
 var mapal = {
     injection: {
         options: {

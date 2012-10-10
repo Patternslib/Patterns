@@ -1,8 +1,9 @@
 define([
-    '../logging',
-    "../../lib/jquery.validate",
-    "../../lib/jquery-validation-1.9.0/additional-methods"
-], function(logging) {
+        "jquery",
+        '../logging',
+        "../../lib/jquery.validate",
+        "../../lib/jquery-validation-1.9.0/additional-methods"
+], function($, logging) {
     var log = logging.getLogger('validate');
 
     var init = function($el, opts) {
