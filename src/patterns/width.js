@@ -9,11 +9,8 @@ define([
 ], function($) {
     var widthClasses = {};
 
-    var width = {
-        register: function(cls, minimum, maximum) {
-            widthClasses[cls] = { minimum: minimum,
-                                  maximum: maximum };
-        },
+    var width_pattern = {
+        name: "width",
 
         update: function() {
             var width = $(window).width(),
@@ -28,16 +25,22 @@ define([
                     $body.removeClass(cls);
                 }
             }
-        },
-
-
-        init: function() {
-            width.update();
-            $(window).bind("resize.width", width.update);
         }
     };
 
-    return width;
+    width_pattern.update();
+    $(window).bind("resize.width", width_pattern.update);
+
+//    patterns.register(width_pattern.name, width_pattern);
+
+    var public_api = {
+        register: function(cls, minimum, maximum) {
+            widthClasses[cls] = { minimum: minimum,
+                                  maximum: maximum };
+        }
+    };
+
+    return public_api;
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

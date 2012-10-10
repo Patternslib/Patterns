@@ -104,7 +104,6 @@ define([
     mapal.patterns.setclass = require('./patterns/setclass');
     mapal.patterns.focus = require('./patterns/focus');
     mapal.patterns.checkedflag = require('./patterns/checkedflag');
-    mapal.patterns.width = require('./patterns/width');
 
     // new-style patterns
     mapal.newstyle = require('./patterns');
