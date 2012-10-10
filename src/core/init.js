@@ -9,11 +9,12 @@
 define([
     'require',
     '../utils',
+    '../registry',
     // XXX: belong to the patterns once they are done
     '../lib/jquery.form/jquery.form',
     '../3rdparty/jquery.tools.min',
     '../jquery-ext'
-], function(require, utils) {
+], function(require, utils, registry) {
 var mapal = {
     injection: {
         options: {
@@ -466,7 +467,7 @@ var mapal = {
 
     // Setup a DOM tree.
     initContent: function(root) {
-        mapal.registry.scan(root);
+        registry.scan(root);
 
         for (var passivePatternName in mapal.passivePatterns) {
             var passivePattern = mapal.passivePatterns[passivePatternName];

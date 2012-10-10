@@ -1,10 +1,10 @@
 define([
     'require',
-    '../lib/jquery.form/jquery.form',
     '../logging',
-    '../patterns'
-], function(require) {
-    var log = require('../logging').getLogger('modal');
+    "../core/parser",
+    '../lib/jquery.form/jquery.form'
+], function(require, logging, Parser) {
+    var log = ogging.getLogger('modal');
 
     var init = function($el, opts) {
         var $first = $el.children(':first'),
@@ -16,8 +16,7 @@ define([
                 '<button type="button" class="close-panel">Close</button>');
 
         if (opts.$trigger) {
-            var Parser = require('../core/parser'),
-                parser = new Parser(),
+            var parser = new Parser(),
                 trigger_opts;
             parser.add_argument("class");
             trigger_opts = parser.parse(opts.$trigger.data("modal"));
