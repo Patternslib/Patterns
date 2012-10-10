@@ -56,8 +56,12 @@ define([
                             return;
                     
                         var $links = $("a[href=#" + this.id+"]");
-                        $panel_links = $panel_links.add($links);
+                        if (index===control.currentPage)
+                            $links.addClass("current");
+                        else
+                            $links.removeClass("current");
                         $links.on("click.carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+                        $panel_links = $panel_links.add($links);
                     }).end()
                     .on("slide_complete.carousel", null, $panel_links, carousel.onSlideComplete);
             });
