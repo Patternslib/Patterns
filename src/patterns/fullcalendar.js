@@ -3,15 +3,16 @@ define([
     '../logging',
     '../utils',
     "../core/init",
+    "../registry",
     '../lib/dist/fullcalendar/fullcalendar'
-], function($, logging, utils, mapal) {
+], function($, logging, utils, mapal, patterns) {
     var log = logging.getLogger('fullcalendar');
 
     var fullcalendar = {
-        initContent: function(root) {
-            var $calroot = $(root).find('.full-calendar');
-            if (!$calroot || $calroot.length === 0) return;
+        name: "fullcalendar",
+        trigger: ".full-calendar",
 
+        init: function($calroot) {
             // XXX: should be within the calendar
             var $filter = $('.calendar-filters');
             var initMonths = function($root) {
@@ -28,16 +29,17 @@ define([
             $filter.find('.check-list .groups label').hide();
 
             // initialize existing months
-            initMonths($calroot);
+            fullcalendar.initMonths($calroot);
 
             // wait for additional months
-            $calroot.bind('inject', function(ev, opts) {
-                initMonths($(ev.target));
+            $calroot.on('inject', function(ev, opts) {
+                fullcalendar.initMonths($(ev.target));
             });
-            $calroot.bind('injection', function(event, month) {
-                initMonths($(month));
+            $calroot.on('injection', function(event, month) {
+                fullcalendar.initMonths($(month));
             });
         },
+
         initMonth: function($month, $filter) {
             var $events = $('.events', $month);
             if ($events.length === 0) { return; }
@@ -81,6 +83,7 @@ define([
             });
             mapal.initContent($calendar);
         },
+
         parseEvents: function($events, $filter) {
             // show groups that are mentioned
             $filter.find(
@@ -173,7 +176,8 @@ define([
             return events;
         }
     };
-    return fullcalendar;
+
+    patterns.register(fullcalendar);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

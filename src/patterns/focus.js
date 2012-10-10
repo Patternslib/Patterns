@@ -5,16 +5,13 @@
  * Copyright 2012 Simplon B.V.
  */
 define([
-    'jquery'
-], function($) {
+    'jquery',
+    "../registry"
+], function($, patterns) {
     var focus = {
-        init: function() {
-            $(document)
-               .on("focus", ":input", focus.onFocus)
-               .on("blur", ":input", focus.onBlur);
-        },
+        name: "focus",
 
-        initContent: function(root) {
+        onNewContent: function() {
             if ($(document.activeElement).is(":input")) {
                 focus._markFocus(document.activeElement);
             }
@@ -40,7 +37,11 @@ define([
         }
     };
 
-    return focus;
+    $(document)
+        .on("focus.patterns", ":input", focus.onFocus)
+        .on("blur.patterns", ":input", focus.onBlur)
+        .on("newContent", focus.onNewContent);
+    patterns.register(focus);
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

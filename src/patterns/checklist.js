@@ -1,14 +1,18 @@
 define([
         "jquery",
+        "../registry",
         "../jqplugins/checklist"
-], function($) {
+], function($, patterns) {
     var checklist = {
-        initContent: function(root) {
-            $("[data-checklist]").patternChecklist();
+        name: "checklist",
+        trigger: "[data-checklist]",
+
+        init: function($root) {
+            $root.patternChecklist();
         }
     };
 
-    return checklist;
+    patterns.register(checklist);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

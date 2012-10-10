@@ -1,16 +1,20 @@
 define([
         "jquery",
+        "../registry",
         "../jqplugins/autosubmit"
-], function($) {
+], function($, patterns) {
     var autosubmit = {
-        initContent: function(root) {
-            $("[data-autosubmit]", root)
+        name: "autosubmit",
+        trigger: "[data-autosubmit]",
+
+        init: function($root) {
+            $root
                 .find("input[type-search]").andSelf()
                 .patternAutosubmit();
         }
     };
 
-    return autosubmit;
+    patterns.register(autosubmit);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
