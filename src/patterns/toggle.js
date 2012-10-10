@@ -8,9 +8,10 @@
  */
 define([
     'jquery',
+    "../registry",
     '../logging',
     "../core/parser"
-], function($, logging, Parser) {
+], function($, patterns, logging, Parser) {
     var log = logging.getLogger('switch'),
         parser = new Parser();
 
@@ -19,8 +20,11 @@ define([
     parser.add_argument("value");
 
     var toggle = {
-        initContent: function(root) {
-            $("[data-toggle]", root).on("click", toggle.onClick);
+        name: "toggle",
+        trigger: "[data-toggle]",
+
+        init: function($el) {
+            $el.on("click.patterns", toggle.onClick);
         },
 
         onClick: function(event) {
@@ -58,11 +62,11 @@ define([
                     }
                 }
             }
-
         }
     };
 
-    return toggle;
+    patterns.register(toggle);
+    return toggle; // XXX for tests only
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

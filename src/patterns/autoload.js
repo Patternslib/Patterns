@@ -1,12 +1,14 @@
 define([
-    "jquery"
-], function($) {
+    "jquery",
+    "../registry"
+], function($, patterns) {
     var autoload = {
-        initContent: function(root) {
-            var $root = $(root);
+        name: "autoload",
+        trigger: ".autoLoading-visible",
 
+        init: function($root) {
             // find all autoloads
-            $root.find('.autoLoading-visible:not(.cant-touch-this)').each(function() {
+            $root.each(function() {
                 var $autoload = $(this),
                     $scrollable = $autoload.parents(":scrollable");
 
@@ -43,7 +45,7 @@ define([
         }
     };
 
-    return autoload;
+    patterns.register(autoload);
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

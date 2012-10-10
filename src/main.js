@@ -75,33 +75,12 @@ define([
     width.register("medium", 0, 1109);
     width.register("wide", 1110, null);
 
-    // register our patterns
-    // rethink naming once all patterns are migrated to this style
-    mapal.passivePatterns.transforms = require('./patterns/transforms');
-    mapal.passivePatterns.autofocus = require('./patterns/autofocus');
-    mapal.passivePatterns.autoload = require('./patterns/autoload');
-    mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
-    mapal.passivePatterns.checklist = require('./patterns/checklist');
-    mapal.passivePatterns.depends = require('./patterns/depends');
-    mapal.passivePatterns.menu = require('./patterns/menu');
-    mapal.passivePatterns.sorting = require('./patterns/sorting');
-    mapal.passivePatterns.switcher = require('./patterns/switch');
-    mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
-    mapal.passivePatterns.toggle = require('./patterns/toggle');
-    mapal.passivePatterns.tooltip = require('./patterns/tooltip');
-    mapal.passivePatterns.focus = require('./patterns/focus');
-    mapal.passivePatterns.checkedflag = require('./patterns/checkedflag');
-
     // Register as active pattern to prevent errors on clicks.
     // XXX: hack, what does this do?
-    mapal.patterns.tooltip = { execute: function() {} };
     mapal.patterns.fancybox = require('./patterns/fancybox');
     mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
     mapal.patterns.modal = require('./patterns/old_modal');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
-    mapal.patterns.setclass = require('./patterns/setclass');
-    mapal.patterns.focus = require('./patterns/focus');
-    mapal.patterns.checkedflag = require('./patterns/checkedflag');
 
     $(document).on('inject.patterns.scan', function(ev, opts) {
         mapal.initContent(ev.target, opts);

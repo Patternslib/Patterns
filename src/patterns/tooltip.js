@@ -8,27 +8,24 @@
  */
 define([
     'jquery',
+    "../registry",
     '../core/init',
     '../utils'
-], function($, mapal, utils) {
+], function($, patterns, mapal, utils) {
     var tooltip = {
+        name: "tooltip",
+        trigger: "[data-tooltip]",
+
         count: 0,
 
-        init: function() {
-        },
-
-        initContent: function(root) {
-            var $root = $(root);
-            var init = function($trigger) {
-                var options = utils.parseOptions($trigger.data("tooltip"));
+        init: function($root) {
+            return $root.each(function() {
+                var $trigger = $(this),
+                    options = utils.parseOptions($trigger.data("tooltip"));
                 options.title = $trigger.attr("title");
                 $trigger.removeAttr("title");
                 $trigger.data("mapal.tooltip", options);
                 tooltip.setupShowEvents($trigger);
-            };
-            if ($root.is('[data-tooltip]')) init($root);
-            $("*[data-tooltip]", $root).each(function() {
-                init($(this));
             });
         },
 
@@ -439,7 +436,8 @@ define([
         }
     };
 
-    return tooltip;
+    patterns.register(tooltip);
+    return tooltip; // XXX Replace for tests
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
