@@ -34,8 +34,12 @@ define([
                 // elements
                 if ($match.length > 0) {
                     plog.debug('Initialising:', $match);
-                    $initialised = pattern.init($match);
-                    plog.debug('Initialised:', $initialised);
+                    try {
+                        $initialised = pattern.init($match);
+                        plog.debug('Initialised:', $initialised);
+                    } catch (e) {
+                        plog.critical("Error initialising pattern", e);
+                    }
                 }
             }
         },
@@ -60,3 +64,5 @@ define([
     };
     return _;
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
