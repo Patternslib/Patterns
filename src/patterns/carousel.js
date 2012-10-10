@@ -6,10 +6,11 @@
  */
 define([
     "jquery",
+    "../registry",
     "../logging",
     "../core/parser",
     "../3rdparty/jquery.anythingslider"
-], function($, logging, Parser) {
+], function($, patterns, logging, Parser) {
     var log = logging.getLogger("carousel"),
         parser = new Parser();
 
@@ -24,7 +25,8 @@ define([
     parser.add_argument("time-animation", 600);
 
     var carousel = {
-        markup_trigger: ".pt-carousel",
+        name: "carousel",
+        trigger: ".pt-carousel",
 
         init: function($el) {
             return $el.each(function() {
@@ -62,7 +64,8 @@ define([
         }
     };
 
-    return carousel;
+    patterns.register(carousel);
+    return carousel;  // XXX For testing only
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

@@ -68,6 +68,7 @@ define([
     './patterns/checkedflag',
     './patterns/width',
     './patterns/placeholder',
+    './patterns/carousel',
     './patterns/validate'
 ], function(require, $) {
     var mapal = require('./core/init'),
