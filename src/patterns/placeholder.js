@@ -1,19 +1,18 @@
 define([
-    '../logging',
+    "../registry",
+    '../3rdparty/modernizr-2.0.6',
     '../3rdparty/jquery.placeholder'
-], function(logging) {
-    var log = logging.getLogger('placeholder');
+], function(patterns) {
+    var pattern_spec = {
+        name: "placeholder",
+        trigger: ":input[placeholder]",
 
-    var init = function($el, opts) {
-        $el.placeholder();
+        init: function($el) {
+            return $el.placeholder();
+        }
     };
 
-    var pattern = {
-        markup_trigger: '[placeholder]',
-        register_jquery_plugin: false,
-        init: init
-    };
-    return pattern;
+    patterns.register(pattern_spec);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
