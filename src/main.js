@@ -66,8 +66,8 @@ define([
     './patterns/tooltip',
     './patterns/focus',
     './patterns/checkedflag',
-    './patterns/width'
-    // below here only patterns that register themself when loaded
+    './patterns/width',
+    './patterns/validate'
 ], function(require, $) {
     var mapal = require('./core/init'),
         width = require('./patterns/width');
