@@ -12,7 +12,8 @@ define([
         }
     };
 
-    patterns.register(pattern_spec);
+    if (!Modernizr.input.placeholder)
+        patterns.register(pattern_spec);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
