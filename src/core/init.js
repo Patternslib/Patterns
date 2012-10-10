@@ -465,8 +465,8 @@ var mapal = {
     },
 
     // Setup a DOM tree.
-    initContent: function(root, opts) {
-        mapal.newstyle.scan(root, opts);
+    initContent: function(root) {
+        mapal.registry.scan(root);
 
         for (var passivePatternName in mapal.passivePatterns) {
             var passivePattern = mapal.passivePatterns[passivePatternName];

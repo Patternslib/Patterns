@@ -49,6 +49,7 @@ define([
     './core/init',
     './core/parser',
     './core/store',
+    './registry',
     './patterns',
     './patterns/transforms',
     './patterns/autofocus',
@@ -70,6 +71,7 @@ define([
     './patterns/focus',
     './patterns/checkedflag',
     './patterns/width'
+    // below here only patterns that register themself when loaded
 ], function(require, $) {
     var mapal = require('./core/init'),
         width = require('./patterns/width');
@@ -105,8 +107,7 @@ define([
     mapal.patterns.focus = require('./patterns/focus');
     mapal.patterns.checkedflag = require('./patterns/checkedflag');
 
-    // new-style patterns
-    mapal.newstyle = require('./patterns');
+    mapal.registry = require('./registry');
 
     $(document).on('inject.patterns.scan', function(ev, opts) {
         mapal.initContent(ev.target, opts);
