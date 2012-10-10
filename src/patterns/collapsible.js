@@ -28,24 +28,26 @@ define([
             // set initial state
             if ((opts && opts.closed) || $el.hasClass("closed")) {
                 $el.removeClass("closed");
-                _.close($el, 0);
+                _.close($el, {duration: 0});
             } else {
                 $el.addClass("open");
                 $el.trigger('patterns-collapsible-open');
             }
 
             // bind to click events
-            $ctrl.bind("click", function() { _.toggle($el, "fast"); });
+            $ctrl.on("click.collapsible", function() { _.toggle($el, "fast"); });
 
             return $el;
         },
         destroy: function($el) {
+            var $ctrl = $el.children(':first');
+            $ctrl.off('.collapsible');
         },
         open: function($el, opts) {
             opts = opts || {};
             if ($el.hasClass("open")) return null;
 
-            toggle($el, opts.duration);
+            _.toggle($el, opts.duration);
 
             // allow for chaining
             return $el;
@@ -53,7 +55,7 @@ define([
         close: function($el, opts) {
             opts = opts || {};
             if ($el.hasClass("closed")) return null;
-            toggle($el, opts.duration);
+            _.toggle($el, opts.duration);
 
             // allow for chaining
             return $el;
