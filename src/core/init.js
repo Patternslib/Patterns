@@ -338,21 +338,9 @@ var mapal = {
             }
         },
 
-        'listeners': {
-            'onBeforeStart': [],
-            'onFinished': [],
-            'onExecuted': []
-        },
-
         // Enable DOM-injection from anchors
         init: function () {
             var key;
-            // initalize the listeners for each of the patterns
-            for (key in mapal.patterns) {
-                if (mapal.patterns[key].execute) {
-                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners );
-                }
-            }
 
             // Call the initialization function for each of the patterns
             for (key in mapal.patterns) {
@@ -403,13 +391,9 @@ var mapal = {
                         var paramObjs = utils.extractParameters(params, sources);
                         if ( mapal.patterns[patt]  ) {
                             // only do something if we found the pattern
-                            if (!mapal.patterns[patt].passive) {
+                            if (!mapal.patterns[patt].passive)
                                 // ignore the pattern if it is not active
-                                if (mapal.patterns.callListener($a, patt, 'onBeforeStart')) {
-                                    mapal.patterns[patt].execute($a, url, sources, paramObjs, e);
-                                    mapal.patterns.callListener($a, patt, 'onExecuted');
-                                }
-                            }
+                                mapal.patterns[patt].execute($a, url, sources, paramObjs, e);
                         } else {
                             alert('Pattern[WARN]: the pattern "' + patt + '" was not found');
                         }
@@ -421,34 +405,6 @@ var mapal = {
 
             $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
             $(mapal.patterns.options.search.submit.join(", ")).live("submit.mapal", handlePattern );
-        },
-
-        callListener: function( elem, pattern, event ) {
-            var weContinue = true;
-            $(mapal.patterns[pattern].listeners[event]).each(function(){
-                if (weContinue && !this(elem) ) {
-                    weContinue = false;
-                    return;
-                }
-            });
-
-            return weContinue;
-        },
-
-        registerListener: function(patterns, event, listener) {
-            if (typeof patterns == 'string') {
-                if (mapal.patterns[patterns].listeners[event]) {
-                    mapal.patterns[patterns].listeners[event].push(listener);
-                }
-            } else {
-                $(patterns).each( function() {
-                    if (mapal.patterns[this]) {
-                        if (mapal.patterns[this].listeners[event]) {
-                            mapal.patterns[this].listeners[event].push(listener);
-                        }
-                    }
-                });
-            }
         }
     },
 

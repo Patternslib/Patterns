@@ -94,8 +94,6 @@ define([
                         selfHealing.remove($target);
                     }, selfHealing.options.displayTime*1000));
                 });
-
-                mapal.patterns.callListener($(elem), 'selfHealing', 'onFinished');
             });
         },
 
