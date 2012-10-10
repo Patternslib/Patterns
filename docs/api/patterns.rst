@@ -102,6 +102,32 @@ pattern. You can then interact with it using the standard jQuery API:
    $("#title").patternMypattern("othermethod", {option: "value"});
 
 
+Injection actions
+-----------------
+
+The injection mechanism supports invoking arbitrary actions after loading new
+content. This is handled through *injection actions*. These are handled by an
+``inject`` method on a pattern.
+
+.. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 3
+
+   var pattern_spec = {
+       name: "mypattern",
+
+       inject: function($trigger, content) {
+           ...
+       }
+   };
+
+The inject methods gets a number of parameters:
+
+* ``$trigger`` is the element that triggered the injection. 
+* ``content`` is an array containing the loaded content.
+
+
+
 Pattern configuration
 ---------------------
 
