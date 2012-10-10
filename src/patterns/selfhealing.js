@@ -8,10 +8,8 @@
  */
 define([
     'require',
-    '../core/init',
-    '../utils'
-], function(require) {
-    var mapal = require('../core/init');
+    '../core/init'
+], function(require, mapal) {
     var selfHealing = {
         options: {
             confirm: null,

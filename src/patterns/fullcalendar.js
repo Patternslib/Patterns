@@ -1,11 +1,11 @@
 define([
     'require',
-    '../lib/dist/fullcalendar/fullcalendar',
     '../logging',
-    '../utils'
-], function(require) {
-    var log = require('../logging').getLogger('fullcalendar'),
-        utils = require('../utils');
+    '../utils',
+    "../core/init",
+    '../lib/dist/fullcalendar/fullcalendar'
+], function(require, logging, utils, mapal) {
+    var log = logging.getLogger('fullcalendar');
 
     var fullcalendar = {
         initContent: function(root) {
@@ -45,8 +45,7 @@ define([
                 year = ym[0],
                 month = Number(ym[1]) - 1,
                 $calendar = $('<div class="calendar">\n</div>')
-                    .insertAfter($events),
-                mapal = require('../core/init');
+                    .insertAfter($events);
             var refetch = function() {
                 $calendar.fullCalendar('refetchEvents');
                 // XXX: replace with mutator event listener
