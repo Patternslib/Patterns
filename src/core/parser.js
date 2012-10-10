@@ -88,6 +88,9 @@ define([
 
                 // Handle all named parameters
                 for (i=0; i<parts.length; i++) {
+                    if (!parts[i])
+                        continue;
+
                     matches = parts[i].match(this.named_param_pattern);
                     if (!matches) {
                         log.warn("Positional parameters not allowed after named parameters");
