@@ -15,6 +15,7 @@ define([
             $closebutton = $(
                 '<button type="button" class="close-panel">Close</button>');
 
+        opts = opts || {};
         if (opts.$trigger) {
             var parser = new Parser(),
                 trigger_opts;
