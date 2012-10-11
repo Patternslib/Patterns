@@ -10,7 +10,6 @@ requirejs.config({
         //"modernizr": "3rdparty/modernizr-2.0.6",
         //"jquery.anythingslider": "3rdparty/jquery.anythingslider",
         //"jquery.autoSuggest": "3rdparty/jquery.autosuggest",
-        //"jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
         //"jquery.form": "lib/jquery.form/jquery.form",
         //"jquery.placeholder": "3rdparty/jquery.placeholder",
         //"jquery.tools": "3rdparty/jquery.tools.min"
@@ -60,7 +59,6 @@ define([
     './patterns/depends',
     './patterns/edit-tinymce',
     './patterns/expandable',
-    './patterns/fancybox',
     './patterns/floatingpanel',
     './patterns/focus',
     './patterns/fullcalendar',
@@ -88,7 +86,6 @@ define([
     width.register("wide", 1110, null);
 
     // Register these so data-injection can execute actions from these patterns
-    mapal.patterns.fancybox = require('./patterns/fancybox');
     mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
     mapal.patterns.modal = require('./patterns/old_modal');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
