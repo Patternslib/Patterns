@@ -13,7 +13,6 @@ require([
     '../src/main',
     '../src/registry',
 //    'spec!./spec/aloha',
-    'spec!./spec/collapsible',
 //    'spec!./spec/edit',
     'spec!./spec/inject',
     'spec!./spec/modal',
@@ -22,7 +21,6 @@ require([
     var registry = require('../src/registry'),
         spec_names = [
 //            'aloha',
-            'collapsible',
 //            'edit',
             'inject',
             'modal',
