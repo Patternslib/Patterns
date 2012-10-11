@@ -1,0 +1,79 @@
+/* @group Demo site */
+
+body {
+	max-width: 910px;
+	margin-left: auto;
+	margin-right: auto;
+	width: auto;
+	padding-left: 20px;
+	padding-right: 20px;
+	position: relative;
+	padding-top: 90px;
+}
+
+/* @group Anchor */
+
+a {
+	color: #325974;
+}
+
+
+
+/* @end */
+
+/* @group Global nav */
+
+#global-nav {
+	background-image: url(texture-light-grain.png);
+	padding: 100px 16px 16px 23px;
+	position: absolute;
+	width: 90%;
+	max-width: 910px;
+	top: 0;
+	transform: rotate(-1.5deg);
+	margin-top: -80px;
+	font: 30px "Courier New", Courier, mono;
+	letter-spacing: 2px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.2)
+}
+
+#global-nav a {
+	text-decoration: none;
+}
+
+#global-nav a:before {
+	content: " ";
+	border: 2px dashed #325974;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	bottom: 10px;
+	left: 10px;
+}
+
+#global-nav #nav-patterns {
+	z-index: 1;
+	margin-top: -74px;
+	transform: rotate(0deg);
+}
+
+#global-nav #nav-demo {
+	z-index: 2;
+	left: 210px;
+}
+
+#global-nav #nav-get-it {
+	right: 0;
+	width: auto;
+}
+
+#global-nav #nav-get-it:before {
+	display: none;
+	box-shadow: none;
+}
+
+/* @end */
+
+
+
+/* @end */
