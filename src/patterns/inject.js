@@ -10,7 +10,8 @@ define([
     "../lib/ajax",
     "../lib/inject",
     "../logging",
-    "../registry"
+    "../registry",
+    "../3rdparty/URI"
 ], function($, Parser, ajax, injectlib, logging, registry) {
     var log = logging.getLogger('inject'),
         register = registry.register;
