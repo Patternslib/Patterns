@@ -91,15 +91,6 @@ define([
             });
             _.execute(cfg);
         },
-        onCollapsibleOpen: function(ev) {
-            var cfg = $(this).data('patterns.inject');
-            if (Array.prototype.isArray.call(cfg)) {
-                log.error('Multi injection not supported for .collapsible');
-                return;
-            }
-            cfg.$targets = $.find('.panel-content', this);
-            _.execute(cfg);
-        },
         onFolderOpen: function(ev) {
             if (ev && ev.target !== ev.currentTarget) return;
             var cfg = $(this).data('patterns.inject');
