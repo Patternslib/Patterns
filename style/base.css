@@ -29,6 +29,7 @@ body {
 	background-image: url(texture-light-grain.png);
 	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
 	margin-top: 0;
+	color: #525151;
 }
 
 body:before {
