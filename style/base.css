@@ -111,13 +111,15 @@ body:before {
 #download .column p {
 	font-size: 12px;
 	line-height: 20px;
+	margin-bottom: 12px;
 }
 
 #download textarea.url {
 	width: 90%;
-	font-size: 14px;
-	line-height: 20px;
-	padding: 8px;
+	font-size: 12px;
+	line-height: 18px;
+	padding: 6px;
+	height: 49px;
 }
 
 #download img {
@@ -232,10 +234,14 @@ h1 {
 
 h2 {
 	margin-top: 0;
+	font-weight: normal;
+	font-style: normal;
+	letter-spacing: 2px;
 }
 
 h3 {
 	margin-top: 0;
+	font-size: 16px;
 }
 
 
