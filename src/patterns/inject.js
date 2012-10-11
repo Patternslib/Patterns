@@ -2,14 +2,16 @@
  * changes to previous injection implementations
  * - no support for data-injection anymore, switch to new data-inject
  * - no support for data-href-next anymore, switch to data-inject: next-href
+ * - XXX: add support for forms, see remnants in inject1 and ajaxify
  */
 define([
     "jquery",
     "../core/parser",
     "../lib/ajax",
+    "../lib/inject",
     "../logging",
     "../registry"
-], function($, Parser, ajax, logging, registry) {
+], function($, Parser, ajax, injectlib, logging, registry) {
     var log = logging.getLogger('inject'),
         register = registry.register;
 
@@ -19,6 +21,7 @@ define([
         // will be joined with ","
         trigger: [
             "a.inject,a[data-inject]",
+//            "form.inject,form[data-inject]",
             ".collapsible[data-inject]",
             ".folder[data-inject]"
         ],
