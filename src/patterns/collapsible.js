@@ -10,7 +10,7 @@ define([
 ], function($, logging, registry) {
     var log = logging.getLogger('collapsible');
 
-    var _ = {
+    var pattern_spec = {
         name: "collapsible",
         trigger: ".collapsible",
         init: function($el, opts) {
@@ -28,14 +28,14 @@ define([
             // set initial state
             if ((opts && opts.closed) || $el.hasClass("closed")) {
                 $el.removeClass("closed");
-                _.close($el, {duration: 0});
+                pattern_spec.close($el, {duration: 0});
             } else {
                 $el.addClass("open");
                 $el.trigger('patterns-collapsible-open');
             }
 
             // bind to click events
-            $ctrl.on("click.collapsible", function() { _.toggle($el, "fast"); });
+            $ctrl.on("click.collapsible", function() { pattern_spec.toggle($el, "fast"); });
 
             return $el;
         },
@@ -47,7 +47,7 @@ define([
             opts = opts || {};
             if ($el.hasClass("open")) return null;
 
-            _.toggle($el, opts.duration);
+            pattern_spec.toggle($el, opts.duration);
 
             // allow for chaining
             return $el;
@@ -55,7 +55,7 @@ define([
         close: function($el, opts) {
             opts = opts || {};
             if ($el.hasClass("closed")) return null;
-            _.toggle($el, opts.duration);
+            pattern_spec.toggle($el, opts);
 
             // allow for chaining
             return $el;
@@ -65,10 +65,10 @@ define([
             var $panel = $el.find('.panel-content');
             if ($el.hasClass("closed")) {
                 $el.trigger('patterns-collapsible-open');
-                _._transit($el, $panel, "closed", "open", opts.duration);
+                pattern_spec._transit($el, $panel, "closed", "open", opts.duration);
             } else {
                 $el.trigger('patterns-collapsible-close');
-                _._transit($el, $panel, "open", "closed", opts.duration);
+                pattern_spec._transit($el, $panel, "open", "closed", opts.duration);
             }
 
             // allow for chaining
@@ -76,6 +76,7 @@ define([
         },
 
         _transit: function($el, $panel, from_cls, to_cls, duration) {
+            duration = duration || 0; // Handle undefined/null durations
             $el.removeClass(from_cls);
             if (duration) $el.addClass("in-progress");
             $panel.slideToggle(duration, function() {
@@ -85,7 +86,8 @@ define([
         }
     };
 
-    return registry.register(_);
+    registry.register(pattern_spec);
+    return pattern_spec; // XXX For testing only
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
