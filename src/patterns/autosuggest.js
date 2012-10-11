@@ -12,14 +12,14 @@ define([
 ], function($, logging, Parser, registry, utils) {
     var log = logging.getLogger('autosuggest');
 
-    var parser = new Parser();
+    var parser = new Parser("autosuggest");
     parser.add_argument('words');
     parser.add_argument('prefill');
     parser.add_argument('asHtmlId', false);
 
     var _ = {
-        name: 'autoSuggest',
-        trigger: "input.auto-suggest",
+        name: 'autosuggest',
+        trigger: "input.pat-autosuggest",
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.map(function() {
@@ -30,12 +30,12 @@ define([
             var cfg = $.extend({}, _.extractConfig($el), opts);
             $el.data("patterns.autoSuggest", cfg);
 
-            $el.on('keydown.patternAutoSuggest', _.onKeyDown);
+            $el.on('keydown.pat-autosuggest', _.onKeyDown);
 
             // are we autosubmit?
-            var autosubmit = $el.is('.auto-submit') ||
-                    ($el.parents('.auto-submit').length > 0);
-            log.debug('auto-submit', autosubmit, $el);
+            var autosubmit = $el.is('.pat-autosubmit') ||
+                    ($el.parents('.pat-autosubmit').length > 0);
+            log.debug('autosubmit', autosubmit, $el);
 
             var $form;
             if (autosubmit) {
@@ -67,8 +67,8 @@ define([
             return $el;
         },
         destroy: function($el) {
-            $el.off('.patternAutoSuggest');
-            $el.data('patterns.autoSuggest', null);
+            $el.off('.pat-autosuggest');
+            $el.data('patterns.autosuggest', null);
             // XXX: destroy the jqueryPlugin
         },
 
@@ -81,9 +81,9 @@ define([
             };
 
             // fetch config from first parent found
-            var $cfg = $el.parents('[data-auto-suggest-config]:first');
+            var $cfg = $el.parents('[data-pat-autosuggest]:first');
             cfg = $.extend(
-                {}, cfg, _.parser.parse($cfg.attr('data-auto-suggest-config')));
+                {}, cfg, _.parser.parse($cfg.attr('data-pat-autosuggest')));
 
             if (cfg.prefill && (cfg.prefill.slice(0,1) === ',')) {
                 cfg.prefill = cfg.prefill.slice(1);

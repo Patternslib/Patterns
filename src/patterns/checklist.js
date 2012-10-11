@@ -5,7 +5,7 @@ define([
 ], function($, patterns) {
     var checklist = {
         name: "checklist",
-        trigger: "[data-checklist]",
+        trigger: ".pat-checklist",
 
         init: function($root) {
             $root.patternChecklist();

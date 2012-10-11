@@ -8,7 +8,7 @@ define([
 
     var _ = {
         name: "breadcrumbs",
-        trigger: 'nav.breadcrumbs',
+        trigger: 'nav.pat-breadcrumbs',
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.map(function() {
@@ -18,7 +18,7 @@ define([
 
             // wrap elements in a DIV that will be shifted around
             var $content = $el.children()
-                    .wrapAll('<div class="breadcrumbs-content"></div>').parent();
+                    .wrapAll('<div class="pat-breadcrumbs-content"></div>').parent();
 
             // set fixed width on content
             var width = $content.children().toArray().reduce(function(acc, el) {
@@ -60,7 +60,7 @@ define([
                         $el.addClass('shifting');
                         $ctrl.removeClass('shift-right');
                         $ctrl.addClass('shift-left');
-                        $ctrl.on('click.breadcrumbs', shifter(true));
+                        $ctrl.on('click.pat-breadcrumbs', shifter(true));
                         $ctrl.click();
                     } else {
                         // a shifter that keeps state
@@ -74,18 +74,18 @@ define([
                             shifting = false;
                             $el.removeClass('shifting');
                             $ctrl.removeClass('shift-left shift-right');
-                            $ctrl.off('.breadcrumbs');
+                            $ctrl.off('.pat-breadcrumbs');
                         });
                     }
                 }
             };
             maybeshift();
-            $(window).on('resize.breadcrumbs', maybeshift);
+            $(window).on('resize.pat-breadcrumbs', maybeshift);
 
             return $el;
         },
         destroy: function($el) {
-            $el.off('.breadcrumbs');
+            $el.off('.pat-breadcrumbs');
         }
     };
     return registry.register(_);

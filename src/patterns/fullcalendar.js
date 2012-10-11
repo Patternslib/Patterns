@@ -10,7 +10,7 @@ define([
 
     var fullcalendar = {
         name: "fullcalendar",
-        trigger: ".full-calendar",
+        trigger: ".pat-fullcalendar",
 
         init: function($calroot) {
             // XXX: should be within the calendar
@@ -32,10 +32,10 @@ define([
             fullcalendar.initMonths($calroot);
 
             // wait for additional months
-            $calroot.on('inject', function(ev, opts) {
+            $calroot.on('inject.pat-fullcalendar', function(ev, opts) {
                 fullcalendar.initMonths($(ev.target));
             });
-            $calroot.on('injection', function(event, month) {
+            $calroot.on('injection.pat-fullcalendar', function(event, month) {
                 fullcalendar.initMonths($(month));
             });
         },

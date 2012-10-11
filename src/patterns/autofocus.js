@@ -4,7 +4,7 @@ define([
 ], function($, patterns) {
     var autofocus = {
         name: "autofocus",
-        trigger: ":input.autofocus,:input[autofocus]",
+        trigger: ":input.pat-autofocus,:input[autofocus]",
 
         init: function($el) {
             for (var i=0; i<$el.length; i+=1)

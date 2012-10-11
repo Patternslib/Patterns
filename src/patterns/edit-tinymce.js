@@ -9,7 +9,7 @@ define([
 
     var _ = {
         name: "editTinyMCE",
-        trigger: 'form textarea.edit-tinymce',
+        trigger: 'form textarea.pat-edit-tinymce',
         init: function($el, opts) {
             var $form = $el.parents('form'),
                 $resetbtn = $form.find('[type=reset]'),
@@ -64,7 +64,7 @@ define([
 
             // XXX: we hijack the reset button, but currently only reset
             // the tiny textarea.
-            $resetbtn.on('click', (function(id) {
+            $resetbtn.on('click.pat-edit-tinymce', (function(id) {
                 return function(ev) {
                     ev.preventDefault();
                     tinyMCE.editors[id].load();
