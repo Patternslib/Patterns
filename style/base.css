@@ -75,6 +75,85 @@ body>section:after {
 	margin-top: 30px;
 }
 
+body:before {
+
+	background-size: auto auto;
+}
+
+/* @group Column */
+
+.column {
+	float: left;
+}
+
+
+
+@media (max-width: 767px) {
+
+.column {
+	width: 100% !important;
+}
+} {
+	
+}
+
+
+
+/* @end */
+
+/* @group Section download */
+
+#download .column {
+	text-align: center;
+	width: 33.33333%;
+}
+
+#download .column p {
+	font-size: 12px;
+	line-height: 20px;
+}
+
+#download textarea.url {
+	width: 90%;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 8px;
+}
+
+#download img {
+
+}
+
+#download a {
+	text-decoration: none;
+}
+
+#download a:hover {
+	text-decoration: underline;
+}
+
+#download em.label {
+	clear: left;
+	display: block;
+}
+
+
+
+/* @end */
+
+/* @group Column */
+
+@media (max-width: 767px) {
+
+body:before {
+	clear: both;
+}
+}
+
+
+
+/* @end */
+
 /* @group Site header */
 
 #site-header {
