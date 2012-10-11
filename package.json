@@ -11,7 +11,7 @@
 	"dependencies": {
 	    "jquery": ">1.7"
 	},
-	"homepage": "https://gitub.com/cornae/Patterns",
+	"homepage": "https://gitub.com/Patternslib/Patterns",
 	"docs": "http://readthedocs.org/docs/patterns",
 	"maintainers": [
 	   {
@@ -22,7 +22,11 @@
 	   {
 		   "name": "Cornelis Kolbach",
 		   "url": "http://cornae.com"
+	   },
+	   {
+		   "name": "Florian Friesdorf",
+		   "email": "flo@chaoflow.net"
 	   }
 	],
-	"files": ["build/patterns.js"]
+	"files": ["dist/patterns.js"]
 }
