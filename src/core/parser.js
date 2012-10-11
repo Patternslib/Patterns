@@ -10,9 +10,10 @@ define([
 ], function(logging) {
     var log = logging.getLogger('parser');
 
-    function ArgumentParser(spec) {
+    function ArgumentParser(spec, name) {
         this.params = [];
         this.defaults = {};
+        this.attribute = "data-pat-" + name;
         if (spec)
             this.add_spec(spec);
     }
@@ -41,7 +42,7 @@ define([
             }
         },
 
-        parse: function(parameter, defaults) {
+        _parse: function(parameter) {
             if (typeof parameter==="number")
                 parameter = parameter.toString();
             if (parameter && parameter.match(/&&/)) {
@@ -50,19 +51,7 @@ define([
                 }, this);
             }
 
-            var types = {},
-                opts = {}, i, name;
-
-            for (i in this.defaults)
-                types[i] = this.defaults[i]===null ? "null" : typeof this.defaults[i];
-
-            // Copy all defaults to opts.
-            if (typeof defaults === "object")
-                for (i in defaults)
-                    opts[i] = defaults[i];
-
-            for (i in this.defaults)
-                opts[i] = opts[i] || this.defaults[i];
+            var result = {}, i, name;
 
             if (parameter) {
                 var parts = parameter.split(";"),
@@ -103,12 +92,25 @@ define([
                 }
             }
 
-            // Resolve references and do type coercion
+            // Resolve references
             for (name in opts) {
                 var value = opts[name];
 
                 if (typeof value==="string" && opts[name].slice(0,1) === "$")
-                    value = opts[value.slice(1)];
+                    opts[name]=opts[value.slice(1)];
+            }
+
+            return opts;
+        },
+
+        _coerce: function(data) {
+            var i, name, value;
+
+            for (i in this.defaults)
+                types[i]=this.defaults[i]===null ? "null" : typeof this.defaults[i];
+
+            for (name in data) {
+                value = data[name];
 
                 if (typeof value !== types[name]) {
                     switch (types[name]) {
@@ -143,10 +145,55 @@ define([
                             break;
                     }
                 }
-                opts[name] = value;
+                data[name]=value;
+            }
+            return data;
+        },
+
+        parse: function(el, defaults, multiple) {
+            if (typeof defaults==="boolean" && multiple===undefined) {
+                multiple=defaults;
+                defaults={};
             }
 
-            return opts;
+            var stack = [[this.defaults]];
+            if (typeof defaults==="object")
+                stack.push([defaults]);
+
+            var $parents = $(el).parents(),
+                i, data, final_length, frame;
+            for (i=$parents.length-1; i>=0; i--) {
+                data = $parents.eq(i).attr(this.attribute);
+                if (data) {
+                    if (data.match(/&&/))
+                        frame=data.split(/\s*&&\s*/).map(this._parse);
+                    else
+                        frame=[this._parse(data)];
+                    maxlen = Math.max(frame.length, maxlen);
+                    stack.push(frame);
+                }
+            }
+
+            if (!multiple)
+                final_length=1;
+
+            var results, frame_length, x, xf;
+            for (i=0; i<final_length; i++)
+                results.push({});
+
+            for (i=0; i<stack.lenght; i++) {
+                frame=stack[i];
+                frame_length=frame.length-1;
+
+                for (x=0; x<final_length; x++) {
+                    xf=(x>frame_length) ? frame_length : x;
+                    results[i]=$.extend(results[x], frame[xf]);
+                }
+            }
+            
+            for (i=0; i<final_length; i++)
+                results[i]=this._coerce(results[i]);
+            return multiple ? results : results[0];
         }
     };
 
