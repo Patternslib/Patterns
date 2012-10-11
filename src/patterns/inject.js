@@ -16,21 +16,20 @@ define([
         register = registry.register;
 
     var _ = {
-        // XXX: do we need a name?
         name: "inject",
         // will be joined with ","
         trigger: [
-            "a.inject,a[data-inject]",
-//            "form.inject,form[data-inject]",
-            ".collapsible[data-inject]",
-            ".folder[data-inject]"
+            "a.pat-inject,a[data-pat-inject]," +
+                "form.pat-inject,form[data-pat-inject]," +
+                ".collapsible[data-pat-inject]," +
+                ".folder[data-pat-inject]"
         ],
         init: function($el, opts) {
             // transformations / fixups
-            if (!$el.hasClass('inject')) $el.addClass('inject');
+            if (!$el.hasClass('pat-inject')) $el.addClass('pat-inject');
 
             var cfg = $.extend({}, _.extractConfig($el), opts);
-            $el.data("patterns.inject", cfg);
+            $el.data("patterns.pat-inject", cfg);
 
             // In case next-href is specified the anchor's href will
             // be set to it after the injection is triggered. In case
@@ -48,16 +47,16 @@ define([
 
             // setup event handlers
             if ($el.is('a')) {
-                $el.on("click.inject", _.onClick);
+                $el.on("click.pat-inject", _.onClick);
             } else if ($el.is('.collapsible')) {
-                $el.on("patterns-collapsible-open.inject", _.onCollapsibleOpen);
+                $el.on("patterns-collapsible-open.pat-inject", _.onCollapsibleOpen);
             } else if ($el.is('.folder')) {
-                $el.on("patterns-folder-open.inject", _.onFolderOpen);
+                $el.on("patterns-folder-open.pat-inject", _.onFolderOpen);
             }
             return $el;
         },
         destroy: function($el) {
-            $el.off('.inject');
+            $el.off('.pat-inject');
             $el.data('patterns.inject', null);
             return $el;
         },

@@ -12,7 +12,7 @@ define([
 
     var pattern_spec = {
         name: "collapsible",
-        trigger: ".collapsible",
+        trigger: ".pat-collapsible",
         init: function($el, opts) {
             // create collapsible structure
             var $ctrl = $el.children(':first'),
@@ -35,13 +35,13 @@ define([
             }
 
             // bind to click events
-            $ctrl.on("click.collapsible", function() { pattern_spec.toggle($el, "fast"); });
+            $ctrl.on("click.pat-collapsible", function() { pattern_spec.toggle($el, "fast"); });
 
             return $el;
         },
         destroy: function($el) {
             var $ctrl = $el.children(':first');
-            $ctrl.off('.collapsible');
+            $ctrl.off('.pat-collapsible');
         },
         open: function($el, opts) {
             opts = opts || {};

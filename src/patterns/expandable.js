@@ -4,10 +4,10 @@ define([
 ], function($, registry) {
     var _ = {
         name: "expandable",
-        trigger: "ul.expandable",
+        trigger: "ul.pat-expandable",
         init: function($el, opts) {
             // make sure inject folders have a ul
-            $el.find('.folder[data-inject]:not(:has(ul))').append('<ul />');
+            $el.find('.folder[data-pat-inject]:not(:has(ul))').append('<ul />');
 
             // find all folders that contain a ul
             var $folders = $el.find('li.folder:has(ul)');
@@ -26,7 +26,7 @@ define([
             $ctrls.each(function() {
                 var $ctrl = $(this),
                     $folder = $ctrl.parent();
-                $ctrl.on('click', function(ev) {
+                $ctrl.on('click.pat-expandable', function(ev) {
                     $folder.toggleClass('open closed');
                     $folder.filter('.open').trigger('patterns-folder-open');
                 });

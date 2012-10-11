@@ -4,7 +4,7 @@ define([
 ], function($, patterns) {
     var depends = {
         name: "depends",
-        trigger: "[class*='dependsOn-']",
+        trigger: "[class*='pat-depends-']",
 
         verify: function($slave, command) {
             var result=[],

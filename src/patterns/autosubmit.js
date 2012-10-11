@@ -5,7 +5,7 @@ define([
 ], function($, patterns) {
     var autosubmit = {
         name: "autosubmit",
-        trigger: "[data-autosubmit]",
+        trigger: ".pat-autosubmit",
 
         init: function($root) {
             $root

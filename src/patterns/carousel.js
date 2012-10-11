@@ -26,7 +26,7 @@ define([
 
     var carousel = {
         name: "carousel",
-        trigger: ".pt-carousel",
+        trigger: ".pat-carousel",
 
         init: function($el) {
             return $el.each(function() {
@@ -62,10 +62,10 @@ define([
                             $links.addClass("current");
                         else
                             $links.removeClass("current");
-                        $links.on("click.carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+                        $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
                         $panel_links = $panel_links.add($links);
                     }).end()
-                    .on("slide_complete.carousel", null, $panel_links, carousel.onSlideComplete);
+                    .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
             });
         },
 
