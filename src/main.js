@@ -75,14 +75,9 @@ define([
     './patterns/toggle',
     './patterns/tooltip',
     './patterns/transforms',
-    './patterns/validate',
-    './patterns/width'
+    './patterns/validate'
 ], function(require, $) {
-    var mapal = require('./core/init'),
-        width = require('./patterns/width');
-    width.register("narrow", 0, 780);
-    width.register("medium", 0, 1109);
-    width.register("wide", 1110, null);
+    var mapal = require('./core/init');
 
     // Register these so data-injection can execute actions from these patterns
     mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
