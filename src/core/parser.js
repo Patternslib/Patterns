@@ -30,13 +30,8 @@ define([
         _parse: function(parameter) {
             if (typeof parameter==="number")
                 parameter = parameter.toString();
-            if (parameter && parameter.match(/&&/)) {
-                return parameter.split(/\s*&&\s*/).map(function(parameter) {
-                    return this.parse(parameter, defaults);
-                }, this);
-            }
 
-            var result = {}, i, name;
+            var opts = {}, i, name;
 
             if (parameter) {
                 var parts = parameter.split(";"),
@@ -89,7 +84,7 @@ define([
         },
 
         _coerce: function(data) {
-            var i, name, value;
+            var i, name, value, types={};
 
             for (i in this.defaults)
                 types[i]=this.defaults[i]===null ? "null" : typeof this.defaults[i];
@@ -162,7 +157,7 @@ define([
             if (!multiple)
                 final_length=1;
 
-            var results, frame_length, x, xf;
+            var results=[], frame_length, x, xf;
             for (i=0; i<final_length; i++)
                 results.push({});
 

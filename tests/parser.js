@@ -28,14 +28,14 @@ describe("Core / Parser", function() {
         it("Empty paramter", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
-            var opts = parser.parse(undefined, {"default": true});
+            var opts = parser.parse($(), {"default": true});
             expect(opts["default"]).toBe(true);
         });
 
         it("Positional argument", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
-            var opts = parser.parse(".MyClass");
+            var opts = parser.parse($(), ".MyClass");
             expect(opts.selector).toBe(".MyClass");
         });
 
