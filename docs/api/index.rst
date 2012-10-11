@@ -8,4 +8,3 @@ Javascript API
    patterns
    logging
    store
-   width
