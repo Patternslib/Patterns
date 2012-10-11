@@ -62,7 +62,7 @@ define([
     './patterns/floatingpanel',
     './patterns/focus',
     './patterns/fullcalendar',
-    //'./patterns/inject',
+    './patterns/inject',
     './patterns/menu',
     './patterns/modal',
     './patterns/navigation',
