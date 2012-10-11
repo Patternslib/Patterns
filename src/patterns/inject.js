@@ -167,10 +167,6 @@ define([
         execute: function(cfg) {
             var $this = $(this);
 
-            if (!Array.prototype.isArray.call(cfg)) {
-                cfg = [cfg];
-            }
-
             // sanity checks
             var url = cfg[0].url;
             if (!cfg.every(function(opts) {
