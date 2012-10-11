@@ -1,184 +1,244 @@
+/*
+ * changes to previous injection implementations
+ * - no support for data-injection anymore, switch to new data-inject
+ * - no support for data-href-next anymore, switch to data-inject: next-href
+ * - XXX: add support for forms, see remnants in inject1 and ajaxify
+ */
 define([
-        "jquery",
-        "../logging",
-        "../core/parser",
-        "../lib/inject",
-        "ajaxify"
-], function($, logging, Parser, injectlib, ajaxify) {
-    var parser = new parser.Parser("source; target; replace; pre; post; append; prepend"),
-        log = logging.getLogger('inject');
+    "jquery",
+    "../core/parser",
+    "../lib/ajax",
+    "../lib/inject",
+    "../logging",
+    "../registry"
+], function($, Parser, ajax, injectlib, logging, registry) {
+    var log = logging.getLogger('inject'),
+        register = registry.register;
 
-    var init = function($el, opts) {
-        // XXX: if opts, set them on $el as if defined there
+    var _ = {
+        // XXX: do we need a name?
+        name: "inject",
+        // will be joined with ","
+        trigger: [
+            "a.inject,a[data-inject]",
+//            "form.inject,form[data-inject]",
+            ".collapsible[data-inject]",
+            ".folder[data-inject]"
+        ],
+        init: function($el, opts) {
+            // transformations / fixups
+            if (!$el.hasClass('inject')) $el.addClass('inject');
 
-        // if the element referenced by href-next exists already,
-        // point to it and disable injection
-        var hrefnext = $el.data('href-next');
-        if (hrefnext && ($(hrefnext).length > 0)) {
-            log.debug('Skipping as href-next already exists', $(hrefnext));
-            return $el.attr({href: hrefnext});
-        }
+            var cfg = $.extend({}, _.extractConfig($el), opts);
+            $el.data("patterns.inject", cfg);
 
-        // ensure element is ajaxified
-        ajaxify.init($el);
-
-        // inject in case of successfull ajax request
-        $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
-            // retrieve href and split into url and default srcid
-            var href = ($el.is('form') ? $el.attr('action') : $el.attr('href')).split('#'),
-                srcid = href[1];
-
-            if (ev.target !== $el[0]) {
-                //log.debug('ignoring ajax event for', $(ev.target), 'not',  $el[0]);
-                return;
-            }
-            if (href[0] !== ajaxopts.url) {
-                //log.debug('ignoring ajax event', ajaxopts.url, href[0]);
-                return;
-            }
-            log.debug('executing', $el);
-
-            if (href.length > 2) {
-                log.warn('Ignoring additional source ids:', href.slice(2), $el);
+            // In case next-href is specified the anchor's href will
+            // be set to it after the injection is triggered. In case
+            // the next href already exists, we do not activate the
+            // injection but instead just change the anchors href.
+            // XXX: This is used in only one project for linked
+            // fullcalendars, it's sanity is wonky and we should
+            // probably solve it differently.
+            var $nexthref = cfg['next-href'] && $(cfg['next-href']);
+            if ($el.is('a') && $nexthref.length > 0) {
+                log.debug('Skipping as next href already exists', $nexthref);
+                // XXX: reconsider how the injection enters exhausted state
+                return $el.attr({href: cfg['next-href']});
             }
 
-            // fetch defaults from parents
-            var $defaults = $el.parents('[data-inject-defaults]'),
-                defaults = $defaults.toArray().reduceRight(function(acc, el) {
-                    var opts_str = $(el).attr('data-inject-defaults');
-                    return parser.parse(opts_str, acc);
-                }, {});
-
-            if (srcid) defaults.source = '#' + srcid;
-
-            var opts_str = $el.attr('data-inject') || "",
-                opts = parser.parse(opts_str, defaults);
-
-            // default: replace targets content with sources content
-            var method_name = "content";
-
-            // post-process options
-            if (opts.replace) {
-                opts.target = opts.replace;
-                method_name = "replace";
+            // setup event handlers
+            if ($el.is('a')) {
+                $el.on("click.inject", _.onClick);
+            } else if ($el.is('.collapsible')) {
+                $el.on("patterns-collapsible-open.inject", _.onCollapsibleOpen);
+            } else if ($el.is('.folder')) {
+                $el.on("patterns-folder-open.inject", _.onFolderOpen);
             }
-            if (opts.pre) {
-                opts.target = opts.pre;
-                method_name = "pre";
-            }
-            if (opts.post) {
-                opts.target = opts.post;
-                method_name = "post";
-            }
-            if (!opts.source) {
-                opts.source = '#__original_body';
-            }
-
-            injector($el, method_name, opts)(data);
-        });
-
-        return $el;
-    };
-
-
-    // create an injector to be run on ajax success
-    var injector = function($el, method_name, opts) {
-        // hack to support modals
-        var modal = $el.hasClass('modal');
-        if (modal) {
-            if (opts.target) log.warn('Overriding target for modal');
-            opts.target = '#modal';
-            method_name = "replace";
-        }
-
-        if (!opts.target) {
-            opts.target = opts.source;
-        }
-
-        var method = injectlib[method_name],
-            $targets = $(opts.target);
-
-
-        if ($targets.length === 0) {
-            if (opts.target.slice(0,1) !== '#') {
-                log.error('only id supported for non-existing target');
-            }
-            $targets = $('<div />').attr({id: opts.target.slice(1)});
-            $('body').append($targets);
-        }
-
-        var inject = function(data) {
-            // just copied from old inject code
-            data = data
-                .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                .replace(/<\/body(.*)>/gi,'</div>');
-            var $sources = $('<div/>').html(data).find(opts.source);
-
-            if ($sources.length === 0) {
-                log.error('Sources are empty for selector:', opts.source);
-                return;
-            }
-
-            if (modal) {
-                var $modal = $('<div id="modal" class="modal" />');
-                if ($sources.length === 1) {
-                    // for single source copy its content into the modal
-                    $sources = $modal.html($sources.html());
-                } else {
-                    // for multiple sources wrap them into a modal
-                    $sources = $modal.html($sources);
-                }
-            }
-
-            // perform injection, suppressing event
-            $targets = method($sources, $targets, true);
-
-            // XXX: think about making the href-next thing implicit
-            var hrefnext = $el.data('href-next');
-            if (hrefnext) {
-                $el.attr({href: hrefnext});
-                $el.off('.ajaxify');
-                $el.off('.inject.ajaxify');
-            }
-
-            // check whether we are inside a navigation element and
-            // set .current accordingly
-            var $nav = $el.parents('nav, .navigation');
-            if ($nav.length > 1) {
-                $nav = $($nav[0]);
-                log.warn('Inside multiple navigations, using innermost', $nav);
-            }
-            if ($nav.length > 0) {
-                $nav.children('.current').removeClass('current');
-                $el.addClass('current');
-            }
-
-            // trigger inject event
-            $targets.trigger('inject', {
-                method: method_name,
-                $sources: $sources,
-                $trigger_el: $el
-            });
-            $el.trigger('patterns-inject_interim-triggered');
-        };
-        return inject;
-    };
-
-    var pattern = {
-        initialised_class: 'inject',
-        markup_trigger: 'form.inject, form[data-inject]',
-        // XXX: unsupported
-        opts: {
-            "data-inject":
-            "source; target; replace; pre; post; append; prepend"
+            return $el;
         },
-        supported_tags: ['a', 'form'], // XXX: unsupported
-        init: init
-    };
+        destroy: function($el) {
+            $el.off('.inject');
+            $el.data('patterns.inject', null);
+            return $el;
+        },
 
-    return pattern;
+        onClick: function(ev) {
+            if (ev) ev.preventDefault();
+            var $this = $(this),
+                cfg = $this.data('patterns.inject');
+
+            // modals are special
+            if ($this.is('.modal')) {
+                if (cfg.slice) {
+                    log.error('Multi injection not supported for modals');
+                    return;
+                }
+                cfg.target = '#modal';
+                cfg.method = "replace";
+                cfg.modal = true;
+            }
+
+            cfg.forEach(function(cfg) {
+                // create non-existing targets
+                if (cfg.$targets.length === 0) {
+                    if (cfg.target.slice(0,1) !== '#') {
+                        log.error('only id supported for non-existing target');
+                    }
+                    cfg.$targets = $('<div />').attr({id: cfg.target.slice(1)});
+                    $('body').append(cfg.$targets);
+                } else {
+                    cfg.$targets = $(cfg.target);
+                }
+            });
+            _.execute(cfg);
+        },
+        onCollapsibleOpen: function(ev) {
+            var cfg = $(this).data('patterns.inject');
+            if (Array.prototype.isArray.call(cfg)) {
+                log.error('Multi injection not supported for .collapsible');
+                return;
+            }
+            cfg.$targets = $.find('.panel-content', this);
+            _.execute(cfg);
+        },
+        onFolderOpen: function(ev) {
+            if (ev && ev.target !== ev.currentTarget) return;
+            var cfg = $(this).data('patterns.inject');
+            if (Array.prototype.isArray.call(cfg)) {
+                log.error('Multi injection not supported for .folder');
+                return;
+            }
+            cfg.$targets = $.children('ul', this);
+            _.execute(cfg);
+        },
+
+        extractConfig: function($el) {
+            var cfg = {}, urlparts,
+                url = $el.attr('href') || $el.attr('action'),
+                parser = new Parser();
+            parser.add_argument('source');
+            parser.add_argument('target');
+            parser.add_argument('replace');
+            parser.add_argument('replacetagwithcontent');
+            parser.add_argument('pre');
+            parser.add_argument('post');
+            parser.add_argument('prepend');
+            parser.add_argument('append');
+            parser.add_argument('url', url);
+            parser.add_argument('method', 'content');
+
+            cfg = parser.parse($el.attr('data-inject') || "");
+
+            // Check for source id as part of url
+            if (!cfg.url) {
+                log.error('No URL specified');
+                return {};
+            }
+            urlparts = cfg.url.split('#');
+            cfg.url = urlparts[0];
+            cfg.source = cfg.source || '#' + urlparts[1];
+            if (urlparts.length > 2) {
+                log.error('Ignoring additional source ids:', urlparts.slice(2));
+            }
+
+            // injection method
+            ["replace", "replacetagwithcontent", "pre", "post",
+             "append", "prepend"
+            ].forEach(function(method) {
+                if (cfg[method]) {
+                    cfg.target = cfg[method];
+                    cfg.method = method;
+                }
+            });
+
+            // target defaults to source, source needed in this case
+            if (!cfg.target) {
+                if (!cfg.source) {
+                    log.error('Need source!');
+                }
+                cfg.target = cfg.source;
+            }
+
+            // source defaults to __original_body, produced by string
+            // -> element parsing code
+            cfg.source = cfg.source || '#__original_body';
+
+            return cfg;
+        },
+
+        execute: function(cfg) {
+            var $this = $(this);
+
+            if (!Array.prototype.isArray.call(cfg)) {
+                cfg = [cfg];
+            }
+
+            // sanity checks
+            var url = cfg[0].url;
+            if (!cfg.every(function(opts) {
+                return opts.url === url;
+            })) {
+                log.error('Unsupported different urls for multi-inject');
+                return;
+            };
+            if (!cfg.every(function(opts) {
+                return opts.$targets.length;
+            })) {
+                log.error('Missing targets, aborting');
+                return;
+            }
+
+            cfg.forEach(function(cfg) {
+                var method = _[cfg.method];
+                cfg.classes = 'injecting injecting-' + cfg.method;
+                cfg.$targets.addClass(cfg.classes);
+            });
+
+            var successHandler = function(data, status, jqxhr) {
+                var $data = $('<div/>').html(
+                    data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                        .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                        .replace(/<body(.*)>/gi, '<div id="__original_body">')
+                        .replace(/<\/body(.*)>/gi,'</div>')
+                );
+                cfg.forEach(function(cfg) {
+                    var $sources = $data.find(cfg.source);
+
+                    if ($sources.length === 0) {
+                        log.error(
+                            'Aborting, sources are empty for selector:', cfg.source, data);
+                        return;
+                    }
+
+                    if (cfg.modal) {
+                        var $modal = $('<div id="modal" class="modal" />');
+                        if ($sources.length === 1) {
+                            // for single source. copy its content into the modal
+                            $sources = $modal.html($sources.html());
+                        } else {
+                            // for multiple sources wrap them into a modal
+                            $sources = $modal.html($sources);
+                        }
+                    }
+
+                    injectlib[cfg.method]($sources, cfg.$targets, cfg);
+                    cfg.$targets.removeClass(cfg.classes);
+                });
+                $this.trigger('patterns-inject-triggered');
+
+                if (cfg['next-href']) {
+                    $this.attr({href: cfg['next-href']});
+                    _.destroy($this);
+                }
+            };
+
+            ajax($this, {
+                url: cfg[0].url,
+                success: successHandler
+            });
+        }
+    };
+    return register(_);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
