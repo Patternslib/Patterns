@@ -76,11 +76,12 @@ define([
             var components = cfg['load-content'].split('#'),
                 url = components[0],
                 id = components[1] ? '#' + components[1] : 'body',
-                opts = {
+                opts = [{
                     url: url,
+                    method: 'content',
                     source: id,
-                    target: '.panel-content'
-                };
+                    $targets: $('.panel-content', $el)
+                }];
             inject.execute(opts);
         },
         close: function($el, opts) {
