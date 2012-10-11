@@ -49,18 +49,36 @@ define([
                 settings.animationTime = options["time-animation"];
 
                 var $carousel = $(this).anythingSlider(settings),
-                    control = $carousel.data("AnythingSlider");
+                    control = $carousel.data("AnythingSlider"),
+                    $panel_links = $();
 
-                $carousel.children().each(function(index, el) {
-                    if (!this.id)
-                        return;
-                    $("a[href=#" + this.id+"]").on("click.carousel", function(event) {
-                        control.gotoPage(index, false);
-                        event.preventDefault();
-                    });
-                });
-
+                $carousel
+                    .children().each(function(index, el) {
+                        if (!this.id)
+                            return;
+                    
+                        var $links = $("a[href=#" + this.id+"]");
+                        if (index===control.currentPage)
+                            $links.addClass("current");
+                        else
+                            $links.removeClass("current");
+                        $links.on("click.carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+                        $panel_links = $panel_links.add($links);
+                    }).end()
+                    .on("slide_complete.carousel", null, $panel_links, carousel.onSlideComplete);
             });
+        },
+
+        onPanelLinkClick: function(event) {
+            event.data.control.gotoPage(event.data.index, false);
+            event.preventDefault();
+        },
+
+        onSlideComplete: function(event, slider) {
+            var $panel_links = event.data;
+            $panel_links.removeClass("current");
+            if (slider.$targetPage[0].id)
+                $panel_links.filter("[href=#" + slider.$targetPage[0].id + "]").addClass("current");
         }
     };
 
