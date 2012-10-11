@@ -35,7 +35,7 @@ define([
                 if ($match.length > 0) {
                     plog.debug('Initialising:', $match);
                     try {
-                        $initialised = pattern.init($match);
+                        pattern.init($match);
                         plog.debug('Initialised:', $initialised);
                     } catch (e) {
                         plog.critical("Error initialising pattern", e);
