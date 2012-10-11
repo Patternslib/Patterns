@@ -10,12 +10,10 @@ define([
 ], function(logging) {
     var log = logging.getLogger('parser');
 
-    function ArgumentParser(spec, name) {
+    function ArgumentParser(name) {
         this.params = [];
         this.defaults = {};
         this.attribute = "data-pat-" + name;
-        if (spec)
-            this.add_spec(spec);
     }
 
     ArgumentParser.prototype = {
@@ -26,20 +24,6 @@ define([
                 default_value = null;
             this.params.push(name);
             this.defaults[name] = default_value;
-        },
-
-        add_spec: function(spec) {
-            var parts = spec.split(';'),
-                parser = this;
-            for (var i=0, part; i<parts.length; i++) {
-                part = parts[i].trim();
-                var match = part.match(parser.named_param_pattern);
-                if (match) {
-                    parser.add_argument(match[1], match[2].trim());
-                } else {
-                    parser.add_argument(part);
-                }
-            }
         },
 
         _parse: function(parameter) {
