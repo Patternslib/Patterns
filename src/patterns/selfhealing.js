@@ -7,11 +7,9 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
-    '../core/init',
-    '../utils'
-], function(require) {
-    var mapal = require('../core/init');
+    'jquery',
+    '../core/init'
+], function($, mapal) {
     var selfHealing = {
         options: {
             confirm: null,
@@ -96,8 +94,6 @@ define([
                         selfHealing.remove($target);
                     }, selfHealing.options.displayTime*1000));
                 });
-
-                mapal.patterns.callListener($(elem), 'selfHealing', 'onFinished');
             });
         },
 

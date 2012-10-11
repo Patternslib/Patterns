@@ -48,7 +48,7 @@ function(logging, Parser) {
                 if (remove.indexOf('*')===-1) 
                     $targets.removeClass(remove);
                 else {
-                    remove = remove.replace(/[-[\]{}()+?.,\\^$|#\s]/g, "\\$&");
+                    remove = remove.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
                     remove = remove.replace(/[*]/g, ".*");
                     remove = new RegExp("^" + remove + "$");
                     $targets.filter("[class]").each(function() {

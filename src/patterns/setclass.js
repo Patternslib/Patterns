@@ -7,17 +7,20 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
+    "../registry",
     '../core/store',
     '../utils'
-], function(require, store, utils) {
+], function($, patterns, store, utils) {
     var storage = store.session("setclass");
 
     var setclass = {
-        init: function() {
+        name: "setclass",
+        trigger: "[data-setclass]",
 
-            $(document).on("click", '[data-setclass]').live('click', setclass.handleClick);
-            $("[data-setclass]").each(function() {
+        init: function($el) {
+            $el.on("click", setclass.onClick);
+            $el.each(function() {
                 var $this = $(this);
                 var obj = setclass.getObjFromParams(
                               $this,
@@ -76,7 +79,7 @@ define([
             return obj;
         },
 
-        handleClick: function(event) {
+        onClick: function(event) {
             var $this = $(this);
             if ($this.hasClass('cant-touch-this')) return;
             var params = utils.extractParameters('!' + $this.attr('data-setclass'));
@@ -137,7 +140,8 @@ define([
             return true;
         }
     };
-    return setclass;
+
+    patterns.register(setclass);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

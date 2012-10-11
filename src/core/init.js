@@ -7,22 +7,15 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
     '../utils',
+    '../registry',
     // XXX: belong to the patterns once they are done
     '../lib/jquery.form/jquery.form',
     '../3rdparty/jquery.tools.min',
     '../jquery-ext'
-], function(require, utils) {
+], function($, utils, registry) {
 var mapal = {
-    widthClasses: {},
-
-    // Utility methods
-    registerWidthClass: function(cls, minimum, maximum) {
-        mapal.widthClasses[cls] = { minimum: minimum,
-                                    maximum: maximum };
-    },
-
     injection: {
         options: {
             defaultModifier: "replace",
@@ -345,21 +338,9 @@ var mapal = {
             }
         },
 
-        'listeners': {
-            'onBeforeStart': [],
-            'onFinished': [],
-            'onExecuted': []
-        },
-
         // Enable DOM-injection from anchors
         init: function () {
             var key;
-            // initalize the listeners for each of the patterns
-            for (key in mapal.patterns) {
-                if (mapal.patterns[key].execute) {
-                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners );
-                }
-            }
 
             // Call the initialization function for each of the patterns
             for (key in mapal.patterns) {
@@ -410,13 +391,9 @@ var mapal = {
                         var paramObjs = utils.extractParameters(params, sources);
                         if ( mapal.patterns[patt]  ) {
                             // only do something if we found the pattern
-                            if (!mapal.patterns[patt].passive) {
+                            if (!mapal.patterns[patt].passive)
                                 // ignore the pattern if it is not active
-                                if (mapal.patterns.callListener($a, patt, 'onBeforeStart')) {
-                                    mapal.patterns[patt].execute($a, url, sources, paramObjs, e);
-                                    mapal.patterns.callListener($a, patt, 'onExecuted');
-                                }
-                            }
+                                mapal.patterns[patt].execute($a, url, sources, paramObjs, e);
                         } else {
                             alert('Pattern[WARN]: the pattern "' + patt + '" was not found');
                         }
@@ -428,92 +405,18 @@ var mapal = {
 
             $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
             $(mapal.patterns.options.search.submit.join(", ")).live("submit.mapal", handlePattern );
-        },
-
-        callListener: function( elem, pattern, event ) {
-            var weContinue = true;
-            $(mapal.patterns[pattern].listeners[event]).each(function(){
-                if (weContinue && !this(elem) ) {
-                    weContinue = false;
-                    return;
-                }
-            });
-
-            return weContinue;
-        },
-
-        registerListener: function(patterns, event, listener) {
-            if (typeof patterns == 'string') {
-                if (mapal.patterns[patterns].listeners[event]) {
-                    mapal.patterns[patterns].listeners[event].push(listener);
-                }
-            } else {
-                $(patterns).each( function() {
-                    if (mapal.patterns[this]) {
-                        if (mapal.patterns[this].listeners[event]) {
-                            mapal.patterns[this].listeners[event].push(listener);
-                        }
-                    }
-                });
-            }
-        }
-    },
-
-    // Utility method to update the width classes on the body
-    updateWidthClasses: function() {
-        var width = $(window).width(),
-            $body = $("body"),
-            limits;
-
-        for (var cls in mapal.widthClasses) {
-            if (mapal.widthClasses.hasOwnProperty(cls)) {
-                limits=mapal.widthClasses[cls];
-                if ((limits.minimum===null || limits.minimum<=width) && (limits.maximum===null || width<=limits.maximum)) {
-                    $body.addClass(cls);
-                } else {
-                    $body.removeClass(cls);
-                }
-            }
-        }
-    },
-
-
-    initWidthClasses: function() {
-        mapal.updateWidthClasses();
-        $(window).bind("resize.mapal", mapal.updateWidthClasses);
-    },
-
-    passivePatterns: {
-        'selectSiblingRadio': {
-            init: function() {},
-            initContent: function(root) {
-                $(root).find('.selectSiblingRadio').focus(function() {
-                    var $this = $(this);
-
-                    $this.parent().find('input[type=radio]').attr('checked', true);
-                });
-            }
         }
     },
 
     // Setup a DOM tree.
-    initContent: function(root, opts) {
-        mapal.newstyle.scan(root, opts);
-
-        for (var passivePatternName in mapal.passivePatterns) {
-            var passivePattern = mapal.passivePatterns[passivePatternName];
-            if (passivePattern.initContent && $.isFunction(passivePattern.initContent) ) {
-                passivePattern.initContent(root);
-            }
-        }
-
+    initContent: function(root) {
+        registry.scan(root);
         $(root).trigger("newContent", root);
     },
 
 
     // Setup global behaviour
     init: function() {
-        mapal.initWidthClasses();
         mapal.patterns.init();
     },
 

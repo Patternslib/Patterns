@@ -10,7 +10,6 @@ requirejs.config({
         //"modernizr": "3rdparty/modernizr-2.0.6",
         //"jquery.anythingslider": "3rdparty/jquery.anythingslider",
         //"jquery.autoSuggest": "3rdparty/jquery.autosuggest",
-        //"jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
         //"jquery.form": "lib/jquery.form/jquery.form",
         //"jquery.placeholder": "3rdparty/jquery.placeholder",
         //"jquery.tools": "3rdparty/jquery.tools.min"
@@ -44,69 +43,51 @@ requirejs.config({
 define([
     'require',
     'jquery',
-    './3rdparty/prefixfree.min',
+    './3rdparty/prefixfree',
     './3rdparty/modernizr-2.0.6',
     './core/init',
-    './core/parser',
-    './core/store',
-    './patterns',
-    './patterns/transforms',
     './patterns/autofocus',
     './patterns/autoload',
     './patterns/autosubmit',
+    './patterns/autosuggest',
+    './patterns/breadcrumbs',
+    './patterns/carousel',
+    './patterns/checkedflag',
     './patterns/checklist',
+    './patterns/chosen',
+    './patterns/collapsible',
     './patterns/depends',
-    './patterns/menu',
-    './patterns/sorting',
-    './patterns/switch',
-    './patterns/fancybox',
+    './patterns/edit-tinymce',
+    './patterns/expandable',
     './patterns/floatingpanel',
+    './patterns/focus',
     './patterns/fullcalendar',
+    //'./patterns/inject',
+    './patterns/menu',
+    './patterns/modal',
+    './patterns/navigation',
     './patterns/old_modal',
+    './patterns/placeholder',
     './patterns/selfhealing',
     './patterns/setclass',
+    './patterns/sorting',
+    './patterns/switch',
     './patterns/toggle',
     './patterns/tooltip',
-    './patterns/focus',
-    './patterns/checkedflag'
+    './patterns/transforms',
+    './patterns/validate',
+    './patterns/width'
 ], function(require, $) {
-    var mapal = require('./core/init');
-    mapal.registerWidthClass("narrow", 0, 780);
-    mapal.registerWidthClass("medium", 0, 1109);
-    mapal.registerWidthClass("wide", 1110, null);
+    var mapal = require('./core/init'),
+        width = require('./patterns/width');
+    width.register("narrow", 0, 780);
+    width.register("medium", 0, 1109);
+    width.register("wide", 1110, null);
 
-    mapal.store = require('./core/store');
-
-    // register our patterns
-    // rethink naming once all patterns are migrated to this style
-    mapal.passivePatterns.transforms = require('./patterns/transforms');
-    mapal.passivePatterns.autofocus = require('./patterns/autofocus');
-    mapal.passivePatterns.autoload = require('./patterns/autoload');
-    mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
-    mapal.passivePatterns.checklist = require('./patterns/checklist');
-    mapal.passivePatterns.depends = require('./patterns/depends');
-    mapal.passivePatterns.menu = require('./patterns/menu');
-    mapal.passivePatterns.sorting = require('./patterns/sorting');
-    mapal.passivePatterns.switcher = require('./patterns/switch');
-    mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
-    mapal.passivePatterns.toggle = require('./patterns/toggle');
-    mapal.passivePatterns.tooltip = require('./patterns/tooltip');
-    mapal.passivePatterns.focus = require('./patterns/focus');
-    mapal.passivePatterns.checkedflag = require('./patterns/checkedflag');
-
-    // Register as active pattern to prevent errors on clicks.
-    // XXX: hack, what does this do?
-    mapal.patterns.tooltip = { execute: function() {} };
-    mapal.patterns.fancybox = require('./patterns/fancybox');
+    // Register these so data-injection can execute actions from these patterns
     mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
     mapal.patterns.modal = require('./patterns/old_modal');
     mapal.patterns.selfHealing = require('./patterns/selfhealing');
-    mapal.patterns.setclass = require('./patterns/setclass');
-    mapal.patterns.focus = require('./patterns/focus');
-    mapal.patterns.checkedflag = require('./patterns/checkedflag');
-
-    // new-style patterns
-    mapal.newstyle = require('./patterns');
 
     $(document).on('inject.patterns.scan', function(ev, opts) {
         mapal.initContent(ev.target, opts);
