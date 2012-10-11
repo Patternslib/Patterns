@@ -17,16 +17,6 @@ body {
 	outline: none;
 }
 
-/* @group Injection */
-
-.injection-loading {
-	opacity: 0;
-}
-
-
-
-/* @end */
-
 /* @group Expandable tree */
 
 ul.expandable {
@@ -177,6 +167,16 @@ ul.expandable li a {
 	margin: 0;
 }
 /* @end */
+
+
+
+/* @end */
+
+/* @group Injection */
+
+.injection-loading {
+	opacity: 0;
+}
 
 
 
