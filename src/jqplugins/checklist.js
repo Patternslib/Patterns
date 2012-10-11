@@ -5,7 +5,7 @@ define([
         ],
 function($, logging, Parser) {
     var log = logging.getLogger("checklist"),
-        parser = new Parser();
+        parser = new Parser("checklist");
     parser.add_argument("select", ".functions .select-all");
     parser.add_argument("deselect", ".functions .deselect-all");
 
@@ -13,7 +13,7 @@ function($, logging, Parser) {
 
     $.patterns.checklist = {
         parse: function($trigger) {
-            var options = parser.parse($trigger.data("checklist"));
+            var options = parser.parse($trigger);
             if (Array.isArray(options)) {
                 log.error("checklist does not support multiple options");
                 options = options[0];

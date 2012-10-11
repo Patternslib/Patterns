@@ -12,13 +12,13 @@ describe("autosubmit-plugin", function() {
 
     describe("parse", function() {
         it("Shorthand notation", function() {
-            var $trigger = $("<input data-autosubmit='500'/>");
+            var $trigger = $("<input data-pat-autosubmit='500'/>");
                 options = pattern.parse($trigger);
             expect(options.delay).toBe("500");
         });
 
         it("Multiple options not accepted", function() {
-            var $trigger = $("<input data-autosubmit='500 && 400'/>");
+            var $trigger = $("<input data-pat-autosubmit='500 && 400'/>");
                 options = pattern.parse($trigger);
             expect(options.delay).toBe("500");
         });
