@@ -130,6 +130,8 @@ define([
             return data;
         },
 
+        // XXX: do we need defaults?
+        // XXX: we need overrides coming in via jquery plugin init
         parse: function($el, defaults, multiple) {
             if (typeof defaults==="boolean" && multiple===undefined) {
                 multiple=defaults;
