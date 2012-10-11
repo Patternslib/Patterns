@@ -27,17 +27,18 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	width: auto;
-	padding-left: 20px;
-	padding-right: 20px;
 	position: relative;
-	padding-top: 90px;
+	padding-top: 0;
 	background-image: url(texture-light-grain.png);
 	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
+	margin-top: 0;
 }
 
 body>section {
 	clear: both;
 	margin-bottom: 40px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 body>section:after {
@@ -45,6 +46,64 @@ body>section:after {
 	clear: both;
 	display: block;
 }
+
+/* @group Site header */
+
+#site-header {
+	margin-bottom: 40px;
+	float: left;
+	width: 100%;
+	background-color: #a49f9c;
+	border-top: 2px solid #d5cdc9;
+	margin-top: -6px;
+}
+
+
+
+/* @end */
+
+/* @group Global nav */
+
+#global-nav {
+	padding: 0;
+	font: 22px/50px "Courier New", Courier, mono;
+	letter-spacing: 2px;
+	margin: 0;
+}
+
+#global-nav a
+ {
+	text-decoration: none;
+	font-weight: bold;
+	float: left;
+	text-align: center;
+	padding-left: 30px;
+	padding-right: 30px;
+	display: inline-block;
+	color: white;
+}
+
+/*#global-nav:before {
+	content: " ";
+	border: 2px dashed #325974;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	bottom: 10px;
+	left: 10px;
+}*/
+
+/* @end */
+
+/* @group Image */
+
+img {
+	max-width: 100%;
+}
+
+
+
+/* @end */
 
 /* @group Headers */
 
@@ -82,39 +141,6 @@ a {
 }
 
 
-
-/* @end */
-
-/* @group Global nav */
-
-#global-nav {
-	padding: 100px 16px 16px 0;
-	position: absolute;
-	width: 90%;
-	max-width: 910px;
-	top: 0;
-	/*transform: rotate(-1.5deg);*/
-	margin-top: -80px;
-	font: 30px "Courier New", Courier, mono;
-	letter-spacing: 2px;
-	/*box-shadow: 0 0 10px rgba(0,0,0,0.2)*/
-}
-
-#global-nav a
- {
-	text-decoration: none;
-	font-weight: bold;
-}
-
-/*#global-nav:before {
-	content: " ";
-	border: 2px dashed #325974;
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	bottom: 10px;
-	left: 10px;
-}*/
 
 /* @end */
 
@@ -179,6 +205,23 @@ ol.usps li p {
 	padding-left: 8%;
 	padding-right: 8%;
 	position: relative;
+}
+
+@media (max-width: 767px) {
+
+ol.usps li {
+	clear: both;
+	width: 100%;
+}
+
+ol.usps li p {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+ol.usps li:before {
+	display: none;
+}
 }
 
 
@@ -867,5 +910,42 @@ label.pt-unchecked {
 }
 
 /* @end */
+
+/* @end */
+
+/* @group Hero unit */
+
+.hero-unit {
+	position: relative;
+}
+
+.hero-unit img {
+	
+}
+
+.hero-unit blockquote {
+	position: absolute;
+	z-index: 10;
+	margin: 0;
+	top: 80px;
+	left: 60px;
+	color: white;
+	font-weight: bold;
+	font-size: 30px;
+	width: 70%;
+	line-height: 45px;
+	text-shadow:  0 2px 2px black;
+}
+
+@media (max-width: 767px) {
+
+.hero-unit blockquote {
+	font-size: 16px;
+	line-height: 30px;
+	top: 50px;
+}
+}
+
+
 
 /* @end */
