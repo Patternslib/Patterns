@@ -149,10 +149,6 @@ define([
                 cfg.target = cfg.source;
             }
 
-            // source defaults to __original_body, produced by string
-            // -> element parsing code
-            cfg.source = cfg.source || '#__original_body';
-
             return cfg;
         },
 
@@ -175,7 +171,8 @@ define([
             }
 
             cfg.forEach(function(cfg) {
-                var method = _[cfg.method];
+                cfg.method = cfg.method || 'content';
+                cfg.source = cfg.source || '#__original_body';
                 cfg.classes = 'injecting injecting-' + cfg.method;
                 cfg.$targets.addClass(cfg.classes);
             });
