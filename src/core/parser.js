@@ -181,7 +181,7 @@ define([
             for (i=0; i<final_length; i++)
                 results.push({});
 
-            for (i=0; i<stack.lenght; i++) {
+            for (i=0; i<stack.length; i++) {
                 frame=stack[i];
                 frame_length=frame.length-1;
 
