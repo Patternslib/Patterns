@@ -143,44 +143,38 @@ describe("Core / Parser", function() {
         });
     });
 
-    describe("parse - type coercion", function() {
+    describe("_coerce", function() {
         it("Convert to number", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", 0);
-            expect(parser.parse("15").value).toBe(15);
+            expect(parser._coerce({value: "15"}).value).toBe(15);
         });
 
         it("Always use decimal notation for numbers", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", 0);
-            expect(parser.parse("010").value).toBe(10);
+            expect(parser._coerce({value: "010"}).value).toBe(10);
         });
 
         it("Convert to boolean", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", false);
-            expect(parser.parse("1").value).toBe(true);
-            expect(parser.parse("TRUE").value).toBe(true);
-            expect(parser.parse("YeS").value).toBe(true);
-            expect(parser.parse("0").value).toBe(false);
-            expect(parser.parse("False").value).toBe(false);
-            expect(parser.parse("n").value).toBe(false);
-            expect(parser.parse("unknown").value).toBe(false);
+            expect(parser._coerce({value: "1"}).value).toBe(true);
+            expect(parser._coerce({value: "TRUE"}).value).toBe(true);
+            expect(parser._coerce({value: "YeS"}).value).toBe(true);
+            expect(parser._coerce({value: "0"}).value).toBe(false);
+            expect(parser._coerce({value: "False"}).value).toBe(false);
+            expect(parser._coerce({value: "n"}).value).toBe(false);
+            expect(parser._coerce({value: "unknown"}).value).toBe(false);
         });
 
         it("Convert to number", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", 15);
-            expect(parser.parse("1").value).toBe(1);
-            expect(parser.parse("0").value).toBe(0);
-            expect(parser.parse("010").value).toBe(10);
-            expect(isNaN(parser.parse("ZZZ").value)).toBe(true);
-        });
-
-        it("Coerce defaults", function() {
-            var parser = new ArgumentParser();
-            parser.add_argument("value", false);
-            expect(parser.parse("", {value: 15}).value).toBe(true);
+            expect(parser._coerce({value: "1"}).value).toBe(1);
+            expect(parser._coerce({value: "0"}).value).toBe(0);
+            expect(parser._coerce({value: "010"}).value).toBe(10);
+            expect(isNaN(parser._coerce({value: "ZZZ"}).value)).toBe(true);
         });
     });
 });
