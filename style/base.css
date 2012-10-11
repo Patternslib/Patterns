@@ -99,6 +99,10 @@ body>section:after {
 
 /* @group Section download */
 
+#download {
+	padding-bottom: 40px;
+}
+
 #download .column {
 	text-shadow: white 0 1px 0;
 	text-align: center;
@@ -1053,7 +1057,7 @@ label.pt-unchecked {
 
 .hero-unit {
 	position: relative;
-	height: 410px;
+	height: 370px;
 }
 
 .hero-unit img {
