@@ -4,7 +4,7 @@ define([
     "../core/parser",
     '../lib/jquery.form/jquery.form'
 ], function($, logging, Parser) {
-    var log = ogging.getLogger('modal');
+    var log = logging.getLogger('modal');
 
     var init = function($el, opts) {
         var $first = $el.children(':first'),
