@@ -140,10 +140,10 @@ define([
             if (typeof defaults==="object")
                 stack.push([defaults]);
 
-            var $parents = $el.parents(),
+            var $els = $el.parents().add($el),
                 i, data, final_length, frame, maxlen;
-            for (i=$parents.length-1; i>=0; i--) {
-                data = $parents.eq(i).attr(this.attribute);
+            for (i=$els.length-1; i>=0; i--) {
+                data = $els.eq(i).attr(this.attribute);
                 if (data) {
                     if (data.match(/&&/))
                         frame=data.split(/\s*&&\s*/).map(this._parse);
