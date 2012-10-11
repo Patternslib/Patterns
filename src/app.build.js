@@ -2,7 +2,7 @@
     logLevel: 1,
     baseUrl: ".",
     mainConfigFile: "main.js",
-    out: "../dist/patterns.js",
+    out: "../bundles/patterns.js",
     optimize: "none",
 
     name: "main",
