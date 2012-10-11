@@ -38,7 +38,7 @@ define([
                         pattern.init($match);
                         plog.debug('Initialised:', $initialised);
                     } catch (e) {
-                        plog.critical("Error initialising pattern", e);
+                        plog.error("Error initialising pattern", e);
                     }
                 }
             }
