@@ -18,17 +18,15 @@ define([
 
     var _ = {
         name: "inject",
-        trigger: [
-            "a.pat-inject,a[data-pat-inject]," +
-                "form.pat-inject,form[data-pat-inject]," +
-                ".collapsible[data-pat-inject]," +
-                ".folder[data-pat-inject]"
-        ],
+        trigger: "a.pat-inject, form.pat-inject",
         init: function($el, opts) {
-            // transformations / fixups
-            if (!$el.hasClass('pat-inject')) $el.addClass('pat-inject');
-
-            var cfg = $.extend({}, _.extractConfig($el), opts);
+            $el.each(function() {
+                _._init($(this), opts);
+            });
+            return $el;
+        },
+        _init: function($el, opts) {
+            var cfg = _.extractConfig($el, opts);
             $el.data("patterns.pat-inject", cfg);
 
             // In case next-href is specified the anchor's href will
@@ -91,6 +89,7 @@ define([
             });
             _.execute(cfg);
         },
+        // XXX: this should be over in expandable
         onFolderOpen: function(ev) {
             if (ev && ev.target !== ev.currentTarget) return;
             var cfg = $(this).data('patterns.inject');
@@ -102,10 +101,10 @@ define([
             _.execute(cfg);
         },
 
-        extractConfig: function($el) {
+        extractConfig: function($el, opts) {
             var cfg = {}, urlparts,
                 url = $el.attr('href') || $el.attr('action'),
-                parser = new Parser();
+                parser = new Parser("inject");
             parser.add_argument('source');
             parser.add_argument('target');
             parser.add_argument('replace');
@@ -117,7 +116,8 @@ define([
             parser.add_argument('url', url);
             parser.add_argument('method', 'content');
 
-            cfg = parser.parse($el.attr('data-inject') || "");
+            // XXX: parser does not handle overrides yet (our opts)
+            cfg = parser.parse($el);
 
             // Check for source id as part of url
             if (!cfg.url) {
@@ -131,6 +131,7 @@ define([
                 log.error('Ignoring additional source ids:', urlparts.slice(2));
             }
 
+            // XXX: this syntax is under discussion
             // injection method
             ["replace", "replacetagwithcontent", "pre", "post",
              "append", "prepend"
