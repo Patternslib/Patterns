@@ -1,0 +1,137 @@
+body {
+	max-width: 910px;
+	margin-left: auto;
+	margin-right: auto;
+	width: auto;
+	padding-left: 20px;
+	padding-right: 20px;
+	position: relative;
+	padding-top: 90px;
+	background-image: url(texture-light-grain.png);
+	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+
+body>section {
+	clear: both;
+}
+
+/* @group Paragraph */
+
+p {
+	margin-top: 0;
+	margin-bottom: 24px;
+}
+
+
+
+/* @end */
+
+/* @group Anchor */
+
+a {
+	color: #325974;
+}
+
+
+
+/* @end */
+
+/* @group Global nav */
+
+#global-nav {
+	padding: 100px 16px 16px 0;
+	position: absolute;
+	width: 90%;
+	max-width: 910px;
+	top: 0;
+	/*transform: rotate(-1.5deg);*/
+	margin-top: -80px;
+	font: 30px "Courier New", Courier, mono;
+	letter-spacing: 2px;
+	/*box-shadow: 0 0 10px rgba(0,0,0,0.2)*/
+}
+
+#global-nav a
+ {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+/*#global-nav:before {
+	content: " ";
+	border: 2px dashed #325974;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	bottom: 10px;
+	left: 10px;
+}*/
+
+/* @end */
+
+/* @group Components list */
+
+.components-list {
+	float: left;
+	width: 27%;
+	margin-right: 3%;
+}
+
+.components-list a {
+	display: block;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-decoration: none;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.components-list a:hover {
+	background-color: rgba(0,0,0,0.07);
+}
+
+
+
+/* @end */
+
+/* @group UPSs */
+
+ol.usps {
+	list-style-type: none;
+	margin: 0 0 22px;
+	padding: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+ol.usps li {
+	width: 33.333333%;
+	padding-top: 190px;
+	vertical-align: top;
+	float: left;
+	margin: 0;
+	padding-left: 0;
+}
+
+ol.usps li:before {
+	content: " ";
+	width: 2px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	display: block;
+	background-color: silver;
+}
+
+ol.usps li:first-child:before {
+	display: none;
+}
+
+ol.usps li p {
+	padding-left: 8%;
+	padding-right: 8%;
+}
+
+
+
+/* @end */

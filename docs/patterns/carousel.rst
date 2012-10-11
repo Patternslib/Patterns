@@ -50,6 +50,9 @@ to jump to the linked panel when clicked.
    <p>As you can see in the <a href="#reports">reports screenshot</a>
     AcmeReports(TM) can generate beautiful reports.</p>
 
+Such links will automatically get a ``current`` class when the panel they are
+pointing to is displayed.
+
 
 Customizing behaviour
 ---------------------
