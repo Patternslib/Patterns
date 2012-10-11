@@ -12,7 +12,7 @@ define([
     "../3rdparty/jquery.anythingslider"
 ], function($, patterns, logging, Parser) {
     var log = logging.getLogger("carousel"),
-        parser = new Parser();
+        parser = new Parser("carousel");
 
     parser.add_argument("auto-play", true);
     parser.add_argument("loop", true);
@@ -30,7 +30,7 @@ define([
 
         init: function($el) {
             return $el.each(function() {
-                var options = parser.parse(this.dataset.carousel),
+                var options = parser.parse($(this));
                     settings = {hashTags: false};
 
                 if (Array.isArray(options)) {

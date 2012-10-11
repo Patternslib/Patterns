@@ -6,14 +6,14 @@ define([
         ],
 function($, logging, Parser, utils) {
     var log = logging.getLogger("autosubmit"),
-        parser = new Parser();
+        parser = new Parser("autosubmit");
     parser.add_argument("delay");
 
     $.patterns = $.patterns || {};
 
     $.patterns.autosubmit = {
         parse: function($trigger) {
-            var options = parser.parse($trigger.data("autosubmit"));
+            var options = parser.parse($trigger);
             if (Array.isArray(options)) {
                 log.error("autosubmit does not support multiple options");
                 options = options[0];
