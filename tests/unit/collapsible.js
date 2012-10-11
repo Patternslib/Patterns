@@ -10,10 +10,6 @@ describe("collapsible-pattern", function() {
         $("#lab *").remove();
     });
 
-    function addContent() {
-            
-    }
-
     describe("init", function() {
         it("Create panel-content", function() {
             var $lab = $("#lab")

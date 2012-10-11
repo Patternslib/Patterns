@@ -15,7 +15,6 @@ require([
 //    'spec!./spec/aloha',
 //    'spec!./spec/edit',
     'spec!./spec/inject',
-    'spec!./spec/modal',
     'spec!./spec/parser'
 ], function(require) {
     var registry = require('../src/registry'),
@@ -23,7 +22,6 @@ require([
 //            'aloha',
 //            'edit',
             'inject',
-            'modal',
             'parser'
         ];
 
