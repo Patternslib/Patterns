@@ -17,7 +17,6 @@ define([
 
     var _ = {
         name: "inject",
-        // will be joined with ","
         trigger: [
             "a.pat-inject,a[data-pat-inject]," +
                 "form.pat-inject,form[data-pat-inject]," +
