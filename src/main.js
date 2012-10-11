@@ -44,7 +44,7 @@ requirejs.config({
 define([
     'require',
     'jquery',
-    './3rdparty/prefixfree.min',
+    './3rdparty/prefixfree',
     './3rdparty/modernizr-2.0.6',
     './core/init',
     './patterns/autofocus',
