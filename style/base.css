@@ -13,6 +13,7 @@ body {
 
 body>section {
 	clear: both;
+	margin-bottom: 40px;
 }
 
 /* @group Paragraph */
@@ -69,31 +70,6 @@ a {
 
 /* @end */
 
-/* @group Components list */
-
-.components-list {
-	float: left;
-	width: 27%;
-	margin-right: 3%;
-}
-
-.components-list a {
-	display: block;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	text-decoration: none;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-.components-list a:hover {
-	background-color: rgba(0,0,0,0.07);
-}
-
-
-
-/* @end */
-
 /* @group UPSs */
 
 ol.usps {
@@ -130,6 +106,46 @@ ol.usps li:first-child:before {
 ol.usps li p {
 	padding-left: 8%;
 	padding-right: 8%;
+}
+
+
+
+/* @end */
+
+/* @group Components list */
+
+.components-list {
+	float: left;
+	width: 27%;
+	margin-right: 3%;
+}
+
+.components-list a {
+	display: block;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-decoration: none;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.components-list a:hover {
+	background-color: rgba(0,0,0,0.07);
+}
+
+.components-list a.current {
+	background-color: rgba(0,0,0,0.07);
+}
+
+
+
+/* @end */
+
+/* @group Content */
+
+#content {
+	width: 70%;
+	float: left;
 }
 
 
