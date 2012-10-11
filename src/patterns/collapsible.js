@@ -75,10 +75,9 @@ define([
                 return;
             var components = cfg['load-content'].split('#'),
                 url = components[0],
-                id = components[1] ? '#' + components[1] : 'body',
+                id = components[1] ? '#' + components[1] : null,
                 opts = [{
                     url: url,
-                    method: 'content',
                     source: id,
                     $targets: $('.panel-content', $el)
                 }];
