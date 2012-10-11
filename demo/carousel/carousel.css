@@ -1,3 +1,5 @@
+/* @group Anything slider */
+
 /*
 	AnythingSlider v1.8+ Default theme
 	By Chris Coyier: http://css-tricks.com
@@ -293,3 +295,5 @@
 a.current {
 	background: grey;
 }
+
+/* @end */
