@@ -18,12 +18,11 @@ define([
     var _ = {
         // XXX: do we need a name?
         name: "inject",
-        // will be joined with ","
         trigger: [
-            "a.inject,a[data-inject]",
-//            "form.inject,form[data-inject]",
-            ".collapsible[data-inject]",
-            ".folder[data-inject]"
+            "a.inject,a[data-inject]," +
+                "form.inject,form[data-inject]," +
+                ".collapsible[data-inject]," +
+                ".folder[data-inject]"
         ],
         init: function($el, opts) {
             // transformations / fixups
