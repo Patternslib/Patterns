@@ -12,21 +12,11 @@ require([
     '../lib/pavlov',
     '../src/main',
     '../src/registry',
-//    'spec!./spec/aloha',
-    'spec!./spec/collapsible',
-//    'spec!./spec/edit',
-    'spec!./spec/inject',
-    'spec!./spec/modal',
-    'spec!./spec/parser'
+    'spec!./spec/inject'
 ], function(require) {
     var registry = require('../src/registry'),
         spec_names = [
-//            'aloha',
-            'collapsible',
-//            'edit',
             'inject',
-            'modal',
-            'parser'
         ];
 
     // a jquery local to the fixtures container will be passed to the specs

@@ -22,7 +22,6 @@ The available patterns are:
    carousel
    checklist
    depends
-   fancybox
    menu
    modal
    selfhealing
