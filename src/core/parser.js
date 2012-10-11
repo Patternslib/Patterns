@@ -6,8 +6,9 @@
  * Copyright 2012 Florian Friesdorf
  */
 define([
+    'jquery',
     '../logging'
-], function(logging) {
+], function($, logging) {
     var log = logging.getLogger('parser');
 
     function ArgumentParser(name) {
@@ -134,7 +135,7 @@ define([
             return data;
         },
 
-        parse: function(el, defaults, multiple) {
+        parse: function($el, defaults, multiple) {
             if (typeof defaults==="boolean" && multiple===undefined) {
                 multiple=defaults;
                 defaults={};
@@ -144,8 +145,8 @@ define([
             if (typeof defaults==="object")
                 stack.push([defaults]);
 
-            var $parents = $(el).parents(),
-                i, data, final_length, frame;
+            var $parents = $el.parents(),
+                i, data, final_length, frame, maxlen;
             for (i=$parents.length-1; i>=0; i--) {
                 data = $parents.eq(i).attr(this.attribute);
                 if (data) {
@@ -174,7 +175,7 @@ define([
                     results[i]=$.extend(results[x], frame[xf]);
                 }
             }
-            
+
             for (i=0; i<final_length; i++)
                 results[i]=this._coerce(results[i]);
             return multiple ? results : results[0];
@@ -182,8 +183,6 @@ define([
     };
 
     return ArgumentParser;
-
 });
-
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
