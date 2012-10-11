@@ -1,11 +1,11 @@
 define([
-    'require',
-    '../lib/aloha-loader',
+    'jquery',
     '../logging',
-    '../patterns'
-], function(require) {
+    'ajaxify',
+    '../lib/aloha-loader'
+], function($, logging, ajaxify) {
     var Aloha = window.Aloha,
-        log = require('../logging').getLogger('edit');
+        log = logging.getLogger('edit');
 
     // var buttons = {
     //     emphasise: "i",
@@ -36,8 +36,7 @@ define([
         buttons.insertparagraph = $ctrls.find('.paragraph');
 
         // ensure form is ajaxified
-        var ajaxify = require('../patterns').ajaxify.init;
-        ajaxify($form);
+        ajaxify.init($form);
 
         // activate aloha on element
         $el.aloha();

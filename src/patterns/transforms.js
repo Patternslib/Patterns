@@ -1,8 +1,11 @@
 define([
-    'jquery'
-], function($) {
+    "jquery",
+    "../registry"
+], function($, patterns) {
     var transforms = {
-        convertToIframes: function($root) {
+        name: "transforms",
+
+        _convertToIframes: function($root) {
             $root.find("object[type=text/html]").each(function() {
                 var $object = $(this),
                     $iframe = $("<iframe allowtransparency='true'/>");
@@ -17,13 +20,12 @@ define([
             });
         },
 
-
-        initContent: function(root) {
+        onNewContent: function(event, root) {
             var $root = $(root);
             if ($root.is(".record-history"))
                 $root.addClass('cant-touch-this');
 
-            $("legend:not(.cant-touch-this)", root).each(function() {
+            $root.find("legend:not(.cant-touch-this)").each(function() {
                 $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
             });
 
@@ -31,12 +33,14 @@ define([
             if ($.browser.msie ) {
                 var version = Number( $.browser.version.split(".", 2).join(""));
                 if (version<=80)
-                    transforms.convertToIframes($root);
+                    transforms._convertToIframes($root);
             }
         }
     };
 
-    return transforms;
+    $(document).on("newContent", transforms.onNewContent);
+
+    patterns.register(transforms);
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

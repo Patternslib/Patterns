@@ -6,10 +6,9 @@
  * Copyright 2012 Florian Friesdorf
  */
 define([
-    'require',
     '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('parser');
+], function(logging) {
+    var log = logging.getLogger('parser');
 
     function ArgumentParser(spec) {
         this.params = [];
@@ -88,6 +87,9 @@ define([
 
                 // Handle all named parameters
                 for (i=0; i<parts.length; i++) {
+                    if (!parts[i])
+                        continue;
+
                     matches = parts[i].match(this.named_param_pattern);
                     if (!matches) {
                         log.warn("Positional parameters not allowed after named parameters");

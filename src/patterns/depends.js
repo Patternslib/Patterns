@@ -1,7 +1,11 @@
 define([
-    'jquery'
-], function($) {
+    'jquery',
+    "../registry"
+], function($, patterns) {
     var depends = {
+        name: "depends",
+        trigger: "[class*='dependsOn-']",
+
         verify: function($slave, command) {
             var result=[],
                 $form = $slave.closest("form"),
@@ -100,8 +104,8 @@ define([
             return command;
         },
 
-        initContent: function(root) {
-            return $("*[class*='dependsOn-']", root).each(function() {
+        init: function($root) {
+            return $root.each(function() {
                 var slave = this,
                     $slave = $(this),
                     command, state;
@@ -145,7 +149,8 @@ define([
         }
     };
 
-    return depends;
+    patterns.register(depends);
+    return depends; // XXX for tests only
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

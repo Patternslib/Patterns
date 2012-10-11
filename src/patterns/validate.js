@@ -1,33 +1,38 @@
-define(function(require) {
-    var log = require('../logging').getLogger('validate'),
-        _ = require('../../lib/jquery.validate'),
-        __ = require('../../lib/jquery-validation-1.9.0/additional-methods');
+define([
+        "jquery",
+        "../registry",
+        '../logging',
+        "../../lib/jquery.validate",
+        "../../lib/jquery-validation-1.9.0/additional-methods"
+], function($, patterns, logging) {
+    var log = logging.getLogger('validate');
 
-    var init = function($el, opts) {
-        var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
-            var $el = $(el),
-                id = $el.attr('id');
-            if (!id) {
-                log.error('Element needs id, skipping:', $el);
+    var pattern_spec = {
+        name: "validate",
+        trigger: "form.validate",
+
+        init: function($el) {
+            var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
+                var $el = $(el),
+                    id = $el.attr('id');
+                if (!id) {
+                    log.error('Element needs id, skipping:', $el);
+                    return acc;
+                }
+                acc[id] = {required: $el.data('required-if')};
                 return acc;
-            }
-            acc[id] = {required: $el.data('required-if')};
-            return acc;
-        }, {});
-        log.debug('rules:', rules);
+            }, {});
+            log.debug('rules:', rules);
 
-        // ATTENTION: adding the debug option to validate, disables
-        // form submission
-        $el.validate({rules: rules});
-        return $el;
+            // ATTENTION: adding the debug option to validate, disables
+            // form submission
+            $el.validate({rules: rules});
+            return $el;
+        }
     };
 
-    var pattern = {
-        markup_trigger: 'form.validate',
-        register_jquery_plugin: false,
-        init: init
-    };
-    return pattern;
+    patterns.register(pattern_spec);
+    return pattern_spec;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

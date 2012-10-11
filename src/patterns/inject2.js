@@ -1,7 +1,11 @@
-define(function(require) {
-    var log = require('../logging').getLogger('inject2'),
-        inject = require('../lib/inject'),
-        ajax = require('../lib/ajax');
+define([
+        "jquery",
+        "../logging",
+        "../core/parser",
+        "../lib/inject",
+        "../lib/ajax"
+], function($, logging, Parser, inject, ajax) {
+    var log = logging.getLogger('inject2');
 
     var init = function($el, opts) {
         var injecthandler = function(ev) {
@@ -52,7 +56,6 @@ define(function(require) {
             }
         };
 
-        var Parser = require('../core/parser');
         var opts = opts_spec.reduce(function(acc, opts_src) {
             var attr = opts_src[0],
                 spec = opts_src[1],
@@ -180,7 +183,7 @@ define(function(require) {
         })) {
             log.error('Unsupported different urls for inject');
             return;
-        };
+        }
 
         if (!opts.every(function(opts) {
             return opts.$targets.length;

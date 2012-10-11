@@ -10,7 +10,8 @@ require.config({
 require([
     'require',
     '../lib/pavlov',
-    '../src/patterns',
+    '../src/main',
+    '../src/registry',
 //    'spec!./spec/aloha',
     'spec!./spec/collapsible',
 //    'spec!./spec/edit',
@@ -18,7 +19,7 @@ require([
     'spec!./spec/modal',
     'spec!./spec/parser'
 ], function(require) {
-    var patterns = require('../src/patterns'),
+    var registry = require('../src/registry'),
         spec_names = [
 //            'aloha',
             'collapsible',
@@ -63,7 +64,7 @@ require([
                                     $('#qunit-fixture').html(data);
                                 }
                             });
-                            patterns.scan($$());
+                            registry.scan($$());
                         });
                     }
                     spec($$);

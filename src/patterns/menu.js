@@ -1,9 +1,13 @@
 define([
-    'jquery'
-], function($) {
+    'jquery',
+    "../registry"
+], function($, patterns) {
     var menu = {
-        initContent: function(root) {
-            return $("ul.menu:not(.cant-touch-this)", root).each(function() {
+        name: "menu",
+        trigger: "ul.menu",
+
+        init: function($root) {
+            return $root.each(function() {
                 var $menu = $(this),
                     timer,
                     closeMenu, openMenu,
@@ -50,7 +54,7 @@ define([
         }
     };
 
-    return menu;
+    patterns.register(menu);
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

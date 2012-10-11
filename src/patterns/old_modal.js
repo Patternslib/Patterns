@@ -7,11 +7,9 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'require',
+    'jquery',
     '../core/init'
-], function(require) {
-    var mapal = require('../core/init');
-
+], function($, mapal) {
     var modal = {
         options: {
             "class": "",

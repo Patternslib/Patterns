@@ -4,17 +4,18 @@
  *
  * Copyright 2012 Simplon B.V.
  */
-define(function(require) {
+define([
+        "jquery",
+        "../registry"
+], function($, patterns) {
     var checkedflag = {
-        init: function() {
-            $(document)
-               .on("change", "input[type=checkbox]", checkedflag.onChangeCheckbox)
-               .on("change", "input[type=radio]", checkedflag.onChangeRadio);
-        },
+        name: "checkedflag",
+        trigger: "input",
 
-        initContent: function(root) {
-             $("input[type=checkbox]", root).each(checkedflag.onChangeCheckbox);
-             $("input[type=radio]", root).each(checkedflag.onChangeRadio);
+        init: function($el) {
+            $el
+                .filter("[type=checkbox]").each(checkedflag.onChangeCheckbox).end()
+                .filter("[type=radio]").each(checkedflag.onChangeRadio).end();
         },
 
         onChangeCheckbox: function(e) {
@@ -43,7 +44,10 @@ define(function(require) {
         }
     };
 
-    return checkedflag;
+    $(document)
+       .on("change", "input[type=checkbox]", checkedflag.onChangeCheckbox)
+       .on("change", "input[type=radio]", checkedflag.onChangeRadio);
+    patterns.register(checkedflag);
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

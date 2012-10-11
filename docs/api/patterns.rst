@@ -9,50 +9,198 @@ patterns library. Below is a minimal skeleton for a pattern.
 
    define([
        'require'
-       '../patterns'
+       '../registry'
    ], function(require, patterns) {
-       var mypattern = {
-           markup_trigger: "CSS selector",
-           init: function($el) { ... }
+       var pattern_spec = {
+           name: "mypattern",
        };
 
        patterns.register(mypattern);
-       return mypattern;
    });
 
-This skeleton does two things:
+This skeleton does several things:
 
-* lines 1-4 use `RequireJS <http://requirejs.org/>`_ to load the core patterns
-  logic.
+* lines 1-4 use `RequireJS <http://requirejs.org/>`_ to load the patterns
+  registry.
 * lines 5-8 create an object which defines this pattern.
 * line 10 registers the pattern.
 
-The pattern also returns the pattern object itself. While not required this
-is recommended behaviour: it makes it easier to write tests for patterns and
-can be used to expose a pattern-specific API that other javascript routines can
-use.
 
-.. js:function:: patterns.register(name, definition)
+Markup patterns
+---------------
 
-   :param string name: short name for the pattern
-   :param object definition: Object specifying how pattern interfaces
+Most patterns deal with markup: they are activated for content that matches
+a specific CSS selector. This is handled by adding two items to the
+pattern specification: ``trigger`` and an ``init`` function.
 
-   The available options in the definition object are:
+.. code-block:: javascript
+   :linenos:
 
-   * ``markup_trigger``: a jQuery selector which specifies elements that should
-     be initialised by this pattern.
-   * ``init``: a function which is called for every element matching
-     ``markup_trigger`` which should be initialised.
+   var pattern_spec = {
+       name: "mypattern",
+       trigger: ".tooltip, [data-tooltip]",
 
-   Any other keys are ignored.
+       init: function($el) {
+           ...
+       },
+
+       destroy: function($el) {
+           ...
+       }
+   };
+
+The trigger specified on line 3 is a CSS selector to tells the pattern framework
+which elements this pattern is interested in. If new items are discovered in the
+DOM that match this pattern the ``init`` function will be called with a jQuery
+wrapper around the element.
+
+While not encouraged patterns are encouraged to include a ``destroy`` function
+that undos the pattern initialisation.  After calling ``destroy`` it should be
+possible to call ``init`` again to reactivate the pattern.
+
+Methods must always return ``this`` to facilitate their use as jQuery widgets.
+
+jQuery plugins
+--------------
+
+Patterns can also act as jQuery plugins. This can be done by providing a
+``jquery_plugin`` option in the pattern specification.
+
+.. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 3
+
+   var pattern_spec = {
+       name: "mypattern",
+       jquery_plugin: true,
+
+       init: function($el) {
+           ...
+       },
+
+       destroy: function($el) {
+           ...
+       },
+
+       othermethod: function($el, options) {
+           ...
+       }
+   };
+
+
+Line 3 tells the patterns framework that this pattern can be used as a jQuery
+plugin. In order to prevent conflicts the name of the jQuery function will be
+created by combining the word ``pattern`` with the capitalized name of the
+pattern. You can then interact with it using the standard jQuery API:
+
+.. code-block:: javascript
+
+   // Initialize mypattern for #title
+   $("#title").patternMypattern();
+
+   // Invoke othermethod for the pattern 
+   $("#title").patternMypattern("othermethod", {option: "value"});
+
+
+Injection actions
+-----------------
+
+The injection mechanism supports invoking arbitrary actions after loading new
+content. This is handled through *injection actions*. These are handled by an
+``inject`` method on a pattern.
+
+.. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 3
+
+   var pattern_spec = {
+       name: "mypattern",
+
+       inject: function($trigger, content) {
+           ...
+       }
+   };
+
+The inject methods gets a number of parameters:
+
+* ``$trigger`` is the element that triggered the injection. 
+* ``content`` is an array containing the loaded content.
 
 
 
-Pattern initialisation
-----------------------
+Pattern configuration
+---------------------
 
-After a pattern has been registered the system will use it to initialise
-content. There are two reasons for having patterns drive the initialisation
-over initialisting elements manually: patterns will make sure that any new
-content that is added to the DOM later will be initialised correctly, and
-it will make sure content is never initialised more than once.
+The configuration of a pattern is generally based on three components: the
+default settings, configuration set on a DOM element via a data-attribute, and,
+if the jQuery API is used, via options passed in via the jQuery plugin API.
+The init method for patterns should combine these settings. Lets update our
+example pattern to do this.
+
+.. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 3,6,7,8,12
+
+   define([
+       'require',
+       'core/parser',
+       '../registry'
+   ], function(require, Parser, patterns) {
+       var Parser = new Parser();
+       parser.add_argument("delay", 500);
+       parser.add_argument("auto-play", true);
+
+       var pattern_spec = {
+           init: function($el, opts) {
+               var options = $.extend({}, parser.parse($el.data("mypattern")), opts);
+               ...
+           };
+       };
+
+   });
+
+The first step is loading the parser. In lines 7 to 9 we proceed to create a
+parser instance and add our options with their default values. In the init
+method we use the parser to parse the ``data-mypattern`` attribute for the
+element. Finally we combine that with the options might have been provided
+through the jQuery plugin API.
+
+Creating a JavaScript API
+-------------------------
+
+Sometimes you may want to create a JavaScript API that is not tied to DOM
+elements, so exposing it as a jQuery plugin does not make sense. This can
+be done using the standard RequireJS mechanism by creating returning an
+API object form.
+
+.. code-block:: javascript
+   :linenos:
+   :emphasize-lines: 13-17
+
+   define([
+       'require',
+       '../registry'
+   ], function(require, registry) {
+       var pattern_spec = {
+           init: function($el) {
+               ...
+           };
+       };
+
+       registry.register(pattern_spec);
+
+       var public_api = {
+           method1: function() { .... },
+           method2: function() { .... }
+       };
+       return public_api;
+   });
+
+
+You can then use the API by using require to retrieve the API object for
+the pattern
+
+.. code-block:: javascript
+
+  var pattern_api = require("patterns/mypattern");
+  pattern_api.method1();

@@ -1,8 +1,12 @@
-define(function(require) {
-    var Parser = require('../core/parser'),
-        parser = new Parser("source; target; replace; pre; post; append; prepend"),
-        injectlib = require('../lib/inject'),
-        log = require('../logging').getLogger('inject');
+define([
+        "jquery",
+        "../logging",
+        "../core/parser",
+        "../lib/inject",
+        "ajaxify"
+], function($, logging, Parser, injectlib, ajaxify) {
+    var parser = new parser.Parser("source; target; replace; pre; post; append; prepend"),
+        log = logging.getLogger('inject');
 
     var init = function($el, opts) {
         // XXX: if opts, set them on $el as if defined there
@@ -16,8 +20,7 @@ define(function(require) {
         }
 
         // ensure element is ajaxified
-        var ajaxify = require('../patterns').ajaxify.init;
-        ajaxify($el);
+        ajaxify.init($el);
 
         // inject in case of successfull ajax request
         $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {

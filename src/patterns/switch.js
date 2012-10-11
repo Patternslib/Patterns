@@ -1,13 +1,18 @@
 define([
-    '../jqplugins/switch'
-
-], function() {
+        "jquery",
+        "../registry",
+        "../jqplugins/switch"
+], function($, patterns) {
     var switcher = {
-        initContent: function(root) {
-            $("[data-switch]", root).patternSwitch();
+        name: "switch",
+        trigger: "[data-switch]",
+
+        init: function($el) {
+            return $el.patternSwitch();
         }
     };
-    return switcher;
+
+    patterns.register(switcher);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 sts=4 expandtab
