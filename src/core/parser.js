@@ -140,16 +140,18 @@ define([
             if (typeof defaults==="object")
                 stack.push([defaults]);
 
-            var $els = $el.parents().add($el),
-                i, data, final_length, frame, maxlen;
-            for (i=$els.length-1; i>=0; i--) {
-                data = $els.eq(i).attr(this.attribute);
+            var $parents = $el.parents().andSelf(),
+                final_length = 0,
+                i, data, frame;
+            for (i=0; i<$parents.length; i++) {
+                data = $parents.eq(i).attr(this.attribute);
                 if (data) {
+                    var _parse = this._parse.bind(this); // Needed to fix binding in map call
                     if (data.match(/&&/))
-                        frame=data.split(/\s*&&\s*/).map(this._parse);
+                        frame=data.split(/\s*&&\s*/).map(_parse);
                     else
-                        frame=[this._parse(data)];
-                    maxlen = Math.max(frame.length, maxlen);
+                        frame=[_parse(data)];
+                    final_length = Math.max(frame.length, final_length);
                     stack.push(frame);
                 }
             }
@@ -167,7 +169,7 @@ define([
 
                 for (x=0; x<final_length; x++) {
                     xf=(x>frame_length) ? frame_length : x;
-                    results[i]=$.extend(results[x], frame[xf]);
+                    results[x]=$.extend(results[x], frame[xf]);
                 }
             }
 
