@@ -196,19 +196,19 @@ define([
                         .replace(/<body(.*)>/gi, '<div id="__original_body">')
                         .replace(/<\/body(.*)>/gi,'</div>')
                 );
-                $data(":uri(is:relative)").each(function() {
-                    switch (this.tagName) {
-                        case "A":
-                            this.href=new URI(this.href).absoluteTo(url).toString();
-                            break;
-                        case "FORM":
-                            this.action=new URI(this.action).absoluteTo(url).toString();
-                            break;
-                        case "IMG":
-                            this.src=new URI(this.src).absoluteTo(url).toString();
-                            break;
-                    }
-                });
+                // $data.filter(":uri(is:relative)").each(function() {
+                //     switch (this.tagName) {
+                //         case "A":
+                //             this.href=new URI(this.href).absoluteTo(url).toString();
+                //             break;
+                //         case "FORM":
+                //             this.action=new URI(this.action).absoluteTo(url).toString();
+                //             break;
+                //         case "IMG":
+                //             this.src=new URI(this.src).absoluteTo(url).toString();
+                //             break;
+                //     }
+                // });
                 cfg.forEach(function(cfg) {
                     var $sources = $data.find(cfg.source);
 
