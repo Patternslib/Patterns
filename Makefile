@@ -1,20 +1,20 @@
 PHANTOMJS	?= phantomjs
 SOURCES		= src/lib/jquery.form $(wildcard src/*.js) $(wildcard src/*/*.js)
-TARGETS		= dist/patterns.js dist/patterns.min.js dist/require-patterns.js dist/require-patterns.min.js
+TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/require-patterns.js bundles/require-patterns.min.js
 
 all:: $(TARGETS)
 
-dist/patterns.js: $(SOURCES)
+bundles/patterns.js: $(SOURCES)
 	node lib/r.js -o src/app.build.js out=$@ optimize=none
 
-dist/patterns.min.js: $(SOURCES)
+bundles/patterns.min.js: $(SOURCES)
 	node lib/r.js -o src/app.build.js out=$@ optimize=uglify
 
-dist/require-patterns.js: 
+bundles/require-patterns.js: 
 	node lib/r.js -o src/app.build.js out=$@ \
 		name=3rdparty/almond include=main wrap=true optimize=none
 
-dist/require-patterns.min.js: 
+bundles/require-patterns.min.js: 
 	node lib/r.js -o src/app.build.js out=$@ \
 		name=3rdparty/almond include=main wrap=true optimize=uglify
 
