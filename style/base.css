@@ -8,7 +8,23 @@ body {
 	position: relative;
 	padding-top: 90px;
 	background-image: url(texture-light-grain.png);
+	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
 }
+
+body>section {
+	clear: both;
+}
+
+/* @group Paragraph */
+
+p {
+	margin-top: 0;
+	margin-bottom: 24px;
+}
+
+
+
+/* @end */
 
 /* @group Anchor */
 
@@ -72,6 +88,48 @@ a {
 
 .components-list a:hover {
 	background-color: rgba(0,0,0,0.07);
+}
+
+
+
+/* @end */
+
+/* @group UPSs */
+
+ol.usps {
+	list-style-type: none;
+	margin: 0 0 22px;
+	padding: 0;
+	overflow: hidden;
+	position: relative;
+}
+
+ol.usps li {
+	width: 33.333333%;
+	padding-top: 190px;
+	vertical-align: top;
+	float: left;
+	margin: 0;
+	padding-left: 0;
+}
+
+ol.usps li:before {
+	content: " ";
+	width: 2px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	display: block;
+	background-color: silver;
+}
+
+ol.usps li:first-child:before {
+	display: none;
+}
+
+ol.usps li p {
+	padding-left: 8%;
+	padding-right: 8%;
 }
 
 
