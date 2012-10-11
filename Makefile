@@ -27,7 +27,7 @@ build/docs/index.html: docs/conf.py $(wildcard docs/*.rst) $(wildcard docs/*/*.r
 	sphinx-build -b html docs build/docs
 
 check: lib/phantom-jasmine
-	$(PHANTOMJS) lib/phantom-jasmine/lib/run_jasmine_test.coffee tests/unit/runner.html
+	$(PHANTOMJS) lib/phantom-jasmine/lib/run_jasmine_test.coffee tests/index.html
 
 clean:
 	rm -f $(TARGETS)
