@@ -1,6 +1,6 @@
 /* @group Collapsible */
 
-.collapsible > *:first-child {
+.pat-collapsible > *:first-child {
 	padding-left: 10px;
 	padding-right: 10px;
 	font-size: 12px;
@@ -22,17 +22,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	letter-spacing: 1px;
 }
 
-.collapsible > *:first-child:before {
+.pat-collapsible > *:first-child:before {
 	content: "▼";
 	width: 18px;
 	display: inline-block;
 }
 
-.collapsible.closed > *:first-child:before {
+.pat-collapsible.closed > *:first-child:before {
 	content: "▶";
 }
 
-.collapsible > .panel-content {
+.pat-collapsible > .panel-content {
 	padding-top: 10px;
 	padding-bottom: 20px;
 }
