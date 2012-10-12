@@ -12,8 +12,8 @@ define([
     '../logging',
     "../core/parser"
 ], function($, patterns, logging, Parser) {
-    var log = logging.getLogger('switch'),
-        parser = new Parser();
+    var log = logging.getLogger('toggle'),
+        parser = new Parser("toggle");
 
     parser.add_argument("selector");
     parser.add_argument("attr", "class");
@@ -21,7 +21,7 @@ define([
 
     var toggle = {
         name: "toggle",
-        trigger: "[data-toggle]",
+        trigger: "[data-pat-toggle]",
 
         init: function($el) {
             $el.on("click.patterns", toggle.onClick);
@@ -31,9 +31,7 @@ define([
             var $trigger = $(this),
                 options, option, $targets, $target, i;
 
-            options=parser.parse($trigger.data("toggle"));
-            if (!Array.isArray(options)) 
-                options = [options];
+            options=parser.parse($trigger, true);
             for (i=0; i<options.length; i++) {
                 option=options[i];
                 if (option.selector && option.attr && option.value)

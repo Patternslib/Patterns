@@ -12,14 +12,14 @@ describe("switch-plugin", function() {
 
     describe("parse", function() {
         it("Shorthand notation", function() {
-            var $trigger = $("<button id='trigger' data-pat-switch='#victim; hide; show'>Click</button>");
+            var $trigger = $("<button id='trigger' data-pat-switch='#victim; hide; show'>Click</button>"),
                 options = pattern.parse($trigger);
             expect(options.length).toBe(1);
             expect(options[0]).toEqual({selector: "#victim", remove: "hide", add: "show"});
         });
 
         it("Multiple changes", function() {
-            var $trigger = $("<button id='trigger' data-pat-switch='#victim; hide; show && #victim; hide; red'>Click</button>");
+            var $trigger = $("<button id='trigger' data-pat-switch='#victim; hide; show && #victim; hide; red'>Click</button>"),
                 options = pattern.parse($trigger);
             expect(options.length).toBe(2);
             expect(options[0]).toEqual({selector: "#victim", remove: "hide", add: "show"});
