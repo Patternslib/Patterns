@@ -25,7 +25,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "on"]]};
+                                  on: [{name: "toggle", operator: "on"}]};
                     $lab.append("<input type='checkbox' name='toggle'/>");
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -34,7 +34,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "on"]]};
+                                  on: [{name: "toggle", operator: "on"}]};
                     $lab.append("<input type='checkbox' name='toggle' checked='checked'/>");
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -43,7 +43,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "on"]]};
+                                  on: [{name: "title", operator: "on"}]};
                     $lab.append("<input type='text' name='title'/>"); 
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -52,7 +52,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "on"]]};
+                                  on: [{name: "title", operator: "on"}]};
                     $lab.append("<input type='text' name='title' value='Pink unicorns'/>"); 
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -63,7 +63,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "off"]]};
+                                  on: [{name: "toggle", operator: "off"}]};
                     $lab.append("<input type='checkbox' name='toggle'/>");
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -72,7 +72,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "off"]]};
+                                  on: [{name: "toggle", operator: "off"}]};
                     $lab.append("<input type='checkbox' name='toggle' checked='checked'/>");
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -81,7 +81,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "off"]]};
+                                  on: [{name: "title", operator: "off"}]};
                     $lab.append("<input type='text' name='title'/>"); 
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -90,7 +90,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "off"]]};
+                                  on: [{name: "title", operator: "off"}]};
                     $lab.append("<input type='text' name='title' value='Pink unicorns'/>"); 
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -101,7 +101,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "equals", 'yes']]};
+                                  on: [{name: "toggle", operator: "equals", value: "yes"}]};
                     $lab.append("<input type='checkbox' name='toggle' value='yes'/>");
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -110,7 +110,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "equals", "yes"]]};
+                                  on: [{name: "toggle", operator: "equals", value: "yes"}]};
                     $lab.append("<input type='checkbox' name='toggle' value='yes' checked='checked'/>");
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -119,7 +119,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "equals", "yes"]]};
+                                  on: [{name: "toggle", operator: "equals", value: "yes"}]};
                     $lab.append("<input type='checkbox' name='toggle' value='no' checked='checked'/>");
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -128,7 +128,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "equals", "yes"]]};
+                                  on: [{name: "title", operator: "equals", value: "yes"}]};
                     $lab.append("<input type='text' name='title'/>"); 
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -137,7 +137,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "equals", "yes"]]};
+                                  on: [{name: "title", operator: "equals", value: "yes"}]};
                     $lab.append("<input type='text' name='title' value='Pink unicorns'/>"); 
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -146,7 +146,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "equals", "yes"]]};
+                                  on: [{name: "title", operator: "equals", value: "yes"}]};
                     $lab.append("<input type='text' name='title' value='yes'/>"); 
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -157,7 +157,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "notEquals", 'yes']]};
+                                  on: [{name: "toggle", operator: "notEquals", value: "yes"}]};
                     $lab.append("<input type='checkbox' name='toggle' value='yes'/>");
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -166,7 +166,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "notEquals", "yes"]]};
+                                  on: [{value: "toggle", operator: "notEquals", value: "yes"}]};
                     $lab.append("<input type='checkbox' name='toggle' value='yes' checked='checked'/>");
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -175,7 +175,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["toggle", "notEquals", "yes"]]};
+                                  on: [{name: "toggle", operator: "notEquals", value: "yes"}]};
                     $lab.append("<input type='checkbox' name='toggle' value='no' checked='checked'/>");
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -184,7 +184,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "notEquals", "yes"]]};
+                                  on: [{name: "title", operator: "notEquals", value: "yes"}]};
                     $lab.append("<input type='text' name='title'/>"); 
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -193,7 +193,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "notEquals", "yes"]]};
+                                  on: [{name: "title", operator: "notEquals", value: "yes"}]};
                     $lab.append("<input type='text' name='title' value='Pink unicorns'/>"); 
                     expect(pattern.verify($lab, action)).toBe(true);
                 });
@@ -202,7 +202,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [["title", "notEquals", "yes"]]};
+                                  on: [{name: "title", operator: "notEquals", value: "yes"}]};
                     $lab.append("<input type='text' name='title' value='yes'/>"); 
                     expect(pattern.verify($lab, action)).toBe(false);
                 });
@@ -214,7 +214,8 @@ describe("depends-pattern", function() {
                 var $lab = $("#lab"),
                     action = {action: "show",
                               type: "or",
-                              on: [["one", "on"], ["two", "on"]]};
+                              on: [{name: "one", operator: "on"},
+                                   {name: "two", operator: "on"}]};
                 $lab
                     .append("<input type='text' name='one'/>")
                     .append("<input type='text' name='two' value='yes'/>");
@@ -225,7 +226,8 @@ describe("depends-pattern", function() {
                 var $lab = $("#lab"),
                     action = {action: "show",
                               type: "and",
-                              on: [["one", "on"], ["two", "on"]]};
+                              on: [{name: "one", operator: "on"},
+                                   {name: "two", operator: "on"}]};
                 $lab
                     .append("<input type='text' name='one'/>")
                     .append("<input type='text' name='two' value='yes'/>");
@@ -278,28 +280,35 @@ describe("depends-pattern", function() {
 
     describe("parse", function() {
         it("Default action ", function() {
-            expect(pattern.parse("dependsOn-master")).toEqual(
-                {action: "show", type: "and", on: [["master"]]});
+            var command = pattern.parse($("<div data-pat-depends='master'/>"));
+            expect(command.on.length).toBe(1);
+            expect(command.on[0].name).toBe("master");
+            expect(command.on[0].operator).toBe("on");
         });
 
         it("Equality", function() {
-            expect(pattern.parse("dependsOn-master-equals-nero")).toEqual(
-                {action: "show", type: "and", on: [["master", "equals", "nero"]]});
+            var command = pattern.parse($("<div data-pat-depends='master; equals; nero'/>"));
+            expect(command.on.length).toBe(1);
+            expect(command.on[0].name).toBe("master");
+            expect(command.on[0].operator).toBe("equals");
+            expect(command.on[0].value).toBe("nero");
         });
 
         it("Specify action", function() {
-            expect(pattern.parse("dependsAction-visible")).toEqual(
-                {action: "visible", type: "and", on: []});
+            var command = pattern.parse($("<div data-pat-depends='action: show'/>"));
+            expect(command.action).toBe("show");
         });
 
         it("Specify type", function() {
-            expect(pattern.parse("dependsType-or")).toEqual(
-                {action: "show", type: "or", on: []});
+            var command = pattern.parse($("<div data-pat-depends='type:or'/>"));
+            expect(command.type).toBe("or");
         });
 
         it("Multiple actions", function() {
-            expect(pattern.parse("dependsOn-master dependsOn-caesar")).toEqual(
-                {action: "show", type: "and", on: [["master"], ["caesar"]]});
+            var command = pattern.parse($("<div data-pat-depends='master && caesar'/>"));
+            expect(command.on.length).toBe(2);
+            expect(command.on[0].name).toBe("master");
+            expect(command.on[1].name).toBe("caesar");
         });
     });
 });

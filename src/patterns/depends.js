@@ -1,23 +1,32 @@
 define([
-    'jquery',
-    "../registry"
-], function($, patterns) {
+    "jquery",
+    "../registry",
+    "../core/parser",
+], function($, patterns, Parser) {
+    var parser = new Parser("depends");
+
+    parser.add_argument("name");
+    parser.add_argument("operator", "on");
+    parser.add_argument("value");
+    parser.add_argument("type", "and");
+    parser.add_argument("action", "show");
+
     var depends = {
         name: "depends",
-        trigger: "[class*='pat-depends-']",
+        trigger: "[data-pat-depends]",
 
         verify: function($slave, command) {
             var result=[],
                 $form = $slave.closest("form"),
-                $input, i, value, parts;
+                $input, i, value, test;
 
             if (!$form.length)
                 $form=$(document);
 
             for (i=0; i<command.on.length; i++) {
-                parts=command.on[i];
+                test=command.on[i];
 
-                $input = $form.find(":input[name="+parts[0]+"]");
+                $input = $form.find(":input[name="+test.name+"]");
                 if (!$input.length) {
                     result.push(false);
                     continue;
@@ -28,17 +37,17 @@ define([
                 else
                     value = $input.val();
 
-                if ((parts.length===1 || parts[1]==="on") && !value) {
+                if (test.operator==="on" && !value) {
                     result.push(false);
                     continue;
-                } else if (parts[1]==="off" && value) {
+                } else if (test.operator==="off" && value) {
                     result.push(false);
                     continue;
-                } else if (parts.length>2) {
-                    if (parts[1]==="equals" && parts[2]!==value) {
+                } else if (test.value) {
+                    if (test.operator==="equals" && test.value!==value) {
                         result.push(false);
                         continue;
-                    } else if (parts[1]==="notEquals" && parts[2]===value) {
+                    } else if (test.operator==="notEquals" && test.value===value) {
                         result.push(false);
                         continue;
                     }
@@ -79,28 +88,18 @@ define([
             return $result;
         },
 
-        parse: function(data) {
-            var classes = data.split(" "),
-                command = {"on" : [],
+        parse: function($el) {
+            var options = parser.parse($el, true);
+            var command = {"on" : options,
                            "action" : "show",
                            "type": "and"
                            },
                 i, a, parts;
 
-            for (i=0; i<classes.length; i++) {
-                parts=classes[i].split("-");
-                if (parts[0].indexOf("depends")===0) {
-                    a=parts[0].substr(7).toLowerCase();
-                    if (a==="on") {
-                        if (parts.length>4) {
-                            parts=parts.slice(0,3).concat(parts.slice(3).join("-"));
-                        }
-                        command.on.push(parts.slice(1));
-                    } else {
-                        command[a]=parts[1];
-                    }
-                }
-            }
+            if (options[0].action)
+                command.action=options[0].action;
+            if (options[0].type)
+                command.type=options[0].type;
             return command;
         },
 
@@ -110,7 +109,7 @@ define([
                     $slave = $(this),
                     command, state;
 
-                command=depends.parse($slave.attr("class"));
+                command=depends.parse($slave);
                 state=depends.verify($slave, command);
 
                 if (command.action==="show") {
