@@ -2,11 +2,11 @@ Triggering class changes on click
 =================================
 
 It is possible to add or remove classes when a user clicks on an item. This is
-done by adding a ``data-switch`` attribute to the triggering element.
+done by adding a ``data-pat-switch`` attribute to the triggering element.
 
 .. code-block:: html
 
-   <button data-switch="#status; off; on">Power on</button>
+   <button data-pat-switch="#status; off; on">Power on</button>
    <span id="status" class="off"/>
 
 If a user clicks on the *Power on* button the ``off`` class will be removed and the
@@ -26,7 +26,7 @@ wildcard (the ``*`` character) in the class name.
 
 .. code-block:: html
 
-   <button data-switch=".toolbar; icon-*">Remove icons</button>
+   <button data-pat-switch=".toolbar; icon-*">Remove icons</button>
 
 Multiple changes can be provided if desired by separating them using the ``&&``
 separator. The example below uses this to remove all icon classes in both the
@@ -34,14 +34,14 @@ toolbar and the navigation tree.
 
 .. code-block:: html
 
-   <button data-switch=".toolbar; icon-* && .navtree; icon-*">Remove icons</button>
+   <button data-pat-switch=".toolbar; icon-* && .navtree; icon-*">Remove icons</button>
 
 
 Javascript API
 --------------
 
 The javascript API is entirely optional since patterns already autmoatically
-enables the switching behaviour for all elements with a ``data-switch``
+enables the switching behaviour for all elements with a ``data-pat-switch``
 attribute. Developers may be interested in using the API to add behaviour
 to other elements or trigger switches manually.
 
@@ -50,7 +50,7 @@ to other elements or trigger switches manually.
    :param options: one or more objects describing triggers to execute
 
    Setup switching behaviour for the selected elements. If no options are
-   provided they are taken from the ``data-switch`` attributes. Options
+   provided they are taken from the ``data-pat-switch`` attributes. Options
    can be provided as a (array of) javascript object(s) with the following
    keys:
 
