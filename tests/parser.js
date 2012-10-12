@@ -88,19 +88,10 @@ describe("Core / Parser", function() {
                 expect(opts.selector).toBe("default");
             });
 
-            it("Use default parameter over parser default", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("selector", false);
-                var opts = parser.parse($(), {"default": true});
-                expect(opts["default"]).toBe(true);
-            });
-
             it("Value from data attribute", function() {
                 var parser=new ArgumentParser("mypattern");
                 parser.add_argument("selector", "default");
-                var opts = parser.parse(
-                    $('<div data-pat-mypattern="element"/>'),
-                    {selector: "parameter"});
+                var opts = parser.parse($('<div data-pat-mypattern="element"/>'));
                 expect(opts.selector).toBe("element");
             });
 
@@ -108,7 +99,7 @@ describe("Core / Parser", function() {
                 var parser=new ArgumentParser("mypattern");
                 parser.add_argument("selector", "default");
                 var $content = $("<div data-pat-mypattern='parent'><span/></div>").find("span");
-                var opts = parser.parse($content, {selector: "parameter"});
+                var opts = parser.parse($content);
                 expect(opts.selector).toBe("parent");
             });
 
@@ -116,9 +107,19 @@ describe("Core / Parser", function() {
                 var parser=new ArgumentParser("mypattern");
                 parser.add_argument("selector", "default");
                 var $content = $("<div data-pat-mypattern='parent'><span data-pat-mypattern='el'/></div>").find("span");
-                var opts = parser.parse($content, {selector: "parameter"});
+                var opts = parser.parse($content);
                 expect(opts.selector).toBe("el");
             });
+
+            it("Parameter trumps all", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("selector", "default");
+                var opts = parser.parse(
+                    $('<div data-pat-mypattern="element"/>'),
+                    {selector: "parameter"});
+                expect(opts.selector).toBe("parameter");
+            });
+
         });
 
         describe("Multiple argument handling", function() {

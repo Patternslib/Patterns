@@ -130,20 +130,16 @@ define([
             return data;
         },
 
-        // XXX: do we need defaults?
-        // XXX: we need overrides coming in via jquery plugin init
-        parse: function($el, defaults, multiple) {
-            if (typeof defaults==="boolean" && multiple===undefined) {
-                multiple=defaults;
-                defaults={};
+        parse: function($el, options, multiple) {
+            if (typeof options==="boolean" && multiple===undefined) {
+                multiple=options;
+                options={};
             }
 
             var stack = [[this.defaults]];
-            if (typeof defaults==="object")
-                stack.push([defaults]);
 
             var $parents = $el.parents().andSelf(),
-                final_length = 0,
+                final_length = 1,
                 i, data, frame;
             for (i=0; i<$parents.length; i++) {
                 data = $parents.eq(i).attr(this.attribute);
@@ -157,6 +153,8 @@ define([
                     stack.push(frame);
                 }
             }
+            if (typeof options==="object")
+                stack.push([options]);
 
             if (!multiple)
                 final_length=1;
