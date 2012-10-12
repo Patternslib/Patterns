@@ -241,13 +241,13 @@ describe("depends-pattern", function() {
     describe("getMasters", function() {
         it("Unknown master", function() {
             var $lab = $("#lab"),
-                action = {on: [["master"]]};
+                action = {on: [{name: "master"}]};
             expect(pattern.getMasters($lab, action).length).toBe(0);
         });
 
         it("Single master", function() {
             var $lab = $("#lab"),
-                action = {on: [["master"]]};
+                action = {on: [{name: "master"}]};
             $lab.append("<input type='text' name='master'/>");
             var $masters = pattern.getMasters($lab, action);
             expect($masters.length).toBe(1);
@@ -257,7 +257,7 @@ describe("depends-pattern", function() {
 
         it("Multiple masters", function() {
             var $lab = $("#lab"),
-                action = {on: [["master"]]};
+                action = {on: [{name: "master"}]};
             $lab
                 .append("<input type='checkbox' name='master' value='one'/>") 
                 .append("<input type='checkbox' name='master' value='two'/>");
@@ -268,7 +268,7 @@ describe("depends-pattern", function() {
         });
 
         it("Limit to form", function() {
-            var action = {on: [["master"]]};
+            var action = {on: [{name: "master"}]};
             $("#lab")
                 .append("<form><input type='checkbox' name='master' value='one'/><span id='slave'/></form>") 
                 .append("<input type='checkbox' name='master' value='two'/>");
