@@ -12,7 +12,7 @@ define([
 function(logging, Parser) {
     $ = jQuery;
     var log = logging.getLogger("switch"),
-        parser = new Parser();
+        parser = new Parser("switch");
     parser.add_argument("selector");
     parser.add_argument("remove");
     parser.add_argument("add");
@@ -70,11 +70,7 @@ function(logging, Parser) {
         },
 
         parse: function($trigger) {
-            var options = parser.parse($trigger.data("switch")),
-                no = [];
-            if (!Array.isArray(options)) 
-                options = [options];
-            return options;
+            return parser.parse($trigger, true);
         },
 
         validateOptions: function(options) {
