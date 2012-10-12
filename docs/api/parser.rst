@@ -2,35 +2,45 @@ Argument parser
 ===============
 
 Many patterns can be configured to change their behaviour. This is done by
-passing arguments to the parser in data-* attributes or when using an internal
-javascript API. All processing of arguments is done by the argument parser.
-Using the parser is easy:
+passing arguments to the parser in data-pat-* attributes or when using an
+internal javascript API. All processing of arguments is done by the argument
+parser.  Using the parser is easy:
 
 .. code-block:: javascript
    :linenos:
 
-   var parser = new ArgumentParser();
+   var parser = new ArgumentParser("tooltip");
    parser.add_argument("delay", 150);
    parser.add_argument("loop", false);
    parser.add_argument("next-label", "Next");
 
-   $("[data-tooltip]").each(function() {
-       var options = parser.parse(this.dataset.tooltip);
+   $("[data-pat-tooltip]").each(function() {
+       var options = parser.parse($(this));
        ...
    });
 
-Lines 1-4 show how to create a new argument parser instance and tell it about
-the options we want to handle and provide some default values. The code
-then finds all elements in the document with a data-tooltip attribute and
-uses the argument parser to parse the value.
+Lines 1-4 show how to create a new argument parser instance for our
+pattern, tell it about the options we want to handle and provide some default
+values. The code then finds all elements in the document with a
+``data-pat-tooltip`` attribute and uses the argument parser to parse the value.
+
+The parser combines values from multiple sources. In order of priority they are:
+
+1. options passed in to the parse() call
+2. options for the ``data-pat-<name>`` attribute of the parsed element
+3. options for the ``data-pat-<name>`` attribute of all parent elements
+4. default values provided in the add_argument() call
 
 
 Parser API
 -----------
 
-.. js:class:: ArgumentParser()
+.. js:class:: ArgumentParser(name)
 
-   Create a new argument parser instance.
+   :param string name: name of the pattern
+
+   Create a new argument parser instance. The pattern name is used to find the
+   right attribute to parse for elements.
 
 
 .. js:function:: ArgumentParser.add_argument(name[, default])
@@ -43,17 +53,15 @@ Parser API
    used.
 
 
-.. js:function:: ArgumentParser.parse(data[, defaults])
+.. js:function:: ArgumentParser.parse($el [, options][, multiple])
 
-   :param string data: data to parse
+   :param $el: jQuery object for element to parse
    :param object defaults: default values to use
-   :returns: object with parsed values, or list of objects 
+   :param boolean multiple: flag indicating if multiple values should
+     be returned.
+   :returns: object with parsed values, or list of objects if multiple
+     is true.
 
-   Parse a string with parameters and return the parsed data. You can
-   optionally provide default values that will supplement (and override) the
-   defaults registered with add_argument.
-
-   If a the input data uses the ``&&`` operator to indicate multiple parameters
-   are present this method will return a list of results instead of a single
-   object.
-
+   This method returns the configuration for a pattern from an object. You can
+   optionally provide options that will override default values and values
+   found on the element.
