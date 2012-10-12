@@ -72,17 +72,17 @@ define([
         getMasters: function($slave, command) {
             var $result = $(),
                 $form = $slave.closest("form"),
-                i, parts;
+                i, test;
 
             if (!$form.length)
                 $form=$(document);
 
             for (i=0; i<command.on.length; i++) {
-                parts=command.on[i];
-                if (!parts)
+                test=command.on[i];
+                if (!test)
                     continue;
 
-                $result=$result.add($form.find(":input[name="+parts[0]+"]"));
+                $result=$result.add($form.find(":input[name="+test.name+"]"));
             }
 
             return $result;
@@ -93,9 +93,7 @@ define([
             var command = {"on" : options,
                            "action" : "show",
                            "type": "and"
-                           },
-                i, a, parts;
-
+                           };
             if (options[0].action)
                 command.action=options[0].action;
             if (options[0].type)
