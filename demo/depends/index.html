@@ -7,27 +7,26 @@
 		<script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js" type="text/javascript"></script>
 	</head>
 	<body>
-          <form class="concise" action="#">
-            <fieldset>
-              <legend>Flavour</legend>
+		<form class="concise" action="#">
+			<fieldset>
+				<legend>Flavour</legend>
 
-              <label><input type="radio" name="flavour" value="hawaii"/> Hawaii</label>
-              <label><input type="radio" name="flavour" value="bacon"/> Bacon Supreme</label>
-              <label><input type="radio" name="flavour" value="sea"/> Fruits de mer</label>
-            </fieldset>
+				<label><input type="radio" name="flavour" value="hawaii"/> Hawaii</label>
+				<label><input type="radio" name="flavour" value="bacon"/> Bacon Supreme</label>
+				<label><input type="radio" name="flavour" value="sea"/> Fruits de mer</label>
+			</fieldset>
 
-            <label><input type="checkbox" name="custom"/> Add extra toppings</label>
+			<label><input type="checkbox" name="custom"/> Add extra toppings</label>
 
-            <fieldset data-pat-depends="custom">
-              <legend>Extra toppings</legend>
-              <label data-pat-depends="flavour; notEquals; hawaii;"><input type="checkbox" name="pineapple"/> Pineapple</label>
-              <label><input type="checkbox" name="gorgonzola"/> Gorgonzola</label>
-              <label><input type="checkbox" name="peanuts"/> Peanuts</label>
-              <label><input type="checkbox" name="redonion"/> Red onions</label>
-            </fieldset>
-          </form>
+			<fieldset class="pat-depends" data-pat-depends="custom">
+				<legend>Extra toppings</legend>
+				<label data-pat-depends="flavour; notEquals; hawaii;"><input type="checkbox" name="pineapple"/> Pineapple</label>
+				<label><input type="checkbox" name="gorgonzola"/> Gorgonzola</label>
+				<label><input type="checkbox" name="peanuts"/> Peanuts</label>
+				<label><input type="checkbox" name="redonion"/> Red onions</label>
+			</fieldset>
+		</form>
 
-          <strong data-pat-depends="flavour; equals; bacon">This pizza is bad for your health!</strong>
+		<strong class="pat-depends" data-pat-depends="flavour; equals; bacon">This pizza is bad for your health!</strong>
 	</body>
 </html>
-

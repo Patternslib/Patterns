@@ -1,7 +1,7 @@
 define([
     "jquery",
     "../registry",
-    "../core/parser",
+    "../core/parser"
 ], function($, patterns, Parser) {
     var parser = new Parser("depends");
 
@@ -13,7 +13,8 @@ define([
 
     var depends = {
         name: "depends",
-        trigger: "[data-pat-depends]",
+        jquery_plugin: true,
+        trigger: ".pat-depends",
 
         verify: function($slave, command) {
             var result=[],
@@ -88,8 +89,8 @@ define([
             return $result;
         },
 
-        parse: function($el) {
-            var options = parser.parse($el, true);
+        parse: function($el, opts) {
+            var options = parser.parse($el, opts, true);
             var command = {"on" : options,
                            "action" : "show",
                            "type": "and"
@@ -101,13 +102,13 @@ define([
             return command;
         },
 
-        init: function($root) {
+        init: function($root, opts) {
             return $root.each(function() {
                 var slave = this,
                     $slave = $(this),
                     command, state;
 
-                command=depends.parse($slave);
+                command=depends.parse($slave, opts);
                 state=depends.verify($slave, command);
 
                 if (command.action==="show") {
@@ -125,7 +126,7 @@ define([
                     }
                 }
 
-                depends.getMasters($slave, command).on("change.patterns", function() {
+                depends.getMasters($slave, command).on("change.pat-depends", function() {
                     state=depends.verify($slave, command);
                     if (command.action==="show") {
                         if (state)
@@ -149,6 +150,5 @@ define([
     patterns.register(depends);
     return depends; // XXX for tests only
 });
-
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
