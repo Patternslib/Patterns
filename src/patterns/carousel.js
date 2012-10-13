@@ -28,15 +28,10 @@ define([
         name: "carousel",
         trigger: ".pat-carousel",
 
-        init: function($el) {
+        init: function($el, opts) {
             return $el.each(function() {
-                var options = parser.parse($(this));
+                var options = parser.parse($(this), opts),
                     settings = {hashTags: false};
-
-                if (Array.isArray(options)) {
-                    log.warn("Multiple options not supported for carousels.");
-                    options = options[0];
-                }
 
                 settings.autoPlay = options["auto-play"];
                 settings.stopAtEnd = !options.loop;
@@ -56,7 +51,7 @@ define([
                     .children().each(function(index, el) {
                         if (!this.id)
                             return;
-                    
+
                         var $links = $("a[href=#" + this.id+"]");
                         if (index===control.currentPage)
                             $links.addClass("current");
