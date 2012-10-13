@@ -8,7 +8,7 @@ define([
     var _ = {
         name: "chosen",
         trigger: "select.pat-chosen",
-        init: function($el, opts) {
+        init: function($el) {
             $el.chosen();
             return $el;
         },
