@@ -13,6 +13,7 @@ define([
 
     function ArgumentParser(name) {
         this.params = [];
+        this.mappings = {};
         this.defaults = {};
         this.attribute = "data-pat-" + name;
     }
@@ -24,7 +25,8 @@ define([
             if (default_value === undefined)
                 default_value = null;
             this.params.push(name);
-            this.defaults[name] = default_value;
+            this.mappings[name] = name.replace(/\-([a-z])/g, function(_,p1){return p1.toUpperCase();});
+            this.defaults[this.mappings[name]] = default_value;
         },
 
         _parse: function(parameter) {
@@ -51,7 +53,7 @@ define([
                         parts.unshift(part);
                         break;
                     }
-                    opts[this.params[i]] = part.trim();
+                    opts[this.mappings[this.params[i]]] = part.trim();
                 }
 
                 // Handle all named parameters
@@ -64,11 +66,11 @@ define([
                         log.warn("Positional parameters not allowed after named parameters");
                         break;
                     }
-                    if (this.defaults[matches[1]] === undefined) {
+                    if (this.defaults[this.mappings[matches[1]]] === undefined) {
                         log.warn("Unknown named parameter " + matches[1]);
                         continue;
                     }
-                    opts[matches[1]] = matches[2].trim();
+                    opts[this.mappings[matches[1]]] = matches[2].trim();
                 }
             }
 
