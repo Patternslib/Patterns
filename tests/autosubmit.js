@@ -1,7 +1,7 @@
 describe("autosubmit-plugin", function() {
     var pattern;
 
-    requireDependencies(["jqplugins/autosubmit"], function(cls) {
+    requireDependencies(["patterns/autosubmit"], function(cls) {
         pattern = cls;
     });
 
