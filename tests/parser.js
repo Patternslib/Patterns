@@ -54,7 +54,7 @@ describe("Core / Parser", function() {
             var parser=new ArgumentParser();
             parser.add_argument("time-delay");
             var opts = parser._parse("15");
-            expect(opts["time-delay"]).toBeDefined();
+            expect(opts["timeDelay"]).toBeDefined();
         });
 
         it("Extra colons in named argument", function() {
