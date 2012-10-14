@@ -136,7 +136,7 @@ body>section:after {
 	display: block;
 	width: 45px;
 	height: 140px;
-	margin: -22px 0 0; /* half height of image */
+	margin: -80px 0 0; /* half height of image */
 	text-align: center;
 	outline: 0;
 	background: url(carousel-arrows.png) no-repeat;
