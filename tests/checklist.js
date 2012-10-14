@@ -12,14 +12,14 @@ describe("checklist-plugin", function() {
 
     describe("parse", function() {
         it("Shorthand notation", function() {
-            var $trigger = $("<input data-checklist='.select; .deselect'/>");
+            var $trigger = $("<input data-pat-checklist='.select; .deselect'/>");
                 options = pattern.parse($trigger);
             expect(options.select).toBe(".select");
             expect(options.deselect).toBe(".deselect");
         });
 
         it("Multiple options not accepted", function() {
-            var $trigger = $("<input data-checklist='.select1 && .select2'/>");
+            var $trigger = $("<input data-pat-checklist='.select1 && .select2'/>");
                 options = pattern.parse($trigger);
             expect(options.select).toBe(".select1");
         });
@@ -34,7 +34,7 @@ describe("checklist-plugin", function() {
         });
 
         it("Parse options from DOM", function() {
-            $("#lab").html("<div data-checklist='.one; .two'></div>");
+            $("#lab").html("<div data-pat-checklist='.one; .two'></div>");
             $("#lab div").patternChecklist();
             var $trigger = $("#lab div");
             expect($trigger.data("patternChecklist")).toEqual({select: ".one", deselect: ".two"});

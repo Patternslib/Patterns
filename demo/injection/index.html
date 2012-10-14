@@ -16,9 +16,9 @@
 		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
-		<link rel="stylesheet" href="base.css" type="text/css">
+		<link rel="stylesheet" href="../base.css" type="text/css">
 
-		<script data-main="../../src/main" src="../src/3rdparty/require-jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 
@@ -51,14 +51,14 @@
 				<li>9</li>
 			</ul>
 			<p id="buttonBarMore" style="width:150px;">
-				<a href="pattern-test-response.html#listToUpdate#buttonBarMore" rel="#listToUpdate:after #buttonBarMore" class="autoLoading-visible">More&hellip;</a>
+				<a href="pattern-test-response.html" class="pat-inject pat-autoload-visible" data-pat-inject="append: #listToUpdate && #buttonBarMore">More&hellip;</a>
 			</p>
 		</div>
 
 		<div id="panel1">
-			<ul>
-				<li><a href="pattern-test-response.html#cata-panel2" data-injection="#panel2:content">Cat A</a></li>
-				<li><a href="pattern-test-response.html#catb-panel2" data-injection="#panel2:content">Cat B</a></li>
+			<ul data-pat-inject="target: #panel2">
+				<li><a href="pattern-test-response.html#cata-panel2">Cat A</a></li>
+				<li><a href="pattern-test-response.html#catb-panel2">Cat B</a></li>
 				<li>etc...</li>
 			</ul>
 		</div>

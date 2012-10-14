@@ -10,7 +10,7 @@ when relevant. Here is an example from a hypothetical pizza order form:
    <form>
      <label><input type="checkbox" name="custom"/> Add extra toppings</label>
 
-     <fieldset class="dependsOn-custom">
+     <fieldset data-pat-depends="custom">
        <legend>Extra toppings</legend>
        <label><input type="checkbox" name="pineapple"/> Pineapple</label>
        <label><input type="checkbox" name="gorgonzola"/> Gorgonzola</label>
@@ -31,10 +31,10 @@ Another common use case is filtering a list based on some options:
    <label><input type="checkbox" name="overdue" checked="checked"/> Show overdue invoices</label>
 
    <ul>
-     <li class="dependsOn-paid">A paid invoice</li>
-     <li class="dependsOn-paid">Another paid invoiceli>
-     <li class="dependsOn-overdue">An overdue invoiceli>
-     <li class="dependsOn-draft">A draft invoice</li>
+     <li data-pat-depends="paid">A paid invoice</li>
+     <li data-pat-depends="paid">Another paid invoiceli>
+     <li data-pat-depends="overdue">An overdue invoiceli>
+     <li data-pat-depends="draft">A draft invoice</li>
      ....
    </ul>
 
@@ -42,34 +42,35 @@ Another common use case is filtering a list based on some options:
 Specifying dependencies
 -----------------------
 
-Dependencies are specified via one or more ``dependsOn-*`` classes on an
-element. In the simplest form these take a ``dependsOn-<input name>`` form
-which indicates that an input element with the given name must have a value
-(or if it is a checkbox must be checked). Other conditions are possible
-by specifying extra conditions:
+Dependencies are specified via one or dependencies specified in the
+``data-pat-depends-*`` attribute on an element. In the simplest form these take a
+``<input name>`` form which indicates that an input element with the given name
+must have a value (or if it is a checkbox must be checked). Other conditions
+are possible by specifying extra conditions:
 
-* ``dependsOn-<input name>-on``: indicates that an element name must have
-  a value, or if it is a checkbox must be checked. This is the default
+* ``<input name> on``: indicates that an element name must have
+  a value, or if; it is a checkbox must be checked. This is the default
   behaviour.
-* ``dependsOn-<input name>-off``: indicates that an element name must *not*
-  have a value, or if it is a checkbox must be unchecked.
-* ``dependsOn-<input name>-equals-<value>``: indicates that an input element
-  must have a specific value. This is most useful when used to check with
+* ``<input name> off``: indicates that an element name must *not*
+  have a value, ;or if it is a checkbox must be unchecked.
+* ``<input name> equals <value>``: indicates that an input element
+  must have a sp;ecific; value. This is most useful when used to check with
   radio button is selected.
-* ``dependsOn-<input name>-notEquals-<value>``: indicates that an input element
-  must have a not specific value. This is most useful when used to check with
+* ``<input name> notEquals <value>``: indicates that an input element
+  must have a no;t specifi;c value. This is most useful when used to check with
   radio button is selected.
 
 
-If you specify multiple dependencies for an element they must all be made. This
-can be changed with a ``dependsType-*`` class. The support values are:
+If you specify multiple dependencies by seperating them with `&&`
+they must all be match. This can be changed with by specifying a
+type in the first argument. . The support values are:
 
 * ``and``: all dependencies must be met (default).
 * ``or``: only one of the specified dependencies needs to be fullfilled
 
 .. code-block:: html
 
-   <button class="dependsOn-title dependsOn-id dependsType-or">Submit</button>
+   <button data-pat-depends="name: id; type: or && title">Submit</button>
 
 This creates a button which is only visible if either a title or an id has
 been provided.
@@ -79,12 +80,12 @@ Actions
 -------
 
 Two types of actions can be taken by the pattern: changing visibility and
-disabling elements. The action can be specified using a ``dependsAction-*``
-class.
+disabling elements. The action can be specified using a ``action-*``
+parameter.
 
 .. code-block:: html
 
-   <button class="dependsOn-title dependsAction-enable">Submit</button>
+   <button data-pat-depends="name: title; action:enable">Submit</button>
 
 This example shows a submit button which is disabled if the title input
 has no value.

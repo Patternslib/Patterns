@@ -13,7 +13,7 @@ describe("carousel-plugin", function() {
     describe("init", function() {
         it("Default options", function() {
             $("#lab").html(
-                "<ul class='pt-carousel'>" +
+                "<ul class='pat-carousel'>" +
                 "  <li>Panel 1</li>" +
                 "  <li>Panel 2</li>" +
                 "</ul>");
@@ -32,7 +32,7 @@ describe("carousel-plugin", function() {
 
         it("Default options (DOM test)", function() {
             $("#lab").html(
-                "<ul class='pt-carousel'>" +
+                "<ul class='pat-carousel'>" +
                 "  <li>Panel 1</li>" +
                 "  <li>Panel 2</li>" +
                 "</ul>");
@@ -48,7 +48,7 @@ describe("carousel-plugin", function() {
 
         it("Tweak options via DOM", function() {
             $("#lab").html(
-                "<ul class='pt-carousel' data-carousel='auto-play: false; loop: false; time-delay: 50'>" +
+                "<ul class='pat-carousel' data-pat-carousel='auto-play: false; loop: false; time-delay: 50'>" +
                 "  <li>Panel 1</li>" +
                 "  <li>Panel 2</li>" +
                 "</ul>");

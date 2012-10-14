@@ -12,14 +12,14 @@ describe("switch-plugin", function() {
 
     describe("parse", function() {
         it("Shorthand notation", function() {
-            var $trigger = $("<button id='trigger' data-switch='#victim; hide; show'>Click</button>");
+            var $trigger = $("<button id='trigger' data-pat-switch='#victim; hide; show'>Click</button>"),
                 options = pattern.parse($trigger);
             expect(options.length).toBe(1);
             expect(options[0]).toEqual({selector: "#victim", remove: "hide", add: "show"});
         });
 
         it("Multiple changes", function() {
-            var $trigger = $("<button id='trigger' data-switch='#victim; hide; show && #victim; hide; red'>Click</button>");
+            var $trigger = $("<button id='trigger' data-pat-switch='#victim; hide; show && #victim; hide; red'>Click</button>"),
                 options = pattern.parse($trigger);
             expect(options.length).toBe(2);
             expect(options[0]).toEqual({selector: "#victim", remove: "hide", add: "show"});
@@ -111,7 +111,7 @@ describe("switch-plugin", function() {
         });
 
         it("Parse defaults from DOM", function() {
-            $("#lab").html("<button data-switch='#victim; foo ; bar'>Click me</button>");
+            $("#lab").html("<button data-pat-switch='#victim; foo ; bar'>Click me</button>");
             $("#lab button").patternSwitch();
             var $trigger = $("#lab button");
             expect($trigger.data("patternSwitch")).toEqual([{selector: "#victim", remove:"foo", add: "bar"}]);
@@ -120,7 +120,7 @@ describe("switch-plugin", function() {
         it("Setup click event handler", function() {
             // Note that this relies on jQuery implementation details to check
             // for registered event handlers.
-            $("#lab").html("<button data-switch='#victim; foo'>Click me</button>");
+            $("#lab").html("<button data-pat-switch='#victim; foo'>Click me</button>");
             var $trigger = $("#lab button").patternSwitch(),
                  events = $._data($trigger[0]).events;
             expect(events.click).toBeDefined();
@@ -130,7 +130,7 @@ describe("switch-plugin", function() {
 
     it("Execute changes", function() {
         $("#lab")
-            .append("<button data-switch='#victim; foo'>Click me</button>")
+            .append("<button data-pat-switch='#victim; foo'>Click me</button>")
             .append("<div id='victim' class='foo'/>");
         var $trigger = $("#lab button").patternSwitch();
         $trigger.patternSwitch("execute");
@@ -142,7 +142,7 @@ describe("switch-plugin", function() {
         it("Setup click event handler", function() {
             // Note that this relies on jQuery implementation details to check
             // for registered event handlers.
-            $("#lab").html("<button data-switch='#victim; foo'>Click me</button>");
+            $("#lab").html("<button data-pat-switch='#victim; foo'>Click me</button>");
             var $trigger = $("#lab button").patternSwitch(),
                  events = $._data($trigger[0]).events;
             expect(events.click).toBeDefined();

@@ -4,7 +4,7 @@ define([
 ], function($, patterns) {
     var menu = {
         name: "menu",
-        trigger: "ul.menu",
+        trigger: "ul.pat-menu",
 
         init: function($root) {
             return $root.each(function() {
@@ -48,8 +48,8 @@ define([
                 $("ul.menu li", root)
                     .addClass("closed")
                     .filter(":has(ul)").addClass("hasChildren").end()
-                    .on("mouseover.patterns", mouseOverHandler)
-                    .on("mouseout.patterns", mouseOutHandler);
+                    .on("mouseover.pat-menu", mouseOverHandler)
+                    .on("mouseout.pat-menu", mouseOutHandler);
             });
         }
     };

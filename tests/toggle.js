@@ -12,7 +12,7 @@ describe("toggle", function() {
 
     describe("onClick", function() {
         it("Bad syntax", function() {
-            $("#lab").html("<button id='trigger' data-toggle='#victim'>Click</button>");
+            $("#lab").html("<button id='trigger' data-pat-toggle='#victim'>Click</button>");
             var trigger = document.getElementById("trigger"),
                 event = jasmine.createSpyObj("event", ["preventDefault"]);
             spyOn(pattern, "_update");
@@ -22,7 +22,7 @@ describe("toggle", function() {
         });
 
         it("Shorthand notation", function() {
-            $("#lab").html("<button id='trigger' data-toggle='#victim;;on'>Click</button>");
+            $("#lab").html("<button id='trigger' data-pat-toggle='#victim;;on'>Click</button>");
             var trigger = document.getElementById("trigger"),
                 event = jasmine.createSpyObj("event", ["preventDefault"]);
             spyOn(pattern, "_update");
@@ -32,7 +32,7 @@ describe("toggle", function() {
         });
 
         it("Multiple changes", function() {
-            $("#lab").html("<button id='trigger' data-toggle='#victim;;on && #victim;;enabled'>Click</button>");
+            $("#lab").html("<button id='trigger' data-pat-toggle='#victim;;on && #victim;;enabled'>Click</button>");
             var trigger = document.getElementById("trigger"),
                 event = jasmine.createSpyObj("event", ["preventDefault"]);
             spyOn(pattern, "_update");
