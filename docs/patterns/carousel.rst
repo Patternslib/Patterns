@@ -70,40 +70,40 @@ in the ``data-pat-carousel`` attribute.
    </ul>
 
                                      
-+------------------------+            +------------+-----------------------------------------+
-| Setting                | Values     | Default    | Description                             |
-+========================+            +============+=========================================+
-| ``slide-show``         | autoplay   |            | Indicates if the carousel should start  |
-|                        | start-stop |            | playing automatically. If               |
-|                        | loop            |            | ``control-arrows`` is enabled users|
-|                        |            |            | will be able to control this manually.  |
-|                        |            |            | Start-stop introduces a buttons that    |
-|                        |            |            | toggles the slideshow on or of. With    |
-|                        |            |            | loop the carousel will start at the     |
-|                        |            |            | beginning again once it reached the end.|
-+------------------------+            +------------+-----------------------------------------+
-| ``effect``             | bounce     | ease-in    | Easing behaviour of the carousel animation
-|                        | ease-in    | ease-out   | 
-|                        | ease-out   |            | 
-+------------------------+            +------------+-----------------------------------------+
-| ``sizing``             | resize     |            | If resize is enabled the carousel will be resized |
-|                        | expand     |            | to fill its parent.                     |
++---------------------+------------+----------+----------------------------------------------------+
+| Setting             | Values     | Default  | Description                                        |
++=====================+============+==========+====================================================+
+| ``slide-show``      | autoplay   |          | Indicates if the carousel should start             |
+|                     | start-stop |          | playing automatically. If                          |
+|                     | loop       |          | ``control-arrows`` is enabled users                |
+|                     |            |          | will be able to control this manually.             |
+|                     |            |          | Start-stop introduces a buttons that               |
+|                     |            |          | toggles the slideshow on or of. With               |
+|                     |            |          | loop the carousel will start at the                |
+|                     |            |          | beginning again once it reached the end.           |
++---------------------+------------+----------+----------------------------------------------------+
+| ``effect``          | bounce     | ease-in  | Easing behaviour of the carousel animation         |
+|                     | ease-in    | ease-out |                                                    |
+|                     | ease-out   |          |                                                    |
++---------------------+------------+----------+----------------------------------------------------+
+| ``sizing``          | resize     |          | If resize is enabled the carousel will be resized  |
+|                     | expand     |          | to fill its parent.                                |
+|                     |            |          | If expand is enabled all panels will be resizes to |
+|                     |            |          | fill the carousel. If not enabled the              |
+|                     |            |          | will dynamically adjust its size to                |
+|                     |            |          | match the currently shown panel.                   |
++---------------------+------------+----------+----------------------------------------------------+
+| ``controls``        | buttons    | buttons  | Switch on control buttons (arrows),                |
+|                     | navigation |          | generated navigation links, touch                  |
+|                     | touch      |          | control                                            |
++---------------------+------------+----------+----------------------------------------------------+
+| ``delay``           |            | 3s       | The time in seconds a single panel                 |
+|                     |            |          | is shown when animation is active.                 |
++---------------------+------------+----------+----------------------------------------------------+
+| ``animation-speed`` |            | 0.2s     | The duration of a transition animation             |
+|                     |            |          | in milliseconds.                                   |
++---------------------+------------+----------+----------------------------------------------------+
+| end                 | infite     |          | With 'infinite' the carousel wel rotate            |
+|                     |            |          | back to the first slide after the last             |
++---------------------+------------+----------+----------------------------------------------------+
 
-|                        |            |            | If expand is enabled all panels will be resizes to |
-|                        |            |            | fill the carousel. If not enabled the   |
-|                        |            |            | will dynamically adjust its size to     |
-|                        |            |            | match the currently shown panel.        |
-+------------------------+            +------------+-----------------------------------------+
-| ``controls``           | buttons    | buttons    | Switch on control buttons (arrows),     |
-|                        | navigation |            | generated navigation links, touch       |
-|                        | touch      |            | control                                 |
-+------------------------+            +------------+-----------------------------------------+
-| ``delay``              |            | 3s         | The time in seconds a single panel |
-|                        |            |            | is shown when animation is active.      |
-+------------------------+            +------------+-----------------------------------------+
-| ``animation-speed``    |            | 0.2s       | The duration of a transition animation  |
-|                        |            |            | in milliseconds.                        |
-+------------------------+            +------------+-----------------------------------------+
-| end                    | infite     |            | With 'infinite' the carousel wel rotate |
-|                        |            |            | back to the first slide after the last  |
-+------------------------+            +------------+-----------------------------------------+
