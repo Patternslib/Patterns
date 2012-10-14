@@ -69,39 +69,41 @@ in the ``data-pat-carousel`` attribute.
      <li><img title="Panel 3"/></li>
    </ul>
 
+                                     
++------------------------+            +------------+-----------------------------------------+
+| Setting                | Values     | Default    | Description                             |
++========================+            +============+=========================================+
+| ``slide-show``         | autoplay   |            | Indicates if the carousel should start  |
+|                        | start-stop |            | playing automatically. If               |
+|                        | loop            |            | ``control-arrows`` is enabled users|
+|                        |            |            | will be able to control this manually.  |
+|                        |            |            | Start-stop introduces a buttons that    |
+|                        |            |            | toggles the slideshow on or of. With    |
+|                        |            |            | loop the carousel will start at the     |
+|                        |            |            | beginning again once it reached the end.|
++------------------------+            +------------+-----------------------------------------+
+| ``effect``             | bounce     | ease-in    | Easing behaviour of the carousel animation
+|                        | ease-in    | ease-out   | 
+|                        | ease-out   |            | 
++------------------------+            +------------+-----------------------------------------+
+| ``sizing``             | resize     |            | If resize is enabled the carousel will be resized |
+|                        | expand     |            | to fill its parent.                     |
 
-+------------------------+---------+-----------------------------------------+
-| Setting                | Default | Description                             |
-+========================+=========+=========================================+
-| ``auto-play``          | true    | Indicates if the carousel should start  |
-|                        |         | playing automatically. If               |
-|                        |         | ``control-arrows`` is enabled users     |
-|                        |         | will be able to control this manually.  |
-+------------------------+---------+-----------------------------------------+
-| ``loop``               | true    | Indicates if the carousel will loop.    |
-+------------------------+---------+-----------------------------------------+
-| ``resize``             | false   | If enabled the carousel will be resized |
-|                        |         | to fill its parent.                     |
-+------------------------+---------+-----------------------------------------+
-| ``expand``             | false   | If enable all panels will be resizes to |
-|                        |         | fill the carousel. If not enabled the   |
-|                        |         | will dynamically adjust its size to     |
-|                        |         | match the currently shown panel.        |
-+------------------------+---------+-----------------------------------------+
-| ``control-arrows``     | false   | If enabled back and forward-arrows are  |
-|                        |         | are created. Note that users can always |
-|                        |         | use swipes and keyboard to control the  |
-|                        |         | carousel as well.                       |
-+------------------------+---------+-----------------------------------------+
-| ``control-navigation`` | false   | If enabled a list of links to navigate  |
-|                        |         | within the carousel is created.         |
-+------------------------+---------+-----------------------------------------+
-| ``control-startstop``  | false   | If enabled a button to start and stop   |
-|                        |         | carousel animation is added.            |
-+------------------------+---------+-----------------------------------------+
-| ``time-delay``         | 3000    | The time in milliseconds a single panel |
-|                        |         | is shown when animation is active.      |
-+------------------------+---------+-----------------------------------------+
-| ``time-animation``     | 600     | The duration of a transition animation  |
-|                        |         | in milliseconds.                        |
-+------------------------+---------+-----------------------------------------+
+|                        |            |            | If expand is enabled all panels will be resizes to |
+|                        |            |            | fill the carousel. If not enabled the   |
+|                        |            |            | will dynamically adjust its size to     |
+|                        |            |            | match the currently shown panel.        |
++------------------------+            +------------+-----------------------------------------+
+| ``controls``           | buttons    | buttons    | Switch on control buttons (arrows),     |
+|                        | navigation |            | generated navigation links, touch       |
+|                        | touch      |            | control                                 |
++------------------------+            +------------+-----------------------------------------+
+| ``delay``              |            | 3s         | The time in seconds a single panel |
+|                        |            |            | is shown when animation is active.      |
++------------------------+            +------------+-----------------------------------------+
+| ``animation-speed``    |            | 0.2s       | The duration of a transition animation  |
+|                        |            |            | in milliseconds.                        |
++------------------------+            +------------+-----------------------------------------+
+| end                    | infite     |            | With 'infinite' the carousel wel rotate |
+|                        |            |            | back to the first slide after the last  |
++------------------------+            +------------+-----------------------------------------+
