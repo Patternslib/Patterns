@@ -18,42 +18,36 @@ define([
     var _ = {
         name: "collapsible",
         trigger: ".pat-collapsible",
-        init: function($el, opts) {
-            $el.each(function() {
-                _._init($(this), opts);
-            });
-            return $el;
-        },
         parser: parser,
-        _init: function($el, opts) {
-            // create collapsible structure
-            var $ctrl = $el.children(':first'),
-                $content = $el.children(':gt(0)'),
-                $panel;
-            if ($content.length > 0) {
-                $panel = $content.wrapAll('<div class="panel-content" />')
-                    .parent();
-            } else {
-                $panel = $('<div class="panel-content" />').insertAfter($ctrl);
-            }
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $el = $(this);
+                // create collapsible structure
+                var $ctrl = $el.children(':first'),
+                    $content = $el.children(':gt(0)'),
+                    $panel;
+                if ($content.length > 0) {
+                    $panel = $content.wrapAll('<div class="panel-content" />')
+                        .parent();
+                } else {
+                    $panel = $('<div class="panel-content" />').insertAfter($ctrl);
+                }
 
-            var cfg = _.parser.parse($el, opts);
-            $el.data('patterns.collapsible', cfg);
+                // set initial state
+                if ((opts && opts.closed) || $el.hasClass("closed")) {
+                    $el.removeClass("closed");
+                    _.close($el, {duration: 0});
+                } else {
+                    $el.addClass("open");
+                }
 
-            // set initial state
-            if ((opts && opts.closed) || $el.hasClass("closed")) {
-                $el.removeClass("closed");
-                _.close($el, {duration: 0});
-            } else {
-                $el.addClass("open");
-            }
+                // bind to click events
+                $ctrl.on("click.pat-collapsible", function() {
+                    _.toggle($el, "fast");
+                });
 
-            // bind to click events
-            $ctrl.on("click.pat-collapsible", function() {
-                _.toggle($el, "fast");
+                return $el;
             });
-
-            return $el;
         },
         destroy: function($el) {
             var $ctrl = $el.children(':first');
@@ -70,10 +64,10 @@ define([
             return $el;
         },
         loadContent: function($el) {
-            var cfg = $el.data('patterns.collapsible');
-            if (!cfg['load-content'])
+            var cfg = _.parser.parse($el, opts);
+            if (!cfg.loadContent)
                 return;
-            var components = cfg['load-content'].split('#'),
+            var components = cfg.loadContent.split('#'),
                 url = components[0],
                 id = components[1] ? '#' + components[1] : null,
                 opts = [{
