@@ -65,9 +65,6 @@ define(function(require) {
         getLogger: function(name) {
             var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
             if (name === 'inject_log_old') logger.setLevel(level.INFO);
-            // disable old injection logging for now
-            if (name === 'old-injection') logger.setLevel(level.WARN);
-
             return logger;
         }
     };
