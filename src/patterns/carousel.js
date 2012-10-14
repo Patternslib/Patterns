@@ -14,11 +14,11 @@ define([
     var log = logging.getLogger("carousel"),
         parser = new Parser("carousel");
 
-    parser.add_argument("auto-play", true);
+    parser.add_argument("auto-play", false);
     parser.add_argument("loop", true);
     parser.add_argument("resize", false);
     parser.add_argument("expand", false);
-    parser.add_argument("control-arrows", false);
+    parser.add_argument("control-arrows", true);
     parser.add_argument("control-navigation", false);
     parser.add_argument("control-startstop", false);
     parser.add_argument("time-delay", 3000);
