@@ -4,7 +4,7 @@ define([
     '../utils',
     "../core/init",
     "../registry",
-    '../lib/dist/fullcalendar/fullcalendar'
+    '../3rdparty/fullcalendar/fullcalendar'
 ], function($, logging, utils, mapal, patterns) {
     var log = logging.getLogger('fullcalendar');
 
