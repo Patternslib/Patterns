@@ -696,6 +696,9 @@ ol.usps li p {
 	padding-left: 8%;
 	padding-right: 8%;
 	position: relative;
+	font-size: 12px;
+	font-style: italic;
+	line-height: 18px;
 }
 
 @media (max-width: 767px) {
