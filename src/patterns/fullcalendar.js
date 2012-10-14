@@ -29,14 +29,14 @@ define([
             $filter.find('.check-list .groups label').hide();
 
             // initialize existing months
-            fullcalendar.initMonths($calroot);
+            initMonths($calroot);
 
             // wait for additional months
             $calroot.on('inject.pat-fullcalendar', function(ev, opts) {
-                fullcalendar.initMonths($(ev.target));
+                initMonths($(ev.target));
             });
             $calroot.on('injection.pat-fullcalendar', function(event, month) {
-                fullcalendar.initMonths($(month));
+                initMonths($(month));
             });
         },
 
