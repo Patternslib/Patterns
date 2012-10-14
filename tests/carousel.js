@@ -22,11 +22,11 @@ describe("carousel-plugin", function() {
             pattern.init($carousel);
             expect($.fn.anythingSlider).toHaveBeenCalled();
             var options = $.fn.anythingSlider.calls[0].args[0];
-            expect(options.autoPlay).toBe(true);
+            expect(options.autoPlay).toBe(false);
             expect(options.stopAtEnd).toBe(false);
             expect(options.resizeContents).toBe(false);
             expect(options.expand).toBe(false);
-            expect(options.buildArrows).toBe(false);
+            expect(options.buildArrows).toBe(true);
             expect(options.expand).toBe(false);
         });
 
