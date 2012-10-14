@@ -15,7 +15,10 @@ define([
     var parser = new Parser("autosuggest");
     parser.add_argument('words');
     parser.add_argument('prefill');
-    parser.add_argument('asHtmlId', false);
+    parser.add_argument('as-html-id', false);
+    parser.add_argument('selected-value-prop', "name");
+    parser.add_argument('search-obj-prop', "name");
+    parser.add_argument('start-text', "Enter text");
 
     var _ = {
         name: 'autosuggest',
@@ -27,8 +30,17 @@ define([
                 });
             }
 
-            var cfg = $.extend({}, _.extractConfig($el), opts);
-            $el.data("patterns.autoSuggest", cfg);
+            // fetch config from first parent found
+            cfg = _.parser.parse($el, opts);
+            if ($el.attr('readonly')) {
+                cfg.startText = "";
+            }
+
+            if (cfg.prefill && (cfg.prefill.slice(0,1) === ',')) {
+                cfg.prefill = cfg.prefill.slice(1);
+            }
+
+            $el.data("patterns.autosuggest", cfg);
 
             $el.on('keydown.pat-autosuggest', _.onKeyDown);
 
@@ -58,7 +70,7 @@ define([
                 };
             }
 
-            var data = cfg.words.map(function(word) {
+            var data = cfg.words.split(/\s*,\s*/).map(function(word) {
                 return {value: word, name: word};
             });
 
@@ -69,28 +81,12 @@ define([
         destroy: function($el) {
             $el.off('.pat-autosuggest');
             $el.data('patterns.autosuggest', null);
-            // XXX: destroy the jqueryPlugin
+
+            // XXX: destroy the jqueryPlugin, unfortunately it doesn't
+            // support this as of now
         },
 
         parser: parser,
-        extractConfig: function($el) {
-            var cfg = {
-                selectedValueProp: "name",
-                searchObjProp: "name",
-                startText: $el.attr('readonly') ? "" : "Click to add labels"
-            };
-
-            // fetch config from first parent found
-            var $cfg = $el.parents('[data-pat-autosuggest]:first');
-            cfg = $.extend(
-                {}, cfg, _.parser.parse($cfg.attr('data-pat-autosuggest')));
-
-            if (cfg.prefill && (cfg.prefill.slice(0,1) === ',')) {
-                cfg.prefill = cfg.prefill.slice(1);
-            }
-
-            return cfg;
-        },
 
         onKeyDown: function(ev) {
             var $this = $(this);
