@@ -24,34 +24,20 @@ describe("Core / Parser", function() {
         ArgumentParser = cls;
     });
 
-    describe("parse", function() {
-        it("Empty paramter", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("selector");
-            var opts = parser.parse(undefined, {"default": true});
-            expect(opts["default"]).toBe(true);
-        });
-
+    describe("_parse", function() {
         it("Positional argument", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
-            var opts = parser.parse(".MyClass");
+            var opts = parser._parse(".MyClass");
             expect(opts.selector).toBe(".MyClass");
         });
 
-        it("Default value", function() {
+        it("Empty first value value", function() {
             var parser=new ArgumentParser();
-            parser.add_argument("selector", "default");
-            var opts = parser.parse("");
-            expect(opts.selector).toBe("default");
-        });
-
-        it("Use default for empty value", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("first", "default");
+            parser.add_argument("first");
             parser.add_argument("second");
-            var opts = parser.parse("; bar");
-            expect(opts.first).toBe("default");
+            var opts = parser._parse("; bar");
+            expect(opts.first).toBe(undefined);
             expect(opts.second).toBe("bar");
         });
 
@@ -59,185 +45,137 @@ describe("Core / Parser", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
             parser.add_argument("attr");
-            var opts = parser.parse("attr: class");
+            var opts = parser._parse("attr: class");
+            expect(opts.selector).toBe(undefined);
             expect(opts.attr).toBe("class");
         });
 
         it("Dash in key", function() {
             var parser=new ArgumentParser();
             parser.add_argument("time-delay");
-            var opts = parser.parse("15");
-            expect(opts["time-delay"]).toBeDefined();
-        });
-
-        it("Numeric value only", function() {
-            // This is likely to happen since $().data("name") will return a
-            // number of a digits-only value was used. Simple test case:
-            // typeof $("<div/>", {"data-xyz": "500"}).data("xyz") === "number"
-            var parser=new ArgumentParser();
-            parser.add_argument("delay");
-            var opts = parser.parse(500);
-            expect(opts.delay).toBe("500");
+            var opts = parser._parse("15");
+            expect(opts["timeDelay"]).toBeDefined();
         });
 
         it("Extra colons in named argument", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
-            var opts = parser.parse("selector: nav:first");
+            var opts = parser._parse("selector: nav:first");
             expect(opts.selector).toBe("nav:first");
         });
 
-        // XXX: test for warn message
         it("Ignore extra positional parameters", function() {
             var parser=new ArgumentParser();
             parser.add_argument("foo");
-            var opts = parser.parse("bar; buz");
+            var opts = parser._parse("bar; buz");
             expect(opts.foo).toBe("bar");
         });
 
-        // XXX: test for warn message
         it("Ignore unknown named parameter", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
-            var opts = parser.parse("attr: class");
+            var opts = parser._parse("attr: class");
             expect(opts.attr).toBeUndefined();
         });
     });
+    
+    describe("parse", function() {
+        describe("Value bubbling", function() {
+            it("Use default from parser", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("selector", "default");
+                var opts = parser.parse($(), "");
+                expect(opts.selector).toBe("default");
+            });
 
-    describe("parse - params via init", function() {
-        it("Positional argument", function() {
-            var parser=new ArgumentParser("selector");
-            var opts = parser.parse(".MyClass");
-            expect(opts.selector).toBe(".MyClass");
+            it("Value from data attribute", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("selector", "default");
+                var opts = parser.parse($('<div data-pat-mypattern="element"/>'));
+                expect(opts.selector).toBe("element");
+            });
+
+            it("Inherit value from parent data attribute", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("selector", "default");
+                var $content = $("<div data-pat-mypattern='parent'><span/></div>").find("span");
+                var opts = parser.parse($content);
+                expect(opts.selector).toBe("parent");
+            });
+
+            it("Prefer value from element data attribute", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("selector", "default");
+                var $content = $("<div data-pat-mypattern='parent'><span data-pat-mypattern='el'/></div>").find("span");
+                var opts = parser.parse($content);
+                expect(opts.selector).toBe("el");
+            });
+
+            it("Parameter trumps all", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("selector", "default");
+                var opts = parser.parse(
+                    $('<div data-pat-mypattern="element"/>'),
+                    {selector: "parameter"});
+                expect(opts.selector).toBe("parameter");
+            });
+
         });
 
-        it("Default value", function() {
-            var parser=new ArgumentParser("selector: default");
-            var opts = parser.parse("");
-            expect(opts.selector).toBe("default");
-        });
+        describe("Multiple argument handling", function() {
+            it("Ignore extra arguments when multiple not requested", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value");
+                var $content = $("<div data-pat-mypattern='one && two'/>");
+                var opts = parser.parse($content);
+                expect(Array.isArray(opts)).toBe(false);
+                expect(opts.value).toBe("one");
+            });
 
-        it("Use default for empty value", function() {
-            var parser=new ArgumentParser("first: default; second");
-            var opts = parser.parse("; bar");
-            expect(opts.first).toBe("default");
-            expect(opts.second).toBe("bar");
-        });
-
-        it("Default value for second", function() {
-            var parser=new ArgumentParser("first; selector: default");
-            var opts = parser.parse("abc");
-            expect(opts.first).toBe("abc");
-            expect(opts.selector).toBe("default");
-        });
-
-        it("Named argument", function() {
-            var parser=new ArgumentParser("selector; attr");
-            var opts = parser.parse("attr: class");
-            expect(opts.attr).toBe("class");
-        });
-
-        // XXX: test for warn message
-        it("Ignore extra positional parameters", function() {
-            var parser=new ArgumentParser("foo");
-            var opts = parser.parse("bar; buz");
-            expect(opts.foo).toBe("bar");
-        });
-
-        // XXX: test for warn message
-        it("Ignore unknown named parameter", function() {
-            var parser=new ArgumentParser("selector");
-            var opts = parser.parse("attr: class");
-            expect(opts.attr).toBeUndefined();
-        });
-
-        it("Reference other param for default value", function() {
-            var parser=new ArgumentParser("p1; p2: $p1");
-            var opts = parser.parse("foo");
-            expect(opts.p1).toBe("foo");
-            expect(opts.p2).toBe("foo");
-        });
-    });
-
-    describe("parse - multiple with &&", function() {
-        it("Positional argument", function() {
-            var parser=new ArgumentParser("selector");
-            var opts = parser.parse(".MyClass && .MyOther");
-            expect(opts[0].selector).toBe(".MyClass");
-            expect(opts[1].selector).toBe(".MyOther");
-        });
-
-        it("Default value", function() {
-            var parser=new ArgumentParser("selector: default");
-            var opts = parser.parse("&&");
-            expect(opts[0].selector).toBe("default");
-            expect(opts[1].selector).toBe("default");
-        });
-
-        it("Use default for empty value", function() {
-            var parser=new ArgumentParser("first: default; second");
-            var opts = parser.parse("; bar && ;baz");
-            expect(opts[0].first).toBe("default");
-            expect(opts[0].second).toBe("bar");
-            expect(opts[1].first).toBe("default");
-            expect(opts[1].second).toBe("baz");
-        });
-
-        it("Named argument", function() {
-            var parser=new ArgumentParser("selector; attr");
-            var opts = parser.parse("attr: class && ;foo");
-            expect(opts[0].attr).toBe("class");
-            expect(opts[1].attr).toBe("foo");
-        });
-
-        it("Parse time default", function() {
-            var parser=new ArgumentParser("selector; attr");
-            var opts = parser.parse("attr: class && ;foo", {"selector": "bar"});
-            expect(opts[0].attr).toBe("class");
-            expect(opts[0].selector).toBe("bar");
-            expect(opts[1].attr).toBe("foo");
-            expect(opts[1].selector).toBe("bar");
+            it("Return all arguments when multiple requested", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value");
+                var $content = $("<div data-pat-mypattern='one && two'/>");
+                var opts = parser.parse($content, true);
+                expect(Array.isArray(opts)).toBe(true);
+                expect(opts[0].value).toBe("one");
+                expect(opts[1].value).toBe("two");
+            });
         });
     });
 
-    describe("parse - type coercion", function() {
+    describe("_coerce", function() {
         it("Convert to number", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", 0);
-            expect(parser.parse("15").value).toBe(15);
+            expect(parser._coerce({value: "15"}).value).toBe(15);
         });
 
         it("Always use decimal notation for numbers", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", 0);
-            expect(parser.parse("010").value).toBe(10);
+            expect(parser._coerce({value: "010"}).value).toBe(10);
         });
 
         it("Convert to boolean", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", false);
-            expect(parser.parse("1").value).toBe(true);
-            expect(parser.parse("TRUE").value).toBe(true);
-            expect(parser.parse("YeS").value).toBe(true);
-            expect(parser.parse("0").value).toBe(false);
-            expect(parser.parse("False").value).toBe(false);
-            expect(parser.parse("n").value).toBe(false);
-            expect(parser.parse("unknown").value).toBe(false);
+            expect(parser._coerce({value: "1"}).value).toBe(true);
+            expect(parser._coerce({value: "TRUE"}).value).toBe(true);
+            expect(parser._coerce({value: "YeS"}).value).toBe(true);
+            expect(parser._coerce({value: "0"}).value).toBe(false);
+            expect(parser._coerce({value: "False"}).value).toBe(false);
+            expect(parser._coerce({value: "n"}).value).toBe(false);
+            expect(parser._coerce({value: "unknown"}).value).toBe(false);
         });
 
         it("Convert to number", function() {
             var parser = new ArgumentParser();
             parser.add_argument("value", 15);
-            expect(parser.parse("1").value).toBe(1);
-            expect(parser.parse("0").value).toBe(0);
-            expect(parser.parse("010").value).toBe(10);
-            expect(isNaN(parser.parse("ZZZ").value)).toBe(true);
-        });
-
-        it("Coerce defaults", function() {
-            var parser = new ArgumentParser();
-            parser.add_argument("value", false);
-            expect(parser.parse("", {value: 15}).value).toBe(true);
+            expect(parser._coerce({value: "1"}).value).toBe(1);
+            expect(parser._coerce({value: "0"}).value).toBe(0);
+            expect(parser._coerce({value: "010"}).value).toBe(10);
+            expect(isNaN(parser._coerce({value: "ZZZ"}).value)).toBe(true);
         });
     });
 });

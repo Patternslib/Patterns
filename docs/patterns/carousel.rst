@@ -3,14 +3,14 @@ Carousels
 
 Patterns builds on the excellent `AnythingSlider
 <https://github.com/CSS-Tricks/AnythingSlider/wiki>`_ (licensed under LGPL 3) to
-provide a very simple way to create carousels. Just by adding a ``pt-carousel``
+provide a very simple way to create carousels. Just by adding a ``pat-carousel``
 class to your markup you can turn anything into a beautiful carousel.
 
 Carousels usually use an unnumbered list to define all panels:
 
 .. code-block:: html
 
-   <ul class="pt-carousel">
+   <ul class="pat-carousel">
      <li><img title="Panel 1"/></li>
      <li><img title="Panel 2"/></li>
      <li><img title="Panel 3"/></li>
@@ -22,7 +22,7 @@ panels. For example using a sequence of divs in a section:
 
 .. code-block:: html
 
-   <section class="pt-carousel">
+   <section class="pat-carousel">
      <div>
        <h2>This is panel 1</h2>
        <p>....</p>
@@ -41,7 +41,7 @@ to jump to the linked panel when clicked.
 
 .. code-block:: html
 
-   <ul class="pt-carousel">
+   <ul class="pat-carousel">
      <li id="intro"><img title="Panel 1"/></li>
      <li id="frontpage"><img title="Panel 2"/></li>
      <li id="reports"><img title="Panel 3"/></li>
@@ -58,12 +58,12 @@ Customizing behaviour
 ---------------------
 
 The default carousel is quite spartan. You can customize it through options
-in the ``data-carousel`` attribute. 
+in the ``data-pat-carousel`` attribute. 
 
 
 .. code-block:: html
 
-   <ul class="pt-carousel" data-carousel="loop: false; control-arrows: true;">
+   <ul class="pat-carousel" data-pat-carousel="loop: false; control-arrows: true;">
      <li><img title="Panel 1"/></li>
      <li><img title="Panel 2"/></li>
      <li><img title="Panel 3"/></li>

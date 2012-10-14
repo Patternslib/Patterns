@@ -12,14 +12,17 @@ define([
 ], function($, logging, Parser, registry, utils) {
     var log = logging.getLogger('autosuggest');
 
-    var parser = new Parser();
+    var parser = new Parser("autosuggest");
     parser.add_argument('words');
     parser.add_argument('prefill');
-    parser.add_argument('asHtmlId', false);
+    parser.add_argument('as-html-id', false);
+    parser.add_argument('selected-value-prop', "name");
+    parser.add_argument('search-obj-prop', "name");
+    parser.add_argument('start-text', "Enter text");
 
     var _ = {
-        name: 'autoSuggest',
-        trigger: "input.auto-suggest",
+        name: 'autosuggest',
+        trigger: "input.pat-autosuggest",
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.map(function() {
@@ -27,15 +30,24 @@ define([
                 });
             }
 
-            var cfg = $.extend({}, _.extractConfig($el), opts);
-            $el.data("patterns.autoSuggest", cfg);
+            // fetch config from first parent found
+            cfg = _.parser.parse($el, opts);
+            if ($el.attr('readonly')) {
+                cfg.startText = "";
+            }
 
-            $el.on('keydown.patternAutoSuggest', _.onKeyDown);
+            if (cfg.prefill && (cfg.prefill.slice(0,1) === ',')) {
+                cfg.prefill = cfg.prefill.slice(1);
+            }
+
+            $el.data("patterns.autosuggest", cfg);
+
+            $el.on('keydown.pat-autosuggest', _.onKeyDown);
 
             // are we autosubmit?
-            var autosubmit = $el.is('.auto-submit') ||
-                    ($el.parents('.auto-submit').length > 0);
-            log.debug('auto-submit', autosubmit, $el);
+            var autosubmit = $el.is('.pat-autosubmit') ||
+                    ($el.parents('.pat-autosubmit').length > 0);
+            log.debug('autosubmit', autosubmit, $el);
 
             var $form;
             if (autosubmit) {
@@ -58,7 +70,7 @@ define([
                 };
             }
 
-            var data = cfg.words.map(function(word) {
+            var data = cfg.words.split(/\s*,\s*/).map(function(word) {
                 return {value: word, name: word};
             });
 
@@ -67,30 +79,14 @@ define([
             return $el;
         },
         destroy: function($el) {
-            $el.off('.patternAutoSuggest');
-            $el.data('patterns.autoSuggest', null);
-            // XXX: destroy the jqueryPlugin
+            $el.off('.pat-autosuggest');
+            $el.data('patterns.autosuggest', null);
+
+            // XXX: destroy the jqueryPlugin, unfortunately it doesn't
+            // support this as of now
         },
 
         parser: parser,
-        extractConfig: function($el) {
-            var cfg = {
-                selectedValueProp: "name",
-                searchObjProp: "name",
-                startText: $el.attr('readonly') ? "" : "Click to add labels"
-            };
-
-            // fetch config from first parent found
-            var $cfg = $el.parents('[data-auto-suggest-config]:first');
-            cfg = $.extend(
-                {}, cfg, _.parser.parse($cfg.attr('data-auto-suggest-config')));
-
-            if (cfg.prefill && (cfg.prefill.slice(0,1) === ',')) {
-                cfg.prefill = cfg.prefill.slice(1);
-            }
-
-            return cfg;
-        },
 
         onKeyDown: function(ev) {
             var $this = $(this);
@@ -108,7 +104,8 @@ define([
             }
         }
     };
-    return registry.register(_);
+    registry.register(_);
+    return _;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

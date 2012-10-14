@@ -6,15 +6,16 @@
  * Copyright 2012 Florian Friesdorf
  */
 define([
+    'jquery',
     '../logging'
-], function(logging) {
+], function($, logging) {
     var log = logging.getLogger('parser');
 
-    function ArgumentParser(spec) {
+    function ArgumentParser(name) {
         this.params = [];
+        this.mappings = {};
         this.defaults = {};
-        if (spec)
-            this.add_spec(spec);
+        this.attribute = "data-pat-" + name;
     }
 
     ArgumentParser.prototype = {
@@ -24,45 +25,15 @@ define([
             if (default_value === undefined)
                 default_value = null;
             this.params.push(name);
-            this.defaults[name] = default_value;
+            this.mappings[name] = name.replace(/\-([a-z])/g, function(_,p1){return p1.toUpperCase();});
+            this.defaults[this.mappings[name]] = default_value;
         },
 
-        add_spec: function(spec) {
-            var parts = spec.split(';'),
-                parser = this;
-            for (var i=0, part; i<parts.length; i++) {
-                part = parts[i].trim();
-                var match = part.match(parser.named_param_pattern);
-                if (match) {
-                    parser.add_argument(match[1], match[2].trim());
-                } else {
-                    parser.add_argument(part);
-                }
-            }
-        },
-
-        parse: function(parameter, defaults) {
+        _parse: function(parameter) {
             if (typeof parameter==="number")
                 parameter = parameter.toString();
-            if (parameter && parameter.match(/&&/)) {
-                return parameter.split(/\s*&&\s*/).map(function(parameter) {
-                    return this.parse(parameter, defaults);
-                }, this);
-            }
 
-            var types = {},
-                opts = {}, i, name;
-
-            for (i in this.defaults)
-                types[i] = this.defaults[i]===null ? "null" : typeof this.defaults[i];
-
-            // Copy all defaults to opts.
-            if (typeof defaults === "object")
-                for (i in defaults)
-                    opts[i] = defaults[i];
-
-            for (i in this.defaults)
-                opts[i] = opts[i] || this.defaults[i];
+            var opts = {}, i, name;
 
             if (parameter) {
                 var parts = parameter.split(";"),
@@ -82,7 +53,7 @@ define([
                         parts.unshift(part);
                         break;
                     }
-                    opts[this.params[i]] = part.trim();
+                    opts[this.mappings[this.params[i]]] = part.trim();
                 }
 
                 // Handle all named parameters
@@ -95,20 +66,33 @@ define([
                         log.warn("Positional parameters not allowed after named parameters");
                         break;
                     }
-                    if (this.defaults[matches[1]] === undefined) {
+                    if (this.defaults[this.mappings[matches[1]]] === undefined) {
                         log.warn("Unknown named parameter " + matches[1]);
                         continue;
                     }
-                    opts[matches[1]] = matches[2].trim();
+                    opts[this.mappings[matches[1]]] = matches[2].trim();
                 }
             }
 
-            // Resolve references and do type coercion
+            // Resolve references
             for (name in opts) {
                 var value = opts[name];
 
                 if (typeof value==="string" && opts[name].slice(0,1) === "$")
-                    value = opts[value.slice(1)];
+                    opts[name]=opts[value.slice(1)];
+            }
+
+            return opts;
+        },
+
+        _coerce: function(data) {
+            var i, name, value, types={};
+
+            for (i in this.defaults)
+                types[i]=this.defaults[i]===null ? "null" : typeof this.defaults[i];
+
+            for (name in data) {
+                value = data[name];
 
                 if (typeof value !== types[name]) {
                     switch (types[name]) {
@@ -143,16 +127,61 @@ define([
                             break;
                     }
                 }
-                opts[name] = value;
+                data[name]=value;
+            }
+            return data;
+        },
+
+        parse: function($el, options, multiple) {
+            if (typeof options==="boolean" && multiple===undefined) {
+                multiple=options;
+                options={};
             }
 
-            return opts;
+            var stack = [[this.defaults]];
+
+            var $parents = $el.parents().andSelf(),
+                final_length = 1,
+                i, data, frame;
+            for (i=0; i<$parents.length; i++) {
+                data = $parents.eq(i).attr(this.attribute);
+                if (data) {
+                    var _parse = this._parse.bind(this); // Needed to fix binding in map call
+                    if (data.match(/&&/))
+                        frame=data.split(/\s*&&\s*/).map(_parse);
+                    else
+                        frame=[_parse(data)];
+                    final_length = Math.max(frame.length, final_length);
+                    stack.push(frame);
+                }
+            }
+            if (typeof options==="object")
+                stack.push([options]);
+
+            if (!multiple)
+                final_length=1;
+
+            var results=[], frame_length, x, xf;
+            for (i=0; i<final_length; i++)
+                results.push({});
+
+            for (i=0; i<stack.length; i++) {
+                frame=stack[i];
+                frame_length=frame.length-1;
+
+                for (x=0; x<final_length; x++) {
+                    xf=(x>frame_length) ? frame_length : x;
+                    results[x]=$.extend(results[x], frame[xf]);
+                }
+            }
+
+            for (i=0; i<final_length; i++)
+                results[i]=this._coerce(results[i]);
+            return multiple ? results : results[0];
         }
     };
 
     return ArgumentParser;
-
 });
-
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

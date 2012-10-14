@@ -4,14 +4,14 @@ Checklist
 The checklist pattern provides a convenient method to add options to select and
 deselect all checkboxes in a block. This requires two changes in your markup:
 
-1. add a ``data-checklist`` attribute to the containing element
+1. add a ``pat-checklist`` class to the containing element
 2. add a select and deselect buttons
 
 Here is a simple example.
 
 .. code-block:: html
 
-   <fieldset data-checklist="">
+   <fieldset class="pat-checklist">
      <div class="functions">
        <button class="select-all">Select all</button>
        <button class="deselect-all">Deselect all</button>
@@ -23,19 +23,19 @@ Here is a simple example.
      <label><input type="checkbox"/> Option four</label>
    </fieldset>
 
-The selectors used to find the select-all and deselect-all buttons is
+The selectors used to find the select-all and deselect-all buttons are
 configurable. The default values are ``.functions .select-all`` and
 ``.functions .dselect-all``. You can configure them using shorthand notation:
 
 .. code-block:: html
 
-   <fieldset data-checklist=".selectAll; .deselectAll">
+   <fieldset class="pat-checklist" data-pat-checklist=".selectAll; .deselectAll">
 
 or using the extended notation:
 
 .. code-block:: html
 
-   <fieldset data-checklist="select: .selectAll; deselect: .deselectAll">
+   <fieldset class="pat-checklist" data-pat-checklist="select: .selectAll; deselect: .deselectAll">
 
 The buttons will be disabled if they would not make any changes. That is: if
 all checkboxes are already checked the select-all button will be disabled. And
@@ -46,7 +46,7 @@ Javascript API
 --------------
 
 The javascript API is entirely optional since patterns already autmoatically
-enables the switching behaviour for all elements with a ``data-checklist``
+enables the switching behaviour for all elements with a ``data-pat-checklist``
 attribute. 
 
 .. js:function:: jQuery.patternChecklist([options])
@@ -54,7 +54,7 @@ attribute.
    :param options: one or more objects describing triggers to execute
 
    Setup checkbox management for the selected elements. If no options are
-   provided they are taken from the ``data-checklist`` attributes. Options
+   provided they are taken from the ``data-pat-checklist`` attributes. Options
    can be provided as a javascript object with the following
    keys:
 

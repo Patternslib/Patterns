@@ -4,7 +4,7 @@ Autosubmit forms
 .. code-block:: html
 
   <form>
-    <input name="q" data-autosubmit=""/>
+    <input name="q" data-pat-autosubmit=""/>
   </form>
 
 This will autosubmit the form as soon as the *q* input field is changed. This
@@ -14,7 +14,7 @@ finish typing or making changes. You can configure this by adding a delay:
 .. code-block:: html
 
   <form>
-    <input name="q" data-autosubmit="delay"/>
+    <input name="q" data-pat-autosubmit="delay"/>
   </form>
  
 You can also configure the delay explicitly by specifying a timeout in milliseconds:
@@ -22,12 +22,12 @@ You can also configure the delay explicitly by specifying a timeout in milliseco
 .. code-block:: html
 
   <form>
-    <input name="q" data-autosubmit="500"/>
+    <input name="q" data-pat-autosubmit="500"/>
   </form>
 
 
 If you want to trigger form submission for multiple, or even all, elements in a
-form you can do so by setting ``data-autosubmit`` on grouping element.
+form you can do so by setting ``data-pat-autosubmit`` on grouping element.
 
 .. code-block:: html
 
@@ -49,7 +49,7 @@ Here is a minimal search page:
 .. code-block:: html
    :linenos:
 
-   <form data-autosubmit="delay" action="/search" data-injection="#results:content">
+   <form data-pat-autosubmit="delay" action="/search" data-injection="#results:content">
      <input type="text" name="q" placeholder="Search query"/>
      <label><input type="checkbox" name="local"/> Only search in this section</label>
    </form>
@@ -68,7 +68,7 @@ Javascript API
 --------------
 
 The javascript API is entirely optional since patterns already autmoatically
-enables the autosubmit behaviour for all elements with a ``data-autosubmit``
+enables the autosubmit behaviour for all elements with a ``data-pat-autosubmit``
 attribute.
 
 
@@ -77,7 +77,7 @@ attribute.
    :param options: one or more objects describing triggers to execute
 
    Setup switching behaviour for the selected elements. If no options are
-   provided they are taken from the ``data-autosubmit`` attributes. Options
+   provided they are taken from the ``data-pat-autosubmit`` attributes. Options
    can be provided as a (array of) javascript object(s) with he following
    keys:
 

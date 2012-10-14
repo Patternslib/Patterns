@@ -12,7 +12,7 @@ define([
     "../3rdparty/jquery.anythingslider"
 ], function($, patterns, logging, Parser) {
     var log = logging.getLogger("carousel"),
-        parser = new Parser();
+        parser = new Parser("carousel");
 
     parser.add_argument("auto-play", true);
     parser.add_argument("loop", true);
@@ -26,27 +26,22 @@ define([
 
     var carousel = {
         name: "carousel",
-        trigger: ".pt-carousel",
+        trigger: ".pat-carousel",
 
-        init: function($el) {
+        init: function($el, opts) {
             return $el.each(function() {
-                var options = parser.parse(this.dataset.carousel),
+                var options = parser.parse($(this), opts),
                     settings = {hashTags: false};
 
-                if (Array.isArray(options)) {
-                    log.warn("Multiple options not supported for carousels.");
-                    options = options[0];
-                }
-
-                settings.autoPlay = options["auto-play"];
+                settings.autoPlay = options.autoPlay;
                 settings.stopAtEnd = !options.loop;
                 settings.resizeContents = options.resize;
                 settings.expand = options.expand;
-                settings.buildArrows = options["control-arrows"];
-                settings.buildNavigation = options["control-navigation"];
-                settings.buildStartStop = options["control-startstop"];
-                settings.delay = options["time-delay"];
-                settings.animationTime = options["time-animation"];
+                settings.buildArrows = options.controlArrows;
+                settings.buildNavigation = options.controlNavigation;
+                settings.buildStartStop = options.controlStartstop;
+                settings.delay = options.timeDelay;
+                settings.animationTime = options.timeAnimation;
 
                 var $carousel = $(this).anythingSlider(settings),
                     control = $carousel.data("AnythingSlider"),
@@ -56,16 +51,16 @@ define([
                     .children().each(function(index, el) {
                         if (!this.id)
                             return;
-                    
+
                         var $links = $("a[href=#" + this.id+"]");
                         if (index===control.currentPage)
                             $links.addClass("current");
                         else
                             $links.removeClass("current");
-                        $links.on("click.carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+                        $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
                         $panel_links = $panel_links.add($links);
                     }).end()
-                    .on("slide_complete.carousel", null, $panel_links, carousel.onSlideComplete);
+                    .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
             });
         },
 

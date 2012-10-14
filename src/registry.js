@@ -35,10 +35,10 @@ define([
                 if ($match.length > 0) {
                     plog.debug('Initialising:', $match);
                     try {
-                        $initialised = pattern.init($match);
+                        pattern.init($match);
                         plog.debug('Initialised:', $initialised);
                     } catch (e) {
-                        plog.critical("Error initialising pattern", e);
+                        plog.error("Error initialising pattern", e);
                     }
                 }
             }
@@ -46,7 +46,7 @@ define([
         register: function(pattern) {
             if (_.patterns[pattern.name]) {
                 log.error("Already have a pattern called: " + pattern.name);
-                return null;
+                return false;
             }
 
             // register pattern to be used for scanning new content
@@ -59,7 +59,7 @@ define([
             }
 
             log.info('Registered pattern:', pattern.name, pattern);
-            return pattern;
+            return true;
         }
     };
     return _;

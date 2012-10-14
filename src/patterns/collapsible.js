@@ -5,57 +5,82 @@
  */
 define([
     'jquery',
+    './inject',
     '../logging',
+    '../core/parser',
     '../registry'
-], function($, logging, registry) {
-    var log = logging.getLogger('collapsible');
+], function($, inject, logging, Parser, registry) {
+    var log = logging.getLogger('collapsible'),
+        parser = new Parser("collapsible");
 
-    var pattern_spec = {
+    parser.add_argument("load-content");
+
+    var _ = {
         name: "collapsible",
-        trigger: ".collapsible",
+        trigger: ".pat-collapsible",
+        parser: parser,
         init: function($el, opts) {
-            // create collapsible structure
-            var $ctrl = $el.children(':first'),
-                $content = $el.children(':gt(0)'),
-                $panel;
-            if ($content.length > 0) {
-                $panel = $content.wrapAll('<div class="panel-content" />')
-                    .parent();
-            } else {
-                $panel = $('<div class="panel-content" />').insertAfter($ctrl);
-            }
+            return $el.each(function() {
+                var $el = $(this);
+                // create collapsible structure
+                var $ctrl = $el.children(':first'),
+                    $content = $el.children(':gt(0)'),
+                    $panel;
+                if ($content.length > 0) {
+                    $panel = $content.wrapAll('<div class="panel-content" />')
+                        .parent();
+                } else {
+                    $panel = $('<div class="panel-content" />').insertAfter($ctrl);
+                }
 
-            // set initial state
-            if ((opts && opts.closed) || $el.hasClass("closed")) {
-                $el.removeClass("closed");
-                pattern_spec.close($el, {duration: 0});
-            } else {
-                $el.addClass("open");
-                $el.trigger('patterns-collapsible-open');
-            }
+                // set initial state
+                if ((opts && opts.closed) || $el.hasClass("closed")) {
+                    $el.removeClass("closed");
+                    _.close($el, {duration: 0});
+                } else {
+                    $el.addClass("open");
+                }
 
-            // bind to click events
-            $ctrl.on("click.collapsible", function() { pattern_spec.toggle($el, "fast"); });
+                // bind to click events
+                $ctrl.on("click.pat-collapsible", function() {
+                    _.toggle($el, "fast");
+                });
 
-            return $el;
+                return $el;
+            });
         },
         destroy: function($el) {
             var $ctrl = $el.children(':first');
-            $ctrl.off('.collapsible');
+            $ctrl.off('.pat-collapsible');
         },
         open: function($el, opts) {
             opts = opts || {};
-            if ($el.hasClass("open")) return null;
+            if ($el.hasClass("open"))
+                return null;
 
-            pattern_spec.toggle($el, opts.duration);
+            _.toggle($el, opts.duration);
 
             // allow for chaining
             return $el;
         },
+        loadContent: function($el) {
+            var cfg = _.parser.parse($el, opts);
+            if (!cfg.loadContent)
+                return;
+            var components = cfg.loadContent.split('#'),
+                url = components[0],
+                id = components[1] ? '#' + components[1] : null,
+                opts = [{
+                    url: url,
+                    source: id,
+                    $targets: $('.panel-content', $el)
+                }];
+            inject.execute(opts);
+        },
         close: function($el, opts) {
             opts = opts || {};
             if ($el.hasClass("closed")) return null;
-            pattern_spec.toggle($el, opts);
+            _.toggle($el, opts);
 
             // allow for chaining
             return $el;
@@ -65,29 +90,32 @@ define([
             var $panel = $el.find('.panel-content');
             if ($el.hasClass("closed")) {
                 $el.trigger('patterns-collapsible-open');
-                pattern_spec._transit($el, $panel, "closed", "open", opts.duration);
+                _._transit($el, $panel, "closed", "open", opts.duration);
             } else {
                 $el.trigger('patterns-collapsible-close');
-                pattern_spec._transit($el, $panel, "open", "closed", opts.duration);
+                _._transit($el, $panel, "open", "closed", opts.duration);
             }
 
             // allow for chaining
             return $el;
         },
-
         _transit: function($el, $panel, from_cls, to_cls, duration) {
             duration = duration || 0; // Handle undefined/null durations
+            if (to_cls === "open")
+                _.loadContent($el);
             $el.removeClass(from_cls);
-            if (duration) $el.addClass("in-progress");
+            if (duration)
+                $el.addClass("in-progress");
             $panel.slideToggle(duration, function() {
-                if (duration) $el.removeClass("in-progress");
+                if (duration)
+                    $el.removeClass("in-progress");
                 $el.addClass(to_cls);
             });
         }
     };
 
-    registry.register(pattern_spec);
-    return pattern_spec; // XXX For testing only
+    registry.register(_);
+    return _;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
