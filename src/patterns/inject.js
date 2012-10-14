@@ -14,44 +14,50 @@ define([
     "../3rdparty/URI"
 ], function($, Parser, ajax, injectlib, logging, registry) {
     var log = logging.getLogger('inject'),
-        register = registry.register;
+        parser = new Parser("inject");
+
+    parser.add_argument('source');
+    parser.add_argument('target');
+    parser.add_argument('replace');
+    parser.add_argument('replacetagwithcontent');
+    parser.add_argument('pre');
+    parser.add_argument('post');
+    parser.add_argument('prepend');
+    parser.add_argument('append');
+    parser.add_argument('url');
+    parser.add_argument('method', 'content');
+    parser.add_argument('type');
+    parser.add_argument('next-href');
 
     var _ = {
         name: "inject",
         trigger: "a.pat-inject, form.pat-inject",
         init: function($el, opts) {
-            $el.each(function() {
-                _._init($(this), opts);
+            return $el.each(function() {
+                var $el = $(this),
+                    cfg = _.extractConfig($el, opts);
+                $el.data('patterns.inject', cfg);
+
+                // In case next-href is specified the anchor's href will
+                // be set to it after the injection is triggered. In case
+                // the next href already exists, we do not activate the
+                // injection but instead just change the anchors href.
+                //
+                // XXX: This is used in only one project for linked
+                // fullcalendars, it's sanity is wonky and we should
+                // probably solve it differently.
+                var $nexthref = $(cfg.nextHref);
+                if ($el.is('a') && $nexthref.length > 0) {
+                    log.debug('Skipping as next href already exists', $nexthref);
+                    // XXX: reconsider how the injection enters exhausted state
+                    return $el.attr({href: cfg.nextHref});
+                }
+
+                // setup event handlers
+                if ($el.is('a'))
+                    $el.on("click.pat-inject", _.onClick);
+                return $el;
             });
-            return $el;
-        },
-        _init: function($el, opts) {
-            var cfg = _.extractConfig($el, opts);
-            $el.data("patterns.pat-inject", cfg);
-
-            // In case next-href is specified the anchor's href will
-            // be set to it after the injection is triggered. In case
-            // the next href already exists, we do not activate the
-            // injection but instead just change the anchors href.
-            // XXX: This is used in only one project for linked
-            // fullcalendars, it's sanity is wonky and we should
-            // probably solve it differently.
-            var $nexthref = cfg['next-href'] && $(cfg['next-href']);
-            if ($el.is('a') && $nexthref.length > 0) {
-                log.debug('Skipping as next href already exists', $nexthref);
-                // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({href: cfg['next-href']});
-            }
-
-            // setup event handlers
-            if ($el.is('a')) {
-                $el.on("click.pat-inject", _.onClick);
-            } else if ($el.is('.collapsible')) {
-                $el.on("patterns-collapsible-open.pat-inject", _.onCollapsibleOpen);
-            } else if ($el.is('.folder')) {
-                $el.on("patterns-folder-open.pat-inject", _.onFolderOpen);
-            }
-            return $el;
         },
         destroy: function($el) {
             $el.off('.pat-inject');
@@ -60,12 +66,14 @@ define([
         },
 
         onClick: function(ev) {
-            if (ev) ev.preventDefault();
-            var $this = $(this),
-                cfg = $this.data('patterns.inject');
+            var $el = $(this),
+                cfg = $el.data('patterns.inject');
+
+            if (ev)
+                ev.preventDefault();
 
             // modals are special
-            if ($this.is('.modal')) {
+            if ($el.is('.modal')) {
                 if (cfg.slice) {
                     log.error('Multi injection not supported for modals');
                     return;
@@ -76,6 +84,8 @@ define([
             }
 
             cfg.forEach(function(cfg) {
+                cfg.$targets = $(cfg.target);
+
                 // create non-existing targets
                 if (cfg.$targets.length === 0) {
                     if (cfg.target.slice(0,1) !== '#') {
@@ -83,8 +93,6 @@ define([
                     }
                     cfg.$targets = $('<div />').attr({id: cfg.target.slice(1)});
                     $('body').append(cfg.$targets);
-                } else {
-                    cfg.$targets = $(cfg.target);
                 }
             });
             _.execute(cfg);
@@ -103,53 +111,40 @@ define([
 
         extractConfig: function($el, opts) {
             var cfg = {}, urlparts,
-                url = $el.attr('href') || $el.attr('action'),
-                parser = new Parser("inject");
-            parser.add_argument('source');
-            parser.add_argument('target');
-            parser.add_argument('replace');
-            parser.add_argument('replacetagwithcontent');
-            parser.add_argument('pre');
-            parser.add_argument('post');
-            parser.add_argument('prepend');
-            parser.add_argument('append');
-            parser.add_argument('url', url);
-            parser.add_argument('method', 'content');
+                url = $el.attr('href') || $el.attr('action');
 
-            // XXX: parser does not handle overrides yet (our opts)
-            cfg = parser.parse($el);
+            cfg = parser.parse($el, opts, true);
 
-            // Check for source id as part of url
-            if (!cfg.url) {
-                log.error('No URL specified');
-                return {};
-            }
-            urlparts = cfg.url.split('#');
-            cfg.url = urlparts[0];
-            cfg.source = cfg.source || '#' + urlparts[1];
-            if (urlparts.length > 2) {
-                log.error('Ignoring additional source ids:', urlparts.slice(2));
-            }
+            cfg.forEach(function(cfg) {
+                if (!cfg.url) cfg.url = url;
 
-            // XXX: this syntax is under discussion
-            // injection method
-            ["replace", "replacetagwithcontent", "pre", "post",
-             "append", "prepend"
-            ].forEach(function(method) {
-                if (cfg[method]) {
-                    cfg.target = cfg[method];
-                    cfg.method = method;
+                // Check for source id as part of url
+                urlparts = cfg.url.split('#');
+                cfg.url = urlparts[0];
+                cfg.source = cfg.source || urlparts[1] ? '#' + urlparts[1] : "";
+                if (urlparts.length > 2) {
+                    log.warn('Ignoring additional source ids:', urlparts.slice(2));
+                }
+
+                // XXX: this syntax is under discussion
+                // injection method
+                ["replace", "replacetagwithcontent", "pre", "post",
+                 "append", "prepend"
+                ].forEach(function(method) {
+                    if (cfg[method]) {
+                        cfg.target = cfg[method];
+                        cfg.method = method;
+                    }
+                });
+
+                // target defaults to source, source needed in this case
+                if (!cfg.target) {
+                    if (!cfg.source) {
+                        log.error('Need source!');
+                    }
+                    cfg.target = cfg.source;
                 }
             });
-
-            // target defaults to source, source needed in this case
-            if (!cfg.target) {
-                if (!cfg.source) {
-                    log.error('Need source!');
-                }
-                cfg.target = cfg.source;
-            }
-
             return cfg;
         },
 
@@ -173,7 +168,7 @@ define([
 
             cfg.forEach(function(cfg) {
                 cfg.method = cfg.method || 'content';
-                cfg.source = cfg.source || '#__original_body';
+                cfg.source = cfg.source || 'body';
                 cfg.classes = 'injecting injecting-' + cfg.method;
                 cfg.$targets.addClass(cfg.classes);
             });
@@ -181,26 +176,28 @@ define([
             var successHandler = function(data, status, jqxhr) {
                 var uri,
                     $data = $('<div/>').html(
-                    data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                        .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                        .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                        .replace(/<\/body(.*)>/gi,'</div>')
-                );
+                        data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                            .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                            .replace(/<body(.*)>/gi, '<div id="__original_body">')
+                            .replace(/<\/body(.*)>/gi,'</div>')
+                    );
                 $data.filter(":uri(is:relative)").each(function() {
                     switch (this.tagName) {
-                        case "A":
-                            this.href=new URI(this.href).absoluteTo(url).toString();
-                            break;
-                        case "FORM":
-                            this.action=new URI(this.action).absoluteTo(url).toString();
-                            break;
-                        case "IMG":
-                            this.src=new URI(this.src).absoluteTo(url).toString();
-                            break;
+                    case "A":
+                        this.href=new URI(this.href).absoluteTo(url).toString();
+                        break;
+                    case "FORM":
+                        this.action=new URI(this.action).absoluteTo(url).toString();
+                        break;
+                    case "IMG":
+                        this.src=new URI(this.src).absoluteTo(url).toString();
+                        break;
                     }
                 });
                 cfg.forEach(function(cfg) {
-                    var $sources = $data.find(cfg.source);
+                    var source = cfg.source === "body" ?
+                            "#__original_body" : cfg.source,
+                        $sources = $data.find(source);
 
                     if ($sources.length === 0) {
                         log.error(
@@ -236,7 +233,7 @@ define([
             });
         }
     };
-    register(_);
+    registry.register(_);
     return _;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
