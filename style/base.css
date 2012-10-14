@@ -50,8 +50,12 @@ body:before {
 
 #news .introduction {
 	float: left;
-	width: 72%;
+	width: 70%;
 	margin-bottom: 30px;
+}
+
+#news .panel-content {
+	clear: both;
 }
 
 #button-slides {
@@ -64,6 +68,7 @@ body:before {
 	border-left: 1px solid #e1e1e1;
 	position: relative;
 	cursor: pointer;
+	user-select:none;
 }
 
 #button-slides:active {
