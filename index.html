@@ -4,7 +4,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Patterns library</title>
 		<link rel="stylesheet" href="style/base.css" type="text/css">
-		<link rel="stylesheet" href="../src/lib/dist/fullcalendar/fullcalendar.css" type="text/css">
 
 		<script data-main="bundles/patterns.min.js" src="src/3rdparty/require-jquery.js" type="text/javascript"></script>
 	</head>
@@ -12,19 +11,60 @@
 
 		<header id="site-header">
 			<div class="hero-unit">
-				<!--				<img src="media/hero-image.jpg" alt="Patterns library" />-->
 				<blockquote>Welcome to Patterns. A library that aims to bring design and development together.</blockquote>
 			</div>
 			<nav class="navigation" id="global-nav">
+				<a href="#news" id="nav-news">News</a>
 				<a href="#patterns" id="nav-patterns">Patterns</a>
 				<a href="#demo" id="nav-demo">Demo</a>
 				<a href="http://patterns.readthedocs.org/en/latest/patterns" id="nav-documentation" class="float-after">Documentation</a>
 				<a href="#download" id="nav-get-it">Get it!</a>
 			</nav>
 		</header>
-
+		<section id="news">
+			<p class="introduction">Did you see the patterns talk at the Plone Conference in Arnhem 2012? Here are the slides that were used for the demonstration.</p>
+			<div class="collapsible closed">
+				<h3 class="button-slides" id="button-slides">Slides</h3>
+				<div class="carousel">
+					<img src="media/preso-plone-conference-2012/slide.001.jpg" alt="Slide 1" />
+					<img src="media/preso-plone-conference-2012/slide.002.jpg" alt="Slide 2" />
+					<img src="media/preso-plone-conference-2012/slide.003.jpg" alt="Slide 3" />
+					<img src="media/preso-plone-conference-2012/slide.004.jpg" alt="Slide 4" />
+					<img src="media/preso-plone-conference-2012/slide.005.jpg" alt="Slide 5" />
+					<img src="media/preso-plone-conference-2012/slide.006.jpg" alt="Slide 6" />
+					<img src="media/preso-plone-conference-2012/slide.007.jpg" alt="Slide 7" />
+					<img src="media/preso-plone-conference-2012/slide.008.jpg" alt="Slide 8" />
+					<img src="media/preso-plone-conference-2012/slide.009.jpg" alt="Slide 9" />
+					<img src="media/preso-plone-conference-2012/slide.010.jpg" alt="Slide 10" />
+					<img src="media/preso-plone-conference-2012/slide.011.jpg" alt="Slide 11" />
+					<img src="media/preso-plone-conference-2012/slide.012.jpg" alt="Slide 12" />
+					<img src="media/preso-plone-conference-2012/slide.013.jpg" alt="Slide 13" />
+					<img src="media/preso-plone-conference-2012/slide.014.jpg" alt="Slide 14" />
+					<img src="media/preso-plone-conference-2012/slide.015.jpg" alt="Slide 15" />
+					<img src="media/preso-plone-conference-2012/slide.016.jpg" alt="Slide 16" />
+					<img src="media/preso-plone-conference-2012/slide.017.jpg" alt="Slide 17" />
+					<img src="media/preso-plone-conference-2012/slide.018.jpg" alt="Slide 18" />
+					<img src="media/preso-plone-conference-2012/slide.019.jpg" alt="Slide 19" />
+					<img src="media/preso-plone-conference-2012/slide.020.jpg" alt="Slide 20" />
+					<img src="media/preso-plone-conference-2012/slide.021.jpg" alt="Slide 21" />
+					<img src="media/preso-plone-conference-2012/slide.022.jpg" alt="Slide 22" />
+					<img src="media/preso-plone-conference-2012/slide.023.jpg" alt="Slide 23" />
+					<img src="media/preso-plone-conference-2012/slide.024.jpg" alt="Slide 24" />
+					<img src="media/preso-plone-conference-2012/slide.025.jpg" alt="Slide 25" />	
+					<img src="media/preso-plone-conference-2012/slide.026.jpg" alt="Slide 26" />
+					<img src="media/preso-plone-conference-2012/slide.027.jpg" alt="Slide 27" />
+					<img src="media/preso-plone-conference-2012/slide.028.jpg" alt="Slide 28" />
+					<img src="media/preso-plone-conference-2012/slide.029.jpg" alt="Slide 29" />
+					<img src="media/preso-plone-conference-2012/slide.030.jpg" alt="Slide 30" />
+					<img src="media/preso-plone-conference-2012/slide.031.jpg" alt="Slide 31" />
+					<img src="media/preso-plone-conference-2012/slide.032.jpg" alt="Slide 32" />
+					<img src="media/preso-plone-conference-2012/slide.033.jpg" alt="Slide 33" />
+				</div>
+			</div>					
+		</section>
+		
 		<section id="patterns">
-			<p>Patterns works something like this:</p>
+			<p>Patterns is a combination of a library and a workflow. That workflow goes something like this:</p>
 			<ol class="usps">
 				<li>
 					<p>Designer creates an HTML5 prototype. By including Patterns library, he can use a series of rich interaction patterns by applying dedicated classes and data-attributes instead of writing Javascript. The prototype he contains an example of all important page types with working interaction patterns such as form elements, modal panels, AJAX injections, etc. </p>
@@ -43,35 +83,35 @@
 
 		<section id="demo">
 			<nav class="components-list">
-				<a class="pat-inject" href="demo/injection/injection.html#content" title="Ajax pattern">Ajax pattern</a>
-				<a class="pat-inject" href="demo/switch/index.html#content" title="Switch">Attribute values switching<sup>stable</sup></a>
-				<a class="pat-inject" href="demo/autofocus/index.html#content" title="Auto focus">Autofocus<sup>stable</sup></a>
-				<a class="pat-inject" href="demo/autoload/index.html#content" title="Auto load">Autoload*</a>
-				<a class="pat-inject" href="demo/auto-submit/index.html#content" title="Auto submit">Automatic form submit<sup>beta</sup></a>
-				<a class="pat-inject" href="demo/auto-suggest/index.html#content" title="Auto suggest">Auto suggest</a>
-				<a class="pat-inject" href="demo/calendar/index.html#content" title="Calendar">Full calendar<sup>bèta</sup></a>
-				<a class="pat-inject" href="demo/carousel/index.html#content" title="">Carousel</a>
-				<a class="pat-inject" href="demo/toggle/index.html#content" title="Toggle">Class toggle<sup>stable</sup></a>
+				<a class="pat-inject" href="demo/injection/injection.html#content" title="Ajax pattern">Ajax pattern<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/switch/index.html#content" title="Switch">Attribute values switching<sup>β</sup></a>
+				<a class="pat-inject" href="demo/autofocus/index.html#content" title="Auto focus">Autofocus<sup>β</sup></a>
+				<a class="pat-inject" href="demo/autoload/index.html#content" title="Auto load">Autoload*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/auto-submit/index.html#content" title="Auto submit">Automatic form submit<sup>β</sup></a>
+				<a class="pat-inject" href="demo/auto-suggest/index.html#content" title="Auto suggest">Auto suggest<sup>β</sup></a>
+				<a class="pat-inject" href="demo/calendar/index.html#content" title="Calendar">Full calendar<sup>β</sup></a>
+				<a class="pat-inject" href="demo/carousel/index.html#content" title="">Carousel<sup>β</sup></a>
+				<a class="pat-inject" href="demo/toggle/index.html#content" title="Toggle">Class toggle<sup>β</sup></a>
 				<a class="pat-inject" href="demo/collapsible/index.html#content" title="collapsible">Collapsible<sup>stable</sup></a>
-				<a class="pat-inject" href="demo/depends/index.html#content" title="">Depends*<sup>beta</sup></a>
-				<a class="pat-inject" href="demo/expandable-tree/index.html#content" title="">Expandable tree*</a>
-				<a class="pat-inject" href="demo/focus/index.html#content" title="">Focus*</a>
-				<a class="pat-inject" href="demo/validate/index.html#content" title="">Form validation*</a>
-				<!--<a class="pat-inject" href="demo/checkedflag/index.html#content" title="checkedflag">Checked flag</a>-->
-				<a class="pat-inject" href="demo/checklist/index.html#content" title="checklist">Select/deselect groups of checkboxes</a>
-				<!--<a class="pat-inject" href="demo/edit-tinymce.html#content" title="Rich editor">Tiny MCE rich editor</a>-->
-				<a class="pat-inject" href="demo/menu/index.html#content" title="">Menu*</a>
-				<a class="pat-inject" href="demo/modal/index.html#content" title="Modal panels">Modal panels</a>
-				<a class="pat-inject" href="demo/chosen/index.html#content" title="">Multi combobox (Chosen)<sup>demo missing</sup></a>
-				<a class="pat-inject" href="demo/navigation/index.html#content" title="Navigation markers">Navigation markers</a>
-				<a class="pat-inject" href="demo/placeholder/index.html#content" title="">Placeholder*</a>
-				<a class="pat-inject" href="demo/selfhealing/index.html#content" title="">Selfhealing*</a>
-				<a class="pat-inject" href="demo/breadcrumbs/index.html#content" title="">Sliding breadcrumbs*</a>
+				<a class="pat-inject" href="demo/depends/index.html#content" title="">Depends*<sup>β</sup></a>
+				<a class="pat-inject" href="demo/expandable-tree/index.html#content" title="">Expandable tree*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/focus/index.html#content" title="">Focus*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/validate/index.html#content" title="">Form validation*<sup>unknown</sup></a>
+				<!--<a class="pat-inject" href="demo/checkedflag/index.html#content" title="checkedflag">Checked flag<sup>unknown</sup></a>-->
+				<a class="pat-inject" href="demo/checklist/index.html#content" title="checklist">Select/deselect groups of checkboxes<sup>unknown</sup></a>
+				<!--<a class="pat-inject" href="demo/edit-tinymce.html#content" title="Rich editor">Tiny MCE rich editor<sup>unknown</sup></a>-->
+				<a class="pat-inject" href="demo/menu/index.html#content" title="">Menu*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/modal/index.html#content" title="Modal panels">Modal panels<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/chosen/index.html#content" title="">Multi combobox (Chosen)*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/navigation/index.html#content" title="Navigation markers">Navigation markers<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/placeholder/index.html#content" title="">Placeholder*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/selfhealing/index.html#content" title="">Selfhealing*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/breadcrumbs/index.html#content" title="">Sliding breadcrumbs*<sup>unknown</sup></a>
 				<!--<a class="pat-inject" href="demo/setclass/index.html#content" title="">Setclass*</a>-->
-				<a class="pat-inject" href="demo/sorting/index.html#content" title="">Sorting*</a>
-				<a class="pat-inject" href="demo/tooltip/index.html#content" title="">Tooltips*<sup>stable</sup></a>
-				<!--<a class="pat-inject" href="demo/transforms/index.html#content" title="">Transforms*</a>-->
-				<a class="pat-inject" href="demo/width/index.html#content" title="">Viewport width helper*</a>
+				<a class="pat-inject" href="demo/sorting/index.html#content" title="">Sorting*<sup>unknown</sup></a>
+				<a class="pat-inject" href="demo/tooltip/index.html#content" title="">Tooltips*<sup>β</sup></a>
+				<!--<a class="pat-inject" href="demo/transforms/index.html#content" title="">Transforms*<sup>unknown</sup></a>-->
+				<a class="pat-inject" href="demo/width/index.html#content" title="">Viewport width helper*<sup>unknown</sup></a>
 			</nav>
 			<div id="content">
 				<a class="pat-inject pat-autoload-visible" href="demo/inject/index.html#content" title="Auto submit">Ajax pattern</a>
