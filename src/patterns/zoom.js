@@ -32,6 +32,7 @@ define([
     };
 
     patterns.register(zoom);
+    return zoom;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 sts=4 expandtab
