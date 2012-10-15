@@ -75,7 +75,8 @@ define([
     './patterns/toggle',
     './patterns/tooltip',
     './patterns/transforms',
-    './patterns/validate'
+    './patterns/validate',
+    './patterns/zoom'
 ], function(require, $) {
     var mapal = require('./core/init');
 
