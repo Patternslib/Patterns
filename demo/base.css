@@ -800,36 +800,3 @@ ul.radioRow li label {
 /* @end */
 
 /* @end */
-
-/* @group Focus pattern demo */
-
-fieldset.pt-focus {
-    background-color: #efefef;
-    -webkit-transition: background-color 1s ease;
-    transition: background-color 1s ease;
-}
-
-label.pt-focus {
-    -webkit-transition: color 1s ease;
-    transition: color 1s ease;
-	background-color: #ddeefe;
-}
-
-/* @end */
-
-/* @group Checked flag */
-
-label.pt-checked {
-    color: #000;
-    -webkit-transition: color 0.1s ease;
-    transition: color 0.1s ease;
-}
-
-label.pt-unchecked {
-    color: #ccc;
-    -webkit-transition: color 1s ease;
-    transition: color 1s ease;
-}
-
-/* @end */
-
