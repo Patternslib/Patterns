@@ -23,9 +23,9 @@ define([
                 $label = $el.closest("label");
 
             if (this.checked) {
-                $label.removeClass("pt-unchecked").addClass("pt-checked");
+                $label.removeClass("pat-unchecked").addClass("pat-checked");
             } else {
-                $label.addClass("pt-unchecked").removeClass("pt-checked");
+                $label.addClass("pat-unchecked").removeClass("pat-checked");
             }
         },
 
@@ -35,11 +35,11 @@ define([
                 selector = "label:has(input[name=" + this.name + "]:not(:checked))",
                 $siblings = (this.form===null) ? $(selector) : $(selector, this.form);
 
-            $siblings.removeClass("pt-checked").addClass("pt-unchecked");
+            $siblings.removeClass("pat-checked").addClass("pat-unchecked");
             if (this.checked) {
-                $label.removeClass("pt-unchecked").addClass("pt-checked");
+                $label.removeClass("pat-unchecked").addClass("pat-checked");
             } else {
-                $label.addClass("pt-unchecked").removeClass("pt-checked");
+                $label.addClass("pat-unchecked").removeClass("pat-checked");
             }
         }
     };
