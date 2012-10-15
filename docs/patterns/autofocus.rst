@@ -5,8 +5,8 @@ Patterns augments the standard HTML5 autofocus behaviour, and implements it
 for browsers that do not support it natively.
 
 On initial page load or when new content is injected it is scanned for input
-elements with an ``autofocus`` attribute or class. The first such element that
-has no current value will be given the focus.
+elements with an ``autofocus`` attribute or ``pat-autofocus`` class. The first
+such element that has no current value will be given the focus.
 
 .. code-block:: html
 
