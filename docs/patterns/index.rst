@@ -12,17 +12,34 @@ is dependent on each individual pattern. Also, each pattern can receive
 parameters after the pattern name by delimiting them with any non-alphanumeric
 character. 
 
-The available patterns are:
+Markup patterns
+---------------
+
+Markup patterns never add or change any behaviour: their only purpose is to
+add some convenience facilities over standard HTML to help with styling.
 
 .. toctree::
    :maxdepth: 1
 
    autofocus
+   checkedflag
+   focus
+   transforms
+
+
+Behavioural patterns
+--------------------
+
+Behavioural patterns add extra behaviour to a page. This can be anything from
+changing classes in a click, to doing complex AJAX injection of content.
+
+.. toctree::
+   :maxdepth: 1
+
    autosubmit
    carousel
    checklist
    depends
-   focus
    menu
    modal
    selfhealing
@@ -30,4 +47,3 @@ The available patterns are:
    switch
    toggle
    tooltip
-   transforms
