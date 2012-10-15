@@ -5,7 +5,7 @@ define([
 ], function($, patterns) {
     var switcher = {
         name: "switch",
-        trigger: ".pat-switch,[data-pat-switch]",
+        trigger: ".pat-switch",
 
         init: function($el) {
             return $el.patternSwitch();
