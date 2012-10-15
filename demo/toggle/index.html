@@ -25,13 +25,15 @@
 			color: white;
 			}
 		</style>
+                <script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js"></script>
 	</head>
 	<body>
-		<span class="red" id="toToggle">This is getting toggled</span>
-		<button data-toggle="#toToggle; ; red blue">change colour</button>
-		<hr/>
-		<input type="checkbox" id="toCheck" />
-		<button data-toggle="#toCheck; checked; checked">toggle checkbox</button>
-		<script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js"></script>
+          <fieldset>
+            <span class="red" id="toToggle">This is getting toggled</span>
+            <button data-pat-toggle="#toToggle; ; red blue">change colour</button>
+            <hr/>
+            <input type="checkbox" id="toCheck" />
+            <button data-pat-toggle="#toCheck; checked; checked">toggle checkbox</button>
+          </fieldset>
 	</body>
 </html>
