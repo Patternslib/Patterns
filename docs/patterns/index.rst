@@ -47,3 +47,4 @@ changing classes in a click, to doing complex AJAX injection of content.
    switch
    toggle
    tooltip
+   zoom
