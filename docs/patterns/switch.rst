@@ -2,16 +2,18 @@ Triggering class changes on click
 =================================
 
 It is possible to add or remove classes when a user clicks on an item. This is
-done by adding a ``data-pat-switch`` attribute to the triggering element.
+done by adding a ``pat-switch`` class along with a ``data-pat-switch``
+attribute to the triggering element.
 
 .. code-block:: html
 
-   <button data-pat-switch="#status; off; on">Power on</button>
+   <button class="pat-switch" data-pat-switch="#status; off; on">Power on</button>
    <span id="status" class="off"/>
 
-If a user clicks on the *Power on* button the ``off`` class will be removed and the
-``on`` class will be added. Note that this is similar to the toggle pattern. This pattern only triggers
-once though, while the toggle pattern toggles between two states.
+If a user clicks on the *Power on* button the ``off`` class will be removed and
+the ``on`` class will be added. Note that this is similar to the toggle
+pattern. This pattern only triggers once though, while the toggle pattern
+toggles between two states.
 
 This pattern takes three arguments:
 
@@ -26,7 +28,7 @@ wildcard (the ``*`` character) in the class name.
 
 .. code-block:: html
 
-   <button data-pat-switch=".toolbar; icon-*">Remove icons</button>
+   <button class="pat-switch" data-pat-switch=".toolbar; icon-*">Remove icons</button>
 
 Multiple changes can be provided if desired by separating them using the ``&&``
 separator. The example below uses this to remove all icon classes in both the
@@ -34,7 +36,7 @@ toolbar and the navigation tree.
 
 .. code-block:: html
 
-   <button data-pat-switch=".toolbar; icon-* && .navtree; icon-*">Remove icons</button>
+   <button class="pat-switch" data-pat-switch=".toolbar; icon-* && .navtree; icon-*">Remove icons</button>
 
 
 Javascript API
