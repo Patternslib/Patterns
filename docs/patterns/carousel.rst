@@ -54,6 +54,21 @@ Such links will automatically get a ``current`` class when the panel they are
 pointing to is displayed.
 
 
+Lazy loading
+------------
+
+The carousel supports lazy loading. To use this simply give your images a
+``data-src`` attribute.  When a panel is about to be displayed the carousel
+will move all ``data-src`` attributes to ``src``
+
+.. code-block:: html
+
+   <ul class="pat-carousel">
+     <li><img data-src="images/img1.jpg/></li>
+     <li><img data-src="images/img2.jpg/></li>
+   </ul>
+
+
 Customizing behaviour
 ---------------------
 
