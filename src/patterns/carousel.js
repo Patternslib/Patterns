@@ -42,6 +42,8 @@ define([
                 settings.buildStartStop = options.controlStartstop;
                 settings.delay = options.timeDelay;
                 settings.animationTime = options.timeAnimation;
+                settings.onInitialized = carousel.onInitialized;
+                settings.onSlideInit = carousel.onSlideInit;
 
                 var $carousel = $(this).anythingSlider(settings),
                     control = $carousel.data("AnythingSlider"),
@@ -64,9 +66,30 @@ define([
             });
         },
 
+        _loadPanelImages: function(slider, page) {
+            var $img;
+            log.info("Loading lazy images on panel " + page);
+            slider.$items.eq(page).find("img[data-src]").each(function() {
+                $img=$(this);
+                this.src=$img.attr("data-src");
+                $img.removeAttr("data-src");
+            });
+        },
+
         onPanelLinkClick: function(event) {
             event.data.control.gotoPage(event.data.index, false);
             event.preventDefault();
+        },
+
+        onInitialized: function(event, slider) {
+            carousel._loadPanelImages(slider, slider.options.startPanel);
+            carousel._loadPanelImages(slider, slider.options.startPanel+1);
+            carousel._loadPanelImages(slider, 0);
+            carousel._loadPanelImages(slider, slider.pages+1);
+        },
+
+        onSlideInit: function(event, slider) {
+            carousel._loadPanelImages(slider, slider.targetPage);
         },
 
         onSlideComplete: function(event, slider) {
@@ -74,6 +97,7 @@ define([
             $panel_links.removeClass("current");
             if (slider.$targetPage[0].id)
                 $panel_links.filter("[href=#" + slider.$targetPage[0].id + "]").addClass("current");
+            carousel._loadPanelImages(slider, slider.targetPage+1);
         }
     };
 
