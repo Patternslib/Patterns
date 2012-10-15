@@ -6,22 +6,9 @@
     <link rel="stylesheet" href="autofocus.css" type="text/css">
 </head>
   <body>
-    <fieldset>
-      <legend>Daddy fieldset</legend>
-
-      <fieldset class="condensed">
-        <legend>Fieldset 1</legend>
-        <label>Element 1.1 <input autofocus="autofocus" type="text"/></label>
-        <label>Element 1.2 <input type="text"/></label>
-        <label>Element 1.3 <textarea></textarea></label>
-      </fieldset>
-
-      <fieldset class="condensed">
-        <legend>Fieldset 2</legend>
-        <label>Element 2.1 <input type="text"/></label>
-        <label>Element 2.2 <input type="text"/></label>
-        <label>Element 2.3 <textarea></textarea></label>
-      </fieldset>
+    <fieldset class="concise">
+      <label>Title <input autofocus="autofocus" type="text" value="Prefilled title"/></label>
+      <label>Keywords <input autofocus="autofocus" type="text" placeholder="This field should get the focus"/></label>
     </fieldset>
 
     <script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js" charset="utf-8"></script>
