@@ -8,8 +8,8 @@ Form legends
 ------------
 
 ``legend`` elements are rewritten as ``p`` elements with a ``question`` class.
-This is needed for browsers (XXX list which ones) which can not properly style
-legend elements.
+This is needed for all non-WebKit browsers which can not properly style legend
+elements.
 
 .. code-block:: html
    :emphasize-lines: 2
