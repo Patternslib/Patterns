@@ -3,13 +3,14 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
+    <link rel="stylesheet" href="../base.css" type="text/css">
 		<script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<form class="validate">
+		<form class="pat-validate">
 			<h1>Validation</h1>
 			<input id="text1" type="text" name="text1" class="required" value=""/></br>
-			<input id="text2" type="text" name="text2" data-required-if="#text3:blank" value=""/></br>
+			<input id="text2" type="text" name="text2" data-pat-validate="#text3:blank" value=""/></br>
 			<input id="text3" type="text" name="text3" value=""/></br>
 			<button type="submit" name="submit" value="submit">Submit</button>
 		</form>

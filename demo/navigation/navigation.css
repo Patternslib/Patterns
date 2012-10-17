@@ -1,2 +1,7 @@
+.current {
+	font-weight: bold;
+	display: inline-block;
+	color: red;
+}
 
 
