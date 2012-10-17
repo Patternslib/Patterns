@@ -48,7 +48,7 @@ define([
             var $container = tooltip.getContainer($trigger),
                 parameters = $trigger.data("mapal.tooltip");
             if (parameters.sticky) {
-                $container.find(".closePanel")
+                $container.find(".close-panel")
                     .on("click.tooltip", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
@@ -77,7 +77,7 @@ define([
             var $container = tooltip.getContainer($trigger);
             $(document).off(".tooltip");
             $container.off(".tooltip");
-            $container.find(".closePanel").off(".tooltip");
+            $container.find(".close-panel").off(".tooltip");
             $trigger.off(".tooltip");
         },
 
@@ -157,7 +157,7 @@ define([
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
             if (options.sticky && !options.noclose) {
-                $("<button/>", {"class": "closePanel"})
+                $("<button/>", {"class": "close-panel"})
                     .text("Close")
                     .insertBefore($container.find("*"));
             }
