@@ -74,7 +74,6 @@ define([
     './patterns/switch',
     './patterns/toggle',
     './patterns/tooltip',
-    './patterns/transforms',
     './patterns/validate',
     './patterns/zoom'
 ], function(require, $) {
