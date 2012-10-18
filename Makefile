@@ -34,11 +34,13 @@ clean:
 
 upgrade-require-jquery:
 	rm -f src/3rdparty/require-jquery.zip
-	curl -o src/3rdparty/require-jquery.zip $(curl http://requirejs.org/docs/download.html 2>/dev/null | grep download |grep jquery-require |cut -d'"' -f4)
+	curl -o src/3rdparty/require-jquery.zip $(shell curl http://requirejs.org/docs/download.html 2>/dev/null | grep download |grep jquery-require |cut -d'"' -f4)
 	unzip -p src/3rdparty/require-jquery.zip jquery-require-sample/webapp/scripts/require-jquery.js > src/3rdparty/require-jquery.js
 	rm src/3rdparty/require-jquery.zip
 
 upgrade-rjs:
-	curl -o lib/r.js $(curl http://requirejs.org/docs/download.html 2>/dev/null | grep download |grep 'r\.js' |cut -d'"' -f4)
+	curl -o lib/r.js $(shell curl http://requirejs.org/docs/download.html 2>/dev/null | grep download |grep 'r\.js' |cut -d'"' -f4)
+
+upgrade-requirejs: upgrade-rjs upgrade-require-jquery
 
 .PHONY: all clean check
