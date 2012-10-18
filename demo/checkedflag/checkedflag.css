@@ -1,12 +1,12 @@
 /* @group Checked flag */
 
-label.pat-checked {
+label.checked {
     color: #000;
     -webkit-transition: color 0.1s ease;
     transition: color 0.1s ease;
 }
 
-label.pat-unchecked {
+label.unchecked {
     color: #ccc;
     -webkit-transition: color 1s ease;
     transition: color 1s ease;
