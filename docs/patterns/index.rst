@@ -40,6 +40,7 @@ changing classes in a click, to doing complex AJAX injection of content.
    carousel
    checklist
    depends
+   inject
    menu
    modal
    selfhealing
