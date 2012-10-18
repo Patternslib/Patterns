@@ -12,77 +12,92 @@ define([
     var log = logging.getLogger('parser');
 
     function ArgumentParser(name) {
-        this.params = [];
+        this.order = [];
         this.mappings = {};
-        this.defaults = {};
+        this.parameters = {};
         this.attribute = "data-pat-" + name;
     }
 
     ArgumentParser.prototype = {
         named_param_pattern: /^\s*([a-zA-Z0-9\-]+)\s*:(.*)/,
 
-        add_argument: function(name, default_value) {
-            if (default_value === undefined)
-                default_value = null;
-            this.params.push(name);
-            this.mappings[name] = name.replace(/\-([a-z])/g, function(_,p1){return p1.toUpperCase();});
-            this.defaults[this.mappings[name]] = default_value;
+        add_argument: function(name, default_value, choices) {
+            var js_name = name.replace(/\-([a-z])/g, function(_,p1){return p1.toUpperCase();}),
+                spec;
+
+            spec={name: name,
+                  value: (default_value===undefined) ? null : default_value};
+            if (choices && Array.isArray(choices) && choices.length) {
+                spec.choices=choices;
+                spec.type=this._typeof(choices[0]);
+            } else
+                spec.type=this._typeof(spec.value);
+
+            this.order.push(name);
+            this.mappings[name]=js_name;
+            this.parameters[js_name]=spec;
+        },
+
+        _typeof: function(obj) {
+            var type = typeof obj;
+            if (obj===null)
+                return "null";
+            return type;
         },
 
         _set: function(opts, name, value) {
-            if (!(name in this.defaults)) {
+            if (!(name in this.parameters)) {
                 log.debug("Ignoring value for unknown argument " + name);
                 return;
             }
 
-            var type = this.defaults[name]===null ? "null" : typeof this.defaults[name];
-            if (typeof value === type)
-                opts[name]=value;
-            else
-                switch (type) {
-                    case "boolean":
-                        if (typeof value === "string") {
-                            value=value.toLowerCase();
-                            var num = parseInt(value, 10);
-                            if (!isNaN(num))
-                                opts[name] = !!num;
+            var spec=this.parameters[name];
+            try {
+                if (typeof value !== spec.type)
+                    switch (spec.type) {
+                        case "boolean":
+                            if (typeof value === "string") {
+                                value=value.toLowerCase();
+                                var num = parseInt(value, 10);
+                                if (!isNaN(num))
+                                    value=!!num;
+                                else
+                                    value=(value==="true" || value==="y" || value==="yes" || value==="y");
+                            } else if (typeof value === "number")
+                                value=!!value;
                             else
-                                opts[name]=(value==="true" || value==="y" || value==="yes" || value==="y");
-                        } else if (typeof value === "number")
-                            opts[name]=!!value;
-                        else
-                            log.warn("Cannot convert value for " + name + " to boolean");
-                        break;
-                    case "number":
-                        if (typeof value === "string") {
-                            value=parseInt(value, 10);
-                            if (isNaN(value))
-                                log.warn("Cannot convert value for " + name + " to number");
+                                throw ("Cannot convert value for " + name + " to boolean");
+                            break;
+                        case "number":
+                            if (typeof value === "string") {
+                                value=parseInt(value, 10);
+                                if (isNaN(value))
+                                    throw ("Cannot convert value for " + name + " to number");
+                            } else if (typeof value === "boolean")
+                                value=value + 0;
                             else
-                                opts[name]=value;
-                        } else if (typeof value === "boolean")
-                            opts[name]=value + 0;
-                        else
-                            log.warn("Cannot convert value for " + name + " to number");
-                        break;
-                    case "string":
-                        opts[name]=value.toString();
-                        break;
-                    case "null":  // Missing default values
-                        opts[name]=value;
-                        break;
-                    case "undefined":
-                        break;
-                    default:
-                        log.warn("Do not know how to convert value for " + name + " to " + type);
-                        break;
-                }
+                                throw ("Cannot convert value for " + name + " to number");
+                            break;
+                        case "string":
+                            value=value.toString();
+                            break;
+                        case "null":  // Missing default values
+                        case "undefined":
+                            break;
+                        default:
+                            throw ("Do not know how to convert value for " + name + " to " + spec.type);
+                    }
+
+                if (spec.choices && spec.choices.indexOf(value)===-1)
+                    log.warn("Illegal value for " + name + ": " + value);
+                else
+                    opts[name]=value;
+            } catch (e) {
+                log.warn(e);
+            }
         },
 
         _parse: function(parameter) {
-            if (typeof parameter==="number")
-                parameter = parameter.toString();
-
             var opts = {}, i, name;
 
             if (parameter) {
@@ -93,7 +108,7 @@ define([
                 i=-1;
                 while (parts.length) {
                     i++;
-                    if (i>=this.params.length) {
+                    if (i>=this.order.length) {
                         break;
                     }
                     part = parts.shift().trim();
@@ -103,7 +118,7 @@ define([
                         parts.unshift(part);
                         break;
                     }
-                    this._set(opts, this.mappings[this.params[i]], part.trim());
+                    this._set(opts, this.mappings[this.order[i]], part.trim());
                 }
 
                 // Handle all named parameters
@@ -116,7 +131,7 @@ define([
                         log.warn("Positional parameters not allowed after named parameters");
                         break;
                     }
-                    if (this.defaults[this.mappings[matches[1]]] === undefined) {
+                    if (this.parameters[this.mappings[matches[1]]] === undefined) {
                         log.warn("Unknown named parameter " + matches[1]);
                         continue;
                     }
@@ -135,6 +150,12 @@ define([
             return opts;
         },
 
+        _defaults: function() {
+            var result = {};
+            for (var name in this.parameters)
+                result[name]=this.parameters[name].value;
+            return result;
+        },
 
         parse: function($el, options, multiple) {
             if (typeof options==="boolean" && multiple===undefined) {
@@ -142,7 +163,7 @@ define([
                 options={};
             }
 
-            var stack = [[this.defaults]];
+            var stack = [[this._defaults()]];
 
             var $parents = $el.parents().andSelf(),
                 final_length = 1,

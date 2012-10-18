@@ -144,12 +144,55 @@ describe("Core / Parser", function() {
         });
     });
 
+    describe("_typeof", function() {
+        it("null", function() {
+            var parser=new ArgumentParser("mypattern");
+            expect(parser._typeof(null)).toBe("null");
+        });
+
+        it("number", function() {
+            var parser=new ArgumentParser("mypattern");
+            expect(parser._typeof(15)).toBe("number");
+        });
+
+        it("boolean", function() {
+            var parser=new ArgumentParser("mypattern");
+            expect(parser._typeof(false)).toBe("boolean");
+        });
+    });
+
     describe("_set", function() {
         it("Ignore unknown parameter", function() {
             var parser=new ArgumentParser(),
                 opts={};
             parser._set(opts, "value", "1");
             expect(opts).toEqual({});
+        });
+
+        describe("Enum handling", function() {
+            it("Valid value", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", "red",  ["red", "blue", "green"]);
+                parser._set(opts, "value", "red");
+                expect(opts.value).toBe("red");
+            });
+
+            it("Unknown value", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", "red",  ["red", "blue", "green"]);
+                parser._set(opts, "value", "pink");
+                expect(opts.value).toBe(undefined);
+            });
+
+            it("Coercion for enum values", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 5, [1, 3, 5, 10]);
+                parser._set(opts, "value", "3");
+                expect(opts.value).toBe(3);
+            });
         });
 
         describe("Convert to boolean", function() {

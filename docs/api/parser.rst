@@ -43,10 +43,11 @@ Parser API
    right attribute to parse for elements.
 
 
-.. js:function:: ArgumentParser.add_argument(name[, default])
+.. js:function:: ArgumentParser.add_argument(name[, default[, choices]])
 
    :param string name: argument name
    :param default: default value
+   :param array choice: list of acceptable values
 
    Register a new argument. The default value will be used if no value was
    found during parsing, and is used to determine what data type should be
