@@ -50,11 +50,11 @@ describe("Core / Parser", function() {
             expect(opts.attr).toBe("class");
         });
 
-        it("Dash in key", function() {
+        it("camelCase parameter names", function() {
             var parser=new ArgumentParser();
             parser.add_argument("time-delay");
             var opts = parser._parse("15");
-            expect(opts["timeDelay"]).toBeDefined();
+            expect(opts.timeDelay).toBeDefined();
         });
 
         it("Extra colons in named argument", function() {
@@ -144,39 +144,140 @@ describe("Core / Parser", function() {
         });
     });
 
-    describe("_coerce", function() {
-        it("Convert to number", function() {
-            var parser = new ArgumentParser();
-            parser.add_argument("value", 0);
-            expect(parser._coerce({value: "15"}).value).toBe(15);
+    describe("_set", function() {
+        it("Ignore unknown parameter", function() {
+            var parser=new ArgumentParser(),
+                opts={};
+            parser._set(opts, "value", "1");
+            expect(opts).toEqual({});
         });
 
-        it("Always use decimal notation for numbers", function() {
-            var parser = new ArgumentParser();
-            parser.add_argument("value", 0);
-            expect(parser._coerce({value: "010"}).value).toBe(10);
+        describe("Convert to boolean", function() {
+            it("String with non-zero number", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", false);
+                parser._set(opts, "value", "1");
+                expect(opts.value).toBe(true);
+            });
+
+            it("String with uppercase bool", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", false);
+                parser._set(opts, "value", "TRUE");
+                expect(opts.value).toBe(true);
+            });
+
+            it("String with mixed-case yes", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", false);
+                parser._set(opts, "value", "YeS");
+                expect(opts.value).toBe(true);
+            });
+
+            it("String with zero number", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", false);
+                parser._set(opts, "value", "0");
+                expect(opts.value).toBe(false);
+            });
+
+            it("String with mixed-case false", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", false);
+                parser._set(opts, "value", "False");
+                expect(opts.value).toBe(false);
+            });
+
+            it("String with n", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", false);
+                parser._set(opts, "value", "n");
+                expect(opts.value).toBe(false);
+            });
+
+            it("String with unknown value", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", false);
+                parser._set(opts, "value", "unknown");
+                expect(opts.value).toBe(false);
+            });
         });
 
-        it("Convert to boolean", function() {
-            var parser = new ArgumentParser();
-            parser.add_argument("value", false);
-            expect(parser._coerce({value: "1"}).value).toBe(true);
-            expect(parser._coerce({value: "TRUE"}).value).toBe(true);
-            expect(parser._coerce({value: "YeS"}).value).toBe(true);
-            expect(parser._coerce({value: "0"}).value).toBe(false);
-            expect(parser._coerce({value: "False"}).value).toBe(false);
-            expect(parser._coerce({value: "n"}).value).toBe(false);
-            expect(parser._coerce({value: "unknown"}).value).toBe(false);
+        describe("Convert to number", function() {
+            it("False boolean", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 15);
+                parser._set(opts, "value", false);
+                expect(opts.value).toBe(0);
+            });
+
+            it("True boolean", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 15);
+                parser._set(opts, "value", true);
+                expect(opts.value).toBe(1);
+            });
+
+            it("String with positive number", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 15);
+                parser._set(opts, "value", "1");
+                expect(opts.value).toBe(1);
+            });
+
+            it("String with zero number", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 0);
+                parser._set(opts, "value", "0");
+                expect(opts.value).toBe(0);
+            });
+
+            it("Always use decimal notation for numbers", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 0);
+                parser._set(opts, "value", "010");
+                expect(opts.value).toBe(10);
+            });
+
+            it("String with invalid", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 0);
+                parser._set(opts, "value", "ZZ");
+                expect(opts.value).toBe(undefined);
+            });
         });
 
-        it("Convert to number", function() {
-            var parser = new ArgumentParser();
-            parser.add_argument("value", 15);
-            expect(parser._coerce({value: "1"}).value).toBe(1);
-            expect(parser._coerce({value: "0"}).value).toBe(0);
-            expect(parser._coerce({value: "010"}).value).toBe(10);
-            expect(isNaN(parser._coerce({value: "ZZZ"}).value)).toBe(true);
+        describe("Convert to string", function() {
+            it("Boolean", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", "value");
+                parser._set(opts, "value", true);
+                expect(opts.value).toBe("true");
+            });
+
+            it("Number", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", "value");
+                parser._set(opts, "value", 15);
+                expect(opts.value).toBe("15");
+            });
         });
+
     });
 });
 
