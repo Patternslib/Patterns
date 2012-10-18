@@ -803,15 +803,15 @@ ul.radioRow li label {
 
 /* @group Focus demo CSS */
 
-fieldset.pat-focus {
+fieldset.focus {
 	background: #ddd;
 }
 
-label.pat-focus {
+label.focus {
 	background: #aaa;
 }
 
-input.pat-focus {
+input.focus {
 	background: #888;
 }
 

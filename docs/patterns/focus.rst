@@ -3,7 +3,7 @@ Focus classes
 
 It is frequently useful to change the styling for labels or fieldsets if they
 contain an input element that has the focus. Patterns facilitate that by
-automatically adding a ``pat-focus`` class.
+automatically adding a ``focus`` class.
 
 Lets look at a simple form:
 
@@ -23,7 +23,7 @@ Lets look at a simple form:
      </fieldset>
    </form>
 
-If the focus changes to the keywords input Patterns will add the ``pat-focus``
+If the focus changes to the keywords input Patterns will add the ``focus``
 class to the input element, its label and fieldset:
 
 
@@ -32,10 +32,10 @@ class to the input element, its label and fieldset:
    :emphasize-lines: 2,4
 
    <form>
-     <fieldset class="pat-focus">
+     <fieldset class="focus">
        <legend>Generic info</legend>
        <label>Title <input type="text" name="title"/></label>
-       <label class="pat-focus">Keywords <input class="pat-focus"type="text" name="keywords"/></label>
+       <label class="focus">Keywords <input class="focus"type="text" name="keywords"/></label>
      </fieldset>
 
      <fieldset>

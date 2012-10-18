@@ -13,7 +13,7 @@ define([
 
         onNewContent: function() {
             if ($(document.activeElement).is(":input"))
-                focus._findRelatives(document.activeElement).addClass("pat-focus");
+                focus._findRelatives(document.activeElement).addClass("focus");
         },
 
         _findRelatives: function(el) {
@@ -37,14 +37,14 @@ define([
         },
 
         onFocus: function(e) {
-            focus._findRelatives(this).addClass("pat-focus");
+            focus._findRelatives(this).addClass("focus");
         },
 
         onBlur: function(e) {
             var $relatives = focus._findRelatives(this);
 
             $(document).one("mouseup keyup", function() {
-                $relatives.filter(":not(:has(:input:focus))").removeClass("pat-focus");
+                $relatives.filter(":not(:has(:input:focus))").removeClass("focus");
             });
         }
     };
