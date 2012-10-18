@@ -206,7 +206,7 @@ Replace target element with source element:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src:element; target: #tgt:element">
+      data-pat-inject="source: #src::element; target: #tgt::element">
 
 
 Put source element before target element:
@@ -214,7 +214,7 @@ Put source element before target element:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src:element; target: #tgt:element::before">
+      data-pat-inject="source: #src::element; target: #tgt::element::before">
 
 
 Put source element after target element:
@@ -222,7 +222,7 @@ Put source element after target element:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src:element; target: #tgt:element::after">
+      data-pat-inject="source: #src::element; target: #tgt::element::after">
 
 
 Mixing element and content
@@ -233,7 +233,7 @@ Replace target element with source content:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src; target: #tgt:element">
+      data-pat-inject="source: #src; target: #tgt::element">
 
 
 Replace target content with source element:
@@ -241,7 +241,7 @@ Replace target content with source element:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src; target: #tgt:element">
+      data-pat-inject="source: #src; target: #tgt::element">
 
 
 Source content before target element:
@@ -249,7 +249,7 @@ Source content before target element:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src; target: #tgt:element::before">
+      data-pat-inject="source: #src; target: #tgt::element::before">
 
 
 Source content after target element:
@@ -257,7 +257,7 @@ Source content after target element:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src; target: #tgt:element::after">
+      data-pat-inject="source: #src; target: #tgt::element::after">
 
 
 Source element before target content:
@@ -265,7 +265,7 @@ Source element before target content:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src:element; target: #tgt::before">
+      data-pat-inject="source: #src::element; target: #tgt::before">
 
 
 Source element after target content:
@@ -273,7 +273,7 @@ Source element after target content:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src:element; target: #tgt::after">
+      data-pat-inject="source: #src::element; target: #tgt::after">
 
 
 
