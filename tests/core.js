@@ -20,12 +20,12 @@ describe("core-init", function() {
 
         it("Transform text/html objects", function() {
             var $lab = $("#lab");
-            $lab.append('<object type="text/html" data="about.html">Plain content</object>');
+            $lab.append('<object type="text/html" data="about:blank">Plain content</object>');
             mapal._convertToIframes($lab);
             expect($lab.find("object").length).toBe(0);
             var $iframe = $lab.find("iframe");
             expect($iframe.length).toBe(1);
-            expect($iframe[0].src).toMatch(/about.html$/);
+            expect($iframe[0].src).toBe("about:blank");
         });
     });
 
