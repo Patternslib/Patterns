@@ -29,6 +29,56 @@ define([
             this.defaults[this.mappings[name]] = default_value;
         },
 
+        _set: function(opts, name, value) {
+            if (!(name in this.defaults)) {
+                log.debug("Ignoring value for unknown argument " + name);
+                return;
+            }
+
+            var type = this.defaults[name]===null ? "null" : typeof this.defaults[name];
+            if (typeof value === type)
+                opts[name]=value;
+            else
+                switch (type) {
+                    case "boolean":
+                        if (typeof value === "string") {
+                            value=value.toLowerCase();
+                            var num = parseInt(value, 10);
+                            if (!isNaN(num))
+                                opts[name] = !!num;
+                            else
+                                opts[name]=(value==="true" || value==="y" || value==="yes" || value==="y");
+                        } else if (typeof value === "number")
+                            opts[name]=!!value;
+                        else
+                            log.warn("Cannot convert value for " + name + " to boolean");
+                        break;
+                    case "number":
+                        if (typeof value === "string") {
+                            value=parseInt(value, 10);
+                            if (isNaN(value))
+                                log.warn("Cannot convert value for " + name + " to number");
+                            else
+                                opts[name]=value;
+                        } else if (typeof value === "boolean")
+                            opts[name]=value + 0;
+                        else
+                            log.warn("Cannot convert value for " + name + " to number");
+                        break;
+                    case "string":
+                        opts[name]=value.toString();
+                        break;
+                    case "null":  // Missing default values
+                        opts[name]=value;
+                        break;
+                    case "undefined":
+                        break;
+                    default:
+                        log.warn("Do not know how to convert value for " + name + " to " + type);
+                        break;
+                }
+        },
+
         _parse: function(parameter) {
             if (typeof parameter==="number")
                 parameter = parameter.toString();
@@ -53,7 +103,7 @@ define([
                         parts.unshift(part);
                         break;
                     }
-                    opts[this.mappings[this.params[i]]] = part.trim();
+                    this._set(opts, this.mappings[this.params[i]], part.trim());
                 }
 
                 // Handle all named parameters
@@ -70,67 +120,21 @@ define([
                         log.warn("Unknown named parameter " + matches[1]);
                         continue;
                     }
-                    opts[this.mappings[matches[1]]] = matches[2].trim();
+
+                    this._set(opts, this.mappings[matches[1]], matches[2].trim());
                 }
             }
 
             // Resolve references
             for (name in opts) {
                 var value = opts[name];
-
                 if (typeof value==="string" && opts[name].slice(0,1) === "$")
-                    opts[name]=opts[value.slice(1)];
+                    this._set(opts, name, opts[value.slice(1)]);
             }
 
             return opts;
         },
 
-        _coerce: function(data) {
-            var i, name, value, types={};
-
-            for (i in this.defaults)
-                types[i]=this.defaults[i]===null ? "null" : typeof this.defaults[i];
-
-            for (name in data) {
-                value = data[name];
-
-                if (typeof value !== types[name]) {
-                    switch (types[name]) {
-                        case "boolean":
-                            if (typeof value === "string") {
-                                value = value.toLowerCase();
-                                var num = parseInt(value, 10);
-                                if (!isNaN(num))
-                                    value = !!num;
-                                else
-                                    value = (value==="true" || value==="y" || value==="yes" || value==="y");
-                            } else if (typeof value === "number")
-                                value = !!value;
-                            else
-                                log.warn("Cannot convert value for " + name + " to boolean");
-                            break;
-                        case "number":
-                            if (typeof value === "string") {
-                                value = parseInt(value, 10);
-                                if (isNaN(value))
-                                    log.warn("Cannot convert value for " + name + " to number");
-                            } else if (typeof value === "boolean")
-                                value = value + 0;
-                            else
-                                log.warn("Cannot convert value for " + name + " to number");
-                            break;
-                        case "null":  // Missing default values
-                        case "undefined":
-                            break;
-                        default:
-                            log.warn("Do not know how to convert value for " + name + " to " + types[name]);
-                            break;
-                    }
-                }
-                data[name]=value;
-            }
-            return data;
-        },
 
         parse: function($el, options, multiple) {
             if (typeof options==="boolean" && multiple===undefined) {
@@ -175,8 +179,6 @@ define([
                 }
             }
 
-            for (i=0; i<final_length; i++)
-                results[i]=this._coerce(results[i]);
             return multiple ? results : results[0];
         }
     };
