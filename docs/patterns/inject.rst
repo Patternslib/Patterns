@@ -241,7 +241,7 @@ Replace target content with source element:
 .. code-block:: html
 
    <a class="pat-inject" href="sources.html"
-      data-pat-inject="source: #src; target: #tgt::element">
+      data-pat-inject="source: #src::element; target: #tgt">
 
 
 Source content before target element:
