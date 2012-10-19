@@ -3,7 +3,7 @@ define([
     '../logging',
     '../utils',
     "../registry",
-    '../lib/dist/fullcalendar/fullcalendar'
+    '../3rdparty/fullcalendar/fullcalendar'
 ], function($, logging, utils, registry) {
     var log = logging.getLogger('fullcalendar');
 
