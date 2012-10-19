@@ -9,10 +9,13 @@
                 <script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js"></script>
 	</head>
 	<body>
+          <h2>Toggle a class</h2>
+          <span class="red" id="toToggle">This is getting toggled</span>
+          <small>also notice how the status persists across page reloads!</small><br/>
+          <button id="colour" class="pat-toggle" data-pat-toggle="selector: #toToggle; value: red blue; store: session">change colour</button>
+
+          <h2>Toggling of attributes</h2>
           <fieldset>
-            <span class="red" id="toToggle">This is getting toggled</span>
-            <button id="colour" class="pat-toggle" data-pat-toggle="selector: #toToggle; value: red blue; store: session">change colour</button>
-            <hr/>
             <input type="checkbox" id="toCheck" />
             <button class="pat-toggle" data-pat-toggle="#toCheck; checked; checked">toggle checkbox</button>
           </fieldset>
