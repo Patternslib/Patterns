@@ -13,37 +13,47 @@ define([
     var log = logging.getLogger('collapsible'),
         parser = new Parser("collapsible");
 
+    parser.add_argument("duration", 200);
     parser.add_argument("load-content");
+    parser.add_argument("state", "open");
 
     var _ = {
         name: "collapsible",
         trigger: ".pat-collapsible",
         parser: parser,
+        parse: function($el, opts) {
+            var defaults = {
+                state: $el.hasClass('closed') ? "closed" : "open"
+            };
+            var cfg = $.extend({}, defaults, _.parser.parse($el, opts));
+            return cfg;
+        },
         init: function($el, opts) {
             return $el.each(function() {
-                var $el = $(this);
                 // create collapsible structure
-                var $ctrl = $el.children(':first'),
+                var $el = $(this),
+                    $ctrl = $el.children(':first'),
                     $content = $el.children(':gt(0)'),
-                    $panel;
-                if ($content.length > 0) {
-                    $panel = $content.wrapAll('<div class="panel-content" />')
-                        .parent();
-                } else {
-                    $panel = $('<div class="panel-content" />').insertAfter($ctrl);
+                    $panel = $el.find('.panel-content');
+                if ($panel.length === 0) {
+                    if ($content.length > 0) {
+                        $panel = $content.wrapAll('<div class="panel-content" />')
+                            .parent();
+                    } else {
+                        $panel = $('<div class="panel-content" />').insertAfter($ctrl);
+                    }
                 }
 
-                // set initial state
-                if ((opts && opts.closed) || $el.hasClass("closed")) {
-                    $el.removeClass("closed");
-                    _.close($el, {duration: 0});
-                } else {
-                    $el.addClass("open");
-                }
+                var cfg = _.parse($el, opts);
+
+                if (cfg.closed)
+                    _.close($el);
+                else if (cfg.open)
+                    _.open($el);
 
                 // bind to click events
                 $ctrl.on("click.pat-collapsible", function() {
-                    _.toggle($el, "fast");
+                    _.toggle($el);
                 });
 
                 return $el;
@@ -54,11 +64,43 @@ define([
             $ctrl.off('.pat-collapsible');
         },
         open: function($el, opts) {
-            opts = opts || {};
-            if ($el.hasClass("open"))
-                return null;
+            if ($el.hasClass('open'))
+                return $el;
 
-            _.toggle($el, opts.duration);
+            var cfg = _.parser.parse($el, opts),
+                $panel = $el.find('.panel-content');
+            $el.removeClass('closed');
+            if (cfg.duration)
+                $el.addClass('opening');
+            $el.content.show(cfg.duration, function() {
+                $el.removeClass('opening');
+                $el.addClass('open');
+            });
+            return $el;
+        },
+        close: function($el, opts) {
+            var cfg = _.parser.parse($el, opts);
+            if (cfg.closed)
+                $panel = $el.find('.panel-content');
+            $el.removeClass('open');
+            if (cfg.duration)
+                $el.addClass('closing');
+            $el.content.show(cfg.duration, function() {
+                $el.removeClass('closing');
+                $el.addClass('close');
+            });
+            return $el;
+        },
+        toggle: function($el, opts) {
+            opts = opts || {};
+            var $panel = $el.find('.panel-content');
+            if ($el.hasClass("closed")) {
+                $el.trigger('patterns-collapsible-open');
+                _._transit($el, $panel, "closed", "open", opts.duration);
+            } else {
+                $el.trigger('patterns-collapsible-close');
+                _._transit($el, $panel, "open", "closed", opts.duration);
+            }
 
             // allow for chaining
             return $el;
@@ -76,28 +118,6 @@ define([
                     $targets: $('.panel-content', $el)
                 }];
             inject.execute(opts);
-        },
-        close: function($el, opts) {
-            opts = opts || {};
-            if ($el.hasClass("closed")) return null;
-            _.toggle($el, opts);
-
-            // allow for chaining
-            return $el;
-        },
-        toggle: function($el, opts) {
-            opts = opts || {};
-            var $panel = $el.find('.panel-content');
-            if ($el.hasClass("closed")) {
-                $el.trigger('patterns-collapsible-open');
-                _._transit($el, $panel, "closed", "open", opts.duration);
-            } else {
-                $el.trigger('patterns-collapsible-close');
-                _._transit($el, $panel, "open", "closed", opts.duration);
-            }
-
-            // allow for chaining
-            return $el;
         },
         _transit: function($el, $panel, from_cls, to_cls, duration) {
             duration = duration || 0; // Handle undefined/null durations
