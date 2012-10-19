@@ -141,6 +141,16 @@ describe("Core / Parser", function() {
                 expect(opts[0].value).toBe("one");
                 expect(opts[1].value).toBe("two");
             });
+
+            it("Provide multiple options to parse()", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value");
+                var opts = parser.parse($(), [{value: "one"}, {value: "two"}], true);
+                expect(Array.isArray(opts)).toBe(true);
+                expect(opts.length).toBe(2);
+                expect(opts[0].value).toBe("one");
+                expect(opts[1].value).toBe("two");
+            });
         });
     });
 
