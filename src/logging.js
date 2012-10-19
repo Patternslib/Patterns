@@ -1,9 +1,39 @@
-define(function(require) {
-    require('../lib/log4javascript');
+define([
+    "jquery",
+    "../lib/log4javascript"
+], function($) {
     var l4js = log4javascript,
-        level = l4js.Level,
         rootname = 'patterns',
-        root = l4js.getLogger(rootname);
+        root = l4js.getLogger(rootname),
+        log = l4js.getLogger(rootname + '.logging');
+
+    // default log level mapping
+    //
+    // you can override these via the url search parameter:
+    // foo.html?patterns-log-level=WARN&patterns-log-level-inject=DEBUG
+    //
+    var LEVELMAP = {
+        patterns: l4js.Level.INFO
+        //"patterns.inject": l4js.Level.DEBUG
+    };
+    var loglevelFromUrl = function() {
+        // check URL for loglevel config
+        var loglevel_re =/patterns-log-level-?([^=]*)=([^&]+)/g,
+            level, name, m;
+        while (true) {
+            m = loglevel_re.exec(window.location.search);
+            if (!m)
+                break;
+            name = rootname + (m[1] ? '.' + m[1] : "");
+            level = m[2].toUpperCase();
+            if (!l4js.Level[level])
+                log.warn('Unknown log level:', level, m);
+            else
+                LEVELMAP[name] = l4js.Level[level];
+        }
+    };
+    loglevelFromUrl();
+    root.setLevel(LEVELMAP[rootname]);
 
     var init_console_logging = function() {
         // enable/disable all logging
@@ -45,8 +75,6 @@ define(function(require) {
 
         var layout = new Layout();
         bca.setLayout(layout);
-
-        root.setLevel(level.INFO);
     };
 
     init_console_logging();
@@ -55,17 +83,22 @@ define(function(require) {
         Level: l4js.Level,
 
         setEnabled: function(enabled) {
-            l4js.setEnabled(true);
+            l4js.setEnabled(enabled);
         },
 
         setLevel: function(level) {
             root.setLevel(level);
         },
 
+        // XXX: get this into l4js:
+        // logging.getLogger("foo").getLogger("bar").getLogger("baz");
         getLogger: function(name) {
-            var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
-            if (name === 'inject_log_old') logger.setLevel(level.INFO);
-            return logger;
+            var logname = rootname + (name ? '.' + name : ''),
+                log = l4js.getLogger(logname),
+                level = LEVELMAP[logname];
+            if (level)
+                log.setLevel(level);
+            return log;
         }
     };
 
