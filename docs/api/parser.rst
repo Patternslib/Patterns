@@ -53,6 +53,11 @@ Parser API
    found during parsing, and is used to determine what data type should be
    used.
 
+   As a special feature you can define an *argument-alias* as default value by
+   using a ```$<argument name>``` as default value. In that case if no value
+   for the argument was provided a copy of the referenced argument will be
+   used.
+
 
 .. js:function:: ArgumentParser.parse($el [, options][, multiple])
 
