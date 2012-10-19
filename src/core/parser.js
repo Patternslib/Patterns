@@ -180,8 +180,13 @@ define([
                     stack.push(frame);
                 }
             }
-            if (typeof options==="object")
-                stack.push([options]);
+            if (typeof options==="object") {
+                if (Array.isArray(options)) {
+                    stack.push(options);
+                    final_length=Math.max(options.length, final_length);
+                } else
+                    stack.push([options]);
+            }
 
             if (!multiple)
                 final_length=1;
