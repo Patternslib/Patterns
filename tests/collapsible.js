@@ -12,7 +12,7 @@ describe("collapsible-pattern", function() {
 
     describe("init", function() {
         it("Create panel-content", function() {
-            var $lab = $("#lab")
+            var $lab = $("#lab");
             $lab.html([
                 '<div class="collapsible">',
                 '<h3>Trigger header</h3>',
@@ -25,7 +25,7 @@ describe("collapsible-pattern", function() {
         });
 
         it("Panels are open by default", function() {
-            var $lab = $("#lab")
+            var $lab = $("#lab");
             $lab.html([
                 '<div class="collapsible">',
                 '<h3>Trigger header</h3>',
@@ -38,7 +38,7 @@ describe("collapsible-pattern", function() {
         });
 
         it("Explicitly closed panel is not open", function() {
-            var $lab = $("#lab")
+            var $lab = $("#lab");
             $lab.html([
                 '<div class="collapsible closed">',
                 '<h3>Trigger header</h3>',
@@ -53,7 +53,7 @@ describe("collapsible-pattern", function() {
 
     describe("toggle", function() {
         it("Toggle an open panel", function() {
-            var $lab = $("#lab")
+            var $lab = $("#lab");
             $lab.html([
                 '<div class="collapsible">',
                 '<h3>Trigger header</h3>',
@@ -67,7 +67,7 @@ describe("collapsible-pattern", function() {
         });
 
         it("Toggle a closed panel", function() {
-            var $lab = $("#lab")
+            var $lab = $("#lab");
             $lab.html([
                 '<div class="collapsible closed">',
                 '<h3>Trigger header</h3>',

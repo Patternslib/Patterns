@@ -166,7 +166,7 @@ describe("depends-pattern", function() {
                     var $lab = $("#lab"),
                         action = {action: "show",
                                   type: "and",
-                                  on: [{value: "toggle", operator: "notEquals", value: "yes"}]};
+                                  on: [{name: "toggle", operator: "notEquals", value: "yes"}]};
                     $lab.append("<input type='checkbox' name='toggle' value='yes' checked='checked'/>");
                     expect(pattern.verify($lab, action)).toBe(false);
                 });

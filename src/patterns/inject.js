@@ -90,7 +90,7 @@ define([
                 log.warn('Ignoring additional source ids:', urlparts.slice(2));
             }
 
-            return cfgs = parser.parse($el, opts, true);
+            return parser.parse($el, opts, true);
         },
         // verify and post-process config
         verifyConfig: function(cfgs) {
@@ -205,7 +205,7 @@ define([
                     _._inject($source, cfg.$target, cfg.action);
                 });
 
-                if (cfgs['nexthref']) {
+                if (cfgs.nexthref) {
                     $this.attr({href: cfgs['next-href']});
                     _.destroy($this);
                 }
@@ -247,7 +247,7 @@ define([
                     $(this)[method]($ourSource);
                     $ourSource.trigger('patterns-injected');
                 });
-            };
+            }
         },
         _sourcesFromHtml: function(html, url, sources) {
             var $html = _._parseRawHtml(html, url);
