@@ -83,8 +83,8 @@ be JSON serialized instead of only strings.
    :returns: object with all stored data
 
    This method returns an object containing a copy of all stored data. Please 
-   this is only a copy: modifications made to the returned object will not be
-   stored.
+   note that this is only a copy: modifications made to the returned object
+   will *not* be stored.
 
 
 Example
