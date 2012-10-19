@@ -152,6 +152,33 @@ describe("Core / Parser", function() {
                 expect(opts[1].value).toBe("two");
             });
         });
+
+        describe("Variable references", function() {
+            it("Basic reference", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value", 15);
+                parser.add_argument("other", "$value");
+                var opts = parser.parse($());
+                expect(opts.other).toBe(15);
+            });
+
+            it("Coerce to referenced type", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value", 15);
+                parser.add_argument("other", "$value");
+                var $content = $("<div data-pat-mypattern='other: 32'/>");
+                var opts = parser.parse($content);
+                expect(opts.other).toBe(32);
+            });
+
+            it("Do not follow $ in value", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value", 15);
+                parser.add_argument("other");
+                var opts = parser.parse($(), {other: "$value"});
+                expect(opts.other).toBe("$value");
+            });
+        });
     });
 
     describe("_typeof", function() {

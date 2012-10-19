@@ -30,7 +30,9 @@ define([
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
                 spec.type=this._typeof(choices[0]);
-            } else
+            } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                spec.type=this.parameters[spec.value.slice(1)].type;
+            else
                 spec.type=this._typeof(spec.value);
 
             this.order.push(name);
@@ -140,13 +142,6 @@ define([
                 }
             }
 
-            // Resolve references
-            for (name in opts) {
-                var value = opts[name];
-                if (typeof value==="string" && opts[name].slice(0,1) === "$")
-                    this._set(opts, name, opts[value.slice(1)]);
-            }
-
             return opts;
         },
 
@@ -204,6 +199,15 @@ define([
                     results[x]=$.extend(results[x], frame[xf]);
                 }
             }
+
+            // Resolve references
+            var name, value, spec;
+            for (i=0; i<results.length; i++)
+                for (name in results[i]) {
+                    spec=this.parameters[name];
+                    if (results[i][name]===spec.value && typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                        results[i][name]=results[i][spec.value.slice(1)];
+                }
 
             return multiple ? results : results[0];
         }
