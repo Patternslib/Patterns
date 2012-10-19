@@ -1,8 +1,6 @@
 define([
-    'require',
-    "jquery",
-    './core/init'
-], function(require, $, mapal) {
+    "jquery"
+], function($) {
     var extractParameters = function(params, sources) {
         var tmp,
             j,
@@ -73,19 +71,6 @@ define([
             return this;
         };
         return plugin;
-    };
-
-    // XXX: need to understand require magic to make this work here
-    // require paths are local to where it is called, we would need to
-    // pass the path of the module that called load_modules
-    var load_modules = function(prefix, names, suffix) {
-        prefix = prefix || '';
-        suffix = suffix || '';
-        var modules = names.reduce(function(acc, name) {
-            acc[name] = require(prefix + name + suffix);
-            return acc;
-        }, {});
-        return modules;
     };
 
     function _renumberAttribute(el, attr, i) {
