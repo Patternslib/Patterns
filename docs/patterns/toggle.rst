@@ -48,3 +48,31 @@ by spaces to toggle multiple classes.
 
 On the first click the ``inactive`` class will be removed and ``active`` will be added. On
 the next click ``active`` will be removed again and ``active`` restored.
+
+Remembering the state
+---------------------
+
+Sometimes you need to remember the toggle state of an element. For example when
+you use a toggle to hide or show a sidebar you do not want the sidebar to
+reappear on every page (re)load. This can be done by telling the toggle pattern
+to store the state of an element using the ``store`` parameter.
+
+.. code-block:: html
+
+   <button id="sidebar-toggle" class="pat-toggle"
+       data-pat-toggle="selector: #sidebar; value; visible; store: session">Show sidebar</button>
+
+To use this you requirements must be met:
+
+1. the element must have an ``id``
+2. The browser must support `Web Storage <http://www.w3.org/TR/webstorage/>`_
+
+The possible values for the ``store`` parameter are:
+
+* ``none``: do not remember the toggle state (default)
+* ``session``: remember the status as part of the session storage
+* ``local``: remember the state as part of the local page storage.
+
+Local storage is probably not what you want since a browser will reset it as
+soon as you switch to another page or reload the current page.
+
