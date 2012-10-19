@@ -76,25 +76,10 @@ define([
     './patterns/tooltip',
     './patterns/validate',
     './patterns/zoom'
-], function(require, $) {
-    var mapal = require('./core/init');
-
-    // Register these so data-injection can execute actions from these patterns
-    mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
-    mapal.patterns.modal = require('./patterns/old_modal');
-    mapal.patterns.selfHealing = require('./patterns/selfhealing');
-
-    $(document).on('inject.patterns.scan', function(ev, opts) {
-        mapal.initContent(ev.target, opts);
-        $(ev.target).trigger('patterns-inject-scanned', opts);
-    });
-
+], function($, registry) {
     // wait for the DOM to be ready and initialize
     $(document).ready(function(){
-        mapal.init();
-        mapal.initContent(document.body);
-        $(document).trigger("setupFinished", document);
+        registry.scan(document.body);
     });
-
-    return mapal;
+    return registry;
 });

@@ -9,19 +9,21 @@
 define([
     "jquery",
     "./logging",
+    "./transforms",
     "./utils",
     // below here modules that are only loaded
     "./compat"
-], function($, logging, utils) {
+], function($, logging, transforms, utils) {
     var log = logging.getLogger('registry'),
         jquery_plugin = utils.jquery_plugin;
 
-    var _ = {
+    var registry = {
         patterns: {},
         scan: function(content) {
             var $content = $(content), pattern, $match, plog, $initialised;
-            for (var name in _.patterns) {
-                pattern = _.patterns[name];
+            transforms.transformContent($content);
+            for (var name in registry.patterns) {
+                pattern = registry.patterns[name];
                 plog = logging.getLogger(name);
 
                 // construct set of matching elements
@@ -44,13 +46,13 @@ define([
             }
         },
         register: function(pattern) {
-            if (_.patterns[pattern.name]) {
+            if (registry.patterns[pattern.name]) {
                 log.error("Already have a pattern called: " + pattern.name);
                 return false;
             }
 
             // register pattern to be used for scanning new content
-            _.patterns[pattern.name] = pattern;
+            registry.patterns[pattern.name] = pattern;
 
             // register pattern as jquery plugin
             if (pattern.jquery_plugin) {
@@ -62,7 +64,14 @@ define([
             return true;
         }
     };
-    return _;
+
+    $(document).on('patterns-injected.patterns', function(ev) {
+        registry.scan(ev.target);
+        $(ev.target).trigger('patterns-injected-scanned');
+    });
+
+
+    return registry;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
