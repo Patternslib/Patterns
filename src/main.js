@@ -41,11 +41,10 @@ requirejs.config({
 
 
 define([
-    'require',
     'jquery',
+    './registry',
     './3rdparty/prefixfree',
     './3rdparty/modernizr-2.0.6',
-    './core/init',
     './patterns/autofocus',
     './patterns/autoload',
     './patterns/autosubmit',
@@ -66,9 +65,7 @@ define([
     './patterns/menu',
     './patterns/modal',
     './patterns/navigation',
-    './patterns/old_modal',
     './patterns/placeholder',
-    './patterns/selfhealing',
     './patterns/setclass',
     './patterns/sorting',
     './patterns/switch',

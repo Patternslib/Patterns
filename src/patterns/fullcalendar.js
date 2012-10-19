@@ -2,10 +2,9 @@ define([
     'jquery',
     '../logging',
     '../utils',
-    "../core/init",
     "../registry",
     '../lib/dist/fullcalendar/fullcalendar'
-], function($, logging, utils, mapal, patterns) {
+], function($, logging, utils, registry) {
     var log = logging.getLogger('fullcalendar');
 
     var fullcalendar = {
@@ -29,14 +28,11 @@ define([
             $filter.find('.check-list .groups label').hide();
 
             // initialize existing months
-            fullcalendar.initMonths($calroot);
+            initMonths($calroot);
 
             // wait for additional months
-            $calroot.on('inject.pat-fullcalendar', function(ev, opts) {
-                fullcalendar.initMonths($(ev.target));
-            });
-            $calroot.on('injection.pat-fullcalendar', function(event, month) {
-                fullcalendar.initMonths($(month));
+            $calroot.on('patterns-injected.pat-fullcalendar', function(ev) {
+                initMonths($(ev.target));
             });
         },
 
@@ -51,7 +47,7 @@ define([
             var refetch = function() {
                 $calendar.fullCalendar('refetchEvents');
                 // XXX: replace with mutator event listener
-                mapal.initContent($calendar);
+                registry.scan($calendar);
             };
             var refetch_deb = utils.debounce(refetch, 400);
             if ($filter && $filter.length > 0) {
@@ -81,7 +77,7 @@ define([
                 month: month,
                 year: year
             });
-            mapal.initContent($calendar);
+            registry.scan($calendar);
         },
 
         parseEvents: function($events, $filter) {
@@ -177,7 +173,7 @@ define([
         }
     };
 
-    patterns.register(fullcalendar);
+    registry.register(fullcalendar);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
