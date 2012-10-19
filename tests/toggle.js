@@ -10,39 +10,6 @@ describe("toggle", function() {
         $("#lab *").remove();
     });
 
-    describe("onClick", function() {
-        it("Bad syntax", function() {
-            $("#lab").html("<button id='trigger' data-pat-toggle='#victim'>Click</button>");
-            var trigger = document.getElementById("trigger"),
-                event = jasmine.createSpyObj("event", ["preventDefault"]);
-            spyOn(pattern, "_update");
-            pattern.onClick.bind(trigger)(event);
-            expect(pattern._update).not.toHaveBeenCalled();
-            expect(event.preventDefault).toHaveBeenCalled();
-        });
-
-        it("Shorthand notation", function() {
-            $("#lab").html("<button id='trigger' data-pat-toggle='#victim;;on'>Click</button>");
-            var trigger = document.getElementById("trigger"),
-                event = jasmine.createSpyObj("event", ["preventDefault"]);
-            spyOn(pattern, "_update");
-            pattern.onClick.bind(trigger)(event);
-            expect(pattern._update).toHaveBeenCalledWith("#victim", "class", "on");
-            expect(event.preventDefault).toHaveBeenCalled();
-        });
-
-        it("Multiple changes", function() {
-            $("#lab").html("<button id='trigger' data-pat-toggle='#victim;;on && #victim;;enabled'>Click</button>");
-            var trigger = document.getElementById("trigger"),
-                event = jasmine.createSpyObj("event", ["preventDefault"]);
-            spyOn(pattern, "_update");
-            pattern.onClick.bind(trigger)(event);
-            expect(pattern._update).toHaveBeenCalledWith("#victim", "class", "on");
-            expect(pattern._update).toHaveBeenCalledWith("#victim", "class", "enabled");
-            expect(event.preventDefault).toHaveBeenCalled();
-        });
-    });
-
     describe("_update", function() {
         it("No targets", function() {
             spyOn(jQuery.fn, "toggleClass");
