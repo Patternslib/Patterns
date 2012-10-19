@@ -1,7 +1,7 @@
-describe("core-init", function() {
+describe("transforms", function() {
     var mapal;
 
-    requireDependencies(["core/init"], function(cls) {
+    requireDependencies(["transforms"], function(cls) {
         mapal = cls;
     });
 
