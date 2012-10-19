@@ -21,7 +21,7 @@ define([
 
     var toggle = {
         name: "toggle",
-        trigger: "[data-pat-toggle]",
+        trigger: ".pat-toggle",
 
         init: function($el) {
             $el.on("click.patterns", toggle.onClick);
