@@ -57,7 +57,7 @@ define([
             // register pattern as jquery plugin
             if (pattern.jquery_plugin) {
                 // XXX: here the pattern used to be jquery_plugin wrapped
-                $.fn[pattern.name] = jquery_plugin(pattern);
+                $.fn[pattern.jquery_plugin] = jquery_plugin(pattern);
             }
 
             log.info('Registered pattern:', pattern.name, pattern);

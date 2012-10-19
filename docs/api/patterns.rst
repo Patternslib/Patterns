@@ -72,7 +72,7 @@ Patterns can also act as jQuery plugins. This can be done by providing a
 
    var pattern_spec = {
        name: "mypattern",
-       jquery_plugin: true,
+       jquery_plugin: "patternMypattern",
 
        init: function($el) {
            ...
@@ -89,9 +89,8 @@ Patterns can also act as jQuery plugins. This can be done by providing a
 
 
 Line 3 tells the patterns framework that this pattern can be used as a jQuery
-plugin. In order to prevent conflicts the name of the jQuery function will be
-created by combining the word ``pattern`` with the capitalized name of the
-pattern. You can then interact with it using the standard jQuery API:
+plugin named ``patternMyPattern``. You can then interact with it using the
+standard jQuery API:
 
 .. code-block:: javascript
 
