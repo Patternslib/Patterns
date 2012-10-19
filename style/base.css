@@ -133,10 +133,6 @@ body>section:after {
 	width: 100% !important;
 } 
 
-.anythingSlider .panel {
-	width: 100% !important;
-}
-
 .anythingSlider-default .arrow a {
 	display: block;
 	width: 45px;
