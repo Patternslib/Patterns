@@ -13,8 +13,8 @@ define([
 
     var depends = {
         name: "depends",
-        jquery_plugin: true,
         trigger: ".pat-depends",
+        jquery_plugin: "patternDepends",
 
         verify: function($slave, command) {
             var result=[],
