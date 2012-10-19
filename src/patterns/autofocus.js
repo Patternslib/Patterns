@@ -1,7 +1,7 @@
 define([
     'jquery',
     "../registry"
-], function($, patterns) {
+], function($, registry) {
     var autofocus = {
         name: "autofocus",
         trigger: ":input.pat-autofocus,:input[autofocus]",
@@ -17,7 +17,7 @@ define([
         }
     };
 
-    patterns.register(autofocus);
+    registry.register(autofocus);
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

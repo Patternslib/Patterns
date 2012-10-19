@@ -9,9 +9,9 @@
 define([
     'jquery',
     "../registry",
-    '../core/init',
-    '../utils'
-], function($, patterns, mapal, utils) {
+    '../utils',
+    './inject'
+], function($, patterns, utils, inject) {
     var tooltip = {
         name: "tooltip",
         trigger: "[data-tooltip]",
@@ -24,13 +24,13 @@ define([
                     options = utils.parseOptions($trigger.data("tooltip"));
                 options.title = $trigger.attr("title");
                 $trigger.removeAttr("title");
-                $trigger.data("mapal.tooltip", options);
+                $trigger.data("patterns.tooltip", options);
                 tooltip.setupShowEvents($trigger);
             });
         },
 
         setupShowEvents: function($trigger) {
-            var parameters = $trigger.data("mapal.tooltip");
+            var parameters = $trigger.data("patterns.tooltip");
             if (parameters.click) {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
@@ -46,7 +46,7 @@ define([
 
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
-                parameters = $trigger.data("mapal.tooltip");
+                parameters = $trigger.data("patterns.tooltip");
             if (parameters.sticky) {
                 $container.find(".close-panel")
                     .on("click.tooltip", $trigger, tooltip.hide);
@@ -61,8 +61,6 @@ define([
                     $trigger.on("click.tooltip", tooltip.blockDefault);
                     // close if something inside the tooltip triggered an injection
                     $container.on('patterns-inject-triggered.tooltip',
-                                  $trigger, tooltip.hide);
-                    $container.on('patterns-inject_interim-triggered.tooltip',
                                   $trigger, tooltip.hide);
                     $container.on('submit.tooltip', $trigger, tooltip.hide);
                 } else {
@@ -90,7 +88,7 @@ define([
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
                 namespace = $container.attr("id"),
-                options = $trigger.data("mapal.tooltip");
+                options = $trigger.data("patterns.tooltip");
 
             tooltip.removeShowEvents($trigger);
             // Wrap in a timeout to make sure this click is not used to
@@ -105,11 +103,11 @@ define([
             if (options.ajax) {
                 var source = $trigger.attr("href").split("#"),
                     target_id = $container.find("progress").attr("id");
-                mapal.injection.load($trigger, source[0], target_id+":replace", source[1] || [],
+                inject.execute($trigger, source[0], target_id+":replace", source[1] || [],
                         ajax_show, true);
                 // always load fresh tooltips
                 // delete options.ajax;
-                $trigger.data("mapal.tooltip", options);
+                $trigger.data("patterns.tooltip", options);
             }
 
             tooltip.positionContainer($trigger, $container);
@@ -132,16 +130,16 @@ define([
         },
 
         getContainer: function($trigger) {
-            var $container = $trigger.data("mapal.tooltip.container");
+            var $container = $trigger.data("patterns.tooltip.container");
             if ($container===undefined) {
                 $container=tooltip.createContainer($trigger);
-                $trigger.data("mapal.tooltip.container", $container);
+                $trigger.data("patterns.tooltip.container", $container);
             }
             return $container;
         },
 
         createContainer: function($trigger) {
-            var options = $trigger.data("mapal.tooltip"),
+            var options = $trigger.data("patterns.tooltip"),
                 count = ++tooltip.count,
                 $content, $container;
 
@@ -328,7 +326,7 @@ define([
 
         positionContainer: function($trigger, $container) {
             var status = tooltip.positionStatus($trigger, $container),
-                options = $trigger.data("mapal.tooltip"),
+                options = $trigger.data("patterns.tooltip"),
                 container_offset = {},
                 tip_offset = {},
                 position;
