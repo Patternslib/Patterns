@@ -58,7 +58,9 @@ define([
     var jquery_plugin = function(pattern) {
         var plugin = function(method) {
             if (!method || typeof method === "object") {
-                pattern.init.apply(this, [this].concat(arguments));
+                pattern.init.apply(
+                        this,
+                        [this].concat(Array.prototype.slice.call(arguments)));
             } else if (pattern[method]) {
                 pattern[method].apply(
                     this,
