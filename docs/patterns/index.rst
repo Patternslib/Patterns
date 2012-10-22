@@ -39,6 +39,7 @@ changing classes in a click, to doing complex AJAX injection of content.
    autosubmit
    carousel
    checklist
+   collapsible
    depends
    inject
    menu
