@@ -16,6 +16,8 @@ define([
         this.mappings = {};
         this.parameters = {};
         this.attribute = "data-pat-" + name;
+        this.enum_values = {};
+        this.enum_conflicts = [];
     }
 
     ArgumentParser.prototype = {
@@ -30,6 +32,14 @@ define([
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
                 spec.type=this._typeof(choices[0]);
+                for (var i=0; i<choices.length; i++)
+                    if (this.enum_conflicts.indexOf(choices[i])!==-1)
+                        continue;
+                    else if (choices[i] in this.enum_values) {
+                        this.enum_conflicts.push(choices[i]);
+                        delete this.enum_values[choices[i]];
+                    } else
+                        this.enum_values[choices[i]]=js_name;
             } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                 spec.type=this.parameters[spec.value.slice(1)].type;
             else
@@ -142,6 +152,9 @@ define([
                 if (flag in this.mappings) {
                     position=false;
                     this._set(opts, this.mappings[flag], sense);
+                } else if (flag in this.enum_values) {
+                    position=false;
+                    this._set(opts, this.enum_values[flag], flag);
                 } else if (positional)
                     this._set(opts, this.mappings[this.order[i]], part);
                 else {
