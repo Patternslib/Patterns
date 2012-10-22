@@ -91,7 +91,8 @@ element using the ``store`` parameter.
 
 .. code-block:: html
 
-   <section id="about-us" class="pat-collapsible" data-pat-collapsible="store: session">
+   <section id="about-us" class="pat-collapsible"
+           data-pat-collapsible="store: session">
      <h3>About us</h3>
      ...
    </section>
@@ -103,9 +104,9 @@ To use this you requirements must be met:
 
 The possible values for the ``store`` parameter are:
 
-* ``none``: do not remember the toggle state (default)
-* ``session``: remember the status as part of the session storage
-* ``local``: remember the state as part of the local page storage.
+* ``none``: do not remember the toggle state (default).
+* ``local``: remember the state as part of the local storage.
+* ``session``: remember the status as part of the session storage.
 
 
 Option reference
