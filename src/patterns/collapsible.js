@@ -106,7 +106,7 @@ define([
                 opts = [{
                     url: url,
                     source: id,
-                    $targets: $('.panel-content', $el)
+                    $target: $('.panel-content', $el)
                 }];
             inject.execute(opts);
         },
