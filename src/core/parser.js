@@ -99,50 +99,57 @@ define([
             }
         },
 
-        _parse: function(parameter) {
-            var opts = {}, i, name;
+        _parseExtendedNotation: function(parameter) {
+            var opts = {}, i,
+                parts = parameter.split(";"),
+                matches;
 
-            if (parameter) {
-                var parts = parameter.split(";"),
-                    part, matches;
+            for (i=0; i<parts.length; i++) {
+                if (!parts[i])
+                    continue;
 
-                // Grab all positional parameters
-                i=-1;
-                while (parts.length) {
-                    i++;
-                    if (i>=this.order.length) {
-                        break;
-                    }
-                    part = parts.shift().trim();
-                    if (!part)
-                        continue;
-                    if (this.named_param_pattern.test(part)) {
-                        parts.unshift(part);
-                        break;
-                    }
-                    this._set(opts, this.mappings[this.order[i]], part.trim());
+                matches = parts[i].match(this.named_param_pattern);
+                if (!matches) {
+                    log.warn("Invalid parameter: " + parts[i]);
+                    break;
                 }
-
-                // Handle all named parameters
-                for (i=0; i<parts.length; i++) {
-                    if (!parts[i])
-                        continue;
-
-                    matches = parts[i].match(this.named_param_pattern);
-                    if (!matches) {
-                        log.warn("Positional parameters not allowed after named parameters");
-                        break;
-                    }
-                    if (this.parameters[this.mappings[matches[1]]] === undefined) {
-                        log.warn("Unknown named parameter " + matches[1]);
-                        continue;
-                    }
-
-                    this._set(opts, this.mappings[matches[1]], matches[2].trim());
+                if (this.parameters[this.mappings[matches[1]]] === undefined) {
+                    log.warn("Unknown named parameter " + matches[1]);
+                    continue;
                 }
+                this._set(opts, this.mappings[matches[1]], matches[2].trim());
             }
 
             return opts;
+        },
+
+        _parseShorthandNotation: function(parameter) {
+            var parts = parameter.split(/\s+/),
+                opts = {},
+                i, part, matches;
+
+            i=0;
+            while (parts.length) {
+                part=parts.shift().trim();
+                this._set(opts, this.mappings[this.order[i]], part);
+                i++;
+                if (i>=this.order.length)
+                    break;
+            }
+            if (parts.length)
+                log.warn("Ignore extra arguments: " + parts.join(" "));
+            return opts;
+        },
+
+        _parse: function(parameter) {
+            var opts = {}, i, name;
+
+            if (!parameter)
+                return {};
+            else if (parameter.match(this.named_param_pattern))
+                return this._parseExtendedNotation(parameter);
+            else
+                return this._parseShorthandNotation(parameter);
         },
 
         _defaults: function() {
