@@ -40,6 +40,15 @@ Boolean values can be referenced directly by name. If you prefix the name with
 you can use ``sticky no-click``: this sets ``sticky`` to true and ``click`` to
 false.
 
+Enum values can also be used directly. For example the toggle pattern has a
+``store`` argument which can take three values. This allows you to write
+a parameter like this::
+
+    :input.myClass checked session
+
+It can happen that a name is both a known boolean option and a value enum
+value. In that case it is treated as a boolean option.
+
 
 Multiple parameters
 -------------------
