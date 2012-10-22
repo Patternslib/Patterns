@@ -16,8 +16,8 @@ define([
 
     parser.add_argument("load-content");
     parser.add_argument("store", "none", ["none", "session", "local"]);
-    parser.add_argument("duration", "fast");
-    parser.add_argument("easing", "linear");
+    parser.add_argument("duration", "0.4s");
+    parser.add_argument("easing", "swing");
     parser.add_argument("closed", false);
 
     var _ = {
