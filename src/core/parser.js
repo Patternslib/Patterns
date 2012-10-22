@@ -126,12 +126,29 @@ define([
         _parseShorthandNotation: function(parameter) {
             var parts = parameter.split(/\s+/),
                 opts = {},
-                i, part, matches;
+                positional = true,
+                i, part, flag, sense, matches;
 
             i=0;
             while (parts.length) {
                 part=parts.shift().trim();
-                this._set(opts, this.mappings[this.order[i]], part);
+                if (part.slice(0, 3)==="no-") {
+                    sense=false;
+                    flag=part.slice(3);
+                } else {
+                    sense=true;
+                    flag=part;
+                }
+                if (flag in this.mappings) {
+                    position=false;
+                    this._set(opts, this.mappings[flag], sense);
+                } else if (positional)
+                    this._set(opts, this.mappings[this.order[i]], part);
+                else {
+                    parts.unshift(part);
+                    break;
+                }
+
                 i++;
                 if (i>=this.order.length)
                     break;
