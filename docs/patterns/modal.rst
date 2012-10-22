@@ -22,13 +22,3 @@ the form action URL has a fragment that will be used to extract part of the
 response. If the form action URL has no fragment the same fragment as used to
 initially open the panel will be used. For all other HTTP status codes the
 panel will be closed and no further action is taken.
-
-Requirements
-------------
-
-In order to use modal panels you need to include the following jQuery extensions
-in your page:
-
-* `jQuery Tools <http://www.jquerytools.org/>`_
-* `jQuery Form Plugin <http://jquery.malsup.com/form/>`_
-

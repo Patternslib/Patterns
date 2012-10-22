@@ -12,7 +12,6 @@ requirejs.config({
         //"jquery.autoSuggest": "3rdparty/jquery.autosuggest",
         //"jquery.form": "lib/jquery.form/jquery.form",
         //"jquery.placeholder": "3rdparty/jquery.placeholder",
-        //"jquery.tools": "3rdparty/jquery.tools.min"
     // },
     // shim: {
     //     "jquery.form": {
