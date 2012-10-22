@@ -22,7 +22,7 @@ in your markup:
    <script type="text/javascript"
      src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
    <script type="text/javascript"
-     src="https://raw.github.com/Patternslib/Patterns/master/dist/require-pattern.min.js"></script>
+     src="https://raw.github.com/Patternslib/Patterns/master/bundles/require-patterns.min.js"></script>
 
 This will load jQuery and the single-file version of Patterns.
 
@@ -35,7 +35,7 @@ a standard ``define`` call.
 .. code-block:: javascript
 
    requirejs.config({
-       patterns: "https://raw.github.com/Patternslib/Patterns/master/dist/pattern.js"
+       patterns: "https://raw.github.com/Patternslib/Patterns/master/bundles/patterns.js"
    });
 
    define(["patterns"], function() {
