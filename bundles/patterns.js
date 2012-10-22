@@ -1,1219 +1,5 @@
 
 /**
- * StyleFix 1.0.3 & PrefixFree 1.0.7
- * @author Lea Verou
- * MIT license
- */(function(){function t(e,t){return[].slice.call((t||document).querySelectorAll(e))}if(!window.addEventListener)return;var e=window.StyleFix={link:function(t){try{if(t.rel!=="stylesheet"||t.hasAttribute("data-noprefix"))return}catch(n){return}var r=t.href||t.getAttribute("data-href"),i=r.replace(/[^\/]+$/,""),s=t.parentNode,o=new XMLHttpRequest,u;o.onreadystatechange=function(){o.readyState===4&&u()};u=function(){var n=o.responseText;if(n&&t.parentNode&&(!o.status||o.status<400||o.status>600)){n=e.fix(n,!0,t);if(i){n=n.replace(/url\(\s*?((?:"|')?)(.+?)\1\s*?\)/gi,function(e,t,n){return/^([a-z]{3,10}:|\/|#)/i.test(n)?e:'url("'+i+n+'")'});var r=i.replace(/([\\\^\$*+[\]?{}.=!:(|)])/g,"\\$1");n=n.replace(RegExp("\\b(behavior:\\s*?url\\('?\"?)"+r,"gi"),"$1")}var u=document.createElement("style");u.textContent=n;u.media=t.media;u.disabled=t.disabled;u.setAttribute("data-href",t.getAttribute("href"));s.insertBefore(u,t);s.removeChild(t);u.media=t.media}};try{o.open("GET",r);o.send(null)}catch(n){if(typeof XDomainRequest!="undefined"){o=new XDomainRequest;o.onerror=o.onprogress=function(){};o.onload=u;o.open("GET",r);o.send(null)}}t.setAttribute("data-inprogress","")},styleElement:function(t){if(t.hasAttribute("data-noprefix"))return;var n=t.disabled;t.textContent=e.fix(t.textContent,!0,t);t.disabled=n},styleAttribute:function(t){var n=t.getAttribute("style");n=e.fix(n,!1,t);t.setAttribute("style",n)},process:function(){t('link[rel="stylesheet"]:not([data-inprogress])').forEach(StyleFix.link);t("style").forEach(StyleFix.styleElement);t("[style]").forEach(StyleFix.styleAttribute)},register:function(t,n){(e.fixers=e.fixers||[]).splice(n===undefined?e.fixers.length:n,0,t)},fix:function(t,n,r){for(var i=0;i<e.fixers.length;i++)t=e.fixers[i](t,n,r)||t;return t},camelCase:function(e){return e.replace(/-([a-z])/g,function(e,t){return t.toUpperCase()}).replace("-","")},deCamelCase:function(e){return e.replace(/[A-Z]/g,function(e){return"-"+e.toLowerCase()})}};(function(){setTimeout(function(){t('link[rel="stylesheet"]').forEach(StyleFix.link)},10);document.addEventListener("DOMContentLoaded",StyleFix.process,!1)})()})();(function(e){function t(e,t,r,i,s){e=n[e];if(e.length){var o=RegExp(t+"("+e.join("|")+")"+r,"gi");s=s.replace(o,i)}return s}if(!window.StyleFix||!window.getComputedStyle)return;var n=window.PrefixFree={prefixCSS:function(e,r,i){var s=n.prefix;n.functions.indexOf("linear-gradient")>-1&&(e=e.replace(/(\s|:|,)(repeating-)?linear-gradient\(\s*(-?\d*\.?\d*)deg/ig,function(e,t,n,r){return t+(n||"")+"linear-gradient("+(90-r)+"deg"}));e=t("functions","(\\s|:|,)","\\s*\\(","$1"+s+"$2(",e);e=t("keywords","(\\s|:)","(\\s|;|\\}|$)","$1"+s+"$2$3",e);e=t("properties","(^|\\{|\\s|;)","\\s*:","$1"+s+"$2:",e);if(n.properties.length){var o=RegExp("\\b("+n.properties.join("|")+")(?!:)","gi");e=t("valueProperties","\\b",":(.+?);",function(e){return e.replace(o,s+"$1")},e)}if(r){e=t("selectors","","\\b",n.prefixSelector,e);e=t("atrules","@","\\b","@"+s+"$1",e)}e=e.replace(RegExp("-"+s,"g"),"-");e=e.replace(/-\*-(?=[a-z]+)/gi,n.prefix);return e},property:function(e){return(n.properties.indexOf(e)?n.prefix:"")+e},value:function(e,r){e=t("functions","(^|\\s|,)","\\s*\\(","$1"+n.prefix+"$2(",e);e=t("keywords","(^|\\s)","(\\s|$)","$1"+n.prefix+"$2$3",e);return e},prefixSelector:function(e){return e.replace(/^:{1,2}/,function(e){return e+n.prefix})},prefixProperty:function(e,t){var r=n.prefix+e;return t?StyleFix.camelCase(r):r}};(function(){var e={},t=[],r={},i=getComputedStyle(document.documentElement,null),s=document.createElement("div").style,o=function(n){if(n.charAt(0)==="-"){t.push(n);var r=n.split("-"),i=r[1];e[i]=++e[i]||1;while(r.length>3){r.pop();var s=r.join("-");u(s)&&t.indexOf(s)===-1&&t.push(s)}}},u=function(e){return StyleFix.camelCase(e)in s};if(i.length>0)for(var a=0;a<i.length;a++)o(i[a]);else for(var f in i)o(StyleFix.deCamelCase(f));var l={uses:0};for(var c in e){var h=e[c];l.uses<h&&(l={prefix:c,uses:h})}n.prefix="-"+l.prefix+"-";n.Prefix=StyleFix.camelCase(n.prefix);n.properties=[];for(var a=0;a<t.length;a++){var f=t[a];if(f.indexOf(n.prefix)===0){var p=f.slice(n.prefix.length);u(p)||n.properties.push(p)}}n.Prefix=="Ms"&&!("transform"in s)&&!("MsTransform"in s)&&"msTransform"in s&&n.properties.push("transform","transform-origin");n.properties.sort()})();(function(){function i(e,t){r[t]="";r[t]=e;return!!r[t]}var e={"linear-gradient":{property:"backgroundImage",params:"red, teal"},calc:{property:"width",params:"1px + 5%"},element:{property:"backgroundImage",params:"#foo"},"cross-fade":{property:"backgroundImage",params:"url(a.png), url(b.png), 50%"}};e["repeating-linear-gradient"]=e["repeating-radial-gradient"]=e["radial-gradient"]=e["linear-gradient"];var t={initial:"color","zoom-in":"cursor","zoom-out":"cursor",box:"display",flexbox:"display","inline-flexbox":"display",flex:"display","inline-flex":"display"};n.functions=[];n.keywords=[];var r=document.createElement("div").style;for(var s in e){var o=e[s],u=o.property,a=s+"("+o.params+")";!i(a,u)&&i(n.prefix+a,u)&&n.functions.push(s)}for(var f in t){var u=t[f];!i(f,u)&&i(n.prefix+f,u)&&n.keywords.push(f)}})();(function(){function s(e){i.textContent=e+"{}";return!!i.sheet.cssRules.length}var t={":read-only":null,":read-write":null,":any-link":null,"::selection":null},r={keyframes:"name",viewport:null,document:'regexp(".")'};n.selectors=[];n.atrules=[];var i=e.appendChild(document.createElement("style"));for(var o in t){var u=o+(t[o]?"("+t[o]+")":"");!s(u)&&s(n.prefixSelector(u))&&n.selectors.push(o)}for(var a in r){var u=a+" "+(r[a]||"");!s("@"+u)&&s("@"+n.prefix+u)&&n.atrules.push(a)}e.removeChild(i)})();n.valueProperties=["transition","transition-property"];e.className+=" "+n.prefix;StyleFix.register(n.prefixCSS)})(document.documentElement);
-define("3rdparty/prefixfree.min", function(){});
-
-/*!
- * Modernizr v2.0.6
- * http://www.modernizr.com
- *
- * Copyright (c) 2009-2011 Faruk Ates, Paul Irish, Alex Sexton
- * Dual-licensed under the BSD or MIT licenses: www.modernizr.com/license/
- */
-
-/*
- * Modernizr tests which native CSS3 and HTML5 features are available in
- * the current UA and makes the results available to you in two ways:
- * as properties on a global Modernizr object, and as classes on the
- * <html> element. This information allows you to progressively enhance
- * your pages with a granular level of control over the experience.
- *
- * Modernizr has an optional (not included) conditional resource loader
- * called Modernizr.load(), based on Yepnope.js (yepnopejs.com).
- * To get a build that includes Modernizr.load(), as well as choosing
- * which tests to include, go to www.modernizr.com/download/
- *
- * Authors        Faruk Ates, Paul Irish, Alex Sexton, 
- * Contributors   Ryan Seddon, Ben Alman
- */
-
-window.Modernizr = (function( window, document, undefined ) {
-
-    var version = '2.0.6',
-
-    Modernizr = {},
-    
-    // option for enabling the HTML classes to be added
-    enableClasses = true,
-
-    docElement = document.documentElement,
-    docHead = document.head || document.getElementsByTagName('head')[0],
-
-    /**
-     * Create our "modernizr" element that we do most feature tests on.
-     */
-    mod = 'modernizr',
-    modElem = document.createElement(mod),
-    mStyle = modElem.style,
-
-    /**
-     * Create the input element for various Web Forms feature tests.
-     */
-    inputElem = document.createElement('input'),
-
-    smile = ':)',
-
-    toString = Object.prototype.toString,
-
-    // List of property values to set for css tests. See ticket #21
-    prefixes = ' -webkit- -moz- -o- -ms- -khtml- '.split(' '),
-
-    // Following spec is to expose vendor-specific style properties as:
-    //   elem.style.WebkitBorderRadius
-    // and the following would be incorrect:
-    //   elem.style.webkitBorderRadius
-
-    // Webkit ghosts their properties in lowercase but Opera & Moz do not.
-    // Microsoft foregoes prefixes entirely <= IE8, but appears to
-    //   use a lowercase `ms` instead of the correct `Ms` in IE9
-
-    // More here: http://github.com/Modernizr/Modernizr/issues/issue/21
-    domPrefixes = 'Webkit Moz O ms Khtml'.split(' '),
-
-    ns = {'svg': 'http://www.w3.org/2000/svg'},
-
-    tests = {},
-    inputs = {},
-    attrs = {},
-
-    classes = [],
-
-    featureName, // used in testing loop
-
-
-    // Inject element with style element and some CSS rules
-    injectElementWithStyles = function( rule, callback, nodes, testnames ) {
-
-      var style, ret, node,
-          div = document.createElement('div');
-
-      if ( parseInt(nodes, 10) ) {
-          // In order not to give false positives we create a node for each test
-          // This also allows the method to scale for unspecified uses
-          while ( nodes-- ) {
-              node = document.createElement('div');
-              node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
-              div.appendChild(node);
-          }
-      }
-
-      // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
-      // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
-      // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
-      // http://msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
-      style = ['&shy;', '<style>', rule, '</style>'].join('');
-      div.id = mod;
-      div.innerHTML += style;
-      docElement.appendChild(div);
-
-      ret = callback(div, rule);
-      div.parentNode.removeChild(div);
-
-      return !!ret;
-
-    },
-
-
-    // adapted from matchMedia polyfill
-    // by Scott Jehl and Paul Irish
-    // gist.github.com/786768
-    testMediaQuery = function( mq ) {
-
-      if ( window.matchMedia ) {
-        return matchMedia(mq).matches;
-      }
-
-      var bool;
-
-      injectElementWithStyles('@media ' + mq + ' { #' + mod + ' { position: absolute; } }', function( node ) {
-        bool = (window.getComputedStyle ?
-                  getComputedStyle(node, null) :
-                  node.currentStyle)['position'] == 'absolute';
-      });
-
-      return bool;
-
-     },
-
-
-    /**
-      * isEventSupported determines if a given element supports the given event
-      * function from http://yura.thinkweb2.com/isEventSupported/
-      */
-    isEventSupported = (function() {
-
-      var TAGNAMES = {
-        'select': 'input', 'change': 'input',
-        'submit': 'form', 'reset': 'form',
-        'error': 'img', 'load': 'img', 'abort': 'img'
-      };
-
-      function isEventSupported( eventName, element ) {
-
-        element = element || document.createElement(TAGNAMES[eventName] || 'div');
-        eventName = 'on' + eventName;
-
-        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
-        var isSupported = eventName in element;
-
-        if ( !isSupported ) {
-          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
-          if ( !element.setAttribute ) {
-            element = document.createElement('div');
-          }
-          if ( element.setAttribute && element.removeAttribute ) {
-            element.setAttribute(eventName, '');
-            isSupported = is(element[eventName], 'function');
-
-            // If property was created, "remove it" (by setting value to `undefined`)
-            if ( !is(element[eventName], undefined) ) {
-              element[eventName] = undefined;
-            }
-            element.removeAttribute(eventName);
-          }
-        }
-
-        element = null;
-        return isSupported;
-      }
-      return isEventSupported;
-    })();
-
-    // hasOwnProperty shim by kangax needed for Safari 2.0 support
-    var _hasOwnProperty = ({}).hasOwnProperty, hasOwnProperty;
-    if ( !is(_hasOwnProperty, undefined) && !is(_hasOwnProperty.call, undefined) ) {
-      hasOwnProperty = function (object, property) {
-        return _hasOwnProperty.call(object, property);
-      };
-    }
-    else {
-      hasOwnProperty = function (object, property) { /* yes, this can give false positives/negatives, but most of the time we don't care about those */
-        return ((property in object) && is(object.constructor.prototype[property], undefined));
-      };
-    }
-
-    /**
-     * setCss applies given styles to the Modernizr DOM node.
-     */
-    function setCss( str ) {
-        mStyle.cssText = str;
-    }
-
-    /**
-     * setCssAll extrapolates all vendor-specific css strings.
-     */
-    function setCssAll( str1, str2 ) {
-        return setCss(prefixes.join(str1 + ';') + ( str2 || '' ));
-    }
-
-    /**
-     * is returns a boolean for if typeof obj is exactly type.
-     */
-    function is( obj, type ) {
-        return typeof obj === type;
-    }
-
-    /**
-     * contains returns a boolean for if substr is found within str.
-     */
-    function contains( str, substr ) {
-        return !!~('' + str).indexOf(substr);
-    }
-
-    /**
-     * testProps is a generic CSS / DOM property test; if a browser supports
-     *   a certain property, it won't return undefined for it.
-     *   A supported CSS property returns empty string when its not yet set.
-     */
-    function testProps( props, prefixed ) {
-        for ( var i in props ) {
-            if ( mStyle[ props[i] ] !== undefined ) {
-                return prefixed == 'pfx' ? props[i] : true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * testPropsAll tests a list of DOM properties we want to check against.
-     *   We specify literally ALL possible (known and/or likely) properties on
-     *   the element including the non-vendor prefixed one, for forward-
-     *   compatibility.
-     */
-    function testPropsAll( prop, prefixed ) {
-
-        var ucProp  = prop.charAt(0).toUpperCase() + prop.substr(1),
-            props   = (prop + ' ' + domPrefixes.join(ucProp + ' ') + ucProp).split(' ');
-
-        return testProps(props, prefixed);
-    }
-
-    /**
-     * testBundle tests a list of CSS features that require element and style injection.
-     *   By bundling them together we can reduce the need to touch the DOM multiple times.
-     */
-    /*>>testBundle*/
-    var testBundle = (function( styles, tests ) {
-        var style = styles.join(''),
-            len = tests.length;
-
-        injectElementWithStyles(style, function( node, rule ) {
-            var style = document.styleSheets[document.styleSheets.length - 1],
-                // IE8 will bork if you create a custom build that excludes both fontface and generatedcontent tests.
-                // So we check for cssRules and that there is a rule available
-                // More here: https://github.com/Modernizr/Modernizr/issues/288 & https://github.com/Modernizr/Modernizr/issues/293
-                cssText = style.cssRules && style.cssRules[0] ? style.cssRules[0].cssText : style.cssText || "",
-                children = node.childNodes, hash = {};
-
-            while ( len-- ) {
-                hash[children[len].id] = children[len];
-            }
-
-            /*>>touch*/           Modernizr['touch'] = ('ontouchstart' in window) || hash['touch'].offsetTop === 9; /*>>touch*/
-            /*>>csstransforms3d*/ Modernizr['csstransforms3d'] = hash['csstransforms3d'].offsetLeft === 9;          /*>>csstransforms3d*/
-            /*>>generatedcontent*/Modernizr['generatedcontent'] = hash['generatedcontent'].offsetHeight >= 1;       /*>>generatedcontent*/
-            /*>>fontface*/        Modernizr['fontface'] = /src/i.test(cssText) &&
-                                                                  cssText.indexOf(rule.split(' ')[0]) === 0;        /*>>fontface*/
-        }, len, tests);
-
-    })([
-        // Pass in styles to be injected into document
-        /*>>fontface*/        '@font-face {font-family:"font";src:url("https://")}'         /*>>fontface*/
-        
-        /*>>touch*/           ,['@media (',prefixes.join('touch-enabled),('),mod,')',
-                                '{#touch{top:9px;position:absolute}}'].join('')           /*>>touch*/
-                                
-        /*>>csstransforms3d*/ ,['@media (',prefixes.join('transform-3d),('),mod,')',
-                                '{#csstransforms3d{left:9px;position:absolute}}'].join('')/*>>csstransforms3d*/
-                                
-        /*>>generatedcontent*/,['#generatedcontent:after{content:"',smile,'";visibility:hidden}'].join('')  /*>>generatedcontent*/
-    ],
-      [
-        /*>>fontface*/        'fontface'          /*>>fontface*/
-        /*>>touch*/           ,'touch'            /*>>touch*/
-        /*>>csstransforms3d*/ ,'csstransforms3d'  /*>>csstransforms3d*/
-        /*>>generatedcontent*/,'generatedcontent' /*>>generatedcontent*/
-        
-    ]);/*>>testBundle*/
-
-
-    /**
-     * Tests
-     * -----
-     */
-
-    tests['flexbox'] = function() {
-        /**
-         * setPrefixedValueCSS sets the property of a specified element
-         * adding vendor prefixes to the VALUE of the property.
-         * @param {Element} element
-         * @param {string} property The property name. This will not be prefixed.
-         * @param {string} value The value of the property. This WILL be prefixed.
-         * @param {string=} extra Additional CSS to append unmodified to the end of
-         * the CSS string.
-         */
-        function setPrefixedValueCSS( element, property, value, extra ) {
-            property += ':';
-            element.style.cssText = (property + prefixes.join(value + ';' + property)).slice(0, -property.length) + (extra || '');
-        }
-
-        /**
-         * setPrefixedPropertyCSS sets the property of a specified element
-         * adding vendor prefixes to the NAME of the property.
-         * @param {Element} element
-         * @param {string} property The property name. This WILL be prefixed.
-         * @param {string} value The value of the property. This will not be prefixed.
-         * @param {string=} extra Additional CSS to append unmodified to the end of
-         * the CSS string.
-         */
-        function setPrefixedPropertyCSS( element, property, value, extra ) {
-            element.style.cssText = prefixes.join(property + ':' + value + ';') + (extra || '');
-        }
-
-        var c = document.createElement('div'),
-            elem = document.createElement('div');
-
-        setPrefixedValueCSS(c, 'display', 'box', 'width:42px;padding:0;');
-        setPrefixedPropertyCSS(elem, 'box-flex', '1', 'width:10px;');
-
-        c.appendChild(elem);
-        docElement.appendChild(c);
-
-        var ret = elem.offsetWidth === 42;
-
-        c.removeChild(elem);
-        docElement.removeChild(c);
-
-        return ret;
-    };
-
-    // On the S60 and BB Storm, getContext exists, but always returns undefined
-    // http://github.com/Modernizr/Modernizr/issues/issue/97/
-
-    tests['canvas'] = function() {
-        var elem = document.createElement('canvas');
-        return !!(elem.getContext && elem.getContext('2d'));
-    };
-
-    tests['canvastext'] = function() {
-        return !!(Modernizr['canvas'] && is(document.createElement('canvas').getContext('2d').fillText, 'function'));
-    };
-
-    // This WebGL test may false positive. 
-    // But really it's quite impossible to know whether webgl will succeed until after you create the context. 
-    // You might have hardware that can support a 100x100 webgl canvas, but will not support a 1000x1000 webgl 
-    // canvas. So this feature inference is weak, but intentionally so.
-    
-    // It is known to false positive in FF4 with certain hardware and the iPad 2.
-    
-    tests['webgl'] = function() {
-        return !!window.WebGLRenderingContext;
-    };
-
-    /*
-     * The Modernizr.touch test only indicates if the browser supports
-     *    touch events, which does not necessarily reflect a touchscreen
-     *    device, as evidenced by tablets running Windows 7 or, alas,
-     *    the Palm Pre / WebOS (touch) phones.
-     *
-     * Additionally, Chrome (desktop) used to lie about its support on this,
-     *    but that has since been rectified: http://crbug.com/36415
-     *
-     * We also test for Firefox 4 Multitouch Support.
-     *
-     * For more info, see: http://modernizr.github.com/Modernizr/touch.html
-     */
-
-    tests['touch'] = function() {
-        return Modernizr['touch'];
-    };
-
-    /**
-     * geolocation tests for the new Geolocation API specification.
-     *   This test is a standards compliant-only test; for more complete
-     *   testing, including a Google Gears fallback, please see:
-     *   http://code.google.com/p/geo-location-javascript/
-     * or view a fallback solution using google's geo API:
-     *   http://gist.github.com/366184
-     */
-    tests['geolocation'] = function() {
-        return !!navigator.geolocation;
-    };
-
-    // Per 1.6:
-    // This used to be Modernizr.crosswindowmessaging but the longer
-    // name has been deprecated in favor of a shorter and property-matching one.
-    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
-    // and in the first release thereafter disappear entirely.
-    tests['postmessage'] = function() {
-      return !!window.postMessage;
-    };
-
-    // Web SQL database detection is tricky:
-
-    // In chrome incognito mode, openDatabase is truthy, but using it will
-    //   throw an exception: http://crbug.com/42380
-    // We can create a dummy database, but there is no way to delete it afterwards.
-
-    // Meanwhile, Safari users can get prompted on any database creation.
-    //   If they do, any page with Modernizr will give them a prompt:
-    //   http://github.com/Modernizr/Modernizr/issues/closed#issue/113
-
-    // We have chosen to allow the Chrome incognito false positive, so that Modernizr
-    //   doesn't litter the web with these test databases. As a developer, you'll have
-    //   to account for this gotcha yourself.
-    tests['websqldatabase'] = function() {
-      var result = !!window.openDatabase;
-      /*  if (result){
-            try {
-              result = !!openDatabase( mod + "testdb", "1.0", mod + "testdb", 2e4);
-            } catch(e) {
-            }
-          }  */
-      return result;
-    };
-
-    // Vendors had inconsistent prefixing with the experimental Indexed DB:
-    // - Webkit's implementation is accessible through webkitIndexedDB
-    // - Firefox shipped moz_indexedDB before FF4b9, but since then has been mozIndexedDB
-    // For speed, we don't test the legacy (and beta-only) indexedDB
-    tests['indexedDB'] = function() {
-      for ( var i = -1, len = domPrefixes.length; ++i < len; ){
-        if ( window[domPrefixes[i].toLowerCase() + 'IndexedDB'] ){
-          return true;
-        }
-      }
-      return !!window.indexedDB;
-    };
-
-    // documentMode logic from YUI to filter out IE8 Compat Mode
-    //   which false positives.
-    tests['hashchange'] = function() {
-      return isEventSupported('hashchange', window) && (document.documentMode === undefined || document.documentMode > 7);
-    };
-
-    // Per 1.6:
-    // This used to be Modernizr.historymanagement but the longer
-    // name has been deprecated in favor of a shorter and property-matching one.
-    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
-    // and in the first release thereafter disappear entirely.
-    tests['history'] = function() {
-      return !!(window.history && history.pushState);
-    };
-
-    tests['draganddrop'] = function() {
-        return isEventSupported('dragstart') && isEventSupported('drop');
-    };
-
-    // Mozilla is targeting to land MozWebSocket for FF6
-    // bugzil.la/659324
-    tests['websockets'] = function() {
-        for ( var i = -1, len = domPrefixes.length; ++i < len; ){
-          if ( window[domPrefixes[i] + 'WebSocket'] ){
-            return true;
-          }
-        }
-        return 'WebSocket' in window;
-    };
-
-
-    // http://css-tricks.com/rgba-browser-support/
-    tests['rgba'] = function() {
-        // Set an rgba() color and check the returned value
-
-        setCss('background-color:rgba(150,255,150,.5)');
-
-        return contains(mStyle.backgroundColor, 'rgba');
-    };
-
-    tests['hsla'] = function() {
-        // Same as rgba(), in fact, browsers re-map hsla() to rgba() internally,
-        //   except IE9 who retains it as hsla
-
-        setCss('background-color:hsla(120,40%,100%,.5)');
-
-        return contains(mStyle.backgroundColor, 'rgba') || contains(mStyle.backgroundColor, 'hsla');
-    };
-
-    tests['multiplebgs'] = function() {
-        // Setting multiple images AND a color on the background shorthand property
-        //  and then querying the style.background property value for the number of
-        //  occurrences of "url(" is a reliable method for detecting ACTUAL support for this!
-
-        setCss('background:url(https://),url(https://),red url(https://)');
-
-        // If the UA supports multiple backgrounds, there should be three occurrences
-        //   of the string "url(" in the return value for elemStyle.background
-
-        return /(url\s*\(.*?){3}/.test(mStyle.background);
-    };
-
-
-    // In testing support for a given CSS property, it's legit to test:
-    //    `elem.style[styleName] !== undefined`
-    // If the property is supported it will return an empty string,
-    // if unsupported it will return undefined.
-
-    // We'll take advantage of this quick test and skip setting a style
-    // on our modernizr element, but instead just testing undefined vs
-    // empty string.
-
-
-    tests['backgroundsize'] = function() {
-        return testPropsAll('backgroundSize');
-    };
-
-    tests['borderimage'] = function() {
-        return testPropsAll('borderImage');
-    };
-
-
-    // Super comprehensive table about all the unique implementations of
-    // border-radius: http://muddledramblings.com/table-of-css3-border-radius-compliance
-
-    tests['borderradius'] = function() {
-        return testPropsAll('borderRadius');
-    };
-
-    // WebOS unfortunately false positives on this test.
-    tests['boxshadow'] = function() {
-        return testPropsAll('boxShadow');
-    };
-
-    // FF3.0 will false positive on this test
-    tests['textshadow'] = function() {
-        return document.createElement('div').style.textShadow === '';
-    };
-
-
-    tests['opacity'] = function() {
-        // Browsers that actually have CSS Opacity implemented have done so
-        //  according to spec, which means their return values are within the
-        //  range of [0.0,1.0] - including the leading zero.
-
-        setCssAll('opacity:.55');
-
-        // The non-literal . in this regex is intentional:
-        //   German Chrome returns this value as 0,55
-        // https://github.com/Modernizr/Modernizr/issues/#issue/59/comment/516632
-        return /^0.55$/.test(mStyle.opacity);
-    };
-
-
-    tests['cssanimations'] = function() {
-        return testPropsAll('animationName');
-    };
-
-
-    tests['csscolumns'] = function() {
-        return testPropsAll('columnCount');
-    };
-
-
-    tests['cssgradients'] = function() {
-        /**
-         * For CSS Gradients syntax, please see:
-         * http://webkit.org/blog/175/introducing-css-gradients/
-         * https://developer.mozilla.org/en/CSS/-moz-linear-gradient
-         * https://developer.mozilla.org/en/CSS/-moz-radial-gradient
-         * http://dev.w3.org/csswg/css3-images/#gradients-
-         */
-
-        var str1 = 'background-image:',
-            str2 = 'gradient(linear,left top,right bottom,from(#9f9),to(white));',
-            str3 = 'linear-gradient(left top,#9f9, white);';
-
-        setCss(
-            (str1 + prefixes.join(str2 + str1) + prefixes.join(str3 + str1)).slice(0, -str1.length)
-        );
-
-        return contains(mStyle.backgroundImage, 'gradient');
-    };
-
-
-    tests['cssreflections'] = function() {
-        return testPropsAll('boxReflect');
-    };
-
-
-    tests['csstransforms'] = function() {
-        return !!testProps(['transformProperty', 'WebkitTransform', 'MozTransform', 'OTransform', 'msTransform']);
-    };
-
-
-    tests['csstransforms3d'] = function() {
-
-        var ret = !!testProps(['perspectiveProperty', 'WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective']);
-
-        // Webkit’s 3D transforms are passed off to the browser's own graphics renderer.
-        //   It works fine in Safari on Leopard and Snow Leopard, but not in Chrome in
-        //   some conditions. As a result, Webkit typically recognizes the syntax but
-        //   will sometimes throw a false positive, thus we must do a more thorough check:
-        if ( ret && 'webkitPerspective' in docElement.style ) {
-
-          // Webkit allows this media query to succeed only if the feature is enabled.
-          // `@media (transform-3d),(-o-transform-3d),(-moz-transform-3d),(-ms-transform-3d),(-webkit-transform-3d),(modernizr){ ... }`
-          ret = Modernizr['csstransforms3d'];
-        }
-        return ret;
-    };
-
-
-    tests['csstransitions'] = function() {
-        return testPropsAll('transitionProperty');
-    };
-
-
-    /*>>fontface*/
-    // @font-face detection routine by Diego Perini
-    // http://javascript.nwbox.com/CSSSupport/
-    tests['fontface'] = function() {
-        return Modernizr['fontface'];
-    };
-    /*>>fontface*/
-
-    // CSS generated content detection
-    tests['generatedcontent'] = function() {
-        return Modernizr['generatedcontent'];
-    };
-
-
-
-    // These tests evaluate support of the video/audio elements, as well as
-    // testing what types of content they support.
-    //
-    // We're using the Boolean constructor here, so that we can extend the value
-    // e.g.  Modernizr.video     // true
-    //       Modernizr.video.ogg // 'probably'
-    //
-    // Codec values from : http://github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
-    //                     thx to NielsLeenheer and zcorpan
-
-    // Note: in FF 3.5.1 and 3.5.0, "no" was a return value instead of empty string.
-    //   Modernizr does not normalize for that.
-
-    tests['video'] = function() {
-        var elem = document.createElement('video'),
-            bool = false;
-            
-        // IE9 Running on Windows Server SKU can cause an exception to be thrown, bug #224
-        try {
-            if ( bool = !!elem.canPlayType ) {
-                bool      = new Boolean(bool);
-                bool.ogg  = elem.canPlayType('video/ogg; codecs="theora"');
-
-                // Workaround required for IE9, which doesn't report video support without audio codec specified.
-                //   bug 599718 @ msft connect
-                var h264 = 'video/mp4; codecs="avc1.42E01E';
-                bool.h264 = elem.canPlayType(h264 + '"') || elem.canPlayType(h264 + ', mp4a.40.2"');
-
-                bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"');
-            }
-            
-        } catch(e) { }
-        
-        return bool;
-    };
-
-    tests['audio'] = function() {
-        var elem = document.createElement('audio'),
-            bool = false;
-
-        try { 
-            if ( bool = !!elem.canPlayType ) {
-                bool      = new Boolean(bool);
-                bool.ogg  = elem.canPlayType('audio/ogg; codecs="vorbis"');
-                bool.mp3  = elem.canPlayType('audio/mpeg;');
-
-                // Mimetypes accepted:
-                //   https://developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
-                //   http://bit.ly/iphoneoscodecs
-                bool.wav  = elem.canPlayType('audio/wav; codecs="1"');
-                bool.m4a  = elem.canPlayType('audio/x-m4a;') || elem.canPlayType('audio/aac;');
-            }
-        } catch(e) { }
-        
-        return bool;
-    };
-
-
-    // Firefox has made these tests rather unfun.
-
-    // In FF4, if disabled, window.localStorage should === null.
-
-    // Normally, we could not test that directly and need to do a
-    //   `('localStorage' in window) && ` test first because otherwise Firefox will
-    //   throw http://bugzil.la/365772 if cookies are disabled
-
-    // However, in Firefox 4 betas, if dom.storage.enabled == false, just mentioning
-    //   the property will throw an exception. http://bugzil.la/599479
-    // This looks to be fixed for FF4 Final.
-
-    // Because we are forced to try/catch this, we'll go aggressive.
-
-    // FWIW: IE8 Compat mode supports these features completely:
-    //   http://www.quirksmode.org/dom/html5.html
-    // But IE8 doesn't support either with local files
-
-    tests['localstorage'] = function() {
-        try {
-            return !!localStorage.getItem;
-        } catch(e) {
-            return false;
-        }
-    };
-
-    tests['sessionstorage'] = function() {
-        try {
-            return !!sessionStorage.getItem;
-        } catch(e){
-            return false;
-        }
-    };
-
-
-    tests['webworkers'] = function() {
-        return !!window.Worker;
-    };
-
-
-    tests['applicationcache'] = function() {
-        return !!window.applicationCache;
-    };
-
-
-    // Thanks to Erik Dahlstrom
-    tests['svg'] = function() {
-        return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
-    };
-
-    // specifically for SVG inline in HTML, not within XHTML
-    // test page: paulirish.com/demo/inline-svg
-    tests['inlinesvg'] = function() {
-      var div = document.createElement('div');
-      div.innerHTML = '<svg/>';
-      return (div.firstChild && div.firstChild.namespaceURI) == ns.svg;
-    };
-
-    // Thanks to F1lt3r and lucideer, ticket #35
-    tests['smil'] = function() {
-        return !!document.createElementNS && /SVG/.test(toString.call(document.createElementNS(ns.svg, 'animate')));
-    };
-
-    tests['svgclippaths'] = function() {
-        // Possibly returns a false positive in Safari 3.2?
-        return !!document.createElementNS && /SVG/.test(toString.call(document.createElementNS(ns.svg, 'clipPath')));
-    };
-
-    // input features and input types go directly onto the ret object, bypassing the tests loop.
-    // Hold this guy to execute in a moment.
-    function webforms() {
-        // Run through HTML5's new input attributes to see if the UA understands any.
-        // We're using f which is the <input> element created early on
-        // Mike Taylr has created a comprehensive resource for testing these attributes
-        //   when applied to all input types:
-        //   http://miketaylr.com/code/input-type-attr.html
-        // spec: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
-        
-        // Only input placeholder is tested while textarea's placeholder is not. 
-        // Currently Safari 4 and Opera 11 have support only for the input placeholder
-        // Both tests are available in feature-detects/forms-placeholder.js
-        Modernizr['input'] = (function( props ) {
-            for ( var i = 0, len = props.length; i < len; i++ ) {
-                attrs[ props[i] ] = !!(props[i] in inputElem);
-            }
-            return attrs;
-        })('autocomplete autofocus list placeholder max min multiple pattern required step'.split(' '));
-
-        // Run through HTML5's new input types to see if the UA understands any.
-        //   This is put behind the tests runloop because it doesn't return a
-        //   true/false like all the other tests; instead, it returns an object
-        //   containing each input type with its corresponding true/false value
-
-        // Big thanks to @miketaylr for the html5 forms expertise. http://miketaylr.com/
-        Modernizr['inputtypes'] = (function(props) {
-
-            for ( var i = 0, bool, inputElemType, defaultView, len = props.length; i < len; i++ ) {
-
-                inputElem.setAttribute('type', inputElemType = props[i]);
-                bool = inputElem.type !== 'text';
-
-                // We first check to see if the type we give it sticks..
-                // If the type does, we feed it a textual value, which shouldn't be valid.
-                // If the value doesn't stick, we know there's input sanitization which infers a custom UI
-                if ( bool ) {
-
-                    inputElem.value         = smile;
-                    inputElem.style.cssText = 'position:absolute;visibility:hidden;';
-
-                    if ( /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ) {
-
-                      docElement.appendChild(inputElem);
-                      defaultView = document.defaultView;
-
-                      // Safari 2-4 allows the smiley as a value, despite making a slider
-                      bool =  defaultView.getComputedStyle &&
-                              defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
-                              // Mobile android web browser has false positive, so must
-                              // check the height to see if the widget is actually there.
-                              (inputElem.offsetHeight !== 0);
-
-                      docElement.removeChild(inputElem);
-
-                    } else if ( /^(search|tel)$/.test(inputElemType) ){
-                      // Spec doesnt define any special parsing or detectable UI
-                      //   behaviors so we pass these through as true
-
-                      // Interestingly, opera fails the earlier test, so it doesn't
-                      //  even make it here.
-
-                    } else if ( /^(url|email)$/.test(inputElemType) ) {
-                      // Real url and email support comes with prebaked validation.
-                      bool = inputElem.checkValidity && inputElem.checkValidity() === false;
-
-                    } else if ( /^color$/.test(inputElemType) ) {
-                        // chuck into DOM and force reflow for Opera bug in 11.00
-                        // github.com/Modernizr/Modernizr/issues#issue/159
-                        docElement.appendChild(inputElem);
-                        docElement.offsetWidth;
-                        bool = inputElem.value != smile;
-                        docElement.removeChild(inputElem);
-
-                    } else {
-                      // If the upgraded input compontent rejects the :) text, we got a winner
-                      bool = inputElem.value != smile;
-                    }
-                }
-
-                inputs[ props[i] ] = !!bool;
-            }
-            return inputs;
-        })('search tel url email datetime date month week time datetime-local number range color'.split(' '));
-    }
-
-
-    // End of test definitions
-    // -----------------------
-
-
-
-    // Run through all tests and detect their support in the current UA.
-    // todo: hypothetically we could be doing an array of tests and use a basic loop here.
-    for ( var feature in tests ) {
-        if ( hasOwnProperty(tests, feature) ) {
-            // run the test, throw the return value into the Modernizr,
-            //   then based on that boolean, define an appropriate className
-            //   and push it into an array of classes we'll join later.
-            featureName  = feature.toLowerCase();
-            Modernizr[featureName] = tests[feature]();
-
-            classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
-        }
-    }
-
-    // input tests need to run.
-    Modernizr.input || webforms();
-
-
-    /**
-     * addTest allows the user to define their own feature tests
-     * the result will be added onto the Modernizr object,
-     * as well as an appropriate className set on the html element
-     *
-     * @param feature - String naming the feature
-     * @param test - Function returning true if feature is supported, false if not
-     */
-     Modernizr.addTest = function ( feature, test ) {
-       if ( typeof feature == "object" ) {
-         for ( var key in feature ) {
-           if ( hasOwnProperty( feature, key ) ) { 
-             Modernizr.addTest( key, feature[ key ] );
-           }
-         }
-       } else {
-
-         feature = feature.toLowerCase();
-
-         if ( Modernizr[feature] !== undefined ) {
-           // we're going to quit if you're trying to overwrite an existing test
-           // if we were to allow it, we'd do this:
-           //   var re = new RegExp("\\b(no-)?" + feature + "\\b");  
-           //   docElement.className = docElement.className.replace( re, '' );
-           // but, no rly, stuff 'em.
-           return; 
-         }
-
-         test = typeof test == "boolean" ? test : !!test();
-
-         docElement.className += ' ' + (test ? '' : 'no-') + feature;
-         Modernizr[feature] = test;
-
-       }
-
-       return Modernizr; // allow chaining.
-     };
-    
-
-    // Reset modElem.cssText to nothing to reduce memory footprint.
-    setCss('');
-    modElem = inputElem = null;
-
-    //>>BEGIN IEPP
-    // Enable HTML 5 elements for styling (and printing) in IE.
-    if ( window.attachEvent && (function(){ var elem = document.createElement('div');
-                                            elem.innerHTML = '<elem></elem>';
-                                            return elem.childNodes.length !== 1; })() ) {
-                                              
-        // iepp v2 by @jon_neal & afarkas : github.com/aFarkas/iepp/
-        (function(win, doc) {
-          win.iepp = win.iepp || {};
-          var iepp = win.iepp,
-            elems = iepp.html5elements || 'abbr|article|aside|audio|canvas|datalist|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video',
-            elemsArr = elems.split('|'),
-            elemsArrLen = elemsArr.length,
-            elemRegExp = new RegExp('(^|\\s)('+elems+')', 'gi'),
-            tagRegExp = new RegExp('<(\/*)('+elems+')', 'gi'),
-            filterReg = /^\s*[\{\}]\s*$/,
-            ruleRegExp = new RegExp('(^|[^\\n]*?\\s)('+elems+')([^\\n]*)({[\\n\\w\\W]*?})', 'gi'),
-            docFrag = doc.createDocumentFragment(),
-            html = doc.documentElement,
-            head = html.firstChild,
-            bodyElem = doc.createElement('body'),
-            styleElem = doc.createElement('style'),
-            printMedias = /print|all/,
-            body;
-          function shim(doc) {
-            var a = -1;
-            while (++a < elemsArrLen)
-              // Use createElement so IE allows HTML5-named elements in a document
-              doc.createElement(elemsArr[a]);
-          }
-
-          iepp.getCSS = function(styleSheetList, mediaType) {
-            if(styleSheetList+'' === undefined){return '';}
-            var a = -1,
-              len = styleSheetList.length,
-              styleSheet,
-              cssTextArr = [];
-            while (++a < len) {
-              styleSheet = styleSheetList[a];
-              //currently no test for disabled/alternate stylesheets
-              if(styleSheet.disabled){continue;}
-              mediaType = styleSheet.media || mediaType;
-              // Get css from all non-screen stylesheets and their imports
-              if (printMedias.test(mediaType)) cssTextArr.push(iepp.getCSS(styleSheet.imports, mediaType), styleSheet.cssText);
-              //reset mediaType to all with every new *not imported* stylesheet
-              mediaType = 'all';
-            }
-            return cssTextArr.join('');
-          };
-
-          iepp.parseCSS = function(cssText) {
-            var cssTextArr = [],
-              rule;
-            while ((rule = ruleRegExp.exec(cssText)) != null){
-              // Replace all html5 element references with iepp substitute classnames
-              cssTextArr.push(( (filterReg.exec(rule[1]) ? '\n' : rule[1]) +rule[2]+rule[3]).replace(elemRegExp, '$1.iepp_$2')+rule[4]);
-            }
-            return cssTextArr.join('\n');
-          };
-
-          iepp.writeHTML = function() {
-            var a = -1;
-            body = body || doc.body;
-            while (++a < elemsArrLen) {
-              var nodeList = doc.getElementsByTagName(elemsArr[a]),
-                nodeListLen = nodeList.length,
-                b = -1;
-              while (++b < nodeListLen)
-                if (nodeList[b].className.indexOf('iepp_') < 0)
-                  // Append iepp substitute classnames to all html5 elements
-                  nodeList[b].className += ' iepp_'+elemsArr[a];
-            }
-            docFrag.appendChild(body);
-            html.appendChild(bodyElem);
-            // Write iepp substitute print-safe document
-            bodyElem.className = body.className;
-            bodyElem.id = body.id;
-            // Replace HTML5 elements with <font> which is print-safe and shouldn't conflict since it isn't part of html5
-            bodyElem.innerHTML = body.innerHTML.replace(tagRegExp, '<$1font');
-          };
-
-
-          iepp._beforePrint = function() {
-            // Write iepp custom print CSS
-            styleElem.styleSheet.cssText = iepp.parseCSS(iepp.getCSS(doc.styleSheets, 'all'));
-            iepp.writeHTML();
-          };
-
-          iepp.restoreHTML = function(){
-            // Undo everything done in onbeforeprint
-            bodyElem.innerHTML = '';
-            html.removeChild(bodyElem);
-            html.appendChild(body);
-          };
-
-          iepp._afterPrint = function(){
-            // Undo everything done in onbeforeprint
-            iepp.restoreHTML();
-            styleElem.styleSheet.cssText = '';
-          };
-
-
-
-          // Shim the document and iepp fragment
-          shim(doc);
-          shim(docFrag);
-
-          //
-          if(iepp.disablePP){return;}
-
-          // Add iepp custom print style element
-          head.insertBefore(styleElem, head.firstChild);
-          styleElem.media = 'print';
-          styleElem.className = 'iepp-printshim';
-          win.attachEvent(
-            'onbeforeprint',
-            iepp._beforePrint
-          );
-          win.attachEvent(
-            'onafterprint',
-            iepp._afterPrint
-          );
-        })(window, document);
-    }
-    //>>END IEPP
-
-    // Assign private properties to the return object with prefix
-    Modernizr._version      = version;
-
-    // expose these for the plugin API. Look in the source for how to join() them against your input
-    Modernizr._prefixes     = prefixes;
-    Modernizr._domPrefixes  = domPrefixes;
-    
-    // Modernizr.mq tests a given media query, live against the current state of the window
-    // A few important notes:
-    //   * If a browser does not support media queries at all (eg. oldIE) the mq() will always return false
-    //   * A max-width or orientation query will be evaluated against the current state, which may change later.
-    //   * You must specify values. Eg. If you are testing support for the min-width media query use: 
-    //       Modernizr.mq('(min-width:0)')
-    // usage:
-    // Modernizr.mq('only screen and (max-width:768)')
-    Modernizr.mq            = testMediaQuery;   
-    
-    // Modernizr.hasEvent() detects support for a given event, with an optional element to test on
-    // Modernizr.hasEvent('gesturestart', elem)
-    Modernizr.hasEvent      = isEventSupported; 
-
-    // Modernizr.testProp() investigates whether a given style property is recognized
-    // Note that the property names must be provided in the camelCase variant.
-    // Modernizr.testProp('pointerEvents')
-    Modernizr.testProp      = function(prop){
-        return testProps([prop]);
-    };        
-
-    // Modernizr.testAllProps() investigates whether a given style property,
-    //   or any of its vendor-prefixed variants, is recognized
-    // Note that the property names must be provided in the camelCase variant.
-    // Modernizr.testAllProps('boxSizing')    
-    Modernizr.testAllProps  = testPropsAll;     
-
-
-    
-    // Modernizr.testStyles() allows you to add custom styles to the document and test an element afterwards
-    // Modernizr.testStyles('#modernizr { position:absolute }', function(elem, rule){ ... })
-    Modernizr.testStyles    = injectElementWithStyles; 
-
-
-    // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
-    // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
-    
-    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
-    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
-    //
-    //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
-    
-    // If you're trying to ascertain which transition end event to bind to, you might do something like...
-    // 
-    //     var transEndEventNames = {
-    //       'WebkitTransition' : 'webkitTransitionEnd',
-    //       'MozTransition'    : 'transitionend',
-    //       'OTransition'      : 'oTransitionEnd',
-    //       'msTransition'     : 'msTransitionEnd', // maybe?
-    //       'transition'       : 'transitionEnd'
-    //     },
-    //     transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
-    
-    Modernizr.prefixed      = function(prop){
-      return testPropsAll(prop, 'pfx');
-    };
-
-
-
-    // Remove "no-js" class from <html> element, if it exists:
-    docElement.className = docElement.className.replace(/\bno-js\b/, '')
-                            
-                            // Add the new classes to the <html> element.
-                            + (enableClasses ? ' js ' + classes.join(' ') : '');
-
-    return Modernizr;
-
-})(this, this.document);
-
-define("3rdparty/modernizr-2.0.6", function(){});
-
-/**
- * @license
- * Patterns @VERSION@ store - store pattern state locally in the browser
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('core/store',[
-    'require'
-], function(require) {
-    function Storage(backend, prefix) {
-        this.prefix=prefix;
-        this.backend=backend;
-    }
-
-    Storage.prototype._key = function(name) {
-        return this.prefix + ":" + name;
-    };
-
-    Storage.prototype._allKeys = function() {
-        var keys = [],
-            prefix = this.prefix + ":",
-            prefix_length = prefix.length,
-            key, i;
-
-        for (i=0; i<this.backend.length; i++) {
-            key=this.backend.key(i);
-            if (key.slice(0, prefix_length)===prefix)
-                keys.push(key);
-        }
-        return keys;
-    };
-
-    Storage.prototype.get = function(name) {
-        var key = this._key(name),
-            value = this.backend.getItem(key);
-        if (value!==null)
-            value=JSON.parse(value);
-        return value;
-    };
-
-    Storage.prototype.set = function(name, value) {
-        var key = this._key(name);
-        return this.backend.setItem(key, JSON.stringify(value));
-    };
-
-    Storage.prototype.remove = function(name) {
-        var key = this._key(name);
-        return this.backend.removeItem(key);
-    };
-
-    Storage.prototype.clear = function() {
-        var keys = this._allKeys();
-        for (var i=0; i<keys.length; i++)
-            this.backend.removeItem(keys[i]);
-    };
-
-    Storage.prototype.all = function() {
-        var keys = this._allKeys(),
-            prefix_length = this.prefix.length + 1,
-            lk,
-            data = {};
-
-        for (var i=0; i<keys.length; i++) {
-            lk = keys[i].slice(prefix_length);
-            data[lk]=JSON.parse(this.backend.getItem(keys[i]));
-        }
-        return data;
-    };
-
-    var store = {
-        supported: typeof window.sessionStorage !== 'undefined',
-
-        local: function (name) {
-            return new Storage(window.localStorage, name);
-        },
-
-        session: function (name) {
-            return new Storage(window.sessionStorage, name);
-        }
-    };
-
-    return store;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
  * Copyright 2012 Tim Down.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -7073,12 +5859,42 @@ var log4javascript = (function() {
 })();
 define("../lib/log4javascript", function(){});
 
-define('logging',['require','../lib/log4javascript'],function(require) {
-    require('../lib/log4javascript');
+define('logging',[
+    "jquery",
+    "../lib/log4javascript"
+], function($) {
     var l4js = log4javascript,
-        level = l4js.Level,
         rootname = 'patterns',
-        root = l4js.getLogger(rootname);
+        root = l4js.getLogger(rootname),
+        log = l4js.getLogger(rootname + '.logging');
+
+    // default log level mapping
+    //
+    // you can override these via the url search parameter:
+    // foo.html?patterns-log-level=WARN&patterns-log-level-inject=DEBUG
+    //
+    var LEVELMAP = {
+        patterns: l4js.Level.INFO
+        //"patterns.inject": l4js.Level.DEBUG
+    };
+    var loglevelFromUrl = function() {
+        // check URL for loglevel config
+        var loglevel_re =/patterns-log-level-?([^=]*)=([^&]+)/g,
+            level, name, m;
+        while (true) {
+            m = loglevel_re.exec(window.location.search);
+            if (!m)
+                break;
+            name = rootname + (m[1] ? '.' + m[1] : "");
+            level = m[2].toUpperCase();
+            if (!l4js.Level[level])
+                log.warn('Unknown log level:', level, m);
+            else
+                LEVELMAP[name] = l4js.Level[level];
+        }
+    };
+    loglevelFromUrl();
+    root.setLevel(LEVELMAP[rootname]);
 
     var init_console_logging = function() {
         // enable/disable all logging
@@ -7120,8 +5936,6 @@ define('logging',['require','../lib/log4javascript'],function(require) {
 
         var layout = new Layout();
         bca.setLayout(layout);
-
-        root.setLevel(level.INFO);
     };
 
     init_console_logging();
@@ -7130,20 +5944,22 @@ define('logging',['require','../lib/log4javascript'],function(require) {
         Level: l4js.Level,
 
         setEnabled: function(enabled) {
-            l4js.setEnabled(true);
+            l4js.setEnabled(enabled);
         },
 
         setLevel: function(level) {
             root.setLevel(level);
         },
 
+        // XXX: get this into l4js:
+        // logging.getLogger("foo").getLogger("bar").getLogger("baz");
         getLogger: function(name) {
-            var logger = l4js.getLogger(rootname + (name ? '.' + name : ''));
-            if (name === 'inject_log_old') logger.setLevel(level.INFO);
-            // disable old injection logging for now
-            if (name === 'old-injection') logger.setLevel(level.WARN);
-
-            return logger;
+            var logname = rootname + (name ? '.' + name : ''),
+                log = l4js.getLogger(logname),
+                level = LEVELMAP[logname];
+            if (level)
+                log.setLevel(level);
+            return log;
         }
     };
 
@@ -7151,15 +5967,44 @@ define('logging',['require','../lib/log4javascript'],function(require) {
     return logging;
 });
 
-define('utils',[
-    'require',
-    './core/store',
-    './logging'
-], function(require) {
-    // XXX: not nice
-    var mapal = require('./core/store'),
-        getLogger = require('./logging').getLogger;
+define('transforms',[
+    "jquery"
+], function($) {
+    var transforms = {
+        _convertToIframes: function($root) {
+            $root.find("object[type='text/html']").each(function() {
+                var $object = $(this),
+                    $iframe = $("<iframe allowtransparency='true'/>");
 
+                $iframe
+                    .attr("id", $object.attr("id"))
+                    .attr("class", $object.attr("class"))
+                    .attr("src", $object.attr("data"))
+                    .attr("frameborder", "0")
+                    .attr("style", "background-color:transparent");
+                $object.replaceWith($iframe);
+            });
+        },
+
+        transformContent: function(root) {
+            var $root = $(root);
+            $root.find("legend:not(.cant-touch-this)").each(function() {
+                $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
+            });
+
+            // Replace objects with iframes for IE 8 and older.
+            if ($.browser.msie ) {
+                var version = Number( $.browser.version.split(".", 2).join(""));
+                if (version<=80)
+                    transforms._convertToIframes($root);
+            }
+        }
+    };
+    return transforms;
+});
+define('utils',[
+    "jquery"
+], function($) {
     var extractParameters = function(params, sources) {
         var tmp,
             j,
@@ -7214,102 +6059,24 @@ define('utils',[
         return options;
     };
 
-    var log_init = function(name, method) {
-        var log_wrapper = function($el) {
-            var log = getLogger(name);
-            log.debug('Initialising:', $el);
-            var ret = method.apply(this, arguments);
-            if (ret === false) {
-                log.debug('skipped', $el);
-            } else {
-                log.debug('initialised:', $el);
-            }
-            return ret;
-        };
-        return log_wrapper;
-    };
-
-    var set_initialised_class = function(method, pattern) {
-        var cls = pattern.initialised_class;
-        if (!cls) return method;
-        var initialised_class_wrapper = function($el) {
-            var ret = method.apply(this, arguments);
-            if (ret !== false) $el.addClass(cls);
-            return ret;
-        };
-        return initialised_class_wrapper;
-    };
-
-    // run a method on an element only once
-    var once = function(key, method) {
-        var once_wrapper = function($el) {
-            var initialised = $el.data(key);
-            if (initialised) return undefined;
-            var ret = method.apply(this, arguments);
-            if (ret !== false) $el.data(key, true);
-            return ret;
-        };
-        return once_wrapper;
-    };
-
-    // work on elements single file
-    var turnstiled = function(method) {
-        var turnstile = function($el) {
-            var rest = Array.prototype.slice.call(arguments, 1);
-            $el.each(function() {
-                var $this = $(this);
-                return method.apply($this, [$this].concat(rest));
-            });
-        };
-        return turnstile;
-    };
-
-    // return a pimpéd pattern
-    // - init only once
-    // - put multiple elements through a turnstile
-    var pimp_pattern = function(pname, pattern) {
-        var pimped = {};
-        for (var mname in pattern) {
-            var method = pattern[mname];
-            if (mname === "init") {
-                method = log_init(pname, method);
-                method = set_initialised_class(method, pattern);
-                method = once(pname + '-' + mname, method);
-            }
-            if (typeof method === "function") method = turnstiled(method);
-            pimped[mname] = method;
-        }
-        return pimped;
-    };
-
-    var jquery_plugin = function(name, pattern) {
+    var jquery_plugin = function(pattern) {
         var plugin = function(method) {
             if (!method || typeof method === "object") {
-                pattern.init.apply(this, [this].concat(arguments));
+                pattern.init.apply(
+                        this,
+                        [this].concat(Array.prototype.slice.call(arguments)));
             } else if (pattern[method]) {
                 pattern[method].apply(
                     this,
                     [this].concat(Array.prototype.slice.call(arguments, 1))
                 );
             } else {
-                $.error('Method ' + method + ' does not exist on jQuery.' + name);
+                $.error('Method ' + method +
+                        ' does not exist on jQuery.' + pattern.name);
             }
             return this;
         };
         return plugin;
-    };
-
-    // XXX: need to understand require magic to make this work here
-    // require paths are local to where it is called, we would need to
-    // pass the path of the module that called load_modules
-    var load_modules = function(prefix, names, suffix) {
-        prefix = prefix || '';
-        suffix = suffix || '';
-        var modules = names.reduce(function(acc, name) {
-            acc[name] = require(prefix + name + suffix);
-            return acc;
-        }, {});
-        return modules;
     };
 
     function _renumberAttribute(el, attr, i) {
@@ -7376,10 +6143,6 @@ define('utils',[
         parseOptions: parseOptions,
         //load_modules: load_modules,
         // pattern pimping - own module?
-        set_initialised_class: set_initialised_class,
-        once: once,
-        turnstiled: turnstiled,
-        pimp_pattern: pimp_pattern,
         jquery_plugin: jquery_plugin,
         debounce: debounce,
 	renumber: renumber,
@@ -7389,2058 +6152,6 @@ define('utils',[
     return utils;
 });
 
-/*!
- * jQuery Form Plugin
- * version: 3.03 (08-MAR-2012)
- * @requires jQuery v1.3.2 or later
- *
- * Examples and documentation at: http://malsup.com/jquery/form/
- * Project repository: https://github.com/malsup/form
- * Dual licensed under the MIT and GPL licenses:
- *    http://malsup.github.com/mit-license.txt
- *    http://malsup.github.com/gpl-license-v2.txt
- */
-/*global ActiveXObject alert */
-;(function($) {
-
-
-/*
-    Usage Note:
-    -----------
-    Do not use both ajaxSubmit and ajaxForm on the same form.  These
-    functions are mutually exclusive.  Use ajaxSubmit if you want
-    to bind your own submit handler to the form.  For example,
-
-    $(document).ready(function() {
-        $('#myForm').bind('submit', function(e) {
-            e.preventDefault(); // <-- important
-            $(this).ajaxSubmit({
-                target: '#output'
-            });
-        });
-    });
-
-    Use ajaxForm when you want the plugin to manage all the event binding
-    for you.  For example,
-
-    $(document).ready(function() {
-        $('#myForm').ajaxForm({
-            target: '#output'
-        });
-    });
-
-    You can also use ajaxForm with delegation (requires jQuery v1.7+), so the
-    form does not have to exist when you invoke ajaxForm:
-
-    $('#myForm').ajaxForm({
-        delegation: true,
-        target: '#output'
-    });
-
-    When using ajaxForm, the ajaxSubmit function will be invoked for you
-    at the appropriate time.
-*/
-
-/**
- * Feature detection
- */
-var feature = {};
-feature.fileapi = $("<input type='file'/>").get(0).files !== undefined;
-feature.formdata = window.FormData !== undefined;
-
-/**
- * ajaxSubmit() provides a mechanism for immediately submitting
- * an HTML form using AJAX.
- */
-$.fn.ajaxSubmit = function(options) {
-    /*jshint scripturl:true */
-
-    // fast fail if nothing selected (http://dev.jquery.com/ticket/2752)
-    if (!this.length) {
-        log('ajaxSubmit: skipping submit process - no element selected');
-        return this;
-    }
-
-    var method, action, url, $form = this;
-
-    if (typeof options == 'function') {
-        options = { success: options };
-    }
-
-    method = this.attr('method');
-    action = this.attr('action');
-    url = (typeof action === 'string') ? $.trim(action) : '';
-    url = url || window.location.href || '';
-    if (url) {
-        // clean url (don't include hash vaue)
-        url = (url.match(/^([^#]+)/)||[])[1];
-    }
-
-    options = $.extend(true, {
-        url:  url,
-        success: $.ajaxSettings.success,
-        type: method || 'GET',
-        iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank'
-    }, options);
-
-    // hook for manipulating the form data before it is extracted;
-    // convenient for use with rich editors like tinyMCE or FCKEditor
-    var veto = {};
-    this.trigger('form-pre-serialize', [this, options, veto]);
-    if (veto.veto) {
-        log('ajaxSubmit: submit vetoed via form-pre-serialize trigger');
-        return this;
-    }
-
-    // provide opportunity to alter form data before it is serialized
-    if (options.beforeSerialize && options.beforeSerialize(this, options) === false) {
-        log('ajaxSubmit: submit aborted via beforeSerialize callback');
-        return this;
-    }
-
-    var traditional = options.traditional;
-    if ( traditional === undefined ) {
-        traditional = $.ajaxSettings.traditional;
-    }
-
-    var qx, a = this.formToArray(options.semantic);
-    if (options.data) {
-        options.extraData = options.data;
-        qx = $.param(options.data, traditional);
-    }
-
-    // give pre-submit callback an opportunity to abort the submit
-    if (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {
-        log('ajaxSubmit: submit aborted via beforeSubmit callback');
-        return this;
-    }
-
-    // fire vetoable 'validate' event
-    this.trigger('form-submit-validate', [a, this, options, veto]);
-    if (veto.veto) {
-        log('ajaxSubmit: submit vetoed via form-submit-validate trigger');
-        return this;
-    }
-
-    var q = $.param(a, traditional);
-    if (qx) {
-        q = ( q ? (q + '&' + qx) : qx );
-    }
-    if (options.type.toUpperCase() == 'GET') {
-        options.url += (options.url.indexOf('?') >= 0 ? '&' : '?') + q;
-        options.data = null;  // data is null for 'get'
-    }
-    else {
-        options.data = q; // data is the query string for 'post'
-    }
-
-    var callbacks = [];
-    if (options.resetForm) {
-        callbacks.push(function() { $form.resetForm(); });
-    }
-    if (options.clearForm) {
-        callbacks.push(function() { $form.clearForm(options.includeHidden); });
-    }
-
-    // perform a load on the target only if dataType is not provided
-    if (!options.dataType && options.target) {
-        var oldSuccess = options.success || function(){};
-        callbacks.push(function(data) {
-            var fn = options.replaceTarget ? 'replaceWith' : 'html';
-            $(options.target)[fn](data).each(oldSuccess, arguments);
-        });
-    }
-    else if (options.success) {
-        callbacks.push(options.success);
-    }
-
-    options.success = function(data, status, xhr) { // jQuery 1.4+ passes xhr as 3rd arg
-        var context = options.context || options;    // jQuery 1.4+ supports scope context
-        for (var i=0, max=callbacks.length; i < max; i++) {
-            callbacks[i].apply(context, [data, status, xhr || $form, $form]);
-        }
-    };
-
-    // are there files to upload?
-    var fileInputs = $('input:file:enabled[value]', this); // [value] (issue #113)
-    var hasFileInputs = fileInputs.length > 0;
-    var mp = 'multipart/form-data';
-    var multipart = ($form.attr('enctype') == mp || $form.attr('encoding') == mp);
-
-    var fileAPI = feature.fileapi && feature.formdata;
-    log("fileAPI :" + fileAPI);
-    var shouldUseFrame = (hasFileInputs || multipart) && !fileAPI;
-
-    // options.iframe allows user to force iframe mode
-    // 06-NOV-09: now defaulting to iframe mode if file input is detected
-    if (options.iframe !== false && (options.iframe || shouldUseFrame)) {
-        // hack to fix Safari hang (thanks to Tim Molendijk for this)
-        // see:  http://groups.google.com/group/jquery-dev/browse_thread/thread/36395b7ab510dd5d
-        if (options.closeKeepAlive) {
-            $.get(options.closeKeepAlive, function() {
-                fileUploadIframe(a);
-            });
-        }
-          else {
-            fileUploadIframe(a);
-          }
-    }
-    else if ((hasFileInputs || multipart) && fileAPI) {
-        fileUploadXhr(a);
-    }
-    else {
-        $.ajax(options);
-    }
-
-     // fire 'notify' event
-     this.trigger('form-submit-notify', [this, options]);
-     return this;
-
-     // XMLHttpRequest Level 2 file uploads (big hat tip to francois2metz)
-    function fileUploadXhr(a) {
-        var formdata = new FormData();
-
-        for (var i=0; i < a.length; i++) {
-            formdata.append(a[i].name, a[i].value);
-        }
-
-        if (options.extraData) {
-            for (var k in options.extraData)
-                if (options.extraData.hasOwnProperty(k))
-                    formdata.append(k, options.extraData[k]);
-        }
-
-        options.data = null;
-
-        var s = $.extend(true, {}, $.ajaxSettings, options, {
-            contentType: false,
-            processData: false,
-            cache: false,
-            type: 'POST'
-        });
-
-                if (options.uploadProgress) {
-                        // workaround because jqXHR does not expose upload property
-                        s.xhr = function() {
-                                var xhr = jQuery.ajaxSettings.xhr();
-                                if (xhr.upload) {
-                                        xhr.upload.onprogress = function(event) {
-                                                var percent = 0;
-                                                if (event.lengthComputable)
-                                                        percent = parseInt((event.position / event.total) * 100, 10);
-                                                options.uploadProgress(event, event.position, event.total, percent);
-                                        }
-                                }
-                                return xhr;
-                        }
-                }
-
-        s.data = null;
-        var beforeSend = s.beforeSend;
-        s.beforeSend = function(xhr, o) {
-                o.data = formdata;
-            if(beforeSend)
-                beforeSend.call(o, xhr, options);
-        };
-        $.ajax(s);
-         }
-
-    // private function for handling file uploads (hat tip to YAHOO!)
-    function fileUploadIframe(a) {
-        var form = $form[0], el, i, s, g, id, $io, io, xhr, sub, n, timedOut, timeoutHandle;
-        var useProp = !!$.fn.prop;
-
-        if (a) {
-            if ( useProp ) {
-                // ensure that every serialized input is still enabled
-                for (i=0; i < a.length; i++) {
-                    el = $(form[a[i].name]);
-                    el.prop('disabled', false);
-                }
-            } else {
-                for (i=0; i < a.length; i++) {
-                    el = $(form[a[i].name]);
-                    el.removeAttr('disabled');
-                }
-            }
-        }
-
-        var submitMethod;
-        if ($(':input[name=submit],:input[id=submit]', form).length) {
-            // if there is an input with a name or id of 'submit' then we won't be
-            // able to invoke the submit fn on the form (at least not x-browser)
-            var idSubmit = $(':input[id=submit]', form),
-                nameSubmit = $(':input[name=submit]', form);
-            if (idSubmit.length) idSubmit.attr({id:'submit_temporarily_renamed'});
-            if (nameSubmit.length) nameSubmit.attr({name:'submit_temporarily_renamed'});
-            submitMethod = form.submit;
-            if (idSubmit.length) idSubmit.attr({id:'submit'});
-            if (nameSubmit.length) nameSubmit.attr({name:'submit'});
-//            alert('Error: Form elements must not have name or id of "submit".');
-//            return;
-        } else {
-            submitMethod = form.submit;
-        }
-
-        s = $.extend(true, {}, $.ajaxSettings, options);
-        s.context = s.context || s;
-        id = 'jqFormIO' + (new Date().getTime());
-        if (s.iframeTarget) {
-            $io = $(s.iframeTarget);
-            n = $io.attr('name');
-            if (!n)
-                 $io.attr('name', id);
-            else
-                id = n;
-        }
-        else {
-            $io = $('<iframe name="' + id + '" src="'+ s.iframeSrc +'" />');
-            $io.css({ position: 'absolute', top: '-1000px', left: '-1000px' });
-        }
-        io = $io[0];
-
-
-        xhr = { // mock object
-            aborted: 0,
-            responseText: null,
-            responseXML: null,
-            status: 0,
-            statusText: 'n/a',
-            getAllResponseHeaders: function() {},
-            getResponseHeader: function() {},
-            setRequestHeader: function() {},
-            abort: function(status) {
-                var e = (status === 'timeout' ? 'timeout' : 'aborted');
-                log('aborting upload... ' + e);
-                this.aborted = 1;
-                $io.attr('src', s.iframeSrc); // abort op in progress
-                xhr.error = e;
-                if (s.error)
-                    s.error.call(s.context, xhr, e, status);
-                if (g)
-                    $.event.trigger("ajaxError", [xhr, s, e]);
-                if (s.complete)
-                    s.complete.call(s.context, xhr, e);
-            }
-        };
-
-        g = s.global;
-        // trigger ajax global events so that activity/block indicators work like normal
-        if (g && 0 === $.active++) {
-            //$.event.trigger("ajaxStart");
-            $form.trigger("ajaxStart");
-        }
-        if (g) {
-            //$.event.trigger("ajaxSend", [xhr, s]);
-            $form.trigger("ajaxSend", [xhr, s]);
-        }
-
-        if (s.beforeSend && s.beforeSend.call(s.context, xhr, s) === false) {
-            if (s.global) {
-                $.active--;
-            }
-            return;
-        }
-        if (xhr.aborted) {
-            return;
-        }
-
-        // add submitting element to data if we know it
-        sub = form.clk;
-        if (sub) {
-            n = sub.name;
-            if (n && !sub.disabled) {
-                s.extraData = s.extraData || {};
-                s.extraData[n] = sub.value;
-                if (sub.type == "image") {
-                    s.extraData[n+'.x'] = form.clk_x;
-                    s.extraData[n+'.y'] = form.clk_y;
-                }
-            }
-        }
-
-        var CLIENT_TIMEOUT_ABORT = 1;
-        var SERVER_ABORT = 2;
-
-        function getDoc(frame) {
-            var doc = frame.contentWindow ? frame.contentWindow.document : frame.contentDocument ? frame.contentDocument : frame.document;
-            return doc;
-        }
-
-        // Rails CSRF hack (thanks to Yvan Barthelemy)
-        var csrf_token = $('meta[name=csrf-token]').attr('content');
-        var csrf_param = $('meta[name=csrf-param]').attr('content');
-        if (csrf_param && csrf_token) {
-            s.extraData = s.extraData || {};
-            s.extraData[csrf_param] = csrf_token;
-        }
-
-        // take a breath so that pending repaints get some cpu time before the upload starts
-        function doSubmit() {
-            // make sure form attrs are set
-            var t = $form.attr('target'), a = $form.attr('action');
-
-            // update form attrs in IE friendly way
-            form.setAttribute('target',id);
-            if (!method) {
-                form.setAttribute('method', 'POST');
-            }
-            if (a != s.url) {
-                form.setAttribute('action', s.url);
-            }
-
-            // ie borks in some cases when setting encoding
-            if (! s.skipEncodingOverride && (!method || /post/i.test(method))) {
-                $form.attr({
-                    encoding: 'multipart/form-data',
-                    enctype:  'multipart/form-data'
-                });
-            }
-
-            // support timout
-            if (s.timeout) {
-                timeoutHandle = setTimeout(function() { timedOut = true; cb(CLIENT_TIMEOUT_ABORT); }, s.timeout);
-            }
-
-            // look for server aborts
-            function checkState() {
-                try {
-                    var state = getDoc(io).readyState;
-                    log('state = ' + state);
-                    if (state && state.toLowerCase() == 'uninitialized')
-                        setTimeout(checkState,50);
-                }
-                catch(e) {
-                    log('Server abort: ' , e, ' (', e.name, ')');
-                    cb(SERVER_ABORT);
-                    if (timeoutHandle)
-                        clearTimeout(timeoutHandle);
-                    timeoutHandle = undefined;
-                }
-            }
-
-            // add "extra" data to form if provided in options
-            var extraInputs = [];
-            try {
-                if (s.extraData) {
-                    for (var n in s.extraData) {
-                        if (s.extraData.hasOwnProperty(n)) {
-                            extraInputs.push(
-                                $('<input type="hidden" name="'+n+'">').attr('value',s.extraData[n])
-                                    .appendTo(form)[0]);
-                        }
-                    }
-                }
-
-                if (!s.iframeTarget) {
-                    // add iframe to doc and submit the form
-                    $io.appendTo('body');
-                    if (io.attachEvent)
-                        io.attachEvent('onload', cb);
-                    else
-                        io.addEventListener('load', cb, false);
-                }
-                setTimeout(checkState,15);
-                submitMethod.call(form);
-            }
-            finally {
-                // reset attrs and remove "extra" input elements
-                form.setAttribute('action',a);
-                if(t) {
-                    form.setAttribute('target', t);
-                } else {
-                    $form.removeAttr('target');
-                }
-                $(extraInputs).remove();
-            }
-        }
-
-        if (s.forceSync) {
-            doSubmit();
-        }
-        else {
-            setTimeout(doSubmit, 10); // this lets dom updates render
-        }
-
-        var data, doc, domCheckCount = 50, callbackProcessed;
-
-        function cb(e) {
-            if (xhr.aborted || callbackProcessed) {
-                return;
-            }
-            try {
-                doc = getDoc(io);
-            }
-            catch(ex) {
-                log('cannot access response document: ', ex);
-                e = SERVER_ABORT;
-            }
-            if (e === CLIENT_TIMEOUT_ABORT && xhr) {
-                xhr.abort('timeout');
-                return;
-            }
-            else if (e == SERVER_ABORT && xhr) {
-                xhr.abort('server abort');
-                return;
-            }
-
-            if (!doc || doc.location.href == s.iframeSrc) {
-                // response not received yet
-                if (!timedOut)
-                    return;
-            }
-            if (io.detachEvent)
-                io.detachEvent('onload', cb);
-            else
-                io.removeEventListener('load', cb, false);
-
-            var status = 'success', errMsg;
-            try {
-                if (timedOut) {
-                    throw 'timeout';
-                }
-
-                var isXml = s.dataType == 'xml' || doc.XMLDocument || $.isXMLDoc(doc);
-                log('isXml='+isXml);
-                if (!isXml && window.opera && (doc.body === null || !doc.body.innerHTML)) {
-                    if (--domCheckCount) {
-                        // in some browsers (Opera) the iframe DOM is not always traversable when
-                        // the onload callback fires, so we loop a bit to accommodate
-                        log('requeing onLoad callback, DOM not available');
-                        setTimeout(cb, 250);
-                        return;
-                    }
-                    // let this fall through because server response could be an empty document
-                    //log('Could not access iframe DOM after mutiple tries.');
-                    //throw 'DOMException: not available';
-                }
-
-                //log('response detected');
-                var docRoot = doc.body ? doc.body : doc.documentElement;
-                xhr.responseText = docRoot ? docRoot.innerHTML : null;
-                xhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;
-                if (isXml)
-                    s.dataType = 'xml';
-                xhr.getResponseHeader = function(header){
-                    var headers = {'content-type': s.dataType};
-                    return headers[header];
-                };
-                // support for XHR 'status' & 'statusText' emulation :
-                if (docRoot) {
-                    xhr.status = Number( docRoot.getAttribute('status') ) || xhr.status;
-                    xhr.statusText = docRoot.getAttribute('statusText') || xhr.statusText;
-                }
-
-                var dt = (s.dataType || '').toLowerCase();
-                var scr = /(json|script|text)/.test(dt);
-                if (scr || s.textarea) {
-                    // see if user embedded response in textarea
-                    var ta = doc.getElementsByTagName('textarea')[0];
-                    if (ta) {
-                        xhr.responseText = ta.value;
-                        // support for XHR 'status' & 'statusText' emulation :
-                        xhr.status = Number( ta.getAttribute('status') ) || xhr.status;
-                        xhr.statusText = ta.getAttribute('statusText') || xhr.statusText;
-                    }
-                    else if (scr) {
-                        // account for browsers injecting pre around json response
-                        var pre = doc.getElementsByTagName('pre')[0];
-                        var b = doc.getElementsByTagName('body')[0];
-                        if (pre) {
-                            xhr.responseText = pre.textContent ? pre.textContent : pre.innerText;
-                        }
-                        else if (b) {
-                            xhr.responseText = b.textContent ? b.textContent : b.innerText;
-                        }
-                    }
-                }
-                else if (dt == 'xml' && !xhr.responseXML && xhr.responseText) {
-                    xhr.responseXML = toXml(xhr.responseText);
-                }
-
-                try {
-                    data = httpData(xhr, dt, s);
-                }
-                catch (e) {
-                    status = 'parsererror';
-                    xhr.error = errMsg = (e || status);
-                }
-            }
-            catch (e) {
-                log('error caught: ',e);
-                status = 'error';
-                xhr.error = errMsg = (e || status);
-            }
-
-            if (xhr.aborted) {
-                log('upload aborted');
-                status = null;
-            }
-
-            if (xhr.status) { // we've set xhr.status
-                status = (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) ? 'success' : 'error';
-            }
-
-            // ordering of these callbacks/triggers is odd, but that's how $.ajax does it
-            if (status === 'success') {
-                if (s.success)
-                    s.success.call(s.context, data, 'success', xhr);
-                if (g) {
-                    //$.event.trigger("ajaxSuccess", [xhr, s, data]);
-                    $form.trigger("ajaxSuccess", [xhr, s, data]);
-                }
-            }
-            else if (status) {
-                if (errMsg === undefined)
-                    errMsg = xhr.statusText;
-                if (s.error)
-                    s.error.call(s.context, xhr, status, errMsg);
-                if (g) {
-                    //$.event.trigger("ajaxError", [xhr, s, errMsg]);
-                    $form.trigger("ajaxError", [xhr, s, errMsg]);
-                }
-            }
-
-            if (g) {
-                //$.event.trigger("ajaxComplete", [xhr, s]);
-                $form.trigger("ajaxComplete", [xhr, s]);
-            }
-
-            if (g && ! --$.active) {
-                //$.event.trigger("ajaxStop");
-                $form.trigger("ajaxStop");
-            }
-
-            if (s.complete)
-                s.complete.call(s.context, xhr, status);
-
-            callbackProcessed = true;
-            if (s.timeout)
-                clearTimeout(timeoutHandle);
-
-            // clean up
-            setTimeout(function() {
-                if (!s.iframeTarget)
-                    $io.remove();
-                xhr.responseXML = null;
-            }, 100);
-        }
-
-        var toXml = $.parseXML || function(s, doc) { // use parseXML if available (jQuery 1.5+)
-            if (window.ActiveXObject) {
-                doc = new ActiveXObject('Microsoft.XMLDOM');
-                doc.async = 'false';
-                doc.loadXML(s);
-            }
-            else {
-                doc = (new DOMParser()).parseFromString(s, 'text/xml');
-            }
-            return (doc && doc.documentElement && doc.documentElement.nodeName != 'parsererror') ? doc : null;
-        };
-        var parseJSON = $.parseJSON || function(s) {
-            /*jslint evil:true */
-            return window['eval']('(' + s + ')');
-        };
-
-        var httpData = function( xhr, type, s ) { // mostly lifted from jq1.4.4
-
-            var ct = xhr.getResponseHeader('content-type') || '',
-                xml = type === 'xml' || !type && ct.indexOf('xml') >= 0,
-                data = xml ? xhr.responseXML : xhr.responseText;
-
-            if (xml && data.documentElement.nodeName === 'parsererror') {
-                if ($.error)
-                    $.error('parsererror');
-            }
-            if (s && s.dataFilter) {
-                data = s.dataFilter(data, type);
-            }
-            if (typeof data === 'string') {
-                if (type === 'json' || !type && ct.indexOf('json') >= 0) {
-                    data = parseJSON(data);
-                } else if (type === "script" || !type && ct.indexOf("javascript") >= 0) {
-                    $.globalEval(data);
-                }
-            }
-            return data;
-        };
-    }
-};
-
-/**
- * ajaxForm() provides a mechanism for fully automating form submission.
- *
- * The advantages of using this method instead of ajaxSubmit() are:
- *
- * 1: This method will include coordinates for <input type="image" /> elements (if the element
- *    is used to submit the form).
- * 2. This method will include the submit element's name/value data (for the element that was
- *    used to submit the form).
- * 3. This method binds the submit() method to the form for you.
- *
- * The options argument for ajaxForm works exactly as it does for ajaxSubmit.  ajaxForm merely
- * passes the options argument along after properly binding events for submit elements and
- * the form itself.
- */
-$.fn.ajaxForm = function(options) {
-    options = options || {};
-    options.delegation = options.delegation && $.isFunction($.fn.on);
-
-    // in jQuery 1.3+ we can fix mistakes with the ready state
-    if (!options.delegation && this.length === 0) {
-        var o = { s: this.selector, c: this.context };
-        if (!$.isReady && o.s) {
-            log('DOM not ready, queuing ajaxForm');
-            $(function() {
-                $(o.s,o.c).ajaxForm(options);
-            });
-            return this;
-        }
-        // is your DOM ready?  http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
-        log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
-        return this;
-    }
-
-    if ( options.delegation ) {
-        $(document)
-            .off('submit.form-plugin', this.selector, doAjaxSubmit)
-            .off('click.form-plugin', this.selector, captureSubmittingElement)
-            .on('submit.form-plugin', this.selector, options, doAjaxSubmit)
-            .on('click.form-plugin', this.selector, options, captureSubmittingElement);
-        return this;
-    }
-
-    return this.ajaxFormUnbind()
-        .bind('submit.form-plugin', options, doAjaxSubmit)
-        .bind('click.form-plugin', options, captureSubmittingElement);
-};
-
-// private event handlers
-function doAjaxSubmit(e) {
-    /*jshint validthis:true */
-    var options = e.data;
-    if (!e.isDefaultPrevented()) { // if event has been canceled, don't proceed
-        e.preventDefault();
-        $(this).ajaxSubmit(options);
-    }
-}
-
-function captureSubmittingElement(e) {
-    /*jshint validthis:true */
-    var target = e.target;
-    var $el = $(target);
-    if (!($el.is(":submit,input:image"))) {
-        // is this a child element of the submit el?  (ex: a span within a button)
-        var t = $el.closest(':submit');
-        if (t.length === 0) {
-            return;
-        }
-        target = t[0];
-    }
-    var form = this;
-    form.clk = target;
-    if (target.type == 'image') {
-        if (e.offsetX !== undefined) {
-            form.clk_x = e.offsetX;
-            form.clk_y = e.offsetY;
-        } else if (typeof $.fn.offset == 'function') {
-            var offset = $el.offset();
-            form.clk_x = e.pageX - offset.left;
-            form.clk_y = e.pageY - offset.top;
-        } else {
-            form.clk_x = e.pageX - target.offsetLeft;
-            form.clk_y = e.pageY - target.offsetTop;
-        }
-    }
-    // clear form vars
-    setTimeout(function() { form.clk = form.clk_x = form.clk_y = null; }, 100);
-}
-
-
-// ajaxFormUnbind unbinds the event handlers that were bound by ajaxForm
-$.fn.ajaxFormUnbind = function() {
-    return this.unbind('submit.form-plugin click.form-plugin');
-};
-
-/**
- * formToArray() gathers form element data into an array of objects that can
- * be passed to any of the following ajax functions: $.get, $.post, or load.
- * Each object in the array has both a 'name' and 'value' property.  An example of
- * an array for a simple login form might be:
- *
- * [ { name: 'username', value: 'jresig' }, { name: 'password', value: 'secret' } ]
- *
- * It is this array that is passed to pre-submit callback functions provided to the
- * ajaxSubmit() and ajaxForm() methods.
- */
-$.fn.formToArray = function(semantic) {
-    var a = [];
-    if (this.length === 0) {
-        return a;
-    }
-
-    var form = this[0];
-    var els = semantic ? form.getElementsByTagName('*') : form.elements;
-    if (!els) {
-        return a;
-    }
-
-    var i,j,n,v,el,max,jmax;
-    for(i=0, max=els.length; i < max; i++) {
-        el = els[i];
-        n = el.name;
-        if (!n) {
-            continue;
-        }
-
-        if (semantic && form.clk && el.type == "image") {
-            // handle image inputs on the fly when semantic == true
-            if(!el.disabled && form.clk == el) {
-                a.push({name: n, value: $(el).val(), type: el.type });
-                a.push({name: n+'.x', value: form.clk_x}, {name: n+'.y', value: form.clk_y});
-            }
-            continue;
-        }
-
-        v = $.fieldValue(el, true);
-        if (v && v.constructor == Array) {
-            for(j=0, jmax=v.length; j < jmax; j++) {
-                a.push({name: n, value: v[j]});
-            }
-        }
-        else if (feature.fileapi && el.type == 'file' && !el.disabled) {
-            var files = el.files;
-            for (j=0; j < files.length; j++) {
-                a.push({name: n, value: files[j], type: el.type});
-            }
-        }
-        else if (v !== null && typeof v != 'undefined') {
-            a.push({name: n, value: v, type: el.type});
-        }
-    }
-
-    if (!semantic && form.clk) {
-        // input type=='image' are not found in elements array! handle it here
-        var $input = $(form.clk), input = $input[0];
-        n = input.name;
-        if (n && !input.disabled && input.type == 'image') {
-            a.push({name: n, value: $input.val()});
-            a.push({name: n+'.x', value: form.clk_x}, {name: n+'.y', value: form.clk_y});
-        }
-    }
-    return a;
-};
-
-/**
- * Serializes form data into a 'submittable' string. This method will return a string
- * in the format: name1=value1&amp;name2=value2
- */
-$.fn.formSerialize = function(semantic) {
-    //hand off to jQuery.param for proper encoding
-    return $.param(this.formToArray(semantic));
-};
-
-/**
- * Serializes all field elements in the jQuery object into a query string.
- * This method will return a string in the format: name1=value1&amp;name2=value2
- */
-$.fn.fieldSerialize = function(successful) {
-    var a = [];
-    this.each(function() {
-        var n = this.name;
-        if (!n) {
-            return;
-        }
-        var v = $.fieldValue(this, successful);
-        if (v && v.constructor == Array) {
-            for (var i=0,max=v.length; i < max; i++) {
-                a.push({name: n, value: v[i]});
-            }
-        }
-        else if (v !== null && typeof v != 'undefined') {
-            a.push({name: this.name, value: v});
-        }
-    });
-    //hand off to jQuery.param for proper encoding
-    return $.param(a);
-};
-
-/**
- * Returns the value(s) of the element in the matched set.  For example, consider the following form:
- *
- *  <form><fieldset>
- *      <input name="A" type="text" />
- *      <input name="A" type="text" />
- *      <input name="B" type="checkbox" value="B1" />
- *      <input name="B" type="checkbox" value="B2"/>
- *      <input name="C" type="radio" value="C1" />
- *      <input name="C" type="radio" value="C2" />
- *  </fieldset></form>
- *
- *  var v = $(':text').fieldValue();
- *  // if no values are entered into the text inputs
- *  v == ['','']
- *  // if values entered into the text inputs are 'foo' and 'bar'
- *  v == ['foo','bar']
- *
- *  var v = $(':checkbox').fieldValue();
- *  // if neither checkbox is checked
- *  v === undefined
- *  // if both checkboxes are checked
- *  v == ['B1', 'B2']
- *
- *  var v = $(':radio').fieldValue();
- *  // if neither radio is checked
- *  v === undefined
- *  // if first radio is checked
- *  v == ['C1']
- *
- * The successful argument controls whether or not the field element must be 'successful'
- * (per http://www.w3.org/TR/html4/interact/forms.html#successful-controls).
- * The default value of the successful argument is true.  If this value is false the value(s)
- * for each element is returned.
- *
- * Note: This method *always* returns an array.  If no valid value can be determined the
- *    array will be empty, otherwise it will contain one or more values.
- */
-$.fn.fieldValue = function(successful) {
-    for (var val=[], i=0, max=this.length; i < max; i++) {
-        var el = this[i];
-        var v = $.fieldValue(el, successful);
-        if (v === null || typeof v == 'undefined' || (v.constructor == Array && !v.length)) {
-            continue;
-        }
-        if (v.constructor == Array)
-            $.merge(val, v);
-        else
-            val.push(v);
-    }
-    return val;
-};
-
-/**
- * Returns the value of the field element.
- */
-$.fieldValue = function(el, successful) {
-    var n = el.name, t = el.type, tag = el.tagName.toLowerCase();
-    if (successful === undefined) {
-        successful = true;
-    }
-
-    if (successful && (!n || el.disabled || t == 'reset' || t == 'button' ||
-        (t == 'checkbox' || t == 'radio') && !el.checked ||
-        (t == 'submit' || t == 'image') && el.form && el.form.clk != el ||
-        tag == 'select' && el.selectedIndex == -1)) {
-            return null;
-    }
-
-    if (tag == 'select') {
-        var index = el.selectedIndex;
-        if (index < 0) {
-            return null;
-        }
-        var a = [], ops = el.options;
-        var one = (t == 'select-one');
-        var max = (one ? index+1 : ops.length);
-        for(var i=(one ? index : 0); i < max; i++) {
-            var op = ops[i];
-            if (op.selected) {
-                var v = op.value;
-                if (!v) { // extra pain for IE...
-                    v = (op.attributes && op.attributes['value'] && !(op.attributes['value'].specified)) ? op.text : op.value;
-                }
-                if (one) {
-                    return v;
-                }
-                a.push(v);
-            }
-        }
-        return a;
-    }
-    return $(el).val();
-};
-
-/**
- * Clears the form data.  Takes the following actions on the form's input fields:
- *  - input text fields will have their 'value' property set to the empty string
- *  - select elements will have their 'selectedIndex' property set to -1
- *  - checkbox and radio inputs will have their 'checked' property set to false
- *  - inputs of type submit, button, reset, and hidden will *not* be effected
- *  - button elements will *not* be effected
- */
-$.fn.clearForm = function(includeHidden) {
-    return this.each(function() {
-        $('input,select,textarea', this).clearFields(includeHidden);
-    });
-};
-
-/**
- * Clears the selected form elements.
- */
-$.fn.clearFields = $.fn.clearInputs = function(includeHidden) {
-    var re = /^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i; // 'hidden' is not in this list
-    return this.each(function() {
-        var t = this.type, tag = this.tagName.toLowerCase();
-        if (re.test(t) || tag == 'textarea' || (includeHidden && /hidden/.test(t)) ) {
-            this.value = '';
-        }
-        else if (t == 'checkbox' || t == 'radio') {
-            this.checked = false;
-        }
-        else if (tag == 'select') {
-            this.selectedIndex = -1;
-        }
-    });
-};
-
-/**
- * Resets the form data.  Causes all form elements to be reset to their original value.
- */
-$.fn.resetForm = function() {
-    return this.each(function() {
-        // guard against an input with the name of 'reset'
-        // note that IE reports the reset function as an 'object'
-        if (typeof this.reset == 'function' || (typeof this.reset == 'object' && !this.reset.nodeType)) {
-            this.reset();
-        }
-    });
-};
-
-/**
- * Enables or disables any matching elements.
- */
-$.fn.enable = function(b) {
-    if (b === undefined) {
-        b = true;
-    }
-    return this.each(function() {
-        this.disabled = !b;
-    });
-};
-
-/**
- * Checks/unchecks any matching checkboxes or radio buttons and
- * selects/deselects and matching option elements.
- */
-$.fn.selected = function(select) {
-    if (select === undefined) {
-        select = true;
-    }
-    return this.each(function() {
-        var t = this.type;
-        if (t == 'checkbox' || t == 'radio') {
-            this.checked = select;
-        }
-        else if (this.tagName.toLowerCase() == 'option') {
-            var $sel = $(this).parent('select');
-            if (select && $sel[0] && $sel[0].type == 'select-one') {
-                // deselect all other options
-                $sel.find('option').selected(false);
-            }
-            this.selected = select;
-        }
-    });
-};
-
-// expose debug var
-$.fn.ajaxSubmit.debug = false;
-
-// helper fn for console logging
-function log() {
-    if (!$.fn.ajaxSubmit.debug)
-        return;
-    var msg = '[jquery.form] ' + Array.prototype.join.call(arguments,'');
-    if (window.console && window.console.log) {
-        window.console.log(msg);
-    }
-    else if (window.opera && window.opera.postError) {
-        window.opera.postError(msg);
-    }
-}
-
-})(jQuery);
-
-define("lib/jquery.form/jquery.form", function(){});
-
-(function(a,b){function g(a,b){return(new Date(a,b+1,0)).getDate()}function h(a,b){a=""+a,b=b||2;while(a.length<b)a="0"+a;return a}function k(a,b,c){var d=a.getDate(),e=a.getDay(),g=a.getMonth(),k=a.getFullYear(),l={d:d,dd:h(d),ddd:f[c].shortDays[e],dddd:f[c].days[e],m:g+1,mm:h(g+1),mmm:f[c].shortMonths[g],mmmm:f[c].months[g],yy:String(k).slice(2),yyyy:k},m=b.replace(i,function(a){return a in l?l[a]:a.slice(1,a.length-1)});return j.html(m).html()}function l(a){return parseInt(a,10)}function m(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()==b.getMonth()&&a.getDate()==b.getDate()}function n(a){if(a===b)return;if(a.constructor==Date)return a;if(typeof a=="string"){var c=a.split("-");if(c.length==3)return new Date(l(c[0]),l(c[1])-1,l(c[2]));if(!/^-?\d+$/.test(a))return;a=l(a)}var d=new Date;return d.setDate(d.getDate()+a),d}function o(d,h){function M(b,c,e){z=b,w=b.getFullYear(),x=b.getMonth(),y=b.getDate(),e=e||a.Event("api"),e.type="beforeChange",G.trigger(e,[b]);if(e.isDefaultPrevented())return;d.val(k(b,c.format,c.lang)),e.type="change",G.trigger(e),d.data("date",b),i.hide(e)}function N(b){b.type="onShow",G.trigger(b),a(document).bind("keydown.d",function(b){if(b.ctrlKey)return!0;var c=b.keyCode;if(c==8)return d.val(""),i.hide(b);if(c==27||c==9)return i.hide(b);if(a(e).index(c)>=0){if(!C)return i.show(b),b.preventDefault();var f=a("#"+p.weeks+" a"),g=a("."+p.focus),h=f.index(g);g.removeClass(p.focus);if(c==74||c==40)h+=7;else if(c==75||c==38)h-=7;else if(c==76||c==39)h+=1;else if(c==72||c==37)h-=1;return h>41?(i.addMonth(),g=a("#"+p.weeks+" a:eq("+(h-42)+")")):h<0?(i.addMonth(-1),g=a("#"+p.weeks+" a:eq("+(h+42)+")")):g=f.eq(h),g.addClass(p.focus),b.preventDefault()}return c==34?i.addMonth():c==33?i.addMonth(-1):c==36?i.today():(c==13&&(a(b.target).is("select")||a("."+p.focus).click()),a([16,17,18,9]).index(c)>=0)}),a(document).bind("click.d",function(b){var c=b.target;!a(c).parents("#"+p.root).length&&c!=d[0]&&(!t||c!=t[0])&&i.hide(b)})}var i=this,j=new Date,o=j.getFullYear(),p=h.css,q=f[h.lang],r=a("#"+p.root),s=r.find("#"+p.title),t,u,v,w,x,y,z=d.attr("data-value")||h.value||d.val(),A=d.attr("min")||h.min,B=d.attr("max")||h.max,C,D;A===0&&(A="0"),z=n(z)||j,A=n(A||new Date(o+h.yearRange[0],1,1)),B=n(B||new Date(o+h.yearRange[1]+1,1,-1));if(!q)throw"Dateinput: invalid language: "+h.lang;if(d.attr("type")=="date"){var D=d.clone(),E=D.wrap("<div/>").parent().html(),F=a(E.replace(/type/i,"type=text data-orig-type"));h.value&&F.val(h.value),d.replaceWith(F),d=F}d.addClass(p.input);var G=d.add(i);if(!r.length){r=a("<div><div><a/><div/><a/></div><div><div/><div/></div></div>").hide().css({position:"absolute"}).attr("id",p.root),r.children().eq(0).attr("id",p.head).end().eq(1).attr("id",p.body).children().eq(0).attr("id",p.days).end().eq(1).attr("id",p.weeks).end().end().end().find("a").eq(0).attr("id",p.prev).end().eq(1).attr("id",p.next),s=r.find("#"+p.head).find("div").attr("id",p.title);if(h.selectors){var H=a("<select/>").attr("id",p.month),I=a("<select/>").attr("id",p.year);s.html(H.add(I))}var J=r.find("#"+p.days);for(var K=0;K<7;K++)J.append(a("<span/>").text(q.shortDays[(K+h.firstDay)%7]));a("body").append(r)}h.trigger&&(t=a("<a/>").attr("href","#").addClass(p.trigger).click(function(a){return h.toggle?i.toggle():i.show(),a.preventDefault()}).insertAfter(d));var L=r.find("#"+p.weeks);I=r.find("#"+p.year),H=r.find("#"+p.month),a.extend(i,{show:function(b){if(d.attr("readonly")||d.attr("disabled")||C)return;b=b||a.Event(),b.type="onBeforeShow",G.trigger(b);if(b.isDefaultPrevented())return;a.each(c,function(){this.hide()}),C=!0,H.unbind("change").change(function(){i.setValue(I.val(),a(this).val())}),I.unbind("change").change(function(){i.setValue(a(this).val(),H.val())}),u=r.find("#"+p.prev).unbind("click").click(function(a){return u.hasClass(p.disabled)||i.addMonth(-1),!1}),v=r.find("#"+p.next).unbind("click").click(function(a){return v.hasClass(p.disabled)||i.addMonth(),!1}),i.setValue(z);var e=d.offset();return/iPad/i.test(navigator.userAgent)&&(e.top-=a(window).scrollTop()),r.css({top:e.top+d.outerHeight({margins:!0})+h.offset[0],left:e.left+h.offset[1]}),h.speed?r.show(h.speed,function(){N(b)}):(r.show(),N(b)),i},setValue:function(c,d,e){var f=l(d)>=-1?new Date(l(c),l(d),l(e==b||isNaN(e)?1:e)):c||z;f<A?f=A:f>B&&(f=B),typeof c=="string"&&(f=n(c)),c=f.getFullYear(),d=f.getMonth(),e=f.getDate(),d==-1?(d=11,c--):d==12&&(d=0,c++);if(!C)return M(f,h),i;x=d,w=c,y=e;var k=new Date(c,d,1-h.firstDay),o=k.getDay(),r=g(c,d),t=g(c,d-1),D;if(h.selectors){H.empty(),a.each(q.months,function(b,d){A<new Date(c,b+1,1)&&B>new Date(c,b,0)&&H.append(a("<option/>").html(d).attr("value",b))}),I.empty();var E=j.getFullYear();for(var F=E+h.yearRange[0];F<E+h.yearRange[1];F++)A<new Date(F+1,0,1)&&B>new Date(F,0,0)&&I.append(a("<option/>").text(F));H.val(d),I.val(c)}else s.html(q.months[d]+" "+c);L.empty(),u.add(v).removeClass(p.disabled);for(var G=o?0:-7,J,K;G<(o?42:35);G++)J=a("<a/>"),G%7===0&&(D=a("<div/>").addClass(p.week),L.append(D)),G<o?(J.addClass(p.off),K=t-o+G+1,f=new Date(c,d-1,K)):G>=o+r?(J.addClass(p.off),K=G-r-o+1,f=new Date(c,d+1,K)):(K=G-o+1,f=new Date(c,d,K),m(z,f)?J.attr("id",p.current).addClass(p.focus):m(j,f)&&J.attr("id",p.today)),A&&f<A&&J.add(u).addClass(p.disabled),B&&f>B&&J.add(v).addClass(p.disabled),J.attr("href","#"+K).text(K).data("date",f),D.append(J);return L.find("a").click(function(b){var c=a(this);return c.hasClass(p.disabled)||(a("#"+p.current).removeAttr("id"),c.attr("id",p.current),M(c.data("date"),h,b)),!1}),p.sunday&&L.find(p.week).each(function(){var b=h.firstDay?7-h.firstDay:0;a(this).children().slice(b,b+1).addClass(p.sunday)}),i},setMin:function(a,b){return A=n(a),b&&z<A&&i.setValue(A),i},setMax:function(a,b){return B=n(a),b&&z>B&&i.setValue(B),i},today:function(){return i.setValue(j)},addDay:function(a){return this.setValue(w,x,y+(a||1))},addMonth:function(a){var b=x+(a||1),c=g(w,b),d=y<=c?y:c;return this.setValue(w,b,d)},addYear:function(a){return this.setValue(w+(a||1),x,y)},destroy:function(){d.add(document).unbind("click.d").unbind("keydown.d"),r.add(t).remove(),d.removeData("dateinput").removeClass(p.input),D&&d.replaceWith(D)},hide:function(b){if(C){b=a.Event(),b.type="onHide",G.trigger(b),a(document).unbind("click.d").unbind("keydown.d");if(b.isDefaultPrevented())return;r.hide(),C=!1}return i},toggle:function(){return i.isOpen()?i.hide():i.show()},getConf:function(){return h},getInput:function(){return d},getCalendar:function(){return r},getValue:function(a){return a?k(z,a,h.lang):z},isOpen:function(){return C}}),a.each(["onBeforeShow","onShow","change","onHide"],function(b,c){a.isFunction(h[c])&&a(i).bind(c,h[c]),i[c]=function(b){return b&&a(i).bind(c,b),i}}),h.editable||d.bind("focus.d click.d",i.show).keydown(function(b){var c=b.keyCode;return!C&&a(e).index(c)>=0?(i.show(b),b.preventDefault()):b.shiftKey||b.ctrlKey||b.altKey||c==9?!0:b.preventDefault()}),n(d.val())&&M(z,h)}a.tools=a.tools||{version:"1.2.6"};var c=[],d,e=[75,76,38,39,74,72,40,37],f={};d=a.tools.dateinput={conf:{format:"mm/dd/yy",selectors:!1,yearRange:[-5,5],lang:"en",offset:[0,0],speed:0,firstDay:0,min:b,max:b,trigger:0,toggle:0,editable:0,css:{prefix:"cal",input:"date",root:0,head:0,title:0,prev:0,next:0,month:0,year:0,days:0,body:0,weeks:0,today:0,current:0,week:0,off:0,sunday:0,focus:0,disabled:0,trigger:0}},localize:function(b,c){a.each(c,function(a,b){c[a]=b.split(",")}),f[b]=c}},d.localize("en",{months:"January,February,March,April,May,June,July,August,September,October,November,December",shortMonths:"Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec",days:"Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday",shortDays:"Sun,Mon,Tue,Wed,Thu,Fri,Sat"});var i=/d{1,4}|m{1,4}|yy(?:yy)?|"[^"]*"|'[^']*'/g,j=a("<a/>");a.expr[":"].date=function(b){var c=b.getAttribute("type");return c&&c=="date"||!!a(b).data("dateinput")},a.fn.dateinput=function(b){if(this.data("dateinput"))return this;b=a.extend(!0,{},d.conf,b),a.each(b.css,function(a,c){!c&&a!="prefix"&&(b.css[a]=(b.css.prefix||"")+(c||a))});var e;return this.each(function(){var d=new o(a(this),b);c.push(d);var f=d.getInput().data("dateinput",d);e=e?e.add(f):f}),e?e:this}})(jQuery),function(a){function d(d,e){var f=this,g=d.add(f),h=a(window),i,j,k,l=a.tools.expose&&(e.mask||e.expose),m=Math.random().toString().slice(10);l&&(typeof l=="string"&&(l={color:l}),l.closeOnClick=l.closeOnEsc=!1);var n=e.target||d.attr("rel");j=n?a(n):null||d;if(!j.length)throw"Could not find Overlay: "+n;d&&d.index(j)==-1&&d.click(function(a){return f.load(a),a.preventDefault()}),a.extend(f,{load:function(d){if(f.isOpened())return f;var i=c[e.effect];if(!i)throw'Overlay: cannot find effect : "'+e.effect+'"';e.oneInstance&&a.each(b,function(){this.close(d)}),d=d||a.Event(),d.type="onBeforeLoad",g.trigger(d);if(d.isDefaultPrevented())return f;k=!0,l&&a(j).expose(l);var n=e.top,o=e.left,p=j.outerWidth({margin:!0}),q=j.outerHeight({margin:!0});return typeof n=="string"&&(n=n=="center"?Math.max((h.height()-q)/2,0):parseInt(n,10)/100*h.height()),o=="center"&&(o=Math.max((h.width()-p)/2,0)),i[0].call(f,{top:n,left:o},function(){k&&(d.type="onLoad",g.trigger(d))}),l&&e.closeOnClick&&a.mask.getMask().one("click",f.close),e.closeOnClick&&a(document).bind("click."+m,function(b){a(b.target).parents(j).length||f.close(b)}),e.closeOnEsc&&a(document).bind("keydown."+m,function(a){a.keyCode==27&&f.close(a)}),f},close:function(b){if(!f.isOpened())return f;b=b||a.Event(),b.type="onBeforeClose",g.trigger(b);if(b.isDefaultPrevented())return;return k=!1,c[e.effect][1].call(f,function(){b.type="onClose",g.trigger(b)}),a(document).unbind("click."+m).unbind("keydown."+m),l&&a.mask.close(),f},getOverlay:function(){return j},getTrigger:function(){return d},getClosers:function(){return i},isOpened:function(){return k},getConf:function(){return e}}),a.each("onBeforeLoad,onStart,onLoad,onBeforeClose,onClose".split(","),function(b,c){a.isFunction(e[c])&&a(f).bind(c,e[c]),f[c]=function(b){return b&&a(f).bind(c,b),f}}),i=j.find(e.close||".close"),!i.length&&!e.close&&(i=a('<a class="close"></a>'),j.prepend(i)),i.click(function(a){f.close(a)}),e.load&&f.load()}a.tools=a.tools||{version:"1.2.6"},a.tools.overlay={addEffect:function(a,b,d){c[a]=[b,d]},conf:{close:null,closeOnClick:!0,closeOnEsc:!0,closeSpeed:"fast",effect:"default",fixed:!a.browser.msie||a.browser.version>6,left:"center",load:!1,mask:null,oneInstance:!0,speed:"normal",target:null,top:"10%"}};var b=[],c={};a.tools.overlay.addEffect("default",function(b,c){var d=this.getConf(),e=a(window);d.fixed||(b.top+=e.scrollTop(),b.left+=e.scrollLeft()),b.position=d.fixed?"fixed":"absolute",this.getOverlay().css(b).fadeIn(d.speed,c)},function(a){this.getOverlay().fadeOut(this.getConf().closeSpeed,a)}),a.fn.overlay=function(c){var e=this.data("overlay");return e?e:(a.isFunction(c)&&(c={onBeforeLoad:c}),c=a.extend(!0,{},a.tools.overlay.conf,c),this.each(function(){e=new d(a(this),c),b.push(e),a(this).data("overlay",e)}),c.api?e:this)}}(jQuery),function(a){function d(a){var b=a.offset();return{top:b.top+a.height()/2,left:b.left+a.width()/2}}var b=a.tools.overlay,c=a(window);a.extend(b.conf,{start:{top:null,left:null},fadeInSpeed:"fast",zIndex:9999});var e=function(b,e){var f=this.getOverlay(),g=this.getConf(),h=this.getTrigger(),i=this,j=f.outerWidth({margin:!0}),k=f.data("img"),l=g.fixed?"fixed":"absolute";if(!k){var m=f.css("backgroundImage");if(!m)throw"background-image CSS property not set for overlay";m=m.slice(m.indexOf("(")+1,m.indexOf(")")).replace(/\"/g,""),f.css("backgroundImage","none"),k=a('<img src="'+m+'"/>'),k.css({border:0,display:"none"}).width(j),a("body").append(k),f.data("img",k)}var n=g.start.top||Math.round(c.height()/2),o=g.start.left||Math.round(c.width()/2);if(h){var p=d(h);n=p.top,o=p.left}g.fixed?(n-=c.scrollTop(),o-=c.scrollLeft()):(b.top+=c.scrollTop(),b.left+=c.scrollLeft()),k.css({position:"absolute",top:n,left:o,width:0,zIndex:g.zIndex}).show(),b.position=l,f.css(b),k.animate({top:f.css("top"),left:f.css("left"),width:j},g.speed,function(){f.css("zIndex",g.zIndex+1).fadeIn(g.fadeInSpeed,function(){i.isOpened()&&!a(this).index(f)?e.call():f.hide()})}).css("position",l)},f=function(b){var e=this.getOverlay().hide(),f=this.getConf(),g=this.getTrigger(),h=e.data("img"),i={top:f.start.top,left:f.start.left,width:0};g&&a.extend(i,d(g)),f.fixed&&h.css({position:"absolute"}).animate({top:"+="+c.scrollTop(),left:"+="+c.scrollLeft()},0),h.animate(i,f.closeSpeed,b)};b.addEffect("apple",e,f)}(jQuery),function(a){function e(a,b){var c=Math.pow(10,b);return Math.round(a*c)/c}function f(a,b){var c=parseInt(a.css(b),10);if(c)return c;var d=a[0].currentStyle;return d&&d.width&&parseInt(d.width,10)}function g(a){var b=a.data("events");return b&&b.onSlide}function h(b,c){function y(a,f,g,h){g===undefined?g=f/m*q:h&&(g-=c.min),r&&(g=Math.round(g/r)*r);if(f===undefined||r)f=g*m/q;if(isNaN(g))return d;f=Math.max(0,Math.min(f,m)),g=f/m*q;if(h||!j)g+=c.min;j&&(h?f=m-f:g=c.max-g),g=e(g,s);var i=a.type=="click";if(x&&k!==undefined&&!i){a.type="onSlide",w.trigger(a,[g,f]);if(a.isDefaultPrevented())return d}var l=i?c.speed:0,t=i?function(){a.type="change",w.trigger(a,[g])}:null;return j?(o.animate({top:f},l,t),c.progress&&p.animate({height:m-f+o.height()/2},l)):(o.animate({left:f},l,t),c.progress&&p.animate({width:f+o.width()/2},l)),k=g,n=f,b.val(g),d}function z(){j=c.vertical||f(i,"height")>f(i,"width"),j?(m=f(i,"height")-f(o,"height"),l=i.offset().top+m):(m=f(i,"width")-f(o,"width"),l=i.offset().left)}function A(){z(),d.setValue(c.value!==undefined?c.value:c.min)}var d=this,h=c.css,i=a("<div><div/><a href='#'/></div>").data("rangeinput",d),j,k,l,m,n;b.before(i);var o=i.addClass(h.slider).find("a").addClass(h.handle),p=i.find("div").addClass(h.progress);a.each("min,max,step,value".split(","),function(a,d){var e=b.attr(d);parseFloat(e)&&(c[d]=parseFloat(e,10))});var q=c.max-c.min,r=c.step=="any"?0:c.step,s=c.precision;if(s===undefined)try{s=r.toString().split(".")[1].length}catch(t){s=0}if(b.attr("type")=="range"){var u=b.clone().wrap("<div/>").parent().html(),v=a(u.replace(/type/i,"type=text data-orig-type"));v.val(c.value),b.replaceWith(v),b=v}b.addClass(h.input);var w=a(d).add(b),x=!0;a.extend(d,{getValue:function(){return k},setValue:function(b,c){return z(),y(c||a.Event("api"),undefined,b,!0)},getConf:function(){return c},getProgress:function(){return p},getHandle:function(){return o},getInput:function(){return b},step:function(b,e){e=e||a.Event();var f=c.step=="any"?1:c.step;d.setValue(k+f*(b||1),e)},stepUp:function(a){return d.step(a||1)},stepDown:function(a){return d.step(-a||-1)}}),a.each("onSlide,change".split(","),function(b,e){a.isFunction(c[e])&&a(d).bind(e,c[e]),d[e]=function(b){return b&&a(d).bind(e,b),d}}),o.drag({drag:!1}).bind("dragStart",function(){z(),x=g(a(d))||g(b)}).bind("drag",function(a,c,d){if(b.is(":disabled"))return!1;y(a,j?c:d)}).bind("dragEnd",function(a){a.isDefaultPrevented()||(a.type="change",w.trigger(a,[k]))}).click(function(a){return a.preventDefault()}),i.click(function(a){if(b.is(":disabled")||a.target==o[0])return a.preventDefault();z();var c=j?o.height()/2:o.width()/2;y(a,j?m-l-c+a.pageY:a.pageX-l-c)}),c.keyboard&&b.keydown(function(c){if(b.attr("readonly"))return;var e=c.keyCode,f=a([75,76,38,33,39]).index(e)!=-1,g=a([74,72,40,34,37]).index(e)!=-1;if((f||g)&&!(c.shiftKey||c.altKey||c.ctrlKey))return f?d.step(e==33?10:1,c):g&&d.step(e==34?-10:-1,c),c.preventDefault()}),b.blur(function(b){var c=a(this).val();c!==k&&d.setValue(c,b)}),a.extend(b[0],{stepUp:d.stepUp,stepDown:d.stepDown}),A(),m||a(window).load(A)}a.tools=a.tools||{version:"1.2.6"};var b;b=a.tools.rangeinput={conf:{min:0,max:100,step:"any",steps:0,value:0,precision:undefined,vertical:0,keyboard:!0,progress:!1,speed:100,css:{input:"range",slider:"slider",progress:"progress",handle:"handle"}}};var c,d;a.fn.drag=function(b){return document.ondragstart=function(){return!1},b=a.extend({x:!0,y:!0,drag:!0},b),c=c||a(document).bind("mousedown mouseup",function(e){var f=a(e.target);if(e.type=="mousedown"&&f.data("drag")){var g=f.position(),h=e.pageX-g.left,i=e.pageY-g.top,j=!0;c.bind("mousemove.drag",function(a){var c=a.pageX-h,e=a.pageY-i,g={};b.x&&(g.left=c),b.y&&(g.top=e),j&&(f.trigger("dragStart"),j=!1),b.drag&&f.css(g),f.trigger("drag",[e,c]),d=f}),e.preventDefault()}else try{d&&d.trigger("dragEnd")}finally{c.unbind("mousemove.drag"),d=null}}),this.data("drag",!0)},a.expr[":"].range=function(b){var c=b.getAttribute("type");return c&&c=="range"||!!a(b).filter("input").data("rangeinput")},a.fn.rangeinput=function(c){if(this.data("rangeinput"))return this;c=a.extend(!0,{},b.conf,c);var d;return this.each(function(){var b=new h(a(this),a.extend(!0,{},c)),e=b.getInput().data("rangeinput",b);d=d?d.add(e):e}),d?d:this}}(jQuery),function(a){function b(a,b){var c=parseInt(a.css(b),10);if(c)return c;var d=a[0].currentStyle;return d&&d.width&&parseInt(d.width,10)}function c(b,c){var d=a(c);return d.length<2?d:b.parent().find(c)}function e(b,e){var f=this,g=b.add(f),h=b.children(),i=0,j=e.vertical;d||(d=f),h.length>1&&(h=a(e.items,b)),e.size>1&&(e.circular=!1),a.extend(f,{getConf:function(){return e},getIndex:function(){return i},getSize:function(){return f.getItems().size()},getNaviButtons:function(){return n.add(o)},getRoot:function(){return b},getItemWrap:function(){return h},getItems:function(){return h.find(e.item).not("."+e.clonedClass)},move:function(a,b){return f.seekTo(i+a,b)},next:function(a){return f.move(e.size,a)},prev:function(a){return f.move(-e.size,a)},begin:function(a){return f.seekTo(0,a)},end:function(a){return f.seekTo(f.getSize()-1,a)},focus:function(){return d=f,f},addItem:function(b){return b=a(b),e.circular?(h.children().last().before(b),h.children().first().replaceWith(b.clone().addClass(e.clonedClass))):(h.append(b),o.removeClass("disabled")),g.trigger("onAddItem",[b]),f},seekTo:function(b,c,k){b.jquery||(b*=1);if(e.circular&&b===0&&i==-1&&c!==0)return f;if(!e.circular&&b<0||b>f.getSize()||b<-1)return f;var l=b;b.jquery?b=f.getItems().index(b):l=f.getItems().eq(b);var m=a.Event("onBeforeSeek");if(!k){g.trigger(m,[b,c]);if(m.isDefaultPrevented()||!l.length)return f}var n=j?{top:-l.position().top}:{left:-l.position().left};return i=b,d=f,c===undefined&&(c=e.speed),h.animate(n,c,e.easing,k||function(){g.trigger("onSeek",[b])}),f}}),a.each(["onBeforeSeek","onSeek","onAddItem"],function(b,c){a.isFunction(e[c])&&a(f).bind(c,e[c]),f[c]=function(b){return b&&a(f).bind(c,b),f}});if(e.circular){var k=f.getItems().slice(-1).clone().prependTo(h),l=f.getItems().eq(1).clone().appendTo(h);k.add(l).addClass(e.clonedClass),f.onBeforeSeek(function(a,b,c){if(a.isDefaultPrevented())return;if(b==-1)return f.seekTo(k,c,function(){f.end(0)}),a.preventDefault();b==f.getSize()&&f.seekTo(l,c,function(){f.begin(0)})});var m=b.parents().add(b).filter(function(){if(a(this).css("display")==="none")return!0});m.length?(m.show(),f.seekTo(0,0,function(){}),m.hide()):f.seekTo(0,0,function(){})}var n=c(b,e.prev).click(function(a){a.stopPropagation(),f.prev()}),o=c(b,e.next).click(function(a){a.stopPropagation(),f.next()});e.circular||(f.onBeforeSeek(function(a,b){setTimeout(function(){a.isDefaultPrevented()||(n.toggleClass(e.disabledClass,b<=0),o.toggleClass(e.disabledClass,b>=f.getSize()-1))},1)}),e.initialIndex||n.addClass(e.disabledClass)),f.getSize()<2&&n.add(o).addClass(e.disabledClass),e.mousewheel&&a.fn.mousewheel&&b.mousewheel(function(a,b){if(e.mousewheel)return f.move(b<0?1:-1,e.wheelSpeed||50),!1});if(e.touch){var p={};h[0].ontouchstart=function(a){var b=a.touches[0];p.x=b.clientX,p.y=b.clientY},h[0].ontouchmove=function(a){if(a.touches.length==1&&!h.is(":animated")){var b=a.touches[0],c=p.x-b.clientX,d=p.y-b.clientY;f[j&&d>0||!j&&c>0?"next":"prev"](),a.preventDefault()}}}e.keyboard&&a(document).bind("keydown.scrollable",function(b){if(!e.keyboard||b.altKey||b.ctrlKey||b.metaKey||a(b.target).is(":input"))return;if(e.keyboard!="static"&&d!=f)return;var c=b.keyCode;if(!(!j||c!=38&&c!=40))return f.move(c==38?-1:1),b.preventDefault();if(!j&&(c==37||c==39))return f.move(c==37?-1:1),b.preventDefault()}),e.initialIndex&&f.seekTo(e.initialIndex,0,function(){})}a.tools=a.tools||{version:"1.2.6"},a.tools.scrollable={conf:{activeClass:"active",circular:!1,clonedClass:"cloned",disabledClass:"disabled",easing:"swing",initialIndex:0,item:"> *",items:".items",keyboard:!0,mousewheel:!1,next:".next",prev:".prev",size:1,speed:400,vertical:!1,touch:!0,wheelSpeed:0}};var d;a.fn.scrollable=function(b){var c=this.data("scrollable");return c?c:(b=a.extend({},a.tools.scrollable.conf,b),this.each(function(){c=new e(a(this),b),a(this).data("scrollable",c)}),b.api?c:this)}}(jQuery),function(a){var b=a.tools.scrollable;b.autoscroll={conf:{autoplay:!0,interval:3e3,autopause:!0}},a.fn.autoscroll=function(c){typeof c=="number"&&(c={interval:c});var d=a.extend({},b.autoscroll.conf,c),e;return this.each(function(){function h(){f=setTimeout(function(){b.next()},d.interval)}var b=a(this).data("scrollable"),c=b.getRoot(),f,g=!1;b&&(e=b),b.play=function(){if(f)return;g=!1,c.bind("onSeek",h),h()},b.pause=function(){f=clearTimeout(f),c.unbind("onSeek",h)},b.resume=function(){g||b.play()},b.stop=function(){g=!0,b.pause()},d.autopause&&c.add(b.getNaviButtons()).hover(b.pause,b.resume),d.autoplay&&b.play()}),d.api?e:this}}(jQuery),function(a){function c(b,c){var d=a(c);return d.length<2?d:b.parent().find(c)}var b=a.tools.scrollable;b.navigator={conf:{navi:".navi",naviItem:null,activeClass:"active",indexed:!1,idPrefix:null,history:!1}},a.fn.navigator=function(d){typeof d=="string"&&(d={navi:d}),d=a.extend({},b.navigator.conf,d);var e;return this.each(function(){function k(a,c,d){b.seekTo(c),d.preventDefault(),i&&history.pushState({i:c})}function l(){return f.find(d.naviItem||"> *")}function m(b){var c=a("<"+(d.naviItem||"a")+"/>").click(function(c){k(a(this),b,c)});return b===0&&c.addClass(h),d.indexed&&c.text(b+1),d.idPrefix&&c.attr("id",d.idPrefix+b),c.appendTo(f)}var b=a(this).data("scrollable"),f=d.navi.jquery?d.navi:c(b.getRoot(),d.navi),g=b.getNaviButtons(),h=d.activeClass,i=d.history&&!!history.pushState,j=b.getConf().size;b&&(e=b),b.getNaviButtons=function(){return g.add(f)},i&&(history.pushState({i:0}),a(window).bind("popstate",function(a){var c=a.originalEvent.state;c&&b.seekTo(c.i)})),l().length?l().each(function(b){a(this).click(function(c){k(a(this),b,c)})}):a.each(b.getItems(),function(a){a%j==0&&m(a)}),b.onBeforeSeek(function(a,b){setTimeout(function(){if(!a.isDefaultPrevented()){var c=b/j,d=l().eq(c);d.length&&l().removeClass(h).eq(c).addClass(h)}},1)}),b.onAddItem(function(a,c){var d=b.getItems().index(c);d%j==0&&m(d)})}),d.api?e:this}}(jQuery),function(a){function e(c,d,e){var f=this,g=c.add(this),h=c.find(e.tabs),i=d.jquery?d:c.children(d),j;h.length||(h=c.children()),i.length||(i=c.parent().find(d)),i.length||(i=a(d)),a.extend(this,{click:function(c,d){var i=h.eq(c);typeof c=="string"&&c.replace("#","")&&(i=h.filter("[href*="+c.replace("#","")+"]"),c=Math.max(h.index(i),0));if(e.rotate){var k=h.length-1;if(c<0)return f.click(k,d);if(c>k)return f.click(0,d)}if(!i.length){if(j>=0)return f;c=e.initialIndex,i=h.eq(c)}if(c===j)return f;d=d||a.Event(),d.type="onBeforeClick",g.trigger(d,[c]);if(d.isDefaultPrevented())return;return b[e.effect].call(f,c,function(){j=c,d.type="onClick",g.trigger(d,[c])}),h.removeClass(e.current),i.addClass(e.current),f},getConf:function(){return e},getTabs:function(){return h},getPanes:function(){return i},getCurrentPane:function(){return i.eq(j)},getCurrentTab:function(){return h.eq(j)},getIndex:function(){return j},next:function(){return f.click(j+1)},prev:function(){return f.click(j-1)},destroy:function(){return h.unbind(e.event).removeClass(e.current),i.find("a[href^=#]").unbind("click.T"),f}}),a.each("onBeforeClick,onClick".split(","),function(b,c){a.isFunction(e[c])&&a(f).bind(c,e[c]),f[c]=function(b){return b&&a(f).bind(c,b),f}}),e.history&&a.fn.history&&(a.tools.history.init(h),e.event="history"),h.each(function(b){a(this).bind(e.event,function(a){return f.click(b,a),a.preventDefault()})}),i.find("a[href^=#]").bind("click.T",function(b){f.click(a(this).attr("href"),b)}),location.hash&&e.tabs=="a"&&c.find("[href="+location.hash+"]").length?f.click(location.hash):(e.initialIndex===0||e.initialIndex>0)&&f.click(e.initialIndex)}a.tools=a.tools||{version:"1.2.6"},a.tools.tabs={conf:{tabs:"a",current:"current",onBeforeClick:null,onClick:null,effect:"default",initialIndex:0,event:"click",rotate:!1,slideUpSpeed:400,slideDownSpeed:400,history:!1},addEffect:function(a,c){b[a]=c}};var b={"default":function(a,b){this.getPanes().hide().eq(a).show(),b.call()},fade:function(a,b){var c=this.getConf(),d=c.fadeOutSpeed,e=this.getPanes();d?e.fadeOut(d):e.hide(),e.eq(a).fadeIn(c.fadeInSpeed,b)},slide:function(a,b){var c=this.getConf();this.getPanes().slideUp(c.slideUpSpeed),this.getPanes().eq(a).slideDown(c.slideDownSpeed,b)},ajax:function(a,b){this.getPanes().eq(0).load(this.getTabs().eq(a).attr("href"),b)}},c,d;a.tools.tabs.addEffect("horizontal",function(b,e){if(c)return;var f=this.getPanes().eq(b),g=this.getCurrentPane();d||(d=this.getPanes().eq(0).width()),c=!0,f.show(),g.animate({width:0},{step:function(a){f.css("width",d-a)},complete:function(){a(this).hide(),e.call(),c=!1}}),g.length||(e.call(),c=!1)}),a.fn.tabs=function(b,c){var d=this.data("tabs");return d&&(d.destroy(),this.removeData("tabs")),a.isFunction(c)&&(c={onBeforeClick:c}),c=a.extend({},a.tools.tabs.conf,c),this.each(function(){d=new e(a(this),b,c),a(this).data("tabs",d)}),c.api?d:this}}(jQuery),function(a){function c(b,c){function i(c){var d=a(c);return d.length<2?d:b.parent().find(c)}function l(){g=setTimeout(function(){f.next()},c.interval)}var d=this,e=b.add(this),f=b.data("tabs"),g,h=!0,j=i(c.next).click(function(){f.next()}),k=i(c.prev).click(function(){f.prev()});a.extend(d,{getTabs:function(){return f},getConf:function(){return c},play:function(){if(g)return d;var b=a.Event("onBeforePlay");return e.trigger(b),b.isDefaultPrevented()?d:(h=!1,e.trigger("onPlay"),e.bind("onClick",l),l(),d)},pause:function(){if(!g)return d;var b=a.Event("onBeforePause");return e.trigger(b),b.isDefaultPrevented()?d:(g=clearTimeout(g),e.trigger("onPause"),e.unbind("onClick",l),d)},resume:function(){h||d.play()},stop:function(){d.pause(),h=!0}}),a.each("onBeforePlay,onPlay,onBeforePause,onPause".split(","),function(b,e){a.isFunction(c[e])&&a(d).bind(e,c[e]),d[e]=function(b){return a(d).bind(e,b)}}),c.autopause&&f.getTabs().add(j).add(k).add(f.getPanes()).hover(d.pause,d.resume),c.autoplay&&d.play(),c.clickable&&f.getPanes().click(function(){f.next()});if(!f.getConf().rotate){var m=c.disabledClass;f.getIndex()||k.addClass(m),f.onBeforeClick(function(a,b){k.toggleClass(m,!b),j.toggleClass(m,b==f.getTabs().length-1)})}}var b;b=a.tools.tabs.slideshow={conf:{next:".forward",prev:".backward",disabledClass:"disabled",autoplay:!1,autopause:!0,interval:3e3,clickable:!0,api:!1}},a.fn.slideshow=function(d){var e=this.data("slideshow");return e?e:(d=a.extend({},b.conf,d),this.each(function(){e=new c(a(this),d),a(this).data("slideshow",e)}),d.api?e:this)}}(jQuery),function(a){function c(){if(a.browser.msie){var b=a(document).height(),c=a(window).height();return[window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth,b-c<20?c:b]}return[a(document).width(),a(document).height()]}function d(b){if(b)return b.call(a.mask)}a.tools=a.tools||{version:"1.2.6"};var b;b=a.tools.expose={conf:{maskId:"exposeMask",loadSpeed:"slow",closeSpeed:"fast",closeOnClick:!0,closeOnEsc:!0,zIndex:9998,opacity:.8,startOpacity:0,color:"#fff",onLoad:null,onClose:null}};var e,f,g,h,i;a.mask={load:function(j,k){if(g)return this;typeof j=="string"&&(j={color:j}),j=j||h,h=j=a.extend(a.extend({},b.conf),j),e=a("#"+j.maskId),e.length||(e=a("<div/>").attr("id",j.maskId),a("body").append(e));var l=c();return e.css({position:"absolute",top:0,left:0,width:l[0],height:l[1],display:"none",opacity:j.startOpacity,zIndex:j.zIndex}),j.color&&e.css("backgroundColor",j.color),d(j.onBeforeLoad)===!1?this:(j.closeOnEsc&&a(document).bind("keydown.mask",function(b){b.keyCode==27&&a.mask.close(b)}),j.closeOnClick&&e.bind("click.mask",function(b){a.mask.close(b)}),a(window).bind("resize.mask",function(){a.mask.fit()}),k&&k.length&&(i=k.eq(0).css("zIndex"),a.each(k,function(){var b=a(this);/relative|absolute|fixed/i.test(b.css("position"))||b.css("position","relative")}),f=k.css({zIndex:Math.max(j.zIndex+1,i=="auto"?0:i)})),e.css({display:"block"}).fadeTo(j.loadSpeed,j.opacity,function(){a.mask.fit(),d(j.onLoad),g="full"}),g=!0,this)},close:function(){if(g){if(d(h.onBeforeClose)===!1)return this;e.fadeOut(h.closeSpeed,function(){d(h.onClose),f&&f.css({zIndex:i}),g=!1}),a(document).unbind("keydown.mask"),e.unbind("click.mask"),a(window).unbind("resize.mask")}return this},fit:function(){if(g){var a=c();e.css({width:a[0],height:a[1]})}},getMask:function(){return e},isLoaded:function(a){return a?g=="full":g},getConf:function(){return h},getExposed:function(){return f}},a.fn.mask=function(b){return a.mask.load(b),this},a.fn.expose=function(b){return a.mask.load(b,this),this}}(jQuery),function(){function f(a,b){if(b)for(var c in b)b.hasOwnProperty(c)&&(a[c]=b[c]);return a}function g(a,b){var c=[];for(var d in a)a.hasOwnProperty(d)&&(c[d]=b(a[d]));return c}function j(c,d,e){if(h.isSupported(d.version))c.innerHTML=h.getHTML(d,e);else if(d.expressInstall&&h.isSupported([6,65]))c.innerHTML=h.getHTML(f(d,{src:d.expressInstall}),{MMredirectURL:location.href,MMplayerType:"PlugIn",MMdoctitle:document.title});else{c.innerHTML.replace(/\s/g,"")||(c.innerHTML="<h2>Flash version "+d.version+" or greater is required</h2>"+"<h3>"+(i[0]>0?"Your version is "+i:"You have no flash plugin installed")+"</h3>"+(c.tagName=="A"?"<p>Click here to download latest version</p>":"<p>Download latest version from <a href='"+b+"'>here</a></p>"),c.tagName=="A"&&(c.onclick=function(){location.href=b}));if(d.onFail){var g=d.onFail.call(this);typeof g=="string"&&(c.innerHTML=g)}}a&&(window[d.id]=document.getElementById(d.id)),f(this,{getRoot:function(){return c},getOptions:function(){return d},getConf:function(){return e},getApi:function(){return c.firstChild}})}var a=document.all,b="http://www.adobe.com/go/getflashplayer",c=typeof jQuery=="function",d=/(\d+)[^\d]+(\d+)[^\d]*(\d*)/,e={width:"100%",height:"100%",id:"_"+(""+Math.random()).slice(9),allowfullscreen:!0,allowscriptaccess:"always",quality:"high",version:[3,0],onFail:null,expressInstall:null,w3c:!1,cachebusting:!1};window.attachEvent&&window.attachEvent("onbeforeunload",function(){__flash_unloadHandler=function(){},__flash_savedUnloadHandler=function(){}}),window.flashembed=function(a,b,c){typeof a=="string"&&(a=document.getElementById(a.replace("#","")));if(!a)return;return typeof b=="string"&&(b={src:b}),new j(a,f(f({},e),b),c)};var h=f(window.flashembed,{conf:e,getVersion:function(){var a,b;try{b=navigator.plugins["Shockwave Flash"].description.slice(16)}catch(c){try{a=new ActiveXObject("ShockwaveFlash.ShockwaveFlash.7"),b=a&&a.GetVariable("$version")}catch(e){try{a=new ActiveXObject("ShockwaveFlash.ShockwaveFlash.6"),b=a&&a.GetVariable("$version")}catch(f){}}}return b=d.exec(b),b?[b[1],b[3]]:[0,0]},asString:function(a){if(a===null||a===undefined)return null;var b=typeof a;b=="object"&&a.push&&(b="array");switch(b){case"string":return a=a.replace(new RegExp('(["\\\\])',"g"),"\\$1"),a=a.replace(/^\s?(\d+\.?\d*)%/,"$1pct"),'"'+a+'"';case"array":return"["+g(a,function(a){return h.asString(a)}).join(",")+"]";case"function":return'"function()"';case"object":var c=[];for(var d in a)a.hasOwnProperty(d)&&c.push('"'+d+'":'+h.asString(a[d]));return"{"+c.join(",")+"}"}return String(a).replace(/\s/g," ").replace(/\'/g,'"')},getHTML:function(b,c){b=f({},b);var d='<object width="'+b.width+'" height="'+b.height+'" id="'+b.id+'" name="'+b.id+'"';b.cachebusting&&(b.src+=(b.src.indexOf("?")!=-1?"&":"?")+Math.random()),b.w3c||!a?d+=' data="'+b.src+'" type="application/x-shockwave-flash"':d+=' classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',d+=">";if(b.w3c||a)d+='<param name="movie" value="'+b.src+'" />';b.width=b.height=b.id=b.w3c=b.src=null,b.onFail=b.version=b.expressInstall=null;for(var e in b)b[e]&&(d+='<param name="'+e+'" value="'+b[e]+'" />');var g="";if(c){for(var i in c)if(c[i]){var j=c[i];g+=i+"="+encodeURIComponent(/function|object/.test(typeof j)?h.asString(j):j)+"&"}g=g.slice(0,-1),d+='<param name="flashvars" value=\''+g+"' />"}return d+="</object>",d},isSupported:function(a){return i[0]>a[0]||i[0]==a[0]&&i[1]>=a[1]}}),i=h.getVersion();c&&(jQuery.tools=jQuery.tools||{version:"1.2.6"},jQuery.tools.flashembed={conf:e},jQuery.fn.flashembed=function(a,b){return this.each
-(function(){jQuery(this).data("flashembed",flashembed(this,a,b))})})}(),function(a){function f(a){if(a){var b=c.contentWindow.document;b.open().close(),b.location.hash=a}}var b,c,d,e;a.tools=a.tools||{version:"1.2.6"},a.tools.history={init:function(g){if(e)return;a.browser.msie&&a.browser.version<"8"?c||(c=a("<iframe/>").attr("src","javascript:false;").hide().get(0),a("body").prepend(c),setInterval(function(){var d=c.contentWindow.document,e=d.location.hash;b!==e&&a(window).trigger("hash",e)},100),f(location.hash||"#")):setInterval(function(){var c=location.hash;c!==b&&a(window).trigger("hash",c)},100),d=d?d.add(g):g,g.click(function(b){var d=a(this).attr("href");c&&f(d);if(d.slice(0,1)!="#")return location.href="#"+d,b.preventDefault()}),e=!0}},a(window).bind("hash",function(c,e){e?d.filter(function(){var b=a(this).attr("href");return b==e||b==e.replace("#","")}).trigger("history",[e]):d.eq(0).trigger("history",[e]),b=e}),a.fn.history=function(b){return a.tools.history.init(this),this.bind("history",b)}}(jQuery),function(a){function c(b){switch(b.type){case"mousemove":return a.extend(b.data,{clientX:b.clientX,clientY:b.clientY,pageX:b.pageX,pageY:b.pageY});case"DOMMouseScroll":a.extend(b,b.data),b.delta=-b.detail/3;break;case"mousewheel":b.delta=b.wheelDelta/120}return b.type="wheel",a.event.handle.call(this,b,b.delta)}a.fn.mousewheel=function(a){return this[a?"bind":"trigger"]("wheel",a)},a.event.special.wheel={setup:function(){a.event.add(this,b,c,{})},teardown:function(){a.event.remove(this,b,c)}};var b=a.browser.mozilla?"DOMMouseScroll"+(a.browser.version<"1.9"?" mousemove":""):"mousewheel"}(jQuery),function(a){function c(b,c,d){var e=d.relative?b.position().top:b.offset().top,f=d.relative?b.position().left:b.offset().left,g=d.position[0];e-=c.outerHeight()-d.offset[0],f+=b.outerWidth()+d.offset[1],/iPad/i.test(navigator.userAgent)&&(e-=a(window).scrollTop());var h=c.outerHeight()+b.outerHeight();g=="center"&&(e+=h/2),g=="bottom"&&(e+=h),g=d.position[1];var i=c.outerWidth()+b.outerWidth();return g=="center"&&(f-=i/2),g=="left"&&(f-=i),{top:e,left:f}}function d(d,e){var f=this,g=d.add(f),h,i=0,j=0,k=d.attr("title"),l=d.attr("data-tooltip"),m=b[e.effect],n,o=d.is(":input"),p=o&&d.is(":checkbox, :radio, select, :button, :submit"),q=d.attr("type"),r=e.events[q]||e.events[o?p?"widget":"input":"def"];if(!m)throw'Nonexistent effect "'+e.effect+'"';r=r.split(/,\s*/);if(r.length!=2)throw"Tooltip: bad events configuration for "+q;d.bind(r[0],function(a){clearTimeout(i),e.predelay?j=setTimeout(function(){f.show(a)},e.predelay):f.show(a)}).bind(r[1],function(a){clearTimeout(j),e.delay?i=setTimeout(function(){f.hide(a)},e.delay):f.hide(a)}),k&&e.cancelDefault&&(d.removeAttr("title"),d.data("title",k)),a.extend(f,{show:function(b){if(!h){l?h=a(l):e.tip?h=a(e.tip).eq(0):k?h=a(e.layout).addClass(e.tipClass).appendTo(document.body).hide().append(k):(h=d.next(),h.length||(h=d.parent().next()));if(!h.length)throw"Cannot find tooltip for "+d}if(f.isShown())return f;h.stop(!0,!0);var o=c(d,h,e);e.tip&&h.html(d.data("title")),b=a.Event(),b.type="onBeforeShow",g.trigger(b,[o]);if(b.isDefaultPrevented())return f;o=c(d,h,e),h.css({position:"absolute",top:o.top,left:o.left}),n=!0,m[0].call(f,function(){b.type="onShow",n="full",g.trigger(b)});var p=e.events.tooltip.split(/,\s*/);return h.data("__set")||(h.unbind(p[0]).bind(p[0],function(){clearTimeout(i),clearTimeout(j)}),p[1]&&!d.is("input:not(:checkbox, :radio), textarea")&&h.unbind(p[1]).bind(p[1],function(a){a.relatedTarget!=d[0]&&d.trigger(r[1].split(" ")[0])}),e.tip||h.data("__set",!0)),f},hide:function(c){if(!h||!f.isShown())return f;c=a.Event(),c.type="onBeforeHide",g.trigger(c);if(c.isDefaultPrevented())return;return n=!1,b[e.effect][1].call(f,function(){c.type="onHide",g.trigger(c)}),f},isShown:function(a){return a?n=="full":n},getConf:function(){return e},getTip:function(){return h},getTrigger:function(){return d}}),a.each("onHide,onBeforeShow,onShow,onBeforeHide".split(","),function(b,c){a.isFunction(e[c])&&a(f).bind(c,e[c]),f[c]=function(b){return b&&a(f).bind(c,b),f}})}a.tools=a.tools||{version:"1.2.6"},a.tools.tooltip={conf:{effect:"toggle",fadeOutSpeed:"fast",predelay:0,delay:30,opacity:1,tip:0,fadeIE:!1,position:["top","center"],offset:[0,0],relative:!1,cancelDefault:!0,events:{def:"mouseenter,mouseleave",input:"focus,blur",widget:"focus mouseenter,blur mouseleave",tooltip:"mouseenter,mouseleave"},layout:"<div/>",tipClass:"tooltip"},addEffect:function(a,c,d){b[a]=[c,d]}};var b={toggle:[function(a){var b=this.getConf(),c=this.getTip(),d=b.opacity;d<1&&c.css({opacity:d}),c.show(),a.call()},function(a){this.getTip().hide(),a.call()}],fade:[function(b){var c=this.getConf();!a.browser.msie||c.fadeIE?this.getTip().fadeTo(c.fadeInSpeed,c.opacity,b):(this.getTip().show(),b())},function(b){var c=this.getConf();!a.browser.msie||c.fadeIE?this.getTip().fadeOut(c.fadeOutSpeed,b):(this.getTip().hide(),b())}]};a.fn.tooltip=function(b){var c=this.data("tooltip");return c?c:(b=a.extend(!0,{},a.tools.tooltip.conf,b),typeof b.position=="string"&&(b.position=b.position.split(/,?\s/)),this.each(function(){c=new d(a(this),b),a(this).data("tooltip",c)}),b.api?c:this)}}(jQuery),function(a){function c(b){var c=a(window),d=c.width()+c.scrollLeft(),e=c.height()+c.scrollTop();return[b.offset().top<=c.scrollTop(),d<=b.offset().left+b.width(),e<=b.offset().top+b.height(),c.scrollLeft()>=b.offset().left]}function d(a){var b=a.length;while(b--)if(a[b])return!1;return!0}var b=a.tools.tooltip;b.dynamic={conf:{classNames:"top right bottom left"}},a.fn.dynamic=function(e){typeof e=="number"&&(e={speed:e}),e=a.extend({},b.dynamic.conf,e);var f=a.extend(!0,{},e),g=e.classNames.split(/\s/),h;return this.each(function(){var b=a(this).tooltip().onBeforeShow(function(b,e){var i=this.getTip(),j=this.getConf();h||(h=[j.position[0],j.position[1],j.offset[0],j.offset[1],a.extend({},j)]),a.extend(j,h[4]),j.position=[h[0],h[1]],j.offset=[h[2],h[3]],i.css({visibility:"hidden",position:"absolute",top:e.top,left:e.left}).show();var k=a.extend(!0,{},f),l=c(i);if(!d(l)){l[2]&&(a.extend(j,k.top),j.position[0]="top",i.addClass(g[0])),l[3]&&(a.extend(j,k.right),j.position[1]="right",i.addClass(g[1])),l[0]&&(a.extend(j,k.bottom),j.position[0]="bottom",i.addClass(g[2])),l[1]&&(a.extend(j,k.left),j.position[1]="left",i.addClass(g[3]));if(l[0]||l[2])j.offset[0]*=-1;if(l[1]||l[3])j.offset[1]*=-1}i.css({visibility:"visible"}).hide()});b.onBeforeShow(function(){var a=this.getConf(),b=this.getTip();setTimeout(function(){a.position=[h[0],h[1]],a.offset=[h[2],h[3]]},0)}),b.onHide(function(){var a=this.getTip();a.removeClass(e.classNames)}),ret=b}),e.api?ret:this}}(jQuery),function(a){var b=a.tools.tooltip;a.extend(b.conf,{direction:"up",bounce:!1,slideOffset:10,slideInSpeed:200,slideOutSpeed:200,slideFade:!a.browser.msie});var c={up:["-","top"],down:["+","top"],left:["-","left"],right:["+","left"]};b.addEffect("slide",function(a){var b=this.getConf(),d=this.getTip(),e=b.slideFade?{opacity:b.opacity}:{},f=c[b.direction]||c.up;e[f[1]]=f[0]+"="+b.slideOffset,b.slideFade&&d.css({opacity:0}),d.show().animate(e,b.slideInSpeed,a)},function(b){var d=this.getConf(),e=d.slideOffset,f=d.slideFade?{opacity:0}:{},g=c[d.direction]||c.up,h=""+g[0];d.bounce&&(h=h=="+"?"-":"+"),f[g[1]]=h+"="+e,this.getTip().animate(f,d.slideOutSpeed,function(){a(this).hide(),b.call()})})}(jQuery),function(a){function h(b,c,d){var e=b.offset().top,f=b.offset().left,g=d.position.split(/,?\s+/),h=g[0],i=g[1];e-=c.outerHeight()-d.offset[0],f+=b.outerWidth()+d.offset[1],/iPad/i.test(navigator.userAgent)&&(e-=a(window).scrollTop());var j=c.outerHeight()+b.outerHeight();h=="center"&&(e+=j/2),h=="bottom"&&(e+=j);var k=b.outerWidth();return i=="center"&&(f-=(k+c.outerWidth())/2),i=="left"&&(f-=k),{top:e,left:f}}function i(a){function b(){return this.getAttribute("type")==a}return b.key="[type="+a+"]",b}function l(b,c,e){function l(b,c,d){if(!e.grouped&&b.length)return;var f;if(d===!1||a.isArray(d)){f=g.messages[c.key||c]||g.messages["*"],f=f[e.lang]||g.messages["*"].en;var h=f.match(/\$\d/g);h&&a.isArray(d)&&a.each(h,function(a){f=f.replace(this,d[a])})}else f=d[e.lang]||d;b.push(f)}var f=this,i=c.add(f);b=b.not(":button, :image, :reset, :submit"),c.attr("novalidate","novalidate"),a.extend(f,{getConf:function(){return e},getForm:function(){return c},getInputs:function(){return b},reflow:function(){return b.each(function(){var b=a(this),c=b.data("msg.el");if(c){var d=h(b,c,e);c.css({top:d.top,left:d.left})}}),f},invalidate:function(c,d){if(!d){var g=[];a.each(c,function(a,c){var d=b.filter("[name='"+a+"']");d.length&&(d.trigger("OI",[c]),g.push({input:d,messages:[c]}))}),c=g,d=a.Event()}return d.type="onFail",i.trigger(d,[c]),d.isDefaultPrevented()||k[e.effect][0].call(f,c,d),f},reset:function(c){return c=c||b,c.removeClass(e.errorClass).each(function(){var b=a(this).data("msg.el");b&&(b.remove(),a(this).data("msg.el",null))}).unbind(e.errorInputEvent||""),f},destroy:function(){return c.unbind(e.formEvent+".V").unbind("reset.V"),b.unbind(e.inputEvent+".V").unbind("change.V"),f.reset()},checkValidity:function(c,g){c=c||b,c=c.not(":disabled");if(!c.length)return!0;g=g||a.Event(),g.type="onBeforeValidate",i.trigger(g,[c]);if(g.isDefaultPrevented())return g.result;var h=[];c.not(":radio:not(:checked)").each(function(){var b=[],c=a(this).data("messages",b),k=d&&c.is(":date")?"onHide.v":e.errorInputEvent+".v";c.unbind(k),a.each(j,function(){var a=this,d=a[0];if(c.filter(d).length){var h=a[1].call(f,c,c.val());if(h!==!0){g.type="onBeforeFail",i.trigger(g,[c,d]);if(g.isDefaultPrevented())return!1;var j=c.attr(e.messageAttr);if(j)return b=[j],!1;l(b,d,h)}}}),b.length&&(h.push({input:c,messages:b}),c.trigger("OI",[b]),e.errorInputEvent&&c.bind(k,function(a){f.checkValidity(c,a)}));if(e.singleError&&h.length)return!1});var m=k[e.effect];if(!m)throw'Validator: cannot find effect "'+e.effect+'"';return h.length?(f.invalidate(h,g),!1):(m[1].call(f,c,g),g.type="onSuccess",i.trigger(g,[c]),c.unbind(e.errorInputEvent+".v"),!0)}}),a.each("onBeforeValidate,onBeforeFail,onFail,onSuccess".split(","),function(b,c){a.isFunction(e[c])&&a(f).bind(c,e[c]),f[c]=function(b){return b&&a(f).bind(c,b),f}}),e.formEvent&&c.bind(e.formEvent+".V",function(a){if(!f.checkValidity(null,a))return a.preventDefault();a.target=c,a.type=e.formEvent}),c.bind("reset.V",function(){f.reset()}),b[0]&&b[0].validity&&b.each(function(){this.oninvalid=function(){return!1}}),c[0]&&(c[0].checkValidity=f.checkValidity),e.inputEvent&&b.bind(e.inputEvent+".V",function(b){f.checkValidity(a(this),b)}),b.filter(":checkbox, select").filter("[required]").bind("change.V",function(b){var c=a(this);(this.checked||c.is("select")&&a(this).val())&&k[e.effect][1].call(f,c,b)});var m=b.filter(":radio").change(function(a){f.checkValidity(m,a)});a(window).resize(function(){f.reflow()})}a.tools=a.tools||{version:"1.2.6"};var b=/\[type=([a-z]+)\]/,c=/^-?[0-9]*(\.[0-9]+)?$/,d=a.tools.dateinput,e=/^([a-z0-9_\.\-\+]+)@([\da-z\.\-]+)\.([a-z\.]{2,6})$/i,f=/^(https?:\/\/)?[\da-z\.\-]+\.[a-z\.]{2,6}[#&+_\?\/\w \.\-=]*$/i,g;g=a.tools.validator={conf:{grouped:!1,effect:"default",errorClass:"invalid",inputEvent:null,errorInputEvent:"keyup",formEvent:"submit",lang:"en",message:"<div/>",messageAttr:"data-message",messageClass:"error",offset:[0,0],position:"center right",singleError:!1,speed:"normal"},messages:{"*":{en:"Please correct this value"}},localize:function(b,c){a.each(c,function(a,c){g.messages[a]=g.messages[a]||{},g.messages[a][b]=c})},localizeFn:function(b,c){g.messages[b]=g.messages[b]||{},a.extend(g.messages[b],c)},fn:function(c,d,e){a.isFunction(d)?e=d:(typeof d=="string"&&(d={en:d}),this.messages[c.key||c]=d);var f=b.exec(c);f&&(c=i(f[1])),j.push([c,e])},addEffect:function(a,b,c){k[a]=[b,c]}};var j=[],k={"default":[function(b){var c=this.getConf();a.each(b,function(b,d){var e=d.input;e.addClass(c.errorClass);var f=e.data("msg.el");f||(f=a(c.message).addClass(c.messageClass).appendTo(document.body),e.data("msg.el",f)),f.css({visibility:"hidden"}).find("p").remove(),a.each(d.messages,function(b,c){a("<p/>").html(c).appendTo(f)}),f.outerWidth()==f.parent().width()&&f.add(f.find("p")).css({display:"inline"});var g=h(e,f,c);f.css({visibility:"visible",position:"absolute",top:g.top,left:g.left}).fadeIn(c.speed)})},function(b){var c=this.getConf();b.removeClass(c.errorClass).each(function(){var b=a(this).data("msg.el");b&&b.css({visibility:"hidden"})})}]};a.each("email,url,number".split(","),function(b,c){a.expr[":"][c]=function(a){return a.getAttribute("type")===c}}),a.fn.oninvalid=function(a){return this[a?"bind":"trigger"]("OI",a)},g.fn(":email","Please enter a valid email address",function(a,b){return!b||e.test(b)}),g.fn(":url","Please enter a valid URL",function(a,b){return!b||f.test(b)}),g.fn(":number","Please enter a numeric value.",function(a,b){return c.test(b)}),g.fn("[max]","Please enter a value no larger than $1",function(a,b){if(b===""||d&&a.is(":date"))return!0;var c=a.attr("max");return parseFloat(b)<=parseFloat(c)?!0:[c]}),g.fn("[min]","Please enter a value of at least $1",function(a,b){if(b===""||d&&a.is(":date"))return!0;var c=a.attr("min");return parseFloat(b)>=parseFloat(c)?!0:[c]}),g.fn("[required]","Please complete this mandatory field.",function(a,b){return a.is(":checkbox")?a.is(":checked"):!!b}),g.fn("[pattern]",function(a){var b=new RegExp("^"+a.attr("pattern")+"$");return b.test(a.val())}),a.fn.validator=function(b){var c=this.data("validator");return c&&(c.destroy(),this.removeData("validator")),b=a.extend(!0,{},g.conf,b),this.is("form")?this.each(function(){var d=a(this);c=new l(d.find(":input"),d,b),d.data("validator",c)}):(c=new l(this,this.eq(0).closest("form"),b),this.data("validator",c))}}(jQuery);
-define("3rdparty/jquery.tools.min", function(){});
-
-/**
- * @license
- * Patterns @VERSION@ jquery-ext - various jQuery extensions
- *
- * Copyright 2011 Humberto Sermeño
- */
-(function( $ ){
-    var methods = {
-        init: function( options ) {
-            var settings = {
-                time: 3, /* time it will wait before moving to 'timeout' after a move event */
-                initialTime: 8, /* time it will wait before first adding the 'timeout' class */
-                exceptionAreas: [] /* IDs of elements that, if the mouse is over them, will reset the timer */
-            };
-            return this.each(function() {
-                var $this = $(this),
-      data = $this.data('timeout');
-
-                if (!data) {
-                    if ( options ) {
-                        $.extend( settings, options );
-                    }
-                    $this.data('timeout', {
-                        'lastEvent': new Date(),
-                        'trueTime': settings.time,
-                        'time': settings.initialTime,
-                        'untouched': true,
-                        'inExceptionArea': false
-                    });
-
-                    $this.bind( 'mouseover.timeout', methods.mouseMoved );
-                    $this.bind( 'mouseenter.timeout', methods.mouseMoved );
-
-                    $(settings.exceptionAreas).each(function() {
-                        $this.find(this)
-                            .live( 'mouseover.timeout', {'parent':$this}, methods.enteredException )
-                            .live( 'mouseleave.timeout', {'parent':$this}, methods.leftException );
-                    });
-
-                    if (settings.initialTime > 0)
-                        $this.timeout('startTimer');
-                    else
-                        $this.addClass('timeout');
-                }
-            });
-        },
-
-        enteredException: function(event) {
-            var data = event.data.parent.data('timeout');
-            data.inExceptionArea = true;
-            event.data.parent.data('timeout', data);
-            event.data.parent.trigger('mouseover');
-        },
-
-        leftException: function(event) {
-            var data = event.data.parent.data('timeout');
-            data.inExceptionArea = false;
-            event.data.parent.data('timeout', data);
-        },
-
-        destroy: function() {
-            return this.each( function() {
-                var $this = $(this),
-      data = $this.data('timeout');
-
-                $(window).unbind('.timeout');
-                data.timeout.remove();
-                $this.removeData('timeout');
-            });
-        },
-
-        mouseMoved: function(event) {
-            var $this = $(this), data = $this.data('timeout');
-
-            if ($this.hasClass('timeout')) {
-                $this.removeClass('timeout');
-                $this.timeout('startTimer');
-            } else if ( data.untouched ) {
-                data.untouched = false;
-                data.time = data.trueTime;
-            }
-
-            data.lastEvent = new Date();
-            $this.data('timeout', data);
-        },
-
-        startTimer: function( event ) {
-            var $this = $(this), data = $this.data('timeout');
-            var fn = function(){
-                var data = $this.data('timeout');
-                if ( data && data.lastEvent ) {
-                    if ( data.inExceptionArea ) {
-                        setTimeout( fn, Math.floor( data.time*1000 ) );
-                    } else {
-                        var now = new Date();
-                        var diff = Math.floor(data.time*1000) - ( now - data.lastEvent );
-                        if ( diff > 0 ) {
-                            // the timeout has not ocurred, so set the timeout again
-                            setTimeout( fn, diff+100 );
-                        } else {
-                            // timeout ocurred, so set the class
-                            $this.addClass('timeout');
-                        }
-                    }
-                }
-            };
-
-            setTimeout( fn, Math.floor( data.time*1000 ) );
-        }
-    };
-
-    $.fn.timeout = function( method ) {
-        if ( methods[method] ) {
-            return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-        } else if ( typeof method == 'object' || !method ) {
-            return methods.init.apply( this, arguments );
-        } else {
-            $.error( 'Method ' + method + ' does not exist on jQuery.timeout' );
-        }
-    };
-
-})( jQuery );
-
-// Custom jQuery selector to find elements with scrollbars
-(function($) {
-    $.extend($.expr[":"], {
-        scrollable: function(element) {
-            var vertically_scrollable, horizontally_scrollable;
-            if ($(element).css('overflow') == 'scroll' || $(element).css('overflowX') == 'scroll' || $(element).css('overflowY') == 'scroll') return true;
-
-            vertically_scrollable = (element.clientHeight < element.scrollHeight) && (
-                $.inArray($(element).css('overflowY'), ['scroll', 'auto']) != -1 || $.inArray($(element).css('overflow'), ['scroll', 'auto']) != -1);
-
-            if (vertically_scrollable) return true;
-
-            horizontally_scrollable = (element.clientWidth < element.scrollWidth) && (
-                $.inArray($(element).css('overflowX'), ['scroll', 'auto']) != -1 || $.inArray($(element).css('overflow'), ['scroll', 'auto']) != -1);
-            return horizontally_scrollable;
-        }
-    });
-})(jQuery);
-
-// Make Visible in scroll
-(function($) {
-    $.fn.makeVisibleInScroll = function( parent_id ) {
-        var absoluteParent = null;
-        if ( typeof parent_id == 'string' ) {
-            absoluteParent = $("#" + parent_id);
-        } else if ( parent_id ) {
-            absoluteParent = $(parent_id);
-        }
-
-        return this.each(function() {
-            var $this = $(this), parent;
-            if (!absoluteParent) {
-                parent = $this.parents(":scrollable");
-                if (parent.length > 0) {
-                    parent = $(parent[0]);
-                } else {
-                    parent = $(window);
-                }
-            } else {
-                parent = absoluteParent;
-            }
-
-            var elemTop = $this.position().top;
-            var elemBottom = $this.height() + elemTop;
-
-            var viewTop = parent.scrollTop();
-            var viewBottom = parent.height() + viewTop;
-
-            if (elemTop < viewTop) {
-                parent.scrollTop(elemTop);
-            } else if ( elemBottom > viewBottom - parent.height()/2 ) {
-                parent.scrollTop( elemTop - (parent.height() - $this.height())/2 );
-            }
-        });
-    };
-})( jQuery );
-
-//Make absolute location
-(function($) {
-    $.fn.setPositionAbsolute = function(element,offsettop,offsetleft) {
-        return this.each(function() {
-            // set absolute location for based on the element passed
-            // dynamically since every browser has different settings
-            var $this = $(this);
-            var thiswidth = $(this).width();
-            var    pos   = element.offset();
-            var    width = element.width();
-            var    height = element.height();
-            var setleft = (pos.left + width - thiswidth + offsetleft);
-            var settop = (pos.top + height + offsettop);
-            $this.css({ "z-index" : 1, "position": "absolute", "marginLeft": 0, "marginTop": 0, "left": setleft + "px", "top":settop + "px" ,"width":thiswidth});
-            $this.remove().appendTo("body").show();
-        });
-    };
-})( jQuery );
-
-(function($) {
-    $.fn.positionAncestor = function(selector) {
-        var left = 0;
-        var top = 0;
-        this.each(function(index, element) {
-            // check if current element has an ancestor matching a selector
-            // and that ancestor is positioned
-            var $ancestor = $(this).closest(selector);
-            if ($ancestor.length && $ancestor.css("position") !== "static") {
-                var $child = $(this);
-                var childMarginEdgeLeft = $child.offset().left - parseInt($child.css("marginLeft"), 10);
-                var childMarginEdgeTop = $child.offset().top - parseInt($child.css("marginTop"), 10);
-                var ancestorPaddingEdgeLeft = $ancestor.offset().left + parseInt($ancestor.css("borderLeftWidth"), 10);
-                var ancestorPaddingEdgeTop = $ancestor.offset().top + parseInt($ancestor.css("borderTopWidth"), 10);
-                left = childMarginEdgeLeft - ancestorPaddingEdgeLeft;
-                top = childMarginEdgeTop - ancestorPaddingEdgeTop;
-                // we have found the ancestor and computed the position
-                // stop iterating
-                return false;
-            }
-        });
-        return {
-            left:    left,
-            top:    top
-        };
-    };
-})( jQuery );
-
-String.prototype.startsWith = function(str) { return (this.match("^"+str) !== null); };
-String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null); };
-
-
-/******************************
-
- Simple Placeholder
-
- ******************************/
-
-
-(function($) {
-    $.simplePlaceholder = {
-        placeholder_class: null,
-
-        hide_placeholder: function(){
-            var $this = $(this);
-            if($this.val() == $this.attr('placeholder')){
-                $this.val("").removeClass($.simplePlaceholder.placeholder_class);
-            }
-        },
-
-        show_placeholder: function(){
-            var $this = $(this);
-            if($this.val() === ""){
-                $this.val($this.attr('placeholder')).addClass($.simplePlaceholder.placeholder_class);
-            }
-        },
-
-        prevent_placeholder_submit: function(){
-            $(this).find(".simple-placeholder").each(function(e){
-                var $this = $(this);
-                if($this.val() == $this.attr('placeholder')){
-                    $this.val('');
-                }
-            });
-            return true;
-        }
-    };
-
-    $.fn.simplePlaceholder = function(options) {
-        if(document.createElement('input').placeholder === undefined){
-            var config = {
-                placeholder_class : 'placeholding'
-            };
-
-            if(options) $.extend(config, options);
-            $.simplePlaceholder.placeholder_class = config.placeholder_class;
-
-            this.each(function() {
-                var $this = $(this);
-                $this.focus($.simplePlaceholder.hide_placeholder);
-                $this.blur($.simplePlaceholder.show_placeholder);
-                if($this.val() === '') {
-                    $this.val($this.attr("placeholder"));
-                    $this.addClass($.simplePlaceholder.placeholder_class);
-                }
-                $this.addClass("simple-placeholder");
-                $(this.form).submit($.simplePlaceholder.prevent_placeholder_submit);
-            });
-        }
-
-        return this;
-    };
-
-})(jQuery);
-
-// case-insensitive :contains
-(function($) {
-    $.expr[':'].Contains = function(a, i, m) {
-        return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-    };
-})( jQuery );
-
-define("jquery-ext", function(){});
-
-/**
- * @license
- * Patterns @VERSION@ core - library infrastructure
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('core/init',[
-    'require',
-    '../utils',
-    // XXX: belong to the patterns once they are done
-    '../lib/jquery.form/jquery.form',
-    '../3rdparty/jquery.tools.min',
-    '../jquery-ext'
-], function(require, utils) {
-var mapal = {
-    injection: {
-        options: {
-            defaultModifier: "replace",
-            modifiers: {
-
-            },
-
-            bodyInjectionId: "__original_body"
-        },
-
-        load: function($elem, url, targets, sources, callback, $filter) {
-            var i;
-            callback = callback || function() {};
-            // to have more versatility when calling the function
-            if (typeof sources == "string") sources = [ sources ];
-            if (typeof targets == "string") targets = [ targets ];
-
-            if ( sources.length > targets.length ) {
-                mapal.injection.completeArray(sources, targets);
-            } else {
-                // empty source will use content of <body> instead.
-                // (exclamation mark is to make sure an id with value "body" will still work as well)
-                for (i = sources.length; i < targets.length; i++) {
-                    sources.push(mapal.injection.options.bodyInjectionId);
-                }
-            }
-
-            var target_ids = [];
-            var modifiers = [], modifier;
-            var modifier_re = /:[a-zA-Z]+/;
-
-            for (i = 0; i < targets.length; i++) {
-                if (typeof targets[i] == "string") {
-                    // does the specifier contain a parent?
-                    if (targets[i].indexOf(">") > 0) {
-                        var both = targets[i].split(">");
-                        target_ids.push( both[0] + ">#" + both[1].replace( modifier_re, "" ) );
-                    } else {
-                        target_ids.push( targets[i].replace(modifier_re, "") );
-                    }
-
-                    modifier =  (modifier_re.exec(targets[i]) || [":" + mapal.injection.options.defaultModifier]);
-                } else {
-                    target_ids.push( $(targets[i]).attr("id") );
-                    modifier = ":" + mapal.injection.options.defaultModifier;
-                }
-
-                if (modifier.length > 0) {
-                    modifier = modifier[0];
-
-                    if (modifier.length > 0) modifier = modifier.slice(1);
-                }
-
-                if (sources[i] == mapal.injection.options.bodyInjectionId) {
-                    modifiers.push("content");
-                } else {
-                    modifiers.push(modifier);
-                }
-            }
-
-            function htmlLoaded(response, textStatus, responseText) {
-                if ( typeof response == "string" ) {
-                    responseText = response;
-                    textStatus = 200;
-                } else {
-                    responseText = response.responseText;
-
-                    if (response.status < 200 || response.status >= 400) {
-                        return;
-                    }
-                }
-
-                if ($elem.get(0).tagName == 'FORM') {
-                    var $panel = $elem.parents('#panel');
-
-                    if ($panel.length > 0) {
-                        $panel.overlay().close();
-                        $panel.remove();
-                    }
-                }
-
-                // get the actual response in case a dataFilter is present in ajaxSettings
-                //if ( response.done )
-                //  response.done(function(r) { responseText = r; });
-
-                // create a dummy div to hold the results
-                // and get rid of all the scripts
-                //
-                // also remove complete head and rename body to a standard div. this is necessary
-                // because a second body element is not allowed.
-                var $factory = $("<div/>").append(
-                    responseText.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                                .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                                .replace(/<body(.*)>/gi,'<div id="__original_body">')
-                                .replace(/<\/body(.*)>/gi,'</div>')
-                );
-
-//                var sourceIds = [];
-                var len = targets.length;
-
-                for (var idx = 0; idx < len; idx++) {
-                    var modifier = modifiers[idx];
-                    var $source;
-                    var $target = $( "#" + target_ids[idx] );
-                    var appendTo = false;
-
-                    if ( $target.length === 0 ) {
-                        appendTo = document.body;
-                        if (target_ids[idx].indexOf(">") > 0) {
-                            var both = target_ids[idx].split(">");
-
-                            appendTo = $("#" + both[0]);
-                            if ( appendTo.length ===  0) {
-                                appendTo = $("<div/>").appendTo(document.body);
-                                appendTo.attr("id", both[0]);
-                            }
-                        }
-                    }
-
-                    // empty source IDs will have been replaced with !body. Use the <body> tag as a source
-                    if (sources[idx] == mapal.injection.options.bodyInjectionId) {
-                        $source = $factory.find('#'+mapal.injection.options.bodyInjectionId);
-                        modifier = "content";
-                    } else {
-                        $source = $factory.find( '#' + sources[idx] );
-                    }
-
-                    // apply filters to source
-                    if ($filter && $filter.length > 0) {
-                        var searchText = $('.searchText', $filter).val();
-                        if (searchText) {
-                            $source.find($filter.attr('data-filter') + ':not(:Contains(' + searchText + '))').remove();
-                        }
-                    }
-
-                    if ( mapal.injection.modifiers[modifier] && $.isFunction(mapal.injection.modifiers[modifier].execute) ) {
-                        $target = mapal.injection.modifiers[modifier].execute( $source, $target, appendTo );
-
-                        if (appendTo) $target.appendTo(appendTo);
-
-                        mapal.initContent($target);
-
-                        var $nexthref = $elem.attr('data-href-next');
-                        if ($nexthref) {
-                            $elem.attr({'href': $nexthref,
-                                        'data-injection': '',
-                                        'data-href-next': ''});
-                        }
-
-                        if (typeof callback == 'function') {
-                            callback($target);
-                        } else {
-                            (callback.onFinished||$.noop)($target);
-                        }
-                    } else {
-                        alert('Injection[WARN]: Could not find modifier "' + modifier + '"' );
-                    }
-                }
-
-                // check if this was a navigation call
-                var $navs = $elem.parents("nav, .navigation"),
-                    $items, $item;
-                if (($navs.length > 0) && (!$elem.is('[data-tooltip]'))) {
-                    $items = $navs.find('li');
-                    if ($items.length === 0) {
-                        $items = $navs.find('a');
-                    }
-                    $items.removeClass('current');
-
-                    $item = $elem.parents("li");
-                    if ($item.length > 0) {
-                        $($item[0]).addClass('current');
-                    } else if ($item.length === 0) {
-                        $elem.addClass('current');
-                    }
-                }
-            }
-            var $targets = $('#' + target_ids.join(',#'));
-            $targets.addClass('injection-loading');
-            mapal.injection.ajax($elem, url, function() {
-                htmlLoaded.apply(this, arguments);
-                $targets.removeClass('injection-loading');
-            });
-        },
-
-        ajax: function($elem, url, params, callback) {
-            var type = "GET";
-
-            if ( $elem.get(0).tagName == 'FORM') {
-                type = 'POST';
-
-                $elem.ajaxSubmit({
-                    url: url,
-                    type: 'POST',
-                    success: params
-                });
-            } else {
-                // if the second parameter was provided
-                if (params) {
-                    // if it's a function
-                    if ($.isFunction(params)) {
-                        // we assume that it's the callback
-                        callback = params;
-                        params = undefined;
-                    } else if (typeof params === "object") {
-                        // build a param string
-                        params = $.param(params, $.ajaxSettings.traditional);
-                        type = "POST";
-                    }
-                }
-
-                jQuery.ajax({
-                    url: url,
-                    type: type,
-                    dataType: "html",
-                    data: params,
-                    complete: function(jqXHR, textStatus) {
-                        var header = jqXHR.getResponseHeader('X-Griddeo-Action');
-                        var callCallback = true;
-                        if (header) {
-                            var parts = header.split(';');
-
-                            if ( parts.length > 0 && $.isFunction(mapal.injection.griddeoActions[parts[0]]) ) {
-                                callCallback = mapal.injection.griddeoActions[parts[0]]( parts.slice(1) );
-                            }
-                        }
-
-                        if (callCallback) callback(jqXHR, textStatus);
-                    },
-                    error: function(xhr, status, errorThrown) {
-                        return;
-                    }
-                });
-            }
-
-        },
-
-        griddeoActions: {
-            'force-redirect': function(params) {
-                window.location = params[0].trim();
-                return false;
-            }
-        },
-
-        modifiers: {
-            "replace": {
-                "execute": function( $source, $target, appendTo ) {
-                    if (appendTo) {
-                        return $source;
-                    }
-                    // in an ideal world ids are unique, we can't rely on that
-                    $source.addClass('tmp-injection-marker');
-                    $target.replaceWith($source);
-                    $target = $(".tmp-injection-marker");
-                    $target.removeClass('tmp-injection-marker');
-                    return $target;
-                }
-            },
-
-            "content": {
-                "execute": function( $source, $target ) {
-                    $target.html($source.html());
-                    return $target;
-                }
-            },
-
-            "after": {
-                "execute": function( $source, $target  ) {
-                    var $children = $($source[0].children);
-                    $target.append($children);
-                    return $children;
-                }
-            },
-
-            "before": {
-                "execute": function( $source, $target ) {
-                    var $children = $($source[0].children);
-                    $target.prepend($children);
-                    return $children;
-                }
-            },
-
-            "prepend": {
-                "execute": function( $source, $target ) {
-                    $target.before($source);
-                    $target.trigger('injection', $source);
-                    return $source;
-                }
-            },
-            "append": {
-                "execute": function( $source, $target ) {
-                    $target.after($source);
-                    $target.trigger('injection', $source);
-                    return $source;
-                }
-            }
-        },
-
-        completeArray: function( larger, smaller ) {
-            var len = larger.length;
-            for (var i = smaller.length; i < len; i ++ ) {
-                smaller.push( larger[i] );
-            }
-        }
-    },
-
-    patterns: {
-        "options": {
-            search: {
-                click:[
-                       "a[rel^=#]:not(.cant-touch-this)",
-                       "a[rel^='.']:not(.cant-touch-this)",
-                       "a[data-injection^='.']:not(.cant-touch-this)",
-                       "a[data-injection^=#]:not(.cant-touch-this)"
-                     ],
-                submit: [
-                      "form[data-injection^='.']:not(.cant-touch-this)",
-                      "form[data-injection^=#]:not(.cant-touch-this)"
-                      ]
-            }
-        },
-
-        'listeners': {
-            'onBeforeStart': [],
-            'onFinished': [],
-            'onExecuted': []
-        },
-
-        // Enable DOM-injection from anchors
-        init: function () {
-            var key;
-            // initalize the listeners for each of the patterns
-            for (key in mapal.patterns) {
-                if (mapal.patterns[key].execute) {
-                    mapal.patterns[key].listeners = $.extend( true, {}, mapal.patterns.listeners );
-                }
-            }
-
-            // Call the initialization function for each of the patterns
-            for (key in mapal.patterns) {
-                (mapal.patterns[key].init||$.noop)();
-
-                if (mapal.patterns[key].dataAttr) {
-                    //mapal.patterns.options.search.click.push('[data-' + key + ']');
-                }
-            }
-
-            function handlePattern(e) {
-                // First we get the source IDs, whether optional or not
-                var targets, $a = $(this),
-                    sources = ($a.attr("href")||$a.attr("action")).split("#"),
-                    attrVal = ($a.attr("rel") || $a.attr("data-injection")),
-                    $filter = $a.find('.filter');
-
-                // make sure we don't interfere with openPanels below
-                if ( $a.hasClass('openPanel') || $a.hasClass('closePanel') ) return;
-
-                // HREF="http://url.to/follow#source1#source2";
-                var url = sources[0];
-                sources = sources.slice(1);
-
-                // We treat injection differently than the other patterns
-                // namely: injection will always be here!
-                if ( attrVal.startsWith("#") ) {
-                    // this means injection
-                    if ( attrVal.length > 1 )
-                        targets = attrVal.replace(/\s/g,"").split("#").slice(1);
-                    else
-                        targets = [];
-
-                    // let injection handle the rest
-                    mapal.injection.load($a, url, targets, sources, undefined, $filter);
-                } else {
-                    // this means some other pattern, so let the pattern handle what the attribute means
-                    var re = /^[\.][a-zA-Z]+/;
-                    var patt = re.exec(attrVal);
-
-                    if ( patt.length === 0 ) {
-                        // the pattern was malformed. Inform the designer
-                        alert("Pattern[ERROR]: malformed pattern: " + attrVal);
-                    } else {
-                        patt = patt[0].slice(1);
-
-                        var params = attrVal.replace(re, "");
-                        var paramObjs = utils.extractParameters(params, sources);
-                        if ( mapal.patterns[patt]  ) {
-                            // only do something if we found the pattern
-                            if (!mapal.patterns[patt].passive) {
-                                // ignore the pattern if it is not active
-                                if (mapal.patterns.callListener($a, patt, 'onBeforeStart')) {
-                                    mapal.patterns[patt].execute($a, url, sources, paramObjs, e);
-                                    mapal.patterns.callListener($a, patt, 'onExecuted');
-                                }
-                            }
-                        } else {
-                            alert('Pattern[WARN]: the pattern "' + patt + '" was not found');
-                        }
-                    }
-                }
-                e.preventDefault();
-                return false;
-            }
-
-            $(mapal.patterns.options.search.click.join(", ")).live("click.mapal", handlePattern );
-            $(mapal.patterns.options.search.submit.join(", ")).live("submit.mapal", handlePattern );
-        },
-
-        callListener: function( elem, pattern, event ) {
-            var weContinue = true;
-            $(mapal.patterns[pattern].listeners[event]).each(function(){
-                if (weContinue && !this(elem) ) {
-                    weContinue = false;
-                    return;
-                }
-            });
-
-            return weContinue;
-        },
-
-        registerListener: function(patterns, event, listener) {
-            if (typeof patterns == 'string') {
-                if (mapal.patterns[patterns].listeners[event]) {
-                    mapal.patterns[patterns].listeners[event].push(listener);
-                }
-            } else {
-                $(patterns).each( function() {
-                    if (mapal.patterns[this]) {
-                        if (mapal.patterns[this].listeners[event]) {
-                            mapal.patterns[this].listeners[event].push(listener);
-                        }
-                    }
-                });
-            }
-        }
-    },
-
-    passivePatterns: {
-        'selectSiblingRadio': {
-            init: function() {},
-            initContent: function(root) {
-                $(root).find('.selectSiblingRadio').focus(function() {
-                    var $this = $(this);
-
-                    $this.parent().find('input[type=radio]').attr('checked', true);
-                });
-            }
-        }
-    },
-
-    // Setup a DOM tree.
-    initContent: function(root, opts) {
-        mapal.newstyle.scan(root, opts);
-
-        for (var passivePatternName in mapal.passivePatterns) {
-            var passivePattern = mapal.passivePatterns[passivePatternName];
-            if (passivePattern.initContent && $.isFunction(passivePattern.initContent) ) {
-                passivePattern.initContent(root);
-            }
-        }
-
-        $(root).trigger("newContent", root);
-    },
-
-
-    // Setup global behaviour
-    init: function() {
-        mapal.patterns.init();
-    },
-
-    ui: {}
-};
-
-$.extend( mapal.ui, {
-    "modal": function( url, options ) {
-        var opts = '.modal';
-        if (options) {
-            for (var opt in options) {
-                opts += '!' + opt + "=";
-                if (typeof options[opt] == 'string') {
-                    opts += "'" + options[opt] + "'";
-                } else {
-                    opts += options[opt];
-                }
-            }
-        }
-        var $a = $('<a>').attr('href', url).attr('rel', opts);
-        $a.click();
-    }
-});
-
-    return mapal;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ parser - argument parser
- *
- * Copyright 2012 Simplon B.V.
- * Copyright 2012 Florian Friesdorf
- */
-define('core/parser',[
-    'require',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('parser');
-
-    function ArgumentParser(spec) {
-        this.params = [];
-        this.defaults = {};
-        if (spec)
-            this.add_spec(spec);
-    }
-
-    ArgumentParser.prototype = {
-        named_param_pattern: /^\s*([a-zA-Z0-9\-]+)\s*:(.*)/,
-
-        add_argument: function(name, default_value) {
-            if (default_value === undefined)
-                default_value = null;
-            this.params.push(name);
-            this.defaults[name] = default_value;
-        },
-
-        add_spec: function(spec) {
-            var parts = spec.split(';'),
-                parser = this;
-            for (var i=0, part; i<parts.length; i++) {
-                part = parts[i].trim();
-                var match = part.match(parser.named_param_pattern);
-                if (match) {
-                    parser.add_argument(match[1], match[2].trim());
-                } else {
-                    parser.add_argument(part);
-                }
-            }
-        },
-
-        parse: function(parameter, defaults) {
-            if (typeof parameter==="number")
-                parameter = parameter.toString();
-            if (parameter && parameter.match(/&&/)) {
-                return parameter.split(/\s*&&\s*/).map(function(parameter) {
-                    return this.parse(parameter, defaults);
-                }, this);
-            }
-
-            var types = {},
-                opts = {}, i, name;
-
-            for (i in this.defaults)
-                types[i] = this.defaults[i]===null ? "null" : typeof this.defaults[i];
-
-            // Copy all defaults to opts.
-            if (typeof defaults === "object")
-                for (i in defaults)
-                    opts[i] = defaults[i];
-
-            for (i in this.defaults)
-                opts[i] = opts[i] || this.defaults[i];
-
-            if (parameter) {
-                var parts = parameter.split(";"),
-                    part, matches;
-
-                // Grab all positional parameters
-                i=-1;
-                while (parts.length) {
-                    i++;
-                    if (i>=this.params.length) {
-                        break;
-                    }
-                    part = parts.shift().trim();
-                    if (!part)
-                        continue;
-                    if (this.named_param_pattern.test(part)) {
-                        parts.unshift(part);
-                        break;
-                    }
-                    opts[this.params[i]] = part.trim();
-                }
-
-                // Handle all named parameters
-                for (i=0; i<parts.length; i++) {
-                    if (!parts[i])
-                        continue;
-
-                    matches = parts[i].match(this.named_param_pattern);
-                    if (!matches) {
-                        log.warn("Positional parameters not allowed after named parameters");
-                        break;
-                    }
-                    if (this.defaults[matches[1]] === undefined) {
-                        log.warn("Unknown named parameter " + matches[1]);
-                        continue;
-                    }
-                    opts[matches[1]] = matches[2].trim();
-                }
-            }
-
-            // Resolve references and do type coercion
-            for (name in opts) {
-                var value = opts[name];
-
-                if (typeof value==="string" && opts[name].slice(0,1) === "$")
-                    value = opts[value.slice(1)];
-
-                if (typeof value !== types[name]) {
-                    switch (types[name]) {
-                        case "boolean":
-                            if (typeof value === "string") {
-                                value = value.toLowerCase();
-                                var num = parseInt(value, 10);
-                                if (!isNaN(num))
-                                    value = !!num;
-                                else
-                                    value = (value==="true" || value==="y" || value==="yes" || value==="y");
-                            } else if (typeof value === "number")
-                                value = !!value;
-                            else
-                                log.warn("Cannot convert value for " + name + " to boolean");
-                            break;
-                        case "number":
-                            if (typeof value === "string") {
-                                value = parseInt(value, 10);
-                                if (isNaN(value))
-                                    log.warn("Cannot convert value for " + name + " to number");
-                            } else if (typeof value === "boolean")
-                                value = value + 0;
-                            else
-                                log.warn("Cannot convert value for " + name + " to number");
-                            break;
-                        case "null":  // Missing default values
-                        case "undefined":
-                            break;
-                        default:
-                            log.warn("Do not know how to convert value for " + name + " to " + types[name]);
-                            break;
-                    }
-                }
-                opts[name] = value;
-            }
-
-            return opts;
-        }
-    };
-
-    return ArgumentParser;
-
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
 define('compat',[],function() {
 
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every (JS 1.6)
@@ -9838,430 +6549,2105 @@ define('compat',[],function() {
           // closest thing possible to the ECMAScript 5 internal IsCallable function
           throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
         }
-     
+
         var aArgs = Array.prototype.slice.call(arguments, 1), 
             fToBind = this, 
             fNOP = function () {},
             fBound = function () {
-              return fToBind.apply(this instanceof fNOP && oThis
-                                     ? this
-                                     : oThis,
+              return fToBind.apply(this instanceof fNOP &&
+                                   oThis ? this : oThis,
                                    aArgs.concat(Array.prototype.slice.call(arguments)));
             };
-     
+
         fNOP.prototype = this.prototype;
         fBound.prototype = new fNOP();
-     
+
         return fBound;
       };
     }
 });
 
-// XXX: not sure whether this abstraction makes sense or whether it
-// should be moved into the inject2 pattern
-define('lib/inject',['require'],function(require) {
-    var _injectmethod = function(name, method) {
-        var injectwrapper = function($sources, $targets, opts) {
-            // no $targets -> called as a jquery method
-            // XXX: is it good to have that here?
-            if ($targets === undefined) $targets = this;
-            $targets = method($sources, $targets);
+/*
+ * changes to previous patterns.register/scan mechanism
+ * - if you want initialised class, do it in init
+ * - init returns set of elements actually initialised
+ * - handle once within init
+ * - no turnstile anymore
+ * - set pattern.jquery_plugin if you want it
+ */
+define('registry',[
+    "jquery",
+    "./logging",
+    "./transforms",
+    "./utils",
+    // below here modules that are only loaded
+    "./compat"
+], function($, logging, transforms, utils) {
+    var log = logging.getLogger('registry'),
+        jquery_plugin = utils.jquery_plugin;
 
-            opts = opts || {};
-            opts.method = name;
-            opts.$sources = $sources;
-            $targets.trigger('inject', opts);
-            return $targets;
-        };
-        return injectwrapper;
+    var registry = {
+        patterns: {},
+        scan: function(content) {
+            var $content = $(content), pattern, $match, plog, $initialised;
+            transforms.transformContent($content);
+            for (var name in registry.patterns) {
+                pattern = registry.patterns[name];
+                plog = logging.getLogger(name);
+
+                // construct set of matching elements
+                $match = $content.filter(pattern.trigger);
+                $match = $match.add($content.find(pattern.trigger));
+                $match = $match.filter(':not(.cant-touch-this)');
+
+                // call pattern init in case of matching elements, the
+                // pattern returns the set of actually initialised
+                // elements
+                if ($match.length > 0) {
+                    plog.debug('Initialising:', $match);
+                    try {
+                        pattern.init($match);
+                        plog.debug('Initialised:', $initialised);
+                    } catch (e) {
+                        plog.error("Error initialising pattern", e);
+                    }
+                }
+            }
+        },
+        register: function(pattern) {
+            if (registry.patterns[pattern.name]) {
+                log.error("Already have a pattern called: " + pattern.name);
+                return false;
+            }
+
+            // register pattern to be used for scanning new content
+            registry.patterns[pattern.name] = pattern;
+
+            // register pattern as jquery plugin
+            if (pattern.jquery_plugin) {
+                // XXX: here the pattern used to be jquery_plugin wrapped
+                $.fn[pattern.jquery_plugin] = jquery_plugin(pattern);
+            }
+
+            log.debug('Registered pattern:', pattern.name, pattern);
+            return true;
+        }
     };
 
-    var methods = {};
-    // temporary mark sources for injection
-    var MARKER = "tmp-inject-marker";
-
-    methods.content =  _injectmethod("content", function($sources, $targets) {
-        $targets.each(function() {
-            $(this).html($sources.html());
-        });
-        return $targets;
+    $(document).on('patterns-injected.patterns', function(ev) {
+        registry.scan(ev.target);
+        $(ev.target).trigger('patterns-injected-scanned');
     });
 
-    methods.replace = _injectmethod("replace", function($sources, $targets) {
-        // XXX: consider removal of special case
-        // this needs tests!
-        if ($targets.length === 1) {
-            $targets.replaceWith($sources);
-            return $sources;
+
+    return registry;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * StyleFix 1.0.3 & PrefixFree 1.0.7
+ * @author Lea Verou
+ * MIT license
+ */
+
+(function(){
+
+if(!window.addEventListener) {
+	return;
+}
+
+var self = window.StyleFix = {
+	link: function(link) {
+		try {
+			// Ignore stylesheets with data-noprefix attribute as well as alternate stylesheets
+			if(link.rel !== 'stylesheet' || link.hasAttribute('data-noprefix')) {
+				return;
+			}
+		}
+		catch(e) {
+			return;
+		}
+
+		var url = link.href || link.getAttribute('data-href'),
+		    base = url.replace(/[^\/]+$/, ''),
+		    parent = link.parentNode,
+		    xhr = new XMLHttpRequest(),
+		    process;
+		
+		xhr.onreadystatechange = function() {
+			if(xhr.readyState === 4) {
+				process();
+			}
+		};
+
+		process = function() {
+				var css = xhr.responseText;
+				
+				if(css && link.parentNode && (!xhr.status || xhr.status < 400 || xhr.status > 600)) {
+					css = self.fix(css, true, link);
+					
+					// Convert relative URLs to absolute, if needed
+					if(base) {
+						css = css.replace(/url\(\s*?((?:"|')?)(.+?)\1\s*?\)/gi, function($0, quote, url) {
+							if(!/^([a-z]{3,10}:|\/|#)/i.test(url)) { // If url not absolute & not a hash
+								// May contain sequences like /../ and /./ but those DO work
+								return 'url("' + base + url + '")';
+							}
+							
+							return $0;						
+						});
+
+						// behavior URLs shoudn’t be converted (Issue #19)
+						// base should be escaped before added to RegExp (Issue #81)
+						var escaped_base = base.replace(/([\\\^\$*+[\]?{}.=!:(|)])/g,"\\$1");
+						css = css.replace(RegExp('\\b(behavior:\\s*?url\\(\'?"?)' + escaped_base, 'gi'), '$1');
+						}
+					
+					var style = document.createElement('style');
+					style.textContent = css;
+					style.media = link.media;
+					style.disabled = link.disabled;
+					style.setAttribute('data-href', link.getAttribute('href'));
+					
+					parent.insertBefore(style, link);
+					parent.removeChild(link);
+					
+					style.media = link.media; // Duplicate is intentional. See issue #31
+				}
+		};
+
+		try {
+			xhr.open('GET', url);
+			xhr.send(null);
+		} catch (e) {
+			// Fallback to XDomainRequest if available
+			if (typeof XDomainRequest != "undefined") {
+				xhr = new XDomainRequest();
+				xhr.onerror = xhr.onprogress = function() {};
+				xhr.onload = process;
+				xhr.open("GET", url);
+				xhr.send(null);
+			}
+		}
+		
+		link.setAttribute('data-inprogress', '');
+	},
+
+	styleElement: function(style) {
+		if (style.hasAttribute('data-noprefix')) {
+			return;
+		}
+		var disabled = style.disabled;
+		
+		style.textContent = self.fix(style.textContent, true, style);
+		
+		style.disabled = disabled;
+	},
+
+	styleAttribute: function(element) {
+		var css = element.getAttribute('style');
+		
+		css = self.fix(css, false, element);
+		
+		element.setAttribute('style', css);
+	},
+	
+	process: function() {
+		// Linked stylesheets
+		$('link[rel="stylesheet"]:not([data-inprogress])').forEach(StyleFix.link);
+		
+		// Inline stylesheets
+		$('style').forEach(StyleFix.styleElement);
+		
+		// Inline styles
+		$('[style]').forEach(StyleFix.styleAttribute);
+	},
+	
+	register: function(fixer, index) {
+		(self.fixers = self.fixers || [])
+			.splice(index === undefined? self.fixers.length : index, 0, fixer);
+	},
+	
+	fix: function(css, raw, element) {
+		for(var i=0; i<self.fixers.length; i++) {
+			css = self.fixers[i](css, raw, element) || css;
+		}
+		
+		return css;
+	},
+	
+	camelCase: function(str) {
+		return str.replace(/-([a-z])/g, function($0, $1) { return $1.toUpperCase(); }).replace('-','');
+	},
+	
+	deCamelCase: function(str) {
+		return str.replace(/[A-Z]/g, function($0) { return '-' + $0.toLowerCase() });
+	}
+};
+
+/**************************************
+ * Process styles
+ **************************************/
+(function(){
+	setTimeout(function(){
+		$('link[rel="stylesheet"]').forEach(StyleFix.link);
+	}, 10);
+	
+	document.addEventListener('DOMContentLoaded', StyleFix.process, false);
+})();
+
+function $(expr, con) {
+	return [].slice.call((con || document).querySelectorAll(expr));
+}
+
+})();
+
+/**
+ * PrefixFree
+ */
+(function(root){
+
+if(!window.StyleFix || !window.getComputedStyle) {
+	return;
+}
+
+// Private helper
+function fix(what, before, after, replacement, css) {
+	what = self[what];
+	
+	if(what.length) {
+		var regex = RegExp(before + '(' + what.join('|') + ')' + after, 'gi');
+
+		css = css.replace(regex, replacement);
+	}
+	
+	return css;
+}
+
+var self = window.PrefixFree = {
+	prefixCSS: function(css, raw, element) {
+		var prefix = self.prefix;
+		
+		// Gradient angles hotfix
+		if(self.functions.indexOf('linear-gradient') > -1) {
+			// Gradients are supported with a prefix, convert angles to legacy
+			css = css.replace(/(\s|:|,)(repeating-)?linear-gradient\(\s*(-?\d*\.?\d*)deg/ig, function ($0, delim, repeating, deg) {
+				return delim + (repeating || '') + 'linear-gradient(' + (90-deg) + 'deg';
+			});
+		}
+		
+		css = fix('functions', '(\\s|:|,)', '\\s*\\(', '$1' + prefix + '$2(', css);
+		css = fix('keywords', '(\\s|:)', '(\\s|;|\\}|$)', '$1' + prefix + '$2$3', css);
+		css = fix('properties', '(^|\\{|\\s|;)', '\\s*:', '$1' + prefix + '$2:', css);
+		
+		// Prefix properties *inside* values (issue #8)
+		if (self.properties.length) {
+			var regex = RegExp('\\b(' + self.properties.join('|') + ')(?!:)', 'gi');
+			
+			css = fix('valueProperties', '\\b', ':(.+?);', function($0) {
+				return $0.replace(regex, prefix + "$1")
+			}, css);
+		}
+		
+		if(raw) {
+			css = fix('selectors', '', '\\b', self.prefixSelector, css);
+			css = fix('atrules', '@', '\\b', '@' + prefix + '$1', css);
+		}
+		
+		// Fix double prefixing
+		css = css.replace(RegExp('-' + prefix, 'g'), '-');
+		
+		// Prefix wildcard
+		css = css.replace(/-\*-(?=[a-z]+)/gi, self.prefix);
+		
+		return css;
+	},
+	
+	property: function(property) {
+		return (self.properties.indexOf(property)? self.prefix : '') + property;
+	},
+	
+	value: function(value, property) {
+		value = fix('functions', '(^|\\s|,)', '\\s*\\(', '$1' + self.prefix + '$2(', value);
+		value = fix('keywords', '(^|\\s)', '(\\s|$)', '$1' + self.prefix + '$2$3', value);
+		
+		// TODO properties inside values
+		
+		return value;
+	},
+	
+	// Warning: Prefixes no matter what, even if the selector is supported prefix-less
+	prefixSelector: function(selector) {
+		return selector.replace(/^:{1,2}/, function($0) { return $0 + self.prefix })
+	},
+	
+	// Warning: Prefixes no matter what, even if the property is supported prefix-less
+	prefixProperty: function(property, camelCase) {
+		var prefixed = self.prefix + property;
+		
+		return camelCase? StyleFix.camelCase(prefixed) : prefixed;
+	}
+};
+
+/**************************************
+ * Properties
+ **************************************/
+(function() {
+	var prefixes = {},
+		properties = [],
+		shorthands = {},
+		style = getComputedStyle(document.documentElement, null),
+		dummy = document.createElement('div').style;
+	
+	// Why are we doing this instead of iterating over properties in a .style object? Cause Webkit won't iterate over those.
+	var iterate = function(property) {
+		if(property.charAt(0) === '-') {
+			properties.push(property);
+			
+			var parts = property.split('-'),
+				prefix = parts[1];
+				
+			// Count prefix uses
+			prefixes[prefix] = ++prefixes[prefix] || 1;
+			
+			// This helps determining shorthands
+			while(parts.length > 3) {
+				parts.pop();
+				
+				var shorthand = parts.join('-');
+
+				if(supported(shorthand) && properties.indexOf(shorthand) === -1) {
+					properties.push(shorthand);
+				}
+			}
+		}
+	},
+	supported = function(property) {
+		return StyleFix.camelCase(property) in dummy;
+	}
+	
+	// Some browsers have numerical indices for the properties, some don't
+	if(style.length > 0) {
+		for(var i=0; i<style.length; i++) {
+			iterate(style[i])
+		}
+	}
+	else {
+		for(var property in style) {
+			iterate(StyleFix.deCamelCase(property));
+		}
+	}
+
+	// Find most frequently used prefix
+	var highest = {uses:0};
+	for(var prefix in prefixes) {
+		var uses = prefixes[prefix];
+
+		if(highest.uses < uses) {
+			highest = {prefix: prefix, uses: uses};
+		}
+	}
+	
+	self.prefix = '-' + highest.prefix + '-';
+	self.Prefix = StyleFix.camelCase(self.prefix);
+	
+	self.properties = [];
+
+	// Get properties ONLY supported with a prefix
+	for(var i=0; i<properties.length; i++) {
+		var property = properties[i];
+		
+		if(property.indexOf(self.prefix) === 0) { // we might have multiple prefixes, like Opera
+			var unprefixed = property.slice(self.prefix.length);
+			
+			if(!supported(unprefixed)) {
+				self.properties.push(unprefixed);
+			}
+		}
+	}
+	
+	// IE fix
+	if(self.Prefix == 'Ms' 
+	  && !('transform' in dummy) 
+	  && !('MsTransform' in dummy) 
+	  && ('msTransform' in dummy)) {
+		self.properties.push('transform', 'transform-origin');	
+	}
+	
+	self.properties.sort();
+})();
+
+/**************************************
+ * Values
+ **************************************/
+(function() {
+// Values that might need prefixing
+var functions = {
+	'linear-gradient': {
+		property: 'backgroundImage',
+		params: 'red, teal'
+	},
+	'calc': {
+		property: 'width',
+		params: '1px + 5%'
+	},
+	'element': {
+		property: 'backgroundImage',
+		params: '#foo'
+	},
+	'cross-fade': {
+		property: 'backgroundImage',
+		params: 'url(a.png), url(b.png), 50%'
+	}
+};
+
+
+functions['repeating-linear-gradient'] =
+functions['repeating-radial-gradient'] =
+functions['radial-gradient'] =
+functions['linear-gradient'];
+
+var keywords = {
+	'initial': 'color',
+	'zoom-in': 'cursor',
+	'zoom-out': 'cursor',
+	'box': 'display',
+	'flexbox': 'display',
+	'inline-flexbox': 'display',
+	'flex': 'display',
+	'inline-flex': 'display'
+};
+
+self.functions = [];
+self.keywords = [];
+
+var style = document.createElement('div').style;
+
+function supported(value, property) {
+	style[property] = '';
+	style[property] = value;
+
+	return !!style[property];
+}
+
+for (var func in functions) {
+	var test = functions[func],
+		property = test.property,
+		value = func + '(' + test.params + ')';
+	
+	if (!supported(value, property)
+	  && supported(self.prefix + value, property)) {
+		// It's supported, but with a prefix
+		self.functions.push(func);
+	}
+}
+
+for (var keyword in keywords) {
+	var property = keywords[keyword];
+
+	if (!supported(keyword, property)
+	  && supported(self.prefix + keyword, property)) {
+		// It's supported, but with a prefix
+		self.keywords.push(keyword);
+	}
+}
+
+})();
+
+/**************************************
+ * Selectors and @-rules
+ **************************************/
+(function() {
+
+var 
+selectors = {
+	':read-only': null,
+	':read-write': null,
+	':any-link': null,
+	'::selection': null
+},
+
+atrules = {
+	'keyframes': 'name',
+	'viewport': null,
+	'document': 'regexp(".")'
+};
+
+self.selectors = [];
+self.atrules = [];
+
+var style = root.appendChild(document.createElement('style'));
+
+function supported(selector) {
+	style.textContent = selector + '{}';  // Safari 4 has issues with style.innerHTML
+	
+	return !!style.sheet.cssRules.length;
+}
+
+for(var selector in selectors) {
+	var test = selector + (selectors[selector]? '(' + selectors[selector] + ')' : '');
+		
+	if(!supported(test) && supported(self.prefixSelector(test))) {
+		self.selectors.push(selector);
+	}
+}
+
+for(var atrule in atrules) {
+	var test = atrule + ' ' + (atrules[atrule] || '');
+	
+	if(!supported('@' + test) && supported('@' + self.prefix + test)) {
+		self.atrules.push(atrule);
+	}
+}
+
+root.removeChild(style);
+
+})();
+
+// Properties that accept properties as their value
+self.valueProperties = [
+	'transition',
+	'transition-property'
+]
+
+// Add class for current prefix
+root.className += ' ' + self.prefix;
+
+StyleFix.register(self.prefixCSS);
+
+
+})(document.documentElement);
+
+define("3rdparty/prefixfree", function(){});
+
+/*!
+ * Modernizr v2.0.6
+ * http://www.modernizr.com
+ *
+ * Copyright (c) 2009-2011 Faruk Ates, Paul Irish, Alex Sexton
+ * Dual-licensed under the BSD or MIT licenses: www.modernizr.com/license/
+ */
+
+/*
+ * Modernizr tests which native CSS3 and HTML5 features are available in
+ * the current UA and makes the results available to you in two ways:
+ * as properties on a global Modernizr object, and as classes on the
+ * <html> element. This information allows you to progressively enhance
+ * your pages with a granular level of control over the experience.
+ *
+ * Modernizr has an optional (not included) conditional resource loader
+ * called Modernizr.load(), based on Yepnope.js (yepnopejs.com).
+ * To get a build that includes Modernizr.load(), as well as choosing
+ * which tests to include, go to www.modernizr.com/download/
+ *
+ * Authors        Faruk Ates, Paul Irish, Alex Sexton, 
+ * Contributors   Ryan Seddon, Ben Alman
+ */
+
+window.Modernizr = (function( window, document, undefined ) {
+
+    var version = '2.0.6',
+
+    Modernizr = {},
+    
+    // option for enabling the HTML classes to be added
+    enableClasses = true,
+
+    docElement = document.documentElement,
+    docHead = document.head || document.getElementsByTagName('head')[0],
+
+    /**
+     * Create our "modernizr" element that we do most feature tests on.
+     */
+    mod = 'modernizr',
+    modElem = document.createElement(mod),
+    mStyle = modElem.style,
+
+    /**
+     * Create the input element for various Web Forms feature tests.
+     */
+    inputElem = document.createElement('input'),
+
+    smile = ':)',
+
+    toString = Object.prototype.toString,
+
+    // List of property values to set for css tests. See ticket #21
+    prefixes = ' -webkit- -moz- -o- -ms- -khtml- '.split(' '),
+
+    // Following spec is to expose vendor-specific style properties as:
+    //   elem.style.WebkitBorderRadius
+    // and the following would be incorrect:
+    //   elem.style.webkitBorderRadius
+
+    // Webkit ghosts their properties in lowercase but Opera & Moz do not.
+    // Microsoft foregoes prefixes entirely <= IE8, but appears to
+    //   use a lowercase `ms` instead of the correct `Ms` in IE9
+
+    // More here: http://github.com/Modernizr/Modernizr/issues/issue/21
+    domPrefixes = 'Webkit Moz O ms Khtml'.split(' '),
+
+    ns = {'svg': 'http://www.w3.org/2000/svg'},
+
+    tests = {},
+    inputs = {},
+    attrs = {},
+
+    classes = [],
+
+    featureName, // used in testing loop
+
+
+    // Inject element with style element and some CSS rules
+    injectElementWithStyles = function( rule, callback, nodes, testnames ) {
+
+      var style, ret, node,
+          div = document.createElement('div');
+
+      if ( parseInt(nodes, 10) ) {
+          // In order not to give false positives we create a node for each test
+          // This also allows the method to scale for unspecified uses
+          while ( nodes-- ) {
+              node = document.createElement('div');
+              node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
+              div.appendChild(node);
+          }
+      }
+
+      // <style> elements in IE6-9 are considered 'NoScope' elements and therefore will be removed
+      // when injected with innerHTML. To get around this you need to prepend the 'NoScope' element
+      // with a 'scoped' element, in our case the soft-hyphen entity as it won't mess with our measurements.
+      // http://msdn.microsoft.com/en-us/library/ms533897%28VS.85%29.aspx
+      style = ['&shy;', '<style>', rule, '</style>'].join('');
+      div.id = mod;
+      div.innerHTML += style;
+      docElement.appendChild(div);
+
+      ret = callback(div, rule);
+      div.parentNode.removeChild(div);
+
+      return !!ret;
+
+    },
+
+
+    // adapted from matchMedia polyfill
+    // by Scott Jehl and Paul Irish
+    // gist.github.com/786768
+    testMediaQuery = function( mq ) {
+
+      if ( window.matchMedia ) {
+        return matchMedia(mq).matches;
+      }
+
+      var bool;
+
+      injectElementWithStyles('@media ' + mq + ' { #' + mod + ' { position: absolute; } }', function( node ) {
+        bool = (window.getComputedStyle ?
+                  getComputedStyle(node, null) :
+                  node.currentStyle)['position'] == 'absolute';
+      });
+
+      return bool;
+
+     },
+
+
+    /**
+      * isEventSupported determines if a given element supports the given event
+      * function from http://yura.thinkweb2.com/isEventSupported/
+      */
+    isEventSupported = (function() {
+
+      var TAGNAMES = {
+        'select': 'input', 'change': 'input',
+        'submit': 'form', 'reset': 'form',
+        'error': 'img', 'load': 'img', 'abort': 'img'
+      };
+
+      function isEventSupported( eventName, element ) {
+
+        element = element || document.createElement(TAGNAMES[eventName] || 'div');
+        eventName = 'on' + eventName;
+
+        // When using `setAttribute`, IE skips "unload", WebKit skips "unload" and "resize", whereas `in` "catches" those
+        var isSupported = eventName in element;
+
+        if ( !isSupported ) {
+          // If it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+          if ( !element.setAttribute ) {
+            element = document.createElement('div');
+          }
+          if ( element.setAttribute && element.removeAttribute ) {
+            element.setAttribute(eventName, '');
+            isSupported = is(element[eventName], 'function');
+
+            // If property was created, "remove it" (by setting value to `undefined`)
+            if ( !is(element[eventName], undefined) ) {
+              element[eventName] = undefined;
+            }
+            element.removeAttribute(eventName);
+          }
         }
-        $targets.each(function() {
-            $(this).replaceWith($sources.clone().addClass(MARKER));
-        });
-        return $("." + MARKER).removeClass(MARKER);
-    });
 
-    methods.replacetagwithcontent = _injectmethod("replacetagwithcontent", function($sources, $targets) {
-        $targets.each(function() {
-            var $tmp = $sources.clone().children().addClass(MARKER);
-            $(this).replaceWith($tmp);
-        });
-        return $("." + MARKER).removeClass(MARKER);
-    });
+        element = null;
+        return isSupported;
+      }
+      return isEventSupported;
+    })();
 
-    // XXX: name under discussion
-    methods.pre = _injectmethod("pre", function($sources, $targets) {
-        $targets.each(function() {
-            $(this).before($sources.clone().addClass(MARKER));
-        });
-        return $("." + MARKER).removeClass(MARKER);
-    });
+    // hasOwnProperty shim by kangax needed for Safari 2.0 support
+    var _hasOwnProperty = ({}).hasOwnProperty, hasOwnProperty;
+    if ( !is(_hasOwnProperty, undefined) && !is(_hasOwnProperty.call, undefined) ) {
+      hasOwnProperty = function (object, property) {
+        return _hasOwnProperty.call(object, property);
+      };
+    }
+    else {
+      hasOwnProperty = function (object, property) { /* yes, this can give false positives/negatives, but most of the time we don't care about those */
+        return ((property in object) && is(object.constructor.prototype[property], undefined));
+      };
+    }
 
-    // XXX: name under discussion
-    methods.post = _injectmethod("post", function($sources, $targets) {
-        $targets.each(function() {
-            $(this).after($sources.clone().addClass(MARKER));
-        });
-        return $("." + MARKER).removeClass(MARKER);
-    });
+    /**
+     * setCss applies given styles to the Modernizr DOM node.
+     */
+    function setCss( str ) {
+        mStyle.cssText = str;
+    }
 
-    // XXX: name under discussion
-    methods.append = _injectmethod("append", function($sources, $targets) {
-        $targets.each(function() {
-            $(this).append($sources.clone().addClass(MARKER));
-        });
-        return $("." + MARKER).removeClass(MARKER);
-    });
+    /**
+     * setCssAll extrapolates all vendor-specific css strings.
+     */
+    function setCssAll( str1, str2 ) {
+        return setCss(prefixes.join(str1 + ';') + ( str2 || '' ));
+    }
 
-    methods.prepend = _injectmethod("prepend", function($sources, $targets) {
-        $targets.each(function() {
-            $(this).append($sources.clone().addClass(MARKER));
-        });
-        return $("." + MARKER).removeClass(MARKER);
-    });
+    /**
+     * is returns a boolean for if typeof obj is exactly type.
+     */
+    function is( obj, type ) {
+        return typeof obj === type;
+    }
 
-    return methods;
+    /**
+     * contains returns a boolean for if substr is found within str.
+     */
+    function contains( str, substr ) {
+        return !!~('' + str).indexOf(substr);
+    }
+
+    /**
+     * testProps is a generic CSS / DOM property test; if a browser supports
+     *   a certain property, it won't return undefined for it.
+     *   A supported CSS property returns empty string when its not yet set.
+     */
+    function testProps( props, prefixed ) {
+        for ( var i in props ) {
+            if ( mStyle[ props[i] ] !== undefined ) {
+                return prefixed == 'pfx' ? props[i] : true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * testPropsAll tests a list of DOM properties we want to check against.
+     *   We specify literally ALL possible (known and/or likely) properties on
+     *   the element including the non-vendor prefixed one, for forward-
+     *   compatibility.
+     */
+    function testPropsAll( prop, prefixed ) {
+
+        var ucProp  = prop.charAt(0).toUpperCase() + prop.substr(1),
+            props   = (prop + ' ' + domPrefixes.join(ucProp + ' ') + ucProp).split(' ');
+
+        return testProps(props, prefixed);
+    }
+
+    /**
+     * testBundle tests a list of CSS features that require element and style injection.
+     *   By bundling them together we can reduce the need to touch the DOM multiple times.
+     */
+    /*>>testBundle*/
+    var testBundle = (function( styles, tests ) {
+        var style = styles.join(''),
+            len = tests.length;
+
+        injectElementWithStyles(style, function( node, rule ) {
+            var style = document.styleSheets[document.styleSheets.length - 1],
+                // IE8 will bork if you create a custom build that excludes both fontface and generatedcontent tests.
+                // So we check for cssRules and that there is a rule available
+                // More here: https://github.com/Modernizr/Modernizr/issues/288 & https://github.com/Modernizr/Modernizr/issues/293
+                cssText = style.cssRules && style.cssRules[0] ? style.cssRules[0].cssText : style.cssText || "",
+                children = node.childNodes, hash = {};
+
+            while ( len-- ) {
+                hash[children[len].id] = children[len];
+            }
+
+            /*>>touch*/           Modernizr['touch'] = ('ontouchstart' in window) || hash['touch'].offsetTop === 9; /*>>touch*/
+            /*>>csstransforms3d*/ Modernizr['csstransforms3d'] = hash['csstransforms3d'].offsetLeft === 9;          /*>>csstransforms3d*/
+            /*>>generatedcontent*/Modernizr['generatedcontent'] = hash['generatedcontent'].offsetHeight >= 1;       /*>>generatedcontent*/
+            /*>>fontface*/        Modernizr['fontface'] = /src/i.test(cssText) &&
+                                                                  cssText.indexOf(rule.split(' ')[0]) === 0;        /*>>fontface*/
+        }, len, tests);
+
+    })([
+        // Pass in styles to be injected into document
+        /*>>fontface*/        '@font-face {font-family:"font";src:url("https://")}'         /*>>fontface*/
+        
+        /*>>touch*/           ,['@media (',prefixes.join('touch-enabled),('),mod,')',
+                                '{#touch{top:9px;position:absolute}}'].join('')           /*>>touch*/
+                                
+        /*>>csstransforms3d*/ ,['@media (',prefixes.join('transform-3d),('),mod,')',
+                                '{#csstransforms3d{left:9px;position:absolute}}'].join('')/*>>csstransforms3d*/
+                                
+        /*>>generatedcontent*/,['#generatedcontent:after{content:"',smile,'";visibility:hidden}'].join('')  /*>>generatedcontent*/
+    ],
+      [
+        /*>>fontface*/        'fontface'          /*>>fontface*/
+        /*>>touch*/           ,'touch'            /*>>touch*/
+        /*>>csstransforms3d*/ ,'csstransforms3d'  /*>>csstransforms3d*/
+        /*>>generatedcontent*/,'generatedcontent' /*>>generatedcontent*/
+        
+    ]);/*>>testBundle*/
+
+
+    /**
+     * Tests
+     * -----
+     */
+
+    tests['flexbox'] = function() {
+        /**
+         * setPrefixedValueCSS sets the property of a specified element
+         * adding vendor prefixes to the VALUE of the property.
+         * @param {Element} element
+         * @param {string} property The property name. This will not be prefixed.
+         * @param {string} value The value of the property. This WILL be prefixed.
+         * @param {string=} extra Additional CSS to append unmodified to the end of
+         * the CSS string.
+         */
+        function setPrefixedValueCSS( element, property, value, extra ) {
+            property += ':';
+            element.style.cssText = (property + prefixes.join(value + ';' + property)).slice(0, -property.length) + (extra || '');
+        }
+
+        /**
+         * setPrefixedPropertyCSS sets the property of a specified element
+         * adding vendor prefixes to the NAME of the property.
+         * @param {Element} element
+         * @param {string} property The property name. This WILL be prefixed.
+         * @param {string} value The value of the property. This will not be prefixed.
+         * @param {string=} extra Additional CSS to append unmodified to the end of
+         * the CSS string.
+         */
+        function setPrefixedPropertyCSS( element, property, value, extra ) {
+            element.style.cssText = prefixes.join(property + ':' + value + ';') + (extra || '');
+        }
+
+        var c = document.createElement('div'),
+            elem = document.createElement('div');
+
+        setPrefixedValueCSS(c, 'display', 'box', 'width:42px;padding:0;');
+        setPrefixedPropertyCSS(elem, 'box-flex', '1', 'width:10px;');
+
+        c.appendChild(elem);
+        docElement.appendChild(c);
+
+        var ret = elem.offsetWidth === 42;
+
+        c.removeChild(elem);
+        docElement.removeChild(c);
+
+        return ret;
+    };
+
+    // On the S60 and BB Storm, getContext exists, but always returns undefined
+    // http://github.com/Modernizr/Modernizr/issues/issue/97/
+
+    tests['canvas'] = function() {
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    };
+
+    tests['canvastext'] = function() {
+        return !!(Modernizr['canvas'] && is(document.createElement('canvas').getContext('2d').fillText, 'function'));
+    };
+
+    // This WebGL test may false positive. 
+    // But really it's quite impossible to know whether webgl will succeed until after you create the context. 
+    // You might have hardware that can support a 100x100 webgl canvas, but will not support a 1000x1000 webgl 
+    // canvas. So this feature inference is weak, but intentionally so.
+    
+    // It is known to false positive in FF4 with certain hardware and the iPad 2.
+    
+    tests['webgl'] = function() {
+        return !!window.WebGLRenderingContext;
+    };
+
+    /*
+     * The Modernizr.touch test only indicates if the browser supports
+     *    touch events, which does not necessarily reflect a touchscreen
+     *    device, as evidenced by tablets running Windows 7 or, alas,
+     *    the Palm Pre / WebOS (touch) phones.
+     *
+     * Additionally, Chrome (desktop) used to lie about its support on this,
+     *    but that has since been rectified: http://crbug.com/36415
+     *
+     * We also test for Firefox 4 Multitouch Support.
+     *
+     * For more info, see: http://modernizr.github.com/Modernizr/touch.html
+     */
+
+    tests['touch'] = function() {
+        return Modernizr['touch'];
+    };
+
+    /**
+     * geolocation tests for the new Geolocation API specification.
+     *   This test is a standards compliant-only test; for more complete
+     *   testing, including a Google Gears fallback, please see:
+     *   http://code.google.com/p/geo-location-javascript/
+     * or view a fallback solution using google's geo API:
+     *   http://gist.github.com/366184
+     */
+    tests['geolocation'] = function() {
+        return !!navigator.geolocation;
+    };
+
+    // Per 1.6:
+    // This used to be Modernizr.crosswindowmessaging but the longer
+    // name has been deprecated in favor of a shorter and property-matching one.
+    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
+    // and in the first release thereafter disappear entirely.
+    tests['postmessage'] = function() {
+      return !!window.postMessage;
+    };
+
+    // Web SQL database detection is tricky:
+
+    // In chrome incognito mode, openDatabase is truthy, but using it will
+    //   throw an exception: http://crbug.com/42380
+    // We can create a dummy database, but there is no way to delete it afterwards.
+
+    // Meanwhile, Safari users can get prompted on any database creation.
+    //   If they do, any page with Modernizr will give them a prompt:
+    //   http://github.com/Modernizr/Modernizr/issues/closed#issue/113
+
+    // We have chosen to allow the Chrome incognito false positive, so that Modernizr
+    //   doesn't litter the web with these test databases. As a developer, you'll have
+    //   to account for this gotcha yourself.
+    tests['websqldatabase'] = function() {
+      var result = !!window.openDatabase;
+      /*  if (result){
+            try {
+              result = !!openDatabase( mod + "testdb", "1.0", mod + "testdb", 2e4);
+            } catch(e) {
+            }
+          }  */
+      return result;
+    };
+
+    // Vendors had inconsistent prefixing with the experimental Indexed DB:
+    // - Webkit's implementation is accessible through webkitIndexedDB
+    // - Firefox shipped moz_indexedDB before FF4b9, but since then has been mozIndexedDB
+    // For speed, we don't test the legacy (and beta-only) indexedDB
+    tests['indexedDB'] = function() {
+      for ( var i = -1, len = domPrefixes.length; ++i < len; ){
+        if ( window[domPrefixes[i].toLowerCase() + 'IndexedDB'] ){
+          return true;
+        }
+      }
+      return !!window.indexedDB;
+    };
+
+    // documentMode logic from YUI to filter out IE8 Compat Mode
+    //   which false positives.
+    tests['hashchange'] = function() {
+      return isEventSupported('hashchange', window) && (document.documentMode === undefined || document.documentMode > 7);
+    };
+
+    // Per 1.6:
+    // This used to be Modernizr.historymanagement but the longer
+    // name has been deprecated in favor of a shorter and property-matching one.
+    // The old API is still available in 1.6, but as of 2.0 will throw a warning,
+    // and in the first release thereafter disappear entirely.
+    tests['history'] = function() {
+      return !!(window.history && history.pushState);
+    };
+
+    tests['draganddrop'] = function() {
+        return isEventSupported('dragstart') && isEventSupported('drop');
+    };
+
+    // Mozilla is targeting to land MozWebSocket for FF6
+    // bugzil.la/659324
+    tests['websockets'] = function() {
+        for ( var i = -1, len = domPrefixes.length; ++i < len; ){
+          if ( window[domPrefixes[i] + 'WebSocket'] ){
+            return true;
+          }
+        }
+        return 'WebSocket' in window;
+    };
+
+
+    // http://css-tricks.com/rgba-browser-support/
+    tests['rgba'] = function() {
+        // Set an rgba() color and check the returned value
+
+        setCss('background-color:rgba(150,255,150,.5)');
+
+        return contains(mStyle.backgroundColor, 'rgba');
+    };
+
+    tests['hsla'] = function() {
+        // Same as rgba(), in fact, browsers re-map hsla() to rgba() internally,
+        //   except IE9 who retains it as hsla
+
+        setCss('background-color:hsla(120,40%,100%,.5)');
+
+        return contains(mStyle.backgroundColor, 'rgba') || contains(mStyle.backgroundColor, 'hsla');
+    };
+
+    tests['multiplebgs'] = function() {
+        // Setting multiple images AND a color on the background shorthand property
+        //  and then querying the style.background property value for the number of
+        //  occurrences of "url(" is a reliable method for detecting ACTUAL support for this!
+
+        setCss('background:url(https://),url(https://),red url(https://)');
+
+        // If the UA supports multiple backgrounds, there should be three occurrences
+        //   of the string "url(" in the return value for elemStyle.background
+
+        return /(url\s*\(.*?){3}/.test(mStyle.background);
+    };
+
+
+    // In testing support for a given CSS property, it's legit to test:
+    //    `elem.style[styleName] !== undefined`
+    // If the property is supported it will return an empty string,
+    // if unsupported it will return undefined.
+
+    // We'll take advantage of this quick test and skip setting a style
+    // on our modernizr element, but instead just testing undefined vs
+    // empty string.
+
+
+    tests['backgroundsize'] = function() {
+        return testPropsAll('backgroundSize');
+    };
+
+    tests['borderimage'] = function() {
+        return testPropsAll('borderImage');
+    };
+
+
+    // Super comprehensive table about all the unique implementations of
+    // border-radius: http://muddledramblings.com/table-of-css3-border-radius-compliance
+
+    tests['borderradius'] = function() {
+        return testPropsAll('borderRadius');
+    };
+
+    // WebOS unfortunately false positives on this test.
+    tests['boxshadow'] = function() {
+        return testPropsAll('boxShadow');
+    };
+
+    // FF3.0 will false positive on this test
+    tests['textshadow'] = function() {
+        return document.createElement('div').style.textShadow === '';
+    };
+
+
+    tests['opacity'] = function() {
+        // Browsers that actually have CSS Opacity implemented have done so
+        //  according to spec, which means their return values are within the
+        //  range of [0.0,1.0] - including the leading zero.
+
+        setCssAll('opacity:.55');
+
+        // The non-literal . in this regex is intentional:
+        //   German Chrome returns this value as 0,55
+        // https://github.com/Modernizr/Modernizr/issues/#issue/59/comment/516632
+        return /^0.55$/.test(mStyle.opacity);
+    };
+
+
+    tests['cssanimations'] = function() {
+        return testPropsAll('animationName');
+    };
+
+
+    tests['csscolumns'] = function() {
+        return testPropsAll('columnCount');
+    };
+
+
+    tests['cssgradients'] = function() {
+        /**
+         * For CSS Gradients syntax, please see:
+         * http://webkit.org/blog/175/introducing-css-gradients/
+         * https://developer.mozilla.org/en/CSS/-moz-linear-gradient
+         * https://developer.mozilla.org/en/CSS/-moz-radial-gradient
+         * http://dev.w3.org/csswg/css3-images/#gradients-
+         */
+
+        var str1 = 'background-image:',
+            str2 = 'gradient(linear,left top,right bottom,from(#9f9),to(white));',
+            str3 = 'linear-gradient(left top,#9f9, white);';
+
+        setCss(
+            (str1 + prefixes.join(str2 + str1) + prefixes.join(str3 + str1)).slice(0, -str1.length)
+        );
+
+        return contains(mStyle.backgroundImage, 'gradient');
+    };
+
+
+    tests['cssreflections'] = function() {
+        return testPropsAll('boxReflect');
+    };
+
+
+    tests['csstransforms'] = function() {
+        return !!testProps(['transformProperty', 'WebkitTransform', 'MozTransform', 'OTransform', 'msTransform']);
+    };
+
+
+    tests['csstransforms3d'] = function() {
+
+        var ret = !!testProps(['perspectiveProperty', 'WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective']);
+
+        // Webkit’s 3D transforms are passed off to the browser's own graphics renderer.
+        //   It works fine in Safari on Leopard and Snow Leopard, but not in Chrome in
+        //   some conditions. As a result, Webkit typically recognizes the syntax but
+        //   will sometimes throw a false positive, thus we must do a more thorough check:
+        if ( ret && 'webkitPerspective' in docElement.style ) {
+
+          // Webkit allows this media query to succeed only if the feature is enabled.
+          // `@media (transform-3d),(-o-transform-3d),(-moz-transform-3d),(-ms-transform-3d),(-webkit-transform-3d),(modernizr){ ... }`
+          ret = Modernizr['csstransforms3d'];
+        }
+        return ret;
+    };
+
+
+    tests['csstransitions'] = function() {
+        return testPropsAll('transitionProperty');
+    };
+
+
+    /*>>fontface*/
+    // @font-face detection routine by Diego Perini
+    // http://javascript.nwbox.com/CSSSupport/
+    tests['fontface'] = function() {
+        return Modernizr['fontface'];
+    };
+    /*>>fontface*/
+
+    // CSS generated content detection
+    tests['generatedcontent'] = function() {
+        return Modernizr['generatedcontent'];
+    };
+
+
+
+    // These tests evaluate support of the video/audio elements, as well as
+    // testing what types of content they support.
+    //
+    // We're using the Boolean constructor here, so that we can extend the value
+    // e.g.  Modernizr.video     // true
+    //       Modernizr.video.ogg // 'probably'
+    //
+    // Codec values from : http://github.com/NielsLeenheer/html5test/blob/9106a8/index.html#L845
+    //                     thx to NielsLeenheer and zcorpan
+
+    // Note: in FF 3.5.1 and 3.5.0, "no" was a return value instead of empty string.
+    //   Modernizr does not normalize for that.
+
+    tests['video'] = function() {
+        var elem = document.createElement('video'),
+            bool = false;
+            
+        // IE9 Running on Windows Server SKU can cause an exception to be thrown, bug #224
+        try {
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('video/ogg; codecs="theora"');
+
+                // Workaround required for IE9, which doesn't report video support without audio codec specified.
+                //   bug 599718 @ msft connect
+                var h264 = 'video/mp4; codecs="avc1.42E01E';
+                bool.h264 = elem.canPlayType(h264 + '"') || elem.canPlayType(h264 + ', mp4a.40.2"');
+
+                bool.webm = elem.canPlayType('video/webm; codecs="vp8, vorbis"');
+            }
+            
+        } catch(e) { }
+        
+        return bool;
+    };
+
+    tests['audio'] = function() {
+        var elem = document.createElement('audio'),
+            bool = false;
+
+        try { 
+            if ( bool = !!elem.canPlayType ) {
+                bool      = new Boolean(bool);
+                bool.ogg  = elem.canPlayType('audio/ogg; codecs="vorbis"');
+                bool.mp3  = elem.canPlayType('audio/mpeg;');
+
+                // Mimetypes accepted:
+                //   https://developer.mozilla.org/En/Media_formats_supported_by_the_audio_and_video_elements
+                //   http://bit.ly/iphoneoscodecs
+                bool.wav  = elem.canPlayType('audio/wav; codecs="1"');
+                bool.m4a  = elem.canPlayType('audio/x-m4a;') || elem.canPlayType('audio/aac;');
+            }
+        } catch(e) { }
+        
+        return bool;
+    };
+
+
+    // Firefox has made these tests rather unfun.
+
+    // In FF4, if disabled, window.localStorage should === null.
+
+    // Normally, we could not test that directly and need to do a
+    //   `('localStorage' in window) && ` test first because otherwise Firefox will
+    //   throw http://bugzil.la/365772 if cookies are disabled
+
+    // However, in Firefox 4 betas, if dom.storage.enabled == false, just mentioning
+    //   the property will throw an exception. http://bugzil.la/599479
+    // This looks to be fixed for FF4 Final.
+
+    // Because we are forced to try/catch this, we'll go aggressive.
+
+    // FWIW: IE8 Compat mode supports these features completely:
+    //   http://www.quirksmode.org/dom/html5.html
+    // But IE8 doesn't support either with local files
+
+    tests['localstorage'] = function() {
+        try {
+            return !!localStorage.getItem;
+        } catch(e) {
+            return false;
+        }
+    };
+
+    tests['sessionstorage'] = function() {
+        try {
+            return !!sessionStorage.getItem;
+        } catch(e){
+            return false;
+        }
+    };
+
+
+    tests['webworkers'] = function() {
+        return !!window.Worker;
+    };
+
+
+    tests['applicationcache'] = function() {
+        return !!window.applicationCache;
+    };
+
+
+    // Thanks to Erik Dahlstrom
+    tests['svg'] = function() {
+        return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
+    };
+
+    // specifically for SVG inline in HTML, not within XHTML
+    // test page: paulirish.com/demo/inline-svg
+    tests['inlinesvg'] = function() {
+      var div = document.createElement('div');
+      div.innerHTML = '<svg/>';
+      return (div.firstChild && div.firstChild.namespaceURI) == ns.svg;
+    };
+
+    // Thanks to F1lt3r and lucideer, ticket #35
+    tests['smil'] = function() {
+        return !!document.createElementNS && /SVG/.test(toString.call(document.createElementNS(ns.svg, 'animate')));
+    };
+
+    tests['svgclippaths'] = function() {
+        // Possibly returns a false positive in Safari 3.2?
+        return !!document.createElementNS && /SVG/.test(toString.call(document.createElementNS(ns.svg, 'clipPath')));
+    };
+
+    // input features and input types go directly onto the ret object, bypassing the tests loop.
+    // Hold this guy to execute in a moment.
+    function webforms() {
+        // Run through HTML5's new input attributes to see if the UA understands any.
+        // We're using f which is the <input> element created early on
+        // Mike Taylr has created a comprehensive resource for testing these attributes
+        //   when applied to all input types:
+        //   http://miketaylr.com/code/input-type-attr.html
+        // spec: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
+        
+        // Only input placeholder is tested while textarea's placeholder is not. 
+        // Currently Safari 4 and Opera 11 have support only for the input placeholder
+        // Both tests are available in feature-detects/forms-placeholder.js
+        Modernizr['input'] = (function( props ) {
+            for ( var i = 0, len = props.length; i < len; i++ ) {
+                attrs[ props[i] ] = !!(props[i] in inputElem);
+            }
+            return attrs;
+        })('autocomplete autofocus list placeholder max min multiple pattern required step'.split(' '));
+
+        // Run through HTML5's new input types to see if the UA understands any.
+        //   This is put behind the tests runloop because it doesn't return a
+        //   true/false like all the other tests; instead, it returns an object
+        //   containing each input type with its corresponding true/false value
+
+        // Big thanks to @miketaylr for the html5 forms expertise. http://miketaylr.com/
+        Modernizr['inputtypes'] = (function(props) {
+
+            for ( var i = 0, bool, inputElemType, defaultView, len = props.length; i < len; i++ ) {
+
+                inputElem.setAttribute('type', inputElemType = props[i]);
+                bool = inputElem.type !== 'text';
+
+                // We first check to see if the type we give it sticks..
+                // If the type does, we feed it a textual value, which shouldn't be valid.
+                // If the value doesn't stick, we know there's input sanitization which infers a custom UI
+                if ( bool ) {
+
+                    inputElem.value         = smile;
+                    inputElem.style.cssText = 'position:absolute;visibility:hidden;';
+
+                    if ( /^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined ) {
+
+                      docElement.appendChild(inputElem);
+                      defaultView = document.defaultView;
+
+                      // Safari 2-4 allows the smiley as a value, despite making a slider
+                      bool =  defaultView.getComputedStyle &&
+                              defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
+                              // Mobile android web browser has false positive, so must
+                              // check the height to see if the widget is actually there.
+                              (inputElem.offsetHeight !== 0);
+
+                      docElement.removeChild(inputElem);
+
+                    } else if ( /^(search|tel)$/.test(inputElemType) ){
+                      // Spec doesnt define any special parsing or detectable UI
+                      //   behaviors so we pass these through as true
+
+                      // Interestingly, opera fails the earlier test, so it doesn't
+                      //  even make it here.
+
+                    } else if ( /^(url|email)$/.test(inputElemType) ) {
+                      // Real url and email support comes with prebaked validation.
+                      bool = inputElem.checkValidity && inputElem.checkValidity() === false;
+
+                    } else if ( /^color$/.test(inputElemType) ) {
+                        // chuck into DOM and force reflow for Opera bug in 11.00
+                        // github.com/Modernizr/Modernizr/issues#issue/159
+                        docElement.appendChild(inputElem);
+                        docElement.offsetWidth;
+                        bool = inputElem.value != smile;
+                        docElement.removeChild(inputElem);
+
+                    } else {
+                      // If the upgraded input compontent rejects the :) text, we got a winner
+                      bool = inputElem.value != smile;
+                    }
+                }
+
+                inputs[ props[i] ] = !!bool;
+            }
+            return inputs;
+        })('search tel url email datetime date month week time datetime-local number range color'.split(' '));
+    }
+
+
+    // End of test definitions
+    // -----------------------
+
+
+
+    // Run through all tests and detect their support in the current UA.
+    // todo: hypothetically we could be doing an array of tests and use a basic loop here.
+    for ( var feature in tests ) {
+        if ( hasOwnProperty(tests, feature) ) {
+            // run the test, throw the return value into the Modernizr,
+            //   then based on that boolean, define an appropriate className
+            //   and push it into an array of classes we'll join later.
+            featureName  = feature.toLowerCase();
+            Modernizr[featureName] = tests[feature]();
+
+            classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
+        }
+    }
+
+    // input tests need to run.
+    Modernizr.input || webforms();
+
+
+    /**
+     * addTest allows the user to define their own feature tests
+     * the result will be added onto the Modernizr object,
+     * as well as an appropriate className set on the html element
+     *
+     * @param feature - String naming the feature
+     * @param test - Function returning true if feature is supported, false if not
+     */
+     Modernizr.addTest = function ( feature, test ) {
+       if ( typeof feature == "object" ) {
+         for ( var key in feature ) {
+           if ( hasOwnProperty( feature, key ) ) { 
+             Modernizr.addTest( key, feature[ key ] );
+           }
+         }
+       } else {
+
+         feature = feature.toLowerCase();
+
+         if ( Modernizr[feature] !== undefined ) {
+           // we're going to quit if you're trying to overwrite an existing test
+           // if we were to allow it, we'd do this:
+           //   var re = new RegExp("\\b(no-)?" + feature + "\\b");  
+           //   docElement.className = docElement.className.replace( re, '' );
+           // but, no rly, stuff 'em.
+           return; 
+         }
+
+         test = typeof test == "boolean" ? test : !!test();
+
+         docElement.className += ' ' + (test ? '' : 'no-') + feature;
+         Modernizr[feature] = test;
+
+       }
+
+       return Modernizr; // allow chaining.
+     };
+    
+
+    // Reset modElem.cssText to nothing to reduce memory footprint.
+    setCss('');
+    modElem = inputElem = null;
+
+    //>>BEGIN IEPP
+    // Enable HTML 5 elements for styling (and printing) in IE.
+    if ( window.attachEvent && (function(){ var elem = document.createElement('div');
+                                            elem.innerHTML = '<elem></elem>';
+                                            return elem.childNodes.length !== 1; })() ) {
+                                              
+        // iepp v2 by @jon_neal & afarkas : github.com/aFarkas/iepp/
+        (function(win, doc) {
+          win.iepp = win.iepp || {};
+          var iepp = win.iepp,
+            elems = iepp.html5elements || 'abbr|article|aside|audio|canvas|datalist|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video',
+            elemsArr = elems.split('|'),
+            elemsArrLen = elemsArr.length,
+            elemRegExp = new RegExp('(^|\\s)('+elems+')', 'gi'),
+            tagRegExp = new RegExp('<(\/*)('+elems+')', 'gi'),
+            filterReg = /^\s*[\{\}]\s*$/,
+            ruleRegExp = new RegExp('(^|[^\\n]*?\\s)('+elems+')([^\\n]*)({[\\n\\w\\W]*?})', 'gi'),
+            docFrag = doc.createDocumentFragment(),
+            html = doc.documentElement,
+            head = html.firstChild,
+            bodyElem = doc.createElement('body'),
+            styleElem = doc.createElement('style'),
+            printMedias = /print|all/,
+            body;
+          function shim(doc) {
+            var a = -1;
+            while (++a < elemsArrLen)
+              // Use createElement so IE allows HTML5-named elements in a document
+              doc.createElement(elemsArr[a]);
+          }
+
+          iepp.getCSS = function(styleSheetList, mediaType) {
+            if(styleSheetList+'' === undefined){return '';}
+            var a = -1,
+              len = styleSheetList.length,
+              styleSheet,
+              cssTextArr = [];
+            while (++a < len) {
+              styleSheet = styleSheetList[a];
+              //currently no test for disabled/alternate stylesheets
+              if(styleSheet.disabled){continue;}
+              mediaType = styleSheet.media || mediaType;
+              // Get css from all non-screen stylesheets and their imports
+              if (printMedias.test(mediaType)) cssTextArr.push(iepp.getCSS(styleSheet.imports, mediaType), styleSheet.cssText);
+              //reset mediaType to all with every new *not imported* stylesheet
+              mediaType = 'all';
+            }
+            return cssTextArr.join('');
+          };
+
+          iepp.parseCSS = function(cssText) {
+            var cssTextArr = [],
+              rule;
+            while ((rule = ruleRegExp.exec(cssText)) != null){
+              // Replace all html5 element references with iepp substitute classnames
+              cssTextArr.push(( (filterReg.exec(rule[1]) ? '\n' : rule[1]) +rule[2]+rule[3]).replace(elemRegExp, '$1.iepp_$2')+rule[4]);
+            }
+            return cssTextArr.join('\n');
+          };
+
+          iepp.writeHTML = function() {
+            var a = -1;
+            body = body || doc.body;
+            while (++a < elemsArrLen) {
+              var nodeList = doc.getElementsByTagName(elemsArr[a]),
+                nodeListLen = nodeList.length,
+                b = -1;
+              while (++b < nodeListLen)
+                if (nodeList[b].className.indexOf('iepp_') < 0)
+                  // Append iepp substitute classnames to all html5 elements
+                  nodeList[b].className += ' iepp_'+elemsArr[a];
+            }
+            docFrag.appendChild(body);
+            html.appendChild(bodyElem);
+            // Write iepp substitute print-safe document
+            bodyElem.className = body.className;
+            bodyElem.id = body.id;
+            // Replace HTML5 elements with <font> which is print-safe and shouldn't conflict since it isn't part of html5
+            bodyElem.innerHTML = body.innerHTML.replace(tagRegExp, '<$1font');
+          };
+
+
+          iepp._beforePrint = function() {
+            // Write iepp custom print CSS
+            styleElem.styleSheet.cssText = iepp.parseCSS(iepp.getCSS(doc.styleSheets, 'all'));
+            iepp.writeHTML();
+          };
+
+          iepp.restoreHTML = function(){
+            // Undo everything done in onbeforeprint
+            bodyElem.innerHTML = '';
+            html.removeChild(bodyElem);
+            html.appendChild(body);
+          };
+
+          iepp._afterPrint = function(){
+            // Undo everything done in onbeforeprint
+            iepp.restoreHTML();
+            styleElem.styleSheet.cssText = '';
+          };
+
+
+
+          // Shim the document and iepp fragment
+          shim(doc);
+          shim(docFrag);
+
+          //
+          if(iepp.disablePP){return;}
+
+          // Add iepp custom print style element
+          head.insertBefore(styleElem, head.firstChild);
+          styleElem.media = 'print';
+          styleElem.className = 'iepp-printshim';
+          win.attachEvent(
+            'onbeforeprint',
+            iepp._beforePrint
+          );
+          win.attachEvent(
+            'onafterprint',
+            iepp._afterPrint
+          );
+        })(window, document);
+    }
+    //>>END IEPP
+
+    // Assign private properties to the return object with prefix
+    Modernizr._version      = version;
+
+    // expose these for the plugin API. Look in the source for how to join() them against your input
+    Modernizr._prefixes     = prefixes;
+    Modernizr._domPrefixes  = domPrefixes;
+    
+    // Modernizr.mq tests a given media query, live against the current state of the window
+    // A few important notes:
+    //   * If a browser does not support media queries at all (eg. oldIE) the mq() will always return false
+    //   * A max-width or orientation query will be evaluated against the current state, which may change later.
+    //   * You must specify values. Eg. If you are testing support for the min-width media query use: 
+    //       Modernizr.mq('(min-width:0)')
+    // usage:
+    // Modernizr.mq('only screen and (max-width:768)')
+    Modernizr.mq            = testMediaQuery;   
+    
+    // Modernizr.hasEvent() detects support for a given event, with an optional element to test on
+    // Modernizr.hasEvent('gesturestart', elem)
+    Modernizr.hasEvent      = isEventSupported; 
+
+    // Modernizr.testProp() investigates whether a given style property is recognized
+    // Note that the property names must be provided in the camelCase variant.
+    // Modernizr.testProp('pointerEvents')
+    Modernizr.testProp      = function(prop){
+        return testProps([prop]);
+    };        
+
+    // Modernizr.testAllProps() investigates whether a given style property,
+    //   or any of its vendor-prefixed variants, is recognized
+    // Note that the property names must be provided in the camelCase variant.
+    // Modernizr.testAllProps('boxSizing')    
+    Modernizr.testAllProps  = testPropsAll;     
+
+
+    
+    // Modernizr.testStyles() allows you to add custom styles to the document and test an element afterwards
+    // Modernizr.testStyles('#modernizr { position:absolute }', function(elem, rule){ ... })
+    Modernizr.testStyles    = injectElementWithStyles; 
+
+
+    // Modernizr.prefixed() returns the prefixed or nonprefixed property name variant of your input
+    // Modernizr.prefixed('boxSizing') // 'MozBoxSizing'
+    
+    // Properties must be passed as dom-style camelcase, rather than `box-sizing` hypentated style.
+    // Return values will also be the camelCase variant, if you need to translate that to hypenated style use:
+    //
+    //     str.replace(/([A-Z])/g, function(str,m1){ return '-' + m1.toLowerCase(); }).replace(/^ms-/,'-ms-');
+    
+    // If you're trying to ascertain which transition end event to bind to, you might do something like...
+    // 
+    //     var transEndEventNames = {
+    //       'WebkitTransition' : 'webkitTransitionEnd',
+    //       'MozTransition'    : 'transitionend',
+    //       'OTransition'      : 'oTransitionEnd',
+    //       'msTransition'     : 'msTransitionEnd', // maybe?
+    //       'transition'       : 'transitionEnd'
+    //     },
+    //     transEndEventName = transEndEventNames[ Modernizr.prefixed('transition') ];
+    
+    Modernizr.prefixed      = function(prop){
+      return testPropsAll(prop, 'pfx');
+    };
+
+
+
+    // Remove "no-js" class from <html> element, if it exists:
+    docElement.className = docElement.className.replace(/\bno-js\b/, '')
+                            
+                            // Add the new classes to the <html> element.
+                            + (enableClasses ? ' js ' + classes.join(' ') : '');
+
+    return Modernizr;
+
+})(this, this.document);
+
+define("3rdparty/modernizr-2.0.6", function(){});
+
+define('patterns/autofocus',[
+    'jquery',
+    "../registry"
+], function($, registry) {
+    var autofocus = {
+        name: "autofocus",
+        trigger: ":input.pat-autofocus,:input[autofocus]",
+
+        init: function($el) {
+            for (var i=0; i<$el.length; i+=1)
+                if (!$el.eq(i).val()) {
+                    $el.get(i).focus();
+                    return;
+                }
+
+            $el.eq(0).focus();
+        }
+    };
+
+    registry.register(autofocus);
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-define('patterns/inject',['require','../core/parser','../lib/inject','../logging','../patterns'],function(require) {
-    var Parser = require('../core/parser'),
-        parser = new Parser("source; target; replace; pre; post; append; prepend"),
-        injectlib = require('../lib/inject'),
-        log = require('../logging').getLogger('inject');
+define('patterns/autoload',[
+    "jquery",
+    "../registry"
+], function($, patterns) {
+    var autoload = {
+        name: "autoload",
+        trigger: ".pat-autoload-visible",
 
-    var init = function($el, opts) {
-        // XXX: if opts, set them on $el as if defined there
+        init: function($root) {
+            $root.each(function() {
+                var $autoload = $(this),
+                    $scrollable = $autoload.parents(":scrollable");
 
-        // if the element referenced by href-next exists already,
-        // point to it and disable injection
-        var hrefnext = $el.data('href-next');
-        if (hrefnext && ($(hrefnext).length > 0)) {
-            log.debug('Skipping as href-next already exists', $(hrefnext));
-            return $el.attr({href: hrefnext});
+                // ignore executed autoloads
+                if ($autoload.data('patterns.autoload')) return false;
+
+                // function to trigger the autoload and mark as triggered
+                var trigger = function() {
+                    $autoload.data('patterns.autoload', true);
+                    $autoload.trigger('click');
+                    return true;
+                };
+
+                // if autoload has no scrollable parent -> trigger it, it is visible
+                if ($scrollable.length === 0) return trigger();
+
+                // if scrollable parent and visible -> trigger it
+                // we only look at the closest scrollable parent, no nesting
+                var checkVisibility = function() {
+                    if ($autoload.data('patterns.autoload')) return false;
+                    var reltop = $autoload.offset().top - $scrollable.offset().top - 1000,
+                        doTrigger = reltop <= $scrollable.innerHeight();
+                    if (doTrigger) return trigger();
+                    return false;
+                };
+                if (checkVisibility()) return true;
+
+                // wait to become visible - again only immediate scrollable parent
+                $($scrollable[0]).on("scroll", checkVisibility);
+                $(window).on('resize.pat-autoload', checkVisibility);
+                return false;
+            });
+            return $root;
         }
-
-        // ensure element is ajaxified
-        var ajaxify = require('../patterns').ajaxify.init;
-        ajaxify($el);
-
-        // inject in case of successfull ajax request
-        $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
-            // retrieve href and split into url and default srcid
-            var href = ($el.is('form') ? $el.attr('action') : $el.attr('href')).split('#'),
-                srcid = href[1];
-
-            if (ev.target !== $el[0]) {
-                //log.debug('ignoring ajax event for', $(ev.target), 'not',  $el[0]);
-                return;
-            }
-            if (href[0] !== ajaxopts.url) {
-                //log.debug('ignoring ajax event', ajaxopts.url, href[0]);
-                return;
-            }
-            log.debug('executing', $el);
-
-            if (href.length > 2) {
-                log.warn('Ignoring additional source ids:', href.slice(2), $el);
-            }
-
-            // fetch defaults from parents
-            var $defaults = $el.parents('[data-inject-defaults]'),
-                defaults = $defaults.toArray().reduceRight(function(acc, el) {
-                    var opts_str = $(el).attr('data-inject-defaults');
-                    return parser.parse(opts_str, acc);
-                }, {});
-
-            if (srcid) defaults.source = '#' + srcid;
-
-            var opts_str = $el.attr('data-inject') || "",
-                opts = parser.parse(opts_str, defaults);
-
-            // default: replace targets content with sources content
-            var method_name = "content";
-
-            // post-process options
-            if (opts.replace) {
-                opts.target = opts.replace;
-                method_name = "replace";
-            }
-            if (opts.pre) {
-                opts.target = opts.pre;
-                method_name = "pre";
-            }
-            if (opts.post) {
-                opts.target = opts.post;
-                method_name = "post";
-            }
-            if (!opts.source) {
-                opts.source = '#__original_body';
-            }
-
-            injector($el, method_name, opts)(data);
-        });
-
-        return $el;
     };
 
+    patterns.register(autoload);
+});
 
-    // create an injector to be run on ajax success
-    var injector = function($el, method_name, opts) {
-        // hack to support modals
-        var modal = $el.hasClass('modal');
-        if (modal) {
-            if (opts.target) log.warn('Overriding target for modal');
-            opts.target = '#modal';
-            method_name = "replace";
-        }
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * @license
+ * Patterns @VERSION@ parser - argument parser
+ *
+ * Copyright 2012 Simplon B.V.
+ * Copyright 2012 Florian Friesdorf
+ */
+define('core/parser',[
+    'jquery',
+    '../logging'
+], function($, logging) {
+    var log = logging.getLogger('parser');
 
-        if (!opts.target) {
-            opts.target = opts.source;
-        }
+    function ArgumentParser(name) {
+        this.order = [];
+        this.mappings = {};
+        this.parameters = {};
+        this.attribute = "data-pat-" + name;
+    }
 
-        var method = injectlib[method_name],
-            $targets = $(opts.target);
+    ArgumentParser.prototype = {
+        named_param_pattern: /^\s*([a-zA-Z0-9\-]+)\s*:(.*)/,
 
+        add_argument: function(name, default_value, choices) {
+            var js_name = name.replace(/\-([a-z])/g, function(_,p1){return p1.toUpperCase();}),
+                spec;
 
-        if ($targets.length === 0) {
-            if (opts.target.slice(0,1) !== '#') {
-                log.error('only id supported for non-existing target');
-            }
-            $targets = $('<div />').attr({id: opts.target.slice(1)});
-            $('body').append($targets);
-        }
+            spec={name: name,
+                  value: (default_value===undefined) ? null : default_value};
+            if (choices && Array.isArray(choices) && choices.length) {
+                spec.choices=choices;
+                spec.type=this._typeof(choices[0]);
+            } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                spec.type=this.parameters[spec.value.slice(1)].type;
+            else
+                spec.type=this._typeof(spec.value);
 
-        var inject = function(data) {
-            // just copied from old inject code
-            data = data
-                .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                .replace(/<\/body(.*)>/gi,'</div>');
-            var $sources = $('<div/>').html(data).find(opts.source);
+            this.order.push(name);
+            this.mappings[name]=js_name;
+            this.parameters[js_name]=spec;
+        },
 
-            if ($sources.length === 0) {
-                log.error('Sources are empty for selector:', opts.source);
+        _typeof: function(obj) {
+            var type = typeof obj;
+            if (obj===null)
+                return "null";
+            return type;
+        },
+
+        _set: function(opts, name, value) {
+            if (!(name in this.parameters)) {
+                log.debug("Ignoring value for unknown argument " + name);
                 return;
             }
 
-            if (modal) {
-                var $modal = $('<div id="modal" class="modal" />');
-                if ($sources.length === 1) {
-                    // for single source copy its content into the modal
-                    $sources = $modal.html($sources.html());
-                } else {
-                    // for multiple sources wrap them into a modal
-                    $sources = $modal.html($sources);
+            var spec=this.parameters[name];
+            try {
+                if (typeof value !== spec.type)
+                    switch (spec.type) {
+                        case "boolean":
+                            if (typeof value === "string") {
+                                value=value.toLowerCase();
+                                var num = parseInt(value, 10);
+                                if (!isNaN(num))
+                                    value=!!num;
+                                else
+                                    value=(value==="true" || value==="y" || value==="yes" || value==="y");
+                            } else if (typeof value === "number")
+                                value=!!value;
+                            else
+                                throw ("Cannot convert value for " + name + " to boolean");
+                            break;
+                        case "number":
+                            if (typeof value === "string") {
+                                value=parseInt(value, 10);
+                                if (isNaN(value))
+                                    throw ("Cannot convert value for " + name + " to number");
+                            } else if (typeof value === "boolean")
+                                value=value + 0;
+                            else
+                                throw ("Cannot convert value for " + name + " to number");
+                            break;
+                        case "string":
+                            value=value.toString();
+                            break;
+                        case "null":  // Missing default values
+                        case "undefined":
+                            break;
+                        default:
+                            throw ("Do not know how to convert value for " + name + " to " + spec.type);
+                    }
+
+                if (spec.choices && spec.choices.indexOf(value)===-1)
+                    log.warn("Illegal value for " + name + ": " + value);
+                else
+                    opts[name]=value;
+            } catch (e) {
+                log.warn(e);
+            }
+        },
+
+        _parse: function(parameter) {
+            var opts = {}, i, name;
+
+            if (parameter) {
+                var parts = parameter.split(";"),
+                    part, matches;
+
+                // Grab all positional parameters
+                i=-1;
+                while (parts.length) {
+                    i++;
+                    if (i>=this.order.length) {
+                        break;
+                    }
+                    part = parts.shift().trim();
+                    if (!part)
+                        continue;
+                    if (this.named_param_pattern.test(part)) {
+                        parts.unshift(part);
+                        break;
+                    }
+                    this._set(opts, this.mappings[this.order[i]], part.trim());
+                }
+
+                // Handle all named parameters
+                for (i=0; i<parts.length; i++) {
+                    if (!parts[i])
+                        continue;
+
+                    matches = parts[i].match(this.named_param_pattern);
+                    if (!matches) {
+                        log.warn("Positional parameters not allowed after named parameters");
+                        break;
+                    }
+                    if (this.parameters[this.mappings[matches[1]]] === undefined) {
+                        log.warn("Unknown named parameter " + matches[1]);
+                        continue;
+                    }
+
+                    this._set(opts, this.mappings[matches[1]], matches[2].trim());
                 }
             }
 
-            // perform injection, suppressing event
-            $targets = method($sources, $targets, true);
-
-            // XXX: think about making the href-next thing implicit
-            var hrefnext = $el.data('href-next');
-            if (hrefnext) {
-                $el.attr({href: hrefnext});
-                $el.off('.ajaxify');
-                $el.off('.inject.ajaxify');
-            }
-
-            // check whether we are inside a navigation element and
-            // set .current accordingly
-            var $nav = $el.parents('nav, .navigation');
-            if ($nav.length > 1) {
-                $nav = $($nav[0]);
-                log.warn('Inside multiple navigations, using innermost', $nav);
-            }
-            if ($nav.length > 0) {
-                $nav.children('.current').removeClass('current');
-                $el.addClass('current');
-            }
-
-            // trigger inject event
-            $targets.trigger('inject', {
-                method: method_name,
-                $sources: $sources,
-                $trigger_el: $el
-            });
-            $el.trigger('patterns-inject_interim-triggered');
-        };
-        return inject;
-    };
-
-    var pattern = {
-        initialised_class: 'inject',
-        markup_trigger: 'form.inject, form[data-inject]',
-        // XXX: unsupported
-        opts: {
-            "data-inject":
-            "source; target; replace; pre; post; append; prepend"
+            return opts;
         },
-        supported_tags: ['a', 'form'], // XXX: unsupported
-        init: init
+
+        _defaults: function() {
+            var result = {};
+            for (var name in this.parameters)
+                result[name]=this.parameters[name].value;
+            return result;
+        },
+
+        parse: function($el, options, multiple) {
+            if (typeof options==="boolean" && multiple===undefined) {
+                multiple=options;
+                options={};
+            }
+
+            var stack = [[this._defaults()]];
+
+            var $parents = $el.parents().andSelf(),
+                final_length = 1,
+                i, data, frame;
+            for (i=0; i<$parents.length; i++) {
+                data = $parents.eq(i).attr(this.attribute);
+                if (data) {
+                    var _parse = this._parse.bind(this); // Needed to fix binding in map call
+                    if (data.match(/&&/))
+                        frame=data.split(/\s*&&\s*/).map(_parse);
+                    else
+                        frame=[_parse(data)];
+                    final_length = Math.max(frame.length, final_length);
+                    stack.push(frame);
+                }
+            }
+            if (typeof options==="object") {
+                if (Array.isArray(options)) {
+                    stack.push(options);
+                    final_length=Math.max(options.length, final_length);
+                } else
+                    stack.push([options]);
+            }
+
+            if (!multiple)
+                final_length=1;
+
+            var results=[], frame_length, x, xf;
+            for (i=0; i<final_length; i++)
+                results.push({});
+
+            for (i=0; i<stack.length; i++) {
+                frame=stack[i];
+                frame_length=frame.length-1;
+
+                for (x=0; x<final_length; x++) {
+                    xf=(x>frame_length) ? frame_length : x;
+                    results[x]=$.extend(results[x], frame[xf]);
+                }
+            }
+
+            // Resolve references
+            var name, value, spec;
+            for (i=0; i<results.length; i++)
+                for (name in results[i]) {
+                    spec=this.parameters[name];
+                    if (results[i][name]===spec.value && typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                        results[i][name]=results[i][spec.value.slice(1)];
+                }
+
+            return multiple ? results : results[0];
+        }
     };
 
-    return pattern;
+    return ArgumentParser;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-define('patterns/ajaxify',[
-    'require',
-    '../lib/jquery.form/jquery.form',
-    '../logging',
-    './inject'
-], function(require) {
-    var log = require('../logging').getLogger('ajaxify');
+define('patterns/autosubmit',[
+        "jquery",
+        "../registry",
+        "../logging",
+        "../core/parser",
+        "../utils"
+], function($, patterns, logging, Parser, utils) {
+    var log = logging.getLogger("autosubmit"),
+        parser = new Parser("autosubmit");
+    parser.add_argument("delay");
 
-    var init = function($el, opts) {
-        // skip elements that are covered by old-style injection
-        if ($el.is('.injection,[data-injection]')) {
-            log.debug('skipping element claimed by old injection', $el);
-            return false;
-        }
+    var autosubmit = {
+        name: "autosubmit",
+        trigger: ".pat-autosubmit",
 
-        var url = ($el.attr('action') || $el.attr('href') || '').split('#')[0];
-        if (!url) {
-            log.error('Element has neither action nor href', $el);
-            return false;
-        }
-
-        // ajaxify form
-        if ($el.is('form')) {
-            if (($el.attr('method') || '').toLowerCase() === 'get') {
-                log.warn('Ignoring form method GET, enforcing POST');
+        parse: function($trigger) {
+            var options = parser.parse($trigger);
+            if (Array.isArray(options)) {
+                log.error("autosubmit does not support multiple options");
+                options = options[0];
             }
-            $el.ajaxForm({
-                context: $el,
-                // in plone we use this to figure out whether a form is
-                // requested or submitted
-                // XXX: consider setting this via $.ajaxSetup in a
-                // specific application
-                data: {submit: "submit"},
-                // enforce POST, as we compare the url to figure out
-                // who was triggered
-                // XXX: this should not be needed anymore, leaving it
-                // in for now not to cause additional problems
-                //type: $el.attr('method') || 'POST',
-                type: 'POST'
-                // XXX: url may not be set here but needs to be
-                // determined upon submit in jquery.forms, as a
-                // redirect will change the action of already
-                // ajaxified forms
-                //url: url
+            return options;
+        },
+
+        validateOptions: function(options) {
+            if (typeof options.delay==="string") {
+                if (options.delay==="delay" || options.delay==="true")
+                    options.delay=400;
+                else {
+                    var number = parseInt(options.delay, 10);
+                    if (isNaN(number)) {
+                        log.error("Invalid delay value");
+                        return null;
+                    }
+                    options.delay=number;
+                }
+            } else if (typeof options.delay==="number") {
+                if (options.delay<0) {
+                    log.error("Timetravel machine broken - negative delay not possible.");
+                    return null;
+                }
+            } else if (options.delay) {
+                log.error("Invalid delay value");
+                return null;
+            }
+            return options;
+        },
+
+        onChange: function(event) {
+            var $trigger = $(this),
+                $form = this.tagName==="FORM" ? $trigger : $trigger.closest("form");
+
+            if ($trigger.hasClass("auto-suggest")) {
+                log.debug("Ignored event from autosuggest field.");
+                return;
+            }
+
+            if ($trigger.is("input[type=search]")) {
+                // clicking X on type=search deletes data attrs,
+                // therefore we store the old value on the form.
+                var name = $victim.attr('name'),
+                    key = name + '-autosubmit-oldvalue',
+                    oldvalue = $form.data(key) || "",
+                    curvalue = $target[0].value || "";
+
+                if (!name)
+                    log.warn('type=search without name, will be a problem' +
+                             ' if there are multiple', $target);
+                if (oldvalue===curvalue)
+                    return;
+                $form.data(key, curvalue);
+            }
+
+            log.info("triggered by " + event.type);
+            $form.submit();
+            event.stopPropagation();
+        },
+
+        init: function($root, defaults) {
+            defaults = defaults || {};
+            return $root
+                .find("input[type-search]").andSelf()
+                .each(function() {
+                var $trigger = $(this),
+                    options = $.extend({}, autosubmit.parse($trigger), defaults);
+                options=autosubmit.validateOptions(options);
+                if (!options)
+                    return;
+
+                var func = autosubmit.onChange;
+                if (options.delay)
+                    func=utils.debounce(func, options.delay);
+                $trigger
+                    .data("patternAutosubmit", options)
+                    .off(".patternAutosubmit")
+                    .on("change.patternAutosubmit", func)
+                    .on("keyup.patternAutosubmit", "input:not([type=file],[type=checkbox],[type=radio],[type=hidden],[type=image],[type=password],[type=submit])", func);
             });
-        } else {
-            $el.on('click.ajaxify', function(ev, opts) {
-                ev.preventDefault();
-                $.ajax({
-                    context: $el,
-                    url: url
-                });
-            });
+        },
+
+        destroy: function($root) {
+            return $root
+                .find("input[type-search]").andSelf()
+                .each(function() {
+                          $(this).removeData("patternAutosubmit").off(".patternAutosubmit");
+                      });
         }
-
-        $el.ajaxError(function(ev, jqxhr, ajaxopts, error) {
-            // ajaxHandlers are global, we are only interested in our form
-            if (url !== ajaxopts.url) {
-                log.debug('ignoring ajax event', ajaxopts.url, url);
-                return;
-            }
-            if (jqxhr.status === 0) {
-                log.debug('ignoring error due to canceled request');
-                return;
-            }
-            log.debug('error', ev, jqxhr, opts, error);
-
-            // XXX: this needs to be solved differently
-            var msg = [jqxhr.status, jqxhr.statusText, error, opts && opts.url].join(' '),
-                // XXX: error notification pattern!
-                $error = $('<div class="modal">' +
-                           '<h3>Error</h3>' +
-                           '<div class="error message">'+msg+'</div>' +
-                           '</div>');
-            var inject = require('./inject');
-            inject.append($error, $('body'));
-        });
-
-        $el.ajaxSuccess(function(ev, jqxhr, ajaxopts, data) {
-            // ajaxHandlers are global, we are only interested in our form
-            // XXX: figure out how much of this is true with a multi-form test
-            if (ev.target !== $el[0]) {
-                //log.debug('ignoring ajax event for', $(ev.target), 'not',  $el[0]);
-                return;
-            }
-            if (url !== ajaxopts.url) {
-                //log.debug('ignoring ajax event', ajaxopts.url, href[0]);
-                return;
-            }
-
-            var redirect = jqxhr.getResponseHeader('X-Patterns-Redirect-Url'),
-                oldurl = jqxhr.getResponseHeader('X-Patterns-Previous-Url'),
-                reload = jqxhr.getResponseHeader('X-Patterns-Reload');
-
-            if ((reload !== null) && (reload !== undefined)) {
-                log.debug('received reload request');
-
-                $('form.inject.reload').submit();
-                $('a.inject.reload:not(.navigation a)').click();
-                $('.navigation a.inject.reload.current').click();
-            } else if (redirect) {
-                log.debug('received redirect request', redirect);
-
-                // perform redirect
-                window.location.href = redirect;
-            }
-
-            // We are done
-            log.debug('success', ev, jqxhr, opts);
-
-            // XXX: below here disabled for now
-            // if (!oldurl) {
-            //     log.error('Missing header: X-Patterns-Previous-Url');
-            //     return;
-            // }
-            // if (!oldurl.slice(-1) === '/') oldurl = oldurl + '/';
-
-            // $('form[action^="' + oldurl + '"]').each(function() {
-            //     var $form = $(this),
-            //         action = $form.attr('action').replace(oldurl, redirect);
-            //     $form.attr({action: action});
-            //     log.debug('rewrote form action: s:', oldurl, ":", redirect, ":", $form);
-            // });
-
-            // XXX: rewrite anchors that point to the old url?
-        });
-
-        return $el;
     };
 
-    return {
-        markup_trigger: 'form.ajaxify, a.ajaxify',
-        initialised_class: 'ajaxified',
-        init: init
-    };
+    patterns.register(autosubmit);
+    return autosubmit;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
@@ -10639,40 +9025,98 @@ define("3rdparty/jquery.autoSuggest", function(){});
 
 // auto-suggest docs:
 // http://code.drewwilson.com/entry/autosuggest-jquery-plugin
+// Changes to previous
+// - prefill and ashtmlid in data-auto-suggest-config
 define('patterns/autosuggest',[
-    'require',
+    'jquery',
     '../logging',
+    '../core/parser',
+    '../registry',
     '../utils',
     '../3rdparty/jquery.autoSuggest'
-], function(require, logging, utils) {
+], function($, logging, Parser, registry, utils) {
     var log = logging.getLogger('autosuggest');
 
-    var init = function($el, opts) {
-        // fetch words for auto-suggestion
-        var $cfg = $el.parents('[data-auto-suggest-config]:first');
+    var parser = new Parser("autosuggest");
+    parser.add_argument('words');
+    parser.add_argument('prefill');
+    parser.add_argument('as-html-id', false);
+    parser.add_argument('selected-value-prop', "name");
+    parser.add_argument('search-obj-prop', "name");
+    parser.add_argument('start-text', "Enter text");
 
-        // XXX: do this properly
-        var words = (($cfg.data('auto-suggest-config') || '')
-                     .split(':')[1] || '').split(/\s*,\s*/);
-        var data = words.map(function(word) {
-            return {value: word, name: word};
-        });
-        var $prefillcfg = $el.parents('[data-auto-suggest-prefill]:first');
-        var prefill = $prefillcfg.data('auto-suggest-prefill');
-        if (prefill === undefined) prefill = '';
-        if (prefill.slice(0,1) === ',') prefill = prefill.slice(1);
+    var _ = {
+        name: 'autosuggest',
+        trigger: "input.pat-autosuggest",
+        init: function($el, opts) {
+            if ($el.length > 1) {
+                return $el.map(function() {
+                    return _.init($(this), opts);
+                });
+            }
 
-        var $asHtmlIDcfg = $el.parents('[data-auto-suggest-ashtmlid]:first');
-        var asHtmlID = $asHtmlIDcfg.data('auto-suggest-ashtmlid') || false;
+            // fetch config from first parent found
+            cfg = _.parser.parse($el, opts);
+            if ($el.attr('readonly')) {
+                cfg.startText = "";
+            }
 
-        // are we autosubmit?
-        var autosubmit = $el.is('.auto-submit') ||
-                ($el.parents('.auto-submit').length > 0);
-        log.debug('auto-submit', autosubmit, $el);
+            if (cfg.prefill && (cfg.prefill.slice(0,1) === ',')) {
+                cfg.prefill = cfg.prefill.slice(1);
+            }
 
-        $el.on('keydown', function(ev) {
+            $el.data("patterns.autosuggest", cfg);
+
+            $el.on('keydown.pat-autosuggest', _.onKeyDown);
+
+            // are we autosubmit?
+            var autosubmit = $el.is('.pat-autosubmit') ||
+                    ($el.parents('.pat-autosubmit').length > 0);
+            log.debug('autosubmit', autosubmit, $el);
+
+            var $form;
+            if (autosubmit) {
+                $form = $el.parents('form');
+                var submit_debounced = utils.debounce(function() {
+                    $form.submit();
+                }, 400);
+                cfg.selectionAdded = function($item) {
+                    log.debug('submit because selection was added', $item);
+                    // trigger the form
+                    submit_debounced();
+                };
+                cfg.selectionRemoved = function($item) {
+                    // ignore removal request if readonly
+                    if ($el.attr('readonly')) return;
+                    log.debug('submit because selection was removed', $item);
+                    // trigger the form
+                    $item.remove();
+                    submit_debounced();
+                };
+            }
+
+            var data = cfg.words.split(/\s*,\s*/).map(function(word) {
+                return {value: word, name: word};
+            });
+
+            $el.autoSuggest(data, cfg);
+
+            return $el;
+        },
+        destroy: function($el) {
+            $el.off('.pat-autosuggest');
+            $el.data('patterns.autosuggest', null);
+
+            // XXX: destroy the jqueryPlugin, unfortunately it doesn't
+            // support this as of now
+        },
+
+        parser: parser,
+
+        onKeyDown: function(ev) {
+            var $this = $(this);
             if (ev.which === 13) {
-                var $results = $el.parents('.as-selections').next();
+                var $results = $this.parents('.as-selections').next();
                 ev.preventDefault();
                 // skip ENTER->comma translation, if selection is active
                 if (($results.is(':visible')) &&
@@ -10681,49 +9125,12 @@ define('patterns/autosuggest',[
                 newev.ctrlKey = false;
                 newev.which = 188;
                 newev.keyCode = 188;
-                $el.trigger(newev);
+                $this.trigger(newev);
             }
-        });
-
-        var cfg = {
-            asHtmlID: asHtmlID,
-            preFill: prefill,
-            selectedValueProp: "name",
-            searchObjProp: "name",
-            startText: $el.attr('readonly') ? "" : "Click to add labels"
-        };
-        var $form;
-        if (autosubmit) {
-            $form = $el.parents('form');
-            var submit_debounced = utils.debounce(function() {
-                $form.submit();
-            }, 400);
-            cfg.selectionAdded = function($item) {
-                log.debug('submit because selection was added', $item);
-                // trigger the form
-                submit_debounced();
-            };
-            cfg.selectionRemoved = function($item) {
-                // ignore removal request if readonly
-                if ($el.attr('readonly')) return;
-                log.debug('submit because selection was removed', $item);
-                // trigger the form
-                $item.remove();
-                submit_debounced();
-            };
         }
-
-        $el.autoSuggest(data, cfg);
     };
-
-    var pattern = {
-        markup_trigger: "input.auto-suggest",
-        initialised_class: "auto-suggest",
-        register_jquery_plugin: false,
-        init: init
-    };
-
-    return pattern;
+    registry.register(_);
+    return _;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
@@ -11688,192 +10095,2070 @@ Copyright (c) 2011 by Harvest
 define("patterns/../../lib/chosen.jquery", function(){});
 
 define('patterns/breadcrumbs',[
-    'require',
-    '../../lib/chosen.jquery',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('breadcrumbs');
+    'jquery',
+    '../logging',
+    '../registry',
+    '../../lib/chosen.jquery'
+], function($, logging, registry) {
+    var log = logging.getLogger('breadcrumbs');
 
-    var init = function($el, opts) {
-        // wrap elements in a DIV that will be shifted around
-        var $content = $el.children()
-                .wrapAll('<div class="breadcrumbs-content"></div>').parent();
+    var _ = {
+        name: "breadcrumbs",
+        trigger: 'nav.pat-breadcrumbs',
+        init: function($el, opts) {
+            if ($el.length > 1) {
+                return $el.map(function() {
+                    return _.init($(this), opts);
+                });
+            }
 
-        // set fixed width on content
-        var width = $content.children().toArray().reduce(function(acc, el) {
-            return acc + $(el).outerWidth(true);
-        }, 0);
-        $content.width(width);
+            // wrap elements in a DIV that will be shifted around
+            var $content = $el.children()
+                    .wrapAll('<div class="pat-breadcrumbs-content"></div>').parent();
 
-        // shift ctrl
-        var $ctrl = $('<span class="button shift">shift</span>')
-                .prependTo($el);
+            // set fixed width on content
+            var width = $content.children().toArray().reduce(function(acc, el) {
+                return acc + $(el).outerWidth(true);
+            }, 0);
+            $content.width(width);
 
-        var shifted = false,
-            shifting = false,
-            difference = 0;
-        var shifter = function(toggle) {
-            return function() {
-                var margin;
-                if (toggle) {
-                    margin = shifted ? 0 : difference;
-                    $content.animate({"margin-left": margin}, function() {
-                        $ctrl.toggleClass('shift-right shift-left');
-                        shifted = !shifted;
-                    });
+            // shift ctrl
+            var $ctrl = $('<span class="button shift">shift</span>')
+                    .prependTo($el);
+
+            var shifted = false,
+                shifting = false,
+                difference = 0;
+            var shifter = function(toggle) {
+                return function() {
+                    var margin;
+                    if (toggle) {
+                        margin = shifted ? 0 : difference;
+                        $content.animate({"margin-left": margin}, function() {
+                            $ctrl.toggleClass('shift-right shift-left');
+                            shifted = !shifted;
+                        });
+                    } else {
+                        margin = shifted ? difference : 0;
+                        $content.css({"margin-left": margin});
+                    }
+                };
+            };
+
+            var maybeshift = function() {
+                // account for other stuff on the same line (100px)
+                difference = $el.innerWidth() - $content.width() - 100;
+
+                if (difference < 0) {
+                    // we should be shifting
+                    if (!shifting) {
+                        shifting = true;
+                        $el.addClass('shifting');
+                        $ctrl.removeClass('shift-right');
+                        $ctrl.addClass('shift-left');
+                        $ctrl.on('click.pat-breadcrumbs', shifter(true));
+                        $ctrl.click();
+                    } else {
+                        // a shifter that keeps state
+                        shifter(false)();
+                    }
                 } else {
-                    margin = shifted ? difference : 0;
-                    $content.css({"margin-left": margin});
+                    // we should not be shifting
+                    if (shifting) {
+                        $content.animate({"margin-left": 0}, function() {
+                            shifted = false;
+                            shifting = false;
+                            $el.removeClass('shifting');
+                            $ctrl.removeClass('shift-left shift-right');
+                            $ctrl.off('.pat-breadcrumbs');
+                        });
+                    }
                 }
             };
-        };
+            maybeshift();
+            $(window).on('resize.pat-breadcrumbs', maybeshift);
 
-        var maybeshift = function() {
-            // account for other stuff on the same line (100px)
-            difference = $el.innerWidth() - $content.width() - 100;
-
-            if (difference < 0) {
-                // we should be shifting
-                if (!shifting) {
-                    shifting = true;
-                    $el.addClass('shifting');
-                    $ctrl.removeClass('shift-right');
-                    $ctrl.addClass('shift-left');
-                    $ctrl.on('click.breadcrumbs', shifter(true));
-                    $ctrl.click();
-                } else {
-                    // a shifter that keeps state
-                    shifter(false)();
-                }
-            } else {
-                // we should not be shifting
-                if (shifting) {
-                    $content.animate({"margin-left": 0}, function() {
-                        shifted = false;
-                        shifting = false;
-                        $el.removeClass('shifting');
-                        $ctrl.removeClass('shift-left shift-right');
-                        $ctrl.off('.breadcrumbs');
-                    });
-                }
-            }
-        };
-        maybeshift();
-        $(window).on('resize.breadcrumbs', maybeshift);
+            return $el;
+        },
+        destroy: function($el) {
+            $el.off('.pat-breadcrumbs');
+        }
     };
-
-    var pattern = {
-        markup_trigger: 'nav.breadcrumbs',
-        init: init
-    };
-    return pattern;
+    registry.register(_);
+    return _;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-define('patterns/collapsible',['require','../logging'],function(require) {
-    var log = require('../logging').getLogger('collapsible');
+/*!
+	AnythingSlider v1.8.6
+	Original by Chris Coyier: http://css-tricks.com
+	Get the latest version: https://github.com/CSS-Tricks/AnythingSlider
 
-    var init = function($el, opts) {
-        // create collapsible structure
-        var $ctrl = $el.children(':first'),
-            $content = $el.children(':gt(0)'),
-            $panel;
-        if ($content.length > 0) {
-            $panel = $content.wrapAll('<div class="panel-content" />')
-                .parent();
-        } else {
-            $panel = $('<div class="panel-content" />').insertAfter($ctrl);
+	To use the navigationFormatter function, you must have a function that
+	accepts two paramaters, and returns a string of HTML text.
+
+	index = integer index (1 based);
+	panel = jQuery wrapped LI item this tab references
+	@return = Must return a string of HTML/Text
+
+	navigationFormatter: function(index, panel){
+		return "Panel #" + index; // This would have each tab with the text 'Panel #X' where X = index
+	}
+*/
+;(function($) {
+
+	$.anythingSlider = function(el, options) {
+
+		var base = this, o, t;
+
+		// Wraps the ul in the necessary divs and then gives Access to jQuery element
+		base.el = el;
+		base.$el = $(el).addClass('anythingBase').wrap('<div class="anythingSlider"><div class="anythingWindow" /></div>');
+
+		// Add a reverse reference to the DOM object
+		base.$el.data("AnythingSlider", base);
+
+		base.init = function(){
+
+			// Added "o" to be used in the code instead of "base.options" which doesn't get modifed by the compiler - reduces size by ~1k
+			base.options = o = $.extend({}, $.anythingSlider.defaults, options);
+
+			base.initialized = false;
+			if ($.isFunction(o.onBeforeInitialize)) { base.$el.bind('before_initialize', o.onBeforeInitialize); }
+			base.$el.trigger('before_initialize', base);
+
+			// Add "as-oldie" class to body for css purposes
+			$('<!--[if lte IE 8]><script>jQuery("body").addClass("as-oldie");</script><![endif]-->').appendTo('body').remove();
+
+			// Cache existing DOM elements for later
+			// base.$el = original ul
+			// for wrap - get parent() then closest in case the ul has "anythingSlider" class
+			base.$wrapper = base.$el.parent().closest('div.anythingSlider').addClass('anythingSlider-' + o.theme);
+			base.$window = base.$el.closest('div.anythingWindow');
+			base.win = window;
+			base.$win = $(base.win);
+
+			base.$controls = $('<div class="anythingControls"></div>');
+			base.$nav = $('<ul class="thumbNav"><li><a><span></span></a></li></ul>');
+			base.$startStop = $('<a href="#" class="start-stop"></a>');
+			
+			if (o.buildStartStop || o.buildNavigation) {
+				base.$controls.appendTo( (o.appendControlsTo && $(o.appendControlsTo).length) ? $(o.appendControlsTo) : base.$wrapper);
+			}
+			if (o.buildNavigation) {
+				base.$nav.appendTo( (o.appendNavigationTo && $(o.appendNavigationTo).length) ? $(o.appendNavigationTo) : base.$controls );
+			}
+			if (o.buildStartStop) {
+				base.$startStop.appendTo( (o.appendStartStopTo && $(o.appendStartStopTo).length) ? $(o.appendStartStopTo) : base.$controls );
+			}
+
+			// Figure out how many sliders are on the page for indexing
+			base.runTimes = $('.anythingBase').length;
+			base.regex = new RegExp('panel' + base.runTimes + '-(\\d+)', 'i'); // hash tag regex
+			if (base.runTimes === 1) { base.makeActive(); } // make the first slider on the page active
+
+			// Set up a few defaults & get details
+			base.flag    = false; // event flag to prevent multiple calls (used in control click/focusin)
+			base.playing = o.autoPlay; // slideshow state; removed "startStopped" option
+			base.slideshow = false; // slideshow flag needed to correctly trigger slideshow events
+			base.hovered = false; // actively hovering over the slider
+			base.panelSize = [];  // will contain dimensions and left position of each panel
+			base.currentPage = base.targetPage = o.startPanel = parseInt(o.startPanel,10) || 1; // make sure this isn't a string
+			o.changeBy = parseInt(o.changeBy,10) || 1;
+
+			// set slider type, but keep backward compatibility with the vertical option
+			t = (o.mode || 'h').toLowerCase().match(/(h|v|f)/);
+			t = o.vertical ? 'v' : (t || ['h'])[0];
+			o.mode = t === 'v' ? 'vertical' : t === 'f' ? 'fade' : 'horizontal';
+			if (t === 'f') {
+				o.showMultiple = 1; // all slides are stacked in fade mode
+				o.infiniteSlides = false; // no cloned slides
+			}
+
+			base.adj = (o.infiniteSlides) ? 0 : 1; // adjust page limits for infinite or limited modes
+			base.adjustMultiple = 0;
+			base.width = base.$el.width();
+			base.height = base.$el.height();
+			base.outerPad = [ base.$wrapper.innerWidth() - base.$wrapper.width(), base.$wrapper.innerHeight() - base.$wrapper.height() ];
+			if (o.playRtl) { base.$wrapper.addClass('rtl'); }
+
+			// Expand slider to fit parent
+			if (o.expand) {
+				base.$outer = base.$wrapper.parent();
+				base.$window.css({ width: '100%', height: '100%' }); // needed for Opera
+				base.checkResize();
+			}
+
+			// Build start/stop button
+			if (o.buildStartStop) { base.buildAutoPlay(); }
+
+			// Build forwards/backwards buttons
+			if (o.buildArrows) { base.buildNextBackButtons(); }
+
+			// can't lock autoplay it if it's not enabled
+			if (!o.autoPlay) { o.autoPlayLocked = false; }
+
+			base.$lastPage = base.$targetPage = base.$currentPage;
+
+			base.updateSlider();
+
+			// Make sure easing function exists.
+			if (!$.isFunction($.easing[o.easing])) { o.easing = "swing"; }
+
+			// If pauseOnHover then add hover effects
+			if (o.pauseOnHover) {
+				base.$wrapper.hover(function() {
+					if (base.playing) {
+						base.$el.trigger('slideshow_paused', base);
+						base.clearTimer(true);
+					}
+				}, function() {
+					if (base.playing) {
+						base.$el.trigger('slideshow_unpaused', base);
+						base.startStop(base.playing, true);
+					}
+				});
+			}
+
+			// Hide/Show navigation & play/stop controls
+			base.slideControls(false);
+			base.$wrapper.bind('mouseenter mouseleave', function(e){
+				// add hovered class to outer wrapper
+				$(this)[e.type === 'mouseenter' ? 'addClass' : 'removeClass']('anythingSlider-hovered');
+				base.hovered = (e.type === 'mouseenter') ? true : false;
+				base.slideControls(base.hovered);
+			});
+
+			// Add keyboard navigation
+			$(document).keyup(function(e){
+				// Stop arrow keys from working when focused on form items
+				if (o.enableKeyboard && base.$wrapper.hasClass('activeSlider') && !e.target.tagName.match('TEXTAREA|INPUT|SELECT')) {
+					if (o.mode !== 'vertical' && (e.which === 38 || e.which === 40)) { return; }
+					switch (e.which) {
+						case 39: case 40: // right & down arrow
+							base.goForward();
+							break;
+						case 37: case 38: // left & up arrow
+							base.goBack();
+							break;
+					}
+				}
+			});
+
+			// If a hash can not be used to trigger the plugin, then go to start panel
+			base.currentPage = base.gotoHash() || o.startPanel || 1;
+			base.gotoPage(base.currentPage, false, null, -1);
+
+			// Binds events
+			var triggers = "slideshow_paused slideshow_unpaused slide_init slide_begin slideshow_stop slideshow_start initialized swf_completed".split(" ");
+			$.each("onShowPause onShowUnpause onSlideInit onSlideBegin onShowStop onShowStart onInitialized onSWFComplete".split(" "), function(i,f){
+				if ($.isFunction(o[f])){
+					base.$el.bind(triggers[i], o[f]);
+				}
+			});
+			if ($.isFunction(o.onSlideComplete)){
+				// Added setTimeout (zero time) to ensure animation is complete... see this bug report: http://bugs.jquery.com/ticket/7157
+				base.$el.bind('slide_complete', function(){
+					setTimeout(function(){ o.onSlideComplete(base); }, 0);
+					return false;
+				});
+			}
+			base.initialized = true;
+			base.$el.trigger('initialized', base);
+
+			// trigger the slideshow
+			base.startStop(o.autoPlay);
+
+		};
+
+		// called during initialization & to update the slider if a panel is added or deleted
+		base.updateSlider = function(){
+			// needed for updating the slider
+			base.$el.children('.cloned').remove();
+			base.navTextVisible = base.$nav.find('span:first').css('visibility') !== 'hidden';
+			base.$nav.empty();
+			// set currentPage to 1 in case it was zero - occurs when adding slides after removing them all
+			base.currentPage = base.currentPage || 1;
+
+			base.$items = base.$el.children();
+			base.pages = base.$items.length;
+			base.dir = (o.mode === 'vertical') ? 'top' : 'left';
+			o.showMultiple = (o.mode === 'vertical') ? 1 : parseInt(o.showMultiple,10) || 1; // only integers allowed
+			o.navigationSize = (o.navigationSize === false) ? 0 : parseInt(o.navigationSize,10) || 0;
+
+			// Fix tabbing through the page, but don't change the view if the link is in view (showMultiple = true)
+			base.$items.find('a').unbind('focus.AnythingSlider').bind('focus.AnythingSlider', function(e){
+				var panel = $(this).closest('.panel'),
+				 indx = base.$items.index(panel) + base.adj; // index can be -1 in nested sliders - issue #208
+				base.$items.find('.focusedLink').removeClass('focusedLink');
+				$(this).addClass('focusedLink');
+				base.$window.scrollLeft(0).scrollTop(0);
+				if ( ( indx !== -1 && (indx >= base.currentPage + o.showMultiple || indx < base.currentPage) ) ) {
+					base.gotoPage(indx);
+					e.preventDefault();
+				}
+			});
+			if (o.showMultiple > 1) {
+				if (o.showMultiple > base.pages) { o.showMultiple = base.pages; }
+				base.adjustMultiple = (o.infiniteSlides && base.pages > 1) ? 0 : o.showMultiple - 1;
+			}
+
+			// Hide navigation & player if there is only one page
+			base.$controls
+				.add(base.$nav)
+				.add(base.$startStop)
+				.add(base.$forward)
+				.add(base.$back)[(base.pages <= 1) ? 'hide' : 'show']();
+			if (base.pages > 1) {
+				// Build/update navigation tabs
+				base.buildNavigation();
+			}
+
+			// Top and tail the list with 'visible' number of items, top has the last section, and tail has the first
+			// This supports the "infinite" scrolling, also ensures any cloned elements don't duplicate an ID
+			// Moved removeAttr before addClass otherwise IE7 ignores the addClass: http://bugs.jquery.com/ticket/9871
+			if (o.mode !== 'fade' && o.infiniteSlides && base.pages > 1) {
+				base.$el.prepend( base.$items.filter(':last').clone().addClass('cloned') );
+				// Add support for multiple sliders shown at the same time
+				if (o.showMultiple > 1) {
+					base.$el.append( base.$items.filter(':lt(' + o.showMultiple + ')').clone().addClass('cloned multiple') );
+				} else {
+					base.$el.append( base.$items.filter(':first').clone().addClass('cloned') );
+				}
+				base.$el.find('.cloned').each(function(){
+					// disable all focusable elements in cloned panels to prevent shifting the panels by tabbing
+					$(this).find('a,input,textarea,select,button,area,form').attr({ disabled : 'disabled', name : '' });
+					$(this).find('[id]').andSelf().removeAttr('id');
+				});
+			}
+
+			// We just added two items, time to re-cache the list, then get the dimensions of each panel
+			base.$items = base.$el.addClass(o.mode).children().addClass('panel');
+			base.setDimensions();
+
+			// Set the dimensions of each panel
+			if (o.resizeContents) {
+				base.$items.css('width', base.width);
+				base.$wrapper
+					.css('width', base.getDim(base.currentPage)[0])
+					.add(base.$items).css('height', base.height);
+			} else {
+				base.$win.load(function(){
+					// set dimensions after all images load
+					base.setDimensions();
+					// make sure the outer wrapper is set properly
+					t = base.getDim(base.currentPage);
+					base.$wrapper.css({ width: t[0], height: t[1] });
+					base.setCurrentPage(base.currentPage, false);
+				});
+			}
+
+			if (base.currentPage > base.pages) {
+				base.currentPage = base.pages;
+			}
+			base.setCurrentPage(base.currentPage, false);
+			base.$nav.find('a').eq(base.currentPage - 1).addClass('cur'); // update current selection
+
+			if (o.mode === 'fade') {
+				var t = base.$items.eq(base.currentPage-1);
+				if (o.resumeOnVisible) {
+					// prevent display: none;
+					t.css({ opacity: 1 }).siblings().css({ opacity: 0 });
+				} else {
+					// allow display: none; - resets video
+					base.$items.css('opacity',1);
+					t.fadeIn(0).siblings().fadeOut(0);
+				}
+			}
+
+		};
+
+		// Creates the numbered navigation links
+		base.buildNavigation = function() {
+			if (o.buildNavigation && (base.pages > 1)) {
+				var a, c, i, t, $li;
+				base.$items.filter(':not(.cloned)').each(function(j){
+					$li = $('<li/>');
+					i = j + 1;
+					c = (i === 1 ? ' first' : '') + (i === base.pages ? ' last' : '');
+					a = '<a class="panel' + i + ( base.navTextVisible ? '"' : ' ' + o.tooltipClass + '" title="@"' ) + ' href="#"><span>@</span></a>';
+					// If a formatter function is present, use it
+					if ($.isFunction(o.navigationFormatter)) {
+						t = o.navigationFormatter(i, $(this));
+						if (typeof(t) === "string") {
+							$li.html(a.replace(/@/g,t));
+						} else {
+							$li = $('<li/>', t);
+						}
+					} else {
+						$li.html(a.replace(/@/g,i));
+					}
+					$li
+					.appendTo(base.$nav)
+					.addClass(c)
+					.data('index', i);
+				});
+				base.$nav.children('li').bind(o.clickControls, function(e) {
+					if (!base.flag && o.enableNavigation) {
+						// prevent running functions twice (once for click, second time for focusin)
+						base.flag = true; setTimeout(function(){ base.flag = false; }, 100);
+						base.gotoPage( $(this).data('index') );
+					}
+					e.preventDefault();
+				});
+
+				// Add navigation tab scrolling - use !! in case someone sets the size to zero
+				if (!!o.navigationSize && o.navigationSize < base.pages) {
+					if (!base.$controls.find('.anythingNavWindow').length){
+						base.$nav
+							.before('<ul><li class="prev"><a href="#"><span>' + o.backText + '</span></a></li></ul>')
+							.after('<ul><li class="next"><a href="#"><span>' + o.forwardText + '</span></a></li></ul>')
+							.wrap('<div class="anythingNavWindow"></div>');
+					}
+					// include half of the left position to include extra width from themes like tabs-light and tabs-dark (still not perfect)
+					base.navWidths = base.$nav.find('li').map(function(){
+						return $(this).outerWidth(true) + Math.ceil(parseInt($(this).find('span').css('left'),10)/2 || 0);
+					}).get();
+					base.navLeft = base.currentPage;
+					// add 25 pixels (old IE needs more than 5) to make sure the tabs don't wrap to the next line
+					base.$nav.width( base.navWidth( 1, base.pages + 1 ) + 25 );
+					base.$controls.find('.anythingNavWindow')
+						.width( base.navWidth( 1, o.navigationSize + 1 ) ).end()
+						.find('.prev,.next').bind(o.clickControls, function(e) {
+							if (!base.flag) {
+								base.flag = true; setTimeout(function(){ base.flag = false; }, 200);
+								base.navWindow( base.navLeft + o.navigationSize * ( $(this).is('.prev') ? -1 : 1 ) );
+							}
+							e.preventDefault();
+						});
+				}
+
+			}
+		};
+
+		base.navWidth = function(x,y){
+			var i, s = Math.min(x,y),
+				e = Math.max(x,y),
+				w = 0;
+			for (i = s; i < e; i++) {
+				w += base.navWidths[i-1] || 0;
+			}
+			return w;
+		};
+
+		base.navWindow = function(n){
+			if (!!o.navigationSize && o.navigationSize < base.pages && base.navWidths) {
+				var p = base.pages - o.navigationSize + 1;
+				n = (n <= 1) ? 1 : (n > 1 && n < p) ? n : p;
+				if (n !== base.navLeft) {
+					base.$controls.find('.anythingNavWindow').animate(
+						{ scrollLeft: base.navWidth(1, n), width: base.navWidth(n, n + o.navigationSize) },
+						{ queue: false, duration: o.animationTime });
+					base.navLeft = n;
+				}
+			}
+		};
+
+		// Creates the Forward/Backward buttons
+		base.buildNextBackButtons = function() {
+			base.$forward = $('<span class="arrow forward"><a href="#"><span>' + o.forwardText + '</span></a></span>');
+			base.$back = $('<span class="arrow back"><a href="#"><span>' + o.backText + '</span></a></span>');
+
+			// Bind to the forward and back buttons
+			base.$back.bind(o.clickBackArrow, function(e) {
+				// prevent running functions twice (once for click, second time for swipe)
+				if (o.enableArrows && !base.flag) {
+					base.flag = true; setTimeout(function(){ base.flag = false; }, 100);
+					base.goBack();
+				}
+				e.preventDefault();
+			});
+			base.$forward.bind(o.clickForwardArrow, function(e) {
+				// prevent running functions twice (once for click, second time for swipe)
+				if (o.enableArrows && !base.flag) {
+					base.flag = true; setTimeout(function(){ base.flag = false; }, 100);
+					base.goForward();
+				}
+				e.preventDefault();
+			});
+			// using tab to get to arrow links will show they have focus (outline is disabled in css)
+			base.$back.add(base.$forward).find('a').bind('focusin focusout',function(){
+			 $(this).toggleClass('hover');
+			});
+
+			// Append elements to page
+			base.$back.appendTo( (o.appendBackTo && $(o.appendBackTo).length) ? $(o.appendBackTo) : base.$wrapper );
+			base.$forward.appendTo( (o.appendForwardTo && $(o.appendForwardTo).length) ? $(o.appendForwardTo) : base.$wrapper );
+
+			base.arrowWidth = base.$forward.width(); // assuming the left & right arrows are the same width - used for toggle
+			base.arrowRight = parseInt(base.$forward.css('right'), 10);
+			base.arrowLeft = parseInt(base.$back.css('left'), 10);
+
+		};
+
+		// Creates the Start/Stop button
+		base.buildAutoPlay = function(){
+			base.$startStop
+				.html('<span>' + (base.playing ? o.stopText : o.startText) + '</span>')
+				.bind(o.clickSlideshow, function(e) {
+					if (o.enableStartStop) {
+						base.startStop(!base.playing);
+						base.makeActive();
+						if (base.playing && !o.autoPlayDelayed) {
+							base.goForward(true);
+						}
+					}
+					e.preventDefault();
+				})
+				// show button has focus while tabbing
+				.bind('focusin focusout',function(){
+					$(this).toggleClass('hover');
+				});
+		};
+
+		// Adjust slider dimensions on parent element resize
+		base.checkResize = function(stopTimer){
+			clearTimeout(base.resizeTimer);
+			base.resizeTimer = setTimeout(function(){
+				var w = base.$outer.width() - base.outerPad[0],
+					h = (base.$outer[0].tagName === "BODY" ? base.$win.height() : base.$outer.height()) - base.outerPad[1];
+				// base.width = width of one panel, so multiply by # of panels; outerPad is padding added for arrows.
+				if (base.width * o.showMultiple !== w || base.height !== h) {
+					base.setDimensions(); // adjust panel sizes
+					// make sure page is lined up (use -1 animation time, so we can differeniate it from when animationTime = 0)
+					base.gotoPage(base.currentPage, base.playing, null, -1);
+				}
+				if (typeof(stopTimer) === 'undefined'){ base.checkResize(); }
+			}, 500);
+		};
+
+		// Set panel dimensions to either resize content or adjust panel to content
+		base.setDimensions = function(){
+			var w, h, c, t, edge = 0,
+				fullsize = { width: '100%', height: '100%' },
+				// determine panel width
+				pw = (o.showMultiple > 1) ? base.width || base.$window.width()/o.showMultiple : base.$window.width(),
+				winw = base.$win.width();
+			if (o.expand){
+				w = base.$outer.width() - base.outerPad[0];
+				base.height = h = base.$outer.height() - base.outerPad[1];
+				base.$wrapper.add(base.$window).add(base.$items).css({ width: w, height: h });
+				base.width = pw = (o.showMultiple > 1) ? w/o.showMultiple : w;
+			}
+			base.$items.each(function(i){
+				t = $(this);
+				c = t.children();
+				if (o.resizeContents){
+					// resize panel
+					w = base.width;
+					h = base.height;
+					t.css({ width: w, height: h });
+					if (c.length) {
+						if (c[0].tagName === "EMBED") { c.attr(fullsize); } // needed for IE7; also c.length > 1 in IE7
+						if (c[0].tagName === "OBJECT") { c.find('embed').attr(fullsize); }
+						// resize panel contents, if solitary (wrapped content or solitary image)
+						if (c.length === 1){ c.css(fullsize); }
+					}
+				} else {
+					// get panel width & height and save it
+					w = t.width() || base.width; // if image hasn't finished loading, width will be zero, so set it to base width instead
+					if (c.length === 1 && w >= winw){
+						w = (c.width() >= winw) ? pw : c.width(); // get width of solitary child
+						c.css('max-width', w);   // set max width for all children
+					}
+					t.css('width', w); // set width of panel
+					h = (c.length === 1 ? c.outerHeight(true) : t.height()); // get height after setting width
+					if (h <= base.outerPad[1]) { h = base.height; } // if height less than the outside padding, then set it to the preset height
+					t.css('height', h);
+				}
+				base.panelSize[i] = [w,h,edge];
+				edge += (o.mode === 'vertical') ? h : w;
+			});
+			// Set total width of slider
+			base.$el.css((o.mode === 'vertical' ? 'height' : 'width'), o.mode === 'fade' ? base.width : edge );
+		};
+
+		// get dimension of multiple panels, as needed
+		base.getDim = function(page){
+			var i, w = base.width, h = base.height;
+			if (base.pages < 1 || isNaN(page)) { return [ w, h ]; } // prevent errors when base.panelSize is empty
+			page = (o.infiniteSlides && base.pages > 1) ? page : page - 1;
+			i = base.panelSize[page];
+			if (i) {
+				w = i[0] || w;
+				h = i[1] || h;
+			}
+			if (o.showMultiple > 1) {
+				for (i=1; i < o.showMultiple; i++) {
+					w += base.panelSize[(page + i)][0];
+					h = Math.max(h, base.panelSize[page + i][1]);
+				}
+			}
+			return [w,h];
+		};
+
+		base.goForward = function(autoplay) {
+			// targetPage changes before animation so if rapidly changing pages, it will have the correct current page
+			base.gotoPage(base[ o.allowRapidChange ? 'targetPage' : 'currentPage'] + o.changeBy * (o.playRtl ? -1 : 1), autoplay);
+		};
+
+		base.goBack = function(autoplay) {
+			base.gotoPage(base[ o.allowRapidChange ? 'targetPage' : 'currentPage'] + o.changeBy * (o.playRtl ? 1 : -1), autoplay);
+		};
+
+		base.gotoPage = function(page, autoplay, callback, time) {
+			if (autoplay !== true) {
+				autoplay = false;
+				base.startStop(false);
+				base.makeActive();
+			}
+			// check if page is an id or class name
+			if (/^[#|.]/.test(page) && $(page).length) {
+				page = $(page).closest('.panel').index() + base.adj;
+			}
+
+			// rewind effect occurs here when changeBy > 1
+			if (o.changeBy !== 1){
+				var adj = base.pages - base.adjustMultiple;
+				if (page < 1) {
+					page = o.stopAtEnd ? 1 : ( o.infiniteSlides ? base.pages + page : ( o.showMultiple > 1 - page ? 1 : adj ) );
+				}
+				if (page > base.pages) {
+					// 
+					page = o.stopAtEnd ? base.pages : ( o.showMultiple > 1 - page ? 1 : page -= adj );
+				} else if (page >= adj) {
+					// show multiple adjustments
+					page = adj;
+				}
+			}
+
+			if (base.pages <= 1) { return; } // prevents animation
+			base.$lastPage = base.$currentPage;
+			if (typeof(page) !== "number") {
+				page = parseInt(page,10) || o.startPanel;
+				base.setCurrentPage(page);
+			}
+
+			// pause YouTube videos before scrolling or prevent change if playing
+			if (autoplay && o.isVideoPlaying(base)) { return; }
+
+			base.exactPage = page;
+			if (page > base.pages + 1 - base.adj) { page = (!o.infiniteSlides && !o.stopAtEnd) ? 1 : base.pages; }
+			if (page < base.adj ) { page = (!o.infiniteSlides && !o.stopAtEnd) ? base.pages : 1; }
+			if (!o.infiniteSlides) { base.exactPage = page; } // exact page used by the fx extension
+			base.currentPage = ( page > base.pages ) ? base.pages : ( page < 1 ) ? 1 : base.currentPage;
+			base.$currentPage = base.$items.eq(base.currentPage - base.adj);
+			base.targetPage = (page === 0) ? base.pages : (page > base.pages) ? 1 : page;
+			base.$targetPage = base.$items.eq(base.targetPage - base.adj);
+			time = typeof time !== 'undefined' ? time : o.animationTime;
+			// don't trigger events when time < 0 - to prevent FX from firing multiple times on page resize
+			if (time >= 0) { base.$el.trigger('slide_init', base); }
+			// toggle arrows/controls only if there is time to see it - fix issue #317
+			if (time > 0) { base.slideControls(true); }
+
+			// Set visual
+			if (o.buildNavigation){
+				base.setNavigation(base.targetPage);
+			}
+
+			// When autoplay isn't passed, we stop the timer
+			if (autoplay !== true) { autoplay = false; }
+			// Stop the slider when we reach the last page, if the option stopAtEnd is set to true
+			if (!autoplay || (o.stopAtEnd && page === base.pages)) { base.startStop(false); }
+
+			if (time >= 0) { base.$el.trigger('slide_begin', base); }
+
+			// delay starting slide animation
+			setTimeout(function(d){
+				var p, empty = true;
+				if (o.allowRapidChange) {
+					base.$wrapper.add(base.$el).add(base.$items).stop(true, true);
+				}
+				// resize slider if content size varies
+				if (!o.resizeContents) {
+					// animating the wrapper resize before the window prevents flickering in Firefox
+					// don't animate the dimension if it hasn't changed - fix for issue #264
+					p = base.getDim(page); d = {};
+					// prevent animating a dimension to zero
+					if (base.$wrapper.width() !== p[0]) { d.width = p[0] || base.width; empty = false; }
+					if (base.$wrapper.height() !== p[1]) { d.height = p[1] || base.height; empty = false; }
+					if (!empty) {
+						base.$wrapper.filter(':not(:animated)').animate(d, { queue: false, duration: (time < 0 ? 0 : time), easing: o.easing });
+					}
+				}
+
+				if (o.mode === 'fade') {
+					if (base.$lastPage[0] !== base.$targetPage[0]) {
+						base.fadeIt( base.$lastPage, 0, time );
+						base.fadeIt( base.$targetPage, 1, time, function(){ base.endAnimation(page, callback, time); });
+					} else {
+						base.endAnimation(page, callback, time);
+					}
+				} else {
+					d = {};
+					d[base.dir] = -base.panelSize[(o.infiniteSlides && base.pages > 1) ? page : page - 1][2];
+					// Animate Slider
+					base.$el.filter(':not(:animated)').animate(
+						d, { queue: false, duration: time < 0 ? 0 : time, easing: o.easing, complete: function(){ base.endAnimation(page, callback, time); } }
+					);
+				}
+			}, parseInt(o.delayBeforeAnimate, 10) || 0);
+		};
+
+		base.endAnimation = function(page, callback, time){
+			if (page === 0) {
+				base.$el.css( base.dir, o.mode === 'fade' ? 0 : -base.panelSize[base.pages][2]);
+				page = base.pages;
+			} else if (page > base.pages) {
+				// reset back to start position
+				base.$el.css( base.dir, o.mode === 'fade' ? 0 : -base.panelSize[1][2]);
+				page = 1;
+			}
+			base.exactPage = page;
+			base.setCurrentPage(page, false);
+
+			if (o.mode === 'fade') {
+				// make sure non current panels are hidden (rapid slide changes)
+				base.fadeIt( base.$items.not(':eq(' + (page - base.adj) + ')'), 0, 0);
+			}
+
+			if (!base.hovered) { base.slideControls(false); }
+
+			if (o.hashTags) { base.setHash(page); }
+
+			if (time >= 0) { base.$el.trigger('slide_complete', base); }
+			// callback from external slide control: $('#slider').anythingSlider(4, function(slider){ })
+			if (typeof callback === 'function') { callback(base); }
+
+			// Continue slideshow after a delay
+			if (o.autoPlayLocked && !base.playing) {
+				setTimeout(function(){
+					base.startStop(true);
+				// subtract out slide delay as the slideshow waits that additional time.
+				}, o.resumeDelay - (o.autoPlayDelayed ? o.delay : 0));
+			}
+		};
+
+		base.fadeIt = function(el, toOpacity, time, callback){
+			var t = time < 0 ? 0 : time;
+			if (o.resumeOnVisible) {
+				el.filter(':not(:animated)').fadeTo(t, toOpacity, callback);
+			} else {
+				el.filter(':not(:animated)')[ toOpacity === 0 ? 'fadeOut' : 'fadeIn' ](t, callback);
+			}
+		};
+
+		base.setCurrentPage = function(page, move) {
+			page = parseInt(page, 10);
+
+			if (base.pages < 1 || page === 0 || isNaN(page)) { return; }
+			if (page > base.pages + 1 - base.adj) { page = base.pages - base.adj; }
+			if (page < base.adj ) { page = 1; }
+
+			// hide/show arrows based on infinite scroll mode
+			if (o.buildArrows && !o.infiniteSlides && o.stopAtEnd){
+				base.$forward[ page === base.pages - base.adjustMultiple ? 'addClass' : 'removeClass']('disabled');
+				base.$back[ page === 1 ? 'addClass' : 'removeClass']('disabled');
+				if (page === base.pages && base.playing) { base.startStop(); }
+			}
+
+			// Only change left if move does not equal false
+			if (!move) {
+				var d = base.getDim(page);
+				base.$wrapper
+					.css({ width: d[0], height: d[1] })
+					.add(base.$window).scrollLeft(0).scrollTop(0); // reset in case tabbing changed this scrollLeft - probably overly redundant
+				base.$el.css( base.dir, o.mode === 'fade' ? 0 : -base.panelSize[(o.infiniteSlides && base.pages > 1) ? page : page - 1][2] );
+			}
+
+			// Update local variable
+			base.currentPage = page;
+			base.$currentPage = base.$items.removeClass('activePage').eq(page - base.adj).addClass('activePage');
+
+			if (o.buildNavigation){
+				base.setNavigation(page);
+			}
+
+		};
+
+		base.setNavigation = function(page){
+			base.$nav
+				.find('.cur').removeClass('cur').end()
+				.find('a').eq(page - 1).addClass('cur');
+		};
+
+		base.makeActive = function(){
+			// Set current slider as active so keyboard navigation works properly
+			if (!base.$wrapper.hasClass('activeSlider')){
+				$('.activeSlider').removeClass('activeSlider');
+				base.$wrapper.addClass('activeSlider');
+			}
+		};
+
+		// This method tries to find a hash that matches an ID and panel-X
+		// If either found, it tries to find a matching item
+		// If that is found as well, then it returns the page number
+		base.gotoHash = function(){
+			var h = base.win.location.hash,
+				i = h.indexOf('&'),
+				n = h.match(base.regex);
+			// test for "/#/" or "/#!/" used by the jquery address plugin - $('#/') breaks jQuery
+			if (n === null && !/^#&/.test(h) && !/#!?\//.test(h)) {
+				// #quote2&panel1-3&panel3-3
+				h = h.substring(0, (i >= 0 ? i : h.length));
+				// ensure the element is in the same slider
+				n = ($(h).length && $(h).closest('.anythingBase')[0] === base.el) ? base.$items.index($(h).closest('.panel')) + base.adj : null;
+			} else if (n !== null) {
+				// #&panel1-3&panel3-3
+				n = (o.hashTags) ? parseInt(n[1],10) : null;
+			}
+			return n;
+		};
+
+		base.setHash = function(n){
+			var s = 'panel' + base.runTimes + '-',
+				h = base.win.location.hash;
+			if ( typeof h !== 'undefined' ) {
+				base.win.location.hash = (h.indexOf(s) > 0) ? h.replace(base.regex, s + n) : h + "&" + s + n;
+			}
+		};
+
+		// Slide controls (nav and play/stop button up or down)
+		base.slideControls = function(toggle){
+			var dir = (toggle) ? 'slideDown' : 'slideUp',
+				t1 = (toggle) ? 0 : o.animationTime,
+				t2 = (toggle) ? o.animationTime : 0,
+				op = (toggle) ? 1 : 0,
+				sign = (toggle) ? 0 : 1; // 0 = visible, 1 = hidden
+			if (o.toggleControls) {
+				base.$controls.stop(true,true).delay(t1)[dir](o.animationTime/2).delay(t2);
+			}
+			if (o.buildArrows && o.toggleArrows) {
+				if (!base.hovered && base.playing) { sign = 1; op = 0; } // don't animate arrows during slideshow
+				base.$forward.stop(true,true).delay(t1).animate({ right: base.arrowRight + (sign * base.arrowWidth), opacity: op }, o.animationTime/2);
+				base.$back.stop(true,true).delay(t1).animate({ left: base.arrowLeft + (sign * base.arrowWidth), opacity: op }, o.animationTime/2);
+			}
+		};
+
+		base.clearTimer = function(paused){
+			// Clear the timer only if it is set
+			if (base.timer) {
+				base.win.clearInterval(base.timer);
+				if (!paused && base.slideshow) {
+					base.$el.trigger('slideshow_stop', base);
+					base.slideshow = false;
+				}
+			}
+		};
+
+		// Pass startStop(false) to stop and startStop(true) to play
+		base.startStop = function(playing, paused) {
+			if (playing !== true) { playing = false; }  // Default if not supplied is false
+			base.playing = playing;
+
+			if (playing && !paused) {
+				base.$el.trigger('slideshow_start', base);
+				base.slideshow = true;
+			}
+
+			// Toggle playing and text
+			if (o.buildStartStop) {
+				base.$startStop.toggleClass('playing', playing).find('span').html( playing ? o.stopText : o.startText );
+				// add button text to title attribute if it is hidden by text-indent
+				if ( base.$startStop.find('span').css('visibility') === "hidden" ) {
+					base.$startStop.addClass(o.tooltipClass).attr( 'title', playing ? o.stopText : o.startText );
+				}
+			}
+
+			// Pause slideshow while video is playing
+			if (playing){
+				base.clearTimer(true); // Just in case this was triggered twice in a row
+				base.timer = base.win.setInterval(function() {
+					// prevent autoplay if video is playing
+					if ( !o.isVideoPlaying(base) ) {
+						base.goForward(true);
+					// stop slideshow if resume if false
+					} else if (!o.resumeOnVideoEnd) {
+						base.startStop();
+					}
+				}, o.delay);
+			} else {
+				base.clearTimer();
+			}
+		};
+
+		// Trigger the initialization
+		base.init();
+	};
+
+	$.anythingSlider.defaults = {
+		// Appearance
+		theme               : "default", // Theme name, add the css stylesheet manually
+		mode                : "horiz",   // Set mode to "horizontal", "vertical" or "fade" (only first letter needed); replaces vertical option
+		expand              : false,     // If true, the entire slider will expand to fit the parent element
+		resizeContents      : true,      // If true, solitary images/objects in the panel will expand to fit the viewport
+		showMultiple        : false,     // Set this value to a number and it will show that many slides at once
+		easing              : "swing",   // Anything other than "linear" or "swing" requires the easing plugin or jQuery UI
+
+		buildArrows         : true,      // If true, builds the forwards and backwards buttons
+		buildNavigation     : true,      // If true, builds a list of anchor links to link to each panel
+		buildStartStop      : true,      // ** If true, builds the start/stop button
+
+/*
+		// commented out as this will reduce the size of the minified version
+		appendForwardTo     : null,      // Append forward arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
+		appendBackTo        : null,      // Append back arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
+		appendControlsTo    : null,      // Append controls (navigation + start-stop) to a HTML element (jQuery Object, selector or HTMLNode), if not null
+		appendNavigationTo  : null,      // Append navigation buttons to a HTML element (jQuery Object, selector or HTMLNode), if not null
+		appendStartStopTo   : null,      // Append start-stop button to a HTML element (jQuery Object, selector or HTMLNode), if not null
+*/
+
+		toggleArrows        : false,     // If true, side navigation arrows will slide out on hovering & hide @ other times
+		toggleControls      : false,     // if true, slide in controls (navigation + play/stop button) on hover and slide change, hide @ other times
+
+		startText           : "Start",   // Start button text
+		stopText            : "Stop",    // Stop button text
+		forwardText         : "&raquo;", // Link text used to move the slider forward (hidden by CSS, replaced with arrow image)
+		backText            : "&laquo;", // Link text used to move the slider back (hidden by CSS, replace with arrow image)
+		tooltipClass        : "tooltip", // Class added to navigation & start/stop button (text copied to title if it is hidden by a negative text indent)
+
+		// Function
+		enableArrows        : true,      // if false, arrows will be visible, but not clickable.
+		enableNavigation    : true,      // if false, navigation links will still be visible, but not clickable.
+		enableStartStop     : true,      // if false, the play/stop button will still be visible, but not clickable. Previously "enablePlay"
+		enableKeyboard      : true,      // if false, keyboard arrow keys will not work for this slider.
+
+		// Navigation
+		startPanel          : 1,         // This sets the initial panel
+		changeBy            : 1,         // Amount to go forward or back when changing panels.
+		hashTags            : true,      // Should links change the hashtag in the URL?
+		infiniteSlides      : true,      // if false, the slider will not wrap & not clone any panels
+		navigationFormatter : null,      // Details at the top of the file on this use (advanced use)
+		navigationSize      : false,     // Set this to the maximum number of visible navigation tabs; false to disable
+
+		// Slideshow options
+		autoPlay            : false,     // If true, the slideshow will start running; replaces "startStopped" option
+		autoPlayLocked      : false,     // If true, user changing slides will not stop the slideshow
+		autoPlayDelayed     : false,     // If true, starting a slideshow will delay advancing slides; if false, the slider will immediately advance to the next slide when slideshow starts
+		pauseOnHover        : true,      // If true & the slideshow is active, the slideshow will pause on hover
+		stopAtEnd           : false,     // If true & the slideshow is active, the slideshow will stop on the last page. This also stops the rewind effect when infiniteSlides is false.
+		playRtl             : false,     // If true, the slideshow will move right-to-left
+
+		// Times
+		delay               : 3000,      // How long between slideshow transitions in AutoPlay mode (in milliseconds)
+		resumeDelay         : 15000,     // Resume slideshow after user interaction, only if autoplayLocked is true (in milliseconds).
+		animationTime       : 600,       // How long the slideshow transition takes (in milliseconds)
+		delayBeforeAnimate  : 0,         // How long to pause slide animation before going to the desired slide (used if you want your "out" FX to show).
+
+/*
+		// Callbacks - commented out to reduce size of the minified version - they still work
+		onBeforeInitialize  : function(e, slider) {}, // Callback before the plugin initializes
+		onInitialized       : function(e, slider) {}, // Callback when the plugin finished initializing
+		onShowStart         : function(e, slider) {}, // Callback on slideshow start
+		onShowStop          : function(e, slider) {}, // Callback after slideshow stops
+		onShowPause         : function(e, slider) {}, // Callback when slideshow pauses
+		onShowUnpause       : function(e, slider) {}, // Callback when slideshow unpauses - may not trigger properly if user clicks on any controls
+		onSlideInit         : function(e, slider) {}, // Callback when slide initiates, before control animation
+		onSlideBegin        : function(e, slider) {}, // Callback before slide animates
+		onSlideComplete     : function(slider) {},    // Callback when slide completes - no event variable!
+*/
+
+		// Interactivity
+		clickForwardArrow   : "click",         // Event used to activate forward arrow functionality (e.g. add jQuery mobile's "swiperight")
+		clickBackArrow      : "click",         // Event used to activate back arrow functionality (e.g. add jQuery mobile's "swipeleft")
+		clickControls       : "click focusin", // Events used to activate navigation control functionality
+		clickSlideshow      : "click",         // Event used to activate slideshow play/stop button
+		allowRapidChange    : false,           // If true, allow rapid changing of the active pane, instead of ignoring activity during animation
+
+		// Video
+		resumeOnVideoEnd    : true,      // If true & the slideshow is active & a supported video is playing, it will pause the autoplay until the video is complete
+		resumeOnVisible     : true,      // If true the video will resume playing (if previously paused, except for YouTube iframe - known issue); if false, the video remains paused.
+		addWmodeToObject    : "opaque",  // If your slider has an embedded object, the script will automatically add a wmode parameter with this setting
+		isVideoPlaying      : function(base){ return false; } // return true if video is playing or false if not - used by video extension
+
+	};
+
+	$.fn.anythingSlider = function(options, callback) {
+
+		return this.each(function(){
+			var page, anySlide = $(this).data('AnythingSlider');
+
+			// initialize the slider but prevent multiple initializations
+			if ((typeof(options)).match('object|undefined')){
+				if (!anySlide) {
+					(new $.anythingSlider(this, options));
+				} else {
+					anySlide.updateSlider();
+				}
+			// If options is a number, process as an external link to page #: $(element).anythingSlider(#)
+			} else if (/\d/.test(options) && !isNaN(options) && anySlide) {
+				page = (typeof(options) === "number") ? options : parseInt($.trim(options),10); // accepts "  2  "
+				// ignore out of bound pages
+				if ( page >= 1 && page <= anySlide.pages ) {
+					anySlide.gotoPage(page, false, callback); // page #, autoplay, one time callback
+				}
+			// Accept id or class name
+			} else if (/^[#|.]/.test(options) && $(options).length) {
+				anySlide.gotoPage(options, false, callback);
+			}
+		});
+	};
+
+})(jQuery);
+define("3rdparty/jquery.anythingslider", function(){});
+
+/**
+ * @license
+ * Patterns @VERSION@ carousel
+ *
+ * Copyright 2012 Simplon B.V.
+ */
+define('patterns/carousel',[
+    "jquery",
+    "../registry",
+    "../logging",
+    "../core/parser",
+    "../3rdparty/jquery.anythingslider"
+], function($, patterns, logging, Parser) {
+    var log = logging.getLogger("carousel"),
+        parser = new Parser("carousel");
+
+    parser.add_argument("auto-play", false);
+    parser.add_argument("loop", true);
+    parser.add_argument("resize", false);
+    parser.add_argument("expand", false);
+    parser.add_argument("control-arrows", true);
+    parser.add_argument("control-navigation", false);
+    parser.add_argument("control-startstop", false);
+    parser.add_argument("time-delay", 3000);
+    parser.add_argument("time-animation", 600);
+
+    var carousel = {
+        name: "carousel",
+        trigger: ".pat-carousel",
+
+        init: function($el, opts) {
+            return $el.each(function() {
+                var options = parser.parse($(this), opts),
+                    settings = {hashTags: false};
+
+                settings.autoPlay = options.autoPlay;
+                settings.stopAtEnd = !options.loop;
+                settings.resizeContents = options.resize;
+                settings.expand = options.expand;
+                settings.buildArrows = options.controlArrows;
+                settings.buildNavigation = options.controlNavigation;
+                settings.buildStartStop = options.controlStartstop;
+                settings.delay = options.timeDelay;
+                settings.animationTime = options.timeAnimation;
+                settings.onInitialized = carousel.onInitialized;
+                settings.onSlideInit = carousel.onSlideInit;
+
+                var $carousel = $(this).anythingSlider(settings),
+                    control = $carousel.data("AnythingSlider"),
+                    $panel_links = $();
+
+                $carousel
+                    .children().each(function(index, el) {
+                        if (!this.id)
+                            return;
+
+                        var $links = $("a[href=#" + this.id+"]");
+                        if (index===control.currentPage)
+                            $links.addClass("current");
+                        else
+                            $links.removeClass("current");
+                        $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+                        $panel_links = $panel_links.add($links);
+                    }).end()
+                    .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
+            });
+        },
+
+        _loadPanelImages: function(slider, page) {
+            var $img;
+            log.info("Loading lazy images on panel " + page);
+            slider.$items.eq(page).find("img").andSelf().filter("[data-src]").each(function() {
+                $img=$(this);
+                this.src=$img.attr("data-src");
+                $img.removeAttr("data-src");
+            });
+        },
+
+        onPanelLinkClick: function(event) {
+            event.data.control.gotoPage(event.data.index, false);
+            event.preventDefault();
+        },
+
+        onInitialized: function(event, slider) {
+            carousel._loadPanelImages(slider, slider.options.startPanel);
+            carousel._loadPanelImages(slider, slider.options.startPanel+1);
+            carousel._loadPanelImages(slider, 0);
+            carousel._loadPanelImages(slider, slider.pages+1);
+        },
+
+        onSlideInit: function(event, slider) {
+            carousel._loadPanelImages(slider, slider.targetPage);
+        },
+
+        onSlideComplete: function(event, slider) {
+            var $panel_links = event.data;
+            $panel_links.removeClass("current");
+            if (slider.$targetPage[0].id)
+                $panel_links.filter("[href=#" + slider.$targetPage[0].id + "]").addClass("current");
+            carousel._loadPanelImages(slider, slider.targetPage+1);
         }
-
-        // set initial state
-        if ((opts && opts.closed) || $el.hasClass("closed")) {
-            $el.removeClass("closed");
-            close($el, 0);
-        } else {
-            $el.addClass("open");
-            $el.trigger('patterns-collapsible-open');
-        }
-
-        // bind to click events
-        $ctrl.bind("click", function() { toggle($el, "fast"); });
-
-        // allow for chaining
-        return $el;
     };
 
-    var open = function($el, duration) {
-        if ($el.hasClass("open")) return null;
-
-        toggle($el, duration);
-
-        // allow for chaining
-        return $el;
-    };
-
-    var close = function($el, duration) {
-        if ($el.hasClass("closed")) return null;
-        toggle($el, duration);
-
-        // allow for chaining
-        return $el;
-    };
-
-    var transit = function($el, $panel, from_cls, to_cls, duration) {
-        $el.removeClass(from_cls);
-        if (duration) $el.addClass("in-progress");
-        $panel.slideToggle(duration, function() {
-            if (duration) $el.removeClass("in-progress");
-            $el.addClass(to_cls);
-        });
-    };
-
-    var toggle = function($el, duration) {
-        var $panel = $el.find('.panel-content');
-        if ($el.hasClass("closed")) {
-            $el.trigger('patterns-collapsible-open');
-            transit($el, $panel, "closed", "open", duration);
-        } else {
-            $el.trigger('patterns-collapsible-close');
-            transit($el, $panel, "open", "closed", duration);
-        }
-
-        // allow for chaining
-        return $el;
-    };
-
-    var pattern = {
-        markup_trigger: ".collapsible",
-        initialised_class: "collapsible",
-        init: init,
-        open: open,
-        close: close,
-        toggle: toggle
-    };
-
-    return pattern;
+    patterns.register(carousel);
+    return carousel;  // XXX For testing only
 });
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * @license
+ * Patterns @VERSION@ checkedflag - Add checked flag to checkbox labels
+ *
+ * Copyright 2012 Simplon B.V.
+ */
+define('patterns/checkedflag',[
+        "jquery",
+        "../registry"
+], function($, patterns) {
+    var checkedflag = {
+        name: "checkedflag",
+        trigger: "input",
+
+        init: function($el) {
+            $el
+                .filter("[type=checkbox]").each(checkedflag.onChangeCheckbox).end()
+                .filter("[type=radio]").each(checkedflag.onChangeRadio).end();
+        },
+
+        onChangeCheckbox: function(e) {
+            var $el = $(this),
+                $label = $el.closest("label");
+
+            if (this.checked) {
+                $label.removeClass("unchecked").addClass("checked");
+            } else {
+                $label.addClass("unchecked").removeClass("checked");
+            }
+        },
+
+        onChangeRadio: function(e) {
+            var $el = $(this),
+                $label = $el.closest("label"),
+                selector = "label:has(input[name=" + this.name + "]:not(:checked))",
+                $siblings = (this.form===null) ? $(selector) : $(selector, this.form);
+
+            $siblings.removeClass("checked").addClass("unchecked");
+            if (this.checked) {
+                $label.removeClass("unchecked").addClass("checked");
+            } else {
+                $label.addClass("unchecked").removeClass("checked");
+            }
+        }
+    };
+
+    $(document)
+       .on("change", "input[type=checkbox]", checkedflag.onChangeCheckbox)
+       .on("change", "input[type=radio]", checkedflag.onChangeRadio);
+    patterns.register(checkedflag);
+});
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+define('patterns/checklist',[
+        "jquery",
+        "../core/parser",
+        "../logging",
+        "../registry"
+], function($, Parser, logging, registry) {
+    var log = logging.getLogger("checklist"),
+        parser = new Parser("checklist");
+    parser.add_argument("select", ".functions .select-all");
+    parser.add_argument("deselect", ".functions .deselect-all");
+
+    var _ = {
+        name: "checklist",
+        trigger: ".pat-checklist",
+        jquery_plugin: "patternChecklist",
+
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $trigger = $(this),
+                    options = parser.parse($trigger, opts, false);
+
+                $trigger.data("patternChecklist", options);
+                $trigger.find(options.select)
+                    .on("click.checklist", {trigger: $trigger}, _.onSelectAll);
+                $trigger.find(options.deselect)
+                    .on("click.checklist", {trigger: $trigger}, _.onDeselectAll);
+                $trigger.on("change.checklist", "input[type=checkbox]", {trigger: $trigger}, _.onChange);
+            });
+        },
+
+        destroy: function($el) {
+            return $el.each(function() {
+                var $trigger = $(this),
+                    options = $trigger.data("patternChecklist");
+                $trigger.find(options.select).off("click.checklist");
+                $trigger.find(options.deselect).off("click.checklist");
+                $trigger.off("change.checklist", "input[type=checkbox]");
+                $trigger.data("patternChecklist", null);
+            });
+        },
+
+        onChange: function(event) {
+            var $trigger = event.data.trigger,
+                options = $trigger.data("patternChecklist"),
+                deselect = $trigger.find(options.deselect),
+                select = $trigger.find(options.select);
+
+            if (($trigger.find('input[type=checkbox]:visible:checked').length===0) &&
+                (!deselect.prop('disabled'))) {
+                deselect.attr({disabled: 'disabled'});
+            } else if (deselect.prop('disabled')) {
+                deselect.prop('disabled', false);
+            }
+
+            if (($trigger.find('input[type=checkbox]:visible:not(:checked)').length===0) &&
+                (!select.prop('disabled'))) {
+                select.attr({disabled: 'disabled'});
+            } else if (select.prop('disabled')) {
+                select.prop('disabled', false);
+            }
+        },
+
+        onSelectAll: function(event) {
+            var $trigger = event.data.trigger,
+                options = $trigger.data("patternChecklist");
+            $trigger.find("input[type=checkbox]:not(:checked)").prop("checked", true);
+            $trigger.find(options.deselect).prop("disabled", false);
+            $trigger.find(options.select).attr({disabled: "disabled"});
+            $trigger.change();
+            event.preventDefault();
+        },
+
+        onDeselectAll: function(event) {
+            var $trigger = event.data.trigger,
+                options = $trigger.data("patternChecklist");
+            $trigger.find("input[type=checkbox]:checked").prop("checked", false);
+            $trigger.find(options.select).prop("disabled", false);
+            $trigger.find(options.deselect).attr({disabled: "disabled"});
+            $trigger.change();
+            event.preventDefault();
+        }
+    };
+
+    registry.register(_);
+    return _;
+});
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
 define('patterns/chosen',[
-    'require',
-    '../../lib/chosen.jquery',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('chosen');
+    '../logging',
+    '../registry',
+    '../../lib/chosen.jquery'
+], function(logging, registry) {
+    var log = logging.getLogger('chosen');
 
-    var init = function($el, opts) {
-        $el.chosen();
-        return $el;
+    var _ = {
+        name: "chosen",
+        trigger: "select.pat-chosen",
+        init: function($el) {
+            $el.chosen();
+            return $el;
+        },
+        destroy: function($el) {
+            // XXX
+        }
     };
 
-    var pattern = {
-        markup_trigger: 'select.chosen',
-        register_jquery_plugin: false,
-        init: init
+    registry.register(_);
+    return _;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+define('lib/ajax',['require','../logging'],function(require) {
+    var log = require('../logging').getLogger('ajaxlib');
+
+    var submit = function($el, opts) {
+        // XXX: make these only defaults
+        opts.context = $el;
+        opts.error = function(a,b,c,d) {
+            log.error(arguments);
+        };
+
+        if ($el.is('form')) {
+            log.debug('form submit', $el);
+            opts.url = $el.attr('action');
+            if (opts.beforeSerialize) {
+                opts.beforeSerialize();
+            }
+            opts.data = $el.serialize() + '&submit=submit';
+            // XXX: check method on form, use POST as default only
+            opts.type = 'POST';
+            $.ajax(opts);
+        } else {
+            log.debug('submit', $el);
+            $.ajax(opts);
+        }
     };
-    return pattern;
+
+    return submit;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/*! URI.js v1.7.2 http://medialize.github.com/URI.js/ */
+/* build contains: URI.js, jquery.URI.js */
+(function(g){function k(a){return a.replace(/([.*+?^=!:${}()|[\]\/\\])/g,"\\$1")}function l(a){return"[object Array]"===String(Object.prototype.toString.call(a))}function q(a){return encodeURIComponent(a).replace(/[!'()*]/g,escape)}var e="undefined"!==typeof module&&module.exports,p=e?require("./punycode"):window.punycode,r=e?require("./IPv6"):window.IPv6,m=e?require("./SecondLevelDomains"):window.SecondLevelDomains,c=function(a,b){if(!(this instanceof c))return new c(a,b);a===g&&(a="undefined"!==
+typeof location?location.href+"":"");this.href(a);return b!==g?this.absoluteTo(b):this},e=c.prototype;c.idn_expression=/[^a-z0-9\.-]/i;c.punycode_expression=/(xn--)/i;c.ip4_expression=/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;c.ip6_expression=/^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/;
+c.find_uri_expression=/\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?\u00ab\u00bb\u201c\u201d\u2018\u2019]))/ig;c.defaultPorts={http:"80",https:"443",ftp:"21"};c.invalid_hostname_characters=/[^a-zA-Z0-9\.-]/;c.encode=q;c.decode=decodeURIComponent;c.iso8859=function(){c.encode=escape;c.decode=unescape};c.unicode=function(){c.encode=q;c.decode=decodeURIComponent};
+c.characters={pathname:{encode:{expression:/%(24|26|2B|2C|3B|3D|3A|40)/ig,map:{"%24":"$","%26":"&","%2B":"+","%2C":",","%3B":";","%3D":"=","%3A":":","%40":"@"}},decode:{expression:/[\/\?#]/g,map:{"/":"%2F","?":"%3F","#":"%23"}}},reserved:{encode:{expression:/%(21|23|24|26|27|28|29|2A|2B|2C|2F|3A|3B|3D|3F|40|5B|5D)/ig,map:{"%3A":":","%2F":"/","%3F":"?","%23":"#","%5B":"[","%5D":"]","%40":"@","%21":"!","%24":"$","%26":"&","%27":"'","%28":"(","%29":")","%2A":"*","%2B":"+","%2C":",","%3B":";","%3D":"="}}}};
+c.encodeQuery=function(a){return c.encode(a+"").replace(/%20/g,"+")};c.decodeQuery=function(a){return c.decode((a+"").replace(/\+/g,"%20"))};c.recodePath=function(a){for(var a=(a+"").split("/"),b=0,d=a.length;b<d;b++)a[b]=c.encodePathSegment(c.decode(a[b]));return a.join("/")};c.decodePath=function(a){for(var a=(a+"").split("/"),b=0,d=a.length;b<d;b++)a[b]=c.decodePathSegment(a[b]);return a.join("/")};var h={encode:"encode",decode:"decode"},i,j=function(a,b){return function(d){return c[b](d+"").replace(c.characters[a][b].expression,
+function(d){return c.characters[a][b].map[d]})}};for(i in h)c[i+"PathSegment"]=j("pathname",h[i]);c.encodeReserved=j("reserved","encode");c.parse=function(a){var b,d={};b=a.indexOf("#");-1<b&&(d.fragment=a.substring(b+1)||null,a=a.substring(0,b));b=a.indexOf("?");-1<b&&(d.query=a.substring(b+1)||null,a=a.substring(0,b));"//"===a.substring(0,2)?(d.protocol="",a=a.substring(2),a=c.parseAuthority(a,d)):(b=a.indexOf(":"),-1<b&&(d.protocol=a.substring(0,b),"//"===a.substring(b+1,b+3)?(a=a.substring(b+
+3),a=c.parseAuthority(a,d)):(a=a.substring(b+1),d.urn=!0)));d.path=a;return d};c.parseHost=function(a,b){var d=a.indexOf("/"),f;-1===d&&(d=a.length);"["===a[0]?(f=a.indexOf("]"),b.hostname=a.substring(1,f)||null,b.port=a.substring(f+2,d)||null):a.indexOf(":")!==a.lastIndexOf(":")?(b.hostname=a.substring(0,d)||null,b.port=null):(f=a.substring(0,d).split(":"),b.hostname=f[0]||null,b.port=f[1]||null);b.hostname&&"/"!==a.substring(d)[0]&&(d++,a="/"+a);return a.substring(d)||"/"};c.parseAuthority=function(a,
+b){a=c.parseUserinfo(a,b);return c.parseHost(a,b)};c.parseUserinfo=function(a,b){var d=a.indexOf("@"),f=a.indexOf("/");-1<d&&(-1===f||d<f)?(f=a.substring(0,d).split(":"),b.username=f[0]?c.decode(f[0]):null,b.password=f[1]?c.decode(f[1]):null,a=a.substring(d+1)):(b.username=null,b.password=null);return a};c.parseQuery=function(a){if(!a)return{};a=a.replace(/&+/g,"&").replace(/^\?*&*|&+$/g,"");if(!a)return{};for(var b={},a=a.split("&"),d=a.length,f=0;f<d;f++){var n=a[f].split("="),e=c.decodeQuery(n.shift()),
+n=n.length?c.decodeQuery(n.join("=")):null;b[e]?("string"===typeof b[e]&&(b[e]=[b[e]]),b[e].push(n)):b[e]=n}return b};c.build=function(a){var b="";a.protocol&&(b+=a.protocol+":");if(!a.urn&&(b||a.hostname))b+="//";b+=c.buildAuthority(a)||"";"string"===typeof a.path&&("/"!==a.path[0]&&"string"===typeof a.hostname&&(b+="/"),b+=a.path);"string"===typeof a.query&&(b+="?"+a.query);"string"===typeof a.fragment&&(b+="#"+a.fragment);return b};c.buildHost=function(a){var b="";if(a.hostname)c.ip6_expression.test(a.hostname)?
+b=a.port?b+("["+a.hostname+"]:"+a.port):b+a.hostname:(b+=a.hostname,a.port&&(b+=":"+a.port));else return"";return b};c.buildAuthority=function(a){return c.buildUserinfo(a)+c.buildHost(a)};c.buildUserinfo=function(a){var b="";a.username&&(b+=c.encode(a.username),a.password&&(b+=":"+c.encode(a.password)),b+="@");return b};c.buildQuery=function(a,b){var d="",f;for(f in a)if(Object.hasOwnProperty.call(a,f)&&f)if(l(a[f]))for(var n={},e=0,h=a[f].length;e<h;e++)a[f][e]!==g&&n[a[f][e]+""]===g&&(d+="&"+c.buildQueryParameter(f,
+a[f][e]),!0!==b&&(n[a[f][e]+""]=!0));else a[f]!==g&&(d+="&"+c.buildQueryParameter(f,a[f]));return d.substring(1)};c.buildQueryParameter=function(a,b){return c.encodeQuery(a)+(null!==b?"="+c.encodeQuery(b):"")};c.addQuery=function(a,b,d){if("object"===typeof b)for(var f in b)Object.prototype.hasOwnProperty.call(b,f)&&c.addQuery(a,f,b[f]);else if("string"===typeof b)a[b]===g?a[b]=d:("string"===typeof a[b]&&(a[b]=[a[b]]),l(d)||(d=[d]),a[b]=a[b].concat(d));else throw new TypeError("URI.addQuery() accepts an object, string as the name parameter");
+};c.removeQuery=function(a,b,d){if(l(b))for(var d=0,f=b.length;d<f;d++)a[b[d]]=g;else if("object"===typeof b)for(f in b)Object.prototype.hasOwnProperty.call(b,f)&&c.removeQuery(a,f,b[f]);else if("string"===typeof b)if(d!==g)if(a[b]===d)a[b]=g;else{if(l(a[b])){var f=a[b],n={},e,h;if(l(d)){e=0;for(h=d.length;e<h;e++)n[d[e]]=!0}else n[d]=!0;e=0;for(h=f.length;e<h;e++)n[f[e]]!==g&&(f.splice(e,1),h--,e--);a[b]=f}}else a[b]=g;else throw new TypeError("URI.addQuery() accepts an object, string as the first parameter");
+};c.commonPath=function(a,b){var d=Math.min(a.length,b.length),f;for(f=0;f<d;f++)if(a[f]!==b[f]){f--;break}if(1>f)return a[0]===b[0]&&"/"===a[0]?"/":"";"/"!==a[f]&&(f=a.substring(0,f).lastIndexOf("/"));return a.substring(0,f+1)};c.withinString=function(a,b){return a.replace(c.find_uri_expression,b)};c.ensureValidHostname=function(a){if(a.match(c.invalid_hostname_characters)){if(!p)throw new TypeError("Hostname '"+a+"' contains characters other than [A-Z0-9.-] and Punycode.js is not available");if(p.toASCII(a).match(c.invalid_hostname_characters))throw new TypeError("Hostname '"+
+a+"' contains characters other than [A-Z0-9.-]");}};e.build=function(a){if(!0===a)this._deferred_build=!0;else if(a===g||this._deferred_build)this._string=c.build(this._parts),this._deferred_build=!1;return this};e.clone=function(){return new c(this)};e.toString=function(){return this.build(!1)._string};e.valueOf=function(){return this.toString()};h={protocol:"protocol",username:"username",password:"password",hostname:"hostname",port:"port"};j=function(a){return function(b,d){if(b===g)return this._parts[a]||
+"";this._parts[a]=b;this.build(!d);return this}};for(i in h)e[i]=j(h[i]);h={query:"?",fragment:"#"};j=function(a,b){return function(d,f){if(d===g)return this._parts[a]||"";null!==d&&(d+="",d[0]===b&&(d=d.substring(1)));this._parts[a]=d;this.build(!f);return this}};for(i in h)e[i]=j(i,h[i]);h={search:["?","query"],hash:["#","fragment"]};j=function(a,b){return function(d,f){var c=this[a](d,f);return"string"===typeof c&&c.length?b+c:c}};for(i in h)e[i]=j(h[i][1],h[i][0]);e.pathname=function(a,b){if(a===
+g||!0===a){var d=this._parts.path||(this._parts.urn?"":"/");return a?c.decodePath(d):d}this._parts.path=a?c.recodePath(a):"/";this.build(!b);return this};e.path=e.pathname;e.href=function(a,b){if(a===g)return this.toString();this._string="";this._parts={protocol:null,username:null,password:null,hostname:null,urn:null,port:null,path:null,query:null,fragment:null};var d=a instanceof c,f="object"===typeof a&&(a.hostname||a.path),e;if("string"===typeof a)this._parts=c.parse(a);else if(d||f)for(e in d=
+d?a._parts:a,d)Object.hasOwnProperty.call(this._parts,e)&&(this._parts[e]=d[e]);else throw new TypeError("invalid input");this.build(!b);return this};e.is=function(a){var b=!1,d=!1,f=!1,e=!1,h=!1,g=!1,i=!1,j=!this._parts.urn;this._parts.hostname&&(j=!1,d=c.ip4_expression.test(this._parts.hostname),f=c.ip6_expression.test(this._parts.hostname),b=d||f,h=(e=!b)&&m&&m.has(this._parts.hostname),g=e&&c.idn_expression.test(this._parts.hostname),i=e&&c.punycode_expression.test(this._parts.hostname));switch(a.toLowerCase()){case "relative":return j;
+case "absolute":return!j;case "domain":case "name":return e;case "sld":return h;case "ip":return b;case "ip4":case "ipv4":case "inet4":return d;case "ip6":case "ipv6":case "inet6":return f;case "idn":return g;case "url":return!this._parts.urn;case "urn":return!!this._parts.urn;case "punycode":return i}return null};var s=e.protocol,t=e.port,u=e.hostname;e.protocol=function(a,b){if(a!==g&&a&&(a=a.replace(/:(\/\/)?$/,""),a.match(/[^a-zA-z0-9\.+-]/)))throw new TypeError("Protocol '"+a+"' contains characters other than [A-Z0-9.+-]");
+return s.call(this,a,b)};e.scheme=e.protocol;e.port=function(a,b){if(this._parts.urn)return a===g?"":this;if(a!==g&&(0===a&&(a=null),a&&(a+="",":"===a[0]&&(a=a.substring(1)),a.match(/[^0-9]/))))throw new TypeError("Port '"+a+"' contains characters other than [0-9]");return t.call(this,a,b)};e.hostname=function(a,b){if(this._parts.urn)return a===g?"":this;if(a!==g){var d={};c.parseHost(a,d);a=d.hostname}return u.call(this,a,b)};e.host=function(a,b){if(this._parts.urn)return a===g?"":this;if(a===g)return this._parts.hostname?
+c.buildHost(this._parts):"";c.parseHost(a,this._parts);this.build(!b);return this};e.authority=function(a,b){if(this._parts.urn)return a===g?"":this;if(a===g)return this._parts.hostname?c.buildAuthority(this._parts):"";c.parseAuthority(a,this._parts);this.build(!b);return this};e.userinfo=function(a,b){if(this._parts.urn)return a===g?"":this;if(a===g){if(!this._parts.username)return"";var d=c.buildUserinfo(this._parts);return d.substring(0,d.length-1)}"@"!==a[a.length-1]&&(a+="@");c.parseUserinfo(a,
+this._parts);this.build(!b);return this};e.subdomain=function(a,b){if(this._parts.urn)return a===g?"":this;if(a===g){if(!this._parts.hostname||this.is("IP"))return"";var d=this._parts.hostname.length-this.domain().length-1;return this._parts.hostname.substring(0,d)||""}d=this._parts.hostname.length-this.domain().length;d=this._parts.hostname.substring(0,d);d=RegExp("^"+k(d));a&&"."!==a[a.length-1]&&(a+=".");a&&c.ensureValidHostname(a);this._parts.hostname=this._parts.hostname.replace(d,a);this.build(!b);
+return this};e.domain=function(a,b){if(this._parts.urn)return a===g?"":this;"boolean"===typeof a&&(b=a,a=g);if(a===g){if(!this._parts.hostname||this.is("IP"))return"";var d=this._parts.hostname.match(/\./g);if(d&&2>d.length)return this._parts.hostname;d=this._parts.hostname.length-this.tld(b).length-1;d=this._parts.hostname.lastIndexOf(".",d-1)+1;return this._parts.hostname.substring(d)||""}if(!a)throw new TypeError("cannot set domain empty");c.ensureValidHostname(a);!this._parts.hostname||this.is("IP")?
+this._parts.hostname=a:(d=RegExp(k(this.domain())+"$"),this._parts.hostname=this._parts.hostname.replace(d,a));this.build(!b);return this};e.tld=function(a,b){if(this._parts.urn)return a===g?"":this;"boolean"===typeof a&&(b=a,a=g);if(a===g){if(!this._parts.hostname||this.is("IP"))return"";var d=this._parts.hostname.lastIndexOf("."),d=this._parts.hostname.substring(d+1);return!0!==b&&m&&m.list[d.toLowerCase()]?m.get(this._parts.hostname)||d:d}if(a)if(a.match(/[^a-zA-Z0-9-]/))if(m&&m.is(a))d=RegExp(k(this.tld())+
+"$"),this._parts.hostname=this._parts.hostname.replace(d,a);else throw new TypeError("TLD '"+a+"' contains characters other than [A-Z0-9]");else{if(!this._parts.hostname||this.is("IP"))throw new ReferenceError("cannot set TLD on non-domain host");d=RegExp(k(this.tld())+"$");this._parts.hostname=this._parts.hostname.replace(d,a)}else throw new TypeError("cannot set TLD empty");this.build(!b);return this};e.directory=function(a,b){if(this._parts.urn)return a===g?"":this;if(a===g||!0===a){if(!this._parts.path&&
+!this._parts.hostname)return"";if("/"===this._parts.path)return"/";var d=this._parts.path.length-this.filename().length-1,d=this._parts.path.substring(0,d)||(this._parts.hostname?"/":"");return a?c.decodePath(d):d}d=this._parts.path.length-this.filename().length;d=this._parts.path.substring(0,d);d=RegExp("^"+k(d));this.is("relative")||(a||(a="/"),"/"!==a[0]&&(a="/"+a));a&&"/"!==a[a.length-1]&&(a+="/");a=c.recodePath(a);this._parts.path=this._parts.path.replace(d,a);this.build(!b);return this};e.filename=
+function(a,b){if(this._parts.urn)return a===g?"":this;if(a===g||!0===a){if(!this._parts.path||"/"===this._parts.path)return"";var d=this._parts.path.lastIndexOf("/"),d=this._parts.path.substring(d+1);return a?c.decodePathSegment(d):d}d=!1;"/"===a[0]&&(a=a.substring(1));a.match(/\.?\//)&&(d=!0);var f=RegExp(k(this.filename())+"$"),a=c.recodePath(a);this._parts.path=this._parts.path.replace(f,a);d?this.normalizePath(b):this.build(!b);return this};e.suffix=function(a,b){if(this._parts.urn)return a===
+g?"":this;if(a===g||!0===a){if(!this._parts.path||"/"===this._parts.path)return"";var d=this.filename(),f=d.lastIndexOf(".");if(-1===f)return"";d=d.substring(f+1);d=/^[a-z0-9%]+$/i.test(d)?d:"";return a?c.decodePathSegment(d):d}"."===a[0]&&(a=a.substring(1));if(d=this.suffix())f=a?RegExp(k(d)+"$"):RegExp(k("."+d)+"$");else{if(!a)return this;this._parts.path+="."+c.recodePath(a)}f&&(a=c.recodePath(a),this._parts.path=this._parts.path.replace(f,a));this.build(!b);return this};e.segment=function(a,b,
+d){var f=this._parts.urn?":":"/",c=this.path(),e="/"===c.substring(0,1),c=c.split(f);"number"!==typeof a&&(d=b,b=a,a=g);if(a!==g&&"number"!==typeof a)throw Error("Bad segment '"+a+"', must be 0-based integer");e&&c.shift();0>a&&(a=Math.max(c.length+a,0));if(b===g)return a===g?c:c[a];if(null===a||c[a]===g)if(l(b))c=b;else{if(b||"string"===typeof b&&b.length)""===c[c.length-1]?c[c.length-1]=b:c.push(b)}else b||"string"===typeof b&&b.length?c[a]=b:c.splice(a,1);e&&c.unshift("");return this.path(c.join(f),
+d)};var v=e.query;e.query=function(a,b){return!0===a?c.parseQuery(this._parts.query):a!==g&&"string"!==typeof a?(this._parts.query=c.buildQuery(a),this.build(!b),this):v.call(this,a,b)};e.addQuery=function(a,b,d){var f=c.parseQuery(this._parts.query);c.addQuery(f,a,b);this._parts.query=c.buildQuery(f);"string"!==typeof a&&(d=b);this.build(!d);return this};e.removeQuery=function(a,b,d){var f=c.parseQuery(this._parts.query);c.removeQuery(f,a,b);this._parts.query=c.buildQuery(f);"string"!==typeof a&&
+(d=b);this.build(!d);return this};e.addSearch=e.addQuery;e.removeSearch=e.removeQuery;e.normalize=function(){return this._parts.urn?this.normalizeProtocol(!1).normalizeQuery(!1).normalizeFragment(!1).build():this.normalizeProtocol(!1).normalizeHostname(!1).normalizePort(!1).normalizePath(!1).normalizeQuery(!1).normalizeFragment(!1).build()};e.normalizeProtocol=function(a){"string"===typeof this._parts.protocol&&(this._parts.protocol=this._parts.protocol.toLowerCase(),this.build(!a));return this};
+e.normalizeHostname=function(a){this._parts.hostname&&(this.is("IDN")&&p?this._parts.hostname=p.toASCII(this._parts.hostname):this.is("IPv6")&&r&&(this._parts.hostname=r.best(this._parts.hostname)),this._parts.hostname=this._parts.hostname.toLowerCase(),this.build(!a));return this};e.normalizePort=function(a){"string"===typeof this._parts.protocol&&this._parts.port===c.defaultPorts[this._parts.protocol]&&(this._parts.port=null,this.build(!a));return this};e.normalizePath=function(a){if(this._parts.urn||
+!this._parts.path||"/"===this._parts.path)return this;var b,d,f=this._parts.path,e,h;"/"!==f[0]&&("."===f[0]&&(d=f.substring(0,f.indexOf("/"))),b=!0,f="/"+f);for(f=f.replace(/(\/(\.\/)+)|\/{2,}/g,"/");;){e=f.indexOf("/../");if(-1===e)break;else if(0===e){f=f.substring(3);break}h=f.substring(0,e).lastIndexOf("/");-1===h&&(h=e);f=f.substring(0,h)+f.substring(e+3)}b&&this.is("relative")&&(f=d?d+f:f.substring(1));f=c.recodePath(f);this._parts.path=f;this.build(!a);return this};e.normalizePathname=e.normalizePath;
+e.normalizeQuery=function(a){"string"===typeof this._parts.query&&(this._parts.query.length?this.query(c.parseQuery(this._parts.query)):this._parts.query=null,this.build(!a));return this};e.normalizeFragment=function(a){this._parts.fragment||(this._parts.fragment=null,this.build(!a));return this};e.normalizeSearch=e.normalizeQuery;e.normalizeHash=e.normalizeFragment;e.iso8859=function(){var a=c.encode,b=c.decode;c.encode=escape;c.decode=decodeURIComponent;this.normalize();c.encode=a;c.decode=b;return this};
+e.unicode=function(){var a=c.encode,b=c.decode;c.encode=q;c.decode=unescape;this.normalize();c.encode=a;c.decode=b;return this};e.readable=function(){var a=this.clone();a.username("").password("").normalize();var b="";a._parts.protocol&&(b+=a._parts.protocol+"://");a._parts.hostname&&(a.is("punycode")&&p?(b+=p.toUnicode(a._parts.hostname),a._parts.port&&(b+=":"+a._parts.port)):b+=a.host());a._parts.hostname&&(a._parts.path&&"/"!==a._parts.path[0])&&(b+="/");b+=a.path(!0);if(a._parts.query){for(var d=
+"",f=0,e=a._parts.query.split("&"),h=e.length;f<h;f++){var i=(e[f]||"").split("="),d=d+("&"+c.decodeQuery(i[0]).replace(/&/g,"%26"));i[1]!==g&&(d+="="+c.decodeQuery(i[1]).replace(/&/g,"%26"))}b+="?"+d.substring(1)}return b+=a.hash()};e.absoluteTo=function(a){var b=this.clone(),d=["protocol","username","password","hostname","port"],f,e;if(this._parts.urn)throw Error("URNs do not have any generally defined hierachical components");if(this._parts.hostname)return b;a instanceof c||(a=new c(a));f=0;for(e;e=
+d[f];f++)b._parts[e]=a._parts[e];d=["query","path"];f=0;for(e;e=d[f];f++)!b._parts[e]&&a._parts[e]&&(b._parts[e]=a._parts[e]);"/"!==b.path()[0]&&(a=a.directory(),b._parts.path=(a?a+"/":"")+b._parts.path,b.normalizePath());b.build();return b};e.relativeTo=function(a){var b=this.clone(),d=["protocol","username","password","hostname","port"],f;if(this._parts.urn)throw Error("URNs do not have any generally defined hierachical components");a instanceof c||(a=new c(a));if("/"!==this.path()[0]||"/"!==a.path()[0])throw Error("Cannot calculate common path from non-relative URLs");
+f=c.commonPath(b.path(),a.path());for(var a=a.directory(),e=0,h;h=d[e];e++)b._parts[h]=null;if(!f||"/"===f)return b;if(a+"/"===f)b._parts.path="./"+b.filename();else{d="../";f=RegExp("^"+k(f));for(a=a.replace(f,"/").match(/\//g).length-1;a--;)d+="../";b._parts.path=b._parts.path.replace(f,d)}b.build();return b};e.equals=function(a){var b=this.clone(),d=new c(a),f={},e={},a={},h;b.normalize();d.normalize();if(b.toString()===d.toString())return!0;f=b.query();e=d.query();b.query("");d.query("");if(b.toString()!==
+d.toString()||f.length!==e.length)return!1;f=c.parseQuery(f);e=c.parseQuery(e);for(h in f)if(Object.prototype.hasOwnProperty.call(f,h)){if(l(f[h])){if(!l(e[h])||f[h].length!==e[h].length)return!1;f[h].sort();e[h].sort();b=0;for(d=f[h].length;b<d;b++)if(f[h][b]!==e[h][b])return!1}else if(f[h]!==e[h])return!1;a[h]=!0}for(h in e)if(Object.prototype.hasOwnProperty.call(e,h)&&!a[h])return!1;return!0};"undefined"!==typeof module&&module.exports?module.exports=c:window.URI=c})();
+(function(g,k){function l(c){return c.replace(/([.*+?^=!:${}()|[\]\/\\])/g,"\\$1")}function q(c){var e;g.each(["href","src","action"],function(g,k){return k in c?(e=k,!1):!0});return"input"===c.nodeName.toLowerCase()&&"image"!==c.type?k:e}var e="undefined"!==typeof module&&module.exports?require("./URIjs"):window.URI,p=/^([a-zA-Z]+)\s*([\^\$*]?=|:)\s*(['"]?)(.+)\3|^\s*([a-zA-Z0-9]+)\s*$/,r={},m={"=":function(c,e){return c===e},"^=":function(c,e){return!!(c+"").match(RegExp("^"+l(e),"i"))},"$=":function(c,
+e){return!!(c+"").match(RegExp(l(e)+"$","i"))},"*=":function(c,e,g){"directory"==g&&(c+="/");return!!(c+"").match(RegExp(l(e),"i"))},"equals:":function(c,e){return c.equals(e)},"is:":function(c,e){return c.is(e)}};g.each("authority directory domain filename fragment hash host hostname href password path pathname port protocol query scheme search subdomain suffix tld username".split(" "),function(c,e){r[e]=!0;g.attrHooks["uri:"+e]={get:function(c){return g(c).uri()[e]()},set:function(c,h){g(c).uri()[e](h);
+return h}}});g.fn.uri=function(c){var g=this.first(),j=g.get(0),l=q(j);if(!l)throw Error('Element "'+j.nodeName+'" does not have either property: href, src, action');if(c!==k){var m=g.data("uri");if(m)return m.href(c);c instanceof e||(c=e(c))}else{if(c=g.data("uri"))return c;c=e(g.attr(l))}c._dom_element=j;c._dom_attribute=l;c.normalize();g.data("uri",c);return c};e.prototype.build=function(c){if(this._dom_element)this._string=e.build(this._parts),this._deferred_build=!1,this._dom_element.setAttribute(this._dom_attribute,
+this._string),this._dom_element[this._dom_attribute]=this._string;else if(!0===c)this._deferred_build=!0;else if(c===k||this._deferred_build)this._string=e.build(this._parts),this._deferred_build=!1;return this};g.expr.filters.uri=function(c,e,j){if(!q(c)||!j[3])return!1;e=j[3].match(p);if(!e||!e[5]&&":"!==e[2]&&!m[e[2]])return!1;j=g(c).uri();if(e[5])return j.is(e[5]);if(":"===e[2])return c=e[1].toLowerCase()+":",!m[c]?!1:m[c](j,e[4]);c=e[1].toLowerCase();return!r[c]?!1:m[e[2]](j[c](),e[4],c)};var c=
+function(c,e){return g(c).uri().href(e).toString()};g.each(["src","href","action","uri"],function(e,i){g.attrHooks[i]={set:c}});g.attrHooks.uri.get=function(c){return g(c).uri()}})(jQuery);
+
+define("3rdparty/URI", function(){});
+
+/*
+ * changes to previous injection implementations
+ * - no support for data-injection anymore, switch to new data-inject
+ * - no support for data-href-next anymore, switch to data-inject: next-href
+ * - XXX: add support for forms, see remnants in inject1 and ajaxify
+ */
+define('patterns/inject',[
+    "jquery",
+    "../core/parser",
+    "../lib/ajax",
+    "../logging",
+    "../registry",
+    "../3rdparty/URI"
+], function($, Parser, ajax, logging, registry) {
+    var log = logging.getLogger('inject'),
+        parser = new Parser("inject");
+
+    parser.add_argument('selector', 'body');
+    //XXX: (yet) unsupported: parser.add_argument('target', '$selector');
+    parser.add_argument('target');
+    parser.add_argument('type');
+    parser.add_argument('next-href');
+    //XXX: (yet) unsupported: parser.add_argument('source', '$selector');
+    parser.add_argument('source');
+    // XXX: this should not be here but the parser would bail on
+    // unknown parameters and expand/collapsible need to pass the url
+    // to us
+    parser.add_argument('url');
+
+    var _ = {
+        name: "inject",
+        trigger: "a.pat-inject, form.pat-inject",
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $el = $(this),
+                    cfgs = _.extractConfig($el, opts);
+                $el.data('patterns.inject', cfgs);
+
+                // In case next-href is specified the anchor's href will
+                // be set to it after the injection is triggered. In case
+                // the next href already exists, we do not activate the
+                // injection but instead just change the anchors href.
+                //
+                // XXX: This is used in only one project for linked
+                // fullcalendars, it's sanity is wonky and we should
+                // probably solve it differently. -- Maybe it's cool
+                // after all.
+                var $nexthref = $(cfgs[0].nextHref);
+                if ($el.is('a') && $nexthref.length > 0) {
+                    log.debug('Skipping as next href already exists', $nexthref);
+                    // XXX: reconsider how the injection enters exhausted state
+                    return $el.attr({href: cfgs[0].nextHref});
+                }
+
+                // setup event handlers
+                if ($el.is('a'))
+                    $el.on("click.pat-inject", _.onClick);
+                // else if ($el.is('form'))
+                //     $el.on("submit.pat-inject", _.onSubmit);
+                return $el;
+            });
+        },
+        destroy: function($el) {
+            $el.off('.pat-inject');
+            $el.data('patterns.inject', null);
+            return $el;
+        },
+        onClick: function(ev) {
+            var cfgs = $(this).data('patterns.inject');
+            if (ev)
+                ev.preventDefault();
+            $(this).trigger('patterns-inject-triggered');
+            _.execute(cfgs);
+        },
+        extractConfig: function($el, opts) {
+            opts = opts || {};
+
+            var urlparts, cfgs, defaultSelector;
+            // opts has priority, fallback to href/action
+            opts.url = opts.url || $el.attr('href') || $el.attr('action') || "";
+
+            // separate selector from url
+            urlparts = opts.url.split('#');
+            opts.url = urlparts[0];
+
+            // if no selector, check for selector as part of original url
+            defaultSelector = urlparts[1] && '#' + urlparts[1];
+
+            if (urlparts.length > 2) {
+                log.warn('Ignoring additional source ids:', urlparts.slice(2));
+            }
+
+            cfgs = parser.parse($el, opts, true);
+            cfgs.forEach(function(cfg) {
+                cfg.selector = cfg.selector || defaultSelector;
+            });
+            return cfgs;
+        },
+        // verify and post-process config
+        verifyConfig: function(cfgs) {
+            var url = cfgs[0].url;
+
+            // verification for each cfg in the array needs to succeed
+            return cfgs.every(function(cfg) {
+                // in case of multi-injection, all injections need to use
+                // the same url
+                if (cfg.url !== url) {
+                    log.error('Unsupported different urls for multi-inject');
+                    return false;
+                }
+
+                // defaults
+                cfg.source = cfg.source || cfg.selector;
+                cfg.target = cfg.target || cfg.selector;
+
+                if (!_._extractModifiers(cfg))
+                    return false;
+
+                // make sure target exist
+                cfg.$target = cfg.$target || $(cfg.target);
+                if (cfg.$target.length === 0) {
+                    if (!cfg.target) {
+                        log.error('Need target selector', cfg);
+                        return false;
+                    }
+                    return _._createTarget(cfg.target);
+                }
+                return true;
+            });
+        },
+        _extractModifiers: function(cfg) {
+            var source_re = /^(.+?)(::element)?$/,
+                target_re = /^(.+?)(::element)?(::after|::before)?$/,
+                source_match = source_re.exec(cfg.source),
+                target_match = target_re.exec(cfg.target),
+                targetMod, targetPosition;
+
+            // source content or element?
+            cfg.source = source_match[1];
+            // XXX: turn into source processor
+            cfg.sourceMod = source_match[2] ? "element" : "content";
+
+            // will be added while the ajax request is in progress
+            cfg.targetLoadClasses = "injecting";
+
+            // target content or element?
+            targetMod = target_match[2] ? "element" : "content";
+            cfg.target = target_match[1];
+            cfg.targetLoadClasses += " injecting-" + targetMod;
+
+            // position relative to target
+            targetPosition = (target_match[3] || "::").slice(2);
+            if (targetPosition)
+                cfg.targetLoadClasses += " injecting-" + targetPosition;
+
+            cfg.action = targetMod + targetPosition;
+
+            // Once we start detacting illegal combinations, we'll
+            // return false in case of error
+            return true;
+        },
+
+        // create a target that matches the selector
+        //
+        // XXX: so far we only support #target and create a div with
+        // that id appended to the body.
+        _createTarget: function(selector) {
+            var $target;
+            if (selector.slice(0,1) !== '#') {
+                log.error('only id supported for non-existing target');
+                return null;
+            }
+            $target = $('<div />').attr({id: selector.slice(1)});
+            $('body').append($target);
+            return $target;
+        },
+        execute: function(cfgs) {
+            var $this = $(this);
+
+            // get a kinda deep copy, we scribble on it
+            cfgs = cfgs.map(function(cfg) {
+                return $.extend({}, cfg);
+            });
+
+            if (!_.verifyConfig(cfgs))
+                return;
+
+            // possibility for spinners on targets
+            cfgs.forEach(function(cfg) {
+                cfg.$target.addClass(cfg.targetLoadClasses);
+                cfg.$target.on('patterns-injected', function() {
+                    $(this).removeClass(cfg.targetLoadClasses);
+                });
+            });
+
+            var onSuccess = function(data, status, jqxhr) {
+                // list of $source objects, one for each cfg
+                var sources = cfgs.map(function(cfg) { return cfg.source; }),
+                    sources$ = _._sourcesFromHtml(data, cfgs[0].url, sources);
+
+                cfgs.forEach(function(cfg, idx) {
+                    var $source = sources$[idx];
+
+                    // XXX: generalize to do postProcessing for modals
+                    if (cfg.sourceMod === "content")
+                        $source = $source.contents();
+
+                    // perform injection
+                    _._inject($source, cfg.$target, cfg.action);
+                });
+
+                if (cfgs.nexthref) {
+                    $this.attr({href: cfgs['next-href']});
+                    _.destroy($this);
+                }
+            };
+
+            ajax($this, {
+                url: cfgs[0].url,
+                success: onSuccess
+            });
+        },
+        _inject: function($source, $target, action) {
+            // action to jquery method mapping, except for "content"
+            // and "element"
+            var method = {
+                contentbefore: "prepend",
+                contentafter:  "append",
+                elementbefore: "before",
+                elementafter:  "after"
+            }[action];
+
+            switch (action) {
+            case "content":
+                $target.each(function() {
+                    var $ourSource = $source.clone();
+                    $(this).empty().append($ourSource);
+                    $ourSource.trigger('patterns-injected');
+                });
+                break;
+            case "element":
+                $target.each(function() {
+                    var $ourSource = $source.clone();
+                    $(this).replaceWith($ourSource);
+                    $ourSource.trigger('patterns-injected');
+                });
+                break;
+            default:
+                $target.each(function() {
+                    var $ourSource = $source.clone();
+                    $(this)[method]($ourSource);
+                    $ourSource.trigger('patterns-injected');
+                });
+            }
+        },
+        _sourcesFromHtml: function(html, url, sources) {
+            var $html = _._parseRawHtml(html, url);
+            return sources.map(function(source) {
+                if (source === "body")
+                    source = "#__original_body";
+
+                var $source = $html.find(source);
+
+                if ($source.length === 0)
+                    log.warn('No source elements for selector:', source, $html);
+
+                return $source;
+            });
+        },
+        _parseRawHtml: function(html, url) {
+            url = url || "";
+            var $html;
+            $html = $('<div/>').html(
+                html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                    .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                    .replace(/<body(.*)>/gi, '<div id="__original_body">')
+                    .replace(/<\/body(.*)>/gi,'</div>')
+            );
+            $html.filter(":uri(is:relative)").each(function() {
+                switch (this.tagName) {
+                case "A":
+                    this.href=new URI(this.href).absoluteTo(url).toString();
+                    break;
+                case "FORM":
+                    this.action=new URI(this.action).absoluteTo(url).toString();
+                    break;
+                case "IMG":
+                    this.src=new URI(this.src).absoluteTo(url).toString();
+                    break;
+                }
+            });
+            return $html;
+        }
+    };
+    registry.register(_);
+    return _;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * @license
+ * Patterns @VERSION@ store - store pattern state locally in the browser
+ *
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ */
+define('core/store',[],function() {
+    function Storage(backend, prefix) {
+        this.prefix=prefix;
+        this.backend=backend;
+    }
+
+    Storage.prototype._key = function(name) {
+        return this.prefix + ":" + name;
+    };
+
+    Storage.prototype._allKeys = function() {
+        var keys = [],
+            prefix = this.prefix + ":",
+            prefix_length = prefix.length,
+            key, i;
+
+        for (i=0; i<this.backend.length; i++) {
+            key=this.backend.key(i);
+            if (key.slice(0, prefix_length)===prefix)
+                keys.push(key);
+        }
+        return keys;
+    };
+
+    Storage.prototype.get = function(name) {
+        var key = this._key(name),
+            value = this.backend.getItem(key);
+        if (value!==null)
+            value=JSON.parse(value);
+        return value;
+    };
+
+    Storage.prototype.set = function(name, value) {
+        var key = this._key(name);
+        return this.backend.setItem(key, JSON.stringify(value));
+    };
+
+    Storage.prototype.remove = function(name) {
+        var key = this._key(name);
+        return this.backend.removeItem(key);
+    };
+
+    Storage.prototype.clear = function() {
+        var keys = this._allKeys();
+        for (var i=0; i<keys.length; i++)
+            this.backend.removeItem(keys[i]);
+    };
+
+    Storage.prototype.all = function() {
+        var keys = this._allKeys(),
+            prefix_length = this.prefix.length + 1,
+            lk,
+            data = {};
+
+        for (var i=0; i<keys.length; i++) {
+            lk = keys[i].slice(prefix_length);
+            data[lk]=JSON.parse(this.backend.getItem(keys[i]));
+        }
+        return data;
+    };
+
+    var store = {
+        supported: typeof window.sessionStorage !== 'undefined',
+
+        local: function (name) {
+            return new Storage(window.localStorage, name);
+        },
+
+        session: function (name) {
+            return new Storage(window.sessionStorage, name);
+        }
+    };
+
+    return store;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/*
+ * changes:
+ * - open($el, opts) instead of open($el, duration)
+ * - same for close
+ */
+define('patterns/collapsible',[
+    "jquery",
+    "./inject",
+    "../logging",
+    "../core/parser",
+    "../core/store",
+    "../registry"
+], function($, inject, logging, Parser, store, registry) {
+    var log = logging.getLogger("collapsible"),
+        parser = new Parser("collapsible");
+
+    parser.add_argument("load-content");
+    parser.add_argument("store", "none", ["none", "session", "local"]);
+    parser.add_argument("duration", "fast");
+    parser.add_argument("easing", "linear");
+    parser.add_argument("closed", false);
+
+    var _ = {
+        name: "collapsible",
+        trigger: ".pat-collapsible",
+
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $el = $(this),
+                    options = _._validateOptions(this, parser.parse($el, opts)),
+                // create collapsible structure
+                    $trigger = $el.children(':first'),
+                    $content = $el.children(':gt(0)'),
+                    $panel, state;
+                if ($content.length > 0)
+                    $panel = $content.wrapAll('<div class="panel-content" />')
+                        .parent();
+                else
+                    $panel = $('<div class="panel-content" />').insertAfter($trigger);
+
+                $el.data("patternCollapsible", options);
+                state=(options.closed || $el.hasClass("closed")) ? "closed" : "open";
+                if (options.store!=="none") {
+                    storage=(options.store==="local" ? store.local : store.session)(_.name);
+                    state=storage.get(this.id) || state;
+                }
+
+                if (state==="closed") {
+                    $el.removeClass("open").addClass("closed");
+                    $panel.hide();
+                } else {
+                    _.loadContent($el);
+                    $el.addClass("open");
+                    $panel.show();
+                }
+
+                $trigger
+                    .off(".pat-collapsible")
+                    .on("click.pat-collapsible", null, $el, _._onClick);
+
+                return $el;
+            });
+        },
+
+        _onClick: function(event) {
+            _.toggle(event.data);
+        },
+
+        destroy: function($el) {
+            $el.removeData("patternCollapsible");
+            $el.children(":first").off('.pat-collapsible');
+        },
+
+        open: function($el) {
+            if (!$el.hasClass("open"))
+                _.toggle($el);
+            return $el;
+        },
+
+        close: function($el) {
+            if (!$el.hasClass("closed"))
+                _.toggle($el);
+            return $el;
+        },
+
+        _validateOptions: function(trigger, options) {
+            if (options.store!=="none") {
+                if (!trigger.id) {
+                    log.warn("state persistance requested, but element has no id");
+                    options.store="none";
+                } else if (!store.supported) {
+                    log.warn("state persistance requested, but browser does not support webstorage");
+                    options.store="none";
+                }
+            }
+            return options;
+        },
+
+        loadContent: function($el) {
+            var options = $el.data("patternCollapsible");
+            if (!options.loadContent)
+                return;
+            var components = options.loadContent.split('#'),
+                url = components[0],
+                id = components[1] ? '#' + components[1] : null,
+                opts = [{
+                    url: url,
+                    source: id,
+                    $targets: $('.panel-content', $el)
+                }];
+            inject.execute(opts);
+        },
+
+        toggle: function($el) {
+            var options = $el.data("patternCollapsible"),
+                $panel = $el.find('.panel-content'),
+                new_state = $el.hasClass("closed") ? "open" : "closed";
+
+            if (options.store!=="none") {
+                var storage=(options.store==="local" ? store.local : store.session)(_.name);
+                storage.set($el.attr("id"), new_state);
+            }
+
+            if (new_state==="open") {
+                $el.trigger('patterns-collapsible-open');
+                _._transit($el, $panel, "closed", "open", options);
+            } else {
+                $el.trigger('patterns-collapsible-close');
+                _._transit($el, $panel, "open", "closed", options);
+            }
+
+            // allow for chaining
+            return $el;
+        },
+
+        _transit: function($el, $panel, from_cls, to_cls, options) {
+            if (to_cls === "open")
+                _.loadContent($el);
+            $el.removeClass(from_cls);
+            if (options.duration)
+                $el.addClass("in-progress");
+            $panel.slideToggle(options.duration, options.easing, function() {
+                $el
+                    .removeClass("in-progress")
+                    .addClass(to_cls);
+            });
+        }
+    };
+
+    registry.register(_);
+    return _;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+define('patterns/depends',[
+    "jquery",
+    "../registry",
+    "../core/parser"
+], function($, patterns, Parser) {
+    var parser = new Parser("depends");
+
+    parser.add_argument("name");
+    parser.add_argument("operator", "on");
+    parser.add_argument("value");
+    parser.add_argument("type", "and");
+    parser.add_argument("action", "show");
+
+    var depends = {
+        name: "depends",
+        trigger: ".pat-depends",
+        jquery_plugin: "patternDepends",
+
+        verify: function($slave, command) {
+            var result=[],
+                $form = $slave.closest("form"),
+                $input, i, value, test;
+
+            if (!$form.length)
+                $form=$(document);
+
+            for (i=0; i<command.on.length; i++) {
+                test=command.on[i];
+
+                $input = $form.find(":input[name="+test.name+"]");
+                if (!$input.length) {
+                    result.push(false);
+                    continue;
+                }
+
+                if ($input.attr("type")==="radio" || $input.attr("type")==="checkbox")
+                    value = $input.filter(":checked").val();
+                else
+                    value = $input.val();
+
+                if (test.operator==="on" && !value) {
+                    result.push(false);
+                    continue;
+                } else if (test.operator==="off" && value) {
+                    result.push(false);
+                    continue;
+                } else if (test.value) {
+                    if (test.operator==="equals" && test.value!==value) {
+                        result.push(false);
+                        continue;
+                    } else if (test.operator==="notEquals" && test.value===value) {
+                        result.push(false);
+                        continue;
+                    }
+                }
+                result.push(true);
+            }
+
+            if (command.type==="or") {
+                for (i=0; i<result.length; i++) {
+                    if (result[i])
+                        return true;
+                }
+                return false;
+            } else {
+                for (i=0; i<result.length; i++)
+                    if (!result[i])
+                        return false;
+                return true;
+            }
+        },
+
+        getMasters: function($slave, command) {
+            var $result = $(),
+                $form = $slave.closest("form"),
+                i, test;
+
+            if (!$form.length)
+                $form=$(document);
+
+            for (i=0; i<command.on.length; i++) {
+                test=command.on[i];
+                if (!test)
+                    continue;
+
+                $result=$result.add($form.find(":input[name="+test.name+"]"));
+            }
+
+            return $result;
+        },
+
+        parse: function($el, opts) {
+            var options = parser.parse($el, opts, true);
+            var command = {"on" : options,
+                           "action" : "show",
+                           "type": "and"
+                           };
+            if (options[0].action)
+                command.action=options[0].action;
+            if (options[0].type)
+                command.type=options[0].type;
+            return command;
+        },
+
+        init: function($root, opts) {
+            return $root.each(function() {
+                var slave = this,
+                    $slave = $(this),
+                    command, state;
+
+                command=depends.parse($slave, opts);
+                state=depends.verify($slave, command);
+
+                if (command.action==="show") {
+                    if (state)
+                        $slave.show();
+                    else
+                        $slave.hide();
+                } else if (command.action==="enable") {
+                    if (state) {
+                        slave.disabled=null;
+                        $slave.removeClass("disabled");
+                    } else {
+                        slave.disabled="disabled";
+                        $slave.addClass("disabled");
+                    }
+                }
+
+                depends.getMasters($slave, command).on("change.pat-depends", function() {
+                    state=depends.verify($slave, command);
+                    if (command.action==="show") {
+                        if (state)
+                            $slave.slideDown();
+                        else
+                            $slave.slideUp();
+                    } else if (command.action==="enable" ) {
+                        if (state) {
+                            slave.disabled=null;
+                            $slave.removeClass("disabled");
+                        } else {
+                            slave.disabled="disabled";
+                            $slave.addClass("disabled");
+                        }
+                    }
+                });
+            });
+        }
+    };
+
+    patterns.register(depends);
+    return depends; // XXX for tests only
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
@@ -30006,435 +30291,6804 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 
 define("patterns/../../lib/tiny_mce/tiny_mce_src", function(){});
 
-define('lib/ajax',['require','../logging'],function(require) {
-    var log = require('../logging').getLogger('ajaxlib');
-
-    var submit = function($el, opts) {
-        // XXX: make these only defaults
-        opts.context = $el;
-        opts.error = function(a,b,c,d) {
-            log.error(arguments);
-        };
-
-        if ($el.is('form')) {
-            log.debug('form submit', $el);
-            opts.url = $el.attr('action');
-            if (opts.beforeSerialize) {
-                opts.beforeSerialize();
-            }
-            opts.data = $el.serialize() + '&submit=submit';
-            // XXX: check method on form, use POST as default only
-            opts.type = 'POST';
-            $.ajax(opts);
-        } else {
-            log.debug('submit', $el);
-            $.ajax(opts);
-        }
-    };
-
-    return submit;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
 define('patterns/edit-tinymce',[
-    'require',
-    '../../lib/tiny_mce/tiny_mce_src',
+    'jquery',
     '../lib/ajax',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('edit-tinymce'),
-        ajax = require('../lib/ajax');
+    '../logging',
+    '../registry',
+    '../../lib/tiny_mce/tiny_mce_src'
+], function($, ajax, logging, registry) {
+    var log = logging.getLogger('editTinyMCE');
 
-    var init = function($el, opts) {
-        var $form = $el.parents('form'),
-            $resetbtn = $form.find('[type=reset]'),
-            id = $el.attr('id');
+    var _ = {
+        name: "editTinyMCE",
+        trigger: 'form textarea.pat-edit-tinymce',
+        init: function($el, opts) {
+            var $form = $el.parents('form'),
+                $resetbtn = $form.find('[type=reset]'),
+                id = $el.attr('id');
 
-        // make sure the textarea has an id
-        if (!id) {
-            var formid = $form.attr('id'),
-                name = $el.attr('name');
-            if (!formid) {
-                log.error('Textarea or parent form needs an id', $el, $form);
-                return false;
+            // make sure the textarea has an id
+            if (!id) {
+                var formid = $form.attr('id'),
+                    name = $el.attr('name');
+                if (!formid) {
+                    log.error('Textarea or parent form needs an id', $el, $form);
+                    return false;
+                }
+                if (!name) {
+                    log.error('Textarea needs a name', $el);
+                    return false;
+                }
+                id = formid + '_' + name;
+                if ($('#'+id).length > 0) {
+                    log.error('Textarea needs an id', $el);
+                    return false;
+                }
+                $el.attr({id: id});
             }
-            if (!name) {
-                log.error('Textarea needs a name', $el);
-                return false;
+
+            // read configuration
+            var cfg = $el.data('tinymce-json');
+            if (!cfg) {
+                log.info('data-tinymce-json empty, using default config', $el);
+                cfg = '{}';
             }
-            id = formid + '_' + name;
-            if ($('#'+id).length > 0) {
-                log.error('Textarea needs an id', $el);
-                return false;
-            }
-            $el.attr({id: id});
-        }
+            cfg.elements = id;
+            cfg.mode = 'exact';
+            cfg.readonly = Boolean($el.attr('readonly'));
 
-        // read configuration
-        var cfg = $el.data('tinymce-json');
-        if (!cfg) {
-            log.info('data-tinymce-json empty, using default config', $el);
-            cfg = '{}';
-        }
-        cfg.elements = id;
-        cfg.mode = 'exact';
-        cfg.readonly = Boolean($el.attr('readonly'));
+            // initialize editor
+            var tinymce = tinyMCE.init(cfg);
 
-        // initialize editor
-        var tinymce = tinyMCE.init(cfg);
-
-        // ajaxify form
-        var ajaxopts = {
-            beforeSerialize: (function(id) {
-                return function() {
-                    tinyMCE.editors[id].save();
-                };
-            })(id)
-        };
-
-        $form.on('submit', function(ev) {
-            ev.preventDefault();
-            ajax($form, ajaxopts);
-        });
-
-        // XXX: we hijack the reset button, but currently only reset
-        // the tiny textarea.
-        $resetbtn.on('click', (function(id) {
-            return function(ev) {
-                ev.preventDefault();
-                tinyMCE.editors[id].load();
+            // ajaxify form
+            var ajaxopts = {
+                beforeSerialize: (function(id) {
+                    return function() {
+                        tinyMCE.editors[id].save();
+                    };
+                })(id)
             };
-        })(id));
 
-        return $el;
+            $form.on('submit', function(ev) {
+                ev.preventDefault();
+                ajax($form, ajaxopts);
+            });
+
+            // XXX: we hijack the reset button, but currently only reset
+            // the tiny textarea.
+            $resetbtn.on('click.pat-edit-tinymce', (function(id) {
+                return function(ev) {
+                    ev.preventDefault();
+                    tinyMCE.editors[id].load();
+                };
+            })(id));
+
+            return $el;
+        },
+        destroy: function($el) {
+            // XXX
+        }
     };
 
-    var pattern = {
-        markup_trigger: 'form textarea.edit-tinymce',
-        initialised_class: 'edit-tinymce',
-        init: init
-    };
-    return pattern;
+    registry.register(_);
+    return _;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
 define('patterns/expandable',[
-    'require'
-], function(require) {
+    'jquery',
+    '../registry'
+], function($, registry) {
+    var _ = {
+        name: "expandable",
+        trigger: "ul.pat-expandable",
+        init: function($el, opts) {
 
-    var init = function($el, opts) {
-        // make sure inject folders have a ul
-        $el.find('.folder[data-inject]:not(:has(ul))').append('<ul />');
+            // XXX: data-pat-expandable with load-content: instead of injection
 
-        // find all folders that contain a ul
-        var $folders = $el.find('li.folder:has(ul)');
+            // make sure inject folders have a ul
+            $el.find('.folder[data-pat-inject]:not(:has(ul))').append('<ul />');
 
-        // inject span.toggle as first child of each folder
-        $folders.prepend('<span class="toggle"></span>');
+            // find all folders that contain a ul
+            var $folders = $el.find('li.folder:has(ul)');
 
-        // all folders are implicitly closed
-        $folders.filter(':not(.open,.closed)').addClass('closed');
+            // inject span.toggle as first child of each folder
+            $folders.prepend('<span class="toggle"></span>');
 
-        // trigger open event for open folders
-        $folders.filter('.open').trigger('patterns-folder-open');
+            // all folders are implicitly closed
+            $folders.filter(':not(.open,.closed)').addClass('closed');
 
-        // wire spans as control elements
-        var $ctrls = $el.find('span.toggle');
-        $ctrls.each(function() {
-            var $ctrl = $(this),
-                $folder = $ctrl.parent();
-            $ctrl.on('click', function(ev) {
-                $folder.toggleClass('open closed');
-                $folder.filter('.open').trigger('patterns-folder-open');
+            // trigger open event for open folders
+            $folders.filter('.open').trigger('patterns-folder-open');
+
+            // wire spans as control elements
+            var $ctrls = $el.find('span.toggle');
+            $ctrls.each(function() {
+                var $ctrl = $(this),
+                    $folder = $ctrl.parent();
+                $ctrl.on('click.pat-expandable', function(ev) {
+                    $folder.toggleClass('open closed');
+                    $folder.filter('.open').trigger('patterns-folder-open');
+                });
             });
-        });
+            return $el;
+        }
     };
-
-    var pattern = {
-        markup_trigger: "ul.expandable",
-        initialised_class: "expandable",
-        init: init
-    };
-
-    return pattern;
+    registry.register(_);
+    return _;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-define('patterns/inject2',['require','../logging','../lib/inject','../lib/ajax','../core/parser'],function(require) {
-    var log = require('../logging').getLogger('inject2'),
-        inject = require('../lib/inject'),
-        ajax = require('../lib/ajax');
+/**
+ * @license
+ * Patterns @VERSION@ floatingPanel - easily create floating panels
+ *
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ */
+define('patterns/floatingpanel',[
+    'jquery'
+], function($) {
+    var floatingPanelContextual = {
+        options: {
+            events: {
+                def: ",mouseleave"
+            },
+            delay: 500
+        },
 
-    var init = function($el, opts) {
-        var injecthandler = function(ev) {
-            if (ev) ev.preventDefault();
-            triggerinject($el);
-        };
+        execute: function( $elem, url, sources, params, event ) {
+            var api = $elem.data("tooltip");
+            if (!api) {
+                // we haven't initialized the tooltip for this element
+                // dot it now
+                var opts = $.extend({}, floatingPanelContextual.options, params);
 
-        // if the element referenced by href-next exists already,
-        // point to it and disable injection
-        // XXX: probably only makes sense for anchors
-        var hrefnext = $el.data('href-next');
-        if (hrefnext && ($(hrefnext).length > 0)) {
-            log.debug('Skipping as href-next already exists', $(hrefnext));
-            return $el.attr({href: hrefnext});
+                if ( sources.length > 0 ) {
+                    opts.tip = "#" + sources[0];
+                }
+                opts.onHide = floatingPanelContextual.handleOnHide;
+                $elem.tooltip(opts).dynamic();
+
+                api = $elem.data("tooltip");
+            }
+
+            if (!api.isShown(false)) {
+                api.show();
+            }
+            var $parents = $elem.parents("li");
+
+            if ($parents.length > 0) {
+                $($parents[0]).addClass('tipped');
+            }
+        },
+
+        handleOnHide: function() {
+            var $elem = this.getTrigger();
+
+            var $parents = $elem.parents("li");
+
+            if ($parents.length > 0) {
+                $($parents[0]).removeClass('tipped');
+            }
         }
+    };
+    return floatingPanelContextual;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * @license
+ * Patterns @VERSION@ focus - Manage focus class on fieldsets
+ *
+ * Copyright 2012 Simplon B.V.
+ */
+define('patterns/focus',[
+    'jquery',
+    "../registry"
+], function($, patterns) {
+    var focus = {
+        name: "focus",
 
-        if ($el.is('.collapsible')) {
-            log.debug('will trigger on patterns-collapsible-open', $el);
-            $el.on('patterns-collapsible-open.inject', injecthandler);
-        } else if ($el.is('.folder')) {
-            log.debug('will trigger on patterns-folder-open', $el);
-            $el.on('patterns-folder-open.inject', function(ev) {
-                if (ev.target !== ev.currentTarget) return;
-                injecthandler(ev);
+        onNewContent: function() {
+            if ($(document.activeElement).is(":input"))
+                focus._findRelatives(document.activeElement).addClass("focus");
+        },
+
+        _findRelatives: function(el) {
+            var $el = $(el),
+                $relatives = $(el),
+                $label = $();
+
+            $relatives=$relatives.add($el.closest("label"));
+            $relatives=$relatives.add($el.closest("fieldset"));
+
+            if (el.id)
+                $label=$("label[for="+el.id+"]");
+            if (!$label.length) {
+                var $form = $el.closest("form");
+                if (!$form.length)
+                    $form=$(document.body);
+                $label=$form.find("label[for="+el.name+"]");
+            }
+            $relatives=$relatives.add($label);
+            return $relatives;
+        },
+
+        onFocus: function(e) {
+            focus._findRelatives(this).addClass("focus");
+        },
+
+        onBlur: function(e) {
+            var $relatives = focus._findRelatives(this);
+
+            $(document).one("mouseup keyup", function() {
+                $relatives.filter(":not(:has(:input:focus))").removeClass("focus");
             });
-        } else if ($el.is('a')) {
-            log.debug('will trigger on click', $el);
-            $el.on('click.inject', injecthandler);
         }
-
-        return $el;
     };
 
-    var extract_opts = function($el, opts_spec) {
-        // XXX: would be great to get this somehow supported by the parser
-        // like: url#source
-        var post_process_url = function(acc) {
-            if (!acc.url) return;
-            // can be:
-            // - http://foo.html  -> href, no source
-            // - http://foo.html#source -> href, source
-            // - foo.html#source -> href, source
-            var tmp = acc.url.split('#');
-            acc.url = tmp[0];
-            if (tmp[1]) acc.source = '#' + tmp[1];
-            if (tmp.length > 2) {
-                log.error('Ignoring additional source ids:', tmp.slice(2));
-            }
-        };
+    $(document)
+        .on("focus.patterns", ":input", focus.onFocus)
+        .on("blur.patterns", ":input", focus.onBlur)
+        .on("newContent", focus.onNewContent);
+    patterns.register(focus);
+    return focus;
+});
 
-        var Parser = require('../core/parser');
-        var opts = opts_spec.reduce(function(acc, opts_src) {
-            var attr = opts_src[0],
-                spec = opts_src[1],
-                opts_str = $el.attr(attr) || "",
-                parser;
-
-            // XXX: support data-*-config on parents
-            // in the old new inject that was data-inject-default,
-            // unused so far
-
-            // special treatment: href and action always map to url
-            if ((attr === "href") || (attr === "action")) {
-                acc.url = opts_str;
-            } else {
-                parser = new Parser(spec);
-                acc = parser.parse(opts_str, acc);
-            }
-            if (opts_str) post_process_url(acc);
-            return acc;
-        }, {});
-
-        log.debug('parsed:', opts, $el);
-        return opts;
-    };
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * @preserve
+ * FullCalendar v1.5.4
+ * http://arshaw.com/fullcalendar/
+ *
+ * Use fullcalendar.css for basic styling.
+ * For event drag & drop, requires jQuery UI draggable.
+ * For event resizing, requires jQuery UI resizable.
+ *
+ * Copyright (c) 2011 Adam Shaw
+ * Dual licensed under the MIT and GPL licenses, located in
+ * MIT-LICENSE.txt and GPL-LICENSE.txt respectively.
+ *
+ * Date: Tue Sep 4 23:38:33 2012 -0700
+ *
+ */
+ 
+(function($, undefined) {
 
 
-    var triggerinject = function($el) {
-        var opts_spec = [
-            // href -> url + source
-            ["href"],
-            ["data-inject",
-             "source; target; replace; pre; post; prepend; append; url; replacetagwithcontent"]
-        ];
+var defaults = {
 
-        var opts = extract_opts($el, opts_spec),
-            modal = false;
+	// display
+	defaultView: 'month',
+	aspectRatio: 1.35,
+	header: {
+		left: 'title',
+		center: '',
+		right: 'today prev,next'
+	},
+	weekends: true,
+	
+	// editing
+	//editable: false,
+	//disableDragging: false,
+	//disableResizing: false,
+	
+	allDayDefault: true,
+	ignoreTimezone: true,
+	
+	// event ajax
+	lazyFetching: true,
+	startParam: 'start',
+	endParam: 'end',
+	
+	// time formats
+	titleFormat: {
+		month: 'MMMM yyyy',
+		week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",
+		day: 'dddd, MMM d, yyyy'
+	},
+	columnFormat: {
+		month: 'ddd',
+		week: 'ddd M/d',
+		day: 'dddd M/d'
+	},
+	timeFormat: { // for event elements
+		'': 'h(:mm)t' // default
+	},
+	
+	// locale
+	isRTL: false,
+	firstDay: 0,
+	monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+	monthNamesShort: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+	dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+	dayNamesShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+	buttonText: {
+		prev: '&nbsp;&#9668;&nbsp;',
+		next: '&nbsp;&#9658;&nbsp;',
+		prevYear: '&nbsp;&lt;&lt;&nbsp;',
+		nextYear: '&nbsp;&gt;&gt;&nbsp;',
+		today: 'today',
+		month: 'month',
+		week: 'week',
+		day: 'day'
+	},
+	
+	// jquery-ui theming
+	theme: false,
+	buttonIcons: {
+		prev: 'circle-triangle-w',
+		next: 'circle-triangle-e'
+	},
+	
+	//selectable: false,
+	unselectAuto: true,
+	
+	dropAccept: '*'
+	
+};
 
-        opts.$trigger = $el;
+// right-to-left defaults
+var rtlDefaults = {
+	header: {
+		left: 'next,prev today',
+		center: '',
+		right: 'title'
+	},
+	buttonText: {
+		prev: '&nbsp;&#9658;&nbsp;',
+		next: '&nbsp;&#9668;&nbsp;',
+		prevYear: '&nbsp;&gt;&gt;&nbsp;',
+		nextYear: '&nbsp;&lt;&lt;&nbsp;'
+	},
+	buttonIcons: {
+		prev: 'circle-triangle-e',
+		next: 'circle-triangle-w'
+	}
+};
 
-        // special target cases
-        if ($el.is('.collapsible')) {
-            // poor array detection
-            if (opts.slice) {
-                log.error('Multi injection not supported for .collapsible');
-                return;
-            }
-            opts.$targets = $el.find('.panel-content');
-        } else if ($el.is('.folder')) {
-            // poor array detection
-            if (opts.slice) {
-                log.error('Multi injection not supported for .folder');
-                return;
-            }
-            opts.$targets = $el.children('ul');
-        } else if ($el.is('.modal')) {
-            // poor array detection
-            if (opts.slice) {
-                log.error('Multi injection not supported for modals');
-                return;
-            }
-            modal = true;
-            opts.replace = '#modal';
-        }
 
-        if (!opts.slice) opts = [opts];
 
-        var prev_url;
-        opts.forEach(function(opts) {
-            opts.source = opts.source || '#__original_body';
+var fc = $.fullCalendar = { version: "1.5.4" };
+var fcViews = fc.views = {};
 
-            // default: replace targets content with sources content
-            var method_name = "content",
-                target;
 
-            // find targets
-            if (!opts.$targets) {
-                if (opts.replace) {
-                    target = opts.replace;
-                    method_name = "replace";
-                } else if (opts.replacetagwithcontent) {
-                    target = opts.replacetagwithcontent;
-                    method_name = "replacetagwithcontent";
-                } else if (opts.pre) {
-                    target = opts.pre;
-                    method_name = "pre";
-                } else if (opts.post) {
-                    target = opts.post;
-                    method_name = "post";
-                } else if (opts.append) {
-                    target = opts.append;
-                    method_name = "append";
-                } else if (opts.prepend) {
-                    target = opts.prepend;
-                    method_name = "prepend";
-                } else if (opts.target) {
-                    target = opts.target;
+$.fn.fullCalendar = function(options) {
+
+
+	// method calling
+	if (typeof options == 'string') {
+		var args = Array.prototype.slice.call(arguments, 1);
+		var res;
+		this.each(function() {
+			var calendar = $.data(this, 'fullCalendar');
+			if (calendar && $.isFunction(calendar[options])) {
+				var r = calendar[options].apply(calendar, args);
+				if (res === undefined) {
+					res = r;
+				}
+				if (options == 'destroy') {
+					$.removeData(this, 'fullCalendar');
+				}
+			}
+		});
+		if (res !== undefined) {
+			return res;
+		}
+		return this;
+	}
+	
+	
+	// would like to have this logic in EventManager, but needs to happen before options are recursively extended
+	var eventSources = options.eventSources || [];
+	delete options.eventSources;
+	if (options.events) {
+		eventSources.push(options.events);
+		delete options.events;
+	}
+	
+
+	options = $.extend(true, {},
+		defaults,
+		(options.isRTL || options.isRTL===undefined && defaults.isRTL) ? rtlDefaults : {},
+		options
+	);
+	
+	
+	this.each(function(i, _element) {
+		var element = $(_element);
+		var calendar = new Calendar(element, options, eventSources);
+		element.data('fullCalendar', calendar); // TODO: look into memory leak implications
+		calendar.render();
+	});
+	
+	
+	return this;
+	
+};
+
+
+// function for adding/overriding defaults
+function setDefaults(d) {
+	$.extend(true, defaults, d);
+}
+
+
+
+ 
+function Calendar(element, options, eventSources) {
+	var t = this;
+	
+	
+	// exports
+	t.options = options;
+	t.render = render;
+	t.destroy = destroy;
+	t.refetchEvents = refetchEvents;
+	t.reportEvents = reportEvents;
+	t.reportEventChange = reportEventChange;
+	t.rerenderEvents = rerenderEvents;
+	t.changeView = changeView;
+	t.select = select;
+	t.unselect = unselect;
+	t.prev = prev;
+	t.next = next;
+	t.prevYear = prevYear;
+	t.nextYear = nextYear;
+	t.today = today;
+	t.gotoDate = gotoDate;
+	t.incrementDate = incrementDate;
+	t.formatDate = function(format, date) { return formatDate(format, date, options) };
+	t.formatDates = function(format, date1, date2) { return formatDates(format, date1, date2, options) };
+	t.getDate = getDate;
+	t.getView = getView;
+	t.option = option;
+	t.trigger = trigger;
+	
+	
+	// imports
+	EventManager.call(t, options, eventSources);
+	var isFetchNeeded = t.isFetchNeeded;
+	var fetchEvents = t.fetchEvents;
+	
+	
+	// locals
+	var _element = element[0];
+	var header;
+	var headerElement;
+	var content;
+	var tm; // for making theme classes
+	var currentView;
+	var viewInstances = {};
+	var elementOuterWidth;
+	var suggestedViewHeight;
+	var absoluteViewElement;
+	var resizeUID = 0;
+	var ignoreWindowResize = 0;
+	var date = new Date();
+	var events = [];
+	var _dragElement;
+	
+	
+	
+	/* Main Rendering
+	-----------------------------------------------------------------------------*/
+	
+	
+	setYMD(date, options.year, options.month, options.date);
+	
+	
+	function render(inc) {
+		if (!content) {
+			initialRender();
+		}else{
+			calcSize();
+			markSizesDirty();
+			markEventsDirty();
+			renderView(inc);
+		}
+	}
+	
+	
+	function initialRender() {
+		tm = options.theme ? 'ui' : 'fc';
+		element.addClass('fc');
+		if (options.isRTL) {
+			element.addClass('fc-rtl');
+		}
+		if (options.theme) {
+			element.addClass('ui-widget');
+		}
+		content = $("<div class='fc-content' style='position:relative'/>")
+			.prependTo(element);
+		header = new Header(t, options);
+		headerElement = header.render();
+		if (headerElement) {
+			element.prepend(headerElement);
+		}
+		changeView(options.defaultView);
+		$(window).resize(windowResize);
+		// needed for IE in a 0x0 iframe, b/c when it is resized, never triggers a windowResize
+		if (!bodyVisible()) {
+			lateRender();
+		}
+	}
+	
+	
+	// called when we know the calendar couldn't be rendered when it was initialized,
+	// but we think it's ready now
+	function lateRender() {
+		setTimeout(function() { // IE7 needs this so dimensions are calculated correctly
+			if (!currentView.start && bodyVisible()) { // !currentView.start makes sure this never happens more than once
+				renderView();
+			}
+		},0);
+	}
+	
+	
+	function destroy() {
+		$(window).unbind('resize', windowResize);
+		header.destroy();
+		content.remove();
+		element.removeClass('fc fc-rtl ui-widget');
+	}
+	
+	
+	
+	function elementVisible() {
+		return _element.offsetWidth !== 0;
+	}
+	
+	
+	function bodyVisible() {
+		return $('body')[0].offsetWidth !== 0;
+	}
+	
+	
+	
+	/* View Rendering
+	-----------------------------------------------------------------------------*/
+	
+	// TODO: improve view switching (still weird transition in IE, and FF has whiteout problem)
+	
+	function changeView(newViewName) {
+		if (!currentView || newViewName != currentView.name) {
+			ignoreWindowResize++; // because setMinHeight might change the height before render (and subsequently setSize) is reached
+
+			unselect();
+			
+			var oldView = currentView;
+			var newViewElement;
+				
+			if (oldView) {
+				(oldView.beforeHide || noop)(); // called before changing min-height. if called after, scroll state is reset (in Opera)
+				setMinHeight(content, content.height());
+				oldView.element.hide();
+			}else{
+				setMinHeight(content, 1); // needs to be 1 (not 0) for IE7, or else view dimensions miscalculated
+			}
+			content.css('overflow', 'hidden');
+			
+			currentView = viewInstances[newViewName];
+			if (currentView) {
+				currentView.element.show();
+			}else{
+				currentView = viewInstances[newViewName] = new fcViews[newViewName](
+					newViewElement = absoluteViewElement =
+						$("<div class='fc-view fc-view-" + newViewName + "' style='position:absolute'/>")
+							.appendTo(content),
+					t // the calendar object
+				);
+			}
+			
+			if (oldView) {
+				header.deactivateButton(oldView.name);
+			}
+			header.activateButton(newViewName);
+			
+			renderView(); // after height has been set, will make absoluteViewElement's position=relative, then set to null
+			
+			content.css('overflow', '');
+			if (oldView) {
+				setMinHeight(content, 1);
+			}
+			
+			if (!newViewElement) {
+				(currentView.afterShow || noop)(); // called after setting min-height/overflow, so in final scroll state (for Opera)
+			}
+			
+			ignoreWindowResize--;
+		}
+	}
+	
+	
+	
+	function renderView(inc) {
+		if (elementVisible()) {
+			ignoreWindowResize++; // because renderEvents might temporarily change the height before setSize is reached
+
+			unselect();
+			
+			if (suggestedViewHeight === undefined) {
+				calcSize();
+			}
+			
+			var forceEventRender = false;
+			if (!currentView.start || inc || date < currentView.start || date >= currentView.end) {
+				// view must render an entire new date range (and refetch/render events)
+				currentView.render(date, inc || 0); // responsible for clearing events
+				setSize(true);
+				forceEventRender = true;
+			}
+			else if (currentView.sizeDirty) {
+				// view must resize (and rerender events)
+				currentView.clearEvents();
+				setSize();
+				forceEventRender = true;
+			}
+			else if (currentView.eventsDirty) {
+				currentView.clearEvents();
+				forceEventRender = true;
+			}
+			currentView.sizeDirty = false;
+			currentView.eventsDirty = false;
+			updateEvents(forceEventRender);
+			
+			elementOuterWidth = element.outerWidth();
+			
+			header.updateTitle(currentView.title);
+			var today = new Date();
+			if (today >= currentView.start && today < currentView.end) {
+				header.disableButton('today');
+			}else{
+				header.enableButton('today');
+			}
+			
+			ignoreWindowResize--;
+			currentView.trigger('viewDisplay', _element);
+		}
+	}
+	
+	
+	
+	/* Resizing
+	-----------------------------------------------------------------------------*/
+	
+	
+	function updateSize() {
+		markSizesDirty();
+		if (elementVisible()) {
+			calcSize();
+			setSize();
+			unselect();
+			currentView.clearEvents();
+			currentView.renderEvents(events);
+			currentView.sizeDirty = false;
+		}
+	}
+	
+	
+	function markSizesDirty() {
+		$.each(viewInstances, function(i, inst) {
+			inst.sizeDirty = true;
+		});
+	}
+	
+	
+	function calcSize() {
+		if (options.contentHeight) {
+			suggestedViewHeight = options.contentHeight;
+		}
+		else if (options.height) {
+			suggestedViewHeight = options.height - (headerElement ? headerElement.height() : 0) - vsides(content);
+		}
+		else {
+			suggestedViewHeight = Math.round(content.width() / Math.max(options.aspectRatio, .5));
+		}
+	}
+	
+	
+	function setSize(dateChanged) { // todo: dateChanged?
+		ignoreWindowResize++;
+		currentView.setHeight(suggestedViewHeight, dateChanged);
+		if (absoluteViewElement) {
+			absoluteViewElement.css('position', 'relative');
+			absoluteViewElement = null;
+		}
+		currentView.setWidth(content.width(), dateChanged);
+		ignoreWindowResize--;
+	}
+	
+	
+	function windowResize() {
+		if (!ignoreWindowResize) {
+			if (currentView.start) { // view has already been rendered
+				var uid = ++resizeUID;
+				setTimeout(function() { // add a delay
+					if (uid == resizeUID && !ignoreWindowResize && elementVisible()) {
+						if (elementOuterWidth != (elementOuterWidth = element.outerWidth())) {
+							ignoreWindowResize++; // in case the windowResize callback changes the height
+							updateSize();
+							currentView.trigger('windowResize', _element);
+							ignoreWindowResize--;
+						}
+					}
+				}, 200);
+			}else{
+				// calendar must have been initialized in a 0x0 iframe that has just been resized
+				lateRender();
+			}
+		}
+	}
+	
+	
+	
+	/* Event Fetching/Rendering
+	-----------------------------------------------------------------------------*/
+	
+	
+	// fetches events if necessary, rerenders events if necessary (or if forced)
+	function updateEvents(forceRender) {
+		if (!options.lazyFetching || isFetchNeeded(currentView.visStart, currentView.visEnd)) {
+			refetchEvents();
+		}
+		else if (forceRender) {
+			rerenderEvents();
+		}
+	}
+	
+	
+	function refetchEvents() {
+		fetchEvents(currentView.visStart, currentView.visEnd); // will call reportEvents
+	}
+	
+	
+	// called when event data arrives
+	function reportEvents(_events) {
+		events = _events;
+		rerenderEvents();
+	}
+	
+	
+	// called when a single event's data has been changed
+	function reportEventChange(eventID) {
+		rerenderEvents(eventID);
+	}
+	
+	
+	// attempts to rerenderEvents
+	function rerenderEvents(modifiedEventID) {
+		markEventsDirty();
+		if (elementVisible()) {
+			currentView.clearEvents();
+			currentView.renderEvents(events, modifiedEventID);
+			currentView.eventsDirty = false;
+		}
+	}
+	
+	
+	function markEventsDirty() {
+		$.each(viewInstances, function(i, inst) {
+			inst.eventsDirty = true;
+		});
+	}
+	
+
+
+	/* Selection
+	-----------------------------------------------------------------------------*/
+	
+
+	function select(start, end, allDay) {
+		currentView.select(start, end, allDay===undefined ? true : allDay);
+	}
+	
+
+	function unselect() { // safe to be called before renderView
+		if (currentView) {
+			currentView.unselect();
+		}
+	}
+	
+	
+	
+	/* Date
+	-----------------------------------------------------------------------------*/
+	
+	
+	function prev() {
+		renderView(-1);
+	}
+	
+	
+	function next() {
+		renderView(1);
+	}
+	
+	
+	function prevYear() {
+		addYears(date, -1);
+		renderView();
+	}
+	
+	
+	function nextYear() {
+		addYears(date, 1);
+		renderView();
+	}
+	
+	
+	function today() {
+		date = new Date();
+		renderView();
+	}
+	
+	
+	function gotoDate(year, month, dateOfMonth) {
+		if (year instanceof Date) {
+			date = cloneDate(year); // provided 1 argument, a Date
+		}else{
+			setYMD(date, year, month, dateOfMonth);
+		}
+		renderView();
+	}
+	
+	
+	function incrementDate(years, months, days) {
+		if (years !== undefined) {
+			addYears(date, years);
+		}
+		if (months !== undefined) {
+			addMonths(date, months);
+		}
+		if (days !== undefined) {
+			addDays(date, days);
+		}
+		renderView();
+	}
+	
+	
+	function getDate() {
+		return cloneDate(date);
+	}
+	
+	
+	
+	/* Misc
+	-----------------------------------------------------------------------------*/
+	
+	
+	function getView() {
+		return currentView;
+	}
+	
+	
+	function option(name, value) {
+		if (value === undefined) {
+			return options[name];
+		}
+		if (name == 'height' || name == 'contentHeight' || name == 'aspectRatio') {
+			options[name] = value;
+			updateSize();
+		}
+	}
+	
+	
+	function trigger(name, thisObj) {
+		if (options[name]) {
+			return options[name].apply(
+				thisObj || _element,
+				Array.prototype.slice.call(arguments, 2)
+			);
+		}
+	}
+	
+	
+	
+	/* External Dragging
+	------------------------------------------------------------------------*/
+	
+	if (options.droppable) {
+		$(document)
+			.bind('dragstart', function(ev, ui) {
+				var _e = ev.target;
+				var e = $(_e);
+				if (!e.parents('.fc').length) { // not already inside a calendar
+					var accept = options.dropAccept;
+					if ($.isFunction(accept) ? accept.call(_e, e) : e.is(accept)) {
+						_dragElement = _e;
+						currentView.dragStart(_dragElement, ev, ui);
+					}
+				}
+			})
+			.bind('dragstop', function(ev, ui) {
+				if (_dragElement) {
+					currentView.dragStop(_dragElement, ev, ui);
+					_dragElement = null;
+				}
+			});
+	}
+	
+
+}
+
+function Header(calendar, options) {
+	var t = this;
+	
+	
+	// exports
+	t.render = render;
+	t.destroy = destroy;
+	t.updateTitle = updateTitle;
+	t.activateButton = activateButton;
+	t.deactivateButton = deactivateButton;
+	t.disableButton = disableButton;
+	t.enableButton = enableButton;
+	
+	
+	// locals
+	var element = $([]);
+	var tm;
+	
+
+
+	function render() {
+		tm = options.theme ? 'ui' : 'fc';
+		var sections = options.header;
+		if (sections) {
+			element = $("<table class='fc-header' style='width:100%'/>")
+				.append(
+					$("<tr/>")
+						.append(renderSection('left'))
+						.append(renderSection('center'))
+						.append(renderSection('right'))
+				);
+			return element;
+		}
+	}
+	
+	
+	function destroy() {
+		element.remove();
+	}
+	
+	
+	function renderSection(position) {
+		var e = $("<td class='fc-header-" + position + "'/>");
+		var buttonStr = options.header[position];
+		if (buttonStr) {
+			$.each(buttonStr.split(' '), function(i) {
+				if (i > 0) {
+					e.append("<span class='fc-header-space'/>");
+				}
+				var prevButton;
+				$.each(this.split(','), function(j, buttonName) {
+					if (buttonName == 'title') {
+						e.append("<span class='fc-header-title'><h2>&nbsp;</h2></span>");
+						if (prevButton) {
+							prevButton.addClass(tm + '-corner-right');
+						}
+						prevButton = null;
+					}else{
+						var buttonClick;
+						if (calendar[buttonName]) {
+							buttonClick = calendar[buttonName]; // calendar method
+						}
+						else if (fcViews[buttonName]) {
+							buttonClick = function() {
+								button.removeClass(tm + '-state-hover'); // forget why
+								calendar.changeView(buttonName);
+							};
+						}
+						if (buttonClick) {
+							var icon = options.theme ? smartProperty(options.buttonIcons, buttonName) : null; // why are we using smartProperty here?
+							var text = smartProperty(options.buttonText, buttonName); // why are we using smartProperty here?
+							var button = $(
+								"<span class='fc-button fc-button-" + buttonName + " " + tm + "-state-default'>" +
+									"<span class='fc-button-inner'>" +
+										"<span class='fc-button-content'>" +
+											(icon ?
+												"<span class='fc-icon-wrap'>" +
+													"<span class='ui-icon ui-icon-" + icon + "'/>" +
+												"</span>" :
+												text
+												) +
+										"</span>" +
+										"<span class='fc-button-effect'><span></span></span>" +
+									"</span>" +
+								"</span>"
+							);
+							if (button) {
+								button
+									.click(function() {
+										if (!button.hasClass(tm + '-state-disabled')) {
+											buttonClick();
+										}
+									})
+									.mousedown(function() {
+										button
+											.not('.' + tm + '-state-active')
+											.not('.' + tm + '-state-disabled')
+											.addClass(tm + '-state-down');
+									})
+									.mouseup(function() {
+										button.removeClass(tm + '-state-down');
+									})
+									.hover(
+										function() {
+											button
+												.not('.' + tm + '-state-active')
+												.not('.' + tm + '-state-disabled')
+												.addClass(tm + '-state-hover');
+										},
+										function() {
+											button
+												.removeClass(tm + '-state-hover')
+												.removeClass(tm + '-state-down');
+										}
+									)
+									.appendTo(e);
+								if (!prevButton) {
+									button.addClass(tm + '-corner-left');
+								}
+								prevButton = button;
+							}
+						}
+					}
+				});
+				if (prevButton) {
+					prevButton.addClass(tm + '-corner-right');
+				}
+			});
+		}
+		return e;
+	}
+	
+	
+	function updateTitle(html) {
+		element.find('h2')
+			.html(html);
+	}
+	
+	
+	function activateButton(buttonName) {
+		element.find('span.fc-button-' + buttonName)
+			.addClass(tm + '-state-active');
+	}
+	
+	
+	function deactivateButton(buttonName) {
+		element.find('span.fc-button-' + buttonName)
+			.removeClass(tm + '-state-active');
+	}
+	
+	
+	function disableButton(buttonName) {
+		element.find('span.fc-button-' + buttonName)
+			.addClass(tm + '-state-disabled');
+	}
+	
+	
+	function enableButton(buttonName) {
+		element.find('span.fc-button-' + buttonName)
+			.removeClass(tm + '-state-disabled');
+	}
+
+
+}
+
+fc.sourceNormalizers = [];
+fc.sourceFetchers = [];
+
+var ajaxDefaults = {
+	dataType: 'json',
+	cache: false
+};
+
+var eventGUID = 1;
+
+
+function EventManager(options, _sources) {
+	var t = this;
+	
+	
+	// exports
+	t.isFetchNeeded = isFetchNeeded;
+	t.fetchEvents = fetchEvents;
+	t.addEventSource = addEventSource;
+	t.removeEventSource = removeEventSource;
+	t.updateEvent = updateEvent;
+	t.renderEvent = renderEvent;
+	t.removeEvents = removeEvents;
+	t.clientEvents = clientEvents;
+	t.normalizeEvent = normalizeEvent;
+	
+	
+	// imports
+	var trigger = t.trigger;
+	var getView = t.getView;
+	var reportEvents = t.reportEvents;
+	
+	
+	// locals
+	var stickySource = { events: [] };
+	var sources = [ stickySource ];
+	var rangeStart, rangeEnd;
+	var currentFetchID = 0;
+	var pendingSourceCnt = 0;
+	var loadingLevel = 0;
+	var cache = [];
+	
+	
+	for (var i=0; i<_sources.length; i++) {
+		_addEventSource(_sources[i]);
+	}
+	
+	
+	
+	/* Fetching
+	-----------------------------------------------------------------------------*/
+	
+	
+	function isFetchNeeded(start, end) {
+		return !rangeStart || start < rangeStart || end > rangeEnd;
+	}
+	
+	
+	function fetchEvents(start, end) {
+		rangeStart = start;
+		rangeEnd = end;
+		cache = [];
+		var fetchID = ++currentFetchID;
+		var len = sources.length;
+		pendingSourceCnt = len;
+		for (var i=0; i<len; i++) {
+			fetchEventSource(sources[i], fetchID);
+		}
+	}
+	
+	
+	function fetchEventSource(source, fetchID) {
+		_fetchEventSource(source, function(events) {
+			if (fetchID == currentFetchID) {
+				if (events) {
+					for (var i=0; i<events.length; i++) {
+						events[i].source = source;
+						normalizeEvent(events[i]);
+					}
+					cache = cache.concat(events);
+				}
+				pendingSourceCnt--;
+				if (!pendingSourceCnt) {
+					reportEvents(cache);
+				}
+			}
+		});
+	}
+	
+	
+	function _fetchEventSource(source, callback) {
+		var i;
+		var fetchers = fc.sourceFetchers;
+		var res;
+		for (i=0; i<fetchers.length; i++) {
+			res = fetchers[i](source, rangeStart, rangeEnd, callback);
+			if (res === true) {
+				// the fetcher is in charge. made its own async request
+				return;
+			}
+			else if (typeof res == 'object') {
+				// the fetcher returned a new source. process it
+				_fetchEventSource(res, callback);
+				return;
+			}
+		}
+		var events = source.events;
+		if (events) {
+			if ($.isFunction(events)) {
+				pushLoading();
+				events(cloneDate(rangeStart), cloneDate(rangeEnd), function(events) {
+					callback(events);
+					popLoading();
+				});
+			}
+			else if ($.isArray(events)) {
+				callback(events);
+			}
+			else {
+				callback();
+			}
+		}else{
+			var url = source.url;
+			if (url) {
+				var success = source.success;
+				var error = source.error;
+				var complete = source.complete;
+				var data = $.extend({}, source.data || {});
+				var startParam = firstDefined(source.startParam, options.startParam);
+				var endParam = firstDefined(source.endParam, options.endParam);
+				if (startParam) {
+					data[startParam] = Math.round(+rangeStart / 1000);
+				}
+				if (endParam) {
+					data[endParam] = Math.round(+rangeEnd / 1000);
+				}
+				pushLoading();
+				$.ajax($.extend({}, ajaxDefaults, source, {
+					data: data,
+					success: function(events) {
+						events = events || [];
+						var res = applyAll(success, this, arguments);
+						if ($.isArray(res)) {
+							events = res;
+						}
+						callback(events);
+					},
+					error: function() {
+						applyAll(error, this, arguments);
+						callback();
+					},
+					complete: function() {
+						applyAll(complete, this, arguments);
+						popLoading();
+					}
+				}));
+			}else{
+				callback();
+			}
+		}
+	}
+	
+	
+	
+	/* Sources
+	-----------------------------------------------------------------------------*/
+	
+
+	function addEventSource(source) {
+		source = _addEventSource(source);
+		if (source) {
+			pendingSourceCnt++;
+			fetchEventSource(source, currentFetchID); // will eventually call reportEvents
+		}
+	}
+	
+	
+	function _addEventSource(source) {
+		if ($.isFunction(source) || $.isArray(source)) {
+			source = { events: source };
+		}
+		else if (typeof source == 'string') {
+			source = { url: source };
+		}
+		if (typeof source == 'object') {
+			normalizeSource(source);
+			sources.push(source);
+			return source;
+		}
+	}
+	
+
+	function removeEventSource(source) {
+		sources = $.grep(sources, function(src) {
+			return !isSourcesEqual(src, source);
+		});
+		// remove all client events from that source
+		cache = $.grep(cache, function(e) {
+			return !isSourcesEqual(e.source, source);
+		});
+		reportEvents(cache);
+	}
+	
+	
+	
+	/* Manipulation
+	-----------------------------------------------------------------------------*/
+	
+	
+	function updateEvent(event) { // update an existing event
+		var i, len = cache.length, e,
+			defaultEventEnd = getView().defaultEventEnd, // getView???
+			startDelta = event.start - event._start,
+			endDelta = event.end ?
+				(event.end - (event._end || defaultEventEnd(event))) // event._end would be null if event.end
+				: 0;                                                      // was null and event was just resized
+		for (i=0; i<len; i++) {
+			e = cache[i];
+			if (e._id == event._id && e != event) {
+				e.start = new Date(+e.start + startDelta);
+				if (event.end) {
+					if (e.end) {
+						e.end = new Date(+e.end + endDelta);
+					}else{
+						e.end = new Date(+defaultEventEnd(e) + endDelta);
+					}
+				}else{
+					e.end = null;
+				}
+				e.title = event.title;
+				e.url = event.url;
+				e.allDay = event.allDay;
+				e.className = event.className;
+				e.editable = event.editable;
+				e.color = event.color;
+				e.backgroudColor = event.backgroudColor;
+				e.borderColor = event.borderColor;
+				e.textColor = event.textColor;
+				normalizeEvent(e);
+			}
+		}
+		normalizeEvent(event);
+		reportEvents(cache);
+	}
+	
+	
+	function renderEvent(event, stick) {
+		normalizeEvent(event);
+		if (!event.source) {
+			if (stick) {
+				stickySource.events.push(event);
+				event.source = stickySource;
+			}
+			cache.push(event);
+		}
+		reportEvents(cache);
+	}
+	
+	
+	function removeEvents(filter) {
+		if (!filter) { // remove all
+			cache = [];
+			// clear all array sources
+			for (var i=0; i<sources.length; i++) {
+				if ($.isArray(sources[i].events)) {
+					sources[i].events = [];
+				}
+			}
+		}else{
+			if (!$.isFunction(filter)) { // an event ID
+				var id = filter + '';
+				filter = function(e) {
+					return e._id == id;
+				};
+			}
+			cache = $.grep(cache, filter, true);
+			// remove events from array sources
+			for (var i=0; i<sources.length; i++) {
+				if ($.isArray(sources[i].events)) {
+					sources[i].events = $.grep(sources[i].events, filter, true);
+				}
+			}
+		}
+		reportEvents(cache);
+	}
+	
+	
+	function clientEvents(filter) {
+		if ($.isFunction(filter)) {
+			return $.grep(cache, filter);
+		}
+		else if (filter) { // an event ID
+			filter += '';
+			return $.grep(cache, function(e) {
+				return e._id == filter;
+			});
+		}
+		return cache; // else, return all
+	}
+	
+	
+	
+	/* Loading State
+	-----------------------------------------------------------------------------*/
+	
+	
+	function pushLoading() {
+		if (!loadingLevel++) {
+			trigger('loading', null, true);
+		}
+	}
+	
+	
+	function popLoading() {
+		if (!--loadingLevel) {
+			trigger('loading', null, false);
+		}
+	}
+	
+	
+	
+	/* Event Normalization
+	-----------------------------------------------------------------------------*/
+	
+	
+	function normalizeEvent(event) {
+		var source = event.source || {};
+		var ignoreTimezone = firstDefined(source.ignoreTimezone, options.ignoreTimezone);
+		event._id = event._id || (event.id === undefined ? '_fc' + eventGUID++ : event.id + '');
+		if (event.date) {
+			if (!event.start) {
+				event.start = event.date;
+			}
+			delete event.date;
+		}
+		event._start = cloneDate(event.start = parseDate(event.start, ignoreTimezone));
+		event.end = parseDate(event.end, ignoreTimezone);
+		if (event.end && event.end <= event.start) {
+			event.end = null;
+		}
+		event._end = event.end ? cloneDate(event.end) : null;
+		if (event.allDay === undefined) {
+			event.allDay = firstDefined(source.allDayDefault, options.allDayDefault);
+		}
+		if (event.className) {
+			if (typeof event.className == 'string') {
+				event.className = event.className.split(/\s+/);
+			}
+		}else{
+			event.className = [];
+		}
+		// TODO: if there is no start date, return false to indicate an invalid event
+	}
+	
+	
+	
+	/* Utils
+	------------------------------------------------------------------------------*/
+	
+	
+	function normalizeSource(source) {
+		if (source.className) {
+			// TODO: repeat code, same code for event classNames
+			if (typeof source.className == 'string') {
+				source.className = source.className.split(/\s+/);
+			}
+		}else{
+			source.className = [];
+		}
+		var normalizers = fc.sourceNormalizers;
+		for (var i=0; i<normalizers.length; i++) {
+			normalizers[i](source);
+		}
+	}
+	
+	
+	function isSourcesEqual(source1, source2) {
+		return source1 && source2 && getSourcePrimitive(source1) == getSourcePrimitive(source2);
+	}
+	
+	
+	function getSourcePrimitive(source) {
+		return ((typeof source == 'object') ? (source.events || source.url) : '') || source;
+	}
+
+
+}
+
+
+fc.addDays = addDays;
+fc.cloneDate = cloneDate;
+fc.parseDate = parseDate;
+fc.parseISO8601 = parseISO8601;
+fc.parseTime = parseTime;
+fc.formatDate = formatDate;
+fc.formatDates = formatDates;
+
+
+
+/* Date Math
+-----------------------------------------------------------------------------*/
+
+var dayIDs = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+	DAY_MS = 86400000,
+	HOUR_MS = 3600000,
+	MINUTE_MS = 60000;
+	
+
+function addYears(d, n, keepTime) {
+	d.setFullYear(d.getFullYear() + n);
+	if (!keepTime) {
+		clearTime(d);
+	}
+	return d;
+}
+
+
+function addMonths(d, n, keepTime) { // prevents day overflow/underflow
+	if (+d) { // prevent infinite looping on invalid dates
+		var m = d.getMonth() + n,
+			check = cloneDate(d);
+		check.setDate(1);
+		check.setMonth(m);
+		d.setMonth(m);
+		if (!keepTime) {
+			clearTime(d);
+		}
+		while (d.getMonth() != check.getMonth()) {
+			d.setDate(d.getDate() + (d < check ? 1 : -1));
+		}
+	}
+	return d;
+}
+
+
+function addDays(d, n, keepTime) { // deals with daylight savings
+	if (+d) {
+		var dd = d.getDate() + n,
+			check = cloneDate(d);
+		check.setHours(9); // set to middle of day
+		check.setDate(dd);
+		d.setDate(dd);
+		if (!keepTime) {
+			clearTime(d);
+		}
+		fixDate(d, check);
+	}
+	return d;
+}
+
+
+function fixDate(d, check) { // force d to be on check's YMD, for daylight savings purposes
+	if (+d) { // prevent infinite looping on invalid dates
+		while (d.getDate() != check.getDate()) {
+			d.setTime(+d + (d < check ? 1 : -1) * HOUR_MS);
+		}
+	}
+}
+
+
+function addMinutes(d, n) {
+	d.setMinutes(d.getMinutes() + n);
+	return d;
+}
+
+
+function clearTime(d) {
+	d.setHours(0);
+	d.setMinutes(0);
+	d.setSeconds(0); 
+	d.setMilliseconds(0);
+	return d;
+}
+
+
+function cloneDate(d, dontKeepTime) {
+	if (dontKeepTime) {
+		return clearTime(new Date(+d));
+	}
+	return new Date(+d);
+}
+
+
+function zeroDate() { // returns a Date with time 00:00:00 and dateOfMonth=1
+	var i=0, d;
+	do {
+		d = new Date(1970, i++, 1);
+	} while (d.getHours()); // != 0
+	return d;
+}
+
+
+function skipWeekend(date, inc, excl) {
+	inc = inc || 1;
+	while (!date.getDay() || (excl && date.getDay()==1 || !excl && date.getDay()==6)) {
+		addDays(date, inc);
+	}
+	return date;
+}
+
+
+function dayDiff(d1, d2) { // d1 - d2
+	return Math.round((cloneDate(d1, true) - cloneDate(d2, true)) / DAY_MS);
+}
+
+
+function setYMD(date, y, m, d) {
+	if (y !== undefined && y != date.getFullYear()) {
+		date.setDate(1);
+		date.setMonth(0);
+		date.setFullYear(y);
+	}
+	if (m !== undefined && m != date.getMonth()) {
+		date.setDate(1);
+		date.setMonth(m);
+	}
+	if (d !== undefined) {
+		date.setDate(d);
+	}
+}
+
+
+
+/* Date Parsing
+-----------------------------------------------------------------------------*/
+
+
+function parseDate(s, ignoreTimezone) { // ignoreTimezone defaults to true
+	if (typeof s == 'object') { // already a Date object
+		return s;
+	}
+	if (typeof s == 'number') { // a UNIX timestamp
+		return new Date(s * 1000);
+	}
+	if (typeof s == 'string') {
+		if (s.match(/^\d+(\.\d+)?$/)) { // a UNIX timestamp
+			return new Date(parseFloat(s) * 1000);
+		}
+		if (ignoreTimezone === undefined) {
+			ignoreTimezone = true;
+		}
+		return parseISO8601(s, ignoreTimezone) || (s ? new Date(s) : null);
+	}
+	// TODO: never return invalid dates (like from new Date(<string>)), return null instead
+	return null;
+}
+
+
+function parseISO8601(s, ignoreTimezone) { // ignoreTimezone defaults to false
+	// derived from http://delete.me.uk/2005/03/iso8601.html
+	// TODO: for a know glitch/feature, read tests/issue_206_parseDate_dst.html
+	var m = s.match(/^([0-9]{4})(-([0-9]{2})(-([0-9]{2})([T ]([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?(Z|(([-+])([0-9]{2})(:?([0-9]{2}))?))?)?)?)?$/);
+	if (!m) {
+		return null;
+	}
+	var date = new Date(m[1], 0, 1);
+	if (ignoreTimezone || !m[13]) {
+		var check = new Date(m[1], 0, 1, 9, 0);
+		if (m[3]) {
+			date.setMonth(m[3] - 1);
+			check.setMonth(m[3] - 1);
+		}
+		if (m[5]) {
+			date.setDate(m[5]);
+			check.setDate(m[5]);
+		}
+		fixDate(date, check);
+		if (m[7]) {
+			date.setHours(m[7]);
+		}
+		if (m[8]) {
+			date.setMinutes(m[8]);
+		}
+		if (m[10]) {
+			date.setSeconds(m[10]);
+		}
+		if (m[12]) {
+			date.setMilliseconds(Number("0." + m[12]) * 1000);
+		}
+		fixDate(date, check);
+	}else{
+		date.setUTCFullYear(
+			m[1],
+			m[3] ? m[3] - 1 : 0,
+			m[5] || 1
+		);
+		date.setUTCHours(
+			m[7] || 0,
+			m[8] || 0,
+			m[10] || 0,
+			m[12] ? Number("0." + m[12]) * 1000 : 0
+		);
+		if (m[14]) {
+			var offset = Number(m[16]) * 60 + (m[18] ? Number(m[18]) : 0);
+			offset *= m[15] == '-' ? 1 : -1;
+			date = new Date(+date + (offset * 60 * 1000));
+		}
+	}
+	return date;
+}
+
+
+function parseTime(s) { // returns minutes since start of day
+	if (typeof s == 'number') { // an hour
+		return s * 60;
+	}
+	if (typeof s == 'object') { // a Date object
+		return s.getHours() * 60 + s.getMinutes();
+	}
+	var m = s.match(/(\d+)(?::(\d+))?\s*(\w+)?/);
+	if (m) {
+		var h = parseInt(m[1], 10);
+		if (m[3]) {
+			h %= 12;
+			if (m[3].toLowerCase().charAt(0) == 'p') {
+				h += 12;
+			}
+		}
+		return h * 60 + (m[2] ? parseInt(m[2], 10) : 0);
+	}
+}
+
+
+
+/* Date Formatting
+-----------------------------------------------------------------------------*/
+// TODO: use same function formatDate(date, [date2], format, [options])
+
+
+function formatDate(date, format, options) {
+	return formatDates(date, null, format, options);
+}
+
+
+function formatDates(date1, date2, format, options) {
+	options = options || defaults;
+	var date = date1,
+		otherDate = date2,
+		i, len = format.length, c,
+		i2, formatter,
+		res = '';
+	for (i=0; i<len; i++) {
+		c = format.charAt(i);
+		if (c == "'") {
+			for (i2=i+1; i2<len; i2++) {
+				if (format.charAt(i2) == "'") {
+					if (date) {
+						if (i2 == i+1) {
+							res += "'";
+						}else{
+							res += format.substring(i+1, i2);
+						}
+						i = i2;
+					}
+					break;
+				}
+			}
+		}
+		else if (c == '(') {
+			for (i2=i+1; i2<len; i2++) {
+				if (format.charAt(i2) == ')') {
+					var subres = formatDate(date, format.substring(i+1, i2), options);
+					if (parseInt(subres.replace(/\D/, ''), 10)) {
+						res += subres;
+					}
+					i = i2;
+					break;
+				}
+			}
+		}
+		else if (c == '[') {
+			for (i2=i+1; i2<len; i2++) {
+				if (format.charAt(i2) == ']') {
+					var subformat = format.substring(i+1, i2);
+					var subres = formatDate(date, subformat, options);
+					if (subres != formatDate(otherDate, subformat, options)) {
+						res += subres;
+					}
+					i = i2;
+					break;
+				}
+			}
+		}
+		else if (c == '{') {
+			date = date2;
+			otherDate = date1;
+		}
+		else if (c == '}') {
+			date = date1;
+			otherDate = date2;
+		}
+		else {
+			for (i2=len; i2>i; i2--) {
+				if (formatter = dateFormatters[format.substring(i, i2)]) {
+					if (date) {
+						res += formatter(date, options);
+					}
+					i = i2 - 1;
+					break;
+				}
+			}
+			if (i2 == i) {
+				if (date) {
+					res += c;
+				}
+			}
+		}
+	}
+	return res;
+};
+
+
+var dateFormatters = {
+	s	: function(d)	{ return d.getSeconds() },
+	ss	: function(d)	{ return zeroPad(d.getSeconds()) },
+	m	: function(d)	{ return d.getMinutes() },
+	mm	: function(d)	{ return zeroPad(d.getMinutes()) },
+	h	: function(d)	{ return d.getHours() % 12 || 12 },
+	hh	: function(d)	{ return zeroPad(d.getHours() % 12 || 12) },
+	H	: function(d)	{ return d.getHours() },
+	HH	: function(d)	{ return zeroPad(d.getHours()) },
+	d	: function(d)	{ return d.getDate() },
+	dd	: function(d)	{ return zeroPad(d.getDate()) },
+	ddd	: function(d,o)	{ return o.dayNamesShort[d.getDay()] },
+	dddd: function(d,o)	{ return o.dayNames[d.getDay()] },
+	M	: function(d)	{ return d.getMonth() + 1 },
+	MM	: function(d)	{ return zeroPad(d.getMonth() + 1) },
+	MMM	: function(d,o)	{ return o.monthNamesShort[d.getMonth()] },
+	MMMM: function(d,o)	{ return o.monthNames[d.getMonth()] },
+	yy	: function(d)	{ return (d.getFullYear()+'').substring(2) },
+	yyyy: function(d)	{ return d.getFullYear() },
+	t	: function(d)	{ return d.getHours() < 12 ? 'a' : 'p' },
+	tt	: function(d)	{ return d.getHours() < 12 ? 'am' : 'pm' },
+	T	: function(d)	{ return d.getHours() < 12 ? 'A' : 'P' },
+	TT	: function(d)	{ return d.getHours() < 12 ? 'AM' : 'PM' },
+	u	: function(d)	{ return formatDate(d, "yyyy-MM-dd'T'HH:mm:ss'Z'") },
+	S	: function(d)	{
+		var date = d.getDate();
+		if (date > 10 && date < 20) {
+			return 'th';
+		}
+		return ['st', 'nd', 'rd'][date%10-1] || 'th';
+	}
+};
+
+
+
+fc.applyAll = applyAll;
+
+
+/* Event Date Math
+-----------------------------------------------------------------------------*/
+
+
+function exclEndDay(event) {
+	if (event.end) {
+		return _exclEndDay(event.end, event.allDay);
+	}else{
+		return addDays(cloneDate(event.start), 1);
+	}
+}
+
+
+function _exclEndDay(end, allDay) {
+	end = cloneDate(end);
+	return allDay || end.getHours() || end.getMinutes() ? addDays(end, 1) : clearTime(end);
+}
+
+
+function segCmp(a, b) {
+	return (b.msLength - a.msLength) * 100 + (a.event.start - b.event.start);
+}
+
+
+function segsCollide(seg1, seg2) {
+	return seg1.end > seg2.start && seg1.start < seg2.end;
+}
+
+
+
+/* Event Sorting
+-----------------------------------------------------------------------------*/
+
+
+// event rendering utilities
+function sliceSegs(events, visEventEnds, start, end) {
+	var segs = [],
+		i, len=events.length, event,
+		eventStart, eventEnd,
+		segStart, segEnd,
+		isStart, isEnd;
+	for (i=0; i<len; i++) {
+		event = events[i];
+		eventStart = event.start;
+		eventEnd = visEventEnds[i];
+		if (eventEnd > start && eventStart < end) {
+			if (eventStart < start) {
+				segStart = cloneDate(start);
+				isStart = false;
+			}else{
+				segStart = eventStart;
+				isStart = true;
+			}
+			if (eventEnd > end) {
+				segEnd = cloneDate(end);
+				isEnd = false;
+			}else{
+				segEnd = eventEnd;
+				isEnd = true;
+			}
+			segs.push({
+				event: event,
+				start: segStart,
+				end: segEnd,
+				isStart: isStart,
+				isEnd: isEnd,
+				msLength: segEnd - segStart
+			});
+		}
+	}
+	return segs.sort(segCmp);
+}
+
+
+// event rendering calculation utilities
+function stackSegs(segs) {
+	var levels = [],
+		i, len = segs.length, seg,
+		j, collide, k;
+	for (i=0; i<len; i++) {
+		seg = segs[i];
+		j = 0; // the level index where seg should belong
+		while (true) {
+			collide = false;
+			if (levels[j]) {
+				for (k=0; k<levels[j].length; k++) {
+					if (segsCollide(levels[j][k], seg)) {
+						collide = true;
+						break;
+					}
+				}
+			}
+			if (collide) {
+				j++;
+			}else{
+				break;
+			}
+		}
+		if (levels[j]) {
+			levels[j].push(seg);
+		}else{
+			levels[j] = [seg];
+		}
+	}
+	return levels;
+}
+
+
+
+/* Event Element Binding
+-----------------------------------------------------------------------------*/
+
+
+function lazySegBind(container, segs, bindHandlers) {
+	container.unbind('mouseover').mouseover(function(ev) {
+		var parent=ev.target, e,
+			i, seg;
+		while (parent != this) {
+			e = parent;
+			parent = parent.parentNode;
+		}
+		if ((i = e._fci) !== undefined) {
+			e._fci = undefined;
+			seg = segs[i];
+			bindHandlers(seg.event, seg.element, seg);
+			$(ev.target).trigger(ev);
+		}
+		ev.stopPropagation();
+	});
+}
+
+
+
+/* Element Dimensions
+-----------------------------------------------------------------------------*/
+
+
+function setOuterWidth(element, width, includeMargins) {
+	for (var i=0, e; i<element.length; i++) {
+		e = $(element[i]);
+		e.width(Math.max(0, width - hsides(e, includeMargins)));
+	}
+}
+
+
+function setOuterHeight(element, height, includeMargins) {
+	for (var i=0, e; i<element.length; i++) {
+		e = $(element[i]);
+		e.height(Math.max(0, height - vsides(e, includeMargins)));
+	}
+}
+
+
+function hsides(element, includeMargins) {
+	return hpadding(element) + hborders(element) + (includeMargins ? hmargins(element) : 0);
+}
+
+
+function hpadding(element) {
+	return (parseFloat($.css(element[0], 'paddingLeft', true)) || 0) +
+	       (parseFloat($.css(element[0], 'paddingRight', true)) || 0);
+}
+
+
+function hmargins(element) {
+	return (parseFloat($.css(element[0], 'marginLeft', true)) || 0) +
+	       (parseFloat($.css(element[0], 'marginRight', true)) || 0);
+}
+
+
+function hborders(element) {
+	return (parseFloat($.css(element[0], 'borderLeftWidth', true)) || 0) +
+	       (parseFloat($.css(element[0], 'borderRightWidth', true)) || 0);
+}
+
+
+function vsides(element, includeMargins) {
+	return vpadding(element) +  vborders(element) + (includeMargins ? vmargins(element) : 0);
+}
+
+
+function vpadding(element) {
+	return (parseFloat($.css(element[0], 'paddingTop', true)) || 0) +
+	       (parseFloat($.css(element[0], 'paddingBottom', true)) || 0);
+}
+
+
+function vmargins(element) {
+	return (parseFloat($.css(element[0], 'marginTop', true)) || 0) +
+	       (parseFloat($.css(element[0], 'marginBottom', true)) || 0);
+}
+
+
+function vborders(element) {
+	return (parseFloat($.css(element[0], 'borderTopWidth', true)) || 0) +
+	       (parseFloat($.css(element[0], 'borderBottomWidth', true)) || 0);
+}
+
+
+function setMinHeight(element, height) {
+	height = (typeof height == 'number' ? height + 'px' : height);
+	element.each(function(i, _element) {
+		_element.style.cssText += ';min-height:' + height + ';_height:' + height;
+		// why can't we just use .css() ? i forget
+	});
+}
+
+
+
+/* Misc Utils
+-----------------------------------------------------------------------------*/
+
+
+//TODO: arraySlice
+//TODO: isFunction, grep ?
+
+
+function noop() { }
+
+
+function cmp(a, b) {
+	return a - b;
+}
+
+
+function arrayMax(a) {
+	return Math.max.apply(Math, a);
+}
+
+
+function zeroPad(n) {
+	return (n < 10 ? '0' : '') + n;
+}
+
+
+function smartProperty(obj, name) { // get a camel-cased/namespaced property of an object
+	if (obj[name] !== undefined) {
+		return obj[name];
+	}
+	var parts = name.split(/(?=[A-Z])/),
+		i=parts.length-1, res;
+	for (; i>=0; i--) {
+		res = obj[parts[i].toLowerCase()];
+		if (res !== undefined) {
+			return res;
+		}
+	}
+	return obj[''];
+}
+
+
+function htmlEscape(s) {
+	return s.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/'/g, '&#039;')
+		.replace(/"/g, '&quot;')
+		.replace(/\n/g, '<br />');
+}
+
+
+function cssKey(_element) {
+	return _element.id + '/' + _element.className + '/' + _element.style.cssText.replace(/(^|;)\s*(top|left|width|height)\s*:[^;]*/ig, '');
+}
+
+
+function disableTextSelection(element) {
+	element
+		.attr('unselectable', 'on')
+		.css('MozUserSelect', 'none')
+		.bind('selectstart.ui', function() { return false; });
+}
+
+
+/*
+function enableTextSelection(element) {
+	element
+		.attr('unselectable', 'off')
+		.css('MozUserSelect', '')
+		.unbind('selectstart.ui');
+}
+*/
+
+
+function markFirstLast(e) {
+	e.children()
+		.removeClass('fc-first fc-last')
+		.filter(':first-child')
+			.addClass('fc-first')
+		.end()
+		.filter(':last-child')
+			.addClass('fc-last');
+}
+
+
+function setDayID(cell, date) {
+	cell.each(function(i, _cell) {
+		_cell.className = _cell.className.replace(/^fc-\w*/, 'fc-' + dayIDs[date.getDay()]);
+		// TODO: make a way that doesn't rely on order of classes
+	});
+}
+
+
+function getSkinCss(event, opt) {
+	var source = event.source || {};
+	var eventColor = event.color;
+	var sourceColor = source.color;
+	var optionColor = opt('eventColor');
+	var backgroundColor =
+		event.backgroundColor ||
+		eventColor ||
+		source.backgroundColor ||
+		sourceColor ||
+		opt('eventBackgroundColor') ||
+		optionColor;
+	var borderColor =
+		event.borderColor ||
+		eventColor ||
+		source.borderColor ||
+		sourceColor ||
+		opt('eventBorderColor') ||
+		optionColor;
+	var textColor =
+		event.textColor ||
+		source.textColor ||
+		opt('eventTextColor');
+	var statements = [];
+	if (backgroundColor) {
+		statements.push('background-color:' + backgroundColor);
+	}
+	if (borderColor) {
+		statements.push('border-color:' + borderColor);
+	}
+	if (textColor) {
+		statements.push('color:' + textColor);
+	}
+	return statements.join(';');
+}
+
+
+function applyAll(functions, thisObj, args) {
+	if ($.isFunction(functions)) {
+		functions = [ functions ];
+	}
+	if (functions) {
+		var i;
+		var ret;
+		for (i=0; i<functions.length; i++) {
+			ret = functions[i].apply(thisObj, args) || ret;
+		}
+		return ret;
+	}
+}
+
+
+function firstDefined() {
+	for (var i=0; i<arguments.length; i++) {
+		if (arguments[i] !== undefined) {
+			return arguments[i];
+		}
+	}
+}
+
+
+fcViews.month = MonthView;
+
+function MonthView(element, calendar) {
+	var t = this;
+	
+	
+	// exports
+	t.render = render;
+	
+	
+	// imports
+	BasicView.call(t, element, calendar, 'month');
+	var opt = t.opt;
+	var renderBasic = t.renderBasic;
+	var formatDate = calendar.formatDate;
+	
+	
+	
+	function render(date, delta) {
+		if (delta) {
+			addMonths(date, delta);
+			date.setDate(1);
+		}
+		var start = cloneDate(date, true);
+		start.setDate(1);
+		var end = addMonths(cloneDate(start), 1);
+		var visStart = cloneDate(start);
+		var visEnd = cloneDate(end);
+		var firstDay = opt('firstDay');
+		var nwe = opt('weekends') ? 0 : 1;
+		if (nwe) {
+			skipWeekend(visStart);
+			skipWeekend(visEnd, -1, true);
+		}
+		addDays(visStart, -((visStart.getDay() - Math.max(firstDay, nwe) + 7) % 7));
+		addDays(visEnd, (7 - visEnd.getDay() + Math.max(firstDay, nwe)) % 7);
+		var rowCnt = Math.round((visEnd - visStart) / (DAY_MS * 7));
+		if (opt('weekMode') == 'fixed') {
+			addDays(visEnd, (6 - rowCnt) * 7);
+			rowCnt = 6;
+		}
+		t.title = formatDate(start, opt('titleFormat'));
+		t.start = start;
+		t.end = end;
+		t.visStart = visStart;
+		t.visEnd = visEnd;
+		renderBasic(6, rowCnt, nwe ? 5 : 7, true);
+	}
+	
+	
+}
+
+fcViews.basicWeek = BasicWeekView;
+
+function BasicWeekView(element, calendar) {
+	var t = this;
+	
+	
+	// exports
+	t.render = render;
+	
+	
+	// imports
+	BasicView.call(t, element, calendar, 'basicWeek');
+	var opt = t.opt;
+	var renderBasic = t.renderBasic;
+	var formatDates = calendar.formatDates;
+	
+	
+	
+	function render(date, delta) {
+		if (delta) {
+			addDays(date, delta * 7);
+		}
+		var start = addDays(cloneDate(date), -((date.getDay() - opt('firstDay') + 7) % 7));
+		var end = addDays(cloneDate(start), 7);
+		var visStart = cloneDate(start);
+		var visEnd = cloneDate(end);
+		var weekends = opt('weekends');
+		if (!weekends) {
+			skipWeekend(visStart);
+			skipWeekend(visEnd, -1, true);
+		}
+		t.title = formatDates(
+			visStart,
+			addDays(cloneDate(visEnd), -1),
+			opt('titleFormat')
+		);
+		t.start = start;
+		t.end = end;
+		t.visStart = visStart;
+		t.visEnd = visEnd;
+		renderBasic(1, 1, weekends ? 7 : 5, false);
+	}
+	
+	
+}
+
+fcViews.basicDay = BasicDayView;
+
+//TODO: when calendar's date starts out on a weekend, shouldn't happen
+
+
+function BasicDayView(element, calendar) {
+	var t = this;
+	
+	
+	// exports
+	t.render = render;
+	
+	
+	// imports
+	BasicView.call(t, element, calendar, 'basicDay');
+	var opt = t.opt;
+	var renderBasic = t.renderBasic;
+	var formatDate = calendar.formatDate;
+	
+	
+	
+	function render(date, delta) {
+		if (delta) {
+			addDays(date, delta);
+			if (!opt('weekends')) {
+				skipWeekend(date, delta < 0 ? -1 : 1);
+			}
+		}
+		t.title = formatDate(date, opt('titleFormat'));
+		t.start = t.visStart = cloneDate(date, true);
+		t.end = t.visEnd = addDays(cloneDate(t.start), 1);
+		renderBasic(1, 1, 1, false);
+	}
+	
+	
+}
+
+setDefaults({
+	weekMode: 'fixed'
+});
+
+
+function BasicView(element, calendar, viewName) {
+	var t = this;
+	
+	
+	// exports
+	t.renderBasic = renderBasic;
+	t.setHeight = setHeight;
+	t.setWidth = setWidth;
+	t.renderDayOverlay = renderDayOverlay;
+	t.defaultSelectionEnd = defaultSelectionEnd;
+	t.renderSelection = renderSelection;
+	t.clearSelection = clearSelection;
+	t.reportDayClick = reportDayClick; // for selection (kinda hacky)
+	t.dragStart = dragStart;
+	t.dragStop = dragStop;
+	t.defaultEventEnd = defaultEventEnd;
+	t.getHoverListener = function() { return hoverListener };
+	t.colContentLeft = colContentLeft;
+	t.colContentRight = colContentRight;
+	t.dayOfWeekCol = dayOfWeekCol;
+	t.dateCell = dateCell;
+	t.cellDate = cellDate;
+	t.cellIsAllDay = function() { return true };
+	t.allDayRow = allDayRow;
+	t.allDayBounds = allDayBounds;
+	t.getRowCnt = function() { return rowCnt };
+	t.getColCnt = function() { return colCnt };
+	t.getColWidth = function() { return colWidth };
+	t.getDaySegmentContainer = function() { return daySegmentContainer };
+	
+	
+	// imports
+	View.call(t, element, calendar, viewName);
+	OverlayManager.call(t);
+	SelectionManager.call(t);
+	BasicEventRenderer.call(t);
+	var opt = t.opt;
+	var trigger = t.trigger;
+	var clearEvents = t.clearEvents;
+	var renderOverlay = t.renderOverlay;
+	var clearOverlays = t.clearOverlays;
+	var daySelectionMousedown = t.daySelectionMousedown;
+	var formatDate = calendar.formatDate;
+	
+	
+	// locals
+	
+	var head;
+	var headCells;
+	var body;
+	var bodyRows;
+	var bodyCells;
+	var bodyFirstCells;
+	var bodyCellTopInners;
+	var daySegmentContainer;
+	
+	var viewWidth;
+	var viewHeight;
+	var colWidth;
+	
+	var rowCnt, colCnt;
+	var coordinateGrid;
+	var hoverListener;
+	var colContentPositions;
+	
+	var rtl, dis, dit;
+	var firstDay;
+	var nwe;
+	var tm;
+	var colFormat;
+	
+	
+	
+	/* Rendering
+	------------------------------------------------------------*/
+	
+	
+	disableTextSelection(element.addClass('fc-grid'));
+	
+	
+	function renderBasic(maxr, r, c, showNumbers) {
+		rowCnt = r;
+		colCnt = c;
+		updateOptions();
+		var firstTime = !body;
+		if (firstTime) {
+			buildSkeleton(maxr, showNumbers);
+		}else{
+			clearEvents();
+		}
+		updateCells(firstTime);
+	}
+	
+	
+	
+	function updateOptions() {
+		rtl = opt('isRTL');
+		if (rtl) {
+			dis = -1;
+			dit = colCnt - 1;
+		}else{
+			dis = 1;
+			dit = 0;
+		}
+		firstDay = opt('firstDay');
+		nwe = opt('weekends') ? 0 : 1;
+		tm = opt('theme') ? 'ui' : 'fc';
+		colFormat = opt('columnFormat');
+	}
+	
+	
+	
+	function buildSkeleton(maxRowCnt, showNumbers) {
+		var s;
+		var headerClass = tm + "-widget-header";
+		var contentClass = tm + "-widget-content";
+		var i, j;
+		var table;
+		
+		s =
+			"<table class='fc-border-separate' style='width:100%' cellspacing='0'>" +
+			"<thead>" +
+			"<tr>";
+		for (i=0; i<colCnt; i++) {
+			s +=
+				"<th class='fc- " + headerClass + "'/>"; // need fc- for setDayID
+		}
+		s +=
+			"</tr>" +
+			"</thead>" +
+			"<tbody>";
+		for (i=0; i<maxRowCnt; i++) {
+			s +=
+				"<tr class='fc-week" + i + "'>";
+			for (j=0; j<colCnt; j++) {
+				s +=
+					"<td class='fc- " + contentClass + " fc-day" + (i*colCnt+j) + "'>" + // need fc- for setDayID
+					"<div>" +
+					(showNumbers ?
+						"<div class='fc-day-number'/>" :
+						''
+						) +
+					"<div class='fc-day-content'>" +
+					"<div style='position:relative'>&nbsp;</div>" +
+					"</div>" +
+					"</div>" +
+					"</td>";
+			}
+			s +=
+				"</tr>";
+		}
+		s +=
+			"</tbody>" +
+			"</table>";
+		table = $(s).appendTo(element);
+		
+		head = table.find('thead');
+		headCells = head.find('th');
+		body = table.find('tbody');
+		bodyRows = body.find('tr');
+		bodyCells = body.find('td');
+		bodyFirstCells = bodyCells.filter(':first-child');
+		bodyCellTopInners = bodyRows.eq(0).find('div.fc-day-content div');
+		
+		markFirstLast(head.add(head.find('tr'))); // marks first+last tr/th's
+		markFirstLast(bodyRows); // marks first+last td's
+		bodyRows.eq(0).addClass('fc-first'); // fc-last is done in updateCells
+		
+		dayBind(bodyCells);
+		
+		daySegmentContainer =
+			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
+				.appendTo(element);
+	}
+	
+	
+	
+	function updateCells(firstTime) {
+		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
+		var month = t.start.getMonth();
+		var today = clearTime(new Date());
+		var cell;
+		var date;
+		var row;
+	
+		if (dowDirty) {
+			headCells.each(function(i, _cell) {
+				cell = $(_cell);
+				date = indexDate(i);
+				cell.html(formatDate(date, colFormat));
+				setDayID(cell, date);
+			});
+		}
+		
+		bodyCells.each(function(i, _cell) {
+			cell = $(_cell);
+			date = indexDate(i);
+			if (date.getMonth() == month) {
+				cell.removeClass('fc-other-month');
+			}else{
+				cell.addClass('fc-other-month');
+			}
+			if (+date == +today) {
+				cell.addClass(tm + '-state-highlight fc-today');
+			}else{
+				cell.removeClass(tm + '-state-highlight fc-today');
+			}
+			cell.find('div.fc-day-number').text(date.getDate());
+			if (dowDirty) {
+				setDayID(cell, date);
+			}
+		});
+		
+		bodyRows.each(function(i, _row) {
+			row = $(_row);
+			if (i < rowCnt) {
+				row.show();
+				if (i == rowCnt-1) {
+					row.addClass('fc-last');
+				}else{
+					row.removeClass('fc-last');
+				}
+			}else{
+				row.hide();
+			}
+		});
+	}
+	
+	
+	
+	function setHeight(height) {
+		viewHeight = height;
+		
+		var bodyHeight = viewHeight - head.height();
+		var rowHeight;
+		var rowHeightLast;
+		var cell;
+			
+		if (opt('weekMode') == 'variable') {
+			rowHeight = rowHeightLast = Math.floor(bodyHeight / (rowCnt==1 ? 2 : 6));
+		}else{
+			rowHeight = Math.floor(bodyHeight / rowCnt);
+			rowHeightLast = bodyHeight - rowHeight * (rowCnt-1);
+		}
+		
+		bodyFirstCells.each(function(i, _cell) {
+			if (i < rowCnt) {
+				cell = $(_cell);
+				setMinHeight(
+					cell.find('> div'),
+					(i==rowCnt-1 ? rowHeightLast : rowHeight) - vsides(cell)
+				);
+			}
+		});
+		
+	}
+	
+	
+	function setWidth(width) {
+		viewWidth = width;
+		colContentPositions.clear();
+		colWidth = Math.floor(viewWidth / colCnt);
+		setOuterWidth(headCells.slice(0, -1), colWidth);
+	}
+	
+	
+	
+	/* Day clicking and binding
+	-----------------------------------------------------------*/
+	
+	
+	function dayBind(days) {
+		days.click(dayClick)
+			.mousedown(daySelectionMousedown);
+	}
+	
+	
+	function dayClick(ev) {
+		if (!opt('selectable')) { // if selectable, SelectionManager will worry about dayClick
+			var index = parseInt(this.className.match(/fc\-day(\d+)/)[1]); // TODO: maybe use .data
+			var date = indexDate(index);
+			trigger('dayClick', this, date, true, ev);
+		}
+	}
+	
+	
+	
+	/* Semi-transparent Overlay Helpers
+	------------------------------------------------------*/
+	
+	
+	function renderDayOverlay(overlayStart, overlayEnd, refreshCoordinateGrid) { // overlayEnd is exclusive
+		if (refreshCoordinateGrid) {
+			coordinateGrid.build();
+		}
+		var rowStart = cloneDate(t.visStart);
+		var rowEnd = addDays(cloneDate(rowStart), colCnt);
+		for (var i=0; i<rowCnt; i++) {
+			var stretchStart = new Date(Math.max(rowStart, overlayStart));
+			var stretchEnd = new Date(Math.min(rowEnd, overlayEnd));
+			if (stretchStart < stretchEnd) {
+				var colStart, colEnd;
+				if (rtl) {
+					colStart = dayDiff(stretchEnd, rowStart)*dis+dit+1;
+					colEnd = dayDiff(stretchStart, rowStart)*dis+dit+1;
+				}else{
+					colStart = dayDiff(stretchStart, rowStart);
+					colEnd = dayDiff(stretchEnd, rowStart);
+				}
+				dayBind(
+					renderCellOverlay(i, colStart, i, colEnd-1)
+				);
+			}
+			addDays(rowStart, 7);
+			addDays(rowEnd, 7);
+		}
+	}
+	
+	
+	function renderCellOverlay(row0, col0, row1, col1) { // row1,col1 is inclusive
+		var rect = coordinateGrid.rect(row0, col0, row1, col1, element);
+		return renderOverlay(rect, element);
+	}
+	
+	
+	
+	/* Selection
+	-----------------------------------------------------------------------*/
+	
+	
+	function defaultSelectionEnd(startDate, allDay) {
+		return cloneDate(startDate);
+	}
+	
+	
+	function renderSelection(startDate, endDate, allDay) {
+		renderDayOverlay(startDate, addDays(cloneDate(endDate), 1), true); // rebuild every time???
+	}
+	
+	
+	function clearSelection() {
+		clearOverlays();
+	}
+	
+	
+	function reportDayClick(date, allDay, ev) {
+		var cell = dateCell(date);
+		var _element = bodyCells[cell.row*colCnt + cell.col];
+		trigger('dayClick', _element, date, allDay, ev);
+	}
+	
+	
+	
+	/* External Dragging
+	-----------------------------------------------------------------------*/
+	
+	
+	function dragStart(_dragElement, ev, ui) {
+		hoverListener.start(function(cell) {
+			clearOverlays();
+			if (cell) {
+				renderCellOverlay(cell.row, cell.col, cell.row, cell.col);
+			}
+		}, ev);
+	}
+	
+	
+	function dragStop(_dragElement, ev, ui) {
+		var cell = hoverListener.stop();
+		clearOverlays();
+		if (cell) {
+			var d = cellDate(cell);
+			trigger('drop', _dragElement, d, true, ev, ui);
+		}
+	}
+	
+	
+	
+	/* Utilities
+	--------------------------------------------------------*/
+	
+	
+	function defaultEventEnd(event) {
+		return cloneDate(event.start);
+	}
+	
+	
+	coordinateGrid = new CoordinateGrid(function(rows, cols) {
+		var e, n, p;
+		headCells.each(function(i, _e) {
+			e = $(_e);
+			n = e.offset().left;
+			if (i) {
+				p[1] = n;
+			}
+			p = [n];
+			cols[i] = p;
+		});
+		p[1] = n + e.outerWidth();
+		bodyRows.each(function(i, _e) {
+			if (i < rowCnt) {
+				e = $(_e);
+				n = e.offset().top;
+				if (i) {
+					p[1] = n;
+				}
+				p = [n];
+				rows[i] = p;
+			}
+		});
+		p[1] = n + e.outerHeight();
+	});
+	
+	
+	hoverListener = new HoverListener(coordinateGrid);
+	
+	
+	colContentPositions = new HorizontalPositionCache(function(col) {
+		return bodyCellTopInners.eq(col);
+	});
+	
+	
+	function colContentLeft(col) {
+		return colContentPositions.left(col);
+	}
+	
+	
+	function colContentRight(col) {
+		return colContentPositions.right(col);
+	}
+	
+	
+	
+	
+	function dateCell(date) {
+		return {
+			row: Math.floor(dayDiff(date, t.visStart) / 7),
+			col: dayOfWeekCol(date.getDay())
+		};
+	}
+	
+	
+	function cellDate(cell) {
+		return _cellDate(cell.row, cell.col);
+	}
+	
+	
+	function _cellDate(row, col) {
+		return addDays(cloneDate(t.visStart), row*7 + col*dis+dit);
+		// what about weekends in middle of week?
+	}
+	
+	
+	function indexDate(index) {
+		return _cellDate(Math.floor(index/colCnt), index%colCnt);
+	}
+	
+	
+	function dayOfWeekCol(dayOfWeek) {
+		return ((dayOfWeek - Math.max(firstDay, nwe) + colCnt) % colCnt) * dis + dit;
+	}
+	
+	
+	
+	
+	function allDayRow(i) {
+		return bodyRows.eq(i);
+	}
+	
+	
+	function allDayBounds(i) {
+		return {
+			left: 0,
+			right: viewWidth
+		};
+	}
+	
+	
+}
+
+function BasicEventRenderer() {
+	var t = this;
+	
+	
+	// exports
+	t.renderEvents = renderEvents;
+	t.compileDaySegs = compileSegs; // for DayEventRenderer
+	t.clearEvents = clearEvents;
+	t.bindDaySeg = bindDaySeg;
+	
+	
+	// imports
+	DayEventRenderer.call(t);
+	var opt = t.opt;
+	var trigger = t.trigger;
+	//var setOverflowHidden = t.setOverflowHidden;
+	var isEventDraggable = t.isEventDraggable;
+	var isEventResizable = t.isEventResizable;
+	var reportEvents = t.reportEvents;
+	var reportEventClear = t.reportEventClear;
+	var eventElementHandlers = t.eventElementHandlers;
+	var showEvents = t.showEvents;
+	var hideEvents = t.hideEvents;
+	var eventDrop = t.eventDrop;
+	var getDaySegmentContainer = t.getDaySegmentContainer;
+	var getHoverListener = t.getHoverListener;
+	var renderDayOverlay = t.renderDayOverlay;
+	var clearOverlays = t.clearOverlays;
+	var getRowCnt = t.getRowCnt;
+	var getColCnt = t.getColCnt;
+	var renderDaySegs = t.renderDaySegs;
+	var resizableDayEvent = t.resizableDayEvent;
+	
+	
+	
+	/* Rendering
+	--------------------------------------------------------------------*/
+	
+	
+	function renderEvents(events, modifiedEventId) {
+		reportEvents(events);
+		renderDaySegs(compileSegs(events), modifiedEventId);
+	}
+	
+	
+	function clearEvents() {
+		reportEventClear();
+		getDaySegmentContainer().empty();
+	}
+	
+	
+	function compileSegs(events) {
+		var rowCnt = getRowCnt(),
+			colCnt = getColCnt(),
+			d1 = cloneDate(t.visStart),
+			d2 = addDays(cloneDate(d1), colCnt),
+			visEventsEnds = $.map(events, exclEndDay),
+			i, row,
+			j, level,
+			k, seg,
+			segs=[];
+		for (i=0; i<rowCnt; i++) {
+			row = stackSegs(sliceSegs(events, visEventsEnds, d1, d2));
+			for (j=0; j<row.length; j++) {
+				level = row[j];
+				for (k=0; k<level.length; k++) {
+					seg = level[k];
+					seg.row = i;
+					seg.level = j; // not needed anymore
+					segs.push(seg);
+				}
+			}
+			addDays(d1, 7);
+			addDays(d2, 7);
+		}
+		return segs;
+	}
+	
+	
+	function bindDaySeg(event, eventElement, seg) {
+		if (isEventDraggable(event)) {
+			draggableDayEvent(event, eventElement);
+		}
+		if (seg.isEnd && isEventResizable(event)) {
+			resizableDayEvent(event, eventElement, seg);
+		}
+		eventElementHandlers(event, eventElement);
+			// needs to be after, because resizableDayEvent might stopImmediatePropagation on click
+	}
+	
+	
+	
+	/* Dragging
+	----------------------------------------------------------------------------*/
+	
+	
+	function draggableDayEvent(event, eventElement) {
+		var hoverListener = getHoverListener();
+		var dayDelta;
+		eventElement.draggable({
+			zIndex: 9,
+			delay: 50,
+			opacity: opt('dragOpacity'),
+			revertDuration: opt('dragRevertDuration'),
+			start: function(ev, ui) {
+				trigger('eventDragStart', eventElement, event, ev, ui);
+				hideEvents(event, eventElement);
+				hoverListener.start(function(cell, origCell, rowDelta, colDelta) {
+					eventElement.draggable('option', 'revert', !cell || !rowDelta && !colDelta);
+					clearOverlays();
+					if (cell) {
+						//setOverflowHidden(true);
+						dayDelta = rowDelta*7 + colDelta * (opt('isRTL') ? -1 : 1);
+						renderDayOverlay(
+							addDays(cloneDate(event.start), dayDelta),
+							addDays(exclEndDay(event), dayDelta)
+						);
+					}else{
+						//setOverflowHidden(false);
+						dayDelta = 0;
+					}
+				}, ev, 'drag');
+			},
+			stop: function(ev, ui) {
+				hoverListener.stop();
+				clearOverlays();
+				trigger('eventDragStop', eventElement, event, ev, ui);
+				if (dayDelta) {
+					eventDrop(this, event, dayDelta, 0, event.allDay, ev, ui);
+				}else{
+					eventElement.css('filter', ''); // clear IE opacity side-effects
+					showEvents(event, eventElement);
+				}
+				//setOverflowHidden(false);
+			}
+		});
+	}
+
+
+}
+
+fcViews.agendaWeek = AgendaWeekView;
+
+function AgendaWeekView(element, calendar) {
+	var t = this;
+	
+	
+	// exports
+	t.render = render;
+	
+	
+	// imports
+	AgendaView.call(t, element, calendar, 'agendaWeek');
+	var opt = t.opt;
+	var renderAgenda = t.renderAgenda;
+	var formatDates = calendar.formatDates;
+	
+	
+	
+	function render(date, delta) {
+		if (delta) {
+			addDays(date, delta * 7);
+		}
+		var start = addDays(cloneDate(date), -((date.getDay() - opt('firstDay') + 7) % 7));
+		var end = addDays(cloneDate(start), 7);
+		var visStart = cloneDate(start);
+		var visEnd = cloneDate(end);
+		var weekends = opt('weekends');
+		if (!weekends) {
+			skipWeekend(visStart);
+			skipWeekend(visEnd, -1, true);
+		}
+		t.title = formatDates(
+			visStart,
+			addDays(cloneDate(visEnd), -1),
+			opt('titleFormat')
+		);
+		t.start = start;
+		t.end = end;
+		t.visStart = visStart;
+		t.visEnd = visEnd;
+		renderAgenda(weekends ? 7 : 5);
+	}
+	
+
+}
+
+fcViews.agendaDay = AgendaDayView;
+
+function AgendaDayView(element, calendar) {
+	var t = this;
+	
+	
+	// exports
+	t.render = render;
+	
+	
+	// imports
+	AgendaView.call(t, element, calendar, 'agendaDay');
+	var opt = t.opt;
+	var renderAgenda = t.renderAgenda;
+	var formatDate = calendar.formatDate;
+	
+	
+	
+	function render(date, delta) {
+		if (delta) {
+			addDays(date, delta);
+			if (!opt('weekends')) {
+				skipWeekend(date, delta < 0 ? -1 : 1);
+			}
+		}
+		var start = cloneDate(date, true);
+		var end = addDays(cloneDate(start), 1);
+		t.title = formatDate(date, opt('titleFormat'));
+		t.start = t.visStart = start;
+		t.end = t.visEnd = end;
+		renderAgenda(1);
+	}
+	
+
+}
+
+setDefaults({
+	allDaySlot: true,
+	allDayText: 'all-day',
+	firstHour: 6,
+	slotMinutes: 30,
+	defaultEventMinutes: 120,
+	axisFormat: 'h(:mm)tt',
+	timeFormat: {
+		agenda: 'h:mm{ - h:mm}'
+	},
+	dragOpacity: {
+		agenda: .5
+	},
+	minTime: 0,
+	maxTime: 24
+});
+
+
+// TODO: make it work in quirks mode (event corners, all-day height)
+// TODO: test liquid width, especially in IE6
+
+
+function AgendaView(element, calendar, viewName) {
+	var t = this;
+	
+	
+	// exports
+	t.renderAgenda = renderAgenda;
+	t.setWidth = setWidth;
+	t.setHeight = setHeight;
+	t.beforeHide = beforeHide;
+	t.afterShow = afterShow;
+	t.defaultEventEnd = defaultEventEnd;
+	t.timePosition = timePosition;
+	t.dayOfWeekCol = dayOfWeekCol;
+	t.dateCell = dateCell;
+	t.cellDate = cellDate;
+	t.cellIsAllDay = cellIsAllDay;
+	t.allDayRow = getAllDayRow;
+	t.allDayBounds = allDayBounds;
+	t.getHoverListener = function() { return hoverListener };
+	t.colContentLeft = colContentLeft;
+	t.colContentRight = colContentRight;
+	t.getDaySegmentContainer = function() { return daySegmentContainer };
+	t.getSlotSegmentContainer = function() { return slotSegmentContainer };
+	t.getMinMinute = function() { return minMinute };
+	t.getMaxMinute = function() { return maxMinute };
+	t.getBodyContent = function() { return slotContent }; // !!??
+	t.getRowCnt = function() { return 1 };
+	t.getColCnt = function() { return colCnt };
+	t.getColWidth = function() { return colWidth };
+	t.getSlotHeight = function() { return slotHeight };
+	t.defaultSelectionEnd = defaultSelectionEnd;
+	t.renderDayOverlay = renderDayOverlay;
+	t.renderSelection = renderSelection;
+	t.clearSelection = clearSelection;
+	t.reportDayClick = reportDayClick; // selection mousedown hack
+	t.dragStart = dragStart;
+	t.dragStop = dragStop;
+	
+	
+	// imports
+	View.call(t, element, calendar, viewName);
+	OverlayManager.call(t);
+	SelectionManager.call(t);
+	AgendaEventRenderer.call(t);
+	var opt = t.opt;
+	var trigger = t.trigger;
+	var clearEvents = t.clearEvents;
+	var renderOverlay = t.renderOverlay;
+	var clearOverlays = t.clearOverlays;
+	var reportSelection = t.reportSelection;
+	var unselect = t.unselect;
+	var daySelectionMousedown = t.daySelectionMousedown;
+	var slotSegHtml = t.slotSegHtml;
+	var formatDate = calendar.formatDate;
+	
+	
+	// locals
+	
+	var dayTable;
+	var dayHead;
+	var dayHeadCells;
+	var dayBody;
+	var dayBodyCells;
+	var dayBodyCellInners;
+	var dayBodyFirstCell;
+	var dayBodyFirstCellStretcher;
+	var slotLayer;
+	var daySegmentContainer;
+	var allDayTable;
+	var allDayRow;
+	var slotScroller;
+	var slotContent;
+	var slotSegmentContainer;
+	var slotTable;
+	var slotTableFirstInner;
+	var axisFirstCells;
+	var gutterCells;
+	var selectionHelper;
+	
+	var viewWidth;
+	var viewHeight;
+	var axisWidth;
+	var colWidth;
+	var gutterWidth;
+	var slotHeight; // TODO: what if slotHeight changes? (see issue 650)
+	var savedScrollTop;
+	
+	var colCnt;
+	var slotCnt;
+	var coordinateGrid;
+	var hoverListener;
+	var colContentPositions;
+	var slotTopCache = {};
+	
+	var tm;
+	var firstDay;
+	var nwe;            // no weekends (int)
+	var rtl, dis, dit;  // day index sign / translate
+	var minMinute, maxMinute;
+	var colFormat;
+	
+
+	
+	/* Rendering
+	-----------------------------------------------------------------------------*/
+	
+	
+	disableTextSelection(element.addClass('fc-agenda'));
+	
+	
+	function renderAgenda(c) {
+		colCnt = c;
+		updateOptions();
+		if (!dayTable) {
+			buildSkeleton();
+		}else{
+			clearEvents();
+		}
+		updateCells();
+	}
+	
+	
+	
+	function updateOptions() {
+		tm = opt('theme') ? 'ui' : 'fc';
+		nwe = opt('weekends') ? 0 : 1;
+		firstDay = opt('firstDay');
+		if (rtl = opt('isRTL')) {
+			dis = -1;
+			dit = colCnt - 1;
+		}else{
+			dis = 1;
+			dit = 0;
+		}
+		minMinute = parseTime(opt('minTime'));
+		maxMinute = parseTime(opt('maxTime'));
+		colFormat = opt('columnFormat');
+	}
+	
+	
+	
+	function buildSkeleton() {
+		var headerClass = tm + "-widget-header";
+		var contentClass = tm + "-widget-content";
+		var s;
+		var i;
+		var d;
+		var maxd;
+		var minutes;
+		var slotNormal = opt('slotMinutes') % 15 == 0;
+		
+		s =
+			"<table style='width:100%' class='fc-agenda-days fc-border-separate' cellspacing='0'>" +
+			"<thead>" +
+			"<tr>" +
+			"<th class='fc-agenda-axis " + headerClass + "'>&nbsp;</th>";
+		for (i=0; i<colCnt; i++) {
+			s +=
+				"<th class='fc- fc-col" + i + ' ' + headerClass + "'/>"; // fc- needed for setDayID
+		}
+		s +=
+			"<th class='fc-agenda-gutter " + headerClass + "'>&nbsp;</th>" +
+			"</tr>" +
+			"</thead>" +
+			"<tbody>" +
+			"<tr>" +
+			"<th class='fc-agenda-axis " + headerClass + "'>&nbsp;</th>";
+		for (i=0; i<colCnt; i++) {
+			s +=
+				"<td class='fc- fc-col" + i + ' ' + contentClass + "'>" + // fc- needed for setDayID
+				"<div>" +
+				"<div class='fc-day-content'>" +
+				"<div style='position:relative'>&nbsp;</div>" +
+				"</div>" +
+				"</div>" +
+				"</td>";
+		}
+		s +=
+			"<td class='fc-agenda-gutter " + contentClass + "'>&nbsp;</td>" +
+			"</tr>" +
+			"</tbody>" +
+			"</table>";
+		dayTable = $(s).appendTo(element);
+		dayHead = dayTable.find('thead');
+		dayHeadCells = dayHead.find('th').slice(1, -1);
+		dayBody = dayTable.find('tbody');
+		dayBodyCells = dayBody.find('td').slice(0, -1);
+		dayBodyCellInners = dayBodyCells.find('div.fc-day-content div');
+		dayBodyFirstCell = dayBodyCells.eq(0);
+		dayBodyFirstCellStretcher = dayBodyFirstCell.find('> div');
+		
+		markFirstLast(dayHead.add(dayHead.find('tr')));
+		markFirstLast(dayBody.add(dayBody.find('tr')));
+		
+		axisFirstCells = dayHead.find('th:first');
+		gutterCells = dayTable.find('.fc-agenda-gutter');
+		
+		slotLayer =
+			$("<div style='position:absolute;z-index:2;left:0;width:100%'/>")
+				.appendTo(element);
+				
+		if (opt('allDaySlot')) {
+		
+			daySegmentContainer =
+				$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
+					.appendTo(slotLayer);
+		
+			s =
+				"<table style='width:100%' class='fc-agenda-allday' cellspacing='0'>" +
+				"<tr>" +
+				"<th class='" + headerClass + " fc-agenda-axis'>" + opt('allDayText') + "</th>" +
+				"<td>" +
+				"<div class='fc-day-content'><div style='position:relative'/></div>" +
+				"</td>" +
+				"<th class='" + headerClass + " fc-agenda-gutter'>&nbsp;</th>" +
+				"</tr>" +
+				"</table>";
+			allDayTable = $(s).appendTo(slotLayer);
+			allDayRow = allDayTable.find('tr');
+			
+			dayBind(allDayRow.find('td'));
+			
+			axisFirstCells = axisFirstCells.add(allDayTable.find('th:first'));
+			gutterCells = gutterCells.add(allDayTable.find('th.fc-agenda-gutter'));
+			
+			slotLayer.append(
+				"<div class='fc-agenda-divider " + headerClass + "'>" +
+				"<div class='fc-agenda-divider-inner'/>" +
+				"</div>"
+			);
+			
+		}else{
+		
+			daySegmentContainer = $([]); // in jQuery 1.4, we can just do $()
+		
+		}
+		
+		slotScroller =
+			$("<div style='position:absolute;width:100%;overflow-x:hidden;overflow-y:auto'/>")
+				.appendTo(slotLayer);
+				
+		slotContent =
+			$("<div style='position:relative;width:100%;overflow:hidden'/>")
+				.appendTo(slotScroller);
+				
+		slotSegmentContainer =
+			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
+				.appendTo(slotContent);
+		
+		s =
+			"<table class='fc-agenda-slots' style='width:100%' cellspacing='0'>" +
+			"<tbody>";
+		d = zeroDate();
+		maxd = addMinutes(cloneDate(d), maxMinute);
+		addMinutes(d, minMinute);
+		slotCnt = 0;
+		for (i=0; d < maxd; i++) {
+			minutes = d.getMinutes();
+			s +=
+				"<tr class='fc-slot" + i + ' ' + (!minutes ? '' : 'fc-minor') + "'>" +
+				"<th class='fc-agenda-axis " + headerClass + "'>" +
+				((!slotNormal || !minutes) ? formatDate(d, opt('axisFormat')) : '&nbsp;') +
+				"</th>" +
+				"<td class='" + contentClass + "'>" +
+				"<div style='position:relative'>&nbsp;</div>" +
+				"</td>" +
+				"</tr>";
+			addMinutes(d, opt('slotMinutes'));
+			slotCnt++;
+		}
+		s +=
+			"</tbody>" +
+			"</table>";
+		slotTable = $(s).appendTo(slotContent);
+		slotTableFirstInner = slotTable.find('div:first');
+		
+		slotBind(slotTable.find('td'));
+		
+		axisFirstCells = axisFirstCells.add(slotTable.find('th:first'));
+	}
+	
+	
+	
+	function updateCells() {
+		var i;
+		var headCell;
+		var bodyCell;
+		var date;
+		var today = clearTime(new Date());
+		for (i=0; i<colCnt; i++) {
+			date = colDate(i);
+			headCell = dayHeadCells.eq(i);
+			headCell.html(formatDate(date, colFormat));
+			bodyCell = dayBodyCells.eq(i);
+			if (+date == +today) {
+				bodyCell.addClass(tm + '-state-highlight fc-today');
+			}else{
+				bodyCell.removeClass(tm + '-state-highlight fc-today');
+			}
+			setDayID(headCell.add(bodyCell), date);
+		}
+	}
+	
+	
+	
+	function setHeight(height, dateChanged) {
+		if (height === undefined) {
+			height = viewHeight;
+		}
+		viewHeight = height;
+		slotTopCache = {};
+	
+		var headHeight = dayBody.position().top;
+		var allDayHeight = slotScroller.position().top; // including divider
+		var bodyHeight = Math.min( // total body height, including borders
+			height - headHeight,   // when scrollbars
+			slotTable.height() + allDayHeight + 1 // when no scrollbars. +1 for bottom border
+		);
+		
+		dayBodyFirstCellStretcher
+			.height(bodyHeight - vsides(dayBodyFirstCell));
+		
+		slotLayer.css('top', headHeight);
+		
+		slotScroller.height(bodyHeight - allDayHeight - 1);
+		
+		slotHeight = slotTableFirstInner.height() + 1; // +1 for border
+		
+		if (dateChanged) {
+			resetScroll();
+		}
+	}
+	
+	
+	
+	function setWidth(width) {
+		viewWidth = width;
+		colContentPositions.clear();
+		
+		axisWidth = 0;
+		setOuterWidth(
+			axisFirstCells
+				.width('')
+				.each(function(i, _cell) {
+					axisWidth = Math.max(axisWidth, $(_cell).outerWidth());
+				}),
+			axisWidth
+		);
+		
+		var slotTableWidth = slotScroller[0].clientWidth; // needs to be done after axisWidth (for IE7)
+		//slotTable.width(slotTableWidth);
+		
+		gutterWidth = slotScroller.width() - slotTableWidth;
+		if (gutterWidth) {
+			setOuterWidth(gutterCells, gutterWidth);
+			gutterCells
+				.show()
+				.prev()
+				.removeClass('fc-last');
+		}else{
+			gutterCells
+				.hide()
+				.prev()
+				.addClass('fc-last');
+		}
+		
+		colWidth = Math.floor((slotTableWidth - axisWidth) / colCnt);
+		setOuterWidth(dayHeadCells.slice(0, -1), colWidth);
+	}
+	
+
+
+	function resetScroll() {
+		var d0 = zeroDate();
+		var scrollDate = cloneDate(d0);
+		scrollDate.setHours(opt('firstHour'));
+		var top = timePosition(d0, scrollDate) + 1; // +1 for the border
+		function scroll() {
+			slotScroller.scrollTop(top);
+		}
+		scroll();
+		setTimeout(scroll, 0); // overrides any previous scroll state made by the browser
+	}
+	
+	
+	function beforeHide() {
+		savedScrollTop = slotScroller.scrollTop();
+	}
+	
+	
+	function afterShow() {
+		slotScroller.scrollTop(savedScrollTop);
+	}
+	
+	
+	
+	/* Slot/Day clicking and binding
+	-----------------------------------------------------------------------*/
+	
+
+	function dayBind(cells) {
+		cells.click(slotClick)
+			.mousedown(daySelectionMousedown);
+	}
+
+
+	function slotBind(cells) {
+		cells.click(slotClick)
+			.mousedown(slotSelectionMousedown);
+	}
+	
+	
+	function slotClick(ev) {
+		if (!opt('selectable')) { // if selectable, SelectionManager will worry about dayClick
+			var col = Math.min(colCnt-1, Math.floor((ev.pageX - dayTable.offset().left - axisWidth) / colWidth));
+			var date = colDate(col);
+			var rowMatch = this.parentNode.className.match(/fc-slot(\d+)/); // TODO: maybe use data
+			if (rowMatch) {
+				var mins = parseInt(rowMatch[1]) * opt('slotMinutes');
+				var hours = Math.floor(mins/60);
+				date.setHours(hours);
+				date.setMinutes(mins%60 + minMinute);
+				trigger('dayClick', dayBodyCells[col], date, false, ev);
+			}else{
+				trigger('dayClick', dayBodyCells[col], date, true, ev);
+			}
+		}
+	}
+	
+	
+	
+	/* Semi-transparent Overlay Helpers
+	-----------------------------------------------------*/
+	
+
+	function renderDayOverlay(startDate, endDate, refreshCoordinateGrid) { // endDate is exclusive
+		if (refreshCoordinateGrid) {
+			coordinateGrid.build();
+		}
+		var visStart = cloneDate(t.visStart);
+		var startCol, endCol;
+		if (rtl) {
+			startCol = dayDiff(endDate, visStart)*dis+dit+1;
+			endCol = dayDiff(startDate, visStart)*dis+dit+1;
+		}else{
+			startCol = dayDiff(startDate, visStart);
+			endCol = dayDiff(endDate, visStart);
+		}
+		startCol = Math.max(0, startCol);
+		endCol = Math.min(colCnt, endCol);
+		if (startCol < endCol) {
+			dayBind(
+				renderCellOverlay(0, startCol, 0, endCol-1)
+			);
+		}
+	}
+	
+	
+	function renderCellOverlay(row0, col0, row1, col1) { // only for all-day?
+		var rect = coordinateGrid.rect(row0, col0, row1, col1, slotLayer);
+		return renderOverlay(rect, slotLayer);
+	}
+	
+
+	function renderSlotOverlay(overlayStart, overlayEnd) {
+		var dayStart = cloneDate(t.visStart);
+		var dayEnd = addDays(cloneDate(dayStart), 1);
+		for (var i=0; i<colCnt; i++) {
+			var stretchStart = new Date(Math.max(dayStart, overlayStart));
+			var stretchEnd = new Date(Math.min(dayEnd, overlayEnd));
+			if (stretchStart < stretchEnd) {
+				var col = i*dis+dit;
+				var rect = coordinateGrid.rect(0, col, 0, col, slotContent); // only use it for horizontal coords
+				var top = timePosition(dayStart, stretchStart);
+				var bottom = timePosition(dayStart, stretchEnd);
+				rect.top = top;
+				rect.height = bottom - top;
+				slotBind(
+					renderOverlay(rect, slotContent)
+				);
+			}
+			addDays(dayStart, 1);
+			addDays(dayEnd, 1);
+		}
+	}
+	
+	
+	
+	/* Coordinate Utilities
+	-----------------------------------------------------------------------------*/
+	
+	
+	coordinateGrid = new CoordinateGrid(function(rows, cols) {
+		var e, n, p;
+		dayHeadCells.each(function(i, _e) {
+			e = $(_e);
+			n = e.offset().left;
+			if (i) {
+				p[1] = n;
+			}
+			p = [n];
+			cols[i] = p;
+		});
+		p[1] = n + e.outerWidth();
+		if (opt('allDaySlot')) {
+			e = allDayRow;
+			n = e.offset().top;
+			rows[0] = [n, n+e.outerHeight()];
+		}
+		var slotTableTop = slotContent.offset().top;
+		var slotScrollerTop = slotScroller.offset().top;
+		var slotScrollerBottom = slotScrollerTop + slotScroller.outerHeight();
+		function constrain(n) {
+			return Math.max(slotScrollerTop, Math.min(slotScrollerBottom, n));
+		}
+		for (var i=0; i<slotCnt; i++) {
+			rows.push([
+				constrain(slotTableTop + slotHeight*i),
+				constrain(slotTableTop + slotHeight*(i+1))
+			]);
+		}
+	});
+	
+	
+	hoverListener = new HoverListener(coordinateGrid);
+	
+	
+	colContentPositions = new HorizontalPositionCache(function(col) {
+		return dayBodyCellInners.eq(col);
+	});
+	
+	
+	function colContentLeft(col) {
+		return colContentPositions.left(col);
+	}
+	
+	
+	function colContentRight(col) {
+		return colContentPositions.right(col);
+	}
+	
+	
+	
+	
+	function dateCell(date) { // "cell" terminology is now confusing
+		return {
+			row: Math.floor(dayDiff(date, t.visStart) / 7),
+			col: dayOfWeekCol(date.getDay())
+		};
+	}
+	
+	
+	function cellDate(cell) {
+		var d = colDate(cell.col);
+		var slotIndex = cell.row;
+		if (opt('allDaySlot')) {
+			slotIndex--;
+		}
+		if (slotIndex >= 0) {
+			addMinutes(d, minMinute + slotIndex * opt('slotMinutes'));
+		}
+		return d;
+	}
+	
+	
+	function colDate(col) { // returns dates with 00:00:00
+		return addDays(cloneDate(t.visStart), col*dis+dit);
+	}
+	
+	
+	function cellIsAllDay(cell) {
+		return opt('allDaySlot') && !cell.row;
+	}
+	
+	
+	function dayOfWeekCol(dayOfWeek) {
+		return ((dayOfWeek - Math.max(firstDay, nwe) + colCnt) % colCnt)*dis+dit;
+	}
+	
+	
+	
+	
+	// get the Y coordinate of the given time on the given day (both Date objects)
+	function timePosition(day, time) { // both date objects. day holds 00:00 of current day
+		day = cloneDate(day, true);
+		if (time < addMinutes(cloneDate(day), minMinute)) {
+			return 0;
+		}
+		if (time >= addMinutes(cloneDate(day), maxMinute)) {
+			return slotTable.height();
+		}
+		var slotMinutes = opt('slotMinutes'),
+			minutes = time.getHours()*60 + time.getMinutes() - minMinute,
+			slotI = Math.floor(minutes / slotMinutes),
+			slotTop = slotTopCache[slotI];
+		if (slotTop === undefined) {
+			slotTop = slotTopCache[slotI] = slotTable.find('tr:eq(' + slotI + ') td div')[0].offsetTop; //.position().top; // need this optimization???
+		}
+		return Math.max(0, Math.round(
+			slotTop - 1 + slotHeight * ((minutes % slotMinutes) / slotMinutes)
+		));
+	}
+	
+	
+	function allDayBounds() {
+		return {
+			left: axisWidth,
+			right: viewWidth - gutterWidth
+		}
+	}
+	
+	
+	function getAllDayRow(index) {
+		return allDayRow;
+	}
+	
+	
+	function defaultEventEnd(event) {
+		var start = cloneDate(event.start);
+		if (event.allDay) {
+			return start;
+		}
+		return addMinutes(start, opt('defaultEventMinutes'));
+	}
+	
+	
+	
+	/* Selection
+	---------------------------------------------------------------------------------*/
+	
+	
+	function defaultSelectionEnd(startDate, allDay) {
+		if (allDay) {
+			return cloneDate(startDate);
+		}
+		return addMinutes(cloneDate(startDate), opt('slotMinutes'));
+	}
+	
+	
+	function renderSelection(startDate, endDate, allDay) { // only for all-day
+		if (allDay) {
+			if (opt('allDaySlot')) {
+				renderDayOverlay(startDate, addDays(cloneDate(endDate), 1), true);
+			}
+		}else{
+			renderSlotSelection(startDate, endDate);
+		}
+	}
+	
+	
+	function renderSlotSelection(startDate, endDate) {
+		var helperOption = opt('selectHelper');
+		coordinateGrid.build();
+		if (helperOption) {
+			var col = dayDiff(startDate, t.visStart) * dis + dit;
+			if (col >= 0 && col < colCnt) { // only works when times are on same day
+				var rect = coordinateGrid.rect(0, col, 0, col, slotContent); // only for horizontal coords
+				var top = timePosition(startDate, startDate);
+				var bottom = timePosition(startDate, endDate);
+				if (bottom > top) { // protect against selections that are entirely before or after visible range
+					rect.top = top;
+					rect.height = bottom - top;
+					rect.left += 2;
+					rect.width -= 5;
+					if ($.isFunction(helperOption)) {
+						var helperRes = helperOption(startDate, endDate);
+						if (helperRes) {
+							rect.position = 'absolute';
+							rect.zIndex = 8;
+							selectionHelper = $(helperRes)
+								.css(rect)
+								.appendTo(slotContent);
+						}
+					}else{
+						rect.isStart = true; // conside rect a "seg" now
+						rect.isEnd = true;   //
+						selectionHelper = $(slotSegHtml(
+							{
+								title: '',
+								start: startDate,
+								end: endDate,
+								className: ['fc-select-helper'],
+								editable: false
+							},
+							rect
+						));
+						selectionHelper.css('opacity', opt('dragOpacity'));
+					}
+					if (selectionHelper) {
+						slotBind(selectionHelper);
+						slotContent.append(selectionHelper);
+						setOuterWidth(selectionHelper, rect.width, true); // needs to be after appended
+						setOuterHeight(selectionHelper, rect.height, true);
+					}
+				}
+			}
+		}else{
+			renderSlotOverlay(startDate, endDate);
+		}
+	}
+	
+	
+	function clearSelection() {
+		clearOverlays();
+		if (selectionHelper) {
+			selectionHelper.remove();
+			selectionHelper = null;
+		}
+	}
+	
+	
+	function slotSelectionMousedown(ev) {
+		if (ev.which == 1 && opt('selectable')) { // ev.which==1 means left mouse button
+			unselect(ev);
+			var dates;
+			hoverListener.start(function(cell, origCell) {
+				clearSelection();
+				if (cell && cell.col == origCell.col && !cellIsAllDay(cell)) {
+					var d1 = cellDate(origCell);
+					var d2 = cellDate(cell);
+					dates = [
+						d1,
+						addMinutes(cloneDate(d1), opt('slotMinutes')),
+						d2,
+						addMinutes(cloneDate(d2), opt('slotMinutes'))
+					].sort(cmp);
+					renderSlotSelection(dates[0], dates[3]);
+				}else{
+					dates = null;
+				}
+			}, ev);
+			$(document).one('mouseup', function(ev) {
+				hoverListener.stop();
+				if (dates) {
+					if (+dates[0] == +dates[1]) {
+						reportDayClick(dates[0], false, ev);
+					}
+					reportSelection(dates[0], dates[3], false, ev);
+				}
+			});
+		}
+	}
+	
+	
+	function reportDayClick(date, allDay, ev) {
+		trigger('dayClick', dayBodyCells[dayOfWeekCol(date.getDay())], date, allDay, ev);
+	}
+	
+	
+	
+	/* External Dragging
+	--------------------------------------------------------------------------------*/
+	
+	
+	function dragStart(_dragElement, ev, ui) {
+		hoverListener.start(function(cell) {
+			clearOverlays();
+			if (cell) {
+				if (cellIsAllDay(cell)) {
+					renderCellOverlay(cell.row, cell.col, cell.row, cell.col);
+				}else{
+					var d1 = cellDate(cell);
+					var d2 = addMinutes(cloneDate(d1), opt('defaultEventMinutes'));
+					renderSlotOverlay(d1, d2);
+				}
+			}
+		}, ev);
+	}
+	
+	
+	function dragStop(_dragElement, ev, ui) {
+		var cell = hoverListener.stop();
+		clearOverlays();
+		if (cell) {
+			trigger('drop', _dragElement, cellDate(cell), cellIsAllDay(cell), ev, ui);
+		}
+	}
+
+
+}
+
+function AgendaEventRenderer() {
+	var t = this;
+	
+	
+	// exports
+	t.renderEvents = renderEvents;
+	t.compileDaySegs = compileDaySegs; // for DayEventRenderer
+	t.clearEvents = clearEvents;
+	t.slotSegHtml = slotSegHtml;
+	t.bindDaySeg = bindDaySeg;
+	
+	
+	// imports
+	DayEventRenderer.call(t);
+	var opt = t.opt;
+	var trigger = t.trigger;
+	//var setOverflowHidden = t.setOverflowHidden;
+	var isEventDraggable = t.isEventDraggable;
+	var isEventResizable = t.isEventResizable;
+	var eventEnd = t.eventEnd;
+	var reportEvents = t.reportEvents;
+	var reportEventClear = t.reportEventClear;
+	var eventElementHandlers = t.eventElementHandlers;
+	var setHeight = t.setHeight;
+	var getDaySegmentContainer = t.getDaySegmentContainer;
+	var getSlotSegmentContainer = t.getSlotSegmentContainer;
+	var getHoverListener = t.getHoverListener;
+	var getMaxMinute = t.getMaxMinute;
+	var getMinMinute = t.getMinMinute;
+	var timePosition = t.timePosition;
+	var colContentLeft = t.colContentLeft;
+	var colContentRight = t.colContentRight;
+	var renderDaySegs = t.renderDaySegs;
+	var resizableDayEvent = t.resizableDayEvent; // TODO: streamline binding architecture
+	var getColCnt = t.getColCnt;
+	var getColWidth = t.getColWidth;
+	var getSlotHeight = t.getSlotHeight;
+	var getBodyContent = t.getBodyContent;
+	var reportEventElement = t.reportEventElement;
+	var showEvents = t.showEvents;
+	var hideEvents = t.hideEvents;
+	var eventDrop = t.eventDrop;
+	var eventResize = t.eventResize;
+	var renderDayOverlay = t.renderDayOverlay;
+	var clearOverlays = t.clearOverlays;
+	var calendar = t.calendar;
+	var formatDate = calendar.formatDate;
+	var formatDates = calendar.formatDates;
+	
+	
+	
+	/* Rendering
+	----------------------------------------------------------------------------*/
+	
+
+	function renderEvents(events, modifiedEventId) {
+		reportEvents(events);
+		var i, len=events.length,
+			dayEvents=[],
+			slotEvents=[];
+		for (i=0; i<len; i++) {
+			if (events[i].allDay) {
+				dayEvents.push(events[i]);
+			}else{
+				slotEvents.push(events[i]);
+			}
+		}
+		if (opt('allDaySlot')) {
+			renderDaySegs(compileDaySegs(dayEvents), modifiedEventId);
+			setHeight(); // no params means set to viewHeight
+		}
+		renderSlotSegs(compileSlotSegs(slotEvents), modifiedEventId);
+	}
+	
+	
+	function clearEvents() {
+		reportEventClear();
+		getDaySegmentContainer().empty();
+		getSlotSegmentContainer().empty();
+	}
+	
+	
+	function compileDaySegs(events) {
+		var levels = stackSegs(sliceSegs(events, $.map(events, exclEndDay), t.visStart, t.visEnd)),
+			i, levelCnt=levels.length, level,
+			j, seg,
+			segs=[];
+		for (i=0; i<levelCnt; i++) {
+			level = levels[i];
+			for (j=0; j<level.length; j++) {
+				seg = level[j];
+				seg.row = 0;
+				seg.level = i; // not needed anymore
+				segs.push(seg);
+			}
+		}
+		return segs;
+	}
+	
+	
+	function compileSlotSegs(events) {
+		var colCnt = getColCnt(),
+			minMinute = getMinMinute(),
+			maxMinute = getMaxMinute(),
+			d = addMinutes(cloneDate(t.visStart), minMinute),
+			visEventEnds = $.map(events, slotEventEnd),
+			i, col,
+			j, level,
+			k, seg,
+			segs=[];
+		for (i=0; i<colCnt; i++) {
+			col = stackSegs(sliceSegs(events, visEventEnds, d, addMinutes(cloneDate(d), maxMinute-minMinute)));
+			countForwardSegs(col);
+			for (j=0; j<col.length; j++) {
+				level = col[j];
+				for (k=0; k<level.length; k++) {
+					seg = level[k];
+					seg.col = i;
+					seg.level = j;
+					segs.push(seg);
+				}
+			}
+			addDays(d, 1, true);
+		}
+		return segs;
+	}
+	
+	
+	function slotEventEnd(event) {
+		if (event.end) {
+			return cloneDate(event.end);
+		}else{
+			return addMinutes(cloneDate(event.start), opt('defaultEventMinutes'));
+		}
+	}
+	
+	
+	// renders events in the 'time slots' at the bottom
+	
+	function renderSlotSegs(segs, modifiedEventId) {
+	
+		var i, segCnt=segs.length, seg,
+			event,
+			classes,
+			top, bottom,
+			colI, levelI, forward,
+			leftmost,
+			availWidth,
+			outerWidth,
+			left,
+			html='',
+			eventElements,
+			eventElement,
+			triggerRes,
+			vsideCache={},
+			hsideCache={},
+			key, val,
+			contentElement,
+			height,
+			slotSegmentContainer = getSlotSegmentContainer(),
+			rtl, dis, dit,
+			colCnt = getColCnt();
+			
+		if (rtl = opt('isRTL')) {
+			dis = -1;
+			dit = colCnt - 1;
+		}else{
+			dis = 1;
+			dit = 0;
+		}
+			
+		// calculate position/dimensions, create html
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			event = seg.event;
+			top = timePosition(seg.start, seg.start);
+			bottom = timePosition(seg.start, seg.end);
+			colI = seg.col;
+			levelI = seg.level;
+			forward = seg.forward || 0;
+			leftmost = colContentLeft(colI*dis + dit);
+			availWidth = colContentRight(colI*dis + dit) - leftmost;
+			availWidth = Math.min(availWidth-6, availWidth*.95); // TODO: move this to CSS
+			if (levelI) {
+				// indented and thin
+				outerWidth = availWidth / (levelI + forward + 1);
+			}else{
+				if (forward) {
+					// moderately wide, aligned left still
+					outerWidth = ((availWidth / (forward + 1)) - (12/2)) * 2; // 12 is the predicted width of resizer =
+				}else{
+					// can be entire width, aligned left
+					outerWidth = availWidth;
+				}
+			}
+			left = leftmost +                                  // leftmost possible
+				(availWidth / (levelI + forward + 1) * levelI) // indentation
+				* dis + (rtl ? availWidth - outerWidth : 0);   // rtl
+			seg.top = top;
+			seg.left = left;
+			seg.outerWidth = outerWidth;
+			seg.outerHeight = bottom - top;
+			html += slotSegHtml(event, seg);
+		}
+		slotSegmentContainer[0].innerHTML = html; // faster than html()
+		eventElements = slotSegmentContainer.children();
+		
+		// retrieve elements, run through eventRender callback, bind event handlers
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			event = seg.event;
+			eventElement = $(eventElements[i]); // faster than eq()
+			triggerRes = trigger('eventRender', event, event, eventElement);
+			if (triggerRes === false) {
+				eventElement.remove();
+			}else{
+				if (triggerRes && triggerRes !== true) {
+					eventElement.remove();
+					eventElement = $(triggerRes)
+						.css({
+							position: 'absolute',
+							top: seg.top,
+							left: seg.left
+						})
+						.appendTo(slotSegmentContainer);
+				}
+				seg.element = eventElement;
+				if (event._id === modifiedEventId) {
+					bindSlotSeg(event, eventElement, seg);
+				}else{
+					eventElement[0]._fci = i; // for lazySegBind
+				}
+				reportEventElement(event, eventElement);
+			}
+		}
+		
+		lazySegBind(slotSegmentContainer, segs, bindSlotSeg);
+		
+		// record event sides and title positions
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			if (eventElement = seg.element) {
+				val = vsideCache[key = seg.key = cssKey(eventElement[0])];
+				seg.vsides = val === undefined ? (vsideCache[key] = vsides(eventElement, true)) : val;
+				val = hsideCache[key];
+				seg.hsides = val === undefined ? (hsideCache[key] = hsides(eventElement, true)) : val;
+				contentElement = eventElement.find('div.fc-event-content');
+				if (contentElement.length) {
+					seg.contentTop = contentElement[0].offsetTop;
+				}
+			}
+		}
+		
+		// set all positions/dimensions at once
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			if (eventElement = seg.element) {
+				eventElement[0].style.width = Math.max(0, seg.outerWidth - seg.hsides) + 'px';
+				height = Math.max(0, seg.outerHeight - seg.vsides);
+				eventElement[0].style.height = height + 'px';
+				event = seg.event;
+				if (seg.contentTop !== undefined && height - seg.contentTop < 10) {
+					// not enough room for title, put it in the time header
+					eventElement.find('div.fc-event-time')
+						.text(formatDate(event.start, opt('timeFormat')) + ' - ' + event.title);
+					eventElement.find('div.fc-event-title')
+						.remove();
+				}
+				trigger('eventAfterRender', event, event, eventElement);
+			}
+		}
+					
+	}
+	
+	
+	function slotSegHtml(event, seg) {
+		var html = "<";
+		var url = event.url;
+		var skinCss = getSkinCss(event, opt);
+		var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
+		var classes = ['fc-event', 'fc-event-skin', 'fc-event-vert'];
+		if (isEventDraggable(event)) {
+			classes.push('fc-event-draggable');
+		}
+		if (seg.isStart) {
+			classes.push('fc-corner-top');
+		}
+		if (seg.isEnd) {
+			classes.push('fc-corner-bottom');
+		}
+		classes = classes.concat(event.className);
+		if (event.source) {
+			classes = classes.concat(event.source.className || []);
+		}
+		if (url) {
+			html += "a href='" + htmlEscape(event.url) + "'";
+		}else{
+			html += "div";
+		}
+		html +=
+			" class='" + classes.join(' ') + "'" +
+			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
+			">" +
+			"<div class='fc-event-inner fc-event-skin'" + skinCssAttr + ">" +
+			"<div class='fc-event-head fc-event-skin'" + skinCssAttr + ">" +
+			"<div class='fc-event-time'>" +
+			htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) +
+			"</div>" +
+			"</div>" +
+			"<div class='fc-event-content'>" +
+			"<div class='fc-event-title'>" +
+			htmlEscape(event.title) +
+			"</div>" +
+			"</div>" +
+			"<div class='fc-event-bg'></div>" +
+			"</div>"; // close inner
+		if (seg.isEnd && isEventResizable(event)) {
+			html +=
+				"<div class='ui-resizable-handle ui-resizable-s'>=</div>";
+		}
+		html +=
+			"</" + (url ? "a" : "div") + ">";
+		return html;
+	}
+	
+	
+	function bindDaySeg(event, eventElement, seg) {
+		if (isEventDraggable(event)) {
+			draggableDayEvent(event, eventElement, seg.isStart);
+		}
+		if (seg.isEnd && isEventResizable(event)) {
+			resizableDayEvent(event, eventElement, seg);
+		}
+		eventElementHandlers(event, eventElement);
+			// needs to be after, because resizableDayEvent might stopImmediatePropagation on click
+	}
+	
+	
+	function bindSlotSeg(event, eventElement, seg) {
+		var timeElement = eventElement.find('div.fc-event-time');
+		if (isEventDraggable(event)) {
+			draggableSlotEvent(event, eventElement, timeElement);
+		}
+		if (seg.isEnd && isEventResizable(event)) {
+			resizableSlotEvent(event, eventElement, timeElement);
+		}
+		eventElementHandlers(event, eventElement);
+	}
+	
+	
+	
+	/* Dragging
+	-----------------------------------------------------------------------------------*/
+	
+	
+	// when event starts out FULL-DAY
+	
+	function draggableDayEvent(event, eventElement, isStart) {
+		var origWidth;
+		var revert;
+		var allDay=true;
+		var dayDelta;
+		var dis = opt('isRTL') ? -1 : 1;
+		var hoverListener = getHoverListener();
+		var colWidth = getColWidth();
+		var slotHeight = getSlotHeight();
+		var minMinute = getMinMinute();
+		eventElement.draggable({
+			zIndex: 9,
+			opacity: opt('dragOpacity', 'month'), // use whatever the month view was using
+			revertDuration: opt('dragRevertDuration'),
+			start: function(ev, ui) {
+				trigger('eventDragStart', eventElement, event, ev, ui);
+				hideEvents(event, eventElement);
+				origWidth = eventElement.width();
+				hoverListener.start(function(cell, origCell, rowDelta, colDelta) {
+					clearOverlays();
+					if (cell) {
+						//setOverflowHidden(true);
+						revert = false;
+						dayDelta = colDelta * dis;
+						if (!cell.row) {
+							// on full-days
+							renderDayOverlay(
+								addDays(cloneDate(event.start), dayDelta),
+								addDays(exclEndDay(event), dayDelta)
+							);
+							resetElement();
+						}else{
+							// mouse is over bottom slots
+							if (isStart) {
+								if (allDay) {
+									// convert event to temporary slot-event
+									eventElement.width(colWidth - 10); // don't use entire width
+									setOuterHeight(
+										eventElement,
+										slotHeight * Math.round(
+											(event.end ? ((event.end - event.start) / MINUTE_MS) : opt('defaultEventMinutes'))
+											/ opt('slotMinutes')
+										)
+									);
+									eventElement.draggable('option', 'grid', [colWidth, 1]);
+									allDay = false;
+								}
+							}else{
+								revert = true;
+							}
+						}
+						revert = revert || (allDay && !dayDelta);
+					}else{
+						resetElement();
+						//setOverflowHidden(false);
+						revert = true;
+					}
+					eventElement.draggable('option', 'revert', revert);
+				}, ev, 'drag');
+			},
+			stop: function(ev, ui) {
+				hoverListener.stop();
+				clearOverlays();
+				trigger('eventDragStop', eventElement, event, ev, ui);
+				if (revert) {
+					// hasn't moved or is out of bounds (draggable has already reverted)
+					resetElement();
+					eventElement.css('filter', ''); // clear IE opacity side-effects
+					showEvents(event, eventElement);
+				}else{
+					// changed!
+					var minuteDelta = 0;
+					if (!allDay) {
+						minuteDelta = Math.round((eventElement.offset().top - getBodyContent().offset().top) / slotHeight)
+							* opt('slotMinutes')
+							+ minMinute
+							- (event.start.getHours() * 60 + event.start.getMinutes());
+					}
+					eventDrop(this, event, dayDelta, minuteDelta, allDay, ev, ui);
+				}
+				//setOverflowHidden(false);
+			}
+		});
+		function resetElement() {
+			if (!allDay) {
+				eventElement
+					.width(origWidth)
+					.height('')
+					.draggable('option', 'grid', null);
+				allDay = true;
+			}
+		}
+	}
+	
+	
+	// when event starts out IN TIMESLOTS
+	
+	function draggableSlotEvent(event, eventElement, timeElement) {
+		var origPosition;
+		var allDay=false;
+		var dayDelta;
+		var minuteDelta;
+		var prevMinuteDelta;
+		var dis = opt('isRTL') ? -1 : 1;
+		var hoverListener = getHoverListener();
+		var colCnt = getColCnt();
+		var colWidth = getColWidth();
+		var slotHeight = getSlotHeight();
+		eventElement.draggable({
+			zIndex: 9,
+			scroll: false,
+			grid: [colWidth, slotHeight],
+			axis: colCnt==1 ? 'y' : false,
+			opacity: opt('dragOpacity'),
+			revertDuration: opt('dragRevertDuration'),
+			start: function(ev, ui) {
+				trigger('eventDragStart', eventElement, event, ev, ui);
+				hideEvents(event, eventElement);
+				origPosition = eventElement.position();
+				minuteDelta = prevMinuteDelta = 0;
+				hoverListener.start(function(cell, origCell, rowDelta, colDelta) {
+					eventElement.draggable('option', 'revert', !cell);
+					clearOverlays();
+					if (cell) {
+						dayDelta = colDelta * dis;
+						if (opt('allDaySlot') && !cell.row) {
+							// over full days
+							if (!allDay) {
+								// convert to temporary all-day event
+								allDay = true;
+								timeElement.hide();
+								eventElement.draggable('option', 'grid', null);
+							}
+							renderDayOverlay(
+								addDays(cloneDate(event.start), dayDelta),
+								addDays(exclEndDay(event), dayDelta)
+							);
+						}else{
+							// on slots
+							resetElement();
+						}
+					}
+				}, ev, 'drag');
+			},
+			drag: function(ev, ui) {
+				minuteDelta = Math.round((ui.position.top - origPosition.top) / slotHeight) * opt('slotMinutes');
+				if (minuteDelta != prevMinuteDelta) {
+					if (!allDay) {
+						updateTimeText(minuteDelta);
+					}
+					prevMinuteDelta = minuteDelta;
+				}
+			},
+			stop: function(ev, ui) {
+				var cell = hoverListener.stop();
+				clearOverlays();
+				trigger('eventDragStop', eventElement, event, ev, ui);
+				if (cell && (dayDelta || minuteDelta || allDay)) {
+					// changed!
+					eventDrop(this, event, dayDelta, allDay ? 0 : minuteDelta, allDay, ev, ui);
+				}else{
+					// either no change or out-of-bounds (draggable has already reverted)
+					resetElement();
+					eventElement.css('filter', ''); // clear IE opacity side-effects
+					eventElement.css(origPosition); // sometimes fast drags make event revert to wrong position
+					updateTimeText(0);
+					showEvents(event, eventElement);
+				}
+			}
+		});
+		function updateTimeText(minuteDelta) {
+			var newStart = addMinutes(cloneDate(event.start), minuteDelta);
+			var newEnd;
+			if (event.end) {
+				newEnd = addMinutes(cloneDate(event.end), minuteDelta);
+			}
+			timeElement.text(formatDates(newStart, newEnd, opt('timeFormat')));
+		}
+		function resetElement() {
+			// convert back to original slot-event
+			if (allDay) {
+				timeElement.css('display', ''); // show() was causing display=inline
+				eventElement.draggable('option', 'grid', [colWidth, slotHeight]);
+				allDay = false;
+			}
+		}
+	}
+	
+	
+	
+	/* Resizing
+	--------------------------------------------------------------------------------------*/
+	
+	
+	function resizableSlotEvent(event, eventElement, timeElement) {
+		var slotDelta, prevSlotDelta;
+		var slotHeight = getSlotHeight();
+		eventElement.resizable({
+			handles: {
+				s: 'div.ui-resizable-s'
+			},
+			grid: slotHeight,
+			start: function(ev, ui) {
+				slotDelta = prevSlotDelta = 0;
+				hideEvents(event, eventElement);
+				eventElement.css('z-index', 9);
+				trigger('eventResizeStart', this, event, ev, ui);
+			},
+			resize: function(ev, ui) {
+				// don't rely on ui.size.height, doesn't take grid into account
+				slotDelta = Math.round((Math.max(slotHeight, eventElement.height()) - ui.originalSize.height) / slotHeight);
+				if (slotDelta != prevSlotDelta) {
+					timeElement.text(
+						formatDates(
+							event.start,
+							(!slotDelta && !event.end) ? null : // no change, so don't display time range
+								addMinutes(eventEnd(event), opt('slotMinutes')*slotDelta),
+							opt('timeFormat')
+						)
+					);
+					prevSlotDelta = slotDelta;
+				}
+			},
+			stop: function(ev, ui) {
+				trigger('eventResizeStop', this, event, ev, ui);
+				if (slotDelta) {
+					eventResize(this, event, 0, opt('slotMinutes')*slotDelta, ev, ui);
+				}else{
+					eventElement.css('z-index', 8);
+					showEvents(event, eventElement);
+					// BUG: if event was really short, need to put title back in span
+				}
+			}
+		});
+	}
+	
+
+}
+
+
+function countForwardSegs(levels) {
+	var i, j, k, level, segForward, segBack;
+	for (i=levels.length-1; i>0; i--) {
+		level = levels[i];
+		for (j=0; j<level.length; j++) {
+			segForward = level[j];
+			for (k=0; k<levels[i-1].length; k++) {
+				segBack = levels[i-1][k];
+				if (segsCollide(segForward, segBack)) {
+					segBack.forward = Math.max(segBack.forward||0, (segForward.forward||0)+1);
+				}
+			}
+		}
+	}
+}
+
+
+
+
+function View(element, calendar, viewName) {
+	var t = this;
+	
+	
+	// exports
+	t.element = element;
+	t.calendar = calendar;
+	t.name = viewName;
+	t.opt = opt;
+	t.trigger = trigger;
+	//t.setOverflowHidden = setOverflowHidden;
+	t.isEventDraggable = isEventDraggable;
+	t.isEventResizable = isEventResizable;
+	t.reportEvents = reportEvents;
+	t.eventEnd = eventEnd;
+	t.reportEventElement = reportEventElement;
+	t.reportEventClear = reportEventClear;
+	t.eventElementHandlers = eventElementHandlers;
+	t.showEvents = showEvents;
+	t.hideEvents = hideEvents;
+	t.eventDrop = eventDrop;
+	t.eventResize = eventResize;
+	// t.title
+	// t.start, t.end
+	// t.visStart, t.visEnd
+	
+	
+	// imports
+	var defaultEventEnd = t.defaultEventEnd;
+	var normalizeEvent = calendar.normalizeEvent; // in EventManager
+	var reportEventChange = calendar.reportEventChange;
+	
+	
+	// locals
+	var eventsByID = {};
+	var eventElements = [];
+	var eventElementsByID = {};
+	var options = calendar.options;
+	
+	
+	
+	function opt(name, viewNameOverride) {
+		var v = options[name];
+		if (typeof v == 'object') {
+			return smartProperty(v, viewNameOverride || viewName);
+		}
+		return v;
+	}
+
+	
+	function trigger(name, thisObj) {
+		return calendar.trigger.apply(
+			calendar,
+			[name, thisObj || t].concat(Array.prototype.slice.call(arguments, 2), [t])
+		);
+	}
+	
+	
+	/*
+	function setOverflowHidden(bool) {
+		element.css('overflow', bool ? 'hidden' : '');
+	}
+	*/
+	
+	
+	function isEventDraggable(event) {
+		return isEventEditable(event) && !opt('disableDragging');
+	}
+	
+	
+	function isEventResizable(event) { // but also need to make sure the seg.isEnd == true
+		return isEventEditable(event) && !opt('disableResizing');
+	}
+	
+	
+	function isEventEditable(event) {
+		return firstDefined(event.editable, (event.source || {}).editable, opt('editable'));
+	}
+	
+	
+	
+	/* Event Data
+	------------------------------------------------------------------------------*/
+	
+	
+	// report when view receives new events
+	function reportEvents(events) { // events are already normalized at this point
+		eventsByID = {};
+		var i, len=events.length, event;
+		for (i=0; i<len; i++) {
+			event = events[i];
+			if (eventsByID[event._id]) {
+				eventsByID[event._id].push(event);
+			}else{
+				eventsByID[event._id] = [event];
+			}
+		}
+	}
+	
+	
+	// returns a Date object for an event's end
+	function eventEnd(event) {
+		return event.end ? cloneDate(event.end) : defaultEventEnd(event);
+	}
+	
+	
+	
+	/* Event Elements
+	------------------------------------------------------------------------------*/
+	
+	
+	// report when view creates an element for an event
+	function reportEventElement(event, element) {
+		eventElements.push(element);
+		if (eventElementsByID[event._id]) {
+			eventElementsByID[event._id].push(element);
+		}else{
+			eventElementsByID[event._id] = [element];
+		}
+	}
+	
+	
+	function reportEventClear() {
+		eventElements = [];
+		eventElementsByID = {};
+	}
+	
+	
+	// attaches eventClick, eventMouseover, eventMouseout
+	function eventElementHandlers(event, eventElement) {
+		eventElement
+			.click(function(ev) {
+				if (!eventElement.hasClass('ui-draggable-dragging') &&
+					!eventElement.hasClass('ui-resizable-resizing')) {
+						return trigger('eventClick', this, event, ev);
+					}
+			})
+			.hover(
+				function(ev) {
+					trigger('eventMouseover', this, event, ev);
+				},
+				function(ev) {
+					trigger('eventMouseout', this, event, ev);
+				}
+			);
+		// TODO: don't fire eventMouseover/eventMouseout *while* dragging is occuring (on subject element)
+		// TODO: same for resizing
+	}
+	
+	
+	function showEvents(event, exceptElement) {
+		eachEventElement(event, exceptElement, 'show');
+	}
+	
+	
+	function hideEvents(event, exceptElement) {
+		eachEventElement(event, exceptElement, 'hide');
+	}
+	
+	
+	function eachEventElement(event, exceptElement, funcName) {
+		var elements = eventElementsByID[event._id],
+			i, len = elements.length;
+		for (i=0; i<len; i++) {
+			if (!exceptElement || elements[i][0] != exceptElement[0]) {
+				elements[i][funcName]();
+			}
+		}
+	}
+	
+	
+	
+	/* Event Modification Reporting
+	---------------------------------------------------------------------------------*/
+	
+	
+	function eventDrop(e, event, dayDelta, minuteDelta, allDay, ev, ui) {
+		var oldAllDay = event.allDay;
+		var eventId = event._id;
+		moveEvents(eventsByID[eventId], dayDelta, minuteDelta, allDay);
+		trigger(
+			'eventDrop',
+			e,
+			event,
+			dayDelta,
+			minuteDelta,
+			allDay,
+			function() {
+				// TODO: investigate cases where this inverse technique might not work
+				moveEvents(eventsByID[eventId], -dayDelta, -minuteDelta, oldAllDay);
+				reportEventChange(eventId);
+			},
+			ev,
+			ui
+		);
+		reportEventChange(eventId);
+	}
+	
+	
+	function eventResize(e, event, dayDelta, minuteDelta, ev, ui) {
+		var eventId = event._id;
+		elongateEvents(eventsByID[eventId], dayDelta, minuteDelta);
+		trigger(
+			'eventResize',
+			e,
+			event,
+			dayDelta,
+			minuteDelta,
+			function() {
+				// TODO: investigate cases where this inverse technique might not work
+				elongateEvents(eventsByID[eventId], -dayDelta, -minuteDelta);
+				reportEventChange(eventId);
+			},
+			ev,
+			ui
+		);
+		reportEventChange(eventId);
+	}
+	
+	
+	
+	/* Event Modification Math
+	---------------------------------------------------------------------------------*/
+	
+	
+	function moveEvents(events, dayDelta, minuteDelta, allDay) {
+		minuteDelta = minuteDelta || 0;
+		for (var e, len=events.length, i=0; i<len; i++) {
+			e = events[i];
+			if (allDay !== undefined) {
+				e.allDay = allDay;
+			}
+			addMinutes(addDays(e.start, dayDelta, true), minuteDelta);
+			if (e.end) {
+				e.end = addMinutes(addDays(e.end, dayDelta, true), minuteDelta);
+			}
+			normalizeEvent(e, options);
+		}
+	}
+	
+	
+	function elongateEvents(events, dayDelta, minuteDelta) {
+		minuteDelta = minuteDelta || 0;
+		for (var e, len=events.length, i=0; i<len; i++) {
+			e = events[i];
+			e.end = addMinutes(addDays(eventEnd(e), dayDelta, true), minuteDelta);
+			normalizeEvent(e, options);
+		}
+	}
+	
+
+}
+
+function DayEventRenderer() {
+	var t = this;
+
+	
+	// exports
+	t.renderDaySegs = renderDaySegs;
+	t.resizableDayEvent = resizableDayEvent;
+	
+	
+	// imports
+	var opt = t.opt;
+	var trigger = t.trigger;
+	var isEventDraggable = t.isEventDraggable;
+	var isEventResizable = t.isEventResizable;
+	var eventEnd = t.eventEnd;
+	var reportEventElement = t.reportEventElement;
+	var showEvents = t.showEvents;
+	var hideEvents = t.hideEvents;
+	var eventResize = t.eventResize;
+	var getRowCnt = t.getRowCnt;
+	var getColCnt = t.getColCnt;
+	var getColWidth = t.getColWidth;
+	var allDayRow = t.allDayRow;
+	var allDayBounds = t.allDayBounds;
+	var colContentLeft = t.colContentLeft;
+	var colContentRight = t.colContentRight;
+	var dayOfWeekCol = t.dayOfWeekCol;
+	var dateCell = t.dateCell;
+	var compileDaySegs = t.compileDaySegs;
+	var getDaySegmentContainer = t.getDaySegmentContainer;
+	var bindDaySeg = t.bindDaySeg; //TODO: streamline this
+	var formatDates = t.calendar.formatDates;
+	var renderDayOverlay = t.renderDayOverlay;
+	var clearOverlays = t.clearOverlays;
+	var clearSelection = t.clearSelection;
+	
+	
+	
+	/* Rendering
+	-----------------------------------------------------------------------------*/
+	
+	
+	function renderDaySegs(segs, modifiedEventId) {
+		var segmentContainer = getDaySegmentContainer();
+		var rowDivs;
+		var rowCnt = getRowCnt();
+		var colCnt = getColCnt();
+		var i = 0;
+		var rowI;
+		var levelI;
+		var colHeights;
+		var j;
+		var segCnt = segs.length;
+		var seg;
+		var top;
+		var k;
+		segmentContainer[0].innerHTML = daySegHTML(segs); // faster than .html()
+		daySegElementResolve(segs, segmentContainer.children());
+		daySegElementReport(segs);
+		daySegHandlers(segs, segmentContainer, modifiedEventId);
+		daySegCalcHSides(segs);
+		daySegSetWidths(segs);
+		daySegCalcHeights(segs);
+		rowDivs = getRowDivs();
+		// set row heights, calculate event tops (in relation to row top)
+		for (rowI=0; rowI<rowCnt; rowI++) {
+			levelI = 0;
+			colHeights = [];
+			for (j=0; j<colCnt; j++) {
+				colHeights[j] = 0;
+			}
+			while (i<segCnt && (seg = segs[i]).row == rowI) {
+				// loop through segs in a row
+				top = arrayMax(colHeights.slice(seg.startCol, seg.endCol));
+				seg.top = top;
+				top += seg.outerHeight;
+				for (k=seg.startCol; k<seg.endCol; k++) {
+					colHeights[k] = top;
+				}
+				i++;
+			}
+			rowDivs[rowI].height(arrayMax(colHeights));
+		}
+		daySegSetTops(segs, getRowTops(rowDivs));
+	}
+	
+	
+	function renderTempDaySegs(segs, adjustRow, adjustTop) {
+		var tempContainer = $("<div/>");
+		var elements;
+		var segmentContainer = getDaySegmentContainer();
+		var i;
+		var segCnt = segs.length;
+		var element;
+		tempContainer[0].innerHTML = daySegHTML(segs); // faster than .html()
+		elements = tempContainer.children();
+		segmentContainer.append(elements);
+		daySegElementResolve(segs, elements);
+		daySegCalcHSides(segs);
+		daySegSetWidths(segs);
+		daySegCalcHeights(segs);
+		daySegSetTops(segs, getRowTops(getRowDivs()));
+		elements = [];
+		for (i=0; i<segCnt; i++) {
+			element = segs[i].element;
+			if (element) {
+				if (segs[i].row === adjustRow) {
+					element.css('top', adjustTop);
+				}
+				elements.push(element[0]);
+			}
+		}
+		return $(elements);
+	}
+	
+	
+	function daySegHTML(segs) { // also sets seg.left and seg.outerWidth
+		var rtl = opt('isRTL');
+		var i;
+		var segCnt=segs.length;
+		var seg;
+		var event;
+		var url;
+		var classes;
+		var bounds = allDayBounds();
+		var minLeft = bounds.left;
+		var maxLeft = bounds.right;
+		var leftCol;
+		var rightCol;
+		var left;
+		var right;
+		var skinCss;
+		var html = '';
+		// calculate desired position/dimensions, create html
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			event = seg.event;
+			classes = ['fc-event', 'fc-event-skin', 'fc-event-hori'];
+			if (isEventDraggable(event)) {
+				classes.push('fc-event-draggable');
+			}
+			if (rtl) {
+				if (seg.isStart) {
+					classes.push('fc-corner-right');
+				}
+				if (seg.isEnd) {
+					classes.push('fc-corner-left');
+				}
+				leftCol = dayOfWeekCol(seg.end.getDay()-1);
+				rightCol = dayOfWeekCol(seg.start.getDay());
+				left = seg.isEnd ? colContentLeft(leftCol) : minLeft;
+				right = seg.isStart ? colContentRight(rightCol) : maxLeft;
+			}else{
+				if (seg.isStart) {
+					classes.push('fc-corner-left');
+				}
+				if (seg.isEnd) {
+					classes.push('fc-corner-right');
+				}
+				leftCol = dayOfWeekCol(seg.start.getDay());
+				rightCol = dayOfWeekCol(seg.end.getDay()-1);
+				left = seg.isStart ? colContentLeft(leftCol) : minLeft;
+				right = seg.isEnd ? colContentRight(rightCol) : maxLeft;
+			}
+			classes = classes.concat(event.className);
+			if (event.source) {
+				classes = classes.concat(event.source.className || []);
+			}
+			url = event.url;
+			skinCss = getSkinCss(event, opt);
+			if (url) {
+				html += "<a href='" + htmlEscape(url) + "'";
+			}else{
+				html += "<div";
+			}
+			html +=
+				" class='" + classes.join(' ') + "'" +
+				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
+				">" +
+				"<div" +
+				" class='fc-event-inner fc-event-skin'" +
+				(skinCss ? " style='" + skinCss + "'" : '') +
+				">";
+			if (!event.allDay && seg.isStart) {
+				html +=
+					"<span class='fc-event-time'>" +
+					htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) +
+					"</span>";
+			}
+			html +=
+				"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
+				"</div>";
+			if (seg.isEnd && isEventResizable(event)) {
+				html +=
+					"<div class='ui-resizable-handle ui-resizable-" + (rtl ? 'w' : 'e') + "'>" +
+					"&nbsp;&nbsp;&nbsp;" + // makes hit area a lot better for IE6/7
+					"</div>";
+			}
+			html +=
+				"</" + (url ? "a" : "div" ) + ">";
+			seg.left = left;
+			seg.outerWidth = right - left;
+			seg.startCol = leftCol;
+			seg.endCol = rightCol + 1; // needs to be exclusive
+		}
+		return html;
+	}
+	
+	
+	function daySegElementResolve(segs, elements) { // sets seg.element
+		var i;
+		var segCnt = segs.length;
+		var seg;
+		var event;
+		var element;
+		var triggerRes;
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			event = seg.event;
+			element = $(elements[i]); // faster than .eq()
+			triggerRes = trigger('eventRender', event, event, element);
+			if (triggerRes === false) {
+				element.remove();
+			}else{
+				if (triggerRes && triggerRes !== true) {
+					triggerRes = $(triggerRes)
+						.css({
+							position: 'absolute',
+							left: seg.left
+						});
+					element.replaceWith(triggerRes);
+					element = triggerRes;
+				}
+				seg.element = element;
+			}
+		}
+	}
+	
+	
+	function daySegElementReport(segs) {
+		var i;
+		var segCnt = segs.length;
+		var seg;
+		var element;
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			element = seg.element;
+			if (element) {
+				reportEventElement(seg.event, element);
+			}
+		}
+	}
+	
+	
+	function daySegHandlers(segs, segmentContainer, modifiedEventId) {
+		var i;
+		var segCnt = segs.length;
+		var seg;
+		var element;
+		var event;
+		// retrieve elements, run through eventRender callback, bind handlers
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			element = seg.element;
+			if (element) {
+				event = seg.event;
+				if (event._id === modifiedEventId) {
+					bindDaySeg(event, element, seg);
+				}else{
+					element[0]._fci = i; // for lazySegBind
+				}
+			}
+		}
+		lazySegBind(segmentContainer, segs, bindDaySeg);
+	}
+	
+	
+	function daySegCalcHSides(segs) { // also sets seg.key
+		var i;
+		var segCnt = segs.length;
+		var seg;
+		var element;
+		var key, val;
+		var hsideCache = {};
+		// record event horizontal sides
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			element = seg.element;
+			if (element) {
+				key = seg.key = cssKey(element[0]);
+				val = hsideCache[key];
+				if (val === undefined) {
+					val = hsideCache[key] = hsides(element, true);
+				}
+				seg.hsides = val;
+			}
+		}
+	}
+	
+	
+	function daySegSetWidths(segs) {
+		var i;
+		var segCnt = segs.length;
+		var seg;
+		var element;
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			element = seg.element;
+			if (element) {
+				element[0].style.width = Math.max(0, seg.outerWidth - seg.hsides) + 'px';
+			}
+		}
+	}
+	
+	
+	function daySegCalcHeights(segs) {
+		var i;
+		var segCnt = segs.length;
+		var seg;
+		var element;
+		var key, val;
+		var vmarginCache = {};
+		// record event heights
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			element = seg.element;
+			if (element) {
+				key = seg.key; // created in daySegCalcHSides
+				val = vmarginCache[key];
+				if (val === undefined) {
+					val = vmarginCache[key] = vmargins(element);
+				}
+				seg.outerHeight = element[0].offsetHeight + val;
+			}
+		}
+	}
+	
+	
+	function getRowDivs() {
+		var i;
+		var rowCnt = getRowCnt();
+		var rowDivs = [];
+		for (i=0; i<rowCnt; i++) {
+			rowDivs[i] = allDayRow(i)
+				.find('td:first div.fc-day-content > div'); // optimal selector?
+		}
+		return rowDivs;
+	}
+	
+	
+	function getRowTops(rowDivs) {
+		var i;
+		var rowCnt = rowDivs.length;
+		var tops = [];
+		for (i=0; i<rowCnt; i++) {
+			tops[i] = rowDivs[i][0].offsetTop; // !!?? but this means the element needs position:relative if in a table cell!!!!
+		}
+		return tops;
+	}
+	
+	
+	function daySegSetTops(segs, rowTops) { // also triggers eventAfterRender
+		var i;
+		var segCnt = segs.length;
+		var seg;
+		var element;
+		var event;
+		for (i=0; i<segCnt; i++) {
+			seg = segs[i];
+			element = seg.element;
+			if (element) {
+				element[0].style.top = rowTops[seg.row] + (seg.top||0) + 'px';
+				event = seg.event;
+				trigger('eventAfterRender', event, event, element);
+			}
+		}
+	}
+	
+	
+	
+	/* Resizing
+	-----------------------------------------------------------------------------------*/
+	
+	
+	function resizableDayEvent(event, element, seg) {
+		var rtl = opt('isRTL');
+		var direction = rtl ? 'w' : 'e';
+		var handle = element.find('div.ui-resizable-' + direction);
+		var isResizing = false;
+		
+		// TODO: look into using jquery-ui mouse widget for this stuff
+		disableTextSelection(element); // prevent native <a> selection for IE
+		element
+			.mousedown(function(ev) { // prevent native <a> selection for others
+				ev.preventDefault();
+			})
+			.click(function(ev) {
+				if (isResizing) {
+					ev.preventDefault(); // prevent link from being visited (only method that worked in IE6)
+					ev.stopImmediatePropagation(); // prevent fullcalendar eventClick handler from being called
+					                               // (eventElementHandlers needs to be bound after resizableDayEvent)
+				}
+			});
+		
+		handle.mousedown(function(ev) {
+			if (ev.which != 1) {
+				return; // needs to be left mouse button
+			}
+			isResizing = true;
+			var hoverListener = t.getHoverListener();
+			var rowCnt = getRowCnt();
+			var colCnt = getColCnt();
+			var dis = rtl ? -1 : 1;
+			var dit = rtl ? colCnt-1 : 0;
+			var elementTop = element.css('top');
+			var dayDelta;
+			var helpers;
+			var eventCopy = $.extend({}, event);
+			var minCell = dateCell(event.start);
+			clearSelection();
+			$('body')
+				.css('cursor', direction + '-resize')
+				.one('mouseup', mouseup);
+			trigger('eventResizeStart', this, event, ev);
+			hoverListener.start(function(cell, origCell) {
+				if (cell) {
+					var r = Math.max(minCell.row, cell.row);
+					var c = cell.col;
+					if (rowCnt == 1) {
+						r = 0; // hack for all-day area in agenda views
+					}
+					if (r == minCell.row) {
+						if (rtl) {
+							c = Math.min(minCell.col, c);
+						}else{
+							c = Math.max(minCell.col, c);
+						}
+					}
+					dayDelta = (r*7 + c*dis+dit) - (origCell.row*7 + origCell.col*dis+dit);
+					var newEnd = addDays(eventEnd(event), dayDelta, true);
+					if (dayDelta) {
+						eventCopy.end = newEnd;
+						var oldHelpers = helpers;
+						helpers = renderTempDaySegs(compileDaySegs([eventCopy]), seg.row, elementTop);
+						helpers.find('*').css('cursor', direction + '-resize');
+						if (oldHelpers) {
+							oldHelpers.remove();
+						}
+						hideEvents(event);
+					}else{
+						if (helpers) {
+							showEvents(event);
+							helpers.remove();
+							helpers = null;
+						}
+					}
+					clearOverlays();
+					renderDayOverlay(event.start, addDays(cloneDate(newEnd), 1)); // coordinate grid already rebuild at hoverListener.start
+				}
+			}, ev);
+			
+			function mouseup(ev) {
+				trigger('eventResizeStop', this, event, ev);
+				$('body').css('cursor', '');
+				hoverListener.stop();
+				clearOverlays();
+				if (dayDelta) {
+					eventResize(this, event, dayDelta, 0, ev);
+					// event redraw will clear helpers
+				}
+				// otherwise, the drag handler already restored the old events
+				
+				setTimeout(function() { // make this happen after the element's click event
+					isResizing = false;
+				},0);
+			}
+			
+		});
+	}
+	
+
+}
+
+//BUG: unselect needs to be triggered when events are dragged+dropped
+
+function SelectionManager() {
+	var t = this;
+	
+	
+	// exports
+	t.select = select;
+	t.unselect = unselect;
+	t.reportSelection = reportSelection;
+	t.daySelectionMousedown = daySelectionMousedown;
+	
+	
+	// imports
+	var opt = t.opt;
+	var trigger = t.trigger;
+	var defaultSelectionEnd = t.defaultSelectionEnd;
+	var renderSelection = t.renderSelection;
+	var clearSelection = t.clearSelection;
+	
+	
+	// locals
+	var selected = false;
+
+
+
+	// unselectAuto
+	if (opt('selectable') && opt('unselectAuto')) {
+		$(document).mousedown(function(ev) {
+			var ignore = opt('unselectCancel');
+			if (ignore) {
+				if ($(ev.target).parents(ignore).length) { // could be optimized to stop after first match
+					return;
+				}
+			}
+			unselect(ev);
+		});
+	}
+	
+
+	function select(startDate, endDate, allDay) {
+		unselect();
+		if (!endDate) {
+			endDate = defaultSelectionEnd(startDate, allDay);
+		}
+		renderSelection(startDate, endDate, allDay);
+		reportSelection(startDate, endDate, allDay);
+	}
+	
+	
+	function unselect(ev) {
+		if (selected) {
+			selected = false;
+			clearSelection();
+			trigger('unselect', null, ev);
+		}
+	}
+	
+	
+	function reportSelection(startDate, endDate, allDay, ev) {
+		selected = true;
+		trigger('select', null, startDate, endDate, allDay, ev);
+	}
+	
+	
+	function daySelectionMousedown(ev) { // not really a generic manager method, oh well
+		var cellDate = t.cellDate;
+		var cellIsAllDay = t.cellIsAllDay;
+		var hoverListener = t.getHoverListener();
+		var reportDayClick = t.reportDayClick; // this is hacky and sort of weird
+		if (ev.which == 1 && opt('selectable')) { // which==1 means left mouse button
+			unselect(ev);
+			var _mousedownElement = this;
+			var dates;
+			hoverListener.start(function(cell, origCell) { // TODO: maybe put cellDate/cellIsAllDay info in cell
+				clearSelection();
+				if (cell && cellIsAllDay(cell)) {
+					dates = [ cellDate(origCell), cellDate(cell) ].sort(cmp);
+					renderSelection(dates[0], dates[1], true);
+				}else{
+					dates = null;
+				}
+			}, ev);
+			$(document).one('mouseup', function(ev) {
+				hoverListener.stop();
+				if (dates) {
+					if (+dates[0] == +dates[1]) {
+						reportDayClick(dates[0], true, ev);
+					}
+					reportSelection(dates[0], dates[1], true, ev);
+				}
+			});
+		}
+	}
+
+
+}
+ 
+function OverlayManager() {
+	var t = this;
+	
+	
+	// exports
+	t.renderOverlay = renderOverlay;
+	t.clearOverlays = clearOverlays;
+	
+	
+	// locals
+	var usedOverlays = [];
+	var unusedOverlays = [];
+	
+	
+	function renderOverlay(rect, parent) {
+		var e = unusedOverlays.shift();
+		if (!e) {
+			e = $("<div class='fc-cell-overlay' style='position:absolute;z-index:3'/>");
+		}
+		if (e[0].parentNode != parent[0]) {
+			e.appendTo(parent);
+		}
+		usedOverlays.push(e.css(rect).show());
+		return e;
+	}
+	
+
+	function clearOverlays() {
+		var e;
+		while (e = usedOverlays.shift()) {
+			unusedOverlays.push(e.hide().unbind());
+		}
+	}
+
+
+}
+
+function CoordinateGrid(buildFunc) {
+
+	var t = this;
+	var rows;
+	var cols;
+	
+	
+	t.build = function() {
+		rows = [];
+		cols = [];
+		buildFunc(rows, cols);
+	};
+	
+	
+	t.cell = function(x, y) {
+		var rowCnt = rows.length;
+		var colCnt = cols.length;
+		var i, r=-1, c=-1;
+		for (i=0; i<rowCnt; i++) {
+			if (y >= rows[i][0] && y < rows[i][1]) {
+				r = i;
+				break;
+			}
+		}
+		for (i=0; i<colCnt; i++) {
+			if (x >= cols[i][0] && x < cols[i][1]) {
+				c = i;
+				break;
+			}
+		}
+		return (r>=0 && c>=0) ? { row:r, col:c } : null;
+	};
+	
+	
+	t.rect = function(row0, col0, row1, col1, originElement) { // row1,col1 is inclusive
+		var origin = originElement.offset();
+		return {
+			top: rows[row0][0] - origin.top,
+			left: cols[col0][0] - origin.left,
+			width: cols[col1][1] - cols[col0][0],
+			height: rows[row1][1] - rows[row0][0]
+		};
+	};
+
+}
+
+function HoverListener(coordinateGrid) {
+
+
+	var t = this;
+	var bindType;
+	var change;
+	var firstCell;
+	var cell;
+	
+	
+	t.start = function(_change, ev, _bindType) {
+		change = _change;
+		firstCell = cell = null;
+		coordinateGrid.build();
+		mouse(ev);
+		bindType = _bindType || 'mousemove';
+		$(document).bind(bindType, mouse);
+	};
+	
+	
+	function mouse(ev) {
+		_fixUIEvent(ev); // see below
+		var newCell = coordinateGrid.cell(ev.pageX, ev.pageY);
+		if (!newCell != !cell || newCell && (newCell.row != cell.row || newCell.col != cell.col)) {
+			if (newCell) {
+				if (!firstCell) {
+					firstCell = newCell;
+				}
+				change(newCell, firstCell, newCell.row-firstCell.row, newCell.col-firstCell.col);
+			}else{
+				change(newCell, firstCell);
+			}
+			cell = newCell;
+		}
+	}
+	
+	
+	t.stop = function() {
+		$(document).unbind(bindType, mouse);
+		return cell;
+	};
+	
+	
+}
+
+
+
+// this fix was only necessary for jQuery UI 1.8.16 (and jQuery 1.7 or 1.7.1)
+// upgrading to jQuery UI 1.8.17 (and using either jQuery 1.7 or 1.7.1) fixed the problem
+// but keep this in here for 1.8.16 users
+// and maybe remove it down the line
+
+function _fixUIEvent(event) { // for issue 1168
+	if (event.pageX === undefined) {
+		event.pageX = event.originalEvent.pageX;
+		event.pageY = event.originalEvent.pageY;
+	}
+}
+function HorizontalPositionCache(getElement) {
+
+	var t = this,
+		elements = {},
+		lefts = {},
+		rights = {};
+		
+	function e(i) {
+		return elements[i] = elements[i] || getElement(i);
+	}
+	
+	t.left = function(i) {
+		return lefts[i] = lefts[i] === undefined ? e(i).position().left : lefts[i];
+	};
+	
+	t.right = function(i) {
+		return rights[i] = rights[i] === undefined ? t.left(i) + e(i).width() : rights[i];
+	};
+	
+	t.clear = function() {
+		elements = {};
+		lefts = {};
+		rights = {};
+	};
+	
+}
+
+})(jQuery);
+
+define("3rdparty/fullcalendar/fullcalendar", function(){});
+
+define('patterns/fullcalendar',[
+    'jquery',
+    '../logging',
+    '../utils',
+    "../registry",
+    '../3rdparty/fullcalendar/fullcalendar'
+], function($, logging, utils, registry) {
+    var log = logging.getLogger('fullcalendar');
+
+    var fullcalendar = {
+        name: "fullcalendar",
+        trigger: ".pat-fullcalendar",
+
+        init: function($calroot) {
+            // XXX: should be within the calendar
+            var $filter = $('.calendar-filters');
+            var initMonths = function($root) {
+                if ($root.hasClass('month')) {
+                    fullcalendar.initMonth($root, $filter);
                 } else {
-                    target = opts.source;
+                    $root.find('.month').each(function() {
+                        fullcalendar.initMonth($(this), $filter);
+                    });
                 }
-                opts.$targets = $(target);
+            };
+
+            // hide all group checkboxes, will be shown if mentioned
+            $filter.find('.check-list .groups label').hide();
+
+            // initialize existing months
+            initMonths($calroot);
+
+            // wait for additional months
+            $calroot.on('patterns-injected.pat-fullcalendar', function(ev) {
+                initMonths($(ev.target));
+            });
+        },
+
+        initMonth: function($month, $filter) {
+            var $events = $('.events', $month);
+            if ($events.length === 0) { return; }
+            var ym = $('time', $month).attr('datetime').split('-'),
+                year = ym[0],
+                month = Number(ym[1]) - 1,
+                $calendar = $('<div class="calendar">\n</div>')
+                    .insertAfter($events);
+            var refetch = function() {
+                $calendar.fullCalendar('refetchEvents');
+                // XXX: replace with mutator event listener
+                registry.scan($calendar);
+            };
+            var refetch_deb = utils.debounce(refetch, 400);
+            if ($filter && $filter.length > 0) {
+                $('.searchText', $filter).on("keyup", refetch_deb);
+                $('.searchText[type=search]', $filter).on("click", refetch_deb);
+                $('select[name=state]', $filter).on("change", refetch);
+                $('.check-list', $filter).on("change", refetch);
             }
-            opts.method = inject[method_name];
-            if (opts.$targets.length === 0) {
-                if (target.slice(0,1) !== '#') {
-                    log.error('only id supported for non-existing target');
+            $events.css('display', 'None');
+            $calendar.fullCalendar({
+                dayDblClick: function(date, allDay, jsEvent, view) {
+                    // XXX: add event
+                },
+                events: function(start, end, callback) {
+                    var events = fullcalendar.parseEvents($events, $filter);
+                    callback(events);
+                },
+                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                    // XXX: change event
+                    revertFunc();
+                },
+                eventResize: function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) {
+                    // XXX: change event
+                    revertFunc();
+                },
+                header: { left: '', right: '' },
+                month: month,
+                year: year
+            });
+            registry.scan($calendar);
+        },
+
+        parseEvents: function($events, $filter) {
+            // show groups that are mentioned
+            $filter.find(
+                '.check-list .groups label:hidden'
+            ).each(function() {
+                var $label = $(this),
+                    id = $label.find('input').attr('name'),
+                    groupsel = '.group-' + id;
+                if ($events.find(groupsel).length > 0) $label.show();
+            });
+
+            // OPTINAL: go through other filters and gray out groups that would
+            // result in zero matches
+
+            // parse filters
+            if ($filter && $filter.length > 0) {
+                var searchText = $('.searchText', $filter).val(),
+                    state = $('select[name=state]').val(),
+                    $attendees = $('.attendees', $filter),
+                    noattendees = $attendees.is(':has([name="no-attendees"]:checked)'),
+                    onlyusers = $attendees.is(':has([name="only-users"])'),
+                    // XXX: only take visible groups into account
+                    groupsel = $('.groups input:checked', $attendees).map(function() {
+                        var id = $(this).attr('name');
+                        return '.attendees .group-' + id;
+                    }).toArray().join(',');
+            }
+            var events = $events.find('.event').filter(function() {
+                var $event = $(this);
+                // workflow state
+                if (state && state !== "all") {
+                    if (!$event.hasClass('.state-' + state)) {
+                        log.debug('filter denied state', $event);
+                        return false;
+                    }
                 }
-                opts.$targets = $('<div />').attr({id: target.slice(1)});
-                $('body').append(opts.$targets);
-            }
 
-            if (!opts.url) {
-                log.error(
-                    'local source not supported yet, need url for now', $el, opts);
-                return;
-            }
+                // attendees
+                if ($event.find('.attendees *').length > 0) {
+                    if ($event.find('.attendees .group').length > 0) {
+                        if ($event.find(groupsel).length === 0) {
+                            log.debug('filter denied groups', $event);
+                            return false;
+                        }
+                    } else if (!onlyusers) {
+                        log.debug('filter denied onlyusers', $event);
+                        return false;
+                    }
+                } else if (!noattendees) {
+                    log.debug('filter denied noattendees', $event);
+                    return false;
+                }
 
-            opts.classes = 'injecting injecting-' + method_name;
-            opts.$targets.addClass(opts.classes);
-        });
+                // full text search
+                if (searchText && !$event.is(':Contains(' + searchText + ')')) {
+                    log.debug('filter denied fulltext', $event);
+                    return false;
+                }
 
-        // XXX: key options by url and support url per opts
-        var url = opts[0].url;
-        if (!opts.every(function(opts) {
-            return opts.url === url;
-        })) {
-            log.error('Unsupported different urls for inject');
-            return;
-        };
-
-        if (!opts.every(function(opts) {
-            return opts.$targets.length;
-        })) {
-            log.error('Missing targets, aborting');
-            return;
+                return true;
+            }).map(function(idx, event) {
+                var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
+                    return (cls !== 'event');
+                }).concat($('a', event).attr('class').split(/\s+/));
+                var allattrs = $('a', event)[0].attributes,
+                    attrs = {};
+                for (var attr, i=0; i<allattrs.length; i++){
+                    attr = allattrs.item(i);
+                    if (attr.nodeName.slice(0,5) === "data-") {
+                        attrs[attr.nodeName] = attr.nodeValue;
+                    }
+                }
+                var location = ($('.location', event).html() || '').trim();
+                var ev = {
+                    title: $('.title', event).html().trim() +
+                        (location ? (' (' + location + ')') : ''),
+                    start: $('.start', event).attr('datetime'),
+                    end: $('.end', event).attr('datetime'),
+                    allDay: $(event).hasClass('all-day'),
+                    url: $('a', event).attr('href'),
+                    className: classNames,
+                    attrs: attrs,
+                    editable: $(event).hasClass('editable')
+                };
+                if (!ev.title) log.error('No event title for:', event);
+                if (!ev.start) log.error('No event start for:', event);
+                if (!ev.url) log.error('No event url for:', event);
+                return ev;
+            }).toArray();
+            return events;
         }
+    };
 
-        ajax($el, {
-            url: opts[0].url,
-            success: function(data, status, jqxhr) {
-                var $data = $('<div/>').html(
-                    data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-                        .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                        .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                        .replace(/<\/body(.*)>/gi,'</div>')
-                );
-                opts.forEach(function(opts) {
-                    var $sources = $data.find(opts.source);
+    registry.register(fullcalendar);
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+define('patterns/menu',[
+    'jquery',
+    "../registry"
+], function($, patterns) {
+    var menu = {
+        name: "menu",
+        trigger: "ul.pat-menu",
 
-                    if ($sources.length === 0) {
-                        log.error(
-                            'Aborting, sources are empty for selector:', opts.source, data);
-                        return;
+        init: function($root) {
+            return $root.each(function() {
+                var $menu = $(this),
+                    timer,
+                    closeMenu, openMenu,
+                    mouseOverHandler, mouseOutHandler;
+
+                openMenu = function($li) {
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null;
                     }
 
-                    if (modal) {
-                        var $modal = $('<div id="modal" class="modal" />');
-                        if ($sources.length === 1) {
-                            // for single source copy its content into the modal
-                            $sources = $modal.html($sources.html());
-                        } else {
-                            // for multiple sources wrap them into a modal
-                            $sources = $modal.html($sources);
+                    if (!$li.hasClass("open")) {
+                        $li.siblings("li.open").each(function() { closeMenu($menu);});
+                        $li.addClass("open").removeClass("closed");
+                    }
+                };
+
+                closeMenu = function($li) {
+                    $li.find("li.open").andSelf().removeClass("open").addClass("closed");
+                };
+
+                mouseOverHandler = function() {
+                    var $li = $(this);
+                    openMenu($li);
+                };
+
+                mouseOutHandler = function() {
+                    var $li = $(this);
+
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer=null;
+                    }
+
+                    timer = setTimeout(function() { closeMenu($li); }, 1000);
+                };
+
+                $("ul.menu li", root)
+                    .addClass("closed")
+                    .filter(":has(ul)").addClass("hasChildren").end()
+                    .on("mouseover.pat-menu", mouseOverHandler)
+                    .on("mouseout.pat-menu", mouseOutHandler);
+            });
+        }
+    };
+
+    patterns.register(menu);
+});
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/*!
+ * jQuery Form Plugin
+ * version: 3.03 (08-MAR-2012)
+ * @requires jQuery v1.3.2 or later
+ *
+ * Examples and documentation at: http://malsup.com/jquery/form/
+ * Project repository: https://github.com/malsup/form
+ * Dual licensed under the MIT and GPL licenses:
+ *    http://malsup.github.com/mit-license.txt
+ *    http://malsup.github.com/gpl-license-v2.txt
+ */
+/*global ActiveXObject alert */
+;(function($) {
+
+
+/*
+    Usage Note:
+    -----------
+    Do not use both ajaxSubmit and ajaxForm on the same form.  These
+    functions are mutually exclusive.  Use ajaxSubmit if you want
+    to bind your own submit handler to the form.  For example,
+
+    $(document).ready(function() {
+        $('#myForm').bind('submit', function(e) {
+            e.preventDefault(); // <-- important
+            $(this).ajaxSubmit({
+                target: '#output'
+            });
+        });
+    });
+
+    Use ajaxForm when you want the plugin to manage all the event binding
+    for you.  For example,
+
+    $(document).ready(function() {
+        $('#myForm').ajaxForm({
+            target: '#output'
+        });
+    });
+
+    You can also use ajaxForm with delegation (requires jQuery v1.7+), so the
+    form does not have to exist when you invoke ajaxForm:
+
+    $('#myForm').ajaxForm({
+        delegation: true,
+        target: '#output'
+    });
+
+    When using ajaxForm, the ajaxSubmit function will be invoked for you
+    at the appropriate time.
+*/
+
+/**
+ * Feature detection
+ */
+var feature = {};
+feature.fileapi = $("<input type='file'/>").get(0).files !== undefined;
+feature.formdata = window.FormData !== undefined;
+
+/**
+ * ajaxSubmit() provides a mechanism for immediately submitting
+ * an HTML form using AJAX.
+ */
+$.fn.ajaxSubmit = function(options) {
+    /*jshint scripturl:true */
+
+    // fast fail if nothing selected (http://dev.jquery.com/ticket/2752)
+    if (!this.length) {
+        log('ajaxSubmit: skipping submit process - no element selected');
+        return this;
+    }
+
+    var method, action, url, $form = this;
+
+    if (typeof options == 'function') {
+        options = { success: options };
+    }
+
+    method = this.attr('method');
+    action = this.attr('action');
+    url = (typeof action === 'string') ? $.trim(action) : '';
+    url = url || window.location.href || '';
+    if (url) {
+        // clean url (don't include hash vaue)
+        url = (url.match(/^([^#]+)/)||[])[1];
+    }
+
+    options = $.extend(true, {
+        url:  url,
+        success: $.ajaxSettings.success,
+        type: method || 'GET',
+        iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank'
+    }, options);
+
+    // hook for manipulating the form data before it is extracted;
+    // convenient for use with rich editors like tinyMCE or FCKEditor
+    var veto = {};
+    this.trigger('form-pre-serialize', [this, options, veto]);
+    if (veto.veto) {
+        log('ajaxSubmit: submit vetoed via form-pre-serialize trigger');
+        return this;
+    }
+
+    // provide opportunity to alter form data before it is serialized
+    if (options.beforeSerialize && options.beforeSerialize(this, options) === false) {
+        log('ajaxSubmit: submit aborted via beforeSerialize callback');
+        return this;
+    }
+
+    var traditional = options.traditional;
+    if ( traditional === undefined ) {
+        traditional = $.ajaxSettings.traditional;
+    }
+
+    var qx, a = this.formToArray(options.semantic);
+    if (options.data) {
+        options.extraData = options.data;
+        qx = $.param(options.data, traditional);
+    }
+
+    // give pre-submit callback an opportunity to abort the submit
+    if (options.beforeSubmit && options.beforeSubmit(a, this, options) === false) {
+        log('ajaxSubmit: submit aborted via beforeSubmit callback');
+        return this;
+    }
+
+    // fire vetoable 'validate' event
+    this.trigger('form-submit-validate', [a, this, options, veto]);
+    if (veto.veto) {
+        log('ajaxSubmit: submit vetoed via form-submit-validate trigger');
+        return this;
+    }
+
+    var q = $.param(a, traditional);
+    if (qx) {
+        q = ( q ? (q + '&' + qx) : qx );
+    }
+    if (options.type.toUpperCase() == 'GET') {
+        options.url += (options.url.indexOf('?') >= 0 ? '&' : '?') + q;
+        options.data = null;  // data is null for 'get'
+    }
+    else {
+        options.data = q; // data is the query string for 'post'
+    }
+
+    var callbacks = [];
+    if (options.resetForm) {
+        callbacks.push(function() { $form.resetForm(); });
+    }
+    if (options.clearForm) {
+        callbacks.push(function() { $form.clearForm(options.includeHidden); });
+    }
+
+    // perform a load on the target only if dataType is not provided
+    if (!options.dataType && options.target) {
+        var oldSuccess = options.success || function(){};
+        callbacks.push(function(data) {
+            var fn = options.replaceTarget ? 'replaceWith' : 'html';
+            $(options.target)[fn](data).each(oldSuccess, arguments);
+        });
+    }
+    else if (options.success) {
+        callbacks.push(options.success);
+    }
+
+    options.success = function(data, status, xhr) { // jQuery 1.4+ passes xhr as 3rd arg
+        var context = options.context || options;    // jQuery 1.4+ supports scope context
+        for (var i=0, max=callbacks.length; i < max; i++) {
+            callbacks[i].apply(context, [data, status, xhr || $form, $form]);
+        }
+    };
+
+    // are there files to upload?
+    var fileInputs = $('input:file:enabled[value]', this); // [value] (issue #113)
+    var hasFileInputs = fileInputs.length > 0;
+    var mp = 'multipart/form-data';
+    var multipart = ($form.attr('enctype') == mp || $form.attr('encoding') == mp);
+
+    var fileAPI = feature.fileapi && feature.formdata;
+    log("fileAPI :" + fileAPI);
+    var shouldUseFrame = (hasFileInputs || multipart) && !fileAPI;
+
+    // options.iframe allows user to force iframe mode
+    // 06-NOV-09: now defaulting to iframe mode if file input is detected
+    if (options.iframe !== false && (options.iframe || shouldUseFrame)) {
+        // hack to fix Safari hang (thanks to Tim Molendijk for this)
+        // see:  http://groups.google.com/group/jquery-dev/browse_thread/thread/36395b7ab510dd5d
+        if (options.closeKeepAlive) {
+            $.get(options.closeKeepAlive, function() {
+                fileUploadIframe(a);
+            });
+        }
+          else {
+            fileUploadIframe(a);
+          }
+    }
+    else if ((hasFileInputs || multipart) && fileAPI) {
+        fileUploadXhr(a);
+    }
+    else {
+        $.ajax(options);
+    }
+
+     // fire 'notify' event
+     this.trigger('form-submit-notify', [this, options]);
+     return this;
+
+     // XMLHttpRequest Level 2 file uploads (big hat tip to francois2metz)
+    function fileUploadXhr(a) {
+        var formdata = new FormData();
+
+        for (var i=0; i < a.length; i++) {
+            formdata.append(a[i].name, a[i].value);
+        }
+
+        if (options.extraData) {
+            for (var k in options.extraData)
+                if (options.extraData.hasOwnProperty(k))
+                    formdata.append(k, options.extraData[k]);
+        }
+
+        options.data = null;
+
+        var s = $.extend(true, {}, $.ajaxSettings, options, {
+            contentType: false,
+            processData: false,
+            cache: false,
+            type: 'POST'
+        });
+
+                if (options.uploadProgress) {
+                        // workaround because jqXHR does not expose upload property
+                        s.xhr = function() {
+                                var xhr = jQuery.ajaxSettings.xhr();
+                                if (xhr.upload) {
+                                        xhr.upload.onprogress = function(event) {
+                                                var percent = 0;
+                                                if (event.lengthComputable)
+                                                        percent = parseInt((event.position / event.total) * 100, 10);
+                                                options.uploadProgress(event, event.position, event.total, percent);
+                                        }
+                                }
+                                return xhr;
+                        }
+                }
+
+        s.data = null;
+        var beforeSend = s.beforeSend;
+        s.beforeSend = function(xhr, o) {
+                o.data = formdata;
+            if(beforeSend)
+                beforeSend.call(o, xhr, options);
+        };
+        $.ajax(s);
+         }
+
+    // private function for handling file uploads (hat tip to YAHOO!)
+    function fileUploadIframe(a) {
+        var form = $form[0], el, i, s, g, id, $io, io, xhr, sub, n, timedOut, timeoutHandle;
+        var useProp = !!$.fn.prop;
+
+        if (a) {
+            if ( useProp ) {
+                // ensure that every serialized input is still enabled
+                for (i=0; i < a.length; i++) {
+                    el = $(form[a[i].name]);
+                    el.prop('disabled', false);
+                }
+            } else {
+                for (i=0; i < a.length; i++) {
+                    el = $(form[a[i].name]);
+                    el.removeAttr('disabled');
+                }
+            }
+        }
+
+        var submitMethod;
+        if ($(':input[name=submit],:input[id=submit]', form).length) {
+            // if there is an input with a name or id of 'submit' then we won't be
+            // able to invoke the submit fn on the form (at least not x-browser)
+            var idSubmit = $(':input[id=submit]', form),
+                nameSubmit = $(':input[name=submit]', form);
+            if (idSubmit.length) idSubmit.attr({id:'submit_temporarily_renamed'});
+            if (nameSubmit.length) nameSubmit.attr({name:'submit_temporarily_renamed'});
+            submitMethod = form.submit;
+            if (idSubmit.length) idSubmit.attr({id:'submit'});
+            if (nameSubmit.length) nameSubmit.attr({name:'submit'});
+//            alert('Error: Form elements must not have name or id of "submit".');
+//            return;
+        } else {
+            submitMethod = form.submit;
+        }
+
+        s = $.extend(true, {}, $.ajaxSettings, options);
+        s.context = s.context || s;
+        id = 'jqFormIO' + (new Date().getTime());
+        if (s.iframeTarget) {
+            $io = $(s.iframeTarget);
+            n = $io.attr('name');
+            if (!n)
+                 $io.attr('name', id);
+            else
+                id = n;
+        }
+        else {
+            $io = $('<iframe name="' + id + '" src="'+ s.iframeSrc +'" />');
+            $io.css({ position: 'absolute', top: '-1000px', left: '-1000px' });
+        }
+        io = $io[0];
+
+
+        xhr = { // mock object
+            aborted: 0,
+            responseText: null,
+            responseXML: null,
+            status: 0,
+            statusText: 'n/a',
+            getAllResponseHeaders: function() {},
+            getResponseHeader: function() {},
+            setRequestHeader: function() {},
+            abort: function(status) {
+                var e = (status === 'timeout' ? 'timeout' : 'aborted');
+                log('aborting upload... ' + e);
+                this.aborted = 1;
+                $io.attr('src', s.iframeSrc); // abort op in progress
+                xhr.error = e;
+                if (s.error)
+                    s.error.call(s.context, xhr, e, status);
+                if (g)
+                    $.event.trigger("ajaxError", [xhr, s, e]);
+                if (s.complete)
+                    s.complete.call(s.context, xhr, e);
+            }
+        };
+
+        g = s.global;
+        // trigger ajax global events so that activity/block indicators work like normal
+        if (g && 0 === $.active++) {
+            //$.event.trigger("ajaxStart");
+            $form.trigger("ajaxStart");
+        }
+        if (g) {
+            //$.event.trigger("ajaxSend", [xhr, s]);
+            $form.trigger("ajaxSend", [xhr, s]);
+        }
+
+        if (s.beforeSend && s.beforeSend.call(s.context, xhr, s) === false) {
+            if (s.global) {
+                $.active--;
+            }
+            return;
+        }
+        if (xhr.aborted) {
+            return;
+        }
+
+        // add submitting element to data if we know it
+        sub = form.clk;
+        if (sub) {
+            n = sub.name;
+            if (n && !sub.disabled) {
+                s.extraData = s.extraData || {};
+                s.extraData[n] = sub.value;
+                if (sub.type == "image") {
+                    s.extraData[n+'.x'] = form.clk_x;
+                    s.extraData[n+'.y'] = form.clk_y;
+                }
+            }
+        }
+
+        var CLIENT_TIMEOUT_ABORT = 1;
+        var SERVER_ABORT = 2;
+
+        function getDoc(frame) {
+            var doc = frame.contentWindow ? frame.contentWindow.document : frame.contentDocument ? frame.contentDocument : frame.document;
+            return doc;
+        }
+
+        // Rails CSRF hack (thanks to Yvan Barthelemy)
+        var csrf_token = $('meta[name=csrf-token]').attr('content');
+        var csrf_param = $('meta[name=csrf-param]').attr('content');
+        if (csrf_param && csrf_token) {
+            s.extraData = s.extraData || {};
+            s.extraData[csrf_param] = csrf_token;
+        }
+
+        // take a breath so that pending repaints get some cpu time before the upload starts
+        function doSubmit() {
+            // make sure form attrs are set
+            var t = $form.attr('target'), a = $form.attr('action');
+
+            // update form attrs in IE friendly way
+            form.setAttribute('target',id);
+            if (!method) {
+                form.setAttribute('method', 'POST');
+            }
+            if (a != s.url) {
+                form.setAttribute('action', s.url);
+            }
+
+            // ie borks in some cases when setting encoding
+            if (! s.skipEncodingOverride && (!method || /post/i.test(method))) {
+                $form.attr({
+                    encoding: 'multipart/form-data',
+                    enctype:  'multipart/form-data'
+                });
+            }
+
+            // support timout
+            if (s.timeout) {
+                timeoutHandle = setTimeout(function() { timedOut = true; cb(CLIENT_TIMEOUT_ABORT); }, s.timeout);
+            }
+
+            // look for server aborts
+            function checkState() {
+                try {
+                    var state = getDoc(io).readyState;
+                    log('state = ' + state);
+                    if (state && state.toLowerCase() == 'uninitialized')
+                        setTimeout(checkState,50);
+                }
+                catch(e) {
+                    log('Server abort: ' , e, ' (', e.name, ')');
+                    cb(SERVER_ABORT);
+                    if (timeoutHandle)
+                        clearTimeout(timeoutHandle);
+                    timeoutHandle = undefined;
+                }
+            }
+
+            // add "extra" data to form if provided in options
+            var extraInputs = [];
+            try {
+                if (s.extraData) {
+                    for (var n in s.extraData) {
+                        if (s.extraData.hasOwnProperty(n)) {
+                            extraInputs.push(
+                                $('<input type="hidden" name="'+n+'">').attr('value',s.extraData[n])
+                                    .appendTo(form)[0]);
                         }
                     }
+                }
 
-                    opts.method($sources, opts.$targets, opts);
-                    opts.$targets.removeClass(opts.classes);
-                });
-                $el.trigger('patterns-inject-triggered');
+                if (!s.iframeTarget) {
+                    // add iframe to doc and submit the form
+                    $io.appendTo('body');
+                    if (io.attachEvent)
+                        io.attachEvent('onload', cb);
+                    else
+                        io.addEventListener('load', cb, false);
+                }
+                setTimeout(checkState,15);
+                submitMethod.call(form);
+            }
+            finally {
+                // reset attrs and remove "extra" input elements
+                form.setAttribute('action',a);
+                if(t) {
+                    form.setAttribute('target', t);
+                } else {
+                    $form.removeAttr('target');
+                }
+                $(extraInputs).remove();
+            }
+        }
 
-                // XXX: think about making the href-next thing implicit
-                var hrefnext = $el.data('href-next');
-                if (hrefnext) {
-                    $el.attr({href: hrefnext});
-                    $el.off('.inject');
+        if (s.forceSync) {
+            doSubmit();
+        }
+        else {
+            setTimeout(doSubmit, 10); // this lets dom updates render
+        }
+
+        var data, doc, domCheckCount = 50, callbackProcessed;
+
+        function cb(e) {
+            if (xhr.aborted || callbackProcessed) {
+                return;
+            }
+            try {
+                doc = getDoc(io);
+            }
+            catch(ex) {
+                log('cannot access response document: ', ex);
+                e = SERVER_ABORT;
+            }
+            if (e === CLIENT_TIMEOUT_ABORT && xhr) {
+                xhr.abort('timeout');
+                return;
+            }
+            else if (e == SERVER_ABORT && xhr) {
+                xhr.abort('server abort');
+                return;
+            }
+
+            if (!doc || doc.location.href == s.iframeSrc) {
+                // response not received yet
+                if (!timedOut)
+                    return;
+            }
+            if (io.detachEvent)
+                io.detachEvent('onload', cb);
+            else
+                io.removeEventListener('load', cb, false);
+
+            var status = 'success', errMsg;
+            try {
+                if (timedOut) {
+                    throw 'timeout';
+                }
+
+                var isXml = s.dataType == 'xml' || doc.XMLDocument || $.isXMLDoc(doc);
+                log('isXml='+isXml);
+                if (!isXml && window.opera && (doc.body === null || !doc.body.innerHTML)) {
+                    if (--domCheckCount) {
+                        // in some browsers (Opera) the iframe DOM is not always traversable when
+                        // the onload callback fires, so we loop a bit to accommodate
+                        log('requeing onLoad callback, DOM not available');
+                        setTimeout(cb, 250);
+                        return;
+                    }
+                    // let this fall through because server response could be an empty document
+                    //log('Could not access iframe DOM after mutiple tries.');
+                    //throw 'DOMException: not available';
+                }
+
+                //log('response detected');
+                var docRoot = doc.body ? doc.body : doc.documentElement;
+                xhr.responseText = docRoot ? docRoot.innerHTML : null;
+                xhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;
+                if (isXml)
+                    s.dataType = 'xml';
+                xhr.getResponseHeader = function(header){
+                    var headers = {'content-type': s.dataType};
+                    return headers[header];
+                };
+                // support for XHR 'status' & 'statusText' emulation :
+                if (docRoot) {
+                    xhr.status = Number( docRoot.getAttribute('status') ) || xhr.status;
+                    xhr.statusText = docRoot.getAttribute('statusText') || xhr.statusText;
+                }
+
+                var dt = (s.dataType || '').toLowerCase();
+                var scr = /(json|script|text)/.test(dt);
+                if (scr || s.textarea) {
+                    // see if user embedded response in textarea
+                    var ta = doc.getElementsByTagName('textarea')[0];
+                    if (ta) {
+                        xhr.responseText = ta.value;
+                        // support for XHR 'status' & 'statusText' emulation :
+                        xhr.status = Number( ta.getAttribute('status') ) || xhr.status;
+                        xhr.statusText = ta.getAttribute('statusText') || xhr.statusText;
+                    }
+                    else if (scr) {
+                        // account for browsers injecting pre around json response
+                        var pre = doc.getElementsByTagName('pre')[0];
+                        var b = doc.getElementsByTagName('body')[0];
+                        if (pre) {
+                            xhr.responseText = pre.textContent ? pre.textContent : pre.innerText;
+                        }
+                        else if (b) {
+                            xhr.responseText = b.textContent ? b.textContent : b.innerText;
+                        }
+                    }
+                }
+                else if (dt == 'xml' && !xhr.responseXML && xhr.responseText) {
+                    xhr.responseXML = toXml(xhr.responseText);
+                }
+
+                try {
+                    data = httpData(xhr, dt, s);
+                }
+                catch (e) {
+                    status = 'parsererror';
+                    xhr.error = errMsg = (e || status);
                 }
             }
-        });
-    };
+            catch (e) {
+                log('error caught: ',e);
+                status = 'error';
+                xhr.error = errMsg = (e || status);
+            }
 
-    var pattern = {
-        initialised_class: 'inject',
-        markup_trigger: '.collapsible[data-inject], .folder[data-inject], a.inject, a[data-inject]',
-        init: init,
-        triggerinject: triggerinject
-    };
+            if (xhr.aborted) {
+                log('upload aborted');
+                status = null;
+            }
 
-    return pattern;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('patterns/inject_log_old',[
-    'require',
-    '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('old-injection');
+            if (xhr.status) { // we've set xhr.status
+                status = (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) ? 'success' : 'error';
+            }
 
-    var init = function($el, opts) {
-        log.info($el);
-    };
+            // ordering of these callbacks/triggers is odd, but that's how $.ajax does it
+            if (status === 'success') {
+                if (s.success)
+                    s.success.call(s.context, data, 'success', xhr);
+                if (g) {
+                    //$.event.trigger("ajaxSuccess", [xhr, s, data]);
+                    $form.trigger("ajaxSuccess", [xhr, s, data]);
+                }
+            }
+            else if (status) {
+                if (errMsg === undefined)
+                    errMsg = xhr.statusText;
+                if (s.error)
+                    s.error.call(s.context, xhr, status, errMsg);
+                if (g) {
+                    //$.event.trigger("ajaxError", [xhr, s, errMsg]);
+                    $form.trigger("ajaxError", [xhr, s, errMsg]);
+                }
+            }
 
-    return {
-        markup_trigger: '.injection,[data-injection]',
-        init: init
-    };
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
+            if (g) {
+                //$.event.trigger("ajaxComplete", [xhr, s]);
+                $form.trigger("ajaxComplete", [xhr, s]);
+            }
+
+            if (g && ! --$.active) {
+                //$.event.trigger("ajaxStop");
+                $form.trigger("ajaxStop");
+            }
+
+            if (s.complete)
+                s.complete.call(s.context, xhr, status);
+
+            callbackProcessed = true;
+            if (s.timeout)
+                clearTimeout(timeoutHandle);
+
+            // clean up
+            setTimeout(function() {
+                if (!s.iframeTarget)
+                    $io.remove();
+                xhr.responseXML = null;
+            }, 100);
+        }
+
+        var toXml = $.parseXML || function(s, doc) { // use parseXML if available (jQuery 1.5+)
+            if (window.ActiveXObject) {
+                doc = new ActiveXObject('Microsoft.XMLDOM');
+                doc.async = 'false';
+                doc.loadXML(s);
+            }
+            else {
+                doc = (new DOMParser()).parseFromString(s, 'text/xml');
+            }
+            return (doc && doc.documentElement && doc.documentElement.nodeName != 'parsererror') ? doc : null;
+        };
+        var parseJSON = $.parseJSON || function(s) {
+            /*jslint evil:true */
+            return window['eval']('(' + s + ')');
+        };
+
+        var httpData = function( xhr, type, s ) { // mostly lifted from jq1.4.4
+
+            var ct = xhr.getResponseHeader('content-type') || '',
+                xml = type === 'xml' || !type && ct.indexOf('xml') >= 0,
+                data = xml ? xhr.responseXML : xhr.responseText;
+
+            if (xml && data.documentElement.nodeName === 'parsererror') {
+                if ($.error)
+                    $.error('parsererror');
+            }
+            if (s && s.dataFilter) {
+                data = s.dataFilter(data, type);
+            }
+            if (typeof data === 'string') {
+                if (type === 'json' || !type && ct.indexOf('json') >= 0) {
+                    data = parseJSON(data);
+                } else if (type === "script" || !type && ct.indexOf("javascript") >= 0) {
+                    $.globalEval(data);
+                }
+            }
+            return data;
+        };
+    }
+};
+
+/**
+ * ajaxForm() provides a mechanism for fully automating form submission.
+ *
+ * The advantages of using this method instead of ajaxSubmit() are:
+ *
+ * 1: This method will include coordinates for <input type="image" /> elements (if the element
+ *    is used to submit the form).
+ * 2. This method will include the submit element's name/value data (for the element that was
+ *    used to submit the form).
+ * 3. This method binds the submit() method to the form for you.
+ *
+ * The options argument for ajaxForm works exactly as it does for ajaxSubmit.  ajaxForm merely
+ * passes the options argument along after properly binding events for submit elements and
+ * the form itself.
+ */
+$.fn.ajaxForm = function(options) {
+    options = options || {};
+    options.delegation = options.delegation && $.isFunction($.fn.on);
+
+    // in jQuery 1.3+ we can fix mistakes with the ready state
+    if (!options.delegation && this.length === 0) {
+        var o = { s: this.selector, c: this.context };
+        if (!$.isReady && o.s) {
+            log('DOM not ready, queuing ajaxForm');
+            $(function() {
+                $(o.s,o.c).ajaxForm(options);
+            });
+            return this;
+        }
+        // is your DOM ready?  http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
+        log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
+        return this;
+    }
+
+    if ( options.delegation ) {
+        $(document)
+            .off('submit.form-plugin', this.selector, doAjaxSubmit)
+            .off('click.form-plugin', this.selector, captureSubmittingElement)
+            .on('submit.form-plugin', this.selector, options, doAjaxSubmit)
+            .on('click.form-plugin', this.selector, options, captureSubmittingElement);
+        return this;
+    }
+
+    return this.ajaxFormUnbind()
+        .bind('submit.form-plugin', options, doAjaxSubmit)
+        .bind('click.form-plugin', options, captureSubmittingElement);
+};
+
+// private event handlers
+function doAjaxSubmit(e) {
+    /*jshint validthis:true */
+    var options = e.data;
+    if (!e.isDefaultPrevented()) { // if event has been canceled, don't proceed
+        e.preventDefault();
+        $(this).ajaxSubmit(options);
+    }
+}
+
+function captureSubmittingElement(e) {
+    /*jshint validthis:true */
+    var target = e.target;
+    var $el = $(target);
+    if (!($el.is(":submit,input:image"))) {
+        // is this a child element of the submit el?  (ex: a span within a button)
+        var t = $el.closest(':submit');
+        if (t.length === 0) {
+            return;
+        }
+        target = t[0];
+    }
+    var form = this;
+    form.clk = target;
+    if (target.type == 'image') {
+        if (e.offsetX !== undefined) {
+            form.clk_x = e.offsetX;
+            form.clk_y = e.offsetY;
+        } else if (typeof $.fn.offset == 'function') {
+            var offset = $el.offset();
+            form.clk_x = e.pageX - offset.left;
+            form.clk_y = e.pageY - offset.top;
+        } else {
+            form.clk_x = e.pageX - target.offsetLeft;
+            form.clk_y = e.pageY - target.offsetTop;
+        }
+    }
+    // clear form vars
+    setTimeout(function() { form.clk = form.clk_x = form.clk_y = null; }, 100);
+}
+
+
+// ajaxFormUnbind unbinds the event handlers that were bound by ajaxForm
+$.fn.ajaxFormUnbind = function() {
+    return this.unbind('submit.form-plugin click.form-plugin');
+};
+
+/**
+ * formToArray() gathers form element data into an array of objects that can
+ * be passed to any of the following ajax functions: $.get, $.post, or load.
+ * Each object in the array has both a 'name' and 'value' property.  An example of
+ * an array for a simple login form might be:
+ *
+ * [ { name: 'username', value: 'jresig' }, { name: 'password', value: 'secret' } ]
+ *
+ * It is this array that is passed to pre-submit callback functions provided to the
+ * ajaxSubmit() and ajaxForm() methods.
+ */
+$.fn.formToArray = function(semantic) {
+    var a = [];
+    if (this.length === 0) {
+        return a;
+    }
+
+    var form = this[0];
+    var els = semantic ? form.getElementsByTagName('*') : form.elements;
+    if (!els) {
+        return a;
+    }
+
+    var i,j,n,v,el,max,jmax;
+    for(i=0, max=els.length; i < max; i++) {
+        el = els[i];
+        n = el.name;
+        if (!n) {
+            continue;
+        }
+
+        if (semantic && form.clk && el.type == "image") {
+            // handle image inputs on the fly when semantic == true
+            if(!el.disabled && form.clk == el) {
+                a.push({name: n, value: $(el).val(), type: el.type });
+                a.push({name: n+'.x', value: form.clk_x}, {name: n+'.y', value: form.clk_y});
+            }
+            continue;
+        }
+
+        v = $.fieldValue(el, true);
+        if (v && v.constructor == Array) {
+            for(j=0, jmax=v.length; j < jmax; j++) {
+                a.push({name: n, value: v[j]});
+            }
+        }
+        else if (feature.fileapi && el.type == 'file' && !el.disabled) {
+            var files = el.files;
+            for (j=0; j < files.length; j++) {
+                a.push({name: n, value: files[j], type: el.type});
+            }
+        }
+        else if (v !== null && typeof v != 'undefined') {
+            a.push({name: n, value: v, type: el.type});
+        }
+    }
+
+    if (!semantic && form.clk) {
+        // input type=='image' are not found in elements array! handle it here
+        var $input = $(form.clk), input = $input[0];
+        n = input.name;
+        if (n && !input.disabled && input.type == 'image') {
+            a.push({name: n, value: $input.val()});
+            a.push({name: n+'.x', value: form.clk_x}, {name: n+'.y', value: form.clk_y});
+        }
+    }
+    return a;
+};
+
+/**
+ * Serializes form data into a 'submittable' string. This method will return a string
+ * in the format: name1=value1&amp;name2=value2
+ */
+$.fn.formSerialize = function(semantic) {
+    //hand off to jQuery.param for proper encoding
+    return $.param(this.formToArray(semantic));
+};
+
+/**
+ * Serializes all field elements in the jQuery object into a query string.
+ * This method will return a string in the format: name1=value1&amp;name2=value2
+ */
+$.fn.fieldSerialize = function(successful) {
+    var a = [];
+    this.each(function() {
+        var n = this.name;
+        if (!n) {
+            return;
+        }
+        var v = $.fieldValue(this, successful);
+        if (v && v.constructor == Array) {
+            for (var i=0,max=v.length; i < max; i++) {
+                a.push({name: n, value: v[i]});
+            }
+        }
+        else if (v !== null && typeof v != 'undefined') {
+            a.push({name: this.name, value: v});
+        }
+    });
+    //hand off to jQuery.param for proper encoding
+    return $.param(a);
+};
+
+/**
+ * Returns the value(s) of the element in the matched set.  For example, consider the following form:
+ *
+ *  <form><fieldset>
+ *      <input name="A" type="text" />
+ *      <input name="A" type="text" />
+ *      <input name="B" type="checkbox" value="B1" />
+ *      <input name="B" type="checkbox" value="B2"/>
+ *      <input name="C" type="radio" value="C1" />
+ *      <input name="C" type="radio" value="C2" />
+ *  </fieldset></form>
+ *
+ *  var v = $(':text').fieldValue();
+ *  // if no values are entered into the text inputs
+ *  v == ['','']
+ *  // if values entered into the text inputs are 'foo' and 'bar'
+ *  v == ['foo','bar']
+ *
+ *  var v = $(':checkbox').fieldValue();
+ *  // if neither checkbox is checked
+ *  v === undefined
+ *  // if both checkboxes are checked
+ *  v == ['B1', 'B2']
+ *
+ *  var v = $(':radio').fieldValue();
+ *  // if neither radio is checked
+ *  v === undefined
+ *  // if first radio is checked
+ *  v == ['C1']
+ *
+ * The successful argument controls whether or not the field element must be 'successful'
+ * (per http://www.w3.org/TR/html4/interact/forms.html#successful-controls).
+ * The default value of the successful argument is true.  If this value is false the value(s)
+ * for each element is returned.
+ *
+ * Note: This method *always* returns an array.  If no valid value can be determined the
+ *    array will be empty, otherwise it will contain one or more values.
+ */
+$.fn.fieldValue = function(successful) {
+    for (var val=[], i=0, max=this.length; i < max; i++) {
+        var el = this[i];
+        var v = $.fieldValue(el, successful);
+        if (v === null || typeof v == 'undefined' || (v.constructor == Array && !v.length)) {
+            continue;
+        }
+        if (v.constructor == Array)
+            $.merge(val, v);
+        else
+            val.push(v);
+    }
+    return val;
+};
+
+/**
+ * Returns the value of the field element.
+ */
+$.fieldValue = function(el, successful) {
+    var n = el.name, t = el.type, tag = el.tagName.toLowerCase();
+    if (successful === undefined) {
+        successful = true;
+    }
+
+    if (successful && (!n || el.disabled || t == 'reset' || t == 'button' ||
+        (t == 'checkbox' || t == 'radio') && !el.checked ||
+        (t == 'submit' || t == 'image') && el.form && el.form.clk != el ||
+        tag == 'select' && el.selectedIndex == -1)) {
+            return null;
+    }
+
+    if (tag == 'select') {
+        var index = el.selectedIndex;
+        if (index < 0) {
+            return null;
+        }
+        var a = [], ops = el.options;
+        var one = (t == 'select-one');
+        var max = (one ? index+1 : ops.length);
+        for(var i=(one ? index : 0); i < max; i++) {
+            var op = ops[i];
+            if (op.selected) {
+                var v = op.value;
+                if (!v) { // extra pain for IE...
+                    v = (op.attributes && op.attributes['value'] && !(op.attributes['value'].specified)) ? op.text : op.value;
+                }
+                if (one) {
+                    return v;
+                }
+                a.push(v);
+            }
+        }
+        return a;
+    }
+    return $(el).val();
+};
+
+/**
+ * Clears the form data.  Takes the following actions on the form's input fields:
+ *  - input text fields will have their 'value' property set to the empty string
+ *  - select elements will have their 'selectedIndex' property set to -1
+ *  - checkbox and radio inputs will have their 'checked' property set to false
+ *  - inputs of type submit, button, reset, and hidden will *not* be effected
+ *  - button elements will *not* be effected
+ */
+$.fn.clearForm = function(includeHidden) {
+    return this.each(function() {
+        $('input,select,textarea', this).clearFields(includeHidden);
+    });
+};
+
+/**
+ * Clears the selected form elements.
+ */
+$.fn.clearFields = $.fn.clearInputs = function(includeHidden) {
+    var re = /^(?:color|date|datetime|email|month|number|password|range|search|tel|text|time|url|week)$/i; // 'hidden' is not in this list
+    return this.each(function() {
+        var t = this.type, tag = this.tagName.toLowerCase();
+        if (re.test(t) || tag == 'textarea' || (includeHidden && /hidden/.test(t)) ) {
+            this.value = '';
+        }
+        else if (t == 'checkbox' || t == 'radio') {
+            this.checked = false;
+        }
+        else if (tag == 'select') {
+            this.selectedIndex = -1;
+        }
+    });
+};
+
+/**
+ * Resets the form data.  Causes all form elements to be reset to their original value.
+ */
+$.fn.resetForm = function() {
+    return this.each(function() {
+        // guard against an input with the name of 'reset'
+        // note that IE reports the reset function as an 'object'
+        if (typeof this.reset == 'function' || (typeof this.reset == 'object' && !this.reset.nodeType)) {
+            this.reset();
+        }
+    });
+};
+
+/**
+ * Enables or disables any matching elements.
+ */
+$.fn.enable = function(b) {
+    if (b === undefined) {
+        b = true;
+    }
+    return this.each(function() {
+        this.disabled = !b;
+    });
+};
+
+/**
+ * Checks/unchecks any matching checkboxes or radio buttons and
+ * selects/deselects and matching option elements.
+ */
+$.fn.selected = function(select) {
+    if (select === undefined) {
+        select = true;
+    }
+    return this.each(function() {
+        var t = this.type;
+        if (t == 'checkbox' || t == 'radio') {
+            this.checked = select;
+        }
+        else if (this.tagName.toLowerCase() == 'option') {
+            var $sel = $(this).parent('select');
+            if (select && $sel[0] && $sel[0].type == 'select-one') {
+                // deselect all other options
+                $sel.find('option').selected(false);
+            }
+            this.selected = select;
+        }
+    });
+};
+
+// expose debug var
+$.fn.ajaxSubmit.debug = false;
+
+// helper fn for console logging
+function log() {
+    if (!$.fn.ajaxSubmit.debug)
+        return;
+    var msg = '[jquery.form] ' + Array.prototype.join.call(arguments,'');
+    if (window.console && window.console.log) {
+        window.console.log(msg);
+    }
+    else if (window.opera && window.opera.postError) {
+        window.opera.postError(msg);
+    }
+}
+
+})(jQuery);
+
+define("lib/jquery.form/jquery.form", function(){});
+
 define('patterns/modal',[
-    'require',
-    '../lib/jquery.form/jquery.form',
+    'jquery',
     '../logging',
-    '../patterns'
-], function(require) {
-    var log = require('../logging').getLogger('modal');
+    "../core/parser",
+    '../lib/jquery.form/jquery.form'
+], function($, logging, Parser) {
+    var log = logging.getLogger('modal');
 
     var init = function($el, opts) {
         var $first = $el.children(':first'),
@@ -30445,9 +37099,9 @@ define('patterns/modal',[
             $closebutton = $(
                 '<button type="button" class="close-panel">Close</button>');
 
+        opts = opts || {};
         if (opts.$trigger) {
-            var Parser = require('../core/parser'),
-                parser = new Parser(),
+            var parser = new Parser(),
                 trigger_opts;
             parser.add_argument("class");
             trigger_opts = parser.parse(opts.$trigger.data("modal"));
@@ -30548,10 +37202,10 @@ define('patterns/modal',[
 // vim: sw=4 expandtab
 ;
 define('patterns/navigation',[
-    'require',
+    'jquery',
     '../logging'
-], function(require) {
-    var log = require('../logging').getLogger('navigation');
+], function($, logging) {
+    var log = logging.getLogger('navigation');
 
     var match = function(curpath, path) {
         if (!path) {
@@ -30592,7 +37246,7 @@ define('patterns/navigation',[
         if ($el.hasClass('navigation-load-current')) {
             $el.find('a.current, .current a').click();
             // check for current elements injected here
-            $el.on('patterns-inject-scanned', function(ev) {
+            $el.on('patterns-injected-scanned', function(ev) {
                 var $target = $(ev.target);
                 if ($target.is('a.current'))
                     $target.click();
@@ -30807,23 +37461,890 @@ define('patterns/navigation',[
 define("3rdparty/jquery.placeholder", function(){});
 
 define('patterns/placeholder',[
-    'require',
-    '../logging',
+    "../registry",
+    '../3rdparty/modernizr-2.0.6',
     '../3rdparty/jquery.placeholder'
-], function(require, logging) {
-    var log = logging.getLogger('placeholder');
+], function(patterns) {
+    var pattern_spec = {
+        name: "placeholder",
+        trigger: ":input[placeholder]",
 
-    var init = function($el, opts) {
-        $el.placeholder();
+        init: function($el) {
+            return $el.placeholder();
+        }
     };
 
-    var pattern = {
-        markup_trigger: '[placeholder]',
-        register_jquery_plugin: false,
-        init: init
-    };
-    return pattern;
+    if (!Modernizr.input.placeholder)
+        patterns.register(pattern_spec);
 });
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * @license
+ * Patterns @VERSION@ setclass - update class on click
+ *
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ */
+define('patterns/setclass',[
+    'jquery',
+    "../registry",
+    '../core/store',
+    '../utils'
+], function($, patterns, store, utils) {
+    var storage = store.session("setclass");
+
+    var setclass = {
+        name: "setclass",
+        trigger: "[data-setclass]",
+
+        init: function($el) {
+            $el.on("click", setclass.onClick);
+            $el.each(function() {
+                var $this = $(this);
+                var obj = setclass.getObjFromParams(
+                              $this,
+                              utils.extractParameters('!' + $this.attr('data-setclass')));
+
+                if (obj === null)
+                    return;
+
+                if ( !obj.store ) {
+                    storage.remove(obj.id + "." + obj.attr);
+                } else if (storage.get(obj.id + "." + obj.attr))
+                    return;
+
+                if (obj.attr === 'class') {
+                //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
+                } else {
+                    $( "#" + obj.id ).attr( obj.attr, obj.value );
+                }
+
+                if (obj.store)
+                    storage.set(obj.id + "." + obj.attr, obj);
+            });
+
+            var all = storage.all();
+            for (var key in all ) {
+                var obj = all[key];
+                if ( obj.attr === 'class' ) {
+                    $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
+                } else {
+                    $( "#" + obj.id ).attr( obj.attr, obj.value );
+                }
+            }
+        },
+
+        getObjFromParams: function($elem, params) {
+            var values = params.values;
+            var obj = {};
+
+            obj.id = params.id || $elem.attr("id");
+            obj.attr = params.attr || 'class';
+            obj.store = params.store || false;
+
+            if (typeof obj.id !== "string" || obj.id.length === 0 ||
+                typeof obj.attr !== 'string' || obj.attr.length === 0 ||
+                typeof values  !== 'string' || values.length === 0 ) {
+                return null;
+            }
+
+            values = values.split(':');
+            if ( values.length == 1) {
+                values.push('');
+            }
+
+            obj.value = values[0];
+            obj.other = values[1];
+            return obj;
+        },
+
+        onClick: function(event) {
+            var $this = $(this);
+            if ($this.hasClass('cant-touch-this')) return;
+            var params = utils.extractParameters('!' + $this.attr('data-setclass'));
+
+            setclass.execute($this, '', '', params, event);
+
+            event.preventDefault();
+        },
+
+        store: {},
+
+        dataAttr: true,
+
+        execute: function( elem, url, sources, params, event ) {
+            var value, other;
+            var obj = setclass.getObjFromParams( elem, params );
+            if (obj === null) return false;
+
+            var $setclass = $("#" + obj.id);
+            if ($setclass.length === 0) return false;
+
+            if (obj.attr === 'class') {
+                if (obj.other.length > 0 ) {
+                    var cls = $setclass.attr('class').split(' ');
+                    regval = new RegExp(obj.value);
+                    for (i=0;i<cls.length;i++){
+                        if (cls[i].match(regval)) {
+                            $setclass.removeClass(cls[i]);
+                        }
+                    }
+                    $setclass.addClass(obj.other);
+                } else if ($setclass.hasClass(obj.value) || $setclass.hasClass(obj.other)) {
+                    /* obj.value already set and no other present. pass */
+                } else {
+                    $setclass.addClass(obj.value);
+                }
+            } else {
+                /* cave, haven't touched that yet, is still behaving like toggle */
+            /*  var current = $setclass.attr(obj.attr);
+                if (current === obj.value) {
+                    $setclass.attr(obj.attr, obj.other);
+                    value = obj.other;
+                    other = obj.value;
+                } else if (current === obj.other) {
+                    $setclass.attr(obj.attr, obj.value);
+                    value = obj.value;
+                    other = obj.other;
+                } else {
+                    $setclass.attr(obj.attr, obj.other);
+                    value = obj.other;
+                    other = obj.value;
+                }*/
+            }
+
+            if (obj.store)
+                storage.set(obj.id + "." + obj.attr, obj);
+
+            return true;
+        }
+    };
+
+    patterns.register(setclass);
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+// XXX This pattern has an undeclared dependency on jQuery UI
+define('patterns/sorting',[
+    'jquery',
+    "../registry"
+], function($, patterns) {
+    var sorting = {
+        name: "sorting",
+        trigger: "ul.sorting",
+
+        init: function($el) {
+            return $el.sortable({
+                'axis': 'y',
+                'items': 'li',
+                'update': function(event, ui){
+                    var $this = $(this);
+                    var order = $this.sortable("serialize");
+
+                    $.post($this.attr("data-injection"), order);
+                }
+            });
+        }
+    };
+
+    patterns.register(sorting);
+});
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+define('patterns/switch',[
+        "jquery",
+        "../registry",
+        "../logging",
+        "../core/parser"
+], function($, patterns, logging, Parser) {
+    var log = logging.getLogger("switch"),
+        parser = new Parser("switch");
+    parser.add_argument("selector");
+    parser.add_argument("remove");
+    parser.add_argument("add");
+
+    var switcher = {
+        name: "switch",
+        trigger: ".pat-switch",
+        jquery_plugin: "patternSwitch",
+
+        init: function($el, defaults) {
+            return $el.each(function() {
+                var $trigger = $(this),
+                    options = parser.parse($trigger, defaults, true);
+                options=switcher._validateOptions(options);
+                if (options && options.length)
+                    $trigger
+                        .data("patternSwitch", options)
+                        .off(".patternSwitch")
+                        .on("click.patternSwitch", switcher._onClick);
+            });
+        },
+
+        destroy: function($el) {
+            return $el.each(function() {
+                $(this).removeData("patternSwitch").off("click.patternSwitch");
+            });
+        },
+
+        execute: function($el) {
+            return $el.each(function() {
+                switcher._go($(this));
+            });
+        },
+
+        _onClick: function(e) {
+            switcher._go($(this));
+        },
+
+        _go: function($trigger) {
+            var options = $trigger.data("patternSwitch"),
+                option, i;
+            if (!options) {
+                log.error("Tried to execute a switch for an uninitialised element.");
+                return;
+            }
+            for (i=0; i<options.length; i++) {
+                option=options[i];
+                switcher._update(option.selector, option.remove, option.add);
+            }
+        },
+
+        _validateOptions: function(options) {
+            var correct = [];
+
+            for (var i=0; i<options.length; i++) {
+                var option = options[i];
+                if (option.selector && (option.remove || option.add))
+                    correct.push(option);
+                else
+                    log.error('Switch pattern requires selector and one of add or remove.');
+            }
+            return correct.length ? correct : null;
+        },
+
+        _update: function(selector, remove, add) {
+            var $targets = $(selector);
+
+            if (!$targets.length)
+                return;
+
+            if (remove) {
+                if (remove.indexOf('*')===-1) 
+                    $targets.removeClass(remove);
+                else {
+                    remove = remove.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
+                    remove = remove.replace(/[*]/g, ".*");
+                    remove = new RegExp("^" + remove + "$");
+                    $targets.filter("[class]").each(function() {
+                        var $this = $(this),
+                            classes = $this.attr("class").split(/\s+/),
+                            ok=[];
+                        for (var i=0; i<classes.length; i++)
+                            if (!remove.test(classes[i]))
+                                ok.push(classes[i]);
+                        if (ok.length)
+                            $this.attr("class", ok.join(" "));
+                        else
+                            $this.removeAttr("class");
+                    });
+                }
+            }
+            if (add)
+                $targets.addClass(add);
+        }
+    };
+
+    patterns.register(switcher);
+    return switcher;
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 sts=4 expandtab
+;
+/**
+ * @license
+ * Patterns @VERSION@ toggle - toggle class on click
+ *
+ * Copyright 2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ */
+define('patterns/toggle',[
+    'jquery',
+    "../registry",
+    '../logging',
+    "../core/parser",
+    "../core/store"
+], function($, patterns, logging, Parser, store) {
+    var log = logging.getLogger('toggle'),
+        parser = new Parser("toggle");
+
+    parser.add_argument("selector");
+    parser.add_argument("attr", "class");
+    parser.add_argument("value");
+    parser.add_argument("store", "none", ["none", "session", "local"]);
+
+    var toggle = {
+        name: "toggle",
+        trigger: ".pat-toggle",
+
+        init: function($el) {
+            return $el.each(function() {
+                var $trigger = $(this),
+                    options = toggle._validateOptions(this, parser.parse($trigger, true)),
+                    state = {toggled: false, options: options},
+                    i, option;
+
+                if (!options.length)
+                    return;
+
+                if (options[0].store!=="none") {
+                    storage=(options[0].store==="local" ? store.local : store.session)(toggle.name);
+                    if (storage.get(this.id))
+                        state.toggled=true;
+                }
+
+                if (state.toggled)
+                    for (i=0; i<options.length; i++)
+                        toggle._update(options[i].selector, options[i].attr, options[i].value);
+
+                $trigger
+                    .off(".toggle")
+                    .data("patternToggle", state)
+                    .on("click.toggle", toggle.onClick);
+            });
+        },
+
+        _validateOptions: function(trigger, options) {
+            var correct=[],
+                i, option, store_error;
+
+            if (!options.length)
+                return correct;
+
+            if (options[0].store!=="none") {
+                if (!trigger.id) {
+                    log.warn("state persistance requested, but element has no id");
+                    options[0].store="none";
+                } else if (!store.supported) {
+                    store_error="browser does not support webstorage";
+                    log.warn("state persistance requested, but browser does not support webstorage");
+                    options[0].store="none";
+                }
+            }
+
+
+            for (i=0; i<options.length; i++) {
+                option=options[i];
+                if (i && option.store!=="none") {
+                    log.warn("store option can only be set on first argument");
+                    option.store="none";
+                }
+
+                if (!option.selector || !option.attr || !option.value)
+                    log.error("Toggle pattern requires selector, attr and value.");
+                else
+                    correct.push(option);
+            }
+            return correct;
+        },
+
+        onClick: function(event) {
+            var $trigger = $(this),
+                state = $trigger.data("patternToggle"),
+                i;
+
+            state.toggled=!state.toggled;
+            $trigger.data("patternToggle", state);
+
+            if (state.options[0].store!=="none") {
+                var storage=(state.options[0].store==="local" ? store.local : store.session)(toggle.name);
+                if (state.toggled)
+                    storage.set(this.id, true);
+                else
+                    storage.remove(this.id);
+            }
+
+            for (i=0; i<state.options.length; i++) {
+                option=state.options[i];
+                toggle._update(option.selector, option.attr, option.value);
+            }
+            event.preventDefault();
+        },
+
+        _update: function(selector, attr, value) {
+            var $targets = $(selector);
+
+            if (!$targets.length)
+                return;
+
+            if (attr==="class") {
+                $targets.toggleClass(value);
+            } else {
+                for (var i=0; i<$targets.length; i++) {
+                    $target=$targets.eq(i);
+                    if ($target.attr(attr)===attr) {
+                        $target.removeAttr(attr);
+                    } else {
+                        $target.attr(attr, value);
+                    }
+                }
+            }
+        }
+    };
+
+    patterns.register(toggle);
+    return toggle; // XXX for tests only
+});
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
+ * @license
+ * Patterns @VERSION@ tooltip - tooltips
+ *
+ * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2011 Humberto Sermeño
+ * Copyright 2011 SYSLAB.COM GmbH
+ */
+define('patterns/tooltip',[
+    'jquery',
+    "../registry",
+    '../utils',
+    './inject'
+], function($, patterns, utils, inject) {
+    var tooltip = {
+        name: "tooltip",
+        trigger: "[data-tooltip]",
+
+        count: 0,
+
+        init: function($root) {
+            return $root.each(function() {
+                var $trigger = $(this),
+                    options = utils.parseOptions($trigger.data("tooltip"));
+                options.title = $trigger.attr("title");
+                $trigger.removeAttr("title");
+                $trigger.data("patterns.tooltip", options);
+                tooltip.setupShowEvents($trigger);
+            });
+        },
+
+        setupShowEvents: function($trigger) {
+            var parameters = $trigger.data("patterns.tooltip");
+            if (parameters.click) {
+                $trigger.on("click.tooltip", $trigger, tooltip.show);
+            } else {
+                $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+            }
+        },
+
+        removeShowEvents: function($trigger) {
+            $trigger.off(".tooltip");
+        },
+
+        setupHideEvents: function($trigger) {
+            var $container = tooltip.getContainer($trigger),
+                parameters = $trigger.data("patterns.tooltip");
+            if (parameters.sticky) {
+                $container.find(".close-panel")
+                    .on("click.tooltip", $trigger, tooltip.hide);
+                // Make sure click on the trigger element becomes a NOP
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+            } else {
+                if (parameters.click) {
+                    $container.on("click.tooltip", $trigger, function(ev) {
+                        ev.stopPropagation();
+                    });
+                    $(document).on("click.tooltip", $trigger, tooltip.hide);
+                    $trigger.on("click.tooltip", tooltip.blockDefault);
+                    // close if something inside the tooltip triggered an injection
+                    $container.on('patterns-inject-triggered.tooltip',
+                                  $trigger, tooltip.hide);
+                    $container.on('submit.tooltip', $trigger, tooltip.hide);
+                } else {
+                    $container.on("click.tooltip", $trigger, tooltip.hide);
+                    $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
+                    $trigger.on("click.tooltip", tooltip.blockDefault);
+                }
+            }
+        },
+
+        removeHideEvents: function($trigger) {
+            var $container = tooltip.getContainer($trigger);
+            $(document).off(".tooltip");
+            $container.off(".tooltip");
+            $container.find(".close-panel").off(".tooltip");
+            $trigger.off(".tooltip");
+        },
+
+        blockDefault: function(event) {
+            event.preventDefault();
+        },
+
+        show: function(event) {
+            event.preventDefault();
+            var $trigger = event.data,
+                $container = tooltip.getContainer($trigger),
+                namespace = $container.attr("id"),
+                options = $trigger.data("patterns.tooltip");
+
+            tooltip.removeShowEvents($trigger);
+            // Wrap in a timeout to make sure this click is not used to
+            // trigger a hide as well.
+            setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
+
+            function ajax_show() {
+                $container.find(">div >*").css("opacity", 1);
+                tooltip.positionContainer($trigger, $container);
+            }
+
+            if (options.ajax) {
+                var source = $trigger.attr("href").split("#"),
+                    target_id = $container.find("progress").attr("id");
+                inject.execute($trigger, source[0], target_id+":replace", source[1] || [],
+                        ajax_show, true);
+                // always load fresh tooltips
+                // delete options.ajax;
+                $trigger.data("patterns.tooltip", options);
+            }
+
+            tooltip.positionContainer($trigger, $container);
+            $container.css("visibility", "visible");
+
+            // reposition tooltip everytime we scroll or resize
+            $(window).on("scroll." + namespace + " resize." + namespace, function () {
+                 tooltip.positionContainer($trigger, $container);
+            });
+        },
+
+        hide: function(event) {
+            var $trigger = event.data,
+                $container = tooltip.getContainer($trigger),
+                namespace = $container.attr("id");
+            tooltip.removeHideEvents($trigger);
+            $container.css("visibility", "hidden");
+            $(window).off("." + namespace);
+            tooltip.setupShowEvents($trigger);
+        },
+
+        getContainer: function($trigger) {
+            var $container = $trigger.data("patterns.tooltip.container");
+            if ($container===undefined) {
+                $container=tooltip.createContainer($trigger);
+                $trigger.data("patterns.tooltip.container", $container);
+            }
+            return $container;
+        },
+
+        createContainer: function($trigger) {
+            var options = $trigger.data("patterns.tooltip"),
+                count = ++tooltip.count,
+                $content, $container;
+
+            $container = $("<div/>", {"class": "tooltip-container",
+                                     "id": "tooltip" + count});
+            $container.css("visibility", "hidden");
+            if (options.ajax) {
+                $content = $("<progress/>", {"id": "tooltip-load-" + count});
+            } else {
+                $content = $("<p/>").text(options.title);
+            }
+            $container.append(
+                $("<div/>").css("display", "block").append($content))
+                .append($("<span></span>", {"class": "pointer"}));
+            if (options.sticky && !options.noclose) {
+                $("<button/>", {"class": "close-panel"})
+                    .text("Close")
+                    .insertBefore($container.find("*"));
+            }
+            $("body").append($container);
+            return $container;
+        },
+
+        boundingBox: function($el) {
+            var box = $el.offset();
+            box.height = $el.height();
+            box.width = $el.width();
+            box.bottom = box.top + box.height;
+            box.right = box.left + box.width;
+            return box;
+        },
+
+        positionStatus: function($trigger, $container) {
+            var trigger_box = tooltip.boundingBox($trigger),
+                tooltip_box = tooltip.boundingBox($container),
+                $window = $(window),
+                window_width = $window.width(),
+                window_height = $window.height(),
+                trigger_center,
+                scroll = {},
+                space = {},
+                container_offset = {},
+                tip_offset = {},
+                cls = "";
+
+            scroll.top = $window.scrollTop();
+            scroll.left = $window.scrollLeft();
+            trigger_center = {top: trigger_box.top + (trigger_box.height/2),
+                              left: trigger_box.left + (trigger_box.width/2)};
+            space.top = trigger_box.top - scroll.top;
+            space.bottom = window_height - space.top - trigger_box.height;
+            space.left = trigger_box.left - scroll.left;
+            space.right = window_width - space.left - trigger_box.width;
+
+            return {space: space,
+                    trigger_center: trigger_center,
+                    trigger_box: trigger_box,
+                    tooltip_box: tooltip_box,
+                    scroll: scroll,
+                    window: {width: window_width, height: window_height}
+            };
+        },
+
+        // Help function to determine the best position for a tooltip.  Takes
+        // the positioning status (as generated by positionStatus) as input
+        // and returns a two-character position indiciator.
+        findBestPosition: function(status) {
+            var space = status.space,
+                 cls = "";
+
+            if (space.top > Math.max(space.right, space.bottom, space.left)) {
+                cls = "b";
+            } else if (space.right > Math.max(space.bottom, space.left, space.top)) {
+                cls = "l";
+            } else if (space.bottom > Math.max(space.left, space.top, space.right)) {
+                cls = "t";
+            } else {
+                cls = "r";
+            }
+
+            switch (cls[0]) {
+            case "t":
+            case "b":
+                if (Math.abs(space.left-space.right) < 20) {
+                    cls += "m";
+                } else if (space.left > space.right) {
+                    cls += "r";
+                } else {
+                    cls += "l";
+                }
+                break;
+            case "l":
+            case "r":
+                if (Math.abs(space.top-space.bottom) < 20) {
+                    cls += "m";
+                } else if (space.top > space.bottom) {
+                    cls += "b";
+                } else {
+                    cls += "t";
+                }
+            }
+            return cls;
+        },
+
+        isVisible: function(status, position) {
+            var space = status.space,
+                tooltip_box = status.tooltip_box;
+
+            switch (position[0]) {
+            case "t":
+                if (tooltip_box.height > space.bottom) {
+                    return false;
+                }
+                break;
+            case "r":
+                if (tooltip_box.width > space.left) {
+                    return false;
+                }
+                break;
+            case "b":
+                if (tooltip_box.height > space.top) {
+                    return false;
+                }
+                break;
+            case "l":
+                if (tooltip_box.width > space.right) {
+                    return false;
+                }
+                break;
+            default:
+                return false;
+            }
+
+            switch (position[0]) {
+            case "t":
+            case "b":
+                switch (position[1]) {
+                    case "l":
+                        if ((tooltip_box.width-20)>space.right) {
+                            return false;
+                        }
+                        break;
+                    case "m":
+                        if ((tooltip_box.width/2)>space.left || (tooltip_box.width/2)>space.right) {
+                            return false;
+                        }
+                        break;
+                    case "r":
+                        if ((tooltip_box.width-20)>space.left) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+                break;
+            case "l":
+            case "r":
+                switch (position[1]) {
+                    case "t":
+                        if ((tooltip_box.height-20)>space.bottom) {
+                            return false;
+                        }
+                        break;
+                    case "m":
+                        if ((tooltip_box.height/2)>space.top || (tooltip_box.height/2)>space.bottom) {
+                            return false;
+                        }
+                        break;
+                    case "b":
+                        if ((tooltip_box.height-20)>space.top) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+                break;
+            }
+            return true;
+        },
+
+        VALIDPOSITION: /^([lr][tmb]|[tb][lmr])$/,
+
+        positionContainer: function($trigger, $container) {
+            var status = tooltip.positionStatus($trigger, $container),
+                options = $trigger.data("patterns.tooltip"),
+                container_offset = {},
+                tip_offset = {},
+                position;
+
+            if (options.position) {
+                var positions = options.position.split("-"), i;
+                for (i=0; i<positions.length; i++) {
+                    if (!tooltip.VALIDPOSITION.test(positions[i])) {
+                        continue;
+                    }
+
+                    if (options.forcePosition || tooltip.isVisible(status, positions[i])) {
+                        position = positions[i];
+                        break;
+                    }
+                }
+            }
+
+            if (!position) {
+                position = tooltip.findBestPosition(status);
+            }
+
+            var trigger_box = status.trigger_box,
+                tooltip_box = status.tooltip_box,
+                trigger_center = status.trigger_center,
+                content_css = {"max-height": "", "max-width": ""},
+                $window = $(window),
+                bottom_row, x;
+
+            switch (position[0]) {
+            case "t":
+                container_offset.top = trigger_box.bottom + 20;
+                tip_offset.top = -23;
+                bottom_row = status.scroll.top + status.window.height,
+                content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
+                break;
+            case "l":
+                container_offset.left = trigger_box.right + 20;
+                tip_offset.left = -23;
+                x = status.window.width + status.scroll.left;
+                content_css["max-width"] = (x - container_offset.left - 30) + "px";
+                break;
+            case "b":
+                container_offset.top = trigger_box.top - tooltip_box.height + 10;
+                tip_offset.top = tooltip_box.height;
+                x = (status.scroll.top + 10) - container_offset.top;
+                if (x>0) {
+                    tip_offset.top -= x;
+                    content_css["max-height"] = (tooltip_box.height - x) + "px";
+                    container_offset.top += x;
+                }
+                break;
+            case "r":
+                container_offset.left = trigger_box.left - tooltip_box.width - 20;
+                tip_offset.left = tooltip_box.width;
+                break;
+            }
+
+            switch (position[0]) {
+            case "t":
+            case "b":
+                switch (position[1]) {
+                case "l":
+                    container_offset.left = trigger_center.left - 20;
+                    tip_offset.left = 0;
+                    break;
+                case "m":
+                    container_offset.left = trigger_center.left - (tooltip_box.width/2);
+                    tip_offset.left = tooltip_box.width/2 - 10;
+                    break;
+                case "r":
+                    container_offset.left = trigger_center.left + 29 - tooltip_box.width;
+                    tip_offset.left = tooltip_box.width - 20;
+                    break;
+                }
+                break;
+            case "l":
+            case "r":
+                switch (position[1]) {
+                    case "t":
+                        container_offset.top = trigger_center.top - 30;
+                        tip_offset.top = 0;
+                        break;
+                    case "m":
+                        container_offset.top = trigger_center.top - (tooltip_box.height/2);
+                        tip_offset.top = tooltip_box.height/2 - 10;
+                        break;
+                    case "b":
+                        container_offset.top = trigger_center.top + 20 - tooltip_box.height;
+                        tip_offset.top = tooltip_box.height - 20;
+                        break;
+                }
+                break;
+            }
+
+            $container.find("> div").css(content_css);
+            $container.attr("class", "tooltip-container " + position);
+            $container.css({
+                top: container_offset.top+"px",
+                left: container_offset.left+"px"
+            });
+            $container.find(".pointer").css({
+                top: tip_offset.top+"px",
+                left: tip_offset.left+"px"});
+        }
+    };
+
+    patterns.register(tooltip);
+    return tooltip; // XXX Replace for tests
+});
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
@@ -33513,9730 +41034,83 @@ jQuery.validator.addMethod("pattern", function(value, element, param) {
 }, "Invalid format.");
 
 });
-define('patterns/validate',['require','../logging','../../lib/jquery.validate','../../lib/jquery-validation-1.9.0/additional-methods'],function(require) {
-    var log = require('../logging').getLogger('validate'),
-        _ = require('../../lib/jquery.validate'),
-        __ = require('../../lib/jquery-validation-1.9.0/additional-methods');
-
-    var init = function($el, opts) {
-        var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
-            var $el = $(el),
-                id = $el.attr('id');
-            if (!id) {
-                log.error('Element needs id, skipping:', $el);
-                return acc;
-            }
-            acc[id] = {required: $el.data('required-if')};
-            return acc;
-        }, {});
-        log.debug('rules:', rules);
-
-        // ATTENTION: adding the debug option to validate, disables
-        // form submission
-        $el.validate({rules: rules});
-        return $el;
-    };
-
-    var pattern = {
-        markup_trigger: 'form.validate',
-        register_jquery_plugin: false,
-        init: init
-    };
-    return pattern;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/*!
-	AnythingSlider v1.8.6
-	Original by Chris Coyier: http://css-tricks.com
-	Get the latest version: https://github.com/CSS-Tricks/AnythingSlider
-
-	To use the navigationFormatter function, you must have a function that
-	accepts two paramaters, and returns a string of HTML text.
-
-	index = integer index (1 based);
-	panel = jQuery wrapped LI item this tab references
-	@return = Must return a string of HTML/Text
-
-	navigationFormatter: function(index, panel){
-		return "Panel #" + index; // This would have each tab with the text 'Panel #X' where X = index
-	}
-*/
-;(function($) {
-
-	$.anythingSlider = function(el, options) {
-
-		var base = this, o, t;
-
-		// Wraps the ul in the necessary divs and then gives Access to jQuery element
-		base.el = el;
-		base.$el = $(el).addClass('anythingBase').wrap('<div class="anythingSlider"><div class="anythingWindow" /></div>');
-
-		// Add a reverse reference to the DOM object
-		base.$el.data("AnythingSlider", base);
-
-		base.init = function(){
-
-			// Added "o" to be used in the code instead of "base.options" which doesn't get modifed by the compiler - reduces size by ~1k
-			base.options = o = $.extend({}, $.anythingSlider.defaults, options);
-
-			base.initialized = false;
-			if ($.isFunction(o.onBeforeInitialize)) { base.$el.bind('before_initialize', o.onBeforeInitialize); }
-			base.$el.trigger('before_initialize', base);
-
-			// Add "as-oldie" class to body for css purposes
-			$('<!--[if lte IE 8]><script>jQuery("body").addClass("as-oldie");</script><![endif]-->').appendTo('body').remove();
-
-			// Cache existing DOM elements for later
-			// base.$el = original ul
-			// for wrap - get parent() then closest in case the ul has "anythingSlider" class
-			base.$wrapper = base.$el.parent().closest('div.anythingSlider').addClass('anythingSlider-' + o.theme);
-			base.$window = base.$el.closest('div.anythingWindow');
-			base.win = window;
-			base.$win = $(base.win);
-
-			base.$controls = $('<div class="anythingControls"></div>');
-			base.$nav = $('<ul class="thumbNav"><li><a><span></span></a></li></ul>');
-			base.$startStop = $('<a href="#" class="start-stop"></a>');
-			
-			if (o.buildStartStop || o.buildNavigation) {
-				base.$controls.appendTo( (o.appendControlsTo && $(o.appendControlsTo).length) ? $(o.appendControlsTo) : base.$wrapper);
-			}
-			if (o.buildNavigation) {
-				base.$nav.appendTo( (o.appendNavigationTo && $(o.appendNavigationTo).length) ? $(o.appendNavigationTo) : base.$controls );
-			}
-			if (o.buildStartStop) {
-				base.$startStop.appendTo( (o.appendStartStopTo && $(o.appendStartStopTo).length) ? $(o.appendStartStopTo) : base.$controls );
-			}
-
-			// Figure out how many sliders are on the page for indexing
-			base.runTimes = $('.anythingBase').length;
-			base.regex = new RegExp('panel' + base.runTimes + '-(\\d+)', 'i'); // hash tag regex
-			if (base.runTimes === 1) { base.makeActive(); } // make the first slider on the page active
-
-			// Set up a few defaults & get details
-			base.flag    = false; // event flag to prevent multiple calls (used in control click/focusin)
-			base.playing = o.autoPlay; // slideshow state; removed "startStopped" option
-			base.slideshow = false; // slideshow flag needed to correctly trigger slideshow events
-			base.hovered = false; // actively hovering over the slider
-			base.panelSize = [];  // will contain dimensions and left position of each panel
-			base.currentPage = base.targetPage = o.startPanel = parseInt(o.startPanel,10) || 1; // make sure this isn't a string
-			o.changeBy = parseInt(o.changeBy,10) || 1;
-
-			// set slider type, but keep backward compatibility with the vertical option
-			t = (o.mode || 'h').toLowerCase().match(/(h|v|f)/);
-			t = o.vertical ? 'v' : (t || ['h'])[0];
-			o.mode = t === 'v' ? 'vertical' : t === 'f' ? 'fade' : 'horizontal';
-			if (t === 'f') {
-				o.showMultiple = 1; // all slides are stacked in fade mode
-				o.infiniteSlides = false; // no cloned slides
-			}
-
-			base.adj = (o.infiniteSlides) ? 0 : 1; // adjust page limits for infinite or limited modes
-			base.adjustMultiple = 0;
-			base.width = base.$el.width();
-			base.height = base.$el.height();
-			base.outerPad = [ base.$wrapper.innerWidth() - base.$wrapper.width(), base.$wrapper.innerHeight() - base.$wrapper.height() ];
-			if (o.playRtl) { base.$wrapper.addClass('rtl'); }
-
-			// Expand slider to fit parent
-			if (o.expand) {
-				base.$outer = base.$wrapper.parent();
-				base.$window.css({ width: '100%', height: '100%' }); // needed for Opera
-				base.checkResize();
-			}
-
-			// Build start/stop button
-			if (o.buildStartStop) { base.buildAutoPlay(); }
-
-			// Build forwards/backwards buttons
-			if (o.buildArrows) { base.buildNextBackButtons(); }
-
-			// can't lock autoplay it if it's not enabled
-			if (!o.autoPlay) { o.autoPlayLocked = false; }
-
-			base.$lastPage = base.$targetPage = base.$currentPage;
-
-			base.updateSlider();
-
-			// Make sure easing function exists.
-			if (!$.isFunction($.easing[o.easing])) { o.easing = "swing"; }
-
-			// If pauseOnHover then add hover effects
-			if (o.pauseOnHover) {
-				base.$wrapper.hover(function() {
-					if (base.playing) {
-						base.$el.trigger('slideshow_paused', base);
-						base.clearTimer(true);
-					}
-				}, function() {
-					if (base.playing) {
-						base.$el.trigger('slideshow_unpaused', base);
-						base.startStop(base.playing, true);
-					}
-				});
-			}
-
-			// Hide/Show navigation & play/stop controls
-			base.slideControls(false);
-			base.$wrapper.bind('mouseenter mouseleave', function(e){
-				// add hovered class to outer wrapper
-				$(this)[e.type === 'mouseenter' ? 'addClass' : 'removeClass']('anythingSlider-hovered');
-				base.hovered = (e.type === 'mouseenter') ? true : false;
-				base.slideControls(base.hovered);
-			});
-
-			// Add keyboard navigation
-			$(document).keyup(function(e){
-				// Stop arrow keys from working when focused on form items
-				if (o.enableKeyboard && base.$wrapper.hasClass('activeSlider') && !e.target.tagName.match('TEXTAREA|INPUT|SELECT')) {
-					if (o.mode !== 'vertical' && (e.which === 38 || e.which === 40)) { return; }
-					switch (e.which) {
-						case 39: case 40: // right & down arrow
-							base.goForward();
-							break;
-						case 37: case 38: // left & up arrow
-							base.goBack();
-							break;
-					}
-				}
-			});
-
-			// If a hash can not be used to trigger the plugin, then go to start panel
-			base.currentPage = base.gotoHash() || o.startPanel || 1;
-			base.gotoPage(base.currentPage, false, null, -1);
-
-			// Binds events
-			var triggers = "slideshow_paused slideshow_unpaused slide_init slide_begin slideshow_stop slideshow_start initialized swf_completed".split(" ");
-			$.each("onShowPause onShowUnpause onSlideInit onSlideBegin onShowStop onShowStart onInitialized onSWFComplete".split(" "), function(i,f){
-				if ($.isFunction(o[f])){
-					base.$el.bind(triggers[i], o[f]);
-				}
-			});
-			if ($.isFunction(o.onSlideComplete)){
-				// Added setTimeout (zero time) to ensure animation is complete... see this bug report: http://bugs.jquery.com/ticket/7157
-				base.$el.bind('slide_complete', function(){
-					setTimeout(function(){ o.onSlideComplete(base); }, 0);
-					return false;
-				});
-			}
-			base.initialized = true;
-			base.$el.trigger('initialized', base);
-
-			// trigger the slideshow
-			base.startStop(o.autoPlay);
-
-		};
-
-		// called during initialization & to update the slider if a panel is added or deleted
-		base.updateSlider = function(){
-			// needed for updating the slider
-			base.$el.children('.cloned').remove();
-			base.navTextVisible = base.$nav.find('span:first').css('visibility') !== 'hidden';
-			base.$nav.empty();
-			// set currentPage to 1 in case it was zero - occurs when adding slides after removing them all
-			base.currentPage = base.currentPage || 1;
-
-			base.$items = base.$el.children();
-			base.pages = base.$items.length;
-			base.dir = (o.mode === 'vertical') ? 'top' : 'left';
-			o.showMultiple = (o.mode === 'vertical') ? 1 : parseInt(o.showMultiple,10) || 1; // only integers allowed
-			o.navigationSize = (o.navigationSize === false) ? 0 : parseInt(o.navigationSize,10) || 0;
-
-			// Fix tabbing through the page, but don't change the view if the link is in view (showMultiple = true)
-			base.$items.find('a').unbind('focus.AnythingSlider').bind('focus.AnythingSlider', function(e){
-				var panel = $(this).closest('.panel'),
-				 indx = base.$items.index(panel) + base.adj; // index can be -1 in nested sliders - issue #208
-				base.$items.find('.focusedLink').removeClass('focusedLink');
-				$(this).addClass('focusedLink');
-				base.$window.scrollLeft(0).scrollTop(0);
-				if ( ( indx !== -1 && (indx >= base.currentPage + o.showMultiple || indx < base.currentPage) ) ) {
-					base.gotoPage(indx);
-					e.preventDefault();
-				}
-			});
-			if (o.showMultiple > 1) {
-				if (o.showMultiple > base.pages) { o.showMultiple = base.pages; }
-				base.adjustMultiple = (o.infiniteSlides && base.pages > 1) ? 0 : o.showMultiple - 1;
-			}
-
-			// Hide navigation & player if there is only one page
-			base.$controls
-				.add(base.$nav)
-				.add(base.$startStop)
-				.add(base.$forward)
-				.add(base.$back)[(base.pages <= 1) ? 'hide' : 'show']();
-			if (base.pages > 1) {
-				// Build/update navigation tabs
-				base.buildNavigation();
-			}
-
-			// Top and tail the list with 'visible' number of items, top has the last section, and tail has the first
-			// This supports the "infinite" scrolling, also ensures any cloned elements don't duplicate an ID
-			// Moved removeAttr before addClass otherwise IE7 ignores the addClass: http://bugs.jquery.com/ticket/9871
-			if (o.mode !== 'fade' && o.infiniteSlides && base.pages > 1) {
-				base.$el.prepend( base.$items.filter(':last').clone().addClass('cloned') );
-				// Add support for multiple sliders shown at the same time
-				if (o.showMultiple > 1) {
-					base.$el.append( base.$items.filter(':lt(' + o.showMultiple + ')').clone().addClass('cloned multiple') );
-				} else {
-					base.$el.append( base.$items.filter(':first').clone().addClass('cloned') );
-				}
-				base.$el.find('.cloned').each(function(){
-					// disable all focusable elements in cloned panels to prevent shifting the panels by tabbing
-					$(this).find('a,input,textarea,select,button,area,form').attr({ disabled : 'disabled', name : '' });
-					$(this).find('[id]').andSelf().removeAttr('id');
-				});
-			}
-
-			// We just added two items, time to re-cache the list, then get the dimensions of each panel
-			base.$items = base.$el.addClass(o.mode).children().addClass('panel');
-			base.setDimensions();
-
-			// Set the dimensions of each panel
-			if (o.resizeContents) {
-				base.$items.css('width', base.width);
-				base.$wrapper
-					.css('width', base.getDim(base.currentPage)[0])
-					.add(base.$items).css('height', base.height);
-			} else {
-				base.$win.load(function(){
-					// set dimensions after all images load
-					base.setDimensions();
-					// make sure the outer wrapper is set properly
-					t = base.getDim(base.currentPage);
-					base.$wrapper.css({ width: t[0], height: t[1] });
-					base.setCurrentPage(base.currentPage, false);
-				});
-			}
-
-			if (base.currentPage > base.pages) {
-				base.currentPage = base.pages;
-			}
-			base.setCurrentPage(base.currentPage, false);
-			base.$nav.find('a').eq(base.currentPage - 1).addClass('cur'); // update current selection
-
-			if (o.mode === 'fade') {
-				var t = base.$items.eq(base.currentPage-1);
-				if (o.resumeOnVisible) {
-					// prevent display: none;
-					t.css({ opacity: 1 }).siblings().css({ opacity: 0 });
-				} else {
-					// allow display: none; - resets video
-					base.$items.css('opacity',1);
-					t.fadeIn(0).siblings().fadeOut(0);
-				}
-			}
-
-		};
-
-		// Creates the numbered navigation links
-		base.buildNavigation = function() {
-			if (o.buildNavigation && (base.pages > 1)) {
-				var a, c, i, t, $li;
-				base.$items.filter(':not(.cloned)').each(function(j){
-					$li = $('<li/>');
-					i = j + 1;
-					c = (i === 1 ? ' first' : '') + (i === base.pages ? ' last' : '');
-					a = '<a class="panel' + i + ( base.navTextVisible ? '"' : ' ' + o.tooltipClass + '" title="@"' ) + ' href="#"><span>@</span></a>';
-					// If a formatter function is present, use it
-					if ($.isFunction(o.navigationFormatter)) {
-						t = o.navigationFormatter(i, $(this));
-						if (typeof(t) === "string") {
-							$li.html(a.replace(/@/g,t));
-						} else {
-							$li = $('<li/>', t);
-						}
-					} else {
-						$li.html(a.replace(/@/g,i));
-					}
-					$li
-					.appendTo(base.$nav)
-					.addClass(c)
-					.data('index', i);
-				});
-				base.$nav.children('li').bind(o.clickControls, function(e) {
-					if (!base.flag && o.enableNavigation) {
-						// prevent running functions twice (once for click, second time for focusin)
-						base.flag = true; setTimeout(function(){ base.flag = false; }, 100);
-						base.gotoPage( $(this).data('index') );
-					}
-					e.preventDefault();
-				});
-
-				// Add navigation tab scrolling - use !! in case someone sets the size to zero
-				if (!!o.navigationSize && o.navigationSize < base.pages) {
-					if (!base.$controls.find('.anythingNavWindow').length){
-						base.$nav
-							.before('<ul><li class="prev"><a href="#"><span>' + o.backText + '</span></a></li></ul>')
-							.after('<ul><li class="next"><a href="#"><span>' + o.forwardText + '</span></a></li></ul>')
-							.wrap('<div class="anythingNavWindow"></div>');
-					}
-					// include half of the left position to include extra width from themes like tabs-light and tabs-dark (still not perfect)
-					base.navWidths = base.$nav.find('li').map(function(){
-						return $(this).outerWidth(true) + Math.ceil(parseInt($(this).find('span').css('left'),10)/2 || 0);
-					}).get();
-					base.navLeft = base.currentPage;
-					// add 25 pixels (old IE needs more than 5) to make sure the tabs don't wrap to the next line
-					base.$nav.width( base.navWidth( 1, base.pages + 1 ) + 25 );
-					base.$controls.find('.anythingNavWindow')
-						.width( base.navWidth( 1, o.navigationSize + 1 ) ).end()
-						.find('.prev,.next').bind(o.clickControls, function(e) {
-							if (!base.flag) {
-								base.flag = true; setTimeout(function(){ base.flag = false; }, 200);
-								base.navWindow( base.navLeft + o.navigationSize * ( $(this).is('.prev') ? -1 : 1 ) );
-							}
-							e.preventDefault();
-						});
-				}
-
-			}
-		};
-
-		base.navWidth = function(x,y){
-			var i, s = Math.min(x,y),
-				e = Math.max(x,y),
-				w = 0;
-			for (i = s; i < e; i++) {
-				w += base.navWidths[i-1] || 0;
-			}
-			return w;
-		};
-
-		base.navWindow = function(n){
-			if (!!o.navigationSize && o.navigationSize < base.pages && base.navWidths) {
-				var p = base.pages - o.navigationSize + 1;
-				n = (n <= 1) ? 1 : (n > 1 && n < p) ? n : p;
-				if (n !== base.navLeft) {
-					base.$controls.find('.anythingNavWindow').animate(
-						{ scrollLeft: base.navWidth(1, n), width: base.navWidth(n, n + o.navigationSize) },
-						{ queue: false, duration: o.animationTime });
-					base.navLeft = n;
-				}
-			}
-		};
-
-		// Creates the Forward/Backward buttons
-		base.buildNextBackButtons = function() {
-			base.$forward = $('<span class="arrow forward"><a href="#"><span>' + o.forwardText + '</span></a></span>');
-			base.$back = $('<span class="arrow back"><a href="#"><span>' + o.backText + '</span></a></span>');
-
-			// Bind to the forward and back buttons
-			base.$back.bind(o.clickBackArrow, function(e) {
-				// prevent running functions twice (once for click, second time for swipe)
-				if (o.enableArrows && !base.flag) {
-					base.flag = true; setTimeout(function(){ base.flag = false; }, 100);
-					base.goBack();
-				}
-				e.preventDefault();
-			});
-			base.$forward.bind(o.clickForwardArrow, function(e) {
-				// prevent running functions twice (once for click, second time for swipe)
-				if (o.enableArrows && !base.flag) {
-					base.flag = true; setTimeout(function(){ base.flag = false; }, 100);
-					base.goForward();
-				}
-				e.preventDefault();
-			});
-			// using tab to get to arrow links will show they have focus (outline is disabled in css)
-			base.$back.add(base.$forward).find('a').bind('focusin focusout',function(){
-			 $(this).toggleClass('hover');
-			});
-
-			// Append elements to page
-			base.$back.appendTo( (o.appendBackTo && $(o.appendBackTo).length) ? $(o.appendBackTo) : base.$wrapper );
-			base.$forward.appendTo( (o.appendForwardTo && $(o.appendForwardTo).length) ? $(o.appendForwardTo) : base.$wrapper );
-
-			base.arrowWidth = base.$forward.width(); // assuming the left & right arrows are the same width - used for toggle
-			base.arrowRight = parseInt(base.$forward.css('right'), 10);
-			base.arrowLeft = parseInt(base.$back.css('left'), 10);
-
-		};
-
-		// Creates the Start/Stop button
-		base.buildAutoPlay = function(){
-			base.$startStop
-				.html('<span>' + (base.playing ? o.stopText : o.startText) + '</span>')
-				.bind(o.clickSlideshow, function(e) {
-					if (o.enableStartStop) {
-						base.startStop(!base.playing);
-						base.makeActive();
-						if (base.playing && !o.autoPlayDelayed) {
-							base.goForward(true);
-						}
-					}
-					e.preventDefault();
-				})
-				// show button has focus while tabbing
-				.bind('focusin focusout',function(){
-					$(this).toggleClass('hover');
-				});
-		};
-
-		// Adjust slider dimensions on parent element resize
-		base.checkResize = function(stopTimer){
-			clearTimeout(base.resizeTimer);
-			base.resizeTimer = setTimeout(function(){
-				var w = base.$outer.width() - base.outerPad[0],
-					h = (base.$outer[0].tagName === "BODY" ? base.$win.height() : base.$outer.height()) - base.outerPad[1];
-				// base.width = width of one panel, so multiply by # of panels; outerPad is padding added for arrows.
-				if (base.width * o.showMultiple !== w || base.height !== h) {
-					base.setDimensions(); // adjust panel sizes
-					// make sure page is lined up (use -1 animation time, so we can differeniate it from when animationTime = 0)
-					base.gotoPage(base.currentPage, base.playing, null, -1);
-				}
-				if (typeof(stopTimer) === 'undefined'){ base.checkResize(); }
-			}, 500);
-		};
-
-		// Set panel dimensions to either resize content or adjust panel to content
-		base.setDimensions = function(){
-			var w, h, c, t, edge = 0,
-				fullsize = { width: '100%', height: '100%' },
-				// determine panel width
-				pw = (o.showMultiple > 1) ? base.width || base.$window.width()/o.showMultiple : base.$window.width(),
-				winw = base.$win.width();
-			if (o.expand){
-				w = base.$outer.width() - base.outerPad[0];
-				base.height = h = base.$outer.height() - base.outerPad[1];
-				base.$wrapper.add(base.$window).add(base.$items).css({ width: w, height: h });
-				base.width = pw = (o.showMultiple > 1) ? w/o.showMultiple : w;
-			}
-			base.$items.each(function(i){
-				t = $(this);
-				c = t.children();
-				if (o.resizeContents){
-					// resize panel
-					w = base.width;
-					h = base.height;
-					t.css({ width: w, height: h });
-					if (c.length) {
-						if (c[0].tagName === "EMBED") { c.attr(fullsize); } // needed for IE7; also c.length > 1 in IE7
-						if (c[0].tagName === "OBJECT") { c.find('embed').attr(fullsize); }
-						// resize panel contents, if solitary (wrapped content or solitary image)
-						if (c.length === 1){ c.css(fullsize); }
-					}
-				} else {
-					// get panel width & height and save it
-					w = t.width() || base.width; // if image hasn't finished loading, width will be zero, so set it to base width instead
-					if (c.length === 1 && w >= winw){
-						w = (c.width() >= winw) ? pw : c.width(); // get width of solitary child
-						c.css('max-width', w);   // set max width for all children
-					}
-					t.css('width', w); // set width of panel
-					h = (c.length === 1 ? c.outerHeight(true) : t.height()); // get height after setting width
-					if (h <= base.outerPad[1]) { h = base.height; } // if height less than the outside padding, then set it to the preset height
-					t.css('height', h);
-				}
-				base.panelSize[i] = [w,h,edge];
-				edge += (o.mode === 'vertical') ? h : w;
-			});
-			// Set total width of slider
-			base.$el.css((o.mode === 'vertical' ? 'height' : 'width'), o.mode === 'fade' ? base.width : edge );
-		};
-
-		// get dimension of multiple panels, as needed
-		base.getDim = function(page){
-			var i, w = base.width, h = base.height;
-			if (base.pages < 1 || isNaN(page)) { return [ w, h ]; } // prevent errors when base.panelSize is empty
-			page = (o.infiniteSlides && base.pages > 1) ? page : page - 1;
-			i = base.panelSize[page];
-			if (i) {
-				w = i[0] || w;
-				h = i[1] || h;
-			}
-			if (o.showMultiple > 1) {
-				for (i=1; i < o.showMultiple; i++) {
-					w += base.panelSize[(page + i)][0];
-					h = Math.max(h, base.panelSize[page + i][1]);
-				}
-			}
-			return [w,h];
-		};
-
-		base.goForward = function(autoplay) {
-			// targetPage changes before animation so if rapidly changing pages, it will have the correct current page
-			base.gotoPage(base[ o.allowRapidChange ? 'targetPage' : 'currentPage'] + o.changeBy * (o.playRtl ? -1 : 1), autoplay);
-		};
-
-		base.goBack = function(autoplay) {
-			base.gotoPage(base[ o.allowRapidChange ? 'targetPage' : 'currentPage'] + o.changeBy * (o.playRtl ? 1 : -1), autoplay);
-		};
-
-		base.gotoPage = function(page, autoplay, callback, time) {
-			if (autoplay !== true) {
-				autoplay = false;
-				base.startStop(false);
-				base.makeActive();
-			}
-			// check if page is an id or class name
-			if (/^[#|.]/.test(page) && $(page).length) {
-				page = $(page).closest('.panel').index() + base.adj;
-			}
-
-			// rewind effect occurs here when changeBy > 1
-			if (o.changeBy !== 1){
-				var adj = base.pages - base.adjustMultiple;
-				if (page < 1) {
-					page = o.stopAtEnd ? 1 : ( o.infiniteSlides ? base.pages + page : ( o.showMultiple > 1 - page ? 1 : adj ) );
-				}
-				if (page > base.pages) {
-					// 
-					page = o.stopAtEnd ? base.pages : ( o.showMultiple > 1 - page ? 1 : page -= adj );
-				} else if (page >= adj) {
-					// show multiple adjustments
-					page = adj;
-				}
-			}
-
-			if (base.pages <= 1) { return; } // prevents animation
-			base.$lastPage = base.$currentPage;
-			if (typeof(page) !== "number") {
-				page = parseInt(page,10) || o.startPanel;
-				base.setCurrentPage(page);
-			}
-
-			// pause YouTube videos before scrolling or prevent change if playing
-			if (autoplay && o.isVideoPlaying(base)) { return; }
-
-			base.exactPage = page;
-			if (page > base.pages + 1 - base.adj) { page = (!o.infiniteSlides && !o.stopAtEnd) ? 1 : base.pages; }
-			if (page < base.adj ) { page = (!o.infiniteSlides && !o.stopAtEnd) ? base.pages : 1; }
-			if (!o.infiniteSlides) { base.exactPage = page; } // exact page used by the fx extension
-			base.currentPage = ( page > base.pages ) ? base.pages : ( page < 1 ) ? 1 : base.currentPage;
-			base.$currentPage = base.$items.eq(base.currentPage - base.adj);
-			base.targetPage = (page === 0) ? base.pages : (page > base.pages) ? 1 : page;
-			base.$targetPage = base.$items.eq(base.targetPage - base.adj);
-			time = typeof time !== 'undefined' ? time : o.animationTime;
-			// don't trigger events when time < 0 - to prevent FX from firing multiple times on page resize
-			if (time >= 0) { base.$el.trigger('slide_init', base); }
-			// toggle arrows/controls only if there is time to see it - fix issue #317
-			if (time > 0) { base.slideControls(true); }
-
-			// Set visual
-			if (o.buildNavigation){
-				base.setNavigation(base.targetPage);
-			}
-
-			// When autoplay isn't passed, we stop the timer
-			if (autoplay !== true) { autoplay = false; }
-			// Stop the slider when we reach the last page, if the option stopAtEnd is set to true
-			if (!autoplay || (o.stopAtEnd && page === base.pages)) { base.startStop(false); }
-
-			if (time >= 0) { base.$el.trigger('slide_begin', base); }
-
-			// delay starting slide animation
-			setTimeout(function(d){
-				var p, empty = true;
-				if (o.allowRapidChange) {
-					base.$wrapper.add(base.$el).add(base.$items).stop(true, true);
-				}
-				// resize slider if content size varies
-				if (!o.resizeContents) {
-					// animating the wrapper resize before the window prevents flickering in Firefox
-					// don't animate the dimension if it hasn't changed - fix for issue #264
-					p = base.getDim(page); d = {};
-					// prevent animating a dimension to zero
-					if (base.$wrapper.width() !== p[0]) { d.width = p[0] || base.width; empty = false; }
-					if (base.$wrapper.height() !== p[1]) { d.height = p[1] || base.height; empty = false; }
-					if (!empty) {
-						base.$wrapper.filter(':not(:animated)').animate(d, { queue: false, duration: (time < 0 ? 0 : time), easing: o.easing });
-					}
-				}
-
-				if (o.mode === 'fade') {
-					if (base.$lastPage[0] !== base.$targetPage[0]) {
-						base.fadeIt( base.$lastPage, 0, time );
-						base.fadeIt( base.$targetPage, 1, time, function(){ base.endAnimation(page, callback, time); });
-					} else {
-						base.endAnimation(page, callback, time);
-					}
-				} else {
-					d = {};
-					d[base.dir] = -base.panelSize[(o.infiniteSlides && base.pages > 1) ? page : page - 1][2];
-					// Animate Slider
-					base.$el.filter(':not(:animated)').animate(
-						d, { queue: false, duration: time < 0 ? 0 : time, easing: o.easing, complete: function(){ base.endAnimation(page, callback, time); } }
-					);
-				}
-			}, parseInt(o.delayBeforeAnimate, 10) || 0);
-		};
-
-		base.endAnimation = function(page, callback, time){
-			if (page === 0) {
-				base.$el.css( base.dir, o.mode === 'fade' ? 0 : -base.panelSize[base.pages][2]);
-				page = base.pages;
-			} else if (page > base.pages) {
-				// reset back to start position
-				base.$el.css( base.dir, o.mode === 'fade' ? 0 : -base.panelSize[1][2]);
-				page = 1;
-			}
-			base.exactPage = page;
-			base.setCurrentPage(page, false);
-
-			if (o.mode === 'fade') {
-				// make sure non current panels are hidden (rapid slide changes)
-				base.fadeIt( base.$items.not(':eq(' + (page - base.adj) + ')'), 0, 0);
-			}
-
-			if (!base.hovered) { base.slideControls(false); }
-
-			if (o.hashTags) { base.setHash(page); }
-
-			if (time >= 0) { base.$el.trigger('slide_complete', base); }
-			// callback from external slide control: $('#slider').anythingSlider(4, function(slider){ })
-			if (typeof callback === 'function') { callback(base); }
-
-			// Continue slideshow after a delay
-			if (o.autoPlayLocked && !base.playing) {
-				setTimeout(function(){
-					base.startStop(true);
-				// subtract out slide delay as the slideshow waits that additional time.
-				}, o.resumeDelay - (o.autoPlayDelayed ? o.delay : 0));
-			}
-		};
-
-		base.fadeIt = function(el, toOpacity, time, callback){
-			var t = time < 0 ? 0 : time;
-			if (o.resumeOnVisible) {
-				el.filter(':not(:animated)').fadeTo(t, toOpacity, callback);
-			} else {
-				el.filter(':not(:animated)')[ toOpacity === 0 ? 'fadeOut' : 'fadeIn' ](t, callback);
-			}
-		};
-
-		base.setCurrentPage = function(page, move) {
-			page = parseInt(page, 10);
-
-			if (base.pages < 1 || page === 0 || isNaN(page)) { return; }
-			if (page > base.pages + 1 - base.adj) { page = base.pages - base.adj; }
-			if (page < base.adj ) { page = 1; }
-
-			// hide/show arrows based on infinite scroll mode
-			if (o.buildArrows && !o.infiniteSlides && o.stopAtEnd){
-				base.$forward[ page === base.pages - base.adjustMultiple ? 'addClass' : 'removeClass']('disabled');
-				base.$back[ page === 1 ? 'addClass' : 'removeClass']('disabled');
-				if (page === base.pages && base.playing) { base.startStop(); }
-			}
-
-			// Only change left if move does not equal false
-			if (!move) {
-				var d = base.getDim(page);
-				base.$wrapper
-					.css({ width: d[0], height: d[1] })
-					.add(base.$window).scrollLeft(0).scrollTop(0); // reset in case tabbing changed this scrollLeft - probably overly redundant
-				base.$el.css( base.dir, o.mode === 'fade' ? 0 : -base.panelSize[(o.infiniteSlides && base.pages > 1) ? page : page - 1][2] );
-			}
-
-			// Update local variable
-			base.currentPage = page;
-			base.$currentPage = base.$items.removeClass('activePage').eq(page - base.adj).addClass('activePage');
-
-			if (o.buildNavigation){
-				base.setNavigation(page);
-			}
-
-		};
-
-		base.setNavigation = function(page){
-			base.$nav
-				.find('.cur').removeClass('cur').end()
-				.find('a').eq(page - 1).addClass('cur');
-		};
-
-		base.makeActive = function(){
-			// Set current slider as active so keyboard navigation works properly
-			if (!base.$wrapper.hasClass('activeSlider')){
-				$('.activeSlider').removeClass('activeSlider');
-				base.$wrapper.addClass('activeSlider');
-			}
-		};
-
-		// This method tries to find a hash that matches an ID and panel-X
-		// If either found, it tries to find a matching item
-		// If that is found as well, then it returns the page number
-		base.gotoHash = function(){
-			var h = base.win.location.hash,
-				i = h.indexOf('&'),
-				n = h.match(base.regex);
-			// test for "/#/" or "/#!/" used by the jquery address plugin - $('#/') breaks jQuery
-			if (n === null && !/^#&/.test(h) && !/#!?\//.test(h)) {
-				// #quote2&panel1-3&panel3-3
-				h = h.substring(0, (i >= 0 ? i : h.length));
-				// ensure the element is in the same slider
-				n = ($(h).length && $(h).closest('.anythingBase')[0] === base.el) ? base.$items.index($(h).closest('.panel')) + base.adj : null;
-			} else if (n !== null) {
-				// #&panel1-3&panel3-3
-				n = (o.hashTags) ? parseInt(n[1],10) : null;
-			}
-			return n;
-		};
-
-		base.setHash = function(n){
-			var s = 'panel' + base.runTimes + '-',
-				h = base.win.location.hash;
-			if ( typeof h !== 'undefined' ) {
-				base.win.location.hash = (h.indexOf(s) > 0) ? h.replace(base.regex, s + n) : h + "&" + s + n;
-			}
-		};
-
-		// Slide controls (nav and play/stop button up or down)
-		base.slideControls = function(toggle){
-			var dir = (toggle) ? 'slideDown' : 'slideUp',
-				t1 = (toggle) ? 0 : o.animationTime,
-				t2 = (toggle) ? o.animationTime : 0,
-				op = (toggle) ? 1 : 0,
-				sign = (toggle) ? 0 : 1; // 0 = visible, 1 = hidden
-			if (o.toggleControls) {
-				base.$controls.stop(true,true).delay(t1)[dir](o.animationTime/2).delay(t2);
-			}
-			if (o.buildArrows && o.toggleArrows) {
-				if (!base.hovered && base.playing) { sign = 1; op = 0; } // don't animate arrows during slideshow
-				base.$forward.stop(true,true).delay(t1).animate({ right: base.arrowRight + (sign * base.arrowWidth), opacity: op }, o.animationTime/2);
-				base.$back.stop(true,true).delay(t1).animate({ left: base.arrowLeft + (sign * base.arrowWidth), opacity: op }, o.animationTime/2);
-			}
-		};
-
-		base.clearTimer = function(paused){
-			// Clear the timer only if it is set
-			if (base.timer) {
-				base.win.clearInterval(base.timer);
-				if (!paused && base.slideshow) {
-					base.$el.trigger('slideshow_stop', base);
-					base.slideshow = false;
-				}
-			}
-		};
-
-		// Pass startStop(false) to stop and startStop(true) to play
-		base.startStop = function(playing, paused) {
-			if (playing !== true) { playing = false; }  // Default if not supplied is false
-			base.playing = playing;
-
-			if (playing && !paused) {
-				base.$el.trigger('slideshow_start', base);
-				base.slideshow = true;
-			}
-
-			// Toggle playing and text
-			if (o.buildStartStop) {
-				base.$startStop.toggleClass('playing', playing).find('span').html( playing ? o.stopText : o.startText );
-				// add button text to title attribute if it is hidden by text-indent
-				if ( base.$startStop.find('span').css('visibility') === "hidden" ) {
-					base.$startStop.addClass(o.tooltipClass).attr( 'title', playing ? o.stopText : o.startText );
-				}
-			}
-
-			// Pause slideshow while video is playing
-			if (playing){
-				base.clearTimer(true); // Just in case this was triggered twice in a row
-				base.timer = base.win.setInterval(function() {
-					// prevent autoplay if video is playing
-					if ( !o.isVideoPlaying(base) ) {
-						base.goForward(true);
-					// stop slideshow if resume if false
-					} else if (!o.resumeOnVideoEnd) {
-						base.startStop();
-					}
-				}, o.delay);
-			} else {
-				base.clearTimer();
-			}
-		};
-
-		// Trigger the initialization
-		base.init();
-	};
-
-	$.anythingSlider.defaults = {
-		// Appearance
-		theme               : "default", // Theme name, add the css stylesheet manually
-		mode                : "horiz",   // Set mode to "horizontal", "vertical" or "fade" (only first letter needed); replaces vertical option
-		expand              : false,     // If true, the entire slider will expand to fit the parent element
-		resizeContents      : true,      // If true, solitary images/objects in the panel will expand to fit the viewport
-		showMultiple        : false,     // Set this value to a number and it will show that many slides at once
-		easing              : "swing",   // Anything other than "linear" or "swing" requires the easing plugin or jQuery UI
-
-		buildArrows         : true,      // If true, builds the forwards and backwards buttons
-		buildNavigation     : true,      // If true, builds a list of anchor links to link to each panel
-		buildStartStop      : true,      // ** If true, builds the start/stop button
-
-/*
-		// commented out as this will reduce the size of the minified version
-		appendForwardTo     : null,      // Append forward arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
-		appendBackTo        : null,      // Append back arrow to a HTML element (jQuery Object, selector or HTMLNode), if not null
-		appendControlsTo    : null,      // Append controls (navigation + start-stop) to a HTML element (jQuery Object, selector or HTMLNode), if not null
-		appendNavigationTo  : null,      // Append navigation buttons to a HTML element (jQuery Object, selector or HTMLNode), if not null
-		appendStartStopTo   : null,      // Append start-stop button to a HTML element (jQuery Object, selector or HTMLNode), if not null
-*/
-
-		toggleArrows        : false,     // If true, side navigation arrows will slide out on hovering & hide @ other times
-		toggleControls      : false,     // if true, slide in controls (navigation + play/stop button) on hover and slide change, hide @ other times
-
-		startText           : "Start",   // Start button text
-		stopText            : "Stop",    // Stop button text
-		forwardText         : "&raquo;", // Link text used to move the slider forward (hidden by CSS, replaced with arrow image)
-		backText            : "&laquo;", // Link text used to move the slider back (hidden by CSS, replace with arrow image)
-		tooltipClass        : "tooltip", // Class added to navigation & start/stop button (text copied to title if it is hidden by a negative text indent)
-
-		// Function
-		enableArrows        : true,      // if false, arrows will be visible, but not clickable.
-		enableNavigation    : true,      // if false, navigation links will still be visible, but not clickable.
-		enableStartStop     : true,      // if false, the play/stop button will still be visible, but not clickable. Previously "enablePlay"
-		enableKeyboard      : true,      // if false, keyboard arrow keys will not work for this slider.
-
-		// Navigation
-		startPanel          : 1,         // This sets the initial panel
-		changeBy            : 1,         // Amount to go forward or back when changing panels.
-		hashTags            : true,      // Should links change the hashtag in the URL?
-		infiniteSlides      : true,      // if false, the slider will not wrap & not clone any panels
-		navigationFormatter : null,      // Details at the top of the file on this use (advanced use)
-		navigationSize      : false,     // Set this to the maximum number of visible navigation tabs; false to disable
-
-		// Slideshow options
-		autoPlay            : false,     // If true, the slideshow will start running; replaces "startStopped" option
-		autoPlayLocked      : false,     // If true, user changing slides will not stop the slideshow
-		autoPlayDelayed     : false,     // If true, starting a slideshow will delay advancing slides; if false, the slider will immediately advance to the next slide when slideshow starts
-		pauseOnHover        : true,      // If true & the slideshow is active, the slideshow will pause on hover
-		stopAtEnd           : false,     // If true & the slideshow is active, the slideshow will stop on the last page. This also stops the rewind effect when infiniteSlides is false.
-		playRtl             : false,     // If true, the slideshow will move right-to-left
-
-		// Times
-		delay               : 3000,      // How long between slideshow transitions in AutoPlay mode (in milliseconds)
-		resumeDelay         : 15000,     // Resume slideshow after user interaction, only if autoplayLocked is true (in milliseconds).
-		animationTime       : 600,       // How long the slideshow transition takes (in milliseconds)
-		delayBeforeAnimate  : 0,         // How long to pause slide animation before going to the desired slide (used if you want your "out" FX to show).
-
-/*
-		// Callbacks - commented out to reduce size of the minified version - they still work
-		onBeforeInitialize  : function(e, slider) {}, // Callback before the plugin initializes
-		onInitialized       : function(e, slider) {}, // Callback when the plugin finished initializing
-		onShowStart         : function(e, slider) {}, // Callback on slideshow start
-		onShowStop          : function(e, slider) {}, // Callback after slideshow stops
-		onShowPause         : function(e, slider) {}, // Callback when slideshow pauses
-		onShowUnpause       : function(e, slider) {}, // Callback when slideshow unpauses - may not trigger properly if user clicks on any controls
-		onSlideInit         : function(e, slider) {}, // Callback when slide initiates, before control animation
-		onSlideBegin        : function(e, slider) {}, // Callback before slide animates
-		onSlideComplete     : function(slider) {},    // Callback when slide completes - no event variable!
-*/
-
-		// Interactivity
-		clickForwardArrow   : "click",         // Event used to activate forward arrow functionality (e.g. add jQuery mobile's "swiperight")
-		clickBackArrow      : "click",         // Event used to activate back arrow functionality (e.g. add jQuery mobile's "swipeleft")
-		clickControls       : "click focusin", // Events used to activate navigation control functionality
-		clickSlideshow      : "click",         // Event used to activate slideshow play/stop button
-		allowRapidChange    : false,           // If true, allow rapid changing of the active pane, instead of ignoring activity during animation
-
-		// Video
-		resumeOnVideoEnd    : true,      // If true & the slideshow is active & a supported video is playing, it will pause the autoplay until the video is complete
-		resumeOnVisible     : true,      // If true the video will resume playing (if previously paused, except for YouTube iframe - known issue); if false, the video remains paused.
-		addWmodeToObject    : "opaque",  // If your slider has an embedded object, the script will automatically add a wmode parameter with this setting
-		isVideoPlaying      : function(base){ return false; } // return true if video is playing or false if not - used by video extension
-
-	};
-
-	$.fn.anythingSlider = function(options, callback) {
-
-		return this.each(function(){
-			var page, anySlide = $(this).data('AnythingSlider');
-
-			// initialize the slider but prevent multiple initializations
-			if ((typeof(options)).match('object|undefined')){
-				if (!anySlide) {
-					(new $.anythingSlider(this, options));
-				} else {
-					anySlide.updateSlider();
-				}
-			// If options is a number, process as an external link to page #: $(element).anythingSlider(#)
-			} else if (/\d/.test(options) && !isNaN(options) && anySlide) {
-				page = (typeof(options) === "number") ? options : parseInt($.trim(options),10); // accepts "  2  "
-				// ignore out of bound pages
-				if ( page >= 1 && page <= anySlide.pages ) {
-					anySlide.gotoPage(page, false, callback); // page #, autoplay, one time callback
-				}
-			// Accept id or class name
-			} else if (/^[#|.]/.test(options) && $(options).length) {
-				anySlide.gotoPage(options, false, callback);
-			}
-		});
-	};
-
-})(jQuery);
-define("3rdparty/jquery.anythingslider", function(){});
-
-/**
- * @license
- * Patterns @VERSION@ carousel
- *
- * Copyright 2012 Simplon B.V.
- */
-define('patterns/carousel',[
-    "jquery",
-    "../logging",
-    "../core/parser",
-    "../3rdparty/jquery.anythingslider"
-], function($, logging, Parser) {
-    var log = logging.getLogger("carousel"),
-        parser = new Parser();
-
-    parser.add_argument("auto-play", true);
-    parser.add_argument("loop", true);
-    parser.add_argument("resize", false);
-    parser.add_argument("expand", false);
-    parser.add_argument("control-arrows", false);
-    parser.add_argument("control-navigation", false);
-    parser.add_argument("control-startstop", false);
-    parser.add_argument("time-delay", 3000);
-    parser.add_argument("time-animation", 600);
-
-    var carousel = {
-        markup_trigger: ".pt-carousel",
+define('patterns/validate',[
+        "jquery",
+        "../registry",
+        '../logging',
+        "../../lib/jquery.validate",
+        "../../lib/jquery-validation-1.9.0/additional-methods"
+], function($, patterns, logging) {
+    var log = logging.getLogger('validate');
+
+    var pattern_spec = {
+        name: "validate",
+        trigger: "form.validate",
 
         init: function($el) {
-            return $el.each(function() {
-                var options = parser.parse(this.dataset.carousel),
-                    settings = {hashTags: false};
-
-                if (Array.isArray(options)) {
-                    log.warn("Multiple options not supported for carousels.");
-                    options = options[0];
+            var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
+                var $el = $(el),
+                    id = $el.attr('id');
+                if (!id) {
+                    log.error('Element needs id, skipping:', $el);
+                    return acc;
                 }
+                acc[id] = {required: $el.data('required-if')};
+                return acc;
+            }, {});
+            log.debug('rules:', rules);
 
-                settings.autoPlay = options["auto-play"];
-                settings.stopAtEnd = !options.loop;
-                settings.resizeContents = options.resize;
-                settings.expand = options.expand;
-                settings.buildArrows = options["control-arrows"];
-                settings.buildNavigation = options["control-navigation"];
-                settings.buildStartStop = options["control-startstop"];
-                settings.delay = options["time-delay"];
-                settings.animationTime = options["time-animation"];
-
-                var $carousel = $(this).anythingSlider(settings),
-                    control = $carousel.data("AnythingSlider"),
-                    $panel_links = $();
-
-                $carousel
-                    .children().each(function(index, el) {
-                        if (!this.id)
-                            return;
-                    
-                        var $links = $("a[href=#" + this.id+"]");
-                        if (index===control.currentPage)
-                            $links.addClass("current");
-                        else
-                            $links.removeClass("current");
-                        $links.on("click.carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
-                        $panel_links = $panel_links.add($links);
-                    }).end()
-                    .on("slide_complete.carousel", null, $panel_links, carousel.onSlideComplete);
-            });
-        },
-
-        onPanelLinkClick: function(event) {
-            event.data.control.gotoPage(event.data.index, false);
-            event.preventDefault();
-        },
-
-        onSlideComplete: function(event, slider) {
-            var $panel_links = event.data;
-            $panel_links.removeClass("current");
-            if (slider.$targetPage[0].id)
-                $panel_links.filter("[href=#" + slider.$targetPage[0].id + "]").addClass("current");
+            // ATTENTION: adding the debug option to validate, disables
+            // form submission
+            $el.validate({rules: rules});
+            return $el;
         }
     };
 
-    return carousel;
+    patterns.register(pattern_spec);
+    return pattern_spec;
 });
-
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-define('patterns',['require','./compat','./logging','./utils','./patterns/ajaxify','./patterns/autosuggest','./patterns/breadcrumbs','./patterns/collapsible','./patterns/chosen','./patterns/edit-tinymce','./patterns/expandable','./patterns/inject','./patterns/inject2','./patterns/inject_log_old','./patterns/modal','./patterns/navigation','./patterns/placeholder','./patterns/validate','./patterns/carousel'],function(require) {
-    require('./compat');
-
-    var log = require('./logging').getLogger(),
-        utils = require('./utils'),
-        jquery_plugin = utils.jquery_plugin,
-        pimp_pattern = utils.pimp_pattern;
-
-    var patterns_order = [
-        'ajaxify',
-        'autosuggest',
-        'breadcrumbs',
-        'collapsible',
-        'chosen',
-        'edit-tinymce',
-        'expandable',
-        'inject',
-        'inject2',
-        'inject_log_old',
-        'modal',
-        'navigation',
-        'placeholder',
-        'validate',
-        'carousel'
-    ];
-
-
-    var plain_patterns = {
-        ajaxify: require('./patterns/ajaxify'),
-        autosuggest: require('./patterns/autosuggest'),
-        breadcrumbs: require('./patterns/breadcrumbs'),
-        collapsible: require('./patterns/collapsible'),
-        chosen: require('./patterns/chosen'),
-//        edit: require('./patterns/edit'),
-        "edit-tinymce": require('./patterns/edit-tinymce'),
-        expandable: require('./patterns/expandable'),
-        inject: require('./patterns/inject'),
-        inject2: require('./patterns/inject2'),
-        inject_log_old: require('./patterns/inject_log_old'),
-        modal: require('./patterns/modal'),
-        navigation: require('./patterns/navigation'),
-        placeholder: require('./patterns/placeholder'),
-        validate: require('./patterns/validate'),
-        carousel: require('./patterns/carousel')
-    };
-
-    var patterns = {};
-
-    // If you use this to register custom patterns make sure to prefix
-    // their names to avoid name collision.
-    patterns._ordered = [];
-    patterns.register = function(name, pattern) {
-        patterns[name] = pattern = pimp_pattern(name, pattern);
-        patterns._ordered.push(name);
-        // make available as jquery plugins - this is optional and not
-        // needed for the functionality of the patterns library. Should be
-        // configurable.
-        if (pattern.register_jquery_plugin === undefined) {
-            pattern.register_jquery_plugin = true;
-        }
-        if (pattern.register_jquery_plugin) {
-            $.fn[name] = jquery_plugin(name, pattern);
-        }
-        log.info('Registered pattern:', name, pattern);
-    };
-
-    patterns.scan = function(content, opts) {
-        var $content = $(content);
-        patterns._ordered.forEach(function(name) {
-            var pattern = patterns[name],
-                trigger = pattern.markup_trigger;
-            if (!trigger) return;
-            trigger = trigger.split(',').map(function(el, idx) {
-                return el + ':not(.cant-touch-this)';
-            }).join(',');
-            if ($content.is(trigger)) pattern.init($content, opts);
-            $content.find(trigger).each(function() { pattern.init($(this), opts); });
-        });
-    };
-
-    patterns_order.forEach(function(name) {
-        patterns.register(name, plain_patterns[name]);
-    });
-
-    // for now this happens in main.js
-    //
-    // $(document).on('inject.patterns.scan', function(ev, opts) {
-    //     patterns.scan(ev.target, opts);
-    // });
-
-    return patterns;
-});
-
-define('patterns/transforms',[
-    'jquery'
-], function($) {
-    var transforms = {
-        convertToIframes: function($root) {
-            $root.find("object[type=text/html]").each(function() {
-                var $object = $(this),
-                    $iframe = $("<iframe allowtransparency='true'/>");
-
-                $iframe
-                    .attr("id", $object.attr("id"))
-                    .attr("class", $object.attr("class"))
-                    .attr("src", $object.attr("data"))
-                    .attr("frameborder", "0")
-                    .attr("style", "background-color:transparent");
-                $object.replaceWith($iframe);
-            });
-        },
-
-
-        initContent: function(root) {
-            var $root = $(root);
-            if ($root.is(".record-history"))
-                $root.addClass('cant-touch-this');
-
-            $("legend:not(.cant-touch-this)", root).each(function() {
-                $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
-            });
-
-            // Replace objects with iframes for IE 8 and older.
-            if ($.browser.msie ) {
-                var version = Number( $.browser.version.split(".", 2).join(""));
-                if (version<=80)
-                    transforms.convertToIframes($root);
-            }
-        }
-    };
-
-    return transforms;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('patterns/autofocus',[
-    'jquery'
-], function($) {
-    var autofocus = {
-        initContent: function(root) {
-            var $el = $(":input.autofocus,:input[autofocus]", root).filter(":not(.cant-touch.this)");
-
-            for (var i=0; i<$el.length; i+=1)
-                if (!$el.eq(i).val()) {
-                    $el.get(i).focus();
-                    return;
-                }
-
-            $el.eq(0).focus();
-        }
-    };
-
-    return autofocus;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('patterns/autoload',[
-    "jquery"
-], function($) {
-    var autoload = {
-        initContent: function(root) {
-            var $root = $(root);
-
-            // find all autoloads
-            $root.find('.autoLoading-visible:not(.cant-touch-this)').each(function() {
-                var $autoload = $(this),
-                    $scrollable = $autoload.parents(":scrollable");
-
-                // ignore executed autoloads
-                if ($autoload.data('autoLoading')) return false;
-
-                // function to trigger the autoload and mark as triggered
-                var trigger = function() {
-                    $autoload.data('autoLoading', true);
-                    $autoload.trigger('click');
-                    return true;
-                };
-
-                // if autoload has no scrollable parent -> trigger it, it is visible
-                if ($scrollable.length === 0) return trigger();
-
-                // if scrollable parent and visible -> trigger it
-                // we only look at the closest scrollable parent, no nesting
-                var checkVisibility = function() {
-                    if ($autoload.data('autoLoading')) return false;
-                    var reltop = $autoload.offset().top - $scrollable.offset().top - 1000,
-                        doTrigger = reltop <= $scrollable.innerHeight();
-                    if (doTrigger) return trigger();
-                    return false;
-                };
-                if (checkVisibility()) return true;
-
-                // wait to become visible - again only immediate scrollable parent
-                $($scrollable[0]).on("scroll", checkVisibility);
-                $(window).on('resize.autoload', checkVisibility);
-                return false;
-            });
-            return $root;
-        }
-    };
-
-    return autoload;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('jqplugins/autosubmit',[
+define('patterns/zoom',[
         "jquery",
-        "../logging",
-        "../core/parser",
-        "../utils"
-        ],
-function($, logging, Parser, utils) {
-    var log = logging.getLogger("autosubmit"),
-        parser = new Parser();
-    parser.add_argument("delay");
-
-    $.patterns = $.patterns || {};
-
-    $.patterns.autosubmit = {
-        parse: function($trigger) {
-            var options = parser.parse($trigger.data("autosubmit"));
-            if (Array.isArray(options)) {
-                log.error("autosubmit does not support multiple options");
-                options = options[0];
-            }
-            return options;
-        },
-
-        validateOptions: function(options) {
-            if (typeof options.delay==="string") {
-                if (options.delay==="delay" || options.delay==="true")
-                    options.delay=400;
-                else {
-                    var number = parseInt(options.delay, 10);
-                    if (isNaN(number)) {
-                        log.error("Invalid delay value");
-                        return null;
-                    }
-                    options.delay=number;
-                }
-            } else if (typeof options.delay==="number") {
-                if (options.delay<0) {
-                    log.error("Timetravel machine broken - negative delay not possible.");
-                    return null;
-                }
-            } else if (options.delay) {
-                log.error("Invalid delay value");
-                return null;
-            }
-            return options;
-        },
-
-        onChange: function(event) {
-            var $trigger = $(this),
-                $form = this.tagName==="FORM" ? $trigger : $trigger.closest("form");
-
-            if ($trigger.hasClass("auto-suggest")) {
-                log.debug("Ignored event from autosuggest field.");
-                return;
-            }
-
-            if ($trigger.is("input[type=search]")) {
-                // clicking X on type=search deletes data attrs,
-                // therefore we store the old value on the form.
-                var name = $victim.attr('name'),
-                    key = name + '-autosubmit-oldvalue',
-                    oldvalue = $form.data(key) || "",
-                    curvalue = $target[0].value || "";
-
-                if (!name)
-                    log.warn('type=search without name, will be a problem' +
-                             ' if there are multiple', $target);
-                if (oldvalue===curvalue)
-                    return;
-                $form.data(key, curvalue);
-            }
-
-            log.info("triggered by " + event.type);
-            $form.submit();
-            event.stopPropagation();
-        }
-    };
-
-    var methods = {
-        init: function(defaults) {
-            defaults = defaults || {};
-            return this.each(function() {
-                var $trigger = $(this),
-                    options = $.extend({}, $.patterns.autosubmit.parse($trigger), defaults);
-                options=$.patterns.autosubmit.validateOptions(options);
-                if (!options)
-                    return;
-
-                var func = $.patterns.autosubmit.onChange;
-                if (options.delay)
-                    func=utils.debounce(func, options.delay);
-                $trigger
-                    .data("patternAutosubmit", options)
-                    .off(".patternAutosubmit")
-                    .on("change.patternAutosubmit", func)
-                    .on("keyup.patternAutosubmit", "input:not([type=file],[type=checkbox],[type=radio],[type=hidden],[type=image],[type=password],[type=submit])", func);
-            });
-        },
-
-        destroy: function() {
-            return this.each(function() {
-                $(this).removeData("patternAutosubmit").off(".patternAutosubmit");
-            });
-        }
-    };
-
-    $.fn.patternAutosubmit = function(method) {
-        if (methods[method])
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        else if (typeof method ==="object" || !method)
-            return methods.init.apply(this, arguments);
-        else
-            $.error("Method " + method + " does not exist on jQuery.patternAutosubmit");
-    };
-
-    return $.patterns.autosubmit;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 sts=4 expandtab
-;
-define('patterns/autosubmit',[
-    '../jqplugins/autosubmit'
-], function() {
-    var autosubmit = {
-        initContent: function(root) {
-            $("[data-autosubmit]", root)
-                .find("input[type-search]").andSelf()
-                .patternAutosubmit();
-        }
-    };
-
-    return autosubmit;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('jqplugins/checklist',[
-        "jquery",
-        "../logging",
+        "../registry",
         "../core/parser"
-        ],
-function($, logging, Parser) {
-    var log = logging.getLogger("checklist"),
-        parser = new Parser();
-    parser.add_argument("select", ".functions .select-all");
-    parser.add_argument("deselect", ".functions .deselect-all");
+], function($, patterns, Parser) {
+    var parser = new Parser("zoom");
 
-    $.patterns = $.patterns || {};
+    parser.add_argument("min", 0);
+    parser.add_argument("max", 2);
 
-    $.patterns.checklist = {
-        parse: function($trigger) {
-            var options = parser.parse($trigger.data("checklist"));
-            if (Array.isArray(options)) {
-                log.error("checklist does not support multiple options");
-                options = options[0];
-            }
-            return options;
-        },
+    var zoom = {
+        name: "zoom",
+        trigger: ".pat-zoom",
 
-        onChange: function(event) {
-            var $trigger = event.data.trigger,
-                options = $trigger.data("patternChecklist"),
-                deselect = $trigger.find(options.deselect),
-                select = $trigger.find(options.select);
-
-            if (($trigger.find('input[type=checkbox]:visible:checked').length===0) &&
-                (!deselect.prop('disabled'))) {
-                deselect.attr({disabled: 'disabled'});
-            } else if (deselect.prop('disabled')) {
-                deselect.prop('disabled', false);
-            }
-
-            if (($trigger.find('input[type=checkbox]:visible:not(:checked)').length===0) &&
-                (!select.prop('disabled'))) {
-                select.attr({disabled: 'disabled'});
-            } else if (select.prop('disabled')) {
-                select.prop('disabled', false);
-            }
-        },
-
-        onSelectAll: function(event) {
-            var $trigger = event.data.trigger,
-                options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:not(:checked)").prop("checked", true);
-            $trigger.find(options.deselect).prop("disabled", false);
-            $trigger.find(options.select).attr({disabled: "disabled"});
-            $trigger.change();
-            event.preventDefault();
-        },
-
-        onDeselectAll: function(event) {
-            var $trigger = event.data.trigger,
-                options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:checked").prop("checked", false);
-            $trigger.find(options.select).prop("disabled", false);
-            $trigger.find(options.deselect).attr({disabled: "disabled"});
-            $trigger.change();
-            event.preventDefault();
-        }
-    };
-
-    var methods = {
-        init: function(defaults) {
-            defaults = defaults || {};
-            return this.each(function() {
-                var $trigger = $(this),
-                    options = $.extend({}, $.patterns.checklist.parse($trigger), defaults);
-
-                $trigger.data("patternChecklist", options);
-                $trigger.find(options.select)
-                    .on("click.checklist", {trigger: $trigger}, $.patterns.checklist.onSelectAll);
-                $trigger.find(options.deselect)
-                    .on("click.checklist", {trigger: $trigger}, $.patterns.checklist.onDeselectAll);
-                $trigger.on("change.checklist", "input[type=checkbox]", {trigger: $trigger}, $.patterns.checklist.onChange);
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $block = $(this),
+                    options = parser.parse($block, opts),
+                    $slider;
+                $slider=$("<input/>", {type: "range", step: "any", value: 1,
+                                       min: options.min, max: options.max});
+                $slider
+                    .insertBefore($block)
+                    .on("change", null, $block, zoom.onZoom);
             });
         },
 
-        destroy: function() {
-            return this.each(function() {
-                var $trigger = $(this),
-                    options = $trigger.data("patternChecklist");
-                $trigger.find(options.select).off("click.checklist");
-                $trigger.find(options.deselect).off("click.checklist");
-                $trigger.off("change.checklist", "input[type=checkbox]");
-                $trigger.data("patternChecklist", null);
-            });
+        onZoom: function(event) {
+            var $block=event.data;
+            $block.css("zoom", this.value);
         }
     };
 
-    $.fn.patternChecklist = function(method) {
-        if (methods[method])
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        else if (typeof method ==="object" || !method)
-            return methods.init.apply(this, arguments);
-        else
-            $.error("Method " + method + " does not exist on jQuery.patternChecklist");
-    };
-
-    return $.patterns.checklist;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 sts=4 expandtab
-;
-define('patterns/checklist',[
-    '../jqplugins/checklist'
-], function() {
-    var checklist = {
-        initContent: function(root) {
-            $("[data-checklist]").patternChecklist();
-        }
-    };
-
-    return checklist;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('patterns/depends',[
-    'jquery'
-], function($) {
-    var depends = {
-        verify: function($slave, command) {
-            var result=[],
-                $form = $slave.closest("form"),
-                $input, i, value, parts;
-
-            if (!$form.length)
-                $form=$(document);
-
-            for (i=0; i<command.on.length; i++) {
-                parts=command.on[i];
-
-                $input = $form.find(":input[name="+parts[0]+"]");
-                if (!$input.length) {
-                    result.push(false);
-                    continue;
-                }
-
-                if ($input.attr("type")==="radio" || $input.attr("type")==="checkbox")
-                    value = $input.filter(":checked").val();
-                else
-                    value = $input.val();
-
-                if ((parts.length===1 || parts[1]==="on") && !value) {
-                    result.push(false);
-                    continue;
-                } else if (parts[1]==="off" && value) {
-                    result.push(false);
-                    continue;
-                } else if (parts.length>2) {
-                    if (parts[1]==="equals" && parts[2]!==value) {
-                        result.push(false);
-                        continue;
-                    } else if (parts[1]==="notEquals" && parts[2]===value) {
-                        result.push(false);
-                        continue;
-                    }
-                }
-                result.push(true);
-            }
-
-            if (command.type==="or") {
-                for (i=0; i<result.length; i++) {
-                    if (result[i])
-                        return true;
-                }
-                return false;
-            } else {
-                for (i=0; i<result.length; i++)
-                    if (!result[i])
-                        return false;
-                return true;
-            }
-        },
-
-        getMasters: function($slave, command) {
-            var $result = $(),
-                $form = $slave.closest("form"),
-                i, parts;
-
-            if (!$form.length)
-                $form=$(document);
-
-            for (i=0; i<command.on.length; i++) {
-                parts=command.on[i];
-                if (!parts)
-                    continue;
-
-                $result=$result.add($form.find(":input[name="+parts[0]+"]"));
-            }
-
-            return $result;
-        },
-
-        parse: function(data) {
-            var classes = data.split(" "),
-                command = {"on" : [],
-                           "action" : "show",
-                           "type": "and"
-                           },
-                i, a, parts;
-
-            for (i=0; i<classes.length; i++) {
-                parts=classes[i].split("-");
-                if (parts[0].indexOf("depends")===0) {
-                    a=parts[0].substr(7).toLowerCase();
-                    if (a==="on") {
-                        if (parts.length>4) {
-                            parts=parts.slice(0,3).concat(parts.slice(3).join("-"));
-                        }
-                        command.on.push(parts.slice(1));
-                    } else {
-                        command[a]=parts[1];
-                    }
-                }
-            }
-            return command;
-        },
-
-        initContent: function(root) {
-            return $("*[class*='dependsOn-']", root).each(function() {
-                var slave = this,
-                    $slave = $(this),
-                    command, state;
-
-                command=depends.parse($slave.attr("class"));
-                state=depends.verify($slave, command);
-
-                if (command.action==="show") {
-                    if (state)
-                        $slave.show();
-                    else
-                        $slave.hide();
-                } else if (command.action==="enable") {
-                    if (state) {
-                        slave.disabled=null;
-                        $slave.removeClass("disabled");
-                    } else {
-                        slave.disabled="disabled";
-                        $slave.addClass("disabled");
-                    }
-                }
-
-                depends.getMasters($slave, command).on("change.patterns", function() {
-                    state=depends.verify($slave, command);
-                    if (command.action==="show") {
-                        if (state)
-                            $slave.slideDown();
-                        else
-                            $slave.slideUp();
-                    } else if (command.action==="enable" ) {
-                        if (state) {
-                            slave.disabled=null;
-                            $slave.removeClass("disabled");
-                        } else {
-                            slave.disabled="disabled";
-                            $slave.addClass("disabled");
-                        }
-                    }
-                });
-            });
-        }
-    };
-
-    return depends;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('patterns/menu',[
-    'jquery'
-], function($) {
-    var menu = {
-        initContent: function(root) {
-            return $("ul.menu:not(.cant-touch-this)", root).each(function() {
-                var $menu = $(this),
-                    timer,
-                    closeMenu, openMenu,
-                    mouseOverHandler, mouseOutHandler;
-
-                openMenu = function($li) {
-                    if (timer) {
-                        clearTimeout(timer);
-                        timer = null;
-                    }
-
-                    if (!$li.hasClass("open")) {
-                        $li.siblings("li.open").each(function() { closeMenu($menu);});
-                        $li.addClass("open").removeClass("closed");
-                    }
-                };
-
-                closeMenu = function($li) {
-                    $li.find("li.open").andSelf().removeClass("open").addClass("closed");
-                };
-
-                mouseOverHandler = function() {
-                    var $li = $(this);
-                    openMenu($li);
-                };
-
-                mouseOutHandler = function() {
-                    var $li = $(this);
-
-                    if (timer) {
-                        clearTimeout(timer);
-                        timer=null;
-                    }
-
-                    timer = setTimeout(function() { closeMenu($li); }, 1000);
-                };
-
-                $("ul.menu li", root)
-                    .addClass("closed")
-                    .filter(":has(ul)").addClass("hasChildren").end()
-                    .on("mouseover.patterns", mouseOverHandler)
-                    .on("mouseout.patterns", mouseOutHandler);
-            });
-        }
-    };
-
-    return menu;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-// XXX This pattern has an undeclared dependency on jQuery UI
-define('patterns/sorting',[
-    'jquery'
-], function($) {
-    var sorting = {
-        initContent: function(root) {
-            var $root = $(root),
-                $sorting = $root.find('ul.sorting');
-
-            if ($sorting.length > 0) {
-                $sorting.sortable({
-                    'axis': 'y',
-                    'items': 'li',
-                    'update': function(event, ui){
-                        var $this = $(this);
-                        var order = $this.sortable("serialize");
-
-                        $.post($this.attr("data-injection"), order);
-                    }
-                });
-            }
-            return $root;
-        }
-    };
-
-    return sorting;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/* Explicitly requiring jquery should work like this, but currently breaks
- * when using build.sh.
-define([
-        "jquery",
-        "../logging",
-        "../core/parser"],
-function($, logging, Parser) {
-*/
-define('jqplugins/switch',[
-        "../logging",
-        "../core/parser"],
-function(logging, Parser) {
-    $ = jQuery;
-    var log = logging.getLogger("switch"),
-        parser = new Parser();
-    parser.add_argument("selector");
-    parser.add_argument("remove");
-    parser.add_argument("add");
-
-    $.patterns = $.patterns || {};
-
-    $.patterns["switch"] = {
-        go: function($trigger) {
-            var options = $trigger.data("patternSwitch");
-            if (!options) {
-                log.error("onClick called for uninitialised element");
-                return;
-            }
-
-            var option, i;
-            for (i=0; i<options.length; i++) {
-                option=options[i];
-                $.patterns["switch"].update(option.selector, option.remove, option.add);
-            }
-        },
-
-        onClick: function(e) {
-            $.patterns["switch"].go($(this));
-        },
-
-        update: function(selector, remove, add) {
-            var $targets = $(selector);
-
-            if (!$targets.length)
-                return;
-
-            if (remove) {
-                if (remove.indexOf('*')===-1) 
-                    $targets.removeClass(remove);
-                else {
-                    remove = remove.replace(/[-[\]{}()+?.,\\^$|#\s]/g, "\\$&");
-                    remove = remove.replace(/[*]/g, ".*");
-                    remove = new RegExp("^" + remove + "$");
-                    $targets.filter("[class]").each(function() {
-                        var $this = $(this),
-                            classes = $this.attr("class").split(/\s+/),
-                            ok=[];
-                        for (var i=0; i<classes.length; i++)
-                            if (!remove.test(classes[i]))
-                                ok.push(classes[i]);
-                        if (ok.length)
-                            $this.attr("class", ok.join(" "));
-                        else
-                            $this.removeAttr("class");
-                    });
-                }
-            }
-            if (add)
-                $targets.addClass(add);
-        },
-
-        parse: function($trigger) {
-            var options = parser.parse($trigger.data("switch")),
-                no = [];
-            if (!Array.isArray(options)) 
-                options = [options];
-            return options;
-        },
-
-        validateOptions: function(options) {
-            var correct = [];
-
-            for (var i=0; i<options.length; i++) {
-                var option = options[i];
-                if (option.selector && (option.remove || option.add))
-                    correct.push(option);
-                else
-                    log.error('Switch pattern requires selector and one of add or remove.');
-            }
-            return correct.length ? correct : null;
-        }
-    };
-
-    var methods = {
-        init: function(defaults) {
-            if (defaults && !Array.isArray(defaults))
-                defaults = [defaults];
-
-            return this.each(function() {
-                var $trigger = $(this),
-                    o = $trigger.data("patternSwitch");
-
-                if (o)
-                    return;
-
-                var options = defaults || $.patterns["switch"].parse($trigger);
-                options=$.patterns["switch"].validateOptions(options);
-                if (options && options.length)
-                    $trigger
-                        .data("patternSwitch", options)
-                        .on("click.patternSwitch", $.patterns["switch"].onClick);
-            });
-        },
-
-        destroy: function() {
-            return this.each(function() {
-                $(this).removeData("patternSwitch").off("click.patternSwitch");
-            });
-        },
-
-        "execute": function() {
-            return this.each(function() {
-                $.patterns["switch"].go($(this));
-            });
-        }
-    };
-
-    $.fn.patternSwitch = function(method) {
-        if (methods[method])
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        else if (typeof method ==="object" || !method)
-            return methods.init.apply(this, arguments);
-        else
-            $.error("Method " + method + " does not exist on jQuery.patternSwitch");
-    };
-
-    return $.patterns["switch"];
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 sts=4 expandtab
-;
-define('patterns/switch',[
-    '../jqplugins/switch'
-
-], function() {
-    var switcher = {
-        initContent: function(root) {
-            $("[data-switch]", root).patternSwitch();
-        }
-    };
-    return switcher;
+    patterns.register(zoom);
+    return zoom;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 sts=4 expandtab
-;
-/*
- * FancyBox - jQuery Plugin
- * Simple and fancy lightbox alternative
- *
- * Examples and documentation at: http://fancybox.net
- *
- * Copyright (c) 2008 - 2010 Janis Skarnelis
- * That said, it is hardly a one-person project. Many people have submitted bugs, code, and offered their advice freely. Their support is greatly appreciated.
- *
- * Version: 1.3.4 (11/11/2010)
- * Requires: jQuery v1.3+
- *
- * Dual licensed under the MIT and GPL licenses:
- *   http://www.opensource.org/licenses/mit-license.php
- *   http://www.gnu.org/licenses/gpl.html
- */
-
-;(function($) {
-	var tmp, loading, overlay, wrap, outer, content, close, title, nav_left, nav_right,
-
-		selectedIndex = 0, selectedOpts = {}, selectedArray = [], currentIndex = 0, currentOpts = {}, currentArray = [],
-
-		ajaxLoader = null, imgPreloader = new Image(), imgRegExp = /\.(jpg|gif|png|bmp|jpeg)(.*)?$/i, swfRegExp = /[^\.]\.(swf)\s*$/i,
-
-		loadingTimer, loadingFrame = 1,
-
-		titleHeight = 0, titleStr = '', start_pos, final_pos, busy = false, fx = $.extend($('<div/>')[0], { prop: 0 }),
-
-		isIE6 = $.browser.msie && $.browser.version < 7 && !window.XMLHttpRequest,
-
-		/*
-		 * Private methods 
-		 */
-
-		_abort = function() {
-			loading.hide();
-
-			imgPreloader.onerror = imgPreloader.onload = null;
-
-			if (ajaxLoader) {
-				ajaxLoader.abort();
-			}
-
-			tmp.empty();
-		},
-
-		_error = function() {
-			if (false === selectedOpts.onError(selectedArray, selectedIndex, selectedOpts)) {
-				loading.hide();
-				busy = false;
-				return;
-			}
-
-			selectedOpts.titleShow = false;
-
-			selectedOpts.width = 'auto';
-			selectedOpts.height = 'auto';
-
-			tmp.html( '<p id="fancybox-error">The requested content cannot be loaded.<br />Please try again later.</p>' );
-
-			_process_inline();
-		},
-
-		_start = function() {
-			var obj = selectedArray[ selectedIndex ],
-				href, 
-				type, 
-				title,
-				str,
-				emb,
-				ret;
-
-			_abort();
-
-			selectedOpts = $.extend({}, $.fn.fancybox.defaults, (typeof $(obj).data('fancybox') == 'undefined' ? selectedOpts : $(obj).data('fancybox')));
-
-			ret = selectedOpts.onStart(selectedArray, selectedIndex, selectedOpts);
-
-			if (ret === false) {
-				busy = false;
-				return;
-			} else if (typeof ret == 'object') {
-				selectedOpts = $.extend(selectedOpts, ret);
-			}
-
-			title = selectedOpts.title || (obj.nodeName ? $(obj).attr('title') : obj.title) || '';
-
-			if (obj.nodeName && !selectedOpts.orig) {
-				selectedOpts.orig = $(obj).children("img:first").length ? $(obj).children("img:first") : $(obj);
-			}
-
-			if (title === '' && selectedOpts.orig && selectedOpts.titleFromAlt) {
-				title = selectedOpts.orig.attr('alt');
-			}
-
-			href = selectedOpts.href || (obj.nodeName ? $(obj).attr('href') : obj.href) || null;
-
-			if ((/^(?:javascript)/i).test(href) || href == '#') {
-				href = null;
-			}
-
-			if (selectedOpts.type) {
-				type = selectedOpts.type;
-
-				if (!href) {
-					href = selectedOpts.content;
-				}
-
-			} else if (selectedOpts.content) {
-				type = 'html';
-
-			} else if (href) {
-				if (href.match(imgRegExp)) {
-					type = 'image';
-
-				} else if (href.match(swfRegExp)) {
-					type = 'swf';
-
-				} else if ($(obj).hasClass("iframe")) {
-					type = 'iframe';
-
-				} else if (href.indexOf("#") === 0) {
-					type = 'inline';
-
-				} else {
-					type = 'ajax';
-				}
-			}
-
-			if (!type) {
-				_error();
-				return;
-			}
-
-			if (type == 'inline') {
-				obj	= href.substr(href.indexOf("#"));
-				type = $(obj).length > 0 ? 'inline' : 'ajax';
-			}
-
-			selectedOpts.type = type;
-			selectedOpts.href = href;
-			selectedOpts.title = title;
-
-			if (selectedOpts.autoDimensions) {
-				if (selectedOpts.type == 'html' || selectedOpts.type == 'inline' || selectedOpts.type == 'ajax') {
-					selectedOpts.width = 'auto';
-					selectedOpts.height = 'auto';
-				} else {
-					selectedOpts.autoDimensions = false;	
-				}
-			}
-
-			if (selectedOpts.modal) {
-				selectedOpts.overlayShow = true;
-				selectedOpts.hideOnOverlayClick = false;
-				selectedOpts.hideOnContentClick = false;
-				selectedOpts.enableEscapeButton = false;
-				selectedOpts.showCloseButton = false;
-			}
-
-			selectedOpts.padding = parseInt(selectedOpts.padding, 10);
-			selectedOpts.margin = parseInt(selectedOpts.margin, 10);
-
-			tmp.css('padding', (selectedOpts.padding + selectedOpts.margin));
-
-			$('.fancybox-inline-tmp').unbind('fancybox-cancel').bind('fancybox-change', function() {
-				$(this).replaceWith(content.children());				
-			});
-
-			switch (type) {
-				case 'html' :
-					tmp.html( selectedOpts.content );
-					_process_inline();
-				break;
-
-				case 'inline' :
-					if ( $(obj).parent().is('#fancybox-content') === true) {
-						busy = false;
-						return;
-					}
-
-					$('<div class="fancybox-inline-tmp" />')
-						.hide()
-						.insertBefore( $(obj) )
-						.bind('fancybox-cleanup', function() {
-							$(this).replaceWith(content.children());
-						}).bind('fancybox-cancel', function() {
-							$(this).replaceWith(tmp.children());
-						});
-
-					$(obj).appendTo(tmp);
-
-					_process_inline();
-				break;
-
-				case 'image':
-					busy = false;
-
-					$.fancybox.showActivity();
-
-					imgPreloader = new Image();
-
-					imgPreloader.onerror = function() {
-						_error();
-					};
-
-					imgPreloader.onload = function() {
-						busy = true;
-
-						imgPreloader.onerror = imgPreloader.onload = null;
-
-						_process_image();
-					};
-
-					imgPreloader.src = href;
-				break;
-
-				case 'swf':
-					selectedOpts.scrolling = 'no';
-
-					str = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="' + selectedOpts.width + '" height="' + selectedOpts.height + '"><param name="movie" value="' + href + '"></param>';
-					emb = '';
-
-					$.each(selectedOpts.swf, function(name, val) {
-						str += '<param name="' + name + '" value="' + val + '"></param>';
-						emb += ' ' + name + '="' + val + '"';
-					});
-
-					str += '<embed src="' + href + '" type="application/x-shockwave-flash" width="' + selectedOpts.width + '" height="' + selectedOpts.height + '"' + emb + '></embed></object>';
-
-					tmp.html(str);
-
-					_process_inline();
-				break;
-
-				case 'ajax':
-					busy = false;
-
-					$.fancybox.showActivity();
-
-					selectedOpts.ajax.win = selectedOpts.ajax.success;
-
-					ajaxLoader = $.ajax($.extend({}, selectedOpts.ajax, {
-						url	: href,
-						data : selectedOpts.ajax.data || {},
-						error : function(XMLHttpRequest, textStatus, errorThrown) {
-							if ( XMLHttpRequest.status > 0 ) {
-								_error();
-							}
-						},
-						success : function(data, textStatus, XMLHttpRequest) {
-							var o = typeof XMLHttpRequest == 'object' ? XMLHttpRequest : ajaxLoader;
-							if (o.status == 200) {
-								if ( typeof selectedOpts.ajax.win == 'function' ) {
-									ret = selectedOpts.ajax.win(href, data, textStatus, XMLHttpRequest);
-
-									if (ret === false) {
-										loading.hide();
-										return;
-									} else if (typeof ret == 'string' || typeof ret == 'object') {
-										data = ret;
-									}
-								}
-								
-								var part = false;
-								if (href.indexOf("#") > 0) {
-									part = /#[a-zA-Z\-_0-9]+/.exec(href);
-									
-									if (part.length > 0) {
-										part = part[0];
-									}
-								}
-								
-								if ( !part ) {
-									tmp.html( data );
-								} else {
-									// create tmp div
-									var div = $('<div>').append(
-											data.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-										);
-									tmp.html( $(div).find(part) );
-								}
-								
-								_process_inline();
-							}
-						}
-					}));
-
-				break;
-
-				case 'iframe':
-					_show();
-				break;
-			}
-		},
-
-		_process_inline = function() {
-			var
-				w = selectedOpts.width,
-				h = selectedOpts.height;
-
-			if (w.toString().indexOf('%') > -1) {
-				w = parseInt( ($(window).width() - (selectedOpts.margin * 2)) * parseFloat(w) / 100, 10) + 'px';
-
-			} else {
-				w = w == 'auto' ? 'auto' : w + 'px';	
-			}
-
-			if (h.toString().indexOf('%') > -1) {
-				h = parseInt( ($(window).height() - (selectedOpts.margin * 2)) * parseFloat(h) / 100, 10) + 'px';
-
-			} else {
-				h = h == 'auto' ? 'auto' : h + 'px';	
-			}
-
-			tmp.wrapInner('<div style="width:' + w + ';height:' + h + ';overflow: ' + (selectedOpts.scrolling == 'auto' ? 'auto' : (selectedOpts.scrolling == 'yes' ? 'scroll' : 'hidden')) + ';position:relative;"></div>');
-
-			selectedOpts.width = tmp.width();
-			selectedOpts.height = tmp.height();
-
-			_show();
-		},
-
-		_process_image = function() {
-			selectedOpts.width = imgPreloader.width;
-			selectedOpts.height = imgPreloader.height;
-
-			$("<img />").attr({
-				'id' : 'fancybox-img',
-				'src' : imgPreloader.src,
-				'alt' : selectedOpts.title
-			}).appendTo( tmp );
-
-			_show();
-		},
-
-		_show = function() {
-			var pos, equal;
-
-			loading.hide();
-
-			if (wrap.is(":visible") && false === currentOpts.onCleanup(currentArray, currentIndex, currentOpts)) {
-				$.event.trigger('fancybox-cancel');
-
-				busy = false;
-				return;
-			}
-
-			busy = true;
-
-			$(content.add( overlay )).unbind();
-
-			$(window).unbind("resize.fb scroll.fb");
-			$(document).unbind('keydown.fb');
-
-			if (wrap.is(":visible") && currentOpts.titlePosition !== 'outside') {
-				wrap.css('height', wrap.height());
-			}
-
-			currentArray = selectedArray;
-			currentIndex = selectedIndex;
-			currentOpts = selectedOpts;
-
-			if (currentOpts.overlayShow) {
-				overlay.css({
-					'background-color' : currentOpts.overlayColor,
-					'opacity' : currentOpts.overlayOpacity,
-					'cursor' : currentOpts.hideOnOverlayClick ? 'pointer' : 'auto',
-					'height' : $(document).height()
-				});
-
-				if (!overlay.is(':visible')) {
-					if (isIE6) {
-						$('select:not(#fancybox-tmp select)').filter(function() {
-							return this.style.visibility !== 'hidden';
-						}).css({'visibility' : 'hidden'}).one('fancybox-cleanup', function() {
-							this.style.visibility = 'inherit';
-						});
-					}
-
-					overlay.show();
-				}
-			} else {
-				overlay.hide();
-			}
-
-			final_pos = _get_zoom_to();
-
-			_process_title();
-
-			if (wrap.is(":visible")) {
-				$( close.add( nav_left ).add( nav_right ) ).hide();
-
-				pos = wrap.position(),
-
-				start_pos = {
-					top	 : pos.top,
-					left : pos.left,
-					width : wrap.width(),
-					height : wrap.height()
-				};
-
-				equal = (start_pos.width == final_pos.width && start_pos.height == final_pos.height);
-
-				content.fadeTo(currentOpts.changeFade, 0.3, function() {
-					var finish_resizing = function() {
-						content.html( tmp.contents() ).fadeTo(currentOpts.changeFade, 1, _finish);
-					};
-
-					$.event.trigger('fancybox-change');
-
-					content
-						.empty()
-						.removeAttr('filter')
-						.css({
-							'border-width' : currentOpts.padding,
-							'width'	: final_pos.width - currentOpts.padding * 2,
-							'height' : selectedOpts.autoDimensions ? 'auto' : final_pos.height - titleHeight - currentOpts.padding * 2
-						});
-
-					if (equal) {
-						finish_resizing();
-
-					} else {
-						fx.prop = 0;
-
-						$(fx).animate({prop: 1}, {
-							 duration : currentOpts.changeSpeed,
-							 easing : currentOpts.easingChange,
-							 step : _draw,
-							 complete : finish_resizing
-						});
-					}
-				});
-
-				return;
-			}
-
-			wrap.removeAttr("style");
-
-			content.css('border-width', currentOpts.padding);
-
-			if (currentOpts.transitionIn == 'elastic') {
-				start_pos = _get_zoom_from();
-
-				content.html( tmp.contents() );
-
-				wrap.show();
-
-				if (currentOpts.opacity) {
-					final_pos.opacity = 0;
-				}
-
-				fx.prop = 0;
-
-				$(fx).animate({prop: 1}, {
-					 duration : currentOpts.speedIn,
-					 easing : currentOpts.easingIn,
-					 step : _draw,
-					 complete : _finish
-				});
-
-				return;
-			}
-
-			if (currentOpts.titlePosition == 'inside' && titleHeight > 0) {	
-				title.show();	
-			}
-
-			content
-				.css({
-					'width' : final_pos.width - currentOpts.padding * 2,
-					'height' : selectedOpts.autoDimensions ? 'auto' : final_pos.height - titleHeight - currentOpts.padding * 2
-				})
-				.html( tmp.contents() );
-
-			wrap
-				.css(final_pos)
-				.fadeIn( currentOpts.transitionIn == 'none' ? 0 : currentOpts.speedIn, _finish );
-		},
-
-		_format_title = function(title) {
-			if (title && title.length) {
-				if (currentOpts.titlePosition == 'float') {
-					return '<table id="fancybox-title-float-wrap" cellpadding="0" cellspacing="0"><tr><td id="fancybox-title-float-left"></td><td id="fancybox-title-float-main">' + title + '</td><td id="fancybox-title-float-right"></td></tr></table>';
-				}
-
-				return '<div id="fancybox-title-' + currentOpts.titlePosition + '">' + title + '</div>';
-			}
-
-			return false;
-		},
-
-		_process_title = function() {
-			titleStr = currentOpts.title || '';
-			titleHeight = 0;
-
-			title
-				.empty()
-				.removeAttr('style')
-				.removeClass();
-
-			if (currentOpts.titleShow === false) {
-				title.hide();
-				return;
-			}
-
-			titleStr = $.isFunction(currentOpts.titleFormat) ? currentOpts.titleFormat(titleStr, currentArray, currentIndex, currentOpts) : _format_title(titleStr);
-
-			if (!titleStr || titleStr === '') {
-				title.hide();
-				return;
-			}
-
-			title
-				.addClass('fancybox-title-' + currentOpts.titlePosition)
-				.html( titleStr )
-				.appendTo( 'body' )
-				.show();
-
-			switch (currentOpts.titlePosition) {
-				case 'inside':
-					title
-						.css({
-							'width' : final_pos.width - (currentOpts.padding * 2),
-							'marginLeft' : currentOpts.padding,
-							'marginRight' : currentOpts.padding
-						});
-
-					titleHeight = title.outerHeight(true);
-
-					title.appendTo( outer );
-
-					final_pos.height += titleHeight;
-				break;
-
-				case 'over':
-					title
-						.css({
-							'marginLeft' : currentOpts.padding,
-							'width'	: final_pos.width - (currentOpts.padding * 2),
-							'bottom' : currentOpts.padding
-						})
-						.appendTo( outer );
-				break;
-
-				case 'float':
-					title
-						.css('left', parseInt((title.width() - final_pos.width - 40)/ 2, 10) * -1)
-						.appendTo( wrap );
-				break;
-
-				default:
-					title
-						.css({
-							'width' : final_pos.width - (currentOpts.padding * 2),
-							'paddingLeft' : currentOpts.padding,
-							'paddingRight' : currentOpts.padding
-						})
-						.appendTo( wrap );
-				break;
-			}
-
-			title.hide();
-		},
-
-		_set_navigation = function() {
-			if (currentOpts.enableEscapeButton || currentOpts.enableKeyboardNav) {
-				$(document).bind('keydown.fb', function(e) {
-					if (e.keyCode == 27 && currentOpts.enableEscapeButton) {
-						e.preventDefault();
-						$.fancybox.close();
-
-					} else if ((e.keyCode == 37 || e.keyCode == 39) && currentOpts.enableKeyboardNav && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'SELECT') {
-						e.preventDefault();
-						$.fancybox[ e.keyCode == 37 ? 'prev' : 'next']();
-					}
-				});
-			}
-
-			if (!currentOpts.showNavArrows) { 
-				nav_left.hide();
-				nav_right.hide();
-				return;
-			}
-
-			if ((currentOpts.cyclic && currentArray.length > 1) || currentIndex !== 0) {
-				nav_left.show();
-			}
-
-			if ((currentOpts.cyclic && currentArray.length > 1) || currentIndex != (currentArray.length -1)) {
-				nav_right.show();
-			}
-		},
-
-		_finish = function () {
-			if (!$.support.opacity) {
-				content.get(0).style.removeAttribute('filter');
-				wrap.get(0).style.removeAttribute('filter');
-			}
-
-			if (selectedOpts.autoDimensions) {
-				content.css('height', 'auto');
-			}
-
-			wrap.css('height', 'auto');
-
-			if (titleStr && titleStr.length) {
-				title.show();
-			}
-
-			if (currentOpts.showCloseButton) {
-				close.show();
-			}
-
-			_set_navigation();
-	
-			if (currentOpts.hideOnContentClick)	{
-				content.bind('click', $.fancybox.close);
-			}
-
-			if (currentOpts.hideOnOverlayClick)	{
-				overlay.bind('click', $.fancybox.close);
-			}
-
-			$(window).bind("resize.fb", $.fancybox.resize);
-
-			if (currentOpts.centerOnScroll) {
-				$(window).bind("scroll.fb", $.fancybox.center);
-			}
-
-			if (currentOpts.type == 'iframe') {
-				$('<iframe id="fancybox-frame" name="fancybox-frame' + new Date().getTime() + '" frameborder="0" hspace="0" ' + ($.browser.msie ? 'allowtransparency="true""' : '') + ' scrolling="' + selectedOpts.scrolling + '" src="' + currentOpts.href + '"></iframe>').appendTo(content);
-			}
-
-			wrap.show();
-
-			busy = false;
-
-			$.fancybox.center();
-
-			currentOpts.onComplete(currentArray, currentIndex, currentOpts);
-
-			_preload_images();
-		},
-
-		_preload_images = function() {
-			var href, 
-				objNext;
-
-			if ((currentArray.length -1) > currentIndex) {
-				href = currentArray[ currentIndex + 1 ].href;
-
-				if (typeof href !== 'undefined' && href.match(imgRegExp)) {
-					objNext = new Image();
-					objNext.src = href;
-				}
-			}
-
-			if (currentIndex > 0) {
-				href = currentArray[ currentIndex - 1 ].href;
-
-				if (typeof href !== 'undefined' && href.match(imgRegExp)) {
-					objNext = new Image();
-					objNext.src = href;
-				}
-			}
-		},
-
-		_draw = function(pos) {
-			var dim = {
-				width : parseInt(start_pos.width + (final_pos.width - start_pos.width) * pos, 10),
-				height : parseInt(start_pos.height + (final_pos.height - start_pos.height) * pos, 10),
-
-				top : parseInt(start_pos.top + (final_pos.top - start_pos.top) * pos, 10),
-				left : parseInt(start_pos.left + (final_pos.left - start_pos.left) * pos, 10)
-			};
-
-			if (typeof final_pos.opacity !== 'undefined') {
-				dim.opacity = pos < 0.5 ? 0.5 : pos;
-			}
-
-			wrap.css(dim);
-
-			content.css({
-				'width' : dim.width - currentOpts.padding * 2,
-				'height' : dim.height - (titleHeight * pos) - currentOpts.padding * 2
-			});
-		},
-
-		_get_viewport = function() {
-			return [
-				$(window).width() - (currentOpts.margin * 2),
-				$(window).height() - (currentOpts.margin * 2),
-				$(document).scrollLeft() + currentOpts.margin,
-				$(document).scrollTop() + currentOpts.margin
-			];
-		},
-
-		_get_zoom_to = function () {
-			var view = _get_viewport(),
-				to = {},
-				resize = currentOpts.autoScale,
-				double_padding = currentOpts.padding * 2,
-				ratio;
-
-			if (currentOpts.width.toString().indexOf('%') > -1) {
-				to.width = parseInt((view[0] * parseFloat(currentOpts.width)) / 100, 10);
-			} else {
-				to.width = currentOpts.width + double_padding;
-			}
-
-			if (currentOpts.height.toString().indexOf('%') > -1) {
-				to.height = parseInt((view[1] * parseFloat(currentOpts.height)) / 100, 10);
-			} else {
-				to.height = currentOpts.height + double_padding;
-			}
-
-			if (resize && (to.width > view[0] || to.height > view[1])) {
-				if (selectedOpts.type == 'image' || selectedOpts.type == 'swf') {
-					ratio = (currentOpts.width ) / (currentOpts.height );
-
-					if ((to.width ) > view[0]) {
-						to.width = view[0];
-						to.height = parseInt(((to.width - double_padding) / ratio) + double_padding, 10);
-					}
-
-					if ((to.height) > view[1]) {
-						to.height = view[1];
-						to.width = parseInt(((to.height - double_padding) * ratio) + double_padding, 10);
-					}
-
-				} else {
-					to.width = Math.min(to.width, view[0]);
-					to.height = Math.min(to.height, view[1]);
-				}
-			}
-
-			to.top = parseInt(Math.max(view[3] - 20, view[3] + ((view[1] - to.height - 40) * 0.5)), 10);
-			to.left = parseInt(Math.max(view[2] - 20, view[2] + ((view[0] - to.width - 40) * 0.5)), 10);
-
-			return to;
-		},
-
-		_get_obj_pos = function(obj) {
-			var pos = obj.offset();
-
-			pos.top += parseInt( obj.css('paddingTop'), 10 ) || 0;
-			pos.left += parseInt( obj.css('paddingLeft'), 10 ) || 0;
-
-			pos.top += parseInt( obj.css('border-top-width'), 10 ) || 0;
-			pos.left += parseInt( obj.css('border-left-width'), 10 ) || 0;
-
-			pos.width = obj.width();
-			pos.height = obj.height();
-
-			return pos;
-		},
-
-		_get_zoom_from = function() {
-			var orig = selectedOpts.orig ? $(selectedOpts.orig) : false,
-				from = {},
-				pos,
-				view;
-
-			if (orig && orig.length) {
-				pos = _get_obj_pos(orig);
-
-				from = {
-					width : pos.width + (currentOpts.padding * 2),
-					height : pos.height + (currentOpts.padding * 2),
-					top	: pos.top - currentOpts.padding - 20,
-					left : pos.left - currentOpts.padding - 20
-				};
-
-			} else {
-				view = _get_viewport();
-
-				from = {
-					width : currentOpts.padding * 2,
-					height : currentOpts.padding * 2,
-					top	: parseInt(view[3] + view[1] * 0.5, 10),
-					left : parseInt(view[2] + view[0] * 0.5, 10)
-				};
-			}
-
-			return from;
-		},
-
-		_animate_loading = function() {
-			if (!loading.is(':visible')){
-				clearInterval(loadingTimer);
-				return;
-			}
-
-			$('div', loading).css('top', (loadingFrame * -40) + 'px');
-
-			loadingFrame = (loadingFrame + 1) % 12;
-		};
-
-	/*
-	 * Public methods 
-	 */
-
-	$.fn.fancybox = function(options) {
-		if (!$(this).length) {
-			return this;
-		}
-
-		$(this)
-			.data('fancybox', $.extend({}, options, ($.metadata ? $(this).metadata() : {})))
-			.unbind('click.fb')
-			.bind('click.fb', function(e) {
-				e.preventDefault();
-
-				if (busy) {
-					return;
-				}
-
-				busy = true;
-
-				$(this).blur();
-
-				selectedArray = [];
-				selectedIndex = 0;
-
-				var rel = $(this).attr('rel') || '';
-
-				if (!rel || rel == '' || rel === 'nofollow') {
-					selectedArray.push(this);
-
-				} else {
-					selectedArray = $("a[rel=" + rel + "], area[rel=" + rel + "]");
-					selectedIndex = selectedArray.index( this );
-				}
-
-				_start();
-
-				return;
-			});
-
-		return this;
-	};
-
-	$.fancybox = function(obj) {
-		var opts;
-
-		if (busy) {
-			return;
-		}
-
-		busy = true;
-		opts = typeof arguments[1] !== 'undefined' ? arguments[1] : {};
-
-		selectedArray = [];
-		selectedIndex = parseInt(opts.index, 10) || 0;
-
-		if ($.isArray(obj)) {
-			for (var i = 0, j = obj.length; i < j; i++) {
-				if (typeof obj[i] == 'object') {
-					$(obj[i]).data('fancybox', $.extend({}, opts, obj[i]));
-				} else {
-					obj[i] = $({}).data('fancybox', $.extend({content : obj[i]}, opts));
-				}
-			}
-
-			selectedArray = jQuery.merge(selectedArray, obj);
-
-		} else {
-			if (typeof obj == 'object') {
-				$(obj).data('fancybox', $.extend({}, opts, obj));
-			} else {
-				obj = $({}).data('fancybox', $.extend({content : obj}, opts));
-			}
-
-			selectedArray.push(obj);
-		}
-
-		if (selectedIndex > selectedArray.length || selectedIndex < 0) {
-			selectedIndex = 0;
-		}
-
-		_start();
-	};
-
-	$.fancybox.showActivity = function() {
-		clearInterval(loadingTimer);
-
-		loading.show();
-		loadingTimer = setInterval(_animate_loading, 66);
-	};
-
-	$.fancybox.hideActivity = function() {
-		loading.hide();
-	};
-
-	$.fancybox.next = function() {
-		return $.fancybox.pos( currentIndex + 1);
-	};
-
-	$.fancybox.prev = function() {
-		return $.fancybox.pos( currentIndex - 1);
-	};
-
-	$.fancybox.pos = function(pos) {
-		if (busy) {
-			return;
-		}
-
-		pos = parseInt(pos);
-
-		selectedArray = currentArray;
-
-		if (pos > -1 && pos < currentArray.length) {
-			selectedIndex = pos;
-			_start();
-
-		} else if (currentOpts.cyclic && currentArray.length > 1) {
-			selectedIndex = pos >= currentArray.length ? 0 : currentArray.length - 1;
-			_start();
-		}
-
-		return;
-	};
-
-	$.fancybox.cancel = function() {
-		if (busy) {
-			return;
-		}
-
-		busy = true;
-
-		$.event.trigger('fancybox-cancel');
-
-		_abort();
-
-		selectedOpts.onCancel(selectedArray, selectedIndex, selectedOpts);
-
-		busy = false;
-	};
-
-	// Note: within an iframe use - parent.$.fancybox.close();
-	$.fancybox.close = function() {
-		if (busy || wrap.is(':hidden')) {
-			return;
-		}
-
-		busy = true;
-
-		if (currentOpts && false === currentOpts.onCleanup(currentArray, currentIndex, currentOpts)) {
-			busy = false;
-			return;
-		}
-
-		_abort();
-
-		$(close.add( nav_left ).add( nav_right )).hide();
-
-		$(content.add( overlay )).unbind();
-
-		$(window).unbind("resize.fb scroll.fb");
-		$(document).unbind('keydown.fb');
-
-		content.find('iframe').attr('src', isIE6 && /^https/i.test(window.location.href || '') ? 'javascript:void(false)' : 'about:blank');
-
-		if (currentOpts.titlePosition !== 'inside') {
-			title.empty();
-		}
-
-		wrap.stop();
-
-		function _cleanup() {
-			overlay.fadeOut('fast');
-
-			title.empty().hide();
-			wrap.hide();
-
-			$.event.trigger('fancybox-cleanup');
-
-			content.empty();
-
-			currentOpts.onClosed(currentArray, currentIndex, currentOpts);
-
-			currentArray = selectedOpts	= [];
-			currentIndex = selectedIndex = 0;
-			currentOpts = selectedOpts	= {};
-
-			busy = false;
-		}
-
-		if (currentOpts.transitionOut == 'elastic') {
-			start_pos = _get_zoom_from();
-
-			var pos = wrap.position();
-
-			final_pos = {
-				top	 : pos.top ,
-				left : pos.left,
-				width :	wrap.width(),
-				height : wrap.height()
-			};
-
-			if (currentOpts.opacity) {
-				final_pos.opacity = 1;
-			}
-
-			title.empty().hide();
-
-			fx.prop = 1;
-
-			$(fx).animate({ prop: 0 }, {
-				 duration : currentOpts.speedOut,
-				 easing : currentOpts.easingOut,
-				 step : _draw,
-				 complete : _cleanup
-			});
-
-		} else {
-			wrap.fadeOut( currentOpts.transitionOut == 'none' ? 0 : currentOpts.speedOut, _cleanup);
-		}
-	};
-
-	$.fancybox.resize = function() {
-		if (overlay.is(':visible')) {
-			overlay.css('height', $(document).height());
-		}
-
-		$.fancybox.center(true);
-	};
-
-	$.fancybox.center = function() {
-		var view, align;
-
-		if (busy) {
-			return;	
-		}
-
-		align = arguments[0] === true ? 1 : 0;
-		view = _get_viewport();
-
-		if (!align && (wrap.width() > view[0] || wrap.height() > view[1])) {
-			return;	
-		}
-
-		wrap
-			.stop()
-			.animate({
-				'top' : parseInt(Math.max(view[3] - 20, view[3] + ((view[1] - content.height() - 40) * 0.5) - currentOpts.padding)),
-				'left' : parseInt(Math.max(view[2] - 20, view[2] + ((view[0] - content.width() - 40) * 0.5) - currentOpts.padding))
-			}, typeof arguments[0] == 'number' ? arguments[0] : 200);
-	};
-
-	$.fancybox.init = function() {
-		if ($("#fancybox-wrap").length) {
-			return;
-		}
-
-		$('body').append(
-			tmp	= $('<div id="fancybox-tmp"></div>'),
-			loading	= $('<div id="fancybox-loading"><div></div></div>'),
-			overlay	= $('<div id="fancybox-overlay"></div>'),
-			wrap = $('<div id="fancybox-wrap"></div>')
-		);
-
-		outer = $('<div id="fancybox-outer"></div>')
-			.append('<div class="fancybox-bg" id="fancybox-bg-n"></div><div class="fancybox-bg" id="fancybox-bg-ne"></div><div class="fancybox-bg" id="fancybox-bg-e"></div><div class="fancybox-bg" id="fancybox-bg-se"></div><div class="fancybox-bg" id="fancybox-bg-s"></div><div class="fancybox-bg" id="fancybox-bg-sw"></div><div class="fancybox-bg" id="fancybox-bg-w"></div><div class="fancybox-bg" id="fancybox-bg-nw"></div>')
-			.appendTo( wrap );
-
-		outer.append(
-			content = $('<div id="fancybox-content"></div>'),
-			close = $('<a id="fancybox-close"></a>'),
-			title = $('<div id="fancybox-title"></div>'),
-
-			nav_left = $('<a href="javascript:;" id="fancybox-left"><span class="fancy-ico" id="fancybox-left-ico"></span></a>'),
-			nav_right = $('<a href="javascript:;" id="fancybox-right"><span class="fancy-ico" id="fancybox-right-ico"></span></a>')
-		);
-
-		close.click($.fancybox.close);
-		loading.click($.fancybox.cancel);
-
-		nav_left.click(function(e) {
-			e.preventDefault();
-			$.fancybox.prev();
-		});
-
-		nav_right.click(function(e) {
-			e.preventDefault();
-			$.fancybox.next();
-		});
-
-		if ($.fn.mousewheel) {
-			wrap.bind('mousewheel.fb', function(e, delta) {
-				if (busy) {
-					e.preventDefault();
-
-				} else if ($(e.target).get(0).clientHeight == 0 || $(e.target).get(0).scrollHeight === $(e.target).get(0).clientHeight) {
-					e.preventDefault();
-					$.fancybox[ delta > 0 ? 'prev' : 'next']();
-				}
-			});
-		}
-
-		if (!$.support.opacity) {
-			wrap.addClass('fancybox-ie');
-		}
-
-		if (isIE6) {
-			loading.addClass('fancybox-ie6');
-			wrap.addClass('fancybox-ie6');
-
-			$('<iframe id="fancybox-hide-sel-frame" src="' + (/^https/i.test(window.location.href || '') ? 'javascript:void(false)' : 'about:blank' ) + '" scrolling="no" border="0" frameborder="0" tabindex="-1"></iframe>').prependTo(outer);
-		}
-	};
-
-	$.fn.fancybox.defaults = {
-		padding : 10,
-		margin : 40,
-		opacity : false,
-		modal : false,
-		cyclic : false,
-		scrolling : 'auto',	// 'auto', 'yes' or 'no'
-
-		width : 560,
-		height : 340,
-
-		autoScale : true,
-		autoDimensions : true,
-		centerOnScroll : false,
-
-		ajax : {},
-		swf : { wmode: 'transparent' },
-
-		hideOnOverlayClick : true,
-		hideOnContentClick : false,
-
-		overlayShow : true,
-		overlayOpacity : 0.7,
-		overlayColor : '#777',
-
-		titleShow : true,
-		titlePosition : 'float', // 'float', 'outside', 'inside' or 'over'
-		titleFormat : null,
-		titleFromAlt : false,
-
-		transitionIn : 'fade', // 'elastic', 'fade' or 'none'
-		transitionOut : 'fade', // 'elastic', 'fade' or 'none'
-
-		speedIn : 300,
-		speedOut : 300,
-
-		changeSpeed : 300,
-		changeFade : 'fast',
-
-		easingIn : 'swing',
-		easingOut : 'swing',
-
-		showCloseButton	 : true,
-		showNavArrows : true,
-		enableEscapeButton : true,
-		enableKeyboardNav : true,
-
-		onStart : function(){},
-		onCancel : function(){},
-		onComplete : function(){},
-		onCleanup : function(){},
-		onClosed : function(){},
-		onError : function(){}
-	};
-
-	$(document).ready(function() {
-		$.fancybox.init();
-	});
-
-})(jQuery);
-define("3rdparty/jquery.fancybox-1.3.4", function(){});
-
-/**
- * @license
- * Patterns @VERSION@ fancybox - automatic fancybox setup
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('patterns/fancybox',[
-    'jquery',
-    '../3rdparty/jquery.fancybox-1.3.4'
-], function($) {
-    var fancybox = {
-        execute: function(elem, url, sources, params, event) {
-            //var $this = $(event.target);
-
-            //var modifier = /![a-zA-Z]+/.exec(params);
-            //var className = /[\.][a-zA-Z\-0-9_]+/.exec(params);
-            var options = {};
-
-            //if (modifier && modifier.length > 0) {
-            //options.type = modifier[0].slice(1);
-            //} else {
-            if (params.type)
-                options.type = params.type;
-            //}
-
-            options.href = url + (sources.length > 0 ? '#' + sources[0] : '');
-
-            $.fancybox( options );
-            $.fancybox.resize();
-        }
-    };
-    return fancybox;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ floatingPanel - easily create floating panels
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('patterns/floatingpanel',[
-    'require'
-], function(require) {
-    var floatingPanelContextual = {
-        options: {
-            events: {
-                def: ",mouseleave"
-            },
-            delay: 500
-        },
-
-        execute: function( $elem, url, sources, params, event ) {
-            var api = $elem.data("tooltip");
-            if (!api) {
-                // we haven't initialized the tooltip for this element
-                // dot it now
-                var opts = $.extend({}, floatingPanelContextual.options, params);
-
-                if ( sources.length > 0 ) {
-                    opts.tip = "#" + sources[0];
-                }
-                opts.onHide = floatingPanelContextual.handleOnHide;
-                $elem.tooltip(opts).dynamic();
-
-                api = $elem.data("tooltip");
-            }
-
-            if (!api.isShown(false)) {
-                api.show();
-            }
-            var $parents = $elem.parents("li");
-
-            if ($parents.length > 0) {
-                $($parents[0]).addClass('tipped');
-            }
-        },
-
-        handleOnHide: function() {
-            var $elem = this.getTrigger();
-
-            var $parents = $elem.parents("li");
-
-            if ($parents.length > 0) {
-                $($parents[0]).removeClass('tipped');
-            }
-        }
-    };
-    return floatingPanelContextual;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @preserve
- * FullCalendar v1.5.2
- * http://arshaw.com/fullcalendar/
- *
- * Use fullcalendar.css for basic styling.
- * For event drag & drop, requires jQuery UI draggable.
- * For event resizing, requires jQuery UI resizable.
- *
- * Copyright (c) 2011 Adam Shaw
- * Dual licensed under the MIT and GPL licenses, located in
- * MIT-LICENSE.txt and GPL-LICENSE.txt respectively.
- *
- * Date: Sat Nov 19 18:21:10 2011 -0800
- *
- */
- 
-(function($, undefined) {
-
-
-var defaults = {
-
-	// display
-	defaultView: 'month',
-	aspectRatio: 1.35,
-	header: {
-		left: 'title',
-		center: '',
-		right: 'today prev,next'
-	},
-	weekends: true,
-	
-	// editing
-	//editable: false,
-	//disableDragging: false,
-	//disableResizing: false,
-	
-	allDayDefault: true,
-	ignoreTimezone: true,
-	
-	// event ajax
-	lazyFetching: true,
-	startParam: 'start',
-	endParam: 'end',
-	
-	// time formats
-	titleFormat: {
-		month: 'MMMM yyyy',
-		week: "MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",
-		day: 'dddd, MMM d, yyyy'
-	},
-	columnFormat: {
-		month: 'ddd',
-		week: 'ddd M/d',
-		day: 'dddd M/d'
-	},
-	timeFormat: { // for event elements
-		'': 'h(:mm)t' // default
-	},
-	
-	// locale
-	isRTL: false,
-	firstDay: 0,
-	monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-	monthNamesShort: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-	dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-	dayNamesShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-	buttonText: {
-		prev: '&nbsp;&#9668;&nbsp;',
-		next: '&nbsp;&#9658;&nbsp;',
-		prevYear: '&nbsp;&lt;&lt;&nbsp;',
-		nextYear: '&nbsp;&gt;&gt;&nbsp;',
-		today: 'today',
-		month: 'month',
-		week: 'week',
-		day: 'day'
-	},
-	
-	// jquery-ui theming
-	theme: false,
-	buttonIcons: {
-		prev: 'circle-triangle-w',
-		next: 'circle-triangle-e'
-	},
-	
-	//selectable: false,
-	unselectAuto: true,
-	
-	dropAccept: '*'
-	
-};
-
-// right-to-left defaults
-var rtlDefaults = {
-	header: {
-		left: 'next,prev today',
-		center: '',
-		right: 'title'
-	},
-	buttonText: {
-		prev: '&nbsp;&#9658;&nbsp;',
-		next: '&nbsp;&#9668;&nbsp;',
-		prevYear: '&nbsp;&gt;&gt;&nbsp;',
-		nextYear: '&nbsp;&lt;&lt;&nbsp;'
-	},
-	buttonIcons: {
-		prev: 'circle-triangle-e',
-		next: 'circle-triangle-w'
-	}
-};
-
-
-
-var fc = $.fullCalendar = { version: "1.5.2" };
-var fcViews = fc.views = {};
-
-
-$.fn.fullCalendar = function(options) {
-
-
-	// method calling
-	if (typeof options == 'string') {
-		var args = Array.prototype.slice.call(arguments, 1);
-		var res;
-		this.each(function() {
-			var calendar = $.data(this, 'fullCalendar');
-			if (calendar && $.isFunction(calendar[options])) {
-				var r = calendar[options].apply(calendar, args);
-				if (res === undefined) {
-					res = r;
-				}
-				if (options == 'destroy') {
-					$.removeData(this, 'fullCalendar');
-				}
-			}
-		});
-		if (res !== undefined) {
-			return res;
-		}
-		return this;
-	}
-	
-	
-	// would like to have this logic in EventManager, but needs to happen before options are recursively extended
-	var eventSources = options.eventSources || [];
-	delete options.eventSources;
-	if (options.events) {
-		eventSources.push(options.events);
-		delete options.events;
-	}
-	
-
-	options = $.extend(true, {},
-		defaults,
-		(options.isRTL || options.isRTL===undefined && defaults.isRTL) ? rtlDefaults : {},
-		options
-	);
-	
-	
-	this.each(function(i, _element) {
-		var element = $(_element);
-		var calendar = new Calendar(element, options, eventSources);
-		element.data('fullCalendar', calendar); // TODO: look into memory leak implications
-		calendar.render();
-	});
-	
-	
-	return this;
-	
-};
-
-
-// function for adding/overriding defaults
-function setDefaults(d) {
-	$.extend(true, defaults, d);
-}
-
-
-
- 
-function Calendar(element, options, eventSources) {
-	var t = this;
-	
-	
-	// exports
-	t.options = options;
-	t.render = render;
-	t.destroy = destroy;
-	t.refetchEvents = refetchEvents;
-	t.reportEvents = reportEvents;
-	t.reportEventChange = reportEventChange;
-	t.rerenderEvents = rerenderEvents;
-	t.changeView = changeView;
-	t.select = select;
-	t.unselect = unselect;
-	t.prev = prev;
-	t.next = next;
-	t.prevYear = prevYear;
-	t.nextYear = nextYear;
-	t.today = today;
-	t.gotoDate = gotoDate;
-	t.incrementDate = incrementDate;
-	t.formatDate = function(format, date) { return formatDate(format, date, options) };
-	t.formatDates = function(format, date1, date2) { return formatDates(format, date1, date2, options) };
-	t.getDate = getDate;
-	t.getView = getView;
-	t.option = option;
-	t.trigger = trigger;
-	
-	
-	// imports
-	EventManager.call(t, options, eventSources);
-	var isFetchNeeded = t.isFetchNeeded;
-	var fetchEvents = t.fetchEvents;
-	
-	
-	// locals
-	var _element = element[0];
-	var header;
-	var headerElement;
-	var content;
-	var tm; // for making theme classes
-	var currentView;
-	var viewInstances = {};
-	var elementOuterWidth;
-	var suggestedViewHeight;
-	var absoluteViewElement;
-	var resizeUID = 0;
-	var ignoreWindowResize = 0;
-	var date = new Date();
-	var events = [];
-	var _dragElement;
-	
-	
-	
-	/* Main Rendering
-	-----------------------------------------------------------------------------*/
-	
-	
-	setYMD(date, options.year, options.month, options.date);
-	
-	
-	function render(inc) {
-		if (!content) {
-			initialRender();
-		}else{
-			calcSize();
-			markSizesDirty();
-			markEventsDirty();
-			renderView(inc);
-		}
-	}
-	
-	
-	function initialRender() {
-		tm = options.theme ? 'ui' : 'fc';
-		element.addClass('fc');
-		if (options.isRTL) {
-			element.addClass('fc-rtl');
-		}
-		if (options.theme) {
-			element.addClass('ui-widget');
-		}
-		content = $("<div class='fc-content' style='position:relative'/>")
-			.prependTo(element);
-		header = new Header(t, options);
-		headerElement = header.render();
-		if (headerElement) {
-			element.prepend(headerElement);
-		}
-		changeView(options.defaultView);
-		$(window).resize(windowResize);
-		// needed for IE in a 0x0 iframe, b/c when it is resized, never triggers a windowResize
-		if (!bodyVisible()) {
-			lateRender();
-		}
-	}
-	
-	
-	// called when we know the calendar couldn't be rendered when it was initialized,
-	// but we think it's ready now
-	function lateRender() {
-		setTimeout(function() { // IE7 needs this so dimensions are calculated correctly
-			if (!currentView.start && bodyVisible()) { // !currentView.start makes sure this never happens more than once
-				renderView();
-			}
-		},0);
-	}
-	
-	
-	function destroy() {
-		$(window).unbind('resize', windowResize);
-		header.destroy();
-		content.remove();
-		element.removeClass('fc fc-rtl ui-widget');
-	}
-	
-	
-	
-	function elementVisible() {
-		return _element.offsetWidth !== 0;
-	}
-	
-	
-	function bodyVisible() {
-		return $('body')[0].offsetWidth !== 0;
-	}
-	
-	
-	
-	/* View Rendering
-	-----------------------------------------------------------------------------*/
-	
-	// TODO: improve view switching (still weird transition in IE, and FF has whiteout problem)
-	
-	function changeView(newViewName) {
-		if (!currentView || newViewName != currentView.name) {
-			ignoreWindowResize++; // because setMinHeight might change the height before render (and subsequently setSize) is reached
-
-			unselect();
-			
-			var oldView = currentView;
-			var newViewElement;
-				
-			if (oldView) {
-				(oldView.beforeHide || noop)(); // called before changing min-height. if called after, scroll state is reset (in Opera)
-				setMinHeight(content, content.height());
-				oldView.element.hide();
-			}else{
-				setMinHeight(content, 1); // needs to be 1 (not 0) for IE7, or else view dimensions miscalculated
-			}
-			content.css('overflow', 'hidden');
-			
-			currentView = viewInstances[newViewName];
-			if (currentView) {
-				currentView.element.show();
-			}else{
-				currentView = viewInstances[newViewName] = new fcViews[newViewName](
-					newViewElement = absoluteViewElement =
-						$("<div class='fc-view fc-view-" + newViewName + "' style='position:absolute'/>")
-							.appendTo(content),
-					t // the calendar object
-				);
-			}
-			
-			if (oldView) {
-				header.deactivateButton(oldView.name);
-			}
-			header.activateButton(newViewName);
-			
-			renderView(); // after height has been set, will make absoluteViewElement's position=relative, then set to null
-			
-			content.css('overflow', '');
-			if (oldView) {
-				setMinHeight(content, 1);
-			}
-			
-			if (!newViewElement) {
-				(currentView.afterShow || noop)(); // called after setting min-height/overflow, so in final scroll state (for Opera)
-			}
-			
-			ignoreWindowResize--;
-		}
-	}
-	
-	
-	
-	function renderView(inc) {
-		if (elementVisible()) {
-			ignoreWindowResize++; // because renderEvents might temporarily change the height before setSize is reached
-
-			unselect();
-			
-			if (suggestedViewHeight === undefined) {
-				calcSize();
-			}
-			
-			var forceEventRender = false;
-			if (!currentView.start || inc || date < currentView.start || date >= currentView.end) {
-				// view must render an entire new date range (and refetch/render events)
-				currentView.render(date, inc || 0); // responsible for clearing events
-				setSize(true);
-				forceEventRender = true;
-			}
-			else if (currentView.sizeDirty) {
-				// view must resize (and rerender events)
-				currentView.clearEvents();
-				setSize();
-				forceEventRender = true;
-			}
-			else if (currentView.eventsDirty) {
-				currentView.clearEvents();
-				forceEventRender = true;
-			}
-			currentView.sizeDirty = false;
-			currentView.eventsDirty = false;
-			updateEvents(forceEventRender);
-			
-			elementOuterWidth = element.outerWidth();
-			
-			header.updateTitle(currentView.title);
-			var today = new Date();
-			if (today >= currentView.start && today < currentView.end) {
-				header.disableButton('today');
-			}else{
-				header.enableButton('today');
-			}
-			
-			ignoreWindowResize--;
-			currentView.trigger('viewDisplay', _element);
-		}
-	}
-	
-	
-	
-	/* Resizing
-	-----------------------------------------------------------------------------*/
-	
-	
-	function updateSize() {
-		markSizesDirty();
-		if (elementVisible()) {
-			calcSize();
-			setSize();
-			unselect();
-			currentView.clearEvents();
-			currentView.renderEvents(events);
-			currentView.sizeDirty = false;
-		}
-	}
-	
-	
-	function markSizesDirty() {
-		$.each(viewInstances, function(i, inst) {
-			inst.sizeDirty = true;
-		});
-	}
-	
-	
-	function calcSize() {
-		if (options.contentHeight) {
-			suggestedViewHeight = options.contentHeight;
-		}
-		else if (options.height) {
-			suggestedViewHeight = options.height - (headerElement ? headerElement.height() : 0) - vsides(content);
-		}
-		else {
-			suggestedViewHeight = Math.round(content.width() / Math.max(options.aspectRatio, .5));
-		}
-	}
-	
-	
-	function setSize(dateChanged) { // todo: dateChanged?
-		ignoreWindowResize++;
-		currentView.setHeight(suggestedViewHeight, dateChanged);
-		if (absoluteViewElement) {
-			absoluteViewElement.css('position', 'relative');
-			absoluteViewElement = null;
-		}
-		currentView.setWidth(content.width(), dateChanged);
-		ignoreWindowResize--;
-	}
-	
-	
-	function windowResize() {
-		if (!ignoreWindowResize) {
-			if (currentView.start) { // view has already been rendered
-				var uid = ++resizeUID;
-				setTimeout(function() { // add a delay
-					if (uid == resizeUID && !ignoreWindowResize && elementVisible()) {
-						if (elementOuterWidth != (elementOuterWidth = element.outerWidth())) {
-							ignoreWindowResize++; // in case the windowResize callback changes the height
-							updateSize();
-							currentView.trigger('windowResize', _element);
-							ignoreWindowResize--;
-						}
-					}
-				}, 200);
-			}else{
-				// calendar must have been initialized in a 0x0 iframe that has just been resized
-				lateRender();
-			}
-		}
-	}
-	
-	
-	
-	/* Event Fetching/Rendering
-	-----------------------------------------------------------------------------*/
-	
-	
-	// fetches events if necessary, rerenders events if necessary (or if forced)
-	function updateEvents(forceRender) {
-		if (!options.lazyFetching || isFetchNeeded(currentView.visStart, currentView.visEnd)) {
-			refetchEvents();
-		}
-		else if (forceRender) {
-			rerenderEvents();
-		}
-	}
-	
-	
-	function refetchEvents() {
-		fetchEvents(currentView.visStart, currentView.visEnd); // will call reportEvents
-	}
-	
-	
-	// called when event data arrives
-	function reportEvents(_events) {
-		events = _events;
-		rerenderEvents();
-	}
-	
-	
-	// called when a single event's data has been changed
-	function reportEventChange(eventID) {
-		rerenderEvents(eventID);
-	}
-	
-	
-	// attempts to rerenderEvents
-	function rerenderEvents(modifiedEventID) {
-		markEventsDirty();
-		if (elementVisible()) {
-			currentView.clearEvents();
-			currentView.renderEvents(events, modifiedEventID);
-			currentView.eventsDirty = false;
-		}
-	}
-	
-	
-	function markEventsDirty() {
-		$.each(viewInstances, function(i, inst) {
-			inst.eventsDirty = true;
-		});
-	}
-	
-
-
-	/* Selection
-	-----------------------------------------------------------------------------*/
-	
-
-	function select(start, end, allDay) {
-		currentView.select(start, end, allDay===undefined ? true : allDay);
-	}
-	
-
-	function unselect() { // safe to be called before renderView
-		if (currentView) {
-			currentView.unselect();
-		}
-	}
-	
-	
-	
-	/* Date
-	-----------------------------------------------------------------------------*/
-	
-	
-	function prev() {
-		renderView(-1);
-	}
-	
-	
-	function next() {
-		renderView(1);
-	}
-	
-	
-	function prevYear() {
-		addYears(date, -1);
-		renderView();
-	}
-	
-	
-	function nextYear() {
-		addYears(date, 1);
-		renderView();
-	}
-	
-	
-	function today() {
-		date = new Date();
-		renderView();
-	}
-	
-	
-	function gotoDate(year, month, dateOfMonth) {
-		if (year instanceof Date) {
-			date = cloneDate(year); // provided 1 argument, a Date
-		}else{
-			setYMD(date, year, month, dateOfMonth);
-		}
-		renderView();
-	}
-	
-	
-	function incrementDate(years, months, days) {
-		if (years !== undefined) {
-			addYears(date, years);
-		}
-		if (months !== undefined) {
-			addMonths(date, months);
-		}
-		if (days !== undefined) {
-			addDays(date, days);
-		}
-		renderView();
-	}
-	
-	
-	function getDate() {
-		return cloneDate(date);
-	}
-	
-	
-	
-	/* Misc
-	-----------------------------------------------------------------------------*/
-	
-	
-	function getView() {
-		return currentView;
-	}
-	
-	
-	function option(name, value) {
-		if (value === undefined) {
-			return options[name];
-		}
-		if (name == 'height' || name == 'contentHeight' || name == 'aspectRatio') {
-			options[name] = value;
-			updateSize();
-		}
-	}
-	
-	
-	function trigger(name, thisObj) {
-		if (options[name]) {
-			return options[name].apply(
-				thisObj || _element,
-				Array.prototype.slice.call(arguments, 2)
-			);
-		}
-	}
-	
-	
-	
-	/* External Dragging
-	------------------------------------------------------------------------*/
-	
-	if (options.droppable) {
-		$(document)
-			.bind('dragstart', function(ev, ui) {
-				var _e = ev.target;
-				var e = $(_e);
-				if (!e.parents('.fc').length) { // not already inside a calendar
-					var accept = options.dropAccept;
-					if ($.isFunction(accept) ? accept.call(_e, e) : e.is(accept)) {
-						_dragElement = _e;
-						currentView.dragStart(_dragElement, ev, ui);
-					}
-				}
-			})
-			.bind('dragstop', function(ev, ui) {
-				if (_dragElement) {
-					currentView.dragStop(_dragElement, ev, ui);
-					_dragElement = null;
-				}
-			});
-	}
-	
-
-}
-
-function Header(calendar, options) {
-	var t = this;
-	
-	
-	// exports
-	t.render = render;
-	t.destroy = destroy;
-	t.updateTitle = updateTitle;
-	t.activateButton = activateButton;
-	t.deactivateButton = deactivateButton;
-	t.disableButton = disableButton;
-	t.enableButton = enableButton;
-	
-	
-	// locals
-	var element = $([]);
-	var tm;
-	
-
-
-	function render() {
-		tm = options.theme ? 'ui' : 'fc';
-		var sections = options.header;
-		if (sections) {
-			element = $("<table class='fc-header' style='width:100%'/>")
-				.append(
-					$("<tr/>")
-						.append(renderSection('left'))
-						.append(renderSection('center'))
-						.append(renderSection('right'))
-				);
-			return element;
-		}
-	}
-	
-	
-	function destroy() {
-		element.remove();
-	}
-	
-	
-	function renderSection(position) {
-		var e = $("<td class='fc-header-" + position + "'/>");
-		var buttonStr = options.header[position];
-		if (buttonStr) {
-			$.each(buttonStr.split(' '), function(i) {
-				if (i > 0) {
-					e.append("<span class='fc-header-space'/>");
-				}
-				var prevButton;
-				$.each(this.split(','), function(j, buttonName) {
-					if (buttonName == 'title') {
-						e.append("<span class='fc-header-title'><h2>&nbsp;</h2></span>");
-						if (prevButton) {
-							prevButton.addClass(tm + '-corner-right');
-						}
-						prevButton = null;
-					}else{
-						var buttonClick;
-						if (calendar[buttonName]) {
-							buttonClick = calendar[buttonName]; // calendar method
-						}
-						else if (fcViews[buttonName]) {
-							buttonClick = function() {
-								button.removeClass(tm + '-state-hover'); // forget why
-								calendar.changeView(buttonName);
-							};
-						}
-						if (buttonClick) {
-							var icon = options.theme ? smartProperty(options.buttonIcons, buttonName) : null; // why are we using smartProperty here?
-							var text = smartProperty(options.buttonText, buttonName); // why are we using smartProperty here?
-							var button = $(
-								"<span class='fc-button fc-button-" + buttonName + " " + tm + "-state-default'>" +
-									"<span class='fc-button-inner'>" +
-										"<span class='fc-button-content'>" +
-											(icon ?
-												"<span class='fc-icon-wrap'>" +
-													"<span class='ui-icon ui-icon-" + icon + "'/>" +
-												"</span>" :
-												text
-												) +
-										"</span>" +
-										"<span class='fc-button-effect'><span></span></span>" +
-									"</span>" +
-								"</span>"
-							);
-							if (button) {
-								button
-									.click(function() {
-										if (!button.hasClass(tm + '-state-disabled')) {
-											buttonClick();
-										}
-									})
-									.mousedown(function() {
-										button
-											.not('.' + tm + '-state-active')
-											.not('.' + tm + '-state-disabled')
-											.addClass(tm + '-state-down');
-									})
-									.mouseup(function() {
-										button.removeClass(tm + '-state-down');
-									})
-									.hover(
-										function() {
-											button
-												.not('.' + tm + '-state-active')
-												.not('.' + tm + '-state-disabled')
-												.addClass(tm + '-state-hover');
-										},
-										function() {
-											button
-												.removeClass(tm + '-state-hover')
-												.removeClass(tm + '-state-down');
-										}
-									)
-									.appendTo(e);
-								if (!prevButton) {
-									button.addClass(tm + '-corner-left');
-								}
-								prevButton = button;
-							}
-						}
-					}
-				});
-				if (prevButton) {
-					prevButton.addClass(tm + '-corner-right');
-				}
-			});
-		}
-		return e;
-	}
-	
-	
-	function updateTitle(html) {
-		element.find('h2')
-			.html(html);
-	}
-	
-	
-	function activateButton(buttonName) {
-		element.find('span.fc-button-' + buttonName)
-			.addClass(tm + '-state-active');
-	}
-	
-	
-	function deactivateButton(buttonName) {
-		element.find('span.fc-button-' + buttonName)
-			.removeClass(tm + '-state-active');
-	}
-	
-	
-	function disableButton(buttonName) {
-		element.find('span.fc-button-' + buttonName)
-			.addClass(tm + '-state-disabled');
-	}
-	
-	
-	function enableButton(buttonName) {
-		element.find('span.fc-button-' + buttonName)
-			.removeClass(tm + '-state-disabled');
-	}
-
-
-}
-
-fc.sourceNormalizers = [];
-fc.sourceFetchers = [];
-
-var ajaxDefaults = {
-	dataType: 'json',
-	cache: false
-};
-
-var eventGUID = 1;
-
-
-function EventManager(options, _sources) {
-	var t = this;
-	
-	
-	// exports
-	t.isFetchNeeded = isFetchNeeded;
-	t.fetchEvents = fetchEvents;
-	t.addEventSource = addEventSource;
-	t.removeEventSource = removeEventSource;
-	t.updateEvent = updateEvent;
-	t.renderEvent = renderEvent;
-	t.removeEvents = removeEvents;
-	t.clientEvents = clientEvents;
-	t.normalizeEvent = normalizeEvent;
-	
-	
-	// imports
-	var trigger = t.trigger;
-	var getView = t.getView;
-	var reportEvents = t.reportEvents;
-	
-	
-	// locals
-	var stickySource = { events: [] };
-	var sources = [ stickySource ];
-	var rangeStart, rangeEnd;
-	var currentFetchID = 0;
-	var pendingSourceCnt = 0;
-	var loadingLevel = 0;
-	var cache = [];
-	
-	
-	for (var i=0; i<_sources.length; i++) {
-		_addEventSource(_sources[i]);
-	}
-	
-	
-	
-	/* Fetching
-	-----------------------------------------------------------------------------*/
-	
-	
-	function isFetchNeeded(start, end) {
-		return !rangeStart || start < rangeStart || end > rangeEnd;
-	}
-	
-	
-	function fetchEvents(start, end) {
-		rangeStart = start;
-		rangeEnd = end;
-		cache = [];
-		var fetchID = ++currentFetchID;
-		var len = sources.length;
-		pendingSourceCnt = len;
-		for (var i=0; i<len; i++) {
-			fetchEventSource(sources[i], fetchID);
-		}
-	}
-	
-	
-	function fetchEventSource(source, fetchID) {
-		_fetchEventSource(source, function(events) {
-			if (fetchID == currentFetchID) {
-				if (events) {
-					for (var i=0; i<events.length; i++) {
-						events[i].source = source;
-						normalizeEvent(events[i]);
-					}
-					cache = cache.concat(events);
-				}
-				pendingSourceCnt--;
-				if (!pendingSourceCnt) {
-					reportEvents(cache);
-				}
-			}
-		});
-	}
-	
-	
-	function _fetchEventSource(source, callback) {
-		var i;
-		var fetchers = fc.sourceFetchers;
-		var res;
-		for (i=0; i<fetchers.length; i++) {
-			res = fetchers[i](source, rangeStart, rangeEnd, callback);
-			if (res === true) {
-				// the fetcher is in charge. made its own async request
-				return;
-			}
-			else if (typeof res == 'object') {
-				// the fetcher returned a new source. process it
-				_fetchEventSource(res, callback);
-				return;
-			}
-		}
-		var events = source.events;
-		if (events) {
-			if ($.isFunction(events)) {
-				pushLoading();
-				events(cloneDate(rangeStart), cloneDate(rangeEnd), function(events) {
-					callback(events);
-					popLoading();
-				});
-			}
-			else if ($.isArray(events)) {
-				callback(events);
-			}
-			else {
-				callback();
-			}
-		}else{
-			var url = source.url;
-			if (url) {
-				var success = source.success;
-				var error = source.error;
-				var complete = source.complete;
-				var data = $.extend({}, source.data || {});
-				var startParam = firstDefined(source.startParam, options.startParam);
-				var endParam = firstDefined(source.endParam, options.endParam);
-				if (startParam) {
-					data[startParam] = Math.round(+rangeStart / 1000);
-				}
-				if (endParam) {
-					data[endParam] = Math.round(+rangeEnd / 1000);
-				}
-				pushLoading();
-				$.ajax($.extend({}, ajaxDefaults, source, {
-					data: data,
-					success: function(events) {
-						events = events || [];
-						var res = applyAll(success, this, arguments);
-						if ($.isArray(res)) {
-							events = res;
-						}
-						callback(events);
-					},
-					error: function() {
-						applyAll(error, this, arguments);
-						callback();
-					},
-					complete: function() {
-						applyAll(complete, this, arguments);
-						popLoading();
-					}
-				}));
-			}else{
-				callback();
-			}
-		}
-	}
-	
-	
-	
-	/* Sources
-	-----------------------------------------------------------------------------*/
-	
-
-	function addEventSource(source) {
-		source = _addEventSource(source);
-		if (source) {
-			pendingSourceCnt++;
-			fetchEventSource(source, currentFetchID); // will eventually call reportEvents
-		}
-	}
-	
-	
-	function _addEventSource(source) {
-		if ($.isFunction(source) || $.isArray(source)) {
-			source = { events: source };
-		}
-		else if (typeof source == 'string') {
-			source = { url: source };
-		}
-		if (typeof source == 'object') {
-			normalizeSource(source);
-			sources.push(source);
-			return source;
-		}
-	}
-	
-
-	function removeEventSource(source) {
-		sources = $.grep(sources, function(src) {
-			return !isSourcesEqual(src, source);
-		});
-		// remove all client events from that source
-		cache = $.grep(cache, function(e) {
-			return !isSourcesEqual(e.source, source);
-		});
-		reportEvents(cache);
-	}
-	
-	
-	
-	/* Manipulation
-	-----------------------------------------------------------------------------*/
-	
-	
-	function updateEvent(event) { // update an existing event
-		var i, len = cache.length, e,
-			defaultEventEnd = getView().defaultEventEnd, // getView???
-			startDelta = event.start - event._start,
-			endDelta = event.end ?
-				(event.end - (event._end || defaultEventEnd(event))) // event._end would be null if event.end
-				: 0;                                                      // was null and event was just resized
-		for (i=0; i<len; i++) {
-			e = cache[i];
-			if (e._id == event._id && e != event) {
-				e.start = new Date(+e.start + startDelta);
-				if (event.end) {
-					if (e.end) {
-						e.end = new Date(+e.end + endDelta);
-					}else{
-						e.end = new Date(+defaultEventEnd(e) + endDelta);
-					}
-				}else{
-					e.end = null;
-				}
-				e.title = event.title;
-				e.url = event.url;
-				e.allDay = event.allDay;
-				e.className = event.className;
-				e.editable = event.editable;
-				e.color = event.color;
-				e.backgroudColor = event.backgroudColor;
-				e.borderColor = event.borderColor;
-				e.textColor = event.textColor;
-				normalizeEvent(e);
-			}
-		}
-		normalizeEvent(event);
-		reportEvents(cache);
-	}
-	
-	
-	function renderEvent(event, stick) {
-		normalizeEvent(event);
-		if (!event.source) {
-			if (stick) {
-				stickySource.events.push(event);
-				event.source = stickySource;
-			}
-			cache.push(event);
-		}
-		reportEvents(cache);
-	}
-	
-	
-	function removeEvents(filter) {
-		if (!filter) { // remove all
-			cache = [];
-			// clear all array sources
-			for (var i=0; i<sources.length; i++) {
-				if ($.isArray(sources[i].events)) {
-					sources[i].events = [];
-				}
-			}
-		}else{
-			if (!$.isFunction(filter)) { // an event ID
-				var id = filter + '';
-				filter = function(e) {
-					return e._id == id;
-				};
-			}
-			cache = $.grep(cache, filter, true);
-			// remove events from array sources
-			for (var i=0; i<sources.length; i++) {
-				if ($.isArray(sources[i].events)) {
-					sources[i].events = $.grep(sources[i].events, filter, true);
-				}
-			}
-		}
-		reportEvents(cache);
-	}
-	
-	
-	function clientEvents(filter) {
-		if ($.isFunction(filter)) {
-			return $.grep(cache, filter);
-		}
-		else if (filter) { // an event ID
-			filter += '';
-			return $.grep(cache, function(e) {
-				return e._id == filter;
-			});
-		}
-		return cache; // else, return all
-	}
-	
-	
-	
-	/* Loading State
-	-----------------------------------------------------------------------------*/
-	
-	
-	function pushLoading() {
-		if (!loadingLevel++) {
-			trigger('loading', null, true);
-		}
-	}
-	
-	
-	function popLoading() {
-		if (!--loadingLevel) {
-			trigger('loading', null, false);
-		}
-	}
-	
-	
-	
-	/* Event Normalization
-	-----------------------------------------------------------------------------*/
-	
-	
-	function normalizeEvent(event) {
-		var source = event.source || {};
-		var ignoreTimezone = firstDefined(source.ignoreTimezone, options.ignoreTimezone);
-		event._id = event._id || (event.id === undefined ? '_fc' + eventGUID++ : event.id + '');
-		if (event.date) {
-			if (!event.start) {
-				event.start = event.date;
-			}
-			delete event.date;
-		}
-		event._start = cloneDate(event.start = parseDate(event.start, ignoreTimezone));
-		event.end = parseDate(event.end, ignoreTimezone);
-		if (event.end && event.end <= event.start) {
-			event.end = null;
-		}
-		event._end = event.end ? cloneDate(event.end) : null;
-		if (event.allDay === undefined) {
-			event.allDay = firstDefined(source.allDayDefault, options.allDayDefault);
-		}
-		if (event.className) {
-			if (typeof event.className == 'string') {
-				event.className = event.className.split(/\s+/);
-			}
-		}else{
-			event.className = [];
-		}
-		// TODO: if there is no start date, return false to indicate an invalid event
-	}
-	
-	
-	
-	/* Utils
-	------------------------------------------------------------------------------*/
-	
-	
-	function normalizeSource(source) {
-		if (source.className) {
-			// TODO: repeat code, same code for event classNames
-			if (typeof source.className == 'string') {
-				source.className = source.className.split(/\s+/);
-			}
-		}else{
-			source.className = [];
-		}
-		var normalizers = fc.sourceNormalizers;
-		for (var i=0; i<normalizers.length; i++) {
-			normalizers[i](source);
-		}
-	}
-	
-	
-	function isSourcesEqual(source1, source2) {
-		return source1 && source2 && getSourcePrimitive(source1) == getSourcePrimitive(source2);
-	}
-	
-	
-	function getSourcePrimitive(source) {
-		return ((typeof source == 'object') ? (source.events || source.url) : '') || source;
-	}
-
-
-}
-
-
-fc.addDays = addDays;
-fc.cloneDate = cloneDate;
-fc.parseDate = parseDate;
-fc.parseISO8601 = parseISO8601;
-fc.parseTime = parseTime;
-fc.formatDate = formatDate;
-fc.formatDates = formatDates;
-
-
-
-/* Date Math
------------------------------------------------------------------------------*/
-
-var dayIDs = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
-	DAY_MS = 86400000,
-	HOUR_MS = 3600000,
-	MINUTE_MS = 60000;
-	
-
-function addYears(d, n, keepTime) {
-	d.setFullYear(d.getFullYear() + n);
-	if (!keepTime) {
-		clearTime(d);
-	}
-	return d;
-}
-
-
-function addMonths(d, n, keepTime) { // prevents day overflow/underflow
-	if (+d) { // prevent infinite looping on invalid dates
-		var m = d.getMonth() + n,
-			check = cloneDate(d);
-		check.setDate(1);
-		check.setMonth(m);
-		d.setMonth(m);
-		if (!keepTime) {
-			clearTime(d);
-		}
-		while (d.getMonth() != check.getMonth()) {
-			d.setDate(d.getDate() + (d < check ? 1 : -1));
-		}
-	}
-	return d;
-}
-
-
-function addDays(d, n, keepTime) { // deals with daylight savings
-	if (+d) {
-		var dd = d.getDate() + n,
-			check = cloneDate(d);
-		check.setHours(9); // set to middle of day
-		check.setDate(dd);
-		d.setDate(dd);
-		if (!keepTime) {
-			clearTime(d);
-		}
-		fixDate(d, check);
-	}
-	return d;
-}
-
-
-function fixDate(d, check) { // force d to be on check's YMD, for daylight savings purposes
-	if (+d) { // prevent infinite looping on invalid dates
-		while (d.getDate() != check.getDate()) {
-			d.setTime(+d + (d < check ? 1 : -1) * HOUR_MS);
-		}
-	}
-}
-
-
-function addMinutes(d, n) {
-	d.setMinutes(d.getMinutes() + n);
-	return d;
-}
-
-
-function clearTime(d) {
-	d.setHours(0);
-	d.setMinutes(0);
-	d.setSeconds(0); 
-	d.setMilliseconds(0);
-	return d;
-}
-
-
-function cloneDate(d, dontKeepTime) {
-	if (dontKeepTime) {
-		return clearTime(new Date(+d));
-	}
-	return new Date(+d);
-}
-
-
-function zeroDate() { // returns a Date with time 00:00:00 and dateOfMonth=1
-	var i=0, d;
-	do {
-		d = new Date(1970, i++, 1);
-	} while (d.getHours()); // != 0
-	return d;
-}
-
-
-function skipWeekend(date, inc, excl) {
-	inc = inc || 1;
-	while (!date.getDay() || (excl && date.getDay()==1 || !excl && date.getDay()==6)) {
-		addDays(date, inc);
-	}
-	return date;
-}
-
-
-function dayDiff(d1, d2) { // d1 - d2
-	return Math.round((cloneDate(d1, true) - cloneDate(d2, true)) / DAY_MS);
-}
-
-
-function setYMD(date, y, m, d) {
-	if (y !== undefined && y != date.getFullYear()) {
-		date.setDate(1);
-		date.setMonth(0);
-		date.setFullYear(y);
-	}
-	if (m !== undefined && m != date.getMonth()) {
-		date.setDate(1);
-		date.setMonth(m);
-	}
-	if (d !== undefined) {
-		date.setDate(d);
-	}
-}
-
-
-
-/* Date Parsing
------------------------------------------------------------------------------*/
-
-
-function parseDate(s, ignoreTimezone) { // ignoreTimezone defaults to true
-	if (typeof s == 'object') { // already a Date object
-		return s;
-	}
-	if (typeof s == 'number') { // a UNIX timestamp
-		return new Date(s * 1000);
-	}
-	if (typeof s == 'string') {
-		if (s.match(/^\d+(\.\d+)?$/)) { // a UNIX timestamp
-			return new Date(parseFloat(s) * 1000);
-		}
-		if (ignoreTimezone === undefined) {
-			ignoreTimezone = true;
-		}
-		return parseISO8601(s, ignoreTimezone) || (s ? new Date(s) : null);
-	}
-	// TODO: never return invalid dates (like from new Date(<string>)), return null instead
-	return null;
-}
-
-
-function parseISO8601(s, ignoreTimezone) { // ignoreTimezone defaults to false
-	// derived from http://delete.me.uk/2005/03/iso8601.html
-	// TODO: for a know glitch/feature, read tests/issue_206_parseDate_dst.html
-	var m = s.match(/^([0-9]{4})(-([0-9]{2})(-([0-9]{2})([T ]([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?(Z|(([-+])([0-9]{2})(:?([0-9]{2}))?))?)?)?)?$/);
-	if (!m) {
-		return null;
-	}
-	var date = new Date(m[1], 0, 1);
-	if (ignoreTimezone || !m[13]) {
-		var check = new Date(m[1], 0, 1, 9, 0);
-		if (m[3]) {
-			date.setMonth(m[3] - 1);
-			check.setMonth(m[3] - 1);
-		}
-		if (m[5]) {
-			date.setDate(m[5]);
-			check.setDate(m[5]);
-		}
-		fixDate(date, check);
-		if (m[7]) {
-			date.setHours(m[7]);
-		}
-		if (m[8]) {
-			date.setMinutes(m[8]);
-		}
-		if (m[10]) {
-			date.setSeconds(m[10]);
-		}
-		if (m[12]) {
-			date.setMilliseconds(Number("0." + m[12]) * 1000);
-		}
-		fixDate(date, check);
-	}else{
-		date.setUTCFullYear(
-			m[1],
-			m[3] ? m[3] - 1 : 0,
-			m[5] || 1
-		);
-		date.setUTCHours(
-			m[7] || 0,
-			m[8] || 0,
-			m[10] || 0,
-			m[12] ? Number("0." + m[12]) * 1000 : 0
-		);
-		if (m[14]) {
-			var offset = Number(m[16]) * 60 + (m[18] ? Number(m[18]) : 0);
-			offset *= m[15] == '-' ? 1 : -1;
-			date = new Date(+date + (offset * 60 * 1000));
-		}
-	}
-	return date;
-}
-
-
-function parseTime(s) { // returns minutes since start of day
-	if (typeof s == 'number') { // an hour
-		return s * 60;
-	}
-	if (typeof s == 'object') { // a Date object
-		return s.getHours() * 60 + s.getMinutes();
-	}
-	var m = s.match(/(\d+)(?::(\d+))?\s*(\w+)?/);
-	if (m) {
-		var h = parseInt(m[1], 10);
-		if (m[3]) {
-			h %= 12;
-			if (m[3].toLowerCase().charAt(0) == 'p') {
-				h += 12;
-			}
-		}
-		return h * 60 + (m[2] ? parseInt(m[2], 10) : 0);
-	}
-}
-
-
-
-/* Date Formatting
------------------------------------------------------------------------------*/
-// TODO: use same function formatDate(date, [date2], format, [options])
-
-
-function formatDate(date, format, options) {
-	return formatDates(date, null, format, options);
-}
-
-
-function formatDates(date1, date2, format, options) {
-	options = options || defaults;
-	var date = date1,
-		otherDate = date2,
-		i, len = format.length, c,
-		i2, formatter,
-		res = '';
-	for (i=0; i<len; i++) {
-		c = format.charAt(i);
-		if (c == "'") {
-			for (i2=i+1; i2<len; i2++) {
-				if (format.charAt(i2) == "'") {
-					if (date) {
-						if (i2 == i+1) {
-							res += "'";
-						}else{
-							res += format.substring(i+1, i2);
-						}
-						i = i2;
-					}
-					break;
-				}
-			}
-		}
-		else if (c == '(') {
-			for (i2=i+1; i2<len; i2++) {
-				if (format.charAt(i2) == ')') {
-					var subres = formatDate(date, format.substring(i+1, i2), options);
-					if (parseInt(subres.replace(/\D/, ''), 10)) {
-						res += subres;
-					}
-					i = i2;
-					break;
-				}
-			}
-		}
-		else if (c == '[') {
-			for (i2=i+1; i2<len; i2++) {
-				if (format.charAt(i2) == ']') {
-					var subformat = format.substring(i+1, i2);
-					var subres = formatDate(date, subformat, options);
-					if (subres != formatDate(otherDate, subformat, options)) {
-						res += subres;
-					}
-					i = i2;
-					break;
-				}
-			}
-		}
-		else if (c == '{') {
-			date = date2;
-			otherDate = date1;
-		}
-		else if (c == '}') {
-			date = date1;
-			otherDate = date2;
-		}
-		else {
-			for (i2=len; i2>i; i2--) {
-				if (formatter = dateFormatters[format.substring(i, i2)]) {
-					if (date) {
-						res += formatter(date, options);
-					}
-					i = i2 - 1;
-					break;
-				}
-			}
-			if (i2 == i) {
-				if (date) {
-					res += c;
-				}
-			}
-		}
-	}
-	return res;
-};
-
-
-var dateFormatters = {
-	s	: function(d)	{ return d.getSeconds() },
-	ss	: function(d)	{ return zeroPad(d.getSeconds()) },
-	m	: function(d)	{ return d.getMinutes() },
-	mm	: function(d)	{ return zeroPad(d.getMinutes()) },
-	h	: function(d)	{ return d.getHours() % 12 || 12 },
-	hh	: function(d)	{ return zeroPad(d.getHours() % 12 || 12) },
-	H	: function(d)	{ return d.getHours() },
-	HH	: function(d)	{ return zeroPad(d.getHours()) },
-	d	: function(d)	{ return d.getDate() },
-	dd	: function(d)	{ return zeroPad(d.getDate()) },
-	ddd	: function(d,o)	{ return o.dayNamesShort[d.getDay()] },
-	dddd: function(d,o)	{ return o.dayNames[d.getDay()] },
-	M	: function(d)	{ return d.getMonth() + 1 },
-	MM	: function(d)	{ return zeroPad(d.getMonth() + 1) },
-	MMM	: function(d,o)	{ return o.monthNamesShort[d.getMonth()] },
-	MMMM: function(d,o)	{ return o.monthNames[d.getMonth()] },
-	yy	: function(d)	{ return (d.getFullYear()+'').substring(2) },
-	yyyy: function(d)	{ return d.getFullYear() },
-	t	: function(d)	{ return d.getHours() < 12 ? 'a' : 'p' },
-	tt	: function(d)	{ return d.getHours() < 12 ? 'am' : 'pm' },
-	T	: function(d)	{ return d.getHours() < 12 ? 'A' : 'P' },
-	TT	: function(d)	{ return d.getHours() < 12 ? 'AM' : 'PM' },
-	u	: function(d)	{ return formatDate(d, "yyyy-MM-dd'T'HH:mm:ss'Z'") },
-	S	: function(d)	{
-		var date = d.getDate();
-		if (date > 10 && date < 20) {
-			return 'th';
-		}
-		return ['st', 'nd', 'rd'][date%10-1] || 'th';
-	}
-};
-
-
-
-fc.applyAll = applyAll;
-
-
-/* Event Date Math
------------------------------------------------------------------------------*/
-
-
-function exclEndDay(event) {
-	if (event.end) {
-		return _exclEndDay(event.end, event.allDay);
-	}else{
-		return addDays(cloneDate(event.start), 1);
-	}
-}
-
-
-function _exclEndDay(end, allDay) {
-	end = cloneDate(end);
-	return allDay || end.getHours() || end.getMinutes() ? addDays(end, 1) : clearTime(end);
-}
-
-
-function segCmp(a, b) {
-	return (b.msLength - a.msLength) * 100 + (a.event.start - b.event.start);
-}
-
-
-function segsCollide(seg1, seg2) {
-	return seg1.end > seg2.start && seg1.start < seg2.end;
-}
-
-
-
-/* Event Sorting
------------------------------------------------------------------------------*/
-
-
-// event rendering utilities
-function sliceSegs(events, visEventEnds, start, end) {
-	var segs = [],
-		i, len=events.length, event,
-		eventStart, eventEnd,
-		segStart, segEnd,
-		isStart, isEnd;
-	for (i=0; i<len; i++) {
-		event = events[i];
-		eventStart = event.start;
-		eventEnd = visEventEnds[i];
-		if (eventEnd > start && eventStart < end) {
-			if (eventStart < start) {
-				segStart = cloneDate(start);
-				isStart = false;
-			}else{
-				segStart = eventStart;
-				isStart = true;
-			}
-			if (eventEnd > end) {
-				segEnd = cloneDate(end);
-				isEnd = false;
-			}else{
-				segEnd = eventEnd;
-				isEnd = true;
-			}
-			segs.push({
-				event: event,
-				start: segStart,
-				end: segEnd,
-				isStart: isStart,
-				isEnd: isEnd,
-				msLength: segEnd - segStart
-			});
-		}
-	} 
-	return segs.sort(segCmp);
-}
-
-
-// event rendering calculation utilities
-function stackSegs(segs) {
-	var levels = [],
-		i, len = segs.length, seg,
-		j, collide, k;
-	for (i=0; i<len; i++) {
-		seg = segs[i];
-		j = 0; // the level index where seg should belong
-		while (true) {
-			collide = false;
-			if (levels[j]) {
-				for (k=0; k<levels[j].length; k++) {
-					if (segsCollide(levels[j][k], seg)) {
-						collide = true;
-						break;
-					}
-				}
-			}
-			if (collide) {
-				j++;
-			}else{
-				break;
-			}
-		}
-		if (levels[j]) {
-			levels[j].push(seg);
-		}else{
-			levels[j] = [seg];
-		}
-	}
-	return levels;
-}
-
-
-
-/* Event Element Binding
------------------------------------------------------------------------------*/
-
-
-function lazySegBind(container, segs, bindHandlers) {
-	container.unbind('mouseover').mouseover(function(ev) {
-		var parent=ev.target, e,
-			i, seg;
-		while (parent != this) {
-			e = parent;
-			parent = parent.parentNode;
-		}
-		if ((i = e._fci) !== undefined) {
-			e._fci = undefined;
-			seg = segs[i];
-			bindHandlers(seg.event, seg.element, seg);
-			$(ev.target).trigger(ev);
-		}
-		ev.stopPropagation();
-	});
-}
-
-
-
-/* Element Dimensions
------------------------------------------------------------------------------*/
-
-
-function setOuterWidth(element, width, includeMargins) {
-	for (var i=0, e; i<element.length; i++) {
-		e = $(element[i]);
-		e.width(Math.max(0, width - hsides(e, includeMargins)));
-	}
-}
-
-
-function setOuterHeight(element, height, includeMargins) {
-	for (var i=0, e; i<element.length; i++) {
-		e = $(element[i]);
-		e.height(Math.max(0, height - vsides(e, includeMargins)));
-	}
-}
-
-
-// TODO: curCSS has been deprecated (jQuery 1.4.3 - 10/16/2010)
-
-
-function hsides(element, includeMargins) {
-	return hpadding(element) + hborders(element) + (includeMargins ? hmargins(element) : 0);
-}
-
-
-function hpadding(element) {
-	return (parseFloat($.curCSS(element[0], 'paddingLeft', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'paddingRight', true)) || 0);
-}
-
-
-function hmargins(element) {
-	return (parseFloat($.curCSS(element[0], 'marginLeft', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'marginRight', true)) || 0);
-}
-
-
-function hborders(element) {
-	return (parseFloat($.curCSS(element[0], 'borderLeftWidth', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'borderRightWidth', true)) || 0);
-}
-
-
-function vsides(element, includeMargins) {
-	return vpadding(element) +  vborders(element) + (includeMargins ? vmargins(element) : 0);
-}
-
-
-function vpadding(element) {
-	return (parseFloat($.curCSS(element[0], 'paddingTop', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'paddingBottom', true)) || 0);
-}
-
-
-function vmargins(element) {
-	return (parseFloat($.curCSS(element[0], 'marginTop', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'marginBottom', true)) || 0);
-}
-
-
-function vborders(element) {
-	return (parseFloat($.curCSS(element[0], 'borderTopWidth', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'borderBottomWidth', true)) || 0);
-}
-
-
-function setMinHeight(element, height) {
-	height = (typeof height == 'number' ? height + 'px' : height);
-	element.each(function(i, _element) {
-		_element.style.cssText += ';min-height:' + height + ';_height:' + height;
-		// why can't we just use .css() ? i forget
-	});
-}
-
-
-
-/* Misc Utils
------------------------------------------------------------------------------*/
-
-
-//TODO: arraySlice
-//TODO: isFunction, grep ?
-
-
-function noop() { }
-
-
-function cmp(a, b) {
-	return a - b;
-}
-
-
-function arrayMax(a) {
-	return Math.max.apply(Math, a);
-}
-
-
-function zeroPad(n) {
-	return (n < 10 ? '0' : '') + n;
-}
-
-
-function smartProperty(obj, name) { // get a camel-cased/namespaced property of an object
-	if (obj[name] !== undefined) {
-		return obj[name];
-	}
-	var parts = name.split(/(?=[A-Z])/),
-		i=parts.length-1, res;
-	for (; i>=0; i--) {
-		res = obj[parts[i].toLowerCase()];
-		if (res !== undefined) {
-			return res;
-		}
-	}
-	return obj[''];
-}
-
-
-function htmlEscape(s) {
-	return s.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/'/g, '&#039;')
-		.replace(/"/g, '&quot;')
-		.replace(/\n/g, '<br />');
-}
-
-
-function cssKey(_element) {
-	return _element.id + '/' + _element.className + '/' + _element.style.cssText.replace(/(^|;)\s*(top|left|width|height)\s*:[^;]*/ig, '');
-}
-
-
-function disableTextSelection(element) {
-	element
-		.attr('unselectable', 'on')
-		.css('MozUserSelect', 'none')
-		.bind('selectstart.ui', function() { return false; });
-}
-
-
-/*
-function enableTextSelection(element) {
-	element
-		.attr('unselectable', 'off')
-		.css('MozUserSelect', '')
-		.unbind('selectstart.ui');
-}
-*/
-
-
-function markFirstLast(e) {
-	e.children()
-		.removeClass('fc-first fc-last')
-		.filter(':first-child')
-			.addClass('fc-first')
-		.end()
-		.filter(':last-child')
-			.addClass('fc-last');
-}
-
-
-function setDayID(cell, date) {
-	cell.each(function(i, _cell) {
-		_cell.className = _cell.className.replace(/^fc-\w*/, 'fc-' + dayIDs[date.getDay()]);
-		// TODO: make a way that doesn't rely on order of classes
-	});
-}
-
-
-function getSkinCss(event, opt) {
-	var source = event.source || {};
-	var eventColor = event.color;
-	var sourceColor = source.color;
-	var optionColor = opt('eventColor');
-	var backgroundColor =
-		event.backgroundColor ||
-		eventColor ||
-		source.backgroundColor ||
-		sourceColor ||
-		opt('eventBackgroundColor') ||
-		optionColor;
-	var borderColor =
-		event.borderColor ||
-		eventColor ||
-		source.borderColor ||
-		sourceColor ||
-		opt('eventBorderColor') ||
-		optionColor;
-	var textColor =
-		event.textColor ||
-		source.textColor ||
-		opt('eventTextColor');
-	var statements = [];
-	if (backgroundColor) {
-		statements.push('background-color:' + backgroundColor);
-	}
-	if (borderColor) {
-		statements.push('border-color:' + borderColor);
-	}
-	if (textColor) {
-		statements.push('color:' + textColor);
-	}
-	return statements.join(';');
-}
-
-
-function applyAll(functions, thisObj, args) {
-	if ($.isFunction(functions)) {
-		functions = [ functions ];
-	}
-	if (functions) {
-		var i;
-		var ret;
-		for (i=0; i<functions.length; i++) {
-			ret = functions[i].apply(thisObj, args) || ret;
-		}
-		return ret;
-	}
-}
-
-
-function firstDefined() {
-	for (var i=0; i<arguments.length; i++) {
-		if (arguments[i] !== undefined) {
-			return arguments[i];
-		}
-	}
-}
-
-
-
-fcViews.month = MonthView;
-
-function MonthView(element, calendar) {
-	var t = this;
-	
-	
-	// exports
-	t.render = render;
-	
-	
-	// imports
-	BasicView.call(t, element, calendar, 'month');
-	var opt = t.opt;
-	var renderBasic = t.renderBasic;
-	var formatDate = calendar.formatDate;
-	
-	
-	
-	function render(date, delta) {
-		if (delta) {
-			addMonths(date, delta);
-			date.setDate(1);
-		}
-		var start = cloneDate(date, true);
-		start.setDate(1);
-		var end = addMonths(cloneDate(start), 1);
-		var visStart = cloneDate(start);
-		var visEnd = cloneDate(end);
-		var firstDay = opt('firstDay');
-		var nwe = opt('weekends') ? 0 : 1;
-		if (nwe) {
-			skipWeekend(visStart);
-			skipWeekend(visEnd, -1, true);
-		}
-		addDays(visStart, -((visStart.getDay() - Math.max(firstDay, nwe) + 7) % 7));
-		addDays(visEnd, (7 - visEnd.getDay() + Math.max(firstDay, nwe)) % 7);
-		var rowCnt = Math.round((visEnd - visStart) / (DAY_MS * 7));
-		if (opt('weekMode') == 'fixed') {
-			addDays(visEnd, (6 - rowCnt) * 7);
-			rowCnt = 6;
-		}
-		t.title = formatDate(start, opt('titleFormat'));
-		t.start = start;
-		t.end = end;
-		t.visStart = visStart;
-		t.visEnd = visEnd;
-		renderBasic(6, rowCnt, nwe ? 5 : 7, true);
-	}
-	
-	
-}
-
-fcViews.basicWeek = BasicWeekView;
-
-function BasicWeekView(element, calendar) {
-	var t = this;
-	
-	
-	// exports
-	t.render = render;
-	
-	
-	// imports
-	BasicView.call(t, element, calendar, 'basicWeek');
-	var opt = t.opt;
-	var renderBasic = t.renderBasic;
-	var formatDates = calendar.formatDates;
-	
-	
-	
-	function render(date, delta) {
-		if (delta) {
-			addDays(date, delta * 7);
-		}
-		var start = addDays(cloneDate(date), -((date.getDay() - opt('firstDay') + 7) % 7));
-		var end = addDays(cloneDate(start), 7);
-		var visStart = cloneDate(start);
-		var visEnd = cloneDate(end);
-		var weekends = opt('weekends');
-		if (!weekends) {
-			skipWeekend(visStart);
-			skipWeekend(visEnd, -1, true);
-		}
-		t.title = formatDates(
-			visStart,
-			addDays(cloneDate(visEnd), -1),
-			opt('titleFormat')
-		);
-		t.start = start;
-		t.end = end;
-		t.visStart = visStart;
-		t.visEnd = visEnd;
-		renderBasic(1, 1, weekends ? 7 : 5, false);
-	}
-	
-	
-}
-
-fcViews.basicDay = BasicDayView;
-
-//TODO: when calendar's date starts out on a weekend, shouldn't happen
-
-
-function BasicDayView(element, calendar) {
-	var t = this;
-	
-	
-	// exports
-	t.render = render;
-	
-	
-	// imports
-	BasicView.call(t, element, calendar, 'basicDay');
-	var opt = t.opt;
-	var renderBasic = t.renderBasic;
-	var formatDate = calendar.formatDate;
-	
-	
-	
-	function render(date, delta) {
-		if (delta) {
-			addDays(date, delta);
-			if (!opt('weekends')) {
-				skipWeekend(date, delta < 0 ? -1 : 1);
-			}
-		}
-		t.title = formatDate(date, opt('titleFormat'));
-		t.start = t.visStart = cloneDate(date, true);
-		t.end = t.visEnd = addDays(cloneDate(t.start), 1);
-		renderBasic(1, 1, 1, false);
-	}
-	
-	
-}
-
-setDefaults({
-	weekMode: 'fixed'
-});
-
-
-function BasicView(element, calendar, viewName) {
-	var t = this;
-	
-	
-	// exports
-	t.renderBasic = renderBasic;
-	t.setHeight = setHeight;
-	t.setWidth = setWidth;
-	t.renderDayOverlay = renderDayOverlay;
-	t.defaultSelectionEnd = defaultSelectionEnd;
-	t.renderSelection = renderSelection;
-	t.clearSelection = clearSelection;
-	t.reportDayClick = reportDayClick; // for selection (kinda hacky)
-	t.dragStart = dragStart;
-	t.dragStop = dragStop;
-	t.defaultEventEnd = defaultEventEnd;
-	t.getHoverListener = function() { return hoverListener };
-	t.colContentLeft = colContentLeft;
-	t.colContentRight = colContentRight;
-	t.dayOfWeekCol = dayOfWeekCol;
-	t.dateCell = dateCell;
-	t.cellDate = cellDate;
-	t.cellIsAllDay = function() { return true };
-	t.allDayRow = allDayRow;
-	t.allDayBounds = allDayBounds;
-	t.getRowCnt = function() { return rowCnt };
-	t.getColCnt = function() { return colCnt };
-	t.getColWidth = function() { return colWidth };
-	t.getDaySegmentContainer = function() { return daySegmentContainer };
-	
-	
-	// imports
-	View.call(t, element, calendar, viewName);
-	OverlayManager.call(t);
-	SelectionManager.call(t);
-	BasicEventRenderer.call(t);
-	var opt = t.opt;
-	var trigger = t.trigger;
-	var clearEvents = t.clearEvents;
-	var renderOverlay = t.renderOverlay;
-	var clearOverlays = t.clearOverlays;
-	var daySelectionMousedown = t.daySelectionMousedown;
-	var formatDate = calendar.formatDate;
-	
-	
-	// locals
-	
-	var head;
-	var headCells;
-	var body;
-	var bodyRows;
-	var bodyCells;
-	var bodyFirstCells;
-	var bodyCellTopInners;
-	var daySegmentContainer;
-	
-	var viewWidth;
-	var viewHeight;
-	var colWidth;
-	
-	var rowCnt, colCnt;
-	var coordinateGrid;
-	var hoverListener;
-	var colContentPositions;
-	
-	var rtl, dis, dit;
-	var firstDay;
-	var nwe;
-	var tm;
-	var colFormat;
-	
-	
-	
-	/* Rendering
-	------------------------------------------------------------*/
-	
-	
-	disableTextSelection(element.addClass('fc-grid'));
-	
-	
-	function renderBasic(maxr, r, c, showNumbers) {
-		rowCnt = r;
-		colCnt = c;
-		updateOptions();
-		var firstTime = !body;
-		if (firstTime) {
-			buildSkeleton(maxr, showNumbers);
-		}else{
-			clearEvents();
-		}
-		updateCells(firstTime);
-	}
-	
-	
-	
-	function updateOptions() {
-		rtl = opt('isRTL');
-		if (rtl) {
-			dis = -1;
-			dit = colCnt - 1;
-		}else{
-			dis = 1;
-			dit = 0;
-		}
-		firstDay = opt('firstDay');
-		nwe = opt('weekends') ? 0 : 1;
-		tm = opt('theme') ? 'ui' : 'fc';
-		colFormat = opt('columnFormat');
-	}
-	
-	
-	
-	function buildSkeleton(maxRowCnt, showNumbers) {
-		var s;
-		var headerClass = tm + "-widget-header";
-		var contentClass = tm + "-widget-content";
-		var i, j;
-		var table;
-		
-		s =
-			"<table class='fc-border-separate' style='width:100%' cellspacing='0'>" +
-			"<thead>" +
-			"<tr>";
-		for (i=0; i<colCnt; i++) {
-			s +=
-				"<th class='fc- " + headerClass + "'/>"; // need fc- for setDayID
-		}
-		s +=
-			"</tr>" +
-			"</thead>" +
-			"<tbody>";
-		for (i=0; i<maxRowCnt; i++) {
-			s +=
-				"<tr class='fc-week" + i + "'>";
-			for (j=0; j<colCnt; j++) {
-				s +=
-					"<td class='fc- " + contentClass + " fc-day" + (i*colCnt+j) + "'>" + // need fc- for setDayID
-					"<div>" +
-					(showNumbers ?
-						"<div class='fc-day-number'/>" :
-						''
-						) +
-					"<div class='fc-day-content'>" +
-					"<div style='position:relative'>&nbsp;</div>" +
-					"</div>" +
-					"</div>" +
-					"</td>";
-			}
-			s +=
-				"</tr>";
-		}
-		s +=
-			"</tbody>" +
-			"</table>";
-		table = $(s).appendTo(element);
-		
-		head = table.find('thead');
-		headCells = head.find('th');
-		body = table.find('tbody');
-		bodyRows = body.find('tr');
-		bodyCells = body.find('td');
-		bodyFirstCells = bodyCells.filter(':first-child');
-		bodyCellTopInners = bodyRows.eq(0).find('div.fc-day-content div');
-		
-		markFirstLast(head.add(head.find('tr'))); // marks first+last tr/th's
-		markFirstLast(bodyRows); // marks first+last td's
-		bodyRows.eq(0).addClass('fc-first'); // fc-last is done in updateCells
-		
-		dayBind(bodyCells);
-		
-		daySegmentContainer =
-			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
-				.appendTo(element);
-	}
-	
-	
-	
-	function updateCells(firstTime) {
-		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
-		var month = t.start.getMonth();
-		var today = clearTime(new Date());
-		var cell;
-		var date;
-		var row;
-	
-		if (dowDirty) {
-			headCells.each(function(i, _cell) {
-				cell = $(_cell);
-				date = indexDate(i);
-				cell.html(formatDate(date, colFormat));
-				setDayID(cell, date);
-			});
-		}
-		
-		bodyCells.each(function(i, _cell) {
-			cell = $(_cell);
-			date = indexDate(i);
-			if (date.getMonth() == month) {
-				cell.removeClass('fc-other-month');
-			}else{
-				cell.addClass('fc-other-month');
-			}
-			if (+date == +today) {
-				cell.addClass(tm + '-state-highlight fc-today');
-			}else{
-				cell.removeClass(tm + '-state-highlight fc-today');
-			}
-			cell.find('div.fc-day-number').text(date.getDate());
-			if (dowDirty) {
-				setDayID(cell, date);
-			}
-		});
-		
-		bodyRows.each(function(i, _row) {
-			row = $(_row);
-			if (i < rowCnt) {
-				row.show();
-				if (i == rowCnt-1) {
-					row.addClass('fc-last');
-				}else{
-					row.removeClass('fc-last');
-				}
-			}else{
-				row.hide();
-			}
-		});
-	}
-	
-	
-	
-	function setHeight(height) {
-		viewHeight = height;
-		
-		var bodyHeight = viewHeight - head.height();
-		var rowHeight;
-		var rowHeightLast;
-		var cell;
-			
-		if (opt('weekMode') == 'variable') {
-			rowHeight = rowHeightLast = Math.floor(bodyHeight / (rowCnt==1 ? 2 : 6));
-		}else{
-			rowHeight = Math.floor(bodyHeight / rowCnt);
-			rowHeightLast = bodyHeight - rowHeight * (rowCnt-1);
-		}
-		
-		bodyFirstCells.each(function(i, _cell) {
-			if (i < rowCnt) {
-				cell = $(_cell);
-				setMinHeight(
-					cell.find('> div'),
-					(i==rowCnt-1 ? rowHeightLast : rowHeight) - vsides(cell)
-				);
-			}
-		});
-		
-	}
-	
-	
-	function setWidth(width) {
-		viewWidth = width;
-		colContentPositions.clear();
-		colWidth = Math.floor(viewWidth / colCnt);
-		setOuterWidth(headCells.slice(0, -1), colWidth);
-	}
-	
-	
-	
-	/* Day clicking and binding
-	-----------------------------------------------------------*/
-	
-	
-	function dayBind(days) {
-		days.click(dayClick)
-			.mousedown(daySelectionMousedown)
-			.dblclick(dayDblClick);
-	}
-	
-	
-	function dayClick(ev) {
-		if (!opt('selectable')) { // if selectable, SelectionManager will worry about dayClick
-			var index = parseInt(this.className.match(/fc\-day(\d+)/)[1]); // TODO: maybe use .data
-			var date = indexDate(index);
-			trigger('dayClick', this, date, true, ev);
-		}
-	}
-	
-	function dayDblClick(ev) {
-		if (!opt('selectable')) { // if selectable, SelectionManager will worry about dayClick
-			var index = parseInt(this.className.match(/fc\-day(\d+)/)[1]); // TODO: maybe use .data
-			var date = indexDate(index);
-			trigger('dayDblClick', this, date, true, ev);
-		}
-	}
-	
-	/* Semi-transparent Overlay Helpers
-	------------------------------------------------------*/
-	
-	
-	function renderDayOverlay(overlayStart, overlayEnd, refreshCoordinateGrid) { // overlayEnd is exclusive
-		if (refreshCoordinateGrid) {
-			coordinateGrid.build();
-		}
-		var rowStart = cloneDate(t.visStart);
-		var rowEnd = addDays(cloneDate(rowStart), colCnt);
-		for (var i=0; i<rowCnt; i++) {
-			var stretchStart = new Date(Math.max(rowStart, overlayStart));
-			var stretchEnd = new Date(Math.min(rowEnd, overlayEnd));
-			if (stretchStart < stretchEnd) {
-				var colStart, colEnd;
-				if (rtl) {
-					colStart = dayDiff(stretchEnd, rowStart)*dis+dit+1;
-					colEnd = dayDiff(stretchStart, rowStart)*dis+dit+1;
-				}else{
-					colStart = dayDiff(stretchStart, rowStart);
-					colEnd = dayDiff(stretchEnd, rowStart);
-				}
-				dayBind(
-					renderCellOverlay(i, colStart, i, colEnd-1)
-				);
-			}
-			addDays(rowStart, 7);
-			addDays(rowEnd, 7);
-		}
-	}
-	
-	
-	function renderCellOverlay(row0, col0, row1, col1) { // row1,col1 is inclusive
-		var rect = coordinateGrid.rect(row0, col0, row1, col1, element);
-		return renderOverlay(rect, element);
-	}
-	
-	
-	
-	/* Selection
-	-----------------------------------------------------------------------*/
-	
-	
-	function defaultSelectionEnd(startDate, allDay) {
-		return cloneDate(startDate);
-	}
-	
-	
-	function renderSelection(startDate, endDate, allDay) {
-		renderDayOverlay(startDate, addDays(cloneDate(endDate), 1), true); // rebuild every time???
-	}
-	
-	
-	function clearSelection() {
-		clearOverlays();
-	}
-	
-	
-	function reportDayClick(date, allDay, ev) {
-		var cell = dateCell(date);
-		var _element = bodyCells[cell.row*colCnt + cell.col];
-		trigger('dayClick', _element, date, allDay, ev);
-	}
-	
-	
-	
-	/* External Dragging
-	-----------------------------------------------------------------------*/
-	
-	
-	function dragStart(_dragElement, ev, ui) {
-		hoverListener.start(function(cell) {
-			clearOverlays();
-			if (cell) {
-				renderCellOverlay(cell.row, cell.col, cell.row, cell.col);
-			}
-		}, ev);
-	}
-	
-	
-	function dragStop(_dragElement, ev, ui) {
-		var cell = hoverListener.stop();
-		clearOverlays();
-		if (cell) {
-			var d = cellDate(cell);
-			trigger('drop', _dragElement, d, true, ev, ui);
-		}
-	}
-	
-	
-	
-	/* Utilities
-	--------------------------------------------------------*/
-	
-	
-	function defaultEventEnd(event) {
-		return cloneDate(event.start);
-	}
-	
-	
-	coordinateGrid = new CoordinateGrid(function(rows, cols) {
-		var e, n, p;
-		headCells.each(function(i, _e) {
-			e = $(_e);
-			n = e.offset().left;
-			if (i) {
-				p[1] = n;
-			}
-			p = [n];
-			cols[i] = p;
-		});
-		p[1] = n + e.outerWidth();
-		bodyRows.each(function(i, _e) {
-			if (i < rowCnt) {
-				e = $(_e);
-				n = e.offset().top;
-				if (i) {
-					p[1] = n;
-				}
-				p = [n];
-				rows[i] = p;
-			}
-		});
-		p[1] = n + e.outerHeight();
-	});
-	
-	
-	hoverListener = new HoverListener(coordinateGrid);
-	
-	
-	colContentPositions = new HorizontalPositionCache(function(col) {
-		return bodyCellTopInners.eq(col);
-	});
-	
-	
-	function colContentLeft(col) {
-		return colContentPositions.left(col);
-	}
-	
-	
-	function colContentRight(col) {
-		return colContentPositions.right(col);
-	}
-	
-	
-	
-	
-	function dateCell(date) {
-		return {
-			row: Math.floor(dayDiff(date, t.visStart) / 7),
-			col: dayOfWeekCol(date.getDay())
-		};
-	}
-	
-	
-	function cellDate(cell) {
-		return _cellDate(cell.row, cell.col);
-	}
-	
-	
-	function _cellDate(row, col) {
-		return addDays(cloneDate(t.visStart), row*7 + col*dis+dit);
-		// what about weekends in middle of week?
-	}
-	
-	
-	function indexDate(index) {
-		return _cellDate(Math.floor(index/colCnt), index%colCnt);
-	}
-	
-	
-	function dayOfWeekCol(dayOfWeek) {
-		return ((dayOfWeek - Math.max(firstDay, nwe) + colCnt) % colCnt) * dis + dit;
-	}
-	
-	
-	
-	
-	function allDayRow(i) {
-		return bodyRows.eq(i);
-	}
-	
-	
-	function allDayBounds(i) {
-		return {
-			left: 0,
-			right: viewWidth
-		};
-	}
-	
-	
-}
-
-function BasicEventRenderer() {
-	var t = this;
-	
-	
-	// exports
-	t.renderEvents = renderEvents;
-	t.compileDaySegs = compileSegs; // for DayEventRenderer
-	t.clearEvents = clearEvents;
-	t.bindDaySeg = bindDaySeg;
-	
-	
-	// imports
-	DayEventRenderer.call(t);
-	var opt = t.opt;
-	var trigger = t.trigger;
-	//var setOverflowHidden = t.setOverflowHidden;
-	var isEventDraggable = t.isEventDraggable;
-	var isEventResizable = t.isEventResizable;
-	var reportEvents = t.reportEvents;
-	var reportEventClear = t.reportEventClear;
-	var eventElementHandlers = t.eventElementHandlers;
-	var showEvents = t.showEvents;
-	var hideEvents = t.hideEvents;
-	var eventDrop = t.eventDrop;
-	var getDaySegmentContainer = t.getDaySegmentContainer;
-	var getHoverListener = t.getHoverListener;
-	var renderDayOverlay = t.renderDayOverlay;
-	var clearOverlays = t.clearOverlays;
-	var getRowCnt = t.getRowCnt;
-	var getColCnt = t.getColCnt;
-	var renderDaySegs = t.renderDaySegs;
-	var resizableDayEvent = t.resizableDayEvent;
-	
-	
-	
-	/* Rendering
-	--------------------------------------------------------------------*/
-	
-	
-	function renderEvents(events, modifiedEventId) {
-		reportEvents(events);
-		renderDaySegs(compileSegs(events), modifiedEventId);
-	}
-	
-	
-	function clearEvents() {
-		reportEventClear();
-		getDaySegmentContainer().empty();
-	}
-	
-	
-	function compileSegs(events) {
-		var rowCnt = getRowCnt(),
-			colCnt = getColCnt(),
-			d1 = cloneDate(t.visStart),
-			d2 = addDays(cloneDate(d1), colCnt),
-			visEventsEnds = $.map(events, exclEndDay),
-			i, row,
-			j, level,
-			k, seg,
-			segs=[];
-		for (i=0; i<rowCnt; i++) {
-			row = stackSegs(sliceSegs(events, visEventsEnds, d1, d2));
-			for (j=0; j<row.length; j++) {
-				level = row[j];
-				for (k=0; k<level.length; k++) {
-					seg = level[k];
-					seg.row = i;
-					seg.level = j; // not needed anymore
-					segs.push(seg);
-				}
-			}
-			addDays(d1, 7);
-			addDays(d2, 7);
-		}
-		return segs;
-	}
-	
-	
-	function bindDaySeg(event, eventElement, seg) {
-		if (isEventDraggable(event)) {
-			draggableDayEvent(event, eventElement);
-		}
-		if (seg.isEnd && isEventResizable(event)) {
-			resizableDayEvent(event, eventElement, seg);
-		}
-		eventElementHandlers(event, eventElement);
-			// needs to be after, because resizableDayEvent might stopImmediatePropagation on click
-	}
-	
-	
-	
-	/* Dragging
-	----------------------------------------------------------------------------*/
-	
-	
-	function draggableDayEvent(event, eventElement) {
-		var hoverListener = getHoverListener();
-		var dayDelta;
-		eventElement.draggable({
-			zIndex: 9,
-			delay: 50,
-			opacity: opt('dragOpacity'),
-			revertDuration: opt('dragRevertDuration'),
-			start: function(ev, ui) {
-				trigger('eventDragStart', eventElement, event, ev, ui);
-				hideEvents(event, eventElement);
-				hoverListener.start(function(cell, origCell, rowDelta, colDelta) {
-					eventElement.draggable('option', 'revert', !cell || !rowDelta && !colDelta);
-					clearOverlays();
-					if (cell) {
-						//setOverflowHidden(true);
-						dayDelta = rowDelta*7 + colDelta * (opt('isRTL') ? -1 : 1);
-						renderDayOverlay(
-							addDays(cloneDate(event.start), dayDelta),
-							addDays(exclEndDay(event), dayDelta)
-						);
-					}else{
-						//setOverflowHidden(false);
-						dayDelta = 0;
-					}
-				}, ev, 'drag');
-			},
-			stop: function(ev, ui) {
-				hoverListener.stop();
-				clearOverlays();
-				trigger('eventDragStop', eventElement, event, ev, ui);
-				if (dayDelta) {
-					eventDrop(this, event, dayDelta, 0, event.allDay, ev, ui);
-				}else{
-					eventElement.css('filter', ''); // clear IE opacity side-effects
-					showEvents(event, eventElement);
-				}
-				//setOverflowHidden(false);
-			}
-		});
-	}
-
-
-}
-
-fcViews.agendaWeek = AgendaWeekView;
-
-function AgendaWeekView(element, calendar) {
-	var t = this;
-	
-	
-	// exports
-	t.render = render;
-	
-	
-	// imports
-	AgendaView.call(t, element, calendar, 'agendaWeek');
-	var opt = t.opt;
-	var renderAgenda = t.renderAgenda;
-	var formatDates = calendar.formatDates;
-	
-	
-	
-	function render(date, delta) {
-		if (delta) {
-			addDays(date, delta * 7);
-		}
-		var start = addDays(cloneDate(date), -((date.getDay() - opt('firstDay') + 7) % 7));
-		var end = addDays(cloneDate(start), 7);
-		var visStart = cloneDate(start);
-		var visEnd = cloneDate(end);
-		var weekends = opt('weekends');
-		if (!weekends) {
-			skipWeekend(visStart);
-			skipWeekend(visEnd, -1, true);
-		}
-		t.title = formatDates(
-			visStart,
-			addDays(cloneDate(visEnd), -1),
-			opt('titleFormat')
-		);
-		t.start = start;
-		t.end = end;
-		t.visStart = visStart;
-		t.visEnd = visEnd;
-		renderAgenda(weekends ? 7 : 5);
-	}
-	
-
-}
-
-fcViews.agendaDay = AgendaDayView;
-
-function AgendaDayView(element, calendar) {
-	var t = this;
-	
-	
-	// exports
-	t.render = render;
-	
-	
-	// imports
-	AgendaView.call(t, element, calendar, 'agendaDay');
-	var opt = t.opt;
-	var renderAgenda = t.renderAgenda;
-	var formatDate = calendar.formatDate;
-	
-	
-	
-	function render(date, delta) {
-		if (delta) {
-			addDays(date, delta);
-			if (!opt('weekends')) {
-				skipWeekend(date, delta < 0 ? -1 : 1);
-			}
-		}
-		var start = cloneDate(date, true);
-		var end = addDays(cloneDate(start), 1);
-		t.title = formatDate(date, opt('titleFormat'));
-		t.start = t.visStart = start;
-		t.end = t.visEnd = end;
-		renderAgenda(1);
-	}
-	
-
-}
-
-setDefaults({
-	allDaySlot: true,
-	allDayText: 'all-day',
-	firstHour: 6,
-	slotMinutes: 30,
-	defaultEventMinutes: 120,
-	axisFormat: 'h(:mm)tt',
-	timeFormat: {
-		agenda: 'h:mm{ - h:mm}'
-	},
-	dragOpacity: {
-		agenda: .5
-	},
-	minTime: 0,
-	maxTime: 24
-});
-
-
-// TODO: make it work in quirks mode (event corners, all-day height)
-// TODO: test liquid width, especially in IE6
-
-
-function AgendaView(element, calendar, viewName) {
-	var t = this;
-	
-	
-	// exports
-	t.renderAgenda = renderAgenda;
-	t.setWidth = setWidth;
-	t.setHeight = setHeight;
-	t.beforeHide = beforeHide;
-	t.afterShow = afterShow;
-	t.defaultEventEnd = defaultEventEnd;
-	t.timePosition = timePosition;
-	t.dayOfWeekCol = dayOfWeekCol;
-	t.dateCell = dateCell;
-	t.cellDate = cellDate;
-	t.cellIsAllDay = cellIsAllDay;
-	t.allDayRow = getAllDayRow;
-	t.allDayBounds = allDayBounds;
-	t.getHoverListener = function() { return hoverListener };
-	t.colContentLeft = colContentLeft;
-	t.colContentRight = colContentRight;
-	t.getDaySegmentContainer = function() { return daySegmentContainer };
-	t.getSlotSegmentContainer = function() { return slotSegmentContainer };
-	t.getMinMinute = function() { return minMinute };
-	t.getMaxMinute = function() { return maxMinute };
-	t.getBodyContent = function() { return slotContent }; // !!??
-	t.getRowCnt = function() { return 1 };
-	t.getColCnt = function() { return colCnt };
-	t.getColWidth = function() { return colWidth };
-	t.getSlotHeight = function() { return slotHeight };
-	t.defaultSelectionEnd = defaultSelectionEnd;
-	t.renderDayOverlay = renderDayOverlay;
-	t.renderSelection = renderSelection;
-	t.clearSelection = clearSelection;
-	t.reportDayClick = reportDayClick; // selection mousedown hack
-	t.dragStart = dragStart;
-	t.dragStop = dragStop;
-	
-	
-	// imports
-	View.call(t, element, calendar, viewName);
-	OverlayManager.call(t);
-	SelectionManager.call(t);
-	AgendaEventRenderer.call(t);
-	var opt = t.opt;
-	var trigger = t.trigger;
-	var clearEvents = t.clearEvents;
-	var renderOverlay = t.renderOverlay;
-	var clearOverlays = t.clearOverlays;
-	var reportSelection = t.reportSelection;
-	var unselect = t.unselect;
-	var daySelectionMousedown = t.daySelectionMousedown;
-	var slotSegHtml = t.slotSegHtml;
-	var formatDate = calendar.formatDate;
-	
-	
-	// locals
-	
-	var dayTable;
-	var dayHead;
-	var dayHeadCells;
-	var dayBody;
-	var dayBodyCells;
-	var dayBodyCellInners;
-	var dayBodyFirstCell;
-	var dayBodyFirstCellStretcher;
-	var slotLayer;
-	var daySegmentContainer;
-	var allDayTable;
-	var allDayRow;
-	var slotScroller;
-	var slotContent;
-	var slotSegmentContainer;
-	var slotTable;
-	var slotTableFirstInner;
-	var axisFirstCells;
-	var gutterCells;
-	var selectionHelper;
-	
-	var viewWidth;
-	var viewHeight;
-	var axisWidth;
-	var colWidth;
-	var gutterWidth;
-	var slotHeight; // TODO: what if slotHeight changes? (see issue 650)
-	var savedScrollTop;
-	
-	var colCnt;
-	var slotCnt;
-	var coordinateGrid;
-	var hoverListener;
-	var colContentPositions;
-	var slotTopCache = {};
-	
-	var tm;
-	var firstDay;
-	var nwe;            // no weekends (int)
-	var rtl, dis, dit;  // day index sign / translate
-	var minMinute, maxMinute;
-	var colFormat;
-	
-
-	
-	/* Rendering
-	-----------------------------------------------------------------------------*/
-	
-	
-	disableTextSelection(element.addClass('fc-agenda'));
-	
-	
-	function renderAgenda(c) {
-		colCnt = c;
-		updateOptions();
-		if (!dayTable) {
-			buildSkeleton();
-		}else{
-			clearEvents();
-		}
-		updateCells();
-	}
-	
-	
-	
-	function updateOptions() {
-		tm = opt('theme') ? 'ui' : 'fc';
-		nwe = opt('weekends') ? 0 : 1;
-		firstDay = opt('firstDay');
-		if (rtl = opt('isRTL')) {
-			dis = -1;
-			dit = colCnt - 1;
-		}else{
-			dis = 1;
-			dit = 0;
-		}
-		minMinute = parseTime(opt('minTime'));
-		maxMinute = parseTime(opt('maxTime'));
-		colFormat = opt('columnFormat');
-	}
-	
-	
-	
-	function buildSkeleton() {
-		var headerClass = tm + "-widget-header";
-		var contentClass = tm + "-widget-content";
-		var s;
-		var i;
-		var d;
-		var maxd;
-		var minutes;
-		var slotNormal = opt('slotMinutes') % 15 == 0;
-		
-		s =
-			"<table style='width:100%' class='fc-agenda-days fc-border-separate' cellspacing='0'>" +
-			"<thead>" +
-			"<tr>" +
-			"<th class='fc-agenda-axis " + headerClass + "'>&nbsp;</th>";
-		for (i=0; i<colCnt; i++) {
-			s +=
-				"<th class='fc- fc-col" + i + ' ' + headerClass + "'/>"; // fc- needed for setDayID
-		}
-		s +=
-			"<th class='fc-agenda-gutter " + headerClass + "'>&nbsp;</th>" +
-			"</tr>" +
-			"</thead>" +
-			"<tbody>" +
-			"<tr>" +
-			"<th class='fc-agenda-axis " + headerClass + "'>&nbsp;</th>";
-		for (i=0; i<colCnt; i++) {
-			s +=
-				"<td class='fc- fc-col" + i + ' ' + contentClass + "'>" + // fc- needed for setDayID
-				"<div>" +
-				"<div class='fc-day-content'>" +
-				"<div style='position:relative'>&nbsp;</div>" +
-				"</div>" +
-				"</div>" +
-				"</td>";
-		}
-		s +=
-			"<td class='fc-agenda-gutter " + contentClass + "'>&nbsp;</td>" +
-			"</tr>" +
-			"</tbody>" +
-			"</table>";
-		dayTable = $(s).appendTo(element);
-		dayHead = dayTable.find('thead');
-		dayHeadCells = dayHead.find('th').slice(1, -1);
-		dayBody = dayTable.find('tbody');
-		dayBodyCells = dayBody.find('td').slice(0, -1);
-		dayBodyCellInners = dayBodyCells.find('div.fc-day-content div');
-		dayBodyFirstCell = dayBodyCells.eq(0);
-		dayBodyFirstCellStretcher = dayBodyFirstCell.find('> div');
-		
-		markFirstLast(dayHead.add(dayHead.find('tr')));
-		markFirstLast(dayBody.add(dayBody.find('tr')));
-		
-		axisFirstCells = dayHead.find('th:first');
-		gutterCells = dayTable.find('.fc-agenda-gutter');
-		
-		slotLayer =
-			$("<div style='position:absolute;z-index:2;left:0;width:100%'/>")
-				.appendTo(element);
-				
-		if (opt('allDaySlot')) {
-		
-			daySegmentContainer =
-				$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
-					.appendTo(slotLayer);
-		
-			s =
-				"<table style='width:100%' class='fc-agenda-allday' cellspacing='0'>" +
-				"<tr>" +
-				"<th class='" + headerClass + " fc-agenda-axis'>" + opt('allDayText') + "</th>" +
-				"<td>" +
-				"<div class='fc-day-content'><div style='position:relative'/></div>" +
-				"</td>" +
-				"<th class='" + headerClass + " fc-agenda-gutter'>&nbsp;</th>" +
-				"</tr>" +
-				"</table>";
-			allDayTable = $(s).appendTo(slotLayer);
-			allDayRow = allDayTable.find('tr');
-			
-			dayBind(allDayRow.find('td'));
-			
-			axisFirstCells = axisFirstCells.add(allDayTable.find('th:first'));
-			gutterCells = gutterCells.add(allDayTable.find('th.fc-agenda-gutter'));
-			
-			slotLayer.append(
-				"<div class='fc-agenda-divider " + headerClass + "'>" +
-				"<div class='fc-agenda-divider-inner'/>" +
-				"</div>"
-			);
-			
-		}else{
-		
-			daySegmentContainer = $([]); // in jQuery 1.4, we can just do $()
-		
-		}
-		
-		slotScroller =
-			$("<div style='position:absolute;width:100%;overflow-x:hidden;overflow-y:auto'/>")
-				.appendTo(slotLayer);
-				
-		slotContent =
-			$("<div style='position:relative;width:100%;overflow:hidden'/>")
-				.appendTo(slotScroller);
-				
-		slotSegmentContainer =
-			$("<div style='position:absolute;z-index:8;top:0;left:0'/>")
-				.appendTo(slotContent);
-		
-		s =
-			"<table class='fc-agenda-slots' style='width:100%' cellspacing='0'>" +
-			"<tbody>";
-		d = zeroDate();
-		maxd = addMinutes(cloneDate(d), maxMinute);
-		addMinutes(d, minMinute);
-		slotCnt = 0;
-		for (i=0; d < maxd; i++) {
-			minutes = d.getMinutes();
-			s +=
-				"<tr class='fc-slot" + i + ' ' + (!minutes ? '' : 'fc-minor') + "'>" +
-				"<th class='fc-agenda-axis " + headerClass + "'>" +
-				((!slotNormal || !minutes) ? formatDate(d, opt('axisFormat')) : '&nbsp;') +
-				"</th>" +
-				"<td class='" + contentClass + "'>" +
-				"<div style='position:relative'>&nbsp;</div>" +
-				"</td>" +
-				"</tr>";
-			addMinutes(d, opt('slotMinutes'));
-			slotCnt++;
-		}
-		s +=
-			"</tbody>" +
-			"</table>";
-		slotTable = $(s).appendTo(slotContent);
-		slotTableFirstInner = slotTable.find('div:first');
-		
-		slotBind(slotTable.find('td'));
-		
-		axisFirstCells = axisFirstCells.add(slotTable.find('th:first'));
-	}
-	
-	
-	
-	function updateCells() {
-		var i;
-		var headCell;
-		var bodyCell;
-		var date;
-		var today = clearTime(new Date());
-		for (i=0; i<colCnt; i++) {
-			date = colDate(i);
-			headCell = dayHeadCells.eq(i);
-			headCell.html(formatDate(date, colFormat));
-			bodyCell = dayBodyCells.eq(i);
-			if (+date == +today) {
-				bodyCell.addClass(tm + '-state-highlight fc-today');
-			}else{
-				bodyCell.removeClass(tm + '-state-highlight fc-today');
-			}
-			setDayID(headCell.add(bodyCell), date);
-		}
-	}
-	
-	
-	
-	function setHeight(height, dateChanged) {
-		if (height === undefined) {
-			height = viewHeight;
-		}
-		viewHeight = height;
-		slotTopCache = {};
-	
-		var headHeight = dayBody.position().top;
-		var allDayHeight = slotScroller.position().top; // including divider
-		var bodyHeight = Math.min( // total body height, including borders
-			height - headHeight,   // when scrollbars
-			slotTable.height() + allDayHeight + 1 // when no scrollbars. +1 for bottom border
-		);
-		
-		dayBodyFirstCellStretcher
-			.height(bodyHeight - vsides(dayBodyFirstCell));
-		
-		slotLayer.css('top', headHeight);
-		
-		slotScroller.height(bodyHeight - allDayHeight - 1);
-		
-		slotHeight = slotTableFirstInner.height() + 1; // +1 for border
-		
-		if (dateChanged) {
-			resetScroll();
-		}
-	}
-	
-	
-	
-	function setWidth(width) {
-		viewWidth = width;
-		colContentPositions.clear();
-		
-		axisWidth = 0;
-		setOuterWidth(
-			axisFirstCells
-				.width('')
-				.each(function(i, _cell) {
-					axisWidth = Math.max(axisWidth, $(_cell).outerWidth());
-				}),
-			axisWidth
-		);
-		
-		var slotTableWidth = slotScroller[0].clientWidth; // needs to be done after axisWidth (for IE7)
-		//slotTable.width(slotTableWidth);
-		
-		gutterWidth = slotScroller.width() - slotTableWidth;
-		if (gutterWidth) {
-			setOuterWidth(gutterCells, gutterWidth);
-			gutterCells
-				.show()
-				.prev()
-				.removeClass('fc-last');
-		}else{
-			gutterCells
-				.hide()
-				.prev()
-				.addClass('fc-last');
-		}
-		
-		colWidth = Math.floor((slotTableWidth - axisWidth) / colCnt);
-		setOuterWidth(dayHeadCells.slice(0, -1), colWidth);
-	}
-	
-
-
-	function resetScroll() {
-		var d0 = zeroDate();
-		var scrollDate = cloneDate(d0);
-		scrollDate.setHours(opt('firstHour'));
-		var top = timePosition(d0, scrollDate) + 1; // +1 for the border
-		function scroll() {
-			slotScroller.scrollTop(top);
-		}
-		scroll();
-		setTimeout(scroll, 0); // overrides any previous scroll state made by the browser
-	}
-	
-	
-	function beforeHide() {
-		savedScrollTop = slotScroller.scrollTop();
-	}
-	
-	
-	function afterShow() {
-		slotScroller.scrollTop(savedScrollTop);
-	}
-	
-	
-	
-	/* Slot/Day clicking and binding
-	-----------------------------------------------------------------------*/
-	
-
-	function dayBind(cells) {
-		cells.click(slotClick)
-			.mousedown(daySelectionMousedown);
-	}
-
-
-	function slotBind(cells) {
-		cells.click(slotClick)
-			.mousedown(slotSelectionMousedown);
-	}
-	
-	
-	function slotClick(ev) {
-		if (!opt('selectable')) { // if selectable, SelectionManager will worry about dayClick
-			var col = Math.min(colCnt-1, Math.floor((ev.pageX - dayTable.offset().left - axisWidth) / colWidth));
-			var date = colDate(col);
-			var rowMatch = this.parentNode.className.match(/fc-slot(\d+)/); // TODO: maybe use data
-			if (rowMatch) {
-				var mins = parseInt(rowMatch[1]) * opt('slotMinutes');
-				var hours = Math.floor(mins/60);
-				date.setHours(hours);
-				date.setMinutes(mins%60 + minMinute);
-				trigger('dayClick', dayBodyCells[col], date, false, ev);
-			}else{
-				trigger('dayClick', dayBodyCells[col], date, true, ev);
-			}
-		}
-	}
-	
-	
-	
-	/* Semi-transparent Overlay Helpers
-	-----------------------------------------------------*/
-	
-
-	function renderDayOverlay(startDate, endDate, refreshCoordinateGrid) { // endDate is exclusive
-		if (refreshCoordinateGrid) {
-			coordinateGrid.build();
-		}
-		var visStart = cloneDate(t.visStart);
-		var startCol, endCol;
-		if (rtl) {
-			startCol = dayDiff(endDate, visStart)*dis+dit+1;
-			endCol = dayDiff(startDate, visStart)*dis+dit+1;
-		}else{
-			startCol = dayDiff(startDate, visStart);
-			endCol = dayDiff(endDate, visStart);
-		}
-		startCol = Math.max(0, startCol);
-		endCol = Math.min(colCnt, endCol);
-		if (startCol < endCol) {
-			dayBind(
-				renderCellOverlay(0, startCol, 0, endCol-1)
-			);
-		}
-	}
-	
-	
-	function renderCellOverlay(row0, col0, row1, col1) { // only for all-day?
-		var rect = coordinateGrid.rect(row0, col0, row1, col1, slotLayer);
-		return renderOverlay(rect, slotLayer);
-	}
-	
-
-	function renderSlotOverlay(overlayStart, overlayEnd) {
-		var dayStart = cloneDate(t.visStart);
-		var dayEnd = addDays(cloneDate(dayStart), 1);
-		for (var i=0; i<colCnt; i++) {
-			var stretchStart = new Date(Math.max(dayStart, overlayStart));
-			var stretchEnd = new Date(Math.min(dayEnd, overlayEnd));
-			if (stretchStart < stretchEnd) {
-				var col = i*dis+dit;
-				var rect = coordinateGrid.rect(0, col, 0, col, slotContent); // only use it for horizontal coords
-				var top = timePosition(dayStart, stretchStart);
-				var bottom = timePosition(dayStart, stretchEnd);
-				rect.top = top;
-				rect.height = bottom - top;
-				slotBind(
-					renderOverlay(rect, slotContent)
-				);
-			}
-			addDays(dayStart, 1);
-			addDays(dayEnd, 1);
-		}
-	}
-	
-	
-	
-	/* Coordinate Utilities
-	-----------------------------------------------------------------------------*/
-	
-	
-	coordinateGrid = new CoordinateGrid(function(rows, cols) {
-		var e, n, p;
-		dayHeadCells.each(function(i, _e) {
-			e = $(_e);
-			n = e.offset().left;
-			if (i) {
-				p[1] = n;
-			}
-			p = [n];
-			cols[i] = p;
-		});
-		p[1] = n + e.outerWidth();
-		if (opt('allDaySlot')) {
-			e = allDayRow;
-			n = e.offset().top;
-			rows[0] = [n, n+e.outerHeight()];
-		}
-		var slotTableTop = slotContent.offset().top;
-		var slotScrollerTop = slotScroller.offset().top;
-		var slotScrollerBottom = slotScrollerTop + slotScroller.outerHeight();
-		function constrain(n) {
-			return Math.max(slotScrollerTop, Math.min(slotScrollerBottom, n));
-		}
-		for (var i=0; i<slotCnt; i++) {
-			rows.push([
-				constrain(slotTableTop + slotHeight*i),
-				constrain(slotTableTop + slotHeight*(i+1))
-			]);
-		}
-	});
-	
-	
-	hoverListener = new HoverListener(coordinateGrid);
-	
-	
-	colContentPositions = new HorizontalPositionCache(function(col) {
-		return dayBodyCellInners.eq(col);
-	});
-	
-	
-	function colContentLeft(col) {
-		return colContentPositions.left(col);
-	}
-	
-	
-	function colContentRight(col) {
-		return colContentPositions.right(col);
-	}
-	
-	
-	
-	
-	function dateCell(date) { // "cell" terminology is now confusing
-		return {
-			row: Math.floor(dayDiff(date, t.visStart) / 7),
-			col: dayOfWeekCol(date.getDay())
-		};
-	}
-	
-	
-	function cellDate(cell) {
-		var d = colDate(cell.col);
-		var slotIndex = cell.row;
-		if (opt('allDaySlot')) {
-			slotIndex--;
-		}
-		if (slotIndex >= 0) {
-			addMinutes(d, minMinute + slotIndex * opt('slotMinutes'));
-		}
-		return d;
-	}
-	
-	
-	function colDate(col) { // returns dates with 00:00:00
-		return addDays(cloneDate(t.visStart), col*dis+dit);
-	}
-	
-	
-	function cellIsAllDay(cell) {
-		return opt('allDaySlot') && !cell.row;
-	}
-	
-	
-	function dayOfWeekCol(dayOfWeek) {
-		return ((dayOfWeek - Math.max(firstDay, nwe) + colCnt) % colCnt)*dis+dit;
-	}
-	
-	
-	
-	
-	// get the Y coordinate of the given time on the given day (both Date objects)
-	function timePosition(day, time) { // both date objects. day holds 00:00 of current day
-		day = cloneDate(day, true);
-		if (time < addMinutes(cloneDate(day), minMinute)) {
-			return 0;
-		}
-		if (time >= addMinutes(cloneDate(day), maxMinute)) {
-			return slotTable.height();
-		}
-		var slotMinutes = opt('slotMinutes'),
-			minutes = time.getHours()*60 + time.getMinutes() - minMinute,
-			slotI = Math.floor(minutes / slotMinutes),
-			slotTop = slotTopCache[slotI];
-		if (slotTop === undefined) {
-			slotTop = slotTopCache[slotI] = slotTable.find('tr:eq(' + slotI + ') td div')[0].offsetTop; //.position().top; // need this optimization???
-		}
-		return Math.max(0, Math.round(
-			slotTop - 1 + slotHeight * ((minutes % slotMinutes) / slotMinutes)
-		));
-	}
-	
-	
-	function allDayBounds() {
-		return {
-			left: axisWidth,
-			right: viewWidth - gutterWidth
-		}
-	}
-	
-	
-	function getAllDayRow(index) {
-		return allDayRow;
-	}
-	
-	
-	function defaultEventEnd(event) {
-		var start = cloneDate(event.start);
-		if (event.allDay) {
-			return start;
-		}
-		return addMinutes(start, opt('defaultEventMinutes'));
-	}
-	
-	
-	
-	/* Selection
-	---------------------------------------------------------------------------------*/
-	
-	
-	function defaultSelectionEnd(startDate, allDay) {
-		if (allDay) {
-			return cloneDate(startDate);
-		}
-		return addMinutes(cloneDate(startDate), opt('slotMinutes'));
-	}
-	
-	
-	function renderSelection(startDate, endDate, allDay) { // only for all-day
-		if (allDay) {
-			if (opt('allDaySlot')) {
-				renderDayOverlay(startDate, addDays(cloneDate(endDate), 1), true);
-			}
-		}else{
-			renderSlotSelection(startDate, endDate);
-		}
-	}
-	
-	
-	function renderSlotSelection(startDate, endDate) {
-		var helperOption = opt('selectHelper');
-		coordinateGrid.build();
-		if (helperOption) {
-			var col = dayDiff(startDate, t.visStart) * dis + dit;
-			if (col >= 0 && col < colCnt) { // only works when times are on same day
-				var rect = coordinateGrid.rect(0, col, 0, col, slotContent); // only for horizontal coords
-				var top = timePosition(startDate, startDate);
-				var bottom = timePosition(startDate, endDate);
-				if (bottom > top) { // protect against selections that are entirely before or after visible range
-					rect.top = top;
-					rect.height = bottom - top;
-					rect.left += 2;
-					rect.width -= 5;
-					if ($.isFunction(helperOption)) {
-						var helperRes = helperOption(startDate, endDate);
-						if (helperRes) {
-							rect.position = 'absolute';
-							rect.zIndex = 8;
-							selectionHelper = $(helperRes)
-								.css(rect)
-								.appendTo(slotContent);
-						}
-					}else{
-						rect.isStart = true; // conside rect a "seg" now
-						rect.isEnd = true;   //
-						selectionHelper = $(slotSegHtml(
-							{
-								title: '',
-								start: startDate,
-								end: endDate,
-								className: ['fc-select-helper'],
-								editable: false
-							},
-							rect
-						));
-						selectionHelper.css('opacity', opt('dragOpacity'));
-					}
-					if (selectionHelper) {
-						slotBind(selectionHelper);
-						slotContent.append(selectionHelper);
-						setOuterWidth(selectionHelper, rect.width, true); // needs to be after appended
-						setOuterHeight(selectionHelper, rect.height, true);
-					}
-				}
-			}
-		}else{
-			renderSlotOverlay(startDate, endDate);
-		}
-	}
-	
-	
-	function clearSelection() {
-		clearOverlays();
-		if (selectionHelper) {
-			selectionHelper.remove();
-			selectionHelper = null;
-		}
-	}
-	
-	
-	function slotSelectionMousedown(ev) {
-		if (ev.which == 1 && opt('selectable')) { // ev.which==1 means left mouse button
-			unselect(ev);
-			var dates;
-			hoverListener.start(function(cell, origCell) {
-				clearSelection();
-				if (cell && cell.col == origCell.col && !cellIsAllDay(cell)) {
-					var d1 = cellDate(origCell);
-					var d2 = cellDate(cell);
-					dates = [
-						d1,
-						addMinutes(cloneDate(d1), opt('slotMinutes')),
-						d2,
-						addMinutes(cloneDate(d2), opt('slotMinutes'))
-					].sort(cmp);
-					renderSlotSelection(dates[0], dates[3]);
-				}else{
-					dates = null;
-				}
-			}, ev);
-			$(document).one('mouseup', function(ev) {
-				hoverListener.stop();
-				if (dates) {
-					if (+dates[0] == +dates[1]) {
-						reportDayClick(dates[0], false, ev);
-					}
-					reportSelection(dates[0], dates[3], false, ev);
-				}
-			});
-		}
-	}
-	
-	
-	function reportDayClick(date, allDay, ev) {
-		trigger('dayClick', dayBodyCells[dayOfWeekCol(date.getDay())], date, allDay, ev);
-	}
-	
-	
-	
-	/* External Dragging
-	--------------------------------------------------------------------------------*/
-	
-	
-	function dragStart(_dragElement, ev, ui) {
-		hoverListener.start(function(cell) {
-			clearOverlays();
-			if (cell) {
-				if (cellIsAllDay(cell)) {
-					renderCellOverlay(cell.row, cell.col, cell.row, cell.col);
-				}else{
-					var d1 = cellDate(cell);
-					var d2 = addMinutes(cloneDate(d1), opt('defaultEventMinutes'));
-					renderSlotOverlay(d1, d2);
-				}
-			}
-		}, ev);
-	}
-	
-	
-	function dragStop(_dragElement, ev, ui) {
-		var cell = hoverListener.stop();
-		clearOverlays();
-		if (cell) {
-			trigger('drop', _dragElement, cellDate(cell), cellIsAllDay(cell), ev, ui);
-		}
-	}
-
-
-}
-
-function AgendaEventRenderer() {
-	var t = this;
-	
-	
-	// exports
-	t.renderEvents = renderEvents;
-	t.compileDaySegs = compileDaySegs; // for DayEventRenderer
-	t.clearEvents = clearEvents;
-	t.slotSegHtml = slotSegHtml;
-	t.bindDaySeg = bindDaySeg;
-	
-	
-	// imports
-	DayEventRenderer.call(t);
-	var opt = t.opt;
-	var trigger = t.trigger;
-	//var setOverflowHidden = t.setOverflowHidden;
-	var isEventDraggable = t.isEventDraggable;
-	var isEventResizable = t.isEventResizable;
-	var eventEnd = t.eventEnd;
-	var reportEvents = t.reportEvents;
-	var reportEventClear = t.reportEventClear;
-	var eventElementHandlers = t.eventElementHandlers;
-	var setHeight = t.setHeight;
-	var getDaySegmentContainer = t.getDaySegmentContainer;
-	var getSlotSegmentContainer = t.getSlotSegmentContainer;
-	var getHoverListener = t.getHoverListener;
-	var getMaxMinute = t.getMaxMinute;
-	var getMinMinute = t.getMinMinute;
-	var timePosition = t.timePosition;
-	var colContentLeft = t.colContentLeft;
-	var colContentRight = t.colContentRight;
-	var renderDaySegs = t.renderDaySegs;
-	var resizableDayEvent = t.resizableDayEvent; // TODO: streamline binding architecture
-	var getColCnt = t.getColCnt;
-	var getColWidth = t.getColWidth;
-	var getSlotHeight = t.getSlotHeight;
-	var getBodyContent = t.getBodyContent;
-	var reportEventElement = t.reportEventElement;
-	var showEvents = t.showEvents;
-	var hideEvents = t.hideEvents;
-	var eventDrop = t.eventDrop;
-	var eventResize = t.eventResize;
-	var renderDayOverlay = t.renderDayOverlay;
-	var clearOverlays = t.clearOverlays;
-	var calendar = t.calendar;
-	var formatDate = calendar.formatDate;
-	var formatDates = calendar.formatDates;
-	
-	
-	
-	/* Rendering
-	----------------------------------------------------------------------------*/
-	
-
-	function renderEvents(events, modifiedEventId) {
-		reportEvents(events);
-		var i, len=events.length,
-			dayEvents=[],
-			slotEvents=[];
-		for (i=0; i<len; i++) {
-			if (events[i].allDay) {
-				dayEvents.push(events[i]);
-			}else{
-				slotEvents.push(events[i]);
-			}
-		}
-		if (opt('allDaySlot')) {
-			renderDaySegs(compileDaySegs(dayEvents), modifiedEventId);
-			setHeight(); // no params means set to viewHeight
-		}
-		renderSlotSegs(compileSlotSegs(slotEvents), modifiedEventId);
-	}
-	
-	
-	function clearEvents() {
-		reportEventClear();
-		getDaySegmentContainer().empty();
-		getSlotSegmentContainer().empty();
-	}
-	
-	
-	function compileDaySegs(events) {
-		var levels = stackSegs(sliceSegs(events, $.map(events, exclEndDay), t.visStart, t.visEnd)),
-			i, levelCnt=levels.length, level,
-			j, seg,
-			segs=[];
-		for (i=0; i<levelCnt; i++) {
-			level = levels[i];
-			for (j=0; j<level.length; j++) {
-				seg = level[j];
-				seg.row = 0;
-				seg.level = i; // not needed anymore
-				segs.push(seg);
-			}
-		}
-		return segs;
-	}
-	
-	
-	function compileSlotSegs(events) {
-		var colCnt = getColCnt(),
-			minMinute = getMinMinute(),
-			maxMinute = getMaxMinute(),
-			d = addMinutes(cloneDate(t.visStart), minMinute),
-			visEventEnds = $.map(events, slotEventEnd),
-			i, col,
-			j, level,
-			k, seg,
-			segs=[];
-		for (i=0; i<colCnt; i++) {
-			col = stackSegs(sliceSegs(events, visEventEnds, d, addMinutes(cloneDate(d), maxMinute-minMinute)));
-			countForwardSegs(col);
-			for (j=0; j<col.length; j++) {
-				level = col[j];
-				for (k=0; k<level.length; k++) {
-					seg = level[k];
-					seg.col = i;
-					seg.level = j;
-					segs.push(seg);
-				}
-			}
-			addDays(d, 1, true);
-		}
-		return segs;
-	}
-	
-	
-	function slotEventEnd(event) {
-		if (event.end) {
-			return cloneDate(event.end);
-		}else{
-			return addMinutes(cloneDate(event.start), opt('defaultEventMinutes'));
-		}
-	}
-	
-	
-	// renders events in the 'time slots' at the bottom
-	
-	function renderSlotSegs(segs, modifiedEventId) {
-	
-		var i, segCnt=segs.length, seg,
-			event,
-			classes,
-			top, bottom,
-			colI, levelI, forward,
-			leftmost,
-			availWidth,
-			outerWidth,
-			left,
-			html='',
-			eventElements,
-			eventElement,
-			triggerRes,
-			vsideCache={},
-			hsideCache={},
-			key, val,
-			contentElement,
-			height,
-			slotSegmentContainer = getSlotSegmentContainer(),
-			rtl, dis, dit,
-			colCnt = getColCnt();
-			
-		if (rtl = opt('isRTL')) {
-			dis = -1;
-			dit = colCnt - 1;
-		}else{
-			dis = 1;
-			dit = 0;
-		}
-			
-		// calculate position/dimensions, create html
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			event = seg.event;
-			top = timePosition(seg.start, seg.start);
-			bottom = timePosition(seg.start, seg.end);
-			colI = seg.col;
-			levelI = seg.level;
-			forward = seg.forward || 0;
-			leftmost = colContentLeft(colI*dis + dit);
-			availWidth = colContentRight(colI*dis + dit) - leftmost;
-			availWidth = Math.min(availWidth-6, availWidth*.95); // TODO: move this to CSS
-			if (levelI) {
-				// indented and thin
-				outerWidth = availWidth / (levelI + forward + 1);
-			}else{
-				if (forward) {
-					// moderately wide, aligned left still
-					outerWidth = ((availWidth / (forward + 1)) - (12/2)) * 2; // 12 is the predicted width of resizer =
-				}else{
-					// can be entire width, aligned left
-					outerWidth = availWidth;
-				}
-			}
-			left = leftmost +                                  // leftmost possible
-				(availWidth / (levelI + forward + 1) * levelI) // indentation
-				* dis + (rtl ? availWidth - outerWidth : 0);   // rtl
-			seg.top = top;
-			seg.left = left;
-			seg.outerWidth = outerWidth;
-			seg.outerHeight = bottom - top;
-			html += slotSegHtml(event, seg);
-		}
-		slotSegmentContainer[0].innerHTML = html; // faster than html()
-		eventElements = slotSegmentContainer.children();
-		
-		// retrieve elements, run through eventRender callback, bind event handlers
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			event = seg.event;
-			eventElement = $(eventElements[i]); // faster than eq()
-			triggerRes = trigger('eventRender', event, event, eventElement);
-			if (triggerRes === false) {
-				eventElement.remove();
-			}else{
-				if (triggerRes && triggerRes !== true) {
-					eventElement.remove();
-					eventElement = $(triggerRes)
-						.css({
-							position: 'absolute',
-							top: seg.top,
-							left: seg.left
-						})
-						.appendTo(slotSegmentContainer);
-				}
-				seg.element = eventElement;
-				if (event._id === modifiedEventId) {
-					bindSlotSeg(event, eventElement, seg);
-				}else{
-					eventElement[0]._fci = i; // for lazySegBind
-				}
-				reportEventElement(event, eventElement);
-			}
-		}
-		
-		lazySegBind(slotSegmentContainer, segs, bindSlotSeg);
-		
-		// record event sides and title positions
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			if (eventElement = seg.element) {
-				val = vsideCache[key = seg.key = cssKey(eventElement[0])];
-				seg.vsides = val === undefined ? (vsideCache[key] = vsides(eventElement, true)) : val;
-				val = hsideCache[key];
-				seg.hsides = val === undefined ? (hsideCache[key] = hsides(eventElement, true)) : val;
-				contentElement = eventElement.find('div.fc-event-content');
-				if (contentElement.length) {
-					seg.contentTop = contentElement[0].offsetTop;
-				}
-			}
-		}
-		
-		// set all positions/dimensions at once
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			if (eventElement = seg.element) {
-				eventElement[0].style.width = Math.max(0, seg.outerWidth - seg.hsides) + 'px';
-				height = Math.max(0, seg.outerHeight - seg.vsides);
-				eventElement[0].style.height = height + 'px';
-				event = seg.event;
-				if (seg.contentTop !== undefined && height - seg.contentTop < 10) {
-					// not enough room for title, put it in the time header
-					eventElement.find('div.fc-event-time')
-						.text(formatDate(event.start, opt('timeFormat')) + ' - ' + event.title);
-					eventElement.find('div.fc-event-title')
-						.remove();
-				}
-				trigger('eventAfterRender', event, event, eventElement);
-			}
-		}
-					
-	}
-	
-	
-	function slotSegHtml(event, seg) {
-		var html = "<";
-		var url = event.url;
-		var skinCss = getSkinCss(event, opt);
-		var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
-		var classes = ['fc-event', 'fc-event-skin', 'fc-event-vert'];
-		if (isEventDraggable(event)) {
-			classes.push('fc-event-draggable');
-		}
-		if (seg.isStart) {
-			classes.push('fc-corner-top');
-		}
-		if (seg.isEnd) {
-			classes.push('fc-corner-bottom');
-		}
-		classes = classes.concat(event.className);
-		if (event.source) {
-			classes = classes.concat(event.source.className || []);
-		}
-		if (url) {
-			html += "a href='" + htmlEscape(event.url) + "'";
-		}else{
-			html += "div";
-		}
-            html += function(attrs) {
-                var html = "";
-                for (var key in attrs) {
-                    html += key + '="' + attrs[key] + '"';
-                }
-                return html;
-            }(event.attrs);
-		html +=
-			" class='" + classes.join(' ') + "'" +
-			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
-			">" +
-			"<div class='fc-event-inner fc-event-skin'" + skinCssAttr + ">" +
-			"<div class='fc-event-head fc-event-skin'" + skinCssAttr + ">" +
-			"<div class='fc-event-time'>" +
-			htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) +
-			"</div>" +
-			"</div>" +
-			"<div class='fc-event-content'>" +
-			"<div class='fc-event-title'>" +
-			htmlEscape(event.title) +
-			"</div>" +
-			"</div>" +
-			"<div class='fc-event-bg'></div>" +
-			"</div>"; // close inner
-		if (seg.isEnd && isEventResizable(event)) {
-			html +=
-				"<div class='ui-resizable-handle ui-resizable-s'>=</div>";
-		}
-		html +=
-			"</" + (url ? "a" : "div") + ">";
-		return html;
-	}
-	
-	
-	function bindDaySeg(event, eventElement, seg) {
-		if (isEventDraggable(event)) {
-			draggableDayEvent(event, eventElement, seg.isStart);
-		}
-		if (seg.isEnd && isEventResizable(event)) {
-			resizableDayEvent(event, eventElement, seg);
-		}
-		eventElementHandlers(event, eventElement);
-			// needs to be after, because resizableDayEvent might stopImmediatePropagation on click
-	}
-	
-	
-	function bindSlotSeg(event, eventElement, seg) {
-		var timeElement = eventElement.find('div.fc-event-time');
-		if (isEventDraggable(event)) {
-			draggableSlotEvent(event, eventElement, timeElement);
-		}
-		if (seg.isEnd && isEventResizable(event)) {
-			resizableSlotEvent(event, eventElement, timeElement);
-		}
-		eventElementHandlers(event, eventElement);
-	}
-	
-	
-	
-	/* Dragging
-	-----------------------------------------------------------------------------------*/
-	
-	
-	// when event starts out FULL-DAY
-	
-	function draggableDayEvent(event, eventElement, isStart) {
-		var origWidth;
-		var revert;
-		var allDay=true;
-		var dayDelta;
-		var dis = opt('isRTL') ? -1 : 1;
-		var hoverListener = getHoverListener();
-		var colWidth = getColWidth();
-		var slotHeight = getSlotHeight();
-		var minMinute = getMinMinute();
-		eventElement.draggable({
-			zIndex: 9,
-			opacity: opt('dragOpacity', 'month'), // use whatever the month view was using
-			revertDuration: opt('dragRevertDuration'),
-			start: function(ev, ui) {
-				trigger('eventDragStart', eventElement, event, ev, ui);
-				hideEvents(event, eventElement);
-				origWidth = eventElement.width();
-				hoverListener.start(function(cell, origCell, rowDelta, colDelta) {
-					clearOverlays();
-					if (cell) {
-						//setOverflowHidden(true);
-						revert = false;
-						dayDelta = colDelta * dis;
-						if (!cell.row) {
-							// on full-days
-							renderDayOverlay(
-								addDays(cloneDate(event.start), dayDelta),
-								addDays(exclEndDay(event), dayDelta)
-							);
-							resetElement();
-						}else{
-							// mouse is over bottom slots
-							if (isStart) {
-								if (allDay) {
-									// convert event to temporary slot-event
-									eventElement.width(colWidth - 10); // don't use entire width
-									setOuterHeight(
-										eventElement,
-										slotHeight * Math.round(
-											(event.end ? ((event.end - event.start) / MINUTE_MS) : opt('defaultEventMinutes'))
-											/ opt('slotMinutes')
-										)
-									);
-									eventElement.draggable('option', 'grid', [colWidth, 1]);
-									allDay = false;
-								}
-							}else{
-								revert = true;
-							}
-						}
-						revert = revert || (allDay && !dayDelta);
-					}else{
-						resetElement();
-						//setOverflowHidden(false);
-						revert = true;
-					}
-					eventElement.draggable('option', 'revert', revert);
-				}, ev, 'drag');
-			},
-			stop: function(ev, ui) {
-				hoverListener.stop();
-				clearOverlays();
-				trigger('eventDragStop', eventElement, event, ev, ui);
-				if (revert) {
-					// hasn't moved or is out of bounds (draggable has already reverted)
-					resetElement();
-					eventElement.css('filter', ''); // clear IE opacity side-effects
-					showEvents(event, eventElement);
-				}else{
-					// changed!
-					var minuteDelta = 0;
-					if (!allDay) {
-						minuteDelta = Math.round((eventElement.offset().top - getBodyContent().offset().top) / slotHeight)
-							* opt('slotMinutes')
-							+ minMinute
-							- (event.start.getHours() * 60 + event.start.getMinutes());
-					}
-					eventDrop(this, event, dayDelta, minuteDelta, allDay, ev, ui);
-				}
-				//setOverflowHidden(false);
-			}
-		});
-		function resetElement() {
-			if (!allDay) {
-				eventElement
-					.width(origWidth)
-					.height('')
-					.draggable('option', 'grid', null);
-				allDay = true;
-			}
-		}
-	}
-	
-	
-	// when event starts out IN TIMESLOTS
-	
-	function draggableSlotEvent(event, eventElement, timeElement) {
-		var origPosition;
-		var allDay=false;
-		var dayDelta;
-		var minuteDelta;
-		var prevMinuteDelta;
-		var dis = opt('isRTL') ? -1 : 1;
-		var hoverListener = getHoverListener();
-		var colCnt = getColCnt();
-		var colWidth = getColWidth();
-		var slotHeight = getSlotHeight();
-		eventElement.draggable({
-			zIndex: 9,
-			scroll: false,
-			grid: [colWidth, slotHeight],
-			axis: colCnt==1 ? 'y' : false,
-			opacity: opt('dragOpacity'),
-			revertDuration: opt('dragRevertDuration'),
-			start: function(ev, ui) {
-				trigger('eventDragStart', eventElement, event, ev, ui);
-				hideEvents(event, eventElement);
-				origPosition = eventElement.position();
-				minuteDelta = prevMinuteDelta = 0;
-				hoverListener.start(function(cell, origCell, rowDelta, colDelta) {
-					eventElement.draggable('option', 'revert', !cell);
-					clearOverlays();
-					if (cell) {
-						dayDelta = colDelta * dis;
-						if (opt('allDaySlot') && !cell.row) {
-							// over full days
-							if (!allDay) {
-								// convert to temporary all-day event
-								allDay = true;
-								timeElement.hide();
-								eventElement.draggable('option', 'grid', null);
-							}
-							renderDayOverlay(
-								addDays(cloneDate(event.start), dayDelta),
-								addDays(exclEndDay(event), dayDelta)
-							);
-						}else{
-							// on slots
-							resetElement();
-						}
-					}
-				}, ev, 'drag');
-			},
-			drag: function(ev, ui) {
-				minuteDelta = Math.round((ui.position.top - origPosition.top) / slotHeight) * opt('slotMinutes');
-				if (minuteDelta != prevMinuteDelta) {
-					if (!allDay) {
-						updateTimeText(minuteDelta);
-					}
-					prevMinuteDelta = minuteDelta;
-				}
-			},
-			stop: function(ev, ui) {
-				var cell = hoverListener.stop();
-				clearOverlays();
-				trigger('eventDragStop', eventElement, event, ev, ui);
-				if (cell && (dayDelta || minuteDelta || allDay)) {
-					// changed!
-					eventDrop(this, event, dayDelta, allDay ? 0 : minuteDelta, allDay, ev, ui);
-				}else{
-					// either no change or out-of-bounds (draggable has already reverted)
-					resetElement();
-					eventElement.css('filter', ''); // clear IE opacity side-effects
-					eventElement.css(origPosition); // sometimes fast drags make event revert to wrong position
-					updateTimeText(0);
-					showEvents(event, eventElement);
-				}
-			}
-		});
-		function updateTimeText(minuteDelta) {
-			var newStart = addMinutes(cloneDate(event.start), minuteDelta);
-			var newEnd;
-			if (event.end) {
-				newEnd = addMinutes(cloneDate(event.end), minuteDelta);
-			}
-			timeElement.text(formatDates(newStart, newEnd, opt('timeFormat')));
-		}
-		function resetElement() {
-			// convert back to original slot-event
-			if (allDay) {
-				timeElement.css('display', ''); // show() was causing display=inline
-				eventElement.draggable('option', 'grid', [colWidth, slotHeight]);
-				allDay = false;
-			}
-		}
-	}
-	
-	
-	
-	/* Resizing
-	--------------------------------------------------------------------------------------*/
-	
-	
-	function resizableSlotEvent(event, eventElement, timeElement) {
-		var slotDelta, prevSlotDelta;
-		var slotHeight = getSlotHeight();
-		eventElement.resizable({
-			handles: {
-				s: 'div.ui-resizable-s'
-			},
-			grid: slotHeight,
-			start: function(ev, ui) {
-				slotDelta = prevSlotDelta = 0;
-				hideEvents(event, eventElement);
-				eventElement.css('z-index', 9);
-				trigger('eventResizeStart', this, event, ev, ui);
-			},
-			resize: function(ev, ui) {
-				// don't rely on ui.size.height, doesn't take grid into account
-				slotDelta = Math.round((Math.max(slotHeight, eventElement.height()) - ui.originalSize.height) / slotHeight);
-				if (slotDelta != prevSlotDelta) {
-					timeElement.text(
-						formatDates(
-							event.start,
-							(!slotDelta && !event.end) ? null : // no change, so don't display time range
-								addMinutes(eventEnd(event), opt('slotMinutes')*slotDelta),
-							opt('timeFormat')
-						)
-					);
-					prevSlotDelta = slotDelta;
-				}
-			},
-			stop: function(ev, ui) {
-				trigger('eventResizeStop', this, event, ev, ui);
-				if (slotDelta) {
-					eventResize(this, event, 0, opt('slotMinutes')*slotDelta, ev, ui);
-				}else{
-					eventElement.css('z-index', 8);
-					showEvents(event, eventElement);
-					// BUG: if event was really short, need to put title back in span
-				}
-			}
-		});
-	}
-	
-
-}
-
-
-function countForwardSegs(levels) {
-	var i, j, k, level, segForward, segBack;
-	for (i=levels.length-1; i>0; i--) {
-		level = levels[i];
-		for (j=0; j<level.length; j++) {
-			segForward = level[j];
-			for (k=0; k<levels[i-1].length; k++) {
-				segBack = levels[i-1][k];
-				if (segsCollide(segForward, segBack)) {
-					segBack.forward = Math.max(segBack.forward||0, (segForward.forward||0)+1);
-				}
-			}
-		}
-	}
-}
-
-
-
-
-function View(element, calendar, viewName) {
-	var t = this;
-	
-	
-	// exports
-	t.element = element;
-	t.calendar = calendar;
-	t.name = viewName;
-	t.opt = opt;
-	t.trigger = trigger;
-	//t.setOverflowHidden = setOverflowHidden;
-	t.isEventDraggable = isEventDraggable;
-	t.isEventResizable = isEventResizable;
-	t.reportEvents = reportEvents;
-	t.eventEnd = eventEnd;
-	t.reportEventElement = reportEventElement;
-	t.reportEventClear = reportEventClear;
-	t.eventElementHandlers = eventElementHandlers;
-	t.showEvents = showEvents;
-	t.hideEvents = hideEvents;
-	t.eventDrop = eventDrop;
-	t.eventResize = eventResize;
-	// t.title
-	// t.start, t.end
-	// t.visStart, t.visEnd
-	
-	
-	// imports
-	var defaultEventEnd = t.defaultEventEnd;
-	var normalizeEvent = calendar.normalizeEvent; // in EventManager
-	var reportEventChange = calendar.reportEventChange;
-	
-	
-	// locals
-	var eventsByID = {};
-	var eventElements = [];
-	var eventElementsByID = {};
-	var options = calendar.options;
-	
-	
-	
-	function opt(name, viewNameOverride) {
-		var v = options[name];
-		if (typeof v == 'object') {
-			return smartProperty(v, viewNameOverride || viewName);
-		}
-		return v;
-	}
-
-	
-	function trigger(name, thisObj) {
-		return calendar.trigger.apply(
-			calendar,
-			[name, thisObj || t].concat(Array.prototype.slice.call(arguments, 2), [t])
-		);
-	}
-	
-	
-	/*
-	function setOverflowHidden(bool) {
-		element.css('overflow', bool ? 'hidden' : '');
-	}
-	*/
-	
-	
-	function isEventDraggable(event) {
-		return isEventEditable(event) && !opt('disableDragging');
-	}
-	
-	
-	function isEventResizable(event) { // but also need to make sure the seg.isEnd == true
-		return isEventEditable(event) && !opt('disableResizing');
-	}
-	
-	
-	function isEventEditable(event) {
-		return firstDefined(event.editable, (event.source || {}).editable, opt('editable'));
-	}
-	
-	
-	
-	/* Event Data
-	------------------------------------------------------------------------------*/
-	
-	
-	// report when view receives new events
-	function reportEvents(events) { // events are already normalized at this point
-		eventsByID = {};
-		var i, len=events.length, event;
-		for (i=0; i<len; i++) {
-			event = events[i];
-			if (eventsByID[event._id]) {
-				eventsByID[event._id].push(event);
-			}else{
-				eventsByID[event._id] = [event];
-			}
-		}
-	}
-	
-	
-	// returns a Date object for an event's end
-	function eventEnd(event) {
-		return event.end ? cloneDate(event.end) : defaultEventEnd(event);
-	}
-	
-	
-	
-	/* Event Elements
-	------------------------------------------------------------------------------*/
-	
-	
-	// report when view creates an element for an event
-	function reportEventElement(event, element) {
-		eventElements.push(element);
-		if (eventElementsByID[event._id]) {
-			eventElementsByID[event._id].push(element);
-		}else{
-			eventElementsByID[event._id] = [element];
-		}
-	}
-	
-	
-	function reportEventClear() {
-		eventElements = [];
-		eventElementsByID = {};
-	}
-	
-	
-	// attaches eventClick, eventMouseover, eventMouseout
-	function eventElementHandlers(event, eventElement) {
-		eventElement
-			.click(function(ev) {
-				if (!eventElement.hasClass('ui-draggable-dragging') &&
-					!eventElement.hasClass('ui-resizable-resizing')) {
-						return trigger('eventClick', this, event, ev);
-					}
-			})
-			.hover(
-				function(ev) {
-					trigger('eventMouseover', this, event, ev);
-				},
-				function(ev) {
-					trigger('eventMouseout', this, event, ev);
-				}
-			);
-		// TODO: don't fire eventMouseover/eventMouseout *while* dragging is occuring (on subject element)
-		// TODO: same for resizing
-	}
-	
-	
-	function showEvents(event, exceptElement) {
-		eachEventElement(event, exceptElement, 'show');
-	}
-	
-	
-	function hideEvents(event, exceptElement) {
-		eachEventElement(event, exceptElement, 'hide');
-	}
-	
-	
-	function eachEventElement(event, exceptElement, funcName) {
-		var elements = eventElementsByID[event._id],
-			i, len = elements.length;
-		for (i=0; i<len; i++) {
-			if (!exceptElement || elements[i][0] != exceptElement[0]) {
-				elements[i][funcName]();
-			}
-		}
-	}
-	
-	
-	
-	/* Event Modification Reporting
-	---------------------------------------------------------------------------------*/
-	
-	
-	function eventDrop(e, event, dayDelta, minuteDelta, allDay, ev, ui) {
-		var oldAllDay = event.allDay;
-		var eventId = event._id;
-		moveEvents(eventsByID[eventId], dayDelta, minuteDelta, allDay);
-		trigger(
-			'eventDrop',
-			e,
-			event,
-			dayDelta,
-			minuteDelta,
-			allDay,
-			function() {
-				// TODO: investigate cases where this inverse technique might not work
-				moveEvents(eventsByID[eventId], -dayDelta, -minuteDelta, oldAllDay);
-				reportEventChange(eventId);
-			},
-			ev,
-			ui
-		);
-		reportEventChange(eventId);
-	}
-	
-	
-	function eventResize(e, event, dayDelta, minuteDelta, ev, ui) {
-		var eventId = event._id;
-		elongateEvents(eventsByID[eventId], dayDelta, minuteDelta);
-		trigger(
-			'eventResize',
-			e,
-			event,
-			dayDelta,
-			minuteDelta,
-			function() {
-				// TODO: investigate cases where this inverse technique might not work
-				elongateEvents(eventsByID[eventId], -dayDelta, -minuteDelta);
-				reportEventChange(eventId);
-			},
-			ev,
-			ui
-		);
-		reportEventChange(eventId);
-	}
-	
-	
-	
-	/* Event Modification Math
-	---------------------------------------------------------------------------------*/
-	
-	
-	function moveEvents(events, dayDelta, minuteDelta, allDay) {
-		minuteDelta = minuteDelta || 0;
-		for (var e, len=events.length, i=0; i<len; i++) {
-			e = events[i];
-			if (allDay !== undefined) {
-				e.allDay = allDay;
-			}
-			addMinutes(addDays(e.start, dayDelta, true), minuteDelta);
-			if (e.end) {
-				e.end = addMinutes(addDays(e.end, dayDelta, true), minuteDelta);
-			}
-			normalizeEvent(e, options);
-		}
-	}
-	
-	
-	function elongateEvents(events, dayDelta, minuteDelta) {
-		minuteDelta = minuteDelta || 0;
-		for (var e, len=events.length, i=0; i<len; i++) {
-			e = events[i];
-			e.end = addMinutes(addDays(eventEnd(e), dayDelta, true), minuteDelta);
-			normalizeEvent(e, options);
-		}
-	}
-	
-
-}
-
-function DayEventRenderer() {
-	var t = this;
-
-	
-	// exports
-	t.renderDaySegs = renderDaySegs;
-	t.resizableDayEvent = resizableDayEvent;
-	
-	
-	// imports
-	var opt = t.opt;
-	var trigger = t.trigger;
-	var isEventDraggable = t.isEventDraggable;
-	var isEventResizable = t.isEventResizable;
-	var eventEnd = t.eventEnd;
-	var reportEventElement = t.reportEventElement;
-	var showEvents = t.showEvents;
-	var hideEvents = t.hideEvents;
-	var eventResize = t.eventResize;
-	var getRowCnt = t.getRowCnt;
-	var getColCnt = t.getColCnt;
-	var getColWidth = t.getColWidth;
-	var allDayRow = t.allDayRow;
-	var allDayBounds = t.allDayBounds;
-	var colContentLeft = t.colContentLeft;
-	var colContentRight = t.colContentRight;
-	var dayOfWeekCol = t.dayOfWeekCol;
-	var dateCell = t.dateCell;
-	var compileDaySegs = t.compileDaySegs;
-	var getDaySegmentContainer = t.getDaySegmentContainer;
-	var bindDaySeg = t.bindDaySeg; //TODO: streamline this
-	var formatDates = t.calendar.formatDates;
-	var renderDayOverlay = t.renderDayOverlay;
-	var clearOverlays = t.clearOverlays;
-	var clearSelection = t.clearSelection;
-	
-	
-	
-	/* Rendering
-	-----------------------------------------------------------------------------*/
-	
-	
-	function renderDaySegs(segs, modifiedEventId) {
-		var segmentContainer = getDaySegmentContainer();
-		var rowDivs;
-		var rowCnt = getRowCnt();
-		var colCnt = getColCnt();
-		var i = 0;
-		var rowI;
-		var levelI;
-		var colHeights;
-		var j;
-		var segCnt = segs.length;
-		var seg;
-		var top;
-		var k;
-		segmentContainer[0].innerHTML = daySegHTML(segs); // faster than .html()
-		daySegElementResolve(segs, segmentContainer.children());
-		daySegElementReport(segs);
-		daySegHandlers(segs, segmentContainer, modifiedEventId);
-		daySegCalcHSides(segs);
-		daySegSetWidths(segs);
-		daySegCalcHeights(segs);
-		rowDivs = getRowDivs();
-		// set row heights, calculate event tops (in relation to row top)
-		for (rowI=0; rowI<rowCnt; rowI++) {
-			levelI = 0;
-			colHeights = [];
-			for (j=0; j<colCnt; j++) {
-				colHeights[j] = 0;
-			}
-			while (i<segCnt && (seg = segs[i]).row == rowI) {
-				// loop through segs in a row
-				top = arrayMax(colHeights.slice(seg.startCol, seg.endCol));
-				seg.top = top;
-				top += seg.outerHeight;
-				for (k=seg.startCol; k<seg.endCol; k++) {
-					colHeights[k] = top;
-				}
-				i++;
-			}
-			rowDivs[rowI].height(arrayMax(colHeights));
-		}
-		daySegSetTops(segs, getRowTops(rowDivs));
-	}
-	
-	
-	function renderTempDaySegs(segs, adjustRow, adjustTop) {
-		var tempContainer = $("<div/>");
-		var elements;
-		var segmentContainer = getDaySegmentContainer();
-		var i;
-		var segCnt = segs.length;
-		var element;
-		tempContainer[0].innerHTML = daySegHTML(segs); // faster than .html()
-		elements = tempContainer.children();
-		segmentContainer.append(elements);
-		daySegElementResolve(segs, elements);
-		daySegCalcHSides(segs);
-		daySegSetWidths(segs);
-		daySegCalcHeights(segs);
-		daySegSetTops(segs, getRowTops(getRowDivs()));
-		elements = [];
-		for (i=0; i<segCnt; i++) {
-			element = segs[i].element;
-			if (element) {
-				if (segs[i].row === adjustRow) {
-					element.css('top', adjustTop);
-				}
-				elements.push(element[0]);
-			}
-		}
-		return $(elements);
-	}
-	
-	
-	function daySegHTML(segs) { // also sets seg.left and seg.outerWidth
-		var rtl = opt('isRTL');
-		var i;
-		var segCnt=segs.length;
-		var seg;
-		var event;
-		var url;
-		var classes;
-		var bounds = allDayBounds();
-		var minLeft = bounds.left;
-		var maxLeft = bounds.right;
-		var leftCol;
-		var rightCol;
-		var left;
-		var right;
-		var skinCss;
-		var html = '';
-		// calculate desired position/dimensions, create html
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			event = seg.event;
-			classes = ['fc-event', 'fc-event-skin', 'fc-event-hori'];
-			if (isEventDraggable(event)) {
-				classes.push('fc-event-draggable');
-			}
-			if (rtl) {
-				if (seg.isStart) {
-					classes.push('fc-corner-right');
-				}
-				if (seg.isEnd) {
-					classes.push('fc-corner-left');
-				}
-				leftCol = dayOfWeekCol(seg.end.getDay()-1);
-				rightCol = dayOfWeekCol(seg.start.getDay());
-				left = seg.isEnd ? colContentLeft(leftCol) : minLeft;
-				right = seg.isStart ? colContentRight(rightCol) : maxLeft;
-			}else{
-				if (seg.isStart) {
-					classes.push('fc-corner-left');
-				}
-				if (seg.isEnd) {
-					classes.push('fc-corner-right');
-				}
-				leftCol = dayOfWeekCol(seg.start.getDay());
-				rightCol = dayOfWeekCol(seg.end.getDay()-1);
-				left = seg.isStart ? colContentLeft(leftCol) : minLeft;
-				right = seg.isEnd ? colContentRight(rightCol) : maxLeft;
-			}
-			classes = classes.concat(event.className);
-			if (event.source) {
-				classes = classes.concat(event.source.className || []);
-			}
-			url = event.url;
-			skinCss = getSkinCss(event, opt);
-			if (url) {
-				html += "<a href='" + htmlEscape(url) + "'";
-			}else{
-				html += "<div";
-			}
-            html += function(attrs) {
-                var html = "";
-                for (var key in attrs) {
-                    html += key + '="' + attrs[key] + '"';
-                }
-                return html;
-            }(event.attrs);
-			html +=
-				" class='" + classes.join(' ') + "'" +
-				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
-				">" +
-				"<div" +
-				" class='fc-event-inner fc-event-skin'" +
-				(skinCss ? " style='" + skinCss + "'" : '') +
-				">";
-			if (!event.allDay && seg.isStart) {
-				html +=
-					"<span class='fc-event-time'>" +
-					htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) +
-					"</span>";
-			}
-			html +=
-				"<span class='fc-event-title'>" + htmlEscape(event.title) + "</span>" +
-				"</div>";
-			if (seg.isEnd && isEventResizable(event)) {
-				html +=
-					"<div class='ui-resizable-handle ui-resizable-" + (rtl ? 'w' : 'e') + "'>" +
-					"&nbsp;&nbsp;&nbsp;" + // makes hit area a lot better for IE6/7
-					"</div>";
-			}
-			html +=
-				"</" + (url ? "a" : "div" ) + ">";
-			seg.left = left;
-			seg.outerWidth = right - left;
-			seg.startCol = leftCol;
-			seg.endCol = rightCol + 1; // needs to be exclusive
-		}
-		return html;
-	}
-	
-	
-	function daySegElementResolve(segs, elements) { // sets seg.element
-		var i;
-		var segCnt = segs.length;
-		var seg;
-		var event;
-		var element;
-		var triggerRes;
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			event = seg.event;
-			element = $(elements[i]); // faster than .eq()
-			triggerRes = trigger('eventRender', event, event, element);
-			if (triggerRes === false) {
-				element.remove();
-			}else{
-				if (triggerRes && triggerRes !== true) {
-					triggerRes = $(triggerRes)
-						.css({
-							position: 'absolute',
-							left: seg.left
-						});
-					element.replaceWith(triggerRes);
-					element = triggerRes;
-				}
-				seg.element = element;
-			}
-		}
-	}
-	
-	
-	function daySegElementReport(segs) {
-		var i;
-		var segCnt = segs.length;
-		var seg;
-		var element;
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			element = seg.element;
-			if (element) {
-				reportEventElement(seg.event, element);
-			}
-		}
-	}
-	
-	
-	function daySegHandlers(segs, segmentContainer, modifiedEventId) {
-		var i;
-		var segCnt = segs.length;
-		var seg;
-		var element;
-		var event;
-		// retrieve elements, run through eventRender callback, bind handlers
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			element = seg.element;
-			if (element) {
-				event = seg.event;
-				if (event._id === modifiedEventId) {
-					bindDaySeg(event, element, seg);
-				}else{
-					element[0]._fci = i; // for lazySegBind
-				}
-			}
-		}
-		lazySegBind(segmentContainer, segs, bindDaySeg);
-	}
-	
-	
-	function daySegCalcHSides(segs) { // also sets seg.key
-		var i;
-		var segCnt = segs.length;
-		var seg;
-		var element;
-		var key, val;
-		var hsideCache = {};
-		// record event horizontal sides
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			element = seg.element;
-			if (element) {
-				key = seg.key = cssKey(element[0]);
-				val = hsideCache[key];
-				if (val === undefined) {
-					val = hsideCache[key] = hsides(element, true);
-				}
-				seg.hsides = val;
-			}
-		}
-	}
-	
-	
-	function daySegSetWidths(segs) {
-		var i;
-		var segCnt = segs.length;
-		var seg;
-		var element;
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			element = seg.element;
-			if (element) {
-				element[0].style.width = Math.max(0, seg.outerWidth - seg.hsides) + 'px';
-			}
-		}
-	}
-	
-	
-	function daySegCalcHeights(segs) {
-		var i;
-		var segCnt = segs.length;
-		var seg;
-		var element;
-		var key, val;
-		var vmarginCache = {};
-		// record event heights
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			element = seg.element;
-			if (element) {
-				key = seg.key; // created in daySegCalcHSides
-				val = vmarginCache[key];
-				if (val === undefined) {
-					val = vmarginCache[key] = vmargins(element);
-				}
-				seg.outerHeight = element[0].offsetHeight + val;
-			}
-		}
-	}
-	
-	
-	function getRowDivs() {
-		var i;
-		var rowCnt = getRowCnt();
-		var rowDivs = [];
-		for (i=0; i<rowCnt; i++) {
-			rowDivs[i] = allDayRow(i)
-				.find('td:first div.fc-day-content > div'); // optimal selector?
-		}
-		return rowDivs;
-	}
-	
-	
-	function getRowTops(rowDivs) {
-		var i;
-		var rowCnt = rowDivs.length;
-		var tops = [];
-		for (i=0; i<rowCnt; i++) {
-			tops[i] = rowDivs[i][0].offsetTop; // !!?? but this means the element needs position:relative if in a table cell!!!!
-		}
-		return tops;
-	}
-	
-	
-	function daySegSetTops(segs, rowTops) { // also triggers eventAfterRender
-		var i;
-		var segCnt = segs.length;
-		var seg;
-		var element;
-		var event;
-		for (i=0; i<segCnt; i++) {
-			seg = segs[i];
-			element = seg.element;
-			if (element) {
-				element[0].style.top = rowTops[seg.row] + (seg.top||0) + 'px';
-				event = seg.event;
-				trigger('eventAfterRender', event, event, element);
-			}
-		}
-	}
-	
-	
-	
-	/* Resizing
-	-----------------------------------------------------------------------------------*/
-	
-	
-	function resizableDayEvent(event, element, seg) {
-		var rtl = opt('isRTL');
-		var direction = rtl ? 'w' : 'e';
-		var handle = element.find('div.ui-resizable-' + direction);
-		var isResizing = false;
-		
-		// TODO: look into using jquery-ui mouse widget for this stuff
-		disableTextSelection(element); // prevent native <a> selection for IE
-		element
-			.mousedown(function(ev) { // prevent native <a> selection for others
-				ev.preventDefault();
-			})
-			.click(function(ev) {
-				if (isResizing) {
-					ev.preventDefault(); // prevent link from being visited (only method that worked in IE6)
-					ev.stopImmediatePropagation(); // prevent fullcalendar eventClick handler from being called
-					                               // (eventElementHandlers needs to be bound after resizableDayEvent)
-				}
-			});
-		
-		handle.mousedown(function(ev) {
-			if (ev.which != 1) {
-				return; // needs to be left mouse button
-			}
-			isResizing = true;
-			var hoverListener = t.getHoverListener();
-			var rowCnt = getRowCnt();
-			var colCnt = getColCnt();
-			var dis = rtl ? -1 : 1;
-			var dit = rtl ? colCnt-1 : 0;
-			var elementTop = element.css('top');
-			var dayDelta;
-			var helpers;
-			var eventCopy = $.extend({}, event);
-			var minCell = dateCell(event.start);
-			clearSelection();
-			$('body')
-				.css('cursor', direction + '-resize')
-				.one('mouseup', mouseup);
-			trigger('eventResizeStart', this, event, ev);
-			hoverListener.start(function(cell, origCell) {
-				if (cell) {
-					var r = Math.max(minCell.row, cell.row);
-					var c = cell.col;
-					if (rowCnt == 1) {
-						r = 0; // hack for all-day area in agenda views
-					}
-					if (r == minCell.row) {
-						if (rtl) {
-							c = Math.min(minCell.col, c);
-						}else{
-							c = Math.max(minCell.col, c);
-						}
-					}
-					dayDelta = (r*7 + c*dis+dit) - (origCell.row*7 + origCell.col*dis+dit);
-					var newEnd = addDays(eventEnd(event), dayDelta, true);
-					if (dayDelta) {
-						eventCopy.end = newEnd;
-						var oldHelpers = helpers;
-						helpers = renderTempDaySegs(compileDaySegs([eventCopy]), seg.row, elementTop);
-						helpers.find('*').css('cursor', direction + '-resize');
-						if (oldHelpers) {
-							oldHelpers.remove();
-						}
-						hideEvents(event);
-					}else{
-						if (helpers) {
-							showEvents(event);
-							helpers.remove();
-							helpers = null;
-						}
-					}
-					clearOverlays();
-					renderDayOverlay(event.start, addDays(cloneDate(newEnd), 1)); // coordinate grid already rebuild at hoverListener.start
-				}
-			}, ev);
-			
-			function mouseup(ev) {
-				trigger('eventResizeStop', this, event, ev);
-				$('body').css('cursor', '');
-				hoverListener.stop();
-				clearOverlays();
-				if (dayDelta) {
-					eventResize(this, event, dayDelta, 0, ev);
-					// event redraw will clear helpers
-				}
-				// otherwise, the drag handler already restored the old events
-				
-				setTimeout(function() { // make this happen after the element's click event
-					isResizing = false;
-				},0);
-			}
-			
-		});
-	}
-	
-
-}
-
-//BUG: unselect needs to be triggered when events are dragged+dropped
-
-function SelectionManager() {
-	var t = this;
-	
-	
-	// exports
-	t.select = select;
-	t.unselect = unselect;
-	t.reportSelection = reportSelection;
-	t.daySelectionMousedown = daySelectionMousedown;
-	
-	
-	// imports
-	var opt = t.opt;
-	var trigger = t.trigger;
-	var defaultSelectionEnd = t.defaultSelectionEnd;
-	var renderSelection = t.renderSelection;
-	var clearSelection = t.clearSelection;
-	
-	
-	// locals
-	var selected = false;
-
-
-
-	// unselectAuto
-	if (opt('selectable') && opt('unselectAuto')) {
-		$(document).mousedown(function(ev) {
-			var ignore = opt('unselectCancel');
-			if (ignore) {
-				if ($(ev.target).parents(ignore).length) { // could be optimized to stop after first match
-					return;
-				}
-			}
-			unselect(ev);
-		});
-	}
-	
-
-	function select(startDate, endDate, allDay) {
-		unselect();
-		if (!endDate) {
-			endDate = defaultSelectionEnd(startDate, allDay);
-		}
-		renderSelection(startDate, endDate, allDay);
-		reportSelection(startDate, endDate, allDay);
-	}
-	
-	
-	function unselect(ev) {
-		if (selected) {
-			selected = false;
-			clearSelection();
-			trigger('unselect', null, ev);
-		}
-	}
-	
-	
-	function reportSelection(startDate, endDate, allDay, ev) {
-		selected = true;
-		trigger('select', null, startDate, endDate, allDay, ev);
-	}
-	
-	
-	function daySelectionMousedown(ev) { // not really a generic manager method, oh well
-		var cellDate = t.cellDate;
-		var cellIsAllDay = t.cellIsAllDay;
-		var hoverListener = t.getHoverListener();
-		var reportDayClick = t.reportDayClick; // this is hacky and sort of weird
-		if (ev.which == 1 && opt('selectable')) { // which==1 means left mouse button
-			unselect(ev);
-			var _mousedownElement = this;
-			var dates;
-			hoverListener.start(function(cell, origCell) { // TODO: maybe put cellDate/cellIsAllDay info in cell
-				clearSelection();
-				if (cell && cellIsAllDay(cell)) {
-					dates = [ cellDate(origCell), cellDate(cell) ].sort(cmp);
-					renderSelection(dates[0], dates[1], true);
-				}else{
-					dates = null;
-				}
-			}, ev);
-			$(document).one('mouseup', function(ev) {
-				hoverListener.stop();
-				if (dates) {
-					if (+dates[0] == +dates[1]) {
-						reportDayClick(dates[0], true, ev);
-					}
-					reportSelection(dates[0], dates[1], true, ev);
-				}
-			});
-		}
-	}
-
-
-}
- 
-function OverlayManager() {
-	var t = this;
-	
-	
-	// exports
-	t.renderOverlay = renderOverlay;
-	t.clearOverlays = clearOverlays;
-	
-	
-	// locals
-	var usedOverlays = [];
-	var unusedOverlays = [];
-	
-	
-	function renderOverlay(rect, parent) {
-		var e = unusedOverlays.shift();
-		if (!e) {
-			e = $("<div class='fc-cell-overlay' style='position:absolute;z-index:3'/>");
-		}
-		if (e[0].parentNode != parent[0]) {
-			e.appendTo(parent);
-		}
-		usedOverlays.push(e.css(rect).show());
-		return e;
-	}
-	
-
-	function clearOverlays() {
-		var e;
-		while (e = usedOverlays.shift()) {
-			unusedOverlays.push(e.hide().unbind());
-		}
-	}
-
-
-}
-
-function CoordinateGrid(buildFunc) {
-
-	var t = this;
-	var rows;
-	var cols;
-	
-	
-	t.build = function() {
-		rows = [];
-		cols = [];
-		buildFunc(rows, cols);
-	};
-	
-	
-	t.cell = function(x, y) {
-		var rowCnt = rows.length;
-		var colCnt = cols.length;
-		var i, r=-1, c=-1;
-		for (i=0; i<rowCnt; i++) {
-			if (y >= rows[i][0] && y < rows[i][1]) {
-				r = i;
-				break;
-			}
-		}
-		for (i=0; i<colCnt; i++) {
-			if (x >= cols[i][0] && x < cols[i][1]) {
-				c = i;
-				break;
-			}
-		}
-		return (r>=0 && c>=0) ? { row:r, col:c } : null;
-	};
-	
-	
-	t.rect = function(row0, col0, row1, col1, originElement) { // row1,col1 is inclusive
-		var origin = originElement.offset();
-		return {
-			top: rows[row0][0] - origin.top,
-			left: cols[col0][0] - origin.left,
-			width: cols[col1][1] - cols[col0][0],
-			height: rows[row1][1] - rows[row0][0]
-		};
-	};
-
-}
-
-function HoverListener(coordinateGrid) {
-
-
-	var t = this;
-	var bindType;
-	var change;
-	var firstCell;
-	var cell;
-	
-	
-	t.start = function(_change, ev, _bindType) {
-		change = _change;
-		firstCell = cell = null;
-		coordinateGrid.build();
-		mouse(ev);
-		bindType = _bindType || 'mousemove';
-		$(document).bind(bindType, mouse);
-	};
-	
-	
-	function mouse(ev) {
-		_fixUIEvent(ev);
-		var newCell = coordinateGrid.cell(ev.pageX, ev.pageY);
-		if (!newCell != !cell || newCell && (newCell.row != cell.row || newCell.col != cell.col)) {
-			if (newCell) {
-				if (!firstCell) {
-					firstCell = newCell;
-				}
-				change(newCell, firstCell, newCell.row-firstCell.row, newCell.col-firstCell.col);
-			}else{
-				change(newCell, firstCell);
-			}
-			cell = newCell;
-		}
-	}
-	
-	
-	t.stop = function() {
-		$(document).unbind(bindType, mouse);
-		return cell;
-	};
-	
-	
-}
-
-
-function _fixUIEvent(event) { // jQuery 1.7 workaround (for issue 1168)
-	if (event.pageX === undefined) {
-		event.pageX = event.originalEvent.pageX;
-		event.pageY = event.originalEvent.pageY;
-	}
-}
-function HorizontalPositionCache(getElement) {
-
-	var t = this,
-		elements = {},
-		lefts = {},
-		rights = {};
-		
-	function e(i) {
-		return elements[i] = elements[i] || getElement(i);
-	}
-	
-	t.left = function(i) {
-		return lefts[i] = lefts[i] === undefined ? e(i).position().left : lefts[i];
-	};
-	
-	t.right = function(i) {
-		return rights[i] = rights[i] === undefined ? t.left(i) + e(i).width() : rights[i];
-	};
-	
-	t.clear = function() {
-		elements = {};
-		lefts = {};
-		rights = {};
-	};
-	
-}
-
-})(jQuery);
-define("lib/dist/fullcalendar/fullcalendar", function(){});
-
-define('patterns/fullcalendar',[
-    'require',
-    '../lib/dist/fullcalendar/fullcalendar',
-    '../logging',
-    '../utils'
-], function(require) {
-    var log = require('../logging').getLogger('fullcalendar'),
-        utils = require('../utils');
-
-    var fullcalendar = {
-        initContent: function(root) {
-            var $calroot = $(root).find('.full-calendar');
-            if (!$calroot || $calroot.length === 0) return;
-
-            // XXX: should be within the calendar
-            var $filter = $('.calendar-filters');
-            var initMonths = function($root) {
-                if ($root.hasClass('month')) {
-                    fullcalendar.initMonth($root, $filter);
-                } else {
-                    $root.find('.month').each(function() {
-                        fullcalendar.initMonth($(this), $filter);
-                    });
-                }
-            };
-
-            // hide all group checkboxes, will be shown if mentioned
-            $filter.find('.check-list .groups label').hide();
-
-            // initialize existing months
-            initMonths($calroot);
-
-            // wait for additional months
-            $calroot.bind('inject', function(ev, opts) {
-                initMonths($(ev.target));
-            });
-            $calroot.bind('injection', function(event, month) {
-                initMonths($(month));
-            });
-        },
-        initMonth: function($month, $filter) {
-            var $events = $('.events', $month);
-            if ($events.length === 0) { return; }
-            var ym = $('time', $month).attr('datetime').split('-'),
-                year = ym[0],
-                month = Number(ym[1]) - 1,
-                $calendar = $('<div class="calendar">\n</div>')
-                    .insertAfter($events),
-                mapal = require('../core/init');
-            var refetch = function() {
-                $calendar.fullCalendar('refetchEvents');
-                // XXX: replace with mutator event listener
-                mapal.initContent($calendar);
-            };
-            var refetch_deb = utils.debounce(refetch, 400);
-            if ($filter && $filter.length > 0) {
-                $('.searchText', $filter).on("keyup", refetch_deb);
-                $('.searchText[type=search]', $filter).on("click", refetch_deb);
-                $('select[name=state]', $filter).on("change", refetch);
-                $('.check-list', $filter).on("change", refetch);
-            }
-            $events.css('display', 'None');
-            $calendar.fullCalendar({
-                dayDblClick: function(date, allDay, jsEvent, view) {
-                    // XXX: add event
-                },
-                events: function(start, end, callback) {
-                    var events = fullcalendar.parseEvents($events, $filter);
-                    callback(events);
-                },
-                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
-                    // XXX: change event
-                    revertFunc();
-                },
-                eventResize: function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) {
-                    // XXX: change event
-                    revertFunc();
-                },
-                header: { left: '', right: '' },
-                month: month,
-                year: year
-            });
-            mapal.initContent($calendar);
-        },
-        parseEvents: function($events, $filter) {
-            // show groups that are mentioned
-            $filter.find(
-                '.check-list .groups label:hidden'
-            ).each(function() {
-                var $label = $(this),
-                    id = $label.find('input').attr('name'),
-                    groupsel = '.group-' + id;
-                if ($events.find(groupsel).length > 0) $label.show();
-            });
-
-            // OPTINAL: go through other filters and gray out groups that would
-            // result in zero matches
-
-            // parse filters
-            if ($filter && $filter.length > 0) {
-                var searchText = $('.searchText', $filter).val(),
-                    state = $('select[name=state]').val(),
-                    $attendees = $('.attendees', $filter),
-                    noattendees = $attendees.is(':has([name="no-attendees"]:checked)'),
-                    onlyusers = $attendees.is(':has([name="only-users"])'),
-                    // XXX: only take visible groups into account
-                    groupsel = $('.groups input:checked', $attendees).map(function() {
-                        var id = $(this).attr('name');
-                        return '.attendees .group-' + id;
-                    }).toArray().join(',');
-            }
-            var events = $events.find('.event').filter(function() {
-                var $event = $(this);
-                // workflow state
-                if (state && state !== "all") {
-                    if (!$event.hasClass('.state-' + state)) {
-                        log.debug('filter denied state', $event);
-                        return false;
-                    }
-                }
-
-                // attendees
-                if ($event.find('.attendees *').length > 0) {
-                    if ($event.find('.attendees .group').length > 0) {
-                        if ($event.find(groupsel).length === 0) {
-                            log.debug('filter denied groups', $event);
-                            return false;
-                        }
-                    } else if (!onlyusers) {
-                        log.debug('filter denied onlyusers', $event);
-                        return false;
-                    }
-                } else if (!noattendees) {
-                    log.debug('filter denied noattendees', $event);
-                    return false;
-                }
-
-                // full text search
-                if (searchText && !$event.is(':Contains(' + searchText + ')')) {
-                    log.debug('filter denied fulltext', $event);
-                    return false;
-                }
-
-                return true;
-            }).map(function(idx, event) {
-                var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
-                    return (cls !== 'event');
-                }).concat($('a', event).attr('class').split(/\s+/));
-                var allattrs = $('a', event)[0].attributes,
-                    attrs = {};
-                for (var attr, i=0; i<allattrs.length; i++){
-                    attr = allattrs.item(i);
-                    if (attr.nodeName.slice(0,5) === "data-") {
-                        attrs[attr.nodeName] = attr.nodeValue;
-                    }
-                }
-                var location = ($('.location', event).html() || '').trim();
-                var ev = {
-                    title: $('.title', event).html().trim() +
-                        (location ? (' (' + location + ')') : ''),
-                    start: $('.start', event).attr('datetime'),
-                    end: $('.end', event).attr('datetime'),
-                    allDay: $(event).hasClass('all-day'),
-                    url: $('a', event).attr('href'),
-                    className: classNames,
-                    attrs: attrs,
-                    editable: $(event).hasClass('editable')
-                };
-                if (!ev.title) log.error('No event title for:', event);
-                if (!ev.start) log.error('No event start for:', event);
-                if (!ev.url) log.error('No event url for:', event);
-                return ev;
-            }).toArray();
-            return events;
-        }
-    };
-    return fullcalendar;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ floatingPanel - easily create floating panels
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('patterns/old_modal',[
-    'require',
-    '../core/init'
-], function(require) {
-    var mapal = require('../core/init');
-
-    var modal = {
-        options: {
-            "class": "",
-            "loadingText": "Loading...",
-            'showLoading': true,
-            pauseVideo: false
-        },
-
-        init: function() {
-            $("#panel .closePanel").live('click.mapalModal', function(e) {
-                modal._findClose($(this));
-                e.preventDefault();
-                return false;
-            });
-            //	mapal.patterns.registerListener(['selfHealing'], 'onExecuted', mapal.patterns.modal._findClose);
-        },
-
-        _findClose: function($elem) {
-            if ( $elem.hasClass('closePanel') ) {
-                var $panel = $elem.parents( "#panel" );
-                if ( $panel.length > 0 ) {
-                    modal.close($panel);
-                }
-            }
-        },
-
-        execute: function( elem, url, sources, params, event ) {
-            var $trigger = $(event.target),
-                href = event.target.tagName.toLowerCase()==="a" ? $trigger.attr("href") : $trigger.attr("name"),
-                parts = href.split("#", 2),
-                $panel = $("#panel");
-            var source = (parts[1] === undefined) ? [] : parts[1];
-
-            var opts = $.extend({}, modal.options, params);
-
-            if ($panel.length===0) {
-                $panel = $("<div/>")
-                    .attr("id", "panel")
-                    .appendTo(document.body);
-                $("<div/>").attr("id","panel-content").appendTo($panel);
-            }
-
-            $panel.data('modal', opts);
-
-            modal.pauseVideo(opts, true);
-
-            if (opts.showLoading) {
-                var $loading = $("<div>").text(opts.loadingText).attr("id", "panel-loading");
-                $('<span>').appendTo($loading);
-                $loading.appendTo($panel);
-
-                $panel.addClass('loading');
-
-                modal.apiInit($panel, opts);
-                modal.centerOverlay($panel);
-            }
-
-            mapal.injection.load(elem, parts[0], "panel-content:content", source, 
-                                 function($target) {
-                    $panel.attr('class', opts['class']);
-
-                    $target.css("opacity", 1).addClass("panel");
-
-
-                    if (opts.showLoading) {
-                        $("#panel-loading").remove();
-                    } else {
-                        mapal.injection.apiInit($panel, opts);
-                    }
-
-                    modal.centerOverlay($panel);
-                }
-            );
-        },
-
-        apiInit: function($panel, opts) {
-            var api;
-
-            //$target.find("form").ajaxForm({context: $trigger.get(0),
-            //                           success: mapal.patterns.modal.formHandler});
-            api = $panel.overlay({api: true,
-                                  closeOnClick: false,
-                                  onClose: function() {
-                                      modal.pauseVideo(opts, false);
-                                  },
-                                  top: 'center',
-                                  mask: {color: "#ebecff", loadSpeed: 200, opacity: 0.9}});
-            api.load();
-        },
-
-        'centerOverlay': function( $panel ) {
-            var win = $(window);
-            var w = $panel.outerWidth({ "margin": true });//get width of overlay
-            var h = $panel.outerHeight({ "margin": true }); //get height of overlay
-            var l = Math.max((win.width() - w) / 2, 0);  //calculate left property
-            var t = Math.max((win.height() - h) / 2, 0);  //calculate top property
-
-            $panel.css({ 'position': 'fixed', 'top': t, 'left': l });
-        },
-
-        "close": function($panel) {
-            //var opts = $panel.data('modal');
-            //mapal.patterns.modal.pauseVideo(opts, false);
-            $panel.overlay().close();
-            $panel.remove();
-        },
-
-        pauseVideo: function( opts, which ) {
-            if (typeof Playbox !== 'undefined' && opts && opts.pauseVideo ) {
-                if ( which ) {
-                    Playbox.pause();
-                } else {
-                    Playbox.resume();
-                }
-            }
-        },
-
-        formHandler: function(data, status, xhr, $form) {
-            // regexp taken from jQuery 1.4.1
-            var rscript = /<script(.|\s)*?\/script>/gi,
-         $trigger = $(this.context),
-         href = this.context.tagName.toLowerCase()==="a" ? $trigger.attr("href") : $trigger.attr("name"),
-         action = $form.attr("action"),
-         $panel = $("#panel"),
-         ct = xhr.getResponseHeader("content-type"),
-         isJSON = ct.indexOf("application/json") >= 0,
-         $tree, target;
-
-            // Error or validation error
-            if (isJSON || xhr.status !== 202) {
-                if (isJSON) {
-                    var reply = $.parseJSON(xhr.responseText);
-                    $trigger.trigger("ajaxFormResult", reply);
-                    if (reply.action==="reload") {
-                        location.reload();
-                    } else if (reply.action==="close" || !reply.action) {
-                        modal.close($panel);
-                    }
-                    return;
-                } else {
-                    $trigger.trigger("ajaxFormResult");
-                }
-                modal.close($panel);
-                return;
-            }
-
-            if (action.indexOf("#")>0) {
-                target = action.split("#", 2)[1];
-            } else {
-                target = href.split("#", 2)[1];
-            }
-
-            $tree = $("<div/>").append(data.replace(rscript, ""));
-            $tree = $tree.find("#"+target).attr("id", "panel-content");
-            mapal.initContent(target);
-            $("#panel-content").replaceWith($tree);
-            $panel.find("form").ajaxForm({context: this.context,
-                                          success: modal.formHandler});
-        }
-    };
-    return modal;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ selfhealing - self healing messages (like growl)
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('patterns/selfhealing',[
-    'require',
-    '../core/init',
-    '../utils'
-], function(require) {
-    var mapal = require('../core/init');
-    var selfHealing = {
-        options: {
-            confirm: null,
-            "show": null,
-            "remove": null,
-            "disable": null,
-            removeOnClick: true,
-            displayTime: 8
-        },
-
-        execute: function( elem, url, sources, params, event ) {
-            var container = $("#selfhealing-messages"), paramObjs = {}, p = {};
-
-            var options = $.extend({}, selfHealing.options);
-
-            // split up the params
-            $.extend(options, params);
-
-            if (typeof options.disable !== 'string' ) {
-                options.disable = elem;
-            }
-
-            if (container.length === 0) {
-                container = $("<div />").attr("id", "selfhealing-messages").appendTo(document.body);
-            }
-
-            var count = ++selfHealing.count;
-
-            //  $("<div />").attr("id", "selfhealing-message-" + count).attr("opacity", 0).appendTo(container);
-
-            if ( typeof options.confirm === 'string' ) {
-                if (!confirm(options.confirm)) return;
-            }
-
-            if (options.disable !== null) {
-                $(options.disable).attr('disabled', 'disabled');
-            }
-
-            // create the message element
-            mapal.injection.load(elem, url, "selfhealing-messages>selfhealing-message-" + count, sources, function($target) {
-                var doMouseLeave = function() {
-                    var $this = $(this);
-                    $this.data("persistent", false);
-                    selfHealing.remove($this);
-                };
-
-                $target.attr("id", "selfhealing-message-" + count).bind(
-                    {
-                        "mouseenter.mapal-selfHealing": function(event) {
-                            $(this).data("persistent", true);
-                        },
-                        "mouseleave.mapal-selfHealing.": doMouseLeave,
-                        "click": function(event) {
-                            $(this).unbind('.mapal-selfHealing');
-                            doMouseLeave.apply(this, []);
-                        }
-                    }
-                );
-
-                $target.appendTo(container);
-
-                if (options.remove !== null ) {
-                    // we have an ID to delete
-                    if (typeof options.remove == 'string') {
-                        $('#' + options.remove).slideUp('slow');
-                    } else {
-                        $(options.remove).slideUp('slow');
-                    }
-                }
-
-                if (options.show !== null ) {
-                    // we have an ID to delete
-                    if (typeof options.show == 'string') {
-                        $('#' + options.show).slideDown('slow');
-                    } else {
-                        $(options.show).slideDown('slow');
-                    }
-                }
-
-                $target.animate({"opacity": 1}, "fast", function() {
-                    $target.data("timer", setTimeout(function() {
-                        selfHealing.remove($target);
-                    }, selfHealing.options.displayTime*1000));
-                });
-
-                mapal.patterns.callListener($(elem), 'selfHealing', 'onFinished');
-            });
-        },
-
-        remove: function($element) {
-            if ( $element.data("persistent") || $element.data("inFx") ) return;
-            $element.animate({"opacity": 0}, {
-                step: function() {
-                    if ( $element.data("persistent") ) {
-                        // remove the timer
-                        clearTimeout($element.data("timer"));
-
-                        // cancel hiding
-                        $element.stop(true);
-                        $element.css({"opacity": 1});
-
-                        return false;
-                    }
-                },
-
-                complete: function() {
-                    var $this = $(this);
-                    $this.slideUp('slow', function() {
-                        $this.data("inFx", false);
-                        $this.remove();
-                    }).data("inFx", true);
-                }
-            });
-        },
-
-        count: 0
-    };
-    return selfHealing;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ setclass - update class on click
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('patterns/setclass',[
-    'require',
-    '../core/store',
-    '../utils'
-], function(require, store, utils) {
-    var storage = store.session("setclass");
-
-    var setclass = {
-        init: function() {
-
-            $(document).on("click", '[data-setclass]').live('click', setclass.handleClick);
-            $("[data-setclass]").each(function() {
-                var $this = $(this);
-                var obj = setclass.getObjFromParams(
-                              $this,
-                              utils.extractParameters('!' + $this.attr('data-setclass')));
-
-                if (obj === null)
-                    return;
-
-                if ( !obj.store ) {
-                    storage.remove(obj.id + "." + obj.attr);
-                } else if (storage.get(obj.id + "." + obj.attr))
-                    return;
-
-                if (obj.attr === 'class') {
-                //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
-                } else {
-                    $( "#" + obj.id ).attr( obj.attr, obj.value );
-                }
-
-                if (obj.store)
-                    storage.set(obj.id + "." + obj.attr, obj);
-            });
-
-            var all = storage.all();
-            for (var key in all ) {
-                var obj = all[key];
-                if ( obj.attr === 'class' ) {
-                    $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
-                } else {
-                    $( "#" + obj.id ).attr( obj.attr, obj.value );
-                }
-            }
-        },
-
-        getObjFromParams: function($elem, params) {
-            var values = params.values;
-            var obj = {};
-
-            obj.id = params.id || $elem.attr("id");
-            obj.attr = params.attr || 'class';
-            obj.store = params.store || false;
-
-            if (typeof obj.id !== "string" || obj.id.length === 0 ||
-                typeof obj.attr !== 'string' || obj.attr.length === 0 ||
-                typeof values  !== 'string' || values.length === 0 ) {
-                return null;
-            }
-
-            values = values.split(':');
-            if ( values.length == 1) {
-                values.push('');
-            }
-
-            obj.value = values[0];
-            obj.other = values[1];
-            return obj;
-        },
-
-        handleClick: function(event) {
-            var $this = $(this);
-            if ($this.hasClass('cant-touch-this')) return;
-            var params = utils.extractParameters('!' + $this.attr('data-setclass'));
-
-            setclass.execute($this, '', '', params, event);
-
-            event.preventDefault();
-        },
-
-        store: {},
-
-        dataAttr: true,
-
-        execute: function( elem, url, sources, params, event ) {
-            var value, other;
-            var obj = setclass.getObjFromParams( elem, params );
-            if (obj === null) return false;
-
-            var $setclass = $("#" + obj.id);
-            if ($setclass.length === 0) return false;
-
-            if (obj.attr === 'class') {
-                if (obj.other.length > 0 ) {
-                    var cls = $setclass.attr('class').split(' ');
-                    regval = new RegExp(obj.value);
-                    for (i=0;i<cls.length;i++){
-                        if (cls[i].match(regval)) {
-                            $setclass.removeClass(cls[i]);
-                        }
-                    }
-                    $setclass.addClass(obj.other);
-                } else if ($setclass.hasClass(obj.value) || $setclass.hasClass(obj.other)) {
-                    /* obj.value already set and no other present. pass */
-                } else {
-                    $setclass.addClass(obj.value);
-                }
-            } else {
-                /* cave, haven't touched that yet, is still behaving like toggle */
-            /*  var current = $setclass.attr(obj.attr);
-                if (current === obj.value) {
-                    $setclass.attr(obj.attr, obj.other);
-                    value = obj.other;
-                    other = obj.value;
-                } else if (current === obj.other) {
-                    $setclass.attr(obj.attr, obj.value);
-                    value = obj.value;
-                    other = obj.other;
-                } else {
-                    $setclass.attr(obj.attr, obj.other);
-                    value = obj.other;
-                    other = obj.value;
-                }*/
-            }
-
-            if (obj.store)
-                storage.set(obj.id + "." + obj.attr, obj);
-
-            return true;
-        }
-    };
-    return setclass;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ toggle - toggle class on click
- *
- * Copyright 2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('patterns/toggle',[
-    'require',
-    '../logging',
-    '../patterns'
-], function(require) {
-    var log = require('../logging').getLogger('switch'),
-        Parser = require('../core/parser'),
-        parser = new Parser();
-
-    parser.add_argument("selector");
-    parser.add_argument("attr", "class");
-    parser.add_argument("value");
-
-    var toggle = {
-        initContent: function(root) {
-            $("[data-toggle]", root).on("click", toggle.onClick);
-        },
-
-        onClick: function(event) {
-            var $trigger = $(this),
-                options, option, $targets, $target, i;
-
-            options=parser.parse($trigger.data("toggle"));
-            if (!Array.isArray(options)) 
-                options = [options];
-            for (i=0; i<options.length; i++) {
-                option=options[i];
-                if (option.selector && option.attr && option.value)
-                    toggle._update(option.selector, option.attr, option.value);
-                else
-                    log.error('Toggle pattern requires selector, attr and value.');
-            }
-            event.preventDefault();
-        },
-
-        _update: function(selector, attr, value) {
-            var $targets = $(selector);
-
-            if (!$targets.length)
-                return;
-
-            if (attr==="class") {
-                $targets.toggleClass(value);
-            } else {
-                for (var i=0; i<$targets.length; i++) {
-                    $target=$targets.eq(i);
-                    if ($target.attr(attr)===attr) {
-                        $target.removeAttr(attr);
-                    } else {
-                        $target.attr(attr, value);
-                    }
-                }
-            }
-
-        }
-    };
-
-    return toggle;
-});
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ tooltip - tooltips
- *
- * Copyright 2008-2012 Simplon B.V.
- * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
- */
-define('patterns/tooltip',[
-    'require',
-    '../core/init',
-    '../utils'
-], function(require) {
-    var utils = require('../utils'),
-        mapal = require('../core/init');
-
-    var tooltip = {
-        count: 0,
-
-        init: function() {
-        },
-
-        initContent: function(root) {
-            var $root = $(root);
-            var init = function($trigger) {
-                var options = utils.parseOptions($trigger.data("tooltip"));
-                options.title = $trigger.attr("title");
-                $trigger.removeAttr("title");
-                $trigger.data("mapal.tooltip", options);
-                tooltip.setupShowEvents($trigger);
-            };
-            if ($root.is('[data-tooltip]')) init($root);
-            $("*[data-tooltip]", $root).each(function() {
-                init($(this));
-            });
-        },
-
-        setupShowEvents: function($trigger) {
-            var parameters = $trigger.data("mapal.tooltip");
-            if (parameters.click) {
-                $trigger.on("click.tooltip", $trigger, tooltip.show);
-            } else {
-                $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
-                // Make sure click on the trigger element becomes a NOP
-                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
-            }
-        },
-
-        removeShowEvents: function($trigger) {
-            $trigger.off(".tooltip");
-        },
-
-        setupHideEvents: function($trigger) {
-            var $container = tooltip.getContainer($trigger),
-                parameters = $trigger.data("mapal.tooltip");
-            if (parameters.sticky) {
-                $container.find(".closePanel")
-                    .on("click.tooltip", $trigger, tooltip.hide);
-                // Make sure click on the trigger element becomes a NOP
-                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
-            } else {
-                if (parameters.click) {
-                    $container.on("click.tooltip", $trigger, function(ev) {
-                        ev.stopPropagation();
-                    });
-                    $(document).on("click.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", tooltip.blockDefault);
-                    // close if something inside the tooltip triggered an injection
-                    $container.on('patterns-inject-triggered.tooltip',
-                                  $trigger, tooltip.hide);
-                    $container.on('patterns-inject_interim-triggered.tooltip',
-                                  $trigger, tooltip.hide);
-                    $container.on('submit.tooltip', $trigger, tooltip.hide);
-                } else {
-                    $container.on("click.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", tooltip.blockDefault);
-                }
-            }
-        },
-
-        removeHideEvents: function($trigger) {
-            var $container = tooltip.getContainer($trigger);
-            $(document).off(".tooltip");
-            $container.off(".tooltip");
-            $container.find(".closePanel").off(".tooltip");
-            $trigger.off(".tooltip");
-        },
-
-        blockDefault: function(event) {
-            event.preventDefault();
-        },
-
-        show: function(event) {
-            event.preventDefault();
-            var $trigger = event.data,
-                $container = tooltip.getContainer($trigger),
-                namespace = $container.attr("id"),
-                options = $trigger.data("mapal.tooltip");
-
-            tooltip.removeShowEvents($trigger);
-            // Wrap in a timeout to make sure this click is not used to
-            // trigger a hide as well.
-            setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
-
-            function ajax_show() {
-                $container.find(">div >*").css("opacity", 1);
-                tooltip.positionContainer($trigger, $container);
-            }
-
-            if (options.ajax) {
-                var source = $trigger.attr("href").split("#"),
-                    target_id = $container.find("progress").attr("id");
-                mapal.injection.load($trigger, source[0], target_id+":replace", source[1] || [],
-                        ajax_show, true);
-                // always load fresh tooltips
-                // delete options.ajax;
-                $trigger.data("mapal.tooltip", options);
-            }
-
-            tooltip.positionContainer($trigger, $container);
-            $container.css("visibility", "visible");
-
-            // reposition tooltip everytime we scroll or resize
-            $(window).on("scroll." + namespace + " resize." + namespace, function () {
-                 tooltip.positionContainer($trigger, $container);
-            });
-        },
-
-        hide: function(event) {
-            var $trigger = event.data,
-                $container = tooltip.getContainer($trigger),
-                namespace = $container.attr("id");
-            tooltip.removeHideEvents($trigger);
-            $container.css("visibility", "hidden");
-            $(window).off("." + namespace);
-            tooltip.setupShowEvents($trigger);
-        },
-
-        getContainer: function($trigger) {
-            var $container = $trigger.data("mapal.tooltip.container");
-            if ($container===undefined) {
-                $container=tooltip.createContainer($trigger);
-                $trigger.data("mapal.tooltip.container", $container);
-            }
-            return $container;
-        },
-
-        createContainer: function($trigger) {
-            var options = $trigger.data("mapal.tooltip"),
-                count = ++tooltip.count,
-                $content, $container;
-
-            $container = $("<div/>", {"class": "tooltip-container",
-                                     "id": "tooltip" + count});
-            $container.css("visibility", "hidden");
-            if (options.ajax) {
-                $content = $("<progress/>", {"id": "tooltip-load-" + count});
-            } else {
-                $content = $("<p/>").text(options.title);
-            }
-            $container.append(
-                $("<div/>").css("display", "block").append($content))
-                .append($("<span></span>", {"class": "pointer"}));
-            if (options.sticky && !options.noclose) {
-                $("<button/>", {"class": "closePanel"})
-                    .text("Close")
-                    .insertBefore($container.find("*"));
-            }
-            $("body").append($container);
-            return $container;
-        },
-
-        boundingBox: function($el) {
-            var box = $el.offset();
-            box.height = $el.height();
-            box.width = $el.width();
-            box.bottom = box.top + box.height;
-            box.right = box.left + box.width;
-            return box;
-        },
-
-        positionStatus: function($trigger, $container) {
-            var trigger_box = tooltip.boundingBox($trigger),
-                tooltip_box = tooltip.boundingBox($container),
-                $window = $(window),
-                window_width = $window.width(),
-                window_height = $window.height(),
-                trigger_center,
-                scroll = {},
-                space = {},
-                container_offset = {},
-                tip_offset = {},
-                cls = "";
-
-            scroll.top = $window.scrollTop();
-            scroll.left = $window.scrollLeft();
-            trigger_center = {top: trigger_box.top + (trigger_box.height/2),
-                              left: trigger_box.left + (trigger_box.width/2)};
-            space.top = trigger_box.top - scroll.top;
-            space.bottom = window_height - space.top - trigger_box.height;
-            space.left = trigger_box.left - scroll.left;
-            space.right = window_width - space.left - trigger_box.width;
-
-            return {space: space,
-                    trigger_center: trigger_center,
-                    trigger_box: trigger_box,
-                    tooltip_box: tooltip_box,
-                    scroll: scroll,
-                    window: {width: window_width, height: window_height}
-            };
-        },
-
-        // Help function to determine the best position for a tooltip.  Takes
-        // the positioning status (as generated by positionStatus) as input
-        // and returns a two-character position indiciator.
-        findBestPosition: function(status) {
-            var space = status.space,
-                 cls = "";
-
-            if (space.top > Math.max(space.right, space.bottom, space.left)) {
-                cls = "b";
-            } else if (space.right > Math.max(space.bottom, space.left, space.top)) {
-                cls = "l";
-            } else if (space.bottom > Math.max(space.left, space.top, space.right)) {
-                cls = "t";
-            } else {
-                cls = "r";
-            }
-
-            switch (cls[0]) {
-            case "t":
-            case "b":
-                if (Math.abs(space.left-space.right) < 20) {
-                    cls += "m";
-                } else if (space.left > space.right) {
-                    cls += "r";
-                } else {
-                    cls += "l";
-                }
-                break;
-            case "l":
-            case "r":
-                if (Math.abs(space.top-space.bottom) < 20) {
-                    cls += "m";
-                } else if (space.top > space.bottom) {
-                    cls += "b";
-                } else {
-                    cls += "t";
-                }
-            }
-            return cls;
-        },
-
-        isVisible: function(status, position) {
-            var space = status.space,
-                tooltip_box = status.tooltip_box;
-
-            switch (position[0]) {
-            case "t":
-                if (tooltip_box.height > space.bottom) {
-                    return false;
-                }
-                break;
-            case "r":
-                if (tooltip_box.width > space.left) {
-                    return false;
-                }
-                break;
-            case "b":
-                if (tooltip_box.height > space.top) {
-                    return false;
-                }
-                break;
-            case "l":
-                if (tooltip_box.width > space.right) {
-                    return false;
-                }
-                break;
-            default:
-                return false;
-            }
-
-            switch (position[0]) {
-            case "t":
-            case "b":
-                switch (position[1]) {
-                    case "l":
-                        if ((tooltip_box.width-20)>space.right) {
-                            return false;
-                        }
-                        break;
-                    case "m":
-                        if ((tooltip_box.width/2)>space.left || (tooltip_box.width/2)>space.right) {
-                            return false;
-                        }
-                        break;
-                    case "r":
-                        if ((tooltip_box.width-20)>space.left) {
-                            return false;
-                        }
-                        break;
-                    default:
-                        return false;
-                }
-                break;
-            case "l":
-            case "r":
-                switch (position[1]) {
-                    case "t":
-                        if ((tooltip_box.height-20)>space.bottom) {
-                            return false;
-                        }
-                        break;
-                    case "m":
-                        if ((tooltip_box.height/2)>space.top || (tooltip_box.height/2)>space.bottom) {
-                            return false;
-                        }
-                        break;
-                    case "b":
-                        if ((tooltip_box.height-20)>space.top) {
-                            return false;
-                        }
-                        break;
-                    default:
-                        return false;
-                }
-                break;
-            }
-            return true;
-        },
-
-        VALIDPOSITION: /^([lr][tmb]|[tb][lmr])$/,
-
-        positionContainer: function($trigger, $container) {
-            var status = tooltip.positionStatus($trigger, $container),
-                options = $trigger.data("mapal.tooltip"),
-                container_offset = {},
-                tip_offset = {},
-                position;
-
-            if (options.position) {
-                var positions = options.position.split("-"), i;
-                for (i=0; i<positions.length; i++) {
-                    if (!tooltip.VALIDPOSITION.test(positions[i])) {
-                        continue;
-                    }
-
-                    if (options.forcePosition || tooltip.isVisible(status, positions[i])) {
-                        position = positions[i];
-                        break;
-                    }
-                }
-            }
-
-            if (!position) {
-                position = tooltip.findBestPosition(status);
-            }
-
-            var trigger_box = status.trigger_box,
-                tooltip_box = status.tooltip_box,
-                trigger_center = status.trigger_center,
-                content_css = {"max-height": "", "max-width": ""},
-                $window = $(window),
-                bottom_row, x;
-
-            switch (position[0]) {
-            case "t":
-                container_offset.top = trigger_box.bottom + 20;
-                tip_offset.top = -23;
-                bottom_row = status.scroll.top + status.window.height,
-                content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
-                break;
-            case "l":
-                container_offset.left = trigger_box.right + 20;
-                tip_offset.left = -23;
-                x = status.window.width + status.scroll.left;
-                content_css["max-width"] = (x - container_offset.left - 30) + "px";
-                break;
-            case "b":
-                container_offset.top = trigger_box.top - tooltip_box.height + 10;
-                tip_offset.top = tooltip_box.height;
-                x = (status.scroll.top + 10) - container_offset.top;
-                if (x>0) {
-                    tip_offset.top -= x;
-                    content_css["max-height"] = (tooltip_box.height - x) + "px";
-                    container_offset.top += x;
-                }
-                break;
-            case "r":
-                container_offset.left = trigger_box.left - tooltip_box.width - 20;
-                tip_offset.left = tooltip_box.width;
-                break;
-            }
-
-            switch (position[0]) {
-            case "t":
-            case "b":
-                switch (position[1]) {
-                case "l":
-                    container_offset.left = trigger_center.left - 20;
-                    tip_offset.left = 0;
-                    break;
-                case "m":
-                    container_offset.left = trigger_center.left - (tooltip_box.width/2);
-                    tip_offset.left = tooltip_box.width/2 - 10;
-                    break;
-                case "r":
-                    container_offset.left = trigger_center.left + 29 - tooltip_box.width;
-                    tip_offset.left = tooltip_box.width - 20;
-                    break;
-                }
-                break;
-            case "l":
-            case "r":
-                switch (position[1]) {
-                    case "t":
-                        container_offset.top = trigger_center.top - 30;
-                        tip_offset.top = 0;
-                        break;
-                    case "m":
-                        container_offset.top = trigger_center.top - (tooltip_box.height/2);
-                        tip_offset.top = tooltip_box.height/2 - 10;
-                        break;
-                    case "b":
-                        container_offset.top = trigger_center.top + 20 - tooltip_box.height;
-                        tip_offset.top = tooltip_box.height - 20;
-                        break;
-                }
-                break;
-            }
-
-            $container.find("> div").css(content_css);
-            $container.attr("class", "tooltip-container " + position);
-            $container.css({
-                top: container_offset.top+"px",
-                left: container_offset.left+"px"
-            });
-            $container.find(".pointer").css({
-                top: tip_offset.top+"px",
-                left: tip_offset.left+"px"});
-        }
-    };
-
-    return tooltip;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ focus - Manage focus class on fieldsets
- *
- * Copyright 2012 Simplon B.V.
- */
-define('patterns/focus',['require'],function(require) {
-    var focus = {
-        init: function() {
-            $(document)
-               .on("focus", ":input", focus.onFocus)
-               .on("blur", ":input", focus.onBlur);
-        },
-
-        initContent: function(root) {
-            if ($(document.activeElement).is(":input")) {
-                focus._markFocus(document.activeElement);
-            }
-        },
-
-        _markFocus: function(el) {
-            var $el = $(el);
-            $el.closest("label").addClass("pt-focus");
-            $el.closest("fieldset").addClass("pt-focus");
-        },
-
-        onFocus: function(e) {
-            focus._markFocus(this);
-        },
-
-        onBlur: function(e) {
-            var $el = $(this);
-
-            $(document).one("mouseup keyup", function() {
-                $el.closest("label").removeClass("pt-focus");
-                $el.closest("fieldset").filter(":not(:has(:input:focus))").removeClass("pt-focus");
-            });
-        }
-    };
-
-    return focus;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ checkedflag - Add checked flag to checkbox labels
- *
- * Copyright 2012 Simplon B.V.
- */
-define('patterns/checkedflag',['require'],function(require) {
-    var checkedflag = {
-        init: function() {
-            $(document)
-               .on("change", "input[type=checkbox]", checkedflag.onChangeCheckbox)
-               .on("change", "input[type=radio]", checkedflag.onChangeRadio);
-        },
-
-        initContent: function(root) {
-             $("input[type=checkbox]", root).each(checkedflag.onChangeCheckbox);
-             $("input[type=radio]", root).each(checkedflag.onChangeRadio);
-        },
-
-        onChangeCheckbox: function(e) {
-            var $el = $(this),
-                $label = $el.closest("label");
-
-            if (this.checked) {
-                $label.removeClass("pt-unchecked").addClass("pt-checked");
-            } else {
-                $label.addClass("pt-unchecked").removeClass("pt-checked");
-            }
-        },
-
-        onChangeRadio: function(e) {
-            var $el = $(this),
-                $label = $el.closest("label"),
-                selector = "label:has(input[name=" + this.name + "]:not(:checked))",
-                $siblings = (this.form===null) ? $(selector) : $(selector, this.form);
-
-            $siblings.removeClass("pt-checked").addClass("pt-unchecked");
-            if (this.checked) {
-                $label.removeClass("pt-unchecked").addClass("pt-checked");
-            } else {
-                $label.addClass("pt-unchecked").removeClass("pt-checked");
-            }
-        }
-    };
-
-    return checkedflag;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/**
- * @license
- * Patterns @VERSION@ carousel
- *
- * Copyright 2012 Simplon B.V.
- */
-define('patterns/width',[
-    "jquery"
-], function($) {
-    var widthClasses = {};
-
-    var width = {
-        register: function(cls, minimum, maximum) {
-            widthClasses[cls] = { minimum: minimum,
-                                  maximum: maximum };
-        },
-
-        update: function() {
-            var width = $(window).width(),
-                $body = $("body"),
-                limits;
-
-            for (var cls in widthClasses) {
-                limits=widthClasses[cls];
-                if ((limits.minimum===null || limits.minimum<=width) && (limits.maximum===null || width<=limits.maximum)) {
-                    $body.addClass(cls);
-                } else {
-                    $body.removeClass(cls);
-                }
-            }
-        },
-
-
-        init: function() {
-            width.update();
-            $(window).bind("resize.width", width.update);
-        }
-    };
-
-    return width;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
 ;
 requirejs.config({
     paths: {
@@ -43250,7 +41124,6 @@ requirejs.config({
         //"modernizr": "3rdparty/modernizr-2.0.6",
         //"jquery.anythingslider": "3rdparty/jquery.anythingslider",
         //"jquery.autoSuggest": "3rdparty/jquery.autosuggest",
-        //"jquery.fancybox": "3rdparty/jquery.fancybox-1.3.4",
         //"jquery.form": "lib/jquery.form/jquery.form",
         //"jquery.placeholder": "3rdparty/jquery.placeholder",
         //"jquery.tools": "3rdparty/jquery.tools.min"
@@ -43282,86 +41155,44 @@ requirejs.config({
 
 
 define('main',[
-    'require',
     'jquery',
-    './3rdparty/prefixfree.min',
+    './registry',
+    './3rdparty/prefixfree',
     './3rdparty/modernizr-2.0.6',
-    './core/init',
-    './core/parser',
-    './core/store',
-    './patterns',
-    './patterns/transforms',
     './patterns/autofocus',
     './patterns/autoload',
     './patterns/autosubmit',
+    './patterns/autosuggest',
+    './patterns/breadcrumbs',
+    './patterns/carousel',
+    './patterns/checkedflag',
     './patterns/checklist',
+    './patterns/chosen',
+    './patterns/collapsible',
     './patterns/depends',
+    './patterns/edit-tinymce',
+    './patterns/expandable',
+    './patterns/floatingpanel',
+    './patterns/focus',
+    './patterns/fullcalendar',
+    './patterns/inject',
     './patterns/menu',
+    './patterns/modal',
+    './patterns/navigation',
+    './patterns/placeholder',
+    './patterns/setclass',
     './patterns/sorting',
     './patterns/switch',
-    './patterns/fancybox',
-    './patterns/floatingpanel',
-    './patterns/fullcalendar',
-    './patterns/old_modal',
-    './patterns/selfhealing',
-    './patterns/setclass',
     './patterns/toggle',
     './patterns/tooltip',
-    './patterns/focus',
-    './patterns/checkedflag',
-    './patterns/width'
-], function(require, $) {
-    var mapal = require('./core/init'),
-        width = require('./patterns/width');
-    width.register("narrow", 0, 780);
-    width.register("medium", 0, 1109);
-    width.register("wide", 1110, null);
-
-    // register our patterns
-    // rethink naming once all patterns are migrated to this style
-    mapal.passivePatterns.transforms = require('./patterns/transforms');
-    mapal.passivePatterns.autofocus = require('./patterns/autofocus');
-    mapal.passivePatterns.autoload = require('./patterns/autoload');
-    mapal.passivePatterns.autosubmit = require('./patterns/autosubmit');
-    mapal.passivePatterns.checklist = require('./patterns/checklist');
-    mapal.passivePatterns.depends = require('./patterns/depends');
-    mapal.passivePatterns.menu = require('./patterns/menu');
-    mapal.passivePatterns.sorting = require('./patterns/sorting');
-    mapal.passivePatterns.switcher = require('./patterns/switch');
-    mapal.passivePatterns.fullcalendar = require('./patterns/fullcalendar');
-    mapal.passivePatterns.toggle = require('./patterns/toggle');
-    mapal.passivePatterns.tooltip = require('./patterns/tooltip');
-    mapal.passivePatterns.focus = require('./patterns/focus');
-    mapal.passivePatterns.checkedflag = require('./patterns/checkedflag');
-
-    // Register as active pattern to prevent errors on clicks.
-    // XXX: hack, what does this do?
-    mapal.patterns.tooltip = { execute: function() {} };
-    mapal.patterns.fancybox = require('./patterns/fancybox');
-    mapal.patterns.floatingPanelContextual = require('./patterns/floatingpanel');
-    mapal.patterns.modal = require('./patterns/old_modal');
-    mapal.patterns.selfHealing = require('./patterns/selfhealing');
-    mapal.patterns.setclass = require('./patterns/setclass');
-    mapal.patterns.focus = require('./patterns/focus');
-    mapal.patterns.checkedflag = require('./patterns/checkedflag');
-    mapal.patterns.width = require('./patterns/width');
-
-    // new-style patterns
-    mapal.newstyle = require('./patterns');
-
-    $(document).on('inject.patterns.scan', function(ev, opts) {
-        mapal.initContent(ev.target, opts);
-        $(ev.target).trigger('patterns-inject-scanned', opts);
-    });
-
+    './patterns/validate',
+    './patterns/zoom'
+], function($, registry) {
     // wait for the DOM to be ready and initialize
     $(document).ready(function(){
-        mapal.init();
-        mapal.initContent(document.body);
-        $(document).trigger("setupFinished", document);
+        registry.scan(document.body);
     });
-
-    return mapal;
+    return registry;
 });
 
 require(["main"]);
