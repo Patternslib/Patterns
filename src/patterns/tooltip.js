@@ -103,8 +103,11 @@ define([
             if (options.ajax) {
                 var source = $trigger.attr("href").split("#"),
                     target_id = $container.find("progress").attr("id");
-                inject.execute($trigger, source[0], target_id+":replace", source[1] || [],
-                        ajax_show, true);
+                inject.execute([{
+                    url: source[0],
+                    source: '#' + source[1],
+                    target: '#' + target_id + "::element"
+                }]);
                 // always load fresh tooltips
                 // delete options.ajax;
                 $trigger.data("patterns.tooltip", options);
