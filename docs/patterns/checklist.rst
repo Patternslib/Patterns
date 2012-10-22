@@ -29,7 +29,7 @@ configurable. The default values are ``.functions .select-all`` and
 
 .. code-block:: html
 
-   <fieldset class="pat-checklist" data-pat-checklist=".selectAll; .deselectAll">
+   <fieldset class="pat-checklist" data-pat-checklist=".selectAll .deselectAll">
 
 or using the extended notation:
 
