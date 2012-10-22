@@ -25,30 +25,48 @@ describe("Core / Parser", function() {
     });
 
     describe("_parse", function() {
-        it("Positional argument", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("selector");
-            var opts = parser._parse(".MyClass");
-            expect(opts.selector).toBe(".MyClass");
+        describe("Shorthand notation", function() {
+            it("Single argument", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("selector");
+                var opts = parser._parse(".MyClass");
+                expect(opts.selector).toBe(".MyClass");
+            });
+
+            it("Ignore extra positional parameters", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("foo");
+                var opts = parser._parse("bar buz");
+                expect(opts.foo).toBe("bar");
+            });
+
         });
 
-        it("Empty first value value", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("first");
-            parser.add_argument("second");
-            var opts = parser._parse("; bar");
-            expect(opts.first).toBe(undefined);
-            expect(opts.second).toBe("bar");
+        describe("Extended notation" , function() {
+            it("Named argument", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("selector");
+                parser.add_argument("attr");
+                var opts = parser._parse("attr: class");
+                expect(opts.selector).toBe(undefined);
+                expect(opts.attr).toBe("class");
+            });
+
+            it("Colons in value", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("selector");
+                var opts = parser._parse("selector: nav:first");
+                expect(opts.selector).toBe("nav:first");
+            });
+
+            it("Ignore unknown named parameter", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("selector");
+                var opts = parser._parse("attr: class");
+                expect(opts.attr).toBeUndefined();
+            });
         });
 
-        it("Named argument", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("selector");
-            parser.add_argument("attr");
-            var opts = parser._parse("attr: class");
-            expect(opts.selector).toBe(undefined);
-            expect(opts.attr).toBe("class");
-        });
 
         it("camelCase parameter names", function() {
             var parser=new ArgumentParser();
@@ -57,26 +75,6 @@ describe("Core / Parser", function() {
             expect(opts.timeDelay).toBeDefined();
         });
 
-        it("Extra colons in named argument", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("selector");
-            var opts = parser._parse("selector: nav:first");
-            expect(opts.selector).toBe("nav:first");
-        });
-
-        it("Ignore extra positional parameters", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("foo");
-            var opts = parser._parse("bar; buz");
-            expect(opts.foo).toBe("bar");
-        });
-
-        it("Ignore unknown named parameter", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("selector");
-            var opts = parser._parse("attr: class");
-            expect(opts.attr).toBeUndefined();
-        });
     });
     
     describe("parse", function() {
