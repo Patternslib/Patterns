@@ -75,7 +75,7 @@ define([
         extractConfig: function($el, opts) {
             opts = opts || {};
 
-            var urlparts, cfgs;
+            var urlparts, cfgs, defaultSelector;
             // opts has priority, fallback to href/action
             opts.url = opts.url || $el.attr('href') || $el.attr('action') || "";
 
@@ -84,13 +84,17 @@ define([
             opts.url = urlparts[0];
 
             // if no selector, check for selector as part of original url
-            opts.selector = opts.selector || urlparts[1] && '#' + urlparts[1];
+            defaultSelector = urlparts[1] && '#' + urlparts[1];
 
             if (urlparts.length > 2) {
                 log.warn('Ignoring additional source ids:', urlparts.slice(2));
             }
 
-            return parser.parse($el, opts, true);
+            cfgs = parser.parse($el, opts, true);
+            cfgs.forEach(function(cfg) {
+                cfg.selector = cfg.selector || defaultSelector;
+            });
+            return cfgs;
         },
         // verify and post-process config
         verifyConfig: function(cfgs) {
