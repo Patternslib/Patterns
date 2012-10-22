@@ -40,6 +40,28 @@ describe("Core / Parser", function() {
                 expect(opts.foo).toBe("bar");
             });
 
+            it("Positive boolean value", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("foo", true);
+                var opts = parser._parse("foo");
+                expect(opts.foo).toBe(true);
+            });
+
+            it("Negative boolean value", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("foo", true);
+                var opts = parser._parse("no-foo");
+                expect(opts.foo).toBe(false);
+            });
+
+            it("Multiple boolean values", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("foo", false);
+                parser.add_argument("bar", true);
+                var opts = parser._parse("no-bar foo");
+                expect(opts.foo).toBe(true);
+                expect(opts.bar).toBe(false);
+            });
         });
 
         describe("Extended notation" , function() {
@@ -67,14 +89,12 @@ describe("Core / Parser", function() {
             });
         });
 
-
         it("camelCase parameter names", function() {
             var parser=new ArgumentParser();
             parser.add_argument("time-delay");
             var opts = parser._parse("15");
             expect(opts.timeDelay).toBeDefined();
         });
-
     });
     
     describe("parse", function() {
