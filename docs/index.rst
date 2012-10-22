@@ -50,10 +50,6 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
-   jsonly
-   autofocus
-   injection
-   depends
    panels
    patterns/index
    api/index
