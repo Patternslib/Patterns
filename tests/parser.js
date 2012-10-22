@@ -62,6 +62,24 @@ describe("Core / Parser", function() {
                 expect(opts.foo).toBe(true);
                 expect(opts.bar).toBe(false);
             });
+
+            it("Enum value", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("flavour", "cheese", ["cheese", "bacon"]);
+                var opts = parser._parse("bacon");
+                expect(opts.flavour).toBe("bacon");
+            });
+
+            it("Mix it all up", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("delay");
+                parser.add_argument("sticky", false);
+                parser.add_argument("flavour", "cheese", ["cheese", "bacon"]);
+                var opts = parser._parse("15 bacon sticky");
+                expect(opts.delay).toBe("15");
+                expect(opts.sticky).toBe(true);
+                expect(opts.flavour).toBe("bacon");
+            });
         });
 
         describe("Extended notation" , function() {
