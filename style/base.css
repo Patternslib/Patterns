@@ -342,9 +342,8 @@ h1 {
 
 h2 {
 	margin-top: 0;
-	font-weight: normal;
-	font-style: normal;
-	letter-spacing: 2px;
+	font: normal bold 38px/1.5 "Perpetua bold italic";
+	margin-bottom: 0;
 }
 
 h3 {
@@ -1166,11 +1165,9 @@ label.pt-unchecked {
 	top: 80px;
 	left: 60px;
 	color: white;
-	font-weight: bold;
-	font-size: 30px;
 	width: 70%;
-	line-height: 45px;
 	text-shadow:  0 2px 2px black;
+	font: bold 38px/45px "Perpetua bold italic";
 }
 
 @media (max-width: 767px) {
