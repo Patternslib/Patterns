@@ -207,7 +207,10 @@ define([
                         $source = $source.contents();
 
                     // perform injection
-                    _._inject($source, cfg.$target, cfg.action);
+                    var $injected = _._inject($source, cfg.$target, cfg.action);
+                    if (cfg["class"])
+                        $injected.addClass(cfg["class"]);
+                    $injected.trigger('patterns-injected');
                 });
 
                 if (cfgs.nexthref) {
@@ -233,24 +236,22 @@ define([
 
             switch (action) {
             case "content":
-                $target.each(function() {
+                return $target.map(function() {
                     var $ourSource = $source.clone();
                     $(this).empty().append($ourSource);
-                    $ourSource.trigger('patterns-injected');
+                    return $ourSource;
                 });
-                break;
             case "element":
-                $target.each(function() {
+                return $target.map(function() {
                     var $ourSource = $source.clone();
                     $(this).replaceWith($ourSource);
-                    $ourSource.trigger('patterns-injected');
+                    return $ourSource;
                 });
-                break;
             default:
-                $target.each(function() {
+                return $target.map(function() {
                     var $ourSource = $source.clone();
                     $(this)[method]($ourSource);
-                    $ourSource.trigger('patterns-injected');
+                    return $ourSource;
                 });
             }
         },
