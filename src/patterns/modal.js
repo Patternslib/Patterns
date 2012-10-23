@@ -2,117 +2,77 @@ define([
     'jquery',
     '../logging',
     "../core/parser",
-    '../lib/jquery.form/jquery.form'
-], function($, logging, Parser) {
-    var log = logging.getLogger('modal');
+    "../registry",
+    "./inject"
+], function($, logging, Parser, registry, inject) {
+    var log = logging.getLogger('modal'),
+        parser = new Parser("modal");
 
-    var init = function($el, opts) {
-        var $first = $el.children(':first'),
-            $rest = $el.children(':not(:first)'),
-            $header = $('<div class="header" />'),
-            $body = $('<div class="body" />'),
-            $form = $el.find('form'),
-            $closebutton = $(
-                '<button type="button" class="close-panel">Close</button>');
+    parser.add_argument("class");
 
-        opts = opts || {};
-        if (opts.$trigger) {
-            var parser = new Parser(),
-                trigger_opts;
-            parser.add_argument("class");
-            trigger_opts = parser.parse(opts.$trigger.data("modal"));
-            if (trigger_opts["class"]) {
-                $el.addClass(trigger_opts["class"]);
-            }
-        }
-        // separate into header and body
-        if ($rest.length === 0) {
-            $first.wrap($body);
-            $el.prepend($header);
-        } else {
-            $first.wrap($header);
-            $rest.wrapAll($body);
-        }
+    var modal = {
+        // div's are turned into modals
+        // links and forms inject modals
+        trigger: ".pat-modal",
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $el = $(this),
+                    cfg = parser.parse($el, opts);
 
-        // add close-panel button to header
-        $('.header', $el).append($closebutton);
-
-        // event handler to remove element
-        var remove = function(ev) {
-            if (ev) {
-                ev.preventDefault();
-            }
-
-            // the modal will be gone, but unhooked from document
-            $(document).off('.modal');
-            $el.hide();
-        };
-
-        // remove on ESC
-        $(document).on('keyup.remove.modal', function(ev) {
-            if (ev.which == 27) remove(ev);
-        });
-        // remove on close-panel button click
-        $el.find('.close-panel').on('click.remove.modal', remove);
-
-        // close dialog if form is submitted
-        // TODO: one might want to display errors on modal dialog
-        // instead of closing it, provide that option somehow
-        $form.submit(function (e) {
-            remove();
-        });
-
-
-        // ensure element is ajaxified
-        //var ajaxify = require('../patterns').ajaxify.init;
-        //ajaxify($el.find('form'));
-
-
-        // close forms that are successfully submitted or show error
-        // if ($form) {
-        //     // prepare ajax request and submit function
-        //     var params = {
-        //         data: { submit: "submit" },
-        //         error: function(jqXHR, textStatus, errorThrown) {
-        //             var msg = [jqXHR.status, textStatus,
-        //                        $form.attr('action')].join(' '),
-        //                 $errdiv = $el.find('.message.error');
-        //             if ($errdiv.length === 0) {
-        //                 $errdiv = $('<div class="message error"/>');
-        //                 $errdiv.prependTo($el.find('.body'));
-        //             }
-        //             $el.removeClass('ajax-in-progress');
-        //             $errdiv.html(msg);
-        //             console.error(jqXHR, textStatus, errorThrown);
-        //         },
-        //         success: function(data, textStatus, jqXHR) {
-        //             $el.remove();
-        //         }
-        //     };
-        //     var submit = function(ev) {
-        //         $el.addClass('ajax-in-progress');
-        //         ev.preventDefault();
-        //         $form.ajaxSubmit(params);
-        //     };
-        //     $form.find('[type=submit]').on('click', submit);
-        //     $(document).on('keyup.submit.modal', function(ev) {
-        //         if (ev.which == 13) submit(ev);
-        //     });
-        // }
-
-        return $el;
-    };
-
-    var pattern = {
-        markup_trigger: "div.modal",
-        initialised_class: "modal",
-        default_opts: {
-            shown: false
+                if ($el.is('div'))
+                    modal._init_div($el, cfg);
+                else
+                    modal._init_inject($el, cfg);
+            });
         },
-        init: init
-    };
+        _init_inject: function($el, cfg) {
+            var opts = {
+                target: '#modal',
+                "class": "pat-modal" + (cfg["class"] ? " " + cfg["class"] : "")
+            };
+            inject.init($el, opts);
+        },
+        _init_div: function($el, cfg) {
+            var $first = $el.children(':first'),
+                $rest = $el.children(':not(:first)'),
+                $header = $('<div class="header" />'),
+                $body = $('<div class="body" />'),
+                $form = $el.find('form'),
+                $closebutton = $(
+                    '<button type="button" class="close-panel">Close</button>');
 
-    return pattern;
+            // separate into header and body
+            if ($rest.length === 0) {
+                $first.wrap($body);
+                $el.prepend($header);
+            } else {
+                $first.wrap($header);
+                $rest.wrapAll($body);
+            }
+
+            // add close-panel button to header
+            $('.header', $el).append($closebutton);
+
+            // event handler to remove element -- make sure the form
+            // is submit and the response processed before calling this.
+            var remove = function(ev) {
+                if (ev) {
+                    ev.preventDefault();
+                }
+                $(document).off('.pat-modal');
+                $el.remove();
+            };
+
+            // remove on ESC
+            $(document).on('keyup.pat-modal', function(ev) {
+                if (ev.which == 27) remove(ev);
+            });
+            // remove on close-panel button click
+            $el.find('.close-panel').on('click.pat-modal', remove);
+        }
+    };
+    registry.register(modal);
+    return modal;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
