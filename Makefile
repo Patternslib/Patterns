@@ -43,4 +43,7 @@ upgrade-rjs:
 
 upgrade-requirejs: upgrade-rjs upgrade-require-jquery
 
+localize-demo-images:
+	tools/localize-demo-images.sh
+
 .PHONY: all clean check upgrade-require-jquery upgrade-rjs upgrade-requirejs
