@@ -268,7 +268,6 @@ body:before {
 
 #site-header {
 	width: 100%;
-	border-top: 2px solid #d5cdc9;
 	position: relative;
 	max-width: 910px;
 	overflow: hidden;
