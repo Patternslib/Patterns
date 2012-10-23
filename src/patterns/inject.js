@@ -26,6 +26,7 @@ define([
     // unknown parameters and expand/collapsible need to pass the url
     // to us
     parser.add_argument('url');
+    parser.add_argument('class');
 
     var _ = {
         name: "inject",

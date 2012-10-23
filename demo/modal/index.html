@@ -3,35 +3,31 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
-    <link rel="stylesheet" href="../base.css" type="text/css">
+		<link rel="stylesheet" href="../base.css" type="text/css">
 		<link rel="stylesheet" href="modal.css" type="text/css">
 		<script data-main="../../src/main" src="../../src/3rdparty/require-jquery.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<h1>Page Content</h1>
-		
-		<form action="modal-sources.html#modal1" class="inject modal">
+		<form action="modal-sources.html#modal1" class="pat-modal">
 			<fieldset>
 				<button type="submit">Inject modal via form</button>
 			</fieldset>
 		</form>
 		<p>
-		<a href="modal-sources.html" data-modal="class:HUGE" class="inject modal">Modal with an extra class 'Huge' on the modal panel.</a>
+			<a href="modal-sources.html#h3" class="pat-modal">Modal that injects only an H3.</a>
 		</p>
 		<p>
-		<a href="modal-sources.html" data-inject="h3" class="modal">Modal that injects an H3.</a>
+			<a href="modal-sources.html" class="pat-modal" data-pat-modal="class: HUGE">Modal with an extra class 'HUGE' on the modal panel.</a>
 		</p>
-		<p>
-			Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-		</p>
-		<p>
-			Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
-		</p>
-		<p>
-			Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-		</p>
-		<p>
-			Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
-		</p>
+		<div id="modal-on-load" class="pat-modal">
+			<h3>A modal that opens when the page is loaded/injected.</h3>
+			<p>
+				Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+			</p>
+			<p>
+				Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+			</p>
+		</div>
 	</body>
 </html>
