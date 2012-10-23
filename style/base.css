@@ -46,6 +46,11 @@ body:before {
 	background-size: 100% auto;
 }
 
+@font-face {
+	font-family: "Perpetua bold italic";
+	src: url("fonts/Perpetua Bold Italic.ttf")
+}
+
 /* @group News */
 
 #news .introduction {
@@ -412,17 +417,16 @@ ol.usps li p:before {
 	margin-left: -39px;
 	text-align: center;
 	vertical-align: middle;
-	background-color: orange;
+	background-color: white;
 	border-radius: 50%;
-	color: white;
-	font: bold 38px/74px "Lucida Grande", Lucida, Verdana, sans-serif;
-	border: 4px solid #de8d00;
-	box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	border: 3px dashed #5a5a5a;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
 	text-shadow: rgba(0,0,0,0.5) 0 -1px 0;
 	
 	counter-increment: steps 1;  
     content: counter(steps);
 	left: 50%;
+	font: bold 38px/77px "Perpetua bold italic";
 }
 
 ol.usps li:first-child:before {
