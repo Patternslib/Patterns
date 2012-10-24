@@ -31,11 +31,12 @@ body {
 	width: auto;
 	position: relative;
 	padding-top: 0;
-	background-image: url(texture-light-grain.png);
+	/*background-image: url(texture-light-grain.png);*/
 	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
 	padding-left: 0;
 	margin: 0;
+	background-color: #fff;
 }
 
 body:before {
@@ -146,7 +147,7 @@ body>section {
 	clear: both;
 	margin-bottom: 0;
 	position: relative;
-	background-image: url(texture-light-grain.png);
+	/*background-image: url(texture-light-grain.png);*/
 	padding: 30px 20px 0;
 	max-width: 870px;
 	margin-left: auto;
