@@ -106,7 +106,7 @@ Sometimes you want to have several items with a similar configuration. To
 support this you can use set parameters at a parent element so you do not
 need to repeat them everywhere.
 
-.. code-block:: html
+.. code-block::
 
    <nav data-pat-inject="source: #main; target: #content">
      <a class="pat-inject" href="status.html">Status</a>
