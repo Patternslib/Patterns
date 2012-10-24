@@ -15,7 +15,8 @@ define([
     var log = logging.getLogger('inject'),
         parser = new Parser("inject");
 
-    parser.add_argument('selector', 'body');
+    //parser.add_argument('selector', 'body');
+    parser.add_argument('selector');
     //XXX: (yet) unsupported: parser.add_argument('target', '$selector');
     parser.add_argument('target');
     parser.add_argument('type');
@@ -85,7 +86,7 @@ define([
             opts.url = urlparts[0];
 
             // if no selector, check for selector as part of original url
-            defaultSelector = urlparts[1] && '#' + urlparts[1];
+            defaultSelector = urlparts[1] && '#' + urlparts[1] || 'body';
 
             if (urlparts.length > 2) {
                 log.warn('Ignoring additional source ids:', urlparts.slice(2));
