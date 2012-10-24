@@ -40,10 +40,11 @@ define([
                     '<button type="button" class="close-panel">Close</button>'
                 ).appendTo($header);
 
-            $el.contents(':last, :not(:first)')
+            // We cannot handle text nodes here
+            $el.children(':last, :not(:first)')
                 .wrapAll('<div class="panel-content" />');
             $('.panel-content', $el).before($header);
-            $el.contents(':first:not(.header)').prependTo($header);
+            $el.children(':first:not(.header)').prependTo($header);
 
             // event handlers remove modal - first arg to bind is ``this``
             $(document).on('click.pat-modal', '.close-panel',
