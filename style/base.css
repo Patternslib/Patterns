@@ -324,7 +324,7 @@ body:before {
 	position: absolute;
 	left: 50%;
 	margin-left: -50px;
-	top: 300px;
+	top: 270px;
 	padding-left: 10px;
 }
 
@@ -1231,7 +1231,7 @@ label.pt-unchecked {
 	position: absolute;
 	z-index: 10;
 	margin: 0;
-	top: 195px;
+	top: 135px;
 	color: black;
 	width: 56%;
 	text-shadow: white 0 1px 0;
