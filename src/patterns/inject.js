@@ -16,10 +16,12 @@ define([
         parser = new Parser("inject");
 
     parser.add_argument('selector', 'body');
-    parser.add_argument('target', '$selector');
+    //XXX: (yet) unsupported: parser.add_argument('target', '$selector');
+    parser.add_argument('target');
     parser.add_argument('type');
     parser.add_argument('next-href');
-    parser.add_argument('source', '$selector');
+    //XXX: (yet) unsupported: parser.add_argument('source', '$selector');
+    parser.add_argument('source');
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
@@ -107,6 +109,10 @@ define([
                     log.error('Unsupported different urls for multi-inject');
                     return false;
                 }
+
+                // defaults
+                cfg.source = cfg.source || cfg.selector;
+                cfg.target = cfg.target || cfg.selector;
 
                 if (!_._extractModifiers(cfg))
                     return false;
