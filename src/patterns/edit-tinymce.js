@@ -3,7 +3,7 @@ define([
     '../lib/ajax',
     '../logging',
     '../registry',
-    '../../lib/tiny_mce/tiny_mce_src'
+    'tinymce'
 ], function($, ajax, logging, registry) {
     var log = logging.getLogger('editTinyMCE');
 
