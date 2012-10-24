@@ -14,7 +14,7 @@ bundles/require-patterns.js:
 	node lib/r.js -o src/app.build.js out=$@ \
 		name=3rdparty/almond include=main wrap=true optimize=none
 
-bundles/require-patterns.min.js: 
+bundles/require-patterns.min.js:
 	node lib/r.js -o src/app.build.js out=$@ \
 		name=3rdparty/almond include=main wrap=true optimize=uglify
 
