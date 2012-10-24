@@ -4,8 +4,8 @@
 // main.js/app.build.js
 requirejs.config({
     paths: {
-        jquery: "3rdparty/require-jquery"
-        //tinymce: "lib/tiny_mce/tiny_mce_src"
+        jquery: "3rdparty/require-jquery",
+        tinymce: "../lib/tiny_mce/tiny_mce_src"
         //
         // XXX: we do not have a nested config solution yet. Until
         // then we stick with require-jquery and relative dependency
