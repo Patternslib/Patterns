@@ -1,3 +1,4 @@
+RJS		= r.js
 PHANTOMJS	?= phantomjs
 SOURCES		= src/lib/jquery.form $(wildcard src/*.js) $(wildcard src/*/*.js)
 TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/require-patterns.js bundles/require-patterns.min.js
@@ -5,17 +6,17 @@ TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/require-patterns.
 all:: $(TARGETS)
 
 bundles/patterns.js: $(SOURCES)
-	node lib/r.js -o src/app.build.js out=$@ optimize=none
+	node $(RJS) -o src/app.build.js out=$@ optimize=none
 
 bundles/patterns.min.js: $(SOURCES)
-	node lib/r.js -o src/app.build.js out=$@ optimize=uglify
+	node $(RJS) -o src/app.build.js out=$@ optimize=uglify
 
 bundles/require-patterns.js: 
-	node lib/r.js -o src/app.build.js out=$@ \
+	node $(RJS) -o src/app.build.js out=$@ \
 		name=3rdparty/almond include=main wrap=true optimize=none
 
 bundles/require-patterns.min.js:
-	node lib/r.js -o src/app.build.js out=$@ \
+	node $(RJS) -o src/app.build.js out=$@ \
 		name=3rdparty/almond include=main wrap=true optimize=uglify
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
@@ -39,7 +40,7 @@ upgrade-require-jquery:
 	rm src/3rdparty/require-jquery.zip
 
 upgrade-rjs:
-	curl -s -o lib/r.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/r.js/s/.*href="\([^"]*\).*/\1/p')
+	curl -s -o $(RJS) $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/r.js/s/.*href="\([^"]*\).*/\1/p')
 
 upgrade-requirejs: upgrade-rjs upgrade-require-jquery
 
