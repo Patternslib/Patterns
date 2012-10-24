@@ -39998,8 +39998,7 @@ define('patterns/zoom',[
 // main.js/app.build.js
 requirejs.config({
     paths: {
-        jquery: "3rdparty/require-jquery",
-        tinymce: "empty:"
+        jquery: "3rdparty/require-jquery"
         //tinymce: "lib/tiny_mce/tiny_mce_src"
         //
         // XXX: we do not have a nested config solution yet. Until
