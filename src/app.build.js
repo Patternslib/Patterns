@@ -6,7 +6,10 @@
     optimize: "none",
 
     name: "main",
-    exclude: ["jquery"],
+    paths: {
+        jquery: "empty:",
+        tinymce: "../lib/tiny_mce/tiny_mce_src"
+    },
     insertRequire: ["main"]
 })
 
