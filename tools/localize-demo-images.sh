@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -z "$(git status --porcelain)" ]; then
+if [ -z "$(git status --porcelain --untracked-files=no)" ]; then
     FILES=$(grep -lir 'src="https\?://.*\.\(jpg\|png\)"' demo)
     for FILE in $FILES; do
         IMGDIR=$(dirname "$FILE")/images
