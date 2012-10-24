@@ -46,7 +46,7 @@ body:before {
 	right: 0;
 	left: 0;
 	width: 100%;
-	height: 450px;
+	height: 449px;
 	display: block;
 	background-size: 100% auto;
 	border-bottom: 30px solid #8A637A;
@@ -61,6 +61,7 @@ background: -ms-linear-gradient(top, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 
 background: linear-gradient(to bottom, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2d3b6', endColorstr='#f7efea',GradientType=0 );
 	z-index: 1;
+	border-top: 1px solid #bfb197;
 }
 
 body:after {
