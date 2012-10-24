@@ -16,6 +16,7 @@ if [ -z "$(git status --porcelain --untracked-files=no)" ]; then
                i=$(( $i + 1 ))
             done
 
+            echo $URL
             curl -o "$IMGDIR/$IMG" "$URL" && [ -f "$IMGDIR/$IMG" ] || {
                 echo "$URL for $FILE couldn't be fetched"
                 continue
