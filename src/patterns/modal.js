@@ -39,8 +39,9 @@ define([
                     '<button type="button" class="close-panel">Close</button>'
                 ).appendTo($header);
 
-            $el.children(':last, :not(:first)').wrapAll('<div class="body" />');
-            $('.body', $el).before($header);
+            $el.children(':last, :not(:first)')
+                .wrapAll('<div class="panel-content" />');
+            $('.panel-content', $el).before($header);
             $el.children(':first:not(.header)').prependTo($header);
 
             // event handlers remove modal - first arg to bind is ``this``
