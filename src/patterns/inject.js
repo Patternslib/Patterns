@@ -125,7 +125,7 @@ define([
                         log.error('Need target selector', cfg);
                         return false;
                     }
-                    return _._createTarget(cfg.target);
+                    cfg.$target = _._createTarget(cfg.target);
                 }
                 return true;
             });
