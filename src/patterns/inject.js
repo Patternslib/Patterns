@@ -190,9 +190,6 @@ define([
             // possibility for spinners on targets
             cfgs.forEach(function(cfg) {
                 cfg.$target.addClass(cfg.targetLoadClasses);
-                cfg.$target.on('patterns-injected', function() {
-                    $(this).removeClass(cfg.targetLoadClasses);
-                });
             });
 
             var onSuccess = function(data, status, jqxhr) {
@@ -212,10 +209,13 @@ define([
                         var $target = $(this),
                             $src = $source.clone();
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
-                            if (cfg.sourceMod === "content")
+                            if (cfg.sourceMod === "content") {
                                 $target.addClass(cfg["class"]);
-                            else
+                                $target.trigger('patterns-injected', cfg);
+                            } else {
                                 $src.addClass(cfg["class"]);
+                                $src.trigger('patterns-injected', cfg);
+                            }
                         }
                     });
                 });
@@ -298,6 +298,11 @@ define([
             return $html;
         }
     };
+
+    $(document).on("patterns-injected", function(ev, cfg) {
+        cfg.$target.removeClass(cfg.targetLoadClasses);
+    });
+
     registry.register(_);
     return _;
 });
