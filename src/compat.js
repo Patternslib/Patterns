@@ -388,7 +388,6 @@ define(function() {
 
 
     // source: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind
-    // Needed for tests only
     if (!Function.prototype.bind) {
       Function.prototype.bind = function (oThis) {
         if (typeof this !== "function") {
