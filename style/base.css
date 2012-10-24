@@ -329,14 +329,24 @@ body:before {
 }
 
 #site-header .acquire a {
-	float: left;
 	margin-right: 40px;
+	display: inline-block;
+}
+
+#site-header .acquire a img {
+	max-width: 140px;
 }
 
 @media (max-width: 570px) {
 
 #site-header {
-	background-size: 260px;
+	background-size: auto 50%;
+}
+
+#site-header .acquire {
+	margin-left: 0;
+	text-align: center;
+	top: 220px;
 }
 }
 
