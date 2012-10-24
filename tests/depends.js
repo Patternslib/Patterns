@@ -287,7 +287,7 @@ describe("depends-pattern", function() {
         });
 
         it("Equality", function() {
-            var command = pattern.parse($("<div data-pat-depends='master equals nero'/>"));
+            var command = pattern.parse($("<div data-pat-depends='master; equals; nero'/>"));
             expect(command.on.length).toBe(1);
             expect(command.on[0].name).toBe("master");
             expect(command.on[0].operator).toBe("equals");

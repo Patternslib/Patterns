@@ -7,7 +7,7 @@ attribute to the triggering element.
 
 .. code-block:: html
 
-   <button class="pat-switch" data-pat-switch="#status off on">Power on</button>
+   <button class="pat-switch" data-pat-switch="#status; off; on">Power on</button>
    <span id="status" class="off"/>
 
 If a user clicks on the *Power on* button the ``off`` class will be removed and
@@ -28,7 +28,7 @@ wildcard (the ``*`` character) in the class name.
 
 .. code-block:: html
 
-   <button class="pat-switch" data-pat-switch=".toolbar icon-*">Remove icons</button>
+   <button class="pat-switch" data-pat-switch=".toolbar; icon-*">Remove icons</button>
 
 Multiple changes can be provided if desired by separating them using the ``&&``
 separator. The example below uses this to remove all icon classes in both the
@@ -36,7 +36,7 @@ toolbar and the navigation tree.
 
 .. code-block:: html
 
-   <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree; icon-*">Remove icons</button>
+   <button class="pat-switch" data-pat-switch=".toolbar; icon-* && .navtree; icon-*">Remove icons</button>
 
 
 Javascript API

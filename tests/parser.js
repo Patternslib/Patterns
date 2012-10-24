@@ -25,86 +25,29 @@ describe("Core / Parser", function() {
     });
 
     describe("_parse", function() {
-        describe("Shorthand notation", function() {
-            it("Single argument", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("selector");
-                var opts = parser._parse(".MyClass");
-                expect(opts.selector).toBe(".MyClass");
-            });
-
-            it("Ignore extra positional parameters", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("foo");
-                var opts = parser._parse("bar buz");
-                expect(opts.foo).toBe("bar");
-            });
-
-            it("Positive boolean value", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("foo", true);
-                var opts = parser._parse("foo");
-                expect(opts.foo).toBe(true);
-            });
-
-            it("Negative boolean value", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("foo", true);
-                var opts = parser._parse("no-foo");
-                expect(opts.foo).toBe(false);
-            });
-
-            it("Multiple boolean values", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("foo", false);
-                parser.add_argument("bar", true);
-                var opts = parser._parse("no-bar foo");
-                expect(opts.foo).toBe(true);
-                expect(opts.bar).toBe(false);
-            });
-
-            it("Enum value", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("flavour", "cheese", ["cheese", "bacon"]);
-                var opts = parser._parse("bacon");
-                expect(opts.flavour).toBe("bacon");
-            });
-
-            it("Mix it all up", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("delay");
-                parser.add_argument("sticky", false);
-                parser.add_argument("flavour", "cheese", ["cheese", "bacon"]);
-                var opts = parser._parse("15 bacon sticky");
-                expect(opts.delay).toBe("15");
-                expect(opts.sticky).toBe(true);
-                expect(opts.flavour).toBe("bacon");
-            });
+        it("Positional argument", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("selector");
+            var opts = parser._parse(".MyClass");
+            expect(opts.selector).toBe(".MyClass");
         });
 
-        describe("Extended notation" , function() {
-            it("Named argument", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("selector");
-                parser.add_argument("attr");
-                var opts = parser._parse("attr: class");
-                expect(opts.selector).toBe(undefined);
-                expect(opts.attr).toBe("class");
-            });
+        it("Empty first value value", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("first");
+            parser.add_argument("second");
+            var opts = parser._parse("; bar");
+            expect(opts.first).toBe(undefined);
+            expect(opts.second).toBe("bar");
+        });
 
-            it("Colons in value", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("selector");
-                var opts = parser._parse("selector: nav:first");
-                expect(opts.selector).toBe("nav:first");
-            });
-
-            it("Ignore unknown named parameter", function() {
-                var parser=new ArgumentParser();
-                parser.add_argument("selector");
-                var opts = parser._parse("attr: class");
-                expect(opts.attr).toBeUndefined();
-            });
+        it("Named argument", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("selector");
+            parser.add_argument("attr");
+            var opts = parser._parse("attr: class");
+            expect(opts.selector).toBe(undefined);
+            expect(opts.attr).toBe("class");
         });
 
         it("camelCase parameter names", function() {
@@ -112,6 +55,27 @@ describe("Core / Parser", function() {
             parser.add_argument("time-delay");
             var opts = parser._parse("15");
             expect(opts.timeDelay).toBeDefined();
+        });
+
+        it("Extra colons in named argument", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("selector");
+            var opts = parser._parse("selector: nav:first");
+            expect(opts.selector).toBe("nav:first");
+        });
+
+        it("Ignore extra positional parameters", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("foo");
+            var opts = parser._parse("bar; buz");
+            expect(opts.foo).toBe("bar");
+        });
+
+        it("Ignore unknown named parameter", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("selector");
+            var opts = parser._parse("attr: class");
+            expect(opts.attr).toBeUndefined();
         });
     });
     

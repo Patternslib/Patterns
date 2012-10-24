@@ -21,13 +21,13 @@
 
 			<fieldset class="pat-depends" data-pat-depends="custom">
 				<legend>Extra toppings</legend>
-				<label data-pat-depends="flavour notEquals hawaii"><input type="checkbox" name="pineapple"/> Pineapple</label>
+				<label data-pat-depends="flavour; notEquals; hawaii;"><input type="checkbox" name="pineapple"/> Pineapple</label>
 				<label><input type="checkbox" name="gorgonzola"/> Gorgonzola</label>
 				<label><input type="checkbox" name="peanuts"/> Peanuts</label>
 				<label><input type="checkbox" name="redonion"/> Red onions</label>
 			</fieldset>
 		</form>
 
-		<strong class="pat-depends" data-pat-depends="flavour equals bacon">This pizza is bad for your health!</strong>
+		<strong class="pat-depends" data-pat-depends="flavour; equals; bacon">This pizza is bad for your health!</strong>
 	</body>
 </html>

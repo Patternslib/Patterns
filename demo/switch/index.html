@@ -10,17 +10,17 @@
 	<body>
 		<h1>Switch classes test</h1>
 		<h2>Selectively remove class</h2>
-		<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Blue ; add: mode-Green" title="Make all green">Green</button>
-		<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Green ; add: mode-Blue" title="Make all blue">Blue</button>
+		<button class="pat-switch" data-pat-switch="ul.test1 li; mode-Blue ; mode-Green" title="Make all green">Green</button>
+		<button class="pat-switch" data-pat-switch="ul.test1 li; mode-Green ; mode-Blue" title="Make all blue">Blue</button>
 		<ul class="test1">
 			<li class="foo mode-Blue bar">Entry 1</li>
 			<li class="mode-Green">Entry 2</li>
 			<li class="mode-Red">Stays red</li>
 		</ul>
 		<h2>Remove using prefix</h2>
-		<button class="pat-switch" data-pat-switch="selector: ul.test2 li; remove: mode-* ; add: mode-Red" title="Make all red">Red</button>
-		<button class="pat-switch" data-pat-switch="selector: ul.test2 li; remove: mode-* ; add: mode-Green" title="Make all green">Green</button>
-		<button class="pat-switch" data-pat-switch="selector: ul.test2 li; remove: mode-* ; add: mode-Blue" title="Make all blue">Blue</button>
+		<button class="pat-switch" data-pat-switch="ul.test2 li; mode-* ; mode-Red" title="Make all red">Red</button>
+		<button class="pat-switch" data-pat-switch="ul.test2 li; mode-* ; mode-Green" title="Make all green">Green</button>
+		<button class="pat-switch" data-pat-switch="ul.test2 li; mode-* ; mode-Blue" title="Make all blue">Blue</button>
 		<ul class="test2">
 			<li class="foo mode-Blue bar">Entry 1</li>
 			<li class="mode-Green">Entry 2</li>

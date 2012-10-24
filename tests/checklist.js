@@ -21,7 +21,7 @@ describe("checklist-pattern", function() {
             });
 
             it("Parse options from DOM", function() {
-                $("#lab").html("<div data-pat-checklist='.one .two'></div>");
+                $("#lab").html("<div data-pat-checklist='.one; .two'></div>");
                 $("#lab div").patternChecklist();
                 var $trigger = $("#lab div");
                 expect($trigger.data("patternChecklist")).toEqual({select: ".one", deselect: ".two"});
