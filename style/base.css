@@ -22,6 +22,11 @@
 
 @import url("../demo/tooltip/tooltip.css");
 
+@font-face {
+	font-family: "Perpetua bold italic";
+	src: url("fonts/Perpetua Bold Italic.ttf")
+}
+
 body {
 	width: auto;
 	position: relative;
@@ -40,16 +45,45 @@ body:before {
 	right: 0;
 	left: 0;
 	width: 100%;
-	height: 800px;
+	height: 450px;
 	display: block;
-	background: url(hero-image.png) no-repeat;
 	background-size: 100% auto;
+	border-bottom: 30px solid #8A637A;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	
+background: rgb(226,211,182); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(226,211,182,1) 0%, rgba(247,239,234,1) 99%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(226,211,182,1)), color-stop(99%,rgba(247,239,234,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* IE10+ */
+background: linear-gradient(to bottom, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2d3b6', endColorstr='#f7efea',GradientType=0 );
+	z-index: 1;
 }
 
-@font-face {
-	font-family: "Perpetua bold italic";
-	src: url("fonts/Perpetua Bold Italic.ttf")
+body:after {
+	content: url(stamps-and-stuff.png);
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
 }
+
+/* @group Logo */
+
+#logo {
+	position: absolute;
+	left: 50%;
+	top: -15px;
+	margin-left: -50px;
+	width: 100px;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2)
+}
+
+
+
+/* @end */
 
 /* @group News */
 
@@ -227,24 +261,29 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 	height: 49px;
 }
 
-#download img {
+.clone-patterns-large img {
 
 }
 
-#download a {
+a.download-patterns-large,
+a.clone-patterns-large {
 	text-decoration: none;
 }
 
-#download a:hover {
+.download-patterns-large a:hover,
+.clone-patterns-large a :hover {
 	text-decoration: underline;
 }
 
-#download em.label {
+.download-patterns-large em.label {
 	clear: left;
 	display: block;
-	font-weight: normal;
+	font-weight: bold;
+	color: #838383;
+	font-size: 12px;
+	text-align: center;
+	padding-top: 8px;
 	font-style: normal;
-	color: #565656;
 }
 
 
@@ -268,11 +307,36 @@ body:before {
 
 #site-header {
 	width: 100%;
-	position: relative;
 	max-width: 910px;
-	overflow: hidden;
-	margin: 0 auto;
+	margin: 30px auto 0;
 	z-index: 10;
+	height: 480px;
+	background: url(2-ladies.png) no-repeat 0 bottom;
+	background-size: 42%;
+	position: relative;
+}
+
+#site-header .hero-unit {
+}
+
+#site-header .acquire {
+	position: absolute;
+	left: 50%;
+	margin-left: -50px;
+	top: 300px;
+	padding-left: 10px;
+}
+
+#site-header .acquire a {
+	float: left;
+	margin-right: 40px;
+}
+
+@media (max-width: 570px) {
+
+#site-header {
+	background-size: 260px;
+}
 }
 
 
@@ -289,16 +353,14 @@ body:before {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(0,0,0,0.6);
-	border-top: 2px solid rgba(254,255,255,0.5);
 	line-height: 50px;
-	font-size: 18px;
+	font-size: 16px;
+	background-color: #8A637A;
 }
 
 #global-nav a
  {
 	text-decoration: none;
-	float: left;
 	text-align: center;
 	padding-left: 30px;
 	padding-right: 30px;
@@ -320,6 +382,13 @@ body:before {
 	bottom: 10px;
 	left: 10px;
 }*/
+
+@media (max-width: 767px) {
+
+#global-nav {
+	text-align: center;
+}
+}
 
 /* @end */
 
@@ -1161,12 +1230,13 @@ label.pt-unchecked {
 	position: absolute;
 	z-index: 10;
 	margin: 0;
-	top: 80px;
-	left: 60px;
-	color: white;
-	width: 70%;
-	text-shadow:  0 2px 2px black;
-	font: bold 38px/45px "Perpetua bold italic";
+	top: 195px;
+	color: black;
+	width: 56%;
+	text-shadow: white 0 1px 0;
+	right: 0;
+	line-height: 2;
+	font-size: 22px;
 }
 
 @media (max-width: 767px) {
@@ -1178,7 +1248,9 @@ label.pt-unchecked {
 .hero-unit blockquote {
 	font-size: 16px;
 	line-height: 30px;
-	top: 50px;
+	top: 140px;
+	left: 30px;
+	width: 100%;
 }
 }
 
