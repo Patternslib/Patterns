@@ -127,9 +127,7 @@ in the ``data-pat-carousel`` attribute.
 +------------------------+---------+-----------------------------------------+
    
 ..
-
-  Crazy cornelis proposal, commented out for now
-
+  cornelis proposal, commented out for now
   +---------------------+------------+----------+----------------------------------------------------+
   | Setting             | Values     | Default  | Description                                        |
   +=====================+============+==========+====================================================+
@@ -166,4 +164,3 @@ in the ``data-pat-carousel`` attribute.
   | end                 | infite     |          | With 'infinite' the carousel wel rotate            |
   |                     |            |          | back to the first slide after the last             |
   +---------------------+------------+----------+----------------------------------------------------+
-  
