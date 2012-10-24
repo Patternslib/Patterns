@@ -46,6 +46,10 @@ define([
             }
         },
         register: function(pattern) {
+            if (!pattern.name) {
+                log.error("Pattern lacks name:", pattern);
+                return false;
+            }
             if (registry.patterns[pattern.name]) {
                 log.error("Already have a pattern called: " + pattern.name);
                 return false;
