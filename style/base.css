@@ -324,7 +324,7 @@ body:before {
 	position: absolute;
 	left: 50%;
 	margin-left: -50px;
-	top: 270px;
+	top: 255px;
 	padding-left: 10px;
 }
 
@@ -1246,8 +1246,9 @@ label.pt-unchecked {
 	width: 56%;
 	text-shadow: white 0 1px 0;
 	right: 0;
-	line-height: 2;
+	line-height: 1.8;
 	font-size: 22px;
+	opacity: 0.66;
 }
 
 @media (max-width: 767px) {
