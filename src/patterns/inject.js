@@ -72,7 +72,7 @@ define([
             _.execute(cfgs);
         },
         extractConfig: function($el, opts) {
-            opts = opts || {};
+            opts = $.extend({}, opts);
 
             var urlparts, cfgs, defaultSelector;
             // opts has priority, fallback to href/action
