@@ -94,7 +94,7 @@ describe("switch-pattern", function() {
             });
 
             it("Parse defaults from DOM", function() {
-                $("#lab").html("<button data-pat-switch='#victim foo bar'>Click me</button>");
+                $("#lab").html("<button data-pat-switch='#victim; foo ; bar'>Click me</button>");
                 $("#lab button").patternSwitch();
                 var $trigger = $("#lab button");
                 expect($trigger.data("patternSwitch")).toEqual([{selector: "#victim", remove:"foo", add: "bar"}]);
@@ -103,7 +103,7 @@ describe("switch-pattern", function() {
             it("Setup click event handler", function() {
                 // Note that this relies on jQuery implementation details to check
                 // for registered event handlers.
-                $("#lab").html("<button data-pat-switch='#victim foo'>Click me</button>");
+                $("#lab").html("<button data-pat-switch='#victim; foo'>Click me</button>");
                 var $trigger = $("#lab button").patternSwitch(),
                      events = $._data($trigger[0]).events;
                 expect(events.click).toBeDefined();
@@ -113,7 +113,7 @@ describe("switch-pattern", function() {
 
         it("Execute changes", function() {
             $("#lab")
-                .append("<button data-pat-switch='#victim foo'>Click me</button>")
+                .append("<button data-pat-switch='#victim; foo'>Click me</button>")
                 .append("<div id='victim' class='foo'/>");
             var $trigger = $("#lab button").patternSwitch();
             $trigger.patternSwitch("execute");
@@ -125,7 +125,7 @@ describe("switch-pattern", function() {
             it("Setup click event handler", function() {
                 // Note that this relies on jQuery implementation details to check
                 // for registered event handlers.
-                $("#lab").html("<button data-pat-switch='#victim foo'>Click me</button>");
+                $("#lab").html("<button data-pat-switch='#victim; foo'>Click me</button>");
                 var $trigger = $("#lab button").patternSwitch(),
                      events = $._data($trigger[0]).events;
                 expect(events.click).toBeDefined();
