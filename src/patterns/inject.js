@@ -208,10 +208,16 @@ define([
                         $source = $source.contents();
 
                     // perform injection
-                    var $injected = _._inject($source, cfg.$target, cfg.action);
-                    if (cfg["class"])
-                        $injected.addClass(cfg["class"]);
-                    $injected.trigger('patterns-injected');
+                    cfg.$target.each(function() {
+                        var $target = $(this),
+                            $src = $source.clone();
+                        if (_._inject($src, $target, cfg.action, cfg["class"])) {
+                            if (cfg.sourceMod === "content")
+                                $target.addClass(cfg["class"]);
+                            else
+                                $src.addClass(cfg["class"]);
+                        }
+                    });
                 });
 
                 if (cfgs.nexthref) {
@@ -225,7 +231,7 @@ define([
                 success: onSuccess
             });
         },
-        _inject: function($source, $target, action) {
+        _inject: function($source, $target, action, classes) {
             // action to jquery method mapping, except for "content"
             // and "element"
             var method = {
@@ -237,33 +243,21 @@ define([
 
             if ($source.length === 0) {
                 log.warn('Aborting injection, source not found:', $source);
-                return $source;
+                return false;
             }
             if ($target.length === 0) {
                 log.warn('Aborting injection, target not found:', $target);
-                return $target;
+                return false;
             }
 
-            switch (action) {
-            case "content":
-                return $target.map(function() {
-                    var $ourSource = $source.clone();
-                    $(this).empty().append($ourSource);
-                    return $ourSource;
-                });
-            case "element":
-                return $target.map(function() {
-                    var $ourSource = $source.clone();
-                    $(this).replaceWith($ourSource);
-                    return $ourSource;
-                });
-            default:
-                return $target.map(function() {
-                    var $ourSource = $source.clone();
-                    $(this)[method]($ourSource);
-                    return $ourSource;
-                });
-            }
+            if (action === "content")
+                $target.empty().append($source);
+            else if (action === "element")
+                $target.replaceWith($source);
+            else
+                $target[method]($source);
+
+            return true;
         },
         _sourcesFromHtml: function(html, url, sources) {
             var $html = _._parseRawHtml(html, url);
