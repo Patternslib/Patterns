@@ -235,6 +235,15 @@ define([
                 elementafter:  "after"
             }[action];
 
+            if ($source.length === 0) {
+                log.warn('Aborting injection, source not found:', $source);
+                return $source;
+            }
+            if ($target.length === 0) {
+                log.warn('Aborting injection, target not found:', $target);
+                return $target;
+            }
+
             switch (action) {
             case "content":
                 return $target.map(function() {
