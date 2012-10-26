@@ -51,6 +51,7 @@ define([
     './3rdparty/modernizr-2.0.6',
     './patterns/autofocus',
     './patterns/autosubmit',
+    './patterns/autosubmit2',
     './patterns/autosuggest',
     './patterns/breadcrumbs',
     './patterns/carousel',
