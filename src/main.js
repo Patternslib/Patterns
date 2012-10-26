@@ -62,7 +62,6 @@ define([
     './patterns/depends',
     './patterns/edit-tinymce',
     './patterns/expandable',
-    './patterns/floatingpanel',
     './patterns/focus',
     './patterns/fullcalendar',
     './patterns/inject',
