@@ -58,8 +58,8 @@ define([
                 // setup event handlers
                 if ($el.is('a'))
                     $el.on("click.pat-inject", _.onClick);
-                // else if ($el.is('form'))
-                //     $el.on("submit.pat-inject", _.onSubmit);
+                else if ($el.is('form'))
+                    $el.on("submit.pat-inject", _.onSubmit);
 
                 // XXX: hack to support the old autoLoading-visible class
                 if ($el.hasClass("autoLoading-visible"))
@@ -74,6 +74,13 @@ define([
             return $el;
         },
         onClick: function(ev) {
+            var cfgs = $(this).data('patterns.inject');
+            if (ev)
+                ev.preventDefault();
+            $(this).trigger('patterns-inject-triggered');
+            _.execute(cfgs);
+        },
+        onSubmit: function(ev) {
             var cfgs = $(this).data('patterns.inject');
             if (ev)
                 ev.preventDefault();
