@@ -1,8 +1,8 @@
 define([
-        "jquery",
-        "../registry",
-        "../logging",
-        "../core/parser"
+    "jquery",
+    "../registry",
+    "../logging",
+    "../core/parser"
 ], function($, patterns, logging, Parser) {
     var log = logging.getLogger("switch"),
         parser = new Parser("switch");
@@ -105,5 +105,6 @@ define([
     patterns.register(switcher);
     return switcher;
 });
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 sts=4 expandtab

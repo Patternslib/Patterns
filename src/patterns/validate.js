@@ -1,9 +1,8 @@
 define([
-        "jquery",
-        "../registry",
-        '../logging',
-        "../../lib/jquery.validate",
-        "../../lib/jquery-validation-1.9.0/additional-methods"
+    "jquery",
+    "../registry",
+    '../logging',
+    "jquery_validate"
 ], function($, patterns, logging) {
     var log = logging.getLogger('validate');
 

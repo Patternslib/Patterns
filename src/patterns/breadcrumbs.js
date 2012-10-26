@@ -1,8 +1,7 @@
 define([
     'jquery',
     '../logging',
-    '../registry',
-    '../../lib/chosen.jquery'
+    '../registry'
 ], function($, logging, registry) {
     var log = logging.getLogger('breadcrumbs');
 
@@ -91,5 +90,6 @@ define([
     registry.register(_);
     return _;
 });
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

@@ -5,8 +5,8 @@
  * Copyright 2012 Simplon B.V.
  */
 define([
-        "jquery",
-        "../registry"
+    "jquery",
+    "../registry"
 ], function($, patterns) {
     var checkedflag = {
         name: "checkedflag",
