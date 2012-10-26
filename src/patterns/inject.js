@@ -10,6 +10,7 @@ define([
     "../lib/ajax",
     "../logging",
     "../registry",
+    "../jquery-ext", // for :scrollable for autoLoading-visible
     "../3rdparty/URI"
 ], function($, Parser, ajax, logging, registry) {
     var log = logging.getLogger('inject'),
@@ -59,6 +60,11 @@ define([
                     $el.on("click.pat-inject", _.onClick);
                 // else if ($el.is('form'))
                 //     $el.on("submit.pat-inject", _.onSubmit);
+
+                // XXX: hack to support the old autoLoading-visible class
+                if ($el.hasClass("autoLoading-visible"))
+                    _._initAutoloadVisible($el);
+
                 return $el;
             });
         },
@@ -296,6 +302,39 @@ define([
                 }
             });
             return $html;
+        },
+        // XXX: hack
+        _initAutoloadVisible: function($el) {
+            // ignore executed autoloads
+            if ($el.data('patterns.inject.autoloaded')) return false;
+
+            var $scrollable = $el.parents(":scrollable");
+
+            // function to trigger the autoload and mark as triggered
+            var trigger = function() {
+                $el.data('patterns.inject.autoloaded', true);
+                $el.trigger('click');
+                return true;
+            };
+
+            // if autoload has no scrollable parent -> trigger it, it is visible
+            if ($scrollable.length === 0) return trigger();
+
+            // if scrollable parent and visible -> trigger it
+            // we only look at the closest scrollable parent, no nesting
+            var checkVisibility = function() {
+                if ($el.data('patterns.autoload')) return false;
+                var reltop = $el.offset().top - $scrollable.offset().top - 1000,
+                    doTrigger = reltop <= $scrollable.innerHeight();
+                if (doTrigger) return trigger();
+                return false;
+            };
+            if (checkVisibility()) return true;
+
+            // wait to become visible - again only immediate scrollable parent
+            $($scrollable[0]).on("scroll", checkVisibility);
+            $(window).on('resize.pat-autoload', checkVisibility);
+            return false;
         }
     };
 
