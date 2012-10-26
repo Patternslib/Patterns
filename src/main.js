@@ -50,7 +50,6 @@ define([
     './3rdparty/prefixfree',
     './3rdparty/modernizr-2.0.6',
     './patterns/autofocus',
-    './patterns/autoload',
     './patterns/autosubmit',
     './patterns/autosuggest',
     './patterns/breadcrumbs',
