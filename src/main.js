@@ -1,7 +1,7 @@
 requirejs.config({
     paths: {
         URI: "./3rdparty/URI",
-        jquery: "./3rdparty/require-jquery",
+        jquery: "./3rdparty/jquery-1.8.2",
         jquery_anythingslider: "./3rdparty/jquery.anythingslider",
         jquery_autosuggest: "./3rdparty/jquery.autoSuggest",
         jquery_chosen: "../lib/chosen.jquery",

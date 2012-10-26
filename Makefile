@@ -37,10 +37,6 @@ upgrade-requirejs:
 	curl -s -o $(RJS) $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/r.js/s/.*href="\([^"]*\).*/\1/p')
 	curl -s -o src/3rdparty/require.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/comments\/require.js/s/.*href="\([^"]*\).*/\1/p')
 	curl -s -o src/3rdparty/require.min.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/minified\/require.js/s/.*href="\([^"]*\).*/\1/p')
-	rm -f src/3rdparty/require-jquery.zip
-	curl -s -o src/3rdparty/require-jquery.zip $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*jquery/s/.*href="\([^"]*\).*/\1/p')
-	unzip -p src/3rdparty/require-jquery.zip jquery-require-sample/webapp/scripts/require-jquery.js > src/3rdparty/require-jquery.js
-	rm src/3rdparty/require-jquery.zip
 
 localize-demo-images:
 	tools/localize-demo-images.sh
