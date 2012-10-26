@@ -574,7 +574,8 @@ ol.usps li:before {
 /* @group Content */
 
 #content {
-	width: 70%;
+// XXX: at least in Chrome and FF this breaks the page 
+//	width: 70%;
 	float: left;
 }
 
