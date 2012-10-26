@@ -3,7 +3,7 @@ define([
     '../logging',
     '../utils',
     "../registry",
-    '../3rdparty/fullcalendar/fullcalendar'
+    'jquery_fullcalendar'
 ], function($, logging, utils, registry) {
     var log = logging.getLogger('fullcalendar');
 

@@ -1,7 +1,7 @@
 define([
     '../logging',
     '../registry',
-    '../../lib/chosen.jquery'
+    'jquery_chosen'
 ], function(logging, registry) {
     var log = logging.getLogger('chosen');
 
@@ -20,5 +20,6 @@ define([
     registry.register(_);
     return _;
 });
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

@@ -1,9 +1,9 @@
 define([
-        "jquery",
-        "../registry",
-        "../logging",
-        "../core/parser",
-        "../utils"
+    "jquery",
+    "../registry",
+    "../logging",
+    "../core/parser",
+    "../utils"
 ], function($, patterns, logging, Parser, utils) {
     var log = logging.getLogger("autosubmit"),
         parser = new Parser("autosubmit");
@@ -110,5 +110,6 @@ define([
     patterns.register(autosubmit);
     return autosubmit;
 });
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "../lib/log4javascript"
+    "log4javascript"
 ], function($) {
     var l4js = log4javascript,
         rootname = 'patterns',
