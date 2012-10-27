@@ -10,8 +10,8 @@ define([
     "../lib/ajax",
     "../logging",
     "../registry",
-    "../jquery-ext", // for :scrollable for autoLoading-visible
-    "../3rdparty/URI"
+    "jquery_ext", // for :scrollable for autoLoading-visible
+    "URI"
 ], function($, Parser, ajax, logging, registry) {
     var log = logging.getLogger('inject'),
         parser = new Parser("inject");
@@ -352,5 +352,6 @@ define([
     registry.register(_);
     return _;
 });
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

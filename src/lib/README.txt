@@ -1,3 +1,1 @@
-- proxies for unaltered dist/ libraries
-- adapted libraries (preferably these should be unaltered in dist)
-- libraries that do not be adapted (requirejs and it's plugins)
+jquery.form will be in ../3rdparty/ once we don't have the submodule anymore
