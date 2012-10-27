@@ -5,19 +5,19 @@ TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/patterns-standalo
 
 all:: $(TARGETS)
 
-bundles/patterns.js: $(SOURCES)
-	node $(RJS) -o src/app.build.js out=$@ optimize=none
+bundles/patterns.js: $(SOURCES) bundles/build.patterns.js
+	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=none
 
-bundles/patterns.min.js: $(SOURCES)
-	node $(RJS) -o src/app.build.js out=$@ optimize=uglify
+bundles/patterns.min.js: $(SOURCES) bundles/build.patterns.js
+	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=uglify
 
-bundles/patterns-standalone.js:
-	node $(RJS) -o src/app.build.js out=$@ \
-		name=3rdparty/almond include=main wrap=true optimize=none
+bundles/patterns-standalone.js: bundles/build.patterns.js
+	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=none \
+		name=../lib/almond include=main wrap=true optimize=none
 
-bundles/patterns-standalone.min.js:
-	node $(RJS) -o src/app.build.js out=$@ \
-		name=3rdparty/almond include=main wrap=true optimize=uglify
+bundles/patterns-standalone.min.js: bundles/build.patterns.js
+	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=uglify \
+		name=../lib/almond include=main wrap=true optimize=uglify
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
 	git submodule update --init --recursive

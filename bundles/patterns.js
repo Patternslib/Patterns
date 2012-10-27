@@ -48862,3 +48862,5 @@ define('main',[
     });
     return registry;
 });
+
+require(["main"]);

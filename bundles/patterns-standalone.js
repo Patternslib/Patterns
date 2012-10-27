@@ -385,7 +385,7 @@ var requirejs, require, define;
     };
 }());
 
-define("3rdparty/almond", function(){});
+define("../lib/almond", function(){});
 
 /*!
  * jQuery JavaScript Library v1.8.2
@@ -49250,4 +49250,6 @@ define('main',[
     });
     return registry;
 });
+
+require(["main"]);
 }());
