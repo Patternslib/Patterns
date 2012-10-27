@@ -1,23 +1,23 @@
-RJS		= r.js
+STANDALONE      = name=../lib/almond include=main wrap=true
+BUILDJS         = bundles/build.js
+RJS		= lib/r.js
 PHANTOMJS	?= phantomjs
 SOURCES		= src/lib/jquery.form $(wildcard src/*.js) $(wildcard src/*/*.js)
-TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/require-patterns.js bundles/require-patterns.min.js
+TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/patterns-standalone.js bundles/patterns-standalone.min.js
 
 all:: $(TARGETS)
 
-bundles/patterns.js: $(SOURCES)
-	node $(RJS) -o src/app.build.js out=$@ optimize=none
+bundles/patterns.js: $(SOURCES) $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=none
 
-bundles/patterns.min.js: $(SOURCES)
-	node $(RJS) -o src/app.build.js out=$@ optimize=uglify
+bundles/patterns.min.js: $(SOURCES) $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify
 
-bundles/require-patterns.js: 
-	node $(RJS) -o src/app.build.js out=$@ \
-		name=3rdparty/almond include=main wrap=true optimize=none
+bundles/patterns-standalone.js: $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=none $(STANDALONE)
 
-bundles/require-patterns.min.js:
-	node $(RJS) -o src/app.build.js out=$@ \
-		name=3rdparty/almond include=main wrap=true optimize=uglify
+bundles/patterns-standalone.min.js: $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify $(STANDALONE)
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
 	git submodule update --init --recursive
@@ -33,18 +33,18 @@ check: lib/phantom-jasmine
 clean:
 	rm -f $(TARGETS)
 
-upgrade-require-jquery:
-	rm -f src/3rdparty/require-jquery.zip
-	curl -s -o src/3rdparty/require-jquery.zip $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*jquery/s/.*href="\([^"]*\).*/\1/p')
-	unzip -p src/3rdparty/require-jquery.zip jquery-require-sample/webapp/scripts/require-jquery.js > src/3rdparty/require-jquery.js
-	rm src/3rdparty/require-jquery.zip
-
-upgrade-rjs:
+upgrade-requirejs:
 	curl -s -o $(RJS) $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/r.js/s/.*href="\([^"]*\).*/\1/p')
+	curl -s -o lib/require.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/comments\/require.js/s/.*href="\([^"]*\).*/\1/p')
+	curl -s -o lib/require.min.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/minified\/require.js/s/.*href="\([^"]*\).*/\1/p')
 
-upgrade-requirejs: upgrade-rjs upgrade-require-jquery
+	rm -f lib/require-jquery.zip
+	curl -s -o lib/require-jquery.zip $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*jquery/s/.*href="\([^"]*\).*/\1/p')
+	unzip -p lib/require-jquery.zip jquery-require-sample/webapp/scripts/require-jquery.js > lib/require-jquery.js
+	rm lib/require-jquery.zip
+
 
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all clean check upgrade-require-jquery upgrade-rjs upgrade-requirejs
+.PHONY: all clean check upgrade-requirejs

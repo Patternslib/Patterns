@@ -8,7 +8,7 @@ define([
     '../core/parser',
     '../registry',
     '../utils',
-    '../3rdparty/jquery.autoSuggest'
+    'jquery_autosuggest'
 ], function($, logging, Parser, registry, utils) {
     var log = logging.getLogger('autosuggest');
 
@@ -107,5 +107,6 @@ define([
     registry.register(_);
     return _;
 });
+
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
