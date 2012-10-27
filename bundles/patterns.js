@@ -48778,17 +48778,17 @@ requirejs.config({
         jquery: "./3rdparty/jquery-1.8.2",
         jquery_anythingslider: "./3rdparty/jquery.anythingslider",
         jquery_autosuggest: "./3rdparty/jquery.autoSuggest",
-        jquery_chosen: "../lib/chosen.jquery",
+        jquery_chosen: "./3rdparty/chosen.jquery",
         jquery_ext: "./jquery-ext",
-        jquery_form: "../lib/jquery.form/jquery.form",
+        jquery_form: "./3rdparty/jquery.form/jquery.form",
         jquery_fullcalendar: "./3rdparty/fullcalendar/fullcalendar",
         jquery_placeholder: "./3rdparty/jquery.placeholder",
-        jquery_validate: "../lib/jquery-validation/jquery.validate",
-        jquery_validate_additional_methods: "../lib/jquery-validation/additional-methods",
-        log4javascript: "../lib/log4javascript/log4javascript_uncompressed",
+        jquery_validate: "./3rdparty/jquery-validation/jquery.validate",
+        jquery_validate_additional_methods: "./3rdparty/jquery-validation/additional-methods",
+        log4javascript: "./3rdparty/log4javascript/log4javascript_uncompressed",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
-        tinymce: "../lib/tiny_mce/tiny_mce_src"
+        tinymce: "./3rdparty/tiny_mce/tiny_mce_src"
     },
     shim: {
         jquery_anythingslider: {
