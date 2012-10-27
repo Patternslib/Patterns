@@ -1,23 +1,23 @@
-RJS		= r.js
+STANDALONE      = name=../lib/almond include=main wrap=true
+BUILDJS         = bundles/build.js
+RJS		= lib/r.js
 PHANTOMJS	?= phantomjs
 SOURCES		= src/lib/jquery.form $(wildcard src/*.js) $(wildcard src/*/*.js)
 TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/patterns-standalone.js bundles/patterns-standalone.min.js
 
 all:: $(TARGETS)
 
-bundles/patterns.js: $(SOURCES) bundles/build.patterns.js
-	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=none
+bundles/patterns.js: $(SOURCES) $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=none
 
-bundles/patterns.min.js: $(SOURCES) bundles/build.patterns.js
-	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=uglify
+bundles/patterns.min.js: $(SOURCES) $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify
 
-bundles/patterns-standalone.js: bundles/build.patterns.js
-	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=none \
-		name=../lib/almond include=main wrap=true optimize=none
+bundles/patterns-standalone.js: $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=none $(STANDALONE)
 
-bundles/patterns-standalone.min.js: bundles/build.patterns.js
-	node $(RJS) -o bundles/build.patterns.js out=$@ optimize=uglify \
-		name=../lib/almond include=main wrap=true optimize=uglify
+bundles/patterns-standalone.min.js: $(BUILDJS)
+	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify $(STANDALONE)
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
 	git submodule update --init --recursive
