@@ -35,8 +35,14 @@ clean:
 
 upgrade-requirejs:
 	curl -s -o $(RJS) $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/r.js/s/.*href="\([^"]*\).*/\1/p')
-	curl -s -o src/3rdparty/require.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/comments\/require.js/s/.*href="\([^"]*\).*/\1/p')
-	curl -s -o src/3rdparty/require.min.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/minified\/require.js/s/.*href="\([^"]*\).*/\1/p')
+	curl -s -o lib/require.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/comments\/require.js/s/.*href="\([^"]*\).*/\1/p')
+	curl -s -o lib/require.min.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/minified\/require.js/s/.*href="\([^"]*\).*/\1/p')
+
+	rm -f lib/require-jquery.zip
+	curl -s -o lib/require-jquery.zip $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*jquery/s/.*href="\([^"]*\).*/\1/p')
+	unzip -p lib/require-jquery.zip jquery-require-sample/webapp/scripts/require-jquery.js > lib/require-jquery.js
+	rm lib/require-jquery.zip
+
 
 localize-demo-images:
 	tools/localize-demo-images.sh
