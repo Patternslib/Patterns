@@ -39,7 +39,7 @@ define([
             var cfg = $el.data('tinymce-json');
             if (!cfg) {
                 log.info('data-tinymce-json empty, using default config', $el);
-                cfg = '{}';
+                cfg = {};
             }
             cfg.elements = id;
             cfg.mode = 'exact';
