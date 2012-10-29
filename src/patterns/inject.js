@@ -114,6 +114,7 @@ define([
             return cfgs;
         },
         // verify and post-process config
+        // XXX: this should return a command instead of messing around on the config
         verifyConfig: function(cfgs) {
             var url = cfgs[0].url;
 
@@ -141,6 +142,7 @@ define([
                         return false;
                     }
                     cfg.$target = _._createTarget(cfg.target);
+                    cfg.$injected = cfg.$target;
                 }
                 return true;
             });
@@ -197,6 +199,8 @@ define([
                 return $.extend({}, cfg);
             });
 
+            // XXX: this need to get functional, returning a command
+            // for internal use, instead of passing on cfgs
             if (!_.verifyConfig(cfgs))
                 return;
 
@@ -217,20 +221,19 @@ define([
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
 
-                    // XXX: generalize to do postProcessing for modals
                     if (cfg.sourceMod === "content")
                         $source = $source.contents();
+
+                    if (!cfg.$injected)
+                        cfg.$injected = $source;
 
                     // perform injection
                     cfg.$target.each(function() {
                         var $target = $(this),
                             $src = $source.clone();
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
-                            if (cfg.sourceMod === "content")
-                                $target.addClass(cfg["class"]);
-                            else
-                                $src.addClass(cfg["class"]);
-                            $src.trigger('patterns-injected', cfg);
+                            cfg.$injected.addClass(cfg["class"])
+                                .trigger('patterns-injected', cfg);
                         }
                     });
                 });
