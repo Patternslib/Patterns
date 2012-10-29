@@ -115,6 +115,31 @@ describe("Core / Parser", function() {
         });
     });
     
+    describe("_defaults", function() {
+        it("No default value provided", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("selector");
+            var defaults = parser._defaults($());
+            expect(defaults.selector).toBeNull();
+        });
+
+        it("Default value provided", function() {
+            var parser=new ArgumentParser();
+            parser.add_argument("selector", "default");
+            var defaults = parser._defaults($());
+            expect(defaults.selector).toBe("default");
+        });
+
+        it("Default value from function", function() {
+            var parser=new ArgumentParser(),
+                func=jasmine.createSpy("func").andReturn("default");
+            parser.add_argument("selector", func);
+            var defaults = parser._defaults("element");
+            expect(defaults.selector).toBe("default");
+            expect(func).toHaveBeenCalledWith("element", "selector");
+        });
+    });
+
     describe("parse", function() {
         describe("Value bubbling", function() {
             it("Use default from parser", function() {
@@ -214,6 +239,15 @@ describe("Core / Parser", function() {
                 var opts = parser.parse($(), {other: "$value"});
                 expect(opts.other).toBe("$value");
             });
+        });
+
+        it("Coerce to type from default function", function() {
+            var parser=new ArgumentParser("mypattern"),
+                func=jasmine.createSpy("func").andReturn(15),
+                $content = $("<div data-pat-mypattern='value: 32'/>");
+            parser.add_argument("value", func);
+            var defaults = parser.parse($content);
+            expect(defaults.value).toBe(32);
         });
     });
 
