@@ -25,12 +25,12 @@ define([
             $relatives=$relatives.add($el.closest("fieldset"));
 
             if (el.id)
-                $label=$("label[for="+el.id+"]");
+                $label=$('label[for="'+el.id+'"]');
             if (!$label.length) {
                 var $form = $el.closest("form");
                 if (!$form.length)
                     $form=$(document.body);
-                $label=$form.find("label[for="+el.name+"]");
+                $label=$form.find('label[for="'+el.name+'"]');
             }
             $relatives=$relatives.add($label);
             return $relatives;
