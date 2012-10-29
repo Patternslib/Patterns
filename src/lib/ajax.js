@@ -15,8 +15,7 @@ define(function(require) {
                 opts.beforeSerialize();
             }
             opts.data = $el.serialize() + '&submit=submit';
-            // XXX: check method on form, use POST as default only
-            opts.type = 'POST';
+            opts.type = $el.attr('method') || 'POST';
             $.ajax(opts);
         } else {
             log.debug('submit', $el);
