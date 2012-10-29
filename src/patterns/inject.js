@@ -74,18 +74,20 @@ define([
             return $el;
         },
         onClick: function(ev) {
-            var cfgs = $(this).data('patterns.inject');
+            var cfgs = $(this).data('patterns.inject'),
+                $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $(this).trigger('patterns-inject-triggered');
-            _.execute(cfgs);
+            $el.trigger('patterns-inject-triggered');
+            _.execute(cfgs, $el);
         },
         onSubmit: function(ev) {
-            var cfgs = $(this).data('patterns.inject');
+            var cfgs = $(this).data('patterns.inject'),
+                $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $(this).trigger('patterns-inject-triggered');
-            _.execute(cfgs);
+            $el.trigger('patterns-inject-triggered');
+            _.execute(cfgs, $el);
         },
         extractConfig: function($el, opts) {
             opts = $.extend({}, opts);
@@ -189,9 +191,7 @@ define([
             $('body').append($target);
             return $target;
         },
-        execute: function(cfgs) {
-            var $this = $(this);
-
+        execute: function(cfgs, $el) {
             // get a kinda deep copy, we scribble on it
             cfgs = cfgs.map(function(cfg) {
                 return $.extend({}, cfg);
@@ -234,12 +234,12 @@ define([
                 });
 
                 if (cfgs.nexthref) {
-                    $this.attr({href: cfgs['next-href']});
-                    _.destroy($this);
+                    $el.attr({href: cfgs['next-href']});
+                    _.destroy($el);
                 }
             };
 
-            ajax($this, {
+            ajax($el, {
                 url: cfgs[0].url,
                 success: onSuccess
             });
