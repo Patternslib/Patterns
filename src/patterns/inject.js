@@ -222,13 +222,11 @@ define([
                         var $target = $(this),
                             $src = $source.clone();
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
-                            if (cfg.sourceMod === "content") {
+                            if (cfg.sourceMod === "content")
                                 $target.addClass(cfg["class"]);
-                                $target.trigger('patterns-injected', cfg);
-                            } else {
+                            else
                                 $src.addClass(cfg["class"]);
-                                $src.trigger('patterns-injected', cfg);
-                            }
+                            $src.trigger('patterns-injected', cfg);
                         }
                     });
                 });
