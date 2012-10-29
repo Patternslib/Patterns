@@ -107,7 +107,7 @@ define([
                     url: source[0],
                     source: '#' + source[1],
                     target: '#' + target_id + "::element"
-                }]);
+                }], $trigger);
                 // always load fresh tooltips
                 // delete options.ajax;
                 $trigger.data("patterns.tooltip", options);
