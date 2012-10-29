@@ -108,7 +108,7 @@ define([
                     source: id,
                     $target: $('.panel-content', $el)
                 }];
-            inject.execute(opts);
+            inject.execute(opts, $el);
         },
 
         toggle: function($el) {
