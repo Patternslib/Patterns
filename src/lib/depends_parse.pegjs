@@ -24,7 +24,10 @@
 
 expression
     = node:simple_expression { return node; }
-    / left:simple_expression __ type:logical __ right:expression {
+    / "not"i _ node:simple_expression {
+        return {type: "not", child: node};
+    }
+    / left:simple_expression _ type:logical _ right:expression {
         // See https://github.com/dmajda/pegjs/issues/116 for why we use a children list
         var children = [];
         children.push(left);
@@ -33,12 +36,14 @@ expression
     }
 
 simple_expression
-    = "(" __ content:expression __ ")" { return content; }
+    = "(" __ content:expression __ ")" {
+        return content;
+    }
     / input:identifier __ op:operator __ value:value {
         return {type: "comparison", operator: op, input: input, value: value};
     }
-    / "not"i _ node:simple_expression {
-        return {type: "not", child: node};
+    / input:identifier {
+        return {type: "truthy", input: input};
     }
 
 operator "comparison operator"
@@ -53,11 +58,15 @@ logical "logical operator"
   = "and"i
   / "or"i
 
-identifier
-  = [A-Za-z0-9._-]+
+identifier "input name"
+  = chars:[A-Za-z0-9._-]+ {
+      return chars.join("");
+  }
 
-value
-  = [A-Za-z0-9._-]+
+value "value"
+  = chars:[A-Za-z0-9._-]+ {
+      return chars.join("");
+  }
 
 _
   = (WhiteSpace)+ 
@@ -66,7 +75,7 @@ __
   = (WhiteSpace)*
 
 
-WhiteSpace
+WhiteSpace "whitespace"
   = [\t\v\f \u00A0\uFEFF]
   / Zs
 

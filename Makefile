@@ -23,7 +23,7 @@ bundles/patterns-standalone.min.js: $(SOURCES) $(BUILDJS)
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs src/3rdparty/logging/src/logging.js:
 	git submodule update --init --recursive
 
-src/lib/depends.js: src/lib/depends.pegjs
+src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
 	sed -i -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
