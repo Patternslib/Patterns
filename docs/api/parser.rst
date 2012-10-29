@@ -58,6 +58,15 @@ Parser API
    for the argument was provided a copy of the referenced argument will be
    used.
 
+   The default value can also be a function taking a jQuery wrapped element
+   and the parameter name as arguments and which returns a default value.
+
+   .. code-block:: javascript
+
+      parser.add_argument("delay", function($el, name) {
+          return 500;
+      });
+
 
 .. js:function:: ArgumentParser.parse($el [, options][, multiple])
 

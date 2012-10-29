@@ -43,6 +43,7 @@ define([
             } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                 spec.type=this.parameters[spec.value.slice(1)].type;
             else
+                // Note that this will get reset by _defaults if default_value is a function.
                 spec.type=this._typeof(spec.value);
 
             this.order.push(name);
@@ -182,10 +183,18 @@ define([
                 return this._parseShorthandNotation(parameter);
         },
 
-        _defaults: function() {
+        _defaults: function($el) {
             var result = {};
             for (var name in this.parameters)
-                result[name]=this.parameters[name].value;
+                if (typeof this.parameters[name].value==="function")
+                    try {
+                        result[name]=this.parameters[name].value($el, name);
+                        this.parameters[name].type=typeof result[name];
+                    } catch(e) {
+                        log.error("Default function for " + name + " failed.");
+                    }
+                else
+                    result[name]=this.parameters[name].value;
             return result;
         },
 
@@ -195,7 +204,7 @@ define([
                 options={};
             }
 
-            var stack = [[this._defaults()]];
+            var stack = [[this._defaults($el)]];
 
             var $parents = $el.parents().andSelf(),
                 final_length = 1,
