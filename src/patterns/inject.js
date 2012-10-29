@@ -206,6 +206,10 @@ define([
             });
 
             var onSuccess = function(data, status, jqxhr) {
+                if (!data) {
+                    log.warn('No response content, aborting', status, jqxhr);
+                    return;
+                }
                 // list of $source objects, one for each cfg
                 var sources = cfgs.map(function(cfg) { return cfg.source; }),
                     sources$ = _._sourcesFromHtml(data, cfgs[0].url, sources);
