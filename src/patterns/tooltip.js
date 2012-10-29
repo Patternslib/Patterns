@@ -101,8 +101,11 @@ define([
                     source: '#' + source[1],
                     target: '#' + target_id + "::element"
                 }]);
-                // always load fresh tooltips
-                // delete options.ajax;
+                // XXX some use cases might require loading the
+                // tooltip afresh each time, but then it would be
+                // necessary to do a different inject, which replaces
+                // the content
+                delete options.ajax;
                 $trigger.data("patterns.tooltip", options);
             }
 
