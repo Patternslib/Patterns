@@ -25,6 +25,7 @@ lib/phantom-jasmine src/lib/jquery.form lib/requirejs src/3rdparty/logging/src/l
 
 src/lib/depends.js: src/lib/depends.pegjs
 	$(PEGJS) $^
+	sed -i -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 all doc:: build/docs/index.html
 
