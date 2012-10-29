@@ -36,7 +36,7 @@ define([
             } else {
                 $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
                 // Make sure click on the trigger element becomes a NOP
-                $trigger.on("click.tooltip", false);
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             }
         },
 
@@ -51,12 +51,14 @@ define([
                 $container.find(".close-panel")
                     .on("click.tooltip", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
-                $trigger.on("click.tooltip", false);
+                $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else {
                 if (parameters.click) {
-                    $container.on("click.tooltip", function(ev) { ev.stopPropagation(); });
+                    $container.on("click.tooltip", $trigger, function(ev) {
+                        ev.stopPropagation();
+                    });
                     $(document).on("click.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", $trigger, tooltip.hide);
+                    $trigger.on("click.tooltip", tooltip.blockDefault);
                     // close if something inside the tooltip triggered an injection
                     $container.on('patterns-inject-triggered.tooltip',
                                   $trigger, tooltip.hide);
@@ -64,7 +66,7 @@ define([
                 } else {
                     $container.on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", false);
+                    $trigger.on("click.tooltip", tooltip.blockDefault);
                 }
             }
         },
@@ -77,7 +79,12 @@ define([
             $trigger.off(".tooltip");
         },
 
+        blockDefault: function(event) {
+            event.preventDefault();
+        },
+
         show: function(event) {
+            event.preventDefault();
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
                 namespace = $container.attr("id"),
@@ -113,10 +120,6 @@ define([
             $(window).on("scroll." + namespace + " resize." + namespace, function () {
                  tooltip.positionContainer($trigger, $container);
             });
-
-            // ensure that the event doesn't further bubble up the DOM
-            // tree or fire of any browser defaults
-            return false;
         },
 
         hide: function(event) {
@@ -127,10 +130,6 @@ define([
             $container.css("visibility", "hidden");
             $(window).off("." + namespace);
             tooltip.setupShowEvents($trigger);
-
-            // ensure that the event doesn't further bubble up the DOM
-            // tree or fire of any browser defaults
-            return false;
         },
 
         getContainer: function($trigger) {
