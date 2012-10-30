@@ -230,7 +230,7 @@ define([
                             $src = $source.clone(),
                             $injected = cfg.$injected || $src;
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
-                            cfg.$injected.addClass(cfg["class"])
+                            $injected.addClass(cfg["class"])
                                 .trigger('patterns-injected', cfg);
                         }
                     });
