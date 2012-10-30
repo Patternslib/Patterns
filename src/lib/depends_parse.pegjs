@@ -3,7 +3,7 @@
  * Copyright 2012 Simplon B.V.
  *
  * This will return a simple AST for a dependency pattern. Each node in the AST
- * is object with the following keys:
+ * is an object with the following keys:
  *
  * - type: node type. One of "comparison", "not", "and", or "or"
  *
