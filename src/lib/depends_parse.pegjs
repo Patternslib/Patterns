@@ -9,11 +9,11 @@
  *
  * If the type is "and" or "or" the following extra keys will be present:
  *
- * - leaves: only present if type is "comparison". list of leaf nodes
+ * - children: only present if type is "comparison". list of leaf nodes
  *
  * If the type is "not" the following extra keys will be present:
  *
- * - child: the child node whose sense should be inverted
+ * - children: array with the (single) child node whose sense should be inverted
  *
  * If the type is "comparison" the following extra keys will be present:
  *
@@ -24,10 +24,10 @@
 
 expression
     = "not"i _ node:simple_expression {
-        return {type: "not", child: node};
+        return {type: "NOT", children: [node]};
     }
     / left:simple_expression _ type:logical _ right:expression {
-        return {type: type.toUpperCase(), leaves: [left, right]};
+        return {type: type.toUpperCase(), children: [left, right]};
     }
     / node:simple_expression { return node; }
 

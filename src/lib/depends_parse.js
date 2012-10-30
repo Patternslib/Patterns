@@ -139,7 +139,7 @@ define(function() {
         }
         if (result0 !== null) {
           result0 = (function(offset, node) {
-                return {type: "not", child: node};
+                return {type: "NOT", children: [node]};
             })(pos0, result0[2]);
         }
         if (result0 === null) {
@@ -181,7 +181,7 @@ define(function() {
           }
           if (result0 !== null) {
             result0 = (function(offset, left, type, right) {
-                  return {type: type.toUpperCase(), leaves: [left, right]};
+                  return {type: type.toUpperCase(), children: [left, right]};
               })(pos0, result0[0], result0[2], result0[4]);
           }
           if (result0 === null) {
