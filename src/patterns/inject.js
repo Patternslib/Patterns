@@ -224,13 +224,11 @@ define([
                     if (cfg.sourceMod === "content")
                         $source = $source.contents();
 
-                    if (!cfg.$injected)
-                        cfg.$injected = $source;
-
                     // perform injection
                     cfg.$target.each(function() {
                         var $target = $(this),
-                            $src = $source.clone();
+                            $src = $source.clone(),
+                            $injected = cfg.$injected || $src;
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
                             cfg.$injected.addClass(cfg["class"])
                                 .trigger('patterns-injected', cfg);
