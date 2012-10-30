@@ -39,10 +39,12 @@ define(function() {
       var parseFunctions = {
         "expression": parse_expression,
         "simple_expression": parse_simple_expression,
-        "operator": parse_operator,
+        "equal_comparison": parse_equal_comparison,
+        "order_comparison": parse_order_comparison,
         "logical": parse_logical,
         "identifier": parse_identifier,
         "value": parse_value,
+        "number": parse_number,
         "_": parse__,
         "__": parse___,
         "WhiteSpace": parse_WhiteSpace,
@@ -107,9 +109,38 @@ define(function() {
         var pos0, pos1;
         
         pos0 = pos;
-        result0 = parse_simple_expression();
+        pos1 = pos;
+        if (input.substr(pos, 3).toLowerCase() === "not") {
+          result0 = input.substr(pos, 3);
+          pos += 3;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"not\"");
+          }
+        }
         if (result0 !== null) {
-          result0 = (function(offset, node) { return node; })(pos0, result0);
+          result1 = parse__();
+          if (result1 !== null) {
+            result2 = parse_simple_expression();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, node) {
+                return {type: "not", child: node};
+            })(pos0, result0[2]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -150,15 +181,21 @@ define(function() {
           }
           if (result0 !== null) {
             result0 = (function(offset, left, type, right) {
-                  // See https://github.com/dmajda/pegjs/issues/116 for why we use a children list
-                  var children = [];
-                  children.push(left);
-                  children.push(right);
-                  return {type: type, leaves: children};
+                  return {type: type.toUpperCase(), leaves: [left, right]};
               })(pos0, result0[0], result0[2], result0[4]);
           }
           if (result0 === null) {
             pos = pos0;
+          }
+          if (result0 === null) {
+            pos0 = pos;
+            result0 = parse_simple_expression();
+            if (result0 !== null) {
+              result0 = (function(offset, node) { return node; })(pos0, result0);
+            }
+            if (result0 === null) {
+              pos = pos0;
+            }
           }
         }
         return result0;
@@ -232,7 +269,7 @@ define(function() {
           if (result0 !== null) {
             result1 = parse___();
             if (result1 !== null) {
-              result2 = parse_operator();
+              result2 = parse_equal_comparison();
               if (result2 !== null) {
                 result3 = parse___();
                 if (result3 !== null) {
@@ -269,33 +306,22 @@ define(function() {
           }
           if (result0 === null) {
             pos0 = pos;
+            pos1 = pos;
             result0 = parse_identifier();
             if (result0 !== null) {
-              result0 = (function(offset, input) {
-                    return {type: "truthy", input: input};
-                })(pos0, result0);
-            }
-            if (result0 === null) {
-              pos = pos0;
-            }
-            if (result0 === null) {
-              pos0 = pos;
-              pos1 = pos;
-              if (input.substr(pos, 3).toLowerCase() === "not") {
-                result0 = input.substr(pos, 3);
-                pos += 3;
-              } else {
-                result0 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\"not\"");
-                }
-              }
-              if (result0 !== null) {
-                result1 = parse__();
-                if (result1 !== null) {
-                  result2 = parse_simple_expression();
-                  if (result2 !== null) {
-                    result0 = [result0, result1, result2];
+              result1 = parse___();
+              if (result1 !== null) {
+                result2 = parse_order_comparison();
+                if (result2 !== null) {
+                  result3 = parse___();
+                  if (result3 !== null) {
+                    result4 = parse_number();
+                    if (result4 !== null) {
+                      result0 = [result0, result1, result2, result3, result4];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
                   } else {
                     result0 = null;
                     pos = pos1;
@@ -308,10 +334,25 @@ define(function() {
                 result0 = null;
                 pos = pos1;
               }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+            if (result0 !== null) {
+              result0 = (function(offset, input, op, value) {
+                    return {type: "comparison", operator: op, input: input, value: value};
+                })(pos0, result0[0], result0[2], result0[4]);
+            }
+            if (result0 === null) {
+              pos = pos0;
+            }
+            if (result0 === null) {
+              pos0 = pos;
+              result0 = parse_identifier();
               if (result0 !== null) {
-                result0 = (function(offset, node) {
-                      return {type: "not", child: node};
-                  })(pos0, result0[2]);
+                result0 = (function(offset, input) {
+                      return {type: "truthy", input: input};
+                  })(pos0, result0);
               }
               if (result0 === null) {
                 pos = pos0;
@@ -322,7 +363,38 @@ define(function() {
         return result0;
       }
       
-      function parse_operator() {
+      function parse_equal_comparison() {
+        var result0;
+        
+        reportFailures++;
+        if (input.charCodeAt(pos) === 61) {
+          result0 = "=";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"=\"");
+          }
+        }
+        if (result0 === null) {
+          if (input.substr(pos, 2) === "!=") {
+            result0 = "!=";
+            pos += 2;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"!=\"");
+            }
+          }
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("comparison operator");
+        }
+        return result0;
+      }
+      
+      function parse_order_comparison() {
         var result0;
         
         reportFailures++;
@@ -346,45 +418,23 @@ define(function() {
             }
           }
           if (result0 === null) {
-            if (input.charCodeAt(pos) === 61) {
-              result0 = "=";
-              pos++;
+            if (input.substr(pos, 2) === ">=") {
+              result0 = ">=";
+              pos += 2;
             } else {
               result0 = null;
               if (reportFailures === 0) {
-                matchFailed("\"=\"");
+                matchFailed("\">=\"");
               }
             }
             if (result0 === null) {
-              if (input.substr(pos, 2) === "!=") {
-                result0 = "!=";
-                pos += 2;
+              if (input.charCodeAt(pos) === 62) {
+                result0 = ">";
+                pos++;
               } else {
                 result0 = null;
                 if (reportFailures === 0) {
-                  matchFailed("\"!=\"");
-                }
-              }
-              if (result0 === null) {
-                if (input.charCodeAt(pos) === 62) {
-                  result0 = ">";
-                  pos++;
-                } else {
-                  result0 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("\">\"");
-                  }
-                }
-                if (result0 === null) {
-                  if (input.substr(pos, 2) === ">=") {
-                    result0 = ">=";
-                    pos += 2;
-                  } else {
-                    result0 = null;
-                    if (reportFailures === 0) {
-                      matchFailed("\">=\"");
-                    }
-                  }
+                  matchFailed("\">\"");
                 }
               }
             }
@@ -518,6 +568,53 @@ define(function() {
         reportFailures--;
         if (reportFailures === 0 && result0 === null) {
           matchFailed("value");
+        }
+        return result0;
+      }
+      
+      function parse_number() {
+        var result0, result1;
+        var pos0;
+        
+        reportFailures++;
+        pos0 = pos;
+        if (/^[0-9]/.test(input.charAt(pos))) {
+          result1 = input.charAt(pos);
+          pos++;
+        } else {
+          result1 = null;
+          if (reportFailures === 0) {
+            matchFailed("[0-9]");
+          }
+        }
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            if (/^[0-9]/.test(input.charAt(pos))) {
+              result1 = input.charAt(pos);
+              pos++;
+            } else {
+              result1 = null;
+              if (reportFailures === 0) {
+                matchFailed("[0-9]");
+              }
+            }
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, digits) {
+              return parseInt(digits.join(""), 10);
+          })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("number");
         }
         return result0;
       }
