@@ -35,7 +35,7 @@ describe("Depedency expression parser", function() {
 
         });
 
-        it("Equalituy comparison with string", function() {
+        it("Equality comparison with string", function() {
             var ast = parser.parse("foo=bar");
             expect(ast).toEqual({type: "comparison",
                                  input: "foo",
@@ -55,35 +55,35 @@ describe("Depedency expression parser", function() {
     describe("Expressions", function() {
         it("Negated simple expression", function() {
             var ast = parser.parse("not foo=15");
-            expect(ast).toEqual({type: "not",
-                                 child: {type: "comparison",
-                                         input: "foo",
-                                         operator: "=",
-                                         value: "15"}});
+            expect(ast).toEqual({type: "NOT",
+                                 children: [{type: "comparison",
+                                             input: "foo",
+                                             operator: "=",
+                                             value: "15"}]});
         });
 
         it("OR two simple expressions", function() {
             var ast = parser.parse("foo or baf");
             expect(ast).toEqual({type: "OR",
-                                 leaves: [{type: "truthy",
-                                           input: "foo"},
-                                          {type: "truthy",
-                                           input: "baf"}]});
+                                 children: [{type: "truthy",
+                                             input: "foo"},
+                                            {type: "truthy",
+                                             input: "baf"}]});
         });
 
         it("Complex expression", function() {
             var ast = parser.parse("foo or not (bar=1 and buz)");
             expect(ast).toEqual({type: "OR",
-                                 leaves: [{type: "truthy",
-                                           input: "foo"},
-                                          {type: "not",
-                                           child: {type: "AND",
-                                                   leaves: [{type: "comparison",
-                                                             input: "bar",
-                                                             operator: "=",
-                                                             value: "1"},
-                                                            {type: "truthy",
-                                                             input: "buz"}]}}]});
+                                 children: [{type: "truthy",
+                                             input: "foo"},
+                                            {type: "NOT",
+                                             children: [{type: "AND",
+                                                         children: [{type: "comparison",
+                                                                     input: "bar",
+                                                                     operator: "=",
+                                                                     value: "1"},
+                                                                    {type: "truthy",
+                                                                     input: "buz"}]}]}]});
         });
     });
 });
