@@ -23,36 +23,37 @@
  */
 
 expression
-    = node:simple_expression { return node; }
-    / "not"i _ node:simple_expression {
+    = "not"i _ node:simple_expression {
         return {type: "not", child: node};
     }
     / left:simple_expression _ type:logical _ right:expression {
-        // See https://github.com/dmajda/pegjs/issues/116 for why we use a children list
-        var children = [];
-        children.push(left);
-        children.push(right);
-        return {type: type, leaves: children};
+        return {type: type.toUpperCase(), leaves: [left, right]};
     }
+    / node:simple_expression { return node; }
 
 simple_expression
     = "(" __ content:expression __ ")" {
         return content;
     }
-    / input:identifier __ op:operator __ value:value {
+    / input:identifier __ op:equal_comparison __ value:value {
+        return {type: "comparison", operator: op, input: input, value: value};
+    }
+    / input:identifier __ op:order_comparison __ value:number {
         return {type: "comparison", operator: op, input: input, value: value};
     }
     / input:identifier {
         return {type: "truthy", input: input};
     }
 
-operator "comparison operator"
+equal_comparison "comparison operator"
+  = "="
+  / "!="
+
+order_comparison "comparison operator"
   = "<="
   / "<"
-  / "="
-  / "!="
-  / ">"
   / ">="
+  / ">"
 
 logical "logical operator"
   = "and"i
@@ -68,6 +69,10 @@ value "value"
       return chars.join("");
   }
 
+number "number"
+  = digits:[0-9]+ {
+      return parseInt(digits.join(""), 10);
+  }
 _
   = (WhiteSpace)+ 
 
