@@ -9,20 +9,31 @@
 define([
     'jquery',
     "../registry",
-    '../utils',
+    "../core/parser",
     './inject'
-], function($, patterns, utils, inject) {
+], function($, patterns, Parser, inject) {
+    var parser = new Parser("tooltip");
+
+    parser.add_argument("position");
+    parser.add_argument("click", false);
+    parser.add_argument("force", false);
+    parser.add_argument("sticky", false);
+    parser.add_argument("close", true);
+    parser.add_argument("ajax", false);
+    parser.add_argument("title", function($el, name) {
+        return $el.attr("title");
+    });
+
     var tooltip = {
         name: "tooltip",
-        trigger: "[data-tooltip]",
+        trigger: ".pat-tooltip",
 
         count: 0,
 
-        init: function($root) {
-            return $root.each(function() {
+        init: function($el, opts) {
+            return $el.each(function() {
                 var $trigger = $(this),
-                    options = utils.parseOptions($trigger.data("tooltip"));
-                options.title = $trigger.attr("title");
+                    options = parser.parse($trigger, opts);
                 $trigger.removeAttr("title");
                 $trigger.data("patterns.tooltip", options);
                 tooltip.setupShowEvents($trigger);
@@ -30,8 +41,8 @@ define([
         },
 
         setupShowEvents: function($trigger) {
-            var parameters = $trigger.data("patterns.tooltip");
-            if (parameters.click) {
+            var options = $trigger.data("patterns.tooltip");
+            if (options.click) {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
                 $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
@@ -46,14 +57,14 @@ define([
 
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
-                parameters = $trigger.data("patterns.tooltip");
-            if (parameters.sticky) {
+                options = $trigger.data("patterns.tooltip");
+            if (options.sticky) {
                 $container.find(".close-panel")
                     .on("click.tooltip", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else {
-                if (parameters.click) {
+                if (options.click) {
                     $container.on("click.tooltip", $trigger, function(ev) {
                         ev.stopPropagation();
                     });
@@ -108,9 +119,6 @@ define([
                     source: '#' + source[1],
                     target: '#' + target_id + "::element"
                 }]);
-                // always load fresh tooltips
-                // delete options.ajax;
-                $trigger.data("patterns.tooltip", options);
             }
 
             tooltip.positionContainer($trigger, $container);
@@ -157,7 +165,7 @@ define([
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.sticky && !options.noclose) {
+            if (options.sticky && options.close) {
                 $("<button/>", {"class": "close-panel"})
                     .text("Close")
                     .insertBefore($container.find("*"));
@@ -341,7 +349,7 @@ define([
                         continue;
                     }
 
-                    if (options.forcePosition || tooltip.isVisible(status, positions[i])) {
+                    if (options.force || tooltip.isVisible(status, positions[i])) {
                         position = positions[i];
                         break;
                     }
