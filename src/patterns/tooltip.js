@@ -179,7 +179,7 @@ define([
             if (options.sticky && options.close) {
                 $("<button/>", {"class": "close-panel"})
                     .text("Close")
-                    .insertBefore($container.find("*"));
+                    .insertBefore($container.find("*:first"));
             }
             $("body").append($container);
             return $container;
