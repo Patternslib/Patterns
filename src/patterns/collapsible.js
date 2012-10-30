@@ -63,7 +63,9 @@ define([
         },
 
         _onClick: function(event) {
-            _.toggle(event.data);
+            if ($(event.target).attr("data-tooltip") === undefined) {
+                _.toggle(event.data);
+            }
         },
 
         destroy: function($el) {
