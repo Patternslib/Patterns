@@ -89,7 +89,7 @@ define([
         onClick: function(event) {
             var $trigger = $(this),
                 state = $trigger.data("patternToggle"),
-                i;
+                option, i;
 
             state.toggled=!state.toggled;
             $trigger.data("patternToggle", state);
@@ -110,7 +110,8 @@ define([
         },
 
         _update: function(selector, attr, value) {
-            var $targets = $(selector);
+            var $targets = $(selector),
+                $target;
 
             if (!$targets.length)
                 return;
