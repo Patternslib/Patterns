@@ -1,7 +1,7 @@
 describe("DependsHandler", function() {
     var DependsHandler;
 
-    requireDependencies(["lib/depends"], function(cls) {
+    requireDependencies(["lib/dependshandler"], function(cls) {
         DependsHandler = cls;
     });
 
