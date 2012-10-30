@@ -1,4 +1,4 @@
-describe("DependsHandler parser", function() {
+describe("Depedency expression parser", function() {
     var parser;
 
     requireDependencies(["lib/depends_parse"], function(cls) {
