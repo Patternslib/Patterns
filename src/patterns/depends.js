@@ -9,7 +9,7 @@ define([
         parser = new Parser("depends");
 
     parser.add_argument("condition");
-    parser.add_argument("action", "show");
+    parser.add_argument("action", "show", ["show", "enable"]);
 
     var depends = {
         name: "depends",
@@ -26,28 +26,31 @@ define([
                 try {
                     handler=new DependsHander($slave, options.condition);
                 } catch (e) {
-                    log.error("Invalid condition: " + 4);
+                    log.error("Invalid condition: " + e.message);
                     return;
                 }
 
                 state=handler.evaluate();
-                if (options.action==="show") {
-                    if (state)
-                        $slave.show();
-                    else
-                        $slave.hide();
-                } else if (command.action==="enable") {
-                    if (state) {
-                        slave.disabled=null;
-                        $slave.removeClass("disabled");
-                    } else {
-                        slave.disabled="disabled";
-                        $slave.addClass("disabled");
-                    }
+                switch (options.action) {
+                    case "show":
+                        if (state)
+                            $slave.show();
+                        else
+                            $slave.hide();
+                        break;
+                    case "enable":
+                        if (state) {
+                            slave.disabled=null;
+                            $slave.removeClass("disabled");
+                        } else {
+                            slave.disabled="disabled";
+                            $slave.addClass("disabled");
+                        }
+                        break;
                 }
 
                 handler.getAllInputs().on("change.pat-depends", null,
-                        {handler: handler, options: options, $slave: $slave},
+                        {handler: handler, options: options, slave: slave},
                         depends.onChange);
 
             });
@@ -56,7 +59,8 @@ define([
         onChange: function(event) {
             var handler = event.data.handler,
                 options = event.data.options,
-                $slave = event.data.$slave,
+                slave = event.data.slave,
+                $slave = $(slave),
                 state = handler.evaluate();
 
             switch (options.action) {
