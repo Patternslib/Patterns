@@ -1,5 +1,5 @@
 STANDALONE      = name=../lib/almond include=main wrap=true
-BUILDJS         = bundles/build.js
+BUILDJS         = src/build.js
 RJS		= lib/r.js
 PEGJS		?= pegjs
 PHANTOMJS	?= phantomjs
