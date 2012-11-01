@@ -128,3 +128,26 @@ The available actions are:
   dependencies are not met the item will be invisible.
 * ``enable``: disables items and adds a ``disabled`` class if the dependencies
   are not met.
+
+
+Option reference
+----------------
+
+The depends can be configured through a ``data-pat-depends`` attribute.
+The available options are:
+
++---------------------+------------+-----------------------------------------------+
+| Field               | default    | Description                                   |
++=====================+============+===============================================+
+| ``condition``       |            | The dependency condition.                     |
++---------------------+------------+-----------------------------------------------+
+| ``action``          | ``show``   | Action to perform. One of ``show`` or         |
+|                     |            | ``enable``.                                   |
++---------------------+------------+-----------------------------------------------+
+| ``transition``      | ``show``   | Transition effect to use if the action is     |
+|                     |            | ``show``. Must be one of ``none``, ``css``    |
+|                     |            | ``fade`` or ``slide``.                        |
++---------------------+------------+-----------------------------------------------+
+| ``effect-duration`` | ``fast``   | Duration of transition. This is ignored if    |
+|                     |            | the transition is ``none`` or ``css``.        |
++---------------------+------------+-----------------------------------------------+
