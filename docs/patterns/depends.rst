@@ -125,9 +125,45 @@ has no value.
 The available actions are:
 
 * ``show``: make an items visibility conditional on the dependencies. If the
-  dependencies are not met the item will be invisible.
+  dependencies are not met the item will be made invisible. In addition a
+  CSS class of ``hidden`` or ``visible`` will be set.
 * ``enable``: disables items and adds a ``disabled`` class if the dependencies
   are not met.
+
+Transitions
+-----------
+
+When hiding or showing items you can specify a transition effect to be used. The
+default behaviour is to not use any transition and immediately hide or show the
+element by toggling its ``display`` style. If you prefer to control the effect
+completely with CSS you can use the ``css`` transition.
+
+.. code-block:: html
+
+   <style>
+     .pat-depends {
+         transition-property: opacity;
+         transition-duration: 1s;
+     }
+     .visible {
+         opacity: 1;
+     }
+
+     .hidden {
+         opacity: 0;
+     }
+   </style>
+
+   <fieldset class="pat-depends" data-pat-depends="condition:custom; transition: css">
+     <legend>Select custom ingredients</legend>
+     <label><input type="checkbox" name="cheese"/> Extra cheese</label>
+     <label><input type="checkbox" name="bacon"/> Bacon</label>
+   </fieldset>
+
+This allow full control in CSS, including the use of animation for browsers
+supporting CSS animation. Two non-CSS based animation options are also included:
+``fade`` will fade the element in and out, and ``slide`` uses a vertical sliding
+effect. During a transition an ``in-progress`` class will be set on the element.
 
 
 Option reference
