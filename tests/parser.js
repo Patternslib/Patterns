@@ -181,6 +181,11 @@ describe("Core / Parser", function() {
                 expect(opts.selector).toBe("parameter");
             });
 
+            it("Include extra options", function() {
+                var parser=new ArgumentParser();
+                var opts = parser.parse($(), {foo: "bar"});
+                expect(opts).toEqual({foo: "bar"});
+            });
         });
 
         describe("Multiple argument handling", function() {
