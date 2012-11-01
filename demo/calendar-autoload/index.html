@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+    <link rel="stylesheet" href="../base.css" type="text/css">
+		<link rel="stylesheet" href="calendar.css" type="text/css">
+		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="calendar-container pat-fullcalendar">
+			<div class="month" id="2013-01">
+				<h2>
+					<time datetime="2013-01">January 2013</time>
+				</h2>
+				<p class="controls">
+					<a class="next-month autoLoading-visible pat-inject" title="Next month" data-pat-inject="next-href: #2013-02; source: #2013-02::element; target: #2013-01::element::after" href="calendar-sources.html#2013-02">Next month</a>
+				</p>
+				<ul id="eventlistinbody" class="events">
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
