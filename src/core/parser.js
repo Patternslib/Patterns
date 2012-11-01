@@ -251,7 +251,7 @@ define([
             for (i=0; i<results.length; i++)
                 for (name in results[i]) {
                     spec=this.parameters[name];
-                    if (results[i][name]===spec.value && typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                    if (spec && results[i][name]===spec.value && typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                         results[i][name]=results[i][spec.value.slice(1)];
                 }
 
