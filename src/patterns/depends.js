@@ -10,11 +10,19 @@ define([
 
     parser.add_argument("condition");
     parser.add_argument("action", "show", ["show", "enable"]);
+    parser.add_argument("transition", "none", ["none", "css", "fade", "slide"]);
+    parser.add_argument("effect-duration", "fast");
 
     var depends = {
         name: "depends",
         trigger: ".pat-depends",
         jquery_plugin: true,
+
+        transitions: {
+            none: {hide: "hide", show: "show"},
+            fade: {hide: "fadeOut", show: "fadeIn"},
+            slide: {hide: "slideUp", show: "slideDown"}
+        },
 
         init: function($el, opts) {
             return $el.each(function() {
@@ -52,7 +60,6 @@ define([
                 handler.getAllInputs().on("change.pat-depends", null,
                         {handler: handler, options: options, slave: slave},
                         depends.onChange);
-
             });
         },
 
@@ -65,10 +72,17 @@ define([
 
             switch (options.action) {
                 case "show":
-                    if (state)
-                        $slave.slideDown();
-                    else
-                        $slave.slideUp();
+                    $slave.removeClass("visible hidden in-progress");
+                    if (options.transition==="css")
+                        $slave.addClass(state ? "visible" : "hidden");
+                    else {
+                        $slave.addClass("in-progress");
+                        var t = depends.transitions[options.transition],
+                            duration = (options.transition==="none" ? null : options.effectDuration);
+                        $slave[state ? t.show : t.hide](duration, function() {
+                            $slave.removeClass("hidden").addClass(state ? "visible" : "hidden");
+                        });
+                    }
                     break;
                 case "enable":
                     if (state) {
