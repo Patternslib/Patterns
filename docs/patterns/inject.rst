@@ -348,14 +348,14 @@ WILL DO SOMETHING WHEN COMBINED WITH MULTI-INJECTION
 
 For anchors, you can specify an href to point to, after the injection
 was triggered. If that element exists already during initialisation,
-the injection is not initialised and the href changed to href-next.
+the injection is not initialised and the href changed to next-href.
 
 before:
 
 .. code-block:: html
 
    <a class="next-month pat-inject" href="calendar.html#2012-05"
-      data-pat-inject="post: #2012-04; href-next: #2012-05">Next month</a>
+      data-pat-inject="post: #2012-04; next-href: #2012-05">Next month</a>
    ...
    <div class="month" id="2012-04">
      ...
@@ -372,7 +372,7 @@ after:
      ...
    </div>
    <a class="next-month pat-inject" href="calendar.html#2012-06"
-      data-pat-inject="post: #2012-05; href-next: #2012-06">Next month</a>
+      data-pat-inject="post: #2012-05; next-href: #2012-06">Next month</a>
    ...
    <div class="month" id="2012-05">
      ...
