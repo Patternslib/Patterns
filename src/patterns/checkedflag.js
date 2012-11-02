@@ -66,7 +66,7 @@ define([
             var $el = $(this),
                 $label = $el.closest("label"),
                 $fieldset = $el.closest("fieldset"),
-                selector = "label:has(input[name=" + this.name + "]:not(:checked))",
+                selector = "label:has(input[name='" + this.name + "']:not(:checked))",
                 $siblings = (this.form===null) ? $(selector) : $(selector, this.form);
 
             $siblings.removeClass("checked").addClass("unchecked");
