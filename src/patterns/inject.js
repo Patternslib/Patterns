@@ -236,9 +236,14 @@ define([
                     });
                 });
 
-                if (cfgs.nexthref) {
-                    $el.attr({href: cfgs['next-href']});
+                if (cfgs[0].nextHref) {
+                    $el.attr({href: cfgs[0].nextHref});
                     _.destroy($el);
+
+                   // jump to new href target
+                   if (!$el.hasClass("autoLoading-visible")) {
+                       window.location.href = $el.attr('href');
+                   }
                 }
             };
 
@@ -336,7 +341,12 @@ define([
                 if ($el.data('patterns.autoload')) return false;
                 var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                     doTrigger = reltop <= $scrollable.innerHeight();
-                if (doTrigger) return trigger();
+                if (doTrigger) {
+                    // checkVisibility was possibly installed as a scroll 
+                    // handler and has now served its purpose -> remove
+                    $($scrollable[0]).off("scroll", checkVisibility);
+                    return trigger();
+                }
                 return false;
             };
             if (checkVisibility()) return true;
