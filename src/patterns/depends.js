@@ -54,10 +54,36 @@ define([
                         break;
                 }
 
-                handler.getAllInputs().on("change.pat-depends", null,
-                        {handler: handler, options: options, slave: slave},
-                        depends.onChange);
+                var data = {handler: handler,
+                            options: options,
+                            slave: slave};
+
+                handler.getAllInputs().each(function() {
+                    if (this.form) {
+                        var $form = $(this.form),
+                            slaves = $form.data("patDepends.slaves");
+                        if (!slaves) {
+                            slaves=[data];
+                            $form.on("reset.pat-depends", depends.onReset);
+                        } else if (slaves.indexOf(data)===-1)
+                            slaves.push(data);
+                        $form.data("patDepends.slaves", slaves);
+                    }
+                    $(this).on("change.pat-depends", null, data, depends.onChange);
+                });
             });
+        },
+
+        onReset: function(event) {
+            var slaves = $(this).data("patDepends.slaves"),
+                i;
+
+            setTimeout(function() {
+                for (i=0; i<slaves.length; i++) {
+                    event.data=slaves[i];
+                    depends.onChange(event);
+                }
+            }, 50);
         },
 
         _enable: function($slave) {
