@@ -117,15 +117,20 @@ describe("checkedflag-pattern", function() {
         $("#lab").html([
             '<form>',
             '  <fieldset class="checked">',
-            '    <label class="checked"><input type="radio" name="foo" checked="checked"/></label>',
+            '    <label class="checked"><input type="radio" id="foo" checked="checked"/></label>',
+            '    <label class="unchecked"><input type="radio" id="bar"/></label>',
             '  </fieldset>',
             '</form>'].join("\n"));
         var $input = $("#lab input");
         pattern.init($input);
+        $("#foo").prop("checked", false).change();
+        $("#bar").prop("checked", "checked").change();
+        jasmine.Clock.useMock();
         $input[0].form.reset();
-        expect($("#lab label").hasClass("unchecked")).toBe(true);
-        expect($("#lab fieldset").hasClass("unchecked")).toBe(true);
-        expect($("#lab .checked").length).toBe(0);
+        jasmine.Clock.tick(100);
+        expect($("label:has(#foo)").hasClass("checked")).toBe(true);
+        expect($("label:has(#bar)").hasClass("unchecked")).toBe(true);
+        expect($("#lab fieldset").hasClass("checked")).toBe(true);
     });
 
 });
