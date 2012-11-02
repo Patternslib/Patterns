@@ -31,6 +31,45 @@ describe("depends-pattern", function() {
             expect($slave.css("display")).not.toBe("none");
         });
     });
+
+    describe("_disable", function() {
+        it("Input element", function() {
+            $("#lab").append('<button type="button">Click me</button>');
+            var $slave = $("#lab button");
+            pattern._disable($slave);
+            expect($slave[0].disabled).toBeTruthy();
+            expect($slave.hasClass("disabled")).toBe(true);
+        });
+
+        it("Anchor", function() {
+            $("#lab").append('<a href="#target">Click me</button>');
+            var $slave = $("#lab a");
+            pattern._disable($slave);
+            var events = $._data($slave[0]).events;
+            expect($slave.hasClass("disabled")).toBe(true);
+            expect(events.click).toBeDefined();
+            expect(events.click[0].namespace).toBe("patternDepends");
+        });
+    });
+
+    describe("_enable", function() {
+        it("Input element", function() {
+            $("#lab").append('<button disabled="disabled" class="disabled" type="button">Click me</button>');
+            var $slave = $("#lab button");
+            pattern._enable($slave);
+            expect($slave[0].disabled).toBeFalsy();
+            expect($slave.hasClass("disabled")).toBe(false);
+        });
+
+        it("Anchor", function() {
+            $("#lab").append('<a href="#target" class="disabled">Click me</button>');
+            var $slave = $("#lab a");
+            $slave.on("click.patternDepends", false);
+            pattern._enable($slave);
+            expect($slave.hasClass("disabled")).toBe(false);
+            expect($._data($slave[0]).events).toBe(undefined);
+        });
+    });
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

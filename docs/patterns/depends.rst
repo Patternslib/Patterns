@@ -128,7 +128,9 @@ The available actions are:
   dependencies are not met the item will be made invisible. In addition a
   CSS class of ``hidden`` or ``visible`` will be set.
 * ``enable``: disables items and adds a ``disabled`` class if the dependencies
-  are not met.
+  are not met. Input elements are disabled by setting their disabled property.
+  Links are disabled by registered a temporary event handler that blocks their
+  default behaviour.
 
 Transitions
 -----------
