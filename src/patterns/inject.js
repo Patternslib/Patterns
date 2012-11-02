@@ -239,6 +239,11 @@ define([
                 if (cfgs[0].nextHref) {
                     $el.attr({href: cfgs[0].nextHref});
                     _.destroy($el);
+
+                   // jump to new href target
+                   if (!$el.hasClass("autoLoading-visible")) {
+                       window.location.href = $el.attr('href');
+                   }
                 }
             };
 
