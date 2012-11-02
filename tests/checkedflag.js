@@ -112,6 +112,27 @@ describe("checkedflag-pattern", function() {
             expect($("#lab label").eq(1).attr("class")).toBe("checked");
         });
     });
+
+    it("Handle form reset", function() {
+        $("#lab").html([
+            '<form>',
+            '  <fieldset class="checked">',
+            '    <label class="checked"><input type="radio" id="foo" checked="checked"/></label>',
+            '    <label class="unchecked"><input type="radio" id="bar"/></label>',
+            '  </fieldset>',
+            '</form>'].join("\n"));
+        var $input = $("#lab input");
+        pattern.init($input);
+        $("#foo").prop("checked", false).change();
+        $("#bar").prop("checked", "checked").change();
+        jasmine.Clock.useMock();
+        $input[0].form.reset();
+        jasmine.Clock.tick(100);
+        expect($("label:has(#foo)").hasClass("checked")).toBe(true);
+        expect($("label:has(#bar)").hasClass("unchecked")).toBe(true);
+        expect($("#lab fieldset").hasClass("checked")).toBe(true);
+    });
+
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
