@@ -13,7 +13,17 @@ define([
         trigger: "input[type=checkbox],input[type=radio]",
 
         init: function($el) {
+            var $forms = $();
             $el
+                .each(function() {
+                    if (this.form===null)
+                        return;
+                    var $form = $(this.form);
+                    if ($form.data("patternCheckedflag.reset"))
+                        return;
+                    $form.data("patternCheckedflag.reset", true);
+                    $forms=$forms.add(this.form);
+                })
                 .filter("[type=checkbox]")
                     .each(checkedflag.onChangeCheckbox)
                     .on("change.patternCheckedflag", checkedflag.onChangeCheckbox)
@@ -22,6 +32,18 @@ define([
                     .each(checkedflag.onChangeRadio)
                     .on("change.patternCheckedflag", checkedflag.onChangeRadio)
                     .end();
+            $forms.on("reset.patternCheckedflag", checkedflag.onFormReset);
+        },
+
+        onFormReset: function(event) {
+            // This event is triggered before the form is reset, and we need
+            // the post-reset state to update our pattern. Use a small delay
+            // to fix this.
+            var form = this;
+            setTimeout(function() {
+                $("input[type=checkbox]", form).each(checkedflag.onChangeCheckbox);
+                $("input[type=radio]", form).each(checkedflag.onChangeRadio);
+            }, 50);
         },
 
         onChangeCheckbox: function(event) {
