@@ -47,13 +47,10 @@ define([
                             $slave.hide();
                         break;
                     case "enable":
-                        if (state) {
-                            slave.disabled=null;
-                            $slave.removeClass("disabled");
-                        } else {
-                            slave.disabled="disabled";
-                            $slave.addClass("disabled");
-                        }
+                        if (state)
+                            depends._enable($slave);
+                        else
+                            depends._disable($slave);
                         break;
                 }
 
@@ -61,6 +58,22 @@ define([
                         {handler: handler, options: options, slave: slave},
                         depends.onChange);
             });
+        },
+
+        _enable: function($slave) {
+            if ($slave.is(":input"))
+                $slave[0].disabled=null;
+            else if ($slave.is("a"))
+                $slave.off("click.patternDepends");
+            $slave.removeClass("disabled");
+        },
+
+        _disable: function($slave) {
+            if ($slave.is(":input"))
+                $slave[0].disabled="disabled";
+            else if ($slave.is("a"))
+                $slave.on("click.patternDepends", depends.blockDefault);
+            $slave.addClass("disabled");
         },
 
         onChange: function(event) {
@@ -85,15 +98,16 @@ define([
                     }
                     break;
                 case "enable":
-                    if (state) {
-                        slave.disabled=null;
-                        $slave.removeClass("disabled");
-                    } else {
-                        slave.disabled="disabled";
-                        $slave.addClass("disabled");
-                    }
+                    if (state)
+                        depends._enable($slave);
+                    else
+                        depends._disable($slave);
                     break;
             }
+        },
+
+        blockDefault: function(event) {
+            event.preventDefault();
         }
     };
 
