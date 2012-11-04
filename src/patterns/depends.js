@@ -4,7 +4,7 @@ define([
     "../core/logger",
     "../lib/dependshandler",
     "../core/parser"
-], function($, patterns, logging, DependsHander, Parser) {
+], function($, patterns, logging, DependsHandler, Parser) {
     var log = logging.getLogger("depends"),
         parser = new Parser("depends");
 
@@ -32,7 +32,7 @@ define([
                     handler, state;
 
                 try {
-                    handler=new DependsHander($slave, options.condition);
+                    handler=new DependsHandler($slave, options.condition);
                 } catch (e) {
                     log.error("Invalid condition: " + e.message);
                     return;
