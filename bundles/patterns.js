@@ -15969,9 +15969,9 @@ define('compat',[],function() {
 
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray (JS 1.8.5)
     if (!Array.isArray) {
-	Array.isArray = function (arg) {
+        Array.isArray = function (arg) {
             return Object.prototype.toString.call(arg) == '[object Array]';
-	};
+        };
     }
 
     // source: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim (JS 1.8.1)
@@ -15981,29 +15981,27 @@ define('compat',[],function() {
         };
     }
 
-
     // source: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind
     if (!Function.prototype.bind) {
-      Function.prototype.bind = function (oThis) {
-        if (typeof this !== "function") {
-          // closest thing possible to the ECMAScript 5 internal IsCallable function
-          throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-        }
+        Function.prototype.bind = function (oThis) {
+            if (typeof this !== "function") {
+                // closest thing possible to the ECMAScript 5 internal IsCallable function
+                throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+            }
 
-        var aArgs = Array.prototype.slice.call(arguments, 1), 
-            fToBind = this, 
-            fNOP = function () {},
-            fBound = function () {
-              return fToBind.apply(this instanceof fNOP &&
-                                   oThis ? this : oThis,
-                                   aArgs.concat(Array.prototype.slice.call(arguments)));
-            };
+            var aArgs = Array.prototype.slice.call(arguments, 1), 
+                fToBind = this, 
+                fNOP = function () {},
+                fBound = function () {
+                    return fToBind.apply(this instanceof fNOP &&
+                            oThis ? this : oThis,
+                            aArgs.concat(Array.prototype.slice.call(arguments)));
+                };
+            fNOP.prototype = this.prototype;
+            fBound.prototype = new fNOP();
 
-        fNOP.prototype = this.prototype;
-        fBound.prototype = new fNOP();
-
-        return fBound;
-      };
+            return fBound;
+        };
     }
 });
 
@@ -18899,6 +18897,4018 @@ window.Modernizr = (function( window, document, undefined ) {
 
 define("modernizr", function(){});
 
+//
+// LESS - Leaner CSS v1.3.1
+// http://lesscss.org
+// 
+// Copyright (c) 2009-2011, Alexis Sellier
+// Licensed under the Apache 2.0 License.
+//
+(function (window, undefined) {
+//
+// Stub out `require` in the browser
+//
+function require(arg) {
+    return window.less[arg.split('/')[1]];
+};
+
+
+// ecma-5.js
+//
+// -- kriskowal Kris Kowal Copyright (C) 2009-2010 MIT License
+// -- tlrobinson Tom Robinson
+// dantman Daniel Friesen
+
+//
+// Array
+//
+if (!Array.isArray) {
+    Array.isArray = function(obj) {
+        return Object.prototype.toString.call(obj) === "[object Array]" ||
+               (obj instanceof Array);
+    };
+}
+if (!Array.prototype.forEach) {
+    Array.prototype.forEach =  function(block, thisObject) {
+        var len = this.length >>> 0;
+        for (var i = 0; i < len; i++) {
+            if (i in this) {
+                block.call(thisObject, this[i], i, this);
+            }
+        }
+    };
+}
+if (!Array.prototype.map) {
+    Array.prototype.map = function(fun /*, thisp*/) {
+        var len = this.length >>> 0;
+        var res = new Array(len);
+        var thisp = arguments[1];
+
+        for (var i = 0; i < len; i++) {
+            if (i in this) {
+                res[i] = fun.call(thisp, this[i], i, this);
+            }
+        }
+        return res;
+    };
+}
+if (!Array.prototype.filter) {
+    Array.prototype.filter = function (block /*, thisp */) {
+        var values = [];
+        var thisp = arguments[1];
+        for (var i = 0; i < this.length; i++) {
+            if (block.call(thisp, this[i])) {
+                values.push(this[i]);
+            }
+        }
+        return values;
+    };
+}
+if (!Array.prototype.reduce) {
+    Array.prototype.reduce = function(fun /*, initial*/) {
+        var len = this.length >>> 0;
+        var i = 0;
+
+        // no value to return if no initial value and an empty array
+        if (len === 0 && arguments.length === 1) throw new TypeError();
+
+        if (arguments.length >= 2) {
+            var rv = arguments[1];
+        } else {
+            do {
+                if (i in this) {
+                    rv = this[i++];
+                    break;
+                }
+                // if array contains no values, no initial value to return
+                if (++i >= len) throw new TypeError();
+            } while (true);
+        }
+        for (; i < len; i++) {
+            if (i in this) {
+                rv = fun.call(null, rv, this[i], i, this);
+            }
+        }
+        return rv;
+    };
+}
+if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function (value /*, fromIndex */ ) {
+        var length = this.length;
+        var i = arguments[1] || 0;
+
+        if (!length)     return -1;
+        if (i >= length) return -1;
+        if (i < 0)       i += length;
+
+        for (; i < length; i++) {
+            if (!Object.prototype.hasOwnProperty.call(this, i)) { continue }
+            if (value === this[i]) return i;
+        }
+        return -1;
+    };
+}
+
+//
+// Object
+//
+if (!Object.keys) {
+    Object.keys = function (object) {
+        var keys = [];
+        for (var name in object) {
+            if (Object.prototype.hasOwnProperty.call(object, name)) {
+                keys.push(name);
+            }
+        }
+        return keys;
+    };
+}
+
+//
+// String
+//
+if (!String.prototype.trim) {
+    String.prototype.trim = function () {
+        return String(this).replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    };
+}
+var less, tree;
+
+if (typeof environment === "object" && ({}).toString.call(environment) === "[object Environment]") {
+    // Rhino
+    // Details on how to detect Rhino: https://github.com/ringo/ringojs/issues/88
+    if (typeof(window) === 'undefined') { less = {} }
+    else                                { less = window.less = {} }
+    tree = less.tree = {};
+    less.mode = 'rhino';
+} else if (typeof(window) === 'undefined') {
+    // Node.js
+    less = exports,
+    tree = require('./tree');
+    less.mode = 'node';
+} else {
+    // Browser
+    if (typeof(window.less) === 'undefined') { window.less = {} }
+    less = window.less,
+    tree = window.less.tree = {};
+    less.mode = 'browser';
+}
+//
+// less.js - parser
+//
+//    A relatively straight-forward predictive parser.
+//    There is no tokenization/lexing stage, the input is parsed
+//    in one sweep.
+//
+//    To make the parser fast enough to run in the browser, several
+//    optimization had to be made:
+//
+//    - Matching and slicing on a huge input is often cause of slowdowns.
+//      The solution is to chunkify the input into smaller strings.
+//      The chunks are stored in the `chunks` var,
+//      `j` holds the current chunk index, and `current` holds
+//      the index of the current chunk in relation to `input`.
+//      This gives us an almost 4x speed-up.
+//
+//    - In many cases, we don't need to match individual tokens;
+//      for example, if a value doesn't hold any variables, operations
+//      or dynamic references, the parser can effectively 'skip' it,
+//      treating it as a literal.
+//      An example would be '1px solid #000' - which evaluates to itself,
+//      we don't need to know what the individual components are.
+//      The drawback, of course is that you don't get the benefits of
+//      syntax-checking on the CSS. This gives us a 50% speed-up in the parser,
+//      and a smaller speed-up in the code-gen.
+//
+//
+//    Token matching is done with the `$` function, which either takes
+//    a terminal string or regexp, or a non-terminal function to call.
+//    It also takes care of moving all the indices forwards.
+//
+//
+less.Parser = function Parser(env) {
+    var input,       // LeSS input string
+        i,           // current index in `input`
+        j,           // current chunk
+        temp,        // temporarily holds a chunk's state, for backtracking
+        memo,        // temporarily holds `i`, when backtracking
+        furthest,    // furthest index the parser has gone to
+        chunks,      // chunkified input
+        current,     // index of current chunk, in `input`
+        parser;
+
+    var that = this;
+
+    // Top parser on an import tree must be sure there is one "env"
+    // which will then be passed arround by reference.
+    var env = env || { };
+    if (!env.contents) { env.contents={}; }  // env.contents must be passed arround with top env
+
+    // This function is called after all files
+    // have been imported through `@import`.
+    var finish = function () {};
+
+    var imports = this.imports = {
+        paths: env && env.paths || [],  // Search paths, when importing
+        queue: [],                      // Files which haven't been imported yet
+        files: {},                      // Holds the imported parse trees
+        contents: env.contents,         // Holds the imported file contents
+        mime:  env && env.mime,         // MIME type of .less files
+        error: null,                    // Error in parsing/evaluating an import
+        push: function (path, callback) {
+            var that = this;
+            this.queue.push(path);
+
+            //
+            // Import a file asynchronously
+            //
+            less.Parser.importer(path, this.paths, function (e, root) {
+                that.queue.splice(that.queue.indexOf(path), 1); // Remove the path from the queue
+
+                var imported = path in that.files;
+
+                that.files[path] = root;                        // Store the root
+
+                if (e && !that.error) { that.error = e }
+
+                callback(e, root, imported);
+
+                if (that.queue.length === 0) { finish(e) }       // Call `finish` if we're done importing
+            }, env);
+        }
+    };
+
+    function save()    { temp = chunks[j], memo = i, current = i }
+    function restore() { chunks[j] = temp, i = memo, current = i }
+
+    function sync() {
+        if (i > current) {
+            chunks[j] = chunks[j].slice(i - current);
+            current = i;
+        }
+    }
+    function isWhitespace(c) {
+        // Could change to \s?
+        var code = c.charCodeAt(0);
+        return code === 32 || code === 10 || code === 9;
+    }
+    //
+    // Parse from a token, regexp or string, and move forward if match
+    //
+    function $(tok) {
+        var match, args, length, index, k;
+
+        //
+        // Non-terminal
+        //
+        if (tok instanceof Function) {
+            return tok.call(parser.parsers);
+        //
+        // Terminal
+        //
+        //     Either match a single character in the input,
+        //     or match a regexp in the current chunk (chunk[j]).
+        //
+        } else if (typeof(tok) === 'string') {
+            match = input.charAt(i) === tok ? tok : null;
+            length = 1;
+            sync ();
+        } else {
+            sync ();
+
+            if (match = tok.exec(chunks[j])) {
+                length = match[0].length;
+            } else {
+                return null;
+            }
+        }
+
+        // The match is confirmed, add the match length to `i`,
+        // and consume any extra white-space characters (' ' || '\n')
+        // which come after that. The reason for this is that LeSS's
+        // grammar is mostly white-space insensitive.
+        //
+        if (match) {
+            skipWhitespace(length);
+
+            if(typeof(match) === 'string') {
+                return match;
+            } else {
+                return match.length === 1 ? match[0] : match;
+            }
+        }
+    }
+
+    function skipWhitespace(length) {
+        var oldi = i, oldj = j,
+            endIndex = i + chunks[j].length,
+            mem = i += length;
+
+        while (i < endIndex) {
+            if (! isWhitespace(input.charAt(i))) { break }
+            i++;
+        }
+        chunks[j] = chunks[j].slice(length + (i - mem));
+        current = i;
+
+        if (chunks[j].length === 0 && j < chunks.length - 1) { j++ }
+
+        return oldi !== i || oldj !== j;
+    }
+
+    function expect(arg, msg) {
+        var result = $(arg);
+        if (! result) {
+            error(msg || (typeof(arg) === 'string' ? "expected '" + arg + "' got '" + input.charAt(i) + "'"
+                                                   : "unexpected token"));
+        } else {
+            return result;
+        }
+    }
+
+    function error(msg, type) {
+        throw { index: i, type: type || 'Syntax', message: msg };
+    }
+
+    // Same as $(), but don't change the state of the parser,
+    // just return the match.
+    function peek(tok) {
+        if (typeof(tok) === 'string') {
+            return input.charAt(i) === tok;
+        } else {
+            if (tok.test(chunks[j])) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    function getInput(e, env) {
+        if (e.filename && env.filename && (e.filename !== env.filename)) {
+            return parser.imports.contents[e.filename];
+        } else {
+            return input;
+        }
+    }
+
+    function getLocation(index, input) {
+        for (var n = index, column = -1;
+                 n >= 0 && input.charAt(n) !== '\n';
+                 n--) { column++ }
+
+        return { line:   typeof(index) === 'number' ? (input.slice(0, index).match(/\n/g) || "").length : null,
+                 column: column };
+    }
+
+    function getFileName(e) {
+        if(less.mode === 'browser' || less.mode === 'rhino')
+            return e.filename;
+        else
+            return require('path').resolve(e.filename);
+    }
+
+    function getDebugInfo(index, inputStream, e) {
+        return {
+            lineNumber: getLocation(index, inputStream).line + 1,
+            fileName: getFileName(e)
+        };
+    }
+
+    function LessError(e, env) {
+        var input = getInput(e, env),
+            loc = getLocation(e.index, input),
+            line = loc.line,
+            col  = loc.column,
+            lines = input.split('\n');
+
+        this.type = e.type || 'Syntax';
+        this.message = e.message;
+        this.filename = e.filename || env.filename;
+        this.index = e.index;
+        this.line = typeof(line) === 'number' ? line + 1 : null;
+        this.callLine = e.call && (getLocation(e.call, input).line + 1);
+        this.callExtract = lines[getLocation(e.call, input).line];
+        this.stack = e.stack;
+        this.column = col;
+        this.extract = [
+            lines[line - 1],
+            lines[line],
+            lines[line + 1]
+        ];
+    }
+
+    this.env = env = env || {};
+
+    // The optimization level dictates the thoroughness of the parser,
+    // the lower the number, the less nodes it will create in the tree.
+    // This could matter for debugging, or if you want to access
+    // the individual nodes in the tree.
+    this.optimization = ('optimization' in this.env) ? this.env.optimization : 1;
+
+    this.env.filename = this.env.filename || null;
+
+    //
+    // The Parser
+    //
+    return parser = {
+
+        imports: imports,
+        //
+        // Parse an input string into an abstract syntax tree,
+        // call `callback` when done.
+        //
+        parse: function (str, callback) {
+            var root, start, end, zone, line, lines, buff = [], c, error = null;
+
+            i = j = current = furthest = 0;
+            input = str.replace(/\r\n/g, '\n');
+
+            // Remove potential UTF Byte Order Mark
+            input = input.replace(/^\uFEFF/, '');
+
+            // Split the input into chunks.
+            chunks = (function (chunks) {
+                var j = 0,
+                    skip = /(?:@\{[\w-]+\}|[^"'`\{\}\/\(\)\\])+/g,
+                    comment = /\/\*(?:[^*]|\*+[^\/*])*\*+\/|\/\/.*/g,
+                    string = /"((?:[^"\\\r\n]|\\.)*)"|'((?:[^'\\\r\n]|\\.)*)'|`((?:[^`]|\\.)*)`/g,
+                    level = 0,
+                    match,
+                    chunk = chunks[0],
+                    inParam;
+
+                for (var i = 0, c, cc; i < input.length; i++) {
+                    skip.lastIndex = i;
+                    if (match = skip.exec(input)) {
+                        if (match.index === i) {
+                            i += match[0].length;
+                            chunk.push(match[0]);
+                        }
+                    }
+                    c = input.charAt(i);
+                    comment.lastIndex = string.lastIndex = i;
+
+                    if (match = string.exec(input)) {
+                        if (match.index === i) {
+                            i += match[0].length;
+                            chunk.push(match[0]);
+                            c = input.charAt(i);
+                        }
+                    }
+
+                    if (!inParam && c === '/') {
+                        cc = input.charAt(i + 1);
+                        if (cc === '/' || cc === '*') {
+                            if (match = comment.exec(input)) {
+                                if (match.index === i) {
+                                    i += match[0].length;
+                                    chunk.push(match[0]);
+                                    c = input.charAt(i);
+                                }
+                            }
+                        }
+                    }
+                    
+                    switch (c) {
+                        case '{': if (! inParam) { level ++;        chunk.push(c);                           break }
+                        case '}': if (! inParam) { level --;        chunk.push(c); chunks[++j] = chunk = []; break }
+                        case '(': if (! inParam) { inParam = true;  chunk.push(c);                           break }
+                        case ')': if (  inParam) { inParam = false; chunk.push(c);                           break }
+                        default:                                    chunk.push(c);
+                    }
+                }
+                if (level > 0) {
+                    error = new(LessError)({
+                        index: i,
+                        type: 'Parse',
+                        message: "missing closing `}`",
+                        filename: env.filename
+                    }, env);
+                }
+
+                return chunks.map(function (c) { return c.join('') });;
+            })([[]]);
+
+            if (error) {
+                return callback(error);
+            }
+
+            // Start with the primary rule.
+            // The whole syntax tree is held under a Ruleset node,
+            // with the `root` property set to true, so no `{}` are
+            // output. The callback is called when the input is parsed.
+            try {
+                root = new(tree.Ruleset)([], $(this.parsers.primary));
+                root.root = true;
+            } catch (e) {
+                return callback(new(LessError)(e, env));
+            }
+
+            root.toCSS = (function (evaluate) {
+                var line, lines, column;
+
+                return function (options, variables) {
+                    var frames = [], importError;
+
+                    options = options || {};
+                    //
+                    // Allows setting variables with a hash, so:
+                    //
+                    //   `{ color: new(tree.Color)('#f01') }` will become:
+                    //
+                    //   new(tree.Rule)('@color',
+                    //     new(tree.Value)([
+                    //       new(tree.Expression)([
+                    //         new(tree.Color)('#f01')
+                    //       ])
+                    //     ])
+                    //   )
+                    //
+                    if (typeof(variables) === 'object' && !Array.isArray(variables)) {
+                        variables = Object.keys(variables).map(function (k) {
+                            var value = variables[k];
+
+                            if (! (value instanceof tree.Value)) {
+                                if (! (value instanceof tree.Expression)) {
+                                    value = new(tree.Expression)([value]);
+                                }
+                                value = new(tree.Value)([value]);
+                            }
+                            return new(tree.Rule)('@' + k, value, false, 0);
+                        });
+                        frames = [new(tree.Ruleset)(null, variables)];
+                    }
+
+                    try {
+                        var css = evaluate.call(this, { frames: frames })
+                                          .toCSS([], { compress: options.compress || false, dumpLineNumbers: env.dumpLineNumbers });
+                    } catch (e) {
+                        throw new(LessError)(e, env);
+                    }
+
+                    if ((importError = parser.imports.error)) { // Check if there was an error during importing
+                        if (importError instanceof LessError) throw importError;
+                        else                                  throw new(LessError)(importError, env);
+                    }
+
+                    if (options.yuicompress && less.mode === 'node') {
+                        return require('./cssmin').compressor.cssmin(css);
+                    } else if (options.compress) {
+                        return css.replace(/(\s)+/g, "$1");
+                    } else {
+                        return css;
+                    }
+                };
+            })(root.eval);
+
+            // If `i` is smaller than the `input.length - 1`,
+            // it means the parser wasn't able to parse the whole
+            // string, so we've got a parsing error.
+            //
+            // We try to extract a \n delimited string,
+            // showing the line where the parse error occured.
+            // We split it up into two parts (the part which parsed,
+            // and the part which didn't), so we can color them differently.
+            if (i < input.length - 1) {
+                i = furthest;
+                lines = input.split('\n');
+                line = (input.slice(0, i).match(/\n/g) || "").length + 1;
+
+                for (var n = i, column = -1; n >= 0 && input.charAt(n) !== '\n'; n--) { column++ }
+
+                error = {
+                    type: "Parse",
+                    message: "Syntax Error on line " + line,
+                    index: i,
+                    filename: env.filename,
+                    line: line,
+                    column: column,
+                    extract: [
+                        lines[line - 2],
+                        lines[line - 1],
+                        lines[line]
+                    ]
+                };
+            }
+
+            if (this.imports.queue.length > 0) {
+                finish = function (e) {
+                    if (e) callback(e);
+                    else callback(null, root);
+                };
+            } else {
+                callback(error, root);
+            }
+        },
+
+        //
+        // Here in, the parsing rules/functions
+        //
+        // The basic structure of the syntax tree generated is as follows:
+        //
+        //   Ruleset ->  Rule -> Value -> Expression -> Entity
+        //
+        // Here's some LESS code:
+        //
+        //    .class {
+        //      color: #fff;
+        //      border: 1px solid #000;
+        //      width: @w + 4px;
+        //      > .child {...}
+        //    }
+        //
+        // And here's what the parse tree might look like:
+        //
+        //     Ruleset (Selector '.class', [
+        //         Rule ("color",  Value ([Expression [Color #fff]]))
+        //         Rule ("border", Value ([Expression [Dimension 1px][Keyword "solid"][Color #000]]))
+        //         Rule ("width",  Value ([Expression [Operation "+" [Variable "@w"][Dimension 4px]]]))
+        //         Ruleset (Selector [Element '>', '.child'], [...])
+        //     ])
+        //
+        //  In general, most rules will try to parse a token with the `$()` function, and if the return
+        //  value is truly, will return a new node, of the relevant type. Sometimes, we need to check
+        //  first, before parsing, that's when we use `peek()`.
+        //
+        parsers: {
+            //
+            // The `primary` rule is the *entry* and *exit* point of the parser.
+            // The rules here can appear at any level of the parse tree.
+            //
+            // The recursive nature of the grammar is an interplay between the `block`
+            // rule, which represents `{ ... }`, the `ruleset` rule, and this `primary` rule,
+            // as represented by this simplified grammar:
+            //
+            //     primary  →  (ruleset | rule)+
+            //     ruleset  →  selector+ block
+            //     block    →  '{' primary '}'
+            //
+            // Only at one point is the primary rule not called from the
+            // block rule: at the root level.
+            //
+            primary: function () {
+                var node, root = [];
+
+                while ((node = $(this.mixin.definition) || $(this.rule)    ||  $(this.ruleset) ||
+                               $(this.mixin.call)       || $(this.comment) ||  $(this.directive))
+                               || $(/^[\s\n]+/)) {
+                    node && root.push(node);
+                }
+                return root;
+            },
+
+            // We create a Comment node for CSS comments `/* */`,
+            // but keep the LeSS comments `//` silent, by just skipping
+            // over them.
+            comment: function () {
+                var comment;
+
+                if (input.charAt(i) !== '/') return;
+
+                if (input.charAt(i + 1) === '/') {
+                    return new(tree.Comment)($(/^\/\/.*/), true);
+                } else if (comment = $(/^\/\*(?:[^*]|\*+[^\/*])*\*+\/\n?/)) {
+                    return new(tree.Comment)(comment);
+                }
+            },
+
+            //
+            // Entities are tokens which can be found inside an Expression
+            //
+            entities: {
+                //
+                // A string, which supports escaping " and '
+                //
+                //     "milky way" 'he\'s the one!'
+                //
+                quoted: function () {
+                    var str, j = i, e;
+
+                    if (input.charAt(j) === '~') { j++, e = true } // Escaped strings
+                    if (input.charAt(j) !== '"' && input.charAt(j) !== "'") return;
+
+                    e && $('~');
+
+                    if (str = $(/^"((?:[^"\\\r\n]|\\.)*)"|'((?:[^'\\\r\n]|\\.)*)'/)) {
+                        return new(tree.Quoted)(str[0], str[1] || str[2], e);
+                    }
+                },
+
+                //
+                // A catch-all word, such as:
+                //
+                //     black border-collapse
+                //
+                keyword: function () {
+                    var k;
+
+                    if (k = $(/^[_A-Za-z-][_A-Za-z0-9-]*/)) {
+                        if (tree.colors.hasOwnProperty(k)) {
+                            // detect named color
+                            return new(tree.Color)(tree.colors[k].slice(1));
+                        } else {
+                            return new(tree.Keyword)(k);
+                        }
+                    }
+                },
+
+                //
+                // A function call
+                //
+                //     rgb(255, 0, 255)
+                //
+                // We also try to catch IE's `alpha()`, but let the `alpha` parser
+                // deal with the details.
+                //
+                // The arguments are parsed with the `entities.arguments` parser.
+                //
+                call: function () {
+                    var name, nameLC, args, alpha_ret, index = i;
+
+                    if (! (name = /^([\w-]+|%|progid:[\w\.]+)\(/.exec(chunks[j]))) return;
+
+                    name = name[1];
+                    nameLC = name.toLowerCase();
+
+                    if (nameLC === 'url') { return null }
+                    else                { i += name.length }
+
+                    if (nameLC === 'alpha') {
+                        alpha_ret = $(this.alpha);
+                        if(typeof alpha_ret !== 'undefined') {
+                            return alpha_ret;
+                        }
+                    }
+
+                    $('('); // Parse the '(' and consume whitespace.
+
+                    args = $(this.entities.arguments);
+
+                    if (! $(')')) return;
+
+                    if (name) { return new(tree.Call)(name, args, index, env.filename) }
+                },
+                arguments: function () {
+                    var args = [], arg;
+
+                    while (arg = $(this.entities.assignment) || $(this.expression)) {
+                        args.push(arg);
+                        if (! $(',')) { break }
+                    }
+                    return args;
+                },
+                literal: function () {
+                    return $(this.entities.ratio) ||
+                           $(this.entities.dimension) ||
+                           $(this.entities.color) ||
+                           $(this.entities.quoted);
+                },
+
+                // Assignments are argument entities for calls.
+                // They are present in ie filter properties as shown below.
+                //
+                //     filter: progid:DXImageTransform.Microsoft.Alpha( *opacity=50* )
+                //
+
+                assignment: function () {
+                    var key, value;
+                    if ((key = $(/^\w+(?=\s?=)/i)) && $('=') && (value = $(this.entity))) {
+                        return new(tree.Assignment)(key, value);
+                    }
+                },
+
+                //
+                // Parse url() tokens
+                //
+                // We use a specific rule for urls, because they don't really behave like
+                // standard function calls. The difference is that the argument doesn't have
+                // to be enclosed within a string, so it can't be parsed as an Expression.
+                //
+                url: function () {
+                    var value;
+
+                    if (input.charAt(i) !== 'u' || !$(/^url\(/)) return;
+                    value = $(this.entities.quoted)  || $(this.entities.variable) ||
+                            $(/^(?:(?:\\[\(\)'"])|[^\(\)'"])+/) || "";
+
+                    expect(')');
+
+                    return new(tree.URL)((value.value != null || value instanceof tree.Variable)
+                                        ? value : new(tree.Anonymous)(value), imports.paths);
+                },
+
+                //
+                // A Variable entity, such as `@fink`, in
+                //
+                //     width: @fink + 2px
+                //
+                // We use a different parser for variable definitions,
+                // see `parsers.variable`.
+                //
+                variable: function () {
+                    var name, index = i;
+
+                    if (input.charAt(i) === '@' && (name = $(/^@@?[\w-]+/))) {
+                        return new(tree.Variable)(name, index, env.filename);
+                    }
+                },
+
+                // A variable entity useing the protective {} e.g. @{var}
+                variableCurly: function () {
+                    var name, curly, index = i;
+
+                    if (input.charAt(i) === '@' && (curly = $(/^@\{([\w-]+)\}/))) {
+                        return new(tree.Variable)("@" + curly[1], index, env.filename);
+                    }
+                },
+
+                //
+                // A Hexadecimal color
+                //
+                //     #4F3C2F
+                //
+                // `rgb` and `hsl` colors are parsed through the `entities.call` parser.
+                //
+                color: function () {
+                    var rgb;
+
+                    if (input.charAt(i) === '#' && (rgb = $(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/))) {
+                        return new(tree.Color)(rgb[1]);
+                    }
+                },
+
+                //
+                // A Dimension, that is, a number and a unit
+                //
+                //     0.5em 95%
+                //
+                dimension: function () {
+                    var value, c = input.charCodeAt(i);
+                    if ((c > 57 || c < 45) || c === 47) return;
+
+                    if (value = $(/^(-?\d*\.?\d+)(px|%|em|pc|ex|in|deg|s|ms|pt|cm|mm|rad|grad|turn|dpi|dpcm|dppx|rem|vw|vh|vmin|vm|ch)?/)) {
+                        return new(tree.Dimension)(value[1], value[2]);
+                    }
+                },
+
+                //
+                // A Ratio
+                //
+                //    16/9
+                //
+                ratio: function () {
+                  var value, c = input.charCodeAt(i);
+                  if (c > 57 || c < 48) return;
+
+                  if (value = $(/^(\d+\/\d+)/)) {
+                    return new(tree.Ratio)(value[1]);
+                  }
+                },
+
+                //
+                // JavaScript code to be evaluated
+                //
+                //     `window.location.href`
+                //
+                javascript: function () {
+                    var str, j = i, e;
+
+                    if (input.charAt(j) === '~') { j++, e = true } // Escaped strings
+                    if (input.charAt(j) !== '`') { return }
+
+                    e && $('~');
+
+                    if (str = $(/^`([^`]*)`/)) {
+                        return new(tree.JavaScript)(str[1], i, e);
+                    }
+                }
+            },
+
+            //
+            // The variable part of a variable definition. Used in the `rule` parser
+            //
+            //     @fink:
+            //
+            variable: function () {
+                var name;
+
+                if (input.charAt(i) === '@' && (name = $(/^(@[\w-]+)\s*:/))) { return name[1] }
+            },
+
+            //
+            // A font size/line-height shorthand
+            //
+            //     small/12px
+            //
+            // We need to peek first, or we'll match on keywords and dimensions
+            //
+            shorthand: function () {
+                var a, b;
+
+                if (! peek(/^[@\w.%-]+\/[@\w.-]+/)) return;
+
+                save();
+
+                if ((a = $(this.entity)) && $('/') && (b = $(this.entity))) {
+                    return new(tree.Shorthand)(a, b);
+                }
+
+                restore();
+            },
+
+            //
+            // Mixins
+            //
+            mixin: {
+                //
+                // A Mixin call, with an optional argument list
+                //
+                //     #mixins > .square(#fff);
+                //     .rounded(4px, black);
+                //     .button;
+                //
+                // The `while` loop is there because mixins can be
+                // namespaced, but we only support the child and descendant
+                // selector for now.
+                //
+                call: function () {
+                    var elements = [], e, c, args = [], arg, index = i, s = input.charAt(i), name, value, important = false;
+
+                    if (s !== '.' && s !== '#') { return }
+                    
+                    save(); // stop us absorbing part of an invalid selector
+
+                    while (e = $(/^[#.](?:[\w-]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+/)) {
+                        elements.push(new(tree.Element)(c, e, i));
+                        c = $('>');
+                    }
+                    if ($('(')) {
+                        while (arg = $(this.expression)) {
+                            value = arg;
+                            name = null;
+
+                            // Variable
+                            if (arg.value.length == 1) {
+                                var val = arg.value[0];
+                                if (val instanceof tree.Variable) {
+                                    if ($(':')) {
+                                        if (value = $(this.expression)) {
+                                            name = val.name;
+                                        } else {
+                                            throw new(Error)("Expected value");
+                                        }
+                                    }
+                                }
+                            }
+
+                            args.push({ name: name, value: value });
+
+                            if (! $(',')) { break }
+                        }
+                        if (! $(')')) throw new(Error)("Expected )");
+                    }
+
+                    if ($(this.important)) {
+                        important = true;
+                    }
+
+                    if (elements.length > 0 && ($(';') || peek('}'))) {
+                        return new(tree.mixin.Call)(elements, args, index, env.filename, important);
+                    }
+                    
+                    restore();
+                },
+
+                //
+                // A Mixin definition, with a list of parameters
+                //
+                //     .rounded (@radius: 2px, @color) {
+                //        ...
+                //     }
+                //
+                // Until we have a finer grained state-machine, we have to
+                // do a look-ahead, to make sure we don't have a mixin call.
+                // See the `rule` function for more information.
+                //
+                // We start by matching `.rounded (`, and then proceed on to
+                // the argument list, which has optional default values.
+                // We store the parameters in `params`, with a `value` key,
+                // if there is a value, such as in the case of `@radius`.
+                //
+                // Once we've got our params list, and a closing `)`, we parse
+                // the `{...}` block.
+                //
+                definition: function () {
+                    var name, params = [], match, ruleset, param, value, cond, variadic = false;
+                    if ((input.charAt(i) !== '.' && input.charAt(i) !== '#') ||
+                        peek(/^[^{]*(;|})/)) return;
+
+                    save();
+
+                    if (match = $(/^([#.](?:[\w-]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+)\s*\(/)) {
+                        name = match[1];
+
+                        do {
+                            if (input.charAt(i) === '.' && $(/^\.{3}/)) {
+                                variadic = true;
+                                break;
+                            } else if (param = $(this.entities.variable) || $(this.entities.literal)
+                                                                         || $(this.entities.keyword)) {
+                                // Variable
+                                if (param instanceof tree.Variable) {
+                                    if ($(':')) {
+                                        value = expect(this.expression, 'expected expression');
+                                        params.push({ name: param.name, value: value });
+                                    } else if ($(/^\.{3}/)) {
+                                        params.push({ name: param.name, variadic: true });
+                                        variadic = true;
+                                        break;
+                                    } else {
+                                        params.push({ name: param.name });
+                                    }
+                                } else {
+                                    params.push({ value: param });
+                                }
+                            } else {
+                                break;
+                            }
+                        } while ($(','))
+
+                        // .mixincall("@{a}"); 
+                        // looks a bit like a mixin definition.. so we have to be nice and restore
+                        if (!$(')')) {
+                            furthest = i;
+                            restore();
+                        }
+
+                        if ($(/^when/)) { // Guard
+                            cond = expect(this.conditions, 'expected condition');
+                        }
+
+                        ruleset = $(this.block);
+
+                        if (ruleset) {
+                            return new(tree.mixin.Definition)(name, params, ruleset, cond, variadic);
+                        } else {
+                            restore();
+                        }
+                    }
+                }
+            },
+
+            //
+            // Entities are the smallest recognized token,
+            // and can be found inside a rule's value.
+            //
+            entity: function () {
+                return $(this.entities.literal) || $(this.entities.variable) || $(this.entities.url) ||
+                       $(this.entities.call)    || $(this.entities.keyword)  || $(this.entities.javascript) ||
+                       $(this.comment);
+            },
+
+            //
+            // A Rule terminator. Note that we use `peek()` to check for '}',
+            // because the `block` rule will be expecting it, but we still need to make sure
+            // it's there, if ';' was ommitted.
+            //
+            end: function () {
+                return $(';') || peek('}');
+            },
+
+            //
+            // IE's alpha function
+            //
+            //     alpha(opacity=88)
+            //
+            alpha: function () {
+                var value;
+
+                if (! $(/^\(opacity=/i)) return;
+                if (value = $(/^\d+/) || $(this.entities.variable)) {
+                    expect(')');
+                    return new(tree.Alpha)(value);
+                }
+            },
+
+            //
+            // A Selector Element
+            //
+            //     div
+            //     + h1
+            //     #socks
+            //     input[type="text"]
+            //
+            // Elements are the building blocks for Selectors,
+            // they are made out of a `Combinator` (see combinator rule),
+            // and an element name, such as a tag a class, or `*`.
+            //
+            element: function () {
+                var e, t, c, v;
+
+                c = $(this.combinator);
+
+                e = $(/^(?:\d+\.\d+|\d+)%/) || $(/^(?:[.#]?|:*)(?:[\w-]|[^\x00-\x9f]|\\(?:[A-Fa-f0-9]{1,6} ?|[^A-Fa-f0-9]))+/) ||
+                    $('*') || $('&') || $(this.attribute) || $(/^\([^)@]+\)/) || $(/^[\.#](?=@)/) || $(this.entities.variableCurly);
+
+                if (! e) {
+                    if ($('(') && (v = ($(this.entities.variableCurly) || $(this.entities.variable))) && $(')')) {
+                        e = new(tree.Paren)(v);
+                    }
+                }
+
+                if (e) { return new(tree.Element)(c, e, i) }
+            },
+
+            //
+            // Combinators combine elements together, in a Selector.
+            //
+            // Because our parser isn't white-space sensitive, special care
+            // has to be taken, when parsing the descendant combinator, ` `,
+            // as it's an empty space. We have to check the previous character
+            // in the input, to see if it's a ` ` character. More info on how
+            // we deal with this in *combinator.js*.
+            //
+            combinator: function () {
+                var match, c = input.charAt(i);
+
+                if (c === '>' || c === '+' || c === '~') {
+                    i++;
+                    while (input.charAt(i).match(/\s/)) { i++ }
+                    return new(tree.Combinator)(c);
+                } else if (input.charAt(i - 1).match(/\s/)) {
+                    return new(tree.Combinator)(" ");
+                } else {
+                    return new(tree.Combinator)(null);
+                }
+            },
+
+            //
+            // A CSS Selector
+            //
+            //     .class > div + h1
+            //     li a:hover
+            //
+            // Selectors are made out of one or more Elements, see above.
+            //
+            selector: function () {
+                var sel, e, elements = [], c, match;
+
+                // depreciated, will be removed soon
+                if ($('(')) {
+                    sel = $(this.entity);
+                    expect(')');
+                    return new(tree.Selector)([new(tree.Element)('', sel, i)]);
+                }
+
+                while (e = $(this.element)) {
+                    c = input.charAt(i);
+                    elements.push(e)
+                    if (c === '{' || c === '}' || c === ';' || c === ',') { break }
+                }
+
+                if (elements.length > 0) { return new(tree.Selector)(elements) }
+            },
+            tag: function () {
+                return $(/^[A-Za-z][A-Za-z-]*[0-9]?/) || $('*');
+            },
+            attribute: function () {
+                var attr = '', key, val, op;
+
+                if (! $('[')) return;
+
+                if (key = $(/^(?:[_A-Za-z0-9-]|\\.)+/) || $(this.entities.quoted)) {
+                    if ((op = $(/^[|~*$^]?=/)) &&
+                        (val = $(this.entities.quoted) || $(/^[\w-]+/))) {
+                        attr = [key, op, val.toCSS ? val.toCSS() : val].join('');
+                    } else { attr = key }
+                }
+
+                if (! $(']')) return;
+
+                if (attr) { return "[" + attr + "]" }
+            },
+
+            //
+            // The `block` rule is used by `ruleset` and `mixin.definition`.
+            // It's a wrapper around the `primary` rule, with added `{}`.
+            //
+            block: function () {
+                var content;
+                if ($('{') && (content = $(this.primary)) && $('}')) {
+                    return content;
+                }
+            },
+
+            //
+            // div, .class, body > p {...}
+            //
+            ruleset: function () {
+                var selectors = [], s, rules, match, debugInfo;
+                save();
+
+                if (env.dumpLineNumbers)
+                    debugInfo = getDebugInfo(i, input, env);
+
+                while (s = $(this.selector)) {
+                    selectors.push(s);
+                    $(this.comment);
+                    if (! $(',')) { break }
+                    $(this.comment);
+                }
+
+                if (selectors.length > 0 && (rules = $(this.block))) {
+                    var ruleset = new(tree.Ruleset)(selectors, rules, env.strictImports);
+                    if (env.dumpLineNumbers)
+                        ruleset.debugInfo = debugInfo;
+                    return ruleset;
+                } else {
+                    // Backtrack
+                    furthest = i;
+                    restore();
+                }
+            },
+            rule: function () {
+                var name, value, c = input.charAt(i), important, match;
+                save();
+
+                if (c === '.' || c === '#' || c === '&') { return }
+
+                if (name = $(this.variable) || $(this.property)) {
+                    if ((name.charAt(0) != '@') && (match = /^([^@+\/'"*`(;{}-]*);/.exec(chunks[j]))) {
+                        i += match[0].length - 1;
+                        value = new(tree.Anonymous)(match[1]);
+                    } else if (name === "font") {
+                        value = $(this.font);
+                    } else {
+                        value = $(this.value);
+                    }
+                    important = $(this.important);
+
+                    if (value && $(this.end)) {
+                        return new(tree.Rule)(name, value, important, memo);
+                    } else {
+                        furthest = i;
+                        restore();
+                    }
+                }
+            },
+
+            //
+            // An @import directive
+            //
+            //     @import "lib";
+            //
+            // Depending on our environemnt, importing is done differently:
+            // In the browser, it's an XHR request, in Node, it would be a
+            // file-system operation. The function used for importing is
+            // stored in `import`, which we pass to the Import constructor.
+            //
+            "import": function () {
+                var path, features, index = i;
+                
+                save();
+                
+                var dir = $(/^@import(?:-(once))?\s+/);
+
+                if (dir && (path = $(this.entities.quoted) || $(this.entities.url))) {
+                    features = $(this.mediaFeatures);
+                    if ($(';')) {
+                        return new(tree.Import)(path, imports, features, (dir[1] === 'once'), index);
+                    }
+                }
+                
+                restore();
+            },
+
+            mediaFeature: function () {
+                var e, p, nodes = [];
+
+                do {
+                    if (e = $(this.entities.keyword)) {
+                        nodes.push(e);
+                    } else if ($('(')) {
+                        p = $(this.property);
+                        e = $(this.entity);
+                        if ($(')')) {
+                            if (p && e) {
+                                nodes.push(new(tree.Paren)(new(tree.Rule)(p, e, null, i, true)));
+                            } else if (e) {
+                                nodes.push(new(tree.Paren)(e));
+                            } else {
+                                return null;
+                            }
+                        } else { return null }
+                    }
+                } while (e);
+
+                if (nodes.length > 0) {
+                    return new(tree.Expression)(nodes);
+                }
+            },
+
+            mediaFeatures: function () {
+                var e, features = [];
+
+                do {
+                  if (e = $(this.mediaFeature)) {
+                      features.push(e);
+                      if (! $(',')) { break }
+                  } else if (e = $(this.entities.variable)) {
+                      features.push(e);
+                      if (! $(',')) { break }
+                  }
+                } while (e);
+
+                return features.length > 0 ? features : null;
+            },
+
+            media: function () {
+                var features, rules, media, debugInfo;
+
+                if (env.dumpLineNumbers)
+                    debugInfo = getDebugInfo(i, input, env);
+
+                if ($(/^@media/)) {
+                    features = $(this.mediaFeatures);
+
+                    if (rules = $(this.block)) {
+                        media = new(tree.Media)(rules, features);
+                        if(env.dumpLineNumbers)
+                            media.debugInfo = debugInfo;
+                        return media;
+                    }
+                }
+            },
+
+            //
+            // A CSS Directive
+            //
+            //     @charset "utf-8";
+            //
+            directive: function () {
+                var name, value, rules, identifier, e, nodes, nonVendorSpecificName,
+                    hasBlock, hasIdentifier;
+
+                if (input.charAt(i) !== '@') return;
+
+                if (value = $(this['import']) || $(this.media)) {
+                    return value;
+                }
+                
+                save();
+
+                name = $(/^@[a-z-]+/);
+
+                nonVendorSpecificName = name;
+                if (name.charAt(1) == '-' && name.indexOf('-', 2) > 0) {
+                    nonVendorSpecificName = "@" + name.slice(name.indexOf('-', 2) + 1);
+                }
+
+                switch(nonVendorSpecificName) {
+                    case "@font-face":
+                        hasBlock = true;
+                        break;
+                    case "@viewport":
+                    case "@top-left":
+                    case "@top-left-corner":
+                    case "@top-center":
+                    case "@top-right":
+                    case "@top-right-corner":
+                    case "@bottom-left":
+                    case "@bottom-left-corner":
+                    case "@bottom-center":
+                    case "@bottom-right":
+                    case "@bottom-right-corner":
+                    case "@left-top":
+                    case "@left-middle":
+                    case "@left-bottom":
+                    case "@right-top":
+                    case "@right-middle":
+                    case "@right-bottom":
+                        hasBlock = true;
+                        break;
+                    case "@page":
+                    case "@document":
+                    case "@supports":
+                    case "@keyframes":
+                        hasBlock = true;
+                        hasIdentifier = true;
+                        break;
+                }
+
+                if (hasIdentifier) {
+                    name += " " + ($(/^[^{]+/) || '').trim();
+                }
+
+                if (hasBlock)
+                {
+                    if (rules = $(this.block)) {
+                        return new(tree.Directive)(name, rules);
+                    }
+                } else {
+                    if ((value = $(this.entity)) && $(';')) {
+                        return new(tree.Directive)(name, value);
+                    }
+                }
+                
+                restore();
+            },
+            font: function () {
+                var value = [], expression = [], weight, shorthand, font, e;
+
+                while (e = $(this.shorthand) || $(this.entity)) {
+                    expression.push(e);
+                }
+                value.push(new(tree.Expression)(expression));
+
+                if ($(',')) {
+                    while (e = $(this.expression)) {
+                        value.push(e);
+                        if (! $(',')) { break }
+                    }
+                }
+                return new(tree.Value)(value);
+            },
+
+            //
+            // A Value is a comma-delimited list of Expressions
+            //
+            //     font-family: Baskerville, Georgia, serif;
+            //
+            // In a Rule, a Value represents everything after the `:`,
+            // and before the `;`.
+            //
+            value: function () {
+                var e, expressions = [], important;
+
+                while (e = $(this.expression)) {
+                    expressions.push(e);
+                    if (! $(',')) { break }
+                }
+
+                if (expressions.length > 0) {
+                    return new(tree.Value)(expressions);
+                }
+            },
+            important: function () {
+                if (input.charAt(i) === '!') {
+                    return $(/^! *important/);
+                }
+            },
+            sub: function () {
+                var e;
+
+                if ($('(') && (e = $(this.expression)) && $(')')) {
+                    return e;
+                }
+            },
+            multiplication: function () {
+                var m, a, op, operation;
+                if (m = $(this.operand)) {
+                    while (!peek(/^\/\*/) && (op = ($('/') || $('*'))) && (a = $(this.operand))) {
+                        operation = new(tree.Operation)(op, [operation || m, a]);
+                    }
+                    return operation || m;
+                }
+            },
+            addition: function () {
+                var m, a, op, operation;
+                if (m = $(this.multiplication)) {
+                    while ((op = $(/^[-+]\s+/) || (!isWhitespace(input.charAt(i - 1)) && ($('+') || $('-')))) &&
+                           (a = $(this.multiplication))) {
+                        operation = new(tree.Operation)(op, [operation || m, a]);
+                    }
+                    return operation || m;
+                }
+            },
+            conditions: function () {
+                var a, b, index = i, condition;
+
+                if (a = $(this.condition)) {
+                    while ($(',') && (b = $(this.condition))) {
+                        condition = new(tree.Condition)('or', condition || a, b, index);
+                    }
+                    return condition || a;
+                }
+            },
+            condition: function () {
+                var a, b, c, op, index = i, negate = false;
+
+                if ($(/^not/)) { negate = true }
+                expect('(');
+                if (a = $(this.addition) || $(this.entities.keyword) || $(this.entities.quoted)) {
+                    if (op = $(/^(?:>=|=<|[<=>])/)) {
+                        if (b = $(this.addition) || $(this.entities.keyword) || $(this.entities.quoted)) {
+                            c = new(tree.Condition)(op, a, b, index, negate);
+                        } else {
+                            error('expected expression');
+                        }
+                    } else {
+                        c = new(tree.Condition)('=', a, new(tree.Keyword)('true'), index, negate);
+                    }
+                    expect(')');
+                    return $(/^and/) ? new(tree.Condition)('and', c, $(this.condition)) : c;
+                }
+            },
+
+            //
+            // An operand is anything that can be part of an operation,
+            // such as a Color, or a Variable
+            //
+            operand: function () {
+                var negate, p = input.charAt(i + 1);
+
+                if (input.charAt(i) === '-' && (p === '@' || p === '(')) { negate = $('-') }
+                var o = $(this.sub) || $(this.entities.dimension) ||
+                        $(this.entities.color) || $(this.entities.variable) ||
+                        $(this.entities.call);
+                return negate ? new(tree.Operation)('*', [new(tree.Dimension)(-1), o])
+                              : o;
+            },
+
+            //
+            // Expressions either represent mathematical operations,
+            // or white-space delimited Entities.
+            //
+            //     1px solid black
+            //     @var * 2
+            //
+            expression: function () {
+                var e, delim, entities = [], d;
+
+                while (e = $(this.addition) || $(this.entity)) {
+                    entities.push(e);
+                }
+                if (entities.length > 0) {
+                    return new(tree.Expression)(entities);
+                }
+            },
+            property: function () {
+                var name;
+
+                if (name = $(/^(\*?-?[_a-z0-9-]+)\s*:/)) {
+                    return name[1];
+                }
+            }
+        }
+    };
+};
+
+if (less.mode === 'browser' || less.mode === 'rhino') {
+    //
+    // Used by `@import` directives
+    //
+    less.Parser.importer = function (path, paths, callback, env) {
+        if (!/^([a-z-]+:)?\//.test(path) && paths.length > 0) {
+            path = paths[0] + path;
+        }
+        // We pass `true` as 3rd argument, to force the reload of the import.
+        // This is so we can get the syntax tree as opposed to just the CSS output,
+        // as we need this to evaluate the current stylesheet.
+        // __ Now using the hack of passing a ref to top parser's content cache in the 1st arg. __
+        loadStyleSheet({ href: path, title: path, type: env.mime, contents: env.contents }, function (e) {
+            if (e && typeof(env.errback) === "function") {
+                env.errback.call(null, path, paths, callback, env);
+            } else {
+                callback.apply(null, arguments);
+            }
+        }, true);
+    };
+}
+
+(function (tree) {
+
+tree.functions = {
+    rgb: function (r, g, b) {
+        return this.rgba(r, g, b, 1.0);
+    },
+    rgba: function (r, g, b, a) {
+        var rgb = [r, g, b].map(function (c) { return number(c) }),
+            a = number(a);
+        return new(tree.Color)(rgb, a);
+    },
+    hsl: function (h, s, l) {
+        return this.hsla(h, s, l, 1.0);
+    },
+    hsla: function (h, s, l, a) {
+        h = (number(h) % 360) / 360;
+        s = number(s); l = number(l); a = number(a);
+
+        var m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
+        var m1 = l * 2 - m2;
+
+        return this.rgba(hue(h + 1/3) * 255,
+                         hue(h)       * 255,
+                         hue(h - 1/3) * 255,
+                         a);
+
+        function hue(h) {
+            h = h < 0 ? h + 1 : (h > 1 ? h - 1 : h);
+            if      (h * 6 < 1) return m1 + (m2 - m1) * h * 6;
+            else if (h * 2 < 1) return m2;
+            else if (h * 3 < 2) return m1 + (m2 - m1) * (2/3 - h) * 6;
+            else                return m1;
+        }
+    },
+    hue: function (color) {
+        return new(tree.Dimension)(Math.round(color.toHSL().h));
+    },
+    saturation: function (color) {
+        return new(tree.Dimension)(Math.round(color.toHSL().s * 100), '%');
+    },
+    lightness: function (color) {
+        return new(tree.Dimension)(Math.round(color.toHSL().l * 100), '%');
+    },
+    red: function (color) {
+        return new(tree.Dimension)(color.rgb[0]);
+    },
+    green: function (color) {
+        return new(tree.Dimension)(color.rgb[1]);
+    },
+    blue: function (color) {
+        return new(tree.Dimension)(color.rgb[2]);
+    },
+    alpha: function (color) {
+        return new(tree.Dimension)(color.toHSL().a);
+    },
+    luma: function (color) {
+        return new(tree.Dimension)(Math.round((0.2126 * (color.rgb[0]/255) +
+            0.7152 * (color.rgb[1]/255) +
+            0.0722 * (color.rgb[2]/255))
+            * color.alpha * 100), '%');
+    },
+    saturate: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.s += amount.value / 100;
+        hsl.s = clamp(hsl.s);
+        return hsla(hsl);
+    },
+    desaturate: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.s -= amount.value / 100;
+        hsl.s = clamp(hsl.s);
+        return hsla(hsl);
+    },
+    lighten: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.l += amount.value / 100;
+        hsl.l = clamp(hsl.l);
+        return hsla(hsl);
+    },
+    darken: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.l -= amount.value / 100;
+        hsl.l = clamp(hsl.l);
+        return hsla(hsl);
+    },
+    fadein: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.a += amount.value / 100;
+        hsl.a = clamp(hsl.a);
+        return hsla(hsl);
+    },
+    fadeout: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.a -= amount.value / 100;
+        hsl.a = clamp(hsl.a);
+        return hsla(hsl);
+    },
+    fade: function (color, amount) {
+        var hsl = color.toHSL();
+
+        hsl.a = amount.value / 100;
+        hsl.a = clamp(hsl.a);
+        return hsla(hsl);
+    },
+    spin: function (color, amount) {
+        var hsl = color.toHSL();
+        var hue = (hsl.h + amount.value) % 360;
+
+        hsl.h = hue < 0 ? 360 + hue : hue;
+
+        return hsla(hsl);
+    },
+    //
+    // Copyright (c) 2006-2009 Hampton Catlin, Nathan Weizenbaum, and Chris Eppstein
+    // http://sass-lang.com
+    //
+    mix: function (color1, color2, weight) {
+        if (!weight) {
+            weight = new(tree.Dimension)(50);
+        }
+        var p = weight.value / 100.0;
+        var w = p * 2 - 1;
+        var a = color1.toHSL().a - color2.toHSL().a;
+
+        var w1 = (((w * a == -1) ? w : (w + a) / (1 + w * a)) + 1) / 2.0;
+        var w2 = 1 - w1;
+
+        var rgb = [color1.rgb[0] * w1 + color2.rgb[0] * w2,
+                   color1.rgb[1] * w1 + color2.rgb[1] * w2,
+                   color1.rgb[2] * w1 + color2.rgb[2] * w2];
+
+        var alpha = color1.alpha * p + color2.alpha * (1 - p);
+
+        return new(tree.Color)(rgb, alpha);
+    },
+    greyscale: function (color) {
+        return this.desaturate(color, new(tree.Dimension)(100));
+    },
+    contrast: function (color, dark, light, threshold) {
+        if (typeof light === 'undefined') {
+            light = this.rgba(255, 255, 255, 1.0);
+        }
+        if (typeof dark === 'undefined') {
+            dark = this.rgba(0, 0, 0, 1.0);
+        }
+        if (typeof threshold === 'undefined') {
+            threshold = 0.43;
+        } else {
+            threshold = threshold.value;
+        }
+        if (((0.2126 * (color.rgb[0]/255) + 0.7152 * (color.rgb[1]/255) + 0.0722 * (color.rgb[2]/255)) * color.alpha) < threshold) {
+            return light;
+        } else {
+            return dark;
+        }
+    },
+    e: function (str) {
+        return new(tree.Anonymous)(str instanceof tree.JavaScript ? str.evaluated : str);
+    },
+    escape: function (str) {
+        return new(tree.Anonymous)(encodeURI(str.value).replace(/=/g, "%3D").replace(/:/g, "%3A").replace(/#/g, "%23").replace(/;/g, "%3B").replace(/\(/g, "%28").replace(/\)/g, "%29"));
+    },
+    '%': function (quoted /* arg, arg, ...*/) {
+        var args = Array.prototype.slice.call(arguments, 1),
+            str = quoted.value;
+
+        for (var i = 0; i < args.length; i++) {
+            str = str.replace(/%[sda]/i, function(token) {
+                var value = token.match(/s/i) ? args[i].value : args[i].toCSS();
+                return token.match(/[A-Z]$/) ? encodeURIComponent(value) : value;
+            });
+        }
+        str = str.replace(/%%/g, '%');
+        return new(tree.Quoted)('"' + str + '"', str);
+    },
+    round: function (n, f) {
+        var fraction = typeof(f) === "undefined" ? 0 : f.value;
+        if (n instanceof tree.Dimension) {
+            return new(tree.Dimension)(number(n).toFixed(fraction), n.unit);
+        } else if (typeof(n) === 'number') {
+            return n.toFixed(fraction);
+        } else {
+            throw { type: "Argument", message: "argument must be a number" };
+        }
+    },
+    ceil: function (n) {
+        return this._math('ceil', n);
+    },
+    floor: function (n) {
+        return this._math('floor', n);
+    },
+    _math: function (fn, n) {
+        if (n instanceof tree.Dimension) {
+            return new(tree.Dimension)(Math[fn](number(n)), n.unit);
+        } else if (typeof(n) === 'number') {
+            return Math[fn](n);
+        } else {
+            throw { type: "Argument", message: "argument must be a number" };
+        }
+    },
+    argb: function (color) {
+        return new(tree.Anonymous)(color.toARGB());
+
+    },
+    percentage: function (n) {
+        return new(tree.Dimension)(n.value * 100, '%');
+    },
+    color: function (n) {
+        if (n instanceof tree.Quoted) {
+            return new(tree.Color)(n.value.slice(1));
+        } else {
+            throw { type: "Argument", message: "argument must be a string" };
+        }
+    },
+    iscolor: function (n) {
+        return this._isa(n, tree.Color);
+    },
+    isnumber: function (n) {
+        return this._isa(n, tree.Dimension);
+    },
+    isstring: function (n) {
+        return this._isa(n, tree.Quoted);
+    },
+    iskeyword: function (n) {
+        return this._isa(n, tree.Keyword);
+    },
+    isurl: function (n) {
+        return this._isa(n, tree.URL);
+    },
+    ispixel: function (n) {
+        return (n instanceof tree.Dimension) && n.unit === 'px' ? tree.True : tree.False;
+    },
+    ispercentage: function (n) {
+        return (n instanceof tree.Dimension) && n.unit === '%' ? tree.True : tree.False;
+    },
+    isem: function (n) {
+        return (n instanceof tree.Dimension) && n.unit === 'em' ? tree.True : tree.False;
+    },
+    _isa: function (n, Type) {
+        return (n instanceof Type) ? tree.True : tree.False;
+    },
+    
+    /* Blending modes */
+    
+    multiply: function(color1, color2) {
+        var r = color1.rgb[0] * color2.rgb[0] / 255;
+        var g = color1.rgb[1] * color2.rgb[1] / 255;
+        var b = color1.rgb[2] * color2.rgb[2] / 255;
+        return this.rgb(r, g, b);
+    },
+    screen: function(color1, color2) {
+        var r = 255 - (255 - color1.rgb[0]) * (255 - color2.rgb[0]) / 255;
+        var g = 255 - (255 - color1.rgb[1]) * (255 - color2.rgb[1]) / 255;
+        var b = 255 - (255 - color1.rgb[2]) * (255 - color2.rgb[2]) / 255;
+        return this.rgb(r, g, b);
+    },
+    overlay: function(color1, color2) {
+        var r = color1.rgb[0] < 128 ? 2 * color1.rgb[0] * color2.rgb[0] / 255 : 255 - 2 * (255 - color1.rgb[0]) * (255 - color2.rgb[0]) / 255;
+        var g = color1.rgb[1] < 128 ? 2 * color1.rgb[1] * color2.rgb[1] / 255 : 255 - 2 * (255 - color1.rgb[1]) * (255 - color2.rgb[1]) / 255;
+        var b = color1.rgb[2] < 128 ? 2 * color1.rgb[2] * color2.rgb[2] / 255 : 255 - 2 * (255 - color1.rgb[2]) * (255 - color2.rgb[2]) / 255;
+        return this.rgb(r, g, b);
+    },
+    softlight: function(color1, color2) {
+        var t = color2.rgb[0] * color1.rgb[0] / 255;
+        var r = t + color1.rgb[0] * (255 - (255 - color1.rgb[0]) * (255 - color2.rgb[0]) / 255 - t) / 255;
+        t = color2.rgb[1] * color1.rgb[1] / 255;
+        var g = t + color1.rgb[1] * (255 - (255 - color1.rgb[1]) * (255 - color2.rgb[1]) / 255 - t) / 255;
+        t = color2.rgb[2] * color1.rgb[2] / 255;
+        var b = t + color1.rgb[2] * (255 - (255 - color1.rgb[2]) * (255 - color2.rgb[2]) / 255 - t) / 255;
+        return this.rgb(r, g, b);
+    },
+    hardlight: function(color1, color2) {
+        var r = color2.rgb[0] < 128 ? 2 * color2.rgb[0] * color1.rgb[0] / 255 : 255 - 2 * (255 - color2.rgb[0]) * (255 - color1.rgb[0]) / 255;
+        var g = color2.rgb[1] < 128 ? 2 * color2.rgb[1] * color1.rgb[1] / 255 : 255 - 2 * (255 - color2.rgb[1]) * (255 - color1.rgb[1]) / 255;
+        var b = color2.rgb[2] < 128 ? 2 * color2.rgb[2] * color1.rgb[2] / 255 : 255 - 2 * (255 - color2.rgb[2]) * (255 - color1.rgb[2]) / 255;
+        return this.rgb(r, g, b);
+    },
+    difference: function(color1, color2) {
+        var r = Math.abs(color1.rgb[0] - color2.rgb[0]);
+        var g = Math.abs(color1.rgb[1] - color2.rgb[1]);
+        var b = Math.abs(color1.rgb[2] - color2.rgb[2]);
+        return this.rgb(r, g, b);
+    },
+    exclusion: function(color1, color2) {
+        var r = color1.rgb[0] + color2.rgb[0] * (255 - color1.rgb[0] - color1.rgb[0]) / 255;
+        var g = color1.rgb[1] + color2.rgb[1] * (255 - color1.rgb[1] - color1.rgb[1]) / 255;
+        var b = color1.rgb[2] + color2.rgb[2] * (255 - color1.rgb[2] - color1.rgb[2]) / 255;
+        return this.rgb(r, g, b);
+    },
+    average: function(color1, color2) {
+        var r = (color1.rgb[0] + color2.rgb[0]) / 2;
+        var g = (color1.rgb[1] + color2.rgb[1]) / 2;
+        var b = (color1.rgb[2] + color2.rgb[2]) / 2;
+        return this.rgb(r, g, b);
+    },
+    negation: function(color1, color2) {
+        var r = 255 - Math.abs(255 - color2.rgb[0] - color1.rgb[0]);
+        var g = 255 - Math.abs(255 - color2.rgb[1] - color1.rgb[1]);
+        var b = 255 - Math.abs(255 - color2.rgb[2] - color1.rgb[2]);
+        return this.rgb(r, g, b);
+    },
+    tint: function(color, amount) {
+        return this.mix(this.rgb(255,255,255), color, amount);
+    },
+    shade: function(color, amount) {
+        return this.mix(this.rgb(0, 0, 0), color, amount);
+    }
+};
+
+function hsla(hsla) {
+    return tree.functions.hsla(hsla.h, hsla.s, hsla.l, hsla.a);
+}
+
+function number(n) {
+    if (n instanceof tree.Dimension) {
+        return parseFloat(n.unit == '%' ? n.value / 100 : n.value);
+    } else if (typeof(n) === 'number') {
+        return n;
+    } else {
+        throw {
+            error: "RuntimeError",
+            message: "color functions take numbers as parameters"
+        };
+    }
+}
+
+function clamp(val) {
+    return Math.min(1, Math.max(0, val));
+}
+
+})(require('./tree'));
+(function (tree) {
+    tree.colors = {
+        'aliceblue':'#f0f8ff',
+        'antiquewhite':'#faebd7',
+        'aqua':'#00ffff',
+        'aquamarine':'#7fffd4',
+        'azure':'#f0ffff',
+        'beige':'#f5f5dc',
+        'bisque':'#ffe4c4',
+        'black':'#000000',
+        'blanchedalmond':'#ffebcd',
+        'blue':'#0000ff',
+        'blueviolet':'#8a2be2',
+        'brown':'#a52a2a',
+        'burlywood':'#deb887',
+        'cadetblue':'#5f9ea0',
+        'chartreuse':'#7fff00',
+        'chocolate':'#d2691e',
+        'coral':'#ff7f50',
+        'cornflowerblue':'#6495ed',
+        'cornsilk':'#fff8dc',
+        'crimson':'#dc143c',
+        'cyan':'#00ffff',
+        'darkblue':'#00008b',
+        'darkcyan':'#008b8b',
+        'darkgoldenrod':'#b8860b',
+        'darkgray':'#a9a9a9',
+        'darkgrey':'#a9a9a9',
+        'darkgreen':'#006400',
+        'darkkhaki':'#bdb76b',
+        'darkmagenta':'#8b008b',
+        'darkolivegreen':'#556b2f',
+        'darkorange':'#ff8c00',
+        'darkorchid':'#9932cc',
+        'darkred':'#8b0000',
+        'darksalmon':'#e9967a',
+        'darkseagreen':'#8fbc8f',
+        'darkslateblue':'#483d8b',
+        'darkslategray':'#2f4f4f',
+        'darkslategrey':'#2f4f4f',
+        'darkturquoise':'#00ced1',
+        'darkviolet':'#9400d3',
+        'deeppink':'#ff1493',
+        'deepskyblue':'#00bfff',
+        'dimgray':'#696969',
+        'dimgrey':'#696969',
+        'dodgerblue':'#1e90ff',
+        'firebrick':'#b22222',
+        'floralwhite':'#fffaf0',
+        'forestgreen':'#228b22',
+        'fuchsia':'#ff00ff',
+        'gainsboro':'#dcdcdc',
+        'ghostwhite':'#f8f8ff',
+        'gold':'#ffd700',
+        'goldenrod':'#daa520',
+        'gray':'#808080',
+        'grey':'#808080',
+        'green':'#008000',
+        'greenyellow':'#adff2f',
+        'honeydew':'#f0fff0',
+        'hotpink':'#ff69b4',
+        'indianred':'#cd5c5c',
+        'indigo':'#4b0082',
+        'ivory':'#fffff0',
+        'khaki':'#f0e68c',
+        'lavender':'#e6e6fa',
+        'lavenderblush':'#fff0f5',
+        'lawngreen':'#7cfc00',
+        'lemonchiffon':'#fffacd',
+        'lightblue':'#add8e6',
+        'lightcoral':'#f08080',
+        'lightcyan':'#e0ffff',
+        'lightgoldenrodyellow':'#fafad2',
+        'lightgray':'#d3d3d3',
+        'lightgrey':'#d3d3d3',
+        'lightgreen':'#90ee90',
+        'lightpink':'#ffb6c1',
+        'lightsalmon':'#ffa07a',
+        'lightseagreen':'#20b2aa',
+        'lightskyblue':'#87cefa',
+        'lightslategray':'#778899',
+        'lightslategrey':'#778899',
+        'lightsteelblue':'#b0c4de',
+        'lightyellow':'#ffffe0',
+        'lime':'#00ff00',
+        'limegreen':'#32cd32',
+        'linen':'#faf0e6',
+        'magenta':'#ff00ff',
+        'maroon':'#800000',
+        'mediumaquamarine':'#66cdaa',
+        'mediumblue':'#0000cd',
+        'mediumorchid':'#ba55d3',
+        'mediumpurple':'#9370d8',
+        'mediumseagreen':'#3cb371',
+        'mediumslateblue':'#7b68ee',
+        'mediumspringgreen':'#00fa9a',
+        'mediumturquoise':'#48d1cc',
+        'mediumvioletred':'#c71585',
+        'midnightblue':'#191970',
+        'mintcream':'#f5fffa',
+        'mistyrose':'#ffe4e1',
+        'moccasin':'#ffe4b5',
+        'navajowhite':'#ffdead',
+        'navy':'#000080',
+        'oldlace':'#fdf5e6',
+        'olive':'#808000',
+        'olivedrab':'#6b8e23',
+        'orange':'#ffa500',
+        'orangered':'#ff4500',
+        'orchid':'#da70d6',
+        'palegoldenrod':'#eee8aa',
+        'palegreen':'#98fb98',
+        'paleturquoise':'#afeeee',
+        'palevioletred':'#d87093',
+        'papayawhip':'#ffefd5',
+        'peachpuff':'#ffdab9',
+        'peru':'#cd853f',
+        'pink':'#ffc0cb',
+        'plum':'#dda0dd',
+        'powderblue':'#b0e0e6',
+        'purple':'#800080',
+        'red':'#ff0000',
+        'rosybrown':'#bc8f8f',
+        'royalblue':'#4169e1',
+        'saddlebrown':'#8b4513',
+        'salmon':'#fa8072',
+        'sandybrown':'#f4a460',
+        'seagreen':'#2e8b57',
+        'seashell':'#fff5ee',
+        'sienna':'#a0522d',
+        'silver':'#c0c0c0',
+        'skyblue':'#87ceeb',
+        'slateblue':'#6a5acd',
+        'slategray':'#708090',
+        'slategrey':'#708090',
+        'snow':'#fffafa',
+        'springgreen':'#00ff7f',
+        'steelblue':'#4682b4',
+        'tan':'#d2b48c',
+        'teal':'#008080',
+        'thistle':'#d8bfd8',
+        'tomato':'#ff6347',
+        // 'transparent':'rgba(0,0,0,0)',
+        'turquoise':'#40e0d0',
+        'violet':'#ee82ee',
+        'wheat':'#f5deb3',
+        'white':'#ffffff',
+        'whitesmoke':'#f5f5f5',
+        'yellow':'#ffff00',
+        'yellowgreen':'#9acd32'
+    };
+})(require('./tree'));
+(function (tree) {
+
+tree.Alpha = function (val) {
+    this.value = val;
+};
+tree.Alpha.prototype = {
+    toCSS: function () {
+        return "alpha(opacity=" +
+               (this.value.toCSS ? this.value.toCSS() : this.value) + ")";
+    },
+    eval: function (env) {
+        if (this.value.eval) { this.value = this.value.eval(env) }
+        return this;
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Anonymous = function (string) {
+    this.value = string.value || string;
+};
+tree.Anonymous.prototype = {
+    toCSS: function () {
+        return this.value;
+    },
+    eval: function () { return this },
+    compare: function (x) {
+        if (!x.toCSS) {
+            return -1;
+        }
+        
+        var left = this.toCSS(),
+            right = x.toCSS();
+        
+        if (left === right) {
+            return 0;
+        }
+        
+        return left < right ? -1 : 1;
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Assignment = function (key, val) {
+    this.key = key;
+    this.value = val;
+};
+tree.Assignment.prototype = {
+    toCSS: function () {
+        return this.key + '=' + (this.value.toCSS ? this.value.toCSS() : this.value);
+    },
+    eval: function (env) {
+        if (this.value.eval) {
+            return new(tree.Assignment)(this.key, this.value.eval(env));
+        }
+        return this;
+    }
+};
+
+})(require('../tree'));(function (tree) {
+
+//
+// A function call node.
+//
+tree.Call = function (name, args, index, filename) {
+    this.name = name;
+    this.args = args;
+    this.index = index;
+    this.filename = filename;
+};
+tree.Call.prototype = {
+    //
+    // When evaluating a function call,
+    // we either find the function in `tree.functions` [1],
+    // in which case we call it, passing the  evaluated arguments,
+    // or we simply print it out as it appeared originally [2].
+    //
+    // The *functions.js* file contains the built-in functions.
+    //
+    // The reason why we evaluate the arguments, is in the case where
+    // we try to pass a variable to a function, like: `saturate(@color)`.
+    // The function should receive the value, not the variable.
+    //
+    eval: function (env) {
+        var args = this.args.map(function (a) { return a.eval(env) });
+
+        if (this.name in tree.functions) { // 1.
+            try {
+                return tree.functions[this.name].apply(tree.functions, args);
+            } catch (e) {
+                throw { type: e.type || "Runtime",
+                        message: "error evaluating function `" + this.name + "`" +
+                                 (e.message ? ': ' + e.message : ''),
+                        index: this.index, filename: this.filename };
+            }
+        } else { // 2.
+            return new(tree.Anonymous)(this.name +
+                   "(" + args.map(function (a) { return a.toCSS(env) }).join(', ') + ")");
+        }
+    },
+
+    toCSS: function (env) {
+        return this.eval(env).toCSS();
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+//
+// RGB Colors - #ff0014, #eee
+//
+tree.Color = function (rgb, a) {
+    //
+    // The end goal here, is to parse the arguments
+    // into an integer triplet, such as `128, 255, 0`
+    //
+    // This facilitates operations and conversions.
+    //
+    if (Array.isArray(rgb)) {
+        this.rgb = rgb;
+    } else if (rgb.length == 6) {
+        this.rgb = rgb.match(/.{2}/g).map(function (c) {
+            return parseInt(c, 16);
+        });
+    } else {
+        this.rgb = rgb.split('').map(function (c) {
+            return parseInt(c + c, 16);
+        });
+    }
+    this.alpha = typeof(a) === 'number' ? a : 1;
+};
+tree.Color.prototype = {
+    eval: function () { return this },
+
+    //
+    // If we have some transparency, the only way to represent it
+    // is via `rgba`. Otherwise, we use the hex representation,
+    // which has better compatibility with older browsers.
+    // Values are capped between `0` and `255`, rounded and zero-padded.
+    //
+    toCSS: function () {
+        if (this.alpha < 1.0) {
+            return "rgba(" + this.rgb.map(function (c) {
+                return Math.round(c);
+            }).concat(this.alpha).join(', ') + ")";
+        } else {
+            return '#' + this.rgb.map(function (i) {
+                i = Math.round(i);
+                i = (i > 255 ? 255 : (i < 0 ? 0 : i)).toString(16);
+                return i.length === 1 ? '0' + i : i;
+            }).join('');
+        }
+    },
+
+    //
+    // Operations have to be done per-channel, if not,
+    // channels will spill onto each other. Once we have
+    // our result, in the form of an integer triplet,
+    // we create a new Color node to hold the result.
+    //
+    operate: function (op, other) {
+        var result = [];
+
+        if (! (other instanceof tree.Color)) {
+            other = other.toColor();
+        }
+
+        for (var c = 0; c < 3; c++) {
+            result[c] = tree.operate(op, this.rgb[c], other.rgb[c]);
+        }
+        return new(tree.Color)(result, this.alpha + other.alpha);
+    },
+
+    toHSL: function () {
+        var r = this.rgb[0] / 255,
+            g = this.rgb[1] / 255,
+            b = this.rgb[2] / 255,
+            a = this.alpha;
+
+        var max = Math.max(r, g, b), min = Math.min(r, g, b);
+        var h, s, l = (max + min) / 2, d = max - min;
+
+        if (max === min) {
+            h = s = 0;
+        } else {
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2;               break;
+                case b: h = (r - g) / d + 4;               break;
+            }
+            h /= 6;
+        }
+        return { h: h * 360, s: s, l: l, a: a };
+    },
+    toARGB: function () {
+        var argb = [Math.round(this.alpha * 255)].concat(this.rgb);
+        return '#' + argb.map(function (i) {
+            i = Math.round(i);
+            i = (i > 255 ? 255 : (i < 0 ? 0 : i)).toString(16);
+            return i.length === 1 ? '0' + i : i;
+        }).join('');
+    },
+    compare: function (x) {
+        if (!x.rgb) {
+            return -1;
+        }
+        
+        return (x.rgb[0] === this.rgb[0] &&
+            x.rgb[1] === this.rgb[1] &&
+            x.rgb[2] === this.rgb[2] &&
+            x.alpha === this.alpha) ? 0 : -1;
+    }
+};
+
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Comment = function (value, silent) {
+    this.value = value;
+    this.silent = !!silent;
+};
+tree.Comment.prototype = {
+    toCSS: function (env) {
+        return env.compress ? '' : this.value;
+    },
+    eval: function () { return this }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Condition = function (op, l, r, i, negate) {
+    this.op = op.trim();
+    this.lvalue = l;
+    this.rvalue = r;
+    this.index = i;
+    this.negate = negate;
+};
+tree.Condition.prototype.eval = function (env) {
+    var a = this.lvalue.eval(env),
+        b = this.rvalue.eval(env);
+
+    var i = this.index, result;
+
+    var result = (function (op) {
+        switch (op) {
+            case 'and':
+                return a && b;
+            case 'or':
+                return a || b;
+            default:
+                if (a.compare) {
+                    result = a.compare(b);
+                } else if (b.compare) {
+                    result = b.compare(a);
+                } else {
+                    throw { type: "Type",
+                            message: "Unable to perform comparison",
+                            index: i };
+                }
+                switch (result) {
+                    case -1: return op === '<' || op === '=<';
+                    case  0: return op === '=' || op === '>=' || op === '=<';
+                    case  1: return op === '>' || op === '>=';
+                }
+        }
+    })(this.op);
+    return this.negate ? !result : result;
+};
+
+})(require('../tree'));
+(function (tree) {
+
+//
+// A number with a unit
+//
+tree.Dimension = function (value, unit) {
+    this.value = parseFloat(value);
+    this.unit = unit || null;
+};
+
+tree.Dimension.prototype = {
+    eval: function () { return this },
+    toColor: function () {
+        return new(tree.Color)([this.value, this.value, this.value]);
+    },
+    toCSS: function () {
+        var css = this.value + this.unit;
+        return css;
+    },
+
+    // In an operation between two Dimensions,
+    // we default to the first Dimension's unit,
+    // so `1px + 2em` will yield `3px`.
+    // In the future, we could implement some unit
+    // conversions such that `100cm + 10mm` would yield
+    // `101cm`.
+    operate: function (op, other) {
+        return new(tree.Dimension)
+                  (tree.operate(op, this.value, other.value),
+                  this.unit || other.unit);
+    },
+
+    // TODO: Perform unit conversion before comparing
+    compare: function (other) {
+        if (other instanceof tree.Dimension) {
+            if (other.value > this.value) {
+                return -1;
+            } else if (other.value < this.value) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return -1;
+        }
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Directive = function (name, value) {
+    this.name = name;
+
+    if (Array.isArray(value)) {
+        this.ruleset = new(tree.Ruleset)([], value);
+        this.ruleset.allowImports = true;
+    } else {
+        this.value = value;
+    }
+};
+tree.Directive.prototype = {
+    toCSS: function (ctx, env) {
+        if (this.ruleset) {
+            this.ruleset.root = true;
+            return this.name + (env.compress ? '{' : ' {\n  ') +
+                   this.ruleset.toCSS(ctx, env).trim().replace(/\n/g, '\n  ') +
+                               (env.compress ? '}': '\n}\n');
+        } else {
+            return this.name + ' ' + this.value.toCSS() + ';\n';
+        }
+    },
+    eval: function (env) {
+        var evaldDirective = this;
+        if (this.ruleset) {
+            env.frames.unshift(this);
+            evaldDirective = new(tree.Directive)(this.name);
+            evaldDirective.ruleset = this.ruleset.eval(env);
+            env.frames.shift();
+        }
+        return evaldDirective;
+    },
+    variable: function (name) { return tree.Ruleset.prototype.variable.call(this.ruleset, name) },
+    find: function () { return tree.Ruleset.prototype.find.apply(this.ruleset, arguments) },
+    rulesets: function () { return tree.Ruleset.prototype.rulesets.apply(this.ruleset) }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Element = function (combinator, value, index) {
+    this.combinator = combinator instanceof tree.Combinator ?
+                      combinator : new(tree.Combinator)(combinator);
+
+    if (typeof(value) === 'string') {
+        this.value = value.trim();
+    } else if (value) {
+        this.value = value;
+    } else {
+        this.value = "";
+    }
+    this.index = index;
+};
+tree.Element.prototype.eval = function (env) {
+    return new(tree.Element)(this.combinator,
+                             this.value.eval ? this.value.eval(env) : this.value,
+                             this.index);
+};
+tree.Element.prototype.toCSS = function (env) {
+	var value = (this.value.toCSS ? this.value.toCSS(env) : this.value);
+	if (value == '' && this.combinator.value.charAt(0) == '&') {
+		return '';
+	} else {
+		return this.combinator.toCSS(env || {}) + value;
+	}
+};
+
+tree.Combinator = function (value) {
+    if (value === ' ') {
+        this.value = ' ';
+    } else {
+        this.value = value ? value.trim() : "";
+    }
+};
+tree.Combinator.prototype.toCSS = function (env) {
+    return {
+        ''  : '',
+        ' ' : ' ',
+        ':' : ' :',
+        '+' : env.compress ? '+' : ' + ',
+        '~' : env.compress ? '~' : ' ~ ',
+        '>' : env.compress ? '>' : ' > '
+    }[this.value];
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Expression = function (value) { this.value = value };
+tree.Expression.prototype = {
+    eval: function (env) {
+        if (this.value.length > 1) {
+            return new(tree.Expression)(this.value.map(function (e) {
+                return e.eval(env);
+            }));
+        } else if (this.value.length === 1) {
+            return this.value[0].eval(env);
+        } else {
+            return this;
+        }
+    },
+    toCSS: function (env) {
+        return this.value.map(function (e) {
+            return e.toCSS ? e.toCSS(env) : '';
+        }).join(' ');
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+//
+// CSS @import node
+//
+// The general strategy here is that we don't want to wait
+// for the parsing to be completed, before we start importing
+// the file. That's because in the context of a browser,
+// most of the time will be spent waiting for the server to respond.
+//
+// On creation, we push the import path to our import queue, though
+// `import,push`, we also pass it a callback, which it'll call once
+// the file has been fetched, and parsed.
+//
+tree.Import = function (path, imports, features, once, index) {
+    var that = this;
+
+    this.once = once;
+    this.index = index;
+    this._path = path;
+    this.features = features && new(tree.Value)(features);
+
+    // The '.less' extension is optional
+    if (path instanceof tree.Quoted) {
+        this.path = /\.(le?|c)ss(\?.*)?$/.test(path.value) ? path.value : path.value + '.less';
+    } else {
+        this.path = path.value.value || path.value;
+    }
+
+    this.css = /css(\?.*)?$/.test(this.path);
+
+    // Only pre-compile .less files
+    if (! this.css) {
+        imports.push(this.path, function (e, root, imported) {
+            if (e) { e.index = index }
+            if (imported && that.once) that.skip = imported;
+            that.root = root || new(tree.Ruleset)([], []);
+        });
+    }
+};
+
+//
+// The actual import node doesn't return anything, when converted to CSS.
+// The reason is that it's used at the evaluation stage, so that the rules
+// it imports can be treated like any other rules.
+//
+// In `eval`, we make sure all Import nodes get evaluated, recursively, so
+// we end up with a flat structure, which can easily be imported in the parent
+// ruleset.
+//
+tree.Import.prototype = {
+    toCSS: function (env) {
+        var features = this.features ? ' ' + this.features.toCSS(env) : '';
+
+        if (this.css) {
+            return "@import " + this._path.toCSS() + features + ';\n';
+        } else {
+            return "";
+        }
+    },
+    eval: function (env) {
+        var ruleset, features = this.features && this.features.eval(env);
+
+        if (this.skip) return [];
+
+        if (this.css) {
+            return this;
+        } else {
+            ruleset = new(tree.Ruleset)([], this.root.rules.slice(0));
+
+            for (var i = 0; i < ruleset.rules.length; i++) {
+                if (ruleset.rules[i] instanceof tree.Import) {
+                    Array.prototype
+                         .splice
+                         .apply(ruleset.rules,
+                                [i, 1].concat(ruleset.rules[i].eval(env)));
+                }
+            }
+            return this.features ? new(tree.Media)(ruleset.rules, this.features.value) : ruleset.rules;
+        }
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.JavaScript = function (string, index, escaped) {
+    this.escaped = escaped;
+    this.expression = string;
+    this.index = index;
+};
+tree.JavaScript.prototype = {
+    eval: function (env) {
+        var result,
+            that = this,
+            context = {};
+
+        var expression = this.expression.replace(/@\{([\w-]+)\}/g, function (_, name) {
+            return tree.jsify(new(tree.Variable)('@' + name, that.index).eval(env));
+        });
+
+        try {
+            expression = new(Function)('return (' + expression + ')');
+        } catch (e) {
+            throw { message: "JavaScript evaluation error: `" + expression + "`" ,
+                    index: this.index };
+        }
+
+        for (var k in env.frames[0].variables()) {
+            context[k.slice(1)] = {
+                value: env.frames[0].variables()[k].value,
+                toJS: function () {
+                    return this.value.eval(env).toCSS();
+                }
+            };
+        }
+
+        try {
+            result = expression.call(context);
+        } catch (e) {
+            throw { message: "JavaScript evaluation error: '" + e.name + ': ' + e.message + "'" ,
+                    index: this.index };
+        }
+        if (typeof(result) === 'string') {
+            return new(tree.Quoted)('"' + result + '"', result, this.escaped, this.index);
+        } else if (Array.isArray(result)) {
+            return new(tree.Anonymous)(result.join(', '));
+        } else {
+            return new(tree.Anonymous)(result);
+        }
+    }
+};
+
+})(require('../tree'));
+
+(function (tree) {
+
+tree.Keyword = function (value) { this.value = value };
+tree.Keyword.prototype = {
+    eval: function () { return this },
+    toCSS: function () { return this.value },
+    compare: function (other) {
+        if (other instanceof tree.Keyword) {
+            return other.value === this.value ? 0 : 1;
+        } else {
+            return -1;
+        }
+    }
+};
+
+tree.True = new(tree.Keyword)('true');
+tree.False = new(tree.Keyword)('false');
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Media = function (value, features) {
+    var selectors = this.emptySelectors();
+
+    this.features = new(tree.Value)(features);
+    this.ruleset = new(tree.Ruleset)(selectors, value);
+    this.ruleset.allowImports = true;
+};
+tree.Media.prototype = {
+    toCSS: function (ctx, env) {
+        var features = this.features.toCSS(env);
+
+        this.ruleset.root = (ctx.length === 0 || ctx[0].multiMedia);
+        return '@media ' + features + (env.compress ? '{' : ' {\n  ') +
+               this.ruleset.toCSS(ctx, env).trim().replace(/\n/g, '\n  ') +
+                           (env.compress ? '}': '\n}\n');
+    },
+    eval: function (env) {
+        if (!env.mediaBlocks) {
+            env.mediaBlocks = [];
+            env.mediaPath = [];
+        }
+        
+        var blockIndex = env.mediaBlocks.length;
+        env.mediaPath.push(this);
+        env.mediaBlocks.push(this);
+
+        var media = new(tree.Media)([], []);
+        if(this.debugInfo) {
+            this.ruleset.debugInfo = this.debugInfo;
+            media.debugInfo = this.debugInfo;
+        }
+        media.features = this.features.eval(env);
+        
+        env.frames.unshift(this.ruleset);
+        media.ruleset = this.ruleset.eval(env);
+        env.frames.shift();
+        
+        env.mediaBlocks[blockIndex] = media;
+        env.mediaPath.pop();
+
+        return env.mediaPath.length === 0 ? media.evalTop(env) :
+                    media.evalNested(env)
+    },
+    variable: function (name) { return tree.Ruleset.prototype.variable.call(this.ruleset, name) },
+    find: function () { return tree.Ruleset.prototype.find.apply(this.ruleset, arguments) },
+    rulesets: function () { return tree.Ruleset.prototype.rulesets.apply(this.ruleset) },
+    emptySelectors: function() { 
+        var el = new(tree.Element)('', '&', 0);
+        return [new(tree.Selector)([el])];
+    },
+
+    evalTop: function (env) {
+        var result = this;
+
+        // Render all dependent Media blocks.
+        if (env.mediaBlocks.length > 1) {
+            var selectors = this.emptySelectors();
+            result = new(tree.Ruleset)(selectors, env.mediaBlocks);
+            result.multiMedia = true;
+        }
+
+        delete env.mediaBlocks;
+        delete env.mediaPath;
+
+        return result;
+    },
+    evalNested: function (env) {
+        var i, value,
+            path = env.mediaPath.concat([this]);
+
+        // Extract the media-query conditions separated with `,` (OR).
+        for (i = 0; i < path.length; i++) {
+            value = path[i].features instanceof tree.Value ?
+                        path[i].features.value : path[i].features;
+            path[i] = Array.isArray(value) ? value : [value];
+        }
+
+        // Trace all permutations to generate the resulting media-query.
+        //
+        // (a, b and c) with nested (d, e) ->
+        //    a and d
+        //    a and e
+        //    b and c and d
+        //    b and c and e
+        this.features = new(tree.Value)(this.permute(path).map(function (path) {
+            path = path.map(function (fragment) {
+                return fragment.toCSS ? fragment : new(tree.Anonymous)(fragment);
+            });
+
+            for(i = path.length - 1; i > 0; i--) {
+                path.splice(i, 0, new(tree.Anonymous)("and"));
+            }
+
+            return new(tree.Expression)(path);
+        }));
+
+        // Fake a tree-node that doesn't output anything.
+        return new(tree.Ruleset)([], []);
+    },
+    permute: function (arr) {
+      if (arr.length === 0) {
+          return [];
+      } else if (arr.length === 1) {
+          return arr[0];
+      } else {
+          var result = [];
+          var rest = this.permute(arr.slice(1));
+          for (var i = 0; i < rest.length; i++) {
+              for (var j = 0; j < arr[0].length; j++) {
+                  result.push([arr[0][j]].concat(rest[i]));
+              }
+          }
+          return result;
+      }
+    },
+    bubbleSelectors: function (selectors) {
+      this.ruleset = new(tree.Ruleset)(selectors.slice(0), [this.ruleset]);
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.mixin = {};
+tree.mixin.Call = function (elements, args, index, filename, important) {
+    this.selector = new(tree.Selector)(elements);
+    this.arguments = args;
+    this.index = index;
+    this.filename = filename;
+    this.important = important;
+};
+tree.mixin.Call.prototype = {
+    eval: function (env) {
+        var mixins, args, rules = [], match = false;
+
+        for (var i = 0; i < env.frames.length; i++) {
+            if ((mixins = env.frames[i].find(this.selector)).length > 0) {
+                args = this.arguments && this.arguments.map(function (a) {
+                    return { name: a.name, value: a.value.eval(env) };
+                });
+                for (var m = 0; m < mixins.length; m++) {
+                    if (mixins[m].match(args, env)) {
+                        try {
+                            Array.prototype.push.apply(
+                                  rules, mixins[m].eval(env, this.arguments, this.important).rules);
+                            match = true;
+                        } catch (e) {
+                            throw { message: e.message, index: this.index, filename: this.filename, stack: e.stack };
+                        }
+                    }
+                }
+                if (match) {
+                    return rules;
+                } else {
+                    throw { type:    'Runtime',
+                            message: 'No matching definition was found for `' +
+                                      this.selector.toCSS().trim() + '('      +
+                                      this.arguments.map(function (a) {
+                                          return a.toCSS();
+                                      }).join(', ') + ")`",
+                            index:   this.index, filename: this.filename };
+                }
+            }
+        }
+        throw { type: 'Name',
+                message: this.selector.toCSS().trim() + " is undefined",
+                index: this.index, filename: this.filename };
+    }
+};
+
+tree.mixin.Definition = function (name, params, rules, condition, variadic) {
+    this.name = name;
+    this.selectors = [new(tree.Selector)([new(tree.Element)(null, name)])];
+    this.params = params;
+    this.condition = condition;
+    this.variadic = variadic;
+    this.arity = params.length;
+    this.rules = rules;
+    this._lookups = {};
+    this.required = params.reduce(function (count, p) {
+        if (!p.name || (p.name && !p.value)) { return count + 1 }
+        else                                 { return count }
+    }, 0);
+    this.parent = tree.Ruleset.prototype;
+    this.frames = [];
+};
+tree.mixin.Definition.prototype = {
+    toCSS:     function ()     { return "" },
+    variable:  function (name) { return this.parent.variable.call(this, name) },
+    variables: function ()     { return this.parent.variables.call(this) },
+    find:      function ()     { return this.parent.find.apply(this, arguments) },
+    rulesets:  function ()     { return this.parent.rulesets.apply(this) },
+
+    evalParams: function (env, args) {
+        var frame = new(tree.Ruleset)(null, []), varargs, arg;
+
+        for (var i = 0, val, name; i < this.params.length; i++) {
+            arg = args && args[i]
+
+            if (arg && arg.name) {
+                frame.rules.unshift(new(tree.Rule)(arg.name, arg.value.eval(env)));
+                args.splice(i, 1);
+                i--;
+                continue;
+            }
+			
+            if (name = this.params[i].name) {
+                if (this.params[i].variadic && args) {
+                    varargs = [];
+                    for (var j = i; j < args.length; j++) {
+                        varargs.push(args[j].value.eval(env));
+                    }
+                    frame.rules.unshift(new(tree.Rule)(name, new(tree.Expression)(varargs).eval(env)));
+                } else if (val = (arg && arg.value) || this.params[i].value) {
+                    frame.rules.unshift(new(tree.Rule)(name, val.eval(env)));
+                } else {
+                    throw { type: 'Runtime', message: "wrong number of arguments for " + this.name +
+                            ' (' + args.length + ' for ' + this.arity + ')' };
+                }
+            }
+        }
+        return frame;
+    },
+    eval: function (env, args, important) {
+        var frame = this.evalParams(env, args), context, _arguments = [], rules, start;
+
+        for (var i = 0; i < Math.max(this.params.length, args && args.length); i++) {
+            _arguments.push((args[i] && args[i].value) || this.params[i].value);
+        }
+        frame.rules.unshift(new(tree.Rule)('@arguments', new(tree.Expression)(_arguments).eval(env)));
+
+        rules = important ?
+            this.rules.map(function (r) {
+                return new(tree.Rule)(r.name, r.value, '!important', r.index);
+            }) : this.rules.slice(0);
+
+        return new(tree.Ruleset)(null, rules).eval({
+            frames: [this, frame].concat(this.frames, env.frames)
+        });
+    },
+    match: function (args, env) {
+        var argsLength = (args && args.length) || 0, len, frame;
+
+        if (! this.variadic) {
+            if (argsLength < this.required)                               { return false }
+            if (argsLength > this.params.length)                          { return false }
+            if ((this.required > 0) && (argsLength > this.params.length)) { return false }
+        }
+
+        if (this.condition && !this.condition.eval({
+            frames: [this.evalParams(env, args)].concat(env.frames)
+        }))                                                           { return false }
+
+        len = Math.min(argsLength, this.arity);
+
+        for (var i = 0; i < len; i++) {
+            if (!this.params[i].name) {
+                if (args[i].value.eval(env).toCSS() != this.params[i].value.eval(env).toCSS()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Operation = function (op, operands) {
+    this.op = op.trim();
+    this.operands = operands;
+};
+tree.Operation.prototype.eval = function (env) {
+    var a = this.operands[0].eval(env),
+        b = this.operands[1].eval(env),
+        temp;
+
+    if (a instanceof tree.Dimension && b instanceof tree.Color) {
+        if (this.op === '*' || this.op === '+') {
+            temp = b, b = a, a = temp;
+        } else {
+            throw { name: "OperationError",
+                    message: "Can't substract or divide a color from a number" };
+        }
+    }
+    return a.operate(this.op, b);
+};
+
+tree.operate = function (op, a, b) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+    }
+};
+
+})(require('../tree'));
+
+(function (tree) {
+
+tree.Paren = function (node) {
+    this.value = node;
+};
+tree.Paren.prototype = {
+    toCSS: function (env) {
+        return '(' + this.value.toCSS(env) + ')';
+    },
+    eval: function (env) {
+        return new(tree.Paren)(this.value.eval(env));
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Quoted = function (str, content, escaped, i) {
+    this.escaped = escaped;
+    this.value = content || '';
+    this.quote = str.charAt(0);
+    this.index = i;
+};
+tree.Quoted.prototype = {
+    toCSS: function () {
+        if (this.escaped) {
+            return this.value;
+        } else {
+            return this.quote + this.value + this.quote;
+        }
+    },
+    eval: function (env) {
+        var that = this;
+        var value = this.value.replace(/`([^`]+)`/g, function (_, exp) {
+            return new(tree.JavaScript)(exp, that.index, true).eval(env).value;
+        }).replace(/@\{([\w-]+)\}/g, function (_, name) {
+            var v = new(tree.Variable)('@' + name, that.index).eval(env);
+            return ('value' in v) ? v.value : v.toCSS();
+        });
+        return new(tree.Quoted)(this.quote + value + this.quote, value, this.escaped, this.index);
+    },
+    compare: function (x) {
+        if (!x.toCSS) {
+            return -1;
+        }
+        
+        var left = this.toCSS(),
+            right = x.toCSS();
+        
+        if (left === right) {
+            return 0;
+        }
+        
+        return left < right ? -1 : 1;
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Ratio = function (value) {
+    this.value = value;
+};
+tree.Ratio.prototype = {
+    toCSS: function (env) {
+        return this.value;
+    },
+    eval: function () { return this }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Rule = function (name, value, important, index, inline) {
+    this.name = name;
+    this.value = (value instanceof tree.Value) ? value : new(tree.Value)([value]);
+    this.important = important ? ' ' + important.trim() : '';
+    this.index = index;
+    this.inline = inline || false;
+
+    if (name.charAt(0) === '@') {
+        this.variable = true;
+    } else { this.variable = false }
+};
+tree.Rule.prototype.toCSS = function (env) {
+    if (this.variable) { return "" }
+    else {
+        return this.name + (env.compress ? ':' : ': ') +
+               this.value.toCSS(env) +
+               this.important + (this.inline ? "" : ";");
+    }
+};
+
+tree.Rule.prototype.eval = function (context) {
+    return new(tree.Rule)(this.name,
+                          this.value.eval(context),
+                          this.important,
+                          this.index, this.inline);
+};
+
+tree.Shorthand = function (a, b) {
+    this.a = a;
+    this.b = b;
+};
+
+tree.Shorthand.prototype = {
+    toCSS: function (env) {
+        return this.a.toCSS(env) + "/" + this.b.toCSS(env);
+    },
+    eval: function () { return this }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Ruleset = function (selectors, rules, strictImports) {
+    this.selectors = selectors;
+    this.rules = rules;
+    this._lookups = {};
+    this.strictImports = strictImports;
+};
+tree.Ruleset.prototype = {
+    eval: function (env) {
+        var selectors = this.selectors && this.selectors.map(function (s) { return s.eval(env) });
+        var ruleset = new(tree.Ruleset)(selectors, this.rules.slice(0), this.strictImports);
+        var rules = [];
+        
+        ruleset.root = this.root;
+        ruleset.allowImports = this.allowImports;
+
+        if(this.debugInfo) {
+            ruleset.debugInfo = this.debugInfo;
+        }
+
+        // push the current ruleset to the frames stack
+        env.frames.unshift(ruleset);
+
+        // Evaluate imports
+        if (ruleset.root || ruleset.allowImports || !ruleset.strictImports) {
+            for (var i = 0; i < ruleset.rules.length; i++) {
+                if (ruleset.rules[i] instanceof tree.Import) {
+                    rules = rules.concat(ruleset.rules[i].eval(env));
+                } else {
+                    rules.push(ruleset.rules[i]);
+                }
+            }
+            ruleset.rules = rules;
+            rules = [];
+        }
+
+        // Store the frames around mixin definitions,
+        // so they can be evaluated like closures when the time comes.
+        for (var i = 0; i < ruleset.rules.length; i++) {
+            if (ruleset.rules[i] instanceof tree.mixin.Definition) {
+                ruleset.rules[i].frames = env.frames.slice(0);
+            }
+        }
+        
+        var mediaBlockCount = (env.mediaBlocks && env.mediaBlocks.length) || 0;
+
+        // Evaluate mixin calls.
+        for (var i = 0; i < ruleset.rules.length; i++) {
+            if (ruleset.rules[i] instanceof tree.mixin.Call) {
+                rules = rules.concat(ruleset.rules[i].eval(env));
+            } else {
+                rules.push(ruleset.rules[i]);
+            }
+        }
+        ruleset.rules = rules;
+
+        // Evaluate everything else
+        for (var i = 0, rule; i < ruleset.rules.length; i++) {
+            rule = ruleset.rules[i];
+
+            if (! (rule instanceof tree.mixin.Definition)) {
+                ruleset.rules[i] = rule.eval ? rule.eval(env) : rule;
+            }
+        }
+
+        // Pop the stack
+        env.frames.shift();
+        
+        if (env.mediaBlocks) {
+            for(var i = mediaBlockCount; i < env.mediaBlocks.length; i++) {
+                env.mediaBlocks[i].bubbleSelectors(selectors);
+            }
+        }
+
+        return ruleset;
+    },
+    match: function (args) {
+        return !args || args.length === 0;
+    },
+    variables: function () {
+        if (this._variables) { return this._variables }
+        else {
+            return this._variables = this.rules.reduce(function (hash, r) {
+                if (r instanceof tree.Rule && r.variable === true) {
+                    hash[r.name] = r;
+                }
+                return hash;
+            }, {});
+        }
+    },
+    variable: function (name) {
+        return this.variables()[name];
+    },
+    rulesets: function () {
+        if (this._rulesets) { return this._rulesets }
+        else {
+            return this._rulesets = this.rules.filter(function (r) {
+                return (r instanceof tree.Ruleset) || (r instanceof tree.mixin.Definition);
+            });
+        }
+    },
+    find: function (selector, self) {
+        self = self || this;
+        var rules = [], rule, match,
+            key = selector.toCSS();
+
+        if (key in this._lookups) { return this._lookups[key] }
+
+        this.rulesets().forEach(function (rule) {
+            if (rule !== self) {
+                for (var j = 0; j < rule.selectors.length; j++) {
+                    if (match = selector.match(rule.selectors[j])) {
+                        if (selector.elements.length > rule.selectors[j].elements.length) {
+                            Array.prototype.push.apply(rules, rule.find(
+                                new(tree.Selector)(selector.elements.slice(1)), self));
+                        } else {
+                            rules.push(rule);
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+        return this._lookups[key] = rules;
+    },
+    //
+    // Entry point for code generation
+    //
+    //     `context` holds an array of arrays.
+    //
+    toCSS: function (context, env) {
+        var css = [],      // The CSS output
+            rules = [],    // node.Rule instances
+           _rules = [],    //
+            rulesets = [], // node.Ruleset instances
+            paths = [],    // Current selectors
+            selector,      // The fully rendered selector
+            debugInfo,     // Line number debugging
+            rule;
+
+        if (! this.root) {
+            this.joinSelectors(paths, context, this.selectors);
+        }
+
+        // Compile rules and rulesets
+        for (var i = 0; i < this.rules.length; i++) {
+            rule = this.rules[i];
+
+            if (rule.rules || (rule instanceof tree.Directive) || (rule instanceof tree.Media)) {
+                rulesets.push(rule.toCSS(paths, env));
+            } else if (rule instanceof tree.Comment) {
+                if (!rule.silent) {
+                    if (this.root) {
+                        rulesets.push(rule.toCSS(env));
+                    } else {
+                        rules.push(rule.toCSS(env));
+                    }
+                }
+            } else {
+                if (rule.toCSS && !rule.variable) {
+                    rules.push(rule.toCSS(env));
+                } else if (rule.value && !rule.variable) {
+                    rules.push(rule.value.toString());
+                }
+            }
+        } 
+
+        rulesets = rulesets.join('');
+
+        // If this is the root node, we don't render
+        // a selector, or {}.
+        // Otherwise, only output if this ruleset has rules.
+        if (this.root) {
+            css.push(rules.join(env.compress ? '' : '\n'));
+        } else {
+            if (rules.length > 0) {
+                debugInfo = tree.debugInfo(env, this);
+                selector = paths.map(function (p) {
+                    return p.map(function (s) {
+                        return s.toCSS(env);
+                    }).join('').trim();
+                }).join(env.compress ? ',' : ',\n');
+
+                // Remove duplicates
+                for (var i = rules.length - 1; i >= 0; i--) {
+                    if (_rules.indexOf(rules[i]) === -1) {
+                        _rules.unshift(rules[i]);
+                    }
+                }
+                rules = _rules;
+
+                css.push(debugInfo + selector + 
+                        (env.compress ? '{' : ' {\n  ') +
+                        rules.join(env.compress ? '' : '\n  ') +
+                        (env.compress ? '}' : '\n}\n'));
+            }
+        }
+        css.push(rulesets);
+
+        return css.join('')  + (env.compress ? '\n' : '');
+    },
+
+    joinSelectors: function (paths, context, selectors) {
+        for (var s = 0; s < selectors.length; s++) {
+            this.joinSelector(paths, context, selectors[s]);
+        }
+    },
+
+    joinSelector: function (paths, context, selector) {
+
+        var i, j, k, 
+            hasParentSelector, newSelectors, el, sel, parentSel, 
+            newSelectorPath, afterParentJoin, newJoinedSelector, 
+            newJoinedSelectorEmpty, lastSelector, currentElements,
+            selectorsMultiplied;
+    
+        for (i = 0; i < selector.elements.length; i++) {
+            el = selector.elements[i];
+            if (el.value === '&') {
+                hasParentSelector = true;
+            }
+        }
+    
+        if (!hasParentSelector) {
+            if (context.length > 0) {
+                for(i = 0; i < context.length; i++) {
+                    paths.push(context[i].concat(selector));
+                }
+            }
+            else {
+                paths.push([selector]);
+            }
+            return;
+        }
+
+        // The paths are [[Selector]]
+        // The first list is a list of comma seperated selectors
+        // The inner list is a list of inheritance seperated selectors
+        // e.g.
+        // .a, .b {
+        //   .c {
+        //   }
+        // }
+        // == [[.a] [.c]] [[.b] [.c]]
+        //
+
+        // the elements from the current selector so far
+        currentElements = [];
+        // the current list of new selectors to add to the path.
+        // We will build it up. We initiate it with one empty selector as we "multiply" the new selectors
+        // by the parents
+        newSelectors = [[]];
+
+        for (i = 0; i < selector.elements.length; i++) {
+            el = selector.elements[i];
+            // non parent reference elements just get added
+            if (el.value !== "&") {
+                currentElements.push(el);
+            } else {
+                // the new list of selectors to add
+                selectorsMultiplied = [];
+
+                // merge the current list of non parent selector elements
+                // on to the current list of selectors to add
+                if (currentElements.length > 0) {
+                    this.mergeElementsOnToSelectors(currentElements, newSelectors);
+                }
+
+                // loop through our current selectors
+                for(j = 0; j < newSelectors.length; j++) {
+                    sel = newSelectors[j];
+                    // if we don't have any parent paths, the & might be in a mixin so that it can be used
+                    // whether there are parents or not
+                    if (context.length == 0) {
+                        // the combinator used on el should now be applied to the next element instead so that
+                        // it is not lost
+                        if (sel.length > 0) {
+                            sel[0].elements = sel[0].elements.slice(0);
+                            sel[0].elements.push(new(tree.Element)(el.combinator, '', 0)); //new Element(el.Combinator,  ""));
+                        }
+                        selectorsMultiplied.push(sel);
+                    }
+                    else {
+                        // and the parent selectors
+                        for(k = 0; k < context.length; k++) {
+                            parentSel = context[k];
+                            // We need to put the current selectors
+                            // then join the last selector's elements on to the parents selectors
+
+                            // our new selector path
+                            newSelectorPath = [];
+                            // selectors from the parent after the join
+                            afterParentJoin = [];
+                            newJoinedSelectorEmpty = true;
+
+                            //construct the joined selector - if & is the first thing this will be empty,
+                            // if not newJoinedSelector will be the last set of elements in the selector
+                            if (sel.length > 0) {
+                                newSelectorPath = sel.slice(0);
+                                lastSelector = newSelectorPath.pop();
+                                newJoinedSelector = new(tree.Selector)(lastSelector.elements.slice(0));
+                                newJoinedSelectorEmpty = false;
+                            }
+                            else {
+                                newJoinedSelector = new(tree.Selector)([]);
+                            }
+
+                            //put together the parent selectors after the join
+                            if (parentSel.length > 1) {
+                                afterParentJoin = afterParentJoin.concat(parentSel.slice(1));
+                            }
+
+                            if (parentSel.length > 0) {
+                                newJoinedSelectorEmpty = false;
+
+                                // join the elements so far with the first part of the parent
+                                newJoinedSelector.elements.push(new(tree.Element)(el.combinator, parentSel[0].elements[0].value, 0));
+                                newJoinedSelector.elements = newJoinedSelector.elements.concat(parentSel[0].elements.slice(1));
+                            }
+
+                            if (!newJoinedSelectorEmpty) {
+                                // now add the joined selector
+                                newSelectorPath.push(newJoinedSelector);
+                            }
+
+                            // and the rest of the parent
+                            newSelectorPath = newSelectorPath.concat(afterParentJoin);
+
+                            // add that to our new set of selectors
+                            selectorsMultiplied.push(newSelectorPath);
+                        }
+                    }
+                }
+
+                // our new selectors has been multiplied, so reset the state
+                newSelectors = selectorsMultiplied;
+                currentElements = [];
+            }
+        }
+
+        // if we have any elements left over (e.g. .a& .b == .b)
+        // add them on to all the current selectors
+        if (currentElements.length > 0) {
+            this.mergeElementsOnToSelectors(currentElements, newSelectors);
+        }
+
+        for(i = 0; i < newSelectors.length; i++) {
+            paths.push(newSelectors[i]);
+        }
+    },
+    
+    mergeElementsOnToSelectors: function(elements, selectors) {
+        var i, sel;
+
+        if (selectors.length == 0) {
+            selectors.push([ new(tree.Selector)(elements) ]);
+            return;
+        }
+
+        for(i = 0; i < selectors.length; i++) {
+            sel = selectors[i];
+
+            // if the previous thing in sel is a parent this needs to join on to it
+            if (sel.length > 0) {
+                sel[sel.length - 1] = new(tree.Selector)(sel[sel.length - 1].elements.concat(elements));
+            }
+            else {
+                sel.push(new(tree.Selector)(elements));
+            }
+        }
+    }
+};
+})(require('../tree'));
+(function (tree) {
+
+tree.Selector = function (elements) {
+    this.elements = elements;
+};
+tree.Selector.prototype.match = function (other) {
+    var len  = this.elements.length,
+        olen = other.elements.length,
+        max  = Math.min(len, olen);
+
+    if (len < olen) {
+        return false;
+    } else {
+        for (var i = 0; i < max; i++) {
+            if (this.elements[i].value !== other.elements[i].value) {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+tree.Selector.prototype.eval = function (env) {
+    return new(tree.Selector)(this.elements.map(function (e) {
+        return e.eval(env);
+    }));
+};
+tree.Selector.prototype.toCSS = function (env) {
+    if (this._css) { return this._css }
+    
+    if (this.elements[0].combinator.value === "") {
+        this._css = ' ';
+    } else {
+        this._css = '';
+    }
+    
+    this._css += this.elements.map(function (e) {
+        if (typeof(e) === 'string') {
+            return ' ' + e.trim();
+        } else {
+            return e.toCSS(env);
+        }
+    }).join('');
+    
+    return this._css;
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.URL = function (val, paths) {
+    this.value = val;
+    this.paths = paths;
+};
+tree.URL.prototype = {
+    toCSS: function () {
+        return "url(" + this.value.toCSS() + ")";
+    },
+    eval: function (ctx) {
+        var val = this.value.eval(ctx);
+
+        // Add the base path if the URL is relative and we are in the browser
+        if (typeof window !== 'undefined' && typeof val.value === "string" && !/^(?:[a-z-]+:|\/)/.test(val.value) && this.paths.length > 0) {
+            val.value = this.paths[0] + (val.value.charAt(0) === '/' ? val.value.slice(1) : val.value);
+        }
+
+        return new(tree.URL)(val, this.paths);
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Value = function (value) {
+    this.value = value;
+    this.is = 'value';
+};
+tree.Value.prototype = {
+    eval: function (env) {
+        if (this.value.length === 1) {
+            return this.value[0].eval(env);
+        } else {
+            return new(tree.Value)(this.value.map(function (v) {
+                return v.eval(env);
+            }));
+        }
+    },
+    toCSS: function (env) {
+        return this.value.map(function (e) {
+            return e.toCSS(env);
+        }).join(env.compress ? ',' : ', ');
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.Variable = function (name, index, file) { this.name = name, this.index = index, this.file = file };
+tree.Variable.prototype = {
+    eval: function (env) {
+        var variable, v, name = this.name;
+
+        if (name.indexOf('@@') == 0) {
+            name = '@' + new(tree.Variable)(name.slice(1)).eval(env).value;
+        }
+
+        if (variable = tree.find(env.frames, function (frame) {
+            if (v = frame.variable(name)) {
+                return v.value.eval(env);
+            }
+        })) { return variable }
+        else {
+            throw { type: 'Name',
+                    message: "variable " + name + " is undefined",
+                    filename: this.file,
+                    index: this.index };
+        }
+    }
+};
+
+})(require('../tree'));
+(function (tree) {
+
+tree.debugInfo = function(env, ctx) {
+    var result="";
+    if (env.dumpLineNumbers && !env.compress) {
+        switch(env.dumpLineNumbers) {
+            case 'comments':
+                result = tree.debugInfo.asComment(ctx);
+                break;
+            case 'mediaquery':
+                result = tree.debugInfo.asMediaQuery(ctx);
+                break;
+            case 'all':
+                result = tree.debugInfo.asComment(ctx)+tree.debugInfo.asMediaQuery(ctx);
+                break;
+        }
+    }
+    return result;
+};
+
+tree.debugInfo.asComment = function(ctx) {
+    return '/* line ' + ctx.debugInfo.lineNumber + ', ' + ctx.debugInfo.fileName + ' */\n';
+};
+
+tree.debugInfo.asMediaQuery = function(ctx) {
+    return '@media -sass-debug-info{filename{font-family:"' + ctx.debugInfo.fileName + '";}line{font-family:"' + ctx.debugInfo.lineNumber + '";}}\n';
+};
+
+tree.find = function (obj, fun) {
+    for (var i = 0, r; i < obj.length; i++) {
+        if (r = fun.call(obj, obj[i])) { return r }
+    }
+    return null;
+};
+tree.jsify = function (obj) {
+    if (Array.isArray(obj.value) && (obj.value.length > 1)) {
+        return '[' + obj.value.map(function (v) { return v.toCSS(false) }).join(', ') + ']';
+    } else {
+        return obj.toCSS(false);
+    }
+};
+
+})(require('./tree'));
+//
+// browser.js - client-side engine
+//
+
+var isFileProtocol = /^(file|chrome(-extension)?|resource|qrc|app):/.test(location.protocol);
+
+less.env = less.env || (location.hostname == '127.0.0.1' ||
+                        location.hostname == '0.0.0.0'   ||
+                        location.hostname == 'localhost' ||
+                        location.port.length > 0         ||
+                        isFileProtocol                   ? 'development'
+                                                         : 'production');
+
+// Load styles asynchronously (default: false)
+//
+// This is set to `false` by default, so that the body
+// doesn't start loading before the stylesheets are parsed.
+// Setting this to `true` can result in flickering.
+//
+less.async = less.async || false;
+less.fileAsync = less.fileAsync || false;
+
+// Interval between watch polls
+less.poll = less.poll || (isFileProtocol ? 1000 : 1500);
+
+//
+// Watch mode
+//
+less.watch   = function () { return this.watchMode = true };
+less.unwatch = function () { return this.watchMode = false };
+
+if (less.env === 'development') {
+    less.optimization = 0;
+
+    if (/!watch/.test(location.hash)) {
+        less.watch();
+    }
+    var dumpLineNumbers = /!dumpLineNumbers:(comments|mediaquery|all)/.exec(location.hash);
+    if (dumpLineNumbers) {
+        less.dumpLineNumbers = dumpLineNumbers[1];
+    }
+    less.watchTimer = setInterval(function () {
+        if (less.watchMode) {
+            loadStyleSheets(function (e, root, _, sheet, env) {
+                if (root) {
+                    createCSS(root.toCSS(), sheet, env.lastModified);
+                }
+            });
+        }
+    }, less.poll);
+} else {
+    less.optimization = 3;
+}
+
+var cache;
+
+try {
+    cache = (typeof(window.localStorage) === 'undefined') ? null : window.localStorage;
+} catch (_) {
+    cache = null;
+}
+
+//
+// Get all <link> tags with the 'rel' attribute set to "stylesheet/less"
+//
+var links = document.getElementsByTagName('link');
+var typePattern = /^text\/(x-)?less$/;
+
+less.sheets = [];
+
+for (var i = 0; i < links.length; i++) {
+    if (links[i].rel === 'stylesheet/less' || (links[i].rel.match(/stylesheet/) &&
+       (links[i].type.match(typePattern)))) {
+        less.sheets.push(links[i]);
+    }
+}
+
+
+less.refresh = function (reload) {
+    var startTime, endTime;
+    startTime = endTime = new(Date);
+
+    loadStyleSheets(function (e, root, _, sheet, env) {
+        if (env.local) {
+            log("loading " + sheet.href + " from cache.");
+        } else {
+            log("parsed " + sheet.href + " successfully.");
+            createCSS(root.toCSS(), sheet, env.lastModified);
+        }
+        log("css for " + sheet.href + " generated in " + (new(Date) - endTime) + 'ms');
+        (env.remaining === 0) && log("css generated in " + (new(Date) - startTime) + 'ms');
+        endTime = new(Date);
+    }, reload);
+
+    loadStyles();
+};
+less.refreshStyles = loadStyles;
+
+less.refresh(less.env === 'development');
+
+function loadStyles() {
+    var styles = document.getElementsByTagName('style');
+    for (var i = 0; i < styles.length; i++) {
+        if (styles[i].type.match(typePattern)) {
+            new(less.Parser)({
+                filename: document.location.href.replace(/#.*$/, ''),
+                dumpLineNumbers: less.dumpLineNumbers
+            }).parse(styles[i].innerHTML || '', function (e, tree) {
+                var css = tree.toCSS();
+                var style = styles[i];
+                style.type = 'text/css';
+                if (style.styleSheet) {
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.innerHTML = css;
+                }
+            });
+        }
+    }
+}
+
+function loadStyleSheets(callback, reload) {
+    for (var i = 0; i < less.sheets.length; i++) {
+        loadStyleSheet(less.sheets[i], callback, reload, less.sheets.length - (i + 1));
+    }
+}
+
+function loadStyleSheet(sheet, callback, reload, remaining) {
+    var contents  = sheet.contents || {};  // Passing a ref to top importing parser content cache trough 'sheet' arg.
+    var url       = window.location.href.replace(/[#?].*$/, '');
+    var href      = sheet.href.replace(/\?.*$/, '');
+    var css       = cache && cache.getItem(href);
+    var timestamp = cache && cache.getItem(href + ':timestamp');
+    var styles    = { css: css, timestamp: timestamp };
+
+    // Stylesheets in IE don't always return the full path
+    if (! /^[a-z-]+:/.test(href)) {
+        if (href.charAt(0) == "/") {
+            href = window.location.protocol + "//" + window.location.host + href;
+        } else {
+            href = url.slice(0, url.lastIndexOf('/') + 1) + href;
+        }
+    }
+    xhr(sheet.href, sheet.type, function (data, lastModified) {
+        if (!reload && styles && lastModified &&
+           (new(Date)(lastModified).valueOf() ===
+            new(Date)(styles.timestamp).valueOf())) {
+            // Use local copy
+            createCSS(styles.css, sheet);
+            callback(null, null, data, sheet, { local: true, remaining: remaining });
+        } else {
+            // Use remote copy (re-parse)
+            try {
+                contents[href] = data;  // Updating top importing parser content cache
+                new(less.Parser)({
+                    optimization: less.optimization,
+                    paths: [href.replace(/[\w\.-]+$/, '')],
+                    mime: sheet.type,
+                    filename: href,
+                    'contents': contents,    // Passing top importing parser content cache ref down.
+                    dumpLineNumbers: less.dumpLineNumbers
+                }).parse(data, function (e, root) {
+                    if (e) { return error(e, href) }
+                    try {
+                        callback(e, root, data, sheet, { local: false, lastModified: lastModified, remaining: remaining });
+                        removeNode(document.getElementById('less-error-message:' + extractId(href)));
+                    } catch (e) {
+                        error(e, href);
+                    }
+                });
+            } catch (e) {
+                error(e, href);
+            }
+        }
+    }, function (status, url) {
+        throw new(Error)("Couldn't load " + url + " (" + status + ")");
+    });
+}
+
+function extractId(href) {
+    return href.replace(/^[a-z]+:\/\/?[^\/]+/, '' )  // Remove protocol & domain
+               .replace(/^\//,                 '' )  // Remove root /
+               .replace(/\?.*$/,               '' )  // Remove query
+               .replace(/\.[^\.\/]+$/,         '' )  // Remove file extension
+               .replace(/[^\.\w-]+/g,          '-')  // Replace illegal characters
+               .replace(/\./g,                 ':'); // Replace dots with colons(for valid id)
+}
+
+function createCSS(styles, sheet, lastModified) {
+    var css;
+
+    // Strip the query-string
+    var href = sheet.href ? sheet.href.replace(/\?.*$/, '') : '';
+
+    // If there is no title set, use the filename, minus the extension
+    var id = 'less:' + (sheet.title || extractId(href));
+
+    // If the stylesheet doesn't exist, create a new node
+    if ((css = document.getElementById(id)) === null) {
+        css = document.createElement('style');
+        css.type = 'text/css';
+        if( sheet.media ){ css.media = sheet.media; }
+        css.id = id;
+        var nextEl = sheet && sheet.nextSibling || null;
+        document.getElementsByTagName('head')[0].insertBefore(css, nextEl);
+    }
+
+    if (css.styleSheet) { // IE
+        try {
+            css.styleSheet.cssText = styles;
+        } catch (e) {
+            throw new(Error)("Couldn't reassign styleSheet.cssText.");
+        }
+    } else {
+        (function (node) {
+            if (css.childNodes.length > 0) {
+                if (css.firstChild.nodeValue !== node.nodeValue) {
+                    css.replaceChild(node, css.firstChild);
+                }
+            } else {
+                css.appendChild(node);
+            }
+        })(document.createTextNode(styles));
+    }
+
+    // Don't update the local store if the file wasn't modified
+    if (lastModified && cache) {
+        log('saving ' + href + ' to cache.');
+        try {
+            cache.setItem(href, styles);
+            cache.setItem(href + ':timestamp', lastModified);
+        } catch(e) {
+            //TODO - could do with adding more robust error handling
+            log('failed to save');
+        }
+    }
+}
+
+function xhr(url, type, callback, errback) {
+    var xhr = getXMLHttpRequest();
+    var async = isFileProtocol ? less.fileAsync : less.async;
+
+    if (typeof(xhr.overrideMimeType) === 'function') {
+        xhr.overrideMimeType('text/css');
+    }
+    xhr.open('GET', url, async);
+    xhr.setRequestHeader('Accept', type || 'text/x-less, text/css; q=0.9, */*; q=0.5');
+    xhr.send(null);
+
+    if (isFileProtocol && !less.fileAsync) {
+        if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300)) {
+            callback(xhr.responseText);
+        } else {
+            errback(xhr.status, url);
+        }
+    } else if (async) {
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                handleResponse(xhr, callback, errback);
+            }
+        };
+    } else {
+        handleResponse(xhr, callback, errback);
+    }
+
+    function handleResponse(xhr, callback, errback) {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            callback(xhr.responseText,
+                     xhr.getResponseHeader("Last-Modified"));
+        } else if (typeof(errback) === 'function') {
+            errback(xhr.status, url);
+        }
+    }
+}
+
+function getXMLHttpRequest() {
+    if (window.XMLHttpRequest) {
+        return new(XMLHttpRequest);
+    } else {
+        try {
+            return new(ActiveXObject)("MSXML2.XMLHTTP.3.0");
+        } catch (e) {
+            log("browser doesn't support AJAX.");
+            return null;
+        }
+    }
+}
+
+function removeNode(node) {
+    return node && node.parentNode.removeChild(node);
+}
+
+function log(str) {
+    if (less.env == 'development' && typeof(console) !== "undefined") { console.log('less: ' + str) }
+}
+
+function error(e, href) {
+    var id = 'less-error-message:' + extractId(href);
+    var template = '<li><label>{line}</label><pre class="{class}">{content}</pre></li>';
+    var elem = document.createElement('div'), timer, content, error = [];
+    var filename = e.filename || href;
+    var filenameNoPath = filename.match(/([^\/]+)$/)[1];
+
+    elem.id        = id;
+    elem.className = "less-error-message";
+
+    content = '<h3>'  + (e.message || 'There is an error in your .less file') +
+              '</h3>' + '<p>in <a href="' + filename   + '">' + filenameNoPath + "</a> ";
+
+    var errorline = function (e, i, classname) {
+        if (e.extract[i]) {
+            error.push(template.replace(/\{line\}/, parseInt(e.line) + (i - 1))
+                               .replace(/\{class\}/, classname)
+                               .replace(/\{content\}/, e.extract[i]));
+        }
+    };
+
+    if (e.stack) {
+        content += '<br/>' + e.stack.split('\n').slice(1).join('<br/>');
+    } else if (e.extract) {
+        errorline(e, 0, '');
+        errorline(e, 1, 'line');
+        errorline(e, 2, '');
+        content += 'on line ' + e.line + ', column ' + (e.column + 1) + ':</p>' +
+                    '<ul>' + error.join('') + '</ul>';
+    }
+    elem.innerHTML = content;
+
+    // CSS for error messages
+    createCSS([
+        '.less-error-message ul, .less-error-message li {',
+            'list-style-type: none;',
+            'margin-right: 15px;',
+            'padding: 4px 0;',
+            'margin: 0;',
+        '}',
+        '.less-error-message label {',
+            'font-size: 12px;',
+            'margin-right: 15px;',
+            'padding: 4px 0;',
+            'color: #cc7777;',
+        '}',
+        '.less-error-message pre {',
+            'color: #dd6666;',
+            'padding: 4px 0;',
+            'margin: 0;',
+            'display: inline-block;',
+        '}',
+        '.less-error-message pre.line {',
+            'color: #ff0000;',
+        '}',
+        '.less-error-message h3 {',
+            'font-size: 20px;',
+            'font-weight: bold;',
+            'padding: 15px 0 5px 0;',
+            'margin: 0;',
+        '}',
+        '.less-error-message a {',
+            'color: #10a',
+        '}',
+        '.less-error-message .error {',
+            'color: red;',
+            'font-weight: bold;',
+            'padding-bottom: 2px;',
+            'border-bottom: 1px dashed red;',
+        '}'
+    ].join('\n'), { title: 'error-message' });
+
+    elem.style.cssText = [
+        "font-family: Arial, sans-serif",
+        "border: 1px solid #e00",
+        "background-color: #eee",
+        "border-radius: 5px",
+        "-webkit-border-radius: 5px",
+        "-moz-border-radius: 5px",
+        "color: #e00",
+        "padding: 15px",
+        "margin-bottom: 15px"
+    ].join(';');
+
+    if (less.env == 'development') {
+        timer = setInterval(function () {
+            if (document.body) {
+                if (document.getElementById(id)) {
+                    document.body.replaceChild(elem, document.getElementById(id));
+                } else {
+                    document.body.insertBefore(elem, document.body.firstChild);
+                }
+                clearInterval(timer);
+            }
+        }, 10);
+    }
+}
+
+// amd.js
+//
+// Define Less as an AMD module.
+if (typeof define === "function" && define.amd) {
+    define("less", [], function () { return less; } );
+}
+})(window);
+
 /**
  * StyleFix 1.0.3 & PrefixFree 1.0.7
  * @author Lea Verou
@@ -19418,6 +23428,8 @@ define('core/parser',[
         this.mappings = {};
         this.parameters = {};
         this.attribute = "data-pat-" + name;
+        this.enum_values = {};
+        this.enum_conflicts = [];
     }
 
     ArgumentParser.prototype = {
@@ -19432,9 +23444,18 @@ define('core/parser',[
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
                 spec.type=this._typeof(choices[0]);
+                for (var i=0; i<choices.length; i++)
+                    if (this.enum_conflicts.indexOf(choices[i])!==-1)
+                        continue;
+                    else if (choices[i] in this.enum_values) {
+                        this.enum_conflicts.push(choices[i]);
+                        delete this.enum_values[choices[i]];
+                    } else
+                        this.enum_values[choices[i]]=js_name;
             } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                 spec.type=this.parameters[spec.value.slice(1)].type;
             else
+                // Note that this will get reset by _defaults if default_value is a function.
                 spec.type=this._typeof(spec.value);
 
             this.order.push(name);
@@ -19501,56 +23522,100 @@ define('core/parser',[
             }
         },
 
-        _parse: function(parameter) {
-            var opts = {}, i, name;
+        _parseExtendedNotation: function(parameter) {
+            var opts = {}, i,
+                parts = parameter.split(";"),
+                matches;
 
-            if (parameter) {
-                var parts = parameter.split(";"),
-                    part, matches;
+            for (i=0; i<parts.length; i++) {
+                if (!parts[i])
+                    continue;
 
-                // Grab all positional parameters
-                i=-1;
-                while (parts.length) {
-                    i++;
-                    if (i>=this.order.length) {
-                        break;
-                    }
-                    part = parts.shift().trim();
-                    if (!part)
-                        continue;
-                    if (this.named_param_pattern.test(part)) {
-                        parts.unshift(part);
-                        break;
-                    }
-                    this._set(opts, this.mappings[this.order[i]], part.trim());
+                matches = parts[i].match(this.named_param_pattern);
+                if (!matches) {
+                    log.warn("Invalid parameter: " + parts[i]);
+                    break;
                 }
-
-                // Handle all named parameters
-                for (i=0; i<parts.length; i++) {
-                    if (!parts[i])
-                        continue;
-
-                    matches = parts[i].match(this.named_param_pattern);
-                    if (!matches) {
-                        log.warn("Positional parameters not allowed after named parameters");
-                        break;
-                    }
-                    if (this.parameters[this.mappings[matches[1]]] === undefined) {
-                        log.warn("Unknown named parameter " + matches[1]);
-                        continue;
-                    }
-
-                    this._set(opts, this.mappings[matches[1]], matches[2].trim());
+                if (this.parameters[this.mappings[matches[1]]] === undefined) {
+                    log.warn("Unknown named parameter " + matches[1]);
+                    continue;
                 }
+                this._set(opts, this.mappings[matches[1]], matches[2].trim());
             }
 
             return opts;
         },
 
-        _defaults: function() {
+        _parseShorthandNotation: function(parameter) {
+            var parts = parameter.split(/\s+/),
+                opts = {},
+                positional = true,
+                i, part, flag, sense, matches;
+
+            i=0;
+            while (parts.length) {
+                part=parts.shift().trim();
+                if (part.slice(0, 3)==="no-") {
+                    sense=false;
+                    flag=part.slice(3);
+                } else {
+                    sense=true;
+                    flag=part;
+                }
+                if (flag in this.mappings && this.parameters[this.mappings[flag]].type==="boolean") {
+                    positional=false;
+                    this._set(opts, this.mappings[flag], sense);
+                } else if (flag in this.enum_values) {
+                    positional=false;
+                    this._set(opts, this.enum_values[flag], flag);
+                } else if (positional)
+                    this._set(opts, this.mappings[this.order[i]], part);
+                else {
+                    parts.unshift(part);
+                    break;
+                }
+
+                i++;
+                if (i>=this.order.length)
+                    break;
+            }
+            if (parts.length)
+                log.warn("Ignore extra arguments: " + parts.join(" "));
+            return opts;
+        },
+
+        _parse: function(parameter) {
+            var opts, extended, sep;
+
+            if (!parameter)
+                return {};
+
+            sep=parameter.indexOf(";");
+            if (sep===-1)
+                if (parameter.match(this.named_param_pattern))
+                    return this._parseExtendedNotation(parameter);
+                else
+                    return this._parseShorthandNotation(parameter);
+
+            opts=this._parseShorthandNotation(parameter.slice(0, sep));
+            extended=this._parseExtendedNotation(parameter.slice(sep+1));
+            for (var name in extended)
+                opts[name]=extended[name];
+            return opts;
+        },
+
+        _defaults: function($el) {
             var result = {};
             for (var name in this.parameters)
-                result[name]=this.parameters[name].value;
+                if (typeof this.parameters[name].value==="function")
+                    try {
+                        result[name]=this.parameters[name].value($el, name);
+                        this.parameters[name].type=typeof result[name];
+                    } catch(e) {
+                        log.error("Default function for " + name + " failed.");
+                    }
+                else
+                    result[name]=this.parameters[name].value;
             return result;
         },
 
@@ -19560,7 +23625,7 @@ define('core/parser',[
                 options={};
             }
 
-            var stack = [[this._defaults()]];
+            var stack = [[this._defaults($el)]];
 
             var $parents = $el.parents().andSelf(),
                 final_length = 1,
@@ -19607,7 +23672,7 @@ define('core/parser',[
             for (i=0; i<results.length; i++)
                 for (name in results[i]) {
                     spec=this.parameters[name];
-                    if (results[i][name]===spec.value && typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                    if (spec && results[i][name]===spec.value && typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                         results[i][name]=results[i][spec.value.slice(1)];
                 }
 
@@ -19731,76 +23796,6 @@ define('patterns/autosubmit',[
 
     patterns.register(autosubmit);
     return autosubmit;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('patterns/autosubmit2',[
-    "jquery",
-    '../registry',
-    '../logging',
-    '../utils'
-], function($, registry, logging, utils) {
-    var log = logging.getLogger('autosubmit');
-
-    var _ = {
-        name: "autosubmit2",
-        trigger: ".pat-autosubmit2, .pat-autosubmit2-keyup",
-        init: function($el) {
-            return $el.each(function() {
-                var $el = $(this);
-
-                // submit if a (specific) form element changed
-                $el.on("change.pat-autosubmit2", _.submit);
-
-                // debounced keyup submit, if enabled
-                if ($el.hasClass('pat-autosubmit2-keyup')) {
-                    ($el.is('input') ? $el : $el.find('input'))
-                        .on("keyup.pat-autosubmit2", utils.debounce(_.submit, 400));
-                }
-
-                // XXX: test whether on webkit and enable only if supported
-                ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
-                    .on("click.pat-autosubmit2", _.submit);
-            });
-        },
-        submit: function(ev) {
-            var $el = $(this),
-                $form = $el.is('form') ? $el : $el.parents('form').first();
-
-            // ignore auto-suggest fields, the change event will be
-            // triggered on the hidden input
-            if ($el.is('.pat-autosuggest')) {
-                log.debug('ignored event from autosuggest field');
-                return;
-            }
-
-            if ($el.is('input[type=search]')) {
-                // clicking X on type=search deletes data attrs,
-                // therefore we store the old value on the form.
-                var name = $el.attr('name'),
-                    key = name + '-autosubmit-oldvalue',
-                    oldvalue = $form.data(key) || "",
-                    curvalue = $el[0].value || "";
-
-                if (!name) {
-                    log.warn('type=search without name, will be a problem' +
-                             ' if there are multiple', $el);
-                }
-                if (oldvalue === curvalue) return;
-
-                $form.data(key, curvalue);
-            }
-
-            log.debug("triggered by " + ev.type);
-
-            $form.submit();
-        }
-    };
-
-    registry.register(_);
-    return _;
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
@@ -21426,44 +25421,80 @@ define('patterns/checkedflag',[
 ], function($, patterns) {
     var checkedflag = {
         name: "checkedflag",
-        trigger: "input",
+        trigger: "input[type=checkbox],input[type=radio]",
 
         init: function($el) {
+            var $forms = $();
             $el
-                .filter("[type=checkbox]").each(checkedflag.onChangeCheckbox).end()
-                .filter("[type=radio]").each(checkedflag.onChangeRadio).end();
+                .each(function() {
+                    if (this.form===null)
+                        return;
+                    var $form = $(this.form);
+                    if ($form.data("patternCheckedflag.reset"))
+                        return;
+                    $form.data("patternCheckedflag.reset", true);
+                    $forms=$forms.add(this.form);
+                })
+                .filter("[type=checkbox]")
+                    .each(checkedflag.onChangeCheckbox)
+                    .on("change.patternCheckedflag", checkedflag.onChangeCheckbox)
+                    .end()
+                .filter("[type=radio]")
+                    .each(checkedflag.onChangeRadio)
+                    .on("change.patternCheckedflag", checkedflag.onChangeRadio)
+                    .end();
+            $forms.on("reset.patternCheckedflag", checkedflag.onFormReset);
         },
 
-        onChangeCheckbox: function(e) {
+        onFormReset: function(event) {
+            // This event is triggered before the form is reset, and we need
+            // the post-reset state to update our pattern. Use a small delay
+            // to fix this.
+            var form = this;
+            setTimeout(function() {
+                $("input[type=checkbox]", form).each(checkedflag.onChangeCheckbox);
+                $("input[type=radio]", form).each(checkedflag.onChangeRadio);
+            }, 50);
+        },
+
+        onChangeCheckbox: function(event) {
             var $el = $(this),
-                $label = $el.closest("label");
+                $label = $el.closest("label"),
+                $fieldset = $el.closest("fieldset");
 
             if (this.checked) {
-                $label.removeClass("unchecked").addClass("checked");
+                $label.add($fieldset).removeClass("unchecked").addClass("checked");
             } else {
                 $label.addClass("unchecked").removeClass("checked");
+                if ($fieldset.find("input:checked").length)
+                    $fieldset.removeClass("unchecked").addClass("checked");
+                else
+                    $fieldset.addClass("unchecked").removeClass("checked");
             }
         },
 
-        onChangeRadio: function(e) {
+        onChangeRadio: function(event) {
             var $el = $(this),
                 $label = $el.closest("label"),
-                selector = "label:has(input[name=" + this.name + "]:not(:checked))",
+                $fieldset = $el.closest("fieldset"),
+                selector = "label:has(input[name='" + this.name + "']:not(:checked))",
                 $siblings = (this.form===null) ? $(selector) : $(selector, this.form);
 
             $siblings.removeClass("checked").addClass("unchecked");
             if (this.checked) {
-                $label.removeClass("unchecked").addClass("checked");
+                $label.add($fieldset).removeClass("unchecked").addClass("checked");
             } else {
                 $label.addClass("unchecked").removeClass("checked");
+                if ($fieldset.find("input:checked").length)
+                    $fieldset.removeClass("unchecked").addClass("checked");
+                else
+                    $fieldset.addClass("unchecked").removeClass("checked");
             }
         }
     };
 
-    $(document)
-       .on("change", "input[type=checkbox]", checkedflag.onChangeCheckbox)
-       .on("change", "input[type=radio]", checkedflag.onChangeRadio);
     patterns.register(checkedflag);
+    return checkedflag;
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
@@ -22561,8 +26592,7 @@ define('lib/ajax',['require','../logging'],function(require) {
                 opts.beforeSerialize();
             }
             opts.data = $el.serialize() + '&submit=submit';
-            // XXX: check method on form, use POST as default only
-            opts.type = 'POST';
+            opts.type = $el.attr('method') || 'POST';
             $.ajax(opts);
         } else {
             log.debug('submit', $el);
@@ -23002,18 +27032,20 @@ define('patterns/inject',[
             return $el;
         },
         onClick: function(ev) {
-            var cfgs = $(this).data('patterns.inject');
+            var cfgs = $(this).data('patterns.inject'),
+                $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $(this).trigger('patterns-inject-triggered');
-            _.execute(cfgs);
+            $el.trigger('patterns-inject-triggered');
+            _.execute(cfgs, $el);
         },
         onSubmit: function(ev) {
-            var cfgs = $(this).data('patterns.inject');
+            var cfgs = $(this).data('patterns.inject'),
+                $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $(this).trigger('patterns-inject-triggered');
-            _.execute(cfgs);
+            $el.trigger('patterns-inject-triggered');
+            _.execute(cfgs, $el);
         },
         extractConfig: function($el, opts) {
             opts = $.extend({}, opts);
@@ -23040,6 +27072,7 @@ define('patterns/inject',[
             return cfgs;
         },
         // verify and post-process config
+        // XXX: this should return a command instead of messing around on the config
         verifyConfig: function(cfgs) {
             var url = cfgs[0].url;
 
@@ -23067,6 +27100,7 @@ define('patterns/inject',[
                         return false;
                     }
                     cfg.$target = _._createTarget(cfg.target);
+                    cfg.$injected = cfg.$target;
                 }
                 return true;
             });
@@ -23117,14 +27151,14 @@ define('patterns/inject',[
             $('body').append($target);
             return $target;
         },
-        execute: function(cfgs) {
-            var $this = $(this);
-
+        execute: function(cfgs, $el) {
             // get a kinda deep copy, we scribble on it
             cfgs = cfgs.map(function(cfg) {
                 return $.extend({}, cfg);
             });
 
+            // XXX: this need to get functional, returning a command
+            // for internal use, instead of passing on cfgs
             if (!_.verifyConfig(cfgs))
                 return;
 
@@ -23134,6 +27168,10 @@ define('patterns/inject',[
             });
 
             var onSuccess = function(data, status, jqxhr) {
+                if (!data) {
+                    log.warn('No response content, aborting', status, jqxhr);
+                    return;
+                }
                 // list of $source objects, one for each cfg
                 var sources = cfgs.map(function(cfg) { return cfg.source; }),
                     sources$ = _._sourcesFromHtml(data, cfgs[0].url, sources);
@@ -23141,33 +27179,33 @@ define('patterns/inject',[
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
 
-                    // XXX: generalize to do postProcessing for modals
                     if (cfg.sourceMod === "content")
                         $source = $source.contents();
 
                     // perform injection
                     cfg.$target.each(function() {
                         var $target = $(this),
-                            $src = $source.clone();
+                            $src = $source.clone(),
+                            $injected = cfg.$injected || $src;
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
-                            if (cfg.sourceMod === "content") {
-                                $target.addClass(cfg["class"]);
-                                $target.trigger('patterns-injected', cfg);
-                            } else {
-                                $src.addClass(cfg["class"]);
-                                $src.trigger('patterns-injected', cfg);
-                            }
+                            $injected.addClass(cfg["class"])
+                                .trigger('patterns-injected', cfg);
                         }
                     });
                 });
 
-                if (cfgs.nexthref) {
-                    $this.attr({href: cfgs['next-href']});
-                    _.destroy($this);
+                if (cfgs[0].nextHref) {
+                    $el.attr({href: cfgs[0].nextHref});
+                    _.destroy($el);
+
+                   // jump to new href target
+                   if (!$el.hasClass("autoLoading-visible")) {
+                       window.location.href = $el.attr('href');
+                   }
                 }
             };
 
-            ajax($this, {
+            ajax($el, {
                 url: cfgs[0].url,
                 success: onSuccess
             });
@@ -23261,7 +27299,12 @@ define('patterns/inject',[
                 if ($el.data('patterns.autoload')) return false;
                 var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                     doTrigger = reltop <= $scrollable.innerHeight();
-                if (doTrigger) return trigger();
+                if (doTrigger) {
+                    // checkVisibility was possibly installed as a scroll 
+                    // handler and has now served its purpose -> remove
+                    $($scrollable[0]).off("scroll", checkVisibility);
+                    return trigger();
+                }
                 return false;
             };
             if (checkVisibility()) return true;
@@ -23388,8 +27431,8 @@ define('patterns/collapsible',[
 
     parser.add_argument("load-content");
     parser.add_argument("store", "none", ["none", "session", "local"]);
-    parser.add_argument("duration", "fast");
-    parser.add_argument("easing", "linear");
+    parser.add_argument("duration", "0.4s");
+    parser.add_argument("easing", "swing");
     parser.add_argument("closed", false);
 
     var _ = {
@@ -23435,7 +27478,10 @@ define('patterns/collapsible',[
         },
 
         _onClick: function(event) {
-            _.toggle(event.data);
+            // XXX: hack to ignore clicks on a tooltip in our trigger element
+            if ($(event.target).attr("data-tooltip") === undefined) {
+                _.toggle(event.data);
+            }
         },
 
         destroy: function($el) {
@@ -23480,7 +27526,7 @@ define('patterns/collapsible',[
                     source: id,
                     $target: $('.panel-content', $el)
                 }];
-            inject.execute(opts);
+            inject.execute(opts, $el);
         },
 
         toggle: function($el) {
@@ -23526,152 +27572,1055 @@ define('patterns/collapsible',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
+define('lib/depends_parse',[],function() {
+  /*
+   * Generated by PEG.js 0.7.0.
+   *
+   * http://pegjs.majda.cz/
+   */
+  
+  function quote(s) {
+    /*
+     * ECMA-262, 5th ed., 7.8.4: All characters may appear literally in a
+     * string literal except for the closing quote character, backslash,
+     * carriage return, line separator, paragraph separator, and line feed.
+     * Any character may appear in the form of an escape sequence.
+     *
+     * For portability, we also escape escape all control and non-ASCII
+     * characters. Note that "\0" and "\v" escape sequences are not used
+     * because JSHint does not like the first and IE the second.
+     */
+     return '"' + s
+      .replace(/\\/g, '\\\\')  // backslash
+      .replace(/"/g, '\\"')    // closing quote character
+      .replace(/\x08/g, '\\b') // backspace
+      .replace(/\t/g, '\\t')   // horizontal tab
+      .replace(/\n/g, '\\n')   // line feed
+      .replace(/\f/g, '\\f')   // form feed
+      .replace(/\r/g, '\\r')   // carriage return
+      .replace(/[\x00-\x07\x0B\x0E-\x1F\x80-\uFFFF]/g, escape)
+      + '"';
+  }
+  
+  var result = {
+    /*
+     * Parses the input with a generated parser. If the parsing is successfull,
+     * returns a value explicitly or implicitly specified by the grammar from
+     * which the parser was generated (see |PEG.buildParser|). If the parsing is
+     * unsuccessful, throws |PEG.parser.SyntaxError| describing the error.
+     */
+    parse: function(input, startRule) {
+      var parseFunctions = {
+        "expression": parse_expression,
+        "simple_expression": parse_simple_expression,
+        "equal_comparison": parse_equal_comparison,
+        "order_comparison": parse_order_comparison,
+        "logical": parse_logical,
+        "identifier": parse_identifier,
+        "value": parse_value,
+        "number": parse_number,
+        "_": parse__,
+        "__": parse___,
+        "WhiteSpace": parse_WhiteSpace,
+        "Zs": parse_Zs
+      };
+      
+      if (startRule !== undefined) {
+        if (parseFunctions[startRule] === undefined) {
+          throw new Error("Invalid rule name: " + quote(startRule) + ".");
+        }
+      } else {
+        startRule = "expression";
+      }
+      
+      var pos = 0;
+      var reportFailures = 0;
+      var rightmostFailuresPos = 0;
+      var rightmostFailuresExpected = [];
+      
+      function padLeft(input, padding, length) {
+        var result = input;
+        
+        var padLength = length - input.length;
+        for (var i = 0; i < padLength; i++) {
+          result = padding + result;
+        }
+        
+        return result;
+      }
+      
+      function escape(ch) {
+        var charCode = ch.charCodeAt(0);
+        var escapeChar;
+        var length;
+        
+        if (charCode <= 0xFF) {
+          escapeChar = 'x';
+          length = 2;
+        } else {
+          escapeChar = 'u';
+          length = 4;
+        }
+        
+        return '\\' + escapeChar + padLeft(charCode.toString(16).toUpperCase(), '0', length);
+      }
+      
+      function matchFailed(failure) {
+        if (pos < rightmostFailuresPos) {
+          return;
+        }
+        
+        if (pos > rightmostFailuresPos) {
+          rightmostFailuresPos = pos;
+          rightmostFailuresExpected = [];
+        }
+        
+        rightmostFailuresExpected.push(failure);
+      }
+      
+      function parse_expression() {
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.substr(pos, 3).toLowerCase() === "not") {
+          result0 = input.substr(pos, 3);
+          pos += 3;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"not\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse__();
+          if (result1 !== null) {
+            result2 = parse_simple_expression();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, node) {
+                return {type: "NOT", children: [node]};
+            })(pos0, result0[2]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        if (result0 === null) {
+          pos0 = pos;
+          pos1 = pos;
+          result0 = parse_simple_expression();
+          if (result0 !== null) {
+            result1 = parse__();
+            if (result1 !== null) {
+              result2 = parse_logical();
+              if (result2 !== null) {
+                result3 = parse__();
+                if (result3 !== null) {
+                  result4 = parse_expression();
+                  if (result4 !== null) {
+                    result0 = [result0, result1, result2, result3, result4];
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+          if (result0 !== null) {
+            result0 = (function(offset, left, type, right) {
+                  return {type: type.toUpperCase(), children: [left, right]};
+              })(pos0, result0[0], result0[2], result0[4]);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
+          if (result0 === null) {
+            pos0 = pos;
+            result0 = parse_simple_expression();
+            if (result0 !== null) {
+              result0 = (function(offset, node) { return node; })(pos0, result0);
+            }
+            if (result0 === null) {
+              pos = pos0;
+            }
+          }
+        }
+        return result0;
+      }
+      
+      function parse_simple_expression() {
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.charCodeAt(pos) === 40) {
+          result0 = "(";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"(\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse___();
+          if (result1 !== null) {
+            result2 = parse_expression();
+            if (result2 !== null) {
+              result3 = parse___();
+              if (result3 !== null) {
+                if (input.charCodeAt(pos) === 41) {
+                  result4 = ")";
+                  pos++;
+                } else {
+                  result4 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\")\"");
+                  }
+                }
+                if (result4 !== null) {
+                  result0 = [result0, result1, result2, result3, result4];
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, content) {
+                return content;
+            })(pos0, result0[2]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        if (result0 === null) {
+          pos0 = pos;
+          pos1 = pos;
+          result0 = parse_identifier();
+          if (result0 !== null) {
+            result1 = parse___();
+            if (result1 !== null) {
+              result2 = parse_equal_comparison();
+              if (result2 !== null) {
+                result3 = parse___();
+                if (result3 !== null) {
+                  result4 = parse_value();
+                  if (result4 !== null) {
+                    result0 = [result0, result1, result2, result3, result4];
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+          if (result0 !== null) {
+            result0 = (function(offset, input, op, value) {
+                  return {type: "comparison", operator: op, input: input, value: value};
+              })(pos0, result0[0], result0[2], result0[4]);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
+          if (result0 === null) {
+            pos0 = pos;
+            pos1 = pos;
+            result0 = parse_identifier();
+            if (result0 !== null) {
+              result1 = parse___();
+              if (result1 !== null) {
+                result2 = parse_order_comparison();
+                if (result2 !== null) {
+                  result3 = parse___();
+                  if (result3 !== null) {
+                    result4 = parse_number();
+                    if (result4 !== null) {
+                      result0 = [result0, result1, result2, result3, result4];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+            if (result0 !== null) {
+              result0 = (function(offset, input, op, value) {
+                    return {type: "comparison", operator: op, input: input, value: value};
+                })(pos0, result0[0], result0[2], result0[4]);
+            }
+            if (result0 === null) {
+              pos = pos0;
+            }
+            if (result0 === null) {
+              pos0 = pos;
+              result0 = parse_identifier();
+              if (result0 !== null) {
+                result0 = (function(offset, input) {
+                      return {type: "truthy", input: input};
+                  })(pos0, result0);
+              }
+              if (result0 === null) {
+                pos = pos0;
+              }
+            }
+          }
+        }
+        return result0;
+      }
+      
+      function parse_equal_comparison() {
+        var result0;
+        
+        reportFailures++;
+        if (input.charCodeAt(pos) === 61) {
+          result0 = "=";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"=\"");
+          }
+        }
+        if (result0 === null) {
+          if (input.substr(pos, 2) === "!=") {
+            result0 = "!=";
+            pos += 2;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"!=\"");
+            }
+          }
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("comparison operator");
+        }
+        return result0;
+      }
+      
+      function parse_order_comparison() {
+        var result0;
+        
+        reportFailures++;
+        if (input.substr(pos, 2) === "<=") {
+          result0 = "<=";
+          pos += 2;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"<=\"");
+          }
+        }
+        if (result0 === null) {
+          if (input.charCodeAt(pos) === 60) {
+            result0 = "<";
+            pos++;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"<\"");
+            }
+          }
+          if (result0 === null) {
+            if (input.substr(pos, 2) === ">=") {
+              result0 = ">=";
+              pos += 2;
+            } else {
+              result0 = null;
+              if (reportFailures === 0) {
+                matchFailed("\">=\"");
+              }
+            }
+            if (result0 === null) {
+              if (input.charCodeAt(pos) === 62) {
+                result0 = ">";
+                pos++;
+              } else {
+                result0 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\">\"");
+                }
+              }
+            }
+          }
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("comparison operator");
+        }
+        return result0;
+      }
+      
+      function parse_logical() {
+        var result0;
+        
+        reportFailures++;
+        if (input.substr(pos, 3).toLowerCase() === "and") {
+          result0 = input.substr(pos, 3);
+          pos += 3;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"and\"");
+          }
+        }
+        if (result0 === null) {
+          if (input.substr(pos, 2).toLowerCase() === "or") {
+            result0 = input.substr(pos, 2);
+            pos += 2;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"or\"");
+            }
+          }
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("logical operator");
+        }
+        return result0;
+      }
+      
+      function parse_identifier() {
+        var result0, result1;
+        var pos0;
+        
+        reportFailures++;
+        pos0 = pos;
+        if (/^[A-Za-z0-9._\-]/.test(input.charAt(pos))) {
+          result1 = input.charAt(pos);
+          pos++;
+        } else {
+          result1 = null;
+          if (reportFailures === 0) {
+            matchFailed("[A-Za-z0-9._\\-]");
+          }
+        }
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            if (/^[A-Za-z0-9._\-]/.test(input.charAt(pos))) {
+              result1 = input.charAt(pos);
+              pos++;
+            } else {
+              result1 = null;
+              if (reportFailures === 0) {
+                matchFailed("[A-Za-z0-9._\\-]");
+              }
+            }
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, chars) {
+              return chars.join("");
+          })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("input name");
+        }
+        return result0;
+      }
+      
+      function parse_value() {
+        var result0, result1;
+        var pos0;
+        
+        reportFailures++;
+        pos0 = pos;
+        if (/^[A-Za-z0-9._\-]/.test(input.charAt(pos))) {
+          result1 = input.charAt(pos);
+          pos++;
+        } else {
+          result1 = null;
+          if (reportFailures === 0) {
+            matchFailed("[A-Za-z0-9._\\-]");
+          }
+        }
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            if (/^[A-Za-z0-9._\-]/.test(input.charAt(pos))) {
+              result1 = input.charAt(pos);
+              pos++;
+            } else {
+              result1 = null;
+              if (reportFailures === 0) {
+                matchFailed("[A-Za-z0-9._\\-]");
+              }
+            }
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, chars) {
+              return chars.join("");
+          })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("value");
+        }
+        return result0;
+      }
+      
+      function parse_number() {
+        var result0, result1;
+        var pos0;
+        
+        reportFailures++;
+        pos0 = pos;
+        if (/^[0-9]/.test(input.charAt(pos))) {
+          result1 = input.charAt(pos);
+          pos++;
+        } else {
+          result1 = null;
+          if (reportFailures === 0) {
+            matchFailed("[0-9]");
+          }
+        }
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            if (/^[0-9]/.test(input.charAt(pos))) {
+              result1 = input.charAt(pos);
+              pos++;
+            } else {
+              result1 = null;
+              if (reportFailures === 0) {
+                matchFailed("[0-9]");
+              }
+            }
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, digits) {
+              return parseInt(digits.join(""), 10);
+          })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("number");
+        }
+        return result0;
+      }
+      
+      function parse__() {
+        var result0, result1;
+        
+        result1 = parse_WhiteSpace();
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            result1 = parse_WhiteSpace();
+          }
+        } else {
+          result0 = null;
+        }
+        return result0;
+      }
+      
+      function parse___() {
+        var result0, result1;
+        
+        result0 = [];
+        result1 = parse_WhiteSpace();
+        while (result1 !== null) {
+          result0.push(result1);
+          result1 = parse_WhiteSpace();
+        }
+        return result0;
+      }
+      
+      function parse_WhiteSpace() {
+        var result0;
+        
+        reportFailures++;
+        if (/^[\t\x0B\f \xA0\uFEFF]/.test(input.charAt(pos))) {
+          result0 = input.charAt(pos);
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("[\\t\\x0B\\f \\xA0\\uFEFF]");
+          }
+        }
+        if (result0 === null) {
+          result0 = parse_Zs();
+        }
+        reportFailures--;
+        if (reportFailures === 0 && result0 === null) {
+          matchFailed("whitespace");
+        }
+        return result0;
+      }
+      
+      function parse_Zs() {
+        var result0;
+        
+        if (/^[ \xA0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000]/.test(input.charAt(pos))) {
+          result0 = input.charAt(pos);
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("[ \\xA0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000]");
+          }
+        }
+        return result0;
+      }
+      
+      
+      function cleanupExpected(expected) {
+        expected.sort();
+        
+        var lastExpected = null;
+        var cleanExpected = [];
+        for (var i = 0; i < expected.length; i++) {
+          if (expected[i] !== lastExpected) {
+            cleanExpected.push(expected[i]);
+            lastExpected = expected[i];
+          }
+        }
+        return cleanExpected;
+      }
+      
+      function computeErrorPosition() {
+        /*
+         * The first idea was to use |String.split| to break the input up to the
+         * error position along newlines and derive the line and column from
+         * there. However IE's |split| implementation is so broken that it was
+         * enough to prevent it.
+         */
+        
+        var line = 1;
+        var column = 1;
+        var seenCR = false;
+        
+        for (var i = 0; i < Math.max(pos, rightmostFailuresPos); i++) {
+          var ch = input.charAt(i);
+          if (ch === "\n") {
+            if (!seenCR) { line++; }
+            column = 1;
+            seenCR = false;
+          } else if (ch === "\r" || ch === "\u2028" || ch === "\u2029") {
+            line++;
+            column = 1;
+            seenCR = true;
+          } else {
+            column++;
+            seenCR = false;
+          }
+        }
+        
+        return { line: line, column: column };
+      }
+      
+      
+      var result = parseFunctions[startRule]();
+      
+      /*
+       * The parser is now in one of the following three states:
+       *
+       * 1. The parser successfully parsed the whole input.
+       *
+       *    - |result !== null|
+       *    - |pos === input.length|
+       *    - |rightmostFailuresExpected| may or may not contain something
+       *
+       * 2. The parser successfully parsed only a part of the input.
+       *
+       *    - |result !== null|
+       *    - |pos < input.length|
+       *    - |rightmostFailuresExpected| may or may not contain something
+       *
+       * 3. The parser did not successfully parse any part of the input.
+       *
+       *   - |result === null|
+       *   - |pos === 0|
+       *   - |rightmostFailuresExpected| contains at least one failure
+       *
+       * All code following this comment (including called functions) must
+       * handle these states.
+       */
+      if (result === null || pos !== input.length) {
+        var offset = Math.max(pos, rightmostFailuresPos);
+        var found = offset < input.length ? input.charAt(offset) : null;
+        var errorPosition = computeErrorPosition();
+        
+        throw new this.SyntaxError(
+          cleanupExpected(rightmostFailuresExpected),
+          found,
+          offset,
+          errorPosition.line,
+          errorPosition.column
+        );
+      }
+      
+      return result;
+    },
+    
+    /* Returns the parser source code. */
+    toSource: function() { return this._source; }
+  };
+  
+  /* Thrown when a parser encounters a syntax error. */
+  
+  result.SyntaxError = function(expected, found, offset, line, column) {
+    function buildMessage(expected, found) {
+      var expectedHumanized, foundHumanized;
+      
+      switch (expected.length) {
+        case 0:
+          expectedHumanized = "end of input";
+          break;
+        case 1:
+          expectedHumanized = expected[0];
+          break;
+        default:
+          expectedHumanized = expected.slice(0, expected.length - 1).join(", ")
+            + " or "
+            + expected[expected.length - 1];
+      }
+      
+      foundHumanized = found ? quote(found) : "end of input";
+      
+      return "Expected " + expectedHumanized + " but " + foundHumanized + " found.";
+    }
+    
+    this.name = "SyntaxError";
+    this.expected = expected;
+    this.found = found;
+    this.message = buildMessage(expected, found);
+    this.offset = offset;
+    this.line = line;
+    this.column = column;
+  };
+  
+  result.SyntaxError.prototype = Error.prototype;
+  
+  return result;
+});
+
+define('lib/dependshandler',[
+    "jquery",
+    "./depends_parse"
+], function($, parser) {
+    function DependsHandler($el, expression) {
+        var $context = $el.closest("form");
+        if (!$context.length)
+            $context=$(document);
+        this.$el=$el;
+        this.$context=$context;
+        this.ast=parser.parse(expression);  // TODO: handle parse exceptions here
+    }
+
+    DependsHandler.prototype = {
+        _findInputs: function(name) {
+            var $input = this.$context.find(":input[name="+name+"]");
+            if (!$input.length)
+                $input=$("#"+name);
+            return $input;
+        },
+
+        _getValue: function(name) {
+            var $input = this._findInputs(name);
+            if (!$input.length)
+                return null;
+
+            if ($input.attr("type")==="radio" || $input.attr("type")==="checkbox")
+                return $input.filter(":checked").val() || null;
+            else
+                return $input.val();
+        },
+        
+        getAllInputs: function() {
+            var todo = [this.ast],
+                $inputs = $(),
+                node;
+
+            while (todo.length) {
+                node=todo.shift();
+                if (node.input)
+                    $inputs=$inputs.add(this._findInputs(node.input));
+                if (node.children && node.children.length)
+                    todo.push.apply(todo, node.children);
+            }
+            return $inputs;
+        },
+
+        _evaluate: function(node) {
+            var value = node.input ? this._getValue(node.input) : null,
+                i;
+
+            switch (node.type) {
+                case "NOT":
+                    return !this._evaluate(node.children[0]);
+                case "AND":
+                    for (i=0; i<node.children.length; i++)
+                        if (!this._evaluate(node.children[i]))
+                            return false;
+                    return true;
+                case "OR":
+                    for (i=0; i<node.children.length; i++)
+                        if (this._evaluate(node.children[i]))
+                            return true;
+                    return false;
+                case "comparison":
+                    switch (node.operator) {
+                        case "=":
+                            return node.value==value;
+                        case "!=":
+                            return node.value!=value;
+                        case "<=":
+                            return value<=node.value;
+                        case "<":
+                            return value<node.value;
+                        case ">":
+                            return value>node.value;
+                        case ">=":
+                            return value>=node.value;
+                    }
+                    break;
+                case "truthy":
+                    return !!value;
+            }
+        },
+
+        evaluate: function() {
+            return this._evaluate(this.ast);
+        }
+    };
+
+    return DependsHandler;
+});
+
+
 define('patterns/depends',[
     "jquery",
     "../registry",
+    "../logging",
+    "../lib/dependshandler",
     "../core/parser"
-], function($, patterns, Parser) {
-    var parser = new Parser("depends");
+], function($, patterns, logging, DependsHander, Parser) {
+    var log = logging.getLogger("depends"),
+        parser = new Parser("depends");
 
-    parser.add_argument("name");
-    parser.add_argument("operator", "on");
-    parser.add_argument("value");
-    parser.add_argument("type", "and");
-    parser.add_argument("action", "show");
+    parser.add_argument("condition");
+    parser.add_argument("action", "show", ["show", "enable"]);
+    parser.add_argument("transition", "none", ["none", "css", "fade", "slide"]);
+    parser.add_argument("effect-duration", "fast");
 
     var depends = {
         name: "depends",
         trigger: ".pat-depends",
         jquery_plugin: "patternDepends",
 
-        verify: function($slave, command) {
-            var result=[],
-                $form = $slave.closest("form"),
-                $input, i, value, test;
-
-            if (!$form.length)
-                $form=$(document);
-
-            for (i=0; i<command.on.length; i++) {
-                test=command.on[i];
-
-                $input = $form.find(":input[name="+test.name+"]");
-                if (!$input.length) {
-                    result.push(false);
-                    continue;
-                }
-
-                if ($input.attr("type")==="radio" || $input.attr("type")==="checkbox")
-                    value = $input.filter(":checked").val();
-                else
-                    value = $input.val();
-
-                if (test.operator==="on" && !value) {
-                    result.push(false);
-                    continue;
-                } else if (test.operator==="off" && value) {
-                    result.push(false);
-                    continue;
-                } else if (test.value) {
-                    if (test.operator==="equals" && test.value!==value) {
-                        result.push(false);
-                        continue;
-                    } else if (test.operator==="notEquals" && test.value===value) {
-                        result.push(false);
-                        continue;
-                    }
-                }
-                result.push(true);
-            }
-
-            if (command.type==="or") {
-                for (i=0; i<result.length; i++) {
-                    if (result[i])
-                        return true;
-                }
-                return false;
-            } else {
-                for (i=0; i<result.length; i++)
-                    if (!result[i])
-                        return false;
-                return true;
-            }
+        transitions: {
+            none: {hide: "hide", show: "show"},
+            fade: {hide: "fadeOut", show: "fadeIn"},
+            slide: {hide: "slideUp", show: "slideDown"}
         },
 
-        getMasters: function($slave, command) {
-            var $result = $(),
-                $form = $slave.closest("form"),
-                i, test;
-
-            if (!$form.length)
-                $form=$(document);
-
-            for (i=0; i<command.on.length; i++) {
-                test=command.on[i];
-                if (!test)
-                    continue;
-
-                $result=$result.add($form.find(":input[name="+test.name+"]"));
-            }
-
-            return $result;
-        },
-
-        parse: function($el, opts) {
-            var options = parser.parse($el, opts, true);
-            var command = {"on" : options,
-                           "action" : "show",
-                           "type": "and"
-                           };
-            if (options[0].action)
-                command.action=options[0].action;
-            if (options[0].type)
-                command.type=options[0].type;
-            return command;
-        },
-
-        init: function($root, opts) {
-            return $root.each(function() {
+        init: function($el, opts) {
+            return $el.each(function() {
                 var slave = this,
                     $slave = $(this),
-                    command, state;
+                    options = parser.parse($slave, opts),
+                    handler, state;
 
-                command=depends.parse($slave, opts);
-                state=depends.verify($slave, command);
-
-                if (command.action==="show") {
-                    if (state)
-                        $slave.show();
-                    else
-                        $slave.hide();
-                } else if (command.action==="enable") {
-                    if (state) {
-                        slave.disabled=null;
-                        $slave.removeClass("disabled");
-                    } else {
-                        slave.disabled="disabled";
-                        $slave.addClass("disabled");
-                    }
+                try {
+                    handler=new DependsHander($slave, options.condition);
+                } catch (e) {
+                    log.error("Invalid condition: " + e.message);
+                    return;
                 }
 
-                depends.getMasters($slave, command).on("change.pat-depends", function() {
-                    state=depends.verify($slave, command);
-                    if (command.action==="show") {
+                state=handler.evaluate();
+                switch (options.action) {
+                    case "show":
                         if (state)
-                            $slave.slideDown();
+                            $slave.show();
                         else
-                            $slave.slideUp();
-                    } else if (command.action==="enable" ) {
-                        if (state) {
-                            slave.disabled=null;
-                            $slave.removeClass("disabled");
-                        } else {
-                            slave.disabled="disabled";
-                            $slave.addClass("disabled");
-                        }
+                            $slave.hide();
+                        break;
+                    case "enable":
+                        if (state)
+                            depends._enable($slave);
+                        else
+                            depends._disable($slave);
+                        break;
+                }
+
+                var data = {handler: handler,
+                            options: options,
+                            slave: slave};
+
+                handler.getAllInputs().each(function() {
+                    if (this.form) {
+                        var $form = $(this.form),
+                            slaves = $form.data("patDepends.slaves");
+                        if (!slaves) {
+                            slaves=[data];
+                            $form.on("reset.pat-depends", depends.onReset);
+                        } else if (slaves.indexOf(data)===-1)
+                            slaves.push(data);
+                        $form.data("patDepends.slaves", slaves);
                     }
+                    $(this).on("change.pat-depends", null, data, depends.onChange);
                 });
             });
+        },
+
+        onReset: function(event) {
+            var slaves = $(this).data("patDepends.slaves"),
+                i;
+
+            setTimeout(function() {
+                for (i=0; i<slaves.length; i++) {
+                    event.data=slaves[i];
+                    depends.onChange(event);
+                }
+            }, 50);
+        },
+
+        _enable: function($slave) {
+            if ($slave.is(":input"))
+                $slave[0].disabled=null;
+            else if ($slave.is("a"))
+                $slave.off("click.patternDepends");
+            $slave.removeClass("disabled");
+        },
+
+        _disable: function($slave) {
+            if ($slave.is(":input"))
+                $slave[0].disabled="disabled";
+            else if ($slave.is("a"))
+                $slave.on("click.patternDepends", depends.blockDefault);
+            $slave.addClass("disabled");
+        },
+
+        onChange: function(event) {
+            var handler = event.data.handler,
+                options = event.data.options,
+                slave = event.data.slave,
+                $slave = $(slave),
+                state = handler.evaluate();
+
+            switch (options.action) {
+                case "show":
+                    $slave.removeClass("visible hidden in-progress");
+                    if (options.transition==="css")
+                        $slave.addClass(state ? "visible" : "hidden");
+                    else {
+                        $slave.addClass("in-progress");
+                        var t = depends.transitions[options.transition],
+                            duration = (options.transition==="none" ? null : options.effectDuration);
+                        $slave[state ? t.show : t.hide](duration, function() {
+                            $slave.removeClass("hidden").addClass(state ? "visible" : "hidden");
+                        });
+                    }
+                    break;
+                case "enable":
+                    if (state)
+                        depends._enable($slave);
+                    else
+                        depends._disable($slave);
+                    break;
+            }
+        },
+
+        blockDefault: function(event) {
+            event.preventDefault();
         }
     };
 
@@ -23690,9 +28639,9 @@ define('patterns/depends',[
 	var tinymce = {
 		majorVersion : '3',
 
-		minorVersion : '5.0.1',
+		minorVersion : '5.7',
 
-		releaseDate : '2012-05-10',
+		releaseDate : '2012-09-20',
 
 		_init : function() {
 			var t = this, d = document, na = navigator, ua = na.userAgent, i, nl, n, base, p, v;
@@ -23791,10 +28740,14 @@ define('patterns/depends',[
 			if (!t)
 				return o !== undef;
 
-			if (t == 'array' && (o.hasOwnProperty && o instanceof Array))
+			if (t == 'array' && tinymce.isArray(o))
 				return true;
 
 			return typeof(o) == t;
+		},
+
+		isArray: Array.isArray || function(obj) {
+			return Object.prototype.toString.call(obj) === "[object Array]";
 		},
 
 		makeMap : function(items, delim, map) {
@@ -24564,12 +29517,12 @@ tinymce.create('tinymce.util.Dispatcher', {
 				((s) ? "; secure" : "");
 		},
 
-		remove : function(n, p) {
-			var d = new Date();
+		remove : function(name, path, domain) {
+			var date = new Date();
 
-			d.setTime(d.getTime() - 1000);
+			date.setTime(date.getTime() - 1000);
 
-			this.set(n, '', d, p, d);
+			this.set(name, '', date, path, domain);
 		}
 	});
 })();
@@ -24605,7 +29558,7 @@ tinymce.create('tinymce.util.Dispatcher', {
 		}
 
 		if (t == 'object') {
-			if (o.hasOwnProperty && o instanceof Array) {
+			if (o.hasOwnProperty && Object.prototype.toString.call(o) === '[object Array]') {
 					for (i=0, v = '['; i<o.length; i++)
 						v += (i > 0 ? ',' : '') + serialize(o[i], quote);
 
@@ -24767,12 +29720,18 @@ tinymce.create('static tinymce.util.XHR', {
 
 		modifierPressed: function (e) {
 			return e.shiftKey || e.ctrlKey || e.altKey;
+		},
+
+		metaKeyPressed: function(e) {
+			// Check if ctrl or meta key is pressed also check if alt is false for Polish users
+			return tinymce.isMac ? e.metaKey : e.ctrlKey && !e.altKey;
 		}
 	};
 })(tinymce);
 
 tinymce.util.Quirks = function(editor) {
-	var VK = tinymce.VK, BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, settings = editor.settings;
+	var VK = tinymce.VK, BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection,
+		settings = editor.settings, parser = editor.parser, serializer = editor.serializer;
 
 	function setEditorCommandState(cmd, state) {
 		try {
@@ -24781,6 +29740,16 @@ tinymce.util.Quirks = function(editor) {
 			// Ignore
 		}
 	}
+
+	function getDocumentMode() {
+		var documentMode = editor.getDoc().documentMode;
+
+		return documentMode ? documentMode : 6;
+	};
+
+	function isDefaultPrevented(e) {
+		return e.isDefaultPrevented();
+	};
 
 	function cleanupStylesWhenDeleting() {
 		function removeMergedFormatSpans(isDelete) {
@@ -24831,7 +29800,7 @@ tinymce.util.Quirks = function(editor) {
 			var isDelete;
 
 			isDelete = e.keyCode == DELETE;
-			if (!e.isDefaultPrevented() && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+			if (!isDefaultPrevented(e) && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 				e.preventDefault();
 				removeMergedFormatSpans(isDelete);
 			}
@@ -24841,74 +29810,58 @@ tinymce.util.Quirks = function(editor) {
 	};
 	
 	function emptyEditorWhenDeleting() {
-		function getEndPointNode(rng, start) {
-			var container, offset, prefix = start ? 'start' : 'end';
+		function serializeRng(rng) {
+			var body = dom.create("body");
+			var contents = rng.cloneContents();
+			body.appendChild(contents);
+			return selection.serializer.serialize(body, {format: 'html'});
+		}
 
-			container = rng[prefix + 'Container'];
-			offset = rng[prefix + 'Offset'];
+		function allContentsSelected(rng) {
+			var selection = serializeRng(rng);
 
-			// Resolve indexed container
-			if (container.nodeType == 1 && container.hasChildNodes()) {
-				container = container.childNodes[Math.min(start ? offset : (offset > 0 ? offset - 1 : 0), container.childNodes.length - 1)]
-			}
+			var allRng = dom.createRng();
+			allRng.selectNode(editor.getBody());
 
-			return container;
-		};
+			var allSelection = serializeRng(allRng);
+			return selection === allSelection;
+		}
 
-		function isAtStartEndOfBody(rng, start) {
-			var container, offset, root, childNode, prefix = start ? 'start' : 'end', isAfter;
+		editor.onKeyDown.add(function(editor, e) {
+			var keyCode = e.keyCode, isCollapsed;
 
-			container = rng[prefix + 'Container'];
-			offset = rng[prefix + 'Offset'];
-			root = dom.getRoot();
+			// Empty the editor if it's needed for example backspace at <p><b>|</b></p>
+			if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
+				isCollapsed = editor.selection.isCollapsed();
 
-			// Resolve indexed container
-			if (container.nodeType == 1) {
-				isAfter = offset >= container.childNodes.length;
-				container = getEndPointNode(rng, start);
-
-				if (container.nodeType == 3) {
-					offset = start && !isAfter ? 0 : container.nodeValue.length;
-				}
-			}
-
-			// Check if start/end is in the middle of text
-			if (container.nodeType == 3 && ((start && offset > 0) || (!start && offset < container.nodeValue.length))) {
-				return false;
-			}
-
-			// Walk up the DOM tree to see if the endpoint is at the beginning/end of body
-			while (container !== root) {
-				childNode = container.parentNode[start ? 'firstChild' : 'lastChild'];
-
-				// If first/last element is a BR then jump to it's sibling in case: <p>x<br></p>
-				if (childNode.nodeName == "BR") {
-					childNode = childNode[start ? 'nextSibling' : 'previousSibling'] || childNode;
+				// Selection is collapsed but the editor isn't empty
+				if (isCollapsed && !dom.isEmpty(editor.getBody())) {
+					return;
 				}
 
-				// If the childNode isn't the container node then break in case <p><span>A</span>[X]</p>
-				if (childNode !== container) {
-					return false;
+				// IE deletes all contents correctly when everything is selected
+				if (tinymce.isIE && !isCollapsed) {
+					return;
 				}
 
-				container = container.parentNode;
+				// Selection isn't collapsed but not all the contents is selected
+				if (!isCollapsed && !allContentsSelected(editor.selection.getRng())) {
+					return;
+				}
+
+				// Manually empty the editor
+				editor.setContent('');
+				editor.selection.setCursorLocation(editor.getBody(), 0);
+				editor.nodeChanged();
 			}
+		});
+	};
 
-			return true;
-		};
-
-		editor.onKeyDown.addToTop(function(editor, e) {
-			var rng, keyCode = e.keyCode;
-
-			if (!e.isDefaultPrevented() && (keyCode == DELETE || keyCode == BACKSPACE)) {
-				rng = selection.getRng(true);
-
-				if (isAtStartEndOfBody(rng, true) && isAtStartEndOfBody(rng, false) &&
-					(rng.collapsed || dom.findCommonAncestor(getEndPointNode(rng, true), getEndPointNode(rng)) === dom.getRoot())) {
-					editor.setContent('');
-					editor.nodeChanged();
-					e.preventDefault();
-				}
+	function selectAll() {
+		editor.onKeyDown.add(function(editor, e) {
+			if (!isDefaultPrevented(e) && e.keyCode == 65 && VK.metaKeyPressed(e)) {
+				e.preventDefault();
+				editor.execCommand('SelectAll');
 			}
 		});
 	};
@@ -24932,7 +29885,7 @@ tinymce.util.Quirks = function(editor) {
 
 	function removeHrOnBackspace() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (!e.isDefaultPrevented() && e.keyCode === BACKSPACE) {
+			if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
 				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 					var node = selection.getNode();
 					var previousSibling = node.previousSibling;
@@ -24951,7 +29904,7 @@ tinymce.util.Quirks = function(editor) {
 		// wouldn't get proper focus if the user clicked on the HTML element
 		if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
 			editor.onMouseDown.add(function(editor, e) {
-				if (e.target.nodeName === "HTML") {
+				if (!isDefaultPrevented(e) && e.target.nodeName === "HTML") {
 					var body = editor.getBody();
 
 					// Blur the body it's focused but not correctly focused
@@ -25003,7 +29956,7 @@ tinymce.util.Quirks = function(editor) {
 		}
 
 		function isSelectionAcrossElements() {
-			return !selection.isCollapsed() && selection.getStart() != selection.getEnd();
+			return !selection.isCollapsed() && dom.getParent(selection.getStart(), dom.isBlock) != dom.getParent(selection.getEnd(), dom.isBlock);
 		}
 
 		function blockEvent(editor, e) {
@@ -25014,7 +29967,7 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyPress.add(function(editor, e) {
 			var applyAttributes;
 
-			if ((e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
+			if (!isDefaultPrevented(e) && (e.keyCode == 8 || e.keyCode == 46) && isSelectionAcrossElements()) {
 				applyAttributes = getAttributeApplyFunction();
 				editor.getDoc().execCommand('delete', false, null);
 				applyAttributes();
@@ -25026,7 +29979,7 @@ tinymce.util.Quirks = function(editor) {
 		dom.bind(editor.getDoc(), 'cut', function(e) {
 			var applyAttributes;
 
-			if (isSelectionAcrossElements()) {
+			if (!isDefaultPrevented(e) && isSelectionAcrossElements()) {
 				applyAttributes = getAttributeApplyFunction();
 				editor.onKeyUp.addToTop(blockEvent);
 
@@ -25065,7 +30018,7 @@ tinymce.util.Quirks = function(editor) {
 
 	function disableBackspaceIntoATable() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (!e.isDefaultPrevented() && e.keyCode === BACKSPACE) {
+			if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
 				if (selection.isCollapsed() && selection.getRng(true).startOffset === 0) {
 					var previousSibling = selection.getNode().previousSibling;
 					if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === "table") {
@@ -25077,20 +30030,19 @@ tinymce.util.Quirks = function(editor) {
 	}
 
 	function addNewLinesBeforeBrInPre() {
-		var documentMode = editor.getDoc().documentMode;
-
 		// IE8+ rendering mode does the right thing with BR in PRE
-		if (documentMode && documentMode > 7) {
+		if (getDocumentMode() > 7) {
 			return;
 		}
 
 		 // Enable display: none in area and add a specific class that hides all BR elements in PRE to
 		 // avoid the caret from getting stuck at the BR elements while pressing the right arrow key
 		setEditorCommandState('RespectVisibilityInDesign', true);
+		editor.contentStyles.push('.mceHideBrInPre pre br {display: none}');
 		dom.addClass(editor.getBody(), 'mceHideBrInPre');
 
 		// Adds a \n before all BR elements in PRE to get them visual
-		editor.parser.addNodeFilter('pre', function(nodes, name) {
+		parser.addNodeFilter('pre', function(nodes, name) {
 			var i = nodes.length, brNodes, j, brElm, sibling;
 
 			while (i--) {
@@ -25111,7 +30063,7 @@ tinymce.util.Quirks = function(editor) {
 		});
 
 		// Removes any \n before BR elements in PRE since other browsers and in contentEditable=false mode they will be visible
-		editor.serializer.addNodeFilter('pre', function(nodes, name) {
+		serializer.addNodeFilter('pre', function(nodes, name) {
 			var i = nodes.length, brNodes, j, brElm, sibling;
 
 			while (i--) {
@@ -25154,7 +30106,7 @@ tinymce.util.Quirks = function(editor) {
 			var isDelete, rng, container, offset, brElm, sibling, collapsed;
 
 			isDelete = e.keyCode == DELETE;
-			if (!e.isDefaultPrevented() && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
+			if (!isDefaultPrevented(e) && (isDelete || e.keyCode == BACKSPACE) && !VK.modifierPressed(e)) {
 				rng = selection.getRng();
 				container = rng.startContainer;
 				offset = rng.startOffset;
@@ -25194,7 +30146,7 @@ tinymce.util.Quirks = function(editor) {
 		editor.onKeyDown.add(function(editor, e) {
 			var rng, container, offset, root, parent;
 
-			if (e.isDefaultPrevented() || e.keyCode != VK.BACKSPACE) {
+			if (isDefaultPrevented(e) || e.keyCode != VK.BACKSPACE) {
 				return;
 			}
 
@@ -25218,10 +30170,10 @@ tinymce.util.Quirks = function(editor) {
 				editor.formatter.toggle('blockquote', null, parent);
 
 				// Move the caret to the beginning of container
+				rng = dom.createRng();
 				rng.setStart(container, 0);
 				rng.setEnd(container, 0);
 				selection.setRng(rng);
-				selection.collapse(false);
 			}
 		});
 	};
@@ -25272,6 +30224,14 @@ tinymce.util.Quirks = function(editor) {
 		editor.onSetContent.add(selection.onSetContent.add(fixLinks));
 	};
 
+	function setDefaultBlockType() {
+		if (settings.forced_root_block) {
+			editor.onInit.add(function() {
+				setEditorCommandState('DefaultParagraphSeparator', settings.forced_root_block);
+			});
+		}
+	}
+
 	function removeGhostSelection() {
 		function repaint(sender, args) {
 			if (!sender || !args.initial) {
@@ -25284,16 +30244,308 @@ tinymce.util.Quirks = function(editor) {
 		editor.onSetContent.add(repaint);
 	};
 
-	function deleteImageOnBackSpace() {
+	function deleteControlItemOnBackSpace() {
 		editor.onKeyDown.add(function(editor, e) {
-			if (!e.isDefaultPrevented() && e.keyCode == 8 && selection.getNode().nodeName == 'IMG') {
-				e.preventDefault();
-				editor.undoManager.beforeChange();
-				dom.remove(selection.getNode());
-				editor.undoManager.add();
+			var rng;
+
+			if (!isDefaultPrevented(e) && e.keyCode == BACKSPACE) {
+				rng = editor.getDoc().selection.createRange();
+				if (rng && rng.item) {
+					e.preventDefault();
+					editor.undoManager.beforeChange();
+					dom.remove(rng.item(0));
+					editor.undoManager.add();
+				}
 			}
 		});
 	};
+
+	function renderEmptyBlocksFix() {
+		var emptyBlocksCSS;
+
+		// IE10+
+		if (getDocumentMode() >= 10) {
+			emptyBlocksCSS = '';
+			tinymce.each('p div h1 h2 h3 h4 h5 h6'.split(' '), function(name, i) {
+				emptyBlocksCSS += (i > 0 ? ',' : '') + name + ':empty';
+			});
+
+			editor.contentStyles.push(emptyBlocksCSS + '{padding-right: 1px !important}');
+		}
+	};
+
+	function fakeImageResize() {
+		var selectedElmX, selectedElmY, selectedElm, selectedElmGhost, selectedHandle, startX, startY, startW, startH, ratio,
+			resizeHandles, width, height, rootDocument = document, editableDoc = editor.getDoc();
+
+		if (!settings.object_resizing || settings.webkit_fake_resize === false) {
+			return;
+		}
+
+		// Try disabling object resizing if WebKit implements resizing in the future
+		setEditorCommandState("enableObjectResizing", false);
+
+		// Details about each resize handle how to scale etc
+		resizeHandles = {
+			// Name: x multiplier, y multiplier, delta size x, delta size y
+			n: [.5, 0, 0, -1],
+			e: [1, .5, 1, 0],
+			s: [.5, 1, 0, 1],
+			w: [0, .5, -1, 0],
+			nw: [0, 0, -1, -1],
+			ne: [1, 0, 1, -1],
+			se: [1, 1, 1, 1],
+			sw : [0, 1, -1, 1]
+		};
+
+		function resizeElement(e) {
+			var deltaX, deltaY;
+
+			// Calc new width/height
+			deltaX = e.screenX - startX;
+			deltaY = e.screenY - startY;
+
+			// Calc new size
+			width = deltaX * selectedHandle[2] + startW;
+			height = deltaY * selectedHandle[3] + startH;
+
+			// Never scale down lower than 5 pixels
+			width = width < 5 ? 5 : width;
+			height = height < 5 ? 5 : height;
+
+			// Constrain proportions when modifier key is pressed or if the nw, ne, sw, se corners are moved on an image
+			if (VK.modifierPressed(e) || (selectedElm.nodeName == "IMG" && selectedHandle[2] * selectedHandle[3] !== 0)) {
+				width = Math.round(height / ratio);
+				height = Math.round(width * ratio);
+			}
+
+			// Update ghost size
+			dom.setStyles(selectedElmGhost, {
+				width: width,
+				height: height
+			});
+
+			// Update ghost X position if needed
+			if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
+				dom.setStyle(selectedElmGhost, 'left', selectedElmX + (startW - width));
+			}
+
+			// Update ghost Y position if needed
+			if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
+				dom.setStyle(selectedElmGhost, 'top', selectedElmY + (startH - height));
+			}
+		}
+
+		function endResize() {
+			function setSizeProp(name, value) {
+				if (value) {
+					// Resize by using style or attribute
+					if (selectedElm.style[name] || !editor.schema.isValid(selectedElm.nodeName.toLowerCase(), name)) {
+						dom.setStyle(selectedElm, name, value);
+					} else {
+						dom.setAttrib(selectedElm, name, value);
+					}
+				}
+			}
+
+			// Set width/height properties
+			setSizeProp('width', width);
+			setSizeProp('height', height);
+
+			dom.unbind(editableDoc, 'mousemove', resizeElement);
+			dom.unbind(editableDoc, 'mouseup', endResize);
+
+			if (rootDocument != editableDoc) {
+				dom.unbind(rootDocument, 'mousemove', resizeElement);
+				dom.unbind(rootDocument, 'mouseup', endResize);
+			}
+
+			// Remove ghost and update resize handle positions
+			dom.remove(selectedElmGhost);
+			showResizeRect(selectedElm);
+		}
+
+		function showResizeRect(targetElm) {
+			var position, targetWidth, targetHeight;
+
+			hideResizeRect();
+
+			// Get position and size of target
+			position = dom.getPos(targetElm);
+			selectedElmX = position.x;
+			selectedElmY = position.y;
+			targetWidth = targetElm.offsetWidth;
+			targetHeight = targetElm.offsetHeight;
+
+			// Reset width/height if user selects a new image/table
+			if (selectedElm != targetElm) {
+				selectedElm = targetElm;
+				width = height = 0;
+			}
+
+			tinymce.each(resizeHandles, function(handle, name) {
+				var handleElm;
+
+				// Get existing or render resize handle
+				handleElm = dom.get('mceResizeHandle' + name);
+				if (!handleElm) {
+					handleElm = dom.add(editableDoc.documentElement, 'div', {
+						id: 'mceResizeHandle' + name,
+						'class': 'mceResizeHandle',
+						style: 'cursor:' + name + '-resize; margin:0; padding:0'
+					});
+
+					dom.bind(handleElm, 'mousedown', function(e) {
+						e.preventDefault();
+
+						endResize();
+
+						startX = e.screenX;
+						startY = e.screenY;
+						startW = selectedElm.clientWidth;
+						startH = selectedElm.clientHeight;
+						ratio = startH / startW;
+						selectedHandle = handle;
+
+						selectedElmGhost = selectedElm.cloneNode(true);
+						dom.addClass(selectedElmGhost, 'mceClonedResizable');
+						dom.setStyles(selectedElmGhost, {
+							left: selectedElmX,
+							top: selectedElmY,
+							margin: 0
+						});
+
+						editableDoc.documentElement.appendChild(selectedElmGhost);
+
+						dom.bind(editableDoc, 'mousemove', resizeElement);
+						dom.bind(editableDoc, 'mouseup', endResize);
+
+						if (rootDocument != editableDoc) {
+							dom.bind(rootDocument, 'mousemove', resizeElement);
+							dom.bind(rootDocument, 'mouseup', endResize);
+						}
+					});
+				} else {
+					dom.show(handleElm);
+				}
+
+				// Position element
+				dom.setStyles(handleElm, {
+					left: (targetWidth * handle[0] + selectedElmX) - (handleElm.offsetWidth / 2),
+					top: (targetHeight * handle[1] + selectedElmY) - (handleElm.offsetHeight / 2)
+				});
+			});
+
+			// Only add resize rectangle on WebKit and only on images
+			if (!tinymce.isOpera && selectedElm.nodeName == "IMG") {
+				selectedElm.setAttribute('data-mce-selected', '1');
+			}
+		}
+
+		function hideResizeRect() {
+			if (selectedElm) {
+				selectedElm.removeAttribute('data-mce-selected');
+			}
+
+			for (var name in resizeHandles) {
+				dom.hide('mceResizeHandle' + name);
+			}
+		}
+
+		// Add CSS for resize handles, cloned element and selected
+		editor.contentStyles.push(
+			'.mceResizeHandle {' +
+				'position: absolute;' +
+				'border: 1px solid black;' +
+				'background: #FFF;' +
+				'width: 5px;' +
+				'height: 5px;' +
+				'z-index: 10000' +
+			'}' +
+			'.mceResizeHandle:hover {' +
+				'background: #000' +
+			'}' +
+			'img[data-mce-selected] {' +
+				'outline: 1px solid black' +
+			'}' +
+			'img.mceClonedResizable, table.mceClonedResizable {' +
+				'position: absolute;' +
+				'outline: 1px dashed black;' +
+				'opacity: .5;' +
+				'z-index: 10000' +
+			'}'
+		);
+
+		function updateResizeRect() {
+			var controlElm = dom.getParent(selection.getNode(), 'table,img');
+
+			// Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
+			tinymce.each(dom.select('img[data-mce-selected]'), function(img) {
+				img.removeAttribute('data-mce-selected');
+			});
+
+			if (controlElm) {
+				showResizeRect(controlElm);
+			} else {
+				hideResizeRect();
+			}
+		}
+
+		// Show/hide resize rect when image is selected
+		editor.onNodeChange.add(updateResizeRect);
+
+		// Fixes WebKit quirk where it returns IMG on getNode if caret is after last image in container
+		dom.bind(editableDoc, 'selectionchange', updateResizeRect);
+
+		// Remove the internal attribute when serializing the DOM
+		editor.serializer.addAttributeFilter('data-mce-selected', function(nodes, name) {
+			var i = nodes.length;
+
+			while (i--) {
+				nodes[i].attr(name, null);
+			}
+		});
+	}
+
+	function keepNoScriptContents() {
+		if (getDocumentMode() < 9) {
+			parser.addNodeFilter('noscript', function(nodes) {
+				var i = nodes.length, node, textNode;
+
+				while (i--) {
+					node = nodes[i];
+					textNode = node.firstChild;
+
+					if (textNode) {
+						node.attr('data-mce-innertext', textNode.value);
+					}
+				}
+			});
+
+			serializer.addNodeFilter('noscript', function(nodes) {
+				var i = nodes.length, node, textNode, value;
+
+				while (i--) {
+					node = nodes[i];
+					textNode = nodes[i].firstChild;
+
+					if (textNode) {
+						textNode.value = tinymce.html.Entities.decode(textNode.value);
+					} else {
+						// Old IE can't retain noscript value so an attribute is used to store it
+						value = node.attributes.map['data-mce-innertext'];
+						if (value) {
+							node.attr('data-mce-innertext', null);
+							textNode = new tinymce.html.Node('#text', 3);
+							textNode.value = value;
+							textNode.raw = true;
+							node.append(textNode);
+						}
+					}
+				}
+			});
+		}
+	}
 
 	// All browsers
 	disableBackspaceIntoATable();
@@ -25306,10 +30558,14 @@ tinymce.util.Quirks = function(editor) {
 		cleanupStylesWhenDeleting();
 		inputMethodFocus();
 		selectControlElements();
+		setDefaultBlockType();
 
 		// iOS
 		if (tinymce.isIDevice) {
 			selectionChangeNodeChanged();
+		} else {
+			fakeImageResize();
+			selectAll();
 		}
 	}
 
@@ -25319,7 +30575,9 @@ tinymce.util.Quirks = function(editor) {
 		ensureBodyHasRoleApplication();
 		addNewLinesBeforeBrInPre();
 		removePreSerializedStylesWhenSelectingControls();
-		deleteImageOnBackSpace();
+		deleteControlItemOnBackSpace();
+		renderEmptyBlocksFix();
+		keepNoScriptContents();
 	}
 
 	// Gecko
@@ -25330,6 +30588,11 @@ tinymce.util.Quirks = function(editor) {
 		setGeckoEditingOptions();
 		addBrAfterLastLinks();
 		removeGhostSelection();
+	}
+
+	// Opera
+	if (tinymce.isOpera) {
+		fakeImageResize();
 	}
 };
 (function(tinymce) {
@@ -25782,9 +31045,12 @@ tinymce.html.Styles = function(settings, schema) {
 
 		if (!html5) {
 			html5 = mapCache.html5 = unpack({
-					A : 'id|accesskey|class|dir|draggable|item|hidden|itemprop|role|spellcheck|style|subject|title',
-					B : '#|a|abbr|area|audio|b|bdo|br|button|canvas|cite|code|command|datalist|del|dfn|em|embed|i|iframe|img|input|ins|kbd|keygen|label|link|map|mark|meta|meter|noscript|object|output|progress|q|ruby|samp|script|select|small|span|strong|sub|sup|svg|textarea|time|var|video',
-					C : '#|a|abbr|area|address|article|aside|audio|b|bdo|blockquote|br|button|canvas|cite|code|command|datalist|del|details|dfn|dialog|div|dl|em|embed|fieldset|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|i|iframe|img|input|ins|kbd|keygen|label|link|map|mark|menu|meta|meter|nav|noscript|ol|object|output|p|pre|progress|q|ruby|samp|script|section|select|small|span|strong|style|sub|sup|svg|table|textarea|time|ul|var|video'
+					A : 'id|accesskey|class|dir|draggable|item|hidden|itemprop|role|spellcheck|style|subject|title|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup',
+					B : '#|a|abbr|area|audio|b|bdo|br|button|canvas|cite|code|command|datalist|del|dfn|em|embed|i|iframe|img|input|ins|kbd|keygen|label|link|map|mark|meta|' +
+						'meter|noscript|object|output|progress|q|ruby|samp|script|select|small|span|strong|sub|sup|svg|textarea|time|var|video|wbr',
+					C : '#|a|abbr|area|address|article|aside|audio|b|bdo|blockquote|br|button|canvas|cite|code|command|datalist|del|details|dfn|dialog|div|dl|em|embed|fieldset|' +
+						'figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|i|iframe|img|input|ins|kbd|keygen|label|link|map|mark|menu|meta|meter|nav|noscript|ol|object|output|' +
+						'p|pre|progress|q|ruby|samp|script|section|select|small|span|strong|style|sub|sup|svg|table|textarea|time|ul|var|video'
 				}, 'html[A|manifest][body|head]' +
 					'head[A][base|command|link|meta|noscript|script|style|title]' +
 					'title[A][#]' +
@@ -25820,7 +31086,7 @@ tinymce.html.Styles = function(settings, schema) {
 					'dl[A][dd|dt]' +
 					'dt[A][B]' +
 					'dd[A][C]' +
-					'a[A|href|target|ping|rel|media|type][C]' +
+					'a[A|href|target|ping|rel|media|type][B]' +
 					'em[A][B]' +
 					'strong[A][B]' +
 					'small[A][B]' +
@@ -25866,7 +31132,8 @@ tinymce.html.Styles = function(settings, schema) {
 					'form[A|accept-charset|action|autocomplete|enctype|method|name|novalidate|target][C]' +
 					'fieldset[A|disabled|form|name][C|legend]' +
 					'label[A|form|for][B]' +
-					'input[A|type|accept|alt|autocomplete|checked|disabled|form|formaction|formenctype|formmethod|formnovalidate|formtarget|height|list|max|maxlength|min|multiple|pattern|placeholder|readonly|required|size|src|step|width|files|value][]' +
+					'input[A|type|accept|alt|autocomplete|autofocus|checked|disabled|form|formaction|formenctype|formmethod|formnovalidate|formtarget|height|list|max|maxlength|min|' +
+						'multiple|pattern|placeholder|readonly|required|size|src|step|width|files|value|name][]' +
 					'button[A|autofocus|disabled|form|formaction|formenctype|formmethod|formnovalidate|formtarget|name|value|type][B]' +
 					'select[A|autofocus|disabled|form|multiple|name|size][option|optgroup]' +
 					'datalist[A][B|option]' +
@@ -25880,7 +31147,7 @@ tinymce.html.Styles = function(settings, schema) {
 					'area[A|shape|coords|href|alt|target|media|rel|ping|type][]' +
 					'mathml[A][]' +
 					'svg[A][]' +
-					'table[A|summary][caption|colgroup|thead|tfoot|tbody|tr]' +
+					'table[A|border][caption|colgroup|thead|tfoot|tbody|tr]' +
 					'caption[A][C]' +
 					'colgroup[A|span][col]' +
 					'col[A|span][]' +
@@ -25889,7 +31156,8 @@ tinymce.html.Styles = function(settings, schema) {
 					'tbody[A][tr]' +
 					'tr[A][th|td]' +
 					'th[A|headers|rowspan|colspan|scope][B]' +
-					'td[A|headers|rowspan|colspan][C]'
+					'td[A|headers|rowspan|colspan][C]' +
+					'wbr[A][]'
 			);
 		}
 
@@ -26068,14 +31336,15 @@ tinymce.html.Styles = function(settings, schema) {
 		}
 
 		// Setup map objects
-		whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script style textarea');
-		selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li options p td tfoot th thead tr');
-		shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link meta param embed source');
+		whiteSpaceElementsMap = createLookupTable('whitespace_elements', 'pre script noscript style textarea');
+		selfClosingElementsMap = createLookupTable('self_closing_elements', 'colgroup dd dt li option p td tfoot th thead tr');
+		shortEndedElementsMap = createLookupTable('short_ended_elements', 'area base basefont br col frame hr img input isindex link meta param embed source wbr');
 		boolAttrMap = createLookupTable('boolean_attributes', 'checked compact declare defer disabled ismap multiple nohref noresize noshade nowrap readonly selected autoplay loop controls');
 		nonEmptyElementsMap = createLookupTable('non_empty_elements', 'td th iframe video audio object', shortEndedElementsMap);
-		blockElementsMap = createLookupTable('block_elements', 'h1 h2 h3 h4 h5 h6 hr p div address pre form table tbody thead tfoot ' + 
-						'th tr td li ol ul caption blockquote center dl dt dd dir fieldset ' + 
-						'noscript menu isindex samp header footer article section hgroup aside nav figure');
+		textBlockElementsMap = createLookupTable('text_block_elements', 'h1 h2 h3 h4 h5 h6 p div address pre form ' + 
+						'blockquote center dir fieldset header footer article section hgroup aside nav figure');
+		blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' + 
+						'th tr td li ol ul caption dl dt dd noscript menu isindex samp option datalist select optgroup', textBlockElementsMap);
 
 		// Converts a wildcard expression string to a regexp for example *a will become /.*a/.
 		function patternToRegExp(str) {
@@ -26249,8 +31518,15 @@ tinymce.html.Styles = function(settings, schema) {
 					customElementsMap[name] = cloneName;
 
 					// If it's not marked as inline then add it to valid block elements
-					if (!inline)
+					if (!inline) {
+						blockElementsMap[name.toUpperCase()] = {};
 						blockElementsMap[name] = {};
+					}
+
+					// Add elements clone if needed
+					if (!elements[name]) {
+						elements[name] = elements[cloneName];
+					}
 
 					// Add custom elements at span/div positions
 					each(children, function(element, child) {
@@ -26375,6 +31651,10 @@ tinymce.html.Styles = function(settings, schema) {
 			return blockElementsMap;
 		};
 
+		self.getTextBlockElements = function() {
+			return textBlockElementsMap;
+		};
+
 		self.getShortEndedElements = function() {
 			return shortEndedElementsMap;
 		};
@@ -26397,6 +31677,36 @@ tinymce.html.Styles = function(settings, schema) {
 			return !!(parent && parent[child]);
 		};
 
+		self.isValid = function(name, attr) {
+			var attrPatterns, i, rule = getElementRule(name);
+
+			// Check if it's a valid element
+			if (rule) {
+				if (attr) {
+					// Check if attribute name exists
+					if (rule.attributes[attr]) {
+						return true;
+					}
+
+					// Check if attribute matches a regexp pattern
+					attrPatterns = rule.attributePatterns;
+					if (attrPatterns) {
+						i = attrPatterns.length;
+						while (i--) {
+							if (attrPatterns[i].pattern.test(name)) {
+								return true;
+							}
+						}
+					}
+				} else {
+					return true;
+				}
+			}
+
+			// No match
+			return false;
+		};
+		
 		self.getElementRule = getElementRule;
 
 		self.getCustomElements = function() {
@@ -26410,6 +31720,8 @@ tinymce.html.Styles = function(settings, schema) {
 		self.addCustomElements = addCustomElements;
 
 		self.addValidChildren = addValidChildren;
+
+		self.elements = elements;
 	};
 })(tinymce);
 
@@ -26467,7 +31779,7 @@ tinymce.html.Styles = function(settings, schema) {
 				value = name in fillAttrsMap ? name : decode(value || val2 || val3 || ''); // Handle boolean attribute than value attribute
 
 				// Validate name and value
-				if (validate && !isInternalElement && name.indexOf('data-') !== 0) {
+				if (validate && !isInternalElement && name.indexOf('data-mce-') !== 0) {
 					attrRule = validAttributesMap[name];
 
 					// Find rule by pattern matching
@@ -26508,10 +31820,10 @@ tinymce.html.Styles = function(settings, schema) {
 				'(?:!DOCTYPE([\\w\\W]*?)>)|' + // DOCTYPE
 				'(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
 				'(?:\\/([^>]+)>)|' + // End element
-				'(?:([A-Za-z0-9\\-\\:]+)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
+				'(?:([A-Za-z0-9\\-\\:\\.]+)((?:\\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\\/|\\s+)>)' + // Start element
 			')', 'g');
 
-			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:\\.|[^\"])*)\")|(?:\'((?:\\.|[^\'])*)\')|([^>\s]+)))?/g;
+			attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
 			specialElements = {
 				'script' : /<\/script[^>]*>/gi,
 				'style' : /<\/style[^>]*>/gi,
@@ -26520,7 +31832,7 @@ tinymce.html.Styles = function(settings, schema) {
 
 			// Setup lookup tables for empty elements and boolean attributes
 			shortEndedElements = schema.getShortEndedElements();
-			selfClosing = schema.getSelfClosingElements();
+			selfClosing = settings.self_closing_elements || schema.getSelfClosingElements();
 			fillAttrsMap = schema.getBoolAttrs();
 			validate = settings.validate;
 			removeInternalElements = settings.remove_internals;
@@ -26994,7 +32306,7 @@ tinymce.html.Styles = function(settings, schema) {
 						i = node.attributes.length;
 						while (i--) {
 							name = node.attributes[i].name;
-							if (name === "name" || name.indexOf('data-') === 0)
+							if (name === "name" || name.indexOf('data-mce-') === 0)
 								return false;
 						}
 					}
@@ -27050,17 +32362,40 @@ tinymce.html.Styles = function(settings, schema) {
 
 		function fixInvalidChildren(nodes) {
 			var ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i,
-				childClone, nonEmptyElements, nonSplitableElements, sibling, nextNode;
+				childClone, nonEmptyElements, nonSplitableElements, textBlockElements, sibling, nextNode;
 
 			nonSplitableElements = tinymce.makeMap('tr,td,th,tbody,thead,tfoot,table');
 			nonEmptyElements = schema.getNonEmptyElements();
+			textBlockElements = schema.getTextBlockElements();
 
 			for (ni = 0; ni < nodes.length; ni++) {
 				node = nodes[ni];
 
-				// Already removed
-				if (!node.parent)
+				// Already removed or fixed
+				if (!node.parent || node.fixed)
 					continue;
+
+				// If the invalid element is a text block and the text block is within a parent LI element
+				// Then unwrap the first text block and convert other sibling text blocks to LI elements similar to Word/Open Office
+				if (textBlockElements[node.name] && node.parent.name == 'li') {
+					// Move sibling text blocks after LI element
+					sibling = node.next;
+					while (sibling) {
+						if (textBlockElements[sibling.name]) {
+							sibling.name = 'li';
+							sibling.fixed = true;
+							node.parent.insert(sibling, node.parent);
+						} else {
+							break;
+						}
+
+						sibling = sibling.next;
+					}
+
+					// Unwrap current text block
+					node.unwrap(node);
+					continue;
+				}
 
 				// Get list of all parent nodes until we find a valid parent to stick the child into
 				parents = [node];
@@ -27268,9 +32603,23 @@ tinymce.html.Styles = function(settings, schema) {
 				}
 			};
 
+			function cloneAndExcludeBlocks(input) {
+				var name, output = {};
+
+				for (name in input) {
+					if (name !== 'li' && name != 'p') {
+						output[name] = input[name];
+					}
+				}
+
+				return output;
+			};
+
 			parser = new tinymce.html.SaxParser({
 				validate : validate,
-				fix_self_closing : !validate, // Let the DOM parser handle <li> in <li> or <p> in <p> for better results
+
+				// Exclude P and LI from DOM parsing since it's treated better by the DOM parser
+				self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
 
 				cdata: function(text) {
 					node.append(createNode('#cdata', 4)).value = text;
@@ -27425,7 +32774,8 @@ tinymce.html.Styles = function(settings, schema) {
 							}
 
 							// Trim start white space
-							textNode = node.prev;
+							// Removed due to: #5424
+							/*textNode = node.prev;
 							if (textNode && textNode.type === 3) {
 								text = textNode.value.replace(startWhiteSpaceRegExp, '');
 
@@ -27433,7 +32783,7 @@ tinymce.html.Styles = function(settings, schema) {
 									textNode.value = text;
 								else
 									textNode.remove();
-							}
+							}*/
 						}
 
 						// Check if we exited a whitespace preserved element
@@ -27448,7 +32798,7 @@ tinymce.html.Styles = function(settings, schema) {
 									node.empty().append(new Node('#text', '3')).value = '\u00a0';
 								else {
 									// Leave nodes that have a name like <a name="name">
-									if (!node.attributes.map.name) {
+									if (!node.attributes.map.name && !node.attributes.map.id) {
 										tempNode = node.parent;
 										node.empty().remove();
 										node = tempNode;
@@ -27600,12 +32950,12 @@ tinymce.html.Styles = function(settings, schema) {
 
 		// Force anchor names closed, unless the setting "allow_html_in_named_anchor" is explicitly included.
 		if (!settings.allow_html_in_named_anchor) {
-			self.addAttributeFilter('name', function(nodes, name) {
+			self.addAttributeFilter('id,name', function(nodes, name) {
 				var i = nodes.length, sibling, prevSibling, parent, node;
 
 				while (i--) {
 					node = nodes[i];
-					if (node.name === 'a' && node.firstChild) {
+					if (node.name === 'a' && node.firstChild && !node.attr('href')) {
 						parent = node.parent;
 
 						// Move children after current node
@@ -27941,6 +33291,12 @@ tinymce.dom = {};
 				event_utils.domLoaded = true;
 				callback(event);
 			}
+		}
+
+		// Page already loaded then fire it directly
+		if (doc.readyState == "complete") {
+			readyHandler();
+			return;
 		}
 
 		// Use W3C method
@@ -28284,7 +33640,7 @@ tinymce.dom = {};
 
 			// Old API supported multiple targets
 			if (target && target instanceof Array) {
-				var i = target;
+				var i = target.length;
 
 				while (i--) {
 					self.add(target[i], events, func, scope);
@@ -28344,12 +33700,20 @@ tinymce.dom = {};
 		};
 
 		self.prevent = function(e) {
+			if (!e.preventDefault) {
+				e = fix(e);
+			}
+
 			e.preventDefault();
 
 			return false;
 		};
 
 		self.stop = function(e) {
+			if (!e.stopPropagation) {
+				e = fix(e);
+			}
+
 			e.stopPropagation();
 
 			return false;
@@ -29118,6 +34482,32 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 			return this.styles.serialize(o, name);
 		},
 
+		addStyle: function(cssText) {
+			var doc = this.doc, head;
+
+			// Create style element if needed
+			styleElm = doc.getElementById('mceDefaultStyles');
+			if (!styleElm) {
+				styleElm = doc.createElement('style'),
+				styleElm.id = 'mceDefaultStyles';
+				styleElm.type = 'text/css';
+
+				head = doc.getElementsByTagName('head')[0];
+				if (head.firstChild) {
+					head.insertBefore(styleElm, head.firstChild);
+				} else {
+					head.appendChild(styleElm);
+				}
+			}
+
+			// Append style data to old or new style element
+			if (styleElm.styleSheet) {
+				styleElm.styleSheet.cssText += cssText;
+			} else {
+				styleElm.appendChild(doc.createTextNode(cssText));
+			}
+		},
+
 		loadCSS : function(u) {
 			var t = this, d = t.doc, head;
 
@@ -29241,13 +34631,13 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 						// This seems to fix this problem
 
 						// Create new div with HTML contents and a BR infront to keep comments
-						element = self.create('div');
-						element.innerHTML = '<br />' + html;
+						var newElement = self.create('div');
+						newElement.innerHTML = '<br />' + html;
 
 						// Add all children from div to target
-						each (element.childNodes, function(node, i) {
+						each (tinymce.grep(newElement.childNodes), function(node, i) {
 							// Skip br element
-							if (i)
+							if (i && element.canHaveHTML)
 								element.appendChild(node);
 						});
 					}
@@ -29842,7 +35232,8 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 			cloneContents : cloneContents,
 			insertNode : insertNode,
 			surroundContents : surroundContents,
-			cloneRange : cloneRange
+			cloneRange : cloneRange,
+			toStringIE : toStringIE
 		});
 
 		function createDocumentFragment() {
@@ -30482,9 +35873,20 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 
 			n.parentNode.removeChild(n);
 		};
+
+		function toStringIE() {
+			return dom.create('body', null, cloneContents()).outerText;
+		}
+		
+		return t;
 	};
 
 	ns.Range = Range;
+
+	// Older IE versions doesn't let you override toString by it's constructor so we have to stick it in the prototype
+	Range.prototype.toString = function() {
+		return this.toStringIE();
+	};
 })(tinymce.dom);
 
 (function() {
@@ -30840,7 +36242,8 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 		};
 
 		this.addRange = function(rng) {
-			var ieRng, ctrlRng, startContainer, startOffset, endContainer, endOffset, doc = selection.dom.doc, body = doc.body;
+			var ieRng, ctrlRng, startContainer, startOffset, endContainer, endOffset, sibling,
+				doc = selection.dom.doc, body = doc.body, nativeRng, ctrlElm;
 
 			function setEndPoint(start) {
 				var container, offset, marker, tmpRng, nodes;
@@ -30898,11 +36301,25 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 				// Trick to place the caret inside an empty block element like <p></p>
 				if (startOffset == endOffset && !startContainer.hasChildNodes()) {
 					if (startContainer.canHaveHTML) {
+						// Check if previous sibling is an empty block if it is then we need to render it
+						// IE would otherwise move the caret into the sibling instead of the empty startContainer see: #5236
+						// Example this: <p></p><p>|</p> would become this: <p>|</p><p></p>
+						sibling = startContainer.previousSibling;
+						if (sibling && !sibling.hasChildNodes() && dom.isBlock(sibling)) {
+							sibling.innerHTML = '\uFEFF';
+						} else {
+							sibling = null;
+						}
+
 						startContainer.innerHTML = '<span>\uFEFF</span><span>\uFEFF</span>';
 						ieRng.moveToElementText(startContainer.lastChild);
 						ieRng.select();
 						dom.doc.selection.clear();
 						startContainer.innerHTML = '';
+
+						if (sibling) {
+							sibling.innerHTML = '';
+						}
 						return;
 					} else {
 						startOffset = dom.nodeIndex(startContainer);
@@ -30912,10 +36329,17 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 
 				if (startOffset == endOffset - 1) {
 					try {
+						ctrlElm = startContainer.childNodes[startOffset];
 						ctrlRng = body.createControlRange();
-						ctrlRng.addElement(startContainer.childNodes[startOffset]);
+						ctrlRng.addElement(ctrlElm);
 						ctrlRng.select();
-						return;
+
+						// Check if the range produced is on the correct element and is a control range
+						// On IE 8 it will select the parent contentEditable container if you select an inner element see: #5398
+						nativeRng = selection.getRng();
+						if (nativeRng.item && ctrlElm === nativeRng.item(0)) {
+							return;
+						}
 					} catch (ex) {
 						// Ignore
 					}
@@ -32500,12 +37924,13 @@ window.tinymce.dom.Sizzle = Sizzle;
 	var is = tinymce.is, isIE = tinymce.isIE, each = tinymce.each, TreeWalker = tinymce.dom.TreeWalker;
 
 	tinymce.create('tinymce.dom.Selection', {
-		Selection : function(dom, win, serializer) {
+		Selection : function(dom, win, serializer, editor) {
 			var t = this;
 
 			t.dom = dom;
 			t.win = win;
 			t.serializer = serializer;
+			t.editor = editor;
 
 			// Add events
 			each([
@@ -32661,7 +38086,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 
 		getStart : function() {
-			var rng = this.getRng(), startElement, parentElement, checkRng, node;
+			var self = this, rng = self.getRng(), startElement, parentElement, checkRng, node;
 
 			if (rng.duplicate || rng.item) {
 				// Control selection, return first item
@@ -32672,6 +38097,9 @@ window.tinymce.dom.Sizzle = Sizzle;
 				checkRng = rng.duplicate();
 				checkRng.collapse(1);
 				startElement = checkRng.parentElement();
+				if (startElement.ownerDocument !== self.dom.doc) {
+					startElement = self.dom.getRoot();
+				}
 
 				// Check if range parent is inside the start element, then return the inner parent element
 				// This will fix issues when a single element is selected, IE would otherwise return the wrong start element
@@ -32698,31 +38126,34 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 
 		getEnd : function() {
-			var t = this, r = t.getRng(), e, eo;
+			var self = this, rng = self.getRng(), endElement, endOffset;
 
-			if (r.duplicate || r.item) {
-				if (r.item)
-					return r.item(0);
+			if (rng.duplicate || rng.item) {
+				if (rng.item)
+					return rng.item(0);
 
-				r = r.duplicate();
-				r.collapse(0);
-				e = r.parentElement();
+				rng = rng.duplicate();
+				rng.collapse(0);
+				endElement = rng.parentElement();
+				if (endElement.ownerDocument !== self.dom.doc) {
+					endElement = self.dom.getRoot();
+				}
 
-				if (e && e.nodeName == 'BODY')
-					return e.lastChild || e;
+				if (endElement && endElement.nodeName == 'BODY')
+					return endElement.lastChild || endElement;
 
-				return e;
+				return endElement;
 			} else {
-				e = r.endContainer;
-				eo = r.endOffset;
+				endElement = rng.endContainer;
+				endOffset = rng.endOffset;
 
-				if (e.nodeType == 1 && e.hasChildNodes())
-					e = e.childNodes[eo > 0 ? eo - 1 : eo];
+				if (endElement.nodeType == 1 && endElement.hasChildNodes())
+					endElement = endElement.childNodes[endOffset > 0 ? endOffset - 1 : endOffset];
 
-				if (e && e.nodeType == 3)
-					return e.parentNode;
+				if (endElement && endElement.nodeType == 3)
+					return endElement.parentNode;
 
-				return e;
+				return endElement;
 			}
 		},
 
@@ -33468,14 +38899,66 @@ window.tinymce.dom.Sizzle = Sizzle;
 			}
 		},
 
-		destroy : function(s) {
-			var t = this;
+		selectorChanged: function(selector, callback) {
+			var self = this, currentSelectors;
 
-			t.win = null;
+			if (!self.selectorChangedData) {
+				self.selectorChangedData = {};
+				currentSelectors = {};
+
+				self.editor.onNodeChange.addToTop(function(ed, cm, node) {
+					var dom = self.dom, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
+
+					// Check for new matching selectors
+					each(self.selectorChangedData, function(callbacks, selector) {
+						each(parents, function(node) {
+							if (dom.is(node, selector)) {
+								if (!currentSelectors[selector]) {
+									// Execute callbacks
+									each(callbacks, function(callback) {
+										callback(true, {node: node, selector: selector, parents: parents});
+									});
+
+									currentSelectors[selector] = callbacks;
+								}
+
+								matchedSelectors[selector] = callbacks;
+								return false;
+							}
+						});
+					});
+
+					// Check if current selectors still match
+					each(currentSelectors, function(callbacks, selector) {
+						if (!matchedSelectors[selector]) {
+							delete currentSelectors[selector];
+
+							each(callbacks, function(callback) {
+								callback(false, {node: node, selector: selector, parents: parents});
+							});
+						}
+					});
+				});
+			}
+
+			// Add selector listeners
+			if (!self.selectorChangedData[selector]) {
+				self.selectorChangedData[selector] = [];
+			}
+
+			self.selectorChangedData[selector].push(callback);
+
+			return self;
+		},
+
+		destroy : function(manual) {
+			var self = this;
+
+			self.win = null;
 
 			// Manual destroy then remove unload handler
-			if (!s)
-				tinymce.removeUnload(t.destroy);
+			if (!manual)
+				tinymce.removeUnload(self.destroy);
 		},
 
 		// IE has an issue where you can't select/move the caret by clicking outside the body if the document is in standards mode
@@ -33640,6 +39123,18 @@ window.tinymce.dom.Sizzle = Sizzle;
 			}
 		});
 
+		htmlParser.addNodeFilter('noscript', function(nodes) {
+			var i = nodes.length, node;
+
+			while (i--) {
+				node = nodes[i].firstChild;
+
+				if (node) {
+					node.value = tinymce.html.Entities.decode(node.value);
+				}
+			}
+		});
+
 		// Force script into CDATA sections and remove the mce- prefix also add comments around styles
 		htmlParser.addNodeFilter('script,style', function(nodes, name) {
 			var i = nodes.length, node, value;
@@ -33797,7 +39292,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 				// Replace all BOM characters for now until we can find a better solution
 				if (!args.cleanup)
-					args.content = args.content.replace(/\uFEFF|\u200B/g, '');
+					args.content = args.content.replace(/\uFEFF/g, '');
 
 				// Post process
 				if (!args.no_events)
@@ -33891,11 +39386,10 @@ window.tinymce.dom.Sizzle = Sizzle;
 			}
 
 			// Create new script element
-			elm = dom.create('script', {
-				id : id,
-				type : 'text/javascript',
-				src : tinymce._addVer(url)
-			});
+			elm = document.createElement('script');
+			elm.id = id;
+			elm.type = 'text/javascript';
+			elm.src = tinymce._addVer(url);
 
 			// Add onload listener for non IE browsers since IE9
 			// fires onload event before the script is parsed and executed
@@ -34259,12 +39753,15 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 			t.destroy = function() {
 				each(items, function(item) {
-					dom.unbind(dom.get(item.id), 'focus', itemFocussed);
-					dom.unbind(dom.get(item.id), 'blur', itemBlurred);
+					var elm = dom.get(item.id);
+
+					dom.unbind(elm, 'focus', itemFocussed);
+					dom.unbind(elm, 'blur', itemBlurred);
 				});
 
-				dom.unbind(dom.get(root), 'focus', rootFocussed);
-				dom.unbind(dom.get(root), 'keydown', rootKeydown);
+				var rootElm = dom.get(root);
+				dom.unbind(rootElm, 'focus', rootFocussed);
+				dom.unbind(rootElm, 'keydown', rootKeydown);
 
 				items = dom = root = t.focus = itemFocussed = itemBlurred = rootKeydown = rootFocussed = null;
 				t.destroy = function() {};
@@ -34343,21 +39840,23 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 			// Set up state and listeners for each item.
 			each(items, function(item, idx) {
-				var tabindex;
+				var tabindex, elm;
 
 				if (!item.id) {
 					item.id = dom.uniqueId('_mce_item_');
 				}
 
+				elm = dom.get(item.id);
+
 				if (excludeFromTabOrder) {
-					dom.bind(item.id, 'blur', itemBlurred);
+					dom.bind(elm, 'blur', itemBlurred);
 					tabindex = '-1';
 				} else {
 					tabindex = (idx === 0 ? '0' : '-1');
 				}
 
-				dom.setAttrib(item.id, 'tabindex', tabindex);
-				dom.bind(dom.get(item.id), 'focus', itemFocussed);
+				elm.setAttribute('tabindex', tabindex);
+				dom.bind(elm, 'focus', itemFocussed);
 			});
 			
 			// Setup initial state for root element.
@@ -34366,10 +39865,11 @@ window.tinymce.dom.Sizzle = Sizzle;
 			}
 
 			dom.setAttrib(root, 'tabindex', '-1');
-			
+
 			// Setup listeners for root element.
-			dom.bind(dom.get(root), 'focus', rootFocussed);
-			dom.bind(dom.get(root), 'keydown', rootKeydown);
+			var rootElm = dom.get(root);
+			dom.bind(rootElm, 'focus', rootFocussed);
+			dom.bind(rootElm, 'keydown', rootKeydown);
 		}
 	});
 })(tinymce);
@@ -35010,7 +40510,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			l = DOM.encode(s.label || '');
 			h = '<a role="button" id="' + this.id + '" href="javascript:;" class="' + cp + ' ' + cp + 'Enabled ' + s['class'] + (l ? ' ' + cp + 'Labeled' : '') +'" onmousedown="return false;" onclick="return false;" aria-labelledby="' + this.id + '_voice" title="' + DOM.encode(s.title) + '">';
 			if (s.image && !(this.editor  &&this.editor.forcedHighContrastMode) )
-				h += '<img class="mceIcon" src="' + s.image + '" alt="' + DOM.encode(s.title) + '" />' + l;
+				h += '<span class="mceIcon ' + s['class'] + '"><img class="mceIcon" src="' + s.image + '" alt="' + DOM.encode(s.title) + '" /></span>' + (l ? '<span class="' + cp + 'Label">' + l + '</span>' : '');
 			else
 				h += '<span class="mceIcon ' + s['class'] + '"></span>' + (l ? '<span class="' + cp + 'Label">' + l + '</span>' : '');
 
@@ -35718,6 +41218,16 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 				DOM.select('a', t.id + '_menu')[0].focus(); // Select first link
 			}
 
+			t.keyboardNav = new tinymce.ui.KeyboardNavigation({
+				root: t.id + '_menu',
+				items: DOM.select('a', t.id + '_menu'),
+				onCancel: function() {
+					t.hideMenu();
+					t.focus();
+				}
+			});
+
+			t.keyboardNav.focus();
 			t.isMenuVisible = 1;
 		},
 
@@ -35738,6 +41248,7 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 
 				t.isMenuVisible = 0;
 				t.onHideMenu.dispatch();
+				t.keyboardNav.destroy();
 			}
 		},
 
@@ -35802,15 +41313,6 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 			}
 
 			DOM.addClass(m, 'mceColorSplitMenu');
-			
-			new tinymce.ui.KeyboardNavigation({
-				root: t.id + '_menu',
-				items: DOM.select('a', t.id + '_menu'),
-				onCancel: function() {
-					t.hideMenu();
-					t.focus();
-				}
-			});
 
 			// Prevent IE from scrolling and hindering click to occur #4019
 			Event.add(t.id + '_menu', 'mousedown', function(e) {return Event.cancel(e);});
@@ -35852,11 +41354,17 @@ tinymce.create('tinymce.ui.Separator:tinymce.ui.Control', {
 		},
 
 		destroy : function() {
-			this.parent();
+			var self = this;
 
-			Event.clear(this.id + '_menu');
-			Event.clear(this.id + '_more');
-			DOM.remove(this.id + '_menu');
+			self.parent();
+
+			Event.clear(self.id + '_menu');
+			Event.clear(self.id + '_more');
+			DOM.remove(self.id + '_menu');
+
+			if (self.keyboardNav) {
+				self.keyboardNav.destroy();
+			}
 		}
 	});
 })(tinymce);
@@ -36167,11 +41675,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				return c.constructor === RegExp ? c.test(n.className) : DOM.hasClass(n, c);
 			};
 
-			s = extend({
-				theme : "simple",
-				language : "en"
-			}, s);
-
 			t.settings = s;
 
 			// Legacy call
@@ -36272,6 +41775,9 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		get : function(id) {
 			if (id === undef)
 				return this.editors;
+
+			if (!this.editors.hasOwnProperty(id))
+				return undef;
 
 			return this.editors[id];
 		},
@@ -36451,7 +41957,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			self.settings = settings = extend({
 				id : id,
 				language : 'en',
-				theme : 'simple',
+				theme : 'advanced',
 				skin : 'default',
 				delta_width : 0,
 				delta_height : 0,
@@ -36482,8 +41988,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				inline_styles : TRUE,
 				convert_fonts_to_spans : TRUE,
 				indent : 'simple',
-				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
-				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure',
+				indent_before : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure,option,optgroup,datalist',
+				indent_after : 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,ul,li,area,table,thead,tfoot,tbody,tr,section,article,hgroup,aside,figure,option,optgroup,datalist',
 				validate : TRUE,
 				entity_encoding : 'named',
 				url_converter : self.convertURL,
@@ -36504,6 +42010,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			self.baseURI = tinymce.baseURI;
 
 			self.contentCSS = [];
+
+			self.contentStyles = [];
 
 			// Creates all events like onClick, onSetContent etc see Editor.Events.js for the actual logic
 			self.setupEvents();
@@ -36542,6 +42050,12 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			// Add hidden input for non input elements inside form elements
 			if (!/TEXTAREA|INPUT/i.test(t.getElement().nodeName) && s.hidden_input && DOM.getParent(id, 'form'))
 				DOM.insertAfter(DOM.create('input', {type : 'hidden', name : id}), id);
+
+			// Hide target element early to prevent content flashing
+			if (!s.content_editable) {
+				t.orgVisibility = t.getElement().style.visibility;
+				t.getElement().style.visibility = 'hidden';
+			}
 
 			if (tinymce.WindowManager)
 				t.windowManager = new tinymce.WindowManager(t);
@@ -36608,7 +42122,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				if (s.language && s.language_load !== false)
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
-				if (s.theme && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
+				if (s.theme && typeof s.theme != "function" && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
 					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
 
 				each(explode(s.plugins), function(p) {
@@ -36642,20 +42156,25 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		init : function() {
-			var n, t = this, s = t.settings, w, h, e = t.getElement(), o, ti, u, bi, bc, re, i, initializedPlugins = [];
+			var n, t = this, s = t.settings, w, h, mh, e = t.getElement(), o, ti, u, bi, bc, re, i, initializedPlugins = [];
 
 			tinymce.add(t);
 
 			s.aria_label = s.aria_label || DOM.getAttrib(e, 'aria-label', t.getLang('aria.rich_text_area'));
 
 			if (s.theme) {
-				s.theme = s.theme.replace(/-/, '');
-				o = ThemeManager.get(s.theme);
-				t.theme = new o();
+				if (typeof s.theme != "function") {
+					s.theme = s.theme.replace(/-/, '');
+					o = ThemeManager.get(s.theme);
+					t.theme = new o();
 
-				if (t.theme.init)
-					t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+					if (t.theme.init)
+						t.theme.init(t, ThemeManager.urls[s.theme] || tinymce.documentBaseURL.replace(/\/$/, ''));
+				} else {
+					t.theme = s.theme;
+				}
 			}
+
 			function initPlugin(p) {
 				var c = PluginManager.get(p), u = PluginManager.urls[p] || tinymce.documentBaseURL.replace(/\/$/, ''), po;
 				if (c && tinymce.inArray(initializedPlugins,p) === -1) {
@@ -36689,36 +42208,68 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			t.controlManager = new tinymce.ControlManager(t);
 
-			t.onExecCommand.add(function(ed, c) {
-				// Don't refresh the select lists until caret move
-				if (!/^(FontName|FontSize)$/.test(c))
-					t.nodeChanged();
-			});
-
 			// Enables users to override the control factory
 			t.onBeforeRenderUI.dispatch(t, t.controlManager);
 
 			// Measure box
 			if (s.render_ui && t.theme) {
-				w = s.width || e.style.width || e.offsetWidth;
-				h = s.height || e.style.height || e.offsetHeight;
 				t.orgDisplay = e.style.display;
-				re = /^[0-9\.]+(|px)$/i;
 
-				if (re.test('' + w))
-					w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
+				if (typeof s.theme != "function") {
+					w = s.width || e.style.width || e.offsetWidth;
+					h = s.height || e.style.height || e.offsetHeight;
+					mh = s.min_height || 100;
+					re = /^[0-9\.]+(|px)$/i;
 
-				if (re.test('' + h))
-					h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), 100);
+					if (re.test('' + w))
+						w = Math.max(parseInt(w, 10) + (o.deltaWidth || 0), 100);
 
-				// Render UI
-				o = t.theme.renderUI({
-					targetNode : e,
-					width : w,
-					height : h,
-					deltaWidth : s.delta_width,
-					deltaHeight : s.delta_height
-				});
+					if (re.test('' + h))
+						h = Math.max(parseInt(h, 10) + (o.deltaHeight || 0), mh);
+
+					// Render UI
+					o = t.theme.renderUI({
+						targetNode : e,
+						width : w,
+						height : h,
+						deltaWidth : s.delta_width,
+						deltaHeight : s.delta_height
+					});
+
+					// Resize editor
+					DOM.setStyles(o.sizeContainer || o.editorContainer, {
+						width : w,
+						height : h
+					});
+
+					h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
+					if (h < mh)
+						h = mh;
+				} else {
+					o = s.theme(t, e);
+
+					// Convert element type to id:s
+					if (o.editorContainer.nodeType) {
+						o.editorContainer = o.editorContainer.id = o.editorContainer.id || t.id + "_parent";
+					}
+
+					// Convert element type to id:s
+					if (o.iframeContainer.nodeType) {
+						o.iframeContainer = o.iframeContainer.id = o.iframeContainer.id || t.id + "_iframecontainer";
+					}
+
+					// Use specified iframe height or the targets offsetHeight
+					h = o.iframeHeight || e.offsetHeight;
+
+					// Store away the selection when it's changed to it can be restored later with a editor.focus() call
+					if (isIE) {
+						t.onInit.add(function(ed) {
+							ed.dom.bind(ed.getBody(), 'beforedeactivate keydown', function() {
+								ed.lastIERng = ed.selection.getRng();
+							});
+						});
+					}
+				}
 
 				t.editorContainer = o.editorContainer;
 			}
@@ -36730,6 +42281,11 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				});
 			}
 
+			// Load specified content CSS last
+			if (s.content_style) {
+				t.contentStyles.push(s.content_style);
+			}
+
 			// Content editable mode ends here
 			if (s.content_editable) {
 				e = n = o = null; // Fix IE leak
@@ -36739,16 +42295,6 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			// User specified a document.domain value
 			if (document.domain && location.hostname != document.domain)
 				tinymce.relaxedDomain = document.domain;
-
-			// Resize editor
-			DOM.setStyles(o.sizeContainer || o.editorContainer, {
-				width : w,
-				height : h
-			});
-
-			h = (o.iframeHeight || h) + (typeof(h) == 'number' ? (o.deltaHeight || 0) : '');
-			if (h < 100)
-				h = 100;
 
 			t.iframeHTML = s.doctype + '<html><head xmlns="http://www.w3.org/1999/xhtml">';
 
@@ -36808,7 +42354,14 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			});
 
 			t.contentAreaContainer = o.iframeContainer;
-			DOM.get(o.editorContainer).style.display = t.orgDisplay;
+
+			if (o.editorContainer) {
+				DOM.get(o.editorContainer).style.display = t.orgDisplay;
+			}
+
+			// Restore visibility on target element
+			e.style.visibility = t.orgVisibility;
+
 			DOM.get(t.id).style.display = 'none';
 			DOM.setAttrib(t.id, 'aria-hidden', true);
 
@@ -36819,7 +42372,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		initContentBody : function() {
-			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), html, body;
+			var self = this, settings = self.settings, targetElm = DOM.get(self.id), doc = self.getDoc(), html, body, contentCssText;
 
 			// Setup iframe body
 			if ((!isIE || !tinymce.relaxedDomain) && !settings.content_editable) {
@@ -36918,7 +42471,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			self.serializer = new tinymce.dom.Serializer(settings, self.dom, self.schema);
 
-			self.selection = new tinymce.dom.Selection(self.dom, self.getWin(), self.serializer);
+			self.selection = new tinymce.dom.Selection(self.dom, self.getWin(), self.serializer, self);
 
 			self.formatter = new tinymce.Formatter(self);
 
@@ -36927,6 +42480,12 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			self.forceBlocks = new tinymce.ForceBlocks(self);
 			self.enterKey = new tinymce.EnterKey(self);
 			self.editorCommands = new tinymce.EditorCommands(self);
+
+			self.onExecCommand.add(function(editor, command) {
+				// Don't refresh the select lists until caret move
+				if (!/^(FontName|FontSize)$/.test(command))
+					self.nodeChanged();
+			});
 
 			// Pass through
 			self.serializer.onPreProcess.add(function(se, o) {
@@ -36939,7 +42498,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			self.onPreInit.dispatch(self);
 
-			if (!settings.gecko_spellcheck)
+			if (!settings.browser_spellcheck && !settings.gecko_spellcheck)
 				doc.body.spellcheck = false;
 
 			if (!settings.readonly) {
@@ -36990,6 +42549,17 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			self.focus(true);
 			self.nodeChanged({initial : true});
 
+			// Add editor specific CSS styles
+			if (self.contentStyles.length > 0) {
+				contentCssText = '';
+
+				each(self.contentStyles, function(style) {
+					contentCssText += style + "\r\n";
+				});
+
+				self.dom.addStyle(contentCssText);
+			}
+
 			// Load specified content CSS last
 			each(self.contentCSS, function(url) {
 				self.dom.loadCSS(url);
@@ -37015,6 +42585,10 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			var oed, self = this, selection = self.selection, contentEditable = self.settings.content_editable, ieRng, controlElm, doc = self.getDoc(), body;
 
 			if (!skip_focus) {
+				if (self.lastIERng) {
+					selection.setRng(self.lastIERng);
+				}
+
 				// Get selected control element
 				ieRng = selection.getRng();
 				if (ieRng.item) {
@@ -37361,7 +42935,11 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			// We must save before we hide so Safari doesn't crash
 			self.save();
-			DOM.hide(self.getContainer());
+
+			// defer the call to hide to prevent an IE9 crash #4921
+			setTimeout(function() {
+				DOM.hide(self.getContainer());
+			}, 1);
 			DOM.setStyle(self.id, 'display', self.orgDisplay);
 		},
 
@@ -37477,13 +43055,16 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			if (!args.no_events)
 				self.onSetContent.dispatch(self, args);
 
-			self.selection.normalize();
+			// Don't normalize selection if the focused element isn't the body in content editable mode since it will steal focus otherwise
+			if (!self.settings.content_editable || document.activeElement === self.getBody()) {
+				self.selection.normalize();
+			}
 
 			return args.content;
 		},
 
 		getContent : function(args) {
-			var self = this, content;
+			var self = this, content, body = self.getBody();
 
 			// Setup args object
 			args = args || {};
@@ -37497,11 +43078,18 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			// Get raw contents or by default the cleaned contents
 			if (args.format == 'raw')
-				content = self.getBody().innerHTML;
+				content = body.innerHTML;
+			else if (args.format == 'text')
+				content = body.innerText || body.textContent;
 			else
-				content = self.serializer.serialize(self.getBody(), args);
+				content = self.serializer.serialize(body, args);
 
-			args.content = tinymce.trim(content);
+			// Trim whitespace in beginning/end of HTML
+			if (args.format != 'text') {
+				args.content = tinymce.trim(content);
+			} else {
+				args.content = content;
+			}
 
 			// Do post processing
 			if (!args.no_events)
@@ -37610,14 +43198,16 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 						return;
 
 					case 'A':
-						value = dom.getAttrib(elm, 'name');
-						cls = 'mceItemAnchor';
+						if (!dom.getAttrib(elm, 'href', false)) {
+							value = dom.getAttrib(elm, 'name') || elm.id;
+							cls = 'mceItemAnchor';
 
-						if (value) {
-							if (self.hasVisual)
-								dom.addClass(elm, cls);
-							else
-								dom.removeClass(elm, cls);
+							if (value) {
+								if (self.hasVisual)
+									dom.addClass(elm, cls);
+								else
+									dom.removeClass(elm, cls);
+							}
 						}
 
 						return;
@@ -37637,13 +43227,12 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				// Don't clear the window or document if content editable
 				// is enabled since other instances might still be present
 				if (!self.settings.content_editable) {
-					Event.clear(self.getWin());
-					Event.clear(self.getDoc());
+					Event.unbind(self.getWin());
+					Event.unbind(self.getDoc());
 				}
 
-				Event.clear(self.getBody());
-				Event.clear(self.formElement);
-				Event.unbind(elm);
+				Event.unbind(self.getBody());
+				Event.clear(elm);
 
 				self.execCallback('remove_instance_callback', self);
 				self.onRemove.dispatch(self);
@@ -37845,8 +43434,10 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		// Handle legacy handle_event_callback option
 		if (settings.handle_event_callback) {
 			self.onEvent.add(function(ed, e, o) {
-				if (self.execCallback('handle_event_callback', e, ed, o) === false)
-					Event.cancel(e);
+				if (self.execCallback('handle_event_callback', e, ed, o) === false) {
+					e.preventDefault();
+					e.stopPropagation();
+				}
 			});
 		}
 
@@ -37912,9 +43503,12 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			self.focus(true);
 		};
 
-		function nodeChanged() {
-			// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
-			self.selection.normalize();
+		function nodeChanged(ed, e) {
+			// Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i> except for Ctrl+A since it selects everything
+			if (e.keyCode != 65 || !tinymce.VK.metaKeyPressed(e)) {
+				self.selection.normalize();
+			}
+
 			self.nodeChanged();
 		}
 
@@ -37958,7 +43552,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			var keyCode = e.keyCode;
 
 			if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode == 13 || keyCode == 45 || keyCode == 46 || keyCode == 8 || (tinymce.isMac && (keyCode == 91 || keyCode == 93)) || e.ctrlKey)
-				nodeChanged();
+				nodeChanged(ed, e);
 		});
 
 		// Add reset handler
@@ -38311,7 +43905,7 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 					// Insert bookmark node and get the parent
 					selection.setContent(bookmarkHtml);
-					parentNode = editor.selection.getNode();
+					parentNode = selection.getNode();
 					rootNode = editor.getBody();
 
 					// Opera will return the document node when selection is in root
@@ -38383,6 +43977,10 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			mceInsertRawHTML : function(command, ui, value) {
 				selection.setContent('tiny_mce_marker');
 				editor.setContent(editor.getContent().replace(/tiny_mce_marker/g, function() { return value }));
+			},
+
+			mceToggleFormat : function(command, ui, value) {
+				toggleFormat(value);
 			},
 
 			mceSetContent : function(command, ui, value) {
@@ -38474,10 +44072,15 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			selectAll : function() {
 				var root = dom.getRoot(), rng = dom.createRng();
 
-				rng.setStart(root, 0);
-				rng.setEnd(root, root.childNodes.length);
+				// Old IE does a better job with selectall than new versions
+				if (selection.getRng().setStart) {
+					rng.setStart(root, 0);
+					rng.setEnd(root, root.childNodes.length);
 
-				editor.selection.setRng(rng);
+					selection.setRng(rng);
+				} else {
+					execNativeCommand('SelectAll');
+				}
 			}
 		});
 
@@ -38516,7 +44119,10 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			},
 
 			'InsertUnorderedList,InsertOrderedList' : function(command) {
-				return dom.getParent(selection.getNode(), command == 'insertunorderedlist' ? 'UL' : 'OL');
+				var list = dom.getParent(selection.getNode(), 'ul,ol');
+				return list && 
+				     (command === 'insertunorderedlist' && list.tagName === 'UL'
+				   || command === 'insertorderedlist' && list.tagName === 'OL');
 			}
 		}, 'state');
 
@@ -38566,9 +44172,10 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		};
 
 		// Create event instances
-		onAdd = new Dispatcher(self);
-		onUndo = new Dispatcher(self);
-		onRedo = new Dispatcher(self);
+		onBeforeAdd = new Dispatcher(self);
+		onAdd       = new Dispatcher(self);
+		onUndo      = new Dispatcher(self);
+		onRedo      = new Dispatcher(self);
 
 		// Pass though onAdd event from UndoManager to Editor as onChange
 		onAdd.add(function(undoman, level) {
@@ -38657,6 +44264,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 			data : data,
 
 			typing : false,
+			
+			onBeforeAdd: onBeforeAdd,
 
 			onAdd : onAdd,
 
@@ -38673,6 +44282,8 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 				level = level || {};
 				level.content = getContent();
+				
+				self.onBeforeAdd.dispatch(self, level);
 
 				// Add undo level if needed
 				lastLevel = data[index];
@@ -38768,7 +44379,7 @@ tinymce.ForceBlocks = function(editor) {
 	var settings = editor.settings, dom = editor.dom, selection = editor.selection, blockElements = editor.schema.getBlockElements();
 
 	function addRootBlocks() {
-		var node = selection.getStart(), rootNode = editor.getBody(), rng, startContainer, startOffset, endContainer, endOffset, rootBlockNode, tempNode, offset = -0xFFFFFF, wrapped;
+		var node = selection.getStart(), rootNode = editor.getBody(), rng, startContainer, startOffset, endContainer, endOffset, rootBlockNode, tempNode, offset = -0xFFFFFF, wrapped, isInEditorDocument;
 
 		if (!node || node.nodeType !== 1 || !settings.forced_root_block)
 			return;
@@ -38796,6 +44407,7 @@ tinymce.ForceBlocks = function(editor) {
 				rng.moveToElementText(node);
 			}
 
+			isInEditorDocument = rng.parentElement().ownerDocument === editor.getDoc();
 			tmpRng = rng.duplicate();
 			tmpRng.collapse(true);
 			startOffset = tmpRng.move('character', offset) * -1;
@@ -38811,6 +44423,14 @@ tinymce.ForceBlocks = function(editor) {
 		node = rootNode.firstChild;
 		while (node) {
 			if (node.nodeType === 3 || (node.nodeType == 1 && !blockElements[node.nodeName])) {
+				// Remove empty text nodes
+				if (node.nodeType === 3 && node.nodeValue.length == 0) {
+					tempNode = node;
+					node = node.nextSibling;
+					dom.remove(tempNode);
+					continue;
+				}
+
 				if (!rootBlockNode) {
 					rootBlockNode = dom.create(settings.forced_root_block);
 					node.parentNode.insertBefore(rootBlockNode, node);
@@ -38826,28 +44446,30 @@ tinymce.ForceBlocks = function(editor) {
 			}
 		}
 
-		if (rng.setStart) {
-			rng.setStart(startContainer, startOffset);
-			rng.setEnd(endContainer, endOffset);
-			selection.setRng(rng);
-		} else {
-			try {
-				rng = editor.getDoc().body.createTextRange();
-				rng.moveToElementText(rootNode);
-				rng.collapse(true);
-				rng.moveStart('character', startOffset);
-
-				if (endOffset > 0)
-					rng.moveEnd('character', endOffset);
-
-				rng.select();
-			} catch (ex) {
-				// Ignore
-			}
-		}
-
-		// Only trigger nodeChange when we wrapped nodes to prevent a forever loop
 		if (wrapped) {
+			if (rng.setStart) {
+				rng.setStart(startContainer, startOffset);
+				rng.setEnd(endContainer, endOffset);
+				selection.setRng(rng);
+			} else {
+				// Only select if the previous selection was inside the document to prevent auto focus in quirks mode
+				if (isInEditorDocument) {
+					try {
+						rng = editor.getDoc().body.createTextRange();
+						rng.moveToElementText(rootNode);
+						rng.collapse(true);
+						rng.moveStart('character', startOffset);
+
+						if (endOffset > 0)
+							rng.moveEnd('character', endOffset);
+
+						rng.select();
+					} catch (ex) {
+						// Ignore
+					}
+				}
+			}
+
 			editor.nodeChanged();
 		}
 	};
@@ -38915,28 +44537,40 @@ tinymce.ForceBlocks = function(editor) {
 			return c;
 		},
 
-		createControl : function(n) {
-			var c, t = this, ed = t.editor;
+		createControl : function(name) {
+			var ctrl, i, l, self = this, editor = self.editor, factories, ctrlName;
 
-			each(ed.plugins, function(p) {
-				if (p.createControl) {
-					c = p.createControl(n, t);
-
-					if (c)
-						return false;
-				}
-			});
-
-			switch (n) {
-				case "|":
-				case "separator":
-					return t.createSeparator();
+			// Build control factory cache
+			if (!self.controlFactories) {
+				self.controlFactories = [];
+				each(editor.plugins, function(plugin) {
+					if (plugin.createControl) {
+						self.controlFactories.push(plugin);
+					}
+				});
 			}
 
-			if (!c && ed.buttons && (c = ed.buttons[n]))
-				return t.createButton(n, c);
+			// Create controls by asking cached factories
+			factories = self.controlFactories;
+			for (i = 0, l = factories.length; i < l; i++) {
+				ctrl = factories[i].createControl(name, self);
 
-			return t.add(c);
+				if (ctrl) {
+					return self.add(ctrl);
+				}
+			}
+
+			// Create sepearator
+			if (name === "|" || name === "separator") {
+				return self.createSeparator();
+			}
+
+			// Create control from button collection
+			if (editor.buttons && (ctrl = editor.buttons[name])) {
+				return self.createButton(name, ctrl);
+			}
+
+			return self.add(ctrl);
 		},
 
 		createDropMenu : function(id, s, cc) {
@@ -39364,19 +44998,21 @@ tinymce.ForceBlocks = function(editor) {
 			TreeWalker = tinymce.dom.TreeWalker,
 			rangeUtils = new tinymce.dom.RangeUtils(dom),
 			isValid = ed.schema.isValidChild,
+			isArray = tinymce.isArray,
 			isBlock = dom.isBlock,
 			forcedRootBlock = ed.settings.forced_root_block,
 			nodeIndex = dom.nodeIndex,
-			INVISIBLE_CHAR = tinymce.isGecko ? '\u200B' : '\uFEFF',
+			INVISIBLE_CHAR = '\uFEFF',
 			MCE_ATTR_RE = /^(src|href|style)$/,
 			FALSE = false,
 			TRUE = true,
+			formatChangeData,
 			undef,
 			getContentEditable = dom.getContentEditable;
 
-		function isArray(obj) {
-			return obj instanceof Array;
-		};
+		function isTextBlock(name) {
+			return !!ed.schema.getTextBlocks()[name.toLowerCase()];
+		}
 
 		function getParents(node, selector) {
 			return dom.getParents(node, selector, dom.getRoot());
@@ -40252,7 +45888,7 @@ tinymce.ForceBlocks = function(editor) {
 						matchedFormatNames.push(name);
 					}
 				}
-			});
+			}, dom.getRoot());
 
 			return matchedFormatNames;
 		};
@@ -40281,6 +45917,62 @@ tinymce.ForceBlocks = function(editor) {
 			return FALSE;
 		};
 
+		function formatChanged(formats, callback, similar) {
+			var currentFormats;
+
+			// Setup format node change logic
+			if (!formatChangeData) {
+				formatChangeData = {};
+				currentFormats = {};
+
+				ed.onNodeChange.addToTop(function(ed, cm, node) {
+					var parents = getParents(node), matchedFormats = {};
+
+					// Check for new formats
+					each(formatChangeData, function(callbacks, format) {
+						each(parents, function(node) {
+							if (matchNode(node, format, {}, callbacks.similar)) {
+								if (!currentFormats[format]) {
+									// Execute callbacks
+									each(callbacks, function(callback) {
+										callback(true, {node: node, format: format, parents: parents});
+									});
+
+									currentFormats[format] = callbacks;
+								}
+
+								matchedFormats[format] = callbacks;
+								return false;
+							}
+						});
+					});
+
+					// Check if current formats still match
+					each(currentFormats, function(callbacks, format) {
+						if (!matchedFormats[format]) {
+							delete currentFormats[format];
+
+							each(callbacks, function(callback) {
+								callback(false, {node: node, format: format, parents: parents});
+							});
+						}
+					});
+				});
+			}
+
+			// Add format listeners
+			each(formats.split(','), function(format) {
+				if (!formatChangeData[format]) {
+					formatChangeData[format] = [];
+					formatChangeData[format].similar = similar;
+				}
+
+				formatChangeData[format].push(callback);
+			});
+
+			return this;
+		};
+
 		// Expose to public
 		tinymce.extend(this, {
 			get : get,
@@ -40291,7 +45983,8 @@ tinymce.ForceBlocks = function(editor) {
 			match : match,
 			matchAll : matchAll,
 			matchNode : matchNode,
-			canApply : canApply
+			canApply : canApply,
+			formatChanged: formatChanged
 		});
 
 		// Initialize
@@ -40378,6 +46071,10 @@ tinymce.ForceBlocks = function(editor) {
 				siblingName = start ? 'previousSibling' : 'nextSibling';
 				root = dom.getRoot();
 
+				function isBogusBr(node) {
+					return node.nodeName == "BR" && node.getAttribute('data-mce-bogus') && !node.nextSibling;
+				};
+
 				// If it's a text node and the offset is inside the text
 				if (container.nodeType == 3 && !isWhiteSpaceNode(container)) {
 					if (start ? startOffset > 0 : endOffset < container.nodeValue.length) {
@@ -40392,7 +46089,7 @@ tinymce.ForceBlocks = function(editor) {
 
 					// Walk left/right
 					for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
-						if (!isBookmarkNode(sibling) && !isWhiteSpaceNode(sibling)) {
+						if (!isBookmarkNode(sibling) && !isWhiteSpaceNode(sibling) && !isBogusBr(sibling)) {
 							return parent;
 						}
 					}
@@ -40551,7 +46248,7 @@ tinymce.ForceBlocks = function(editor) {
 
 				// Expand to first wrappable block element or any block element
 				if (!node)
-					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isBlock);
+					node = dom.getParent(container.nodeType == 3 ? container.parentNode : container, isTextBlock);
 
 				// Exclude inner lists from wrapping
 				if (node && format[0].wrapper)
@@ -41197,6 +46894,21 @@ tinymce.ForceBlocks = function(editor) {
 				}
 			};
 
+			// Checks if the parent caret container node isn't empty if that is the case it
+			// will remove the bogus state on all children that isn't empty
+			function unmarkBogusCaretParents() {
+				var i, caretContainer, node;
+
+				caretContainer = getParentCaretContainer(selection.getStart());
+				if (caretContainer && !dom.isEmpty(caretContainer)) {
+					tinymce.walk(caretContainer, function(node) {
+						if (node.nodeType == 1 && node.id !== caretContainerId && !dom.isEmpty(node)) {
+							dom.setAttrib(node, 'data-mce-bogus', null);
+						}
+					}, 'childNodes');
+				}
+			};
+
 			// Only bind the caret events once
 			if (!self._hasCaretEvents) {
 				// Mark current caret container elements as bogus when getting the contents so we don't end up with empty elements
@@ -41216,6 +46928,7 @@ tinymce.ForceBlocks = function(editor) {
 				tinymce.each('onMouseUp onKeyUp'.split(' '), function(name) {
 					ed[name].addToTop(function() {
 						removeCaretContainer();
+						unmarkBogusCaretParents();
 					});
 				});
 
@@ -41226,16 +46939,12 @@ tinymce.ForceBlocks = function(editor) {
 					if (keyCode == 8 || keyCode == 37 || keyCode == 39) {
 						removeCaretContainer(getParentCaretContainer(selection.getStart()));
 					}
+
+					unmarkBogusCaretParents();
 				});
 
 				// Remove bogus state if they got filled by contents using editor.selection.setContent
-				selection.onSetContent.add(function() {
-					dom.getParent(selection.getStart(), function(node) {
-						if (node.id !== caretContainerId && dom.getAttrib(node, 'data-mce-bogus') && !dom.isEmpty(node)) {
-							dom.setAttrib(node, 'data-mce-bogus', null);
-						}
-					});
-				});
+				selection.onSetContent.add(unmarkBogusCaretParents);
 
 				self._hasCaretEvents = true;
 			}
@@ -41352,21 +47061,63 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 	var TreeWalker = tinymce.dom.TreeWalker;
 
 	tinymce.EnterKey = function(editor) {
-		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager;
+		var dom = editor.dom, selection = editor.selection, settings = editor.settings, undoManager = editor.undoManager, nonEmptyElementsMap = editor.schema.getNonEmptyElements();
 
 		function handleEnterKey(evt) {
-			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, documentMode,
+			var rng = selection.getRng(true), tmpRng, editableRoot, container, offset, parentBlock, documentMode, shiftKey,
 				newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
 
 			// Returns true if the block can be split into two blocks or not
 			function canSplitBlock(node) {
 				return node &&
 					dom.isBlock(node) &&
-					!/^(TD|TH|CAPTION)$/.test(node.nodeName) &&
+					!/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
 					!/^(fixed|absolute)/i.test(node.style.position) && 
 					dom.getContentEditable(node) !== "true";
 			};
 
+			// Renders empty block on IE
+			function renderBlockOnIE(block) {
+				var oldRng;
+
+				if (tinymce.isIE && dom.isBlock(block)) {
+					oldRng = selection.getRng();
+					block.appendChild(dom.create('span', null, '\u00a0'));
+					selection.select(block);
+					block.lastChild.outerHTML = '';
+					selection.setRng(oldRng);
+				}
+			};
+
+			// Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
+			function trimInlineElementsOnLeftSideOfBlock(block) {
+				var node = block, firstChilds = [], i;
+
+				// Find inner most first child ex: <p><i><b>*</b></i></p>
+				while (node = node.firstChild) {
+					if (dom.isBlock(node)) {
+						return;
+					}
+
+					if (node.nodeType == 1 && !nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
+						firstChilds.push(node);
+					}
+				}
+
+				i = firstChilds.length;
+				while (i--) {
+					node = firstChilds[i];
+					if (!node.hasChildNodes() || (node.firstChild == node.lastChild && node.firstChild.nodeValue === '')) {
+						dom.remove(node);
+					} else {
+						// Remove <a> </a> see #5381
+						if (node.nodeName == "A" && (node.innerText || node.textContent) === ' ') {
+							dom.remove(node);
+						}
+					}
+				}
+			};
+			
 			// Moves the caret to a suitable position within the root for example in the first non pure whitespace text node or before an image
 			function moveToCaretPosition(root) {
 				var walker, node, rng, y, viewPort, lastNode = root, tempElm;
@@ -41383,7 +47134,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 							break;
 						}
 
-						if (/^(BR|IMG)$/.test(node.nodeName)) {
+						if (nonEmptyElementsMap[node.nodeName.toLowerCase()]) {
 							rng.setStartBefore(node);
 							rng.setEndBefore(node);
 							break;
@@ -41444,6 +47195,11 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 				if (settings.keep_styles !== false) {
 					do {
 						if (/^(SPAN|STRONG|B|EM|I|FONT|STRIKE|U)$/.test(node.nodeName)) {
+							// Never clone a caret containers
+							if (node.id == '_mce_caret') {
+								continue;
+							}
+
 							clonedNode = node.cloneNode(false);
 							dom.setAttrib(clonedNode, 'id', ''); // Remove ID since it needs to be document unique
 
@@ -41460,7 +47216,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 
 				// BR is needed in empty blocks on non IE browsers
 				if (!tinymce.isIE) {
-					caretNode.innerHTML = '<br>';
+					caretNode.innerHTML = '<br data-mce-bogus="1">';
 				}
 
 				return block;
@@ -41480,6 +47236,11 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 					return true;
 				}
 
+				// If the caret if before the first element in parentBlock
+				if (start && container.nodeType == 1 && container == parentBlock.firstChild) {
+					return true;
+				}
+
 				// Caret can be before/after a table
 				if (container.nodeName === "TABLE" || (container.previousSibling && container.previousSibling.nodeName == "TABLE")) {
 					return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
@@ -41487,20 +47248,34 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 
 				// Walk the DOM and look for text nodes or non empty elements
 				walker = new TreeWalker(container, parentBlock);
-				while (node = (start ? walker.prev() : walker.next())) {
+	
+				// If caret is in beginning or end of a text block then jump to the next/previous node
+				if (container.nodeType == 3) {
+					if (start && offset == 0) {
+						walker.prev();
+					} else if (!start && offset == container.nodeValue.length) {
+						walker.next();
+					}
+				}
+
+				while (node = walker.current()) {
 					if (node.nodeType === 1) {
 						// Ignore bogus elements
-						if (node.getAttribute('data-mce-bogus')) {
-							continue;
-						}
-
-						// Keep empty elements like <img />
-						name = node.nodeName.toLowerCase();
-						if (name === 'IMG') {
-							return false;
+						if (!node.getAttribute('data-mce-bogus')) {
+							// Keep empty elements like <img /> <input /> but not trailing br:s like <p>text|<br></p>
+							name = node.nodeName.toLowerCase();
+							if (nonEmptyElementsMap[name] && name !== 'br') {
+								return false;
+							}
 						}
 					} else if (node.nodeType === 3 && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
 						return false;
+					}
+
+					if (start) {
+						walker.prev();
+					} else {
+						walker.next();
 					}
 				}
 
@@ -41585,6 +47360,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 				} else if (isFirstOrLastLi()) {
 					// Last LI in list then temove LI and add text block after list
 					dom.insertAfter(newBlock, containerBlock);
+					renderBlockOnIE(newBlock);
 				} else {
 					// Middle LI in list the split the list and insert a text block in the middle
 					// Extract after fragment and insert it after the current block
@@ -41621,7 +47397,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 				if (container && container.nodeType == 3 && offset >= container.nodeValue.length) {
 					// Insert extra BR element at the end block elements
 					if (!tinymce.isIE && !hasRightSideBr()) {
-						brElm = dom.create('br')
+						brElm = dom.create('br');
 						rng.insertNode(brElm);
 						rng.setStartAfter(brElm);
 						rng.setEndAfter(brElm);
@@ -41676,6 +47452,22 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 				return parent !== root ? editableRoot : root;
 			};
 
+			// Adds a BR at the end of blocks that only contains an IMG or INPUT since these might be floated and then they won't expand the block
+			function addBrToBlockIfNeeded(block) {
+				var lastChild;
+
+				// IE will render the blocks correctly other browsers needs a BR
+				if (!tinymce.isIE) {
+					block.normalize(); // Remove empty text nodes that got left behind by the extract
+
+					// Check if the block is empty or contains a floated last child
+					lastChild = block.lastChild;
+					if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true)))) {
+						dom.add(block, 'br');
+					}
+				}
+			};
+
 			// Delete any selected contents
 			if (!rng.collapsed) {
 				editor.execCommand('Delete');
@@ -41690,15 +47482,20 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 			// Setup range items and newBlockName
 			container = rng.startContainer;
 			offset = rng.startOffset;
-			newBlockName = settings.forced_root_block;
+			newBlockName = (settings.force_p_newlines ? 'p' : '') || settings.forced_root_block;
 			newBlockName = newBlockName ? newBlockName.toUpperCase() : '';
 			documentMode = dom.doc.documentMode;
+			shiftKey = evt.shiftKey;
 
 			// Resolve node index
 			if (container.nodeType == 1 && container.hasChildNodes()) {
 				isAfterLastNodeInContainer = offset > container.childNodes.length - 1;
 				container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
-				offset = 0;
+				if (isAfterLastNodeInContainer && container.nodeType == 3) {
+					offset = container.nodeValue.length;
+				} else {
+					offset = 0;
+				}
 			}
 
 			// Get editable root node normaly the body element but sometimes a div or span
@@ -41713,7 +47510,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 
 			// If editable root isn't block nor the root of the editor
 			if (!dom.isBlock(editableRoot) && editableRoot != dom.getRoot()) {
-				if (!newBlockName || evt.shiftKey) {
+				if (!newBlockName || shiftKey) {
 					insertBr();
 				}
 
@@ -41723,7 +47520,7 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 			// Wrap the current node and it's sibling in a default block if it's needed.
 			// for example this <td>text|<b>text2</b></td> will become this <td><p>text|<b>text2</p></b></td>
 			// This won't happen if root blocks are disabled or the shiftKey is pressed
-			if ((newBlockName && !evt.shiftKey) || (!newBlockName && evt.shiftKey)) {
+			if ((newBlockName && !shiftKey) || (!newBlockName && shiftKey)) {
 				container = wrapSelfAndSiblingsInDefaultBlock(container, offset);
 			}
 
@@ -41735,26 +47532,40 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 			parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 			containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
-			// Handle enter inside an empty list item
-			if (parentBlockName == 'LI' && dom.isEmpty(parentBlock)) {
-				// Let the list plugin or browser handle nested lists for now
-				if (/^(UL|OL|LI)$/.test(containerBlock.parentNode.nodeName)) {
-					return false;
+			// Enter inside block contained within a LI then split or insert before/after LI
+			if (containerBlockName == 'LI' && !evt.ctrlKey) {
+				parentBlock = containerBlock;
+				parentBlockName = containerBlockName;
+			}
+
+			// Handle enter in LI
+			if (parentBlockName == 'LI') {
+				if (!newBlockName && shiftKey) {
+					insertBr();
+					return;
 				}
 
-				handleEmptyListItem();
-				return;
+				// Handle enter inside an empty list item
+				if (dom.isEmpty(parentBlock)) {
+					// Let the list plugin or browser handle nested lists for now
+					if (/^(UL|OL|LI)$/.test(containerBlock.parentNode.nodeName)) {
+						return false;
+					}
+
+					handleEmptyListItem();
+					return;
+				}
 			}
 
 			// Don't split PRE tags but insert a BR instead easier when writing code samples etc
 			if (parentBlockName == 'PRE' && settings.br_in_pre !== false) {
-				if (!evt.shiftKey) {
+				if (!shiftKey) {
 					insertBr();
 					return;
 				}
 			} else {
 				// If no root block is configured then insert a BR by default or if the shiftKey is pressed
-				if ((!newBlockName && !evt.shiftKey && parentBlockName != 'LI') || (newBlockName && evt.shiftKey)) {
+				if ((!newBlockName && !shiftKey && parentBlockName != 'LI') || (newBlockName && shiftKey)) {
 					insertBr();
 					return;
 				}
@@ -41779,9 +47590,12 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 				} else {
 					dom.insertAfter(newBlock, parentBlock);
 				}
+
+				moveToCaretPosition(newBlock);
 			} else if (isCaretAtStartOrEndOfBlock(true)) {
 				// Insert new block before
 				newBlock = parentBlock.parentNode.insertBefore(createNewBlock(), parentBlock);
+				renderBlockOnIE(newBlock);
 			} else {
 				// Extract after fragment and insert it after the current block
 				tmpRng = rng.cloneRange();
@@ -41790,10 +47604,12 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 				trimLeadingLineBreaks(fragment);
 				newBlock = fragment.firstChild;
 				dom.insertAfter(fragment, parentBlock);
+				trimInlineElementsOnLeftSideOfBlock(newBlock);
+				addBrToBlockIfNeeded(parentBlock);
+				moveToCaretPosition(newBlock);
 			}
 
 			dom.setAttrib(newBlock, 'id', ''); // Remove ID since it needs to be document unique
-			moveToCaretPosition(newBlock);
 			undoManager.add();
 		}
 
@@ -41851,7 +47667,7 @@ define('patterns/edit-tinymce',[
             var cfg = $el.data('tinymce-json');
             if (!cfg) {
                 log.info('data-tinymce-json empty, using default config', $el);
-                cfg = '{}';
+                cfg = {};
             }
             cfg.elements = id;
             cfg.mode = 'exact';
@@ -41970,12 +47786,12 @@ define('patterns/focus',[
             $relatives=$relatives.add($el.closest("fieldset"));
 
             if (el.id)
-                $label=$("label[for="+el.id+"]");
+                $label=$('label[for="'+el.id+'"]');
             if (!$label.length) {
                 var $form = $el.closest("form");
                 if (!$form.length)
                     $form=$(document.body);
-                $label=$form.find("label[for="+el.name+"]");
+                $label=$form.find('label[for="'+el.name+'"]');
             }
             $relatives=$relatives.add($label);
             return $relatives;
@@ -48200,7 +54016,7 @@ define('patterns/toggle',[
         onClick: function(event) {
             var $trigger = $(this),
                 state = $trigger.data("patternToggle"),
-                i;
+                option, i;
 
             state.toggled=!state.toggled;
             $trigger.data("patternToggle", state);
@@ -48221,7 +54037,8 @@ define('patterns/toggle',[
         },
 
         _update: function(selector, attr, value) {
-            var $targets = $(selector);
+            var $targets = $(selector),
+                $target;
 
             if (!$targets.length)
                 return;
@@ -48259,20 +54076,31 @@ define('patterns/toggle',[
 define('patterns/tooltip',[
     'jquery',
     "../registry",
-    '../utils',
+    "../core/parser",
     './inject'
-], function($, patterns, utils, inject) {
+], function($, patterns, Parser, inject) {
+    var parser = new Parser("tooltip");
+
+    parser.add_argument("position");
+    parser.add_argument("click", false);
+    parser.add_argument("force", false);
+    parser.add_argument("sticky", false);
+    parser.add_argument("close", true);
+    parser.add_argument("ajax", false);
+    parser.add_argument("title", function($el, name) {
+        return $el.attr("title");
+    });
+
     var tooltip = {
         name: "tooltip",
-        trigger: "[data-tooltip]",
+        trigger: ".pat-tooltip",
 
         count: 0,
 
-        init: function($root) {
-            return $root.each(function() {
+        init: function($el, opts) {
+            return $el.each(function() {
                 var $trigger = $(this),
-                    options = utils.parseOptions($trigger.data("tooltip"));
-                options.title = $trigger.attr("title");
+                    options = parser.parse($trigger, opts);
                 $trigger.removeAttr("title");
                 $trigger.data("patterns.tooltip", options);
                 tooltip.setupShowEvents($trigger);
@@ -48280,8 +54108,8 @@ define('patterns/tooltip',[
         },
 
         setupShowEvents: function($trigger) {
-            var parameters = $trigger.data("patterns.tooltip");
-            if (parameters.click) {
+            var options = $trigger.data("patterns.tooltip");
+            if (options.click) {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
                 $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
@@ -48296,14 +54124,14 @@ define('patterns/tooltip',[
 
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
-                parameters = $trigger.data("patterns.tooltip");
-            if (parameters.sticky) {
+                options = $trigger.data("patterns.tooltip");
+            if (options.sticky) {
                 $container.find(".close-panel")
                     .on("click.tooltip", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else {
-                if (parameters.click) {
+                if (options.click) {
                     $container.on("click.tooltip", $trigger, function(ev) {
                         ev.stopPropagation();
                     });
@@ -48358,9 +54186,6 @@ define('patterns/tooltip',[
                     source: '#' + source[1],
                     target: '#' + target_id + "::element"
                 }]);
-                // always load fresh tooltips
-                // delete options.ajax;
-                $trigger.data("patterns.tooltip", options);
             }
 
             tooltip.positionContainer($trigger, $container);
@@ -48407,10 +54232,10 @@ define('patterns/tooltip',[
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.sticky && !options.noclose) {
+            if (options.sticky && options.close) {
                 $("<button/>", {"class": "close-panel"})
                     .text("Close")
-                    .insertBefore($container.find("*"));
+                    .insertBefore($container.find("*:first"));
             }
             $("body").append($container);
             return $container;
@@ -48591,7 +54416,7 @@ define('patterns/tooltip',[
                         continue;
                     }
 
-                    if (options.forcePosition || tooltip.isVisible(status, positions[i])) {
+                    if (options.force || tooltip.isVisible(status, positions[i])) {
                         position = positions[i];
                         break;
                     }
@@ -48786,6 +54611,7 @@ requirejs.config({
         jquery_validate: "./3rdparty/jquery-validation/jquery.validate",
         jquery_validate_additional_methods: "./3rdparty/jquery-validation/additional-methods",
         log4javascript: "./3rdparty/log4javascript/log4javascript_uncompressed",
+        less: "./3rdparty/less-1.3.1",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
         tinymce: "./3rdparty/tiny_mce/tiny_mce_src"
@@ -48827,10 +54653,10 @@ define('main',[
     // below here modules that are only loaded
     "jquery_validate_additional_methods",
     'modernizr',
+    'less',
     'prefixfree',
     './patterns/autofocus',
     './patterns/autosubmit',
-    './patterns/autosubmit2',
     './patterns/autosuggest',
     './patterns/breadcrumbs',
     './patterns/carousel',
