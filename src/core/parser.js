@@ -150,11 +150,11 @@ define([
                     sense=true;
                     flag=part;
                 }
-                if (flag in this.mappings) {
-                    position=false;
+                if (flag in this.mappings && this.parameters[this.mappings[flag]].type==="boolean") {
+                    positional=false;
                     this._set(opts, this.mappings[flag], sense);
                 } else if (flag in this.enum_values) {
-                    position=false;
+                    positional=false;
                     this._set(opts, this.enum_values[flag], flag);
                 } else if (positional)
                     this._set(opts, this.mappings[this.order[i]], part);
@@ -173,14 +173,23 @@ define([
         },
 
         _parse: function(parameter) {
-            var opts = {}, i, name;
+            var opts, extended, sep;
 
             if (!parameter)
                 return {};
-            else if (parameter.match(this.named_param_pattern))
-                return this._parseExtendedNotation(parameter);
-            else
-                return this._parseShorthandNotation(parameter);
+
+            sep=parameter.indexOf(";");
+            if (sep===-1)
+                if (parameter.match(this.named_param_pattern))
+                    return this._parseExtendedNotation(parameter);
+                else
+                    return this._parseShorthandNotation(parameter);
+
+            opts=this._parseShorthandNotation(parameter.slice(0, sep));
+            extended=this._parseExtendedNotation(parameter.slice(sep+1));
+            for (var name in extended)
+                opts[name]=extended[name];
+            return opts;
         },
 
         _defaults: function($el) {
