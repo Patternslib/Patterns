@@ -114,6 +114,21 @@ describe("Core / Parser", function() {
             });
         });
 
+        describe("Mixed notation", function() {
+            it("Basic usage", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("foo");
+                parser.add_argument("bar");
+                parser.add_argument("buz");
+                parser.add_argument("boo");
+                var opts = parser._parse("foo bar; boo: blue");
+                expect(opts.foo).toBe("foo");
+                expect(opts.bar).toBe("bar");
+                expect(opts.buzz).toBe(undefined);
+                expect(opts.boo).toBe("blue");
+            });
+        });
+
         it("camelCase parameter names", function() {
             var parser=new ArgumentParser();
             parser.add_argument("time-delay");

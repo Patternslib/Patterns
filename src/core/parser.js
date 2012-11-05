@@ -173,14 +173,23 @@ define([
         },
 
         _parse: function(parameter) {
-            var opts = {}, i, name;
+            var opts, extended, sep;
 
             if (!parameter)
                 return {};
-            else if (parameter.match(this.named_param_pattern))
-                return this._parseExtendedNotation(parameter);
-            else
-                return this._parseShorthandNotation(parameter);
+
+            sep=parameter.indexOf(";");
+            if (sep===-1)
+                if (parameter.match(this.named_param_pattern))
+                    return this._parseExtendedNotation(parameter);
+                else
+                    return this._parseShorthandNotation(parameter);
+
+            opts=this._parseShorthandNotation(parameter.slice(0, sep));
+            extended=this._parseExtendedNotation(parameter.slice(sep+1));
+            for (var name in extended)
+                opts[name]=extended[name];
+            return opts;
         },
 
         _defaults: function($el) {
