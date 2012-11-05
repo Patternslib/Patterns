@@ -241,9 +241,8 @@ define([
                     _.destroy($el);
 
                    // jump to new href target
-                   if (!$el.hasClass("autoLoading-visible")) {
+                   if (!$el.hasClass("autoLoading-visible"))
                        window.location.href = $el.attr('href');
-                   }
                 }
             };
 
@@ -303,16 +302,21 @@ define([
                     .replace(/<body(.*)>/gi, '<div id="__original_body">')
                     .replace(/<\/body(.*)>/gi,'</div>')
             );
-            $html.filter(":uri(is:relative)").each(function() {
+            // this.(href|action|src) yields absolute uri -> retrieve relative
+            // uris with getAttribute
+            $html.find(":uri(is:relative)").each(function() {
                 switch (this.tagName) {
                 case "A":
-                    this.href=new URI(this.href).absoluteTo(url).toString();
+                    this.href=new URI(this.getAttribute("href"))
+                        .absoluteTo(url).toString();
                     break;
                 case "FORM":
-                    this.action=new URI(this.action).absoluteTo(url).toString();
+                    this.action=new URI(this.getAttribute("action"))
+                        .absoluteTo(url).toString();
                     break;
                 case "IMG":
-                    this.src=new URI(this.src).absoluteTo(url).toString();
+                    this.src=new URI(this.getAttribute("src"))
+                        .absoluteTo(url).toString();
                     break;
                 }
             });
