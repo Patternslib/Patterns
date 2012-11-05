@@ -150,11 +150,11 @@ define([
                     sense=true;
                     flag=part;
                 }
-                if (flag in this.mappings) {
-                    position=false;
+                if (flag in this.mappings && this.parameters[this.mappings[flag]].type==="boolean") {
+                    positional=false;
                     this._set(opts, this.mappings[flag], sense);
                 } else if (flag in this.enum_values) {
-                    position=false;
+                    positional=false;
                     this._set(opts, this.enum_values[flag], flag);
                 } else if (positional)
                     this._set(opts, this.mappings[this.order[i]], part);
