@@ -40,6 +40,13 @@ describe("Core / Parser", function() {
                 expect(opts.foo).toBe("bar");
             });
 
+            it("String value with name of string argument", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("foo");
+                var opts = parser._parse("foo");
+                expect(opts.foo).toBe("foo");
+            });
+
             it("Positive boolean value", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("foo", true);
