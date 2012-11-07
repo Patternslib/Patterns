@@ -31,7 +31,11 @@ define([
                 target: '#pat-modal',
                 "class": "pat-modal" + (cfg["class"] ? " " + cfg["class"] : "")
             };
-            $('#pat-modal').detach();
+            // if $el is already inside a modal, do not detach #pat-modal,
+            // because this would unnecessarily close the modal itself
+            if (!$el.closest("#pat-modal")) {
+                $('#pat-modal').detach();
+            }
             inject.init($el, opts);
         },
         _init_div1: function($el, cfg) {
