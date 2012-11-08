@@ -149,6 +149,14 @@ define([
 
     root=new Logger();
 
+    var logconfig = /pat-loglevel(|-[^=]+)=([^&]+)/g,
+        match;
+
+    while ((match=logconfig.exec(window.location.search))!==null) {
+        var logger = (match[1]==="") ? root : root.getLogger(match[1].slice(1));
+        logger.setLevel(match[2].toUpperCase());
+    }
+
     return {
         Level: Level,
         getLogger: root.getLogger.bind(root),
