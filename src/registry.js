@@ -8,7 +8,7 @@
  */
 define([
     "jquery",
-    "./logging",
+    "./core/logging",
     "./transforms",
     "./utils",
     // below here modules that are only loaded

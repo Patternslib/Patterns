@@ -1,7 +1,7 @@
 define([
     'jquery',
     '../lib/ajax',
-    '../logging',
+    '../core/logging',
     '../registry',
     'tinymce'
 ], function($, ajax, logging, registry) {

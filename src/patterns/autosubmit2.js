@@ -1,7 +1,7 @@
 define([
     "jquery",
     '../registry',
-    '../logging',
+    '../core/logging',
     '../utils'
 ], function($, registry, logging, utils) {
     var log = logging.getLogger('autosubmit');

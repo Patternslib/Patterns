@@ -1,11 +1,11 @@
 Logging
 =======
 
-Patterns uses `log4javascript <http://log4javascript.org/>`_ to provide logging
-facilities. To use this you will need to load the logging module and use
-its `getLogger` method to get a log utility. This is typically done as part
-of the pattern definition. The highlighted lines in the example below show the
-changes you will need to make.
+Patterns includes a minimal logging framework  to provide logging facilities.
+To use this you will need to load the logging module and use its `getLogger`
+method to get a log utility. This is typically done as part of the pattern
+definition. The highlighted lines in the example below show the changes you
+will need to make.
 
 .. code-block:: javascript
    :linenos:
@@ -13,9 +13,9 @@ changes you will need to make.
 
    define([
        'require'
-       '../patterns',
-       '../logging',
-   ], function(require, patterns, logging) {
+       '../registry',
+       '../core/logging',
+   ], function(require, registry, logging) {
       var log = logging.getLogger("mypattern");
       ...
       log.info("Hello, world");
@@ -33,7 +33,8 @@ Logging API
 
 .. js:attribute:: logging.Level
 
-   The log4javascript Level object which defines all available logging levels.
+   An object which defines all available logging levels: ``DEBUG``, ``INFO``,
+   ``WARN``, ``ERROR`` and ``FATAL``.
 
 
 .. js:function:: logging.setEnabled(enabled)
@@ -66,7 +67,7 @@ Logging API
 .. js:function:: logging.getLogger(name)
 
    :param string name: name of the logger
-   :returns: a log4javascript logger instance
+   :returns: a logger instance
 
    Retrieve, and optionally create, a named logger instance.
 
@@ -78,4 +79,4 @@ information at various log levels:
 * `info` is used to log informational messages. These are normally not shown.
 * `warn` is used to log warnings. These are normally shown.
 * `error` is used to log errors. There are normally shown.
-
+* `fatal` is used to log fatal errors. There are normally shown.
