@@ -6,45 +6,47 @@ describe("Core / logging", function() {
     });
 
     describe("Logger", function() {
+        afterEach(function() {
+            delete logging.getLogger("xyzzy")._parent._loggers.xyzzy;
+        });
+
         describe("getLogger", function() {
             it("Create new logger", function() {
                 var logger = logging.getLogger("xyzzy");
                 expect(logger.name).toBe("xyzzy");
                 var root = logger._parent;
                 expect(root._loggers.xyzzy).toBe(logger);
-                delete root._loggers.xyzzy;
             });
 
             it("Return existing logger", function() {
                 logging.getLogger("xyzzy").dummy=true;
                 var logger = logging.getLogger("xyzzy");
                 expect(logger.dummy).toBe(true);
-                delete logger._parent._loggers.xyzzy;
             });
         });
 
         describe("_getFlag", function() {
             it("Flag set on current instance", function() {
                 var logger = logging.getLogger("xyzzy");
-                logger.flag=true;
+                logger._flag=true;
                 expect(logger._getFlag("flag")).toBe(true);
             });
 
             it("Flag set on parent instance", function() {
                 var logger = logging.getLogger("xyzzy");
                     root = logger._parent;
-                root.flag=true;
+                root._flag=true;
                 expect(logger._getFlag("flag")).toBe(true);
-                delete root.flag;
+                delete root._flag;
             });
 
             it("Flag on child overrides flag on parent", function() {
                 var logger = logging.getLogger("xyzzy"),
                     root = logger._parent;
-                root.flag="parent";
-                logger.flag="child";
+                root._flag="parent";
+                logger._flag="child";
                 expect(logger._getFlag("flag")).toBe("child");
-                delete logging.flag;
+                delete root._flag;
             });
         });
 

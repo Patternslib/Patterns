@@ -88,6 +88,7 @@ define([
 
         _getFlag: function(flag) {
             var context=this;
+            flag="_"+flag;
             while (context!==null) {
                 if (context[flag]!==undefined)
                     return context[flag];
@@ -119,7 +120,7 @@ define([
         },
 
         log: function(level, message) {
-            if (!this._getFlag("enabled") || this._getFlag("level")<this.level)
+            if (!this._getFlag("enabled") || level<this._getFlag("level"))
                 return;
             writer.output(level, message);
         },
