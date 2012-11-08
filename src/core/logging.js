@@ -4,7 +4,9 @@
  * Copyright 2012 Simplon B.V.
  */
 
-define(function() {
+define([
+        "../compat"  // Needed for function.bind
+], function() {
     var root,    // root logger instance
         writer;  // writer instance, used to output log entries
 
