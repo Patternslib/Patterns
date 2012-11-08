@@ -28,6 +28,21 @@ this pattern is requested. Finally in line 8 the log utility is used to log
 a message.
 
 
+Configuring through URL
+-----------------------
+
+To facilitate debugging you can change the default log level through the URL
+query string by adding ``pat-loglevel`` options.
+
+* ``http://www.example.com/?pat-loglevel=DEBUG`` changes the default log level
+  to ``DEBUG``.
+* ``http://www.example.com/?pat-loglevel-inject=DEBUG`` changes the log level
+  for just the inject pattern to ``DEBUG``.
+* ``http://www.example.com/?pat-loglevel=ERROR&pat-loglevel-inject=INFO``
+  changes the standard log level error, but enables messages at the ``INFO``
+  level for the inject pattern.
+
+
 Logging API
 -----------
 
