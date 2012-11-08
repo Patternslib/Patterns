@@ -6,7 +6,8 @@ the viewport when it touches it.
 
 Below is a simple example.
 
-..code-block:: html
+.. code-block:: html
+
    <div class="pat-bumper">
       Bumper content
    </div>
@@ -15,7 +16,8 @@ When the user starts scrolling down the page and the top of the above DIV reache
 the top of the viewport, it will be assigned a *bumped* class. The default class
 should look like
 
-..code-block:: css
+.. code-block:: css
+
    .bumped {
       position: fixed;
       top: 0;
