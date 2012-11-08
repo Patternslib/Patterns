@@ -72,7 +72,7 @@ define([
     function Logger(name, parent) {
         this._loggers={};
         this.name=name || "";
-        this.parent=parent || null;
+        this._parent=parent || null;
         if (name==="root") {
             this._enabled=true;
             this._level=Level.INFO;
@@ -91,7 +91,7 @@ define([
             while (context!==null) {
                 if (context[flag]!==undefined)
                     return context[flag];
-                context=context.parent;
+                context=context._parent;
             }
             return null;
         },
@@ -107,8 +107,11 @@ define([
         setLevel: function(level) {
             if (typeof level==="number")
                 this._level=level;
-            else if (level in Level)
-                this._level=Level[level];
+            else if (typeof level==="string") {
+                level=level.toUpperCase();
+                if (level in Level)
+                    this._level=Level[level];
+            }
         },
 
         getLevel: function() {
