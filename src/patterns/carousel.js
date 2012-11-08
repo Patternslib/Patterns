@@ -7,7 +7,7 @@
 define([
     "jquery",
     "../registry",
-    "../logging",
+    "../core/logging",
     "../core/parser",
     "jquery_anythingslider"
 ], function($, patterns, logging, Parser) {

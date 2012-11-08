@@ -7,7 +7,7 @@
  */
 define([
     'jquery',
-    '../logging'
+    '../core/logging'
 ], function($, logging) {
     var log = logging.getLogger('parser');
 

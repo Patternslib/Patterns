@@ -1,7 +1,7 @@
 define([
     "jquery",
     "../registry",
-    "../logging",
+    "../core/logging",
     "../core/parser"
 ], function($, patterns, logging, Parser) {
     var log = logging.getLogger("switch"),

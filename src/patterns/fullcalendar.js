@@ -1,6 +1,6 @@
 define([
     'jquery',
-    '../logging',
+    '../core/logging',
     '../utils',
     "../registry",
     'jquery_fullcalendar'
