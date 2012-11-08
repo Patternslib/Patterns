@@ -2,7 +2,6 @@
  * Patterns logging - minimal logging framework
  *
  * Copyright 2012 Simplon B.V.
- * Copyright 2012 Florian Friesdorf
  */
 
 define(function() {
