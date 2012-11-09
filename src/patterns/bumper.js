@@ -38,7 +38,7 @@ define([
                 }
             });
         }
-    }
+    };
     registry.register(_);
     return _;
 });
