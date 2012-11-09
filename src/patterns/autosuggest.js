@@ -14,7 +14,7 @@ define([
 
     var parser = new Parser("autosuggest");
     parser.add_argument('words');
-    parser.add_argument('prefill');
+    parser.add_argument('pre-fill');
     parser.add_argument('as-html-id', false);
     parser.add_argument('selected-value-prop', "name");
     parser.add_argument('search-obj-prop', "name");
@@ -36,8 +36,8 @@ define([
                 cfg.startText = "";
             }
 
-            if (cfg.prefill && (cfg.prefill.slice(0,1) === ',')) {
-                cfg.prefill = cfg.prefill.slice(1);
+            if (cfg.preFill && (cfg.preFill.slice(0,1) === ',')) {
+                cfg.preFill = cfg.preFill.slice(1);
             }
 
             $el.data("patterns.autosuggest", cfg);
