@@ -4,7 +4,7 @@
 // - prefill and ashtmlid in data-auto-suggest-config
 define([
     'jquery',
-    '../logging',
+    '../core/logging',
     '../core/parser',
     '../registry',
     '../utils',

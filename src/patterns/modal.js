@@ -1,6 +1,6 @@
 define([
     'jquery',
-    '../logging',
+    '../core/logging',
     "../core/parser",
     "../registry",
     "./inject"
