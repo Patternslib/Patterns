@@ -41,48 +41,7 @@ define([
                 cfg.preFill = cfg.preFill.slice(1);
             }
 
-            $el.data("patterns.autosuggest", cfg);
-
             $el.on('keydown.pat-autosuggest', _.onKeyDown);
-
-            // are we autosubmit?
-            var autosubmit = $el.is('.pat-autosubmit') ||
-                    ($el.parents('.pat-autosubmit').length > 0) ||
-                    $el.is('.pat-autosubmit2') ||
-                    ($el.parents('.pat-autosubmit2').length > 0);
-            log.debug('autosubmit', autosubmit, $el);
-
-
-            // XXX: this feels hacky and is either needed for fast
-            // typers in which case it should be in autosubmit or to
-            // work around triggers in autoSuggest.
-            var $form;
-            if (autosubmit) {
-                $form = $el.parents('form');
-
-                $form.ajaxForm({
-                    data: {
-                        submit: "submit"
-                    }
-                });
-
-                var submit_debounced = utils.debounce(function() {
-                    $form.submit();
-                }, 400);
-                cfg.selectionAdded = function($item) {
-                    log.debug('submit because selection was added', $item);
-                    // trigger the form
-                    submit_debounced();
-                };
-                cfg.selectionRemoved = function($item) {
-                    // ignore removal request if readonly
-                    if ($el.attr('readonly')) return;
-                    log.debug('submit because selection was removed', $item);
-                    // trigger the form
-                    $item.remove();
-                    submit_debounced();
-                };
-            }
 
             var data = cfg.words.split(/\s*,\s*/).map(function(word) {
                 return {value: word, name: word};
@@ -94,7 +53,6 @@ define([
         },
         destroy: function($el) {
             $el.off('.pat-autosuggest');
-            $el.data('patterns.autosuggest', null);
 
             // XXX: destroy the jqueryPlugin, unfortunately it doesn't
             // support this as of now
