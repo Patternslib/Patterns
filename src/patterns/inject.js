@@ -8,7 +8,7 @@ define([
     "jquery",
     "../core/parser",
     "../lib/ajax",
-    "../logging",
+    "../core/logging",
     "../registry",
     "jquery_ext", // for :scrollable for autoLoading-visible
     "URI"
