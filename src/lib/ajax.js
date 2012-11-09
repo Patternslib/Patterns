@@ -1,5 +1,7 @@
-define(function(require) {
-    var log = require('../logging').getLogger('ajaxlib');
+define([
+        "../core/logging"
+], function(logging) {
+    var log = logging.getLogger('ajaxlib');
 
     var submit = function($el, opts) {
         // XXX: make these only defaults

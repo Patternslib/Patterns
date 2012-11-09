@@ -25476,7 +25476,10 @@ define('patterns/checkedflag',[
         onChangeRadio: function(event) {
             var $el = $(this),
                 $label = $el.closest("label"),
+<<<<<<< HEAD
                 $fieldset = $el.closest("fieldset"),
+=======
+>>>>>>> master
                 selector = "label:has(input[name='" + this.name + "']:not(:checked))",
                 $siblings = (this.form===null) ? $(selector) : $(selector, this.form);
 
@@ -27199,9 +27202,14 @@ define('patterns/inject',[
                     _.destroy($el);
 
                    // jump to new href target
+<<<<<<< HEAD
                    if (!$el.hasClass("autoLoading-visible")) {
                        window.location.href = $el.attr('href');
                    }
+=======
+                   if (!$el.hasClass("autoLoading-visible"))
+                       window.location.href = $el.attr('href');
+>>>>>>> master
                 }
             };
 
@@ -27261,16 +27269,21 @@ define('patterns/inject',[
                     .replace(/<body(.*)>/gi, '<div id="__original_body">')
                     .replace(/<\/body(.*)>/gi,'</div>')
             );
-            $html.filter(":uri(is:relative)").each(function() {
+            // this.(href|action|src) yields absolute uri -> retrieve relative
+            // uris with getAttribute
+            $html.find(":uri(is:relative)").each(function() {
                 switch (this.tagName) {
                 case "A":
-                    this.href=new URI(this.href).absoluteTo(url).toString();
+                    this.href=new URI(this.getAttribute("href"))
+                        .absoluteTo(url).toString();
                     break;
                 case "FORM":
-                    this.action=new URI(this.action).absoluteTo(url).toString();
+                    this.action=new URI(this.getAttribute("action"))
+                        .absoluteTo(url).toString();
                     break;
                 case "IMG":
-                    this.src=new URI(this.src).absoluteTo(url).toString();
+                    this.src=new URI(this.getAttribute("src"))
+                        .absoluteTo(url).toString();
                     break;
                 }
             });
@@ -29826,6 +29839,7 @@ tinymce.util.Quirks = function(editor) {
 			var allSelection = serializeRng(allRng);
 			return selection === allSelection;
 		}
+<<<<<<< HEAD
 
 		editor.onKeyDown.add(function(editor, e) {
 			var keyCode = e.keyCode, isCollapsed;
@@ -29834,6 +29848,16 @@ tinymce.util.Quirks = function(editor) {
 			if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
 				isCollapsed = editor.selection.isCollapsed();
 
+=======
+
+		editor.onKeyDown.add(function(editor, e) {
+			var keyCode = e.keyCode, isCollapsed;
+
+			// Empty the editor if it's needed for example backspace at <p><b>|</b></p>
+			if (!isDefaultPrevented(e) && (keyCode == DELETE || keyCode == BACKSPACE)) {
+				isCollapsed = editor.selection.isCollapsed();
+
+>>>>>>> master
 				// Selection is collapsed but the editor isn't empty
 				if (isCollapsed && !dom.isEmpty(editor.getBody())) {
 					return;
@@ -38901,6 +38925,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 		selectorChanged: function(selector, callback) {
 			var self = this, currentSelectors;
+<<<<<<< HEAD
 
 			if (!self.selectorChangedData) {
 				self.selectorChangedData = {};
@@ -38954,6 +38979,61 @@ window.tinymce.dom.Sizzle = Sizzle;
 		destroy : function(manual) {
 			var self = this;
 
+=======
+
+			if (!self.selectorChangedData) {
+				self.selectorChangedData = {};
+				currentSelectors = {};
+
+				self.editor.onNodeChange.addToTop(function(ed, cm, node) {
+					var dom = self.dom, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
+
+					// Check for new matching selectors
+					each(self.selectorChangedData, function(callbacks, selector) {
+						each(parents, function(node) {
+							if (dom.is(node, selector)) {
+								if (!currentSelectors[selector]) {
+									// Execute callbacks
+									each(callbacks, function(callback) {
+										callback(true, {node: node, selector: selector, parents: parents});
+									});
+
+									currentSelectors[selector] = callbacks;
+								}
+
+								matchedSelectors[selector] = callbacks;
+								return false;
+							}
+						});
+					});
+
+					// Check if current selectors still match
+					each(currentSelectors, function(callbacks, selector) {
+						if (!matchedSelectors[selector]) {
+							delete currentSelectors[selector];
+
+							each(callbacks, function(callback) {
+								callback(false, {node: node, selector: selector, parents: parents});
+							});
+						}
+					});
+				});
+			}
+
+			// Add selector listeners
+			if (!self.selectorChangedData[selector]) {
+				self.selectorChangedData[selector] = [];
+			}
+
+			self.selectorChangedData[selector].push(callback);
+
+			return self;
+		},
+
+		destroy : function(manual) {
+			var self = this;
+
+>>>>>>> master
 			self.win = null;
 
 			// Manual destroy then remove unload handler
@@ -54185,7 +54265,14 @@ define('patterns/tooltip',[
                     url: source[0],
                     source: '#' + source[1],
                     target: '#' + target_id + "::element"
+<<<<<<< HEAD
                 }]);
+=======
+                }], $trigger);
+                // always load fresh tooltips
+                // delete options.ajax;
+                $trigger.data("patterns.tooltip", options);
+>>>>>>> master
             }
 
             tooltip.positionContainer($trigger, $container);

@@ -6,7 +6,7 @@
 define([
     "jquery",
     "./inject",
-    "../logging",
+    "../core/logging",
     "../core/parser",
     "../core/store",
     "../registry"

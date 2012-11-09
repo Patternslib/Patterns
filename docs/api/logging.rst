@@ -1,11 +1,11 @@
 Logging
 =======
 
-Patterns uses `log4javascript <http://log4javascript.org/>`_ to provide logging
-facilities. To use this you will need to load the logging module and use
-its `getLogger` method to get a log utility. This is typically done as part
-of the pattern definition. The highlighted lines in the example below show the
-changes you will need to make.
+Patterns includes a minimal logging framework  to provide logging facilities.
+To use this you will need to load the logging module and use its `getLogger`
+method to get a log utility. This is typically done as part of the pattern
+definition. The highlighted lines in the example below show the changes you
+will need to make.
 
 .. code-block:: javascript
    :linenos:
@@ -13,9 +13,9 @@ changes you will need to make.
 
    define([
        'require'
-       '../patterns',
-       '../logging',
-   ], function(require, patterns, logging) {
+       '../registry',
+       '../core/logging',
+   ], function(require, registry, logging) {
       var log = logging.getLogger("mypattern");
       ...
       log.info("Hello, world");
@@ -28,12 +28,28 @@ this pattern is requested. Finally in line 8 the log utility is used to log
 a message.
 
 
+Configuring through URL
+-----------------------
+
+To facilitate debugging you can change the default log level through the URL
+query string by adding ``pat-loglevel`` options.
+
+* ``http://www.example.com/?pat-loglevel=DEBUG`` changes the default log level
+  to ``DEBUG``.
+* ``http://www.example.com/?pat-loglevel-inject=DEBUG`` changes the log level
+  for just the inject pattern to ``DEBUG``.
+* ``http://www.example.com/?pat-loglevel=ERROR&pat-loglevel-inject=INFO``
+  changes the standard log level error, but enables messages at the ``INFO``
+  level for the inject pattern.
+
+
 Logging API
 -----------
 
 .. js:attribute:: logging.Level
 
-   The log4javascript Level object which defines all available logging levels.
+   An object which defines all available logging levels: ``DEBUG``, ``INFO``,
+   ``WARN``, ``ERROR`` and ``FATAL``.
 
 
 .. js:function:: logging.setEnabled(enabled)
@@ -66,7 +82,7 @@ Logging API
 .. js:function:: logging.getLogger(name)
 
    :param string name: name of the logger
-   :returns: a log4javascript logger instance
+   :returns: a logger instance
 
    Retrieve, and optionally create, a named logger instance.
 
@@ -78,4 +94,4 @@ information at various log levels:
 * `info` is used to log informational messages. These are normally not shown.
 * `warn` is used to log warnings. These are normally shown.
 * `error` is used to log errors. There are normally shown.
-
+* `fatal` is used to log fatal errors. There are normally shown.

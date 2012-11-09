@@ -9,7 +9,7 @@
 define([
     'jquery',
     "../registry",
-    '../logging',
+    '../core/logging',
     "../core/parser",
     "../core/store"
 ], function($, patterns, logging, Parser, store) {

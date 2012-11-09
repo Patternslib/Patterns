@@ -1,5 +1,5 @@
 define([
-    '../logging',
+    '../core/logging',
     '../registry',
     'jquery_chosen'
 ], function(logging, registry) {
