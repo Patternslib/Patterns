@@ -47,6 +47,13 @@ define([
                 return {value: word, name: word};
             });
 
+            cfg.selectionAdded = function(elem) {
+                $el.next().trigger($.Event("onchange")); 
+            };
+            cfg.selectionRemoved = function(elem) {
+                elem.remove();
+                $el.next().trigger($.Event("onchange"));
+            };
             $el.autoSuggest(data, cfg);
 
             return $el;
