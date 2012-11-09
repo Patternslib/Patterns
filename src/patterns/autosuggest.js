@@ -31,7 +31,7 @@ define([
             }
 
             // fetch config from first parent found
-            cfg = _.parser.parse($el, opts);
+            var cfg = _.parser.parse($el, opts);
             if ($el.attr('readonly')) {
                 cfg.startText = "";
             }
