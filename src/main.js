@@ -6,7 +6,7 @@ requirejs.config({
         jquery_autosuggest: "./3rdparty/jquery.autoSuggest",
         jquery_chosen: "./3rdparty/chosen.jquery",
         jquery_ext: "./jquery-ext",
-        jquery_form: "./3rdparty/jquery.form/jquery.form",
+        jquery_form: "./lib/jquery.form/jquery.form",
         jquery_fullcalendar: "./3rdparty/fullcalendar/fullcalendar",
         jquery_placeholder: "./3rdparty/jquery.placeholder",
         jquery_validate: "./3rdparty/jquery-validation/jquery.validate",
