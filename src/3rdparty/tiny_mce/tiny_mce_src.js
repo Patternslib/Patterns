@@ -13486,11 +13486,15 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 
 			// Load scripts
 			function loadScripts() {
+				var isPatternsTheme = s.theme.substr(0, 4) == "pat-", editor_template = "/editor_template" + tinymce.suffix + ".js";
+
 				if (s.language && s.language_load !== false)
 					sl.add(tinymce.baseURL + '/langs/' + s.language + '.js');
 
-				if (s.theme && typeof s.theme != "function" && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
-					ThemeManager.load(s.theme, 'themes/' + s.theme + '/editor_template' + tinymce.suffix + '.js');
+				if (!isPatternsTheme && s.theme && typeof s.theme != "function" && s.theme.charAt(0) != '-' && !ThemeManager.urls[s.theme])
+					ThemeManager.load(s.theme, 'themes/' + s.theme + editor_template);
+				else if (isPatternsTheme) ThemeManager.load(s.theme, "/_themes/Libraries/tiny_mce/themes/" + s.theme + editor_template);
+
 
 				each(explode(s.plugins), function(p) {
 					if (p &&!PluginManager.urls[p]) {
