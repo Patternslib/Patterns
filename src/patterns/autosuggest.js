@@ -46,7 +46,9 @@ define([
 
             // are we autosubmit?
             var autosubmit = $el.is('.pat-autosubmit') ||
-                    ($el.parents('.pat-autosubmit').length > 0);
+                    ($el.parents('.pat-autosubmit').length > 0) ||
+                    $el.is('.pat-autosubmit2') ||
+                    ($el.parents('.pat-autosubmit2').length > 0);
             log.debug('autosubmit', autosubmit, $el);
 
             var $form;
