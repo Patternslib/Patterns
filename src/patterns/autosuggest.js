@@ -51,6 +51,9 @@ define([
                     ($el.parents('.pat-autosubmit2').length > 0);
             log.debug('autosubmit', autosubmit, $el);
 
+            // XXX: this feels hacky and is either needed for fast
+            // typers in which case it should be in autosubmit or to
+            // work around triggers in autoSuggest.
             var $form;
             if (autosubmit) {
                 $form = $el.parents('form');
