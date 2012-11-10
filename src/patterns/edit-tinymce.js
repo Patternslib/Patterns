@@ -1,11 +1,15 @@
 define([
     'jquery',
     '../lib/ajax',
+    "../core/parser",
     '../core/logging',
     '../registry',
     'tinymce'
-], function($, ajax, logging, registry) {
-    var log = logging.getLogger('editTinyMCE');
+], function($, ajax, Parser, logging, registry) {
+    var log = logging.getLogger('editTinyMCE'),
+        parser = new Parser("edit-tinymce");
+
+    parser.add_argument('theme-baseurl');
 
     var _ = {
         name: "editTinyMCE",
@@ -44,6 +48,16 @@ define([
             cfg.elements = id;
             cfg.mode = 'exact';
             cfg.readonly = Boolean($el.attr('readonly'));
+            
+            // get arguments
+            args = parser.parse($el, opts);
+
+            if (args.themeBaseurl && cfg.theme &&
+                !tinyMCE.ThemeManager.urls[cfg.theme]) {
+                log.info('loading tinymce theme ' + cfg.theme);
+                tinyMCE.ThemeManager.load(cfg.theme, args.themeBaseurl + '/' +
+                    cfg.theme + '/editor_template' + tinyMCE.suffix + '.js');
+            }
 
             // initialize editor
             var tinymce = tinyMCE.init(cfg);
