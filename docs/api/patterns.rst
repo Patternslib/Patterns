@@ -1,5 +1,5 @@
-Creating new pattern
-====================
+Creating a new pattern
+======================
 
 Patterns are implemented as javascript objects that are registered with the
 patterns library. Below is a minimal skeleton for a pattern.
@@ -10,20 +10,20 @@ patterns library. Below is a minimal skeleton for a pattern.
    define([
        'require'
        '../registry'
-   ], function(require, patterns) {
+   ], function(require, registry) {
        var pattern_spec = {
            name: "mypattern",
        };
 
-       patterns.register(mypattern);
+       registry.register(pattern_spec);
    });
 
 This skeleton does several things:
 
 * lines 1-4 use `RequireJS <http://requirejs.org/>`_ to load the patterns
   registry.
-* lines 5-8 create an object which defines this pattern.
-* line 10 registers the pattern.
+* lines 5-7 create an object which defines this pattern's specifications.
+* line 9 registers the pattern.
 
 
 Markup patterns
@@ -31,7 +31,7 @@ Markup patterns
 
 Most patterns deal with markup: they are activated for content that matches
 a specific CSS selector. This is handled by adding two items to the
-pattern specification: ``trigger`` and an ``init`` function.
+pattern specification: a ``trigger`` and an ``init`` function.
 
 .. code-block:: javascript
    :linenos:
@@ -49,12 +49,12 @@ pattern specification: ``trigger`` and an ``init`` function.
        }
    };
 
-The trigger specified on line 3 is a CSS selector to tells the pattern framework
-which elements this pattern is interested in. If new items are discovered in the
-DOM that match this pattern the ``init`` function will be called with a jQuery
-wrapper around the element.
+The trigger specified on line 3 is a CSS selector which tells the pattern
+framework which elements this pattern is interested in. If new items are
+discovered in the DOM that match this pattern, the ``init`` function will be
+called with a jQuery wrapper around the element.
 
-While not encouraged patterns are encouraged to include a ``destroy`` function
+While not required patterns are encouraged to include a ``destroy`` function
 that undos the pattern initialisation.  After calling ``destroy`` it should be
 possible to call ``init`` again to reactivate the pattern.
 
@@ -158,7 +158,7 @@ example pattern to do this.
 
    });
 
-The first step is loading the parser. In lines 7 to 9 we proceed to create a
+The first step is loading the parser. In lines 6 to 8 we proceed to create a
 parser instance and add our options with their default values. In the init
 method we use the parser to parse the ``data-mypattern`` attribute for the
 element. Finally we combine that with the options might have been provided
