@@ -266,32 +266,14 @@ describe("Core / Parser", function() {
             });
         });
 
-        describe("Variable references", function() {
-            it("Basic reference", function() {
-                var parser=new ArgumentParser("mypattern");
-                parser.add_argument("value", 15);
-                parser.add_argument("other", "$value");
-                var opts = parser.parse($());
-                expect(opts.other).toBe(15);
-            });
-
-            it("Coerce to referenced type", function() {
-                var parser=new ArgumentParser("mypattern");
-                parser.add_argument("value", 15);
-                parser.add_argument("other", "$value");
-                var $content = $("<div data-pat-mypattern='other: 32'/>");
-                var opts = parser.parse($content);
-                expect(opts.other).toBe(32);
-            });
-
-            it("Do not follow $ in value", function() {
-                var parser=new ArgumentParser("mypattern");
-                parser.add_argument("value", 15);
-                parser.add_argument("other");
-                var opts = parser.parse($(), {other: "$value"});
-                expect(opts.other).toBe("$value");
-            });
+        it("Use cleanupOptions", function() {
+            var parser=new ArgumentParser("mypattern");
+            parser.add_argument("value", 15);
+            parser.add_argument("other", "$value");
+            var opts = parser.parse($());
+            expect(opts.other).toBe(15);
         });
+
 
         it("Coerce to type from default function", function() {
             var parser=new ArgumentParser("mypattern"),
@@ -494,6 +476,55 @@ describe("Core / Parser", function() {
                 spyOn(parser, "_coerce").andReturn(null);
                 parser._set(opts, "value", "1");
                 expect(opts.value).toBe(undefined);
+            });
+        });
+    });
+
+    describe("_cleanupOptions", function() {
+        describe("Variable references", function() {
+            it("Basic reference", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value", 15);
+                parser.add_argument("other", "$value");
+                var opts = {value: 20, other: "$value"};
+                parser._cleanupOptions(opts);
+                expect(opts.other).toBe(20);
+            });
+
+            it("Do not follow $ in value", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value", 15);
+                parser.add_argument("other");
+                var opts = {value: 20, other: "$value"};
+                parser._cleanupOptions(opts);
+                expect(opts.other).toBe("$value");
+            });
+        });
+
+        describe("Option grouping", function() {
+            it("Create new group", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo");
+                var opts = {"group-foo": 15};
+                parser._cleanupOptions(opts);
+                expect(opts).toEqual({group: {foo: 15}});
+            });
+
+            it("Multiple values in group", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo");
+                parser.add_argument("group-bar");
+                var opts = {"group-foo": 15, "group-bar": 20};
+                parser._cleanupOptions(opts);
+                expect(opts).toEqual({group: {foo: 15, bar:20}});
+            });
+
+            it("Extend existing group", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo");
+                var opts = {"group-foo": 15, group: {bar: 20}};
+                parser._cleanupOptions(opts);
+                expect(opts).toEqual({group: {foo: 15, bar:20}});
             });
         });
     });
