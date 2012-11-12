@@ -16,7 +16,7 @@ define([
     var parser = new Parser("autosuggest");
     parser.add_argument('words');
     parser.add_argument('pre-fill');
-    parser.add_argument('as-html-id', false);
+    parser.add_argument('as-html-id');
     parser.add_argument('selected-value-prop', "name");
     parser.add_argument('search-obj-prop', "name");
     parser.add_argument('start-text', "Enter text");
@@ -54,6 +54,11 @@ define([
                 elem.remove();
                 $el.next().trigger($.Event("onchange"));
             };
+
+            // XXX: See https://github.com/Patternslib/Patterns/issues/149
+            if (cfg['asHtmlId'] !== undefined) {
+                cfg['asHtmlID'] = cfg['asHtmlId'];
+            }
             $el.autoSuggest(data, cfg);
 
             return $el;
