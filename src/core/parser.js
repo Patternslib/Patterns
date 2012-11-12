@@ -118,9 +118,21 @@ define([
                 return;
             }
 
-            value=this._coerce(name, value);
-            if (value!==null) 
+            var spec=this.parameters[name];
+            if (spec.multiple) {
+                var parts=value.split(/,+/), i, v;
+                value=[];
+                for (i=0; i<parts.length; i++) {
+                    v=this._coerce(name, parts[i].trim());
+                    if (v!==null)
+                        value.push(v);
+                }
                 opts[name]=value;
+            } else {
+                value=this._coerce(name, value);
+                if (value!==null) 
+                    opts[name]=value;
+            }
         },
 
         _parseExtendedNotation: function(parameter) {
@@ -137,11 +149,15 @@ define([
                     log.warn("Invalid parameter: " + parts[i]);
                     break;
                 }
-                if (this.parameters[matches[1]] === undefined) {
+
+                var name = matches[1],
+                    value = matches[2].trim();
+
+                if (this.parameters[name] === undefined) {
                     log.warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
-                this._set(opts, matches[1], matches[2].trim());
+                this._set(opts, name, value);
             }
 
             return opts;
