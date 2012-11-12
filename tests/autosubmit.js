@@ -25,6 +25,8 @@ describe("autosubmit-plugin", function() {
     });
 
     describe("validateOptions", function() {
+        var defaultKeyupDelay = 400;  // as defined in patterns/autosubmit.js
+
         it("Integer delay", function() {
             var options = pattern.validateOptions({delay: 500});
             expect(options.delay).toBe(500);
@@ -37,27 +39,27 @@ describe("autosubmit-plugin", function() {
 
         it("Delay keyword", function() {
             var options = pattern.validateOptions({delay: "delay"});
-            expect(options.delay).toBe(400);
+            expect(options.delay).toBe(defaultKeyupDelay);
         });
 
         it("Delay set to true", function() {
             var options = pattern.validateOptions({delay: "true"});
-            expect(options.delay).toBe(400);
+            expect(options.delay).toBe(defaultKeyupDelay);
         });
 
         it("Invalid syntax", function() {
             var options = pattern.validateOptions({delay: "invalid"});
-            expect(options).toBeFalsy();
+            expect(options.delay).toBe(defaultKeyupDelay);
         });
 
         it("Bad type", function() {
             var options = pattern.validateOptions({delay: [500]});
-            expect(options).toBeFalsy();
+            expect(options.delay).toBe(defaultKeyupDelay);
         });
 
         it("Negative delay", function() {
             var options = pattern.validateOptions({delay: -500});
-            expect(options).toBeFalsy();
+            expect(options.delay).toBe(defaultKeyupDelay);
         });
 
     });
