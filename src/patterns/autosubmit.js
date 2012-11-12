@@ -4,8 +4,14 @@ define([
     "../core/logger",
     "../core/parser",
     "../utils"
-], function($, patterns, logger, Parser, utils) {
-    var log = logger.getLogger("pat.autosubmit"),
+], function($, patterns, logging, Parser, utils) {
+
+    //TODO: delete this comment
+    //by default the keyup submission needs to be debounced with 400ms (like before). - NOTE: DONE
+    //keyup can be enabled by default if there is a way to deactivate. - TODO not done yet
+
+    var DELAY_KEYUP_MS = 400,
+        log = logging.getLogger("autosubmit"),
         parser = new Parser("autosubmit");
     parser.add_argument("delay");
 
@@ -23,26 +29,30 @@ define([
         },
 
         validateOptions: function(options) {
-            if (typeof options.delay==="string") {
+            if (options.delay === null) {
+                options.delay = DELAY_KEYUP_MS;
+            } else if (typeof options.delay==="string") {
                 if (options.delay==="delay" || options.delay==="true")
-                    options.delay=400;
+                    options.delay=DELAY_KEYUP_MS;
                 else {
                     var number = parseInt(options.delay, 10);
                     if (isNaN(number)) {
                         log.error("Invalid delay value");
-                        return null;
+                        options.delay = DELAY_KEYUP_MS;
+                    } else {
+                        options.delay=number;
                     }
-                    options.delay=number;
                 }
             } else if (typeof options.delay==="number") {
                 if (options.delay<0) {
                     log.error("Timetravel machine broken - negative delay not possible.");
-                    return null;
+                    options.delay = DELAY_KEYUP_MS;
                 }
             } else if (options.delay) {
                 log.error("Invalid delay value");
-                return null;
+                options.delay = DELAY_KEYUP_MS;
             }
+
             return options;
         },
 
