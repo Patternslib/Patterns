@@ -161,13 +161,6 @@ describe("Core / Parser", function() {
                 expect(opts.boo).toBe("blue");
             });
         });
-
-        it("camelCase parameter names", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("time-delay");
-            var opts = parser._parse("15");
-            expect(opts.timeDelay).toBeDefined();
-        });
     });
     
     describe("_defaults", function() {
