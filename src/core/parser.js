@@ -33,7 +33,8 @@ define([
                 default_value=[default_value];
             spec={name: name,
                   value: default_value,
-                  multiple: multiple};
+                  multiple: multiple,
+                  dest: name};
 
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
@@ -58,7 +59,10 @@ define([
                 if (!(group in this.groups))
                     this.groups[group]=new ArgumentParser();
                 this.groups[group].add_argument(field, default_value, choices, multiple);
-            }
+                spec.group=group;
+                spec.dest=field;
+            } else
+                spec.group=null;
 
             this.order.push(name);
             this.parameters[name]=spec;
@@ -137,12 +141,13 @@ define([
                     if (v!==null)
                         value.push(v);
                 }
-                opts[name]=value;
             } else {
                 value=this._coerce(name, value);
-                if (value!==null) 
-                    opts[name]=value;
+                if (value===null) 
+                    return;
             }
+
+            opts[name]=value;
         },
 
         _parseExtendedNotation: function(parameter) {
@@ -246,6 +251,44 @@ define([
             return result;
         },
 
+        _cleanupOptions: function(options) {
+            var keys = Object.keys(options),
+                i, spec, name, group;
+
+            // Resolve references
+            for (i=0; i<keys.length; i++) {
+                name=keys[i];
+                spec=this.parameters[name];
+                if (spec===undefined)
+                    continue;
+
+                if (options[name]===spec.value &&
+                        typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                    options[name]=options[spec.value.slice(1)];
+            }
+
+            // Move options into groups and do renames
+            keys=Object.keys(options);
+            for (i=0; i<keys.length; i++) {
+                name=keys[i];
+                spec=this.parameters[name];
+                if (spec===undefined)
+                    continue;
+
+                if (spec.group)  {
+                    if (typeof options[spec.group]!=="object")
+                        options[spec.group]={};
+                    target=options[spec.group];
+                } else
+                    target=options;
+
+                if (spec.dest!==name) {
+                    target[spec.dest]=options[name];
+                    delete options[name];
+                }
+            }
+        },
+
         parse: function($el, options, multiple) {
             if (typeof options==="boolean" && multiple===undefined) {
                 multiple=options;
@@ -294,14 +337,8 @@ define([
                 }
             }
 
-            // Resolve references
-            var name, value, spec;
             for (i=0; i<results.length; i++)
-                for (name in results[i]) {
-                    spec=this.parameters[name];
-                    if (spec && results[i][name]===spec.value && typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
-                        results[i][name]=results[i][spec.value.slice(1)];
-                }
+                this._cleanupOptions(results[i]);
 
             return multiple ? results : results[0];
         }
