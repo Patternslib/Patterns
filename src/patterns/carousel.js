@@ -33,15 +33,15 @@ define([
                 var options = parser.parse($(this), opts),
                     settings = {hashTags: false};
 
-                settings.autoPlay = options.autoPlay;
+                settings.autoPlay = options["auto-play"];
                 settings.stopAtEnd = !options.loop;
                 settings.resizeContents = options.resize;
                 settings.expand = options.expand;
-                settings.buildArrows = options.controlArrows;
-                settings.buildNavigation = options.controlNavigation;
-                settings.buildStartStop = options.controlStartstop;
-                settings.delay = options.timeDelay;
-                settings.animationTime = options.timeAnimation;
+                settings.buildArrows = options["control-arrows"];
+                settings.buildNavigation = options["control-navigation"];
+                settings.buildStartStop = options["control-startstop"];
+                settings.delay = options["time-delay"];
+                settings.animationTime = options["time-animation"];
                 settings.onInitialized = carousel.onInitialized;
                 settings.onSlideInit = carousel.onSlideInit;
 
