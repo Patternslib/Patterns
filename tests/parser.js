@@ -24,6 +24,31 @@ describe("Core / Parser", function() {
         ArgumentParser = cls;
     });
 
+    describe("add_argument", function() {
+        it("Create new group", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("dummy-field", "default");
+            expect("dummy" in parser.groups).toBeTruthy();
+        });
+
+        it("Add argument to sub-parser", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("dummy-field", "default", ["yes", "no"], false);
+            expect(parser.groups.dummy.order).toEqual(["field"]);
+            var spec = parser.groups.dummy.parameters.field;
+            expect(spec.value).toBe("default");
+            expect(spec.choices).toEqual(["yes", "no"]);
+            expect(spec.multiple).toBe(false);
+        });
+
+        it("Preserve argument order", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("dummy-one");
+            parser.add_argument("dummy-two");
+            expect(parser.groups.dummy.order).toEqual(["one", "two"]);
+        });
+    });
+
     describe("_parse", function() {
         describe("Shorthand notation", function() {
             it("Single argument", function() {
