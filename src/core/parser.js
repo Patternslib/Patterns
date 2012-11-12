@@ -22,11 +22,17 @@ define([
     ArgumentParser.prototype = {
         named_param_pattern: /^\s*([a-zA-Z0-9\-]+)\s*:(.*)/,
 
-        add_argument: function(name, default_value, choices) {
+        add_argument: function(name, default_value, choices, multiple) {
             var spec;
 
+            if (!multiple && default_value===undefined)
+                default_value=null;
+            if (multiple && !Array.isArray(default_value))
+                default_value=[default_value];
             spec={name: name,
-                  value: (default_value===undefined) ? null : default_value};
+                  value: default_value,
+                  multiple: multiple};
+
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
                 spec.type=this._typeof(choices[0]);
@@ -42,7 +48,7 @@ define([
                 spec.type=this.parameters[spec.value.slice(1)].type;
             else
                 // Note that this will get reset by _defaults if default_value is a function.
-                spec.type=this._typeof(spec.value);
+                spec.type=this._typeof(multiple ? spec.value[0] : spec.value);
 
             this.order.push(name);
             this.parameters[name]=spec;
@@ -55,15 +61,11 @@ define([
             return type;
         },
 
-        _set: function(opts, name, value) {
-            if (!(name in this.parameters)) {
-                log.debug("Ignoring value for unknown argument " + name);
-                return;
-            }
-
+        _coerce: function(name, value) {
             var spec=this.parameters[name];
-            try {
-                if (typeof value !== spec.type)
+
+            if (typeof value !== spec.type)
+                try {
                     switch (spec.type) {
                         case "boolean":
                             if (typeof value === "string") {
@@ -97,14 +99,28 @@ define([
                         default:
                             throw ("Do not know how to convert value for " + name + " to " + spec.type);
                     }
+                } catch (e) {
+                    log.warn(e);
+                    return null;
+                }
 
-                if (spec.choices && spec.choices.indexOf(value)===-1)
-                    log.warn("Illegal value for " + name + ": " + value);
-                else
-                    opts[name]=value;
-            } catch (e) {
-                log.warn(e);
+            if (spec.choices && spec.choices.indexOf(value)===-1) {
+                log.warn("Illegal value for " + name + ": " + value);
+                return null;
             }
+
+            return value;
+        },
+
+        _set: function(opts, name, value) {
+            if (!(name in this.parameters)) {
+                log.debug("Ignoring value for unknown argument " + name);
+                return;
+            }
+
+            value=this._coerce(name, value);
+            if (value!==null) 
+                opts[name]=value;
         },
 
         _parseExtendedNotation: function(parameter) {
