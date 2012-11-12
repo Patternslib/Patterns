@@ -59,6 +59,7 @@ define([
     'prefixfree',
     './patterns/autofocus',
     './patterns/autosubmit',
+    './patterns/autosubmit2',
     './patterns/autosuggest',
     './patterns/breadcrumbs',
     './patterns/bumper',
