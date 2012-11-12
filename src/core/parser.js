@@ -17,13 +17,15 @@ define([
         this.attribute = "data-pat-" + name;
         this.enum_values = {};
         this.enum_conflicts = [];
+        this.groups = {};
     }
 
     ArgumentParser.prototype = {
-        named_param_pattern: /^\s*([a-zA-Z0-9\-]+)\s*:(.*)/,
+        group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
+        named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
 
         add_argument: function(name, default_value, choices, multiple) {
-            var spec;
+            var spec, m;
 
             if (!multiple && default_value===undefined)
                 default_value=null;
@@ -49,6 +51,14 @@ define([
             else
                 // Note that this will get reset by _defaults if default_value is a function.
                 spec.type=this._typeof(multiple ? spec.value[0] : spec.value);
+
+            m=name.match(this.group_pattern);
+            if (m) {
+                var group=m[1], field=m[2];
+                if (!(group in this.groups))
+                    this.groups[group]=new ArgumentParser();
+                this.groups[group].add_argument(field, default_value, choices, multiple);
+            }
 
             this.order.push(name);
             this.parameters[name]=spec;
