@@ -82,6 +82,22 @@ Parser API
    optionally provide options that will override default values and values
    found on the element.
 
-   In the returned object all argument names with hyphens are
-   converted to camelCase (i.e. the value of a 'next-href' argument
-   can be found at options.nextHref).
+   If you use argument groups (multiple parameters that share a prefix) their
+   options will be returned as a sub-object. For example a parser with
+   these arguments:
+
+   .. code-block:: javascript
+
+       parser.add_argument("selector", ".pattern");
+       parser.add_argument("control-arrows", false);
+       parser.add_argument("control-links", true);
+       parser.add_argument("control-index", false);
+
+   will return an object like this:
+
+   .. code-block:: javascript
+
+       {selector: ".pattern",
+        control: {arrows: false,
+                  links: true,
+                  index: false}}

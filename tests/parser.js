@@ -137,6 +137,14 @@ describe("Core / Parser", function() {
                 var opts = parser._parse("attr: class");
                 expect(opts.attr).toBeUndefined();
             });
+
+            it("Grouped options", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo", false);
+                parser.add_argument("group-bar", true);
+                var opts = parser._parse("group: foo no-bar");
+                expect(opts).toEqual({"group-foo": true, "group-bar": false});
+            });
         });
 
         describe("Mixed notation", function() {
@@ -266,12 +274,21 @@ describe("Core / Parser", function() {
             });
         });
 
-        it("Use cleanupOptions", function() {
+        it("Resolve variable references", function() {
             var parser=new ArgumentParser("mypattern");
             parser.add_argument("value", 15);
             parser.add_argument("other", "$value");
             var opts = parser.parse($());
             expect(opts.other).toBe(15);
+        });
+
+        it("Grouped options", function() {
+            var parser=new ArgumentParser("mypattern"),
+                $content = $("<div data-pat-mypattern='group: y n'/>");
+            parser.add_argument("group-foo", false);
+            parser.add_argument("group-bar", true);
+            var opts = parser.parse($content);
+            expect(opts).toEqual({group: {foo: true, bar: false}});
         });
 
 
