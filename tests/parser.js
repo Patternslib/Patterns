@@ -24,6 +24,31 @@ describe("Core / Parser", function() {
         ArgumentParser = cls;
     });
 
+    describe("add_argument", function() {
+        it("Create new group", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("dummy-field", "default");
+            expect("dummy" in parser.groups).toBeTruthy();
+        });
+
+        it("Add argument to sub-parser", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("dummy-field", "default", ["yes", "no"], false);
+            expect(parser.groups.dummy.order).toEqual(["field"]);
+            var spec = parser.groups.dummy.parameters.field;
+            expect(spec.value).toBe("default");
+            expect(spec.choices).toEqual(["yes", "no"]);
+            expect(spec.multiple).toBe(false);
+        });
+
+        it("Preserve argument order", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("dummy-one");
+            parser.add_argument("dummy-two");
+            expect(parser.groups.dummy.order).toEqual(["one", "two"]);
+        });
+    });
+
     describe("_parse", function() {
         describe("Shorthand notation", function() {
             it("Single argument", function() {
@@ -112,6 +137,14 @@ describe("Core / Parser", function() {
                 var opts = parser._parse("attr: class");
                 expect(opts.attr).toBeUndefined();
             });
+
+            it("Grouped options", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo", false);
+                parser.add_argument("group-bar", true);
+                var opts = parser._parse("group: foo no-bar");
+                expect(opts).toEqual({"group-foo": true, "group-bar": false});
+            });
         });
 
         describe("Mixed notation", function() {
@@ -127,13 +160,6 @@ describe("Core / Parser", function() {
                 expect(opts.buzz).toBe(undefined);
                 expect(opts.boo).toBe("blue");
             });
-        });
-
-        it("camelCase parameter names", function() {
-            var parser=new ArgumentParser();
-            parser.add_argument("time-delay");
-            var opts = parser._parse("15");
-            expect(opts.timeDelay).toBeDefined();
         });
     });
     
@@ -241,32 +267,23 @@ describe("Core / Parser", function() {
             });
         });
 
-        describe("Variable references", function() {
-            it("Basic reference", function() {
-                var parser=new ArgumentParser("mypattern");
-                parser.add_argument("value", 15);
-                parser.add_argument("other", "$value");
-                var opts = parser.parse($());
-                expect(opts.other).toBe(15);
-            });
-
-            it("Coerce to referenced type", function() {
-                var parser=new ArgumentParser("mypattern");
-                parser.add_argument("value", 15);
-                parser.add_argument("other", "$value");
-                var $content = $("<div data-pat-mypattern='other: 32'/>");
-                var opts = parser.parse($content);
-                expect(opts.other).toBe(32);
-            });
-
-            it("Do not follow $ in value", function() {
-                var parser=new ArgumentParser("mypattern");
-                parser.add_argument("value", 15);
-                parser.add_argument("other");
-                var opts = parser.parse($(), {other: "$value"});
-                expect(opts.other).toBe("$value");
-            });
+        it("Resolve variable references", function() {
+            var parser=new ArgumentParser("mypattern");
+            parser.add_argument("value", 15);
+            parser.add_argument("other", "$value");
+            var opts = parser.parse($());
+            expect(opts.other).toBe(15);
         });
+
+        it("Grouped options", function() {
+            var parser=new ArgumentParser("mypattern"),
+                $content = $("<div data-pat-mypattern='group: y n'/>");
+            parser.add_argument("group-foo", false);
+            parser.add_argument("group-bar", true);
+            var opts = parser.parse($content);
+            expect(opts).toEqual({group: {foo: true, bar: false}});
+        });
+
 
         it("Coerce to type from default function", function() {
             var parser=new ArgumentParser("mypattern"),
@@ -295,6 +312,125 @@ describe("Core / Parser", function() {
         });
     });
 
+    describe("_coerce", function() {
+        describe("Enum handling", function() {
+            it("Valid value", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", "red",  ["red", "blue", "green"]);
+                expect(parser._coerce("value", "red")).toBe("red");
+            });
+
+            it("Unknown value", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", "red",  ["red", "blue", "green"]);
+                expect(parser._coerce("value", "pink")).toBe(null);
+            });
+
+            it("Coercion for enum values", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", 5, [1, 3, 5, 10]);
+                expect(parser._coerce("value", "3")).toBe(3);
+            });
+        });
+
+        describe("Convert to boolean", function() {
+            it("String with non-zero number", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", false);
+                expect(parser._coerce("value", "1")).toBe(true);
+            });
+
+            it("String with uppercase bool", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", false);
+                expect(parser._coerce("value", "TRUE")).toBe(true);
+            });
+
+            it("String with mixed-case yes", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", false);
+                expect(parser._coerce("value", "YeS")).toBe(true);
+            });
+
+            it("String with zero number", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", false);
+                expect(parser._coerce("value", "0")).toBe(false);
+            });
+
+            it("String with mixed-case false", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", false);
+                expect(parser._coerce("value", "False")).toBe(false);
+            });
+
+            it("String with n", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", false);
+                expect(parser._coerce("value", "n")).toBe(false);
+            });
+
+            it("String with unknown value", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", false);
+                expect(parser._coerce("value", "unknown")).toBe(false);
+            });
+        });
+
+        describe("Convert to number", function() {
+            it("False boolean", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", 15);
+                expect(parser._coerce("value", false)).toBe(0);
+            });
+
+            it("True boolean", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", 15);
+                expect(parser._coerce("value", true)).toBe(1);
+            });
+
+            it("String with positive number", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", 15);
+                expect(parser._coerce("value", "1")).toBe(1);
+            });
+
+            it("String with zero number", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", 0);
+                expect(parser._coerce("value", "0")).toBe(0);
+            });
+
+            it("Always use decimal notation for numbers", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", 0);
+                expect(parser._coerce("value", "010")).toBe(10);
+            });
+
+            it("String with invalid", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", 0);
+                expect(parser._coerce("value", "ZZ")).toBe(null);
+            });
+        });
+
+        describe("Convert to string", function() {
+            it("Boolean", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", "value");
+                expect(parser._coerce("value", true)).toBe("true");
+            });
+
+            it("Number", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("value", "value");
+                expect(parser._coerce("value", 15)).toBe("15");
+            });
+        });
+
+    });
+
     describe("_set", function() {
         it("Ignore unknown parameter", function() {
             var parser=new ArgumentParser(),
@@ -303,158 +439,104 @@ describe("Core / Parser", function() {
             expect(opts).toEqual({});
         });
 
-        describe("Enum handling", function() {
-            it("Valid value", function() {
+        describe("Singular parameters", function() {
+            it("Do type coercion", function() {
                 var parser=new ArgumentParser(),
                     opts={};
-                parser.add_argument("value", "red",  ["red", "blue", "green"]);
-                parser._set(opts, "value", "red");
-                expect(opts.value).toBe("red");
-            });
-
-            it("Unknown value", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", "red",  ["red", "blue", "green"]);
-                parser._set(opts, "value", "pink");
-                expect(opts.value).toBe(undefined);
-            });
-
-            it("Coercion for enum values", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", 5, [1, 3, 5, 10]);
-                parser._set(opts, "value", "3");
-                expect(opts.value).toBe(3);
-            });
-        });
-
-        describe("Convert to boolean", function() {
-            it("String with non-zero number", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", false);
+                parser.add_argument("value", 1);
+                spyOn(parser, "_coerce").andReturn("coerced!");
                 parser._set(opts, "value", "1");
-                expect(opts.value).toBe(true);
+                expect(parser._coerce).toHaveBeenCalledWith("value", "1");
+                expect(opts.value).toBe("coerced!");
             });
 
-            it("String with uppercase bool", function() {
+            it("Abort if coercion fails", function() {
                 var parser=new ArgumentParser(),
                     opts={};
-                parser.add_argument("value", false);
-                parser._set(opts, "value", "TRUE");
-                expect(opts.value).toBe(true);
-            });
-
-            it("String with mixed-case yes", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", false);
-                parser._set(opts, "value", "YeS");
-                expect(opts.value).toBe(true);
-            });
-
-            it("String with zero number", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", false);
-                parser._set(opts, "value", "0");
-                expect(opts.value).toBe(false);
-            });
-
-            it("String with mixed-case false", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", false);
-                parser._set(opts, "value", "False");
-                expect(opts.value).toBe(false);
-            });
-
-            it("String with n", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", false);
-                parser._set(opts, "value", "n");
-                expect(opts.value).toBe(false);
-            });
-
-            it("String with unknown value", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", false);
-                parser._set(opts, "value", "unknown");
-                expect(opts.value).toBe(false);
-            });
-        });
-
-        describe("Convert to number", function() {
-            it("False boolean", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", 15);
-                parser._set(opts, "value", false);
-                expect(opts.value).toBe(0);
-            });
-
-            it("True boolean", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", 15);
-                parser._set(opts, "value", true);
-                expect(opts.value).toBe(1);
-            });
-
-            it("String with positive number", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", 15);
+                parser.add_argument("value", 1);
+                spyOn(parser, "_coerce").andReturn(null);
                 parser._set(opts, "value", "1");
-                expect(opts.value).toBe(1);
-            });
-
-            it("String with zero number", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", 0);
-                parser._set(opts, "value", "0");
-                expect(opts.value).toBe(0);
-            });
-
-            it("Always use decimal notation for numbers", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", 0);
-                parser._set(opts, "value", "010");
-                expect(opts.value).toBe(10);
-            });
-
-            it("String with invalid", function() {
-                var parser=new ArgumentParser(),
-                    opts={};
-                parser.add_argument("value", 0);
-                parser._set(opts, "value", "ZZ");
                 expect(opts.value).toBe(undefined);
             });
         });
 
-        describe("Convert to string", function() {
-            it("Boolean", function() {
+        describe("Multiple parameters", function() {
+            it("Split on comma", function() {
                 var parser=new ArgumentParser(),
                     opts={};
-                parser.add_argument("value", "value");
-                parser._set(opts, "value", true);
-                expect(opts.value).toBe("true");
+                parser.add_argument("value", [], null, true);
+                parser._set(opts, "value", "foo,bar,buz");
+                expect(opts.value).toEqual(["foo", "bar", "buz"]);
             });
 
-            it("Number", function() {
+            it("Do type coercion", function() {
                 var parser=new ArgumentParser(),
                     opts={};
-                parser.add_argument("value", "value");
-                parser._set(opts, "value", 15);
-                expect(opts.value).toBe("15");
+                parser.add_argument("value", [1], null, true);
+                spyOn(parser, "_coerce").andReturn("coerced!");
+                parser._set(opts, "value", "1");
+                expect(parser._coerce).toHaveBeenCalledWith("value", "1");
+                expect(opts.value).toEqual(["coerced!"]);
+            });
+
+            it("Ignored values that can not be coerced", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 1);
+                spyOn(parser, "_coerce").andReturn(null);
+                parser._set(opts, "value", "1");
+                expect(opts.value).toBe(undefined);
+            });
+        });
+    });
+
+    describe("_cleanupOptions", function() {
+        describe("Variable references", function() {
+            it("Basic reference", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value", 15);
+                parser.add_argument("other", "$value");
+                var opts = {value: 20, other: "$value"};
+                parser._cleanupOptions(opts);
+                expect(opts.other).toBe(20);
+            });
+
+            it("Do not follow $ in value", function() {
+                var parser=new ArgumentParser("mypattern");
+                parser.add_argument("value", 15);
+                parser.add_argument("other");
+                var opts = {value: 20, other: "$value"};
+                parser._cleanupOptions(opts);
+                expect(opts.other).toBe("$value");
             });
         });
 
+        describe("Option grouping", function() {
+            it("Create new group", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo");
+                var opts = {"group-foo": 15};
+                parser._cleanupOptions(opts);
+                expect(opts).toEqual({group: {foo: 15}});
+            });
+
+            it("Multiple values in group", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo");
+                parser.add_argument("group-bar");
+                var opts = {"group-foo": 15, "group-bar": 20};
+                parser._cleanupOptions(opts);
+                expect(opts).toEqual({group: {foo: 15, bar:20}});
+            });
+
+            it("Extend existing group", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("group-foo");
+                var opts = {"group-foo": 15, group: {bar: 20}};
+                parser._cleanupOptions(opts);
+                expect(opts).toEqual({group: {foo: 15, bar:20}});
+            });
+        });
     });
 });
 

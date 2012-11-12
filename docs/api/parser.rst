@@ -43,11 +43,12 @@ Parser API
    right attribute to parse for elements.
 
 
-.. js:function:: ArgumentParser.add_argument(name[, default[, choices]])
+.. js:function:: ArgumentParser.add_argument(name[, default[, choices[, multiple]]])
 
    :param string name: argument name
    :param default: default value
    :param array choice: list of acceptable values
+   :param multiple: boolean flag indicating if argument is a list of values
 
    Register a new argument. The default value will be used if no value was
    found during parsing, and is used to determine what data type should be
@@ -80,3 +81,24 @@ Parser API
    This method returns the configuration for a pattern from an object. You can
    optionally provide options that will override default values and values
    found on the element.
+
+   If you use argument groups (multiple parameters that share a prefix) their
+   options will be returned as a sub-object. For example a parser with
+   these arguments:
+
+   .. code-block:: javascript
+
+       parser.add_argument("selector", ".pattern");
+       parser.add_argument("control-arrows", false);
+       parser.add_argument("control-links", true);
+       parser.add_argument("control-index", false);
+
+   will return an object like this:
+
+   .. code-block:: javascript
+
+       {selector: ".pattern",
+        control: {arrows: false,
+                  links: true,
+                  index: false}}
+

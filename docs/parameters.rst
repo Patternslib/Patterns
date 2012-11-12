@@ -122,6 +122,65 @@ The above example uses this mechanism to indicate that all ``#main`` is to
 be extracted and placed into ``#content`` for all links.
 
 
+Multiple values
+---------------
+
+Some parameters take a list of values instead of a single value. An example is
+the tooltip pattern where you can specify multiple locations where the tooltip
+should be positioned. In these cases you specify multiple values by separating
+them with a comma.
+
+.. code-block:: html
+
+  <a class="tooltip" data-pat-tooltip="position: tl,tm,tr" title="Tooltip content">
+    ...
+  </a>
+
+
+Option groups
+-------------
+
+Sometimes a pattern has multiple related options. For example the navigation
+pattern has a set of flags which determine how navigation controls should be
+handled. This can already be done by specifying each option separately:
+
+.. code-block:: html
+
+  <div data-pat-navigation="control-startstop: true; control-nav: true">...</div>
+
+but the option group syntax allows you to use a simpler notation:
+
+.. code-block:: html
+
+  <div data-pat-navigation="control: startstop control-nav">...</div>
+
+This grouping is supported for all parameters that have the same *prefix*: a group
+name followed by a dash (``-``).
+
+Please note that this is still a grouping of options, which means that options
+set at a higher level are inherited. For example with this markup:
+
+.. code-block:: html
+
+  <div data-pat-navigation="controls: startstop">
+    <div data-pav-navigation="controls: nav">
+      ...
+    </div>
+  </div>
+
+at the inner ``div`` both *startstop* and *nav* would be enabled. If you do not want
+that you need to explicitly unset the *startstop*:
+
+.. code-block:: html
+
+  <div data-pat-navigation="control: startstop">
+    <div data-pav-navigation="control: no-startstop nav">
+      ...
+    </div>
+  </div>
+
+
+
 Multiple parameters
 -------------------
 
