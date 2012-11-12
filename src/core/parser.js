@@ -13,7 +13,6 @@ define([
 
     function ArgumentParser(name) {
         this.order = [];
-        this.mappings = {};
         this.parameters = {};
         this.attribute = "data-pat-" + name;
         this.enum_values = {};
@@ -24,8 +23,7 @@ define([
         named_param_pattern: /^\s*([a-zA-Z0-9\-]+)\s*:(.*)/,
 
         add_argument: function(name, default_value, choices) {
-            var js_name = name.replace(/\-([a-z])/g, function(_,p1){return p1.toUpperCase();}),
-                spec;
+            var spec;
 
             spec={name: name,
                   value: (default_value===undefined) ? null : default_value};
@@ -39,7 +37,7 @@ define([
                         this.enum_conflicts.push(choices[i]);
                         delete this.enum_values[choices[i]];
                     } else
-                        this.enum_values[choices[i]]=js_name;
+                        this.enum_values[choices[i]]=name;
             } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                 spec.type=this.parameters[spec.value.slice(1)].type;
             else
@@ -47,8 +45,7 @@ define([
                 spec.type=this._typeof(spec.value);
 
             this.order.push(name);
-            this.mappings[name]=js_name;
-            this.parameters[js_name]=spec;
+            this.parameters[name]=spec;
         },
 
         _typeof: function(obj) {
@@ -124,11 +121,11 @@ define([
                     log.warn("Invalid parameter: " + parts[i]);
                     break;
                 }
-                if (this.parameters[this.mappings[matches[1]]] === undefined) {
+                if (this.parameters[matches[1]] === undefined) {
                     log.warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
-                this._set(opts, this.mappings[matches[1]], matches[2].trim());
+                this._set(opts, matches[1], matches[2].trim());
             }
 
             return opts;
@@ -150,14 +147,14 @@ define([
                     sense=true;
                     flag=part;
                 }
-                if (flag in this.mappings && this.parameters[this.mappings[flag]].type==="boolean") {
+                if (flag in this.parameters && this.parameters[flag].type==="boolean") {
                     positional=false;
-                    this._set(opts, this.mappings[flag], sense);
+                    this._set(opts, flag, sense);
                 } else if (flag in this.enum_values) {
                     positional=false;
                     this._set(opts, this.enum_values[flag], flag);
                 } else if (positional)
-                    this._set(opts, this.mappings[this.order[i]], part);
+                    this._set(opts, this.order[i], part);
                 else {
                     parts.unshift(part);
                     break;
