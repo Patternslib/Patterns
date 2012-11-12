@@ -422,23 +422,54 @@ describe("Core / Parser", function() {
             expect(opts).toEqual({});
         });
 
-        it("Do type coercion", function() {
-            var parser=new ArgumentParser(),
-                opts={};
-            parser.add_argument("value", 1);
-            spyOn(parser, "_coerce").andReturn("coerced!");
-            parser._set(opts, "value", "1");
-            expect(parser._coerce).toHaveBeenCalledWith("value", "1");
-            expect(opts.value).toBe("coerced!");
+        describe("Singular parameters", function() {
+            it("Do type coercion", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 1);
+                spyOn(parser, "_coerce").andReturn("coerced!");
+                parser._set(opts, "value", "1");
+                expect(parser._coerce).toHaveBeenCalledWith("value", "1");
+                expect(opts.value).toBe("coerced!");
+            });
+
+            it("Abort if coercion fails", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 1);
+                spyOn(parser, "_coerce").andReturn(null);
+                parser._set(opts, "value", "1");
+                expect(opts.value).toBe(undefined);
+            });
         });
 
-        it("Abort if coercion fails", function() {
-            var parser=new ArgumentParser(),
-                opts={};
-            parser.add_argument("value", 1);
-            spyOn(parser, "_coerce").andReturn(null);
-            parser._set(opts, "value", "1");
-            expect(opts.value).toBe(undefined);
+        describe("Multiple parameters", function() {
+            it("Split on comma", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", [], null, true);
+                parser._set(opts, "value", "foo,bar,buz");
+                expect(opts.value).toEqual(["foo", "bar", "buz"]);
+            });
+
+            it("Do type coercion", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", [1], null, true);
+                spyOn(parser, "_coerce").andReturn("coerced!");
+                parser._set(opts, "value", "1");
+                expect(parser._coerce).toHaveBeenCalledWith("value", "1");
+                expect(opts.value).toEqual(["coerced!"]);
+            });
+
+            it("Ignored values that can not be coerced", function() {
+                var parser=new ArgumentParser(),
+                    opts={};
+                parser.add_argument("value", 1);
+                spyOn(parser, "_coerce").andReturn(null);
+                parser._set(opts, "value", "1");
+                expect(opts.value).toBe(undefined);
+            });
         });
     });
 });

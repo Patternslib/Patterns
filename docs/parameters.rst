@@ -122,6 +122,22 @@ The above example uses this mechanism to indicate that all ``#main`` is to
 be extracted and placed into ``#content`` for all links.
 
 
+Multiple values
+---------------
+
+Some parameters take a list of values instead of a single value. An example is
+the tooltip pattern where you can specify multiple locations where the tooltip
+should be positioned. In these cases you specify multiple values by separating
+them with a comma.
+
+.. code-block:: html
+
+  <a class="tooltip" data-pat-tooltip="position: tl,tm,tr" title="Tooltip content">
+    ...
+  </a>
+
+
+
 Multiple parameters
 -------------------
 
