@@ -168,11 +168,16 @@ define([
                 var name = matches[1],
                     value = matches[2].trim();
 
-                if (this.parameters[name] === undefined) {
+                if (name in this.parameters)
+                    this._set(opts, name, value);
+                else if (name in this.groups) {
+                    var subopt = this.groups[name]._parseShorthandNotation(value);
+                    for (var field in subopt)
+                        this._set(opts, name+"-"+field, subopt[field]);
+                } else {
                     log.warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
-                this._set(opts, name, value);
             }
 
             return opts;
