@@ -1,55 +1,88 @@
 Autosubmit forms
 ================
 
+The autosubmit pattern submits a form if a form element changes. It is
+enabled by class "pat-autosubmit" for individual form elements, on
+grouping elements for all elements in the group, and on forms for all
+elements of the form.
+
+Only one element:
+
 .. code-block:: html
 
   <form>
-    <input name="q" data-pat-autosubmit=""/>
+    <input class="pat-autosubmit" type="text" name="q" placeholder="Search query"/>
   </form>
 
-This will autosubmit the form as soon as the *q* input field is changed. This
-may not be desirable: often you want to delay a little bit to allow a user to
-finish typing or making changes. You can configure this by adding a delay:
-
-.. code-block:: html
+On a fieldset:
 
   <form>
-    <input name="q" data-pat-autosubmit="delay"/>
-  </form>
- 
-You can also configure the delay explicitly by specifying a timeout in milliseconds:
-
-.. code-block:: html
-
-  <form>
-    <input name="q" data-pat-autosubmit="500"/>
+    <fieldset class="pat-autosubmit">
+     <input type="text" name="q" placeholder="Search query"/>
+     <label><input type="checkbox" name="local"/> Only search in this section</label>
+   </fieldset>
   </form>
 
+And on the form:
 
-If you want to trigger form submission for multiple, or even all, elements in a
-form you can do so by setting ``data-pat-autosubmit`` on grouping element.
-
-.. code-block:: html
-
-  <form>
-    <fieldset data-submit="delay">
+  <form class="pat-autosubmit">
+    <fieldset>
      <input type="text" name="q" placeholder="Search query"/>
      <label><input type="checkbox" name="local"/> Only search in this section</label>
    </fieldset>
   </form>
 
 
+What constitutes a change
+-------------------------
+
+While for a checkbox a change is clearly defined as uncheck/check, for
+input fields there are more options.
+
+Without configuration, a change will be detected 400ms after the last
+keypress in an input field. Naturally, if two keypresses are more than
+400ms apart, two submits will be triggered.
+
+You can configure this behaviour with the delay option.
+
+no delay:
+
+.. code-block:: html
+
+  <form>
+    <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 0"/>
+  </form>
+
+longer delay:
+
+.. code-block:: html
+
+  <form>
+    <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 1000"/>
+  </form>
+
+delay until element loses focus:
+
+.. code-block:: html
+
+  <form>
+    <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: defocus"/>
+  </form>
+
+XXX: defocus does not work yet
+
+
 Combining with injection
 ------------------------
 
-Autosubmit is most useful when combining with injection. This makes it trivial
-to create a form that automatically loads content and displays it on the page.
-Here is a minimal search page:
+Autosubmit is most useful when combined with injection. This makes it
+trivial to create a form that automatically loads content and displays
+it on the page. Here is a minimal search page:
 
 .. code-block:: html
    :linenos:
 
-   <form data-pat-autosubmit="delay" action="/search" data-injection="#results:content">
+   <form class="pat-inject pat-autosubmit" action="/search" data-pat-inject="target: #results">
      <input type="text" name="q" placeholder="Search query"/>
      <label><input type="checkbox" name="local"/> Only search in this section</label>
    </form>
@@ -62,34 +95,3 @@ As soon as the user starts entering text in the search field or changes the
 local-search toggle search requests will send to the server and the results
 will be inserted into the existing page by replacing the content of the
 *results* section.
-
-
-Javascript API
---------------
-
-The javascript API is entirely optional since patterns already autmoatically
-enables the autosubmit behaviour for all elements with a ``data-pat-autosubmit``
-attribute.
-
-
-.. js:function:: jQuery.patternAutosubmit([options])
-
-   :param options: one or more objects describing triggers to execute
-
-   Setup switching behaviour for the selected elements. If no options are
-   provided they are taken from the ``data-pat-autosubmit`` attributes. Options
-   can be provided as a (array of) javascript object(s) with he following
-   keys:
-
-   * ``delay``: how long to delay submissions (in milliseconds). If not
-      provided no delay will be used.
-
-
-   .. code-block:: javascript
-
-      $("form").patternAutosubmit({delay: 500});
-
-
-.. js:function:: jQuery.patternAutosubmit("destroy")
-
-   Disable all autosubmit behaviour for the matched elements.
