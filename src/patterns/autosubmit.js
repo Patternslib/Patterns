@@ -8,6 +8,9 @@ define([
 ], function ($, patterns, logging, Parser, utils) {
     "use strict";
 
+    //NOTE: delete this comment
+    //keyup can be enabled by default if there is a way to deactivate. - not done yet
+
     var DELAY_KEYUP_MS = 400,
         autosubmit,     // pattern specification object
         log = logging.getLogger("autosubmit"),
