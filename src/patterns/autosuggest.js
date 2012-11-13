@@ -25,21 +25,15 @@ define([
         name: 'autosuggest',
         trigger: "input.pat-autosuggest",
         init: function($el, opts) {
-            if ($el.length > 1) {
-                return $el.map(function() {
-                    return _.init($(this), opts);
-                });
-            }
+            if ($el.length > 1)
+                return $el.each(function() { _.init($(this), opts); });
 
-            // fetch config from first parent found
             var cfg = _.parser.parse($el, opts);
-            if ($el.attr('readonly')) {
+            if ($el.attr('readonly'))
                 cfg.startText = "";
-            }
 
-            if (cfg.preFill && (cfg.preFill.slice(0,1) === ',')) {
+            if (cfg.preFill && (cfg.preFill.slice(0,1) === ','))
                 cfg.preFill = cfg.preFill.slice(1);
-            }
 
             $el.on('keydown.pat-autosuggest', _.onKeyDown);
 
