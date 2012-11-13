@@ -40,7 +40,12 @@ define([
                     .on("keyup.pat-autosubmit", submit);
             }
 
-            // XXX: test whether on webkit and enable only if supported
+            // XXX: test whether on webkit and enable only if
+            // supported
+            //
+            // XXX: this should be handled by writing code that
+            // triggers a change event in case the "Clear field
+            // button" inside the search is pressed
             ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
                 .on("click.pat-autosubmit", _.considerSubmit);
 
