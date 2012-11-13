@@ -7,8 +7,8 @@
 		<link rel="stylesheet" href="autosubmit.css" type="text/css">
 	</head>
 	<body>
-		<form action="pattern-test-response.html#paragraphs" data-injection="#main-content:content" class="concise" data-autosubmit="">
-			<fieldset>
+		<form action="pattern-test-response.html#paragraphs" data-pat-inject="target: #main-content" class="concise pat-inject">
+			<fieldset class="pat-autosubmit">
 				<label>
 					Take your pick
 					<select>
@@ -28,7 +28,8 @@
 					<label><input type="radio" name="radio" /> Banana</label>
 					<label><input type="radio" name="radio" /> Raspberry</label>
 				</fieldset>
-				<label>Free text field triggers when field loses focus <input type="text" name="myFreeField" /></label>
+				<label>Free text field triggers with delay <input type="text" name="keyup" class="pat-autosubmit"/></label>
+				<label>Free text field triggers when field loses focus <input type="text" name="defocus" class="pat-autosubmit" data-pat-autosubmit="defocus" /></label>
 			</fieldset>
 		</form>
 		<hr/>
