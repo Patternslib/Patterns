@@ -28,7 +28,9 @@ describe("Core / Parser", function() {
         it("Create new group", function() {
             var parser = new ArgumentParser();
             parser.add_argument("dummy-field", "default");
+            parser.add_argument("dummy-field-two", "default");
             expect("dummy" in parser.groups).toBeTruthy();
+            expect(parser.groups.dummy.order).toEqual(["field", "field-two"]);
         });
 
         it("Add argument to sub-parser", function() {
@@ -279,9 +281,26 @@ describe("Core / Parser", function() {
             var parser=new ArgumentParser("mypattern"),
                 $content = $("<div data-pat-mypattern='group: y n'/>");
             parser.add_argument("group-foo", false);
-            parser.add_argument("group-bar", true);
+            parser.add_argument("group-bar-baz", true);
             var opts = parser.parse($content);
-            expect(opts).toEqual({group: {foo: true, bar: false}});
+            // XXX: which one should it be? I feel the first, least
+            // confusion and I doubt we need the groups as objects to
+            // be passed around
+            expect(opts).toEqual({"group-foo": true, "group-bar-baz": false});
+            expect(opts).toEqual({group: {foo: true, "bar-baz": false}});
+            expect(opts).toEqual({group: {foo: true, bar: {baz: false}}});
+        });
+
+        it("Jquery options for grouped options", function() {
+            var parser=new ArgumentParser("mypattern"),
+                $content = $("<div data-pat-mypattern='group: 1 2'/>");
+            parser.add_argument("group-foo", 0);
+            parser.add_argument("group-bar-baz", 0);
+            var opts = parser.parse($content, {"group-foo": 10,
+                                               "group-bar-baz": 20});
+            // XXX: adjust depending on what we decide for "Grouped options"
+            expect(opts.group.foo).toBe(10);
+            expect(opts.group["bar-baz"]).toBe(20);
         });
 
 
