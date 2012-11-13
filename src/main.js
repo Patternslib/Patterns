@@ -59,7 +59,7 @@ define([
     './patterns/autosubmit2',
     './patterns/autosuggest',
     './patterns/breadcrumbs',
-	'./patterns/bumper',
+    './patterns/bumper',
     './patterns/carousel',
     './patterns/checkedflag',
     './patterns/checklist',
