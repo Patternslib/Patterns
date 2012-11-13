@@ -2,32 +2,59 @@ define([
     "jquery",
     '../registry',
     '../core/logging',
+    '../core/parser',
     '../utils'
-], function($, registry, logging, utils) {
-    var log = logging.getLogger('autosubmit');
+], function($, registry, logging, Parser, utils) {
+    var log = logging.getLogger('autosubmit'),
+        parser = new Parser("autosubmit");
+
+    // XXX: would be great if the parser would handle validation and
+    // interpretation of boolean values:
+    // - integer >=0
+    // - false -> delay=0
+    // - true -> delay=default
+    // - string "defocus"
+    parser.add_argument("delay", 400);
 
     var _ = {
-        name: "autosubmit2",
-        trigger: ".pat-autosubmit2, .pat-autosubmit2-keyup",
-        init: function($el) {
-            return $el.each(function() {
-                var $el = $(this);
+        name: "autosubmit",
+        trigger: ".pat-autosubmit",
+        init: function($el, opts) {
+            if ($el.length > 1)
+                return $el.each(function() { _.init($(this), opts); });
 
-                // submit if a (specific) form element changed
-                $el.on("change.pat-autosubmit2", _.submit);
+            // submit if a (specific) form element changed
+            $el.on("change.pat-autosubmit", _.considerSubmit);
 
-                // debounced keyup submit, if enabled
-                if ($el.hasClass('pat-autosubmit2-keyup')) {
-                    ($el.is('input') ? $el : $el.find('input'))
-                        .on("keyup.pat-autosubmit2", utils.debounce(_.submit, 400));
-                }
+            var cfg = parser.parse($el, opts);
 
-                // XXX: test whether on webkit and enable only if supported
-                ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
-                    .on("click.pat-autosubmit2", _.submit);
-            });
+            // XXX: defocus currently does not work as the parser
+            // returns the default value instead.
+            if (cfg.delay !== "defocus") {
+                var submit = _.considerSubmit;
+                if (cfg.delay === true)
+                    cfg.delay = 400;
+                if (cfg.delay)
+                    submit = utils.debounce(_.considerSubmit, cfg.delay);
+                ($el.is('input') ? $el : $el.find('input'))
+                    .on("keyup.pat-autosubmit", submit);
+            }
+
+            // XXX: test whether on webkit and enable only if supported
+            ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
+                .on("click.pat-autosubmit", _.considerSubmit);
+
+            return $el;
         },
-        submit: function(ev) {
+        parser: parser,
+        destroy: function($el) {
+            $el.off('.pat-autosubmit');
+            $el.find('input').off('.pat-autosubmit');
+        },
+        considerSubmit: function(ev) {
+            // XXX: check that the very same event did not submit the
+            // form already (see below)
+
             var $el = $(this),
                 $form = $el.is('form') ? $el : $el.parents('form').first();
 
@@ -42,20 +69,24 @@ define([
                 // clicking X on type=search deletes data attrs,
                 // therefore we store the old value on the form.
                 var name = $el.attr('name'),
-                    key = name + '-autosubmit-oldvalue',
+                    key = 'pat-autosubmit-' + name + '-oldvalue',
                     oldvalue = $form.data(key) || "",
                     curvalue = $el[0].value || "";
 
-                if (!name) {
+                if (!name)
                     log.warn('type=search without name, will be a problem' +
                              ' if there are multiple', $el);
-                }
-                if (oldvalue === curvalue) return;
+
+                if (oldvalue === curvalue)
+                    return;
 
                 $form.data(key, curvalue);
             }
 
             log.debug("triggered by " + ev.type);
+
+            // XXX: mark event as used so we won't submit through a
+            // parent element again.
 
             $form.submit();
         }
