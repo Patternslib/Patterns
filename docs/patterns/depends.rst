@@ -39,53 +39,85 @@ Another common use case is filtering a list based on some options:
    </ul>
 
 
-Specifying dependencies
------------------------
+Dependency expressions
+----------------------
 
-Dependencies are specified via one or dependencies specified in the
-``data-pat-depends-*`` attribute on an element. In the simplest form these take a
-``<input name>`` form which indicates that an input element with the given name
-must have a value (or if it is a checkbox must be checked). Other conditions
-are possible by specifying extra conditions:
+Dependencies are specified via *dependency expression*. These are expressions
+that specify when an item should be visible or not.
 
-* ``<input name> on``: indicates that an element name must have
-  a value, or if; it is a checkbox must be checked. This is the default
-  behaviour.
-* ``<input name> off``: indicates that an element name must *not*
-  have a value, ;or if it is a checkbox must be unchecked.
-* ``<input name> equals <value>``: indicates that an input element
-  must have a sp;ecific; value. This is most useful when used to check with
-  radio button is selected.
-* ``<input name> notEquals <value>``: indicates that an input element
-  must have a no;t specifi;c value. This is most useful when used to check with
-  radio button is selected.
+The simplest form of a dependency expression is ``<input name>`` which
+indicates that an input element with the given name (or id) must have a value
+(if it is a checkbox must be checked). You can also test for a specifyc value:
 
+* ``<input name>=<value>``: indicates that an input element must have a
+  specific value. This is most useful when used to check which radio button is
+  checked.
+* ``<input name>!=<value>``: indicates that an input element must have a not
+  specific value. This is most useful when used to check if a specific radio
+  button is not checked.
+* ``<input name> <= <value>``: indicates that an input element must have a value
+  less than or equal than the given value. This is most useful for number and range
+  inputs.
+* ``<input name> < <value>``: indicates that an input element must have a value
+  less than the given value. This is most useful for number and range inputs.
+  inputs.
+* ``<input name> > <value>``: indicates that an input element must have a value
+  greater than the given value. This is most useful for number and range
+  inputs.  inputs.
+* ``<input name> >= <value>``: indicates that an input element must have a value
+  greater than or equal than the given value. This is most useful for number
+  and range inputs.
 
-If you specify multiple dependencies by seperating them with `&&`
-they must all be match. This can be changed with by specifying a
-type in the first argument. . The support values are:
-
-* ``and``: all dependencies must be met (default).
-* ``or``: only one of the specified dependencies needs to be fullfilled
+You can also revert a test by putting the ``not`` keyword in front of it. Here
+are some examples:
 
 .. code-block:: html
 
-   <button data-pat-depends="name: id; type: or && title">Submit</button>
+   <input type="checkbox" name="hidden"/>
+   <p class="pat-depends" data-pat-depends="condition:hidden">Hidden items will be included.</p>
+   <p class="pat-depends" data-pat-depends="condition:not hidden">Not showing hidden items.</p>
 
-This creates a button which is only visible if either a title or an id has
-been provided.
+   <input type="range" name="price" value="50"/>
+   <p class="pat-depends" data-pat-depends="price<100">Showing cheap options.</p>
+
+You can also combine multiple tests using ``and`` and ``or``, optionally using
+parenthesis to specify the desired grouping. Here is a more complex example that
+showing use of ``and``.
+
+.. code-block:: html
+
+   <fieldset>
+     <legend>Select your flavour</legend>
+     <label><input type="radio" name="flavour" value="hawaii"/> Hawaii</label>
+     <label><input type="radio" name="flavour" value="meat"/> Meatfest </label>
+     <label><input type="radio" name="flavour" value="veg"/> Vegeration </label>
+     <label><input type="checkbox" name="custom"/> Add extra ingredients</label>
+   </fieldset>
+
+   <fieldset class="pat-depends" data-pat-depends="custom">
+     <legend>Select custom ingredients</legend>
+     <label><input type="checkbox" name="cheese"/> Extra cheese</label>
+     <label><input type="checkbox" name="bacon"/> Bacon</label>
+   </fieldset>
+
+   <em class="warning pat-depends"
+       data-pata-depends="condition:flavour=veg and custom and bacon">
+     Adding bacon means your pizza is no longer vegetarian!</em> 
+
+This pizza menu will show a warning if the user selects a vegetarian pizza
+but then also adds extra bacon to it.
 
 
 Actions
 -------
 
 Two types of actions can be taken by the pattern: changing visibility and
-disabling elements. The action can be specified using a ``action-*``
+disabling elements. The action can be specified using an ``action``
 parameter.
 
 .. code-block:: html
 
-   <button data-pat-depends="name: title; action:enable">Submit</button>
+   <button data-pat-depends="title enable">Submit</button>
 
 This example shows a submit button which is disabled if the title input
 has no value.
@@ -93,6 +125,67 @@ has no value.
 The available actions are:
 
 * ``show``: make an items visibility conditional on the dependencies. If the
-  dependencies are not met the item will be invisible.
+  dependencies are not met the item will be made invisible. In addition a
+  CSS class of ``hidden`` or ``visible`` will be set.
 * ``enable``: disables items and adds a ``disabled`` class if the dependencies
-  are not met.
+  are not met. Input elements are disabled by setting their disabled property.
+  Links are disabled by registered a temporary event handler that blocks their
+  default behaviour.
+
+Transitions
+-----------
+
+When hiding or showing items you can specify a transition effect to be used. The
+default behaviour is to not use any transition and immediately hide or show the
+element by toggling its ``display`` style. If you prefer to control the effect
+completely with CSS you can use the ``css`` transition.
+
+.. code-block:: html
+
+   <style>
+     .pat-depends {
+         transition-property: opacity;
+         transition-duration: 1s;
+     }
+     .visible {
+         opacity: 1;
+     }
+
+     .hidden {
+         opacity: 0;
+     }
+   </style>
+
+   <fieldset class="pat-depends" data-pat-depends="condition:custom; transition: css">
+     <legend>Select custom ingredients</legend>
+     <label><input type="checkbox" name="cheese"/> Extra cheese</label>
+     <label><input type="checkbox" name="bacon"/> Bacon</label>
+   </fieldset>
+
+This allow full control in CSS, including the use of animation for browsers
+supporting CSS animation. Two non-CSS based animation options are also included:
+``fade`` will fade the element in and out, and ``slide`` uses a vertical sliding
+effect. During a transition an ``in-progress`` class will be set on the element.
+
+
+Option reference
+----------------
+
+The depends can be configured through a ``data-pat-depends`` attribute.
+The available options are:
+
++---------------------+------------+-----------------------------------------------+
+| Field               | default    | Description                                   |
++=====================+============+===============================================+
+| ``condition``       |            | The dependency condition.                     |
++---------------------+------------+-----------------------------------------------+
+| ``action``          | ``show``   | Action to perform. One of ``show`` or         |
+|                     |            | ``enable``.                                   |
++---------------------+------------+-----------------------------------------------+
+| ``transition``      | ``show``   | Transition effect to use if the action is     |
+|                     |            | ``show``. Must be one of ``none``, ``css``    |
+|                     |            | ``fade`` or ``slide``.                        |
++---------------------+------------+-----------------------------------------------+
+| ``effect-duration`` | ``fast``   | Duration of transition. This is ignored if    |
+|                     |            | the transition is ``none`` or ``css``.        |
++---------------------+------------+-----------------------------------------------+

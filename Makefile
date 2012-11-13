@@ -1,6 +1,7 @@
 STANDALONE      = name=../lib/almond include=main wrap=true
-BUILDJS         = bundles/build.js
+BUILDJS         = src/build.js
 RJS		= lib/r.js
+PEGJS		?= pegjs
 PHANTOMJS	?= phantomjs
 SOURCES		= src/lib/jquery.form $(wildcard src/*.js) $(wildcard src/*/*.js)
 TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/patterns-standalone.js bundles/patterns-standalone.min.js
@@ -13,16 +14,20 @@ bundles/patterns.js: $(SOURCES) $(BUILDJS)
 bundles/patterns.min.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify
 
-bundles/patterns-standalone.js: $(BUILDJS)
+bundles/patterns-standalone.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=none $(STANDALONE)
 
-bundles/patterns-standalone.min.js: $(BUILDJS)
+bundles/patterns-standalone.min.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify $(STANDALONE)
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
 	git submodule update --init --recursive
 
-all:: build/docs/index.html
+src/lib/depends_parse.js: src/lib/depends_parse.pegjs
+	$(PEGJS) $^
+	sed -i -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
+
+all doc:: build/docs/index.html
 
 build/docs/index.html: docs/conf.py $(wildcard docs/*.rst) $(wildcard docs/*/*.rst)
 	sphinx-build -b html docs build/docs
@@ -47,4 +52,4 @@ upgrade-requirejs:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all clean check upgrade-requirejs
+.PHONY: all clean check doc upgrade-requirejs

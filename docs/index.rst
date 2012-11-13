@@ -51,6 +51,7 @@ Table of Contents
    :maxdepth: 2
 
    panels
+   parameters
    patterns/index
    api/index
 
