@@ -48,11 +48,11 @@ define([
             });
 
             cfg.selectionAdded = function(elem) {
-                $el.next().trigger($.Event("change")); 
+                $el.next().trigger("change");
             };
             cfg.selectionRemoved = function(elem) {
                 elem.remove();
-                $el.next().trigger($.Event("change"));
+                $el.next().trigger("change");
             };
 
             // XXX: See https://github.com/Patternslib/Patterns/issues/149
