@@ -286,9 +286,9 @@ describe("Core / Parser", function() {
             // XXX: which one should it be? I feel the first, least
             // confusion and I doubt we need the groups as objects to
             // be passed around
-            expect(opts).toEqual({"group-foo": true, "group-bar-baz": false});
+            //expect(opts).toEqual({"group-foo": true, "group-bar-baz": false});
             expect(opts).toEqual({group: {foo: true, "bar-baz": false}});
-            expect(opts).toEqual({group: {foo: true, bar: {baz: false}}});
+            //expect(opts).toEqual({group: {foo: true, bar: {baz: false}}});
         });
 
         it("Jquery options for grouped options", function() {
