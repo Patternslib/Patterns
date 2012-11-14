@@ -4,7 +4,7 @@
  *
  * Copyright 2011 Humberto Sermeño
  */
-(function( $ ){
+define(["jquery"], function($) {
     var methods = {
         init: function( options ) {
             var settings = {
@@ -14,7 +14,7 @@
             };
             return this.each(function() {
                 var $this = $(this),
-      data = $this.data('timeout');
+                    data = $this.data('timeout');
 
                 if (!data) {
                     if ( options ) {
@@ -61,7 +61,7 @@
         destroy: function() {
             return this.each( function() {
                 var $this = $(this),
-      data = $this.data('timeout');
+                    data = $this.data('timeout');
 
                 $(window).unbind('.timeout');
                 data.timeout.remove();
@@ -119,10 +119,7 @@
         }
     };
 
-})( jQuery );
-
-// Custom jQuery selector to find elements with scrollbars
-(function($) {
+    // Custom jQuery selector to find elements with scrollbars
     $.extend($.expr[":"], {
         scrollable: function(element) {
             var vertically_scrollable, horizontally_scrollable;
@@ -138,10 +135,8 @@
             return horizontally_scrollable;
         }
     });
-})(jQuery);
 
-// Make Visible in scroll
-(function($) {
+    // Make Visible in scroll
     $.fn.makeVisibleInScroll = function( parent_id ) {
         var absoluteParent = null;
         if ( typeof parent_id == 'string' ) {
@@ -176,10 +171,8 @@
             }
         });
     };
-})( jQuery );
 
-//Make absolute location
-(function($) {
+    //Make absolute location
     $.fn.setPositionAbsolute = function(element,offsettop,offsetleft) {
         return this.each(function() {
             // set absolute location for based on the element passed
@@ -195,9 +188,7 @@
             $this.remove().appendTo("body").show();
         });
     };
-})( jQuery );
 
-(function($) {
     $.fn.positionAncestor = function(selector) {
         var left = 0;
         var top = 0;
@@ -223,20 +214,21 @@
             top:    top
         };
     };
-})( jQuery );
-
-String.prototype.startsWith = function(str) { return (this.match("^"+str) !== null); };
-String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null); };
 
 
-/******************************
+    // XXX: In compat.js we include things for browser compatibility,
+    // but these two seem to be only convenience. Do we really want to
+    // include these as part of patterns?
+    String.prototype.startsWith = function(str) { return (this.match("^"+str) !== null); };
+    String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null); };
 
- Simple Placeholder
 
- ******************************/
+    /******************************
 
+     Simple Placeholder
 
-(function($) {
+     ******************************/
+
     $.simplePlaceholder = {
         placeholder_class: null,
 
@@ -290,11 +282,8 @@ String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null
         return this;
     };
 
-})(jQuery);
-
-// case-insensitive :contains
-(function($) {
+    // case-insensitive :contains
     $.expr[':'].Contains = function(a, i, m) {
-        return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+        return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
-})( jQuery );
+});
