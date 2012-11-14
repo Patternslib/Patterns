@@ -31,7 +31,6 @@ define([
                 target: '#pat-modal',
                 "class": "pat-modal" + (cfg["class"] ? " " + cfg["class"] : "")
             };
-            $('#pat-modal').detach();
             inject.init($el, opts);
         },
         _init_div1: function($el, cfg) {
