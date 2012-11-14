@@ -26,8 +26,6 @@ define([
                 $trigger.removeAttr("title");
                 $trigger.data("patterns.tooltip", options);
                 tooltip.setupShowEvents($trigger);
-
-                // trigger starts with inactive class
                 $trigger.addClass("inactive");
             });
         },
@@ -124,7 +122,6 @@ define([
                  tooltip.positionContainer($trigger, $container);
             });
 
-            // set active class on trigger element
             $trigger.removeClass("inactive").addClass("active");
         },
 
@@ -136,8 +133,6 @@ define([
             $container.css("visibility", "hidden");
             $(window).off("." + namespace);
             tooltip.setupShowEvents($trigger);
-            
-            // set inactive class on trigger element
             $trigger.removeClass("active").addClass("inactive");
         },
 
