@@ -1,20 +1,17 @@
-/*global $, beforeEach, describe, expect, it, requireDependencies*/
 describe("modal-pattern", function () {
-    "use strict";
-
     var pattern;
 
-    requireDependencies(["patterns/modal"], function (cls) {
+    requireDependencies(["patterns/modal"], function(cls) {
         pattern = cls;
     });
 
     // Reset the lab before each test
-    beforeEach(function () {
+    beforeEach(function() {
         $("#lab *").remove();
     });
 
-    describe("init", function () {
-        it("Modal with single element", function () {
+    describe("init", function() {
+        it("Modal with single element", function() {
             $("#lab").html([
                 '<div class="pat-modal" id="modal">',
                 '  <p>Modal content</p>',
@@ -29,7 +26,7 @@ describe("modal-pattern", function () {
             expect($modal.find(".panel-content").text()).toBe("Modal content");
         });
 
-        it("Modal with header ", function () {
+        it("Modal with header ", function() {
             $("#lab").html([
                 '<div class="pat-modal" id="modal">',
                 '  <h3>Modal header</h3>',
@@ -43,7 +40,7 @@ describe("modal-pattern", function () {
             expect($modal.find(".panel-content").text()).toBe("Modal content");
         });
 
-        it("Modal with multiple content items ", function () {
+        it("Modal with multiple content items ", function() {
             $("#lab").html([
                 '<div class="pat-modal" id="modal">',
                 '  <h3>Modal header</h3>',
@@ -60,7 +57,7 @@ describe("modal-pattern", function () {
             expect($modal.find(".panel-content h4").length).toBe(1);
         });
 
-        it("Modal with a form that has the pat-modal CSS class", function () {
+        it("Modal with a form that has the pat-modal CSS class", function() {
 
             var $modal,       // main modal container
                 $modalLink;   // link that triggers the modal
