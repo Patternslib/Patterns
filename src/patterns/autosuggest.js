@@ -14,7 +14,7 @@ define([
     var log = logging.getLogger('autosuggest');
 
     var parser = new Parser("autosuggest");
-    parser.add_argument('words');
+    parser.add_argument('words', "");
     parser.add_argument('pre-fill');
     parser.add_argument('as-html-id');
     parser.add_argument('selected-value-prop', "name");
