@@ -4,12 +4,14 @@ define([
     "../core/parser",
     '../core/logging',
     '../registry',
-    'tinymce'
+    'tinymce',
+    'URI'
 ], function($, ajax, Parser, logging, registry) {
     var log = logging.getLogger('editTinyMCE'),
         parser = new Parser("edit-tinymce");
 
     parser.add_argument('theme-baseurl');
+    parser.add_argument('plugin-baseurl');
 
     var _ = {
         name: "editTinyMCE",
@@ -48,15 +50,32 @@ define([
             cfg.elements = id;
             cfg.mode = 'exact';
             cfg.readonly = Boolean($el.attr('readonly'));
-            
-            // get arguments
-            args = parser.parse($el, opts);
 
+            // get arguments
+            var args = parser.parse($el, opts);
+
+            // load themes from user defined path
             if (args.themeBaseurl && cfg.theme &&
                 !tinyMCE.ThemeManager.urls[cfg.theme]) {
+                args.themeBaseurl = URI(args.themeBaseurl).absoluteTo().toString();
+                var url = args.themeBaseurl + '/' + cfg.theme,
+                    jsFile = 'editor_template' + tinyMCE.suffix + '.js';
+
                 log.info('loading tinymce theme ' + cfg.theme);
-                tinyMCE.ThemeManager.load(cfg.theme, args.themeBaseurl + '/' +
-                    cfg.theme + '/editor_template' + tinyMCE.suffix + '.js');
+                tinyMCE.ThemeManager.load(cfg.theme, url + '/' + jsFile);
+                if (!cfg.popup_css)
+                    cfg.popup_css = url + '/skins/' +
+                        (cfg.skin || 'default') + '/dialog.css';
+            }
+
+            // load plugins from user defined path
+            if (args.pluginBaseurl && cfg.plugins) {
+                var jsFile = 'editor_plugin' + tinyMCE.suffix + '.js';
+                args.pluginBaseurl = URI(args.pluginBaseurl).absoluteTo().toString();
+                cfg.plugins.split(/\s*,\s*/).forEach(function(plugin) {
+                    tinyMCE.PluginManager.load(plugin,
+                        args.pluginBaseurl + '/' + plugin + '/' + jsFile);
+                });
             }
 
             // initialize editor
