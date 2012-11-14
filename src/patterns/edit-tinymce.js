@@ -4,9 +4,9 @@ define([
     "../core/parser",
     '../core/logging',
     '../registry',
-    'tinymce',
-    'URI'
-], function($, ajax, Parser, logging, registry) {
+    'URIjs/URI',
+    'tinymce'
+], function($, ajax, Parser, logging, registry, URI) {
     var log = logging.getLogger('editTinyMCE'),
         parser = new Parser("edit-tinymce");
 
