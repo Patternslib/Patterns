@@ -67,6 +67,8 @@ define([
             if ($el.hasClass("autoLoading-visible"))
                 _._initAutoloadVisible($el);
 
+            log.debug('Initialised:', $el);
+
             return $el;
         },
         destroy: function($el) {
