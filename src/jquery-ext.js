@@ -14,7 +14,7 @@
             };
             return this.each(function() {
                 var $this = $(this),
-      data = $this.data('timeout');
+                    data = $this.data('timeout');
 
                 if (!data) {
                     if ( options ) {
@@ -61,7 +61,7 @@
         destroy: function() {
             return this.each( function() {
                 var $this = $(this),
-      data = $this.data('timeout');
+                    data = $this.data('timeout');
 
                 $(window).unbind('.timeout');
                 data.timeout.remove();
