@@ -7,13 +7,13 @@
 define([
     "jquery",
     "../core/parser",
-    "../lib/ajax",
     "../core/logging",
+    "../lib/ajax",
     "../registry",
     "URIjs/URI",
     "jquery_ext", // for :scrollable for autoLoading-visible
     "URIjs/jquery.URI"
-], function($, Parser, ajax, logging, registry, URI) {
+], function($, Parser, logging, ajax, registry, URI) {
     var log = logging.getLogger('inject'),
         parser = new Parser("inject");
 
@@ -66,6 +66,8 @@ define([
             // XXX: hack to support the old autoLoading-visible class
             if ($el.hasClass("autoLoading-visible"))
                 _._initAutoloadVisible($el);
+
+            log.debug('initialised:', $el);
 
             return $el;
         },

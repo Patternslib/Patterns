@@ -1,177 +1,107 @@
-/**
- * Patterns logging - minimal logging framework
- *
- * Copyright 2012 Simplon B.V.
- */
-
 define([
-        "../compat"  // Needed for function.bind
-], function() {
-    var root,    // root logger instance
-        writer;  // writer instance, used to output log entries
+    "jquery",
+    "log4javascript"
+], function($) {
+    var l4js = log4javascript,
+        rootname = 'patterns',
+        root = l4js.getLogger(rootname),
+        log = l4js.getLogger(rootname + '.logging');
 
-    var Level = {
-        DEBUG: 10,
-        INFO: 20,
-        WARN: 30,
-        ERROR: 40,
-        FATAL: 50
+    // default log level mapping
+    //
+    // you can override these via the url search parameter:
+    // foo.html?pat-loglevel=WARN&pat-loglevel-inject=DEBUG
+    //
+    var LEVELMAP = {
+        patterns: l4js.Level.INFO
+        //"patterns.inject": l4js.Level.DEBUG
     };
-
-    function BaseWriter() {
-    }
-
-    BaseWriter.prototype = {
-        _levelName: function(level) {
-            if (level<=Level.DEBUG)
-                return "DEBUG";
-            if (level<=Level.INFO)
-                return "INFO";
-            if (level<=Level.WARN)
-                return "WARN";
-            if (level<=Level.ERROR)
-                return "ERROR";
-            return "FATAL";
-        },
-
-        format: function(level, message) {
-            var level_name = this._levelName(level);
-            return "[" + level_name + "] " + message;
+    var loglevelFromUrl = function() {
+        // check URL for loglevel config
+        var loglevel_re =/pat-loglevel-?([^=]*)=([^&]+)/g,
+            level, name, m;
+        while (true) {
+            m = loglevel_re.exec(window.location.search);
+            if (!m)
+                break;
+            name = rootname + (m[1] ? '.' + m[1] : "");
+            level = m[2].toUpperCase();
+            if (!l4js.Level[level])
+                log.warn('Unknown log level:', level, m);
+            else
+                LEVELMAP[name] = l4js.Level[level];
         }
     };
+    loglevelFromUrl();
+    root.setLevel(LEVELMAP[rootname]);
 
-    function ConsoleWriter() {
-    }
+    var init_console_logging = function() {
+        // enable/disable all logging
+        l4js.setEnabled(true);
 
-    ConsoleWriter.prototype = new BaseWriter();
-    ConsoleWriter.prototype.output = function(level, message) {
-        // console.log will magically appear in IE8 when the user opens the
-        // F12 Developer Tools, so we have to test for it every time.
-        if (console!==undefined && console.log!==undefined)
-            console.log(this.format(level, message));
-    };
+        var bca = new l4js.BrowserConsoleAppender();
+        root.addAppender(bca);
 
-
-    function FirebugWriter() {
-    }
-
-    FirebugWriter.prototype = new BaseWriter();
-    ConsoleWriter.prototype.output = function(level, message) {
-        var formatted = this.format(level, message);
-        if (level<=Level.DEBUG)
-            console.debug(formatted);
-        else if (level<=Level.INFO)
-            console.info(formatted);
-        else if (level<=Level.WARN)
-            console.warn(formatted);
-        else
-            console.error(formatted);
-    };
-
-
-    function Logger(name, parent) {
-        this._loggers={};
-        this.name=name || "";
-        this._parent=parent || null;
-        if (name==="root") {
-            this._enabled=true;
-            this._level=Level.INFO;
-        }
-    }
-
-    Logger.prototype = {
-        getLogger: function(name) {
-            if (!(name in this._loggers))
-                this._loggers[name] = new Logger(name, this);
-            return this._loggers[name];
-        },
-
-        _getFlag: function(flag) {
-            var context=this;
-            flag="_"+flag;
-            while (context!==null) {
-                if (context[flag]!==undefined)
-                    return context[flag];
-                context=context._parent;
+        var Layout = function() {
+            this.customFields = [];
+            this.layout_noobjects = new l4js.PatternLayout('%p %c: %m');
+            this.layout_objects = new l4js.PatternLayout('%p %c:');
+        };
+        Layout.prototype = new l4js.Layout();
+        Layout.prototype.format = function(loggingEvent) {
+            var hasobjects = false;
+            loggingEvent.messages = $.map(loggingEvent.messages, function(item) {
+                if ($.isPlainObject(item)) hasobjects = true;
+                if (item && item.jquery) {
+                    hasobjects = true;
+                    item = item.clone();
+                }
+                return item;
+            });
+            if (hasobjects) {
+                var prefix = this.layout_objects.format(loggingEvent);
+                loggingEvent.messages.unshift(prefix);
+                return loggingEvent.messages;
+            } else {
+                return this.layout_noobjects.format(loggingEvent);
             }
-            return null;
-        },
+        };
+        Layout.prototype.ignoresThrowable = function() {
+            return true;
+        };
+        Layout.prototype.toString = function() {
+            return "NullLayout";
+        };
 
-        setEnabled: function(state) {
-            this._enabled=!!state;
-        },
+        var layout = new Layout();
+        bca.setLayout(layout);
+    };
 
-        isEnabled: function() {
-            this._getFlag("enabled");
+    init_console_logging();
+
+    var logging = {
+        Level: l4js.Level,
+
+        setEnabled: function(enabled) {
+            l4js.setEnabled(enabled);
         },
 
         setLevel: function(level) {
-            if (typeof level==="number")
-                this._level=level;
-            else if (typeof level==="string") {
-                level=level.toUpperCase();
-                if (level in Level)
-                    this._level=Level[level];
-            }
+            root.setLevel(level);
         },
 
-        getLevel: function() {
-            return this._getFlag("level");
-        },
-
-        log: function(level, message) {
-            if (!this._getFlag("enabled") || level<this._getFlag("level"))
-                return;
-            writer.output(level, message);
-        },
-
-        debug: function(message) {
-            this.log(Level.DEBUG, message);
-        },
-
-        info: function(message) {
-            this.log(Level.INFO, message);
-        },
-
-        warn: function(message) {
-            this.log(Level.WARN, message);
-        },
-
-        error: function(message) {
-            this.log(Level.ERROR, message);
-        },
-
-        fatal: function(message) {
-            this.log(Level.FATAL, message);
+        // XXX: get this into l4js:
+        // logging.getLogger("foo").getLogger("bar").getLogger("baz");
+        getLogger: function(name) {
+            var logname = rootname + (name ? '.' + name : ''),
+                log = l4js.getLogger(logname),
+                level = LEVELMAP[logname];
+            if (level)
+                log.setLevel(level);
+            return log;
         }
     };
 
-    if (window.console!==undefined && window.console.debug!==undefined)
-        writer=new FirebugWriter();
-    else
-        writer=new ConsoleWriter();
 
-    root=new Logger();
-
-    var logconfig = /pat-loglevel(|-[^=]+)=([^&]+)/g,
-        match;
-
-    while ((match=logconfig.exec(window.location.search))!==null) {
-        var logger = (match[1]==="") ? root : root.getLogger(match[1].slice(1));
-        logger.setLevel(match[2].toUpperCase());
-    }
-
-    return {
-        Level: Level,
-        getLogger: root.getLogger.bind(root),
-        setEnabled: root.setEnabled.bind(root),
-        isEnabled: root.isEnabled.bind(root),
-        setLevel: root.setLevel.bind(root),
-        getLevel: root.getLevel.bind(root),
-        debug: root.debug.bind(root),
-        info: root.info.bind(root),
-        warn: root.warn.bind(root),
-        error: root.error.bind(root),
-        fatal: root.fatal.bind(root)
-    };
+    return logging;
 });
