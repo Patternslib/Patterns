@@ -26,9 +26,6 @@ requirejs.config({
         jquery_chosen: {
             deps: ["jquery"]
         },
-        jquery_ext: {
-            deps: ["jquery"]
-        },
         jquery_form: {
             deps: ["jquery"]
         },
