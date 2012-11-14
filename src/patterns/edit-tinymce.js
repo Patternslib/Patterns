@@ -60,9 +60,18 @@ define([
 
             var u = new URI();
             u._parts.query = null;
+
+            // handle rebasing of own urls if we were injected
+            var parents = $el.parents().filter(function() {
+                return $(this).data('pat-injected');
+            });
+            if (parents.length)
+                u = URI(parents.first().data('pat-injected').origin).absoluteTo(u);
+            if (cfg.content_css)
+                cfg.content_css = URI(cfg.content_css).absoluteTo(u).toString();
             tinyMCE.baseURL = URI(args.tinymceBaseurl).absoluteTo(u).toString();
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
-            
+
             // initialize editor
             var tinymce = tinyMCE.init(cfg);
 
