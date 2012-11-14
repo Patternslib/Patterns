@@ -35,39 +35,39 @@ define([
         name: "inject",
         trigger: "a.pat-inject, form.pat-inject",
         init: function($el, opts) {
-            return $el.each(function() {
-                var $el = $(this),
-                    cfgs = _.extractConfig($el, opts);
-                $el.data('patterns.inject', cfgs);
+            if ($el.length > 1)
+                return $el.each(function() { _.init($(this), opts); });
 
-                // In case next-href is specified the anchor's href will
-                // be set to it after the injection is triggered. In case
-                // the next href already exists, we do not activate the
-                // injection but instead just change the anchors href.
-                //
-                // XXX: This is used in only one project for linked
-                // fullcalendars, it's sanity is wonky and we should
-                // probably solve it differently. -- Maybe it's cool
-                // after all.
-                var $nexthref = $(cfgs[0].nextHref);
-                if ($el.is('a') && $nexthref.length > 0) {
-                    log.debug('Skipping as next href already exists', $nexthref);
-                    // XXX: reconsider how the injection enters exhausted state
-                    return $el.attr({href: cfgs[0].nextHref});
-                }
+            var cfgs = _.extractConfig($el, opts);
+            $el.data('patterns.inject', cfgs);
 
-                // setup event handlers
-                if ($el.is('a'))
-                    $el.on("click.pat-inject", _.onClick);
-                else if ($el.is('form'))
-                    $el.on("submit.pat-inject", _.onSubmit);
+            // In case next-href is specified the anchor's href will
+            // be set to it after the injection is triggered. In case
+            // the next href already exists, we do not activate the
+            // injection but instead just change the anchors href.
+            //
+            // XXX: This is used in only one project for linked
+            // fullcalendars, it's sanity is wonky and we should
+            // probably solve it differently. -- Maybe it's cool
+            // after all.
+            var $nexthref = $(cfgs[0].nextHref);
+            if ($el.is('a') && $nexthref.length > 0) {
+                log.debug('Skipping as next href already exists', $nexthref);
+                // XXX: reconsider how the injection enters exhausted state
+                return $el.attr({href: cfgs[0].nextHref});
+            }
 
-                // XXX: hack to support the old autoLoading-visible class
-                if ($el.hasClass("autoLoading-visible"))
-                    _._initAutoloadVisible($el);
+            // setup event handlers
+            if ($el.is('a'))
+                $el.on("click.pat-inject", _.onClick);
+            else if ($el.is('form'))
+                $el.on("submit.pat-inject", _.onSubmit);
 
-                return $el;
-            });
+            // XXX: hack to support the old autoLoading-visible class
+            if ($el.hasClass("autoLoading-visible"))
+                _._initAutoloadVisible($el);
+
+            return $el;
         },
         destroy: function($el) {
             $el.off('.pat-inject');
@@ -241,9 +241,9 @@ define([
                     $el.attr({href: cfgs[0].nextHref});
                     _.destroy($el);
 
-                   // jump to new href target
-                   if (!$el.hasClass("autoLoading-visible"))
-                       window.location.href = $el.attr('href');
+                    // jump to new href target
+                    if (!$el.hasClass("autoLoading-visible"))
+                        window.location.href = $el.attr('href');
                 }
             };
 
