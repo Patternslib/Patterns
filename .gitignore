@@ -3,3 +3,4 @@
 /build/patterns.min.js
 /docs/_build
 /src/lib/jquery.mutations/build
+/node_modules
