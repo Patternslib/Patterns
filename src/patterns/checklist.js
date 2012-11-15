@@ -1,7 +1,7 @@
 define([
     "jquery",
     "../core/parser",
-    "../logging",
+    "../core/logging",
     "../registry"
 ], function($, Parser, logging, registry) {
     var log = logging.getLogger("checklist"),

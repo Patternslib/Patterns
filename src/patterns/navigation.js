@@ -1,6 +1,6 @@
 define([
     'jquery',
-    '../logging',
+    '../core/logging',
     '../registry'
 ], function($, logging, registry) {
     var log = logging.getLogger('navigation');

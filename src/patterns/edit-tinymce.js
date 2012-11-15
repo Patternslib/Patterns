@@ -1,11 +1,16 @@
 define([
     'jquery',
     '../lib/ajax',
-    '../logging',
+    "../core/parser",
+    '../core/logging',
     '../registry',
+    'URIjs/URI',
     'tinymce'
-], function($, ajax, logging, registry) {
-    var log = logging.getLogger('editTinyMCE');
+], function($, ajax, Parser, logging, registry, URI) {
+    var log = logging.getLogger('editTinyMCE'),
+        parser = new Parser("edit-tinymce");
+
+    parser.add_argument('tinymce-baseurl');
 
     var _ = {
         name: "editTinyMCE",
@@ -44,6 +49,28 @@ define([
             cfg.elements = id;
             cfg.mode = 'exact';
             cfg.readonly = Boolean($el.attr('readonly'));
+
+            // get arguments
+            var args = parser.parse($el, opts);
+
+            if (!args.tinymceBaseurl) {
+                log.error('tinymce-baseurl has to point to TinyMCE resources');
+                return false;
+            }
+
+            var u = new URI();
+            u._parts.query = null;
+
+            // handle rebasing of own urls if we were injected
+            var parents = $el.parents().filter(function() {
+                return $(this).data('pat-injected');
+            });
+            if (parents.length)
+                u = URI(parents.first().data('pat-injected').origin).absoluteTo(u);
+            if (cfg.content_css)
+                cfg.content_css = URI(cfg.content_css).absoluteTo(u).toString();
+            tinyMCE.baseURL = URI(args.tinymceBaseurl).absoluteTo(u).toString();
+            tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
             // initialize editor
             var tinymce = tinyMCE.init(cfg);

@@ -8,7 +8,7 @@
  */
 define([
     "jquery",
-    "./logging",
+    "./core/logging",
     "./transforms",
     "./utils",
     // below here modules that are only loaded
@@ -20,7 +20,7 @@ define([
     var registry = {
         patterns: {},
         scan: function(content) {
-            var $content = $(content), pattern, $match, plog, $initialised;
+            var $content = $(content), pattern, $match, plog;
             transforms.transformContent($content);
             for (var name in registry.patterns) {
                 pattern = registry.patterns[name];
@@ -38,9 +38,9 @@ define([
                     plog.debug('Initialising:', $match);
                     try {
                         pattern.init($match);
-                        plog.debug('Initialised:', $initialised);
+                        plog.debug('done.');
                     } catch (e) {
-                        plog.error("Error initialising pattern", e);
+                        plog.error("Caught error:", e);
                     }
                 }
             }

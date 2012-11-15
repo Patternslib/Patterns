@@ -4,3 +4,6 @@
 [submodule "lib/phantom-jasmine"]
 	path = lib/phantom-jasmine
 	url = git://github.com/jcarver989/phantom-jasmine.git
+[submodule "src/3rdparty/URIjs"]
+	path = src/3rdparty/URIjs
+	url = git://github.com/medialize/URI.js.git
