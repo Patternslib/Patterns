@@ -40,7 +40,8 @@ describe("zoom-pattern", function() {
             pattern.init($block);
             var $range = $block.prev();
             $range.val("1.5").change();
-            expect($block.css("zoom")).toBe("1.5");
+            // Fairly lax test so it passes in different browsers. 
+            expect($block.attr("style").match(/zoom: 1.5(;.*)?/i)).toBeTruthy();
         });
     });
 });
