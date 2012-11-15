@@ -42,7 +42,7 @@ describe("depends-pattern", function() {
         });
 
         it("Anchor", function() {
-            $("#lab").append('<a href="#target">Click me</button>');
+            $("#lab").append('<a href="#target">Click me</a>');
             var $slave = $("#lab a");
             pattern._disable($slave);
             var events = $._data($slave[0]).events;
@@ -62,7 +62,7 @@ describe("depends-pattern", function() {
         });
 
         it("Anchor", function() {
-            $("#lab").append('<a href="#target" class="disabled">Click me</button>');
+            $("#lab").append('<a href="#target" class="disabled">Click me</a>');
             var $slave = $("#lab a");
             $slave.on("click.patternDepends", false);
             pattern._enable($slave);
