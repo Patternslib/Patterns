@@ -1,6 +1,6 @@
 define([
     'jquery',
-    '../logging',
+    '../core/logging',
     '../utils',
     "../registry",
     'jquery_fullcalendar'
@@ -58,6 +58,7 @@ define([
             }
             $events.css('display', 'None');
             $calendar.fullCalendar({
+                disableDragging: 'true',
                 dayDblClick: function(date, allDay, jsEvent, view) {
                     // XXX: add event
                 },

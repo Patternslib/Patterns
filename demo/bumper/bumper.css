@@ -1,0 +1,8 @@
+/* @group Bumper */
+
+.bumped {
+	position: fixed !important;
+	top: 30px;
+}
+
+/* @end */

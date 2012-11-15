@@ -4,7 +4,7 @@
 // - prefill and ashtmlid in data-auto-suggest-config
 define([
     'jquery',
-    '../logging',
+    '../core/logging',
     '../core/parser',
     '../registry',
     '../utils',
@@ -14,9 +14,9 @@ define([
     var log = logging.getLogger('autosuggest');
 
     var parser = new Parser("autosuggest");
-    parser.add_argument('words');
+    parser.add_argument('words', "");
     parser.add_argument('pre-fill');
-    parser.add_argument('as-html-id', false);
+    parser.add_argument('as-html-id');
     parser.add_argument('selected-value-prop', "name");
     parser.add_argument('search-obj-prop', "name");
     parser.add_argument('start-text', "Enter text");
@@ -25,76 +25,40 @@ define([
         name: 'autosuggest',
         trigger: "input.pat-autosuggest",
         init: function($el, opts) {
-            if ($el.length > 1) {
-                return $el.map(function() {
-                    return _.init($(this), opts);
-                });
-            }
+            if ($el.length > 1)
+                return $el.each(function() { _.init($(this), opts); });
 
-            // fetch config from first parent found
             var cfg = _.parser.parse($el, opts);
-            if ($el.attr('readonly')) {
+            if ($el.attr('readonly'))
                 cfg.startText = "";
-            }
 
-            if (cfg.preFill && (cfg.preFill.slice(0,1) === ',')) {
+            if (cfg.preFill && (cfg.preFill.slice(0,1) === ','))
                 cfg.preFill = cfg.preFill.slice(1);
-            }
-
-            $el.data("patterns.autosuggest", cfg);
 
             $el.on('keydown.pat-autosuggest', _.onKeyDown);
-
-            // are we autosubmit?
-            var autosubmit = $el.is('.pat-autosubmit') ||
-                    ($el.parents('.pat-autosubmit').length > 0) ||
-                    $el.is('.pat-autosubmit2') ||
-                    ($el.parents('.pat-autosubmit2').length > 0);
-            log.debug('autosubmit', autosubmit, $el);
-
-
-            // XXX: this feels hacky and is either needed for fast
-            // typers in which case it should be in autosubmit or to
-            // work around triggers in autoSuggest.
-            var $form;
-            if (autosubmit) {
-                $form = $el.parents('form');
-
-                $form.ajaxForm({
-                    data: {
-                        submit: "submit"
-                    }
-                });
-
-                var submit_debounced = utils.debounce(function() {
-                    $form.submit();
-                }, 400);
-                cfg.selectionAdded = function($item) {
-                    log.debug('submit because selection was added', $item);
-                    // trigger the form
-                    submit_debounced();
-                };
-                cfg.selectionRemoved = function($item) {
-                    // ignore removal request if readonly
-                    if ($el.attr('readonly')) return;
-                    log.debug('submit because selection was removed', $item);
-                    // trigger the form
-                    $item.remove();
-                    submit_debounced();
-                };
-            }
 
             var data = cfg.words.split(/\s*,\s*/).map(function(word) {
                 return {value: word, name: word};
             });
 
+            cfg.selectionAdded = function(elem) {
+                $el.next().trigger("change");
+            };
+            cfg.selectionRemoved = function(elem) {
+                elem.remove();
+                $el.next().trigger("change");
+            };
+
+            // XXX: See https://github.com/Patternslib/Patterns/issues/149
+            if (cfg['asHtmlId'] !== undefined) {
+                cfg['asHtmlID'] = cfg['asHtmlId'];
+            }
             $el.autoSuggest(data, cfg);
 
             return $el;
         },
         destroy: function($el) {
             $el.off('.pat-autosuggest');
-            $el.data('patterns.autosuggest', null);
 
             // XXX: destroy the jqueryPlugin, unfortunately it doesn't
             // support this as of now

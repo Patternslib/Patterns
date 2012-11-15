@@ -1,4 +1,4 @@
-describe("modal-pattern", function() {
+describe("modal-pattern", function () {
     var pattern;
 
     requireDependencies(["patterns/modal"], function(cls) {
@@ -16,7 +16,7 @@ describe("modal-pattern", function() {
                 '<div class="pat-modal" id="modal">',
                 '  <p>Modal content</p>',
                 '</div>'
-                ].join('\n'));
+            ].join('\n'));
             var $modal = $("#modal");
             pattern.init($modal);
             expect($modal.find(".header").length).toBeTruthy();
@@ -32,7 +32,7 @@ describe("modal-pattern", function() {
                 '  <h3>Modal header</h3>',
                 '  <p>Modal content</p>',
                 '</div>'
-                ].join('\n'));
+            ].join('\n'));
             var $modal = $("#modal");
             pattern.init($modal);
             expect($modal.find(".header").text()).toBe("Modal headerClose");
@@ -48,7 +48,7 @@ describe("modal-pattern", function() {
                 '  <h4>Subheader</h4>',
                 '  <p>More content</p>',
                 '</div>'
-                ].join('\n'));
+            ].join('\n'));
             var $modal = $("#modal");
             pattern.init($modal);
             expect($modal.find(".header").text()).toBe("Modal headerClose");
@@ -57,6 +57,39 @@ describe("modal-pattern", function() {
             expect($modal.find(".panel-content h4").length).toBe(1);
         });
 
+        it("Modal with a form that has the pat-modal CSS class", function() {
+
+            var $modal,       // main modal container
+                $modalLink;   // link that triggers the modal
+
+            $("#lab").html([
+                '<a id="modalLink" class="pat-modal"',
+                '   href="../demo/bug_modal/modal-sources.html">Open a modal',
+                '   containing a form with pat-modal CSS class.</a>'
+            ].join('/n'));
+
+            $modalLink = $("#modalLink");
+            pattern.init($modalLink);
+
+            // najprej #modalLink ne obstaja
+            $modal = $("div#pat-modal");
+            expect($modal.length).toBe(0);
+
+            $modalLink.click();    // trigger panel loading
+
+            // TODO: we need to insert a delay here so that the asynchronous
+            // AJAX injection of the potentially problematic HTML finishes ...
+            // and only AFTER THAT we test that everything is still OK
+            // (read: that the modal still exists in DOM)
+            // NOTE: If AJAX request in inject.execute() is performed in a
+            // synchronous way, a delay is not need and this test detects a
+            // bug in modal._init_inject1()
+
+            // div#pat-modal should still exist even after the click has
+            // loaded and injected problematic HTML
+            $modal = $("div#pat-modal");
+            expect($modal.length).toBeGreaterThan(0);
+        });
     });
 });
 

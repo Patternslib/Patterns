@@ -26,6 +26,7 @@ define([
                 $trigger.removeAttr("title");
                 $trigger.data("patterns.tooltip", options);
                 tooltip.setupShowEvents($trigger);
+                $trigger.addClass("inactive");
             });
         },
 
@@ -120,6 +121,8 @@ define([
             $(window).on("scroll." + namespace + " resize." + namespace, function () {
                  tooltip.positionContainer($trigger, $container);
             });
+
+            $trigger.removeClass("inactive").addClass("active");
         },
 
         hide: function(event) {
@@ -130,6 +133,7 @@ define([
             $container.css("visibility", "hidden");
             $(window).off("." + namespace);
             tooltip.setupShowEvents($trigger);
+            $trigger.removeClass("active").addClass("inactive");
         },
 
         getContainer: function($trigger) {

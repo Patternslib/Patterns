@@ -1,7 +1,7 @@
 define([
     "jquery",
     "../registry",
-    "../logging",
+    "../core/logging",
     "../core/parser",
     "../utils"
 ], function($, patterns, logging, Parser, utils) {
