@@ -115,11 +115,14 @@ define([
                     if (options.transition==="css")
                         $slave.addClass(state ? "visible" : "hidden");
                     else {
-                        $slave.addClass("in-progress");
                         var t = depends.transitions[options.transition],
                             duration = (options.transition==="none" ? null : options.effectDuration);
+                        if (duration)
+                            $slave.addClass("in-progress");
                         $slave[state ? t.show : t.hide](duration, function() {
-                            $slave.removeClass("hidden").addClass(state ? "visible" : "hidden");
+                            $slave
+                                .removeClass("visible in-progress hidden")
+                                .addClass(state ? "visible" : "hidden");
                         });
                     }
                     break;
