@@ -51,8 +51,14 @@ describe("Core / logging", function() {
         });
 
         describe("setLevel", function() {
+            var original_level;
+
+            beforeEach(function() {
+                original_level=logging.getLevel();
+            });
+
             afterEach(function() {
-                logging.setLevel(logging.Level.INFO);
+                logging.setLevel(original_level);
             });
 
             it("Integer level", function() {
@@ -68,6 +74,53 @@ describe("Core / logging", function() {
             it("Level name is not case sensitive", function() {
                 logging.setLevel("FaTal");
                 expect(logging.getLevel()).toBe(logging.Level.FATAL);
+            });
+        });
+
+        describe("log", function() {
+            var original_level;
+
+            beforeEach(function() {
+                original_level=logging.getLevel();
+            });
+
+            afterEach(function() {
+                logging.setLevel(original_level);
+                logging.setEnabled(true);
+            });
+
+            it("Log at current level", function() {
+                var writer = logging.getWriter();
+                spyOn(writer, "output");
+                logging.info("Test message");
+                logging.setLevel(logging.Level.INFO);
+                expect(writer.output).toHaveBeenCalledWith(logging.Level.INFO, ["Test message"]);
+            });
+
+            it("Log more critical errors", function() {
+                var writer = logging.getWriter();
+                spyOn(writer, "output");
+                logging.setLevel(logging.Level.INFO);
+                logging.error("Test message");
+                expect(writer.output).toHaveBeenCalled();
+            });
+
+            it("Ignore unimportant errors", function() {
+                var writer = logging.getWriter();
+                spyOn(writer, "output");
+                logging.setLevel(logging.Level.INFO);
+                logging.debug("Test message");
+                expect(writer.output).not.toHaveBeenCalled();
+            });
+
+            it("Do nothing if logging is disabled", function() {
+                var writer = logging.getWriter();
+                spyOn(writer, "output");
+                logging.setEnabled(false);
+                logging.setLevel(logging.Level.INFO);
+                logging.info("Test message");
+                expect(writer.output).not.toHaveBeenCalled();
+                logging.setEnabled(true);
             });
         });
     });
