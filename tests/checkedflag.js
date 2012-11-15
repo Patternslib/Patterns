@@ -44,7 +44,7 @@ describe("checkedflag-pattern", function() {
                 '  <label class="unchecked"><input type="checkbox" name="foo" checked="checked"/></label>',
                 '</fieldset>'].join("\n"));
             var input = $("#lab input")[0];
-            pattern.onChangeCheckbox.apply(input, null);
+            pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("checked")).toBe(true);
             expect($("#lab fieldset").hasClass("checked")).toBe(true);
             expect($("#lab .unchecked").length).toBe(0);
@@ -56,7 +56,7 @@ describe("checkedflag-pattern", function() {
                 '  <label class="checked"><input type="checkbox" name="foo"/></label>',
                 '</fieldset>'].join("\n"));
             var input = $("#lab input")[0];
-            pattern.onChangeCheckbox.apply(input, null);
+            pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("unchecked")).toBe(true);
             expect($("#lab fieldset").hasClass("unchecked")).toBe(true);
             expect($("#lab .checked").length).toBe(0);
@@ -69,7 +69,7 @@ describe("checkedflag-pattern", function() {
                 '  <label><input type="checkbox" name="bar" checked="checked"/></label>',
                 '</fieldset>'].join("\n"));
             var input = $("#lab input:checked")[0];
-            pattern.onChangeCheckbox.apply(input, null);
+            pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab fieldset").attr("class")).toBe("checked");
             expect($("#lab label").eq(1).attr("class")).toBe("checked");
         });
@@ -82,7 +82,7 @@ describe("checkedflag-pattern", function() {
                 '  <label class="unchecked"><input type="radio" name="foo" checked="checked"/></label>',
                 '</fieldset>'].join("\n"));
             var input = $("#lab input")[0];
-            pattern.onChangeCheckbox.apply(input, null);
+            pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("checked")).toBe(true);
             expect($("#lab fieldset").hasClass("checked")).toBe(true);
             expect($("#lab .unchecked").length).toBe(0);
@@ -94,7 +94,7 @@ describe("checkedflag-pattern", function() {
                 '  <label class="checked"><input type="radio" name="foo"/></label>',
                 '</fieldset>'].join("\n"));
             var input = $("#lab input")[0];
-            pattern.onChangeCheckbox.apply(input, null);
+            pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("unchecked")).toBe(true);
             expect($("#lab fieldset").hasClass("unchecked")).toBe(true);
             expect($("#lab .checked").length).toBe(0);
@@ -107,7 +107,7 @@ describe("checkedflag-pattern", function() {
                 '  <label><input type="radio" name="bar" checked="checked"/></label>',
                 '</fieldset>'].join("\n"));
             var input = $("#lab input:checked")[0];
-            pattern.onChangeCheckbox.apply(input, null);
+            pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab fieldset").attr("class")).toBe("checked");
             expect($("#lab label").eq(1).attr("class")).toBe("checked");
         });
