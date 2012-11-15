@@ -227,12 +227,12 @@ define([
             if (!parameter)
                 return {};
 
+            if (parameter.match(this.named_param_pattern))
+                return this._parseExtendedNotation(parameter);
+
             sep=parameter.indexOf(";");
             if (sep===-1)
-                if (parameter.match(this.named_param_pattern))
-                    return this._parseExtendedNotation(parameter);
-                else
-                    return this._parseShorthandNotation(parameter);
+                return this._parseShorthandNotation(parameter);
 
             opts=this._parseShorthandNotation(parameter.slice(0, sep));
             extended=this._parseExtendedNotation(parameter.slice(sep+1));
