@@ -56,7 +56,7 @@ define([
     }
 
     FirebugWriter.prototype = new BaseWriter();
-    ConsoleWriter.prototype.output = function(level, message) {
+    FirebugWriter.prototype.output = function(level, message) {
         var formatted = this.format(level, message);
         if (level<=Level.DEBUG)
             console.debug(formatted);
@@ -146,12 +146,20 @@ define([
         }
     };
 
-    if (window.console!==undefined && window.console.debug!==undefined)
-        writer=new FirebugWriter();
-    else
-        writer=new ConsoleWriter();
+    function getWriter() {
+        return writer;
+    }
 
-    root=new Logger();
+    function setWriter(w) {
+        writer=w;
+    }
+
+    if (window.console!==undefined && window.console.debug!==undefined)
+        setWriter(new FirebugWriter());
+    else
+        setWriter(new ConsoleWriter());
+
+    root=new Logger("root");
 
     var logconfig = /pat-loglevel(|-[^=]+)=([^&]+)/g,
         match;
@@ -172,6 +180,8 @@ define([
         info: root.info.bind(root),
         warn: root.warn.bind(root),
         error: root.error.bind(root),
-        fatal: root.fatal.bind(root)
+        fatal: root.fatal.bind(root),
+        getWriter: getWriter,
+        setWriter: setWriter
     };
 });
