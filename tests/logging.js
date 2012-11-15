@@ -94,7 +94,7 @@ describe("Core / logging", function() {
                 spyOn(writer, "output");
                 logging.info("Test message");
                 logging.setLevel(logging.Level.INFO);
-                expect(writer.output).toHaveBeenCalledWith(logging.Level.INFO, "Test message");
+                expect(writer.output).toHaveBeenCalledWith(logging.Level.INFO, ["Test message"]);
             });
 
             it("Log more critical errors", function() {

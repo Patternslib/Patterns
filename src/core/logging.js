@@ -18,54 +18,51 @@ define([
         FATAL: 50
     };
 
-    function BaseWriter() {
+    function IEConsoleWriter() {
     }
 
-    BaseWriter.prototype = {
-        _levelName: function(level) {
-            if (level<=Level.DEBUG)
-                return "DEBUG";
-            if (level<=Level.INFO)
-                return "INFO";
-            if (level<=Level.WARN)
-                return "WARN";
-            if (level<=Level.ERROR)
-                return "ERROR";
-            return "FATAL";
-        },
+    IEConsoleWriter.prototype = {
+            output:  function(level, messages) {
+            // console.log will magically appear in IE8 when the user opens the
+            // F12 Developer Tools, so we have to test for it every time.
+            if (console===undefined || console.log===undefined)
+                    return;
+            for (i=0; i<messages.length; i++)
+                if (typeof messages[i]!=="string")
+                    messages[i]=messages[i].toString();
 
-        format: function(level, message) {
-            var level_name = this._levelName(level);
-            return "[" + level_name + "] " + message;
+            var message = messages.join(" ");
+
+            if (level<=Level.DEBUG) {
+                // console.debug exists but is deprecated
+                message="[DEBUG]"+message;
+                console.log(messages);
+            } else if (level<=Level.INFO)
+                console.info(message);
+            else if (level<=Level.WARN)
+                console.warn(message);
+            else
+                console.error(message);
         }
     };
+
 
     function ConsoleWriter() {
     }
 
-    ConsoleWriter.prototype = new BaseWriter();
-    ConsoleWriter.prototype.output = function(level, message) {
-        // console.log will magically appear in IE8 when the user opens the
-        // F12 Developer Tools, so we have to test for it every time.
-        if (console!==undefined && console.log!==undefined)
-            console.log(this.format(level, message));
-    };
-
-
-    function FirebugWriter() {
-    }
-
-    FirebugWriter.prototype = new BaseWriter();
-    FirebugWriter.prototype.output = function(level, message) {
-        var formatted = this.format(level, message);
-        if (level<=Level.DEBUG)
-            console.debug(formatted);
-        else if (level<=Level.INFO)
-            console.info(formatted);
-        else if (level<=Level.WARN)
-            console.warn(formatted);
-        else
-            console.error(formatted);
+    ConsoleWriter.prototype = {
+        output: function(level, messages) {
+            if (level<=Level.DEBUG) {
+                // console.debug exists but is deprecated
+                messages.unshift("[DEBUG]");
+                console.log.apply(console, messages);
+            } else if (level<=Level.INFO)
+                console.info.apply(console, messages);
+            else if (level<=Level.WARN)
+                console.warn.apply(console, messages);
+            else
+                console.error.apply(console, messages);
+        }
     };
 
 
@@ -119,30 +116,31 @@ define([
             return this._getFlag("level");
         },
 
-        log: function(level, message) {
-            if (!this._getFlag("enabled") || level<this._getFlag("level"))
+        log: function(level, messages) {
+            if (!messages.length || !this._getFlag("enabled") || level<this._getFlag("level"))
                 return;
-            writer.output(level, message);
+            messages=Array.prototype.slice.call(messages);
+            writer.output(level, messages);
         },
 
-        debug: function(message) {
-            this.log(Level.DEBUG, message);
+        debug: function() {
+            this.log(Level.DEBUG, arguments);
         },
 
-        info: function(message) {
-            this.log(Level.INFO, message);
+        info: function() {
+            this.log(Level.INFO, arguments);
         },
 
-        warn: function(message) {
-            this.log(Level.WARN, message);
+        warn: function() {
+            this.log(Level.WARN, arguments);
         },
 
-        error: function(message) {
-            this.log(Level.ERROR, message);
+        error: function() {
+            this.log(Level.ERROR, arguments);
         },
 
-        fatal: function(message) {
-            this.log(Level.FATAL, message);
+        fatal: function() {
+            this.log(Level.FATAL, arguments);
         }
     };
 
@@ -154,10 +152,10 @@ define([
         writer=w;
     }
 
-    if (window.console!==undefined && window.console.debug!==undefined)
-        setWriter(new FirebugWriter());
-    else
+    if (window.console && window.console.log && window.console.log.apply!==undefined)
         setWriter(new ConsoleWriter());
+    else
+        setWriter(new IEConsoleWriter());
 
     root=new Logger("root");
 
