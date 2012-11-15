@@ -43,7 +43,7 @@ define([
 
                 if (state.toggled)
                     for (i=0; i<options.length; i++)
-                        toggle._update(options[i].selector, options[i].attr, options[i].value);
+                        toggle._update(options[i].selector, options[i].attr, options[i].value, true);
 
                 $trigger
                     .off(".toggle")
@@ -104,12 +104,12 @@ define([
 
             for (i=0; i<state.options.length; i++) {
                 option=state.options[i];
-                toggle._update(option.selector, option.attr, option.value);
+                toggle._update(option.selector, option.attr, option.value, false);
             }
             event.preventDefault();
         },
 
-        _update: function(selector, attr, value) {
+        _update: function(selector, attr, value, reset) {
             var $targets = $(selector),
                 $target;
 
@@ -121,10 +121,16 @@ define([
             } else {
                 for (var i=0; i<$targets.length; i++) {
                     $target=$targets.eq(i);
-                    if ($target.attr(attr)===attr) {
-                        $target.removeAttr(attr);
+                    if ($target.attr(attr)) {
+                        if (reset)
+                            $target.removeAttr(attr);
+                        else
+                            $target.prop(attr, false);
                     } else {
-                        $target.attr(attr, value);
+                        if (reset)
+                            $target.attr(attr, attr);
+                        else
+                            $target.prop(attr, true);
                     }
                 }
             }
