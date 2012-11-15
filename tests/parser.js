@@ -133,6 +133,14 @@ describe("Core / Parser", function() {
                 expect(opts.selector).toBe("nav:first");
             });
 
+            it("Multiple arguments", function() {
+                var parser=new ArgumentParser();
+                parser.add_argument("foo");
+                parser.add_argument("bar");
+                var opts = parser._parse("foo: one; bar: two");
+                expect(opts).toEqual({foo: "one", bar: "two"});
+            });
+
             it("Ignore unknown named parameter", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("selector");
