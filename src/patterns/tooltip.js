@@ -10,7 +10,8 @@ define([
     'jquery',
     "../registry",
     "../core/parser",
-    './inject'
+    "./inject",
+    "../core/remove"
 ], function($, patterns, Parser, inject) {
     var parser = new Parser("tooltip");
 
@@ -34,8 +35,10 @@ define([
             return $el.each(function() {
                 var $trigger = $(this),
                     options = parser.parse($trigger, opts);
-                $trigger.removeAttr("title");
-                $trigger.data("patterns.tooltip", options);
+                $trigger
+                    .removeAttr("title")
+                    .data("patterns.tooltip", options)
+                    .on("destroy", $trigger, tooltip.onDestroy);
                 tooltip.setupShowEvents($trigger);
                 $trigger.addClass("inactive");
             });
@@ -142,6 +145,13 @@ define([
             $(window).off("." + namespace);
             tooltip.setupShowEvents($trigger);
             $trigger.removeClass("active").addClass("inactive");
+        },
+
+        onDestroy: function(event) {
+            var $trigger = event.data,
+                $container = $trigger.data("patterns.tooltip.container");
+            if ($container!==undefined)
+                $container.remove();
         },
 
         getContainer: function($trigger, create) {
