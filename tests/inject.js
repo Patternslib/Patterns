@@ -150,6 +150,23 @@ describe("inject-pattern", function() {
                 expect($target2.html()).toBe("repl");
             });
 
+            it("sets/unsets load class 'injecting'", function() {
+                var callback = jasmine.createSpy("patterns-injected");
+                $(document).on("patterns-injected", callback);
+
+                pattern.init($a);
+                $a.trigger("click");
+                
+                expect($div.hasClass("injecting")).toBeTruthy();
+
+                answer('<html><body>'
+                       + '<div id="someid">repl</div>'
+                       + '</body></html>');
+                expect($div.hasClass("injecting")).toBeFalsy();
+
+                expect(callback).toHaveBeenCalled();
+            });
+
             // XXX: Tests for ::element ::after, ...
         });
 
