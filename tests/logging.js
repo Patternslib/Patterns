@@ -92,8 +92,8 @@ describe("Core / logging", function() {
             it("Log at current level", function() {
                 var writer = logging.getWriter();
                 spyOn(writer, "output");
-                logging.info("Test message");
                 logging.setLevel(logging.Level.INFO);
+                logging.info("Test message");
                 expect(writer.output).toHaveBeenCalledWith(logging.Level.INFO, ["Test message"]);
             });
 
