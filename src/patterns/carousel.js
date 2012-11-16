@@ -30,7 +30,8 @@ define([
 
         init: function($el, opts) {
             return $el.each(function() {
-                var options = parser.parse($(this), opts),
+                var $carousel = $(this),
+                    options = parser.parse($carousel, opts),
                     settings = {hashTags: false};
 
                 settings.autoPlay = options.auto.play;
@@ -44,27 +45,46 @@ define([
                 settings.animationTime = options.time.animation;
                 settings.onInitialized = carousel.onInitialized;
                 settings.onSlideInit = carousel.onSlideInit;
-
-                var $carousel = $(this).anythingSlider(settings),
-                    control = $carousel.data("AnythingSlider"),
-                    $panel_links = $();
-
-                $carousel
-                    .children().each(function(index, el) {
-                        if (!this.id)
-                            return;
-
-                        var $links = $("a[href=#" + this.id+"]");
-                        if (index===control.currentPage)
-                            $links.addClass("current");
-                        else
-                            $links.removeClass("current");
-                        $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
-                        $panel_links = $panel_links.add($links);
-                    }).end()
-                    .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
+                carousel.setup($carousel, settings);
             });
         },
+
+	setup: function($el, settings) {
+            var loaded = true,
+                $images = $el.find("img"),
+                img, i;
+            for (i=0; loaded && i<$images.length; i++) {
+                img=$images[i];
+                if (!img.complete || img.naturalWidth===0) 
+                    loaded=false;
+            }
+            if (!loaded) {
+                log.debug("Delaying carousel setup until images have loaded.");
+                setTimeout(function() {
+                    carousel.setup($el, settings);
+                }, 50);
+                return;
+            }
+
+            var $carousel = $el.anythingSlider(settings),
+                control = $carousel.data("AnythingSlider"),
+                $panel_links = $();
+
+            $carousel
+                .children().each(function(index, el) {
+                    if (!this.id)
+                        return;
+
+                    var $links = $("a[href=#" + this.id+"]");
+                    if (index===control.currentPage)
+                        $links.addClass("current");
+                    else
+                        $links.removeClass("current");
+                    $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+                    $panel_links = $panel_links.add($links);
+                }).end()
+                .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
+	},
 
         _loadPanelImages: function(slider, page) {
             var $img;
