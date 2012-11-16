@@ -72,7 +72,7 @@ define([
         this._parent=parent || null;
         if (name==="root") {
             this._enabled=true;
-            this._level=Level.INFO;
+            this._level=Level.WARN;
         }
     }
 
