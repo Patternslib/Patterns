@@ -73,25 +73,18 @@ define([
             tinyMCE.baseURL = URI(args.tinymceBaseurl).absoluteTo(u).toString();
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
-            var $tinymce,
-                modified = utils.debounce(function() {
+            var $tinymce, $tinyifr,
+                changed = utils.debounce(function() {
                     $tinymce.off('.pat-tinymce');
-                    $form.removeClass("saved").addClass("modified");
-                    $form.data({modified: true});
-                    log.debug('modified');
+                    $tinyifr.trigger('change');
                 }, 400);
             $form.on('pat-ajax-success.pat-tinymce', function() {
-                $tinymce.on('keyup.pat-tinymce', modified);
-                $form.removeClass("modified").addClass("saved");
-                $form.data({
-                    lastSaved: new Date(),
-                    modified: false
-                });
-                log.debug('saved');
+                $tinymce.on('keyup.pat-tinymce', changed);
             });
             cfg.oninit = function() {
-                $tinymce = $('#' + id + '_ifr').contents().find('#tinymce');
-                $tinymce.on('keyup.pat-tinymce', modified);
+                $tinyifr = $('#' + id + '_ifr');
+                $tinymce = $tinyifr.contents().find('#tinymce');
+                $tinymce.on('keyup.pat-tinymce', changed);
             };
 
             // initialize editor
