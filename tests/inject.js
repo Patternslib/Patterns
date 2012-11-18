@@ -169,7 +169,61 @@ describe("inject-pattern", function() {
                 expect(callback).toHaveBeenCalled();
             });
 
-            // XXX: Tests for ::element ::after, ...
+            it("copies into target if source has ::element", function() {
+                $a.attr("data-pat-inject", "#otherid::element; #someid");
+
+                pattern.init($a);
+                $a.trigger("click");
+                answer('<html><body>'
+                       + '<div id="otherid" class="someclass">repl</div>'
+                       + '</body></html>');
+
+                expect($div.children().attr("id")).toBe("otherid");
+                expect($div.children().attr("class")).toBe("someclass");
+            });
+
+            it("replaces target if both selectors have ::element", function() {
+                $a.attr("data-pat-inject", "#someid::element; #otherid::element");
+                $div.append($('<div id="otherid" />'));
+
+                pattern.init($a);
+                $a.trigger("click");
+                answer('<html><body>'
+                       + '<div id="someid" class="someclass">repl</div>'
+                       + '</body></html>');
+
+                expect($div.children().attr("id")).toBe("someid");
+                expect($div.children().attr("class")).toBe("someclass");
+            });
+
+            it("allows ::before and ::after in target selector", function() {
+                $a.attr("data-pat-inject", "target: #target1::after && target: #target2::before");
+                $target1 = $('<div id="target1">content</div>');
+                $target2 = $('<div id="target2">content</div>');
+                $div.append($target1).append($target2);
+
+                pattern.init($a);
+                $a.trigger("click");
+                answer('<html><body>'
+                       + '<div id="someid">repl</div>'
+                       + '</body></html>');
+
+                expect($target1.html()).toBe("contentrepl");
+                expect($target2.html()).toBe("replcontent");
+            });
+
+            it("allows mixing ::element and ::after in target", function() {
+                $a.attr("data-pat-inject", "target: #otherid::element::after");
+                $div.append($('<div id="otherid" />'));
+
+                pattern.init($a);
+                $a.trigger("click");
+                answer('<html><body>'
+                       + '<div id="someid">repl</div>'
+                       + '</body></html>');
+
+                expect($div.contents().last().text()).toBe("repl");
+            });
         });
 
 
