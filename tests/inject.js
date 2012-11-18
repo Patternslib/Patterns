@@ -80,12 +80,12 @@ describe("inject-pattern", function() {
             spyOn($, "ajax");
         });
             
-        describe("inject on anchor", function() {
 
+        describe("inject on anchor", function() {
             var $a, $div;
 
             beforeEach(function() {
-                $a = $('<a class="pat-inject" href="test.html#someid">link</a>'),
+                $a = $('<a class="pat-inject" href="test.html#someid">link</a>');
                 $div = $('<div id="someid" />');
                 $("#lab").append($a).append($div);
             });
@@ -164,8 +164,8 @@ describe("inject-pattern", function() {
                 answer('<html><body>'
                        + '<div id="someid">repl</div>'
                        + '</body></html>');
-                expect($div.hasClass("injecting")).toBeFalsy();
 
+                expect($div.hasClass("injecting")).toBeFalsy();
                 expect(callback).toHaveBeenCalled();
             });
 
