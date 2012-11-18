@@ -213,13 +213,14 @@ define([
             });
 
             var onSuccess = function(ev) {
-                if (!ev.data) {
+                var data = ev && ev.jqxhr && ev.jqxhr.responseText;
+                if (!data) {
                     log.warn('No response content, aborting', ev);
                     return;
                 }
                 // list of $source objects, one for each cfg
                 var sources = cfgs.map(function(cfg) { return cfg.source; }),
-                    sources$ = _._sourcesFromHtml(ev.data, cfgs[0].url, sources);
+                    sources$ = _._sourcesFromHtml(data, cfgs[0].url, sources);
 
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
