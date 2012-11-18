@@ -65,6 +65,7 @@ define([
     './patterns/edit-tinymce',
     './patterns/expandable',
     './patterns/focus',
+    './patterns/form-state',
     './patterns/fullcalendar',
     './patterns/inject',
     './patterns/menu',
