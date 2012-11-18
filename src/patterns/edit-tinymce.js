@@ -4,9 +4,10 @@ define([
     "../core/parser",
     '../core/logging',
     '../registry',
+    "../utils",
     'URIjs/URI',
     'tinymce'
-], function($, ajax, Parser, logging, registry, URI) {
+], function($, ajax, Parser, logging, registry, utils, URI) {
     var log = logging.getLogger('editTinyMCE'),
         parser = new Parser("edit-tinymce");
 
@@ -71,6 +72,27 @@ define([
                 cfg.content_css = URI(cfg.content_css).absoluteTo(u).toString();
             tinyMCE.baseURL = URI(args.tinymceBaseurl).absoluteTo(u).toString();
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
+
+            var $tinymce,
+                modified = utils.debounce(function() {
+                    $tinymce.off('.pat-tinymce');
+                    $form.removeClass("saved").addClass("modified");
+                    $form.data({modified: true});
+                    log.debug('modified');
+                }, 400);
+            $form.on('pat-ajax-success.pat-tinymce', function() {
+                $tinymce.on('keyup.pat-tinymce', modified);
+                $form.removeClass("modified").addClass("saved");
+                $form.data({
+                    lastSaved: new Date(),
+                    modified: false
+                });
+                log.debug('saved');
+            });
+            cfg.oninit = function() {
+                $tinymce = $('#' + id + '_ifr').contents().find('#tinymce');
+                $tinymce.on('keyup.pat-tinymce', modified);
+            };
 
             // initialize editor
             var tinymce = tinyMCE.init(cfg);
