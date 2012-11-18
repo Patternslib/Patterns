@@ -169,6 +169,7 @@ define([
         setWriter(new IEConsoleWriter());
 
     root=new Logger("root");
+    root = root.getLogger("patterns");
 
     var logconfig = /pat-loglevel(|-[^=]+)=([^&]+)/g,
         match;
