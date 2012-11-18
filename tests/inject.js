@@ -174,7 +174,46 @@ describe("inject-pattern", function() {
 
 
         describe("inject on forms", function() {
-            // XXX
+            var $form, $div;
+
+            beforeEach(function() {
+                $form = $('<form class="pat-inject" action="test.html#someid" />');
+                $div = $('<div id="someid" />');
+                $("#lab").append($form).append($div);
+            });
+
+
+            it("trigger injection on submit", function() {
+                pattern.init($form);
+                $form.trigger('submit');
+                answer('<html><body>'
+                       + '<div id="someid">repl</div>'
+                       + '</body></html>');
+
+                expect($div.html()).toBe("repl");
+            });
+
+            it("pass get form parameters in ajax call as data", function() {
+                $form.attr('method', 'get');
+                $form.append($('<input type="text" name="param" value="somevalue" />'));
+
+                pattern.init($form);
+                $form.trigger('submit');
+
+                expect($.ajax).toHaveBeenCalled();
+                expect($.ajax.mostRecentCall.args[0].data).toContain('param=somevalue');
+            });
+
+            it("pass post form parameters in ajax call as data", function() {
+                $form.attr('method', 'post');
+                $form.append($('<input type="text" name="param" value="somevalue" />'));
+
+                pattern.init($form);
+                $form.trigger('submit');
+
+                expect($.ajax).toHaveBeenCalled();
+                expect($.ajax.mostRecentCall.args[0].data).toContain('param=somevalue');
+            });
         });
     });
 });
