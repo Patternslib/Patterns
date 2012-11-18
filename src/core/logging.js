@@ -2,6 +2,7 @@
  * Patterns logging - minimal logging framework
  *
  * Copyright 2012 Simplon B.V.
+ * Copyright 2012 Florian Friesdorf
  */
 
 define([
@@ -116,10 +117,20 @@ define([
             return this._getFlag("level");
         },
 
+        getFullname: function() {
+            var names = [],
+                logger = this;
+            while (logger.name !== "root") {
+                names.unshift(logger.name);
+                logger = logger._parent;
+            }
+            return names.join(".");
+        },
+
         log: function(level, messages) {
             if (!messages.length || !this._getFlag("enabled") || level<this._getFlag("level"))
                 return;
-            messages=Array.prototype.slice.call(messages);
+            messages=[this.getFullname() + ":"].concat(messages);
             writer.output(level, messages);
         },
 
