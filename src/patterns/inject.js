@@ -233,7 +233,7 @@ define([
                             $src = $source.clone(),
                             $injected = cfg.$injected || $src;
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
-                            $injected.data('pat-injected', {origin: cfg.url})
+                            $injected.data('pat-injected', {origin: cfg.url});
                             $injected.addClass(cfg["class"])
                                 .trigger('patterns-injected', cfg);
                         }
