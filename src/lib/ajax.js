@@ -1,31 +1,57 @@
 define([
-        "../core/logging"
-], function(logging) {
+    "jquery",
+    "../core/logging"
+], function($, logging) {
     var log = logging.getLogger('ajaxlib');
 
-    var submit = function($el, opts) {
-        // XXX: make these only defaults
-        opts.context = $el;
-        opts.error = function(a,b,c,d) {
-            log.error(arguments);
+    // XXX: this should become a pattern to make use of jquery.form's
+    // captureClick among others
+    var ajax = function($el, opts) {
+        opts = opts || {};
+
+        var args = {
+            context: $el,
+            url: opts.url || undefined,
+            error: function(jqxhr, status, error) {
+                // error can als stem from a javascript exception, not
+                // only errors described in the jqxhr
+                log.error({error: error, jqxhr: jqxhr});
+                $el.trigger({
+                    type: "pat-ajax-error",
+                    error: error,
+                    jqxhr: jqxhr
+                });
+            },
+            success: function(data, status, jqxhr) {
+                log.debug("success: jqxhr:", jqxhr);
+                $el.trigger({
+                    type: "pat-ajax-success",
+                    jqxhr: jqxhr
+                });
+            }
         };
 
         if ($el.is('form')) {
             log.debug('form submit', $el);
-            opts.url = $el.attr('action');
+            // XXX: switch to default GET (jquery and jquery.form)
+            args.type = $el.attr('method') || 'POST';
+            // XXX: to be handled as default by ajaxSubmit/ajaxForm
+            args.url = $el.attr('action');
+            // XXX: to be handled as default by ajaxSubmit/ajaxForm
             if (opts.beforeSerialize) {
                 opts.beforeSerialize();
             }
-            opts.data = $el.serialize() + '&submit=submit';
-            opts.type = $el.attr('method') || 'POST';
-            $.ajax(opts);
+            // XXX: this needs to become extra-data passed to the
+            // ajax/inject pattern
+            args.data = $el.serialize() + '&submit=submit';
+            $.ajax(args);
         } else {
             log.debug('submit', $el);
-            $.ajax(opts);
+            $.ajax(args);
         }
     };
 
-    return submit;
+    return ajax;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

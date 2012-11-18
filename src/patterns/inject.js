@@ -212,14 +212,14 @@ define([
                 cfg.$target.addClass(cfg.targetLoadClasses);
             });
 
-            var onSuccess = function(data, status, jqxhr) {
-                if (!data) {
-                    log.warn('No response content, aborting', status, jqxhr);
+            var onSuccess = function(ev) {
+                if (!ev.data) {
+                    log.warn('No response content, aborting', ev);
                     return;
                 }
                 // list of $source objects, one for each cfg
                 var sources = cfgs.map(function(cfg) { return cfg.source; }),
-                    sources$ = _._sourcesFromHtml(data, cfgs[0].url, sources);
+                    sources$ = _._sourcesFromHtml(ev.data, cfgs[0].url, sources);
 
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
@@ -248,11 +248,13 @@ define([
                     if (!$el.hasClass("autoLoading-visible"))
                         window.location.href = $el.attr('href');
                 }
+                $el.off('pat-ajax-success.pat-inject');
             };
 
+            $el.on('pat-ajax-success.pat-inject', onSuccess);
+
             ajax($el, {
-                url: cfgs[0].url,
-                success: onSuccess
+                url: cfgs[0].url
             });
         },
         _inject: function($source, $target, action, classes) {
