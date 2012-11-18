@@ -71,21 +71,23 @@ describe("inject-pattern", function() {
     });
 
     describe("DOM tests", function() {
+        var answer = function(html) {
+            expect($.ajax).toHaveBeenCalled();
+            $.ajax.mostRecentCall.args[0]['success'](html);
+        };
+
+        beforeEach(function() {
+            spyOn($, "ajax");
+        });
             
         describe("inject on anchor", function() {
-            var $a, $div, answer;
 
-            answer = function(html) {
-                expect($.ajax).toHaveBeenCalled();
-                $.ajax.mostRecentCall.args[0]['success'](html);
-            };
+            var $a, $div;
 
             beforeEach(function() {
                 $a = $('<a class="pat-inject" href="test.html#someid">link</a>'),
                 $div = $('<div id="someid" />');
                 $("#lab").append($a).append($div);
-
-                spyOn($, "ajax");
             });
 
 
