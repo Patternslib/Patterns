@@ -7,14 +7,14 @@
 define([
     "jquery",
     "../core/parser",
-    "logging",
+    "../core/logging",
     "../lib/ajax",
     "../registry",
     "URIjs/URI",
     "jquery_ext", // for :scrollable for autoLoading-visible
     "URIjs/jquery.URI"
 ], function($, Parser, logging, ajax, registry, URI) {
-    var log = logging.getLogger('patterns.pat.inject'),
+    var log = logging.getLogger('pat.inject'),
         parser = new Parser("inject");
 
     //parser.add_argument('selector', 'body');

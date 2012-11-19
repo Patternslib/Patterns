@@ -7,9 +7,9 @@
  */
 define([
     'jquery',
-    'logging'
+    './logging'
 ], function($, logging) {
-    var log = logging.getLogger('patternslib.parser');
+    var log = logging.getLogger('parser');
 
     function ArgumentParser(name) {
         this.order = [];

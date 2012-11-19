@@ -1,10 +1,10 @@
 define([
     "jquery",
     '../registry',
-    'logging',
+    '../core/logging',
     '../utils'
 ], function($, registry, logging, utils) {
-    var log = logging.getLogger('patterns.pat.autosubmit');
+    var log = logging.getLogger('pat.autosubmit');
 
     var _ = {
         name: "autosubmit2",
