@@ -9,11 +9,11 @@
 define([
     'jquery',
     "../registry",
-    'logging',
+    '../core/logging',
     "../core/parser",
     "../core/store"
 ], function($, patterns, logging, Parser, store) {
-    var log = logging.getLogger('patterns.pat.toggle'),
+    var log = logging.getLogger('pat.toggle'),
         parser = new Parser("toggle");
 
     parser.add_argument("selector");

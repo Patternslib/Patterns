@@ -1,9 +1,9 @@
 define([
     'jquery',
-    'logging',
+    '../core/logging',
     '../registry'
 ], function($, logging, registry) {
-    var log = logging.getLogger('patterns.pat.breadcrumbs');
+    var log = logging.getLogger('pat.breadcrumbs');
 
     var _ = {
         name: "breadcrumbs",

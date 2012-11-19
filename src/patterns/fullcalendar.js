@@ -1,11 +1,11 @@
 define([
     'jquery',
-    'logging',
+    '../core/logging',
     '../utils',
     "../registry",
     'jquery_fullcalendar'
 ], function($, logging, utils, registry) {
-    var log = logging.getLogger('patterns.pat.fullcalendar');
+    var log = logging.getLogger('pat.fullcalendar');
 
     var fullcalendar = {
         name: "fullcalendar",

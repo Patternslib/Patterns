@@ -6,12 +6,12 @@
 define([
     "jquery",
     "./inject",
-    "logging",
+    "../core/logging",
     "../core/parser",
     "../core/store",
     "../registry"
 ], function($, inject, logging, Parser, store, registry) {
-    var log = logging.getLogger("patterns.pat.collapsible"),
+    var log = logging.getLogger("pat.collapsible"),
         parser = new Parser("collapsible");
 
     parser.add_argument("load-content");
