@@ -6,6 +6,7 @@ define([
     '../registry',
     "../utils",
     'URIjs/URI',
+    'jquery_textchange',
     'tinymce'
 ], function($, ajax, Parser, logging, registry, utils, URI) {
     var log = logging.getLogger('editTinyMCE'),
@@ -73,18 +74,24 @@ define([
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
             var $tinymce, $tinyifr,
-                changed = utils.debounce(function() {
-                    $tinymce.off('.pat-tinymce');
-                    $tinyifr.trigger('change');
-                }, 400);
-            $form.on('pat-ajax-success.pat-tinymce', function() {
-                $tinymce.on('keyup.pat-tinymce', changed);
-            });
+                propagate = function(ev) {
+                    $tinyifr.trigger(ev);
+                };
             cfg.oninit = function() {
+                // find tiny's iframe and edit field
                 $tinyifr = $('#' + id + '_ifr');
                 $tinymce = $tinyifr.contents().find('#tinymce');
-                $tinymce.on('keyup.pat-tinymce', changed);
+
+                // propagate first textchange event outside the iframe
+                $tinymce.one('textchange.pat-tinymce', propagate);
             };
+
+            // reactivate textchange propagation on reset and successfull submit
+            $form.on('reset.pat-tinymce pat-ajax-success.pat-tinymce', function() {
+                $tinymce
+                    .off('.pat-tinymce')
+                    .one('textchange.pat-tinymce', propagate);
+            });
 
             // initialize editor
             var tinymce = tinyMCE.init(cfg);
