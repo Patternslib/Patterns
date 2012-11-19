@@ -31,7 +31,7 @@ define([
                 // create collapsible structure
                     $trigger = $el.children(':first'),
                     $content = $el.children(':gt(0)'),
-                    $panel, state;
+                    $panel, state, storage;
                 if ($content.length > 0)
                     $panel = $content.wrapAll('<div class="panel-content" />')
                         .parent();
