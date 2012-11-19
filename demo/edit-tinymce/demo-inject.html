@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="../base.css" type="text/css">
+		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div data-pat-inject="target: #content">
+			<a class="pat-inject" href="index.html">Rich editor (body)</a>
+			<a class="pat-inject" data-pat-inject="source: #div1" href="index.html">Rich editor (div)</a>
+			<a class="pat-inject" data-pat-inject="source: #form1" href="index.html">Rich editor (form)</a>
+		</div>
+		<div id="content">
+			Original div content
+		</div>
+	</body>
+</html>
