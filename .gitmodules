@@ -7,3 +7,6 @@
 [submodule "src/3rdparty/URIjs"]
 	path = src/3rdparty/URIjs
 	url = git://github.com/medialize/URI.js.git
+[submodule "src/3rdparty/jquery.textchange"]
+	path = src/3rdparty/jquery.textchange
+	url = git://gist.github.com/424774.git
