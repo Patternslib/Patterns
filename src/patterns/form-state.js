@@ -26,6 +26,7 @@ define([
             $form.addClass("modified")
                 .off('.pat-form-state')
                 .one('reset.pat-form-state', _.setReset)
+                .one('pat-ajax-error.pat-form-state', _.setError)
                 .one('pat-ajax-success.pat-form-state', _.setSaved);
             log.debug('modified');
         },
@@ -42,6 +43,11 @@ define([
                      _.setModified);
             log.debug('reset');
         },
+        setError: function(ev) {
+            var $form = $(this),
+                msg = [ev.jqxhr.status, ev.jqxhr.statusText].join(' ');
+            $form.prepend('<p class="message error">' + msg + '</p>');
+        },
         setSaved: function() {
             var $form = $(this);
             _.setReset.call($form);
@@ -57,7 +63,6 @@ define([
             );
 
             $form.addClass("saved");
-            log.debug('saved');
         }
     };
     registry.register(_);
