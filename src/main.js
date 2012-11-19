@@ -11,11 +11,10 @@ requirejs.config({
         jquery_placeholder: "./3rdparty/jquery.placeholder",
         jquery_validate: "./3rdparty/jquery-validation/jquery.validate",
         jquery_validate_additional_methods: "./3rdparty/jquery-validation/additional-methods",
-        log4javascript: "./3rdparty/log4javascript/log4javascript_uncompressed",
+        logging: "./3rdparty/logging/src/logging",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
-        tinymce: "./3rdparty/tiny_mce/tiny_mce_src",
-        logging: "./3rdparty/logging/src/logging"
+        tinymce: "./3rdparty/tiny_mce/tiny_mce_src"
     },
     shim: {
         jquery_anythingslider: {
