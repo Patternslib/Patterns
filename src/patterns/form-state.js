@@ -1,11 +1,11 @@
 define([
     "jquery",
-    "../core/logging",
+    "../core/logger",
     "../registry",
     '../utils',
     './modal'
-], function($, logging, registry, utils, modal) {
-    var log = logging.getLogger('form-state');
+], function($, logger, registry, utils, modal) {
+    var log = logger.getLogger('form-state');
 
     var _ = {
         name: "form-state",
