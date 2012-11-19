@@ -14,7 +14,8 @@ requirejs.config({
         log4javascript: "./3rdparty/log4javascript/log4javascript_uncompressed",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
-        tinymce: "./3rdparty/tiny_mce/tiny_mce_src"
+        tinymce: "./3rdparty/tiny_mce/tiny_mce_src",
+	logging: "./3rdparty/logging/src/logging"
     },
     shim: {
         jquery_anythingslider: {

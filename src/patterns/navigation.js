@@ -1,9 +1,9 @@
 define([
     'jquery',
-    '../core/logging',
+    'logging',
     '../registry'
 ], function($, logging, registry) {
-    var log = logging.getLogger('navigation');
+    var log = logging.getLogger('patternslib.pattern.navigation');
 
     var _ = {
         name: "navigation",

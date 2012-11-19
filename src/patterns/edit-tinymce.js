@@ -2,12 +2,12 @@ define([
     'jquery',
     '../lib/ajax',
     "../core/parser",
-    '../core/logging',
+    'logging',
     '../registry',
     'URIjs/URI',
     'tinymce'
 ], function($, ajax, Parser, logging, registry, URI) {
-    var log = logging.getLogger('editTinyMCE'),
+    var log = logging.getLogger('patternslib.pattern.editTinyMCE'),
         parser = new Parser("edit-tinymce");
 
     parser.add_argument('theme-baseurl');
