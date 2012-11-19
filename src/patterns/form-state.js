@@ -13,6 +13,9 @@ define([
             if ($form.length > 1)
                 return $form.each(function() { _.init($(this)); });
 
+            // XXX: hide reset buttons until we have proper handling for them
+            $form.find('[type=reset]').hide();
+
             _.setReset.call($form);
 
             return $form;
