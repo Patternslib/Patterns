@@ -3,7 +3,7 @@ define([
     '../registry',
     'jquery_chosen'
 ], function(logging, registry) {
-    var log = logging.getLogger('patternslib.pattern.chosen');
+    var log = logging.getLogger('patterns.pat.chosen');
 
     var _ = {
         name: "chosen",

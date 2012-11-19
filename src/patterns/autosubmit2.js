@@ -4,7 +4,7 @@ define([
     'logging',
     '../utils'
 ], function($, registry, logging, utils) {
-    var log = logging.getLogger('patternslib.pattern.autosubmit');
+    var log = logging.getLogger('patterns.pat.autosubmit');
 
     var _ = {
         name: "autosubmit2",

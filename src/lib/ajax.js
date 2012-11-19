@@ -1,7 +1,7 @@
 define([
         "logging"
 ], function(logging) {
-    var log = logging.getLogger('patternslib.ajaxlib');
+    var log = logging.getLogger('patterns.ajaxlib');
 
     var submit = function($el, opts) {
         // XXX: make these only defaults

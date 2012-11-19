@@ -4,7 +4,7 @@ define([
     "logging",
     "../registry"
 ], function($, Parser, logging, registry) {
-    var log = logging.getLogger("patternslib.pattern.checklist"),
+    var log = logging.getLogger("patterns.pat.checklist"),
         parser = new Parser("checklist");
     parser.add_argument("select", ".functions .select-all");
     parser.add_argument("deselect", ".functions .deselect-all");
