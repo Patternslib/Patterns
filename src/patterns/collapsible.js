@@ -23,7 +23,7 @@ define([
     var _ = {
         name: "collapsible",
         trigger: ".pat-collapsible",
-
+        jquery_plugin: true,
         init: function($el, opts) {
             return $el.each(function() {
                 var $el = $(this),
