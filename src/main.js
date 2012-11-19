@@ -9,6 +9,7 @@ requirejs.config({
         jquery_form: "./lib/jquery.form/jquery.form",
         jquery_fullcalendar: "./3rdparty/fullcalendar/fullcalendar",
         jquery_placeholder: "./3rdparty/jquery.placeholder",
+        jquery_textchange: "./3rdparty/jquery.textchange/jquery.textchange",
         jquery_validate: "./3rdparty/jquery-validation/jquery.validate",
         jquery_validate_additional_methods: "./3rdparty/jquery-validation/additional-methods",
         modernizr: "./3rdparty/modernizr-2.0.6",
