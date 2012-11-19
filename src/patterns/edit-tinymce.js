@@ -2,14 +2,14 @@ define([
     'jquery',
     '../lib/ajax',
     "../core/parser",
-    '../core/logging',
+    '../core/logger',
     '../registry',
     "../utils",
     'URIjs/URI',
     'jquery_textchange',
     'tinymce'
-], function($, ajax, Parser, logging, registry, utils, URI) {
-    var log = logging.getLogger('editTinyMCE'),
+], function($, ajax, Parser, logger, registry, utils, URI) {
+    var log = logger.getLogger('pat.editTinyMCE'),
         parser = new Parser("edit-tinymce");
 
     parser.add_argument('tinymce-baseurl');

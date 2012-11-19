@@ -1,11 +1,11 @@
 define([
     "jquery",
     "../registry",
-    "../core/logging",
+    "../core/logger",
     "../core/parser",
     "../utils"
-], function($, patterns, logging, Parser, utils) {
-    var log = logging.getLogger("autosubmit"),
+], function($, patterns, logger, Parser, utils) {
+    var log = logger.getLogger("pat.autosubmit"),
         parser = new Parser("autosubmit");
     parser.add_argument("delay");
 

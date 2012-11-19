@@ -12,6 +12,7 @@ requirejs.config({
         jquery_textchange: "./3rdparty/jquery.textchange/jquery.textchange",
         jquery_validate: "./3rdparty/jquery-validation/jquery.validate",
         jquery_validate_additional_methods: "./3rdparty/jquery-validation/additional-methods",
+        logging: "./3rdparty/logging/src/logging",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
         tinymce: "./3rdparty/tiny_mce/tiny_mce_src"
