@@ -15,7 +15,7 @@ requirejs.config({
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
         tinymce: "./3rdparty/tiny_mce/tiny_mce_src",
-	logging: "./3rdparty/logging/src/logging"
+        logging: "./3rdparty/logging/src/logging"
     },
     shim: {
         jquery_anythingslider: {
