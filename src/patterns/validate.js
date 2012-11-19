@@ -1,10 +1,10 @@
 define([
     "jquery",
     "../registry",
-    '../core/logging',
+    'logging',
     "jquery_validate"
 ], function($, patterns, logging) {
-    var log = logging.getLogger('validate');
+    var log = logging.getLogger('patternslib.pattern.validate');
 
     var pattern_spec = {
         name: "validate",

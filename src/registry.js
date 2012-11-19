@@ -8,13 +8,13 @@
  */
 define([
     "jquery",
-    "./core/logging",
+    "logging",
     "./transforms",
     "./utils",
     // below here modules that are only loaded
     "./compat"
 ], function($, logging, transforms, utils) {
-    var log = logging.getLogger('registry'),
+    var log = logging.getLogger('patternslib.registry'),
         jquery_plugin = utils.jquery_plugin;
 
     var registry = {

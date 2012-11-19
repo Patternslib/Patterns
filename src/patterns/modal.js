@@ -1,11 +1,11 @@
 define([
     'jquery',
-    '../core/logging',
+    'logging',
     "../core/parser",
     "../registry",
     "./inject"
 ], function($, logging, Parser, registry, inject) {
-    var log = logging.getLogger('modal'),
+    var log = logging.getLogger('patternslib.pattern.modal'),
         parser = new Parser("modal");
 
     parser.add_argument("class");
