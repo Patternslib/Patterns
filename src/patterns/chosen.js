@@ -1,9 +1,9 @@
 define([
-    '../core/logging',
+    '../core/logger',
     '../registry',
     'jquery_chosen'
-], function(logging, registry) {
-    var log = logging.getLogger('pat.chosen');
+], function(logger, registry) {
+    var log = logger.getLogger('pat.chosen');
 
     var _ = {
         name: "chosen",
