@@ -23,7 +23,7 @@ define([
             $form.find('[type=reset]').prop('disabled', false);
             $form.find('[type=submit]').prop('disabled', false);
 
-            $form.removeClass("saved").addClass("modified")
+            $form.addClass("modified")
                 .off('.pat-form-state')
                 .one('reset.pat-form-state', _.setReset)
                 .one('pat-ajax-success.pat-form-state', _.setSaved);
