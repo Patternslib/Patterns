@@ -2,8 +2,9 @@ define([
     "jquery",
     "../core/logging",
     "../registry",
-    '../utils'
-], function($, logging, registry, utils) {
+    '../utils',
+    './modal'
+], function($, logging, registry, utils, modal) {
     var log = logging.getLogger('form-state');
 
     var _ = {
@@ -49,7 +50,20 @@ define([
         setError: function(ev) {
             var $form = $(this),
                 msg = [ev.jqxhr.status, ev.jqxhr.statusText].join(' ');
-            $form.prepend('<p class="message error">' + msg + '</p>');
+            modal.init($(
+                '<div class="pat-modal small">' +
+                    '<h3>Error</h3>' +
+                    '<div class="wizard-box">' +
+                    '<div class="panel-body">' +
+                    '<p>A server error has occured.</p>' +
+                    '<p>The error message is: <strong>' + msg + '</strong>.</p>' +
+                    '</div>' +
+                    '<div class="buttons panel-footer">' +
+                    '<button class="close-panel">Ok</button>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>'
+            ).appendTo($('body')));
         },
         setSaved: function() {
             var $form = $(this);
