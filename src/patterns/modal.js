@@ -5,7 +5,7 @@ define([
     "../registry",
     "./inject"
 ], function($, logging, Parser, registry, inject) {
-    var log = logging.getLogger('patternslib.pattern.modal'),
+    var log = logging.getLogger('patterns.pat.modal'),
         parser = new Parser("modal");
 
     parser.add_argument("class");

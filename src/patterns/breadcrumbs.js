@@ -3,7 +3,7 @@ define([
     'logging',
     '../registry'
 ], function($, logging, registry) {
-    var log = logging.getLogger('patternslib.pattern.breadcrumbs');
+    var log = logging.getLogger('patterns.pat.breadcrumbs');
 
     var _ = {
         name: "breadcrumbs",

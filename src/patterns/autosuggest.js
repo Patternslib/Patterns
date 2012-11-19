@@ -11,7 +11,7 @@ define([
     'jquery_autosuggest',
     'jquery_form'
 ], function($, logging, Parser, registry, utils) {
-    var log = logging.getLogger('patternslib.pattern.autosuggest');
+    var log = logging.getLogger('patterns.pat.autosuggest');
 
     var parser = new Parser("autosuggest");
     parser.add_argument('words', "");

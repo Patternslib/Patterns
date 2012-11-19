@@ -11,7 +11,7 @@ define([
     "../core/store",
     "../registry"
 ], function($, inject, logging, Parser, store, registry) {
-    var log = logging.getLogger("patternslib.pattern.collapsible"),
+    var log = logging.getLogger("patterns.pat.collapsible"),
         parser = new Parser("collapsible");
 
     parser.add_argument("load-content");

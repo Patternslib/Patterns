@@ -4,7 +4,7 @@ define([
     'logging',
     "jquery_validate"
 ], function($, patterns, logging) {
-    var log = logging.getLogger('patternslib.pattern.validate');
+    var log = logging.getLogger('patterns.pat.validate');
 
     var pattern_spec = {
         name: "validate",

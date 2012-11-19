@@ -13,7 +13,7 @@ define([
     "../core/parser",
     "../core/store"
 ], function($, patterns, logging, Parser, store) {
-    var log = logging.getLogger('patternslib.pattern.toggle'),
+    var log = logging.getLogger('patterns.pat.toggle'),
         parser = new Parser("toggle");
 
     parser.add_argument("selector");

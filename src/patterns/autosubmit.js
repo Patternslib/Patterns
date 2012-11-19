@@ -5,7 +5,7 @@ define([
     "../core/parser",
     "../utils"
 ], function($, patterns, logging, Parser, utils) {
-    var log = logging.getLogger("patternslib.pattern.autosubmit"),
+    var log = logging.getLogger("patterns.pat.autosubmit"),
         parser = new Parser("autosubmit");
     parser.add_argument("delay");
 
