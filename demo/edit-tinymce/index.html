@@ -2,13 +2,14 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Demo page</title>
-		<script data-main="../src/main" src="../lib/require.js" type="text/javascript" charset="utf-8"></script>
+    		<link rel="stylesheet" href="../base.css" type="text/css">
+    		<link rel="stylesheet" href="edit-tinymce.css" type="text/css">
+		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<form>
-			<h1>Rich Editor</h1>
-			<textarea id="edit1" class="pat-edit-tinymce">
+			<h1>Rich editor demo page</h1>
+			<textarea id="edit1" class="pat-edit-tinymce" data-pat-edit-tinymce="tinymce-baseurl: ../../src/3rdparty/tiny_mce" data-tinymce-json='{"plugins": "paste,inlinepopups", "theme": "advanced", "theme_advanced_buttons1": "bold,italic,bullist,numlist,undo,redo,removeformat,link,unlink,image,cleanup,formatselect", "theme_advanced_blockformats": "p,h1,h2,h3,blockquote,img", "relative_urls": false, "content_css": "tiny-content.css"}'>
 				<h3>Some structure to be edited</h3>
 				<p>
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
@@ -20,3 +21,4 @@
 		</form>
 	</body>
 </html>
+
