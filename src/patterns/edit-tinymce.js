@@ -18,7 +18,6 @@ define([
         trigger: 'form textarea.pat-edit-tinymce',
         init: function($el, opts) {
             var $form = $el.parents('form'),
-                $resetbtn = $form.find('[type=reset]'),
                 id = $el.attr('id');
 
             // make sure the textarea has an id
@@ -99,19 +98,10 @@ define([
                 })(id)
             };
 
-            $form.on('submit', function(ev) {
+            $form.on('submit.pat-tinymce', function(ev) {
                 ev.preventDefault();
                 ajax($form, ajaxopts);
             });
-
-            // XXX: we hijack the reset button, but currently only reset
-            // the tiny textarea.
-            $resetbtn.on('click.pat-edit-tinymce', (function(id) {
-                return function(ev) {
-                    ev.preventDefault();
-                    tinyMCE.editors[id].load();
-                };
-            })(id));
 
             return $el;
         },
