@@ -1,8 +1,8 @@
 define([
     "jquery",
-    "../core/logging"
+        "logging"
 ], function($, logging) {
-    var log = logging.getLogger('ajaxlib');
+    var log = logging.getLogger('patterns.ajaxlib');
 
     // XXX: this should become a pattern to make use of jquery.form's
     // captureClick among others

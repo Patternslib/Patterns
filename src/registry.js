@@ -8,13 +8,13 @@
  */
 define([
     "jquery",
-    "./core/logging",
+    "./core/logger",
     "./transforms",
     "./utils",
     // below here modules that are only loaded
     "./compat"
-], function($, logging, transforms, utils) {
-    var log = logging.getLogger('registry'),
+], function($, logger, transforms, utils) {
+    var log = logger.getLogger('registry'),
         jquery_plugin = utils.jquery_plugin;
 
     var registry = {
@@ -24,7 +24,7 @@ define([
             transforms.transformContent($content);
             for (var name in registry.patterns) {
                 pattern = registry.patterns[name];
-                plog = logging.getLogger(name);
+                plog = logger.getLogger(name);
 
                 // construct set of matching elements
                 $match = $content.filter(pattern.trigger);

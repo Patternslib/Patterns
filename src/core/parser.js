@@ -7,9 +7,9 @@
  */
 define([
     'jquery',
-    '../core/logging'
-], function($, logging) {
-    var log = logging.getLogger('parser');
+    './logger'
+], function($, logger) {
+    var log = logger.getLogger('parser');
 
     function ArgumentParser(name) {
         this.order = [];

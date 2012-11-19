@@ -1,10 +1,10 @@
 define([
     "jquery",
     "../registry",
-    "../core/logging",
+    "../core/logger",
     "../core/parser"
-], function($, patterns, logging, Parser) {
-    var log = logging.getLogger("switch"),
+], function($, patterns, logger, Parser) {
+    var log = logger.getLogger("pat.switch"),
         parser = new Parser("switch");
     parser.add_argument("selector");
     parser.add_argument("remove");

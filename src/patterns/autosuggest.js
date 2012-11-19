@@ -4,14 +4,14 @@
 // - prefill and ashtmlid in data-auto-suggest-config
 define([
     'jquery',
-    '../core/logging',
+    '../core/logger',
     '../core/parser',
     '../registry',
     '../utils',
     'jquery_autosuggest',
     'jquery_form'
-], function($, logging, Parser, registry, utils) {
-    var log = logging.getLogger('autosuggest');
+], function($, logger, Parser, registry, utils) {
+    var log = logger.getLogger('pat.autosuggest');
 
     var parser = new Parser("autosuggest");
     parser.add_argument('words', "");
