@@ -7,11 +7,11 @@
 define([
     "jquery",
     "../registry",
-    "../core/logging",
+    "../core/logger",
     "../core/parser",
     "jquery_anythingslider"
-], function($, patterns, logging, Parser) {
-    var log = logging.getLogger("pat.carousel"),
+], function($, patterns, logger, Parser) {
+    var log = logger.getLogger("pat.carousel"),
         parser = new Parser("carousel");
 
     parser.add_argument("auto-play", false);

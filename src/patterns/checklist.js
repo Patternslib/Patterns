@@ -1,10 +1,10 @@
 define([
     "jquery",
     "../core/parser",
-    "../core/logging",
+    "../core/logger",
     "../registry"
-], function($, Parser, logging, registry) {
-    var log = logging.getLogger("pat.checklist"),
+], function($, Parser, logger, registry) {
+    var log = logger.getLogger("pat.checklist"),
         parser = new Parser("checklist");
     parser.add_argument("select", ".functions .select-all");
     parser.add_argument("deselect", ".functions .deselect-all");
