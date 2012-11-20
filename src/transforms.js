@@ -17,8 +17,7 @@ define([
             });
         },
 
-        transformContent: function(root) {
-            var $root = $(root);
+        transformContent: function($root) {
             $root.find("legend:not(.cant-touch-this)").each(function() {
                 $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
             });
