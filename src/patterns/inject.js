@@ -33,8 +33,7 @@ define([
 
     var _ = {
         name: "inject",
-        trigger: "a.pat-inject:not(.record-history)," +
-            "form.pat-inject:not(.record-history)",
+        trigger: "a.pat-inject, form.pat-inject",
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
