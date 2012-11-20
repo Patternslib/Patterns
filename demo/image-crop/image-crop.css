@@ -1,0 +1,45 @@
+.row {
+    overflow:hidden;
+}
+
+.column {
+    float: left;
+    width: 235px;
+}
+
+.column.wide {
+    width: 500px;
+}
+
+.column.narrow {
+    width: 175px;
+}
+
+.column fieldset.concise {
+    width: 235px;
+}
+
+.column fieldset.concise input {
+    width: 100%;
+}
+
+.column fieldset.concise label {
+    width: 25%;
+    padding-left: 10%;
+}
+
+.preview {
+    width: 168px;
+    border: 1px solid #DFDFDF;
+    float: left;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    height: 168px;
+    overflow: hidden;
+}
+
+.preview img {
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+}

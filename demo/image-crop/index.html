@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+        <link rel="stylesheet" href="../base.css" type="text/css">
+        <link rel="stylesheet" href="image-crop.css" type="text/css">
+        <link rel="stylesheet" href="jquery.Jcrop.min.css" type="text/css">
+		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+	    <div class="row">
+            <form id="crop-demo-form">
+                <div class="column narrow">
+	                <div class="preview">
+	                    <img src="pool.jpg" id="image-crop-preview">
+	                </div>
+    	        </div>
+    	        <div class="column wide">
+    	            <img src="pool.jpg" class="pat-image-crop" data-pat-image-crop="preview-id: #image-crop-preview" />
+    	        </div>	        
+    	        <div class="column">
+        	        <fieldset class="concise">
+    	                <label for="x1">x1
+    	                    <input type="text" name="x1" />
+    	                </label>
+    	                <label for="y1">y1
+        	                <input type="text" name="y1" />
+        	            </label>
+    	                <label for="x2">x2
+        	                <input type="text" name="x2" />
+        	            </label>
+    	                <label for="y2">y2
+        	                <input type="text" name="y2" />
+     	                </label>
+    	                <label for="w">w
+        	                <input type="text" name="w" />
+    	                </label>
+    	                <label for="h">h
+        	                <input type="text" name="h" />
+                        </label>
+        	        </fieldset>
+        	    </div>
+        	</form>
+	    </div>
+	</body>
+</html>
