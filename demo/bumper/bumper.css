@@ -2,7 +2,22 @@
 
 .bumped {
 	position: fixed !important;
+}
+
+.bumped-top {
 	top: 30px;
+}
+
+.bumped-bottom {
+    bottom: 30px;
+}
+
+.bumped-right {
+    right: 30px;
+}
+
+.bumped-left {
+    left: 30px;
 }
 
 /* @end */
