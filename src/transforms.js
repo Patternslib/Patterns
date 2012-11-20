@@ -18,6 +18,11 @@ define([
         },
 
         transformContent: function($root) {
+            $root
+                .filter(".record-history")
+                .add(".record-history", $root)
+                .addClass('.cant-touch-this');
+
             $root.find("legend:not(.cant-touch-this)").each(function() {
                 $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
             });
