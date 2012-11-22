@@ -9,8 +9,38 @@
 	</head>
 	<body>
 		<h1>Markdown formatted content</h1>
+
+		<a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">
+			Load and inject markdown content.
+		</a>
+		<div id="target">
+			Here some markdown rendered content will apear if you click the link above.
+		</div>
+
 		<a href="content.md" class="pat-inject autoLoading-visible">
 			<p>This content and the anchor tag will be replaced (Its tags included)</p>
 		</a>
+
+		<!-- this area's content will be converted to html and injected
+		into a div after the textarea. The textarea will then be hidden
+		-->
+		<textarea class="pat-markdown" readonly="readonly">
+			# Header 1
+
+			## Header 2
+
+			Some *markdown* content, readonly.
+		</textarea>
+
+		<!-- this area's content will be converted to html and injected
+		into a div after the textarea. The textarea will then be hidden.
+		-->
+		<textarea class="pat-markdown">
+			# Header 1
+
+			## Header 2
+
+			Some *markdown* content.
+		</textarea>
 	</body>
 </html>
