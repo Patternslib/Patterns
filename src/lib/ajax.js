@@ -15,7 +15,7 @@ define([
             error: function(jqxhr, status, error) {
                 // error can als stem from a javascript exception, not
                 // only errors described in the jqxhr
-                log.error({error: error, jqxhr: jqxhr});
+                log.error("load error for " + opts.url + ":", error, jqxhr);
                 $el.trigger({
                     type: "pat-ajax-error",
                     error: error,
