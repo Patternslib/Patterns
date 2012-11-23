@@ -60,12 +60,45 @@ describe("bumper-pattern", function() {
 
 			var $bumper = $("#lab .pat-bumper");
 			pattern.init($bumper);
-			
-			var opts = $bumper.data("patterns.bumper");
-			pattern._testBump($bumper, opts.threshold + 10);
-			expect($bumper.hasClass("bumped")).toBeTruthy();
-			pattern._testBump($bumper, opts.threshold - 10);
+			var opts = $bumper.data("patterns.bumper");			
+			var box = {
+			    top: opts.threshold.top - 10 // should not be bumped on top
+			    bottom: opts.threshold.top + 10 // not bumped on bottom
+			    left: opts.threshold.top - 10 // not bumped left
+			    right: opts.threshold.right + 10 // not bumped right
+			}
+
+			pattern._testBump($bumper, box);
 			expect($bumper.hasClass("bumped")).toBeFalsy();
+			
+			// bump top
+			box.top += 10;
+			pattern._testBump($bumper, box);
+			expect($bumper.hasClass("bumped")).toBe(true);
+			expect($bumper.hasClass("bumped-top")).toBe(true);
+			expect($bumper.hasClass("bumped-bottom")).toBe(false);
+			expect($bumper.hasClass("bumped-left")).toBe(false);
+			expect($bumper.hasClass("bumped-right")).toBe(false);
+			
+			// bump bottom
+			box.top -= 20;
+			box.bottom -= 20;
+			pattern._testBump($bumper, box);
+			expect($bumper.hasClass("bumped")).toBe(true);
+			expect($bumper.hasClass("bumped-top")).toBe(false);
+			expect($bumper.hasClass("bumped-bottom")).toBe(true);
+			expect($bumper.hasClass("bumped-left")).toBe(false);
+			expect($bumper.hasClass("bumped-right")).toBe(false);
+			
+			// bump bottom and left
+			box.left += 20;
+			pattern._testBump($bumper, box);
+			expect($bumper.hasClass("bumped")).toBe(true);
+			expect($bumper.hasClass("bumped-top")).toBe(false);
+			expect($bumper.hasClass("bumped-bottom")).toBe(true);
+			expect($bumper.hasClass("bumped-left")).toBe(true);
+			expect($bumper.hasClass("bumped-right")).toBe(false);
+			
 		});
 	});
 });
