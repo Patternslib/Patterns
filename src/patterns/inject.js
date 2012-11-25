@@ -177,7 +177,7 @@ define([
 
             cfg.action = targetMod + targetPosition;
 
-            // Once we start detacting illegal combinations, we'll
+            // Once we start detecting illegal combinations, we'll
             // return false in case of error
             return true;
         },
@@ -304,6 +304,7 @@ define([
             url = url || "";
             var $html;
             $html = $('<div/>').html(
+                // remove script tags and head and replace body by a div
                 html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
                     .replace(/<body(.*)>/gi, '<div id="__original_body">')
