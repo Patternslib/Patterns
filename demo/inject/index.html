@@ -5,48 +5,78 @@
 		<title>Demo page</title>
 		<link rel="stylesheet" href="../base.css" type="text/css">
 		<link rel="stylesheet" href="inject.css" type="text/css">
-
-		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
+		<script data-main="../../src/main" src="../../lib/require.js" charset="utf-8"></script>
 	</head>
 	<body>
 
+		<p><a href="pattern-test-response.html#content"
+		      class="pat-inject">
+			Minimal inject into content div</a></p>
+
+		<div id="content">
+			<p>Content will appear in this div</p>
+		</div>
+
+		<hr />
+
 		<ul>
-			<li>
-				<a href="pattern-test-response.html#login-success" rel=".modal!class=loginModal">Modal test with injection source and extra class</a>
+			<li data-pat-inject="source: #notes > .note1::element">
+				Add note1 to the
+				<a href="pattern-test-response.html"
+				   class="pat-inject"
+				   data-pat-inject="target: #list::before">top</a>
+				or
+				<a href="pattern-test-response.html"
+				   class="pat-inject"
+				   data-pat-inject="target: #list::after">bottom</a>
+				of the list.
 			</li>
-			<li>
-				<a href="pattern-test-response.html#hola" rel=".modal!class=panel1">Modal Window, class panel1</a>
+			<li data-pat-inject="source: #notes > .note2::element">
+				Add note2 to the
+				<a href="pattern-test-response.html"
+				   class="pat-inject"
+				   data-pat-inject="target:#list::before">top</a>
+				or
+				<a href="pattern-test-response.html"
+				   class="pat-inject"
+				   data-pat-inject="target: #list::after">bottom</a>
+				or
+				<a href="pattern-test-response.html"
+				   class="pat-inject"
+				   data-pat-inject="target: #list > .marker::element::after">after each marker</a>
+				of the list.
 			</li>
-			<li>
-				<a href="pattern-test-response.html#hola" rel=".modal!class=panel2">Modal Window, class panel2</a>
+			<li data-pat-inject="source: #notes > .marker::element">
+				Add new marker to the
+				<a href="pattern-test-response.html"
+				   class="pat-inject" data-pat-inject="target: #list::after">bottom</a>
+				of the list.
 			</li>
 		</ul>
 
-		<hr/>
-		<div id="autoLoading-test" style="overflow-y:auto; overflow-x: hidden; height: 200px; width:200px;">
-			AutoLoading example. Scroll down and the list should grow automatically.
+		<ul id="list">
+			<li class="marker">Will be build up to the top and bottom (marker)</li>
+		</ul>
 
-			<ul id="listToUpdate" style="display:block; margin:0;">
-				<li>0</li>
-				<li>1</li>
-				<li>2</li>
-				<li>3</li>
-				<li>4</li>
-				<li>5</li>
-				<li>6</li>
-				<li>7</li>
-				<li>8</li>
-				<li>9</li>
-			</ul>
-			<p id="buttonBarMore" style="width:150px;">
-				<a href="pattern-test-response.html" class="pat-inject pat-autoload-visible" data-pat-inject="append: #listToUpdate && #buttonBarMore">More&hellip;</a>
-			</p>
-		</div>
+		<p>
+			<a href="pattern-test-response.html"
+			   class="pat-inject"
+			   data-pat-inject="#empty-list; #list::element
+					    && #empty-content; #content">
+				Empty notices and content</a>
+		</p>
+
+		<hr />
+
 
 		<div id="panel1">
 			<ul data-pat-inject="target: #panel2">
-				<li><a href="pattern-test-response.html#cata-panel2">Cat A</a></li>
-				<li><a href="pattern-test-response.html#catb-panel2">Cat B</a></li>
+				<li><a href="pattern-test-response.html#cata-panel2"
+				       class="pat-inject">
+					Cat A</a></li>
+				<li><a href="pattern-test-response.html#catb-panel2"
+				       class="pat-inject">
+					Cat B</a></li>
 				<li>etc...</li>
 			</ul>
 		</div>
