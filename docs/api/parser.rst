@@ -71,3 +71,7 @@ Parser API
    This method returns the configuration for a pattern from an object. You can
    optionally provide options that will override default values and values
    found on the element.
+
+   In the returned object all argument names with hyphens are
+   converted to camelCase (i.e. the value of a 'next-href' argument
+   can be found at options.nextHref).
