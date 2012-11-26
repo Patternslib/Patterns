@@ -30,7 +30,7 @@ content. You can easily do that by using a modifier.
    <a href="latest-news.html#content" class="pat-inject"
       data-pat-inject="target: #news::before">Tell me more</a>
 
-   <section id="content">
+   <section id="news">
      ...
    </section>
 
@@ -44,7 +44,7 @@ needs? Don't worry! Lets give you another example:
 
    <section id="section">
      <form action="/my/form" class="pat-inject"
-      data-pat-inject="#content && selector: #notice; type: notification">
+      data-pat-inject="#content && #notice #notices::after">
        ...
      </form>
    </section>
@@ -53,9 +53,7 @@ When you submit this form two things happen: ``#content`` from the
 response is used to replace ``#section``'s content of the page,
 replacing the current form with a new form or a feedback message. In
 addition a ``#notice`` element is extracted from the response and
-shown as a selfhealing notification message.
-
-XXX: adjust to the correct type
+added at the bottom of ``#notices``. 
 
 XXX: cross references for above
 
@@ -77,11 +75,10 @@ body's content and replaces the current body's content with it:
 Admittedly, this is a rare use case. However, it is ideal to
 understand the defaults:
 
-.. note:: Default source and target selector
+.. note:: Default selector and source and target selector
 
-   The default source selector is ``body`` and if no target selector
-   is specified, the source selector will als be used as target
-   selector.
+   The default selector is ``body`` and will be used as target and
+   source selector, unless one or both of them are overridden. 
 
 .. note:: By default we work with/on content
 
@@ -150,7 +147,7 @@ content. In order to work on the elements instead of their content,
 and to put things relative to selected elements, we introduce three
 modifiers:
 
-``:element``
+``::element``
     Select the element, instead of the content.
 
     Can be used for ``source`` and ``target``, and in case of the
@@ -281,7 +278,23 @@ Source element after target content:
 Using full-blown jquery selectors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-XXX: to be done and especially tested
+For both selectors every conceivable jquery selector is allowed. If
+multiple elements match, all will be replaced.
+
+.. code-block:: html
+
+     <a class="pat-inject" href="sources.html"
+        data-pat-inject="target: #parentid > .childrensclass">
+     ...
+     <div id="parentid">
+       <div class="childrensclass">
+         to be replaced by sources.html's body
+       </div>
+       <div class="childrensclass">
+         to be replaced by sources.html's body
+       </div>
+       <div>to stay untouched</div>
+     </div>
 
 
 Non-existing targets
@@ -383,6 +396,9 @@ Injection type (modals)
 -----------------------
 
 XXX: TODO
+
+THIS IS AN EXPERIMENTAL CONCEPT WHICH IS NOT IMPLEMENTED YET, but
+rather still under discussion.
 
 Modals
 ~~~~~~
