@@ -2,7 +2,7 @@ STANDALONE      = name=../lib/almond include=main wrap=true
 BUILDJS         = bundles/build.js
 RJS		= lib/r.js
 PHANTOMJS	?= phantomjs
-SOURCES		= src/lib/jquery.form $(wildcard src/*.js) $(wildcard src/*/*.js)
+SOURCES		= src/lib/jquery.form src/3rdparty/logging/src/logging.js $(wildcard src/*.js) $(wildcard src/*/*.js)
 TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/patterns-standalone.js bundles/patterns-standalone.min.js
 
 all:: $(TARGETS)
@@ -19,7 +19,7 @@ bundles/patterns-standalone.js: $(BUILDJS)
 bundles/patterns-standalone.min.js: $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify $(STANDALONE)
 
-lib/phantom-jasmine src/lib/jquery.form lib/requirejs:
+lib/phantom-jasmine src/lib/jquery.form lib/requirejs src/3rdparty/logging/src/logging.js:
 	git submodule update --init --recursive
 
 all:: build/docs/index.html
