@@ -300,6 +300,13 @@ define([
                 return $source;
             });
         },
+
+        _link_attributes: {
+            A: "href",
+            FORM: "action",
+            IMG: "img"
+        },
+
         _parseRawHtml: function(html, url) {
             url = url || "";
             var $html;
@@ -313,20 +320,15 @@ define([
             // this.(href|action|src) yields absolute uri -> retrieve relative
             // uris with getAttribute
             $html.find(":uri(is:relative)").each(function() {
-                switch (this.tagName) {
-                case "A":
-                    this.href=new URI(this.getAttribute("href"))
-                        .absoluteTo(url).toString();
-                    break;
-                case "FORM":
-                    this.action=new URI(this.getAttribute("action"))
-                        .absoluteTo(url).toString();
-                    break;
-                case "IMG":
-                    this.src=new URI(this.getAttribute("src"))
-                        .absoluteTo(url).toString();
-                    break;
-                }
+                var attr = _._link_attributes[this.tagName],
+                    rel_url;
+                if (!attr)
+                    return;
+                rel_url=this.getAttribute(attr);
+                if (!rel_url || rel_url[0]==="#")
+                    return;
+                url=new URI(rel_url).absoluteTo(url).toString();
+                this[attr]=url;
             });
             return $html;
         },
