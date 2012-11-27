@@ -245,9 +245,12 @@ define([
                     $el.attr({href: cfgs[0].nextHref});
                     _.destroy($el);
 
+                    // XXX: this used to be the case, but I don't see
+                    // why that would be a good idea.
+                    //
                     // jump to new href target
-                    if (!$el.hasClass("autoLoading-visible"))
-                        window.location.href = $el.attr('href');
+                    //if (!$el.hasClass("autoLoading-visible"))
+                    //    window.location.href = $el.attr('href');
                 }
                 $el.off('pat-ajax-success.pat-inject');
             };
