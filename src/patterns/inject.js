@@ -327,11 +327,12 @@ define([
                 rel_url=this.getAttribute(attr);
                 if (!rel_url || rel_url[0]==="#")
                     return;
-                url=new URI(rel_url).absoluteTo(url).toString();
-                this[attr]=url;
+                rel_url=new URI(rel_url).absoluteTo(url).toString();
+                this[attr]=rel_url;
             });
             return $html;
         },
+
         // XXX: hack
         _initAutoloadVisible: function($el) {
             // ignore executed autoloads
