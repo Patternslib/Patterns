@@ -62,11 +62,11 @@ describe("bumper-pattern", function() {
 			pattern.init($bumper);
 			var opts = $bumper.data("patterns.bumper");			
 			var box = {
-			    top: opts.threshold.top - 10 // should not be bumped on top
-			    bottom: opts.threshold.top + 10 // not bumped on bottom
-			    left: opts.threshold.top - 10 // not bumped left
-			    right: opts.threshold.right + 10 // not bumped right
-			}
+                                top: opts.threshold.top - 10, // should not be bumped on top
+                                bottom: opts.threshold.top + 10, // not bumped on bottom
+                                left: opts.threshold.top - 10, // not bumped left
+                                right: opts.threshold.right + 10 // not bumped right
+			};
 
 			pattern._testBump($bumper, box);
 			expect($bumper.hasClass("bumped")).toBeFalsy();
