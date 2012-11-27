@@ -54,7 +54,8 @@ define([
             if ($el.is('a') && $nexthref.length > 0) {
                 log.debug('Skipping as next href already exists', $nexthref);
                 // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({href: cfgs[0].nextHref});
+                return $el.attr({href: (window.location.href.split('#')[0] || '') +
+                                 cfgs[0].nextHref});
             }
 
             // setup event handlers
