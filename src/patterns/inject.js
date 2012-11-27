@@ -242,7 +242,8 @@ define([
                 });
 
                 if (cfgs[0].nextHref) {
-                    $el.attr({href: cfgs[0].nextHref});
+                    $el.attr({href: (window.location.href.split('#')[0] || '') +
+                              cfgs[0].nextHref});
                     _.destroy($el);
 
                     // XXX: this used to be the case, but I don't see
