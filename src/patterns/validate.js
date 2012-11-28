@@ -17,10 +17,10 @@ define([
                     message = $el.data('validator-message');
 
                 path_to_func = varray[1].split('.');
-                func = window[path_to_func[0]];
-                for (i=1; i<path_to_func.length; i++) { 
+                var func = window[path_to_func[0]];
+                for (i=1; i<path_to_func.length; i++) {
                     try {
-                        func = func[path_to_func[i]]; 
+                        func = func[path_to_func[i]];
                     } catch(e) {
                         log.error('Could not find the validator function: ' + varray[1]);
                     }
