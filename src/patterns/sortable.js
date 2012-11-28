@@ -36,14 +36,15 @@ define([
                 // list is being dragged. avoids dragging between lists.
                 $lis.bind('dragover.pat-sortable', function(event) {
                     var $this = $(this),
-                        midlineY = $this.offset().top + $this.height()/2;
+                        midlineY = $this.offset().top - $(document).scrollTop()
+                            + $this.height()/2;
     
                     // bail if dropping on self
                     if ($(this).hasClass('dragged'))
                         return;
 
                     $this.removeClass('drop-target-above drop-target-below');
-                    if (event.originalEvent.pageY > midlineY)
+                    if (event.originalEvent.clientY > midlineY)
                         $this.addClass('drop-target-below');
                     else
                         $this.addClass('drop-target-above');
