@@ -324,7 +324,7 @@ define([
             var $html = $('<div/>').html(clean_html);
 
             if ($html.children().length === 0)
-                log.warn("Parsing html resulted in empty jquery object:", html);
+                log.warn("Parsing html resulted in empty jquery object:", clean_html);
 
             // make relative links in _link_attributes relative to current page
             $html.find(":uri(is:relative)").each(function() {
