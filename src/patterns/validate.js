@@ -12,10 +12,25 @@ define([
 
         init: function($el) {
             var validators = $el.find('[data-validator]').toArray().reduce(function(acc, el) {
+                /*
+                Support for custom validator:
+                -----------------------------
+                The data-* attributes are:
+                - data-validator (classname, method)
+                - data-validator-message  (message)
+
+                Parameters:
+                    *classname* is a string which must be set as a class on the element to validate.
+                    *method* is a string denoting the name of the validating function. 
+                        If it's a nested/namespaced method, you can provide dot notation.
+                    *message* is the error message which will be returned if validation fails.
+                */
                 var i, path_to_func, $el = $(el),
                     varray = $el.data('validator').split(' ', 2),
                     message = $el.data('validator-message');
 
+                // The function might be namespaced (e.g namespace.subnamespace.myfunc)
+                // We therefore need to split on "." and traverse the path.
                 path_to_func = varray[1].split('.');
                 var func = window[path_to_func[0]];
                 for (i=1; i<path_to_func.length; i++) {
@@ -27,7 +42,6 @@ define([
                 }
                 $.validator.addMethod(varray[0], func, message);
             }, {});
-
 
             var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
                 var $el = $(el),
