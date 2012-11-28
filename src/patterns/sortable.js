@@ -70,6 +70,7 @@ define([
                 $lis.unbind('.pat-sortable');
             });
 
+            return $el;
         }
     };
 
