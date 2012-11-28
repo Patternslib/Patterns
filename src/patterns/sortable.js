@@ -14,21 +14,22 @@ define([
             var $lis = $el.children().filter('li');
             
             // add handles and make them draggable for HTML5 and IE8/9
-            var $handles;
-            if('draggable' in document.createElement('span')) {
-                $handles = $('<span class="draghandle" ></span>').appendTo($lis);
+            // it has to be an "a" tag (or img) to make it draggable in IE8/9
+            var $handles = $('<a href="#" class="handle"></a>').appendTo($lis);
+            if('draggable' in document.createElement('span'))
                 $handles.attr('draggable', true);
-            } else {
-                    // it has to be an "a" tag (or img) to make it draggable in IE8/9
-                    $handles = $('<a href="#" class="draghandle"></a>').appendTo($lis);
-                    $handles.bind('selectstart', function(event) {
-                        event.preventDefault();
-                    });
-            }
+            else
+                $handles.bind('selectstart', function(event) {
+                    event.preventDefault();
+                });
                         
             $handles.bind('dragstart', function(event) {
                 // Firefox seems to need this set to any value
                 event.originalEvent.dataTransfer.setData('Text', '');
+                event.originalEvent.dataTransfer.effectAllowed = ['move'];
+                if ('setDragImage' in event.originalEvent.dataTransfer)
+                    event.originalEvent.dataTransfer.setDragImage(
+                        $(this).parent()[0], 0, 0);
                 $(this).parent().addClass('dragged');
            
                 // list elements are only drop targets when one element of the
