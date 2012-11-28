@@ -11,6 +11,24 @@ define([
         trigger: "form.validate",
 
         init: function($el) {
+            var validators = $el.find('[data-validator]').toArray().reduce(function(acc, el) {
+                var i, path_to_func, $el = $(el),
+                    varray = $el.data('validator').split(' ', 2),
+                    message = $el.data('validator-message');
+
+                path_to_func = varray[1].split('.');
+                func = window[path_to_func[0]];
+                for (i=1; i<path_to_func.length; i++) { 
+                    try {
+                        func = func[path_to_func[i]]; 
+                    } catch(e) {
+                        log.error('Could not find the validator function: ' + varray[1]);
+                    }
+                }
+                $.validator.addMethod(varray[0], func, message);
+            }, {});
+
+
             var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
                 var $el = $(el),
                     id = $el.attr('id');
