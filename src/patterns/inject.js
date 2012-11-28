@@ -323,7 +323,7 @@ define([
                     .replace(/<\/body(.*)>/gi,'</div>');
             var $html = $('<div/>').html(clean_html);
 
-            if ($html.children().length() === 0)
+            if ($html.children().length === 0)
                 log.warn("Parsing html resulted in empty jquery object:", html);
 
             // make relative links in _link_attributes relative to current page
