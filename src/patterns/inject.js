@@ -322,13 +322,15 @@ define([
                     .replace(/<body(.*)>/gi, '<div id="__original_body">')
                     .replace(/<\/body(.*)>/gi,'</div>')
             );
-            // this.(href|action|src) yields absolute uri -> retrieve relative
-            // uris with getAttribute
+
+            // make relative links in _link_attributes relative to current page
             $html.find(":uri(is:relative)").each(function() {
                 var attr = _._link_attributes[this.tagName],
                     rel_url;
                 if (!attr)
                     return;
+                // this.(href|action|src) yields absolute uri -> retrieve relative
+                // uris with getAttribute
                 rel_url=this.getAttribute(attr);
                 if (!rel_url || rel_url[0]==="#")
                     return;
