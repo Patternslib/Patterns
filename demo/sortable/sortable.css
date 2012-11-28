@@ -34,15 +34,16 @@ li.drop-target-below {
 	border-bottom: 1px solid #ff0000;
 }
 
-.draghandle {
+.handle {
 	background-color: #808080;
 	display: none;
 	float: right;
 	height: 24px;
 	width: 20px;
+	cursor: move;
 }
 
-li:hover .draghandle {
+li:hover .handle {
 	display: inline-block;
 }
 
