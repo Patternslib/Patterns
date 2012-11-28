@@ -76,6 +76,7 @@ define([
     './patterns/placeholder',
     './patterns/setclass',
     './patterns/sorting',
+    './patterns/sortable',
     './patterns/switch',
     './patterns/toggle',
     './patterns/tooltip',
