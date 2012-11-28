@@ -314,14 +314,14 @@ define([
 
         _parseRawHtml: function(html, url) {
             url = url || "";
-            var $html;
-            $html = $('<div/>').html(
-                // remove script tags and head and replace body by a div
-                html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+
+            // remove script tags and head and replace body by a div
+            var clean_html = html
+                    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
                     .replace(/<body(.*)>/gi, '<div id="__original_body">')
-                    .replace(/<\/body(.*)>/gi,'</div>')
-            );
+                    .replace(/<\/body(.*)>/gi,'</div>');
+            var $html = $('<div/>').html(clean_html);
 
             // make relative links in _link_attributes relative to current page
             $html.find(":uri(is:relative)").each(function() {
