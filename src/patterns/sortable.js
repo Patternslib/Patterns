@@ -35,7 +35,7 @@ define([
                 // list is being dragged. avoids dragging between lists.
                 $lis.bind('dragover.pat-sortable', function(event) {
                     var $this = $(this),
-                        midlineY = $this.offset().top + $this.height();
+                        midlineY = $this.offset().top + $this.height()/2;
     
                     // bail if dropping on self
                     if ($(this).hasClass('dragged'))
