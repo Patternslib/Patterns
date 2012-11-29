@@ -81,20 +81,20 @@ define([
                     bumped = false;
 
                 if (box.top > data.threshold.top) {
-                    $this.addClass('bumped-top');
+                    $this.addClass('bumped-top').removeClass('bumped-bottom');
                     bumped = true;
                 } else if (box.bottom < data.threshold.bottom) {
-                    $this.addClass('bumped-bottom');
+                    $this.addClass('bumped-bottom').removeClass('bumped-top');
                     bumped = true;
                 } else {
                     $this.removeClass('bumped-top bumped-bottom');
                 }
                 
                 if (box.left > data.threshold.left) {
-                    $this.addClass('bumped-left');
+                    $this.addClass('bumped-left').removeClass('bumped-right');
                     bumped = true;
                 } else if (box.right < data.threshold.right) {
-                    $this.addClass('bumped-right');
+                    $this.addClass('bumped-right').removeClass('bumped-left');
                     bumped = true;
                 } else {
                     $this.removeClass('bumped-left bumped-right');

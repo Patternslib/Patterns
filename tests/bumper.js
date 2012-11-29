@@ -44,7 +44,7 @@ describe("bumper-pattern", function() {
                 ].join('\n'));
 			var $bumper = $('#lab .pat-bumper');
 			pattern.init($bumper);
-			expect($bumper.data('patterns.bumper').threshold == $bumper.offset().top - 30).toBeTruthy();
+			expect($bumper.data('patterns.bumper').threshold.top == $bumper.offset().top - 30).toBeTruthy();
 		});
 
 	});
@@ -62,17 +62,17 @@ describe("bumper-pattern", function() {
 			pattern.init($bumper);
 			var opts = $bumper.data("patterns.bumper");			
 			var box = {
-                                top: opts.threshold.top - 10, // should not be bumped on top
-                                bottom: opts.threshold.top + 10, // not bumped on bottom
-                                left: opts.threshold.top - 10, // not bumped left
-                                right: opts.threshold.right + 10 // not bumped right
+                top: opts.threshold.top - 10, // should not be bumped on top
+                bottom: opts.threshold.bottom + 10, // not bumped on bottom
+                left: opts.threshold.left - 10, // not bumped left
+                right: opts.threshold.right + 10 // not bumped right
 			};
 
 			pattern._testBump($bumper, box);
 			expect($bumper.hasClass("bumped")).toBeFalsy();
 			
 			// bump top
-			box.top += 10;
+			box.top += 20;
 			pattern._testBump($bumper, box);
 			expect($bumper.hasClass("bumped")).toBe(true);
 			expect($bumper.hasClass("bumped-top")).toBe(true);
