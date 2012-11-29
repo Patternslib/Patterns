@@ -36,6 +36,9 @@ requirejs.config({
         jquery_placeholder: {
             deps: ["jquery"]
         },
+        jquery_textchange: {
+            deps: ["jquery"]
+        },
         jquery_validate: {
             deps: ["jquery"]
         },
