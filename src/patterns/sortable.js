@@ -23,6 +23,28 @@ define([
                     event.preventDefault();
                 });
 
+            // invisible scroll activation areas
+            var scrollup = $('<div id="pat-scroll-up">&nbsp;</div>'),
+                scrolldn = $('<div id="pat-scroll-dn">&nbsp;</div>'),
+                scroll = $().add(scrollup).add(scrolldn);
+
+            scrollup.css({ top:0 });
+            scrolldn.css({ bottom: 0 });
+            scroll.css({
+                position: 'fixed', zIndex: 999999,
+                height: 32, left: 0, right: 0
+            });
+
+            scroll.bind('dragover', function(event) {
+                event.preventDefault();
+                if ($('html,body').is(':animated')) return;
+
+                var newpos = $(window).scrollTop() +
+                    ($(this).attr('id')=='pat-scroll-up' ? -32 : 32);
+
+                $('html,body').animate({scrollTop: newpos}, 50, 'linear');
+            });
+
             $handles.bind('dragstart', function(event) {
                 // Firefox seems to need this set to any value
                 event.originalEvent.dataTransfer.setData('Text', '');
@@ -36,8 +58,8 @@ define([
                 // list is being dragged. avoids dragging between lists.
                 $lis.bind('dragover.pat-sortable', function(event) {
                     var $this = $(this),
-                        midlineY = $this.offset().top - $(document).scrollTop()
-                            + $this.height()/2;
+                        midlineY = $this.offset().top - $(document).scrollTop() +
+                            $this.height()/2;
 
                     // bail if dropping on self
                     if ($(this).hasClass('dragged'))
@@ -63,11 +85,14 @@ define([
                     $(this).removeClass('drop-target-above drop-target-below');
                     event.preventDefault();
                 });
+
+                scroll.appendTo('body');//.append(scrollup).append(scrolldn);
             });
 
             $handles.bind('dragend', function(event) {
                 $('.dragged').removeClass('dragged');
                 $lis.unbind('.pat-sortable');
+                $('#pat-scroll-up, #pat-scroll-dn').detach();
             });
 
             return $el;
