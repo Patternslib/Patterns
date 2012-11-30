@@ -337,12 +337,10 @@ define([
                 // uris with getAttribute
                 rel_url = this.getAttribute(attr);
                 if (!rel_url) {
-                    log.warn("Couldn't find the relative url for attr:",
-                             $(this), attr);
+                    log.warn("Couldn't find the relative url for attr:", this, attr);
                     return;
                 }
                 if (rel_url[0]==="#") {
-                    log.debug('Leaving url as is:', rel_url);
                     return;
                 }
                 new_rel_url = new URI(rel_url).absoluteTo(url).toString();
