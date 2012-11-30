@@ -13,10 +13,10 @@ bundles/patterns.js: $(SOURCES) $(BUILDJS)
 bundles/patterns.min.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify
 
-bundles/patterns-standalone.js: $(BUILDJS)
+bundles/patterns-standalone.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=none $(STANDALONE)
 
-bundles/patterns-standalone.min.js: $(BUILDJS)
+bundles/patterns-standalone.min.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify $(STANDALONE)
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs src/3rdparty/logging/src/logging.js:
