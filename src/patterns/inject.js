@@ -309,7 +309,7 @@ define([
         _link_attributes: {
             A: "href",
             FORM: "action",
-            IMG: "img"
+            IMG: "src"
         },
 
         _parseRawHtml: function(html, url) {
@@ -329,16 +329,25 @@ define([
             // make relative links in _link_attributes relative to current page
             $html.find(":uri(is:relative)").each(function() {
                 var attr = _._link_attributes[this.tagName],
-                    rel_url;
-                if (!attr)
+                    rel_url, new_rel_url;
+                if (!attr) {
                     return;
+                }
                 // this.(href|action|src) yields absolute uri -> retrieve relative
                 // uris with getAttribute
-                rel_url=this.getAttribute(attr);
-                if (!rel_url || rel_url[0]==="#")
+                rel_url = this.getAttribute(attr);
+                if (!rel_url) {
+                    log.warn("Couldn't find the relative url for attr:",
+                             $(this), attr);
                     return;
-                rel_url=new URI(rel_url).absoluteTo(url).toString();
-                this[attr]=rel_url;
+                }
+                if (rel_url[0]==="#") {
+                    log.debug('Leaving url as is:', rel_url);
+                    return;
+                }
+                new_rel_url = new URI(rel_url).absoluteTo(url).toString();
+                log.debug('Adjusted url from:', rel_url, 'to:', new_rel_url);
+                this[attr]=new_rel_url;
             });
             return $html;
         },
