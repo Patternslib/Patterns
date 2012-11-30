@@ -346,8 +346,10 @@ define([
                     return;
                 }
                 new_rel_url = new URI(rel_url).absoluteTo(url).toString();
-                log.debug('Adjusted url from:', rel_url, 'to:', new_rel_url);
-                this[attr] = new_rel_url;
+                if (new_rel_url !== rel_url) {
+                    log.debug('Adjusted url from:', rel_url, 'to:', new_rel_url);
+                    this[attr] = new_rel_url;
+                }
             });
             return $html;
         },
