@@ -83,14 +83,16 @@ define([
                 $tinymce = $tinyifr.contents().find('#tinymce');
 
                 // propagate first textchange event outside the iframe
-                $tinymce.one('textchange.pat-tinymce', propagate);
+                $tinymce.one('textchange.pat-tinymce', propagate)
+                    .one('change.pat-tinymce', propagate);
             };
 
             // reactivate textchange propagation on reset and successfull submit
             $form.on('reset.pat-tinymce pat-ajax-success.pat-tinymce', function() {
                 $tinymce
                     .off('.pat-tinymce')
-                    .one('textchange.pat-tinymce', propagate);
+                    .one('textchange.pat-tinymce', propagate)
+                    .one('change.pat-tinymce', propagate);
             });
 
             // initialize editor
