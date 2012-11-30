@@ -333,6 +333,7 @@ define([
                 if (!attr) {
                     return;
                 }
+
                 // this.(href|action|src) yields absolute uri -> retrieve relative
                 // uris with getAttribute
                 rel_url = this.getAttribute(attr);
@@ -340,12 +341,13 @@ define([
                     log.warn("Couldn't find the relative url for attr:", this, attr);
                     return;
                 }
-                if (rel_url[0]==="#") {
+                // leave hash and plone views untouched
+                if ((rel_url[0] === "#") || (rel_url[0] === "@")) {
                     return;
                 }
                 new_rel_url = new URI(rel_url).absoluteTo(url).toString();
                 log.debug('Adjusted url from:', rel_url, 'to:', new_rel_url);
-                this[attr]=new_rel_url;
+                this[attr] = new_rel_url;
             });
             return $html;
         },
