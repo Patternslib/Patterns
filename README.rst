@@ -15,7 +15,7 @@ Install
 
 ::
 
-    git clone git://github.com/cornae/Patterns.git
+    git clone git://github.com/Patternslib/Patterns.git
     make
 
 Browser support
