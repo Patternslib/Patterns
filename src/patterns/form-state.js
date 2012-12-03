@@ -65,7 +65,10 @@ define([
                     '</div>'
             ).appendTo($('body')));
         },
-        setSaved: function() {
+        setSaved: function(event) {
+            if (event.target !== this)
+                return;
+
             var $form = $(this);
             _.setReset.call($form);
 
