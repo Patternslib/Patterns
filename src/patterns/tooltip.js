@@ -87,7 +87,7 @@ define([
         show: function(event) {
             event.preventDefault();
             var $trigger = event.data,
-                $container = tooltip.getContainer($trigger),
+                $container = tooltip.getContainer($trigger, true),
                 namespace = $container.attr("id"),
                 options = $trigger.data("patterns.tooltip");
 
@@ -110,8 +110,8 @@ define([
                     target: '#' + target_id + "::element"
                 }], $trigger);
                 // always load fresh tooltips
-                // delete options.ajax;
-                $trigger.data("patterns.tooltip", options);
+                //delete options.ajax;
+                //$trigger.data("patterns.tooltip", options);
             }
 
             tooltip.positionContainer($trigger, $container);
@@ -136,11 +136,16 @@ define([
             $trigger.removeClass("active").addClass("inactive");
         },
 
-        getContainer: function($trigger) {
+        getContainer: function($trigger, create) {
+            var options = $trigger.data("patterns.tooltip");
             var $container = $trigger.data("patterns.tooltip.container");
-            if ($container===undefined) {
+            if (($container===undefined) && (create)) {
                 $container=tooltip.createContainer($trigger);
                 $trigger.data("patterns.tooltip.container", $container);
+            } else if (create) {
+                $container.children().first().html(
+                    '<progress id="tooltip-load-"' + options.number + '"/>"'
+                );
             }
             return $container;
         },
@@ -150,6 +155,7 @@ define([
                 count = ++tooltip.count,
                 $content, $container;
 
+            $trigger.data('patterns.tooltip.number', count);
             $container = $("<div/>", {"class": "tooltip-container",
                                      "id": "tooltip" + count});
             $container.css("visibility", "hidden");
