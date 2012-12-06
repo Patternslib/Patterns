@@ -338,7 +338,7 @@ define([
                 // uris with getAttribute
                 rel_url = this.getAttribute(attr);
                 if (!rel_url) {
-                    log.warn("Couldn't find the relative url for attr:", this, attr);
+                    log.info("Skipping empty url for (el, attr)", this, attr);
                     return;
                 }
                 // leave hash and plone views untouched
