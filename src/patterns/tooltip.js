@@ -137,14 +137,15 @@ define([
         },
 
         getContainer: function($trigger, create) {
-            var options = $trigger.data("patterns.tooltip");
-            var $container = $trigger.data("patterns.tooltip.container");
+            var options = $trigger.data("patterns.tooltip"),
+                $container = $trigger.data("patterns.tooltip.container");
             if (($container===undefined) && (create)) {
                 $container=tooltip.createContainer($trigger);
                 $trigger.data("patterns.tooltip.container", $container);
             } else if (create) {
+                var number = $trigger.data('patterns.tooltip.number');
                 $container.children().first().html(
-                    '<progress id="tooltip-load-"' + options.number + '"/>"'
+                    '<progress id="tooltip-load-' + number + '"/>"'
                 );
             }
             return $container;
