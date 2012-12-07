@@ -21,7 +21,7 @@ define([
     parser.add_argument("selector");
     //XXX: (yet) unsupported: parser.add_argument("target", "$selector");
     parser.add_argument("target");
-    parser.add_argument("type");
+    parser.add_argument("type", "default");
     parser.add_argument("next-href");
     //XXX: (yet) unsupported: parser.add_argument("source", "$selector");
     parser.add_argument("source");
@@ -225,9 +225,8 @@ define([
                     log.warn("No response content, aborting", ev);
                     return;
                 }
-                // list of $source objects, one for each cfg
-                var sources = cfgs.map(function(cfg) { return cfg.source; }),
-                    sources$ = _._sourcesFromHtml(data, cfgs[0].url, sources);
+
+                var sources$ = _.callTypeHandler(cfgs[0].type, 'sources', $el, [cfgs, data, ev]);
 
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
@@ -402,6 +401,33 @@ define([
             $($scrollable[0]).on("scroll", checkVisibility);
             $(window).on("resize.pat-autoload", checkVisibility);
             return false;
+        },
+
+        // XXX: simple so far to see what the team thinks of the idea
+        registerTypeHandler: function(type, handler) {
+            _.handlers[type] = handler;
+        },
+
+        callTypeHandler: function(type, fn, context, params) {
+            if (!type) {
+                log.warn('No type specified');
+                return null;
+            }
+
+            if (_.handlers[type] && $.isFunction(_.handlers[type][fn])) {
+                return _.handlers[type][fn].apply(context, params);
+            } else {
+                return null;
+            }
+        },
+
+        handlers: {
+            'default': {
+                sources: function(cfgs, data) {
+                    var sources = cfgs.map(function(cfg) { return cfg.source; });
+                    return _._sourcesFromHtml(data, cfgs[0].url, sources);
+                }
+            }
         }
     };
 
