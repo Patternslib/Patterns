@@ -4,43 +4,42 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
 		<link rel="stylesheet" href="../base.css" type="text/css">
-		<link rel="stylesheet" href="modal.css" type="text/css">
 		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<h1>Markdown formatted content</h1>
 
-		<a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">
+		<a href="content" class="pat-inject" data-pat-inject="target: #target; type: markdown">
 			Load and inject markdown content.
 		</a>
 		<div id="target">
-			Here some markdown rendered content will apear if you click the link above.
+			Here some markdown rendered content will appear if you click the link above.
 		</div>
 
-		<a href="content.md" class="pat-inject autoLoading-visible">
+        <div id="target-autoload">
+		<a href="content.md" class="pat-inject autoLoading-visible" data-pat-inject="target: #target-autoload">
 			<p>This content and the anchor tag will be replaced (Its tags included)</p>
 		</a>
+		</div>
 
 		<!-- this area's content will be converted to html and injected
 		into a div after the textarea. The textarea will then be hidden
 		-->
-		<textarea class="pat-markdown" readonly="readonly">
-			# Header 1
+		<textarea class="pat-markdown" readonly="readonly"># Header 1
 
-			## Header 2
+## Header 2
 
-			Some *markdown* content, readonly.
+Some *markdown* content, readonly.
 		</textarea>
 
 		<!-- this area's content will be converted to html and injected
 		into a div after the textarea. The textarea will then be hidden.
 		-->
-		<textarea class="pat-markdown">
-			# Header 1
+		<textarea class="pat-markdown"># Some Other Header 1
 
-			## Header 2
+## Some Other Header 2
 
-			Some *markdown* content.
+Some _other_ *markdown* content.
 		</textarea>
 	</body>
 </html>

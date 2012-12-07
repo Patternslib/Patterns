@@ -14,6 +14,8 @@ requirejs.config({
         jquery_validate_additional_methods: "./3rdparty/jquery-validation/additional-methods",
         logging: "./3rdparty/logging/src/logging",
         less: "./3rdparty/less-1.3.1",
+        pagedown_converter: "./3rdparty/pagedown/Markdown.Converter",
+        pagedown_sanitizer: "./3rdparty/pagedown/Markdown.Sanitizer",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
         tinymce: "./3rdparty/tiny_mce/tiny_mce_src"
@@ -45,6 +47,9 @@ requirejs.config({
         },
         jquery_validate_additional_methods: {
             deps: ["jquery_validate"]
+        },
+        pagedown_sanitizer: {
+            deps: ["pagedown_converter"]
         }
     }
 });
@@ -75,6 +80,7 @@ define([
     "./patterns/form-state",
     "./patterns/fullcalendar",
     "./patterns/inject",
+    "./patterns/markdown",
     "./patterns/menu",
     "./patterns/modal",
     "./patterns/navigation",
