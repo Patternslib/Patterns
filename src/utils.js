@@ -57,20 +57,23 @@ define([
 
     var jquery_plugin = function(pattern) {
         var plugin = function(method) {
+            var $this = this;
+            if ($this.length === 0)
+                return $this;
             if (!method || typeof method === "object") {
                 pattern.init.apply(
-                        this,
-                        [this].concat(Array.prototype.slice.call(arguments)));
+                        $this,
+                        [$this].concat(Array.prototype.slice.call(arguments)));
             } else if (pattern[method]) {
                 pattern[method].apply(
-                    this,
-                    [this].concat(Array.prototype.slice.call(arguments, 1))
+                    $this,
+                    [$this].concat(Array.prototype.slice.call(arguments, 1))
                 );
             } else {
                 $.error('Method ' + method +
                         ' does not exist on jQuery.' + pattern.name);
             }
-            return this;
+            return $this;
         };
         return plugin;
     };
