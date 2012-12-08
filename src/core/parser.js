@@ -16,6 +16,8 @@ define([
         this.mappings = {};
         this.parameters = {};
         this.attribute = "data-pat-" + name;
+        this.enum_values = {};
+        this.enum_conflicts = [];
     }
 
     ArgumentParser.prototype = {
@@ -30,9 +32,18 @@ define([
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
                 spec.type=this._typeof(choices[0]);
+                for (var i=0; i<choices.length; i++)
+                    if (this.enum_conflicts.indexOf(choices[i])!==-1)
+                        continue;
+                    else if (choices[i] in this.enum_values) {
+                        this.enum_conflicts.push(choices[i]);
+                        delete this.enum_values[choices[i]];
+                    } else
+                        this.enum_values[choices[i]]=js_name;
             } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                 spec.type=this.parameters[spec.value.slice(1)].type;
             else
+                // Note that this will get reset by _defaults if default_value is a function.
                 spec.type=this._typeof(spec.value);
 
             this.order.push(name);
@@ -99,56 +110,91 @@ define([
             }
         },
 
-        _parse: function(parameter) {
-            var opts = {}, i, name;
+        _parseExtendedNotation: function(parameter) {
+            var opts = {}, i,
+                parts = parameter.split(";"),
+                matches;
 
-            if (parameter) {
-                var parts = parameter.split(";"),
-                    part, matches;
+            for (i=0; i<parts.length; i++) {
+                if (!parts[i])
+                    continue;
 
-                // Grab all positional parameters
-                i=-1;
-                while (parts.length) {
-                    i++;
-                    if (i>=this.order.length) {
-                        break;
-                    }
-                    part = parts.shift().trim();
-                    if (!part)
-                        continue;
-                    if (this.named_param_pattern.test(part)) {
-                        parts.unshift(part);
-                        break;
-                    }
-                    this._set(opts, this.mappings[this.order[i]], part.trim());
+                matches = parts[i].match(this.named_param_pattern);
+                if (!matches) {
+                    log.warn("Invalid parameter: " + parts[i]);
+                    break;
                 }
-
-                // Handle all named parameters
-                for (i=0; i<parts.length; i++) {
-                    if (!parts[i])
-                        continue;
-
-                    matches = parts[i].match(this.named_param_pattern);
-                    if (!matches) {
-                        log.warn("Positional parameters not allowed after named parameters");
-                        break;
-                    }
-                    if (this.parameters[this.mappings[matches[1]]] === undefined) {
-                        log.warn("Unknown named parameter " + matches[1]);
-                        continue;
-                    }
-
-                    this._set(opts, this.mappings[matches[1]], matches[2].trim());
+                if (this.parameters[this.mappings[matches[1]]] === undefined) {
+                    log.warn("Unknown named parameter " + matches[1]);
+                    continue;
                 }
+                this._set(opts, this.mappings[matches[1]], matches[2].trim());
             }
 
             return opts;
         },
 
-        _defaults: function() {
+        _parseShorthandNotation: function(parameter) {
+            var parts = parameter.split(/\s+/),
+                opts = {},
+                positional = true,
+                i, part, flag, sense, matches;
+
+            i=0;
+            while (parts.length) {
+                part=parts.shift().trim();
+                if (part.slice(0, 3)==="no-") {
+                    sense=false;
+                    flag=part.slice(3);
+                } else {
+                    sense=true;
+                    flag=part;
+                }
+                if (flag in this.mappings) {
+                    position=false;
+                    this._set(opts, this.mappings[flag], sense);
+                } else if (flag in this.enum_values) {
+                    position=false;
+                    this._set(opts, this.enum_values[flag], flag);
+                } else if (positional)
+                    this._set(opts, this.mappings[this.order[i]], part);
+                else {
+                    parts.unshift(part);
+                    break;
+                }
+
+                i++;
+                if (i>=this.order.length)
+                    break;
+            }
+            if (parts.length)
+                log.warn("Ignore extra arguments: " + parts.join(" "));
+            return opts;
+        },
+
+        _parse: function(parameter) {
+            var opts = {}, i, name;
+
+            if (!parameter)
+                return {};
+            else if (parameter.match(this.named_param_pattern))
+                return this._parseExtendedNotation(parameter);
+            else
+                return this._parseShorthandNotation(parameter);
+        },
+
+        _defaults: function($el) {
             var result = {};
             for (var name in this.parameters)
-                result[name]=this.parameters[name].value;
+                if (typeof this.parameters[name].value==="function")
+                    try {
+                        result[name]=this.parameters[name].value($el, name);
+                        this.parameters[name].type=typeof result[name];
+                    } catch(e) {
+                        log.error("Default function for " + name + " failed.");
+                    }
+                else
+                    result[name]=this.parameters[name].value;
             return result;
         },
 
@@ -158,7 +204,7 @@ define([
                 options={};
             }
 
-            var stack = [[this._defaults()]];
+            var stack = [[this._defaults($el)]];
 
             var $parents = $el.parents().andSelf(),
                 final_length = 1,
