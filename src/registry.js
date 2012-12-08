@@ -24,7 +24,7 @@ define([
             transforms.transformContent($content);
             for (var name in registry.patterns) {
                 pattern = registry.patterns[name];
-                plog = logger.getLogger(name);
+                plog = logger.getLogger("pat." + name);
 
                 // construct set of matching elements
                 $match = $content.filter(pattern.trigger);
