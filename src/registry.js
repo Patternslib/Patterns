@@ -45,6 +45,8 @@ define([
                 }
             }
         },
+        // XXX: differentiate between internal and custom patterns
+        // _register vs register
         register: function(pattern) {
             if (!pattern.name) {
                 log.error("Pattern lacks name:", pattern);
