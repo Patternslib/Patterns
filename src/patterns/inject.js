@@ -237,7 +237,7 @@ define([
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
                             $injected.filter(function() {
                                 // setting data on textnode fails in IE8 
-                                return this.nodeType !== Node.TEXT_NODE;
+                                return this.nodeType !== 3; //Node.TEXT_NODE
                             }).data('pat-injected', {origin: cfg.url});
                             $injected.addClass(cfg["class"])
                                 .trigger('patterns-injected', cfg);
