@@ -1,3 +1,4 @@
+// This could become a jquery.form replacement or start using jquery.form
 define([
     "jquery",
     "../core/logger"
