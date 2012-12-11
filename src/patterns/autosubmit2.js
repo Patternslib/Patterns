@@ -31,13 +31,6 @@ define([
             var $el = $(this),
                 $form = $el.is('form') ? $el : $el.parents('form').first();
 
-            // ignore auto-suggest fields, the change event will be
-            // triggered on the hidden input
-            if ($el.is('.pat-autosuggest')) {
-                log.debug('ignored event from autosuggest field');
-                return;
-            }
-
             if ($el.is('input[type=search]')) {
                 // clicking X on type=search deletes data attrs,
                 // therefore we store the old value on the form.

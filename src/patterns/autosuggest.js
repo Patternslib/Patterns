@@ -49,6 +49,8 @@ define([
                 $el.next().trigger("change");
             };
 
+            $el.on('change.pat-autosuggest', false);
+
             // XXX: See https://github.com/Patternslib/Patterns/issues/149
             if (cfg['asHtmlId'] !== undefined) {
                 cfg['asHtmlID'] = cfg['asHtmlId'];
