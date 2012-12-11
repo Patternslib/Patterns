@@ -8,26 +8,26 @@ define([
     var _ = {
         name: "ajax",
         trigger: "form.pat-ajax",
-        init: function($el, opts) {
+        init: function($form, opts) {
             // process matches single-file
-            if ($el.length > 1)
-                return $el.each(function() { _.init($(this), opts); });
+            if ($form.length > 1)
+                return $form.each(function() { _.init($(this), opts); });
 
             // remember initial state of the form and after
             // successfull submission
-            _.saveState.call($el);
-            $el.on('pat-ajax-success', _.saveState);
+            _.saveState.call($form);
+            $form.on('pat-ajax-success', _.saveState);
 
             // setup listeners for form to be handled via ajax
-            $el.on('submit.pat-ajax', _.submit);
+            $form.on('submit.pat-ajax', _.submit);
 
             // enable chaining
-            return $el;
+            return $form;
         },
         saveState: function() {
-            var $el = $(this);
-            $el.data('pat-ajax.previous-state', $el.data('pat-ajax.state'));
-            $el.data('pat-ajax.state', $el.serializeArray());
+            var $form = $(this);
+            $form.data('pat-ajax.previous-state', $form.data('pat-ajax.state'));
+            $form.data('pat-ajax.state', $form.serializeArray());
         },
         submit: function(event) {
             if (event)
