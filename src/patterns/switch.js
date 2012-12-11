@@ -13,7 +13,7 @@ define([
     var switcher = {
         name: "switch",
         trigger: ".pat-switch",
-        jquery_plugin: "patternSwitch",
+        jquery_plugin: true,
 
         init: function($el, defaults) {
             return $el.each(function() {

@@ -12,7 +12,7 @@ define([
     var _ = {
         name: "checklist",
         trigger: ".pat-checklist",
-        jquery_plugin: "patternChecklist",
+        jquery_plugin: true,
 
         init: function($el, opts) {
             return $el.each(function() {
