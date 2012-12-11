@@ -20,30 +20,52 @@ define([
     var registry = {
         patterns: {},
         scan: function(content) {
-            var $content = $(content), pattern, $match, plog;
+            var $content = $(content),
+                all = [], allsel,
+                pattern, $match, plog, name;
+
             transforms.transformContent($content);
-            for (var name in registry.patterns) {
+
+            // selector for all patterns and patterns stored by their trigger
+            for (name in registry.patterns) {
                 pattern = registry.patterns[name];
-                plog = logger.getLogger("pat." + name);
-
-                // construct set of matching elements
-                $match = $content.filter(pattern.trigger);
-                $match = $match.add($content.find(pattern.trigger));
-                $match = $match.filter(':not(.cant-touch-this)');
-
-                // call pattern init in case of matching elements, the
-                // pattern returns the set of actually initialised
-                // elements
-                if ($match.length > 0) {
-                    plog.debug('Initialising:', $match);
-                    try {
-                        pattern.init($match);
-                        plog.debug('done.');
-                    } catch (e) {
-                        plog.error("Caught error:", e);
-                    }
+                if (pattern.trigger) {
+                    all.push(pattern.trigger);
                 }
             }
+            allsel = all.join(',');
+
+            // find all elements that belong to any pattern
+            $match = $content.filter(allsel);
+            $match = $match.add($content.find(allsel));
+            $match = $match.filter(':not(.cant-touch-this)');
+
+            // walk list backwards and initialize patterns inside-out.
+            //
+            // XXX: If patterns would only trigger via classes, we
+            // could iterate over an element classes and trigger
+            // patterns in order.
+            //
+            // Advantages: Order of pattern initialization controled
+            // via order of pat-classes and more efficient.
+            $match.toArray().reduceRight(function(acc, el) {
+                var $el = $(el);
+
+                for (name in registry.patterns) {
+                    pattern = registry.patterns[name];
+                    plog = logger.getLogger("pat." + name);
+
+                    if ($el.is(pattern.trigger)) {
+                        plog.debug('Initialising:', $el);
+                        try {
+                            pattern.init($el);
+                            plog.debug('done.');
+                        } catch (e) {
+                            plog.error("Caught error:", e);
+                        }
+                    }
+                }
+            }, null);
         },
         // XXX: differentiate between internal and custom patterns
         // _register vs register
