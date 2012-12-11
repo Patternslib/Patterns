@@ -62,10 +62,10 @@ define([
                 return $this;
             if (!method || typeof method === "object") {
                 pattern.init.apply(
-                        $this,
-                        [$this].concat(Array.prototype.slice.call(arguments)));
+                    $this,
+                    [$this].concat(Array.prototype.slice.call(arguments)));
             } else if (pattern[method]) {
-                pattern[method].apply(
+                return pattern[method].apply(
                     $this,
                     [$this].concat(Array.prototype.slice.call(arguments, 1))
                 );
