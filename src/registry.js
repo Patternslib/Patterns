@@ -84,12 +84,13 @@ define([
 
             // register pattern as jquery plugin
             if (pattern.jquery_plugin) {
-                var pluginName = ("pattern-" + pattern.name)
+                var pluginName = ("pat-" + pattern.name)
                         .replace(/-([a-zA-Z])/g, function(match, p1) {
                             return p1.toUpperCase();
                         });
-                // XXX: here the pattern used to be jquery_plugin wrapped
                 $.fn[pluginName] = jquery_plugin(pattern);
+                // BBB 2012-12-10
+                $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
             }
 
             log.debug('Registered pattern:', pattern.name, pattern);
