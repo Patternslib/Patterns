@@ -6,6 +6,11 @@ ul {
 	margin-bottom: 24px;
 }
 
+ul.scrolling {
+        height: 100px;
+        overflow-y: scroll;
+}
+
 li {
 	border: 1px solid #dedede;
 	width: 250px;
