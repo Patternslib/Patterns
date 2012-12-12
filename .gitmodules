@@ -9,7 +9,7 @@
 	url = git://github.com/medialize/URI.js.git
 [submodule "src/3rdparty/jquery.textchange"]
 	path = src/3rdparty/jquery.textchange
-	url = git://gist.github.com/424774.git
+	url = https://gist.github.com/424774.git
 [submodule "src/3rdparty/logging"]
 	path = src/3rdparty/logging
 	url = git://github.com/Patternslib/logging.git
