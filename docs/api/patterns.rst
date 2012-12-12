@@ -72,7 +72,7 @@ Patterns can also act as jQuery plugins. This can be done by providing a
 
    var pattern_spec = {
        name: "mypattern",
-       jquery_plugin: "patternMypattern",
+       jquery_plugin: true,
 
        init: function($el) {
            ...
@@ -89,16 +89,16 @@ Patterns can also act as jQuery plugins. This can be done by providing a
 
 
 Line 3 tells the patterns framework that this pattern can be used as a jQuery
-plugin named ``patternMyPattern``. You can then interact with it using the
+plugin named ``patMyPattern``. You can then interact with it using the
 standard jQuery API:
 
 .. code-block:: javascript
 
    // Initialize mypattern for #title
-   $("#title").patternMypattern();
+   $("#title").patMypattern();
 
    // Invoke othermethod for the pattern 
-   $("#title").patternMypattern("othermethod", {option: "value"});
+   $("#title").patMypattern("othermethod", {option: "value"});
 
 
 Injection actions
