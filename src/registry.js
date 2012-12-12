@@ -22,12 +22,12 @@ define([
         scan: function(content) {
             var $content = $(content),
                 all = [], allsel,
-                pattern, $match, plog, name;
+                pattern, $match, plog;
 
             transforms.transformContent($content);
 
             // selector for all patterns and patterns stored by their trigger
-            for (name in registry.patterns) {
+            for (var name in registry.patterns) {
                 pattern = registry.patterns[name];
                 if (pattern.trigger) {
                     all.push(pattern.trigger);
@@ -51,7 +51,7 @@ define([
             $match.toArray().reduceRight(function(acc, el) {
                 var $el = $(el);
 
-                for (name in registry.patterns) {
+                for (var name in registry.patterns) {
                     pattern = registry.patterns[name];
                     plog = logger.getLogger("pat." + name);
 
