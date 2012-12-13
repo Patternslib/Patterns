@@ -21,7 +21,8 @@ define([
     parser.add_argument('selector');
     //XXX: (yet) unsupported: parser.add_argument('target', '$selector');
     parser.add_argument('target');
-    parser.add_argument('type', 'default');
+    parser.add_argument('type');
+    parser.add_argument('data-type', 'html');
     parser.add_argument('next-href');
     //XXX: (yet) unsupported: parser.add_argument('source', '$selector');
     parser.add_argument('source');
@@ -78,14 +79,16 @@ define([
             return $el;
         },
         onClick: function(ev) {
-            var $el = $(this), cfgs = $el.data('patterns.inject');
+            var $el = $(this), 
+                cfgs = $el.data('patterns.inject');
             if (ev)
                 ev.preventDefault();
             $el.trigger('patterns-inject-triggered');
             _.execute(cfgs, $el);
         },
         onSubmit: function(ev) {
-            var $el = $(this), cfgs = $el.data('patterns.inject');
+            var $el = $(this), 
+                cfgs = $el.data('patterns.inject');
             if (ev)
                 ev.preventDefault();
             $el.trigger('patterns-inject-triggered');
@@ -218,7 +221,7 @@ define([
                     return;
                 }
 
-                var sources$ = _.callTypeHandler(cfgs[0].type, 'sources', $el, [cfgs, data, ev]);
+                var sources$ = _.callTypeHandler(cfgs[0].data.type, 'sources', $el, [cfgs, data, ev]);
 
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
@@ -412,7 +415,7 @@ define([
         },
         
         handlers: {
-            'default': {
+            'html': {
                 sources: function(cfgs, data) {
                     var sources = cfgs.map(function(cfg) { return cfg.source; });
                     return _._sourcesFromHtml(data, cfgs[0].url, sources);
