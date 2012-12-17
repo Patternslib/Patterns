@@ -26,7 +26,7 @@ define([
 
             transforms.transformContent($content);
 
-            // selector for all patterns and patterns stored by their trigger
+            // selector for all patterns
             for (var name in registry.patterns) {
                 pattern = registry.patterns[name];
                 if (pattern.trigger) {
