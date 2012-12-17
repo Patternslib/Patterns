@@ -285,16 +285,17 @@ define([
                 return false;
             }
 
-            if (action === "content")
+            if (action === "content") {
                 $target.empty().append($source);
-            else if (action === "element")
+            } else if (action === "element") {
                 // we might be removing the link that triggered the
                 // injection and are running in an event handler of
                 // that element
                 $target.detach();
                 $target.replaceWith($source);
-            else
+            } else {
                 $target[method]($source);
+            }
 
             return true;
         },
