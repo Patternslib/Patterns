@@ -258,6 +258,11 @@ define([
                     //    window.location.href = $el.attr('href');
                 }
                 $el.off('pat-ajax-success.pat-inject');
+
+                // If the trigger element was removed, its most outer parent is
+                // of type DocumentFragment and jQuery cannot trigger on it in
+                // IE8. -> prevent pat-ajax-success from bubbling up the DOM.
+                return false;
             };
 
             $el.on('pat-ajax-success.pat-inject', onSuccess);
@@ -288,10 +293,13 @@ define([
             if (action === "content") {
                 $target.empty().append($source);
             } else if (action === "element") {
+                // XXX: the target position in the DOM gets lost if we detach
+                // before replacing. Recheck if we need this at all.
+                
                 // we might be removing the link that triggered the
                 // injection and are running in an event handler of
                 // that element
-                $target.detach();
+                //$target.detach();
                 $target.replaceWith($source);
             } else {
                 $target[method]($source);
