@@ -214,8 +214,6 @@ define([
             });
 
             var onSuccess = function(ev) {
-                if (ev.target !== $el[0]) return;
-
                 var data = ev && ev.jqxhr && ev.jqxhr.responseText;
                 if (!data) {
                     log.warn('No response content, aborting', ev);
@@ -236,7 +234,7 @@ define([
                         var $target = $(this),
                             $src = $source.clone(),
                             $injected = cfg.$injected || $src;
-                        if (_._inject($src, $target, cfg.action, $el)) {
+                        if (_._inject($src, $target, cfg.action, cfg["class"])) {
                             $injected.filter(function() {
                                 // setting data on textnode fails in IE8 
                                 return this.nodeType !== 3; //Node.TEXT_NODE
@@ -268,7 +266,7 @@ define([
                 url: cfgs[0].url
             });
         },
-        _inject: function($source, $target, action, $trigger) {
+        _inject: function($source, $target, action, classes) {
             // action to jquery method mapping, except for "content"
             // and "element"
             var method = {
@@ -287,30 +285,12 @@ define([
                 return false;
             }
 
-            if (action === "content") {
+            if (action === "content")
                 $target.empty().append($source);
-            } else if (action === "element") {
-                if ($target[0] === $trigger[0] || 
-                    $target.find($trigger).length > 0) {
-                    // delay removing the trigger element until all event
-                    // handlers have fired
-                    $target.hide().after($source);
-                    
-                    // use a named function to support concurrent injections
-                    var remove = function(ev) {
-                        if (ev.target === $trigger[0]) {
-                            $target.remove();
-                            $(document)
-                                .off("pat-ajax-success.pat-inject", remove);
-                        }
-                    };
-                    $(document).on("pat-ajax-success.pat-inject", remove);
-                } else {
-                    $target.replaceWith($source);
-                }
-            } else {
+            else if (action === "element")
+                $target.replaceWith($source);
+            else
                 $target[method]($source);
-            }
 
             return true;
         },
