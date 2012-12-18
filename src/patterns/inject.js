@@ -234,7 +234,7 @@ define([
                         var $target = $(this),
                             $src = $source.clone(),
                             $injected = cfg.$injected || $src;
-                        if (_._inject($src, $target, cfg.action)) {
+                        if (_._inject($src, $target, cfg.action, $el)) {
                             $injected.filter(function() {
                                 // setting data on textnode fails in IE8 
                                 return this.nodeType !== 3; //Node.TEXT_NODE
@@ -258,11 +258,6 @@ define([
                     //    window.location.href = $el.attr('href');
                 }
                 $el.off('pat-ajax-success.pat-inject');
-
-                // If the trigger element was removed, its most outer parent is
-                // of type DocumentFragment and jQuery cannot trigger on it in
-                // IE8. -> prevent pat-ajax-success from bubbling up the DOM.
-                return false;
             };
 
             $el.on('pat-ajax-success.pat-inject', onSuccess);
@@ -271,7 +266,7 @@ define([
                 url: cfgs[0].url
             });
         },
-        _inject: function($source, $target, action) {
+        _inject: function($source, $target, action, $trigger) {
             // action to jquery method mapping, except for "content"
             // and "element"
             var method = {
@@ -293,14 +288,24 @@ define([
             if (action === "content") {
                 $target.empty().append($source);
             } else if (action === "element") {
-                // XXX: the target position in the DOM gets lost if we detach
-                // before replacing. Recheck if we need this at all.
-                
-                // we might be removing the link that triggered the
-                // injection and are running in an event handler of
-                // that element
-                //$target.detach();
-                $target.replaceWith($source);
+                if ($target[0] === $trigger[0] || 
+                    $target.find($trigger).length > 0) {
+                    // delay removing the trigger element until all event
+                    // handlers have fired
+                    $target.hide().after($source);
+                    
+                    // use a named function to support concurrent injections
+                    var remove = function(ev) {
+                        if (ev.target === $trigger[0]) {
+                            $target.remove();
+                            $(document)
+                                .off("pat-ajax-success.pat-inject", remove);
+                        }
+                    };
+                    $(document).on("pat-ajax-success.pat-inject", remove);
+                } else {
+                    $target.replaceWith($source);
+                }
             } else {
                 $target[method]($source);
             }
