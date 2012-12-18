@@ -234,7 +234,7 @@ define([
                         var $target = $(this),
                             $src = $source.clone(),
                             $injected = cfg.$injected || $src;
-                        if (_._inject($src, $target, cfg.action, cfg["class"])) {
+                        if (_._inject($src, $target, cfg.action)) {
                             $injected.filter(function() {
                                 // setting data on textnode fails in IE8 
                                 return this.nodeType !== 3; //Node.TEXT_NODE
@@ -271,7 +271,7 @@ define([
                 url: cfgs[0].url
             });
         },
-        _inject: function($source, $target, action, classes) {
+        _inject: function($source, $target, action) {
             // action to jquery method mapping, except for "content"
             // and "element"
             var method = {
