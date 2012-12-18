@@ -214,6 +214,8 @@ define([
             });
 
             var onSuccess = function(ev) {
+                if (ev.target !== $el[0]) return;
+
                 var data = ev && ev.jqxhr && ev.jqxhr.responseText;
                 if (!data) {
                     log.warn('No response content, aborting', ev);
