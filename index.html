@@ -5,153 +5,70 @@
 		<title>Patterns library</title>
 		<link rel="stylesheet" href="style/base.css" type="text/css">
 
-		<!-- <script data-main="bundles/patterns.js" src="lib/require.js" type="text/javascript"></script> -->
-		<!-- <script data-main="bundles/patterns.min.js" src="lib/require.min.js" type="text/javascript"></script> -->
-		<!-- <script src="bundles/patterns-standalone.js" type="text/javascript"></script> -->
-		<script src="bundles/patterns-standalone.min.js" type="text/javascript"></script>
-
-		<link rel="icon" type="image/png" href="media/favicon.png" />
-		<!--[if IE]>
-				<link rel="shortcut icon" type="image/x-icon" href="media/favicon.ico" />
-		<![endif]-->
+		<script data-main="src/main" src="lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<header id="site-header">
-			<img src="style/logo.png" alt="Patterns brandmark" id="logo" />
-			<div class="hero-unit">
-				<blockquote>Welcome to Patterns. A library that aims to bring webdesign and development together.</blockquote>
-
-				<p class="acquire">
-					<a href="http://www.patternslib.com/bundles/patterns.min.js" class="download-patterns-large"><img src="media/icon-download.png" width="80" alt="" /><em class="label">Download</em></a>
-					<a href="https://github.com/Patternslib/Patterns" class="download-patterns-large"><img src="media/icon-github.png" width="200px" alt="" /><em class="label">Clone on Github</em></a>
-				</p>
-			</div>
-			<!-- <nav class="navigation" id="global-nav">
-				<a href="#news" id="nav-news">News</a>
-				<a href="#patterns" id="nav-patterns">Patterns</a>
-				<a href="#demo" id="nav-demo">Demo</a>
-				<a href="http://patterns.readthedocs.org/en/latest/patterns" id="nav-documentation" class="float-after">Documentation</a>
-				<a href="#download" id="nav-get-it">Get it!</a>
-			</nav> -->
-		</header>
-		<section id="news">
-			<p class="introduction">Did you see the patterns talk at the Plone Conference in Arnhem 2012? Here are the slides that were used for the demonstration.</p>
-			<div class="pat-collapsible closed">
-				<h3 class="button-slides" id="button-slides">View slides</h3>
-				<div class="pat-carousel" data-pat-carousel="control-arrows: true; auto-play: false; default: true; time-animation: 300;">
-					<img src="media/preso-plone-conference-2012/slide.001.jpg" alt="Slide 1" />
-					<img src="media/preso-plone-conference-2012/slide.002.jpg" alt="Slide 2" />
-					<img src="media/preso-plone-conference-2012/slide.003.jpg" alt="Slide 3" />
-					<img src="media/preso-plone-conference-2012/slide.004.jpg" alt="Slide 4" />
-					<img src="media/preso-plone-conference-2012/slide.005.jpg" alt="Slide 5" />
-					<img src="media/preso-plone-conference-2012/slide.006.jpg" alt="Slide 6" />
-					<img src="media/preso-plone-conference-2012/slide.007.jpg" alt="Slide 7" />
-					<img src="media/preso-plone-conference-2012/slide.008.jpg" alt="Slide 8" />
-					<img src="media/preso-plone-conference-2012/slide.009.jpg" alt="Slide 9" />
-					<img src="media/preso-plone-conference-2012/slide.010.jpg" alt="Slide 10" />
-					<img src="media/preso-plone-conference-2012/slide.011.jpg" alt="Slide 11" />
-					<img src="media/preso-plone-conference-2012/slide.012.jpg" alt="Slide 12" />
-					<img src="media/preso-plone-conference-2012/slide.013.jpg" alt="Slide 13" />
-					<img src="media/preso-plone-conference-2012/slide.014.jpg" alt="Slide 14" />
-					<img src="media/preso-plone-conference-2012/slide.015.jpg" alt="Slide 15" />
-					<img src="media/preso-plone-conference-2012/slide.016.jpg" alt="Slide 16" />
-					<img src="media/preso-plone-conference-2012/slide.017.jpg" alt="Slide 17" />
-					<img src="media/preso-plone-conference-2012/slide.018.jpg" alt="Slide 18" />
-					<img src="media/preso-plone-conference-2012/slide.019.jpg" alt="Slide 19" />
-					<img src="media/preso-plone-conference-2012/slide.020.jpg" alt="Slide 20" />
-					<img src="media/preso-plone-conference-2012/slide.021.jpg" alt="Slide 21" />
-					<img src="media/preso-plone-conference-2012/slide.022.jpg" alt="Slide 22" />
-					<img src="media/preso-plone-conference-2012/slide.023.jpg" alt="Slide 23" />
-					<img src="media/preso-plone-conference-2012/slide.024.jpg" alt="Slide 24" />
-					<img src="media/preso-plone-conference-2012/slide.025.jpg" alt="Slide 25" />
-					<img src="media/preso-plone-conference-2012/slide.026.jpg" alt="Slide 26" />
-					<img src="media/preso-plone-conference-2012/slide.027.jpg" alt="Slide 27" />
-					<img src="media/preso-plone-conference-2012/slide.028.jpg" alt="Slide 28" />
-					<img src="media/preso-plone-conference-2012/slide.029.jpg" alt="Slide 29" />
-					<img src="media/preso-plone-conference-2012/slide.030.jpg" alt="Slide 30" />
-					<img src="media/preso-plone-conference-2012/slide.031.jpg" alt="Slide 31" />
-					<img src="media/preso-plone-conference-2012/slide.032.jpg" alt="Slide 32" />
-					<img src="media/preso-plone-conference-2012/slide.033.jpg" alt="Slide 33" />
-				</div>
-			</div>
-		</section>
-
-		<section id="patterns">
-			<p>Patterns is a combination of a library and a workflow. That workflow goes something like this:</p>
-			<ol class="usps">
-				<li>
-					<p>Designer creates an HTML5 prototype. By including Patterns library, he can use a series of rich interaction patterns by applying dedicated classes and data-attributes instead of writing Javascript. The prototype he contains an example of all important page types with working interaction patterns such as form elements, modal panels, AJAX injections, etc. </p>
-				</li>
-				<li>
-					<p>Now the designer can validate a rich prototype with both the business stakeholders and the developer. All possibilities and impossibilities will surface before anything is built. This will prevent a lot of change requests and headaches during the development phase</p>
-				</li>
-				<li>
-					<p>Designer hands the prototype over to the developer who copies most of the HTML over into his own templates. By doing that, all the interaction patterns work already as applied by the designer. In some cases, the developer can write some extra JavaScript, or apply some patterns on his own, as a prototype is never fully complete. </p>
-				</li>
-			</ol>
-			<p>
-				For changes to an existing design, the process will look more or less the same, except everything will likely happen in shorter iterations and more in parallel.
-			</p>
-		</section>
-
-		<section id="demo" data-pat-inject="target: #content">
-			<p>Below you'll find some working example of a selection of patterns. Full documentation is found on <a href="https://patterns.readthedocs.org/en/latest/index.html">Readthedocs.org</a>
-			<nav class="components-list">
-				<a class="pat-inject" href="demo/inject/index.html" title="Ajax pattern">Ajax pattern<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/switch/index.html" title="Switch">Attribute values switching<sup>β</sup></a>
-				<a class="pat-inject" href="demo/autofocus/index.html" title="Auto focus">Autofocus<sup>stable</sup></a>
-				<a class="pat-inject" href="demo/autoload/index.html" title="Auto load">Autoload*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/auto-submit/index.html" title="Auto submit">Automatic form submit<sup>β</sup></a>
-				<a class="pat-inject" href="demo/auto-suggest/index.html" title="Auto suggest">Auto suggest<sup>β</sup></a>
-				<a class="pat-inject" href="demo/calendar/index.html" title="Calendar">Full calendar<sup>β</sup></a>
-				<a class="pat-inject" href="demo/carousel/index.html" title="">Carousel<sup>β</sup></a>
-				<a class="pat-inject" href="demo/toggle/index.html" title="Toggle">Class toggle<sup>β</sup></a>
-				<a class="pat-inject" href="demo/collapsible/index.html" title="collapsible">Collapsible<sup>stable</sup></a>
-				<a class="pat-inject" href="demo/depends/index.html" title="">Depends*<sup>β</sup></a>
-				<a class="pat-inject" href="demo/expandable-tree/index.html" title="">Expandable tree*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/focus/index.html" title="">Focus<sup>stable</sup></a>
-				<a class="pat-inject" href="demo/validate/index.html" title="">Form validation*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/checkedflag/index.html" title="checkedflag">Checked flag<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/checklist/index.html" title="checklist">Select/deselect groups of checkboxes<sup>unknown</sup></a>
-				<!--<a class="pat-inject" href="demo/edit-tinymce.html" title="Rich editor">Tiny MCE rich editor<sup>unknown</sup></a>-->
-				<a class="pat-inject" href="demo/menu/index.html" title="">Menu*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/modal/index.html" title="Modal panels">Modal panels<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/chosen/index.html" title="">Multi combobox (Chosen)*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/navigation/index.html" title="Navigation markers">Navigation markers<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/placeholder/index.html" title="">Placeholder*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/selfhealing/index.html" title="">Selfhealing*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/breadcrumbs/index.html" title="">Sliding breadcrumbs*<sup>unknown</sup></a>
-				<!--<a class="pat-inject" href="demo/setclass/index.html" title="">Setclass*</a>-->
-				<a class="pat-inject" href="demo/sorting/index.html" title="">Sorting*<sup>unknown</sup></a>
-				<a class="pat-inject" href="demo/tooltip/index.html" title="">Tooltips*<sup>β</sup></a>
-				<!--<a class="pat-inject" href="demo/transforms/index.html" title="">Transforms*<sup>unknown</sup></a>-->
-				<a class="pat-inject" href="demo/zoom/index.html" title="">Zoom<sup>β</sup></a>
+			<blockquote>
+				Welcome to Patterns. A library that aims to bring webdesign and development together.
+			</blockquote>
+			<nav id="global-navigation" class="pat-bumper">
+				<a href="#" id="home" class="pat-bumper"><img src="style/logo.png" alt="Patterns brandmark" id="logo" /></a> 
+				<a href="#demo">Demos &amp; documentation</a> 
+				<a href="#download">Download &amp; contribute</a>
 			</nav>
-			<div id="content">
-				<a class="pat-inject" href="demo/injection/injection.html" title="Ajax pattern">Ajax pattern<sup>unknown</sup></a>
-			</div>
-		</section>
-		<section id="download">
-			<h2>Got it? Get it!</h2>
-			<p>There are three ways of getting patterns in your site or prototype. You can download the patterns package and host it from your own server, or included it hosted from our server. It's up to you what you find easiest. </p>
-			<div class="column column-1">
-				<h3>1. Hosted externally</h3>
-				<p>To use patterns hosted externally, just paste the following line into your HTML:</p>
-				<textarea class="url" rows="1">&lt;script data-main="http://www.patternslib.com/bundles/patterns.min.js" src="http://www.patternslib.com/lib/require.js" type="text/javascript"&gt;&lt;/script&gt;</textarea>
-			</div>
-			<div class="column column-2">
-				<h3>2. Hosted on your own site</h3>
+		</header>
+		<div id="content">
+			<section id="news">
+				<p class="introduction">Did you see the patterns talk at the Plone Conference in Arnhem 2012? Here are the slides that were used for the demonstration.</p>
+					<a href="http://www.slideshare.net/CornelisKolbach/presentation-plone-conference-2012" class="button-slides" id="button-slides">View slides</a>
+			</section>
+	
+			<section id="patterns">
+				<p>Patterns is a combination of a library and a workflow. That workflow goes something like this:</p>
+				<ol class="usps">
+					<li>
+						<p>Designer creates an HTML5 prototype. By including Patterns library, he can use a series of rich interaction patterns by applying dedicated classes and data-attributes instead of writing Javascript. The prototype he contains an example of all important page types with working interaction patterns such as form elements, modal panels, AJAX injections, etc. </p>
+					</li>
+					<li>
+						<p>Now the designer can validate a rich prototype with both the business stakeholders and the developer. All possibilities and impossibilities will surface before anything is built. This will prevent a lot of change requests and headaches during the development phase</p>
+					</li>
+					<li>
+						<p>Designer hands the prototype over to the developer who copies most of the HTML over into his own templates. By doing that, all the interaction patterns work already as applied by the designer. In some cases, the developer can write some extra JavaScript, or apply some patterns on his own, as a prototype is never fully complete. </p>
+					</li>
+				</ol>
 				<p>
-					<a href="http://www.patternslib.com/bundles/patterns.min.js" class="download-patterns-large"><img src="media/icon-download.png" width="80" alt="" /><em class="label">Download</em></a>
+					For changes to an existing design, the process will look more or less the same, except everything will likely happen in shorter iterations and more in parallel.
 				</p>
-			</div>
-			<div class="column column-3">
-				<h3>3. Clone from Github</h3>
-				<p>
-					<a href="https://github.com/Patternslib/Patterns" class="clone-patterns-large"><img src="media/icon-github.png" width="200px" alt="" /></a>
-				</p>
-			</div>
-		</section>
+			</section>
+			
+			<section id="demo">
+				<h2>Demos</h2>
+				<a href="demo/index.html#component-index" class="pat-inject autoLoading-visible" data-pat-inject="#component-index::element" id="component-index">Pattern index</a>
+			</section>
+			
+			<section id="download">
+				<h2>Got it? Get it!</h2>
+				<p>There are three ways of getting patterns in your site or prototype. You can download the patterns package and host it from your own server, or included it hosted from our server. It's up to you what you find easiest. </p>
+				<div class="column column-1">
+					<h3>1. Hosted externally</h3>
+					<p>To use patterns hosted externally, just paste the following line into your HTML:</p>
+					<textarea class="url" rows="1">&lt;script data-main="http://www.patternslib.com/bundles/patterns.min.js" src="http://www.patternslib.com/lib/require.js" type="text/javascript"&gt;&lt;/script&gt;</textarea>
+				</div>
+				<div class="column column-2">
+					<h3>2. Hosted on your own site</h3>
+					<p>
+						<a href="http://www.patternslib.com/bundles/patterns.min.js" class="download-patterns-large"><img src="media/icon-download.png" width="80" alt="" /><em class="label">Download</em></a>
+					</p>
+				</div>
+				<div class="column column-3">
+					<h3>3. Clone from Github</h3>
+					<p>
+						<a href="https://github.com/Patternslib/Patterns" class="clone-patterns-large"><img src="media/icon-github.png" width="200px" alt="" /></a>
+					</p>
+				</div>
+			</section>
+		</div>
 		<!-- <footer id="appendix">
 				 <a href="#">Github project</a> <a href="disclaimer">Disclaimer</a>
 		</footer> -->
