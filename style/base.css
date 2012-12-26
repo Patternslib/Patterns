@@ -1,3 +1,5 @@
+@import url("../demo/base.css");
+
 @import url("../demo/autosubmit/autosubmit.css");
 
 @import url("../demo/autosuggest/autosuggest.css");
@@ -27,60 +29,73 @@
 	src: url("fonts/Perpetua Bold Italic.ttf")
 }
 
-body {
-	width: auto;
-	position: relative;
-	padding-top: 0;
-	/*background-image: url(texture-light-grain.png);*/
-	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
-	color: #525151;
-	padding-left: 0;
-	margin: 0;
-	background-color: #fff;
-}
+/* @group Global navigation */
 
-body:before {
-	content: " ";
+#global-navigation {
+		max-width: 910px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #925d79;
+	color: white;
+	text-align: center;
+	line-height: 40px;
 	position: absolute;
-	top: 0;
 	right: 0;
 	left: 0;
-	width: 100%;
-	height: 449px;
-	display: block;
-	background-size: 100% auto;
-	border-bottom: 30px solid #8A637A;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	
-background: rgb(226,211,182); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(226,211,182,1) 0%, rgba(247,239,234,1) 99%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(226,211,182,1)), color-stop(99%,rgba(247,239,234,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* IE10+ */
-background: linear-gradient(to bottom, rgba(226,211,182,1) 0%,rgba(247,239,234,1) 99%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2d3b6', endColorstr='#f7efea',GradientType=0 );
-	z-index: 1;
-	border-top: 1px solid #bfb197;
+	bottom: -40px;
+	height: 40px;
 }
 
-body:after {
-	content: url(stamps-and-stuff.png);
+#global-navigation #home {
 	position: absolute;
-	top: 0;
-	right: 0;
+	left: 50%;
+	top: -395px;
+	margin-left: -50px;
+	width: 100px;
 	z-index: 1;
+	text-align: center;
+	background-color: transparent;
 }
+
+#global-navigation.bumped-top #home img {
+	width: 46px;
+	margin-top: -18px;
+}
+
+#global-navigation #home.bumped-top {
+	position: fixed;
+	top: 0;
+}
+
+#global-navigation.bumped-top {
+	position: fixed;
+	top: 0;
+	width: 910px;
+	bottom: auto;
+}
+
+#global-navigation a {
+	color: white;
+	text-decoration: none;
+	width: 50%;
+	display: inline-block;
+	float: left;
+}
+
+#global-navigation a:hover {
+	background-color: rgba(0,0,0,0.18);
+}
+
+
+
+/* @end */
 
 /* @group Logo */
 
 #logo {
-	position: absolute;
-	left: 50%;
-	top: -15px;
-	margin-left: -50px;
 	width: 100px;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.2)
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	transition: all 0.2s;
 }
 
 
@@ -93,10 +108,6 @@ body:after {
 	float: left;
 	width: 70%;
 	margin-bottom: 30px;
-}
-
-#news .panel-content {
-	clear: both;
 }
 
 #button-slides {
@@ -144,18 +155,20 @@ body:before {
 }
 }
 
-body>section {
+#content {
+	clear: both;
+	/*background-image: url(texture-light-grain.png);*/
+}
+
+#content section {
 	clear: both;
 	margin-bottom: 0;
 	position: relative;
 	/*background-image: url(texture-light-grain.png);*/
 	padding: 30px 20px 0;
-	max-width: 870px;
-	margin-left: auto;
-	margin-right: auto;
 }
 
-body>section:after {
+#content section:after {
 	content: " ";
 	clear: both;
 	display: block;
@@ -307,18 +320,33 @@ body:before {
 
 /* @group Site header */
 
+/*body:before {
+	content: " ";
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	width: 100%;
+	height: 469px;
+	display: block;
+	background-size: 100% auto;
+	border-bottom: 10px solid #8A637A;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	background-color: rgb(226,211,182);  Old browsers 
+	z-index: 1;
+	border-top: 1px solid #bfb197;
+}*/
+
 #site-header {
 	width: 100%;
 	max-width: 910px;
-	margin: 30px auto 0;
+	margin: -30px auto 40px;
 	z-index: 10;
-	height: 480px;
-	background: url(2-ladies.png) no-repeat 0 bottom;
-	background-size: 42%;
+	
 	position: relative;
-}
-
-#site-header .hero-unit {
+	background-image: url(hero-image.jpg);
+	background-size: 100% auto;
+	height: 380px;
 }
 
 #site-header .acquire {
@@ -338,6 +366,19 @@ body:before {
 	max-width: 140px;
 }
 
+#site-header blockquote {
+	position: absolute;
+	margin: 0 0 0 -50px;
+	top: 165px;
+	color: black;
+	text-shadow: white 0 1px 0;
+	right: 0;
+	line-height: 1.8;
+	font-size: 20px;
+	opacity: 0.66;
+	left: 50%;
+}
+
 @media (max-width: 570px) {
 
 #site-header {
@@ -352,55 +393,6 @@ body:before {
 }
 
 
-
-/* @end */
-
-/* @group Global nav */
-
-#global-nav {
-	padding: 0;
-	letter-spacing: 2px;
-	margin: 0;
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	line-height: 50px;
-	font-size: 16px;
-	background-color: #8A637A;
-}
-
-#global-nav a
- {
-	text-decoration: none;
-	text-align: center;
-	padding-left: 30px;
-	padding-right: 30px;
-	display: inline-block;
-	color: white;
-	font-weight: bold;
-}
-
-#global-nav a:hover {
-	text-decoration: underline;
-}
-
-/*#global-nav:before {
-	content: " ";
-	border: 2px dashed #325974;
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	bottom: 10px;
-	left: 10px;
-}*/
-
-@media (max-width: 767px) {
-
-#global-nav {
-	text-align: center;
-}
-}
 
 /* @end */
 
@@ -423,7 +415,7 @@ h1 {
 h2 {
 	margin-top: 0;
 	font: normal bold 38px/1.5 "Perpetua bold italic";
-	margin-bottom: 0;
+	margin-bottom: 10px;
 }
 
 h3 {
@@ -565,18 +557,6 @@ ol.usps li:before {
 
 .components-list a.current {
 	background-color: rgba(0,0,0,0.07);
-}
-
-
-
-/* @end */
-
-/* @group Content */
-
-#content {
-// XXX: at least in Chrome and FF this breaks the page 
-//	width: 70%;
-	float: left;
 }
 
 
@@ -1225,49 +1205,5 @@ label.pt-unchecked {
 }
 
 /* @end */
-
-/* @end */
-
-/* @group Hero unit */
-
-.hero-unit {
-	position: relative;
-	height: 370px;
-}
-
-.hero-unit img {
-	float: left;
-}
-
-.hero-unit blockquote {
-	position: absolute;
-	z-index: 10;
-	margin: 0;
-	top: 135px;
-	color: black;
-	width: 56%;
-	text-shadow: white 0 1px 0;
-	right: 0;
-	line-height: 1.8;
-	font-size: 22px;
-	opacity: 0.66;
-}
-
-@media (max-width: 767px) {
-
-.hero-unit {
-	height: 290px;
-}
-
-.hero-unit blockquote {
-	font-size: 16px;
-	line-height: 30px;
-	top: 140px;
-	left: 30px;
-	width: 100%;
-}
-}
-
-
 
 /* @end */

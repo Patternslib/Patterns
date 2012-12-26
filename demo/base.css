@@ -1,21 +1,184 @@
 body {
+	width: auto;
+	position: relative;
+	padding-top: 60px;
+	/*background-image: url(texture-light-grain.png);*/
+	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
+	color: #525151;
+	padding-left: 0;
+	margin: 0;
+	background-color: #fff;
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
-	width: auto;
-	padding-left: 20px;
-	padding-right: 20px;
-	position: relative;
-	padding-top: 90px;
-	background-image: url(texture-light-grain.png);
-	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
 }
 
-* {
-	margin: 0;
-	padding: 0;
-	outline: none;
+/* @group Component index */
+
+#component-index {
+	float: left;
+	padding: 19px 0 7px;
+	border: 1px solid silver;
+	margin-top: 60px;
+	margin-bottom: 40px;
 }
+
+#demo #component-index {
+	margin-top: 0;
+}
+
+#component-index a {
+	float: left;
+	font-size: 12px;
+	background-color: #efefef;
+	padding: 0;
+	text-decoration: none;
+	color: gray;
+	transition: transform 0.2s;
+	margin-right: 2%;
+	margin-left: 2%;
+	line-height: 48px;
+	margin-bottom: 10px;
+	border: 1px solid #e2e2e2;
+	width: 20.9%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#component-index a:hover {
+	background-color: #e5e5e5;
+	transform: scale(1.1)
+}
+
+#component-index a.current {
+	background-color: #7291ff;
+	color: white;
+}
+
+#component-index a:before {
+	content: " ";
+	width: 32px;
+	display: inline-block;
+	height: 32px;
+	vertical-align: middle;
+	margin: -5px 10px -5px 5px;
+	border-radius: 50%;
+	background: white url(../style/component-icons.svg) no-repeat 0 32px;
+	border: 2px solid white;
+}
+
+#component-index a sup {
+	display: none;
+}
+
+#component-index .ajax:before {
+	background-position: 0 -416px;
+}
+
+#component-index .switching:before {
+	
+}
+
+#component-index .autofocus:before {
+	background-position: 0 0;
+}
+
+#component-index .auto-load:before {
+	
+}
+
+#component-index .auto-submit:before {
+	background-position: 0 -32px;
+}
+
+#component-index .auto-suggest:before {
+	background-position: 0 -64px;
+}
+
+#component-index .carousel:before {
+	background-position: 0 -96px;
+}
+
+#component-index .full-calendar:before {
+	background-position: 0 32px;
+}
+
+#component-index .toggle:before {
+	background-position: 0 32px;
+}
+
+#component-index .collapsible:before {
+	background-position: 0 -128px;
+}
+
+#component-index .depends:before {
+	background-position: 0 -160px;
+}
+
+#component-index .tree:before {
+	background-position: 0 -192px;
+}
+
+#component-index .focus:before {
+	background-position: 0 32px;
+}
+
+#component-index .form-validation:before {
+	background-position: 0 -225px;
+}
+
+#component-index .checked-flag:before {
+	background-position: 0 -450px;
+}
+
+#component-index .checkboxes:before {
+	background-position: 0 -255px;
+}
+
+#component-index .menu:before {
+	background-position: 0 32px;
+}
+
+#component-index .modal-panel:before {
+	background-position: 0 -287px;
+}
+
+#component-index .navigation-marker:before {
+	background-position: 0 32px;
+}
+
+#component-index .multi-combobox:before {
+	background-position: 0 32px;
+}
+
+#component-index .placeholder:before {
+	background-position: 0 32px;
+}
+
+#component-index .self-healing:before {
+	background-position: 0 -352px;
+}
+
+#component-index .breadcrumbs:before {
+	background-position: 0 -320px;
+}
+
+#component-index .sorting:before {
+	background-position: 0 -383px;
+}
+
+#component-index .tooltips:before {
+	background-position: 0 32px;
+}
+
+#component-index .zoom:before {
+	background-position: 0 32px;
+}
+
+
+
+/* @end */
 
 /* @group Expandable tree */
 
