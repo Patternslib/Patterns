@@ -56,6 +56,7 @@ define([
     'modernizr',
     'prefixfree',
     './patterns/autofocus',
+    './patterns/autoscale',
     './patterns/autosubmit',
     './patterns/autosubmit2',
     './patterns/autosuggest',
