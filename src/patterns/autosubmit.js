@@ -1,114 +1,104 @@
 define([
     "jquery",
-    "../registry",
-    "../core/logger",
-    "../core/parser",
-    "../utils"
-], function($, patterns, logger, Parser, utils) {
-    var log = logger.getLogger("pat.autosubmit"),
+    '../registry',
+    '../core/logger',
+    '../core/parser',
+    '../utils'
+], function($, registry, logging, Parser, utils) {
+    var log = logging.getLogger('autosubmit'),
         parser = new Parser("autosubmit");
-    parser.add_argument("delay");
 
-    var autosubmit = {
+    // XXX: would be great if the parser would handle validation and
+    // interpretation of boolean values:
+    // - integer >=0
+    // - false -> delay=0
+    // - true -> delay=default
+    // - string "defocus"
+    parser.add_argument("delay", 400);
+
+    var _ = {
         name: "autosubmit",
         trigger: ".pat-autosubmit",
+        init: function($el, opts) {
+            if ($el.length > 1)
+                return $el.each(function() { _.init($(this), opts); });
 
-        parse: function($trigger) {
-            var options = parser.parse($trigger);
-            if (Array.isArray(options)) {
-                log.error("autosubmit does not support multiple options");
-                options = options[0];
+            // submit if a (specific) form element changed
+            $el.on("change.pat-autosubmit", _.considerSubmit);
+
+            var cfg = parser.parse($el, opts);
+
+            // XXX: defocus currently does not work as the parser
+            // returns the default value instead.
+            if (cfg.delay !== "defocus") {
+                var submit = _.considerSubmit;
+                if (cfg.delay === true)
+                    cfg.delay = 400;
+                if (cfg.delay)
+                    submit = utils.debounce(_.considerSubmit, cfg.delay);
+                ($el.is('input') ? $el : $el.find('input'))
+                    .on("keyup.pat-autosubmit", submit);
             }
-            return options;
+
+            // XXX: test whether on webkit and enable only if
+            // supported
+            //
+            // XXX: this should be handled by writing code that
+            // triggers a change event in case the "Clear field
+            // button" inside the search is pressed
+            ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
+                .on("click.pat-autosubmit", _.considerSubmit);
+
+            return $el;
         },
-
-        validateOptions: function(options) {
-            if (typeof options.delay==="string") {
-                if (options.delay==="delay" || options.delay==="true")
-                    options.delay=400;
-                else {
-                    var number = parseInt(options.delay, 10);
-                    if (isNaN(number)) {
-                        log.error("Invalid delay value");
-                        return null;
-                    }
-                    options.delay=number;
-                }
-            } else if (typeof options.delay==="number") {
-                if (options.delay<0) {
-                    log.error("Timetravel machine broken - negative delay not possible.");
-                    return null;
-                }
-            } else if (options.delay) {
-                log.error("Invalid delay value");
-                return null;
-            }
-            return options;
+        parser: parser,
+        destroy: function($el) {
+            $el.off('.pat-autosubmit');
+            $el.find('input').off('.pat-autosubmit');
         },
+        considerSubmit: function(ev) {
+            // XXX: check that the very same event did not submit the
+            // form already (see below)
 
-        onChange: function(event) {
-            var $trigger = $(this),
-                $form = this.tagName==="FORM" ? $trigger : $trigger.closest("form");
+            var $el = $(this),
+                $form = $el.is('form') ? $el : $el.parents('form').first();
 
-            if ($trigger.hasClass("auto-suggest")) {
-                log.debug("Ignored event from autosuggest field.");
+            // ignore auto-suggest fields, the change event will be
+            // triggered on the hidden input
+            if ($el.is('.pat-autosuggest')) {
+                log.debug('ignored event from autosuggest field');
                 return;
             }
 
-            if ($trigger.is("input[type=search]")) {
+            if ($el.is('input[type=search]')) {
                 // clicking X on type=search deletes data attrs,
                 // therefore we store the old value on the form.
-                var name = $victim.attr('name'),
-                    key = name + '-autosubmit-oldvalue',
+                var name = $el.attr('name'),
+                    key = 'pat-autosubmit-' + name + '-oldvalue',
                     oldvalue = $form.data(key) || "",
-                    curvalue = $target[0].value || "";
+                    curvalue = $el[0].value || "";
 
                 if (!name)
                     log.warn('type=search without name, will be a problem' +
-                             ' if there are multiple', $target);
-                if (oldvalue===curvalue)
+                             ' if there are multiple', $el);
+
+                if (oldvalue === curvalue)
                     return;
+
                 $form.data(key, curvalue);
             }
 
-            log.info("triggered by " + event.type);
+            log.debug("triggered by " + ev.type);
+
+            // XXX: mark event as used so we won't submit through a
+            // parent element again.
+
             $form.submit();
-            event.stopPropagation();
-        },
-
-        init: function($root, defaults) {
-            defaults = defaults || {};
-            return $root
-                .find("input[type-search]").andSelf()
-                .each(function() {
-                var $trigger = $(this),
-                    options = $.extend({}, autosubmit.parse($trigger), defaults);
-                options=autosubmit.validateOptions(options);
-                if (!options)
-                    return;
-
-                var func = autosubmit.onChange;
-                if (options.delay)
-                    func=utils.debounce(func, options.delay);
-                $trigger
-                    .data("patternAutosubmit", options)
-                    .off(".patternAutosubmit")
-                    .on("change.patternAutosubmit", func)
-                    .on("keyup.patternAutosubmit", "input:not([type=file],[type=checkbox],[type=radio],[type=hidden],[type=image],[type=password],[type=submit])", func);
-            });
-        },
-
-        destroy: function($root) {
-            return $root
-                .find("input[type-search]").andSelf()
-                .each(function() {
-                          $(this).removeData("patternAutosubmit").off(".patternAutosubmit");
-                      });
         }
     };
 
-    patterns.register(autosubmit);
-    return autosubmit;
+    registry.register(_);
+    return _;
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

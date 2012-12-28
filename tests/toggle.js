@@ -23,27 +23,38 @@ describe("toggle", function() {
 
         it("Toggle class", function() {
             $("#lab").html("<div id='victim' class='always'/>");
-            pattern._update("#victim", "class", "check on");
+            pattern._update("#victim", "class", "check on", false);
             expect($("#victim").hasClass("on")).toBe(true);
             expect($("#victim").hasClass("always")).toBe(true);
-            pattern._update("#victim", "class", "on");
+            pattern._update("#victim", "class", "on", false);
             expect($("#victim").hasClass("on")).toBe(false);
             expect($("#victim").hasClass("always")).toBe(true);
         });
 
         it("Toggle attribute", function() {
             $("#lab").html("<input type='checkbox' id='victim'/>");
-            pattern._update("#victim", "checked", "checked");
-            expect(document.getElementById('victim').checked).toBe(true);
-            pattern._update("#victim", "checked", "checked");
-            expect(document.getElementById('victim').checked).toBe(false);
+            var $checkbox = $("#victim");
+            pattern._update("#victim", "checked", "checked", false);
+            expect($checkbox.attr("checked")).toBeTruthy();
+            pattern._update("#victim", "checked", "checked", false);
+            expect($checkbox.attr("checked")).toBeFalsy();
+        });
+
+        it("Toggle does not reset initial state", function() {
+            $("#lab").html("<input type='checkbox' id='victim'/>");
+            var $checkbox = $("#victim");
+            $checkbox[0].defaultChecked=true;
+            $checkbox[0].checked=true;
+            pattern._update("#victim", "checked", "checked", false);
+            expect($checkbox.attr("checked")).toBeFalsy();
+            expect($checkbox[0].defaultChecked).toBe(true);
         });
 
         it("Multiple targets", function() {
             $("#lab")
                 .append("<div id='one' class='victim'/>")
                 .append("<div id='two' class='victim'/>");
-            pattern._update(".victim", "class", "on");
+            pattern._update(".victim", "class", "on", false);
             expect($("#one").hasClass("on")).toBe(true);
             expect($("#two").hasClass("on")).toBe(true);
         });

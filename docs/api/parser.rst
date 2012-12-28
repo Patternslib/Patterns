@@ -43,11 +43,12 @@ Parser API
    right attribute to parse for elements.
 
 
-.. js:function:: ArgumentParser.add_argument(name[, default[, choices]])
+.. js:function:: ArgumentParser.add_argument(name[, default[, choices[, multiple]]])
 
    :param string name: argument name
    :param default: default value
    :param array choice: list of acceptable values
+   :param multiple: boolean flag indicating if argument is a list of values
 
    Register a new argument. The default value will be used if no value was
    found during parsing, and is used to determine what data type should be
@@ -57,6 +58,15 @@ Parser API
    using a ```$<argument name>``` as default value. In that case if no value
    for the argument was provided a copy of the referenced argument will be
    used.
+
+   The default value can also be a function taking a jQuery wrapped element
+   and the parameter name as arguments and which returns a default value.
+
+   .. code-block:: javascript
+
+      parser.add_argument("delay", function($el, name) {
+          return 500;
+      });
 
 
 .. js:function:: ArgumentParser.parse($el [, options][, multiple])
@@ -72,6 +82,22 @@ Parser API
    optionally provide options that will override default values and values
    found on the element.
 
-   In the returned object all argument names with hyphens are
-   converted to camelCase (i.e. the value of a 'next-href' argument
-   can be found at options.nextHref).
+   If you use argument groups (multiple parameters that share a prefix) their
+   options will be returned as a sub-object. For example a parser with
+   these arguments:
+
+   .. code-block:: javascript
+
+       parser.add_argument("selector", ".pattern");
+       parser.add_argument("control-arrows", false);
+       parser.add_argument("control-links", true);
+       parser.add_argument("control-index", false);
+
+   will return an object like this:
+
+   .. code-block:: javascript
+
+       {selector: ".pattern",
+        control: {arrows: false,
+                  links: true,
+                  index: false}}

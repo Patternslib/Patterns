@@ -10,8 +10,9 @@ Markup structure
 
    <label>Website address
      <a href="#" title="Please enter the full URL for the website"
-         data-tooltip="">More information</a>
+         class="pat-tooltip">More information</a>
    </label>
+
 
 Display
 -------
@@ -24,7 +25,7 @@ adding a ``click`` option.
 .. code-block:: html
 
    <a href="#" title="Please enter the full URL for the website"
-      data-tooltip="click">More information</a>
+      class="pat-tooltip" data-pat-tooltip="click">More information</a>
 
 
 Positioning
@@ -37,9 +38,8 @@ follows that the tooltip itself will be placed to the left of the triggering
 element.
 
 The position of the tip within the tooltip can be specified with a
-*position hint*: a parameter which specifies the preferred positions. This
-is formatted as ``position-<preference>[-preference]*``. The possible
-preferences are:
+*position* argument which specifies the preferred positions. This
+is formatted as ``<preference>[-preference]*``. The possible preferences are:
 
 * ``tl``: tip placed at the leftmost corner of the top side of the tooltip
 * ``tm``: tip placed at the middle of the top side tooltip
@@ -58,25 +58,26 @@ An example:
 
 .. code-block:: html
 
-   <a href="#tip" data-tooltip="position=lt-lm-rt-rm">
+   <a href="#tip" class="pat-tooltip" data-pat-tooltip="lt-lm-rt-rm">
     …
    </a>
 
 This specifies that the preferred position of the tip is at the top left
 side of the tooltip (placing the tooltip itself on the right side of the
-link). If the tooltip does not fit at that position the left-middle position
-should be tried, than the right-top or if all previous options failed the
-middle of the right side. If the tooltip does not fit at any none of the
-preferred positions the tooltip will be positioned at the location that has
-the most space, even if this is not one of the preferred positions.
+link). Notice that position is the first defined argument so you can use
+shorthand syntax directly.  If the tooltip does not fit at that position the
+left-middle position should be tried, than the right-top or if all previous
+options failed the middle of the right side. If the tooltip does not fit at any
+none of the preferred positions the tooltip will be positioned at the location
+that has the most space, even if this is not one of the preferred positions.
 
 It is possible to force a specific tooltip position by adding the
-``forcePosition`` hint.
+``force`` flag.
 
 .. code-block::  html
 
    <a href="#" title="Please enter the full URL for the website"
-      data-tooltip="position=lt!forcePosition">
+      class="pat-tooltip" data-pat-tooltip="lt force">
     …
    </a>
 
@@ -91,7 +92,7 @@ button will be inserted for you automatically.
 
 .. code-block:: html
 
-   <a href="#" data-tooltip="sticky">
+   <a href="#" class="pat-tooltip" data-pat-tooltip="sticky">
     …
    </a>
 
@@ -103,7 +104,7 @@ The tooltip content can be loaded via an AJAX request by proving an ajax option:
 
 .. code-block:: html
 
-   <a href="balloon-contents.html#myTip" data-tooltip="ajax">
+   <a href="balloon-contents.html#myTip" class="pat-tooltip" data-pat-tooltip="ajax">
     …
    </a>
 
@@ -123,7 +124,7 @@ Source markup:
 
    <label>Website address
      <a href="#" title="Please enter the full URL for the website."
-        data-tooltip="sticky">More information</a>
+        class="pat-tooltip" data-pat-tooltip="sticky">More information</a>
    </label>
 
 will be transformed into:
@@ -131,7 +132,7 @@ will be transformed into:
 .. code-block:: html
 
    <label>Website address
-     <a href="#" data-tooltip="sticky">More information</a>
+     <a href="#" class="pat-tooltip" data-pat-tooltip="sticky">More information</a>
    </label>
    …
    <div class="tooltip-container rt"
@@ -151,7 +152,7 @@ temporarily shown with a progress indicator:
 .. code-block:: html
 
    <label>Website address
-     <a href="/tips/#info" data-tooltip="sticky">More information</a>
+     <a href="/tips/#info" class="pat-tooltip" data-pat-tooltip="sticky">More information</a>
    </label>
    …
    <div class="tooltip-container rt"
@@ -161,3 +162,35 @@ temporarily shown with a progress indicator:
        <progress/>
      <span class="pointer" style="top: 111px; left: -22px"></span>
    </div>
+
+
+Option reference
+----------------
+
+The tooltip can be configured through a ``data-pat-tooltip`` attribute.
+The available options are:
+
++------------------+------------+-----------------------------------------------+
+| Field            | default    | Description                                   |
++==================+============+===============================================+
+| ``position``     |            | A ``-``-seperated list of tooltip positions.  |
++------------------+------------+-----------------------------------------------+
+| ``force``        | false      | If set always use a provided position even if |
+|                  |            | does not fit in the window.                   |
++------------------+------------+-----------------------------------------------+
+| ``click``        | false      | If set the user must click on a link to see   |
+|                  |            | the tooltip.                                  |
++------------------+------------+-----------------------------------------------+
+| ``sticky``       | false      | If set the user must click on a close button  |
+|                  |            | in the tooltip to make it disappear.          |
++------------------+------------+-----------------------------------------------+
+| ``close``        | true       | Indicates if a close button should            |
+|                  |            | automatically be added to a sticky tooltip.   |
++------------------+------------+-----------------------------------------------+
+| ``ajax``         | false      | If set the tooltip content will be loaded     |
+|                  |            | from the ``href`` of the link.                |
++------------------+------------+-----------------------------------------------+
+| ``content``      |            | If set (and ajax is not set) use this as the  |
+|                  |            | tooltip content instead of the ``title``      |
+|                  |            | attribute.                                    |
++------------------+------------+-----------------------------------------------+

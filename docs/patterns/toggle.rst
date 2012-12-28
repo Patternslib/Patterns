@@ -18,7 +18,7 @@ for this pattern:
 
 .. code-block:: html
 
-   <a href="#" class="pat-toggle" data-pat-toggle="#work; class; active">Start working</a>
+   <a href="#" class="pat-toggle" data-pat-toggle="#work class active">Start working</a>
    </a>
    <div id="work">
      Working..
@@ -33,14 +33,14 @@ can be used to check the selected state of a checkbox:
 .. code-block:: html
 
   <input type="checkbox" id="toCheck" />
-  <button class="pat-toggle" data-pat-toggle="#toCheck; checked; checked">toggle checkbox</button>
+  <button class="pat-toggle" data-pat-toggle="#toCheck checked checked">toggle checkbox</button>
 
 If you are manipulating the ``class`` attribute you can specify multiple classes separated
 by spaces to toggle multiple classes.
 
 .. code-block:: html
 
-   <a href="#" class="pat-toggle" data-pat-toggle="#work; class; active inactive">Start working</a>
+   <a href="#" class="pat-toggle" data-pat-toggle="#work class active inactive">Start working</a>
    </a>
    <div id="work" class="inactive">
      Working..
