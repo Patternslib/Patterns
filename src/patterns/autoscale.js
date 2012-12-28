@@ -16,7 +16,7 @@ define([
             var $this = $(this),
                 scale;
             
-            if ($this.tagName.toLowerCase() == 'body') {
+            if (this.tagName.toLowerCase() == 'body') {
                 scale = $(window).width()/$this.outerWidth();
             } else {
                 scale = $this.parent().outerWidth()/$this.outerWidth();
