@@ -105,7 +105,7 @@ body {
 }
 
 #component-index .toggle:before {
-	background-position: 0 32px;
+	background-position: 0 -480px;
 }
 
 #component-index .collapsible:before {
@@ -174,58 +174,6 @@ body {
 
 #component-index .zoom:before {
 	background-position: 0 32px;
-}
-
-
-
-/* @end */
-
-/* @group Expandable tree */
-
-ul.expandable {
-	background-color: #f9f9f9;
-	list-style-type: none;
-	padding: 10px;
-	margin-left: 0;
-}
-
-ul.expandable li li {
-	display: block;
-	padding-left: 30px;
-}
-
-ul.expandable li span.toggle {
-	width: 20px;
-	height: 20px;
-	float: left;
-	font-size: 12px;
-	line-height: 23px;
-}
-
-span.toggle:before {
-	content: "▶";
-}
-
-.open > span.toggle:before {
-	content: "▼";
-	width: 18px;
-	display: inline-block;
-}
-
-ul.expandable li ul {
-	margin-bottom: 0;
-	margin-left: 0;
-	margin-top: 0;
-	padding: 0;
-	display: none;
-}
-
-ul.expandable li.open > ul {
-	display: block;
-}
-
-ul.expandable li a {
-	display: block;
 }
 
 
