@@ -1,18 +1,18 @@
 /* @group Expandable tree */
 
-ul.expandable {
+ul.pat-expandable {
 	background-color: #f9f9f9;
 	list-style-type: none;
 	padding: 10px;
 	margin-left: 0;
 }
 
-ul.expandable li li {
+ul.pat-expandable li li {
 	display: block;
 	padding-left: 30px;
 }
 
-ul.expandable li span.toggle {
+ul.pat-expandable li span.toggle {
 	width: 20px;
 	height: 20px;
 	float: left;
@@ -30,7 +30,7 @@ span.toggle:before {
 	display: inline-block;
 }
 
-ul.expandable li ul {
+ul.pat-expandable li ul {
 	margin-bottom: 0;
 	margin-left: 0;
 	margin-top: 0;
@@ -38,11 +38,11 @@ ul.expandable li ul {
 	display: none;
 }
 
-ul.expandable li.open > ul {
+ul.pat-expandable li.open > ul {
 	display: block;
 }
 
-ul.expandable li a {
+ul.pat-expandable li a {
 	display: block;
 }
 
