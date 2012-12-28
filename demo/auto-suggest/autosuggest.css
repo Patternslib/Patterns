@@ -27,6 +27,8 @@ ul.as-selections {
 	height: 23px;
 	margin-left: 0;
 	margin-right: 0;
+	outline: silver 1px solid;
+	margin-bottom: 0;
 }
 
 ul.as-selections.loading {
