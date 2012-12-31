@@ -1,3 +1,5 @@
+/* @group Example CSS */
+
 .narrow {
     position: relative;
     width: 50%;
@@ -17,3 +19,15 @@
     padding: 1em;
     margin: 0 auto;
 }
+
+
+
+/* @end */
+
+/* @group Pattern CSS */
+
+.pat-auto-scale {	
+	transform-origin: left top;
+}
+
+/* @end */
