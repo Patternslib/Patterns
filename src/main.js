@@ -58,6 +58,7 @@ define([
     'less',
     'prefixfree',
     './patterns/autofocus',
+    './patterns/autoscale',
     './patterns/autosubmit',
     './patterns/autosuggest',
     './patterns/breadcrumbs',
