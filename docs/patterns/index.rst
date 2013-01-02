@@ -26,6 +26,7 @@ changing classes in a click, to doing complex AJAX injection of content.
 .. toctree::
    :maxdepth: 1
 
+   autoscale
    autosubmit
    carousel
    checklist
