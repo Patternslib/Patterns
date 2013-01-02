@@ -24,6 +24,7 @@ define([
                 $this.css('transform', 'scale(' + scale + ')');
             else
                 $this.css('zoom', scale);
+            $this.addClass("scaled");
         },
 
         resizeEvent: function() {
