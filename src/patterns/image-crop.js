@@ -114,12 +114,6 @@ define([
                     }
                 });
             });
-
-            $(window).scroll(function() {
-                _._testBump($el, _._getViewport());
-            });
-
-            _._testBump($el, _._getViewport());
         },
         
         _setupInput: function($form, prefix, name) 
@@ -133,8 +127,9 @@ define([
         
         _parseOpt: function(val) 
         {
-            var ret = val.split(' ');
+            var ret = val.replace(/\s{2,}/g, ' ').trim().split(' ');
             for (var i = 0; i < ret.length; i++ ) {
+                
                 ret[i] = parseInt(ret[i]);
             }
             
