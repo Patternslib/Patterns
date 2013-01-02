@@ -5,12 +5,12 @@ define([
     var _ = {
         name: "autoscale",
         trigger: ".pat-auto-scale",
-	method: "scale",
+        method: "scale",
 
         _setup: function() {
             if ($.browser.msie && parseInt($.browser.version, 10)<10)
                 _.method="zoom";
-            $(window).resize(_.resizeEvent);
+            $(window).on("resize.autoscale", _.onResize);
         },
 
         init: function($el, options) {
@@ -37,7 +37,7 @@ define([
             $this.addClass("scaled");
         },
 
-        resizeEvent: function() {
+        onResize: function() {
             $(_.trigger).each(_.resizeElement);
         }
     };
