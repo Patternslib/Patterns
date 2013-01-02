@@ -1,5 +1,8 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        clean: {
+            build: "bundles/*.js"
+        },
         requirejs: {
             options: {
                 baseUrl: "src",
@@ -68,8 +71,9 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-requirejs");
-    grunt.registerTask("default", "jshint requirejs");
+    grunt.registerTask("default", "jshint clean requirejs");
 };
 
