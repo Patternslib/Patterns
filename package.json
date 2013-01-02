@@ -1,15 +1,17 @@
 {
 	"name": "Patterns",
-	"version": "1.0",
+	"version": "1.0.0",
 	"title": "Markup patterns to drive behaviour.",
 	"description":
 		"Patterns is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
 	"author": {"name": "Patterns developers"},
 	"licenses": [
-	    {"type: "BSD", "URL": "LICENSE.txt"}
-	    ],
-	"dependencies": {
-	    "jquery": ">1.7"
+		{"type": "BSD", "URL": "LICENSE.txt"}
+	],
+	"dependencies": {},
+	"devDependencies": {
+		"grunt": "~0.4.0",
+		"grunt-contrib-jshint": "~0.1.0"
 	},
 	"homepage": "https://gitub.com/Patternslib/Patterns",
 	"docs": "http://readthedocs.org/docs/patterns",
