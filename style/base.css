@@ -392,7 +392,7 @@ body:before {
 }
 
 #site-header blockquote {
-	color: rgba(0,0,0,0.67);
+	color: #7f7c79;
 	text-shadow: white 0 1px 0;
 	line-height: 1.8;
 	font-size: 20px;
