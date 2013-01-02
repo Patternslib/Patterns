@@ -28,6 +28,12 @@
 
 .pat-auto-scale {	
 	transform-origin: left top;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.pat-auto-scale.scaled {
+	opacity: 1;
 }
 
 /* @end */
