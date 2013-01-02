@@ -1,6 +1,4 @@
 STANDALONE      = name=../lib/almond include=main wrap=true
-BUILDJS         = src/build.js
-RJS		= lib/r.js
 GRUNT		?= grunt
 PEGJS		?= pegjs
 PHANTOMJS	?= phantomjs
@@ -9,14 +7,14 @@ TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/patterns-standalo
 
 all:: $(TARGETS)
 
-bundles/patterns.js bundles/patterns-standalone.js: $(SOURCES) $(BUILDJS)
+bundles/patterns.js bundles/patterns-standalone.js: $(SOURCES)
 	$(GRUNT) requirejs
 
-bundles/patterns.min.js: $(SOURCES) $(BUILDJS)
-	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify
+bundles/patterns.min.js: bundles/patterns.js
+	$(GRUNT) uglify
 
-bundles/patterns-standalone.min.js: $(SOURCES) $(BUILDJS)
-	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify $(STANDALONE)
+bundles/patterns-standalone.min.js: bundles/patterns-standalone.js
+	$(GRUNT) uglify
 
 lib/phantom-jasmine src/lib/jquery.form lib/requirejs src/3rdparty/logging/src/logging.js:
 	git submodule update --init --recursive
@@ -35,9 +33,9 @@ check: lib/phantom-jasmine
 
 clean:
 	rm -f $(TARGETS)
+	$(GRUNT) clean
 
 upgrade-requirejs:
-	curl -s -o $(RJS) $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/r.js/s/.*href="\([^"]*\).*/\1/p')
 	curl -s -o lib/require.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/comments\/require.js/s/.*href="\([^"]*\).*/\1/p')
 	curl -s -o lib/require.min.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/minified\/require.js/s/.*href="\([^"]*\).*/\1/p')
 

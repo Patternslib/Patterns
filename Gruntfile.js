@@ -1,7 +1,10 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         clean: {
-            build: "bundles/*.js"
+            build: [
+                "bundles/patterns*.js",
+                "bundles/patterns*.map"
+            ]
         },
         requirejs: {
             options: {
@@ -23,6 +26,28 @@ module.exports = function(grunt) {
                     wrap: true,
                     out: "bundles/patterns-standalone.js",
                     almond: true
+                }
+            }
+        },
+        uglify: {
+            build: {
+                files: {
+                    "bundles/patterns.min.js": ["bundles/patterns.js"]
+                },
+                options: {
+                    preserveComments: false,
+                    sourceMap: "bundles/patterns.min.map",
+                    sourceMapRoot: "http://patterslib.com"
+                }
+            },
+            standalone: {
+                files: {
+                    "bundles/patterns-standalone.min.js": ["bundles/patterns-standalone.js"]
+                },
+                options: {
+                    preserveComments: false,
+                    sourceMap: "bundles/patterns-standalone.min.map",
+                    sourceMapRoot: "http://patterslib.com"
                 }
             }
         },
@@ -74,6 +99,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-requirejs");
-    grunt.registerTask("default", "jshint clean requirejs");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.registerTask("default", "jshint clean requirejs uglify");
 };
 
