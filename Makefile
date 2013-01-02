@@ -1,6 +1,7 @@
 STANDALONE      = name=../lib/almond include=main wrap=true
 BUILDJS         = src/build.js
 RJS		= lib/r.js
+GRUNT		?= grunt
 PEGJS		?= pegjs
 PHANTOMJS	?= phantomjs
 SOURCES		= src/lib/jquery.form src/3rdparty/logging/src/logging.js $(wildcard src/*.js) $(wildcard src/*/*.js)
@@ -8,14 +9,11 @@ TARGETS		= bundles/patterns.js bundles/patterns.min.js bundles/patterns-standalo
 
 all:: $(TARGETS)
 
-bundles/patterns.js: $(SOURCES) $(BUILDJS)
-	node $(RJS) -o $(BUILDJS) out=$@ optimize=none
+bundles/patterns.js bundles/patterns-standalone.js: $(SOURCES) $(BUILDJS)
+	$(GRUNT) requirejs
 
 bundles/patterns.min.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify
-
-bundles/patterns-standalone.js: $(SOURCES) $(BUILDJS)
-	node $(RJS) -o $(BUILDJS) out=$@ optimize=none $(STANDALONE)
 
 bundles/patterns-standalone.min.js: $(SOURCES) $(BUILDJS)
 	node $(RJS) -o $(BUILDJS) out=$@ optimize=uglify $(STANDALONE)
