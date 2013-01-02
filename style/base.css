@@ -392,11 +392,10 @@ body:before {
 }
 
 #site-header blockquote {
-	color: black;
+	color: rgba(0,0,0,0.67);
 	text-shadow: white 0 1px 0;
 	line-height: 1.8;
 	font-size: 20px;
-	opacity: 0.66;
 	padding-left: 500px;
 	padding-right: 50px;
 	width: 450px;
