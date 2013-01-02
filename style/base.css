@@ -29,32 +29,42 @@
 	src: url("fonts/Perpetua Bold Italic.ttf")
 }
 
+body {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	display: block;
+	float: left;
+	padding: 0;
+}
+
 /* @group Global navigation */
 
 #global-navigation {
-		max-width: 910px;
-	margin-left: auto;
-	margin-right: auto;
 	background-color: #925d79;
 	color: white;
 	text-align: center;
 	line-height: 40px;
-	position: absolute;
-	right: 0;
-	left: 0;
-	bottom: -40px;
 	height: 40px;
+	display: block;
+}
+
+#global-navigation.bumped-top {
+	position: fixed;
+	right: 0;
+	top: 0;
+	left: 0;
 }
 
 #global-navigation #home {
 	position: absolute;
 	left: 50%;
-	top: -395px;
 	margin-left: -50px;
 	width: 100px;
 	z-index: 1;
 	text-align: center;
 	background-color: transparent;
+	top: -10px;
 }
 
 #global-navigation.bumped-top #home img {
@@ -67,19 +77,12 @@
 	top: 0;
 }
 
-#global-navigation.bumped-top {
-	position: fixed;
-	top: 0;
-	width: 910px;
-	bottom: auto;
-}
-
 #global-navigation a {
 	color: white;
 	text-decoration: none;
-	width: 50%;
 	display: inline-block;
 	float: left;
+	width: 50%;
 }
 
 #global-navigation a:hover {
@@ -157,7 +160,7 @@ body:before {
 
 #content {
 	clear: both;
-	/*background-image: url(texture-light-grain.png);*/
+	width: 1010px;
 }
 
 #content section {
@@ -178,6 +181,25 @@ body:before {
 	background-size: 100% auto;
 	margin-top: 30px;
 }
+
+/* @group Auto scale */
+
+.pat-auto-scale {	
+	transform-origin: left top;
+	opacity: 0;
+	-webkit-transition: opacity 1s;
+	-moz-transition: opacity 1s;
+	-o-transition: opacity 1s;
+	transition: opacity 1s;
+}
+
+.pat-auto-scale.scaled {
+	opacity: 1;
+}
+
+
+
+/* @end */
 
 /* @group Carousel exceptions */
 
@@ -339,14 +361,15 @@ body:before {
 
 #site-header {
 	width: 100%;
-	max-width: 910px;
-	margin: -30px auto 40px;
 	z-index: 10;
 	
 	position: relative;
-	background-image: url(hero-image.jpg);
-	background-size: 100% auto;
-	height: 380px;
+	margin: 20px 0 40px;
+}
+
+#site-header > img {
+	width: 100%;
+	display: block;
 }
 
 #site-header .acquire {
@@ -367,16 +390,18 @@ body:before {
 }
 
 #site-header blockquote {
-	position: absolute;
-	margin: 0 0 0 -50px;
-	top: 165px;
 	color: black;
 	text-shadow: white 0 1px 0;
-	right: 0;
 	line-height: 1.8;
 	font-size: 20px;
 	opacity: 0.66;
-	left: 50%;
+	padding-left: 500px;
+	padding-right: 50px;
+	width: 450px;
+	margin: 0 0 -500px -50px;
+	position: absolute;
+	top: 200px;
+	display: block;
 }
 
 @media (max-width: 570px) {
