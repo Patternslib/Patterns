@@ -365,6 +365,8 @@ body:before {
 	
 	position: relative;
 	margin: 20px 0 40px;
+	border-top: 1px solid silver;
+	box-shadow: 0 1px 4px gray;
 }
 
 #site-header > img {
@@ -400,7 +402,7 @@ body:before {
 	width: 450px;
 	margin: 0 0 -500px -50px;
 	position: absolute;
-	top: 200px;
+	top: 160px;
 	display: block;
 }
 
