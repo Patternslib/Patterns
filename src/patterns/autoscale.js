@@ -5,7 +5,13 @@ define([
     var _ = {
         name: "autoscale",
         trigger: ".pat-auto-scale",
-	transform: $('html').hasClass('csstransforms'),
+	method: "scale",
+
+        _setup: function() {
+            if ($.browser.msie && parseInt($.browser.version, 10)<10)
+                _.method="zoom";
+            $(window).resize(_.resizeEvent);
+        },
 
         init: function($el, options) {
             return $el.each(_.resizeElement);
@@ -20,10 +26,14 @@ define([
             else
                 scale = $this.parent().outerWidth()/$this.outerWidth();
 
-            if (_.transform)
+            switch (_.method) {
+            case "scale":
                 $this.css('transform', 'scale(' + scale + ')');
-            else
+                break;
+            case "zoom":
                 $this.css('zoom', scale);
+                break;
+            }
             $this.addClass("scaled");
         },
 
@@ -32,7 +42,7 @@ define([
         }
     };
 
-    $(window).resize(_.resizeEvent);
+    _._setup();
     registry.register(_);
     return _;
 });
