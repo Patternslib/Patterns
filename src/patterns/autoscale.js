@@ -5,28 +5,25 @@ define([
     var _ = {
         name: "autoscale",
         trigger: ".pat-auto-scale",
-        transform: true,
+	transform: $('html').hasClass('csstransforms'),
 
         init: function($el, options) {
-            // initialize the elements
-            $el.each(_.resizeElement);
+            return $el.each(_.resizeElement);
         },
 
         resizeElement: function() {
             var $this = $(this),
                 scale;
 
-            if (this.tagName.toLowerCase() == 'body') {
+            if (this.tagName.toLowerCase()==='body')
                 scale = $(window).width()/$this.outerWidth();
-            } else {
+            else
                 scale = $this.parent().outerWidth()/$this.outerWidth();
-            }
 
-            if (_.transform) {
+            if (_.transform)
                 $this.css('transform', 'scale(' + scale + ')');
-            } else {
+            else
                 $this.css('zoom', scale);
-            }
         },
 
         resizeEvent: function() {
@@ -34,10 +31,7 @@ define([
         }
     };
 
-    _.transform = $('html').hasClass('csstransforms');
     $(window).resize(_.resizeEvent);
-
     registry.register(_);
-
     return _;
 });
