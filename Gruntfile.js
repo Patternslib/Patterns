@@ -1,5 +1,28 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        requirejs: {
+            options: {
+                baseUrl: "src",
+                insertRequire: ["main"],
+                mainConfigFile: "src/main.js",
+                name: "main",
+                optimize: "none"
+            },
+            build: {
+                options: {
+                    out: "bundles/patterns.js"
+                }
+            },
+            standalone: {
+                options: {
+                    name: "../lib/almond",
+                    include: "main",
+                    wrap: true,
+                    out: "bundles/patterns-standalone.js",
+                    almond: true
+                }
+            }
+        },
         jshint: {
             sources: [
                 "Gruntfile.js",
@@ -46,6 +69,7 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
-    grunt.registerTask("default", "jshint");
+    grunt.loadNpmTasks("grunt-contrib-requirejs");
+    grunt.registerTask("default", "jshint requirejs");
 };
 
