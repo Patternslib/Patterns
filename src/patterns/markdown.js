@@ -16,9 +16,9 @@ define([
             
             $el.each(function() {
                 var $this = $(this),
-                    source = $this.is(":input") ? $this.val() : $this.text();
+                    source = $this.is(":input") ? this.value : $this.text();
                     $rendering = _.convert($("<div/>"), source);
-                $this.hide().after($rendering);
+                $rendering.replaceAll($this);
             });
         },
         
