@@ -16,6 +16,8 @@ Only one element:
 
 On a fieldset:
 
+.. code-block:: html
+
   <form>
     <fieldset class="pat-autosubmit">
      <input type="text" name="q" placeholder="Search query"/>
@@ -24,6 +26,8 @@ On a fieldset:
   </form>
 
 And on the form:
+
+.. code-block:: html
 
   <form class="pat-autosubmit">
     <fieldset>
