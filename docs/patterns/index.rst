@@ -34,6 +34,7 @@ changing classes in a click, to doing complex AJAX injection of content.
    collapsible
    depends
    inject
+   markdown
    menu
    modal
    selfhealing
