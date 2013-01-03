@@ -399,9 +399,9 @@ body:before {
 	padding-left: 500px;
 	padding-right: 50px;
 	width: 450px;
-	margin: 0 0 -500px -50px;
+	margin: -40px 0 -500px -50px;
 	position: absolute;
-	top: 160px;
+	top: 50%;
 	display: block;
 }
 
