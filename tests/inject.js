@@ -47,7 +47,7 @@ describe("inject-pattern", function() {
             it("take two positional options as source and target resp.", function() {
                 var cfgs;
 
-                $a.attr('data-pat-inject', '#otherid; #yetanotherid');
+                $a.attr('data-pat-inject', '#otherid #yetanotherid');
                 $target.attr('id', 'yetanotherid');
                 cfgs = pattern.extractConfig($a);
                 expect(pattern.verifyConfig(cfgs)).toBeTruthy();
@@ -120,7 +120,7 @@ describe("inject-pattern", function() {
             });
 
             it("takes multiple source-target pairs", function() {
-                $a.attr("data-pat-inject", "#someid1; #otherid1 && #someid2; #otherid2");
+                $a.attr("data-pat-inject", "#someid1 #otherid1 && #someid2 #otherid2");
                 $target1 = $('<div id="otherid1" />');
                 $target2 = $('<div id="otherid2" />');
                 $div.append($target1).append($target2);
@@ -174,7 +174,7 @@ describe("inject-pattern", function() {
             });
 
             it("copies into target if source has ::element", function() {
-                $a.attr("data-pat-inject", "#otherid::element; #someid");
+                $a.attr("data-pat-inject", "#otherid::element #someid");
 
                 pattern.init($a);
                 $a.trigger("click");
@@ -187,7 +187,7 @@ describe("inject-pattern", function() {
             });
 
             it("replaces target if both selectors have ::element", function() {
-                $a.attr("data-pat-inject", "#someid::element; #otherid::element");
+                $a.attr("data-pat-inject", "#someid::element #otherid::element");
                 $div.append($('<div id="otherid" />'));
 
                 pattern.init($a);
