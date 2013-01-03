@@ -9,8 +9,10 @@
 	<body>
 		<h1>Markdown formatted content</h1>
 		<h2>Inject Markdown formatted content as HTML</h2>
-		<a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Load and inject markdown content with data-type declaration.</a>
-		<a href="content.md" class="pat-inject" data-pat-inject="target: #target">Load and inject markdown content, automatically detected as markdown based on the file name extension.</a>
+		<ol>
+			<li><a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Load and inject markdown content with data-type declaration.</a></li>
+			<li><a href="content.md" class="pat-inject" data-pat-inject="target: #target">Load and inject markdown content, automatically detected as markdown based on the file name extension.</a></li>
+		</ol>
 		<div id="target">
 			Here some Markdown rendered content will appear if you click on one of the links above.
 		</div>
