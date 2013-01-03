@@ -5,10 +5,13 @@ describe("bumper-pattern", function() {
         pattern = cls;
     });
 
-    // Reset the lab before each test
     beforeEach(function() {
-        $("#lab *").remove();
+        $("<div/>", {id: "lab"}).appendTo(document.body);
         $(window).off(".autoscale");
+    });
+
+    afterEach(function() {
+        $("#lab").remove();
     });
 
     describe("setup", function() {
