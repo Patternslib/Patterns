@@ -1,44 +1,62 @@
 define([
     "jquery",
-    "../registry"
-], function($, registry) {
+    "../registry",
+    "../core/parser"
+], function($, registry, Parser) {
+    var parser = new Parser("auto-scale");
+    parser.add_argument("method", "scale", ["scale", "zoom"]);
+
     var _ = {
         name: "autoscale",
         trigger: ".pat-auto-scale",
-        method: "scale",
+        force_method: null,
 
         _setup: function() {
-            if ($.browser.msie && parseInt($.browser.version, 10)<10)
-                _.method="zoom";
+            if ($.browser.mozilla)
+                _.force_method="scale";
+            else if ($.browser.msie && parseInt($.browser.version, 10)<10)
+                _.force_method="zoom";
             $(window).on("resize.autoscale", _.onResize);
         },
 
-        init: function($el, options) {
-            return $el.each(_.resizeElement);
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $el = $(this);
+                    method = _.force_method;
+                if (method===null) {
+                    var options = _._parser.parse($el, opts);
+                    method=options.method;
+                    $el.data("patterns.auto-scale", method);
+                }
+                _.scale.apply(this, []);
+            });
         },
 
-        resizeElement: function() {
-            var $this = $(this),
+        scale: function() {
+            var $el = $(this),
+                method = _.force_method,
                 scale;
 
-            if (this.tagName.toLowerCase()==='body')
-                scale = $(window).width()/$this.outerWidth();
+            if ($el[0].tagName.toLowerCase()==='body')
+                scale = $(window).width()/$el.outerWidth();
             else
-                scale = $this.parent().outerWidth()/$this.outerWidth();
+                scale = $el.parent().outerWidth()/$el.outerWidth();
 
-            switch (_.method) {
+            if (method===null)
+                method=$el.data("patterns.auto-scale");
+            switch (method) {
             case "scale":
-                $this.css('transform', 'scale(' + scale + ')');
+                $el.css('transform', 'scale(' + scale + ')');
                 break;
             case "zoom":
-                $this.css('zoom', scale);
+                $el.css('zoom', scale);
                 break;
             }
-            $this.addClass("scaled");
+            $el.addClass("scaled");
         },
 
         onResize: function() {
-            $(_.trigger).each(_.resizeElement);
+            $(_.trigger).each(_.scale);
         }
     };
 
