@@ -7,7 +7,7 @@ define([
 ], function($, registry, inject) {
     var _ = {
         name: "markdown",
-        trigger: "textarea.pat-markdown",
+        trigger: ".pat-markdown",
         url_re: /\.md$/,
         converter: null,
         
