@@ -1,6 +1,5 @@
 before_script:
 - "git submodule update --init --recursive"
-script: "phantomjs lib/phantom-jasmine/lib/run_jasmine_test.coffee tests/index.html"
 notifications:
   irc:
     channels:
