@@ -1,4 +1,3 @@
-STANDALONE      = name=../lib/almond include=main wrap=true
 GRUNT		?= grunt
 PEGJS		?= pegjs
 PHANTOMJS	?= phantomjs
@@ -28,12 +27,13 @@ all doc:: build/docs/index.html
 build/docs/index.html: docs/conf.py $(wildcard docs/*.rst) $(wildcard docs/*/*.rst)
 	sphinx-build -b html docs build/docs
 
-check: lib/phantom-jasmine
-	$(PHANTOMJS) lib/phantom-jasmine/lib/run_jasmine_test.coffee tests/index.html
+check:
+	$(GRUNT) test
 
 clean:
 	rm -f $(TARGETS)
 	$(GRUNT) clean
+	rm -rf build
 
 upgrade-requirejs:
 	curl -s -o lib/require.js $(shell curl -s http://requirejs.org/docs/download.html | sed -ne '/download.*\/comments\/require.js/s/.*href="\([^"]*\).*/\1/p')

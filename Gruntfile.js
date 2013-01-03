@@ -4,8 +4,12 @@ module.exports = function(grunt) {
             build: [
                 "bundles/patterns*.js",
                 "bundles/patterns*.map"
+            ],
+            test: [
+                "_SpecRunner.html"
             ]
         },
+
         requirejs: {
             options: {
                 baseUrl: "src",
@@ -29,6 +33,73 @@ module.exports = function(grunt) {
                 }
             }
         },
+
+	jasmine: {
+            src: [],
+            options: {
+                template: "requirejs",
+                templateOptions: {
+                    requireConfig: {
+                        baseUrl: "src/",
+                        paths: {
+                            URIjs: "3rdparty/URIjs/src",
+                            jquery: "3rdparty/jquery-1.8.2",
+                            jquery_anythingslider: "3rdparty/jquery.anythingslider",
+                            jquery_autosuggest: "3rdparty/jquery.autoSuggest",
+                            jquery_chosen: "3rdparty/chosen.jquery",
+                            jquery_ext: "jquery-ext",
+                            jquery_form: "lib/jquery.form/jquery.form",
+                            jquery_fullcalendar: "3rdparty/fullcalendar/fullcalendar",
+                            jquery_placeholder: "3rdparty/jquery.placeholder",
+                            jquery_textchange: "3rdparty/jquery.textchange/jquery.textchange",
+                            jquery_validate: "3rdparty/jquery-validation/jquery.validate",
+                            jquery_validate_additional_methods: "3rdparty/jquery-validation/additional-methods",
+                            logging: "3rdparty/logging/src/logging",
+                            less: "3rdparty/less-1.3.1",
+                            modernizr: "3rdparty/modernizr-2.0.6",
+                            prefixfree: "3rdparty/prefixfree",
+                            tinymce: "3rdparty/tiny_mce/tiny_mce_src"
+                        },
+                        shim: {
+                            jquery_anythingslider: {
+                                deps: ["jquery"]
+                            },
+                            jquery_autosuggest: {
+                                deps: ["jquery"]
+                            },
+                            jquery_chosen: {
+                                deps: ["jquery"]
+                            },
+                            jquery_form: {
+                                deps: ["jquery"]
+                            },
+                            jquery_fullcalendar: {
+                                deps: ["jquery"]
+                            },
+                            jquery_placeholder: {
+                                deps: ["jquery"]
+                            },
+                            jquery_textchange: {
+                                deps: ["jquery"]
+                            },
+                            jquery_validate: {
+                                deps: ["jquery"]
+                            },
+                            jquery_validate_additional_methods: {
+                                deps: ["jquery_validate"]
+                            }
+                        }
+                    }
+                },
+                vendor: [
+                    "lib/requireHelper.js"
+                ],
+                specs: [
+                    "tests/*.js"
+                ]
+            }
+	},
+
         uglify: {
             build: {
                 files: {
@@ -51,6 +122,7 @@ module.exports = function(grunt) {
                 }
             }
         },
+
         jshint: {
             sources: [
                 "Gruntfile.js",
@@ -97,9 +169,11 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-jasmine");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-requirejs");
     grunt.loadNpmTasks("grunt-contrib-uglify");
-    grunt.registerTask("default", "jshint clean requirejs uglify");
+    grunt.registerTask("test", ["jasmine"]);  // No jshint for now
+    grunt.registerTask("default", "jasmine jshint clean requirejs uglify");
 };
 

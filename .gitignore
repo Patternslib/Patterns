@@ -3,6 +3,6 @@
 /build/patterns.min.js
 /bundles/patterns-standalone.min.map
 /bundles/patterns.min.map
-/docs/_build
 /src/lib/jquery.mutations/build
 /node_modules
+/_SpecRunner.html
