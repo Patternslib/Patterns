@@ -17761,55 +17761,6 @@ define('patterns/autofocus',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-define('patterns/autoscale',[
-    "jquery",
-    "../registry"
-], function($, registry) {
-    var _ = {
-        name: "autoscale",
-        trigger: ".pat-auto-scale",
-        method: "scale",
-
-        _setup: function() {
-            if ($.browser.msie && parseInt($.browser.version, 10)<10)
-                _.method="zoom";
-            $(window).on("resize.autoscale", _.resizeEvent);
-        },
-
-        init: function($el, options) {
-            return $el.each(_.resizeElement);
-        },
-
-        resizeElement: function() {
-            var $this = $(this),
-                scale;
-
-            if (this.tagName.toLowerCase()==='body')
-                scale = $(window).width()/$this.outerWidth();
-            else
-                scale = $this.parent().outerWidth()/$this.outerWidth();
-
-            switch (_.method) {
-            case "scale":
-                $this.css('transform', 'scale(' + scale + ')');
-                break;
-            case "zoom":
-                $this.css('zoom', scale);
-                break;
-            }
-            $this.addClass("scaled");
-        },
-
-        resizeEvent: function() {
-            $(_.trigger).each(_.resizeElement);
-        }
-    };
-
-    _._setup();
-    registry.register(_);
-    return _;
-});
-
 /**
  * @license
  * Patterns @VERSION@ parser - argument parser
@@ -18166,6 +18117,73 @@ define('core/parser',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
+define('patterns/autoscale',[
+    "jquery",
+    "../registry",
+    "../core/parser"
+], function($, registry, Parser) {
+    var parser = new Parser("auto-scale");
+    parser.add_argument("method", "scale", ["scale", "zoom"]);
+
+    var _ = {
+        name: "autoscale",
+        trigger: ".pat-auto-scale",
+        force_method: null,
+
+        _setup: function() {
+            if ($.browser.mozilla)
+                _.force_method="scale";
+            else if ($.browser.msie && parseInt($.browser.version, 10)<10)
+                _.force_method="zoom";
+            $(window).on("resize.autoscale", _.onResize);
+        },
+
+        init: function($el, opts) {
+            return $el.each(function() {
+                var $el = $(this);
+                    method = _.force_method;
+                if (method===null) {
+                    var options = _._parser.parse($el, opts);
+                    method=options.method;
+                    $el.data("patterns.auto-scale", method);
+                }
+                _.scale.apply(this, []);
+            });
+        },
+
+        scale: function() {
+            var $el = $(this),
+                method = _.force_method,
+                scale;
+
+            if ($el[0].tagName.toLowerCase()==='body')
+                scale = $(window).width()/$el.outerWidth();
+            else
+                scale = $el.parent().outerWidth()/$el.outerWidth();
+
+            if (method===null)
+                method=$el.data("patterns.auto-scale");
+            switch (method) {
+            case "scale":
+                $el.css('transform', 'scale(' + scale + ')');
+                break;
+            case "zoom":
+                $el.css('zoom', scale);
+                break;
+            }
+            $el.addClass("scaled");
+        },
+
+        onResize: function() {
+            $(_.trigger).each(_.scale);
+        }
+    };
+
+    _._setup();
+    registry.register(_);
+    return _;
+});
+
 define('patterns/autosubmit',[
     "jquery",
     '../registry',
