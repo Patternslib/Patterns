@@ -36,7 +36,7 @@ describe("transforms", function() {
         it("Convert legend to p.legend", function() {
             var $lab = $("#lab");
             $lab.append("<fieldset><legend>Fieldset title</legend></fieldset>");
-            mapal.transformContent($lab[0]);
+            mapal.transformContent($lab);
             expect($lab.html()).toBe('<fieldset><p class="legend">Fieldset title</p></fieldset>');
         });
 
