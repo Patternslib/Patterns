@@ -73,7 +73,7 @@ describe("inject-pattern", function() {
     describe("DOM tests", function() {
         var answer = function(html) {
             expect($.ajax).toHaveBeenCalled();
-            $.ajax.mostRecentCall.args[0]['success'](html);
+            $.ajax.mostRecentCall.args[0]['success'](html, "ok", { responseText: html });
         };
 
         beforeEach(function() {
