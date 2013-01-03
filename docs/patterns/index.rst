@@ -28,6 +28,7 @@ changing classes in a click, to doing complex AJAX injection of content.
 
    autoscale
    autosubmit
+   bumper
    carousel
    checklist
    collapsible
