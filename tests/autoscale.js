@@ -12,39 +12,49 @@ describe("bumper-pattern", function() {
     });
 
     describe("setup", function() {
-        var original_method, msie, version;
+        var force_method, mozilla, msie, version;
 
         beforeEach(function() {
-            original_method=pattern.method;
-            pattern.method="scale";
+            force_method=pattern.force_method;
+            mozilla=jQuery.browser.mozilla;
             msie=jQuery.browser.msie;
             version=jQuery.browser.version;
+            pattern.force_method=null;
+            jQuery.browser.mozilla=false;
+            jQuery.browser.msie=false;
         });
 
         afterEach(function() {
-            pattern.method=original_method;
+            pattern.force_method=force_method;
+            jQuery.browser.mozilla=mozilla;
             jQuery.browser.msie=msie;
             jQuery.browser.version=version;
         });
 
-        it("Use zoom on old IE versions", function() {
+        it("Force zoom on old IE versions", function() {
             jQuery.browser.msie=true;
             jQuery.browser.version="9.192.921";
             pattern._setup();
-            expect(pattern.method).toBe("zoom");
+            expect(pattern.force_method).toBe("zoom");
         });
 
-        it("Use scale on recent IE versions", function() {
+        it("Force nothing on recent IE versions", function() {
             jQuery.browser.msie=true;
             jQuery.browser.version="10.0.19A";
             pattern._setup();
-            expect(pattern.method).toBe("scale");
+            expect(pattern.force_method).toBe(null);
         });
 
-        it("Use scale on non-IE browsers", function() {
-            jQuery.browser.msie=false;
+        it("Force scale on gecko", function() {
+            // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
+            jQuery.browser.mozilla=true;
             pattern._setup();
-            expect(pattern.method).toBe("scale");
+            expect(pattern.force_method).toBe("scale");
+        });
+
+        it("Force nothing on other browsers", function() {
+            pattern._setup();
+            expect(pattern.force_method).toBe(null);
         });
     });
 
@@ -56,24 +66,16 @@ describe("bumper-pattern", function() {
         });
     });
 
-    describe("resizeElement", function() {
+    describe("scale", function() {
         var original_method;
-
-        beforeEach(function() {
-            original_method=pattern.method;
-        });
-
-        afterEach(function() {
-            pattern.method=original_method;
-        });
 
         it("Scale element", function() {
             $("<div/>", {id: "parent"}).css({width: "200px"})
               .append($("<div/>", {id: "child"}).css({width: "50px"}))
               .appendTo("#lab");
             var child = document.getElementById("child");
-            pattern.method="scale";
-            pattern.resizeElement.apply(child, []);
+            $(child).data("patterns.auto-scale", "scale");
+            pattern.scale.apply(child, []);
             expect(child.getAttribute("style")).toMatch(/transform: scale\(4\);/);
         });
 
@@ -82,8 +84,8 @@ describe("bumper-pattern", function() {
               .append($("<div/>", {id: "child"}).css({width: "50px"}))
               .appendTo("#lab");
             var child = document.getElementById("child");
-            pattern.method="zoom";
-            pattern.resizeElement.apply(child, []);
+            $(child).data("patterns.auto-scale", "zoom");
+            pattern.scale.apply(child, []);
             expect(child.style.zoom).toBe("4");
         });
 
@@ -92,7 +94,8 @@ describe("bumper-pattern", function() {
               .append($("<div/>", {id: "child"}).css({width: "50px"}))
               .appendTo("#lab");
             var child = document.getElementById("child");
-            pattern.resizeElement.apply(child, []);
+            $(child).data("patterns.auto-scale", "zoom");
+            pattern.scale.apply(child, []);
             expect($(child).hasClass("scaled")).toBeTruthy();
         });
     });
