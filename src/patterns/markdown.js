@@ -5,16 +5,15 @@ define([
     "pagedown_converter",
     "pagedown_sanitizer"
 ], function($, registry, inject) {
+    var converter = Markdown.getSanitizingConverter();
+
     var _ = {
         name: "markdown",
         trigger: ".pat-markdown",
         url_re: /\.md$/,
-        converter: null,
         
         init: function($el, options) {
-            var converter = Markdown.getSanitizingConverter();
-            
-            $el.each(function() {
+            return $el.each(function() {
                 var $this = $(this),
                     source = $this.is(":input") ? this.value : $this.text();
                     $rendering = _.convert($("<div/>"), source);
@@ -23,15 +22,10 @@ define([
         },
         
         convert: function($el, text) {
-            _.converter = _.converter || Markdown.getSanitizingConverter();
-            
-            var html = _.converter.makeHtml(text);
-            
-            $el.each(function() {
+            var html = converter.makeHtml(text);
+            return $el.each(function() {
                 $(this).html(html);
             });
-            
-            return $el;
         }
     };
     
