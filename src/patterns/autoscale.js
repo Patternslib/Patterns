@@ -24,7 +24,7 @@ define([
                 var $el = $(this);
                     method = _.force_method;
                 if (method===null) {
-                    var options = _._parser.parse($el, opts);
+                    var options = parser.parse($el, opts);
                     method=options.method;
                     $el.data("patterns.auto-scale", method);
                 }

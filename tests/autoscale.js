@@ -64,6 +64,19 @@ describe("bumper-pattern", function() {
             jq.each.andReturn(jq);
             expect(pattern.init(jq)).toBe(jq);
         });
+
+	it("Perform initial scaling", function() {
+            $("<div/>", {id: "parent"}).css({width: "200px"})
+              .append($("<div/>", {id: "child", "data-pat-auto-scale": "scale"})
+                  .css({width: "50px"}))
+              .appendTo("#lab");
+            var $child = $("#child");
+            pattern.init($child);
+            spyOn(pattern, "scale");
+            pattern.init($child);
+            expect($child.data("patterns.auto-scale")).toBe("scale");
+            expect(pattern.scale).toHaveBeenCalled();
+	});
     });
 
     describe("scale", function() {
