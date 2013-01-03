@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+		<link rel="stylesheet" href="../base.css" type="text/css">
+		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<h1>Markdown formatted content</h1>
+
+		<a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">
+			Load and inject markdown content.
+		</a>
+		<div id="target">
+			Here some markdown rendered content will appear if you click the link above.
+		</div>
+
+        <div id="target-autoload">
+		<a href="content.md" class="pat-inject autoLoading-visible" data-pat-inject="target: #target-autoload">
+			<p>This content and the anchor tag will be replaced (Its tags included)</p>
+		</a>
+		</div>
+
+
+		<!-- this area's content will be converted to html and injected
+                into a div after the <pre>.
+		-->
+		<pre class="pat-markdown"># Some Other Header 1
+
+## Some Other Header 2
+
+Some _other_ __markdown__ ___content___.
+
+And a list numbered list:
+
+1. one
+2. two
+3. three
+7. four
+		</pre>
+	</body>
+</html>
