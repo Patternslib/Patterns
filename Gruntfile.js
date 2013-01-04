@@ -34,63 +34,10 @@ module.exports = function(grunt) {
             }
         },
 
-	jasmine: {
+        jasmine: {
             src: [],
             options: {
-                template: "requirejs",
-                templateOptions: {
-                    requireConfig: {
-                        baseUrl: "src/",
-                        paths: {
-                            URIjs: "3rdparty/URIjs/src",
-                            jquery: "3rdparty/jquery-1.8.2",
-                            jquery_anythingslider: "3rdparty/jquery.anythingslider",
-                            jquery_autosuggest: "3rdparty/jquery.autoSuggest",
-                            jquery_chosen: "3rdparty/chosen.jquery",
-                            jquery_ext: "jquery-ext",
-                            jquery_form: "lib/jquery.form/jquery.form",
-                            jquery_fullcalendar: "3rdparty/fullcalendar/fullcalendar",
-                            jquery_placeholder: "3rdparty/jquery.placeholder",
-                            jquery_textchange: "3rdparty/jquery.textchange/jquery.textchange",
-                            jquery_validate: "3rdparty/jquery-validation/jquery.validate",
-                            jquery_validate_additional_methods: "3rdparty/jquery-validation/additional-methods",
-                            logging: "3rdparty/logging/src/logging",
-                            less: "3rdparty/less-1.3.1",
-                            modernizr: "3rdparty/modernizr-2.0.6",
-                            prefixfree: "3rdparty/prefixfree",
-                            tinymce: "3rdparty/tiny_mce/tiny_mce_src"
-                        },
-                        shim: {
-                            jquery_anythingslider: {
-                                deps: ["jquery"]
-                            },
-                            jquery_autosuggest: {
-                                deps: ["jquery"]
-                            },
-                            jquery_chosen: {
-                                deps: ["jquery"]
-                            },
-                            jquery_form: {
-                                deps: ["jquery"]
-                            },
-                            jquery_fullcalendar: {
-                                deps: ["jquery"]
-                            },
-                            jquery_placeholder: {
-                                deps: ["jquery"]
-                            },
-                            jquery_textchange: {
-                                deps: ["jquery"]
-                            },
-                            jquery_validate: {
-                                deps: ["jquery"]
-                            },
-                            jquery_validate_additional_methods: {
-                                deps: ["jquery_validate"]
-                            }
-                        }
-                    }
-                },
+                template: "tests/runner.tmpl",
                 vendor: [
                     "lib/requireHelper.js"
                 ],
@@ -98,7 +45,7 @@ module.exports = function(grunt) {
                     "tests/*.js"
                 ]
             }
-	},
+        },
 
         uglify: {
             build: {
