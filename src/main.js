@@ -58,7 +58,6 @@ define([
     "jquery",
     "./registry",
     // below here modules that are only loaded
-    "jquery_validate_additional_methods",
     "modernizr",
     "less",
     "prefixfree",
