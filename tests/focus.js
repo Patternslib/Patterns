@@ -5,9 +5,12 @@ describe("focus-plugin", function() {
         pattern = cls;
     });
 
-    // Reset the lab before each test
     beforeEach(function() {
-        $("#lab *").remove();
+        $("<div/>", {id: "lab"}).appendTo(document.body);
+    });
+
+    afterEach(function() {
+        $("#lab").remove();
     });
 
     describe("_findRelatives", function() {
