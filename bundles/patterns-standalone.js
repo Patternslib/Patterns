@@ -10100,10 +10100,10 @@ define('transforms',[
             $root
                 .filter(".record-history")
                 .add(".record-history", $root)
-                .addClass('cant-touch-this');
+                .addClass("cant-touch-this");
 
             $root.find("legend:not(.cant-touch-this)").each(function() {
-                $(this).replaceWith('<p class="legend">'+$(this).html()+'</p>');
+                $(this).replaceWith("<p class='legend'>"+$(this).html()+"</p>");
             });
 
             // Replace objects with iframes for IE 8 and older.
@@ -10116,63 +10116,10 @@ define('transforms',[
     };
     return transforms;
 });
+
 define('utils',[
     "jquery"
 ], function($) {
-    var extractParameters = function(params, sources) {
-        var tmp,
-            j,
-            paramObjs = {};
-        if (params.length > 0) {
-            var p = params.slice(1).split('!');
-            for (var i = p.length-1; i >= 0; i--) {
-                // support injection parameters in other patterns
-                if (p[i][0] == '#') {
-                    var param, effect;
-
-                    if (p[i].indexOf('.') > 0) {
-                        tmp = p[i].split('.');
-                        param = tmp[0];
-                        effect = tmp[1];
-                    } else {
-                        param = p[i];
-                        effect = undefined;
-                    }
-                    var source = [sources.pop()];
-                    // XXX: $a and url were also not defined in the old context
-                    // We need automated tests
-                    mapal.injection.load($a, url, param.slice(1), source);
-                } else if (p[i].indexOf('=') > 0) {
-                    j = p[i].indexOf('=');
-                    paramObjs[p[i].slice(0, j)] = p[i].slice(j+1);
-                } else {
-                    paramObjs[p[i]] = true;
-                }
-            }
-        }
-        return paramObjs;
-    };
-
-    // input = "a!b=1 2!c=x"
-    // --> options = {a: true, b: '1 2', c: 'x'}
-    var parseOptions = function(input) {
-        var params = input.split("!"),
-            options = {}, name, value, index;
-
-        for (var i=0; i<params.length; i++) {
-            index = params[i].indexOf("=");
-            if (index === -1) {
-                name = params[i];
-                value = true;
-            } else {
-                name = params[i].slice(0, index);
-                value = params[i].slice(index+1);
-            }
-            options[name] = value;
-        }
-        return options;
-    };
-
     var jquery_plugin = function(pattern) {
         var plugin = function(method) {
             var $this = this;
@@ -10188,48 +10135,13 @@ define('utils',[
                     [$this].concat(Array.prototype.slice.call(arguments, 1))
                 );
             } else {
-                $.error('Method ' + method +
-                        ' does not exist on jQuery.' + pattern.name);
+                $.error("Method " + method +
+                        " does not exist on jQuery." + pattern.name);
             }
             return $this;
         };
         return plugin;
     };
-
-    function _renumberAttribute(el, attr, i) {
-        var $el = $(el),
-            buf = $el.attr(attr);
-        if (buf) {
-            $el.attr(attr, buf.replace(/[0-9]+/, i));
-        }
-    }
-
-    function _renumberEl() {
-	_renumberAttribute(this, "for", i);
-	_renumberAttribute(this, "id", i);
-	_renumberAttribute(this, "name", i);
-    }
-
-    function renumber($container, selector) {
-        var $entries = $container.find(selector ? selector : "fieldset,tr,dd"),
-            entry, i;
-
-        for (i=0; i<$entries.length; i++) {
-            entry = $entries.get(i);
-            _renumberAttribute(entry, "id", i);
-            $("label, :input", entry).each(_renumberEl);
-        }
-    }
-
-
-    function hasContent($el) {
-        if ($el.is(":input")) {
-            return $el.val();
-        } else {
-            return $el.text().replace(/\s*/g, "") || $el.find("img,object,video,audio").length;
-        }
-    }
-
 
     //     Underscore.js 1.3.1
     //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
@@ -10256,14 +10168,9 @@ define('utils',[
     };
 
     var utils = {
-        extractParameters: extractParameters,
-        parseOptions: parseOptions,
-        //load_modules: load_modules,
         // pattern pimping - own module?
         jquery_plugin: jquery_plugin,
-        debounce: debounce,
-	renumber: renumber,
-	hasContent: hasContent
+        debounce: debounce
     };
 
     return utils;
@@ -10283,7 +10190,7 @@ define('compat',[],function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof fun != "function")
+            if (typeof fun !== "function")
                 throw new TypeError();
 
             var thisp = arguments[1];
@@ -10308,7 +10215,7 @@ define('compat',[],function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof fun != "function")
+            if (typeof fun !== "function")
                 throw new TypeError();
 
             var res = [];
@@ -10350,7 +10257,7 @@ define('compat',[],function() {
 
             // 4. If IsCallable(callback) is false, throw a TypeError exception.
             // See: http://es5.github.com/#x9.11
-            if ( {}.toString.call(callback) != "[object Function]" ) {
+            if ( {}.toString.call(callback) !== "[object Function]" ) {
                 throw new TypeError( callback + " is not a function" );
             }
 
@@ -10404,9 +10311,9 @@ define('compat',[],function() {
             var n = 0;
             if (arguments.length > 0) {
                 n = Number(arguments[1]);
-                if (n != n) { // shortcut for verifying if it's NaN
+                if (n !== n) { // shortcut for verifying if it's NaN
                     n = 0;
-                } else if (n !== 0 && n != Infinity && n != -Infinity) {
+                } else if (n !== 0 && n !== Infinity && n !== -Infinity) {
                     n = (n > 0 || -1) * Math.floor(Math.abs(n));
                 }
             }
@@ -10441,9 +10348,9 @@ define('compat',[],function() {
             if (arguments.length > 1)
             {
                 n = Number(arguments[1]);
-                if (n != n)
+                if (n !== n)
                     n = 0;
-                else if (n !== 0 && n != (1 / 0) && n != -(1 / 0))
+                else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
                     n = (n > 0 || -1) * Math.floor(Math.abs(n));
             }
 
@@ -10480,7 +10387,7 @@ define('compat',[],function() {
 
             // 4. If IsCallable(callback) is false, throw a TypeError exception.
             // See: http://es5.github.com/#x9.11
-            if ({}.toString.call(callback) != "[object Function]") {
+            if ({}.toString.call(callback) !== "[object Function]") {
                 throw new TypeError(callback + " is not a function");
             }
 
@@ -10574,7 +10481,7 @@ define('compat',[],function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof callbackfn != "function")
+            if (typeof callbackfn !== "function")
                 throw new TypeError();
 
             // no value to return if no initial value, empty array
@@ -10628,7 +10535,7 @@ define('compat',[],function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof fun != "function")
+            if (typeof fun !== "function")
                 throw new TypeError();
 
             var thisp = arguments[1];
@@ -10646,14 +10553,14 @@ define('compat',[],function() {
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray (JS 1.8.5)
     if (!Array.isArray) {
         Array.isArray = function (arg) {
-            return Object.prototype.toString.call(arg) == '[object Array]';
+            return Object.prototype.toString.call(arg) === "[object Array]";
         };
     }
 
     // source: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim (JS 1.8.1)
     if (!String.prototype.trim) {
         String.prototype.trim = function () {
-            return this.replace(/^\s+|\s+$/g,'');
+            return this.replace(/^\s+|\s+$/g, "");
         };
     }
 
@@ -10665,8 +10572,8 @@ define('compat',[],function() {
                 throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
             }
 
-            var aArgs = Array.prototype.slice.call(arguments, 1), 
-                fToBind = this, 
+            var aArgs = Array.prototype.slice.call(arguments, 1),
+                fToBind = this,
                 fNOP = function () {},
                 fBound = function () {
                     return fToBind.apply(this instanceof fNOP &&
@@ -10684,21 +10591,21 @@ define('compat',[],function() {
     if (!Object.keys) {
         Object.keys = (function () {
             var _hasOwnProperty = Object.prototype.hasOwnProperty,
-            hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+            hasDontEnumBug = !({toString: null}).propertyIsEnumerable("toString"),
             dontEnums = [
-            'toString',
-            'toLocaleString',
-            'valueOf',
-            'hasOwnProperty',
-            'isPrototypeOf',
-            'propertyIsEnumerable',
-            'constructor'
+            "toString",
+            "toLocaleString",
+            "valueOf",
+            "hasOwnProperty",
+            "isPrototypeOf",
+            "propertyIsEnumerable",
+            "constructor"
             ],
             dontEnumsLength = dontEnums.length;
 
             return function (obj) {
-                if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null)
-                    throw new TypeError('Object.keys called on non-object');
+                if (typeof obj !== "object" && typeof obj !== "function" || obj === null)
+                    throw new TypeError("Object.keys called on non-object");
 
                 var result = [];
                 for (var prop in obj)
@@ -10731,7 +10638,7 @@ define('registry',[
     // below here modules that are only loaded
     "./compat"
 ], function($, logger, transforms, utils) {
-    var log = logger.getLogger('registry'),
+    var log = logger.getLogger("registry"),
         jquery_plugin = utils.jquery_plugin;
 
     var registry = {
@@ -10750,12 +10657,12 @@ define('registry',[
                     all.push(pattern.trigger);
                 }
             }
-            allsel = all.join(',');
+            allsel = all.join(",");
 
             // find all elements that belong to any pattern
             $match = $content.filter(allsel);
             $match = $match.add($content.find(allsel));
-            $match = $match.filter(':not(.cant-touch-this)');
+            $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.
             //
@@ -10773,10 +10680,10 @@ define('registry',[
                     plog = logger.getLogger("pat." + name);
 
                     if ($el.is(pattern.trigger)) {
-                        plog.debug('Initialising:', $el);
+                        plog.debug("Initialising:", $el);
                         try {
                             pattern.init($el);
-                            plog.debug('done.');
+                            plog.debug("done.");
                         } catch (e) {
                             plog.error("Caught error:", e);
                         }
@@ -10810,14 +10717,14 @@ define('registry',[
                 $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
             }
 
-            log.debug('Registered pattern:', pattern.name, pattern);
+            log.debug("Registered pattern:", pattern.name, pattern);
             return true;
         }
     };
 
-    $(document).on('patterns-injected.patterns', function(ev) {
+    $(document).on("patterns-injected.patterns", function(ev) {
         registry.scan(ev.target);
-        $(ev.target).trigger('patterns-injected-scanned');
+        $(ev.target).trigger("patterns-injected-scanned");
     });
 
 
@@ -18125,7 +18032,7 @@ StyleFix.register(self.prefixCSS);
 define("prefixfree", function(){});
 
 define('patterns/autofocus',[
-    'jquery',
+    "jquery",
     "../registry"
 ], function($, registry) {
     var autofocus = {
@@ -18528,7 +18435,7 @@ define('patterns/autoscale',[
 
         init: function($el, opts) {
             return $el.each(function() {
-                var $el = $(this);
+                var $el = $(this),
                     method = _.force_method;
                 if (method===null) {
                     var options = parser.parse($el, opts);
@@ -18544,7 +18451,7 @@ define('patterns/autoscale',[
                 method = _.force_method,
                 scale;
 
-            if ($el[0].tagName.toLowerCase()==='body')
+            if ($el[0].tagName.toLowerCase()==="body")
                 scale = $(window).width()/$el.outerWidth();
             else
                 scale = $el.parent().outerWidth()/$el.outerWidth();
@@ -18553,10 +18460,10 @@ define('patterns/autoscale',[
                 method=$el.data("patterns.auto-scale");
             switch (method) {
             case "scale":
-                $el.css('transform', 'scale(' + scale + ')');
+                $el.css("transform", "scale(" + scale + ")");
                 break;
             case "zoom":
-                $el.css('zoom', scale);
+                $el.css("zoom", scale);
                 break;
             }
             $el.addClass("scaled");
@@ -18574,12 +18481,12 @@ define('patterns/autoscale',[
 
 define('patterns/autosubmit',[
     "jquery",
-    '../registry',
-    '../core/logger',
-    '../core/parser',
-    '../utils'
+    "../registry",
+    "../core/logger",
+    "../core/parser",
+    "../utils"
 ], function($, registry, logging, Parser, utils) {
-    var log = logging.getLogger('autosubmit'),
+    var log = logging.getLogger("autosubmit"),
         parser = new Parser("autosubmit");
 
     // XXX: would be great if the parser would handle validation and
@@ -18610,7 +18517,7 @@ define('patterns/autosubmit',[
                     cfg.delay = 400;
                 if (cfg.delay)
                     submit = utils.debounce(_.considerSubmit, cfg.delay);
-                ($el.is('input') ? $el : $el.find('input'))
+                ($el.is("input") ? $el : $el.find("input"))
                     .on("keyup.pat-autosubmit", submit);
             }
 
@@ -18620,41 +18527,41 @@ define('patterns/autosubmit',[
             // XXX: this should be handled by writing code that
             // triggers a change event in case the "Clear field
             // button" inside the search is pressed
-            ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
+            ($el.is("input[type=search]") ? $el : $el.find("input[type=search]"))
                 .on("click.pat-autosubmit", _.considerSubmit);
 
             return $el;
         },
         parser: parser,
         destroy: function($el) {
-            $el.off('.pat-autosubmit');
-            $el.find('input').off('.pat-autosubmit');
+            $el.off(".pat-autosubmit");
+            $el.find("input").off(".pat-autosubmit");
         },
         considerSubmit: function(ev) {
             // XXX: check that the very same event did not submit the
             // form already (see below)
 
             var $el = $(this),
-                $form = $el.is('form') ? $el : $el.parents('form').first();
+                $form = $el.is("form") ? $el : $el.parents("form").first();
 
             // ignore auto-suggest fields, the change event will be
             // triggered on the hidden input
-            if ($el.is('.pat-autosuggest')) {
-                log.debug('ignored event from autosuggest field');
+            if ($el.is(".pat-autosuggest")) {
+                log.debug("ignored event from autosuggest field");
                 return;
             }
 
-            if ($el.is('input[type=search]')) {
+            if ($el.is("input[type=search]")) {
                 // clicking X on type=search deletes data attrs,
                 // therefore we store the old value on the form.
-                var name = $el.attr('name'),
-                    key = 'pat-autosubmit-' + name + '-oldvalue',
+                var name = $el.attr("name"),
+                    key = "pat-autosubmit-" + name + "-oldvalue",
                     oldvalue = $form.data(key) || "",
                     curvalue = $el[0].value || "";
 
                 if (!name)
-                    log.warn('type=search without name, will be a problem' +
-                             ' if there are multiple', $el);
+                    log.warn("type=search without name, will be a problem" +
+                             " if there are multiple", $el);
 
                 if (oldvalue === curvalue)
                     return;
@@ -20178,45 +20085,41 @@ define("jquery_form", ["jquery"], function(){});
 // Changes to previous
 // - prefill and ashtmlid in data-auto-suggest-config
 define('patterns/autosuggest',[
-    'jquery',
-    '../core/logger',
-    '../core/parser',
-    '../registry',
-    '../utils',
-    'jquery_autosuggest',
-    'jquery_form'
-], function($, logger, Parser, registry, utils) {
-    var log = logger.getLogger('pat.autosuggest');
-
+    "jquery",
+    "../core/parser",
+    "../registry",
+    "jquery_autosuggest",
+    "jquery_form"
+], function($, Parser, registry) {
     var parser = new Parser("autosuggest");
-    parser.add_argument('words', "");
-    parser.add_argument('pre-fill');
-    parser.add_argument('as-html-id');
-    parser.add_argument('selected-value-prop', "name");
-    parser.add_argument('search-obj-prop', "name");
-    parser.add_argument('start-text', "Enter text");
+    parser.add_argument("words", "");
+    parser.add_argument("pre-fill");
+    parser.add_argument("as-html-id");
+    parser.add_argument("selected-value-prop", "name");
+    parser.add_argument("search-obj-prop", "name");
+    parser.add_argument("start-text", "Enter text");
 
     var _ = {
-        name: 'autosuggest',
+        name: "autosuggest",
         trigger: "input.pat-autosuggest",
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
             var cfg = _.parser.parse($el, opts);
-            if ($el.attr('readonly'))
+            if ($el.attr("readonly"))
                 cfg.startText = "";
 
-            if (cfg.preFill && (cfg.preFill.slice(0,1) === ','))
+            if (cfg.preFill && (cfg.preFill.slice(0,1) === ","))
                 cfg.preFill = cfg.preFill.slice(1);
 
-            $el.on('keydown.pat-autosuggest', _.onKeyDown);
+            $el.on("keydown.pat-autosuggest", _.onKeyDown);
 
             var data = cfg.words.split(/\s*,\s*/).map(function(word) {
                 return {value: word, name: word};
             });
 
-            cfg.selectionAdded = function(elem) {
+            cfg.selectionAdded = function() {
                 $el.next().trigger("change");
             };
             cfg.selectionRemoved = function(elem) {
@@ -20224,18 +20127,18 @@ define('patterns/autosuggest',[
                 $el.next().trigger("change");
             };
 
-            $el.on('change.pat-autosuggest', false);
+            $el.on("change.pat-autosuggest", false);
 
             // XXX: See https://github.com/Patternslib/Patterns/issues/149
-            if (cfg['asHtmlId'] !== undefined) {
-                cfg['asHtmlID'] = cfg['asHtmlId'];
+            if (cfg.asHtmlId !== undefined) {
+                cfg.asHtmlID = cfg.asHtmlId;
             }
             $el.autoSuggest(data, cfg);
 
             return $el;
         },
         destroy: function($el) {
-            $el.off('.pat-autosuggest');
+            $el.off(".pat-autosuggest");
 
             // XXX: destroy the jqueryPlugin, unfortunately it doesn't
             // support this as of now
@@ -20246,11 +20149,11 @@ define('patterns/autosuggest',[
         onKeyDown: function(ev) {
             var $this = $(this);
             if (ev.which === 13) {
-                var $results = $this.parents('.as-selections').next();
+                var $results = $this.parents(".as-selections").next();
                 ev.preventDefault();
                 // skip ENTER->comma translation, if selection is active
-                if (($results.is(':visible')) &&
-                    ($results.find('.active').length > 0)) return;
+                if (($results.is(":visible")) &&
+                    ($results.find(".active").length > 0)) return;
                 var newev = $.Event("keydown");
                 newev.ctrlKey = false;
                 newev.which = 188;
@@ -20267,15 +20170,12 @@ define('patterns/autosuggest',[
 // vim: sw=4 expandtab
 ;
 define('patterns/breadcrumbs',[
-    'jquery',
-    '../core/logger',
-    '../registry'
-], function($, logger, registry) {
-    var log = logger.getLogger('pat.breadcrumbs');
-
+    "jquery",
+    "../registry"
+], function($, registry) {
     var _ = {
         name: "breadcrumbs",
-        trigger: 'nav.pat-breadcrumbs',
+        trigger: "nav.pat-breadcrumbs",
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.map(function() {
@@ -20285,7 +20185,7 @@ define('patterns/breadcrumbs',[
 
             // wrap elements in a DIV that will be shifted around
             var $content = $el.children()
-                    .wrapAll('<div class="pat-breadcrumbs-content"></div>').parent();
+                    .wrapAll("<div class='pat-breadcrumbs-content'></div>").parent();
 
             // set fixed width on content
             var width = $content.children().toArray().reduce(function(acc, el) {
@@ -20294,7 +20194,7 @@ define('patterns/breadcrumbs',[
             $content.width(width);
 
             // shift ctrl
-            var $ctrl = $('<span class="button shift">shift</span>')
+            var $ctrl = $("<span class='button shift'>shift</span>")
                     .prependTo($el);
 
             var shifted = false,
@@ -20306,7 +20206,7 @@ define('patterns/breadcrumbs',[
                     if (toggle) {
                         margin = shifted ? 0 : difference;
                         $content.animate({"margin-left": margin}, function() {
-                            $ctrl.toggleClass('shift-right shift-left');
+                            $ctrl.toggleClass("shift-right shift-left");
                             shifted = !shifted;
                         });
                     } else {
@@ -20324,10 +20224,10 @@ define('patterns/breadcrumbs',[
                     // we should be shifting
                     if (!shifting) {
                         shifting = true;
-                        $el.addClass('shifting');
-                        $ctrl.removeClass('shift-right');
-                        $ctrl.addClass('shift-left');
-                        $ctrl.on('click.pat-breadcrumbs', shifter(true));
+                        $el.addClass("shifting");
+                        $ctrl.removeClass("shift-right");
+                        $ctrl.addClass("shift-left");
+                        $ctrl.on("click.pat-breadcrumbs", shifter(true));
                         $ctrl.click();
                     } else {
                         // a shifter that keeps state
@@ -20339,20 +20239,20 @@ define('patterns/breadcrumbs',[
                         $content.animate({"margin-left": 0}, function() {
                             shifted = false;
                             shifting = false;
-                            $el.removeClass('shifting');
-                            $ctrl.removeClass('shift-left shift-right');
-                            $ctrl.off('.pat-breadcrumbs');
+                            $el.removeClass("shifting");
+                            $ctrl.removeClass("shift-left shift-right");
+                            $ctrl.off(".pat-breadcrumbs");
                         });
                     }
                 }
             };
             maybeshift();
-            $(window).on('resize.pat-breadcrumbs', maybeshift);
+            $(window).on("resize.pat-breadcrumbs", maybeshift);
 
             return $el;
         },
         destroy: function($el) {
-            $el.off('.pat-breadcrumbs');
+            $el.off(".pat-breadcrumbs");
         }
     };
     registry.register(_);
@@ -20375,7 +20275,7 @@ define('patterns/bumper',[
         name: "bumper",
         trigger: ".pat-bumper",
 
-        init: function($el, options) {            
+        init: function($el, options) {
             // initialize the elements
             $el.each(function() {
                 var $this = $(this),
@@ -20390,7 +20290,7 @@ define('patterns/bumper',[
                 };
                 data.margin = opts.margin;
                 
-                $this.data('patterns.bumper', data);
+                $this.data("patterns.bumper", data);
             });
 
             $(window).scroll(function() {
@@ -20424,8 +20324,8 @@ define('patterns/bumper',[
         _getElementBox: function($elem) {
             var box = $elem.offset();
             
-            box.top -= parseFloat($elem.css('marginTop').replace(/auto/, 0));
-            box.left -= parseFloat($elem.css('marginLeft').replace(/auto/, 0));
+            box.top -= parseFloat($elem.css("marginTop").replace(/auto/, 0));
+            box.left -= parseFloat($elem.css("marginLeft").replace(/auto/, 0));
             box.right = box.left + $elem.outerWidth(true);
             box.bottom = box.top + $elem.outerHeight(true);
             
@@ -20436,38 +20336,38 @@ define('patterns/bumper',[
          * Determines whether an element should be bumped
          *
          * @param $el  The element to look for
-         * @param view The bounding box in which the element will be bumped   
+         * @param view The bounding box in which the element will be bumped
          */
         _testBump: function($el, box) {
             $el.each(function() {
                 var $this = $(this),
-                    data = $this.data('patterns.bumper'),
+                    data = $this.data("patterns.bumper"),
                     bumped = false;
 
                 if (box.top > data.threshold.top) {
-                    $this.addClass('bumped-top').removeClass('bumped-bottom');
+                    $this.addClass("bumped-top").removeClass("bumped-bottom");
                     bumped = true;
                 } else if (box.bottom < data.threshold.bottom) {
-                    $this.addClass('bumped-bottom').removeClass('bumped-top');
+                    $this.addClass("bumped-bottom").removeClass("bumped-top");
                     bumped = true;
                 } else {
-                    $this.removeClass('bumped-top bumped-bottom');
+                    $this.removeClass("bumped-top bumped-bottom");
                 }
                 
                 if (box.left > data.threshold.left) {
-                    $this.addClass('bumped-left').removeClass('bumped-right');
+                    $this.addClass("bumped-left").removeClass("bumped-right");
                     bumped = true;
                 } else if (box.right < data.threshold.right) {
-                    $this.addClass('bumped-right').removeClass('bumped-left');
+                    $this.addClass("bumped-right").removeClass("bumped-left");
                     bumped = true;
                 } else {
-                    $this.removeClass('bumped-left bumped-right');
+                    $this.removeClass("bumped-left bumped-right");
                 }
                 
                 if (bumped) {
-                    $this.addClass('bumped');
+                    $this.addClass("bumped");
                 } else {
-                    $this.removeClass('bumped');
+                    $this.removeClass("bumped");
                 }
             });
         }
@@ -21454,7 +21354,7 @@ define('patterns/carousel',[
                 img, i;
             for (i=0; loaded && i<$images.length; i++) {
                 img=$images[i];
-                if (!img.complete || img.naturalWidth===0) 
+                if (!img.complete || img.naturalWidth===0)
                     loaded=false;
             }
             if (!loaded) {
@@ -21470,7 +21370,7 @@ define('patterns/carousel',[
                 $panel_links = $();
 
             $carousel
-                .children().each(function(index, el) {
+                .children().each(function(index) {
                     if (!this.id)
                         return;
 
@@ -21564,7 +21464,7 @@ define('patterns/checkedflag',[
             $forms.on("reset.patternCheckedflag", checkedflag.onFormReset);
         },
 
-        onFormReset: function(event) {
+        onFormReset: function() {
             // This event is triggered before the form is reset, and we need
             // the post-reset state to update our pattern. Use a small delay
             // to fix this.
@@ -21575,7 +21475,7 @@ define('patterns/checkedflag',[
             }, 50);
         },
 
-        onChangeCheckbox: function(event) {
+        onChangeCheckbox: function() {
             var $el = $(this),
                 $label = $el.closest("label"),
                 $fieldset = $el.closest("fieldset");
@@ -21591,7 +21491,7 @@ define('patterns/checkedflag',[
             }
         },
 
-        onChangeRadio: function(event) {
+        onChangeRadio: function() {
             var $el = $(this),
                 $label = $el.closest("label"),
                 $fieldset = $el.closest("fieldset"),
@@ -21621,11 +21521,9 @@ define('patterns/checkedflag',[
 define('patterns/checklist',[
     "jquery",
     "../core/parser",
-    "../core/logger",
     "../registry"
-], function($, Parser, logger, registry) {
-    var log = logger.getLogger("pat.checklist"),
-        parser = new Parser("checklist");
+], function($, Parser, registry) {
+    var parser = new Parser("checklist");
     parser.add_argument("select", ".functions .select-all");
     parser.add_argument("deselect", ".functions .deselect-all");
 
@@ -21665,18 +21563,18 @@ define('patterns/checklist',[
                 deselect = $trigger.find(options.deselect),
                 select = $trigger.find(options.select);
 
-            if (($trigger.find('input[type=checkbox]:visible:checked').length===0) &&
-                (!deselect.prop('disabled'))) {
-                deselect.attr({disabled: 'disabled'});
-            } else if (deselect.prop('disabled')) {
-                deselect.prop('disabled', false);
+            if (($trigger.find("input[type=checkbox]:visible:checked").length===0) &&
+                (!deselect.prop("disabled"))) {
+                deselect.attr({disabled: "disabled"});
+            } else if (deselect.prop("disabled")) {
+                deselect.prop("disabled", false);
             }
 
-            if (($trigger.find('input[type=checkbox]:visible:not(:checked)').length===0) &&
-                (!select.prop('disabled'))) {
-                select.attr({disabled: 'disabled'});
-            } else if (select.prop('disabled')) {
-                select.prop('disabled', false);
+            if (($trigger.find("input[type=checkbox]:visible:not(:checked)").length===0) &&
+                (!select.prop("disabled"))) {
+                select.attr({disabled: "disabled"});
+            } else if (select.prop("disabled")) {
+                select.prop("disabled", false);
             }
         },
 
@@ -22668,12 +22566,9 @@ Copyright (c) 2011 by Harvest
 define("jquery_chosen", ["jquery"], function(){});
 
 define('patterns/chosen',[
-    '../core/logger',
-    '../registry',
-    'jquery_chosen'
-], function(logger, registry) {
-    var log = logger.getLogger('pat.chosen');
-
+    "../registry",
+    "jquery_chosen"
+], function(registry) {
     var _ = {
         name: "chosen",
         trigger: "select.pat-chosen",
@@ -22681,7 +22576,8 @@ define('patterns/chosen',[
             $el.chosen();
             return $el;
         },
-        destroy: function($el) {
+
+        destroy: function() {
             // XXX
         }
     };
@@ -25296,86 +25192,86 @@ define('jquery_ext',["jquery"], function($) {
     var methods = {
         init: function( options ) {
             var settings = {
-                time: 3, /* time it will wait before moving to 'timeout' after a move event */
-                initialTime: 8, /* time it will wait before first adding the 'timeout' class */
+                time: 3, /* time it will wait before moving to "timeout" after a move event */
+                initialTime: 8, /* time it will wait before first adding the "timeout" class */
                 exceptionAreas: [] /* IDs of elements that, if the mouse is over them, will reset the timer */
             };
             return this.each(function() {
                 var $this = $(this),
-                    data = $this.data('timeout');
+                    data = $this.data("timeout");
 
                 if (!data) {
                     if ( options ) {
                         $.extend( settings, options );
                     }
-                    $this.data('timeout', {
-                        'lastEvent': new Date(),
-                        'trueTime': settings.time,
-                        'time': settings.initialTime,
-                        'untouched': true,
-                        'inExceptionArea': false
+                    $this.data("timeout", {
+                        "lastEvent": new Date(),
+                        "trueTime": settings.time,
+                        "time": settings.initialTime,
+                        "untouched": true,
+                        "inExceptionArea": false
                     });
 
-                    $this.bind( 'mouseover.timeout', methods.mouseMoved );
-                    $this.bind( 'mouseenter.timeout', methods.mouseMoved );
+                    $this.bind( "mouseover.timeout", methods.mouseMoved );
+                    $this.bind( "mouseenter.timeout", methods.mouseMoved );
 
                     $(settings.exceptionAreas).each(function() {
                         $this.find(this)
-                            .live( 'mouseover.timeout', {'parent':$this}, methods.enteredException )
-                            .live( 'mouseleave.timeout', {'parent':$this}, methods.leftException );
+                            .live( "mouseover.timeout", {"parent":$this}, methods.enteredException )
+                            .live( "mouseleave.timeout", {"parent":$this}, methods.leftException );
                     });
 
                     if (settings.initialTime > 0)
-                        $this.timeout('startTimer');
+                        $this.timeout("startTimer");
                     else
-                        $this.addClass('timeout');
+                        $this.addClass("timeout");
                 }
             });
         },
 
         enteredException: function(event) {
-            var data = event.data.parent.data('timeout');
+            var data = event.data.parent.data("timeout");
             data.inExceptionArea = true;
-            event.data.parent.data('timeout', data);
-            event.data.parent.trigger('mouseover');
+            event.data.parent.data("timeout", data);
+            event.data.parent.trigger("mouseover");
         },
 
         leftException: function(event) {
-            var data = event.data.parent.data('timeout');
+            var data = event.data.parent.data("timeout");
             data.inExceptionArea = false;
-            event.data.parent.data('timeout', data);
+            event.data.parent.data("timeout", data);
         },
 
         destroy: function() {
             return this.each( function() {
                 var $this = $(this),
-                    data = $this.data('timeout');
+                    data = $this.data("timeout");
 
-                $(window).unbind('.timeout');
+                $(window).unbind(".timeout");
                 data.timeout.remove();
-                $this.removeData('timeout');
+                $this.removeData("timeout");
             });
         },
 
-        mouseMoved: function(event) {
-            var $this = $(this), data = $this.data('timeout');
+        mouseMoved: function() {
+            var $this = $(this), data = $this.data("timeout");
 
-            if ($this.hasClass('timeout')) {
-                $this.removeClass('timeout');
-                $this.timeout('startTimer');
+            if ($this.hasClass("timeout")) {
+                $this.removeClass("timeout");
+                $this.timeout("startTimer");
             } else if ( data.untouched ) {
                 data.untouched = false;
                 data.time = data.trueTime;
             }
 
             data.lastEvent = new Date();
-            $this.data('timeout', data);
+            $this.data("timeout", data);
         },
 
-        startTimer: function( event ) {
-            var $this = $(this), data = $this.data('timeout');
+        startTimer: function() {
+            var $this = $(this), data = $this.data("timeout");
             var fn = function(){
-                var data = $this.data('timeout');
+                var data = $this.data("timeout");
                 if ( data && data.lastEvent ) {
                     if ( data.inExceptionArea ) {
                         setTimeout( fn, Math.floor( data.time*1000 ) );
@@ -25387,7 +25283,7 @@ define('jquery_ext',["jquery"], function($) {
                             setTimeout( fn, diff+100 );
                         } else {
                             // timeout ocurred, so set the class
-                            $this.addClass('timeout');
+                            $this.addClass("timeout");
                         }
                     }
                 }
@@ -25400,10 +25296,10 @@ define('jquery_ext',["jquery"], function($) {
     $.fn.timeout = function( method ) {
         if ( methods[method] ) {
             return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-        } else if ( typeof method == 'object' || !method ) {
+        } else if ( typeof method === "object" || !method ) {
             return methods.init.apply( this, arguments );
         } else {
-            $.error( 'Method ' + method + ' does not exist on jQuery.timeout' );
+            $.error( "Method " + method + " does not exist on jQuery.timeout" );
         }
     };
 
@@ -25411,15 +25307,19 @@ define('jquery_ext',["jquery"], function($) {
     $.extend($.expr[":"], {
         scrollable: function(element) {
             var vertically_scrollable, horizontally_scrollable;
-            if ($(element).css('overflow') == 'scroll' || $(element).css('overflowX') == 'scroll' || $(element).css('overflowY') == 'scroll') return true;
+            if ($(element).css("overflow") === "scroll" ||
+                $(element).css("overflowX") === "scroll" ||
+                $(element).css("overflowY") === "scroll")
+                return true;
 
             vertically_scrollable = (element.clientHeight < element.scrollHeight) && (
-                $.inArray($(element).css('overflowY'), ['scroll', 'auto']) != -1 || $.inArray($(element).css('overflow'), ['scroll', 'auto']) != -1);
+                $.inArray($(element).css("overflowY"), ["scroll", "auto"]) !== -1 || $.inArray($(element).css("overflow"), ["scroll", "auto"]) !== -1);
 
-            if (vertically_scrollable) return true;
+            if (vertically_scrollable)
+                return true;
 
             horizontally_scrollable = (element.clientWidth < element.scrollWidth) && (
-                $.inArray($(element).css('overflowX'), ['scroll', 'auto']) != -1 || $.inArray($(element).css('overflow'), ['scroll', 'auto']) != -1);
+                $.inArray($(element).css("overflowX"), ["scroll", "auto"]) !== -1 || $.inArray($(element).css("overflow"), ["scroll", "auto"]) !== -1);
             return horizontally_scrollable;
         }
     });
@@ -25427,7 +25327,7 @@ define('jquery_ext',["jquery"], function($) {
     // Make Visible in scroll
     $.fn.makeVisibleInScroll = function( parent_id ) {
         var absoluteParent = null;
-        if ( typeof parent_id == 'string' ) {
+        if ( typeof parent_id === "string" ) {
             absoluteParent = $("#" + parent_id);
         } else if ( parent_id ) {
             absoluteParent = $(parent_id);
@@ -25480,7 +25380,7 @@ define('jquery_ext',["jquery"], function($) {
     $.fn.positionAncestor = function(selector) {
         var left = 0;
         var top = 0;
-        this.each(function(index, element) {
+        this.each(function() {
             // check if current element has an ancestor matching a selector
             // and that ancestor is positioned
             var $ancestor = $(this).closest(selector);
@@ -25522,7 +25422,7 @@ define('jquery_ext',["jquery"], function($) {
 
         hide_placeholder: function(){
             var $this = $(this);
-            if($this.val() == $this.attr('placeholder')){
+            if($this.val() === $this.attr("placeholder")){
                 $this.val("").removeClass($.simplePlaceholder.placeholder_class);
             }
         },
@@ -25530,15 +25430,15 @@ define('jquery_ext',["jquery"], function($) {
         show_placeholder: function(){
             var $this = $(this);
             if($this.val() === ""){
-                $this.val($this.attr('placeholder')).addClass($.simplePlaceholder.placeholder_class);
+                $this.val($this.attr("placeholder")).addClass($.simplePlaceholder.placeholder_class);
             }
         },
 
         prevent_placeholder_submit: function(){
-            $(this).find(".simple-placeholder").each(function(e){
+            $(this).find(".simple-placeholder").each(function() {
                 var $this = $(this);
-                if($this.val() == $this.attr('placeholder')){
-                    $this.val('');
+                if ($this.val() === $this.attr("placeholder")){
+                    $this.val("");
                 }
             });
             return true;
@@ -25546,9 +25446,9 @@ define('jquery_ext',["jquery"], function($) {
     };
 
     $.fn.simplePlaceholder = function(options) {
-        if(document.createElement('input').placeholder === undefined){
+        if(document.createElement("input").placeholder === undefined){
             var config = {
-                placeholder_class : 'placeholding'
+                placeholder_class : "placeholding"
             };
 
             if(options) $.extend(config, options);
@@ -25558,7 +25458,7 @@ define('jquery_ext',["jquery"], function($) {
                 var $this = $(this);
                 $this.focus($.simplePlaceholder.hide_placeholder);
                 $this.blur($.simplePlaceholder.show_placeholder);
-                if($this.val() === '') {
+                if($this.val() === "") {
                     $this.val($this.attr("placeholder"));
                     $this.addClass($.simplePlaceholder.placeholder_class);
                 }
@@ -25571,7 +25471,7 @@ define('jquery_ext',["jquery"], function($) {
     };
 
     // case-insensitive :contains
-    $.expr[':'].Contains = function(a, i, m) {
+    $.expr[":"].Contains = function(a, i, m) {
         return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
 });
@@ -25831,22 +25731,22 @@ define('patterns/inject',[
     "jquery_ext", // for :scrollable for autoLoading-visible
     "URIjs/jquery.URI"
 ], function($, Parser, logger, ajax, registry, URI) {
-    var log = logger.getLogger('pat.inject'),
+    var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
 
-    //parser.add_argument('selector', 'body');
-    parser.add_argument('selector');
-    //XXX: (yet) unsupported: parser.add_argument('target', '$selector');
-    parser.add_argument('target');
-    parser.add_argument('type');
-    parser.add_argument('next-href');
-    //XXX: (yet) unsupported: parser.add_argument('source', '$selector');
-    parser.add_argument('source');
+    //parser.add_argument("selector", "body");
+    parser.add_argument("selector");
+    //XXX: (yet) unsupported: parser.add_argument("target", "$selector");
+    parser.add_argument("target");
+    parser.add_argument("data-type", "html");
+    parser.add_argument("next-href");
+    //XXX: (yet) unsupported: parser.add_argument("source", "$selector");
+    parser.add_argument("source");
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
-    parser.add_argument('url');
-    parser.add_argument('class');
+    parser.add_argument("url");
+    parser.add_argument("class");
 
     var _ = {
         name: "inject",
@@ -25856,7 +25756,7 @@ define('patterns/inject',[
                 return $el.each(function() { _.init($(this), opts); });
 
             var cfgs = _.extractConfig($el, opts);
-            $el.data('patterns.inject', cfgs);
+            $el.data("patterns.inject", cfgs);
 
             // In case next-href is specified the anchor's href will
             // be set to it after the injection is triggered. In case
@@ -25868,64 +25768,68 @@ define('patterns/inject',[
             // probably solve it differently. -- Maybe it's cool
             // after all.
             var $nexthref = $(cfgs[0].nextHref);
-            if ($el.is('a') && $nexthref.length > 0) {
-                log.debug('Skipping as next href already exists', $nexthref);
+            if ($el.is("a") && $nexthref.length > 0) {
+                log.debug("Skipping as next href already exists", $nexthref);
                 // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({href: (window.location.href.split('#')[0] || '') +
+                return $el.attr({href: (window.location.href.split("#")[0] || "") +
                                  cfgs[0].nextHref});
             }
 
             // setup event handlers
-            if ($el.is('a'))
+            if ($el.is("a"))
                 $el.on("click.pat-inject", _.onClick);
-            else if ($el.is('form'))
+            else if ($el.is("form"))
                 $el.on("submit.pat-inject", _.onSubmit);
 
             // XXX: hack to support the old autoLoading-visible class
             if ($el.hasClass("autoLoading-visible"))
                 _._initAutoloadVisible($el);
 
-            log.debug('initialised:', $el);
+            log.debug("initialised:", $el);
 
             return $el;
         },
+
         destroy: function($el) {
-            $el.off('.pat-inject');
-            $el.data('patterns.inject', null);
+            $el.off(".pat-inject");
+            $el.data("patterns.inject", null);
             return $el;
         },
+
         onClick: function(ev) {
-            var cfgs = $(this).data('patterns.inject'),
+            var cfgs = $(this).data("patterns.inject"),
                 $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $el.trigger('patterns-inject-triggered');
+            $el.trigger("patterns-inject-triggered");
             _.execute(cfgs, $el);
         },
+
         onSubmit: function(ev) {
-            var cfgs = $(this).data('patterns.inject'),
+            var cfgs = $(this).data("patterns.inject"),
                 $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $el.trigger('patterns-inject-triggered');
+            $el.trigger("patterns-inject-triggered");
             _.execute(cfgs, $el);
         },
+
         extractConfig: function($el, opts) {
             opts = $.extend({}, opts);
 
             var urlparts, cfgs, defaultSelector;
             // opts has priority, fallback to href/action
-            opts.url = opts.url || $el.attr('href') || $el.attr('action') || "";
+            opts.url = opts.url || $el.attr("href") || $el.attr("action") || "";
 
             // separate selector from url
-            urlparts = opts.url.split('#');
+            urlparts = opts.url.split("#");
             opts.url = urlparts[0];
 
             // if no selector, check for selector as part of original url
-            defaultSelector = urlparts[1] && '#' + urlparts[1] || 'body';
+            defaultSelector = urlparts[1] && "#" + urlparts[1] || "body";
 
             if (urlparts.length > 2) {
-                log.warn('Ignoring additional source ids:', urlparts.slice(2));
+                log.warn("Ignoring additional source ids:", urlparts.slice(2));
             }
 
             cfgs = parser.parse($el, opts, true);
@@ -25944,7 +25848,7 @@ define('patterns/inject',[
                 // in case of multi-injection, all injections need to use
                 // the same url
                 if (cfg.url !== url) {
-                    log.error('Unsupported different urls for multi-inject');
+                    log.error("Unsupported different urls for multi-inject");
                     return false;
                 }
 
@@ -25959,7 +25863,7 @@ define('patterns/inject',[
                 cfg.$target = cfg.$target || $(cfg.target);
                 if (cfg.$target.length === 0) {
                     if (!cfg.target) {
-                        log.error('Need target selector', cfg);
+                        log.error("Need target selector", cfg);
                         return false;
                     }
                     cfg.$target = _._createTarget(cfg.target);
@@ -25968,6 +25872,7 @@ define('patterns/inject',[
                 return true;
             });
         },
+
         _extractModifiers: function(cfg) {
             var source_re = /^(.+?)(::element)?$/,
                 target_re = /^(.+?)(::element)?(::after|::before)?$/,
@@ -26006,14 +25911,15 @@ define('patterns/inject',[
         // that id appended to the body.
         _createTarget: function(selector) {
             var $target;
-            if (selector.slice(0,1) !== '#') {
-                log.error('only id supported for non-existing target');
+            if (selector.slice(0,1) !== "#") {
+                log.error("only id supported for non-existing target");
                 return null;
             }
-            $target = $('<div />').attr({id: selector.slice(1)});
-            $('body').append($target);
+            $target = $("<div />").attr({id: selector.slice(1)});
+            $("body").append($target);
             return $target;
         },
+
         execute: function(cfgs, $el) {
             // get a kinda deep copy, we scribble on it
             cfgs = cfgs.map(function(cfg) {
@@ -26033,12 +25939,11 @@ define('patterns/inject',[
             var onSuccess = function(ev) {
                 var data = ev && ev.jqxhr && ev.jqxhr.responseText;
                 if (!data) {
-                    log.warn('No response content, aborting', ev);
+                    log.warn("No response content, aborting", ev);
                     return;
                 }
-                // list of $source objects, one for each cfg
-                var sources = cfgs.map(function(cfg) { return cfg.source; }),
-                    sources$ = _._sourcesFromHtml(data, cfgs[0].url, sources);
+
+                var sources$ = _.callTypeHandler(cfgs[0].data.type, "sources", $el, [cfgs, data, ev]);
 
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
@@ -26053,17 +25958,17 @@ define('patterns/inject',[
                             $injected = cfg.$injected || $src;
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
                             $injected.filter(function() {
-                                // setting data on textnode fails in IE8 
+                                // setting data on textnode fails in IE8
                                 return this.nodeType !== 3; //Node.TEXT_NODE
-                            }).data('pat-injected', {origin: cfg.url});
+                            }).data("pat-injected", {origin: cfg.url});
                             $injected.addClass(cfg["class"])
-                                .trigger('patterns-injected', cfg);
+                                .trigger("patterns-injected", cfg);
                         }
                     });
                 });
 
                 if (cfgs[0].nextHref) {
-                    $el.attr({href: (window.location.href.split('#')[0] || '') +
+                    $el.attr({href: (window.location.href.split("#")[0] || "") +
                               cfgs[0].nextHref});
                     _.destroy($el);
 
@@ -26074,16 +25979,17 @@ define('patterns/inject',[
                     //if (!$el.hasClass("autoLoading-visible"))
                     //    window.location.href = $el.attr('href');
                 }
-                $el.off('pat-ajax-success.pat-inject');
+                $el.off("pat-ajax-success.pat-inject");
             };
 
-            $el.on('pat-ajax-success.pat-inject', onSuccess);
+            $el.on("pat-ajax-success.pat-inject", onSuccess);
 
             ajax($el, {
                 url: cfgs[0].url
             });
         },
-        _inject: function($source, $target, action, classes) {
+
+        _inject: function($source, $target, action /* , classes */) {
             // action to jquery method mapping, except for "content"
             // and "element"
             var method = {
@@ -26094,11 +26000,11 @@ define('patterns/inject',[
             }[action];
 
             if ($source.length === 0) {
-                log.warn('Aborting injection, source not found:', $source);
+                log.warn("Aborting injection, source not found:", $source);
                 return false;
             }
             if ($target.length === 0) {
-                log.warn('Aborting injection, target not found:', $target);
+                log.warn("Aborting injection, target not found:", $target);
                 return false;
             }
 
@@ -26111,6 +26017,7 @@ define('patterns/inject',[
 
             return true;
         },
+
         _sourcesFromHtml: function(html, url, sources) {
             var $html = _._parseRawHtml(html, url);
             return sources.map(function(source) {
@@ -26120,7 +26027,7 @@ define('patterns/inject',[
                 var $source = $html.find(source);
 
                 if ($source.length === 0)
-                    log.warn('No source elements for selector:', source, $html);
+                    log.warn("No source elements for selector:", source, $html);
 
                 return $source;
             });
@@ -26139,9 +26046,9 @@ define('patterns/inject',[
             var clean_html = html
                     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                    .replace(/<body(.*?)>/gi, '<div id="__original_body">')
-                    .replace(/<\/body(.*?)>/gi,'</div>');
-            var $html = $('<div/>').html(clean_html);
+                    .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
+                    .replace(/<\/body([^>]*?)>/gi, "</div>");
+            var $html = $("<div/>").html(clean_html);
 
             if ($html.children().length === 0)
                 log.warn("Parsing html resulted in empty jquery object:", clean_html);
@@ -26167,7 +26074,7 @@ define('patterns/inject',[
                 }
                 new_rel_url = new URI(rel_url).absoluteTo(url).toString();
                 if (new_rel_url !== rel_url) {
-                    log.debug('Adjusted url from:', rel_url, 'to:', new_rel_url);
+                    log.debug("Adjusted url from:", rel_url, "to:", new_rel_url);
                     this[attr] = new_rel_url;
                 }
             });
@@ -26177,14 +26084,14 @@ define('patterns/inject',[
         // XXX: hack
         _initAutoloadVisible: function($el) {
             // ignore executed autoloads
-            if ($el.data('patterns.inject.autoloaded')) return false;
+            if ($el.data("patterns.inject.autoloaded")) return false;
 
             var $scrollable = $el.parents(":scrollable");
 
             // function to trigger the autoload and mark as triggered
             var trigger = function() {
-                $el.data('patterns.inject.autoloaded', true);
-                $el.trigger('click');
+                $el.data("patterns.inject.autoloaded", true);
+                $el.trigger("click");
                 return true;
             };
 
@@ -26194,11 +26101,11 @@ define('patterns/inject',[
             // if scrollable parent and visible -> trigger it
             // we only look at the closest scrollable parent, no nesting
             var checkVisibility = function() {
-                if ($el.data('patterns.autoload')) return false;
+                if ($el.data("patterns.autoload")) return false;
                 var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                     doTrigger = reltop <= $scrollable.innerHeight();
                 if (doTrigger) {
-                    // checkVisibility was possibly installed as a scroll 
+                    // checkVisibility was possibly installed as a scroll
                     // handler and has now served its purpose -> remove
                     $($scrollable[0]).off("scroll", checkVisibility);
                     return trigger();
@@ -26209,8 +26116,35 @@ define('patterns/inject',[
 
             // wait to become visible - again only immediate scrollable parent
             $($scrollable[0]).on("scroll", checkVisibility);
-            $(window).on('resize.pat-autoload', checkVisibility);
+            $(window).on("resize.pat-autoload", checkVisibility);
             return false;
+        },
+
+        // XXX: simple so far to see what the team thinks of the idea
+        registerTypeHandler: function(type, handler) {
+            _.handlers[type] = handler;
+        },
+
+        callTypeHandler: function(type, fn, context, params) {
+            if (!type) {
+                log.warn("No type specified");
+                return null;
+            }
+
+            if (_.handlers[type] && $.isFunction(_.handlers[type][fn])) {
+                return _.handlers[type][fn].apply(context, params);
+            } else {
+                return null;
+            }
+        },
+
+        handlers: {
+            "html": {
+                sources: function(cfgs, data) {
+                    var sources = cfgs.map(function(cfg) { return cfg.source; });
+                    return _._sourcesFromHtml(data, cfgs[0].url, sources);
+                }
+            }
         }
     };
 
@@ -26342,14 +26276,14 @@ define('patterns/collapsible',[
                 var $el = $(this),
                     options = _._validateOptions(this, parser.parse($el, opts)),
                 // create collapsible structure
-                    $trigger = $el.children(':first'),
-                    $content = $el.children(':gt(0)'),
+                    $trigger = $el.children(":first"),
+                    $content = $el.children(":gt(0)"),
                     $panel, state, storage;
                 if ($content.length > 0)
-                    $panel = $content.wrapAll('<div class="panel-content" />')
+                    $panel = $content.wrapAll("<div class='panel-content' />")
                         .parent();
                 else
-                    $panel = $('<div class="panel-content" />').insertAfter($trigger);
+                    $panel = $("<div class='panel-content' />").insertAfter($trigger);
 
                 $el.data("patternCollapsible", options);
                 state=(options.closed || $el.hasClass("closed")) ? "closed" : "open";
@@ -26384,7 +26318,7 @@ define('patterns/collapsible',[
 
         destroy: function($el) {
             $el.removeData("patternCollapsible");
-            $el.children(":first").off('.pat-collapsible');
+            $el.children(":first").off(".pat-collapsible");
         },
 
         open: function($el) {
@@ -26416,20 +26350,20 @@ define('patterns/collapsible',[
             var options = $el.data("patternCollapsible");
             if (!options.loadContent)
                 return;
-            var components = options.loadContent.split('#'),
+            var components = options.loadContent.split("#"),
                 url = components[0],
-                id = components[1] ? '#' + components[1] : null,
+                id = components[1] ? "#" + components[1] : null,
                 opts = [{
                     url: url,
                     source: id,
-                    $target: $('.panel-content', $el)
+                    $target: $(".panel-content", $el)
                 }];
             inject.execute(opts, $el);
         },
 
         toggle: function($el) {
             var options = $el.data("patternCollapsible"),
-                $panel = $el.find('.panel-content'),
+                $panel = $el.find(".panel-content"),
                 new_state = $el.hasClass("closed") ? "open" : "closed";
 
             if (options.store!=="none") {
@@ -26438,10 +26372,10 @@ define('patterns/collapsible',[
             }
 
             if (new_state==="open") {
-                $el.trigger('patterns-collapsible-open');
+                $el.trigger("patterns-collapsible-open");
                 _._transit($el, $panel, "closed", "open", options);
             } else {
-                $el.trigger('patterns-collapsible-close');
+                $el.trigger("patterns-collapsible-close");
                 _._transit($el, $panel, "open", "closed", options);
             }
 
@@ -46606,63 +46540,63 @@ tinymce.onAddEditor.add(function(tinymce, ed) {
 define("tinymce", function(){});
 
 define('patterns/edit-tinymce',[
-    'jquery',
-    '../lib/ajax',
+    "jquery",
+    "../lib/ajax",
     "../core/parser",
-    '../core/logger',
-    '../registry',
+    "../core/logger",
+    "../registry",
     "../utils",
-    'URIjs/URI',
-    'jquery_textchange',
-    'tinymce'
+    "URIjs/URI",
+    "jquery_textchange",
+    "tinymce"
 ], function($, ajax, Parser, logger, registry, utils, URI) {
-    var log = logger.getLogger('pat.editTinyMCE'),
+    var log = logger.getLogger("pat.editTinyMCE"),
         parser = new Parser("edit-tinymce");
 
-    parser.add_argument('tinymce-baseurl');
+    parser.add_argument("tinymce-baseurl");
 
     var _ = {
         name: "editTinyMCE",
-        trigger: 'form textarea.pat-edit-tinymce',
+        trigger: "form textarea.pat-edit-tinymce",
         init: function($el, opts) {
-            var $form = $el.parents('form'),
-                id = $el.attr('id');
+            var $form = $el.parents("form"),
+                id = $el.attr("id");
 
             // make sure the textarea has an id
             if (!id) {
-                var formid = $form.attr('id'),
-                    name = $el.attr('name');
+                var formid = $form.attr("id"),
+                    name = $el.attr("name");
                 if (!formid) {
-                    log.error('Textarea or parent form needs an id', $el, $form);
+                    log.error("Textarea or parent form needs an id", $el, $form);
                     return false;
                 }
                 if (!name) {
-                    log.error('Textarea needs a name', $el);
+                    log.error("Textarea needs a name", $el);
                     return false;
                 }
-                id = formid + '_' + name;
-                if ($('#'+id).length > 0) {
-                    log.error('Textarea needs an id', $el);
+                id = formid + "_" + name;
+                if ($("#"+id).length > 0) {
+                    log.error("Textarea needs an id", $el);
                     return false;
                 }
                 $el.attr({id: id});
             }
 
             // read configuration
-            var cfg = $el.data('tinymce-json');
+            var cfg = $el.data("tinymce-json");
             if (!cfg) {
-                log.info('data-tinymce-json empty, using default config', $el);
+                log.info("data-tinymce-json empty, using default config", $el);
                 cfg = {};
             }
             cfg.elements = id;
-            cfg.mode = 'exact';
-            cfg.readonly = Boolean($el.attr('readonly'));
+            cfg.mode = "exact";
+            cfg.readonly = Boolean($el.attr("readonly"));
 
             // get arguments
             var args = parser.parse($el, opts);
 
             if (!args.tinymceBaseurl) {
-                log.error('tinymce-baseurl has to point to TinyMCE resources');
+                log.error("tinymce-baseurl has to point to TinyMCE resources");
                 return false;
             }
 
@@ -46671,10 +46605,10 @@ define('patterns/edit-tinymce',[
 
             // handle rebasing of own urls if we were injected
             var parents = $el.parents().filter(function() {
-                return $(this).data('pat-injected');
+                return $(this).data("pat-injected");
             });
             if (parents.length)
-                u = URI(parents.first().data('pat-injected').origin).absoluteTo(u);
+                u = URI(parents.first().data("pat-injected").origin).absoluteTo(u);
             if (cfg.content_css)
                 cfg.content_css = URI(cfg.content_css).absoluteTo(u).toString();
             tinyMCE.baseURL = URI(args.tinymceBaseurl).absoluteTo(u).toString();
@@ -46686,24 +46620,24 @@ define('patterns/edit-tinymce',[
                 };
             cfg.oninit = function() {
                 // find tiny's iframe and edit field
-                $tinyifr = $('#' + id + '_ifr');
-                $tinymce = $tinyifr.contents().find('#tinymce');
+                $tinyifr = $("#" + id + "_ifr");
+                $tinymce = $tinyifr.contents().find("#tinymce");
 
                 // propagate first textchange event outside the iframe
-                $tinymce.one('textchange.pat-tinymce', propagate)
-                    .one('change.pat-tinymce', propagate);
+                $tinymce.one("textchange.pat-tinymce", propagate)
+                    .one("change.pat-tinymce", propagate);
             };
 
             // reactivate textchange propagation on reset and successfull submit
-            $form.on('reset.pat-tinymce pat-ajax-success.pat-tinymce', function() {
+            $form.on("reset.pat-tinymce pat-ajax-success.pat-tinymce", function() {
                 $tinymce
-                    .off('.pat-tinymce')
-                    .one('textchange.pat-tinymce', propagate)
-                    .one('change.pat-tinymce', propagate);
+                    .off(".pat-tinymce")
+                    .one("textchange.pat-tinymce", propagate)
+                    .one("change.pat-tinymce", propagate);
             });
 
             // initialize editor
-            var tinymce = tinyMCE.init(cfg);
+            tinyMCE.init(cfg);
 
             // ajaxify form
             var ajaxopts = {
@@ -46714,14 +46648,15 @@ define('patterns/edit-tinymce',[
                 })(id)
             };
 
-            $form.on('submit.pat-tinymce', function(ev) {
+            $form.on("submit.pat-tinymce", function(ev) {
                 ev.preventDefault();
                 ajax($form, ajaxopts);
             });
 
             return $el;
         },
-        destroy: function($el) {
+
+        destroy: function() {
             // XXX
         }
     };
@@ -46734,39 +46669,39 @@ define('patterns/edit-tinymce',[
 // vim: sw=4 expandtab
 ;
 define('patterns/expandable',[
-    'jquery',
-    '../registry'
+    "jquery",
+    "../registry"
 ], function($, registry) {
     var _ = {
         name: "expandable",
         trigger: "ul.pat-expandable",
-        init: function($el, opts) {
+        init: function($el) {
 
             // XXX: data-pat-expandable with load-content: instead of injection
 
             // make sure inject folders have a ul
-            $el.find('.folder[data-pat-inject]:not(:has(ul))').append('<ul />');
+            $el.find(".folder[data-pat-inject]:not(:has(ul))").append("<ul />");
 
             // find all folders that contain a ul
-            var $folders = $el.find('li.folder:has(ul)');
+            var $folders = $el.find("li.folder:has(ul)");
 
             // inject span.toggle as first child of each folder
-            $folders.prepend('<span class="toggle"></span>');
+            $folders.prepend("<span class='toggle'></span>");
 
             // all folders are implicitly closed
-            $folders.filter(':not(.open,.closed)').addClass('closed');
+            $folders.filter(":not(.open,.closed)").addClass("closed");
 
             // trigger open event for open folders
-            $folders.filter('.open').trigger('patterns-folder-open');
+            $folders.filter(".open").trigger("patterns-folder-open");
 
             // wire spans as control elements
-            var $ctrls = $el.find('span.toggle');
+            var $ctrls = $el.find("span.toggle");
             $ctrls.each(function() {
                 var $ctrl = $(this),
                     $folder = $ctrl.parent();
-                $ctrl.on('click.pat-expandable', function(ev) {
-                    $folder.toggleClass('open closed');
-                    $folder.filter('.open').trigger('patterns-folder-open');
+                $ctrl.on("click.pat-expandable", function() {
+                    $folder.toggleClass("open closed");
+                    $folder.filter(".open").trigger("patterns-folder-open");
                 });
             });
             return $el;
@@ -46786,7 +46721,7 @@ define('patterns/expandable',[
  * Copyright 2012 Simplon B.V.
  */
 define('patterns/focus',[
-    'jquery',
+    "jquery",
     "../registry"
 ], function($, patterns) {
     var focus = {
@@ -46806,22 +46741,22 @@ define('patterns/focus',[
             $relatives=$relatives.add($el.closest("fieldset"));
 
             if (el.id)
-                $label=$('label[for="'+el.id+'"]');
+                $label=$("label[for='"+el.id+"']");
             if (!$label.length) {
                 var $form = $el.closest("form");
                 if (!$form.length)
                     $form=$(document.body);
-                $label=$form.find('label[for="'+el.name+'"]');
+                $label=$form.find("label[for='"+el.name+"']");
             }
             $relatives=$relatives.add($label);
             return $relatives;
         },
 
-        onFocus: function(e) {
+        onFocus: function() {
             focus._findRelatives(this).addClass("focus");
         },
 
-        onBlur: function(e) {
+        onBlur: function() {
             var $relatives = focus._findRelatives(this);
 
             $(document).one("mouseup keyup", function() {
@@ -46842,14 +46777,12 @@ define('patterns/focus',[
 // vim: sw=4 expandtab
 ;
 define('patterns/modal',[
-    'jquery',
-    '../core/logger',
+    "jquery",
     "../core/parser",
     "../registry",
     "./inject"
-], function($, logger, Parser, registry, inject) {
-    var log = logger.getLogger('pat.modal'),
-        parser = new Parser("modal");
+], function($, Parser, registry, inject) {
+    var parser = new Parser("modal");
 
     parser.add_argument("class");
 
@@ -46863,47 +46796,49 @@ define('patterns/modal',[
                 var $el = $(this),
                     cfg = parser.parse($el, opts);
 
-                if ($el.is('div'))
+                if ($el.is("div"))
                     modal._init_div1($el, cfg);
                 else
                     modal._init_inject1($el, cfg);
             });
         },
+
         _init_inject1: function($el, cfg) {
             var opts = {
-                target: '#pat-modal',
+                target: "#pat-modal",
                 "class": "pat-modal" + (cfg["class"] ? " " + cfg["class"] : "")
             };
             // if $el is already inside a modal, do not detach #pat-modal,
             // because this would unnecessarily close the modal itself
             if (!$el.closest("#pat-modal")) {
-                $('#pat-modal').detach();
+                $("#pat-modal").detach();
             }
             inject.init($el, opts);
         },
-        _init_div1: function($el, cfg) {
-            var $header = $('<div class="header" />'),
-                $button = $(
-                    '<button type="button" class="close-panel">Close</button>'
-                ).appendTo($header);
+
+        _init_div1: function($el) {
+            var $header = $("<div class='header' />");
+
+            $("<button type='button' class='close-panel'>Close</button>").appendTo($header);
 
             // We cannot handle text nodes here
-            $el.children(':last, :not(:first)')
-                .wrapAll('<div class="panel-content" />');
-            $('.panel-content', $el).before($header);
-            $el.children(':first:not(.header)').prependTo($header);
+            $el.children(":last, :not(:first)")
+                .wrapAll("<div class='panel-content' />");
+            $(".panel-content", $el).before($header);
+            $el.children(":first:not(.header)").prependTo($header);
 
             // event handlers remove modal - first arg to bind is ``this``
-            $(document).on('click.pat-modal', '.close-panel',
+            $(document).on("click.pat-modal", ".close-panel",
                            modal.destroy.bind($el, $el));
             // remove on ESC
-            $(document).on('keyup.pat-modal',
+            $(document).on("keyup.pat-modal",
                            modal.destroy.bind($el, $el));
         },
+
         destroy: function($el, ev) {
             if (ev && ev.type === "keyup" && ev.which !== 27)
                 return;
-            $(document).off('.pat-modal');
+            $(document).off(".pat-modal");
             $el.remove();
         }
     };
@@ -46918,10 +46853,10 @@ define('patterns/form-state',[
     "jquery",
     "../core/logger",
     "../registry",
-    '../utils',
-    './modal'
+    "../utils",
+    "./modal"
 ], function($, logger, registry, utils, modal) {
-    var log = logger.getLogger('form-state');
+    var log = logger.getLogger("form-state");
 
     var _ = {
         name: "form-state",
@@ -46931,7 +46866,7 @@ define('patterns/form-state',[
                 return $form.each(function() { _.init($(this)); });
 
             // XXX: hide reset buttons until we have proper handling for them
-            $form.find('[type=reset]').hide();
+            $form.find("[type=reset]").hide();
 
             _.setReset.call($form);
 
@@ -46940,46 +46875,45 @@ define('patterns/form-state',[
         setModified: function() {
             var $form = $(this);
 
-            $form.find('[type=reset]').prop('disabled', false);
-            $form.find('[type=submit]').prop('disabled', false);
+            $form.find("[type=reset]").prop("disabled", false);
+            $form.find("[type=submit]").prop("disabled", false);
 
             $form.addClass("modified")
-                .off('.pat-form-state')
-                .one('reset.pat-form-state', _.setReset)
-                .one('pat-ajax-error.pat-form-state', _.setError)
-                .one('pat-ajax-success.pat-form-state', _.setSaved);
-            log.debug('modified');
+                .off(".pat-form-state")
+                .one("reset.pat-form-state", _.setReset)
+                .one("pat-ajax-error.pat-form-state", _.setError)
+                .one("pat-ajax-success.pat-form-state", _.setSaved);
+            log.debug("modified");
         },
         setReset: function() {
             var $form = $(this);
 
-            $form.find('[type=reset]').prop('disabled', true);
-            $form.find('[type=submit]').prop('disabled', true);
+            $form.find("[type=reset]").prop("disabled", true);
+            $form.find("[type=submit]").prop("disabled", true);
 
             $form
                 .removeClass("modified")
-                .off('.pat-form-state')
-                .one('change.pat-form-state textchange.pat-form-state',
+                .off(".pat-form-state")
+                .one("change.pat-form-state textchange.pat-form-state",
                      _.setModified);
-            log.debug('reset');
+            log.debug("reset");
         },
-        setError: function(ev) {
-            var $form = $(this),
-                msg = [ev.jqxhr.status, ev.jqxhr.statusText].join(' ');
+        setError: function(event) {
+            var msg = [event.jqxhr.status, event.jqxhr.statusText].join(" ");
             modal.init($(
-                '<div class="pat-modal small">' +
-                    '<h3>Error</h3>' +
-                    '<div class="wizard-box">' +
-                    '<div class="panel-body">' +
-                    '<p>A server error has occured.</p>' +
-                    '<p>The error message is: <strong>' + msg + '</strong>.</p>' +
-                    '</div>' +
-                    '<div class="buttons panel-footer">' +
-                    '<button class="close-panel">Ok</button>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
-            ).appendTo($('body')));
+                "<div class='pat-modal small'>" +
+                    "<h3>Error</h3>" +
+                    "<div class='wizard-box'>" +
+                    "<div class='panel-body'>" +
+                    "<p>A server error has occured.</p>" +
+                    "<p>The error message is: <strong>" + msg + "</strong>.</p>" +
+                    "</div>" +
+                    "<div class='buttons panel-footer'>" +
+                    "<button class='close-panel'>Ok</button>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>"
+            ).appendTo($("body")));
         },
         setSaved: function(event) {
             if (event.target !== this)
@@ -46989,13 +46923,13 @@ define('patterns/form-state',[
             _.setReset.call($form);
 
             var time = new Date(),
-                timestr = time.getHours() + ':'
-                    + time.getMinutes() + ':'
-                    + time.getSeconds();
-            $form.find('time.last-saved').remove();
+                timestr = time.getHours() + ":" +
+                    time.getMinutes() + ":" +
+                    time.getSeconds();
+            $form.find("time.last-saved").remove();
             $form.prepend(
-                '<time class="last-saved" datetime="' + timestr + '">' +
-                    timestr + '</time>'
+                "<time class='last-saved' datetime='" + timestr + "'>" +
+                    timestr + "</time>"
             );
 
             $form.addClass("saved");
@@ -52228,13 +52162,13 @@ function HorizontalPositionCache(getElement) {
 define("jquery_fullcalendar", ["jquery"], function(){});
 
 define('patterns/fullcalendar',[
-    'jquery',
-    '../core/logger',
-    '../utils',
+    "jquery",
+    "../core/logger",
+    "../utils",
     "../registry",
-    'jquery_fullcalendar'
+    "jquery_fullcalendar"
 ], function($, logger, utils, registry) {
-    var log = logger.getLogger('pat.fullcalendar');
+    var log = logger.getLogger("pat.fullcalendar");
 
     var fullcalendar = {
         name: "fullcalendar",
@@ -52242,68 +52176,68 @@ define('patterns/fullcalendar',[
 
         init: function($calroot) {
             // XXX: should be within the calendar
-            var $filter = $('.calendar-filters');
+            var $filter = $(".calendar-filters");
             var initMonths = function($root) {
-                if ($root.hasClass('month')) {
+                if ($root.hasClass("month")) {
                     fullcalendar.initMonth($root, $filter);
                 } else {
-                    $root.find('.month').each(function() {
+                    $root.find(".month").each(function() {
                         fullcalendar.initMonth($(this), $filter);
                     });
                 }
             };
 
             // hide all group checkboxes, will be shown if mentioned
-            $filter.find('.check-list .groups label').hide();
+            $filter.find(".check-list .groups label").hide();
 
             // initialize existing months
             initMonths($calroot);
 
             // wait for additional months
-            $calroot.on('patterns-injected.pat-fullcalendar', function(ev) {
+            $calroot.on("patterns-injected.pat-fullcalendar", function(ev) {
                 initMonths($(ev.target));
             });
         },
 
         initMonth: function($month, $filter) {
-            var $events = $('.events', $month);
+            var $events = $(".events", $month);
             if ($events.length === 0) { return; }
-            var ym = $('time', $month).attr('datetime').split('-'),
+            var ym = $("time", $month).attr("datetime").split("-"),
                 year = ym[0],
                 month = Number(ym[1]) - 1,
-                $calendar = $('<div class="calendar">\n</div>')
+                $calendar = $("<div class='calendar'>\n</div>")
                     .insertAfter($events);
             var refetch = function() {
-                $calendar.fullCalendar('refetchEvents');
+                $calendar.fullCalendar("refetchEvents");
                 // XXX: replace with mutator event listener
                 registry.scan($calendar);
             };
             var refetch_deb = utils.debounce(refetch, 400);
             if ($filter && $filter.length > 0) {
-                $('.searchText', $filter).on("keyup", refetch_deb);
-                $('.searchText[type=search]', $filter).on("click", refetch_deb);
-                $('select[name=state]', $filter).on("change", refetch);
-                $('.check-list', $filter).on("change", refetch);
+                $(".searchText", $filter).on("keyup", refetch_deb);
+                $(".searchText[type=search]", $filter).on("click", refetch_deb);
+                $("select[name=state]", $filter).on("change", refetch);
+                $(".check-list", $filter).on("change", refetch);
             }
-            $events.css('display', 'None');
+            $events.css("display", "None");
             $calendar.fullCalendar({
-                disableDragging: 'true',
-                dayDblClick: function(date, allDay, jsEvent, view) {
+                disableDragging: "true",
+                dayDblClick: function(/* date, allDay, jsEvent, view */) {
                     // XXX: add event
                 },
                 events: function(start, end, callback) {
                     var events = fullcalendar.parseEvents($events, $filter);
                     callback(events);
                 },
-                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc /*, jsEvent, ui, view */) {
                     // XXX: change event
                     revertFunc();
                 },
-                eventResize: function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) {
+                eventResize: function(event, dayDelta, minuteDelta, revertFunc /*, jsEvent, ui, view */) {
                     // XXX: change event
                     revertFunc();
                 },
-                header: { left: '', right: '' },
+                header: { left: "", right: "" },
                 month: month,
                 year: year
             });
@@ -52313,11 +52247,11 @@ define('patterns/fullcalendar',[
         parseEvents: function($events, $filter) {
             // show groups that are mentioned
             $filter.find(
-                '.check-list .groups label:hidden'
+                ".check-list .groups label:hidden"
             ).each(function() {
                 var $label = $(this),
-                    id = $label.find('input').attr('name'),
-                    groupsel = '.group-' + id;
+                    id = $label.find("input").attr("name"),
+                    groupsel = ".group-" + id;
                 if ($events.find(groupsel).length > 0) $label.show();
             });
 
@@ -52326,55 +52260,55 @@ define('patterns/fullcalendar',[
 
             // parse filters
             if ($filter && $filter.length > 0) {
-                var searchText = $('.searchText', $filter).val(),
-                    state = $('select[name=state]').val(),
-                    $attendees = $('.attendees', $filter),
-                    noattendees = $attendees.is(':has([name="no-attendees"]:checked)'),
-                    onlyusers = $attendees.is(':has([name="only-users"])'),
+                var searchText = $(".searchText", $filter).val(),
+                    state = $("select[name=state]").val(),
+                    $attendees = $(".attendees", $filter),
+                    noattendees = $attendees.is(":has([name=\"no-attendees\"]:checked)"),
+                    onlyusers = $attendees.is(":has([name=\"only-users\"])"),
                     // XXX: only take visible groups into account
-                    groupsel = $('.groups input:checked', $attendees).map(function() {
-                        var id = $(this).attr('name');
-                        return '.attendees .group-' + id;
-                    }).toArray().join(',');
+                    groupsel = $(".groups input:checked", $attendees).map(function() {
+                        var id = $(this).attr("name");
+                        return ".attendees .group-" + id;
+                    }).toArray().join(",");
             }
-            var events = $events.find('.event').filter(function() {
+            var events = $events.find(".event").filter(function() {
                 var $event = $(this);
                 // workflow state
                 if (state && state !== "all") {
-                    if (!$event.hasClass('.state-' + state)) {
-                        log.debug('filter denied state', $event);
+                    if (!$event.hasClass(".state-" + state)) {
+                        log.debug("filter denied state", $event);
                         return false;
                     }
                 }
 
                 // attendees
-                if ($event.find('.attendees *').length > 0) {
-                    if ($event.find('.attendees .group').length > 0) {
+                if ($event.find(".attendees *").length > 0) {
+                    if ($event.find(".attendees .group").length > 0) {
                         if ($event.find(groupsel).length === 0) {
-                            log.debug('filter denied groups', $event);
+                            log.debug("filter denied groups", $event);
                             return false;
                         }
                     } else if (!onlyusers) {
-                        log.debug('filter denied onlyusers', $event);
+                        log.debug("filter denied onlyusers", $event);
                         return false;
                     }
                 } else if (!noattendees) {
-                    log.debug('filter denied noattendees', $event);
+                    log.debug("filter denied noattendees", $event);
                     return false;
                 }
 
                 // full text search
-                if (searchText && !$event.is(':Contains(' + searchText + ')')) {
-                    log.debug('filter denied fulltext', $event);
+                if (searchText && !$event.is(":Contains(" + searchText + ")")) {
+                    log.debug("filter denied fulltext", $event);
                     return false;
                 }
 
                 return true;
             }).map(function(idx, event) {
-                var classNames = $(event).attr('class').split(/\s+/).filter(function(cls) {
-                    return (cls !== 'event');
-                }).concat($('a', event).attr('class').split(/\s+/));
-                var allattrs = $('a', event)[0].attributes,
+                var classNames = $(event).attr("class").split(/\s+/).filter(function(cls) {
+                    return (cls !== "event");
+                }).concat($("a", event).attr("class").split(/\s+/));
+                var allattrs = $("a", event)[0].attributes,
                     attrs = {};
                 for (var attr, i=0; i<allattrs.length; i++){
                     attr = allattrs.item(i);
@@ -52382,21 +52316,21 @@ define('patterns/fullcalendar',[
                         attrs[attr.nodeName] = attr.nodeValue;
                     }
                 }
-                var location = ($('.location', event).html() || '').trim();
+                var location = ($(".location", event).html() || "").trim();
                 var ev = {
-                    title: $('.title', event).html().trim() +
-                        (location ? (' (' + location + ')') : ''),
-                    start: $('.start', event).attr('datetime'),
-                    end: $('.end', event).attr('datetime'),
-                    allDay: $(event).hasClass('all-day'),
-                    url: $('a', event).attr('href'),
+                    title: $(".title", event).html().trim() +
+                        (location ? (" (" + location + ")") : ""),
+                    start: $(".start", event).attr("datetime"),
+                    end: $(".end", event).attr("datetime"),
+                    allDay: $(event).hasClass("all-day"),
+                    url: $("a", event).attr("href"),
                     className: classNames,
                     attrs: attrs,
-                    editable: $(event).hasClass('editable')
+                    editable: $(event).hasClass("editable")
                 };
-                if (!ev.title) log.error('No event title for:', event);
-                if (!ev.start) log.error('No event start for:', event);
-                if (!ev.url) log.error('No event url for:', event);
+                if (!ev.title) log.error("No event title for:", event);
+                if (!ev.start) log.error("No event start for:", event);
+                if (!ev.url) log.error("No event url for:", event);
                 return ev;
             }).toArray();
             return events;
@@ -52408,8 +52342,1508 @@ define('patterns/fullcalendar',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
+var Markdown;
+
+if (typeof exports === "object" && typeof require === "function") // we're in a CommonJS (e.g. Node.js) module
+    Markdown = exports;
+else
+    Markdown = {};
+    
+// The following text is included for historical reasons, but should
+// be taken with a pinch of salt; it's not all true anymore.
+
+//
+// Wherever possible, Showdown is a straight, line-by-line port
+// of the Perl version of Markdown.
+//
+// This is not a normal parser design; it's basically just a
+// series of string substitutions.  It's hard to read and
+// maintain this way,  but keeping Showdown close to the original
+// design makes it easier to port new features.
+//
+// More importantly, Showdown behaves like markdown.pl in most
+// edge cases.  So web applications can do client-side preview
+// in Javascript, and then build identical HTML on the server.
+//
+// This port needs the new RegExp functionality of ECMA 262,
+// 3rd Edition (i.e. Javascript 1.5).  Most modern web browsers
+// should do fine.  Even with the new regular expression features,
+// We do a lot of work to emulate Perl's regex functionality.
+// The tricky changes in this file mostly have the "attacklab:"
+// label.  Major or self-explanatory changes don't.
+//
+// Smart diff tools like Araxis Merge will be able to match up
+// this file with markdown.pl in a useful way.  A little tweaking
+// helps: in a copy of markdown.pl, replace "#" with "//" and
+// replace "$text" with "text".  Be sure to ignore whitespace
+// and line endings.
+//
+
+
+//
+// Usage:
+//
+//   var text = "Markdown *rocks*.";
+//
+//   var converter = new Markdown.Converter();
+//   var html = converter.makeHtml(text);
+//
+//   alert(html);
+//
+// Note: move the sample code to the bottom of this
+// file before uncommenting it.
+//
+
+(function () {
+
+    function identity(x) { return x; }
+    function returnFalse(x) { return false; }
+
+    function HookCollection() { }
+
+    HookCollection.prototype = {
+
+        chain: function (hookname, func) {
+            var original = this[hookname];
+            if (!original)
+                throw new Error("unknown hook " + hookname);
+
+            if (original === identity)
+                this[hookname] = func;
+            else
+                this[hookname] = function (x) { return func(original(x)); }
+        },
+        set: function (hookname, func) {
+            if (!this[hookname])
+                throw new Error("unknown hook " + hookname);
+            this[hookname] = func;
+        },
+        addNoop: function (hookname) {
+            this[hookname] = identity;
+        },
+        addFalse: function (hookname) {
+            this[hookname] = returnFalse;
+        }
+    };
+
+    Markdown.HookCollection = HookCollection;
+
+    // g_urls and g_titles allow arbitrary user-entered strings as keys. This
+    // caused an exception (and hence stopped the rendering) when the user entered
+    // e.g. [push] or [__proto__]. Adding a prefix to the actual key prevents this
+    // (since no builtin property starts with "s_"). See
+    // http://meta.stackoverflow.com/questions/64655/strange-wmd-bug
+    // (granted, switching from Array() to Object() alone would have left only __proto__
+    // to be a problem)
+    function SaveHash() { }
+    SaveHash.prototype = {
+        set: function (key, value) {
+            this["s_" + key] = value;
+        },
+        get: function (key) {
+            return this["s_" + key];
+        }
+    };
+
+    Markdown.Converter = function () {
+        var pluginHooks = this.hooks = new HookCollection();
+        pluginHooks.addNoop("plainLinkText");  // given a URL that was encountered by itself (without markup), should return the link text that's to be given to this link
+        pluginHooks.addNoop("preConversion");  // called with the orignal text as given to makeHtml. The result of this plugin hook is the actual markdown source that will be cooked
+        pluginHooks.addNoop("postConversion"); // called with the final cooked HTML code. The result of this plugin hook is the actual output of makeHtml
+
+        //
+        // Private state of the converter instance:
+        //
+
+        // Global hashes, used by various utility routines
+        var g_urls;
+        var g_titles;
+        var g_html_blocks;
+
+        // Used to track when we're inside an ordered or unordered list
+        // (see _ProcessListItems() for details):
+        var g_list_level;
+
+        this.makeHtml = function (text) {
+
+            //
+            // Main function. The order in which other subs are called here is
+            // essential. Link and image substitutions need to happen before
+            // _EscapeSpecialCharsWithinTagAttributes(), so that any *'s or _'s in the <a>
+            // and <img> tags get encoded.
+            //
+
+            // This will only happen if makeHtml on the same converter instance is called from a plugin hook.
+            // Don't do that.
+            if (g_urls)
+                throw new Error("Recursive call to converter.makeHtml");
+        
+            // Create the private state objects.
+            g_urls = new SaveHash();
+            g_titles = new SaveHash();
+            g_html_blocks = [];
+            g_list_level = 0;
+
+            text = pluginHooks.preConversion(text);
+
+            // attacklab: Replace ~ with ~T
+            // This lets us use tilde as an escape char to avoid md5 hashes
+            // The choice of character is arbitray; anything that isn't
+            // magic in Markdown will work.
+            text = text.replace(/~/g, "~T");
+
+            // attacklab: Replace $ with ~D
+            // RegExp interprets $ as a special character
+            // when it's in a replacement string
+            text = text.replace(/\$/g, "~D");
+
+            // Standardize line endings
+            text = text.replace(/\r\n/g, "\n"); // DOS to Unix
+            text = text.replace(/\r/g, "\n"); // Mac to Unix
+
+            // Make sure text begins and ends with a couple of newlines:
+            text = "\n\n" + text + "\n\n";
+
+            // Convert all tabs to spaces.
+            text = _Detab(text);
+
+            // Strip any lines consisting only of spaces and tabs.
+            // This makes subsequent regexen easier to write, because we can
+            // match consecutive blank lines with /\n+/ instead of something
+            // contorted like /[ \t]*\n+/ .
+            text = text.replace(/^[ \t]+$/mg, "");
+
+            // Turn block-level HTML blocks into hash entries
+            text = _HashHTMLBlocks(text);
+
+            // Strip link definitions, store in hashes.
+            text = _StripLinkDefinitions(text);
+
+            text = _RunBlockGamut(text);
+
+            text = _UnescapeSpecialChars(text);
+
+            // attacklab: Restore dollar signs
+            text = text.replace(/~D/g, "$$");
+
+            // attacklab: Restore tildes
+            text = text.replace(/~T/g, "~");
+
+            text = pluginHooks.postConversion(text);
+
+            g_html_blocks = g_titles = g_urls = null;
+
+            return text;
+        };
+
+        function _StripLinkDefinitions(text) {
+            //
+            // Strips link definitions from text, stores the URLs and titles in
+            // hash references.
+            //
+
+            // Link defs are in the form: ^[id]: url "optional title"
+
+            /*
+            text = text.replace(/
+                ^[ ]{0,3}\[(.+)\]:  // id = $1  attacklab: g_tab_width - 1
+                [ \t]*
+                \n?                 // maybe *one* newline
+                [ \t]*
+                <?(\S+?)>?          // url = $2
+                (?=\s|$)            // lookahead for whitespace instead of the lookbehind removed below
+                [ \t]*
+                \n?                 // maybe one newline
+                [ \t]*
+                (                   // (potential) title = $3
+                    (\n*)           // any lines skipped = $4 attacklab: lookbehind removed
+                    [ \t]+
+                    ["(]
+                    (.+?)           // title = $5
+                    [")]
+                    [ \t]*
+                )?                  // title is optional
+                (?:\n+|$)
+            /gm, function(){...});
+            */
+
+            text = text.replace(/^[ ]{0,3}\[(.+)\]:[ \t]*\n?[ \t]*<?(\S+?)>?(?=\s|$)[ \t]*\n?[ \t]*((\n*)["(](.+?)[")][ \t]*)?(?:\n+)/gm,
+                function (wholeMatch, m1, m2, m3, m4, m5) {
+                    m1 = m1.toLowerCase();
+                    g_urls.set(m1, _EncodeAmpsAndAngles(m2));  // Link IDs are case-insensitive
+                    if (m4) {
+                        // Oops, found blank lines, so it's not a title.
+                        // Put back the parenthetical statement we stole.
+                        return m3;
+                    } else if (m5) {
+                        g_titles.set(m1, m5.replace(/"/g, "&quot;"));
+                    }
+
+                    // Completely remove the definition from the text
+                    return "";
+                }
+            );
+
+            return text;
+        }
+
+        function _HashHTMLBlocks(text) {
+
+            // Hashify HTML blocks:
+            // We only want to do this for block-level HTML tags, such as headers,
+            // lists, and tables. That's because we still want to wrap <p>s around
+            // "paragraphs" that are wrapped in non-block-level tags, such as anchors,
+            // phrase emphasis, and spans. The list of tags we're looking for is
+            // hard-coded:
+            var block_tags_a = "p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del"
+            var block_tags_b = "p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math"
+
+            // First, look for nested blocks, e.g.:
+            //   <div>
+            //     <div>
+            //     tags for inner block must be indented.
+            //     </div>
+            //   </div>
+            //
+            // The outermost tags must start at the left margin for this to match, and
+            // the inner nested divs must be indented.
+            // We need to do this before the next, more liberal match, because the next
+            // match will start at the first `<div>` and stop at the first `</div>`.
+
+            // attacklab: This regex can be expensive when it fails.
+
+            /*
+            text = text.replace(/
+                (                       // save in $1
+                    ^                   // start of line  (with /m)
+                    <($block_tags_a)    // start tag = $2
+                    \b                  // word break
+                                        // attacklab: hack around khtml/pcre bug...
+                    [^\r]*?\n           // any number of lines, minimally matching
+                    </\2>               // the matching end tag
+                    [ \t]*              // trailing spaces/tabs
+                    (?=\n+)             // followed by a newline
+                )                       // attacklab: there are sentinel newlines at end of document
+            /gm,function(){...}};
+            */
+            text = text.replace(/^(<(p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del)\b[^\r]*?\n<\/\2>[ \t]*(?=\n+))/gm, hashElement);
+
+            //
+            // Now match more liberally, simply from `\n<tag>` to `</tag>\n`
+            //
+
+            /*
+            text = text.replace(/
+                (                       // save in $1
+                    ^                   // start of line  (with /m)
+                    <($block_tags_b)    // start tag = $2
+                    \b                  // word break
+                                        // attacklab: hack around khtml/pcre bug...
+                    [^\r]*?             // any number of lines, minimally matching
+                    .*</\2>             // the matching end tag
+                    [ \t]*              // trailing spaces/tabs
+                    (?=\n+)             // followed by a newline
+                )                       // attacklab: there are sentinel newlines at end of document
+            /gm,function(){...}};
+            */
+            text = text.replace(/^(<(p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math)\b[^\r]*?.*<\/\2>[ \t]*(?=\n+)\n)/gm, hashElement);
+
+            // Special case just for <hr />. It was easier to make a special case than
+            // to make the other regex more complicated.  
+
+            /*
+            text = text.replace(/
+                \n                  // Starting after a blank line
+                [ ]{0,3}
+                (                   // save in $1
+                    (<(hr)          // start tag = $2
+                        \b          // word break
+                        ([^<>])*?
+                    \/?>)           // the matching end tag
+                    [ \t]*
+                    (?=\n{2,})      // followed by a blank line
+                )
+            /g,hashElement);
+            */
+            text = text.replace(/\n[ ]{0,3}((<(hr)\b([^<>])*?\/?>)[ \t]*(?=\n{2,}))/g, hashElement);
+
+            // Special case for standalone HTML comments:
+
+            /*
+            text = text.replace(/
+                \n\n                                            // Starting after a blank line
+                [ ]{0,3}                                        // attacklab: g_tab_width - 1
+                (                                               // save in $1
+                    <!
+                    (--(?:|(?:[^>-]|-[^>])(?:[^-]|-[^-])*)--)   // see http://www.w3.org/TR/html-markup/syntax.html#comments and http://meta.stackoverflow.com/q/95256
+                    >
+                    [ \t]*
+                    (?=\n{2,})                                  // followed by a blank line
+                )
+            /g,hashElement);
+            */
+            text = text.replace(/\n\n[ ]{0,3}(<!(--(?:|(?:[^>-]|-[^>])(?:[^-]|-[^-])*)--)>[ \t]*(?=\n{2,}))/g, hashElement);
+
+            // PHP and ASP-style processor instructions (<?...?> and <%...%>)
+
+            /*
+            text = text.replace(/
+                (?:
+                    \n\n            // Starting after a blank line
+                )
+                (                   // save in $1
+                    [ ]{0,3}        // attacklab: g_tab_width - 1
+                    (?:
+                        <([?%])     // $2
+                        [^\r]*?
+                        \2>
+                    )
+                    [ \t]*
+                    (?=\n{2,})      // followed by a blank line
+                )
+            /g,hashElement);
+            */
+            text = text.replace(/(?:\n\n)([ ]{0,3}(?:<([?%])[^\r]*?\2>)[ \t]*(?=\n{2,}))/g, hashElement);
+
+            return text;
+        }
+
+        function hashElement(wholeMatch, m1) {
+            var blockText = m1;
+
+            // Undo double lines
+            blockText = blockText.replace(/^\n+/, "");
+
+            // strip trailing blank lines
+            blockText = blockText.replace(/\n+$/g, "");
+
+            // Replace the element text with a marker ("~KxK" where x is its key)
+            blockText = "\n\n~K" + (g_html_blocks.push(blockText) - 1) + "K\n\n";
+
+            return blockText;
+        }
+
+        function _RunBlockGamut(text, doNotUnhash) {
+            //
+            // These are all the transformations that form block-level
+            // tags like paragraphs, headers, and list items.
+            //
+            text = _DoHeaders(text);
+
+            // Do Horizontal Rules:
+            var replacement = "<hr />\n";
+            text = text.replace(/^[ ]{0,2}([ ]?\*[ ]?){3,}[ \t]*$/gm, replacement);
+            text = text.replace(/^[ ]{0,2}([ ]?-[ ]?){3,}[ \t]*$/gm, replacement);
+            text = text.replace(/^[ ]{0,2}([ ]?_[ ]?){3,}[ \t]*$/gm, replacement);
+
+            text = _DoLists(text);
+            text = _DoCodeBlocks(text);
+            text = _DoBlockQuotes(text);
+
+            // We already ran _HashHTMLBlocks() before, in Markdown(), but that
+            // was to escape raw HTML in the original Markdown source. This time,
+            // we're escaping the markup we've just created, so that we don't wrap
+            // <p> tags around block-level tags.
+            text = _HashHTMLBlocks(text);
+            text = _FormParagraphs(text, doNotUnhash);
+
+            return text;
+        }
+
+        function _RunSpanGamut(text) {
+            //
+            // These are all the transformations that occur *within* block-level
+            // tags like paragraphs, headers, and list items.
+            //
+
+            text = _DoCodeSpans(text);
+            text = _EscapeSpecialCharsWithinTagAttributes(text);
+            text = _EncodeBackslashEscapes(text);
+
+            // Process anchor and image tags. Images must come first,
+            // because ![foo][f] looks like an anchor.
+            text = _DoImages(text);
+            text = _DoAnchors(text);
+
+            // Make links out of things like `<http://example.com/>`
+            // Must come after _DoAnchors(), because you can use < and >
+            // delimiters in inline links like [this](<url>).
+            text = _DoAutoLinks(text);
+            
+            text = text.replace(/~P/g, "://"); // put in place to prevent autolinking; reset now
+            
+            text = _EncodeAmpsAndAngles(text);
+            text = _DoItalicsAndBold(text);
+
+            // Do hard breaks:
+            text = text.replace(/  +\n/g, " <br>\n");
+
+            return text;
+        }
+
+        function _EscapeSpecialCharsWithinTagAttributes(text) {
+            //
+            // Within tags -- meaning between < and > -- encode [\ ` * _] so they
+            // don't conflict with their use in Markdown for code, italics and strong.
+            //
+
+            // Build a regex to find HTML tags and comments.  See Friedl's 
+            // "Mastering Regular Expressions", 2nd Ed., pp. 200-201.
+
+            // SE: changed the comment part of the regex
+
+            var regex = /(<[a-z\/!$]("[^"]*"|'[^']*'|[^'">])*>|<!(--(?:|(?:[^>-]|-[^>])(?:[^-]|-[^-])*)--)>)/gi;
+
+            text = text.replace(regex, function (wholeMatch) {
+                var tag = wholeMatch.replace(/(.)<\/?code>(?=.)/g, "$1`");
+                tag = escapeCharacters(tag, wholeMatch.charAt(1) == "!" ? "\\`*_/" : "\\`*_"); // also escape slashes in comments to prevent autolinking there -- http://meta.stackoverflow.com/questions/95987
+                return tag;
+            });
+
+            return text;
+        }
+
+        function _DoAnchors(text) {
+            //
+            // Turn Markdown link shortcuts into XHTML <a> tags.
+            //
+            //
+            // First, handle reference-style links: [link text] [id]
+            //
+
+            /*
+            text = text.replace(/
+                (                           // wrap whole match in $1
+                    \[
+                    (
+                        (?:
+                            \[[^\]]*\]      // allow brackets nested one level
+                            |
+                            [^\[]           // or anything else
+                        )*
+                    )
+                    \]
+
+                    [ ]?                    // one optional space
+                    (?:\n[ ]*)?             // one optional newline followed by spaces
+
+                    \[
+                    (.*?)                   // id = $3
+                    \]
+                )
+                ()()()()                    // pad remaining backreferences
+            /g, writeAnchorTag);
+            */
+            text = text.replace(/(\[((?:\[[^\]]*\]|[^\[\]])*)\][ ]?(?:\n[ ]*)?\[(.*?)\])()()()()/g, writeAnchorTag);
+
+            //
+            // Next, inline-style links: [link text](url "optional title")
+            //
+
+            /*
+            text = text.replace(/
+                (                           // wrap whole match in $1
+                    \[
+                    (
+                        (?:
+                            \[[^\]]*\]      // allow brackets nested one level
+                            |
+                            [^\[\]]         // or anything else
+                        )*
+                    )
+                    \]
+                    \(                      // literal paren
+                    [ \t]*
+                    ()                      // no id, so leave $3 empty
+                    <?(                     // href = $4
+                        (?:
+                            \([^)]*\)       // allow one level of (correctly nested) parens (think MSDN)
+                            |
+                            [^()\s]
+                        )*?
+                    )>?                
+                    [ \t]*
+                    (                       // $5
+                        (['"])              // quote char = $6
+                        (.*?)               // Title = $7
+                        \6                  // matching quote
+                        [ \t]*              // ignore any spaces/tabs between closing quote and )
+                    )?                      // title is optional
+                    \)
+                )
+            /g, writeAnchorTag);
+            */
+
+            text = text.replace(/(\[((?:\[[^\]]*\]|[^\[\]])*)\]\([ \t]*()<?((?:\([^)]*\)|[^()\s])*?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g, writeAnchorTag);
+
+            //
+            // Last, handle reference-style shortcuts: [link text]
+            // These must come last in case you've also got [link test][1]
+            // or [link test](/foo)
+            //
+
+            /*
+            text = text.replace(/
+                (                   // wrap whole match in $1
+                    \[
+                    ([^\[\]]+)      // link text = $2; can't contain '[' or ']'
+                    \]
+                )
+                ()()()()()          // pad rest of backreferences
+            /g, writeAnchorTag);
+            */
+            text = text.replace(/(\[([^\[\]]+)\])()()()()()/g, writeAnchorTag);
+
+            return text;
+        }
+
+        function writeAnchorTag(wholeMatch, m1, m2, m3, m4, m5, m6, m7) {
+            if (m7 == undefined) m7 = "";
+            var whole_match = m1;
+            var link_text = m2.replace(/:\/\//g, "~P"); // to prevent auto-linking withing the link. will be converted back after the auto-linker runs
+            var link_id = m3.toLowerCase();
+            var url = m4;
+            var title = m7;
+
+            if (url == "") {
+                if (link_id == "") {
+                    // lower-case and turn embedded newlines into spaces
+                    link_id = link_text.toLowerCase().replace(/ ?\n/g, " ");
+                }
+                url = "#" + link_id;
+
+                if (g_urls.get(link_id) != undefined) {
+                    url = g_urls.get(link_id);
+                    if (g_titles.get(link_id) != undefined) {
+                        title = g_titles.get(link_id);
+                    }
+                }
+                else {
+                    if (whole_match.search(/\(\s*\)$/m) > -1) {
+                        // Special case for explicit empty url
+                        url = "";
+                    } else {
+                        return whole_match;
+                    }
+                }
+            }
+            url = encodeProblemUrlChars(url);
+            url = escapeCharacters(url, "*_");
+            var result = "<a href=\"" + url + "\"";
+
+            if (title != "") {
+                title = attributeEncode(title);
+                title = escapeCharacters(title, "*_");
+                result += " title=\"" + title + "\"";
+            }
+
+            result += ">" + link_text + "</a>";
+
+            return result;
+        }
+
+        function _DoImages(text) {
+            //
+            // Turn Markdown image shortcuts into <img> tags.
+            //
+
+            //
+            // First, handle reference-style labeled images: ![alt text][id]
+            //
+
+            /*
+            text = text.replace(/
+                (                   // wrap whole match in $1
+                    !\[
+                    (.*?)           // alt text = $2
+                    \]
+
+                    [ ]?            // one optional space
+                    (?:\n[ ]*)?     // one optional newline followed by spaces
+
+                    \[
+                    (.*?)           // id = $3
+                    \]
+                )
+                ()()()()            // pad rest of backreferences
+            /g, writeImageTag);
+            */
+            text = text.replace(/(!\[(.*?)\][ ]?(?:\n[ ]*)?\[(.*?)\])()()()()/g, writeImageTag);
+
+            //
+            // Next, handle inline images:  ![alt text](url "optional title")
+            // Don't forget: encode * and _
+
+            /*
+            text = text.replace(/
+                (                   // wrap whole match in $1
+                    !\[
+                    (.*?)           // alt text = $2
+                    \]
+                    \s?             // One optional whitespace character
+                    \(              // literal paren
+                    [ \t]*
+                    ()              // no id, so leave $3 empty
+                    <?(\S+?)>?      // src url = $4
+                    [ \t]*
+                    (               // $5
+                        (['"])      // quote char = $6
+                        (.*?)       // title = $7
+                        \6          // matching quote
+                        [ \t]*
+                    )?              // title is optional
+                    \)
+                )
+            /g, writeImageTag);
+            */
+            text = text.replace(/(!\[(.*?)\]\s?\([ \t]*()<?(\S+?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g, writeImageTag);
+
+            return text;
+        }
+        
+        function attributeEncode(text) {
+            // unconditionally replace angle brackets here -- what ends up in an attribute (e.g. alt or title)
+            // never makes sense to have verbatim HTML in it (and the sanitizer would totally break it)
+            return text.replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+        }
+
+        function writeImageTag(wholeMatch, m1, m2, m3, m4, m5, m6, m7) {
+            var whole_match = m1;
+            var alt_text = m2;
+            var link_id = m3.toLowerCase();
+            var url = m4;
+            var title = m7;
+
+            if (!title) title = "";
+
+            if (url == "") {
+                if (link_id == "") {
+                    // lower-case and turn embedded newlines into spaces
+                    link_id = alt_text.toLowerCase().replace(/ ?\n/g, " ");
+                }
+                url = "#" + link_id;
+
+                if (g_urls.get(link_id) != undefined) {
+                    url = g_urls.get(link_id);
+                    if (g_titles.get(link_id) != undefined) {
+                        title = g_titles.get(link_id);
+                    }
+                }
+                else {
+                    return whole_match;
+                }
+            }
+            
+            alt_text = escapeCharacters(attributeEncode(alt_text), "*_[]()");
+            url = escapeCharacters(url, "*_");
+            var result = "<img src=\"" + url + "\" alt=\"" + alt_text + "\"";
+
+            // attacklab: Markdown.pl adds empty title attributes to images.
+            // Replicate this bug.
+
+            //if (title != "") {
+            title = attributeEncode(title);
+            title = escapeCharacters(title, "*_");
+            result += " title=\"" + title + "\"";
+            //}
+
+            result += " />";
+
+            return result;
+        }
+
+        function _DoHeaders(text) {
+
+            // Setext-style headers:
+            //  Header 1
+            //  ========
+            //  
+            //  Header 2
+            //  --------
+            //
+            text = text.replace(/^(.+)[ \t]*\n=+[ \t]*\n+/gm,
+                function (wholeMatch, m1) { return "<h1>" + _RunSpanGamut(m1) + "</h1>\n\n"; }
+            );
+
+            text = text.replace(/^(.+)[ \t]*\n-+[ \t]*\n+/gm,
+                function (matchFound, m1) { return "<h2>" + _RunSpanGamut(m1) + "</h2>\n\n"; }
+            );
+
+            // atx-style headers:
+            //  # Header 1
+            //  ## Header 2
+            //  ## Header 2 with closing hashes ##
+            //  ...
+            //  ###### Header 6
+            //
+
+            /*
+            text = text.replace(/
+                ^(\#{1,6})      // $1 = string of #'s
+                [ \t]*
+                (.+?)           // $2 = Header text
+                [ \t]*
+                \#*             // optional closing #'s (not counted)
+                \n+
+            /gm, function() {...});
+            */
+
+            text = text.replace(/^(\#{1,6})[ \t]*(.+?)[ \t]*\#*\n+/gm,
+                function (wholeMatch, m1, m2) {
+                    var h_level = m1.length;
+                    return "<h" + h_level + ">" + _RunSpanGamut(m2) + "</h" + h_level + ">\n\n";
+                }
+            );
+
+            return text;
+        }
+
+        function _DoLists(text) {
+            //
+            // Form HTML ordered (numbered) and unordered (bulleted) lists.
+            //
+
+            // attacklab: add sentinel to hack around khtml/safari bug:
+            // http://bugs.webkit.org/show_bug.cgi?id=11231
+            text += "~0";
+
+            // Re-usable pattern to match any entirel ul or ol list:
+
+            /*
+            var whole_list = /
+                (                                   // $1 = whole list
+                    (                               // $2
+                        [ ]{0,3}                    // attacklab: g_tab_width - 1
+                        ([*+-]|\d+[.])              // $3 = first list item marker
+                        [ \t]+
+                    )
+                    [^\r]+?
+                    (                               // $4
+                        ~0                          // sentinel for workaround; should be $
+                        |
+                        \n{2,}
+                        (?=\S)
+                        (?!                         // Negative lookahead for another list item marker
+                            [ \t]*
+                            (?:[*+-]|\d+[.])[ \t]+
+                        )
+                    )
+                )
+            /g
+            */
+            var whole_list = /^(([ ]{0,3}([*+-]|\d+[.])[ \t]+)[^\r]+?(~0|\n{2,}(?=\S)(?![ \t]*(?:[*+-]|\d+[.])[ \t]+)))/gm;
+
+            if (g_list_level) {
+                text = text.replace(whole_list, function (wholeMatch, m1, m2) {
+                    var list = m1;
+                    var list_type = (m2.search(/[*+-]/g) > -1) ? "ul" : "ol";
+
+                    var result = _ProcessListItems(list, list_type);
+
+                    // Trim any trailing whitespace, to put the closing `</$list_type>`
+                    // up on the preceding line, to get it past the current stupid
+                    // HTML block parser. This is a hack to work around the terrible
+                    // hack that is the HTML block parser.
+                    result = result.replace(/\s+$/, "");
+                    result = "<" + list_type + ">" + result + "</" + list_type + ">\n";
+                    return result;
+                });
+            } else {
+                whole_list = /(\n\n|^\n?)(([ ]{0,3}([*+-]|\d+[.])[ \t]+)[^\r]+?(~0|\n{2,}(?=\S)(?![ \t]*(?:[*+-]|\d+[.])[ \t]+)))/g;
+                text = text.replace(whole_list, function (wholeMatch, m1, m2, m3) {
+                    var runup = m1;
+                    var list = m2;
+
+                    var list_type = (m3.search(/[*+-]/g) > -1) ? "ul" : "ol";
+                    var result = _ProcessListItems(list, list_type);
+                    result = runup + "<" + list_type + ">\n" + result + "</" + list_type + ">\n";
+                    return result;
+                });
+            }
+
+            // attacklab: strip sentinel
+            text = text.replace(/~0/, "");
+
+            return text;
+        }
+
+        var _listItemMarkers = { ol: "\\d+[.]", ul: "[*+-]" };
+
+        function _ProcessListItems(list_str, list_type) {
+            //
+            //  Process the contents of a single ordered or unordered list, splitting it
+            //  into individual list items.
+            //
+            //  list_type is either "ul" or "ol".
+
+            // The $g_list_level global keeps track of when we're inside a list.
+            // Each time we enter a list, we increment it; when we leave a list,
+            // we decrement. If it's zero, we're not in a list anymore.
+            //
+            // We do this because when we're not inside a list, we want to treat
+            // something like this:
+            //
+            //    I recommend upgrading to version
+            //    8. Oops, now this line is treated
+            //    as a sub-list.
+            //
+            // As a single paragraph, despite the fact that the second line starts
+            // with a digit-period-space sequence.
+            //
+            // Whereas when we're inside a list (or sub-list), that line will be
+            // treated as the start of a sub-list. What a kludge, huh? This is
+            // an aspect of Markdown's syntax that's hard to parse perfectly
+            // without resorting to mind-reading. Perhaps the solution is to
+            // change the syntax rules such that sub-lists must start with a
+            // starting cardinal number; e.g. "1." or "a.".
+
+            g_list_level++;
+
+            // trim trailing blank lines:
+            list_str = list_str.replace(/\n{2,}$/, "\n");
+
+            // attacklab: add sentinel to emulate \z
+            list_str += "~0";
+
+            // In the original attacklab showdown, list_type was not given to this function, and anything
+            // that matched /[*+-]|\d+[.]/ would just create the next <li>, causing this mismatch:
+            //
+            //  Markdown          rendered by WMD        rendered by MarkdownSharp
+            //  ------------------------------------------------------------------
+            //  1. first          1. first               1. first
+            //  2. second         2. second              2. second
+            //  - third           3. third                   * third
+            //
+            // We changed this to behave identical to MarkdownSharp. This is the constructed RegEx,
+            // with {MARKER} being one of \d+[.] or [*+-], depending on list_type:
+        
+            /*
+            list_str = list_str.replace(/
+                (^[ \t]*)                       // leading whitespace = $1
+                ({MARKER}) [ \t]+               // list marker = $2
+                ([^\r]+?                        // list item text   = $3
+                    (\n+)
+                )
+                (?=
+                    (~0 | \2 ({MARKER}) [ \t]+)
+                )
+            /gm, function(){...});
+            */
+
+            var marker = _listItemMarkers[list_type];
+            var re = new RegExp("(^[ \\t]*)(" + marker + ")[ \\t]+([^\\r]+?(\\n+))(?=(~0|\\1(" + marker + ")[ \\t]+))", "gm");
+            var last_item_had_a_double_newline = false;
+            list_str = list_str.replace(re,
+                function (wholeMatch, m1, m2, m3) {
+                    var item = m3;
+                    var leading_space = m1;
+                    var ends_with_double_newline = /\n\n$/.test(item);
+                    var contains_double_newline = ends_with_double_newline || item.search(/\n{2,}/) > -1;
+
+                    if (contains_double_newline || last_item_had_a_double_newline) {
+                        item = _RunBlockGamut(_Outdent(item), /* doNotUnhash = */true);
+                    }
+                    else {
+                        // Recursion for sub-lists:
+                        item = _DoLists(_Outdent(item));
+                        item = item.replace(/\n$/, ""); // chomp(item)
+                        item = _RunSpanGamut(item);
+                    }
+                    last_item_had_a_double_newline = ends_with_double_newline;
+                    return "<li>" + item + "</li>\n";
+                }
+            );
+
+            // attacklab: strip sentinel
+            list_str = list_str.replace(/~0/g, "");
+
+            g_list_level--;
+            return list_str;
+        }
+
+        function _DoCodeBlocks(text) {
+            //
+            //  Process Markdown `<pre><code>` blocks.
+            //  
+
+            /*
+            text = text.replace(/
+                (?:\n\n|^)
+                (                               // $1 = the code block -- one or more lines, starting with a space/tab
+                    (?:
+                        (?:[ ]{4}|\t)           // Lines must start with a tab or a tab-width of spaces - attacklab: g_tab_width
+                        .*\n+
+                    )+
+                )
+                (\n*[ ]{0,3}[^ \t\n]|(?=~0))    // attacklab: g_tab_width
+            /g ,function(){...});
+            */
+
+            // attacklab: sentinel workarounds for lack of \A and \Z, safari\khtml bug
+            text += "~0";
+
+            text = text.replace(/(?:\n\n|^)((?:(?:[ ]{4}|\t).*\n+)+)(\n*[ ]{0,3}[^ \t\n]|(?=~0))/g,
+                function (wholeMatch, m1, m2) {
+                    var codeblock = m1;
+                    var nextChar = m2;
+
+                    codeblock = _EncodeCode(_Outdent(codeblock));
+                    codeblock = _Detab(codeblock);
+                    codeblock = codeblock.replace(/^\n+/g, ""); // trim leading newlines
+                    codeblock = codeblock.replace(/\n+$/g, ""); // trim trailing whitespace
+
+                    codeblock = "<pre><code>" + codeblock + "\n</code></pre>";
+
+                    return "\n\n" + codeblock + "\n\n" + nextChar;
+                }
+            );
+
+            // attacklab: strip sentinel
+            text = text.replace(/~0/, "");
+
+            return text;
+        }
+
+        function hashBlock(text) {
+            text = text.replace(/(^\n+|\n+$)/g, "");
+            return "\n\n~K" + (g_html_blocks.push(text) - 1) + "K\n\n";
+        }
+
+        function _DoCodeSpans(text) {
+            //
+            // * Backtick quotes are used for <code></code> spans.
+            // 
+            // * You can use multiple backticks as the delimiters if you want to
+            //   include literal backticks in the code span. So, this input:
+            //     
+            //      Just type ``foo `bar` baz`` at the prompt.
+            //     
+            //   Will translate to:
+            //     
+            //      <p>Just type <code>foo `bar` baz</code> at the prompt.</p>
+            //     
+            //   There's no arbitrary limit to the number of backticks you
+            //   can use as delimters. If you need three consecutive backticks
+            //   in your code, use four for delimiters, etc.
+            //
+            // * You can use spaces to get literal backticks at the edges:
+            //     
+            //      ... type `` `bar` `` ...
+            //     
+            //   Turns to:
+            //     
+            //      ... type <code>`bar`</code> ...
+            //
+
+            /*
+            text = text.replace(/
+                (^|[^\\])       // Character before opening ` can't be a backslash
+                (`+)            // $2 = Opening run of `
+                (               // $3 = The code block
+                    [^\r]*?
+                    [^`]        // attacklab: work around lack of lookbehind
+                )
+                \2              // Matching closer
+                (?!`)
+            /gm, function(){...});
+            */
+
+            text = text.replace(/(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/gm,
+                function (wholeMatch, m1, m2, m3, m4) {
+                    var c = m3;
+                    c = c.replace(/^([ \t]*)/g, ""); // leading whitespace
+                    c = c.replace(/[ \t]*$/g, ""); // trailing whitespace
+                    c = _EncodeCode(c);
+                    c = c.replace(/:\/\//g, "~P"); // to prevent auto-linking. Not necessary in code *blocks*, but in code spans. Will be converted back after the auto-linker runs.
+                    return m1 + "<code>" + c + "</code>";
+                }
+            );
+
+            return text;
+        }
+
+        function _EncodeCode(text) {
+            //
+            // Encode/escape certain characters inside Markdown code runs.
+            // The point is that in code, these characters are literals,
+            // and lose their special Markdown meanings.
+            //
+            // Encode all ampersands; HTML entities are not
+            // entities within a Markdown code span.
+            text = text.replace(/&/g, "&amp;");
+
+            // Do the angle bracket song and dance:
+            text = text.replace(/</g, "&lt;");
+            text = text.replace(/>/g, "&gt;");
+
+            // Now, escape characters that are magic in Markdown:
+            text = escapeCharacters(text, "\*_{}[]\\", false);
+
+            // jj the line above breaks this:
+            //---
+
+            //* Item
+
+            //   1. Subitem
+
+            //            special char: *
+            //---
+
+            return text;
+        }
+
+        function _DoItalicsAndBold(text) {
+
+            // <strong> must go first:
+            text = text.replace(/([\W_]|^)(\*\*|__)(?=\S)([^\r]*?\S[\*_]*)\2([\W_]|$)/g,
+            "$1<strong>$3</strong>$4");
+
+            text = text.replace(/([\W_]|^)(\*|_)(?=\S)([^\r\*_]*?\S)\2([\W_]|$)/g,
+            "$1<em>$3</em>$4");
+
+            return text;
+        }
+
+        function _DoBlockQuotes(text) {
+
+            /*
+            text = text.replace(/
+                (                           // Wrap whole match in $1
+                    (
+                        ^[ \t]*>[ \t]?      // '>' at the start of a line
+                        .+\n                // rest of the first line
+                        (.+\n)*             // subsequent consecutive lines
+                        \n*                 // blanks
+                    )+
+                )
+            /gm, function(){...});
+            */
+
+            text = text.replace(/((^[ \t]*>[ \t]?.+\n(.+\n)*\n*)+)/gm,
+                function (wholeMatch, m1) {
+                    var bq = m1;
+
+                    // attacklab: hack around Konqueror 3.5.4 bug:
+                    // "----------bug".replace(/^-/g,"") == "bug"
+
+                    bq = bq.replace(/^[ \t]*>[ \t]?/gm, "~0"); // trim one level of quoting
+
+                    // attacklab: clean up hack
+                    bq = bq.replace(/~0/g, "");
+
+                    bq = bq.replace(/^[ \t]+$/gm, "");     // trim whitespace-only lines
+                    bq = _RunBlockGamut(bq);             // recurse
+
+                    bq = bq.replace(/(^|\n)/g, "$1  ");
+                    // These leading spaces screw with <pre> content, so we need to fix that:
+                    bq = bq.replace(
+                            /(\s*<pre>[^\r]+?<\/pre>)/gm,
+                        function (wholeMatch, m1) {
+                            var pre = m1;
+                            // attacklab: hack around Konqueror 3.5.4 bug:
+                            pre = pre.replace(/^  /mg, "~0");
+                            pre = pre.replace(/~0/g, "");
+                            return pre;
+                        });
+
+                    return hashBlock("<blockquote>\n" + bq + "\n</blockquote>");
+                }
+            );
+            return text;
+        }
+
+        function _FormParagraphs(text, doNotUnhash) {
+            //
+            //  Params:
+            //    $text - string to process with html <p> tags
+            //
+
+            // Strip leading and trailing lines:
+            text = text.replace(/^\n+/g, "");
+            text = text.replace(/\n+$/g, "");
+
+            var grafs = text.split(/\n{2,}/g);
+            var grafsOut = [];
+            
+            var markerRe = /~K(\d+)K/;
+
+            //
+            // Wrap <p> tags.
+            //
+            var end = grafs.length;
+            for (var i = 0; i < end; i++) {
+                var str = grafs[i];
+
+                // if this is an HTML marker, copy it
+                if (markerRe.test(str)) {
+                    grafsOut.push(str);
+                }
+                else if (/\S/.test(str)) {
+                    str = _RunSpanGamut(str);
+                    str = str.replace(/^([ \t]*)/g, "<p>");
+                    str += "</p>"
+                    grafsOut.push(str);
+                }
+
+            }
+            //
+            // Unhashify HTML blocks
+            //
+            if (!doNotUnhash) {
+                end = grafsOut.length;
+                for (var i = 0; i < end; i++) {
+                    var foundAny = true;
+                    while (foundAny) { // we may need several runs, since the data may be nested
+                        foundAny = false;
+                        grafsOut[i] = grafsOut[i].replace(/~K(\d+)K/g, function (wholeMatch, id) {
+                            foundAny = true;
+                            return g_html_blocks[id];
+                        });
+                    }
+                }
+            }
+            return grafsOut.join("\n\n");
+        }
+
+        function _EncodeAmpsAndAngles(text) {
+            // Smart processing for ampersands and angle brackets that need to be encoded.
+
+            // Ampersand-encoding based entirely on Nat Irons's Amputator MT plugin:
+            //   http://bumppo.net/projects/amputator/
+            text = text.replace(/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/g, "&amp;");
+
+            // Encode naked <'s
+            text = text.replace(/<(?![a-z\/?\$!])/gi, "&lt;");
+
+            return text;
+        }
+
+        function _EncodeBackslashEscapes(text) {
+            //
+            //   Parameter:  String.
+            //   Returns:    The string, with after processing the following backslash
+            //               escape sequences.
+            //
+
+            // attacklab: The polite way to do this is with the new
+            // escapeCharacters() function:
+            //
+            //     text = escapeCharacters(text,"\\",true);
+            //     text = escapeCharacters(text,"`*_{}[]()>#+-.!",true);
+            //
+            // ...but we're sidestepping its use of the (slow) RegExp constructor
+            // as an optimization for Firefox.  This function gets called a LOT.
+
+            text = text.replace(/\\(\\)/g, escapeCharacters_callback);
+            text = text.replace(/\\([`*_{}\[\]()>#+-.!])/g, escapeCharacters_callback);
+            return text;
+        }
+
+        function _DoAutoLinks(text) {
+
+            // note that at this point, all other URL in the text are already hyperlinked as <a href=""></a>
+            // *except* for the <http://www.foo.com> case
+
+            // automatically add < and > around unadorned raw hyperlinks
+            // must be preceded by space/BOF and followed by non-word/EOF character    
+            text = text.replace(/(^|\s)(https?|ftp)(:\/\/[-A-Z0-9+&@#\/%?=~_|\[\]\(\)!:,\.;]*[-A-Z0-9+&@#\/%=~_|\[\]])($|\W)/gi, "$1<$2$3>$4");
+
+            //  autolink anything like <http://example.com>
+            
+            var replacer = function (wholematch, m1) { return "<a href=\"" + m1 + "\">" + pluginHooks.plainLinkText(m1) + "</a>"; }
+            text = text.replace(/<((https?|ftp):[^'">\s]+)>/gi, replacer);
+
+            // Email addresses: <address@domain.foo>
+            /*
+            text = text.replace(/
+                <
+                (?:mailto:)?
+                (
+                    [-.\w]+
+                    \@
+                    [-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+
+                )
+                >
+            /gi, _DoAutoLinks_callback());
+            */
+
+            /* disabling email autolinking, since we don't do that on the server, either
+            text = text.replace(/<(?:mailto:)?([-.\w]+\@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)>/gi,
+                function(wholeMatch,m1) {
+                    return _EncodeEmailAddress( _UnescapeSpecialChars(m1) );
+                }
+            );
+            */
+            return text;
+        }
+
+        function _UnescapeSpecialChars(text) {
+            //
+            // Swap back in all the special characters we've hidden.
+            //
+            text = text.replace(/~E(\d+)E/g,
+                function (wholeMatch, m1) {
+                    var charCodeToReplace = parseInt(m1);
+                    return String.fromCharCode(charCodeToReplace);
+                }
+            );
+            return text;
+        }
+
+        function _Outdent(text) {
+            //
+            // Remove one level of line-leading tabs or spaces
+            //
+
+            // attacklab: hack around Konqueror 3.5.4 bug:
+            // "----------bug".replace(/^-/g,"") == "bug"
+
+            text = text.replace(/^(\t|[ ]{1,4})/gm, "~0"); // attacklab: g_tab_width
+
+            // attacklab: clean up hack
+            text = text.replace(/~0/g, "")
+
+            return text;
+        }
+
+        function _Detab(text) {
+            if (!/\t/.test(text))
+                return text;
+
+            var spaces = ["    ", "   ", "  ", " "],
+            skew = 0,
+            v;
+
+            return text.replace(/[\n\t]/g, function (match, offset) {
+                if (match === "\n") {
+                    skew = offset + 1;
+                    return match;
+                }
+                v = (offset - skew) % 4;
+                skew = offset + 1;
+                return spaces[v];
+            });
+        }
+
+        //
+        //  attacklab: Utility functions
+        //
+
+        var _problemUrlChars = /(?:["'*()[\]:]|~D)/g;
+
+        // hex-encodes some unusual "problem" chars in URLs to avoid URL detection problems 
+        function encodeProblemUrlChars(url) {
+            if (!url)
+                return "";
+
+            var len = url.length;
+
+            return url.replace(_problemUrlChars, function (match, offset) {
+                if (match == "~D") // escape for dollar
+                    return "%24";
+                if (match == ":") {
+                    if (offset == len - 1 || /[0-9\/]/.test(url.charAt(offset + 1)))
+                        return ":"
+                }
+                return "%" + match.charCodeAt(0).toString(16);
+            });
+        }
+
+
+        function escapeCharacters(text, charsToEscape, afterBackslash) {
+            // First we have to escape the escape characters so that
+            // we can build a character class out of them
+            var regexString = "([" + charsToEscape.replace(/([\[\]\\])/g, "\\$1") + "])";
+
+            if (afterBackslash) {
+                regexString = "\\\\" + regexString;
+            }
+
+            var regex = new RegExp(regexString, "g");
+            text = text.replace(regex, escapeCharacters_callback);
+
+            return text;
+        }
+
+
+        function escapeCharacters_callback(wholeMatch, m1) {
+            var charCodeToEscape = m1.charCodeAt(0);
+            return "~E" + charCodeToEscape + "E";
+        }
+
+    }; // end of the Markdown.Converter constructor
+
+})();
+
+define("pagedown_converter", function(){});
+
+(function () {
+    var output, Converter;
+    if (typeof exports === "object" && typeof require === "function") { // we're in a CommonJS (e.g. Node.js) module
+        output = exports;
+        Converter = require("./Markdown.Converter").Converter;
+    } else {
+        output = window.Markdown;
+        Converter = output.Converter;
+    }
+        
+    output.getSanitizingConverter = function () {
+        var converter = new Converter();
+        converter.hooks.chain("postConversion", sanitizeHtml);
+        converter.hooks.chain("postConversion", balanceTags);
+        return converter;
+    }
+
+    function sanitizeHtml(html) {
+        return html.replace(/<[^>]*>?/gi, sanitizeTag);
+    }
+
+    // (tags that can be opened/closed) | (tags that stand alone)
+    var basic_tag_whitelist = /^(<\/?(b|blockquote|code|del|dd|dl|dt|em|h1|h2|h3|i|kbd|li|ol|p|pre|s|sup|sub|strong|strike|ul)>|<(br|hr)\s?\/?>)$/i;
+    // <a href="url..." optional title>|</a>
+    var a_white = /^(<a\shref="((https?|ftp):\/\/|\/)[-A-Za-z0-9+&@#\/%?=~_|!:,.;\(\)]+"(\stitle="[^"<>]+")?\s?>|<\/a>)$/i;
+
+    // <img src="url..." optional width  optional height  optional alt  optional title
+    var img_white = /^(<img\ssrc="(https?:\/\/|\/)[-A-Za-z0-9+&@#\/%?=~_|!:,.;\(\)]+"(\swidth="\d{1,3}")?(\sheight="\d{1,3}")?(\salt="[^"<>]*")?(\stitle="[^"<>]*")?\s?\/?>)$/i;
+
+    function sanitizeTag(tag) {
+        if (tag.match(basic_tag_whitelist) || tag.match(a_white) || tag.match(img_white))
+            return tag;
+        else
+            return "";
+    }
+
+    /// <summary>
+    /// attempt to balance HTML tags in the html string
+    /// by removing any unmatched opening or closing tags
+    /// IMPORTANT: we *assume* HTML has *already* been 
+    /// sanitized and is safe/sane before balancing!
+    /// 
+    /// adapted from CODESNIPPET: A8591DBA-D1D3-11DE-947C-BA5556D89593
+    /// </summary>
+    function balanceTags(html) {
+
+        if (html == "")
+            return "";
+
+        var re = /<\/?\w+[^>]*(\s|$|>)/g;
+        // convert everything to lower case; this makes
+        // our case insensitive comparisons easier
+        var tags = html.toLowerCase().match(re);
+
+        // no HTML tags present? nothing to do; exit now
+        var tagcount = (tags || []).length;
+        if (tagcount == 0)
+            return html;
+
+        var tagname, tag;
+        var ignoredtags = "<p><img><br><li><hr>";
+        var match;
+        var tagpaired = [];
+        var tagremove = [];
+        var needsRemoval = false;
+
+        // loop through matched tags in forward order
+        for (var ctag = 0; ctag < tagcount; ctag++) {
+            tagname = tags[ctag].replace(/<\/?(\w+).*/, "$1");
+            // skip any already paired tags
+            // and skip tags in our ignore list; assume they're self-closed
+            if (tagpaired[ctag] || ignoredtags.search("<" + tagname + ">") > -1)
+                continue;
+
+            tag = tags[ctag];
+            match = -1;
+
+            if (!/^<\//.test(tag)) {
+                // this is an opening tag
+                // search forwards (next tags), look for closing tags
+                for (var ntag = ctag + 1; ntag < tagcount; ntag++) {
+                    if (!tagpaired[ntag] && tags[ntag] == "</" + tagname + ">") {
+                        match = ntag;
+                        break;
+                    }
+                }
+            }
+
+            if (match == -1)
+                needsRemoval = tagremove[ctag] = true; // mark for removal
+            else
+                tagpaired[match] = true; // mark paired
+        }
+
+        if (!needsRemoval)
+            return html;
+
+        // delete all orphaned tags from the string
+
+        var ctag = 0;
+        html = html.replace(re, function (match) {
+            var res = tagremove[ctag] ? "" : match;
+            ctag++;
+            return res;
+        });
+        return html;
+    }
+})();
+
+define("pagedown_sanitizer", ["pagedown_converter"], function(){});
+
+define('patterns/markdown',[
+    "jquery",
+    "../registry",
+    "./inject",
+    "pagedown_converter",
+    "pagedown_sanitizer"
+], function($, registry, inject) {
+    var converter = Markdown.getSanitizingConverter();
+
+    var _ = {
+        name: "markdown",
+        trigger: ".pat-markdown",
+        url_re: /\.md$/,
+
+        init: function($el) {
+            return $el.each(function() {
+                var $this = $(this),
+                    source = $this.is(":input") ? this.value : $this.text(),
+                    $rendering = _.convert($("<div/>"), source);
+                $rendering.replaceAll($this);
+            });
+        },
+
+        convert: function($el, text) {
+            var html = converter.makeHtml(text);
+            return $el.each(function() {
+                $(this).html(html);
+            });
+        }
+    };
+
+    // XXX: Hack
+    $("a.pat-inject").on("patterns-inject-triggered.pat-markdown", function() {
+        var $this = $(this), cfgs = $this.data("patterns.inject");
+
+        if (_.url_re.test(cfgs[0].url)) {
+            cfgs.forEach(function(cfg) {
+                cfg.data.type = "markdown";
+            });
+        }
+    });
+
+    inject.registerTypeHandler("markdown", {
+        sources: function(cfgs, data) {
+            var $el = _.convert($("<div/>"), data);
+
+            return cfgs.map(function() { return $el; });
+        }
+    });
+
+    registry.register(_);
+    return _;
+});
+
 define('patterns/menu',[
-    'jquery',
+    "jquery",
     "../registry"
 ], function($, patterns) {
     var menu = {
@@ -52455,7 +53889,7 @@ define('patterns/menu',[
                     timer = setTimeout(function() { closeMenu($li); }, 1000);
                 };
 
-                $("ul.menu li", root)
+                $root.find("li")
                     .addClass("closed")
                     .filter(":has(ul)").addClass("hasChildren").end()
                     .on("mouseover.pat-menu", mouseOverHandler)
@@ -52471,11 +53905,11 @@ define('patterns/menu',[
 // vim: sw=4 expandtab
 ;
 define('patterns/navigation',[
-    'jquery',
-    '../core/logger',
-    '../registry'
+    "jquery",
+    "../core/logger",
+    "../registry"
 ], function($, logger, registry) {
-    var log = logger.getLogger('pat.navigation');
+    var log = logger.getLogger("pat.navigation");
 
     var _ = {
         name: "navigation",
@@ -52484,49 +53918,49 @@ define('patterns/navigation',[
             return $el.each(function() {
                 var $el = $(this);
                 var curpath = window.location.pathname;
-                log.debug('current path:', curpath);
+                log.debug("current path:", curpath);
 
                 // check whether to load
-                if ($el.hasClass('navigation-load-current')) {
-                    $el.find('a.current, .current a').click();
+                if ($el.hasClass("navigation-load-current")) {
+                    $el.find("a.current, .current a").click();
                     // check for current elements injected here
-                    $el.on('patterns-injected-scanned', function(ev) {
+                    $el.on("patterns-injected-scanned", function(ev) {
                         var $target = $(ev.target);
-                        if ($target.is('a.current'))
+                        if ($target.is("a.current"))
                             $target.click();
-                        if ($target.is('.current'))
-                            $target.find('a').click();
+                        if ($target.is(".current"))
+                            $target.find("a").click();
                         _._updatenavpath($el);
                     });
                 }
 
                 // An element within this navigation triggered injection
-                $el.on('patterns-inject-triggered', function(ev) {
+                $el.on("patterns-inject-triggered", function(ev) {
                     var $target = $(ev.target);
 
                     // remove all set current classes
-                    $el.find('.current').removeClass('current');
+                    $el.find(".current").removeClass("current");
 
                     // set .current on target
-                    $target.addClass('current');
+                    $target.addClass("current");
 
                     // If target's parent is an LI, also set current there
-                    $target.parent('li').addClass('current');
+                    $target.parent("li").addClass("current");
 
                     _._updatenavpath($el);
                 });
 
                 // set current class if it is not set
-                if ($el.find('.current').length === 0) {
-                    $el.find('li a').each(function() {
+                if ($el.find(".current").length === 0) {
+                    $el.find("li a").each(function() {
                         var $a = $(this),
-                            $li = $a.parents('li:first'),
-                            url = $a.attr('href'),
+                            $li = $a.parents("li:first"),
+                            url = $a.attr("href"),
                             path = _._pathfromurl(url);
-                        log.debug('checking url:', url, 'extracted path:', path);
+                        log.debug("checking url:", url, "extracted path:", path);
                         if (_._match(curpath, path)) {
-                            log.debug('found match', $li);
-                            $li.addClass('current');
+                            log.debug("found match", $li);
+                            $li.addClass("current");
                         }
                     });
                 }
@@ -52535,18 +53969,18 @@ define('patterns/navigation',[
             });
         },
         _updatenavpath: function($el) {
-            $el.find('.navigation-in-path').removeClass('navigation-in-path');
-            $el.find('li:has(.current)').addClass('navigation-in-path');
+            $el.find(".navigation-in-path").removeClass("navigation-in-path");
+            $el.find("li:has(.current)").addClass("navigation-in-path");
         },
         _match: function(curpath, path) {
             if (!path) {
-                log.debug('path empty');
+                log.debug("path empty");
                 return false;
             }
 
             // current path needs to end in the anchor's path
             if (path !== curpath.slice(- path.length)) {
-                log.debug(curpath, 'does not end in', path);
+                log.debug(curpath, "does not end in", path);
                 return false;
             }
 
@@ -52554,13 +53988,13 @@ define('patterns/navigation',[
             return true;
         },
         _pathfromurl: function(url) {
-            var path = url.split('#')[0].split('://');
+            var path = url.split("#")[0].split("://");
             if (path.length > 2) {
-                log.error('weird url', url);
-                return '';
+                log.error("weird url", url);
+                return "";
             }
             if (path.length === 1) return path[0];
-            return path[1].split('/').slice(1).join('/');
+            return path[1].split("/").slice(1).join("/");
         }
     };
 
@@ -52732,8 +54166,8 @@ define("jquery_placeholder", ["jquery"], function(){});
 
 define('patterns/placeholder',[
     "../registry",
-    'modernizr',
-    'jquery_placeholder'
+    "modernizr",
+    "jquery_placeholder"
 ], function(patterns) {
     var pattern_spec = {
         name: "placeholder",
@@ -52760,10 +54194,10 @@ define('patterns/placeholder',[
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define('patterns/setclass',[
-    'jquery',
+    "jquery",
     "../registry",
-    '../core/store',
-    '../utils'
+    "../core/store",
+    "../utils"
 ], function($, patterns, store, utils) {
     var storage = store.session("setclass");
 
@@ -52777,7 +54211,7 @@ define('patterns/setclass',[
                 var $this = $(this);
                 var obj = setclass.getObjFromParams(
                               $this,
-                              utils.extractParameters('!' + $this.attr('data-setclass')));
+                              utils.extractParameters("!" + $this.attr("data-setclass")));
 
                 if (obj === null)
                     return;
@@ -52787,7 +54221,7 @@ define('patterns/setclass',[
                 } else if (storage.get(obj.id + "." + obj.attr))
                     return;
 
-                if (obj.attr === 'class') {
+                if (obj.attr === "class") {
                 //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
                 } else {
                     $( "#" + obj.id ).attr( obj.attr, obj.value );
@@ -52800,7 +54234,7 @@ define('patterns/setclass',[
             var all = storage.all();
             for (var key in all ) {
                 var obj = all[key];
-                if ( obj.attr === 'class' ) {
+                if ( obj.attr === "class" ) {
                     $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
                 } else {
                     $( "#" + obj.id ).attr( obj.attr, obj.value );
@@ -52813,18 +54247,18 @@ define('patterns/setclass',[
             var obj = {};
 
             obj.id = params.id || $elem.attr("id");
-            obj.attr = params.attr || 'class';
+            obj.attr = params.attr || "class";
             obj.store = params.store || false;
 
             if (typeof obj.id !== "string" || obj.id.length === 0 ||
-                typeof obj.attr !== 'string' || obj.attr.length === 0 ||
-                typeof values  !== 'string' || values.length === 0 ) {
+                typeof obj.attr !== "string" || obj.attr.length === 0 ||
+                typeof values  !== "string" || values.length === 0 ) {
                 return null;
             }
 
-            values = values.split(':');
-            if ( values.length == 1) {
-                values.push('');
+            values = values.split(":");
+            if ( values.length === 1) {
+                values.push("");
             }
 
             obj.value = values[0];
@@ -52834,10 +54268,10 @@ define('patterns/setclass',[
 
         onClick: function(event) {
             var $this = $(this);
-            if ($this.hasClass('cant-touch-this')) return;
-            var params = utils.extractParameters('!' + $this.attr('data-setclass'));
+            if ($this.hasClass("cant-touch-this")) return;
+            var params = utils.extractParameters("!" + $this.attr("data-setclass"));
 
-            setclass.execute($this, '', '', params, event);
+            setclass.execute($this, "", "", params, event);
 
             event.preventDefault();
         },
@@ -52846,19 +54280,18 @@ define('patterns/setclass',[
 
         dataAttr: true,
 
-        execute: function( elem, url, sources, params, event ) {
-            var value, other;
+        execute: function( elem, url, sources, params) {
             var obj = setclass.getObjFromParams( elem, params );
             if (obj === null) return false;
 
             var $setclass = $("#" + obj.id);
             if ($setclass.length === 0) return false;
 
-            if (obj.attr === 'class') {
+            if (obj.attr === "class") {
                 if (obj.other.length > 0 ) {
-                    var cls = $setclass.attr('class').split(' ');
-                    regval = new RegExp(obj.value);
-                    for (i=0;i<cls.length;i++){
+                    var cls = $setclass.attr("class").split(" "),
+                        regval = new RegExp(obj.value);
+                    for (var i=0;i<cls.length;i++){
                         if (cls[i].match(regval)) {
                             $setclass.removeClass(cls[i]);
                         }
@@ -52901,7 +54334,7 @@ define('patterns/setclass',[
 // vim: sw=4 expandtab
 ;
 define('patterns/sortable',[
-    'jquery',
+    "jquery",
     "../registry"
 ], function($, patterns) {
     var _ = {
@@ -52913,88 +54346,88 @@ define('patterns/sortable',[
                 return $el.each(function() { _.init($(this)); });
 
             // use only direct descendants to support nested lists
-            var $lis = $el.children().filter('li');
+            var $lis = $el.children().filter("li");
 
             // add handles and make them draggable for HTML5 and IE8/9
             // it has to be an "a" tag (or img) to make it draggable in IE8/9
-            var $handles = $('<a href="#" class="handle"></a>').appendTo($lis);
-            if('draggable' in document.createElement('span'))
-                $handles.attr('draggable', true);
+            var $handles = $("<a href=\"#\" class=\"handle\"></a>").appendTo($lis);
+            if("draggable" in document.createElement("span"))
+                $handles.attr("draggable", true);
             else
-                $handles.bind('selectstart', function(event) {
+                $handles.bind("selectstart", function(event) {
                     event.preventDefault();
                 });
 
             // invisible scroll activation areas
-            var scrollup = $('<div id="pat-scroll-up">&nbsp;</div>'),
-                scrolldn = $('<div id="pat-scroll-dn">&nbsp;</div>'),
+            var scrollup = $("<div id=\"pat-scroll-up\">&nbsp;</div>"),
+                scrolldn = $("<div id=\"pat-scroll-dn\">&nbsp;</div>"),
                 scroll = $().add(scrollup).add(scrolldn);
 
             scrollup.css({ top:0 });
             scrolldn.css({ bottom: 0 });
             scroll.css({
-                position: 'fixed', zIndex: 999999,
+                position: "fixed", zIndex: 999999,
                 height: 32, left: 0, right: 0
             });
 
-            scroll.bind('dragover', function(event) {
+            scroll.bind("dragover", function(event) {
                 event.preventDefault();
-                if ($('html,body').is(':animated')) return;
+                if ($("html,body").is(":animated")) return;
 
                 var newpos = $(window).scrollTop() +
-                    ($(this).attr('id')=='pat-scroll-up' ? -32 : 32);
+                    ($(this).attr("id")==="pat-scroll-up" ? -32 : 32);
 
-                $('html,body').animate({scrollTop: newpos}, 50, 'linear');
+                $("html,body").animate({scrollTop: newpos}, 50, "linear");
             });
 
-            $handles.bind('dragstart', function(event) {
+            $handles.bind("dragstart", function(event) {
                 // Firefox seems to need this set to any value
-                event.originalEvent.dataTransfer.setData('Text', '');
-                event.originalEvent.dataTransfer.effectAllowed = ['move'];
-                if ('setDragImage' in event.originalEvent.dataTransfer)
+                event.originalEvent.dataTransfer.setData("Text", "");
+                event.originalEvent.dataTransfer.effectAllowed = ["move"];
+                if ("setDragImage" in event.originalEvent.dataTransfer)
                     event.originalEvent.dataTransfer.setDragImage(
                         $(this).parent()[0], 0, 0);
-                $(this).parent().addClass('dragged');
+                $(this).parent().addClass("dragged");
 
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
-                $lis.bind('dragover.pat-sortable', function(event) {
+                $lis.bind("dragover.pat-sortable", function(event) {
                     var $this = $(this),
                         midlineY = $this.offset().top - $(document).scrollTop() +
                             $this.height()/2;
 
                     // bail if dropping on self
-                    if ($(this).hasClass('dragged'))
+                    if ($(this).hasClass("dragged"))
                         return;
 
-                    $this.removeClass('drop-target-above drop-target-below');
+                    $this.removeClass("drop-target-above drop-target-below");
                     if (event.originalEvent.clientY > midlineY)
-                        $this.addClass('drop-target-below');
+                        $this.addClass("drop-target-below");
                     else
-                        $this.addClass('drop-target-above');
+                        $this.addClass("drop-target-above");
                     event.preventDefault();
                 });
 
-                $lis.bind('dragleave.pat-sortable', function(event) {
-                    $lis.removeClass('drop-target-above drop-target-below');
+                $lis.bind("dragleave.pat-sortable", function() {
+                    $lis.removeClass("drop-target-above drop-target-below");
                 });
 
-                $lis.bind('drop.pat-sortable', function(event) {
-                    if ($(this).hasClass('drop-target-below'))
-                        $(this).after($('.dragged'));
+                $lis.bind("drop.pat-sortable", function() {
+                    if ($(this).hasClass("drop-target-below"))
+                        $(this).after($(".dragged"));
                     else
-                        $(this).before($('.dragged'));
-                    $(this).removeClass('drop-target-above drop-target-below');
+                        $(this).before($(".dragged"));
+                    $(this).removeClass("drop-target-above drop-target-below");
                     event.preventDefault();
                 });
 
-                scroll.appendTo('body');//.append(scrollup).append(scrolldn);
+                scroll.appendTo("body");//.append(scrollup).append(scrolldn);
             });
 
-            $handles.bind('dragend', function(event) {
-                $('.dragged').removeClass('dragged');
-                $lis.unbind('.pat-sortable');
-                $('#pat-scroll-up, #pat-scroll-dn').detach();
+            $handles.bind("dragend", function() {
+                $(".dragged").removeClass("dragged");
+                $lis.unbind(".pat-sortable");
+                $("#pat-scroll-up, #pat-scroll-dn").detach();
             });
 
             return $el;
@@ -53050,7 +54483,7 @@ define('patterns/switch',[
             });
         },
 
-        _onClick: function(e) {
+        _onClick: function() {
             switcher._go($(this));
         },
 
@@ -53075,7 +54508,7 @@ define('patterns/switch',[
                 if (option.selector && (option.remove || option.add))
                     correct.push(option);
                 else
-                    log.error('Switch pattern requires selector and one of add or remove.');
+                    log.error("Switch pattern requires selector and one of add or remove.");
             }
             return correct.length ? correct : null;
         },
@@ -53087,7 +54520,7 @@ define('patterns/switch',[
                 return;
 
             if (remove) {
-                if (remove.indexOf('*')===-1) 
+                if (remove.indexOf("*")===-1)
                     $targets.removeClass(remove);
                 else {
                     remove = remove.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
@@ -53128,13 +54561,13 @@ define('patterns/switch',[
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define('patterns/toggle',[
-    'jquery',
+    "jquery",
     "../registry",
-    '../core/logger',
+    "../core/logger",
     "../core/parser",
     "../core/store"
 ], function($, patterns, logger, Parser, store) {
-    var log = logger.getLogger('pat.toggle'),
+    var log = logger.getLogger("pat.toggle"),
         parser = new Parser("toggle");
 
     parser.add_argument("selector");
@@ -53151,7 +54584,7 @@ define('patterns/toggle',[
                 var $trigger = $(this),
                     options = toggle._validateOptions(this, parser.parse($trigger, true)),
                     state = {toggled: false, options: options},
-                    i, option;
+                    i, storage;
 
                 if (!options.length)
                     return;
@@ -53293,7 +54726,7 @@ define('core/remove',[
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define('patterns/tooltip',[
-    'jquery',
+    "jquery",
     "../registry",
     "../core/parser",
     "./inject",
@@ -53307,7 +54740,7 @@ define('patterns/tooltip',[
     parser.add_argument("sticky", false);
     parser.add_argument("close", true);
     parser.add_argument("ajax", false);
-    parser.add_argument("title", function($el, name) {
+    parser.add_argument("title", function($el) {
         return $el.attr("title");
     });
 
@@ -53361,9 +54794,9 @@ define('patterns/tooltip',[
                     $(document).on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("click.tooltip", tooltip.blockDefault);
                     // close if something inside the tooltip triggered an injection
-                    $container.on('patterns-inject-triggered.tooltip',
+                    $container.on("patterns-inject-triggered.tooltip",
                                   $trigger, tooltip.hide);
-                    $container.on('submit.tooltip', $trigger, tooltip.hide);
+                    $container.on("submit.tooltip", $trigger, tooltip.hide);
                 } else {
                     $container.on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
@@ -53396,18 +54829,13 @@ define('patterns/tooltip',[
             // trigger a hide as well.
             setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
 
-            function ajax_show() {
-                $container.find(">div >*").css("opacity", 1);
-                tooltip.positionContainer($trigger, $container);
-            }
-
             if (options.ajax) {
                 var source = $trigger.attr("href").split("#"),
                     target_id = $container.find("progress").attr("id");
                 inject.execute([{
                     url: source[0],
-                    source: '#' + source[1],
-                    target: '#' + target_id + "::element"
+                    source: "#" + source[1],
+                    target: "#" + target_id + "::element"
                 }]);
             }
 
@@ -53441,8 +54869,7 @@ define('patterns/tooltip',[
         },
 
         getContainer: function($trigger, create) {
-            var options = $trigger.data("patterns.tooltip"),
-                $container = $trigger.data("patterns.tooltip.container");
+            var $container = $trigger.data("patterns.tooltip.container");
 
             if (create) {
                 if ($container !== undefined) {
@@ -53460,7 +54887,7 @@ define('patterns/tooltip',[
                 count = ++tooltip.count,
                 $content, $container;
 
-            $trigger.data('patterns.tooltip.number', count);
+            $trigger.data("patterns.tooltip.number", count);
             $container = $("<div/>", {"class": "tooltip-container",
                                      "id": "tooltip" + count});
             $container.css("visibility", "hidden");
@@ -53498,10 +54925,7 @@ define('patterns/tooltip',[
                 window_height = $window.height(),
                 trigger_center,
                 scroll = {},
-                space = {},
-                container_offset = {},
-                tip_offset = {},
-                cls = "";
+                space = {};
 
             scroll.top = $window.scrollTop();
             scroll.left = $window.scrollLeft();
@@ -53671,7 +55095,6 @@ define('patterns/tooltip',[
                 tooltip_box = status.tooltip_box,
                 trigger_center = status.trigger_center,
                 content_css = {"max-height": "", "max-width": ""},
-                $window = $(window),
                 bottom_row, x;
 
             switch (position[0]) {
@@ -53762,17 +55185,17 @@ define('patterns/tooltip',[
 define('patterns/validate',[
     "jquery",
     "../registry",
-    '../core/logger',
+    "../core/logger",
     "jquery_validate"
 ], function($, patterns, logger) {
-    var log = logger.getLogger('pat.validate');
+    var log = logger.getLogger("pat.validate");
 
     var pattern_spec = {
         name: "validate",
         trigger: "form.validate",
 
         init: function($el) {
-            var validators = $el.find('[data-validator]').toArray().reduce(function(acc, el) {
+            $el.find("[data-validator]").toArray().reduce(function(acc, el) {
                 /*
                 Support for custom validator:
                 -----------------------------
@@ -53782,39 +55205,39 @@ define('patterns/validate',[
 
                 Parameters:
                     *classname* is a string which must be set as a class on the element to validate.
-                    *method* is a string denoting the name of the validating function. 
+                    *method* is a string denoting the name of the validating function.
                         If it's a nested/namespaced method, you can provide dot notation.
                     *message* is the error message which will be returned if validation fails.
                 */
                 var i, path_to_func, $el = $(el),
-                    varray = $el.data('validator').split(' ', 2),
-                    message = $el.data('validator-message');
+                    varray = $el.data("validator").split(" ", 2),
+                    message = $el.data("validator-message");
 
                 // The function might be namespaced (e.g namespace.subnamespace.myfunc)
                 // We therefore need to split on "." and traverse the path.
-                path_to_func = varray[1].split('.');
+                path_to_func = varray[1].split(".");
                 var func = window[path_to_func[0]];
                 for (i=1; i<path_to_func.length; i++) {
                     try {
                         func = func[path_to_func[i]];
                     } catch(e) {
-                        log.error('Could not find the validator function: ' + varray[1]);
+                        log.error("Could not find the validator function: " + varray[1]);
                     }
                 }
                 $.validator.addMethod(varray[0], func, message);
             }, {});
 
-            var rules = $el.find('[data-required-if]').toArray().reduce(function(acc, el) {
+            var rules = $el.find("[data-required-if]").toArray().reduce(function(acc, el) {
                 var $el = $(el),
-                    id = $el.attr('id');
+                    id = $el.attr("id");
                 if (!id) {
-                    log.error('Element needs id, skipping:', $el);
+                    log.error("Element needs id, skipping:", $el);
                     return acc;
                 }
-                acc[id] = {required: $el.data('required-if')};
+                acc[id] = {required: $el.data("required-if")};
                 return acc;
             }, {});
-            log.debug('rules:', rules);
+            log.debug("rules:", rules);
 
             // ATTENTION: adding the debug option to validate, disables
             // form submission
@@ -53885,6 +55308,8 @@ requirejs.config({
         jquery_validate_additional_methods: "./3rdparty/jquery-validation/additional-methods",
         logging: "./3rdparty/logging/src/logging",
         less: "./3rdparty/less-1.3.1",
+        pagedown_converter: "./3rdparty/pagedown/Markdown.Converter",
+        pagedown_sanitizer: "./3rdparty/pagedown/Markdown.Sanitizer",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
         tinymce: "./3rdparty/tiny_mce/tiny_mce_src"
@@ -53916,47 +55341,51 @@ requirejs.config({
         },
         jquery_validate_additional_methods: {
             deps: ["jquery_validate"]
+        },
+        pagedown_sanitizer: {
+            deps: ["pagedown_converter"]
         }
     }
 });
 
 define('main',[
-    'jquery',
-    './registry',
+    "jquery",
+    "./registry",
     // below here modules that are only loaded
     "jquery_validate_additional_methods",
-    'modernizr',
-    'less',
-    'prefixfree',
-    './patterns/autofocus',
-    './patterns/autoscale',
-    './patterns/autosubmit',
-    './patterns/autosuggest',
-    './patterns/breadcrumbs',
-    './patterns/bumper',
-    './patterns/carousel',
-    './patterns/checkedflag',
-    './patterns/checklist',
-    './patterns/chosen',
-    './patterns/collapsible',
-    './patterns/depends',
-    './patterns/edit-tinymce',
-    './patterns/expandable',
-    './patterns/focus',
-    './patterns/form-state',
-    './patterns/fullcalendar',
-    './patterns/inject',
-    './patterns/menu',
-    './patterns/modal',
-    './patterns/navigation',
-    './patterns/placeholder',
-    './patterns/setclass',
-    './patterns/sortable',
-    './patterns/switch',
-    './patterns/toggle',
-    './patterns/tooltip',
-    './patterns/validate',
-    './patterns/zoom'
+    "modernizr",
+    "less",
+    "prefixfree",
+    "./patterns/autofocus",
+    "./patterns/autoscale",
+    "./patterns/autosubmit",
+    "./patterns/autosuggest",
+    "./patterns/breadcrumbs",
+    "./patterns/bumper",
+    "./patterns/carousel",
+    "./patterns/checkedflag",
+    "./patterns/checklist",
+    "./patterns/chosen",
+    "./patterns/collapsible",
+    "./patterns/depends",
+    "./patterns/edit-tinymce",
+    "./patterns/expandable",
+    "./patterns/focus",
+    "./patterns/form-state",
+    "./patterns/fullcalendar",
+    "./patterns/inject",
+    "./patterns/markdown",
+    "./patterns/menu",
+    "./patterns/modal",
+    "./patterns/navigation",
+    "./patterns/placeholder",
+    "./patterns/setclass",
+    "./patterns/sortable",
+    "./patterns/switch",
+    "./patterns/toggle",
+    "./patterns/tooltip",
+    "./patterns/validate",
+    "./patterns/zoom"
 ], function($, registry) {
     // wait for the DOM to be ready and initialize
     $(document).ready(function(){
