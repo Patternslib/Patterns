@@ -40,7 +40,7 @@ define([
             });
         },
 
-        _onClick: function(e) {
+        _onClick: function() {
             switcher._go($(this));
         },
 
@@ -65,7 +65,7 @@ define([
                 if (option.selector && (option.remove || option.add))
                     correct.push(option);
                 else
-                    log.error('Switch pattern requires selector and one of add or remove.');
+                    log.error("Switch pattern requires selector and one of add or remove.");
             }
             return correct.length ? correct : null;
         },
@@ -77,7 +77,7 @@ define([
                 return;
 
             if (remove) {
-                if (remove.indexOf('*')===-1) 
+                if (remove.indexOf("*")===-1)
                     $targets.removeClass(remove);
                 else {
                     remove = remove.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");

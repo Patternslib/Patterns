@@ -7,7 +7,7 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'jquery',
+    "jquery",
     "../registry",
     "../core/parser",
     "./inject",
@@ -21,7 +21,7 @@ define([
     parser.add_argument("sticky", false);
     parser.add_argument("close", true);
     parser.add_argument("ajax", false);
-    parser.add_argument("title", function($el, name) {
+    parser.add_argument("title", function($el) {
         return $el.attr("title");
     });
 
@@ -75,9 +75,9 @@ define([
                     $(document).on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("click.tooltip", tooltip.blockDefault);
                     // close if something inside the tooltip triggered an injection
-                    $container.on('patterns-inject-triggered.tooltip',
+                    $container.on("patterns-inject-triggered.tooltip",
                                   $trigger, tooltip.hide);
-                    $container.on('submit.tooltip', $trigger, tooltip.hide);
+                    $container.on("submit.tooltip", $trigger, tooltip.hide);
                 } else {
                     $container.on("click.tooltip", $trigger, tooltip.hide);
                     $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
@@ -110,18 +110,13 @@ define([
             // trigger a hide as well.
             setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
 
-            function ajax_show() {
-                $container.find(">div >*").css("opacity", 1);
-                tooltip.positionContainer($trigger, $container);
-            }
-
             if (options.ajax) {
                 var source = $trigger.attr("href").split("#"),
                     target_id = $container.find("progress").attr("id");
                 inject.execute([{
                     url: source[0],
-                    source: '#' + source[1],
-                    target: '#' + target_id + "::element"
+                    source: "#" + source[1],
+                    target: "#" + target_id + "::element"
                 }]);
             }
 
@@ -155,8 +150,7 @@ define([
         },
 
         getContainer: function($trigger, create) {
-            var options = $trigger.data("patterns.tooltip"),
-                $container = $trigger.data("patterns.tooltip.container");
+            var $container = $trigger.data("patterns.tooltip.container");
 
             if (create) {
                 if ($container !== undefined) {
@@ -174,7 +168,7 @@ define([
                 count = ++tooltip.count,
                 $content, $container;
 
-            $trigger.data('patterns.tooltip.number', count);
+            $trigger.data("patterns.tooltip.number", count);
             $container = $("<div/>", {"class": "tooltip-container",
                                      "id": "tooltip" + count});
             $container.css("visibility", "hidden");
@@ -212,10 +206,7 @@ define([
                 window_height = $window.height(),
                 trigger_center,
                 scroll = {},
-                space = {},
-                container_offset = {},
-                tip_offset = {},
-                cls = "";
+                space = {};
 
             scroll.top = $window.scrollTop();
             scroll.left = $window.scrollLeft();
@@ -385,7 +376,6 @@ define([
                 tooltip_box = status.tooltip_box,
                 trigger_center = status.trigger_center,
                 content_css = {"max-height": "", "max-width": ""},
-                $window = $(window),
                 bottom_row, x;
 
             switch (position[0]) {

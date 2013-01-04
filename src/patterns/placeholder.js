@@ -1,7 +1,7 @@
 define([
     "../registry",
-    'modernizr',
-    'jquery_placeholder'
+    "modernizr",
+    "jquery_placeholder"
 ], function(patterns) {
     var pattern_spec = {
         name: "placeholder",

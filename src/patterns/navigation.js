@@ -1,9 +1,9 @@
 define([
-    'jquery',
-    '../core/logger',
-    '../registry'
+    "jquery",
+    "../core/logger",
+    "../registry"
 ], function($, logger, registry) {
-    var log = logger.getLogger('pat.navigation');
+    var log = logger.getLogger("pat.navigation");
 
     var _ = {
         name: "navigation",
@@ -12,49 +12,49 @@ define([
             return $el.each(function() {
                 var $el = $(this);
                 var curpath = window.location.pathname;
-                log.debug('current path:', curpath);
+                log.debug("current path:", curpath);
 
                 // check whether to load
-                if ($el.hasClass('navigation-load-current')) {
-                    $el.find('a.current, .current a').click();
+                if ($el.hasClass("navigation-load-current")) {
+                    $el.find("a.current, .current a").click();
                     // check for current elements injected here
-                    $el.on('patterns-injected-scanned', function(ev) {
+                    $el.on("patterns-injected-scanned", function(ev) {
                         var $target = $(ev.target);
-                        if ($target.is('a.current'))
+                        if ($target.is("a.current"))
                             $target.click();
-                        if ($target.is('.current'))
-                            $target.find('a').click();
+                        if ($target.is(".current"))
+                            $target.find("a").click();
                         _._updatenavpath($el);
                     });
                 }
 
                 // An element within this navigation triggered injection
-                $el.on('patterns-inject-triggered', function(ev) {
+                $el.on("patterns-inject-triggered", function(ev) {
                     var $target = $(ev.target);
 
                     // remove all set current classes
-                    $el.find('.current').removeClass('current');
+                    $el.find(".current").removeClass("current");
 
                     // set .current on target
-                    $target.addClass('current');
+                    $target.addClass("current");
 
                     // If target's parent is an LI, also set current there
-                    $target.parent('li').addClass('current');
+                    $target.parent("li").addClass("current");
 
                     _._updatenavpath($el);
                 });
 
                 // set current class if it is not set
-                if ($el.find('.current').length === 0) {
-                    $el.find('li a').each(function() {
+                if ($el.find(".current").length === 0) {
+                    $el.find("li a").each(function() {
                         var $a = $(this),
-                            $li = $a.parents('li:first'),
-                            url = $a.attr('href'),
+                            $li = $a.parents("li:first"),
+                            url = $a.attr("href"),
                             path = _._pathfromurl(url);
-                        log.debug('checking url:', url, 'extracted path:', path);
+                        log.debug("checking url:", url, "extracted path:", path);
                         if (_._match(curpath, path)) {
-                            log.debug('found match', $li);
-                            $li.addClass('current');
+                            log.debug("found match", $li);
+                            $li.addClass("current");
                         }
                     });
                 }
@@ -63,18 +63,18 @@ define([
             });
         },
         _updatenavpath: function($el) {
-            $el.find('.navigation-in-path').removeClass('navigation-in-path');
-            $el.find('li:has(.current)').addClass('navigation-in-path');
+            $el.find(".navigation-in-path").removeClass("navigation-in-path");
+            $el.find("li:has(.current)").addClass("navigation-in-path");
         },
         _match: function(curpath, path) {
             if (!path) {
-                log.debug('path empty');
+                log.debug("path empty");
                 return false;
             }
 
             // current path needs to end in the anchor's path
             if (path !== curpath.slice(- path.length)) {
-                log.debug(curpath, 'does not end in', path);
+                log.debug(curpath, "does not end in", path);
                 return false;
             }
 
@@ -82,13 +82,13 @@ define([
             return true;
         },
         _pathfromurl: function(url) {
-            var path = url.split('#')[0].split('://');
+            var path = url.split("#")[0].split("://");
             if (path.length > 2) {
-                log.error('weird url', url);
-                return '';
+                log.error("weird url", url);
+                return "";
             }
             if (path.length === 1) return path[0];
-            return path[1].split('/').slice(1).join('/');
+            return path[1].split("/").slice(1).join("/");
         }
     };
 

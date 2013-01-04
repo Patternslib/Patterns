@@ -7,13 +7,13 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'jquery',
+    "jquery",
     "../registry",
-    '../core/logger',
+    "../core/logger",
     "../core/parser",
     "../core/store"
 ], function($, patterns, logger, Parser, store) {
-    var log = logger.getLogger('pat.toggle'),
+    var log = logger.getLogger("pat.toggle"),
         parser = new Parser("toggle");
 
     parser.add_argument("selector");
@@ -30,7 +30,7 @@ define([
                 var $trigger = $(this),
                     options = toggle._validateOptions(this, parser.parse($trigger, true)),
                     state = {toggled: false, options: options},
-                    i, option;
+                    i, storage;
 
                 if (!options.length)
                     return;

@@ -1,5 +1,5 @@
 define([
-    'jquery',
+    "jquery",
     "../registry"
 ], function($, registry) {
     var autofocus = {

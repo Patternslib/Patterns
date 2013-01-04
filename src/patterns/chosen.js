@@ -1,10 +1,7 @@
 define([
-    '../core/logger',
-    '../registry',
-    'jquery_chosen'
-], function(logger, registry) {
-    var log = logger.getLogger('pat.chosen');
-
+    "../registry",
+    "jquery_chosen"
+], function(registry) {
     var _ = {
         name: "chosen",
         trigger: "select.pat-chosen",
@@ -12,7 +9,8 @@ define([
             $el.chosen();
             return $el;
         },
-        destroy: function($el) {
+
+        destroy: function() {
             // XXX
         }
     };

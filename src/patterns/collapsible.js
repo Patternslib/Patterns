@@ -29,14 +29,14 @@ define([
                 var $el = $(this),
                     options = _._validateOptions(this, parser.parse($el, opts)),
                 // create collapsible structure
-                    $trigger = $el.children(':first'),
-                    $content = $el.children(':gt(0)'),
+                    $trigger = $el.children(":first"),
+                    $content = $el.children(":gt(0)"),
                     $panel, state, storage;
                 if ($content.length > 0)
-                    $panel = $content.wrapAll('<div class="panel-content" />')
+                    $panel = $content.wrapAll("<div class='panel-content' />")
                         .parent();
                 else
-                    $panel = $('<div class="panel-content" />').insertAfter($trigger);
+                    $panel = $("<div class='panel-content' />").insertAfter($trigger);
 
                 $el.data("patternCollapsible", options);
                 state=(options.closed || $el.hasClass("closed")) ? "closed" : "open";
@@ -71,7 +71,7 @@ define([
 
         destroy: function($el) {
             $el.removeData("patternCollapsible");
-            $el.children(":first").off('.pat-collapsible');
+            $el.children(":first").off(".pat-collapsible");
         },
 
         open: function($el) {
@@ -103,20 +103,20 @@ define([
             var options = $el.data("patternCollapsible");
             if (!options.loadContent)
                 return;
-            var components = options.loadContent.split('#'),
+            var components = options.loadContent.split("#"),
                 url = components[0],
-                id = components[1] ? '#' + components[1] : null,
+                id = components[1] ? "#" + components[1] : null,
                 opts = [{
                     url: url,
                     source: id,
-                    $target: $('.panel-content', $el)
+                    $target: $(".panel-content", $el)
                 }];
             inject.execute(opts, $el);
         },
 
         toggle: function($el) {
             var options = $el.data("patternCollapsible"),
-                $panel = $el.find('.panel-content'),
+                $panel = $el.find(".panel-content"),
                 new_state = $el.hasClass("closed") ? "open" : "closed";
 
             if (options.store!=="none") {
@@ -125,10 +125,10 @@ define([
             }
 
             if (new_state==="open") {
-                $el.trigger('patterns-collapsible-open');
+                $el.trigger("patterns-collapsible-open");
                 _._transit($el, $panel, "closed", "open", options);
             } else {
-                $el.trigger('patterns-collapsible-close');
+                $el.trigger("patterns-collapsible-close");
                 _._transit($el, $panel, "open", "closed", options);
             }
 

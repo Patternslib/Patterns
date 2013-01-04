@@ -1,13 +1,10 @@
 define([
-    'jquery',
-    '../core/logger',
-    '../registry'
-], function($, logger, registry) {
-    var log = logger.getLogger('pat.breadcrumbs');
-
+    "jquery",
+    "../registry"
+], function($, registry) {
     var _ = {
         name: "breadcrumbs",
-        trigger: 'nav.pat-breadcrumbs',
+        trigger: "nav.pat-breadcrumbs",
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.map(function() {
@@ -17,7 +14,7 @@ define([
 
             // wrap elements in a DIV that will be shifted around
             var $content = $el.children()
-                    .wrapAll('<div class="pat-breadcrumbs-content"></div>').parent();
+                    .wrapAll("<div class='pat-breadcrumbs-content'></div>").parent();
 
             // set fixed width on content
             var width = $content.children().toArray().reduce(function(acc, el) {
@@ -26,7 +23,7 @@ define([
             $content.width(width);
 
             // shift ctrl
-            var $ctrl = $('<span class="button shift">shift</span>')
+            var $ctrl = $("<span class='button shift'>shift</span>")
                     .prependTo($el);
 
             var shifted = false,
@@ -38,7 +35,7 @@ define([
                     if (toggle) {
                         margin = shifted ? 0 : difference;
                         $content.animate({"margin-left": margin}, function() {
-                            $ctrl.toggleClass('shift-right shift-left');
+                            $ctrl.toggleClass("shift-right shift-left");
                             shifted = !shifted;
                         });
                     } else {
@@ -56,10 +53,10 @@ define([
                     // we should be shifting
                     if (!shifting) {
                         shifting = true;
-                        $el.addClass('shifting');
-                        $ctrl.removeClass('shift-right');
-                        $ctrl.addClass('shift-left');
-                        $ctrl.on('click.pat-breadcrumbs', shifter(true));
+                        $el.addClass("shifting");
+                        $ctrl.removeClass("shift-right");
+                        $ctrl.addClass("shift-left");
+                        $ctrl.on("click.pat-breadcrumbs", shifter(true));
                         $ctrl.click();
                     } else {
                         // a shifter that keeps state
@@ -71,20 +68,20 @@ define([
                         $content.animate({"margin-left": 0}, function() {
                             shifted = false;
                             shifting = false;
-                            $el.removeClass('shifting');
-                            $ctrl.removeClass('shift-left shift-right');
-                            $ctrl.off('.pat-breadcrumbs');
+                            $el.removeClass("shifting");
+                            $ctrl.removeClass("shift-left shift-right");
+                            $ctrl.off(".pat-breadcrumbs");
                         });
                     }
                 }
             };
             maybeshift();
-            $(window).on('resize.pat-breadcrumbs', maybeshift);
+            $(window).on("resize.pat-breadcrumbs", maybeshift);
 
             return $el;
         },
         destroy: function($el) {
-            $el.off('.pat-breadcrumbs');
+            $el.off(".pat-breadcrumbs");
         }
     };
     registry.register(_);

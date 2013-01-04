@@ -16,18 +16,18 @@ define([
             // remember initial state of the form and after
             // successfull submission
             _.saveState.call($form);
-            $form.on('pat-ajax-success', _.saveState);
+            $form.on("pat-ajax-success", _.saveState);
 
             // setup listeners for form to be handled via ajax
-            $form.on('submit.pat-ajax', _.submit);
+            $form.on("submit.pat-ajax", _.submit);
 
             // enable chaining
             return $form;
         },
         saveState: function() {
             var $form = $(this);
-            $form.data('pat-ajax.previous-state', $form.data('pat-ajax.state'));
-            $form.data('pat-ajax.state', $form.serializeArray());
+            $form.data("pat-ajax.previous-state", $form.data("pat-ajax.state"));
+            $form.data("pat-ajax.state", $form.serializeArray());
         },
         submit: function(event) {
             if (event)

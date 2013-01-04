@@ -35,7 +35,7 @@ define([
             $forms.on("reset.patternCheckedflag", checkedflag.onFormReset);
         },
 
-        onFormReset: function(event) {
+        onFormReset: function() {
             // This event is triggered before the form is reset, and we need
             // the post-reset state to update our pattern. Use a small delay
             // to fix this.
@@ -46,7 +46,7 @@ define([
             }, 50);
         },
 
-        onChangeCheckbox: function(event) {
+        onChangeCheckbox: function() {
             var $el = $(this),
                 $label = $el.closest("label"),
                 $fieldset = $el.closest("fieldset");
@@ -62,7 +62,7 @@ define([
             }
         },
 
-        onChangeRadio: function(event) {
+        onChangeRadio: function() {
             var $el = $(this),
                 $label = $el.closest("label"),
                 $fieldset = $el.closest("fieldset"),

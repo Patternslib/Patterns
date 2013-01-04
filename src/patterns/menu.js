@@ -1,5 +1,5 @@
 define([
-    'jquery',
+    "jquery",
     "../registry"
 ], function($, patterns) {
     var menu = {
@@ -45,7 +45,7 @@ define([
                     timer = setTimeout(function() { closeMenu($li); }, 1000);
                 };
 
-                $("ul.menu li", root)
+                $root.find("li")
                     .addClass("closed")
                     .filter(":has(ul)").addClass("hasChildren").end()
                     .on("mouseover.pat-menu", mouseOverHandler)
