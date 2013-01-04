@@ -112,6 +112,7 @@ module.exports = function(grunt) {
                     "require",
                     "define",
                     "module",
+                    "Markdown",
                     "Modernizr",
                     "tinyMCE"
                 ]
