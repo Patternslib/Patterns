@@ -16,8 +16,8 @@ describe("depends-pattern", function() {
     describe("init", function() {
         it("Hide if condition is not met initially", function() {
             $("#lab").html([
-                '<input type="checkbox" id="control" value="yes"/>',
-                '<div id="slave" class="pat-depends"/>'
+                "<input type=\"checkbox\" id=\"control\" value=\"yes\"/>",
+                "<div id=\"slave\" class=\"pat-depends\"/>"
                 ].join("\n"));
             var $slave = $("#slave");
             pattern.init($slave, {condition: "control"});
@@ -26,8 +26,8 @@ describe("depends-pattern", function() {
 
         it("Show if condition is not met initially", function() {
             $("#lab").html([
-                '<input type="checkbox" id="control" value="yes" checked="checked"/>',
-                '<div id="slave" class="pat-depends" style="display: none"/>'
+                "<input type=\"checkbox\" id=\"control\" value=\"yes\" checked=\"checked\"/>",
+                "<div id=\"slave\" class=\"pat-depends\" style=\"display: none\"/>"
                 ].join("\n"));
             var $slave = $("#slave");
             pattern.init($slave, {condition: "control"});
@@ -37,7 +37,7 @@ describe("depends-pattern", function() {
 
     describe("_disable", function() {
         it("Input element", function() {
-            $("#lab").append('<button type="button">Click me</button>');
+            $("#lab").append("<button type=\"button\">Click me</button>");
             var $slave = $("#lab button");
             pattern._disable($slave);
             expect($slave[0].disabled).toBeTruthy();
@@ -45,7 +45,7 @@ describe("depends-pattern", function() {
         });
 
         it("Anchor", function() {
-            $("#lab").append('<a href="#target">Click me</a>');
+            $("#lab").append("<a href=\"#target\">Click me</a>");
             var $slave = $("#lab a");
             pattern._disable($slave);
             var events = $._data($slave[0]).events;
@@ -57,7 +57,7 @@ describe("depends-pattern", function() {
 
     describe("_enable", function() {
         it("Input element", function() {
-            $("#lab").append('<button disabled="disabled" class="disabled" type="button">Click me</button>');
+            $("#lab").append("<button disabled=\"disabled\" class=\"disabled\" type=\"button\">Click me</button>");
             var $slave = $("#lab button");
             pattern._enable($slave);
             expect($slave[0].disabled).toBeFalsy();
@@ -65,7 +65,7 @@ describe("depends-pattern", function() {
         });
 
         it("Anchor", function() {
-            $("#lab").append('<a href="#target" class="disabled">Click me</a>');
+            $("#lab").append("<a href=\"#target\" class=\"disabled\">Click me</a>");
             var $slave = $("#lab a");
             $slave.on("click.patternDepends", false);
             pattern._enable($slave);

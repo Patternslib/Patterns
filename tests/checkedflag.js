@@ -16,9 +16,9 @@ describe("checkedflag-pattern", function() {
     describe("init", function() {
         it("Set initial state for radio button", function() {
             $("#lab").html([
-                '<fieldset>',
-                '  <label><input type="radio" name="foo"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset>",
+                "  <label><input type=\"radio\" name=\"foo\"/></label>",
+                "</fieldset>"].join("\n"));
             spyOn(pattern, "onChangeCheckbox");
             spyOn(pattern, "onChangeRadio");
             pattern.init($("#lab input"));
@@ -29,23 +29,23 @@ describe("checkedflag-pattern", function() {
 
         it("Set initial state for checkbox", function() {
             $("#lab").html([
-                '<fieldset>',
-                '  <label><input type="checkbox" name="foo"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset>",
+                "  <label><input type=\"checkbox\" name=\"foo\"/></label>",
+                "</fieldset>"].join("\n"));
             spyOn(pattern, "onChangeCheckbox");
             spyOn(pattern, "onChangeRadio");
             pattern.init($("#lab input"));
             expect(pattern.onChangeCheckbox).toHaveBeenCalled();
             expect(pattern.onChangeRadio).not.toHaveBeenCalled();
         });
-    }); 
+    });
 
     describe("onChangeCheckbox", function() {
         it("Change to checked state", function() {
             $("#lab").html([
-                '<fieldset class="unchecked">',
-                '  <label class="unchecked"><input type="checkbox" name="foo" checked="checked"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset class=\"unchecked\">",
+                "  <label class=\"unchecked\"><input type=\"checkbox\" name=\"foo\" checked=\"checked\"/></label>",
+                "</fieldset>"].join("\n"));
             var input = $("#lab input")[0];
             pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("checked")).toBe(true);
@@ -55,9 +55,9 @@ describe("checkedflag-pattern", function() {
 
         it("Change to unchecked state", function() {
             $("#lab").html([
-                '<fieldset class="checked">',
-                '  <label class="checked"><input type="checkbox" name="foo"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset class=\"checked\">",
+                "  <label class=\"checked\"><input type=\"checkbox\" name=\"foo\"/></label>",
+                "</fieldset>"].join("\n"));
             var input = $("#lab input")[0];
             pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("unchecked")).toBe(true);
@@ -67,10 +67,10 @@ describe("checkedflag-pattern", function() {
 
         it("Fieldset with both checked and unchecked items", function() {
             $("#lab").html([
-                '<fieldset>',
-                '  <label><input type="checkbox" name="foo"/></label>',
-                '  <label><input type="checkbox" name="bar" checked="checked"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset>",
+                "  <label><input type=\"checkbox\" name=\"foo\"/></label>",
+                "  <label><input type=\"checkbox\" name=\"bar\" checked=\"checked\"/></label>",
+                "</fieldset>"].join("\n"));
             var input = $("#lab input:checked")[0];
             pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab fieldset").attr("class")).toBe("checked");
@@ -81,9 +81,9 @@ describe("checkedflag-pattern", function() {
     describe("onChangeRadio", function() {
         it("Change to checked state", function() {
             $("#lab").html([
-                '<fieldset class="unchecked">',
-                '  <label class="unchecked"><input type="radio" name="foo" checked="checked"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset class=\"unchecked\">",
+                "  <label class=\"unchecked\"><input type=\"radio\" name=\"foo\" checked=\"checked\"/></label>",
+                "</fieldset>"].join("\n"));
             var input = $("#lab input")[0];
             pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("checked")).toBe(true);
@@ -93,9 +93,9 @@ describe("checkedflag-pattern", function() {
 
         it("Change to unchecked state", function() {
             $("#lab").html([
-                '<fieldset class="checked">',
-                '  <label class="checked"><input type="radio" name="foo"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset class=\"checked\">",
+                "  <label class=\"checked\"><input type=\"radio\" name=\"foo\"/></label>",
+                "</fieldset>"].join("\n"));
             var input = $("#lab input")[0];
             pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab label").hasClass("unchecked")).toBe(true);
@@ -105,10 +105,10 @@ describe("checkedflag-pattern", function() {
 
         it("Fieldset with both checked and unchecked items", function() {
             $("#lab").html([
-                '<fieldset>',
-                '  <label><input type="radio" name="foo"/></label>',
-                '  <label><input type="radio" name="bar" checked="checked"/></label>',
-                '</fieldset>'].join("\n"));
+                "<fieldset>",
+                "  <label><input type=\"radio\" name=\"foo\"/></label>",
+                "  <label><input type=\"radio\" name=\"bar\" checked=\"checked\"/></label>",
+                "</fieldset>"].join("\n"));
             var input = $("#lab input:checked")[0];
             pattern.onChangeCheckbox.apply(input, []);
             expect($("#lab fieldset").attr("class")).toBe("checked");
@@ -118,12 +118,12 @@ describe("checkedflag-pattern", function() {
 
     it("Handle form reset", function() {
         $("#lab").html([
-            '<form>',
-            '  <fieldset class="checked">',
-            '    <label class="checked"><input type="radio" id="foo" checked="checked"/></label>',
-            '    <label class="unchecked"><input type="radio" id="bar"/></label>',
-            '  </fieldset>',
-            '</form>'].join("\n"));
+            "<form>",
+            "  <fieldset class=\"checked\">",
+            "    <label class=\"checked\"><input type=\"radio\" id=\"foo\" checked=\"checked\"/></label>",
+            "    <label class=\"unchecked\"><input type=\"radio\" id=\"bar\"/></label>",
+            "  </fieldset>",
+            "</form>"].join("\n"));
         var $input = $("#lab input");
         pattern.init($input);
         $("#foo").prop("checked", false).change();

@@ -16,7 +16,7 @@ describe("Core / store", function() {
             try {
                 expect(storage.backend).toBe(window.localStorage);
             } catch(e) {
-                // IE8 throws an exceptoin if you try to do something as
+                // IE8 throws an exception if you try to do something as
                 // simple as window.localStorage===window.localStorage
             }
         });
@@ -24,10 +24,10 @@ describe("Core / store", function() {
         it("sessionStorage accessor", function() {
             var storage = store.session("mypattern");
             expect(storage.prefix).toBe("mypattern");
-            try { 
+            try {
                 expect(storage.backend).toBe(window.sessionStorage);
             } catch (e) {
-                // IE8 throws an exceptoin if you try to do something as
+                // IE8 throws an exception if you try to do something as
                 // simple as window.localStorage===window.localStorage
             }
         });
