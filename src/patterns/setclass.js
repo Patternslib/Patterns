@@ -7,10 +7,10 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    'jquery',
+    "jquery",
     "../registry",
-    '../core/store',
-    '../utils'
+    "../core/store",
+    "../utils"
 ], function($, patterns, store, utils) {
     var storage = store.session("setclass");
 
@@ -24,7 +24,7 @@ define([
                 var $this = $(this);
                 var obj = setclass.getObjFromParams(
                               $this,
-                              utils.extractParameters('!' + $this.attr('data-setclass')));
+                              utils.extractParameters("!" + $this.attr("data-setclass")));
 
                 if (obj === null)
                     return;
@@ -34,7 +34,7 @@ define([
                 } else if (storage.get(obj.id + "." + obj.attr))
                     return;
 
-                if (obj.attr === 'class') {
+                if (obj.attr === "class") {
                 //    $( "#" + obj.id ).addClass( obj.value );  // removed the removeClass which was used in toggle
                 } else {
                     $( "#" + obj.id ).attr( obj.attr, obj.value );
@@ -47,7 +47,7 @@ define([
             var all = storage.all();
             for (var key in all ) {
                 var obj = all[key];
-                if ( obj.attr === 'class' ) {
+                if ( obj.attr === "class" ) {
                     $( "#" + obj.id ).removeClass( obj.other ).addClass( obj.value );
                 } else {
                     $( "#" + obj.id ).attr( obj.attr, obj.value );
@@ -60,18 +60,18 @@ define([
             var obj = {};
 
             obj.id = params.id || $elem.attr("id");
-            obj.attr = params.attr || 'class';
+            obj.attr = params.attr || "class";
             obj.store = params.store || false;
 
             if (typeof obj.id !== "string" || obj.id.length === 0 ||
-                typeof obj.attr !== 'string' || obj.attr.length === 0 ||
-                typeof values  !== 'string' || values.length === 0 ) {
+                typeof obj.attr !== "string" || obj.attr.length === 0 ||
+                typeof values  !== "string" || values.length === 0 ) {
                 return null;
             }
 
-            values = values.split(':');
-            if ( values.length == 1) {
-                values.push('');
+            values = values.split(":");
+            if ( values.length === 1) {
+                values.push("");
             }
 
             obj.value = values[0];
@@ -81,10 +81,10 @@ define([
 
         onClick: function(event) {
             var $this = $(this);
-            if ($this.hasClass('cant-touch-this')) return;
-            var params = utils.extractParameters('!' + $this.attr('data-setclass'));
+            if ($this.hasClass("cant-touch-this")) return;
+            var params = utils.extractParameters("!" + $this.attr("data-setclass"));
 
-            setclass.execute($this, '', '', params, event);
+            setclass.execute($this, "", "", params, event);
 
             event.preventDefault();
         },
@@ -93,19 +93,18 @@ define([
 
         dataAttr: true,
 
-        execute: function( elem, url, sources, params, event ) {
-            var value, other;
+        execute: function( elem, url, sources, params) {
             var obj = setclass.getObjFromParams( elem, params );
             if (obj === null) return false;
 
             var $setclass = $("#" + obj.id);
             if ($setclass.length === 0) return false;
 
-            if (obj.attr === 'class') {
+            if (obj.attr === "class") {
                 if (obj.other.length > 0 ) {
-                    var cls = $setclass.attr('class').split(' ');
-                    regval = new RegExp(obj.value);
-                    for (i=0;i<cls.length;i++){
+                    var cls = $setclass.attr("class").split(" "),
+                        regval = new RegExp(obj.value);
+                    for (var i=0;i<cls.length;i++){
                         if (cls[i].match(regval)) {
                             $setclass.removeClass(cls[i]);
                         }

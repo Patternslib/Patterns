@@ -12,7 +12,7 @@ define(function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof fun != "function")
+            if (typeof fun !== "function")
                 throw new TypeError();
 
             var thisp = arguments[1];
@@ -37,7 +37,7 @@ define(function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof fun != "function")
+            if (typeof fun !== "function")
                 throw new TypeError();
 
             var res = [];
@@ -79,7 +79,7 @@ define(function() {
 
             // 4. If IsCallable(callback) is false, throw a TypeError exception.
             // See: http://es5.github.com/#x9.11
-            if ( {}.toString.call(callback) != "[object Function]" ) {
+            if ( {}.toString.call(callback) !== "[object Function]" ) {
                 throw new TypeError( callback + " is not a function" );
             }
 
@@ -133,9 +133,9 @@ define(function() {
             var n = 0;
             if (arguments.length > 0) {
                 n = Number(arguments[1]);
-                if (n != n) { // shortcut for verifying if it's NaN
+                if (n !== n) { // shortcut for verifying if it's NaN
                     n = 0;
-                } else if (n !== 0 && n != Infinity && n != -Infinity) {
+                } else if (n !== 0 && n !== Infinity && n !== -Infinity) {
                     n = (n > 0 || -1) * Math.floor(Math.abs(n));
                 }
             }
@@ -170,9 +170,9 @@ define(function() {
             if (arguments.length > 1)
             {
                 n = Number(arguments[1]);
-                if (n != n)
+                if (n !== n)
                     n = 0;
-                else if (n !== 0 && n != (1 / 0) && n != -(1 / 0))
+                else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0))
                     n = (n > 0 || -1) * Math.floor(Math.abs(n));
             }
 
@@ -209,7 +209,7 @@ define(function() {
 
             // 4. If IsCallable(callback) is false, throw a TypeError exception.
             // See: http://es5.github.com/#x9.11
-            if ({}.toString.call(callback) != "[object Function]") {
+            if ({}.toString.call(callback) !== "[object Function]") {
                 throw new TypeError(callback + " is not a function");
             }
 
@@ -303,7 +303,7 @@ define(function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof callbackfn != "function")
+            if (typeof callbackfn !== "function")
                 throw new TypeError();
 
             // no value to return if no initial value, empty array
@@ -357,7 +357,7 @@ define(function() {
 
             var t = Object(this);
             var len = t.length >>> 0;
-            if (typeof fun != "function")
+            if (typeof fun !== "function")
                 throw new TypeError();
 
             var thisp = arguments[1];
@@ -375,14 +375,14 @@ define(function() {
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/isArray (JS 1.8.5)
     if (!Array.isArray) {
         Array.isArray = function (arg) {
-            return Object.prototype.toString.call(arg) == '[object Array]';
+            return Object.prototype.toString.call(arg) === "[object Array]";
         };
     }
 
     // source: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim (JS 1.8.1)
     if (!String.prototype.trim) {
         String.prototype.trim = function () {
-            return this.replace(/^\s+|\s+$/g,'');
+            return this.replace(/^\s+|\s+$/g, "");
         };
     }
 
@@ -394,8 +394,8 @@ define(function() {
                 throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
             }
 
-            var aArgs = Array.prototype.slice.call(arguments, 1), 
-                fToBind = this, 
+            var aArgs = Array.prototype.slice.call(arguments, 1),
+                fToBind = this,
                 fNOP = function () {},
                 fBound = function () {
                     return fToBind.apply(this instanceof fNOP &&
@@ -413,21 +413,21 @@ define(function() {
     if (!Object.keys) {
         Object.keys = (function () {
             var _hasOwnProperty = Object.prototype.hasOwnProperty,
-            hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+            hasDontEnumBug = !({toString: null}).propertyIsEnumerable("toString"),
             dontEnums = [
-            'toString',
-            'toLocaleString',
-            'valueOf',
-            'hasOwnProperty',
-            'isPrototypeOf',
-            'propertyIsEnumerable',
-            'constructor'
+            "toString",
+            "toLocaleString",
+            "valueOf",
+            "hasOwnProperty",
+            "isPrototypeOf",
+            "propertyIsEnumerable",
+            "constructor"
             ],
             dontEnumsLength = dontEnums.length;
 
             return function (obj) {
-                if (typeof obj !== 'object' && typeof obj !== 'function' || obj === null)
-                    throw new TypeError('Object.keys called on non-object');
+                if (typeof obj !== "object" && typeof obj !== "function" || obj === null)
+                    throw new TypeError("Object.keys called on non-object");
 
                 var result = [];
                 for (var prop in obj)

@@ -55,7 +55,7 @@ define([
                 img, i;
             for (i=0; loaded && i<$images.length; i++) {
                 img=$images[i];
-                if (!img.complete || img.naturalWidth===0) 
+                if (!img.complete || img.naturalWidth===0)
                     loaded=false;
             }
             if (!loaded) {
@@ -71,7 +71,7 @@ define([
                 $panel_links = $();
 
             $carousel
-                .children().each(function(index, el) {
+                .children().each(function(index) {
                     if (!this.id)
                         return;
 

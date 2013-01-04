@@ -21,7 +21,7 @@ define([
 
         init: function($el, opts) {
             return $el.each(function() {
-                var $el = $(this);
+                var $el = $(this),
                     method = _.force_method;
                 if (method===null) {
                     var options = parser.parse($el, opts);
@@ -37,7 +37,7 @@ define([
                 method = _.force_method,
                 scale;
 
-            if ($el[0].tagName.toLowerCase()==='body')
+            if ($el[0].tagName.toLowerCase()==="body")
                 scale = $(window).width()/$el.outerWidth();
             else
                 scale = $el.parent().outerWidth()/$el.outerWidth();
@@ -46,10 +46,10 @@ define([
                 method=$el.data("patterns.auto-scale");
             switch (method) {
             case "scale":
-                $el.css('transform', 'scale(' + scale + ')');
+                $el.css("transform", "scale(" + scale + ")");
                 break;
             case "zoom":
-                $el.css('zoom', scale);
+                $el.css("zoom", scale);
                 break;
             }
             $el.addClass("scaled");

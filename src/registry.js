@@ -14,7 +14,7 @@ define([
     // below here modules that are only loaded
     "./compat"
 ], function($, logger, transforms, utils) {
-    var log = logger.getLogger('registry'),
+    var log = logger.getLogger("registry"),
         jquery_plugin = utils.jquery_plugin;
 
     var registry = {
@@ -33,12 +33,12 @@ define([
                     all.push(pattern.trigger);
                 }
             }
-            allsel = all.join(',');
+            allsel = all.join(",");
 
             // find all elements that belong to any pattern
             $match = $content.filter(allsel);
             $match = $match.add($content.find(allsel));
-            $match = $match.filter(':not(.cant-touch-this)');
+            $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.
             //
@@ -56,10 +56,10 @@ define([
                     plog = logger.getLogger("pat." + name);
 
                     if ($el.is(pattern.trigger)) {
-                        plog.debug('Initialising:', $el);
+                        plog.debug("Initialising:", $el);
                         try {
                             pattern.init($el);
-                            plog.debug('done.');
+                            plog.debug("done.");
                         } catch (e) {
                             plog.error("Caught error:", e);
                         }
@@ -93,14 +93,14 @@ define([
                 $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
             }
 
-            log.debug('Registered pattern:', pattern.name, pattern);
+            log.debug("Registered pattern:", pattern.name, pattern);
             return true;
         }
     };
 
-    $(document).on('patterns-injected.patterns', function(ev) {
+    $(document).on("patterns-injected.patterns", function(ev) {
         registry.scan(ev.target);
-        $(ev.target).trigger('patterns-injected-scanned');
+        $(ev.target).trigger("patterns-injected-scanned");
     });
 
 

@@ -1,11 +1,9 @@
 define([
     "jquery",
     "../core/parser",
-    "../core/logger",
     "../registry"
-], function($, Parser, logger, registry) {
-    var log = logger.getLogger("pat.checklist"),
-        parser = new Parser("checklist");
+], function($, Parser, registry) {
+    var parser = new Parser("checklist");
     parser.add_argument("select", ".functions .select-all");
     parser.add_argument("deselect", ".functions .deselect-all");
 
@@ -45,18 +43,18 @@ define([
                 deselect = $trigger.find(options.deselect),
                 select = $trigger.find(options.select);
 
-            if (($trigger.find('input[type=checkbox]:visible:checked').length===0) &&
-                (!deselect.prop('disabled'))) {
-                deselect.attr({disabled: 'disabled'});
-            } else if (deselect.prop('disabled')) {
-                deselect.prop('disabled', false);
+            if (($trigger.find("input[type=checkbox]:visible:checked").length===0) &&
+                (!deselect.prop("disabled"))) {
+                deselect.attr({disabled: "disabled"});
+            } else if (deselect.prop("disabled")) {
+                deselect.prop("disabled", false);
             }
 
-            if (($trigger.find('input[type=checkbox]:visible:not(:checked)').length===0) &&
-                (!select.prop('disabled'))) {
-                select.attr({disabled: 'disabled'});
-            } else if (select.prop('disabled')) {
-                select.prop('disabled', false);
+            if (($trigger.find("input[type=checkbox]:visible:not(:checked)").length===0) &&
+                (!select.prop("disabled"))) {
+                select.attr({disabled: "disabled"});
+            } else if (select.prop("disabled")) {
+                select.prop("disabled", false);
             }
         },
 

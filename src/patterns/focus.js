@@ -5,7 +5,7 @@
  * Copyright 2012 Simplon B.V.
  */
 define([
-    'jquery',
+    "jquery",
     "../registry"
 ], function($, patterns) {
     var focus = {
@@ -25,22 +25,22 @@ define([
             $relatives=$relatives.add($el.closest("fieldset"));
 
             if (el.id)
-                $label=$('label[for="'+el.id+'"]');
+                $label=$("label[for='"+el.id+"']");
             if (!$label.length) {
                 var $form = $el.closest("form");
                 if (!$form.length)
                     $form=$(document.body);
-                $label=$form.find('label[for="'+el.name+'"]');
+                $label=$form.find("label[for='"+el.name+"']");
             }
             $relatives=$relatives.add($label);
             return $relatives;
         },
 
-        onFocus: function(e) {
+        onFocus: function() {
             focus._findRelatives(this).addClass("focus");
         },
 
-        onBlur: function(e) {
+        onBlur: function() {
             var $relatives = focus._findRelatives(this);
 
             $(document).one("mouseup keyup", function() {

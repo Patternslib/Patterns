@@ -108,8 +108,12 @@ module.exports = function(grunt) {
                 unused: true,
                 white: false,
                 predef: [
+                    "requirejs",
+                    "require",
                     "define",
-                    "module"
+                    "module",
+                    "Modernizr",
+                    "tinyMCE"
                 ]
             }
         }

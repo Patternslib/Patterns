@@ -3,45 +3,41 @@
 // Changes to previous
 // - prefill and ashtmlid in data-auto-suggest-config
 define([
-    'jquery',
-    '../core/logger',
-    '../core/parser',
-    '../registry',
-    '../utils',
-    'jquery_autosuggest',
-    'jquery_form'
-], function($, logger, Parser, registry, utils) {
-    var log = logger.getLogger('pat.autosuggest');
-
+    "jquery",
+    "../core/parser",
+    "../registry",
+    "jquery_autosuggest",
+    "jquery_form"
+], function($, Parser, registry) {
     var parser = new Parser("autosuggest");
-    parser.add_argument('words', "");
-    parser.add_argument('pre-fill');
-    parser.add_argument('as-html-id');
-    parser.add_argument('selected-value-prop', "name");
-    parser.add_argument('search-obj-prop', "name");
-    parser.add_argument('start-text', "Enter text");
+    parser.add_argument("words", "");
+    parser.add_argument("pre-fill");
+    parser.add_argument("as-html-id");
+    parser.add_argument("selected-value-prop", "name");
+    parser.add_argument("search-obj-prop", "name");
+    parser.add_argument("start-text", "Enter text");
 
     var _ = {
-        name: 'autosuggest',
+        name: "autosuggest",
         trigger: "input.pat-autosuggest",
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
             var cfg = _.parser.parse($el, opts);
-            if ($el.attr('readonly'))
+            if ($el.attr("readonly"))
                 cfg.startText = "";
 
-            if (cfg.preFill && (cfg.preFill.slice(0,1) === ','))
+            if (cfg.preFill && (cfg.preFill.slice(0,1) === ","))
                 cfg.preFill = cfg.preFill.slice(1);
 
-            $el.on('keydown.pat-autosuggest', _.onKeyDown);
+            $el.on("keydown.pat-autosuggest", _.onKeyDown);
 
             var data = cfg.words.split(/\s*,\s*/).map(function(word) {
                 return {value: word, name: word};
             });
 
-            cfg.selectionAdded = function(elem) {
+            cfg.selectionAdded = function() {
                 $el.next().trigger("change");
             };
             cfg.selectionRemoved = function(elem) {
@@ -49,18 +45,18 @@ define([
                 $el.next().trigger("change");
             };
 
-            $el.on('change.pat-autosuggest', false);
+            $el.on("change.pat-autosuggest", false);
 
             // XXX: See https://github.com/Patternslib/Patterns/issues/149
-            if (cfg['asHtmlId'] !== undefined) {
-                cfg['asHtmlID'] = cfg['asHtmlId'];
+            if (cfg.asHtmlId !== undefined) {
+                cfg.asHtmlID = cfg.asHtmlId;
             }
             $el.autoSuggest(data, cfg);
 
             return $el;
         },
         destroy: function($el) {
-            $el.off('.pat-autosuggest');
+            $el.off(".pat-autosuggest");
 
             // XXX: destroy the jqueryPlugin, unfortunately it doesn't
             // support this as of now
@@ -71,11 +67,11 @@ define([
         onKeyDown: function(ev) {
             var $this = $(this);
             if (ev.which === 13) {
-                var $results = $this.parents('.as-selections').next();
+                var $results = $this.parents(".as-selections").next();
                 ev.preventDefault();
                 // skip ENTER->comma translation, if selection is active
-                if (($results.is(':visible')) &&
-                    ($results.find('.active').length > 0)) return;
+                if (($results.is(":visible")) &&
+                    ($results.find(".active").length > 0)) return;
                 var newev = $.Event("keydown");
                 newev.ctrlKey = false;
                 newev.which = 188;
