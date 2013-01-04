@@ -30,7 +30,7 @@ describe("checklist-pattern", function() {
                 expect($trigger.data("patternChecklist")).toEqual({select: ".one", deselect: ".two"});
             });
         });
-    }); 
+    });
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

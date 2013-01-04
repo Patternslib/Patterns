@@ -210,7 +210,7 @@ describe("Core / Parser", function() {
             it("Value from data attribute", function() {
                 var parser=new ArgumentParser("mypattern");
                 parser.add_argument("selector", "default");
-                var opts = parser.parse($('<div data-pat-mypattern="element"/>'));
+                var opts = parser.parse($("<div data-pat-mypattern=\"element\"/>"));
                 expect(opts.selector).toBe("element");
             });
 
@@ -234,7 +234,7 @@ describe("Core / Parser", function() {
                 var parser=new ArgumentParser("mypattern");
                 parser.add_argument("selector", "default");
                 var opts = parser.parse(
-                    $('<div data-pat-mypattern="element"/>'),
+                    $("<div data-pat-mypattern=\"element\"/>"),
                     {selector: "parameter"});
                 expect(opts.selector).toBe("parameter");
             });

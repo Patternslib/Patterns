@@ -83,8 +83,6 @@ describe("bumper-pattern", function() {
     });
 
     describe("scale", function() {
-        var original_method;
-
         it("Scale element", function() {
             $("<div/>", {id: "parent"}).css({width: "200px"})
               .append($("<div/>", {id: "child"}).css({width: "50px"}))

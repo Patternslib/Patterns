@@ -17,11 +17,11 @@ describe("collapsible-pattern", function() {
         it("Create panel-content", function() {
             var $lab = $("#lab");
             $lab.html([
-                '<div class="pat-collapsible">',
-                '<h3>Trigger header</h3>',
-                '<p>Collapsible content</p>',
-                '</div>'
-                ].join('\n'));
+                "<div class=\"pat-collapsible\">",
+                "<h3>Trigger header</h3>",
+                "<p>Collapsible content</p>",
+                "</div>"
+                ].join("\n"));
             var $collapsible = $("#lab .pat-collapsible");
             pattern.init($collapsible);
             expect($collapsible.find(".panel-content").length).toBe(1);
@@ -30,11 +30,11 @@ describe("collapsible-pattern", function() {
         it("Panels are open by default", function() {
             var $lab = $("#lab");
             $lab.html([
-                '<div class="pat-collapsible">',
-                '<h3>Trigger header</h3>',
-                '<p>Collapsible content</p>',
-                '</div>'
-                ].join('\n'));
+                "<div class=\"pat-collapsible\">",
+                "<h3>Trigger header</h3>",
+                "<p>Collapsible content</p>",
+                "</div>"
+                ].join("\n"));
             var $collapsible = $("#lab .pat-collapsible");
             pattern.init($collapsible);
             expect($collapsible.hasClass("open")).toBeTruthy();
@@ -43,11 +43,11 @@ describe("collapsible-pattern", function() {
         it("Explicitly closed panel is not open", function() {
             var $lab = $("#lab");
             $lab.html([
-                '<div class="pat-collapsible closed">',
-                '<h3>Trigger header</h3>',
-                '<p>Collapsible content</p>',
-                '</div>'
-                ].join('\n'));
+                "<div class=\"pat-collapsible closed\">",
+                "<h3>Trigger header</h3>",
+                "<p>Collapsible content</p>",
+                "</div>"
+                ].join("\n"));
             var $collapsible = $("#lab .pat-collapsible");
             pattern.init($collapsible);
             expect($collapsible.hasClass("open")).toBeFalsy();
@@ -58,11 +58,11 @@ describe("collapsible-pattern", function() {
         it("Toggle an open panel", function() {
             var $lab = $("#lab");
             $lab.html([
-                '<div class="pat-collapsible">',
-                '<h3>Trigger header</h3>',
-                '<p>Collapsible content</p>',
-                '</div>'
-                ].join('\n'));
+                "<div class=\"pat-collapsible\">",
+                "<h3>Trigger header</h3>",
+                "<p>Collapsible content</p>",
+                "</div>"
+                ].join("\n"));
             var $collapsible = $("#lab .pat-collapsible");
             pattern.init($collapsible, {duration: 0});
             pattern.toggle($collapsible);
@@ -73,11 +73,11 @@ describe("collapsible-pattern", function() {
         it("Toggle a closed panel", function() {
             var $lab = $("#lab");
             $lab.html([
-                '<div class="pat-collapsible closed">',
-                '<h3>Trigger header</h3>',
-                '<p>Collapsible content</p>',
-                '</div>'
-                ].join('\n'));
+                "<div class=\"pat-collapsible closed\">",
+                "<h3>Trigger header</h3>",
+                "<p>Collapsible content</p>",
+                "</div>"
+                ].join("\n"));
             var $collapsible = $("#lab .pat-collapsible");
             pattern.init($collapsible, {duration: 0});
             pattern.toggle($collapsible);

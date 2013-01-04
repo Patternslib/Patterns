@@ -22,24 +22,24 @@ describe("DependsHandler", function() {
         it("Reference to input name", function() {
             var $lab = $("#lab"),
                 handler = new DependsHandler($("#lab"), "foo");
-            $lab.append('<input type="text" name="foo"/>');
+            $lab.append("<input type=\"text\" name=\"foo\"/>");
             expect(handler._findInputs("foo").length).toBe(1);
         });
 
         it("Reference to input id", function() {
             var $lab = $("#lab"),
                 handler = new DependsHandler($("#lab"), "foo");
-            $lab.append('<input type="text" id="bar" name="foo"/>');
+            $lab.append("<input type=\"text\" id=\"bar\" name=\"foo\"/>");
             expect(handler._findInputs("bar").length).toBe(1);
         });
 
         it("Restrict searches to current form", function() {
             $("#lab").html([
-                '<input type="text" name="foo"/>',
-                '<form>',
-                '  <div id="context"/>',
-                '  <input type="radio" name="foo" value="1"/>',
-                '</form>'
+                "<input type=\"text\" name=\"foo\"/>",
+                "<form>",
+                "  <div id=\"context\"/>",
+                "  <input type=\"radio\" name=\"foo\" value=\"1\"/>",
+                "</form>"
                 ].join("\n"));
             var handler = new DependsHandler($("#context"), "foo"),
                 $inputs = handler._findInputs("foo");
@@ -50,31 +50,31 @@ describe("DependsHandler", function() {
 
     describe("_getValue", function() {
         it("Unchecked checkbox", function() {
-            $("#lab").append('<input type="checkbox" name="foo" value="bar"/>');
+            $("#lab").append("<input type=\"checkbox\" name=\"foo\" value=\"bar\"/>");
             var handler = new DependsHandler($("#lab"), "foo");
             expect(handler._getValue("foo")).toBeNull();
         });
 
         it("Checked checkbox", function() {
-            $("#lab").append('<input type="checkbox" name="foo" value="bar" checked="checked"/>');
+            $("#lab").append("<input type=\"checkbox\" name=\"foo\" value=\"bar\" checked=\"checked\"/>");
             var handler = new DependsHandler($("#lab"), "foo");
             expect(handler._getValue("foo")).toBe("bar");
         });
 
         it("Unchecked radio button", function() {
-            $("#lab").append('<input type="radio" name="foo" value="bar"/>');
+            $("#lab").append("<input type=\"radio\" name=\"foo\" value=\"bar\"/>");
             var handler = new DependsHandler($("#lab"), "foo");
             expect(handler._getValue("foo")).toBeNull();
         });
 
         it("Unchecked radio button", function() {
-            $("#lab").append('<input type="radio" name="foo" value="bar"/>');
+            $("#lab").append("<input type=\"radio\" name=\"foo\" value=\"bar\"/>");
             var handler = new DependsHandler($("#lab"), "foo");
             expect(handler._getValue("foo")).toBeNull();
         });
 
         it("Checked radio button", function() {
-            $("#lab").append('<input type="radio" name="foo" value="bar" checked="checked"/>');
+            $("#lab").append("<input type=\"radio\" name=\"foo\" value=\"bar\" checked=\"checked\"/>");
             var handler = new DependsHandler($("#lab"), "foo");
             expect(handler._getValue("foo")).toBe("bar");
         });
@@ -82,7 +82,7 @@ describe("DependsHandler", function() {
 
     describe("getAllInputs", function() {
         it("Simple expression", function() {
-            $("#lab").append('<input type="radio" name="foo" value="bar"/>');
+            $("#lab").append("<input type=\"radio\" name=\"foo\" value=\"bar\"/>");
             var handler = new DependsHandler($("#lab"), "foo"),
                 inputs = handler.getAllInputs();
             expect(inputs.length).toBe(1);
@@ -91,8 +91,8 @@ describe("DependsHandler", function() {
 
         it("Nested expression", function() {
             $("#lab").html([
-                '<input type="text" name="foo"/>',
-                '<input type="text" name="buz"/>'
+                "<input type=\"text\" name=\"foo\"/>",
+                "<input type=\"text\" name=\"buz\"/>"
                 ].join("\n"));
             var handler = new DependsHandler($("#lab"), "foo or (foo and buz)"),
                 inputs = handler.getAllInputs();
@@ -105,13 +105,13 @@ describe("DependsHandler", function() {
     describe("evaluate", function() {
         describe("truthy", function() {
             it("Text input with value", function() {
-                $("#lab").append('<input type="text" name="foo" value="xxx"/>');
+                $("#lab").append("<input type=\"text\" name=\"foo\" value=\"xxx\"/>");
                 var handler = new DependsHandler($("#lab"), "foo");
                 expect(handler.evaluate()).toBe(true);
             });
 
             it("Text input without value", function() {
-                $("#lab").append('<input type="text" name="foo"/>');
+                $("#lab").append("<input type=\"text\" name=\"foo\"/>");
                 var handler = new DependsHandler($("#lab"), "foo");
                 expect(handler.evaluate()).toBe(false);
             });
@@ -119,25 +119,25 @@ describe("DependsHandler", function() {
 
         describe("Comparison", function() {
             it("Positive number input below value", function() {
-                $("#lab").append('<input type="number" name="foo" value="10"/>');
+                $("#lab").append("<input type=\"number\" name=\"foo\" value=\"10\"/>");
                 var handler = new DependsHandler($("#lab"), "foo<15");
                 expect(handler.evaluate()).toBe(true);
             });
 
             it("Negative number input below value", function() {
-                $("#lab").append('<input type="number" name="foo" value="20"/>');
+                $("#lab").append("<input type=\"number\" name=\"foo\" value=\"20\"/>");
                 var handler = new DependsHandler($("#lab"), "foo<15");
                 expect(handler.evaluate()).toBe(false);
             });
 
             it("Positive equal to value", function() {
-                $("#lab").append('<input type="text" name="foo" value="bar"/>');
+                $("#lab").append("<input type=\"text\" name=\"foo\" value=\"bar\"/>");
                 var handler = new DependsHandler($("#lab"), "foo=bar");
                 expect(handler.evaluate()).toBe(true);
             });
 
             it("Negative equal to value", function() {
-                $("#lab").append('<input type="text" name="foo" value="buz"/>');
+                $("#lab").append("<input type=\"text\" name=\"foo\" value=\"buz\"/>");
                 var handler = new DependsHandler($("#lab"), "foo=bar");
                 expect(handler.evaluate()).toBe(false);
             });
@@ -145,13 +145,13 @@ describe("DependsHandler", function() {
 
         describe("Negate test", function() {
             it("Text input with value", function() {
-                $("#lab").append('<input type="text" name="foo" value="xxx"/>');
+                $("#lab").append("<input type=\"text\" name=\"foo\" value=\"xxx\"/>");
                 var handler = new DependsHandler($("#lab"), "not foo");
                 expect(handler.evaluate()).toBe(false);
             });
 
             it("Text input without value", function() {
-                $("#lab").append('<input type="text" name="foo" value=""/>');
+                $("#lab").append("<input type=\"text\" name=\"foo\" value=\"\"/>");
                 var handler = new DependsHandler($("#lab"), "not foo");
                 expect(handler.evaluate()).toBe(true);
             });
@@ -160,8 +160,8 @@ describe("DependsHandler", function() {
         describe("AND multiple expressions", function() {
             it("All options true", function() {
                 $("#lab").html([
-                    '<input type="text" name="one" value="1"/>',
-                    '<input type="text" name="two" value="2"/>'
+                    "<input type=\"text\" name=\"one\" value=\"1\"/>",
+                    "<input type=\"text\" name=\"two\" value=\"2\"/>"
                     ].join("\n"));
                 var handler = new DependsHandler($("#lab"), "one and two");
                 expect(handler.evaluate()).toBe(true);
@@ -169,8 +169,8 @@ describe("DependsHandler", function() {
 
             it("Not all options true", function() {
                 $("#lab").html([
-                    '<input type="text" name="one" value="1"/>',
-                    '<input type="text" name="two" value=""/>'
+                    "<input type=\"text\" name=\"one\" value=\"1\"/>",
+                    "<input type=\"text\" name=\"two\" value=\"\"/>"
                     ].join("\n"));
                 var handler = new DependsHandler($("#lab"), "one and two");
                 expect(handler.evaluate()).toBe(false);
@@ -180,8 +180,8 @@ describe("DependsHandler", function() {
         describe("OR multiple expressions", function() {
             it("No options true", function() {
                 $("#lab").html([
-                    '<input type="text" name="one" value=""/>',
-                    '<input type="text" name="two" value=""/>'
+                    "<input type=\"text\" name=\"one\" value=\"\"/>",
+                    "<input type=\"text\" name=\"two\" value=\"\"/>"
                     ].join("\n"));
                 var handler = new DependsHandler($("#lab"), "one or two");
                 expect(handler.evaluate()).toBe(false);
@@ -189,8 +189,8 @@ describe("DependsHandler", function() {
 
             it("One option true", function() {
                 $("#lab").html([
-                    '<input type="text" name="one" value="1"/>',
-                    '<input type="text" name="two" value=""/>'
+                    "<input type=\"text\" name=\"one\" value=\"1\"/>",
+                    "<input type=\"text\" name=\"two\" value=\"\"/>"
                     ].join("\n"));
                 var handler = new DependsHandler($("#lab"), "one or two");
                 expect(handler.evaluate()).toBe(true);
