@@ -1,6 +1,8 @@
 .DS_Store
 /build/docs
 /build/patterns.min.js
-/docs/_build
+/bundles/patterns-standalone.min.map
+/bundles/patterns.min.map
 /src/lib/jquery.mutations/build
 /node_modules
+/_SpecRunner.html
