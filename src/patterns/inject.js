@@ -330,8 +330,8 @@ define([
             var clean_html = html
                     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                    .replace(/<body(.*?)>/gi, "<div id=\"__original_body\">")
-                    .replace(/<\/body(.*?)>/gi, "</div>");
+                    .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
+                    .replace(/<\/body([^>]*?)>/gi, "</div>");
             var $html = $("<div/>").html(clean_html);
 
             if ($html.children().length === 0)
