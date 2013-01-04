@@ -11,16 +11,16 @@ define([
         name: "markdown",
         trigger: ".pat-markdown",
         url_re: /\.md$/,
-        
-        init: function($el, options) {
+
+        init: function($el) {
             return $el.each(function() {
                 var $this = $(this),
-                    source = $this.is(":input") ? this.value : $this.text();
+                    source = $this.is(":input") ? this.value : $this.text(),
                     $rendering = _.convert($("<div/>"), source);
                 $rendering.replaceAll($this);
             });
         },
-        
+
         convert: function($el, text) {
             var html = converter.makeHtml(text);
             return $el.each(function() {
@@ -28,7 +28,7 @@ define([
             });
         }
     };
-    
+
     // XXX: Hack
     $("a.pat-inject").on("patterns-inject-triggered.pat-markdown", function() {
         var $this = $(this), cfgs = $this.data("patterns.inject");
@@ -39,15 +39,15 @@ define([
             });
         }
     });
-    
+
     inject.registerTypeHandler("markdown", {
-        sources: function(cfgs, data, ev) {
+        sources: function(cfgs, data) {
             var $el = _.convert($("<div/>"), data);
-            
+
             return cfgs.map(function() { return $el; });
         }
     });
-    
+
     registry.register(_);
     return _;
 });

@@ -226,7 +226,7 @@ define([
                     return;
                 }
 
-                var sources$ = _.callTypeHandler(cfgs[0].data.type, 'sources', $el, [cfgs, data, ev]);
+                var sources$ = _.callTypeHandler(cfgs[0].data.type, "sources", $el, [cfgs, data, ev]);
 
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
@@ -410,7 +410,7 @@ define([
 
         callTypeHandler: function(type, fn, context, params) {
             if (!type) {
-                log.warn('No type specified');
+                log.warn("No type specified");
                 return null;
             }
 
