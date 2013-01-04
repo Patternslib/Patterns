@@ -61,6 +61,6 @@ installed globally for this to work or npm will not be able to find the
 If you want to run the tests in a browser you will need to generate a
 testrunner template first:
 
-   grunt jasmine:src:build
+    grunt jasmine:src:build
 
 This will create a `_SpecRunner.html` file which you can open in a browser.
