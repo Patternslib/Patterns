@@ -5,9 +5,12 @@ describe("toggle", function() {
         pattern = cls;
     });
 
-    // Reset the lab before each test
     beforeEach(function() {
-        $("#lab *").remove();
+        $("<div/>", {id: "lab"}).appendTo(document.body);
+    });
+
+    afterEach(function() {
+        $("#lab").remove();
     });
 
     describe("_update", function() {
