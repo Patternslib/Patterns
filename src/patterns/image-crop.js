@@ -7,7 +7,7 @@ define([
 ], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.image-crop"),
         parser = new Parser("image-crop");
-    
+
     parser.add_argument('preview-id', '');
     parser.add_argument('preview-height', 0);
     parser.add_argument('preview-width', 0);
@@ -17,27 +17,24 @@ define([
     parser.add_argument('min-size', '0 0');
     parser.add_argument('max-size', '0 0');
     parser.add_argument('input-prefix', '');
-    
+
     var _ = {
         name: "image-crop",
         trigger: "img.pat-image-crop",
         bounds: [0, 0],
         inputNames: ['x1', 'y1', 'x2', 'y2', 'w', 'h'],
-        init: function($el, options) 
-        {            
+
+        init: function($el, options) {
             // initialize the elements
             return $el.each(function() {
-                var $this = $(this);
-                var    opts = parser.parse($this, options);
-                    
-                  var  data = {};
-                
-                //
+                var $this = $(this),
+                    opts = parser.parse($this, options),
+                    data = {};
+
                 // Initialize the preview parameters
-                //
-                if (opts.preview.id.length == 0) {
+                if (opts.preview.id.length === 0)
                     data.preview = false;
-                } else {
+                else {
                     data.preview = {};
                     data.preview.element = $(opts.preview.id);
                     if (data.preview.element.length === 0) {
@@ -52,11 +49,9 @@ define([
                         data.preview.height = data.preview.element.parent().height();
                     }
                 }
-                
-                //
+
                 // Set the form ID
-                //
-                if (opts.formId.length == 0) {
+                if (opts.formId.length === 0) {
                     // no form ID supplied. Look for the closest parent form element
                     data.form = $this.closest('form');
                     if (data.form.length === 0) {
@@ -65,38 +60,32 @@ define([
                     }
                 } else {
                     data.form = $(opts.formId);
-                    if (data.form.length == 0) {
+                    if (data.form.length === 0) {
                         log.error('Invalid form ID supplied: ' + opts.formId);
                     }
                 }
-                
-                //
+
                 // Setup form inputs
-                //
                 data.prefix = opts.inputPrefix;
                 data.inputs = {};
-                for (var i = 0; i < _.inputNames.length; i++) {
+                for (var i = 0; i < _.inputNames.length; i++)
                     data.inputs[_.inputNames[i]] = _._setupInput(data.form, data.prefix, _.inputNames[i]);
-                }
-                
+
                 //
                 // Initial coordinates
                 //
                 var ic = _._parseOpt(opts.initialSel);
-                if (ic.length !== 4) {
+                if (ic.length !== 4)
                     log.warn('Invalid coordinates for initial selection');
-                } else {
-                    if (ic[2] - ic[0] > 0 && ic[3] - ic[1] > 0) {
-                        data.initialCoords = ic;    
-                    }
-                }
-                
+                else if (ic[2] - ic[0] > 0 && ic[3] - ic[1] > 0)
+                    data.initialCoords = ic;
+
                 data.aspectRatio = opts.aspectRatio;
                 data.minSize = _._parseOpt(opts.minSize);
                 data.maxSize = _._parseOpt(opts.maxSize);
-                                
+
                 $this.data('patterns.image-crop', data);
-                
+
                 $this.Jcrop({
                     onChange: data.preview ? _.updatePreview : $.noop(),
                     onSelect: _.onSelect,
@@ -109,52 +98,41 @@ define([
                     this.element = $this;
                     if (data.preview) {
                         var selection = this.tellSelect();
-
                         _.updatePreview(selection);
                     }
                 });
             });
         },
-        
-        _setupInput: function($form, prefix, name) 
-        {
+
+        _setupInput: function($form, prefix, name) {
             var input = $form.find('input[name=' + prefix + name + ']');
-            if (input.length === 0) {
+            if (input.length === 0)
                 input = $('<input type="hidden" name="' + prefix + name + '" />').appendTo($form);
-            }
             return input;
         },
-        
-        _parseOpt: function(val) 
-        {
+
+        _parseOpt: function(val) {
             var ret = val.replace(/\s{2,}/g, ' ').trim().split(' ');
-            for (var i = 0; i < ret.length; i++ ) {
-                
-                ret[i] = parseInt(ret[i]);
-            }
-            
+            for (var i = 0; i < ret.length; i++ )
+                ret[i] = parseInt(ret[i], 10);
             return ret;
         },
-        
-        onSelect: function(c)
-        {
+
+        onSelect: function(c) {
             var data = this.element.data('patterns.image-crop');
-            
-            if (data.preview) _.updatePreview.apply(this, [c, data]);
-            
+            if (data.preview)
+                _.updatePreview.apply(this, [c, data]);
             _.updateInputs.apply(this, [c, data]);
         },
-        
-        updatePreview: function(c, data) 
-        {
-            if (parseInt(c.w) > 0) {
-                if (!data) {
+
+        updatePreview: function(c, data) {
+            if (parseInt(c.w, 10) > 0) {
+                if (!data)
                     data = this.element.data('patterns.image-crop');
-                }
-                
+
                 var rx = data.preview.width/c.w, ry = data.preview.height/c.h,
                     bounds = this.getBounds();
-                
+
                 data.preview.element.css({
                     width: Math.round( rx * bounds[0] ) + 'px',
                     height: Math.round( ry * bounds[1] ) + 'px',
@@ -163,14 +141,12 @@ define([
                 });
             }
         },
-        
-        updateInputs: function(c, data)
-        {
-            if (c && c.w && parseInt(c.w) > 0) {
-                if (!data) {
+
+        updateInputs: function(c, data) {
+            if (c && c.w && parseInt(c.w, 10) > 0) {
+                if (!data)
                     data = this.element.data('patterns.image-crop');
-                }
-                
+
                 data.inputs.x1.attr('value', c.x);
                 data.inputs.y1.attr('value', c.y);
                 data.inputs.x2.attr('value', c.x2);
@@ -180,7 +156,7 @@ define([
             }
         }
     };
-    
+
     registry.register(_);
     return _;
 });
