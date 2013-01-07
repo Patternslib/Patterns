@@ -16,16 +16,15 @@ define([
             return $el.each(function() {
                 var $this = $(this),
                     source = $this.is(":input") ? this.value : $this.text(),
-                    $rendering = _.convert($("<div/>"), source);
+                    $rendering = _._render(source);
                 $rendering.replaceAll($this);
             });
         },
 
-        convert: function($el, text) {
-            var html = converter.makeHtml(text);
-            return $el.each(function() {
-                $(this).html(html);
-            });
+        _render: function(text) {
+            var $rendering = $("<div/>");
+            $rendering.html(converter.makeHtml(text));
+            return $rendering;
         }
     };
 
@@ -42,9 +41,8 @@ define([
 
     inject.registerTypeHandler("markdown", {
         sources: function(cfgs, data) {
-            var $el = _.convert($("<div/>"), data);
-
-            return cfgs.map(function() { return $el; });
+            var $rendering = _._render(data);
+            return cfgs.map(function() { return $rendering; });
         }
     });
 
