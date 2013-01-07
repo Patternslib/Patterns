@@ -35,18 +35,18 @@ define([
                 //
                 // Initialize the preview parameters
                 //
-                if (opts.previewId.length == 0) {
+                if (opts.preview.id.length == 0) {
                     data.preview = false;
                 } else {
                     data.preview = {};
-                    data.preview.element = $(opts.previewId);
+                    data.preview.element = $(opts.preview.id);
                     if (data.preview.element.length === 0) {
-                        log.error('Invalid preview element ID supplied: ' + opts.previewId);
+                        log.error('Invalid preview element ID supplied: ' + opts.preview.id);
                         return;
                     }
-                    if (opts.previewWidth > 0 && opts.previewHeight > 0) {
-                        data.preview.width = opts.previewWidth;
-                        data.preview.height = opts.previewHeight;
+                    if (opts.previewWidth > 0 && opts.preview.height > 0) {
+                        data.preview.width = opts.preview.width;
+                        data.preview.height = opts.preview.height;
                     } else {
                         data.preview.width = data.preview.element.parent().width();
                         data.preview.height = data.preview.element.parent().height();
