@@ -59,6 +59,14 @@ describe("inject-pattern", function() {
                 expect(cfgs[0].target).toBe("#yetanotherid");
             });
 
+            it("Use trigger as target", function() {
+                $a.attr("data-pat-inject", "target: self::after");
+                var cfgs = pattern.extractConfig($a);
+                expect(pattern.verifyConfig(cfgs, $a)).toBeTruthy();
+                expect(cfgs[0].target).toBe("self");
+                expect(cfgs[0].$target[0]).toBe($a[0]);
+            });
+
             it("create target if it doesn't exist", function() {
                 var cfgs = pattern.extractConfig($a);
 

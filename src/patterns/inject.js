@@ -123,7 +123,7 @@ define([
         },
         // verify and post-process config
         // XXX: this should return a command instead of messing around on the config
-        verifyConfig: function(cfgs) {
+        verifyConfig: function(cfgs, $el) {
             var url = cfgs[0].url;
 
             // verification for each cfg in the array needs to succeed
@@ -143,7 +143,7 @@ define([
                     return false;
 
                 // make sure target exist
-                cfg.$target = cfg.$target || $(cfg.target);
+                cfg.$target = cfg.$target || (cfg.target==="self" ? $el : $(cfg.target));
                 if (cfg.$target.length === 0) {
                     if (!cfg.target) {
                         log.error("Need target selector", cfg);
@@ -211,7 +211,7 @@ define([
 
             // XXX: this need to get functional, returning a command
             // for internal use, instead of passing on cfgs
-            if (!_.verifyConfig(cfgs))
+            if (!_.verifyConfig(cfgs, $el))
                 return;
 
             // possibility for spinners on targets
