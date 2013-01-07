@@ -21,6 +21,7 @@ The Image Crop pattern can create a live preview of the cropping selection. The
 following html and css fragments illustrate the use of this feature.
 
 .. code-block:: html
+
     <div class="preview">
         <img id="crop-preview" src="image-to-crop.jpg" />
     </div>
