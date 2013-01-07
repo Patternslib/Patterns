@@ -138,6 +138,15 @@ source selector and can be overriden for one or more injections:
      One injection overrides the default source element.
    </a>
 
+Sometimes it is useful to use the triggering element itself as a target. This
+can be done by using the special *self* target:
+
+.. code-block:: html
+
+   <a class="pat-inject" href="sources.html" data-pat-inject="target: #self">
+     Replace me with sources.html.
+   </a>
+
 
 Modifiers
 ~~~~~~~~~
