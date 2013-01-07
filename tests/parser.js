@@ -25,6 +25,13 @@ describe("Core / Parser", function() {
     });
 
     describe("add_argument", function() {
+        it("No group if prefix only used once", function() {
+            var parser = new ArgumentParser();
+            parser.add_argument("dummy-field", "default");
+            expect("dummy" in parser.groups).toBeFalsy();
+            expect(parser.parameters["dummy-field"].dest).toBe("dummyField");
+        });
+
         it("Create new group", function() {
             var parser = new ArgumentParser();
             parser.add_argument("dummy-field", "default");
@@ -35,8 +42,9 @@ describe("Core / Parser", function() {
 
         it("Add argument to sub-parser", function() {
             var parser = new ArgumentParser();
+            parser.add_argument("dummy-foo");
             parser.add_argument("dummy-field", "default", ["yes", "no"], false);
-            expect(parser.groups.dummy.order).toEqual(["field"]);
+            expect(parser.groups.dummy.order).toEqual(["foo", "field"]);
             var spec = parser.groups.dummy.parameters.field;
             expect(spec.value).toBe("default");
             expect(spec.choices).toEqual(["yes", "no"]);
@@ -542,6 +550,7 @@ describe("Core / Parser", function() {
             it("Create new group", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("group-foo");
+                parser.add_argument("group-bar");
                 var opts = {"group-foo": 15};
                 parser._cleanupOptions(opts);
                 expect(opts).toEqual({group: {foo: 15}});
@@ -559,6 +568,7 @@ describe("Core / Parser", function() {
             it("Extend existing group", function() {
                 var parser=new ArgumentParser();
                 parser.add_argument("group-foo");
+                parser.add_argument("group-buz");
                 var opts = {"group-foo": 15, group: {bar: 20}};
                 parser._cleanupOptions(opts);
                 expect(opts).toEqual({group: {foo: 15, bar:20}});

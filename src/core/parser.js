@@ -18,11 +18,18 @@ define([
         this.enum_values = {};
         this.enum_conflicts = [];
         this.groups = {};
+        this.possible_groups = {};
     }
 
     ArgumentParser.prototype = {
         group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
         named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
+
+        _camelCase: function(str) {
+            return str.replace(/\-([a-z])/g, function(_, p1){
+                return p1.toUpperCase();
+            });
+        },
 
         add_argument: function(name, default_value, choices, multiple) {
             var spec, m;
@@ -34,7 +41,8 @@ define([
             spec={name: name,
                   value: default_value,
                   multiple: multiple,
-                  dest: name};
+                  dest: name,
+                  group: null};
 
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
@@ -56,14 +64,26 @@ define([
             m=name.match(this.group_pattern);
             if (m) {
                 var group=m[1], field=m[2];
-                if (!(group in this.groups))
+                if (group in this.possible_groups) {
+                    var first_spec = this.possible_groups[group],
+                        first_name = first_spec.name.match(this.group_pattern)[2];
+                    first_spec.group=group;
+                    first_spec.dest=first_name;
                     this.groups[group]=new ArgumentParser();
-                this.groups[group].add_argument(field, default_value, choices, multiple);
-                spec.group=group;
-                spec.dest=field;
-            } else
-                spec.group=null;
-
+                    this.groups[group].add_argument(
+                            first_name,
+                            spec.value, spec.cohices, spec.multiple);
+                    delete this.possible_groups[group];
+                }
+                if (group in this.groups) {
+                    this.groups[group].add_argument(field, default_value, choices, multiple);
+                    spec.group=group;
+                    spec.dest=field;
+                } else {
+                    this.possible_groups[group]=spec;
+                    spec.dest=this._camelCase(spec.name);
+                }
+            }
             this.order.push(name);
             this.parameters[name]=spec;
         },
