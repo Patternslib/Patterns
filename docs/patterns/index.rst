@@ -34,6 +34,7 @@ changing classes in a click, to doing complex AJAX injection of content.
    collapsible
    depends
    inject
+   image-crop
    markdown
    menu
    modal
