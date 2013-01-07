@@ -226,7 +226,7 @@ define([
                     return;
                 }
 
-                var sources$ = _.callTypeHandler(cfgs[0].data.type, "sources", $el, [cfgs, data, ev]);
+                var sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
 
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];

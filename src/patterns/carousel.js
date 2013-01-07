@@ -34,7 +34,7 @@ define([
                     options = parser.parse($carousel, opts),
                     settings = {hashTags: false};
 
-                settings.autoPlay = options.auto.play;
+                settings.autoPlay = options.autoPlay;
                 settings.stopAtEnd = !options.loop;
                 settings.resizeContents = options.resize;
                 settings.expand = options.expand;

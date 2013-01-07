@@ -34,7 +34,7 @@ define([
 
         if (_.url_re.test(cfgs[0].url)) {
             cfgs.forEach(function(cfg) {
-                cfg.data.type = "markdown";
+                cfg.dataType = "markdown";
             });
         }
     });
