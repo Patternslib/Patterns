@@ -101,7 +101,8 @@ module.exports = function(grunt) {
                 browser: true,
                 devel: true,
                 jquery: false,
-                quotmark: "double",
+                // disputable
+                //quotmark: "double",
                 smarttabs: true,
                 trailing: true,
                 undef: true,
