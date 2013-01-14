@@ -127,7 +127,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-requirejs");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.registerTask("test", ["jasmine", "jshint"]);
-    grunt.registerTask("build", ["clean", "requirejs", "uglify"]);
-    grunt.registerTask("default", ["jasmine", "jshint", "clean", "requirejs", "uglify"]);
+    grunt.registerTask("build", [
+        //"clean",
+        "requirejs",
+        "uglify"
+    ]);
+    grunt.registerTask("default", ["test", "build"]);
 };
 
