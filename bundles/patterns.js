@@ -24401,11 +24401,11 @@ define('patterns/collapsible',[
         _transit: function($el, $panel, from_cls, to_cls, options) {
             if (to_cls === "open")
                 _.loadContent($el);
-            $el.removeClass(from_cls);
             if (options.duration)
                 $el.addClass("in-progress");
             $panel.slideToggle(options.duration, options.easing, function() {
                 $el
+                    .removeClass(from_cls)
                     .removeClass("in-progress")
                     .addClass(to_cls);
             });
@@ -25253,7 +25253,7 @@ define('lib/dependshandler',[
 
     DependsHandler.prototype = {
         _findInputs: function(name) {
-            var $input = this.$context.find(":input[name="+name+"]");
+            var $input = this.$context.find(":input[name='"+name+"']");
             if (!$input.length)
                 $input=$("#"+name);
             return $input;
