@@ -143,7 +143,7 @@ define([
                 $el.addClass("in-progress");
             $panel.slideToggle(options.duration, options.easing, function() {
                 $el
-                    $el.removeClass(from_cls);
+                    .removeClass(from_cls)
                     .removeClass("in-progress")
                     .addClass(to_cls);
             });
