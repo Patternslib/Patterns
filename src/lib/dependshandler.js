@@ -13,7 +13,7 @@ define([
 
     DependsHandler.prototype = {
         _findInputs: function(name) {
-            var $input = this.$context.find(":input[name="+name+"]");
+            var $input = this.$context.find(":input[name='"+name+"']");
             if (!$input.length)
                 $input=$("#"+name);
             return $input;
