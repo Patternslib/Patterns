@@ -2,8 +2,8 @@
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Demo page</title>
-    <link rel="stylesheet" href="../base.css" type="text/css">
+		<title>Auto submit</title>
+    	<link rel="stylesheet" href="../base.css" type="text/css">
 		<link rel="stylesheet" href="autosubmit.css" type="text/css">
 	</head>
 	<body>
@@ -32,10 +32,17 @@
 				<label>Free text field triggers when field loses focus <input type="text" name="defocus" class="pat-autosubmit" data-pat-autosubmit="defocus" /></label>
 			</fieldset>
 		</form>
-		<hr/>
+		
 		<div id="main-content">
-			<p>Main content will appear here…</p>
+			<p>Some content will appear here if you change anything in the form…</p>
 		</div>
+		
+		<hr/>
+		
+		<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
+		
+		<a href="../../index.html#global-navigation" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Global navigation</a>
+		
 		<script data-main="../../src/main" src="../../lib/require.js"></script>
 	</body>
 </html>
