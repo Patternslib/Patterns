@@ -95,6 +95,23 @@ define([
 
             log.debug("Registered pattern:", pattern.name, pattern);
             return true;
+        },
+        wrap: function(Pattern, defaults, multiple) {
+          return {
+            name: Pattern.prototype.name,
+            trigger: '.pat-' + Pattern.prototype.name,
+            init: function($all) {
+              return $all.each(function(i) {
+                var $el = $(this),
+                    data = $el.data('pattern-' + Pattern.prototype.name + '-' + i);
+                if (!data) {
+                  $el.data('pattern-' + Pattern.prototype.name + '-' + i,
+                      new Pattern($el, Pattern.prototype.parser.parse(
+                          $el, defaults || {}, multiple || false)));
+                }
+              });
+            }
+          };
         }
     };
 
