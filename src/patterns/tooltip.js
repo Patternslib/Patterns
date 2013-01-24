@@ -116,8 +116,9 @@ define([
                 inject.execute([{
                     url: source[0],
                     source: "#" + source[1],
-                    target: "#" + target_id + "::element"
-                }]);
+                    target: "#" + target_id + "::element",
+                    dataType: "html"
+                }], $trigger);
             }
 
             tooltip.positionContainer($trigger, $container);
