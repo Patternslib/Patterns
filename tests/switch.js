@@ -86,7 +86,7 @@ describe("switch-pattern", function() {
                 $("#lab").html("<button>Click me</button>");
                 $("#lab button").patternSwitch({selector: "#victim", add: "pink"});
                 var $trigger = $("#lab button");
-                expect($trigger.data("patternSwitch")).toEqual([{selector: "#victim", remove: null, add: "pink"}]);
+                expect($trigger.data("patternSwitch")).toEqual([{selector: "#victim", add: "pink"}]);
             });
 
             it("Invalid defaults via API", function() {
