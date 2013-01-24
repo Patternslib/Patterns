@@ -37,5 +37,12 @@
             "email": "flo@chaoflow.net"
         }
     ],
-    "files": ["dist/patterns.js"]
+    "files": ["dist/patterns.js"],
+    "jam": {
+        "main": "bundles/patterns-standalone.js",
+        "dependencies": {
+            "jquery": ">=1.8.0",
+            "logging": ">=1.0.0pre"
+        }
+    }
 }
