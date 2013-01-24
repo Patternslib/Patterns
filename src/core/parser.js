@@ -35,7 +35,7 @@ define([
             var spec, m;
 
             if (!multiple && default_value===undefined)
-                default_value=null;
+                default_value=undefined;
             if (multiple && !Array.isArray(default_value))
                 default_value=[default_value];
             spec={name: name,
