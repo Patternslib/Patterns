@@ -13,6 +13,61 @@ body {
 	margin-right: auto;
 }
 
+/* @group Global navigation */
+
+#global-navigation {
+	background-color: #925d79;
+	color: white;
+	text-align: center;
+	line-height: 40px;
+	height: 40px;
+	display: block;
+}
+
+#global-navigation.bumped-top {
+	position: fixed;
+	right: 0;
+	top: 0;
+	left: 0;
+}
+
+#global-navigation #home {
+	position: absolute;
+	left: 50%;
+	margin-left: -50px;
+	width: 100px;
+	z-index: 1;
+	text-align: center;
+	background-color: transparent;
+	top: -10px;
+}
+
+#global-navigation.bumped-top #home img {
+	width: 46px;
+	margin-top: -18px;
+}
+
+#global-navigation #home.bumped-top {
+	position: fixed;
+	top: 0;
+}
+
+#global-navigation a {
+	color: white;
+	text-decoration: none;
+	display: inline-block;
+	float: left;
+	width: 50%;
+}
+
+#global-navigation a:hover {
+	background-color: rgba(0,0,0,0.18);
+}
+
+
+
+/* @end */
+
 /* @group Component index */
 
 #component-index {
