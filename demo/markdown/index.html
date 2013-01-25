@@ -6,7 +6,12 @@
 		<link rel="stylesheet" href="../../Style/common.css" type="text/css">
 		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
-	<body>
+<body>
+	<section class="description">
+		<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+	</section>
+	<section class="demo">
+		<h2>Demo</h2>
 		<h1>Markdown formatted content</h1>
 		<h2>Inject Markdown formatted content as HTML</h2>
 		<ol>
@@ -41,6 +46,7 @@ And a list numbered list:
 3. three
 7. four
 		</pre>
+		</section>
 		<section class="documentation">
 			<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
 		</section>

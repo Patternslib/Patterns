@@ -6,19 +6,23 @@
     <link rel="stylesheet" href="../../Style/common.css" type="text/css">
     <link rel="stylesheet" href="autofocus.css" type="text/css">
 </head>
-  <body>
-    <fieldset class="concise">
-      <label>Title <input autofocus="autofocus" type="text" value="Prefilled title"/></label>
-      <label>Keywords <input autofocus="autofocus" type="text" placeholder="This field should get the focus"/></label>
-    </fieldset>
-	
-	<!--<a href="../index.html#component-index" class="pat-inject autoLoading-visible" data-pat-inject="#component-index::element" id="component-index">Pattern index</a>-->
+	<body>
+		<section class="description">
+			<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+		<h2>Demo</h2>
+			<fieldset class="concise">
+				<label>Title <input autofocus="autofocus" type="text" value="Prefilled title"/></label>
+				<label>Keywords <input autofocus="autofocus" type="text" placeholder="This field should get the focus"/></label>
+			</fieldset>
+		</section>
 		<section class="documentation">
 			<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
 		</section>
 		
 		<a href="../../index.html#site-header" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Global navigation</a>
 		
-    <script data-main="../../src/main" src="../../lib/require.js" charset="utf-8"></script>
-  </body>
+		<script data-main="../../src/main" src="../../lib/require.js" charset="utf-8"></script>
+	</body>
 </html>
