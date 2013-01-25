@@ -15,6 +15,12 @@ define([
     parser.add_argument("as-html-id");
     parser.add_argument("selected-value-prop", "name");
     parser.add_argument("search-obj-prop", "name");
+    parser.add_argument("placeholder", function($el) {
+        var placeholder = $el.attr("placeholder") || "Enter text";
+        // jquery_autosuggest does not like the placeholder attr (yet)
+        $el.attr("placeholder", "");
+        return placeholder;
+    });
 
     var _ = {
         name: "autosuggest",
@@ -28,10 +34,7 @@ define([
             if ($el.attr("readonly"))
                 cfg.startText = "";
             else
-                cfg.startText = $el.attr("placeholder") || "Enter text";
-
-            // jquery_autosuggest does not like the placeholder attr (yet)
-            $el.attr("placeholder", "");
+                cfg.startText = cfg.placeholder;
 
             if (cfg.preFill && (cfg.preFill.slice(0,1) === ","))
                 cfg.preFill = cfg.preFill.slice(1);
