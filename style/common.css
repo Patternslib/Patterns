@@ -1,3 +1,80 @@
+/* @group Colours */
+
+@primary-1: #3D617E;
+@primary-2: #2F383F;
+@primary-3: #192631;
+@primary-4: #9CC3E3;
+@primary-5: #C1D4E3;
+
+@complement-1: #C39658;
+@complement-2: #625647;
+@complement-3: #33291A;
+@complement-4: #E7CFAE;
+@complement-5: #F2E2CB;
+
+/* end */
+
+
+body {
+	margin:0; padding: 2em;
+	background:white;
+	color: #666;
+	font: 75%/1.33 Verdana, sans-serif;
+	text-align:left;
+	}
+h1 {
+	margin: 0.5em 0;
+	font-size: 200%;
+	}
+p {
+	margin: 0.5em 0;
+	}
+
+.color-table {
+	margin: 2em 2em 5em;
+	border-collapse:collapse;
+	border:none;
+	border-spacing:0;
+	font-size:100%;
+	}
+.color-table th {
+	padding: 0 1em 0 0;
+	text-align:right;
+	vertical-align: middle;
+	font-size:110%;
+	border: none;
+	}
+.color-table td.sample {
+	width:10em; height:8em;
+	padding: 10px;
+	text-align:center;
+	vertical-align:middle;
+	font-size:90%;
+	border: 1px solid white;
+	white-space:nowrap;
+	}
+.color-table.small td.sample {
+	width:4em; height:4em;
+	padding:0;
+	border:none;
+	}
+.color-table .white { margin-bottom:0.2em; color:white }
+.color-table .black { margin-top:0.2em; color:black }
+
+hr {
+	border:none;
+	border-bottom:1px solid silver;
+	}
+#footer {
+	padding:1em;
+	text-align:center;
+	font-size:80%;
+	}
+
+
+
+/* @end */
+
 body {
 	width: auto;
 	position: relative;
@@ -17,6 +94,51 @@ body {
 	font-family: "Perpetua bold italic";
 	src: url("fonts/Perpetua Bold Italic.ttf")
 }
+
+/* @group Data source */
+
+div[data-src] {
+	position: relative;
+}
+
+div[data-src]:hover:after {
+	background-color: @complement-1;	content: attr(data-src);
+	position: absolute;
+	padding-right: 10px;
+	font-size: 10px;
+	padding-left: 10px;
+	border: 1px solid #dfbf94;
+	color: #72624c;
+	top: 10px;
+	right: 10px;
+	border-radius: 20px;
+	line-height: 20px;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+	text-shadow: rgba(254,255,255,0.72) 0 1px 0;
+}
+
+
+
+/* @end */
+
+/* @group Appendix */
+
+#appendix {
+	text-align: center;
+	padding-bottom: 40px;
+	font-size: 12px;
+}
+
+#appendix a {
+	padding-left: 10px;
+	padding-right: 10px;
+	display: inline-block;
+	text-decoration: none;
+}
+
+
+
+/* @end */
 
 /* @group Blockquote */
 
@@ -109,7 +231,6 @@ section.demo {
 #logo {
 	width: 100px;
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	transition: all 0.2s;
 	width: 46px;
 	margin-top: -18px;
 }
@@ -151,6 +272,10 @@ section.demo {
 	top: -10px;
 }
 
+#global-navigation #home img {
+	transition: all 0.3s;
+}
+
 #global-navigation.bumped-top #home img {
 	width: 46px;
 	margin-top: -18px;
@@ -167,6 +292,7 @@ section.demo {
 	display: inline-block;
 	float: left;
 	width: 50%;
+	text-align: center;
 }
 
 #global-navigation a:hover {
@@ -220,16 +346,36 @@ section.demo {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	border-radius: 26px;
 }
 
-#component-index a:hover {
-	background-color: #e5e5e5;
-	transform: scale(1.1)
+#component-index .behavioural a {
+	background-color: #3d607e;
+	color: white;
+}
+
+#component-index .navigation a {
+	background-color: #c37757;
+	color: white;
+}
+
+#component-index .layout a {
+	background-color: #915e79;
+	color: white;
+}
+
+#component-index .forms a {
+	background-color: #9ba476;
+	color: white;
+}
+
+#component-index .fancy-stuff a {
+	background-color: #a59baf;
+	color: white;
 }
 
 #component-index a.current {
-	background-color: #7291ff;
-	color: white;
+	outline: solid 2px black;
 }
 
 #component-index a:before {
@@ -238,7 +384,7 @@ section.demo {
 	display: inline-block;
 	height: 32px;
 	vertical-align: middle;
-	margin: -5px 10px -5px 5px;
+	margin: -5px 10px -3px 6px;
 	border-radius: 50%;
 	background: white url(../style/component-icons.svg) no-repeat 0 32px;
 	border: 2px solid white;
