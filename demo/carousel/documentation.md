@@ -70,10 +70,9 @@ options in the `data-pat-carousel` attribute.
       <li><img title="Panel 3"/></li>
     </ul>
 
-.. note:
 
-    This plugin is not fully stable yet. The availably options and spelling may
-    change in the future.
+>    This plugin is not fully stable yet. The availably options and spelling may
+>    change in the future.
 
 <table>
 <col width="32%" />

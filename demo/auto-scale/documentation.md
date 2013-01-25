@@ -42,22 +42,7 @@ Option reference
 The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:
 
-<table>
-<col width="26%" />
-<col width="15%" />
-<col width="57%" />
-<thead>
-<tr class="header">
-<th align="left">Field</th>
-<th align="left">default</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>method</code></td>
-<td align="left"><code>scale</code></td>
-<td align="left">The scaling method to use. One of <code>scale</code> or <code>zoom</code>.</td>
-</tr>
-</tbody>
-</table>
+| Field    | default | Description                                         |
+| ---------|---------|-----------------------------------------------------|
+| `method` | `scale` | The scaling method to use. One of `scale` or `zoom` |
+
