@@ -319,6 +319,14 @@ define([
                 if ($source.length === 0)
                     log.warn("No source elements for selector:", source, $html);
 
+                $source.find("a[href^=\"#\"]").each(function() {
+                    // Skip in-document links pointing to an id that is
+                    // inside this fragment.
+                    if ($source.find(this.href))
+                        return;
+                    this.href = url+this.href;
+                });
+
                 return $source;
             });
         },
@@ -363,9 +371,9 @@ define([
                 if (rel_url.slice(0, 2)==="@@")
                     return;
 
-                // Do not rewrite in-document links if the target is inside the 
-                // content we are injecting.
-                if (rel_url[0] === "#" && $html.find(rel_url).length)
+                // Do not rewrite in-document links; we will do another pass over these
+                // later when we have extracted the right fragment from the whole page.
+                if (rel_url[0] === "#")
                     return;
 
                 new_rel_url = new URI(rel_url).absoluteTo(url).toString();
