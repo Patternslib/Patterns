@@ -18,6 +18,33 @@ body {
 	src: url("fonts/Perpetua Bold Italic.ttf")
 }
 
+/* @group Data source */
+
+div[data-src] {
+	position: relative;
+}
+
+div[data-src]:hover:after {
+	content: attr(data-src);
+	position: absolute;
+	background-color: #f2d0a1;
+	padding-right: 10px;
+	font-size: 10px;
+	padding-left: 10px;
+	border: 1px solid #dfbf94;
+	color: #72624c;
+	top: 10px;
+	right: 10px;
+	border-radius: 20px;
+	line-height: 20px;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+	text-shadow: rgba(254,255,255,0.72) 0 1px 0;
+}
+
+
+
+/* @end */
+
 /* @group Appendix */
 
 #appendix {
