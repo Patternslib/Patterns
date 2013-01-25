@@ -25,6 +25,7 @@ define([
                 pattern, $match, plog;
 
             transforms.transformContent($content);
+            $content.trigger('patterns-registry-before-scan');
 
             // selector for all patterns
             for (var name in registry.patterns) {
