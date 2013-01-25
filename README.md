@@ -34,7 +34,7 @@ Development
 To develop on Patterns or one of it's submodules, clone the repository
 and set it's push-url to your fork:
 
-    git set-url --push origin <url_to_your_fork>
+    git remote set-url --push origin <url_to_your_fork>
 
 Create a branch for the feature/bug you are working on:
 

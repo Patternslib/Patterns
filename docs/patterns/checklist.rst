@@ -5,7 +5,7 @@ The checklist pattern provides a convenient method to add options to select and
 deselect all checkboxes in a block. This requires two changes in your markup:
 
 1. add a ``pat-checklist`` class to the containing element
-2. add a select and deselect buttons
+2. add select and deselect buttons
 
 Here is a simple example.
 
@@ -25,7 +25,7 @@ Here is a simple example.
 
 The selectors used to find the select-all and deselect-all buttons are
 configurable. The default values are ``.functions .select-all`` and
-``.functions .dselect-all``. You can configure them using shorthand notation:
+``.functions .deselect-all``. You can configure them using shorthand notation:
 
 .. code-block:: html
 
@@ -39,13 +39,13 @@ or using the extended notation:
 
 The buttons will be disabled if they would not make any changes. That is: if
 all checkboxes are already checked the select-all button will be disabled. And
-if no checkboxes are checked the dselect-all button will be disabled.
+if no checkboxes are checked the deselect-all button will be disabled.
 
 
 Javascript API
 --------------
 
-The javascript API is entirely optional since patterns already autmoatically
+The javascript API is entirely optional since patterns already automatically
 enables the switching behaviour for all elements with a ``data-pat-checklist``
 attribute. 
 
@@ -58,7 +58,7 @@ attribute.
    can be provided as a javascript object with the following
    keys:
 
-   * ``dselect``: the CSS selector identifying the deselect-all button(s)
+   * ``deselect``: the CSS selector identifying the deselect-all button(s)
    * ``select``: the CSS selector identifying the select-all button(s)
 
    .. code-block:: javascript

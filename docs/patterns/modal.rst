@@ -10,8 +10,7 @@ class. An example:
    <a href="/status/server1#content" class="pat-modal">Show server status</a>
 
 This will load the page at ``/status/server1``, extract the element
-with id ``content`` and display its content in a panel. If the content
-consists of a single element 
+with id ``content`` and display its content in a panel.
 
 
 Forms in panels

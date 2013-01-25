@@ -26,7 +26,6 @@ Lets look at a simple form:
 If the focus changes to the keywords input Patterns will add the ``focus``
 class to the input element, its label and fieldset:
 
-
 .. code-block:: html
    :linenos:
    :emphasize-lines: 2,4
