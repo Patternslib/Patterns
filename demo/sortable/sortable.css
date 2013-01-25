@@ -8,6 +8,7 @@ ul {
 
 ul.scrolling {
         height: 100px;
+        width: 265px;
         overflow-y: scroll;
 }
 
