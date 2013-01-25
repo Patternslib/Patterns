@@ -1,7 +1,10 @@
 .current {
 	font-weight: bold;
 	display: inline-block;
-	color: red;
+	color: red !important;
 }
 
-
+.current > ul {
+    font-weight: normal;
+    color: black;
+}
