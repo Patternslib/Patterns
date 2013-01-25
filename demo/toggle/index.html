@@ -9,19 +9,25 @@
                 <script data-main="../../src/main" src="../../lib/require.js"></script>
 	</head>
 	<body>
-          <h2>Toggle a class</h2>
-          <span class="red" id="toToggle">This is getting toggled</span>
-          <small>also notice how the status persists across page reloads!</small><br/>
-          <button id="colour" class="pat-toggle" data-pat-toggle="selector: #toToggle; value: red blue; store: session">change colour</button>
-
-          <h2>Toggling of attributes</h2>
-          <fieldset>
-            <input type="checkbox" id="toCheck" />
-            <button class="pat-toggle" data-pat-toggle="#toCheck checked checked">toggle checkbox</button>
-          </fieldset>
-          <section class="documentation">
-          	<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
-          </section>
+		<section class="description">
+			<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+		<h2>Demo</h2>
+			<h2>Toggle a class</h2>
+			<span class="red" id="toToggle">This is getting toggled</span>
+			<small>also notice how the status persists across page reloads!</small><br/>
+			<button id="colour" class="pat-toggle" data-pat-toggle="selector: #toToggle; value: red blue; store: session">change colour</button>
+			
+			<h2>Toggling of attributes</h2>
+			<fieldset>
+			<input type="checkbox" id="toCheck" />
+			<button class="pat-toggle" data-pat-toggle="#toCheck checked checked">toggle checkbox</button>
+			</fieldset>
+		</section>
+		<section class="documentation">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
+		</section>
           
           <a href="../../index.html#site-header" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Global navigation</a>
           

@@ -22,82 +22,88 @@
 </head>
 <body>
 
-	<ul>
-		<li>
-			<a href="pattern-test-response.html#login-success" rel=".modal!class=loginModal">Modal test with injection source and extra class</a>
-		</li>
-		<li>
-			<button data-toggle="id=toToggle!attr=class!values=red:blue!store">toggle</button> <span id="toToggle">this is getting toggled</span>
-		</li>
-		
-		<li>
-			<a href="pattern-test-response.html#hola" rel=".modal!class=panel1">Modal Window, class panel1</a>
-		</li>
-		<li>
-			<a href="pattern-test-response.html#hola" rel=".modal!class=panel2">Modal Window, class panel2</a>
-		</li>
-		<li>
-			<a href="pattern-test-response.html#message" rel=".selfHealing">SelfHealing</a>
-		</li>
-	
-	</ul>
-	<hr/>
-	<p>Tooltip tests</p>
-	<ul>
-		<li>
-			<a href="#" title="This is the tooltip" class="tooltip">Simple Tooltip</a></li>
-		<li>
-			<a href="#myBigTooltip" >HTML Tooltip</a>
-		</li>
-	</ul>
-
-	<p>Testing tab .current behaviour</p>
-	<ul class="navigation">
-		<li><a href="pattern-test-response.html#inject-tab-1" rel="#content-tab:content">Tab 1</a></li>
-		<li><a href="pattern-test-response.html#inject-tab-2" rel="#content-tab:content">Tab 2</a></li>
-	</ul>
-	<div id="content-tab">
-		Content will appear here
-	</div>
-
-	<div id="autoLoading-test" style="overflow-y:auto; overflow-x: hidden; height: 200px; position:absolute; width:200px;">
-		AutoLoading example. Scroll down and the list should grow automatically.
-
-		<ul id="listToUpdate" style="display:block; margin:0;">
-			<li>0</li>
-			<li>1</li>
-			<li>2</li>
-			<li>3</li>
-			<li>4</li>
-			<li>5</li>
-			<li>6</li>
-			<li>7</li>
-			<li>8</li>
-			<li>9</li>
-		</ul>
-		<p id="buttonBarMore" style="width:150px;">
-			<a href="pattern-test-response.html#listToUpdate#buttonBarMore" rel="#listToUpdate:after #buttonBarMore" class="autoLoading-visible">More&hellip;</a>
-		</p>
-	</div>
-
-	<div class="bigTooltip somethingElse" id="myBigTooltip">		
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-	</div>
-
-
-	<div id="panel1">
+	<section class="description">
+		<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+	</section>
+	<section class="demo">
+		<h2>Demo</h2>
 		<ul>
-			<li><a href="pattern-test-response.html#cata-panel2" data-injection="#panel2:content">Cat A</a></li>
-			<li><a href="pattern-test-response.html#catb-panel2" data-injection="#panel2:content">Cat B</a></li>
-			<li>etc...</li>
+			<li>
+				<a href="pattern-test-response.html#login-success" rel=".modal!class=loginModal">Modal test with injection source and extra class</a>
+			</li>
+			<li>
+				<button data-toggle="id=toToggle!attr=class!values=red:blue!store">toggle</button> <span id="toToggle">this is getting toggled</span>
+			</li>
+			
+			<li>
+				<a href="pattern-test-response.html#hola" rel=".modal!class=panel1">Modal Window, class panel1</a>
+			</li>
+			<li>
+				<a href="pattern-test-response.html#hola" rel=".modal!class=panel2">Modal Window, class panel2</a>
+			</li>
+			<li>
+				<a href="pattern-test-response.html#message" rel=".selfHealing">SelfHealing</a>
+			</li>
+		
 		</ul>
-	</div>
+		<hr/>
+		<p>Tooltip tests</p>
+		<ul>
+			<li>
+				<a href="#" title="This is the tooltip" class="tooltip">Simple Tooltip</a></li>
+			<li>
+				<a href="#myBigTooltip" >HTML Tooltip</a>
+			</li>
+		</ul>
 	
-	<div id="panel2">
-	</div>
+		<p>Testing tab .current behaviour</p>
+		<ul class="navigation">
+			<li><a href="pattern-test-response.html#inject-tab-1" rel="#content-tab:content">Tab 1</a></li>
+			<li><a href="pattern-test-response.html#inject-tab-2" rel="#content-tab:content">Tab 2</a></li>
+		</ul>
+		<div id="content-tab">
+			Content will appear here
+		</div>
 	
-	<div id="panel3"></div>
-	<div id="panel4"></div>
+		<div id="autoLoading-test" style="overflow-y:auto; overflow-x: hidden; height: 200px; position:absolute; width:200px;">
+			AutoLoading example. Scroll down and the list should grow automatically.
+	
+			<ul id="listToUpdate" style="display:block; margin:0;">
+				<li>0</li>
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+				<li>6</li>
+				<li>7</li>
+				<li>8</li>
+				<li>9</li>
+			</ul>
+			<p id="buttonBarMore" style="width:150px;">
+				<a href="pattern-test-response.html#listToUpdate#buttonBarMore" rel="#listToUpdate:after #buttonBarMore" class="autoLoading-visible">More&hellip;</a>
+			</p>
+		</div>
+	
+		<div class="bigTooltip somethingElse" id="myBigTooltip">		
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+		</div>
+	
+	
+		<div id="panel1">
+			<ul>
+				<li><a href="pattern-test-response.html#cata-panel2" data-injection="#panel2:content">Cat A</a></li>
+				<li><a href="pattern-test-response.html#catb-panel2" data-injection="#panel2:content">Cat B</a></li>
+				<li>etc...</li>
+			</ul>
+		</div>
+		
+		<div id="panel2">
+		</div>
+		
+		<div id="panel3"></div>
+		<div id="panel4"></div>
+	</section>
 	<section class="documentation">
 		<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
 	</section>

@@ -9,20 +9,26 @@
     <script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-	<p>Testing tab .current behaviour</p>
-	<ul class="navigation">
-		<li><a href="pattern-test-response.html#inject-tab-1" rel="#content-tab:content">Tab 1</a></li>
-		<li><a href="pattern-test-response.html#inject-tab-2" rel="#content-tab:content">Tab 2</a></li>
-	</ul>
-	
-	<p class="navigation">
-		<a href="pattern-test-response.html#inject-tab-1" rel="#content-tab:content">Link A</a> <a href="pattern-test-response.html#inject-tab-2" rel="#content-tab:content">Link B</a>
-	</p>
-	
-	<div id="content-tab">
-		Content will appear here
-	</div>
-	
+	<section class="description">
+		<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+	</section>
+	<section class="demo">
+		<h2>Demo</h2>
+		<h2>Demo</h2>
+		<p>Testing tab .current behaviour</p>
+		<ul class="navigation">
+			<li><a href="pattern-test-response.html#inject-tab-1" rel="#content-tab:content">Tab 1</a></li>
+			<li><a href="pattern-test-response.html#inject-tab-2" rel="#content-tab:content">Tab 2</a></li>
+		</ul>
+		
+		<p class="navigation">
+			<a href="pattern-test-response.html#inject-tab-1" rel="#content-tab:content">Link A</a> <a href="pattern-test-response.html#inject-tab-2" rel="#content-tab:content">Link B</a>
+		</p>
+		
+		<div id="content-tab">
+			Content will appear here
+		</div>
+	</section>
 	<section class="documentation">
 		<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
 	</section>
