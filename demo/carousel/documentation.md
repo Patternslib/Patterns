@@ -74,63 +74,16 @@ options in the `data-pat-carousel` attribute.
 >    This plugin is not fully stable yet. The availably options and spelling may
 >    change in the future.
 
-<table>
-<col width="32%" />
-<col width="12%" />
-<col width="54%" />
-<thead>
-<tr class="header">
-<th align="left">Setting</th>
-<th align="left">Default</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>auto-play</code></td>
-<td align="left">true</td>
-<td align="left">Indicates if the carousel should start playing automatically. If <code>control-arrows</code> is enabled users will be able to control this manually.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>loop</code></td>
-<td align="left">true</td>
-<td align="left">Indicates if the carousel will loop.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>resize</code></td>
-<td align="left">false</td>
-<td align="left">If enabled the carousel will be resized to fill its parent.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>expand</code></td>
-<td align="left">false</td>
-<td align="left">If enable all panels will be resizes to fill the carousel. If not enabled the will dynamically adjust its size to match the currently shown panel.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>control-arrows</code></td>
-<td align="left">false</td>
-<td align="left">If enabled back and forward-arrows are are created. Note that users can always use swipes and keyboard to control the carousel as well.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>control-navigation</code></td>
-<td align="left">false</td>
-<td align="left">If enabled a list of links to navigate within the carousel is created.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>control-startstop</code></td>
-<td align="left">false</td>
-<td align="left">If enabled a button to start and stop carousel animation is added.</td>
-</tr>
-<tr class="even">
-<td align="left"><code>time-delay</code></td>
-<td align="left">3000</td>
-<td align="left">The time in milliseconds a single panel is shown when animation is active.</td>
-</tr>
-<tr class="odd">
-<td align="left"><code>time-animation</code></td>
-<td align="left">600</td>
-<td align="left">The duration of a transition animation in milliseconds.</td>
-</tr>
-</tbody>
-</table>
+
+| Setting | Default | Description |
+| --------|---------|-------------|
+| `auto-play` | true | Indicates if the carousel should start playing automatically. If `control-arrows` is enabled users will be able to control this manually.|
+| `loop` | true | Indicates if the carousel will loop. | 
+| `resize` | false | If enabled the carousel will be resized to fill its parent. | 
+| `expand` | false | If enable all panels will be resizes to fill the carousel. If not enabled the will dynamically adjust its size to match the currently shown panel. | 
+| `control-arrows` | false | If enabled back and forward-arrows are are created. Note that users can always use swipes and keyboard to control the carousel as well. | 
+| `control-navigation` | false | If enabled a list of links to navigate within the carousel is created. | 
+| `control-startstop` | false | If enabled a button to start and stop carousel animation is added. | 
+| `time-delay` | 3000 | The time in milliseconds a single panel is shown when animation is active. | 
+| `time-animation` | 600 | The duration of a transition animation in milliseconds. | 
 
