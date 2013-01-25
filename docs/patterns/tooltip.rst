@@ -1,7 +1,8 @@
 Tooltip
 =======
 
-Tooltips are intended to display contextual information and function about the trigger element. 
+Tooltips are intended to display additional information about the triggering
+element.
 
 Markup structure
 ----------------
@@ -42,16 +43,16 @@ The position of the tip within the tooltip can be specified with a
 is formatted as ``<preference>[-preference]*``. The possible preferences are:
 
 * ``tl``: tip placed at the leftmost corner of the top side of the tooltip
-* ``tm``: tip placed at the middle of the top side tooltip
+* ``tm``: tip placed at the middle of the top side of the tooltip
 * ``tr``: tip placed at the rightmost corner of the top side of the tooltip
 * ``rt``: tip placed at the top corner of the right side of the tooltip
-* ``rm``: tip placed at the middle of the right side tooltip
+* ``rm``: tip placed at the middle of the right side of the tooltip
 * ``rb``: tip placed at the bottom corner of the right side of the tooltip
 * ``bl``: tip placed at the leftmost corner of the bottom side of the tooltip
-* ``bm``: tip placed at the middle of the bottom side tooltip
+* ``bm``: tip placed at the middle of the bottom side of the tooltip
 * ``br``: tip placed at the rightmost corner of the bottom side of the tooltip
 * ``lt``: tip placed at the top corner of the left side of the tooltip
-* ``lm``: tip placed at the middle of the left side tooltip
+* ``lm``: tip placed at the middle of the left side of the tooltip
 * ``lb``: tip placed at the bottom corner of the left side of the tooltip
 
 An example:
@@ -65,10 +66,10 @@ An example:
 This specifies that the preferred position of the tip is at the top left
 side of the tooltip (placing the tooltip itself on the right side of the
 link). Notice that position is the first defined argument so you can use
-shorthand syntax directly.  If the tooltip does not fit at that position the
-left-middle position should be tried, than the right-top or if all previous
-options failed the middle of the right side. If the tooltip does not fit at any
-none of the preferred positions the tooltip will be positioned at the location
+shorthand syntax directly.  If the tooltip does not fit at that position, the
+left-middle position should be tried, then the right-top or if all previous
+options failed, the middle of the right side. If the tooltip does not fit at
+any of the preferred positions it will be positioned at the location
 that has the most space, even if this is not one of the preferred positions.
 
 It is possible to force a specific tooltip position by adding the
@@ -85,10 +86,10 @@ Sticky tooltips
 ---------------
 
 By default, the tooltip disappears when the cursor is moved off the element or
-the triggering element is clicked. If this is not desired behaviour, there is
-the option to have a 'sticky' tooltip.  This only disappears when a close
-button on the tooltip is clicked. When the sticky option is chosen, the close
-button will be inserted for you automatically.
+the triggering element is clicked. If this is not a desired behaviour, there
+is the option to have a 'sticky' tooltip.  Sticky tooltip only disappears
+when a close button on the tooltip is clicked. When the sticky option is
+chosen, the close button will be inserted for you automatically.
 
 .. code-block:: html
 
@@ -146,7 +147,7 @@ will be transformed into:
      <span class="pointer" style="top: 111px; left: -22px"></span>
    </div>
 
-for tooltips which fetch their content with an AJAX call the tooltip may be
+For tooltips which fetch their content with an AJAX call the tooltip may be
 temporarily shown with a progress indicator:
 
 .. code-block:: html

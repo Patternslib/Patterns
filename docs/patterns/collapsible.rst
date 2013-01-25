@@ -1,7 +1,7 @@
 Collapsibles
 ============
 
-A *collapsible* is an element where content is can be shown or visible by
+A *collapsible* is an element where content can be shown or hidden by
 clicking on a triggering element. One way to use this is to implement a very
 minimal accordeon.
 
@@ -13,7 +13,7 @@ minimal accordeon.
      <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
    </section>
 
-In the above example clicking on the *About us* header will hide or shown the
+In the above example clicking on the *About us* header will hide or show the
 remainder of the section content. Another possible use case is to create a
 simple contextual menu.
 
@@ -38,12 +38,12 @@ Markup structure
 
 The markup structure for a collapsible is very simple: the first child of
 an element with the ``pat-collapsible`` class will be used as the triggering
-element and will always be visible. All further child will be part of the
+element and will always be visible. All further children will be part of the
 content.
 
 The trigger element will get a ``open`` or ``closed`` class which indicates
 if the collapsible is currently open (content is visible) or closed (content
-is not visible).  Second the content of the collapsible is wrapped in a new 
+is not visible).  Secondly, content of the collapsible is wrapped in a new 
 ``div`` element with class ``panel-content``.
 
 Post-processing our first example will look like this after the collapsible

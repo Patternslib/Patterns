@@ -13,8 +13,8 @@ used to toggle a CSS class.
    </div>
 
 If a user clicks on the *Start working* link the ``active`` class is added to the div. If the
-link is clicked again the ``active`` class is removed again. You can also use shorthand notation
-for this pattern:
+link is clicked again the ``active`` class is removed. You can also use
+shorthand notation for this pattern:
 
 .. code-block:: html
 
@@ -47,7 +47,7 @@ by spaces to toggle multiple classes.
    </div>
 
 On the first click the ``inactive`` class will be removed and ``active`` will be added. On
-the next click ``active`` will be removed again and ``active`` restored.
+the next click ``active`` will be removed again and ``inactive`` restored.
 
 Remembering the state
 ---------------------
@@ -60,14 +60,14 @@ to store the state of an element using the ``store`` parameter.
 .. code-block:: html
 
    <button id="sidebar-toggle" class="pat-toggle"
-       data-pat-toggle="selector: #sidebar; value; visible; store: local">Show sidebar</button>
+       data-pat-toggle="selector: #sidebar; value: visible; store: local">Show sidebar</button>
 
-To use this you requirements must be met:
+To use this the following requirements have to be met:
 
-1. the element must have an ``id``
-2. The browser must support `Web Storage <http://www.w3.org/TR/webstorage/>`_
+1. The element must have an ``id``.
+2. The browser must support `Web Storage <http://www.w3.org/TR/webstorage/>`_.
 
-The possible values for the ``store`` parameter are:
+Possible values for the ``store`` parameter are:
 
 * ``none``: do not remember the toggle state (default).
 * ``local``: remember the state as part of the local storage.

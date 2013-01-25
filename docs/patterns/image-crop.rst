@@ -50,7 +50,8 @@ following html and css fragments illustrate the use of this feature.
 Form Elements
 -------------
 
-By default, this pattern uses the form ancestor to the trigger image element. However,
+By default, this pattern uses parent form of the pattern trigger element
+(the image that we want to crop) to save cropping information. However,
 a different form can be used by using the form-id option.
 
 Within the form, the following input fields will be populated:
@@ -103,7 +104,7 @@ The available options are:
 +--------------------+------------+-----------------------------------------------+
 | ``form-id``        |   ''       | The ID of the form containing the fields that |
 |                    |            | will be used to save cropping information.    |
-|                    |            | If not specified, the form that is ancestor   |
+|                    |            | If not specified, the form that is parent     |
 |                    |            | of the trigger element will be used.          |
 +--------------------+------------+-----------------------------------------------+
 | ``min-size``       |  0 0       | Minimum width and height of the cropped       |
