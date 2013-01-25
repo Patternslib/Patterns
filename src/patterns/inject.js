@@ -363,7 +363,7 @@ define([
                 if (rel_url.slice(0, 2)==="@@")
                     return;
 
-                // Do not rewrite in-document links if the target is inside the 
+                // Do not rewrite in-document links if the target is inside the
                 // content we are injecting.
                 if (rel_url[0] === "#" && $html.find(rel_url).length)
                     return;
