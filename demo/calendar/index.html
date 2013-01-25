@@ -3,11 +3,16 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
-    <link rel="stylesheet" href="../base.css" type="text/css">
+    <link rel="stylesheet" href="../../style/common.css" type="text/css">
 		<link rel="stylesheet" href="calendar.css" type="text/css">
 		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
+		<section class="description">
+			<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+		<h2>Demo</h2>
 		<ul class="events pat-fullcalendar">
 			<li class="event all-day">
 				<a href="#" class="url external">
@@ -35,5 +40,12 @@
 				</a>
 			</li>
 		</ul>
+		</section>
+		<section class="documentation">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
+		</section>
+		
+		<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+		
 	</body>
 </html>
