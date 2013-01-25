@@ -42,7 +42,10 @@ define([
     inject.registerTypeHandler("markdown", {
         sources: function(cfgs, data) {
             var $rendering = _._render(data);
-            return cfgs.map(function() { return $rendering; });
+            return cfgs.map(function(cfg) {
+                $rendering.attr("data-src", cfg.url);
+                return $rendering;
+            });
         }
     });
 

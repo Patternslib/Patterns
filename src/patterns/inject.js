@@ -164,8 +164,8 @@ define([
         },
 
         _extractModifiers: function(cfg) {
-            var source_re = /^(.+?)(::element)?$/,
-                target_re = /^(.+?)(::element)?(::after|::before)?$/,
+            var source_re = /^(.*?)(::element)?$/,
+                target_re = /^(.*?)(::element)?(::after|::before)?$/,
                 source_match = source_re.exec(cfg.source),
                 target_match = target_re.exec(cfg.target),
                 targetMod, targetPosition;
