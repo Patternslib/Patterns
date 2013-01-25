@@ -16,6 +16,7 @@ requirejs.config({
         logging: "./3rdparty/logging/src/logging",
         less: "./3rdparty/less-1.3.1",
         pagedown_converter: "./3rdparty/pagedown/Markdown.Converter",
+        pagedown_extra: "./3rdparty/pagedown-extra/Markdown.Extra",
         pagedown_sanitizer: "./3rdparty/pagedown/Markdown.Sanitizer",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
@@ -51,6 +52,9 @@ requirejs.config({
         },
         jquery_validate_additional_methods: {
             deps: ["jquery_validate"]
+        },
+        pagedown_extra: {
+            deps: ["pagedown_converter", 'pagedown_sanitizer']
         },
         pagedown_sanitizer: {
             deps: ["pagedown_converter"]

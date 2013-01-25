@@ -3,9 +3,14 @@ define([
     "../registry",
     "./inject",
     "pagedown_converter",
+    "pagedown_extra",
     "pagedown_sanitizer"
 ], function($, registry, inject) {
-    var converter = Markdown.getSanitizingConverter();
+    // XXX: currently not supported,
+    // see: https://github.com/jmcmanus/pagedown-extra/issues/1
+    //var converter = Markdown.getSanitizingConverter();
+    var converter = new Markdown.Converter();
+    converter.hooks.chain("preConversion", Markdown.Extra.all);
 
     var _ = {
         name: "markdown",

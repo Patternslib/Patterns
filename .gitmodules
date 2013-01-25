@@ -10,3 +10,6 @@
 [submodule "src/3rdparty/logging"]
 	path = src/3rdparty/logging
 	url = git://github.com/Patternslib/logging.git
+[submodule "src/3rdparty/pagedown-extra"]
+	path = src/3rdparty/pagedown-extra
+	url = git://github.com/jmcmanus/pagedown-extra.git
