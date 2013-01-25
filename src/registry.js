@@ -9,11 +9,10 @@
 define([
     "jquery",
     "./core/logger",
-    "./transforms",
     "./utils",
     // below here modules that are only loaded
     "./compat"
-], function($, logger, transforms, utils) {
+], function($, logger, utils) {
     var log = logger.getLogger("registry"),
         jquery_plugin = utils.jquery_plugin;
 
@@ -24,7 +23,6 @@ define([
                 all = [], allsel,
                 pattern, $match, plog;
 
-            transforms.transformContent($content);
             $content.trigger('patterns-registry-before-scan');
 
             // selector for all patterns
