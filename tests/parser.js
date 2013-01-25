@@ -186,7 +186,7 @@ describe("Core / Parser", function() {
             var parser=new ArgumentParser();
             parser.add_argument("selector");
             var defaults = parser._defaults($());
-            expect(defaults.selector).toBeNull();
+            expect(defaults.selector).toBe(undefined);
         });
 
         it("Default value provided", function() {
