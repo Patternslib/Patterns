@@ -358,10 +358,16 @@ define([
                     log.info("Skipping empty url for (el, attr)", this, attr);
                     return;
                 }
-                // leave hash and plone views untouched
-                if ((rel_url[0] === "#") || (rel_url[0] === "@")) {
+
+                // Do not rewrite Zope views but rebase them to the current context.
+                if (rel_url.slice(0, 2)==="@@")
                     return;
-                }
+
+                // Do not rewrite in-document links if the target is inside the 
+                // content we are injecting.
+                if (rel_url[0] === "#" && $html.find(rel_url).length)
+                    return;
+
                 new_rel_url = new URI(rel_url).absoluteTo(url).toString();
                 if (new_rel_url !== rel_url) {
                     log.debug("Adjusted url from:", rel_url, "to:", new_rel_url);
