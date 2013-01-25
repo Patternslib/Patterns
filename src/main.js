@@ -1,4 +1,4 @@
-requirejs.config({
+requirejs.config({ 
     paths: {
         URIjs: "./3rdparty/URIjs/src",
         jquery: "./3rdparty/jquery-1.8.2",
