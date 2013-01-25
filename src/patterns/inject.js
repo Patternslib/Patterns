@@ -316,15 +316,16 @@ define([
 
                 var $source = $html.find(source);
 
-                if ($source.length === 0)
+                if ($source.length===0)
                     log.warn("No source elements for selector:", source, $html);
 
                 $source.find("a[href^=\"#\"]").each(function() {
+                    var href = this.getAttribute("href");
                     // Skip in-document links pointing to an id that is
                     // inside this fragment.
-                    if ($source.find(this.href))
+                    if ($source.find(href).length)
                         return;
-                    this.href = url+this.href;
+                    this.href=url+href;
                 });
 
                 return $source;
