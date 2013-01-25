@@ -34,8 +34,6 @@ define([
         add_argument: function(name, default_value, choices, multiple) {
             var spec, m;
 
-            if (!multiple && default_value===undefined)
-                default_value=null;
             if (multiple && !Array.isArray(default_value))
                 default_value=[default_value];
             spec={name: name,
