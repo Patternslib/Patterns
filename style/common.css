@@ -18,6 +18,22 @@ body {
 	src: url("fonts/Perpetua Bold Italic.ttf")
 }
 
+/* @group Blockquote */
+
+blockquote {
+	color: #3c3c3c;
+	text-shadow: white 0 1px 0;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-style: italic;
+	border-left: 4px solid silver;
+	margin-left: 0;
+	padding-left: 12px;
+}
+
+
+
+/* @end */
+
 /* @group Inline code */
 
 p code {
@@ -177,6 +193,12 @@ section.demo {
 	background-color: white;
 }
 
+#component-index h4 {
+	clear: both;
+	font-size: 16px;
+	margin-top: 0;
+}
+
 #demo #component-index {
 	margin-top: 0;
 }
@@ -192,7 +214,7 @@ section.demo {
 	margin-right: 2%;
 	margin-left: 2%;
 	line-height: 48px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	border: 1px solid #e2e2e2;
 	width: 20.9%;
 	overflow: hidden;
