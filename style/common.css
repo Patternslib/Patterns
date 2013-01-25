@@ -146,7 +146,7 @@ section.demo {
 }
 
 #global-navigation a {
-	color: white;
+	color: rgba(254,255,255,0.73);
 	text-decoration: none;
 	display: inline-block;
 	float: left;

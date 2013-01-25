@@ -1,8 +1,8 @@
 @import url("common.css");
 
-@import url("../demo/autosubmit/autosubmit.css");
+@import url("../demo/auto-submit/autosubmit.css");
 
-@import url("../demo/autosuggest/autosuggest.css");
+@import url("../demo/auto-suggest/autosuggest.css");
 
 @import url("../demo/autofocus/autofocus.css");
 
@@ -10,7 +10,7 @@
 
 @import url("../demo/carousel/carousel.css");
 
-@import url("../demo/checkedflag/checkedflag.css");
+@import url("../demo/checked-flag/checkedflag.css");
 
 @import url("../demo/collapsible/collapsible.css");
 
