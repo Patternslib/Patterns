@@ -3,46 +3,50 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Auto submit</title>
-    	<link rel="stylesheet" href="../base.css" type="text/css">
+    	<link rel="stylesheet" href="../../Style/common.css" type="text/css">
 		<link rel="stylesheet" href="autosubmit.css" type="text/css">
 	</head>
-	<body>
-		<form action="pattern-test-response.html#paragraphs" data-pat-inject="target: #main-content" class="concise pat-inject">
-			<fieldset class="pat-autosubmit">
-				<label>
-					Take your pick
-					<select>
-						<option>
-							Item A
-						</option>
-						<option>
-							Item B
-						</option>
-					</select>
-				</label>
-				<label><input type="checkbox" name="myCheckbox" /> My checkbox</label>
-				<label><input type="file" name="myFile" /> Upload a file</label>
-				<fieldset class="comprehensive radio-list">
-					<legend>Choose your flavour</legend>
-					<label><input type="radio" name="radio" /> Strawberry</label>
-					<label><input type="radio" name="radio" /> Banana</label>
-					<label><input type="radio" name="radio" /> Raspberry</label>
+	<body class="home">
+		<section class="description">
+			<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+			<h1>Example</h1>
+			<form action="pattern-test-response.html#paragraphs" data-pat-inject="target: #main-content" class="concise pat-inject">
+				<fieldset class="pat-autosubmit">
+					<label>
+						Take your pick
+						<select>
+							<option>
+								Item A
+							</option>
+							<option>
+								Item B
+							</option>
+						</select>
+					</label>
+					<label><input type="checkbox" name="myCheckbox" /> My checkbox</label>
+					<label><input type="file" name="myFile" /> Upload a file</label>
+					<fieldset class="comprehensive radio-list">
+						<legend>Choose your flavour</legend>
+						<label><input type="radio" name="radio" /> Strawberry</label>
+						<label><input type="radio" name="radio" /> Banana</label>
+						<label><input type="radio" name="radio" /> Raspberry</label>
+					</fieldset>
+					<label>Free text field triggers with delay <input type="text" name="keyup" class="pat-autosubmit"/></label>
+					<label>Free text field triggers when field loses focus <input type="text" name="defocus" class="pat-autosubmit" data-pat-autosubmit="defocus" /></label>
 				</fieldset>
-				<label>Free text field triggers with delay <input type="text" name="keyup" class="pat-autosubmit"/></label>
-				<label>Free text field triggers when field loses focus <input type="text" name="defocus" class="pat-autosubmit" data-pat-autosubmit="defocus" /></label>
-			</fieldset>
-		</form>
+			</form>
+			<div id="main-content">
+				<p>Some content will appear here if you change anything in the form…</p>
+			</div>
+		</section>
+		<section class="documentation">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
+		</section>
 		
-		<div id="main-content">
-			<p>Some content will appear here if you change anything in the form…</p>
-		</div>
-		
-		<hr/>
-		
-		<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
-		
-		<a href="../../index.html#global-navigation" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Global navigation</a>
-		
+		<a href="../../index.html#site-header" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Global navigation</a>
+
 		<script data-main="../../src/main" src="../../lib/require.js"></script>
 	</body>
 </html>

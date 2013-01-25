@@ -1,7 +1,7 @@
 body {
 	width: auto;
 	position: relative;
-	padding-top: 60px;
+	padding-top: 70px;
 	/*background-image: url(texture-light-grain.png);*/
 	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
@@ -13,6 +13,25 @@ body {
 	margin-right: auto;
 }
 
+@font-face {
+	font-family: "Perpetua bold italic";
+	src: url("fonts/Perpetua Bold Italic.ttf")
+}
+
+/* @group Logo */
+
+#logo {
+	width: 100px;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	transition: all 0.2s;
+	width: 46px;
+	margin-top: -18px;
+}
+
+
+
+/* @end */
+
 /* @group Global navigation */
 
 #global-navigation {
@@ -22,6 +41,10 @@ body {
 	line-height: 40px;
 	height: 40px;
 	display: block;
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
 }
 
 #global-navigation.bumped-top {
@@ -352,6 +375,10 @@ body {
 
 ul,ol,p,table,dl {
 	margin-bottom: 24px;
+}
+
+h1 {
+	font-family: "Perpetua bold italic";
 }
 
 
