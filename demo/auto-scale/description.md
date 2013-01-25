@@ -1,2 +1,2 @@
-# Auto scale
+# Description
 …
