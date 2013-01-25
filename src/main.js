@@ -61,6 +61,7 @@ requirejs.config({
 define([
     "jquery",
     "./registry",
+    "./transforms",
     // below here modules that are only loaded
     "modernizr",
     "less",
@@ -97,7 +98,10 @@ define([
     "./patterns/tooltip",
     "./patterns/validate",
     "./patterns/zoom"
-], function($, registry) {
+], function($, registry, transforms) {
+    $(document).on("patterns-registry-before-scan.patterns", function(e) {
+      transforms.transformContent($(e.target));
+    });
     // wait for the DOM to be ready and initialize
     $(document).ready(function(){
         registry.scan(document.body);
