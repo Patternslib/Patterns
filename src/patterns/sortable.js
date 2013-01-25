@@ -28,7 +28,7 @@ define([
                 scrolldn = $("<div id=\"pat-scroll-dn\">&nbsp;</div>"),
                 scroll = $().add(scrollup).add(scrolldn);
 
-            scrollup.css({ top:0 });
+            scrollup.css({ top: 0 });
             scrolldn.css({ bottom: 0 });
             scroll.css({
                 position: "fixed", zIndex: 999999,
@@ -53,6 +53,19 @@ define([
                     event.originalEvent.dataTransfer.setDragImage(
                         $(this).parent()[0], 0, 0);
                 $(this).parent().addClass("dragged");
+
+                // Scroll the list if near the borders
+                $el.bind("dragover.pat-sortable", function(event) {
+                    event.preventDefault();
+                    if ($el.is(":animated")) return;
+
+                    var pos = event.originalEvent.clientY + $("body").scrollTop();
+
+                    if (pos - $el.offset().top < 32)
+                        $el.animate({scrollTop: $el.scrollTop()-32}, 50, "linear");
+                    else if ($el.offset().top+$el.height() - pos < 32)
+                        $el.animate({scrollTop: $el.scrollTop()+32}, 50, "linear");
+                });
 
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
@@ -86,12 +99,15 @@ define([
                     event.preventDefault();
                 });
 
-                scroll.appendTo("body");//.append(scrollup).append(scrolldn);
+                //XXX: Deactivate document scroll areas, as DnD affects only
+                //     scrolling of parent element
+                //scroll.appendTo("body");
             });
 
             $handles.bind("dragend", function() {
                 $(".dragged").removeClass("dragged");
                 $lis.unbind(".pat-sortable");
+                $el.unbind(".pat-sortable");
                 $("#pat-scroll-up, #pat-scroll-dn").detach();
             });
 
