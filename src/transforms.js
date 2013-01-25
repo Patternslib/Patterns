@@ -18,11 +18,8 @@ define([
         },
 
         transformContent: function($root) {
-            $root
-                .filter(".record-history")
-                .add(".record-history", $root)
-                .addClass("cant-touch-this");
-
+            // XXX: cant-touch-this is no more, so every legend should be
+            // transformed?
             $root.find("legend:not(.cant-touch-this)").each(function() {
                 $(this).replaceWith("<p class='legend'>"+$(this).html()+"</p>");
             });

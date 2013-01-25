@@ -39,6 +39,11 @@ define([
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
+            // if the injection shall add a history entry and HTML5 pushState
+            // is missing, then don't initialize the injection.
+            if ($el.hasClass("record-history") && !("pushState" in history))
+                return;
+
             var cfgs = _.extractConfig($el, opts);
             $el.data("patterns.inject", cfgs);
 
@@ -254,6 +259,9 @@ define([
                             $injected.addClass(cfg["class"])
                                 .trigger("patterns-injected", cfg);
                         }
+                        if ($el.hasClass("record-history") &&
+                            ("pushState" in history))
+                            history.pushState({url: cfg.url}, "", cfg.url);
                     });
                 });
 
@@ -460,6 +468,21 @@ define([
     $(document).on("patterns-injected", function(ev, cfg) {
         cfg.$target.removeClass(cfg.targetLoadClasses);
     });
+
+    $(window).bind("popstate", function (event) {
+        // popstate also triggers on traditional anchors
+        if (!event.originalEvent.state) {
+            history.replaceState("anchor", "", document.location.href);
+            return;
+        }
+        window.location.reload();
+    });
+
+    // this entry ensures that the initally loaded page can be reached with
+    // the back button
+    if ("replaceState" in history) {
+        history.replaceState("pageload", "", document.location.href);
+    }
 
     registry.register(_);
     return _;
