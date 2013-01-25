@@ -52,8 +52,7 @@ XXX: cross references for above
 
 XXX: give an overview of sections with cross references
 
-Where and what to inject
-------------------------
+## Where and what to inject
 
 The most simple injection fetches a source via ajax, extracts its body's
 content and replaces the current body's content with it:
@@ -71,6 +70,7 @@ the defaults:
 >
 > The default selector is `body` and will be used as target and source
 > selector, unless one or both of them are overridden.
+
 
 > **note**
 >
@@ -242,8 +242,7 @@ multiple elements match, all will be replaced.
       <div>to stay untouched</div>
     </div>
 
-Non-existing targets
---------------------
+## Non-existing targets
 
 In case the target selector returns no elements, we will attempt to
 create a matching element for you - the fuuuture, the apex of the vortex
@@ -256,8 +255,7 @@ of `body`:
     <a class="pat-inject" href="sources.html"
        data-pat-inject="target: #non-existing">
     ...
-
-> \</body\>
+    </body>
 
 After the injection:
 
@@ -267,8 +265,7 @@ After the injection:
     <div id="non-existing">
       Content of body of sources.html
     </div>
-
-> \</body\>
+	</body>
 
 Trigger
 -------
@@ -289,8 +286,8 @@ with the next 10 entries and a new `autoload-visible` injection link.
 
 XXX: example infinite list
 
-Change href after injection
----------------------------
+
+## Change href after injection
 
 EXPERIMENTAL FEATURE
 
@@ -313,19 +310,19 @@ after:
 
     <a class="next-month" href="#2012-05"
        data-pat-inject="">Next month</a>
-    ...
+    …
     <div class="month" id="2012-04">
-      ...
+	    …
     </div>
     <a class="next-month pat-inject" href="calendar.html#2012-06"
        data-pat-inject="post: #2012-05; next-href: #2012-06">Next month</a>
-    ...
+    	…
     <div class="month" id="2012-05">
-      ...
+    	…
     </div>
 
-Injection type (modals)
------------------------
+
+## Injection type (modals)
 
 XXX: TODO
 
@@ -340,13 +337,15 @@ and the new modal injected as last element of the body:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
 
-> ... \</body\>
+	… 
+	</body>
 
 It corresponds and is shorthand notation for:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="target: div#modal.modal">
-
-> ... \</body\>
+    
+    …
+    </body>
 
 After injection was triggered:
 
@@ -355,8 +354,6 @@ After injection was triggered:
     <div id="modal" class="pat-modal">
       Content from modal-source.html's ``body``.
     </div>
-
-> \</body\>
->
-> \<a class="pat-inject" href="modal-source.html" data-pat-inject="type:
-> modal"\>
+    </body>
+    
+    <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal"\>
