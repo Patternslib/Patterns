@@ -18,6 +18,28 @@ body {
 	src: url("fonts/Perpetua Bold Italic.ttf")
 }
 
+/* @group Description section */
+
+section.description {
+	margin-bottom: 40px;
+}
+
+
+
+/* @end */
+
+/* @group Demo section */
+
+section.demo {
+	padding: 20px;
+	box-shadow: inset 0 1px 6px rgba(0,0,0,0.15);
+	margin-bottom: 40px;
+}
+
+
+
+/* @end */
+
 /* @group Logo */
 
 #logo {
@@ -379,6 +401,14 @@ ul,ol,p,table,dl {
 
 h1 {
 	font-family: "Perpetua bold italic";
+	margin-top: 0;
+}
+
+h2 {
+	font-size: 18px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	margin-top: 0;
 }
 
 
