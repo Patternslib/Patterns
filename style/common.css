@@ -18,6 +18,25 @@ body {
 	src: url("fonts/Perpetua Bold Italic.ttf")
 }
 
+/* @group Appendix */
+
+#appendix {
+	text-align: center;
+	padding-bottom: 40px;
+	font-size: 12px;
+}
+
+#appendix a {
+	padding-left: 10px;
+	padding-right: 10px;
+	display: inline-block;
+	text-decoration: none;
+}
+
+
+
+/* @end */
+
 /* @group Blockquote */
 
 blockquote {
@@ -224,16 +243,36 @@ section.demo {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+	border-radius: 26px;
 }
 
-#component-index a:hover {
-	background-color: #e5e5e5;
-	transform: scale(1.1)
+#component-index .behavioural a {
+	background-color: #3d607e;
+	color: white;
+}
+
+#component-index .navigation a {
+	background-color: #c37757;
+	color: white;
+}
+
+#component-index .layout a {
+	background-color: #915e79;
+	color: white;
+}
+
+#component-index .forms a {
+	background-color: #9ba476;
+	color: white;
+}
+
+#component-index .fancy-stuff a {
+	background-color: #a59baf;
+	color: white;
 }
 
 #component-index a.current {
-	background-color: #7291ff;
-	color: white;
+	outline: solid 2px black;
 }
 
 #component-index a:before {
@@ -242,7 +281,7 @@ section.demo {
 	display: inline-block;
 	height: 32px;
 	vertical-align: middle;
-	margin: -5px 10px -5px 5px;
+	margin: -5px 10px -3px 6px;
 	border-radius: 50%;
 	background: white url(../style/component-icons.svg) no-repeat 0 32px;
 	border: 2px solid white;
