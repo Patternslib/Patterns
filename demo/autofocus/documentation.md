@@ -1,4 +1,5 @@
 # Documentation
+
 Patterns augments the standard HTML5 autofocus behaviour, and implements it for browsers that do not support it natively.
 
 On initial page load or when new content is injected it is scanned for input elements with an `autofocus` attribute or `pat-autofocus` class.
