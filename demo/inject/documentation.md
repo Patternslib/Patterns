@@ -64,16 +64,12 @@ content and replaces the current body's content with it:
 Admittedly, this is a rare use case. However, it is ideal to understand
 the defaults:
 
-> **note**
->
 > Default selector and source and target selector
 >
 > The default selector is `body` and will be used as target and source
 > selector, unless one or both of them are overridden.
 
 
-> **note**
->
 > By default we work with/on content
 >
 > For `target` and `source` by default the content is selected and
