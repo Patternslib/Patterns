@@ -109,7 +109,6 @@ section.demo {
 #logo {
 	width: 100px;
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	transition: all 0.2s;
 	width: 46px;
 	margin-top: -18px;
 }
@@ -151,6 +150,10 @@ section.demo {
 	top: -10px;
 }
 
+#global-navigation #home img {
+	transition: all 0.3s;
+}
+
 #global-navigation.bumped-top #home img {
 	width: 46px;
 	margin-top: -18px;
@@ -167,6 +170,7 @@ section.demo {
 	display: inline-block;
 	float: left;
 	width: 50%;
+	text-align: center;
 }
 
 #global-navigation a:hover {
