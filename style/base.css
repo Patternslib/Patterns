@@ -1,4 +1,4 @@
-@import url("../demo/base.css");
+@import url("common.css");
 
 @import url("../demo/autosubmit/autosubmit.css");
 
@@ -24,11 +24,6 @@
 
 @import url("../demo/tooltip/tooltip.css");
 
-@font-face {
-	font-family: "Perpetua bold italic";
-	src: url("fonts/Perpetua Bold Italic.ttf")
-}
-
 body {
 	width: 100%;
 	max-width: 100%;
@@ -37,18 +32,6 @@ body {
 	float: left;
 	padding: 0;
 }
-
-/* @group Logo */
-
-#logo {
-	width: 100px;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	transition: all 0.2s;
-}
-
-
-
-/* @end */
 
 /* @group News */
 
@@ -126,6 +109,21 @@ body:before {
 	background-size: 100% auto;
 	margin-top: 30px;
 }
+
+#global-navigation {
+	position: static;
+}
+
+/* @group Logo */
+
+#logo {
+	width: auto;
+	margin-top: auto;
+}
+
+
+
+/* @end */
 
 /* @group Auto scale */
 
