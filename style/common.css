@@ -471,7 +471,7 @@ section.demo {
 
 /* @group Typography */
 
-ul,ol,p,table,dl {
+ul,ol,p,table,dl,pre {
 	margin-bottom: 24px;
 }
 
