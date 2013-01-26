@@ -32,7 +32,7 @@ Markup structure
 
 The markup structure for a collapsible is very simple: the first child
 of an element with the `pat-collapsible` class will be used as the
-triggering element and will always be visible. All further child will be
+triggering element and will always be visible. All further children will be
 part of the content.
 
 The trigger element will get a `open` or `closed` class which indicates
