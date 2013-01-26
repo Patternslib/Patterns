@@ -39,6 +39,52 @@ describe("inject-pattern", function() {
         });
     });
 
+    describe("rebaseHTML", function() {
+        it("Basic markup with DOCTYPE", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<!DOCTYPE html>\n<p>This is a simple <em>test</em></p>"))
+                .toBe(" <p>This is a simple <em>test</em></p>");
+        });
+
+        it("Basic markup", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<p>This is a simple <em>test</em></p>"))
+                .toBe("<p>This is a simple <em>test</em></p>");
+        });
+
+        it("Recover from unclosed tags", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<p>This is a simple <em>test</p>"))
+                .toBe("<p>This is a simple <em>test</em></p>");
+        });
+
+        it("Element without link attribute", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<a>This is a test</a>"))
+                .toBe("<a>This is a test</a>");
+            expect(pattern._rebaseURL).not.toHaveBeenCalled();
+        });
+
+        it("Element with link attribute", function() {
+            spyOn(pattern, "_rebaseURL").andReturn("REBASED");
+            expect(
+                pattern._rebaseHTML("base", "<a href=\"example.com\">This is a test</a>"))
+                .toBe("<a href=\"REBASED\">This is a test</a>");
+            expect(pattern._rebaseURL).toHaveBeenCalledWith("base", "example.com");
+        });
+
+        it("Ignore casing of attribute", function() {
+            spyOn(pattern, "_rebaseURL").andReturn("REBASED");
+            expect(
+                pattern._rebaseHTML("base", "<a HrEf=\"example.com\">This is a test</a>"))
+                .toBe("<a HrEf=\"REBASED\">This is a test</a>");
+        });
+    });
+
     describe("Functional tests", function() {
         describe("extract/verifyConfig", function() {
             var $a, $target;

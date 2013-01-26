@@ -10,10 +10,9 @@ define([
     "../core/logger",
     "../lib/ajax",
     "../registry",
-    "URIjs/URI",
-    "jquery_ext", // for :scrollable for autoLoading-visible
-    "URIjs/jquery.URI"
-], function($, Parser, logger, ajax, registry) {
+    "../lib/htmlparser",
+    "jquery_ext"  // for :scrollable for autoLoading-visible
+], function($, Parser, logger, ajax, registry, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
 
@@ -323,7 +322,7 @@ define([
                     var href = this.getAttribute("href");
                     // Skip in-document links pointing to an id that is
                     // inside this fragment.
-                    if ($source.find(href).length)
+                    if (href.length===1 || $source.find(href).length)
                         return;
                     this.href=url+href;
                 });
@@ -344,6 +343,46 @@ define([
             return base.slice(0, base.lastIndexOf("/")+1) + url;
         },
 
+        _rebaseHTML: function(base, html) {
+            var output = [],
+                i, link_attribute, value;
+
+            htmlparser.HTMLParser(html, {
+                start: function(tag, attrs, unary) {
+                    output.push("<"+tag);
+                    link_attribute=_._link_attributes[tag.toUpperCase()];
+                    for (i=0; i<attrs.length; i++) {
+                        if (attrs[i].name.toLowerCase()===link_attribute) {
+                            value=attrs[i].value;
+                            // Do not rewrite Zope views or in-document links.
+                            // In-document links will be processed later after
+                            // extracting the right fragment.
+                            if (value.slice(0, 2)!=="@@" && value[0]!=="#") {
+                                value=_._rebaseURL(base, value);
+                                value=value.replace(/(^|[^\\])"/g, '$1\\\"') //";
+                            }
+                        }  else
+                            value=attrs[i].escaped;
+                        output.push(" "+attrs[i].name+"=\""+value+"\"");
+                    }
+                    output.push(unary ? "/>" : ">");
+                },
+
+                end: function(tag) {
+                    output.push("</"+tag+">");
+                },
+                
+                chars: function(text) {
+                    output.push(text);
+                },
+
+                comment: function(text) {
+                    output.push("<!--"+text+"-->");
+                }
+            });
+            return output.join("");
+        },
+
         _parseRawHtml: function(html, url) {
             url = url || "";
 
@@ -353,42 +392,16 @@ define([
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
                     .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
                     .replace(/<\/body([^>]*?)>/gi, "</div>");
+            try {
+                clean_html = _._rebaseHTML(url, clean_html);
+            } catch (e) {
+                log.error("Error rebasing urls", e);
+            }
             var $html = $("<div/>").html(clean_html);
 
             if ($html.children().length === 0)
                 log.warn("Parsing html resulted in empty jquery object:", clean_html);
 
-            // make relative links in _link_attributes relative to current page
-            $html.find(":uri(is:relative)").each(function() {
-                var attr = _._link_attributes[this.tagName],
-                    rel_url, new_rel_url;
-                if (!attr) {
-                    return;
-                }
-
-                // this.(href|action|src) yields absolute uri -> retrieve relative
-                // uris with getAttribute
-                rel_url = this.getAttribute(attr);
-                if (!rel_url) {
-                    log.info("Skipping empty url for (el, attr)", this, attr);
-                    return;
-                }
-
-                // Do not rewrite Zope views but rebase them to the current context.
-                if (rel_url.slice(0, 2)==="@@")
-                    return;
-
-                // Do not rewrite in-document links; we will do another pass over these
-                // later when we have extracted the right fragment from the whole page.
-                if (rel_url[0] === "#")
-                    return;
-
-                new_rel_url = _._rebaseURL(url, rel_url);
-                if (new_rel_url !== rel_url) {
-                    log.debug("Adjusted url from:", rel_url, "to:", new_rel_url);
-                    this[attr] = new_rel_url;
-                }
-            });
             return $html;
         },
 
