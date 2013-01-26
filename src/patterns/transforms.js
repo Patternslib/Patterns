@@ -2,6 +2,8 @@ define([
     "jquery"
 ], function($) {
     var transforms = {
+        name: "transforms",
+
         _convertToIframes: function($root) {
             $root.find("object[type='text/html']").each(function() {
                 var $object = $(this),
@@ -17,7 +19,7 @@ define([
             });
         },
 
-        transformContent: function($root) {
+        transform: function($root) {
             // XXX: cant-touch-this is no more, so every legend should be
             // transformed?
             $root.find("legend:not(.cant-touch-this)").each(function() {
@@ -32,10 +34,6 @@ define([
             }
         }
     };
-
-    $(document).on("patterns-registry-before-scan.patterns", function(e) {
-        transforms.transformContent($(e.target));
-    });
 
     return transforms;
 
