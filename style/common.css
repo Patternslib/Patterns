@@ -961,6 +961,7 @@ form.concise label {
 	padding-right: 65%;
 	width: 35%;
 	left: 0;
+	margin-bottom: 1em;
 }
 
 form.concise fieldset label *,
@@ -1022,7 +1023,7 @@ fieldset.condensed p.question {
 	clear: left;
 	border-style: none;
 	margin: 0;
-	margin-bottom: 10px;
+	margin-bottom: 1em;
 	padding-left: 35%;
 	padding-bottom: 0;
 	position: relative;
@@ -1053,7 +1054,6 @@ form.compact fieldset.comprehensive label {
 .concise fieldset.comprehensive,
 .condensed fieldset.comprehensive {
 	border-bottom-style: none;
-	margin: 0;
 	height: auto;
 	padding-top: 0;
 	padding-bottom: 0;
@@ -1168,7 +1168,6 @@ fieldset.condensed fieldset p.question {
 
 .radio-list {
 	list-style-type: none !important;
-	margin: 0 0 20px;
 	padding-bottom: 4px !important;
 }
 
