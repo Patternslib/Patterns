@@ -42,10 +42,10 @@ all checkboxes are already checked the select-all button will be disabled. And
 if no checkboxes are checked the deselect-all button will be disabled.
 
 
-Javascript API
+JavaScript API
 --------------
 
-The javascript API is entirely optional since patterns already automatically
+The JavaScript API is entirely optional since patterns already automatically
 enables the switching behaviour for all elements with a ``data-pat-checklist``
 attribute. 
 
@@ -55,7 +55,7 @@ attribute.
 
    Setup checkbox management for the selected elements. If no options are
    provided they are taken from the ``data-pat-checklist`` attributes. Options
-   can be provided as a javascript object with the following
+   can be provided as a JavaScript object with the following
    keys:
 
    * ``deselect``: the CSS selector identifying the deselect-all button(s)
