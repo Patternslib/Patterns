@@ -377,7 +377,6 @@ define([
                 tooltip_box = status.tooltip_box,
                 trigger_center = status.trigger_center,
                 content_css = {"max-height": "", "max-width": ""},
-                body_offset = $("body").offset(),
                 bottom_row, x;
 
             switch (position[0]) {
@@ -446,11 +445,20 @@ define([
                 break;
             }
 
+            var $body = $("body"),
+                body_pos = $body.css("position");
+
+            if (body_pos==="relative" || body_pos==="absolute") {
+                var body_offset = $"body".offset();
+                container_offset.top-=body_offset.top;
+                container_offset.left-=body_offset.left;
+            }
+
             $container.find("> div").css(content_css);
             $container.attr("class", "tooltip-container " + position);
             $container.css({
-                top: (container_offset.top-body_offset.top)+"px",
-                left: (container_offset.left-body_offset.left)+"px"
+                top: container_offset.top+"px",
+                left: container_offset.left+"px"
             });
             $container.find(".pointer").css({
                 top: tip_offset.top+"px",
