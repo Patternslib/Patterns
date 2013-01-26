@@ -148,11 +148,8 @@ body {
 	padding-bottom: 40px;
 }
 
-#download .columns {
-	text-shadow: white 0 1px 0;
-	text-align: center;
-	padding-top: 20px;
-	background: rgb(255,255,255); /* Old browsers */
+#download .download-options {
+		background: rgb(255,255,255); /* Old browsers */
 background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
 background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
@@ -160,13 +157,29 @@ background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 1
 background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
 background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
-	height: 200px;
+border-radius: 4px;
+	margin-left: 0;
+	margin-right: 0;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	border: 1px solid #e0e0e0;
+}
+
+#download .columns {
+	text-shadow: white 0 1px 0;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 10px;
+	height: 180px;
 }
 
 #download .columns p {
 	font-size: 10px;
 	line-height: 20px;
 	margin-bottom: 12px;
+}
+
+#download .columns h3 {
+	font-size: 13px;
 }
 
 #download textarea.url {

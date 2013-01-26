@@ -269,6 +269,7 @@ div[data-src]:hover:after {
 	text-align: center;
 	padding-bottom: 40px;
 	font-size: 12px;
+	padding-top: 20px;
 }
 
 #appendix a {
