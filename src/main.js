@@ -84,8 +84,8 @@ define([
     "./patterns/form-state",
     "./patterns/fullcalendar",
     "./patterns/image-crop",
+    "./patterns/markdown",  // This must be loaded before injection
     "./patterns/inject",
-    "./patterns/markdown",
     "./patterns/menu",
     "./patterns/modal",
     "./patterns/navigation",
