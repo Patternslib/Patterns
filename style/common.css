@@ -1,3 +1,5 @@
+@import url("../demo/grid/grid.css");
+
 body {
 	width: auto;
 	position: relative;
@@ -829,16 +831,13 @@ label.superImpose,
 	border-style: none;
 }
 
-input:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="time"]:focus,
 textarea:focus {
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
-	background: -o-gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
-	background:-moz-linear-gradient(19% 75% 90deg,whiteFFF, whiteFFF, whiteFFF 100%);
-	background: gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
-	-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.3);
-	-moz-box-shadow: 0 0 10px rgba(0,0,0,0.3);
-	box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
+	outline: solid black 1px;
+	}
 
 input[type="file"] {
 	margin-left: 0px !important;
