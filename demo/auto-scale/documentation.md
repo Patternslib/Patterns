@@ -42,7 +42,7 @@ Option reference
 The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:
 
-| Field    | default | Description                                         |
+| Field    | Default | Description                                         |
 | ------- | ------- | ----------- |
 | `method` | `scale` | The scaling method to use. One of `scale` or `zoom` |
 | ------- | ------- | ----------- |
