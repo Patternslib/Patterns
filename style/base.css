@@ -26,6 +26,11 @@
 
 @import url("../demo/tooltip/tooltip.css");
 
+@font-face {
+	font-family: "Perpetua bold italic";
+	src: url("fonts/Perpetua Bold Italic.ttf")
+}
+
 body {
 	width: 100%;
 	max-width: 100%;
