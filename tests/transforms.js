@@ -1,8 +1,8 @@
 describe("transforms", function() {
-    var mapal;
+    var transforms;
 
-    requireDependencies(["transforms"], function(cls) {
-        mapal = cls;
+    requireDependencies(["patterns/transforms"], function(cls) {
+        transforms = cls;
     });
 
     beforeEach(function() {
@@ -17,14 +17,14 @@ describe("transforms", function() {
         it("Keep non-html objects", function() {
             var $lab = $("#lab");
             $lab.append("<object type=\"text/plain\">Plain content</object>");
-            mapal._convertToIframes($lab);
+            transforms._convertToIframes($lab);
             expect($lab.find("object").length).toBe(1);
         });
 
         it("Transform text/html objects", function() {
             var $lab = $("#lab");
             $lab.append("<object type=\"text/html\" data=\"about:blank\">Plain content</object>");
-            mapal._convertToIframes($lab);
+            transforms._convertToIframes($lab);
             expect($lab.find("object").length).toBe(0);
             var $iframe = $lab.find("iframe");
             expect($iframe.length).toBe(1);
@@ -36,18 +36,18 @@ describe("transforms", function() {
         it("Convert legend to p.legend", function() {
             var $lab = $("#lab");
             $lab.append("<fieldset><legend>Fieldset title</legend></fieldset>");
-            mapal.transformContent($lab);
+            transforms.transformContent($lab);
             expect($lab.html()).toBe("<fieldset><p class=\"legend\">Fieldset title</p></fieldset>");
         });
 
         it("Keep text/html objects on non-IE", function() {
             var $lab = $("#lab"),
                 old_msie = $.browser.msie;
-            spyOn(mapal, "_convertToIframes");
+            spyOn(transforms, "_convertToIframes");
             try {
                 old_msie=false;
-                mapal.transformContent($lab[0]);
-                expect(mapal._convertToIframes).not.toHaveBeenCaled();
+                transforms.transformContent($lab[0]);
+                expect(transforms._convertToIframes).not.toHaveBeenCaled();
             } catch (e) {
                 $.browser.msie = old_msie;
             }
@@ -57,12 +57,12 @@ describe("transforms", function() {
             var $lab = $("#lab"),
                 old_msie = $.browser.msie,
                 old_version = $.browser.version;
-            spyOn(mapal, "_convertToIframes");
+            spyOn(transforms, "_convertToIframes");
             try {
                 $.browser.msie=true;
                 $.browser.version="7.0";
-                mapal.transformContent($lab[0]);
-                expect(mapal._convertToIframes).toHaveBeenCaled();
+                transforms.transformContent($lab[0]);
+                expect(transforms._convertToIframes).toHaveBeenCaled();
             } catch (e) {
                 $.browser.msie = old_msie;
                 $.browser.version = old_version;
@@ -73,12 +73,12 @@ describe("transforms", function() {
             var $lab = $("#lab"),
                 old_msie = $.browser.msie,
                 old_version = $.browser.version;
-            spyOn(mapal, "_convertToIframes");
+            spyOn(transforms, "_convertToIframes");
             try {
                 $.browser.msie=true;
                 $.browser.version="9.0";
-                mapal.transformContent($lab[0]);
-                expect(mapal._convertToIframes).not.toHaveBeenCaled();
+                transforms.transformContent($lab[0]);
+                expect(transforms._convertToIframes).not.toHaveBeenCaled();
             } catch (e) {
                 $.browser.msie = old_msie;
                 $.browser.version = old_version;
