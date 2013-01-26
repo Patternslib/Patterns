@@ -35,7 +35,7 @@ in both the toolbar and the navigation tree.
 JavaScript API
 --------------
 
-The JavaScript API is entirely optional since patterns already
+The JavaScript API is entirely optional since Patterns already
 automatically enables the switching behaviour for all elements with a
 `data-pat-switch` attribute. Developers may be interested in using the
 API to add behaviour to other elements or trigger switches manually.

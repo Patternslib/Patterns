@@ -6,7 +6,7 @@ Patterns builds on the excellent
 carousels. Just by adding a `pat-carousel` class to your markup you can
 turn anything into a beautiful carousel.
 
-Carousels usually use an unnumbered list to define all panels:
+Carousels usually use an unordered list to define all panels:
 
     <ul class="pat-carousel">
       <li><img title="Panel 1"/></li>
@@ -71,7 +71,7 @@ options in the `data-pat-carousel` attribute.
     </ul>
 
 
->    This plugin is not fully stable yet. The availably options and spelling may
+>    This plugin is not fully stable yet. The available options and spelling may
 >    change in the future.
 
 
