@@ -13,8 +13,79 @@ describe("inject-pattern", function() {
         $("#lab").remove();
     });
 
+    describe("rebaseURL", function() {
+        it("Keep URL with scheme", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/", "http://other.com/me"))
+                .toBe("http://other.com/me");
+        });
+
+        it("Keep URL with absolute path", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/", "/me"))
+                .toBe("/me");
+        });
+
+        it("Rebase to base with filename", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/index.html", "me/page.html"))
+                .toBe("http://example.com/foo/me/page.html");
+        });
+
+        it("Rebase to base with directory path", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/", "me/page.html"))
+                .toBe("http://example.com/foo/me/page.html");
+        });
+    });
+
+    describe("rebaseHTML", function() {
+        it("Basic markup with DOCTYPE", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<!DOCTYPE html>\n<p>This is a simple <em>test</em></p>"))
+                .toBe(" <p>This is a simple <em>test</em></p>");
+        });
+
+        it("Basic markup", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<p>This is a simple <em>test</em></p>"))
+                .toBe("<p>This is a simple <em>test</em></p>");
+        });
+
+        it("Recover from unclosed tags", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<p>This is a simple <em>test</p>"))
+                .toBe("<p>This is a simple <em>test</em></p>");
+        });
+
+        it("Element without link attribute", function() {
+            spyOn(pattern, "_rebaseURL");
+            expect(
+                pattern._rebaseHTML("base", "<a>This is a test</a>"))
+                .toBe("<a>This is a test</a>");
+            expect(pattern._rebaseURL).not.toHaveBeenCalled();
+        });
+
+        it("Element with link attribute", function() {
+            spyOn(pattern, "_rebaseURL").andReturn("REBASED");
+            expect(
+                pattern._rebaseHTML("base", "<a href=\"example.com\">This is a test</a>"))
+                .toBe("<a href=\"REBASED\">This is a test</a>");
+            expect(pattern._rebaseURL).toHaveBeenCalledWith("base", "example.com");
+        });
+
+        it("Ignore casing of attribute", function() {
+            spyOn(pattern, "_rebaseURL").andReturn("REBASED");
+            expect(
+                pattern._rebaseHTML("base", "<a HrEf=\"example.com\">This is a test</a>"))
+                .toBe("<a HrEf=\"REBASED\">This is a test</a>");
+        });
+    });
+
     describe("Functional tests", function() {
-        
         describe("extract/verifyConfig", function() {
             var $a, $target;
 
@@ -286,6 +357,3 @@ describe("inject-pattern", function() {
         });
     });
 });
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
