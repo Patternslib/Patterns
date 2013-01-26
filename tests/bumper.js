@@ -14,6 +14,12 @@ describe("bumper-pattern", function() {
     });
 
     describe("init", function(){
+        it("Return jQuery object", function() {
+            var jq = jasmine.createSpyObj("jQuery", ["each"]);
+            jq.each.andReturn(jq);
+            expect(pattern.init(jq)).toBe(jq);
+	});
+
         it("Element witout margin option", function(){
             var $lab = $("#lab");
             $lab.html([
