@@ -118,7 +118,8 @@ body {
 }
 
 #global-navigation #home {
-	top: 10px;
+	top: -10px;
+	position: absolute;
 }
 
 
