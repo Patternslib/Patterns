@@ -10,9 +10,10 @@ define([
     "../core/logger",
     "../lib/ajax",
     "../registry",
+    "../utils",
     "../lib/htmlparser",
     "jquery_ext"  // for :scrollable for autoLoading-visible
-], function($, Parser, logger, ajax, registry, htmlparser) {
+], function($, Parser, logger, ajax, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
 
@@ -347,12 +348,6 @@ define([
             IMG: "src"
         },
 
-        _rebaseURL: function(base, url) {
-            if (url.indexOf("://")!==-1 || url[0]==="/")
-                return url;
-            return base.slice(0, base.lastIndexOf("/")+1) + url;
-        },
-
         _rebaseHTML: function(base, html) {
             var output = [],
                 i, link_attribute, value;
@@ -368,8 +363,8 @@ define([
                             // In-document links will be processed later after
                             // extracting the right fragment.
                             if (value.slice(0, 2)!=="@@" && value[0]!=="#") {
-                                value=_._rebaseURL(base, value);
-                                value=value.replace(/(^|[^\\])"/g, '$1\\\"') //";
+                                value=utils.rebaseURL(base, value);
+                                value=value.replace(/(^|[^\\])"/g, '$1\\\"');
                             }
                         }  else
                             value=attrs[i].escaped;
