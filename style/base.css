@@ -179,7 +179,8 @@ border-radius: 4px;
 }
 
 #download .columns h3 {
-	font-size: 13px;
+	font-size: 18px;
+	margin-bottom: 8px;
 }
 
 #download textarea.url {
