@@ -333,59 +333,6 @@ div[data-src]:hover:after {
 
 /* @end */
 
-/* @end */
-
-/* @group Blockquote */
-
-blockquote {
-	color: #3c3c3c;
-	text-shadow: white 0 1px 0;
-	font-family: Georgia, "Times New Roman", Times, serif;
-	font-style: italic;
-	border-left: 4px solid silver;
-	margin-left: 0;
-	padding-left: 12px;
-}
-
-
-
-/* @end */
-
-/* @group Inline code */
-
-p code {
-	box-shadow: inset 0 1px 6px rgba(0,0,0,0.10);
-	border-radius: 4px;
-	color: #5e5e5e;
-	text-shadow: #eaeaea 0 1px 0;
-	display: inline-block;
-	padding-left: 8px;
-	padding-right: 8px;
-	border: 1px solid #d3d3d3;
-	line-height: 1.6;
-}
-
-
-
-/* @end */
-
-/* @group Code preview */
-
-pre {
-	background-color: #e8e8e8;
-	border: 1px solid #d3d3d3;
-	padding: 10px;
-	overflow: auto;
-	box-shadow: inset 0 1px 6px rgba(0,0,0,0.10);
-	border-radius: 4px;
-	color: #5e5e5e;
-	text-shadow: #eaeaea 0 1px 0;
-}
-
-
-
-/* @end */
-
 /* @group Siteheader */
 
 #site-header img,#site-header blockquote {
@@ -470,6 +417,7 @@ section.demo:after {
 	top: 0;
 	right: 0;
 	left: 0;
+	z-index: 10000;
 }
 
 #global-navigation.bumped-top {
@@ -480,14 +428,13 @@ section.demo:after {
 }
 
 #global-navigation #home {
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	margin-left: -50px;
 	width: 100px;
-	z-index: 1;
 	text-align: center;
 	background-color: transparent;
-	top: -10px;
+	top: 0;
 }
 
 #global-navigation #home img {
@@ -527,15 +474,67 @@ section.demo:after {
 
 /* @end */
 
+/* @end */
+
+/* @group Blockquote */
+
+blockquote {
+	color: #3c3c3c;
+	text-shadow: white 0 1px 0;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-style: italic;
+	border-left: 4px solid silver;
+	margin-left: 0;
+	padding-left: 12px;
+}
+
+
+
+/* @end */
+
+/* @group Inline code */
+
+p code {
+	box-shadow: inset 0 1px 6px rgba(0,0,0,0.10);
+	border-radius: 4px;
+	color: #5e5e5e;
+	text-shadow: #eaeaea 0 1px 0;
+	display: inline-block;
+	padding-left: 8px;
+	padding-right: 8px;
+	border: 1px solid #d3d3d3;
+	line-height: 1.6;
+}
+
+
+
+/* @end */
+
+/* @group Code preview */
+
+pre {
+	background-color: #e8e8e8;
+	border: 1px solid #d3d3d3;
+	padding: 10px;
+	overflow: auto;
+	box-shadow: inset 0 1px 6px rgba(0,0,0,0.10);
+	border-radius: 4px;
+	color: #5e5e5e;
+	text-shadow: #eaeaea 0 1px 0;
+}
+
+
+
+/* @end */
+
 /* @group Messages */
 
 .message {
 	padding: 8px;
 	margin-bottom: 20px;
-	-webkit-box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-	-moz-box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-	box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.20);
 	display: block;
+	border-radius: 4px
 }
 
 .message *:last-child {
@@ -755,11 +754,11 @@ a {
 }
 
 img.float-before {
-	margin-right: 10px;
+	margin-right: 30px;
 }
 
 img.float-after {
-	margin-left: 10px;
+	margin-left: 30px;
 }
 
 p img {
