@@ -6,17 +6,15 @@
 body {
 	width: auto;
 	position: relative;
-	padding-top: 70px;
 	/*background-image: url(texture-light-grain.png);*/
 	font: 16px/2em "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
-	padding-left: 0;
 	margin: 0;
 	background-color: #efefef;
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
-	padding-right: 0;
+	padding: 70px 0;
 }
 
 /* @group Tables */
