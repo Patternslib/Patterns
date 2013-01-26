@@ -101,10 +101,4 @@ define([
     "./patterns/tooltip",
     "./patterns/validate",
     "./patterns/zoom"
-], function($, registry) {
-    // wait for the DOM to be ready and initialize
-    $(document).ready(function(){
-        registry.scan(document.body);
-    });
-    return registry;
-});
+], function() { });

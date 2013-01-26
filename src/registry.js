@@ -97,11 +97,15 @@ define([
         }
     };
 
-    $(document).on("patterns-injected.patterns", function(ev) {
-        registry.scan(ev.target);
-        $(ev.target).trigger("patterns-injected-scanned");
-    });
-
+    $(document)
+        .on("patterns-injected.patterns", function(ev) {
+            registry.scan(ev.target);
+            $(ev.target).trigger("patterns-injected-scanned");
+        })
+        // wait for the DOM to be ready and initialize
+        .ready(function(){
+            registry.scan(document.body);
+        });
 
     return registry;
 });
