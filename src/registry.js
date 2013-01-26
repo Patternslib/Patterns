@@ -18,7 +18,6 @@ define([
 
     var registry = {
         patterns: {},
-        _scanned: false,
 
         scan: function(content) {
             var $content = $(content),
@@ -30,10 +29,8 @@ define([
             // selector for all patterns
             for (var name in registry.patterns) {
                 pattern = registry.patterns[name];
-                if (pattern.trigger && !pattern._scanned) {
+                if (pattern.trigger)
                     all.push(pattern.trigger);
-                    pattern._scanned=true;
-                }
             }
             allsel = all.join(",");
 
@@ -103,26 +100,14 @@ define([
             }
 
             log.debug("Registered pattern:", pattern.name, pattern);
-            if (registry._scanned)
-                utils.debounce(registry._rescan, 20)();
             return true;
         }
     };
 
-    $(document)
-        .on("patterns-injected.patterns", function(ev) {
-            registry.scan(ev.target);
-            $(ev.target).trigger("patterns-injected-scanned");
-        })
-        // wait for the DOM to be ready and give patterns some time to
-        // registry.
-        // XXX This is a bit fragile
-        .ready(function(){
-            setTimeout(function() {
-                registry.scan(document.body);
-                registry._scanned=true;
-            }, 50);
-        });
+    $(document) .on("patterns-injected.patterns", function(ev) {
+        registry.scan(ev.target);
+        $(ev.target).trigger("patterns-injected-scanned");
+    });
 
     return registry;
 });

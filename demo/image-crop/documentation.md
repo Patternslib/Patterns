@@ -15,8 +15,8 @@ Live Preview
 ------------
 
 The Image Crop pattern can create a live preview of the cropping
-selection. The following html and css fragments illustrate the use of
-this feature.
+selection. The following HTML and CSS fragments illustrate the use of
+this feature:
 
     <div class="preview">
         <img id="crop-preview" src="image-to-crop.jpg" />
@@ -104,7 +104,7 @@ attribute. The available options are:
 <thead>
 <tr class="header">
 <th align="left">Field</th>
-<th align="left">default</th>
+<th align="left">Default</th>
 <th align="left">Description</th>
 </tr>
 </thead>
@@ -121,7 +121,7 @@ attribute. The available options are:
 <td align="left"><blockquote>
 <p>0</p>
 </blockquote></td>
-<td align="left">If a preview element is used, you can optionally specify it's height explicitly. If 0, the preview element's parent height will be used.</td>
+<td align="left">If a preview element is used, you can optionally specify its height explicitly. If 0, the preview element's parent height will be used.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>preview-width</code></td>
@@ -149,7 +149,7 @@ attribute. The available options are:
 <td align="left"><blockquote>
 <p>''</p>
 </blockquote></td>
-<td align="left">The ID of the form containing the fields that will be used to save cropping information. If not specified, the form that is ancestor of the trigger element will be used.</td>
+<td align="left">The ID of the form containing the fields that will be used to save cropping information. If not specified, the form that is the ancestor of the trigger element will be used.</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>min-size</code></td>
