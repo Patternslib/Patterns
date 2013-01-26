@@ -21,7 +21,7 @@
         "test": "grunt test"
     },
     "homepage": "https://gitub.com/Patternslib/Patterns",
-    "docs": "http://readthedocs.org/docs/patterns",
+    "docs": "http://patternslib.com/",
     "maintainers": [
         {
             "name": "Wichert Akkerman",
