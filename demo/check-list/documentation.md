@@ -37,8 +37,8 @@ is: if all checkboxes are already checked the select-all button will be
 disabled. And if no checkboxes are checked the dselect-all button will
 be disabled.
 
-## Javascript API
+## JavaScript API
 
-The javascript API is entirely optional since patterns already
-autmoatically enables the switching behaviour for all elements with a
+The JavaScript API is entirely optional since patterns already
+automatically enables the switching behaviour for all elements with a
 `data-pat-checklist` attribute.
