@@ -95,24 +95,21 @@ define([
             // OPTINAL: go through other filters and gray out groups that would
             // result in zero matches
 
+            var noattendees = true;
+
             // parse filters
             if ($filter && $filter.length > 0) {
                 var searchText = $(".searchText", $filter).val(),
                     state = $("select[name=state]").val(),
                     $attendees = $(".attendees", $filter),
-                    noattendees = $attendees.is(":has([name=\"no-attendees\"]:checked)"),
                     onlyusers = $attendees.is(":has([name=\"only-users\"])"),
                     // XXX: only take visible groups into account
                     groupsel = $(".groups input:checked", $attendees).map(function() {
                         var id = $(this).attr("name");
                         return ".attendees .group-" + id;
                     }).toArray().join(",");
-            }
 
-            // noattendees might still be undefined here if the block above
-            // is not executed, so set it to a deafult value here if necessary
-            if (noattendees === undefined) {
-                var noattendees = true;
+                noattendees = $attendees.is(":has([name=\"no-attendees\"]:checked)");
             }
 
             var events = $events.find(".event").filter(function() {
