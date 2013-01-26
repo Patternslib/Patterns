@@ -207,11 +207,11 @@ Tooltip
   <a id="sourceid" href="tooltips.html#myTip" data-injection="#myTip.tooltip[data-tooltip-info='rt forcePosition']">
   <button id="targetid" class="tooltip" data-tooltip="rt" title="Tooltip content">
 
-
-
   <button id="targetid">
 
-At some point, the block below here is injected somewhere on the same page. The block is hidden with CSS. 
+At some point, the block below here is injected somewhere on the same page. The block is hidden with CSS.
+
+::
 
     <div class="tooltip-interim" data-tooltip="rt force-position auto-show; target: selector">
       <p>
@@ -222,7 +222,8 @@ At some point, the block below here is injected somewhere on the same page. The 
     <img src="foo.png" title="Tooltip content" alt="Descriptive text
       on image for blind people" class="tooltip" />
 
-above will be turned into below during loading (the :
+above will be turned into below during loading::
 
     <div class="tooltip-container rt forcePosition"  style="top: 208px ....; display: hidden">
   </body>
+

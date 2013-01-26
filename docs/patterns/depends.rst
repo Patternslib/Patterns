@@ -47,7 +47,7 @@ that specify when an item should be visible or not.
 
 The simplest form of a dependency expression is ``<input name>`` which
 indicates that an input element with the given name (or id) must have a value
-(if it is a checkbox must be checked). You can also test for a specifyc value:
+(if it is a checkbox must be checked). You can also test for a specific value:
 
 * ``<input name>=<value>``: indicates that an input element must have a
   specific value. This is most useful when used to check which radio button is
@@ -81,8 +81,8 @@ are some examples:
    <p class="pat-depends" data-pat-depends="price<100">Showing cheap options.</p>
 
 You can also combine multiple tests using ``and`` and ``or``, optionally using
-parenthesis to specify the desired grouping. Here is a more complex example that
-showing use of ``and``.
+parenthesis to specify the desired grouping. Here is a more complex example
+showing the use of ``and``.
 
 .. code-block:: html
 
@@ -182,7 +182,7 @@ The available options are:
 | ``action``          | ``show``   | Action to perform. One of ``show`` or         |
 |                     |            | ``enable``.                                   |
 +---------------------+------------+-----------------------------------------------+
-| ``transition``      | ``show``   | Transition effect to use if the action is     |
+| ``transition``      | ``none``   | Transition effect to use if the action is     |
 |                     |            | ``show``. Must be one of ``none``, ``css``    |
 |                     |            | ``fade`` or ``slide``.                        |
 +---------------------+------------+-----------------------------------------------+

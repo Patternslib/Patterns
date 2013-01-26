@@ -7,9 +7,14 @@
 		<script data-main="../../src/main" src="../../lib/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<div id="div1">
+		<section class="description">
+				<a href="description.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Description</a>
+				
+		</section>
+		
+		<section class="demo">
+		<h2>Demo</h2>
 			<form id="form1">
-				<h1>Rich editor</h1>
 				<textarea id="edit1" class="pat-edit-tinymce" data-pat-edit-tinymce="tinymce-baseurl: ../../src/3rdparty/tiny_mce" data-tinymce-json='{"plugins": "paste,inlinepopups", "theme": "advanced", "theme_advanced_buttons1": "bold,italic,bullist,numlist,undo,redo,removeformat,link,unlink,image,cleanup,formatselect", "theme_advanced_blockformats": "p,h1,h2,h3,blockquote,img", "relative_urls": false, "content_css": "tiny-content.css"}'>
 					<h3>Some structure to be edited</h3>
 					<p>
@@ -20,7 +25,14 @@
 					</p>
 				</textarea>
 			</form>
-		</div>
+		</section>
+		<section class="documentation">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
+		</section>
+		
+		<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+
+
 	</body>
 </html>
 

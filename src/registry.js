@@ -35,8 +35,8 @@ define([
             allsel = all.join(",");
 
             // find all elements that belong to any pattern
-            $match = $content.filter(allsel);
-            $match = $match.add($content.find(allsel));
+            $match = $content.wrap("<div>").parent().find(allsel);
+            $content.unwrap();
             $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.

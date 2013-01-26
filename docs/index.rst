@@ -50,7 +50,6 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
-   panels
    parameters
    patterns/index
    api/index

@@ -3,7 +3,7 @@ Autosubmit forms
 
 The autosubmit pattern submits a form if a form element changes. It is
 enabled by class "pat-autosubmit" for individual form elements, on
-grouping elements for all elements in the group, and on forms for all
+grouped elements for all elements in the group and on forms for all
 elements of the form.
 
 Only one element:
@@ -96,6 +96,6 @@ it on the page. Here is a minimal search page:
    </section>
 
 As soon as the user starts entering text in the search field or changes the
-local-search toggle search requests will send to the server and the results
-will be inserted into the existing page by replacing the content of the
-*results* section.
+local-search toggle, search requests will be sent to the server and the
+results will be inserted into the existing page by replacing the content
+of the *results* section.
