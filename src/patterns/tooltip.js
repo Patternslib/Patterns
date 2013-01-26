@@ -449,7 +449,7 @@ define([
                 body_pos = $body.css("position");
 
             if (body_pos==="relative" || body_pos==="absolute") {
-                var body_offset = $"body".offset();
+                var body_offset = $body.offset();
                 container_offset.top-=body_offset.top;
                 container_offset.left-=body_offset.left;
             }
