@@ -14,6 +14,8 @@
 
 @import url("../demo/collapsible/collapsible.css");
 
+@import url("../demo/grid/grid.css");
+
 @import url("../demo/modal/modal.css");
 
 @import url("../demo/navigation/navigation.css");
@@ -78,17 +80,11 @@ body {
 
 /* @end */
 
-@media (max-width: 767px) {
-
-body:before {
-
-	background-size: auto auto;
-}
-}
-
 #content {
 	clear: both;
-	width: 1010px;
+	width: 940px;
+	padding-right: 80px;
+	padding-left: 80px;
 }
 
 #content section {
@@ -96,7 +92,7 @@ body:before {
 	margin-bottom: 0;
 	position: relative;
 	/*background-image: url(texture-light-grain.png);*/
-	padding: 30px 80px 0;
+	padding: 30px 0 0;
 }
 
 #content section:after {
@@ -146,75 +142,15 @@ body:before {
 
 /* @end */
 
-/* @group Carousel exceptions */
-
-.anythingSlider-default .anythingWindow {
-	border-style: none;
-	box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-	width: 100% !important;
-} 
-
-.anythingSlider-default .arrow a {
-	display: block;
-	width: 45px;
-	height: 140px;
-	margin: -80px 0 0; /* half height of image */
-	text-align: center;
-	outline: 0;
-	background: url(carousel-arrows.png) no-repeat;
-	z-index: 10;
-}
-
-/* back arrow */
-.anythingSlider-default .back { left: -5px; }
-.anythingSlider-default .back a { background-position: left top; }
-.anythingSlider-default .back a:hover,
-.anythingSlider-default .back a.hover { background-position: left -140px; }
-/* forward arrow */
-.anythingSlider-default .forward { right: 5px;
-}
-.anythingSlider-default .forward a { background-position: right top; }
-.anythingSlider-default .forward a:hover,
-.anythingSlider-default .forward a.hover { background-position: right -140px; }
-}
-
-
-
-/* @end */
-
-/* @group Column */
-
-.column {
-	float: left;
-}
-
-
-
-@media (max-width: 767px) {
-
-.column {
-	width: 100% !important;
-}
-} {
-	
-}
-
-
-
-/* @end */
-
 /* @group Section download */
 
 #download {
 	padding-bottom: 40px;
 }
 
-#download .column {
+#download .columns {
 	text-shadow: white 0 1px 0;
 	text-align: center;
-	width: 33.33333%;
-	outline: silver 1px solid;
-	height: 160px;
 	padding-top: 20px;
 	background: rgb(255,255,255); /* Old browsers */
 background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
@@ -224,27 +160,25 @@ background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 1
 background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
 background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
-	float: left;
+	height: 200px;
 }
 
-#download .column p {
-	font-size: 12px;
+#download .columns p {
+	font-size: 10px;
 	line-height: 20px;
 	margin-bottom: 12px;
-	padding-right: 10px;
-	padding-left: 10px;
 }
 
 #download textarea.url {
-	width: 90%;
-	font-size: 12px;
-	line-height: 18px;
+	width: 100%;
+	font-size: 9px;
+	line-height: 12px;
 	padding: 6px;
-	height: 49px;
+	height: 64px;
 }
 
 .clone-patterns-large img {
-
+	margin-top: 25px;
 }
 
 a.download-patterns-large,
@@ -266,19 +200,6 @@ a.clone-patterns-large {
 	text-align: center;
 	padding-top: 8px;
 	font-style: normal;
-}
-
-
-
-/* @end */
-
-/* @group Column */
-
-@media (max-width: 767px) {
-
-body:before {
-	clear: both;
-}
 }
 
 
@@ -383,28 +304,6 @@ body:before {
 
 img {
 	max-width: 100%;
-}
-
-
-
-/* @end */
-
-/* @group Headers */
-
-h1 {
-	margin-top: 0;
-}
-
-h2 {
-	margin-top: 0;
-	font: normal bold 38px/1.5 "Perpetua bold italic";
-	margin-bottom: 10px;
-	text-align: center;
-}
-
-h3 {
-	margin-top: 0;
-	font-size: 16px;
 }
 
 
