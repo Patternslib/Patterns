@@ -80,7 +80,7 @@ body {
 	position: relative;
 	padding-top: 70px;
 	/*background-image: url(texture-light-grain.png);*/
-	font: 16px/24px "Lucida Grande", Lucida, Verdana, sans-serif;
+	font: 16px/2 "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
 	padding-left: 0;
 	margin: 0;
@@ -88,6 +88,7 @@ body {
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
+	padding-right: 0;
 }
 
 @font-face {
@@ -167,6 +168,7 @@ p code {
 	padding-left: 8px;
 	padding-right: 8px;
 	border: 1px solid #d3d3d3;
+	line-height: 1.6;
 }
 
 
@@ -337,8 +339,6 @@ section.demo {
 	text-decoration: none;
 	color: gray;
 	transition: transform 0.2s;
-	margin-right: 2%;
-	margin-left: 2%;
 	line-height: 48px;
 	margin-bottom: 20px;
 	border: 1px solid #e2e2e2;
@@ -347,6 +347,8 @@ section.demo {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	border-radius: 26px;
+	margin-right: 1.9%;
+	margin-left: 2%;
 }
 
 #component-index .behavioural a {
@@ -384,10 +386,11 @@ section.demo {
 	display: inline-block;
 	height: 32px;
 	vertical-align: middle;
-	margin: -5px 10px -3px 6px;
+	margin: -5px 10px -3px 8px;
 	border-radius: 50%;
 	background: white url(../style/component-icons.svg) no-repeat 0 32px;
-	border: 2px solid white;
+	border: 1px solid white;
+	box-shadow: inset 0 1px 3px silver;
 }
 
 #component-index a sup {
