@@ -5,7 +5,7 @@ body {
 	font: 16px/2em "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
 	margin: 0;
-	background-color: #efefef;
+	background-color: #f5f5f5;
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
@@ -1154,6 +1154,11 @@ fieldset.condensed fieldset p.question {
 
 /* @group Radio List */
 
+fieldset.condensed.radio-list p.legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
 .radio-list {
 	list-style-type: none !important;
 }
@@ -1249,6 +1254,11 @@ ul.checkList li {
 	list-style-type: none !important;
 	margin: 0 0 20px;
 	padding-bottom: 4px !important;
+}
+
+fieldset.check-list.radio-list p.legend {
+	font-weight: normal;
+	font-style: normal;
 }
 
 fieldset.check-list label {
