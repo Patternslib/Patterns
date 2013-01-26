@@ -29,11 +29,12 @@ define([
                 $this.data("patterns.bumper", data);
             });
 
-            $(window).scroll(function() {
+            $(window).on("scroll.bumper", function() {
                 _._testBump($el, _._getViewport());
             });
 
             _._testBump($el, _._getViewport());
+            return $el;
         },
         
         /**
