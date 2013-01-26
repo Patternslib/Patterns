@@ -42,7 +42,7 @@ needs? Don't worry! Lets give you another example:
 
 .. code-block:: html
 
-   <section id="section">
+   <section id="content">
      <form action="/my/form" class="pat-inject"
       data-pat-inject="#content && #notice #notices::after">
        ...
@@ -75,17 +75,17 @@ body's content and replaces the current body's content with it:
 Admittedly, this is a rare use case. However, it is ideal to
 understand the defaults:
 
-.. note:: Default selector and source and target selector
+.. note:: Default source and target selector
 
    The default selector is ``body`` and will be used as target and
-   source selector, unless one or both of them are overridden. 
+   source selector, unless one or both of them are overridden.
 
 .. note:: By default we work with/on content
 
    For ``target`` and ``source`` by default the content is selected
    and worked on.
 
-In the next section you learn how to use element ids as ``source`` and
+In the next section you will learn how to use element ids as ``source`` and
 ``target`` selectors, which covers most use cases. These can be
 combined with modifiers and finally the full injection power is
 unleashed with arbitrary jquery selectors.
@@ -167,13 +167,13 @@ modifiers:
     content of the target element. The so far non-existing, but
     soon-to-be first child of the target element.
 
-    Can be used for ``target`` and combined with ``:element``.
+    Can be used for ``target`` and combined with ``::element``.
 
 ``::after``
     Like in CSS, the pseudo-element (a position) right before the
     content of the selected element.
 
-    Can be used for ``target`` and combined with ``:element``.
+    Can be used for ``target`` and combined with ``::element``.
 
 Let's see these in action and combination:
 
@@ -443,7 +443,4 @@ After injection was triggered:
        Content from modal-source.html's ``body``.
      </div>
    </body>
-
-
-   <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
 

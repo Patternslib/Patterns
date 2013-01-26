@@ -38,9 +38,7 @@ changing classes in a click, to doing complex AJAX injection of content.
    markdown
    menu
    modal
-   selfhealing
    sortable
-   sorting
    switch
    toggle
    tooltip

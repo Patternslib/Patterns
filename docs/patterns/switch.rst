@@ -18,8 +18,8 @@ toggles between two states.
 This pattern takes three arguments:
 
 * ``selector``: the CSS selector identifying the elements that must be updated
-* ``remove``: the class that should be added
-* ``add``: a class that should be removed
+* ``remove``: the class that should be removed
+* ``add``: a class that should be added
 
 You must provide the selector and at least one of *remove* or *add*.
 
@@ -36,7 +36,7 @@ toolbar and the navigation tree.
 
 .. code-block:: html
 
-   <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree; icon-*">Remove icons</button>
+   <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree icon-*">Remove icons</button>
 
 
 Javascript API
@@ -57,8 +57,8 @@ to other elements or trigger switches manually.
    keys:
 
    * ``selector``: the CSS selector identifying the elements that must be updated
-   * ``remove``: the class that should be added
-   * ``add``: a class that should be removed
+   * ``remove``: the class that should be removed
+   * ``add``: a class that should be added
 
    .. code-block:: javascript
 

@@ -35,7 +35,7 @@ Using markdown with injection
 
 You can also use markdown rendering in combination with injection: if the
 injected content is markdown it will automatically be rendered. There are two
-ways for Patterns to detect that you are injection markdown: filename extension
+ways for Patterns to detect that you are injecting markdown: filename extension
 and explicit configuration.
 
 If you inject a URL which ends in ``.md`` it will be considered to be markdown

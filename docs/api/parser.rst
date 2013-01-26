@@ -2,7 +2,7 @@ Argument parser
 ===============
 
 Many patterns can be configured to change their behaviour. This is done by
-passing arguments to the parser in data-pat-* attributes or when using an
+passing arguments to the parser in data-pat-* attributes or by using an
 internal javascript API. All processing of arguments is done by the argument
 parser.  Using the parser is easy:
 
@@ -47,7 +47,7 @@ Parser API
 
    :param string name: argument name
    :param default: default value
-   :param array choice: list of acceptable values
+   :param array choices: list of acceptable values
    :param multiple: boolean flag indicating if argument is a list of values
 
    Register a new argument. The default value will be used if no value was
@@ -72,7 +72,7 @@ Parser API
 .. js:function:: ArgumentParser.parse($el [, options][, multiple])
 
    :param $el: jQuery object for element to parse
-   :param object defaults: default values to use
+   :param object options: default values to use
    :param boolean multiple: flag indicating if multiple values should
      be returned.
    :returns: object with parsed values, or list of objects if multiple

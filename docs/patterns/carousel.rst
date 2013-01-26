@@ -103,13 +103,13 @@ in the ``data-pat-carousel`` attribute.
 | ``resize``             | false   | If enabled the carousel will be resized |
 |                        |         | to fill its parent.                     |
 +------------------------+---------+-----------------------------------------+
-| ``expand``             | false   | If enable all panels will be resizes to |
+| ``expand``             | false   | If enabled all panels will be resized to|
 |                        |         | fill the carousel. If not enabled the   |
-|                        |         | will dynamically adjust its size to     |
-|                        |         | match the currently shown panel.        |
+|                        |         | carousel will dynamically adjust its    |
+|                        |         | size to match the currently shown panel.|
 +------------------------+---------+-----------------------------------------+
 | ``control-arrows``     | false   | If enabled back and forward-arrows are  |
-|                        |         | are created. Note that users can always |
+|                        |         | created. Note that users can always     |
 |                        |         | use swipes and keyboard to control the  |
 |                        |         | carousel as well.                       |
 +------------------------+---------+-----------------------------------------+

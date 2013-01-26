@@ -1,10 +1,10 @@
 Detect selected radio buttons and checked checkboxes
 ====================================================
 
-You may want to forms components differently depending on the state of their
-checkbox or radio button. Patterns supports this by automatically adding a
-``checked`` or ``unchecked`` class to labels and fieldset to reflect if they
-contain any checked checkbox or radio buttons.
+You may want to style form components differently depending on the state of
+their checkboxes or radio buttons. Patterns supports this by automatically
+adding a ``checked`` or ``unchecked`` class to labels and fieldsets to
+reflect if they contain any checked checkboxes or radio buttons.
 
 .. code-block:: html
    :linenos:
@@ -29,6 +29,6 @@ Patterns will modify this to look like this:
      <label class="unchecked"><input type="radio" name="radio"/> White</label>
    </fieldset>
 
-As you can see the fieldset and both labels have gotten a new class which
+As you can see, the fieldset and both labels have gotten a new class which
 matches the selection state of the radio button.
 
