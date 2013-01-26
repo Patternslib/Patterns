@@ -1,7 +1,8 @@
 .DS_Store
+/.grunt
 /build/docs
 /build/patterns.min.js
 /bundles/patterns-standalone.min.map
 /bundles/patterns.min.map
-/src/lib/jquery.mutations/build
 /node_modules
+/src/lib/jquery.mutations/build

@@ -2,7 +2,7 @@ Welcome to Patterns's documentation!
 ====================================
 
 Patterns is a JavaScript library that enables designers to build rich
-interactive prototypes without the need for writing any Javascript. All events
+interactive prototypes without needing to write any JavaScript. All events
 are triggered by classes and other attributes in the HTML, without abusing the
 HTML as a programming language. Accessibility, SEO and well structured HTML are
 core values of Patterns.

@@ -39,10 +39,10 @@ toolbar and the navigation tree.
    <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree icon-*">Remove icons</button>
 
 
-Javascript API
+JavaScript API
 --------------
 
-The javascript API is entirely optional since patterns already autmoatically
+The JavaScript API is entirely optional since patterns already autmoatically
 enables the switching behaviour for all elements with a ``data-pat-switch``
 attribute. Developers may be interested in using the API to add behaviour
 to other elements or trigger switches manually.
@@ -53,7 +53,7 @@ to other elements or trigger switches manually.
 
    Setup switching behaviour for the selected elements. If no options are
    provided they are taken from the ``data-pat-switch`` attributes. Options
-   can be provided as a (array of) javascript object(s) with the following
+   can be provided as a (array of) JavaScript object(s) with the following
    keys:
 
    * ``selector``: the CSS selector identifying the elements that must be updated
