@@ -5,7 +5,7 @@ It is frequently useful to change the styling for labels or fieldsets if they
 contain an input element that has the focus. Patterns facilitate that by
 automatically adding a ``focus`` class.
 
-Lets look at a simple form:
+Let's look at a simple form:
 
 .. code-block:: html
    :linenos:

@@ -100,7 +100,7 @@ button will be inserted for you automatically.
 AJAX tooltips
 -------------
 
-The tooltip content can be loaded via an AJAX request by proving an ajax option:
+The tooltip content can be loaded via an AJAX request by proving an AJAX option:
 
 .. code-block:: html
 
