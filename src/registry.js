@@ -22,20 +22,24 @@ define([
         scan: function(content) {
             var $content = $(content),
                 all = [], allsel,
-                pattern, $match, plog;
-
-            $content.trigger('patterns-registry-before-scan');
+                pattern, $match, plog, name;
 
             // selector for all patterns
-            for (var name in registry.patterns) {
+            for (name in registry.patterns) {
                 pattern = registry.patterns[name];
+                if (pattern.transform)
+                    try {
+                        pattern.transform($content);
+                    } catch (e) {
+                        log.critical("Transform error for pattern" + name, e);
+                    }
                 if (pattern.trigger)
                     all.push(pattern.trigger);
             }
             allsel = all.join(",");
 
             // find all elements that belong to any pattern
-            $match = $content.wrap("<div>").parent().find(allsel);
+            $match = $content.wrap("<div/>").parent().find(allsel);
             $content.unwrap();
             $match = $match.filter(":not(.cant-touch-this)");
 
@@ -65,11 +69,6 @@ define([
                     }
                 }
             }, null);
-        },
-
-        _rescan: function() {
-            log.debug("Retriggering document scan for new pattern");
-            registry.scan(document.body);
         },
 
         // XXX: differentiate between internal and custom patterns

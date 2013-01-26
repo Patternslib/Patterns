@@ -32,11 +32,11 @@ describe("transforms", function() {
         });
     });
 
-    describe("transformContent", function() {
+    describe("transform", function() {
         it("Convert legend to p.legend", function() {
             var $lab = $("#lab");
             $lab.append("<fieldset><legend>Fieldset title</legend></fieldset>");
-            transforms.transformContent($lab);
+            transforms.transform($lab);
             expect($lab.html()).toBe("<fieldset><p class=\"legend\">Fieldset title</p></fieldset>");
         });
 
@@ -46,7 +46,7 @@ describe("transforms", function() {
             spyOn(transforms, "_convertToIframes");
             try {
                 old_msie=false;
-                transforms.transformContent($lab[0]);
+                transforms.transform($lab[0]);
                 expect(transforms._convertToIframes).not.toHaveBeenCaled();
             } catch (e) {
                 $.browser.msie = old_msie;
@@ -61,7 +61,7 @@ describe("transforms", function() {
             try {
                 $.browser.msie=true;
                 $.browser.version="7.0";
-                transforms.transformContent($lab[0]);
+                transforms.transform($lab[0]);
                 expect(transforms._convertToIframes).toHaveBeenCaled();
             } catch (e) {
                 $.browser.msie = old_msie;
@@ -77,7 +77,7 @@ describe("transforms", function() {
             try {
                 $.browser.msie=true;
                 $.browser.version="9.0";
-                transforms.transformContent($lab[0]);
+                transforms.transform($lab[0]);
                 expect(transforms._convertToIframes).not.toHaveBeenCaled();
             } catch (e) {
                 $.browser.msie = old_msie;
