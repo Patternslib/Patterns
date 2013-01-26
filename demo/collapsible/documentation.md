@@ -99,7 +99,7 @@ Option reference
 The collapsible can be configured through a `data-pat-collapsible`
 attribute. The available options are:
 
-| Field          | default | Description                               |
+| Field          | Default | Description                               |
 | -------------- | ------- | ----------------------------------------- |
 | `load-content` |         | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible. |
 | -------------- | ------- | ----------------------------------------- |

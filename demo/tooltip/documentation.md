@@ -158,7 +158,7 @@ Option reference
 The tooltip can be configured through a `data-pat-tooltip` attribute.
 The available options are:
 
-| Field | default | Description |
+| Field | Default | Description |
 | ----- | ------- | ----------- |
 | `position` | | A `-`-seperated list of tooltip positions. |
 | ----- | ------- | ----------- |
