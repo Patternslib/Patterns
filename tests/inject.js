@@ -13,8 +13,33 @@ describe("inject-pattern", function() {
         $("#lab").remove();
     });
 
+    describe("rebaseURL", function() {
+        it("Keep URL with scheme", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/", "http://other.com/me"))
+                .toBe("http://other.com/me");
+        });
+
+        it("Keep URL with absolute path", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/", "/me"))
+                .toBe("/me");
+        });
+
+        it("Rebase to base with filename", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/index.html", "me/page.html"))
+                .toBe("http://example.com/foo/me/page.html");
+        });
+
+        it("Rebase to base with directory path", function() {
+            expect(
+                pattern._rebaseURL("http://example.com/foo/", "me/page.html"))
+                .toBe("http://example.com/foo/me/page.html");
+        });
+    });
+
     describe("Functional tests", function() {
-        
         describe("extract/verifyConfig", function() {
             var $a, $target;
 
@@ -286,6 +311,3 @@ describe("inject-pattern", function() {
         });
     });
 });
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
