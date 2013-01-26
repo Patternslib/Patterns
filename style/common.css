@@ -406,6 +406,13 @@ section.demo {
 
 }
 
+section.demo:after {
+	*zoom: 1;
+	content: " ";
+	display: table;
+	clear: both;
+}
+
 
 
 /* @end */
@@ -641,29 +648,34 @@ h1,
   margin-bottom: 0.75em;
   font-size: 32px;
   line-height: 1.2;
+	letter-spacing: 1px;
 }
 h2,
 .h2 {
   margin-bottom: 0.75em;
   font-size: 24px;
   line-height: 1.2;
+	letter-spacing: 1px;
 }
 h3,
 .h3 {
   margin-bottom: 1em;
   font-size: 21px;
   line-height: 1.3;
+	letter-spacing: 1px;
 }
 h4,
 .h4 {
   margin-bottom: 1.5em;
   font-size: 18px;
   line-height: 1.25;
+	letter-spacing: 1px;
 }
 h5,
 .h5 {
   font-size: 16px;
   margin-bottom: 1.5em;
+	letter-spacing: 1px;
 }
 h6,
 .h6 {
@@ -678,7 +690,7 @@ h6,
 
 /* @end */
 
-/* @group Horixontal rule */
+/* @group Horizontal rule */
 
 hr {
 	border:none;
@@ -884,11 +896,9 @@ fieldset {
 fieldset p.question,
 fieldset p.legend {
 	width: 95% !important;
-	font-weight: bold;
-	color: #3f3f3f;
-	margin-bottom: 20px;
-	margin-top: 0;
-	text-transform: uppercase;
+  margin-bottom: 1em;
+  font-size: 21px;
+  line-height: 1.3;
 	letter-spacing: 1px;
 }
 
