@@ -13,7 +13,7 @@ define([
     "URIjs/URI",
     "jquery_ext", // for :scrollable for autoLoading-visible
     "URIjs/jquery.URI"
-], function($, Parser, logger, ajax, registry, URI) {
+], function($, Parser, logger, ajax, registry) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
 
@@ -338,6 +338,12 @@ define([
             IMG: "src"
         },
 
+        _rebaseURL: function(base, url) {
+            if (url.indexOf("://")!==-1 || url[0]==="/")
+                return url;
+            return base.slice(0, base.lastIndexOf("/")+1) + url;
+        },
+
         _parseRawHtml: function(html, url) {
             url = url || "";
 
@@ -377,7 +383,7 @@ define([
                 if (rel_url[0] === "#")
                     return;
 
-                new_rel_url = new URI(rel_url).absoluteTo(url).toString();
+                new_rel_url = _._rebaseURL(url, rel_url);
                 if (new_rel_url !== rel_url) {
                     log.debug("Adjusted url from:", rel_url, "to:", new_rel_url);
                     this[attr] = new_rel_url;
