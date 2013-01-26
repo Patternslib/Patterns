@@ -961,8 +961,6 @@ form.concise label {
 	padding-right: 65%;
 	width: 35%;
 	left: 0;
-	margin-bottom: 10px;
-	padding-top: 1px;
 }
 
 form.concise fieldset label *,
@@ -1055,10 +1053,10 @@ form.compact fieldset.comprehensive label {
 .concise fieldset.comprehensive,
 .condensed fieldset.comprehensive {
 	border-bottom-style: none;
-	margin: 0 0 10px;
-	padding-bottom: 0 !important;
-	padding-top: 1px;
+	margin: 0;
 	height: auto;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 fieldset.comprehensive label *,
@@ -1072,7 +1070,7 @@ form.compact fieldset.comprehensive label * {
 
 fieldset.comprehenisve input[type="radio"],
 .concise fieldset.comprehensive input[type="radio"] {
-	margin-top: 3px;
+	margin-top: 10px;
 }
 
 fieldset.comprehenisve input[type="checkbox"],
@@ -1094,10 +1092,11 @@ form.compact fieldset.comprehensive p.question {
 	float: left;
 	font-weight: normal;
 	font-style: normal;
-	color: black;
 	margin: 0 0 0 -54%;
 	text-transform: none;
 	letter-spacing: 0;
+	line-height: 2em;
+	font-size: 16px;
 }
 
 fieldset.comprehensive label a.floatAfter {
