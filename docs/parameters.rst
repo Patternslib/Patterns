@@ -95,7 +95,7 @@ Enum values can also be used directly. For example the toggle pattern has a
     </button>
 
 In very rare situations it might happen that a a known boolean argument
-has the exact same name as a enum value for another argument. In that case it
+has the exact same name as an enum value for another argument. In that case it
 will be treated as a boolean option.
 
 
