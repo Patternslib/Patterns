@@ -162,7 +162,7 @@ Option reference
 The depends can be configured through a `data-pat-depends` attribute.
 The available options are:
 
-| Field | default | Description |
+| Field | Default | Description |
 | ----- | ------- | ----------- | 
 | `condition` | | The dependency condition. |
 | ----- | ------- | ----------- | 
