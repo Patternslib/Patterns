@@ -108,6 +108,13 @@ define([
                         return ".attendees .group-" + id;
                     }).toArray().join(",");
             }
+
+            // noattendees might still be undefined here if the block above
+            // is not executed, so set it to a deafult value here if necessary
+            if (noattendees === undefined) {
+                var noattendees = true;
+            }
+
             var events = $events.find(".event").filter(function() {
                 var $event = $(this);
                 // workflow state
@@ -118,7 +125,7 @@ define([
                     }
                 }
 
-                // attendees
+
                 if ($event.find(".attendees *").length > 0) {
                     if ($event.find(".attendees .group").length > 0) {
                         if ($event.find(groupsel).length === 0) {
