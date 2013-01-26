@@ -367,6 +367,18 @@ body:before {
 
 /* @end */
 
+/* @group Site footer */
+
+#footer {
+	padding:1em;
+	text-align:center;
+	font-size:80%;
+	}
+
+
+
+/* @end */
+
 /* @group Image */
 
 img {
@@ -387,6 +399,7 @@ h2 {
 	margin-top: 0;
 	font: normal bold 38px/1.5 "Perpetua bold italic";
 	margin-bottom: 10px;
+	text-align: center;
 }
 
 h3 {
