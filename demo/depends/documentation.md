@@ -170,6 +170,5 @@ The available options are:
 | ----- | ------- | ----------- | 
 | `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
 | ----- | ------- | ----------- | 
-| `effect-duration` | `fast` | Duration of transition. This is ignored
-if the transition is `none` or `css`. |
+| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. |
 | ----- | ------- | ----------- | 
