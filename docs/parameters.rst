@@ -16,7 +16,7 @@ separated by a colon.
 
 .. code-block:: html
 
-    <div class="pat-collapsible" pat-data-toggle="store: session">...</div>
+    <div class="pat-collapsible" data-pat-toggle="store: session">...</div>
     <ul class="pat-carousel" data-pat-carousel="loop: false">...</ul>
 
 Multiple arguments can be provided by separating them with a semicolon.
@@ -103,7 +103,7 @@ Cascading configuration
 -----------------------
 
 Sometimes you want to have several items with a similar configuration. To
-support this you can use set parameters at a parent element so you do not
+support this you can set parameters on the parent element so you do not
 need to repeat them everywhere.
 
 .. code-block:: html
@@ -152,7 +152,7 @@ but the option group syntax allows you to use a simpler notation:
 
 .. code-block:: html
 
-  <div data-pat-navigation="control: startstop control-nav">...</div>
+  <div data-pat-navigation="control: startstop nav">...</div>
 
 This grouping is supported for all parameters that have the same *prefix*: a group
 name followed by a dash (``-``).
@@ -162,8 +162,8 @@ set at a higher level are inherited. For example with this markup:
 
 .. code-block:: html
 
-  <div data-pat-navigation="controls: startstop">
-    <div data-pav-navigation="controls: nav">
+  <div data-pat-navigation="control: startstop">
+    <div data-pav-navigation="control: nav">
       ...
     </div>
   </div>

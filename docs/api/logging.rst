@@ -71,7 +71,7 @@ Logging API
       logging.setLevel(logging.Level.DEBUG);
 
    Please note that this only changes the root logging level. You can set a
-   different logging for individual lggers as well:
+   different logging for individual loggers as well:
 
    .. code-block:: javascript
 
@@ -90,7 +90,7 @@ Logging API
 The logging object (`log` in the code example) exposes several methods to log
 information at various log levels: 
 
-* `debug` is used to log debug messages. There are normally not shown.
+* `debug` is used to log debug messages. These are normally not shown.
 * `info` is used to log informational messages. These are normally not shown.
 * `warn` is used to log warnings. These are normally shown.
 * `error` is used to log errors. There are normally shown.
