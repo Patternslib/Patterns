@@ -3,6 +3,8 @@
  * Original code by Erik Arvidsson, Mozilla Public License
  * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
  *
+ * Modified by Wichert Akkerman to support act as a module.
+ *
  * // Use like so:
  * HTMLParser(htmlString, {
  *     start: function(tag, attrs, unary) {},
@@ -23,7 +25,7 @@
  *
  */
 
-(function(){
+define(function(){
 
 	// Regular Expressions for parsing tags and attributes
 	var startTag = /^<([-A-Za-z0-9_]+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
@@ -311,4 +313,9 @@
 			obj[ items[i] ] = true;
 		return obj;
 	}
-})();
+
+	return {HTMLParser: HTMLParser,
+		HTMLtoXML: HTMLtoXML,
+		HTMLtoDOM: HTMLtoDOM
+	};
+});
