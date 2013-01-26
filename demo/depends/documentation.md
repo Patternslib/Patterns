@@ -43,13 +43,13 @@ expressions that specify when an item should be visible or not.
 The simplest form of a dependency expression is `<input name>` which
 indicates that an input element with the given name (or id) must have a
 value (if it is a checkbox must be checked). You can also test for a
-specifyc value:
+specific value:
 
 -   `<input name>=<value>`: indicates that an input element must have a
     specific value. This is most useful when used to check which radio
     button is checked.
--   `<input name>!=<value>`: indicates that an input element must have a
-    not specific value. This is most useful when used to check if a
+-   `<input name>!=<value>`: indicates that an input element must not
+    have a specific value. This is most useful when used to check if a
     specific radio button is not checked.
 -   `<input name> <= <value>`: indicates that an input element must have
     a value less than or equal than the given value. This is most useful
@@ -76,7 +76,7 @@ Here are some examples:
 
 You can also combine multiple tests using `and` and `or`, optionally
 using parenthesis to specify the desired grouping. Here is a more
-complex example that showing use of `and`.
+complex example which demonstrates the use of `and`:
 
     <fieldset>
       <legend>Select your flavour</legend>
@@ -113,9 +113,10 @@ has no value.
 
 The available actions are:
 
--   `show`: make an items visibility conditional on the dependencies. If
-    the dependencies are not met the item will be made invisible. In
-    addition a CSS class of `hidden` or `visible` will be set.
+-   `show`: make an item's visibility conditional, based on the
+    dependencies. If the dependencies are not met the item will
+    be made invisible. In addition a CSS class of `hidden` or
+	`visible` will be set.
 -   `enable`: disables items and adds a `disabled` class if the
     dependencies are not met. Input elements are disabled by setting
     their disabled property. Links are disabled by registered a
