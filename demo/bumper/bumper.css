@@ -1,7 +1,11 @@
 /* @group Bumper */
 
+.pat-bumper {
+}
+
 .bumped {
 	position: fixed !important;
+	z-index: 1;
 }
 
 .bumped-top {
