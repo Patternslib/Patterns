@@ -331,11 +331,12 @@ define([
 
                 $source.find("a[href^=\"#\"]").each(function() {
                     var href = this.getAttribute("href");
-                    // Skip in-document links pointing to an id that is
-                    // inside this fragment.
-                    if (href.length===1 || $source.find(href).length)
-                        return;
-                    this.href=url+href;
+                    // Skip in-document links pointing to an id that is inside
+                    // this fragment.
+                    if (href.length===1)  // Special case for top-of-page links
+                        this.href=url;
+                    else if (!$source.find(href).length)
+                        this.href=url+href;
                 });
 
                 return $source;
