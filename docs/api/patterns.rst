@@ -89,7 +89,7 @@ Patterns can also act as jQuery plugins. This can be done by providing a
 
 
 Line 3 tells the patterns framework that this pattern can be used as a jQuery
-plugin named ``patMyPattern``. You can then interact with it using the
+plugin named ``patMypattern``. You can then interact with it using the
 standard jQuery API:
 
 .. code-block:: javascript
@@ -133,8 +133,8 @@ Pattern configuration
 The configuration of a pattern is generally based on three components: the
 default settings, configuration set on a DOM element via a data-attribute, and,
 if the jQuery API is used, via options passed in via the jQuery plugin API.
-The init method for patterns should combine these settings. Lets update our
-example pattern to do this.
+The init method for patterns should combine these settings. Let's update our
+example pattern to do this:
 
 .. code-block:: javascript
    :linenos:
@@ -144,7 +144,7 @@ example pattern to do this.
        'require',
        'core/parser',
        '../registry'
-   ], function(require, Parser, patterns) {
+   ], function(require, Parser, registry) {
        var Parser = new Parser();
        parser.add_argument("delay", 500);
        parser.add_argument("auto-play", true);
@@ -161,16 +161,16 @@ example pattern to do this.
 The first step is loading the parser. In lines 6 to 8 we proceed to create a
 parser instance and add our options with their default values. In the init
 method we use the parser to parse the ``data-mypattern`` attribute for the
-element. Finally we combine that with the options might have been provided
-through the jQuery plugin API.
+element. Finally we combine that with the options that might have been
+provided through the jQuery plugin API.
 
 Creating a JavaScript API
 -------------------------
 
 Sometimes you may want to create a JavaScript API that is not tied to DOM
 elements, so exposing it as a jQuery plugin does not make sense. This can
-be done using the standard RequireJS mechanism by creating returning an
-API object form.
+be done using the standard RequireJS mechanism by creating and returning an
+API object.
 
 .. code-block:: javascript
    :linenos:
@@ -197,7 +197,7 @@ API object form.
 
 
 You can then use the API by using require to retrieve the API object for
-the pattern
+the pattern:
 
 .. code-block:: javascript
 

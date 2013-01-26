@@ -2,18 +2,18 @@ Storage utility
 ===============
 
 Patterns include a simple storage utility which you can use to store
-information for a pattern. The implementation is similar to the `Web storage
+data for a pattern. The implementation is similar to the `Web storage
 <http://www.whatwg.org/specs/web-apps/current-work/multipage/webstorage.html>`_
-mechanism introduces in HTML5 (and if fact uses that as underlying storage) but
-offers multiple named storages and a few extensions that make it easier to use
-in patterns.
+mechanism introduces in HTML5 (and in fact uses that as the underlying
+storage), but offers multiple named storages and a few extensions that make
+it easier to use in patterns.
 
 Store API
 -----------
 
 .. js:attribute:: store.supported
 
-   A boolean flag indicating if the browser sessions web storage.
+   A boolean flag indicating if the browser supports web storage.
 
 .. js:function:: store.local(name)
 
@@ -32,7 +32,7 @@ Store API
    :returns: storage instance
 
    Return a session storage instance. Session storage is tied to a single
-   browser session. If a browser has multiple tabs open on the same wbesite
+   browser session. If a browser has multiple tabs open on the same website
    each tab will be seen as a different session. Session storage is not
    guaranteed to survive a browser restart.
 
@@ -53,7 +53,7 @@ be JSON serialized instead of only strings.
    :returns: stored variable
 
    Retrieve (a copy of) a stored value from the storage. If no value for the
-   given name was stored `null` will be returned.
+   given name was stored, `null` will be returned.
 
 
 .. js:function:: storage.set(name, value)
