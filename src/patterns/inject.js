@@ -269,9 +269,19 @@ define([
                     //    window.location.href = $el.attr('href');
                 }
                 $el.off("pat-ajax-success.pat-inject");
+                $el.off("pat-ajax-error.pat-inject");
+            };
+
+            var onError = function() {
+                cfgs.forEach(function(cfg) {
+                    cfg.$injected.remove();
+                });
+                $el.off("pat-ajax-success.pat-inject");
+                $el.off("pat-ajax-error.pat-inject");
             };
 
             $el.on("pat-ajax-success.pat-inject", onSuccess);
+            $el.on("pat-ajax-error.pat-inject", onError);
 
             ajax($el, {
                 url: cfgs[0].url
