@@ -32,10 +32,10 @@ in both the toolbar and the navigation tree.
 
     <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree; icon-*">Remove icons</button>
 
-Javascript API
+JavaScript API
 --------------
 
-The javascript API is entirely optional since patterns already
-autmoatically enables the switching behaviour for all elements with a
+The JavaScript API is entirely optional since patterns already
+automatically enables the switching behaviour for all elements with a
 `data-pat-switch` attribute. Developers may be interested in using the
 API to add behaviour to other elements or trigger switches manually.
