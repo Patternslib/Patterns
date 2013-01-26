@@ -47,9 +47,10 @@ div.pat-modal:after {
   top: 50%;
 }
 .pat-modal .header {
+  height: 20px;
   padding: 9px 15px;
   border-bottom: 1px solid #eee;
-  
+
   background: rgb(206,220,231); /* Old browsers */
 background: -moz-linear-gradient(top, rgba(206,220,231,1) 0%, rgba(89,106,114,1) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(206,220,231,1)), color-stop(100%,rgba(89,106,114,1))); /* Chrome,Safari4+ */

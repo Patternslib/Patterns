@@ -32,5 +32,11 @@ define([
             }
         }
     };
+
+    $(document).on("patterns-registry-before-scan.patterns", function(e) {
+        transforms.transformContent($(e.target));
+    });
+
     return transforms;
+
 });
