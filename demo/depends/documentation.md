@@ -162,17 +162,14 @@ Option reference
 The depends can be configured through a `data-pat-depends` attribute.
 The available options are:
 
-+---------------------+------------+-----------------------------------------------+
 | Field | default | Description |
-+=====================+============+===============================================+
+| ----- | ------- | ----------- | 
 | `condition` | | The dependency condition. |
-+---------------------+------------+-----------------------------------------------+
-| `action` | `show` | Action to perform. One of `show` or | | | |
-`enable`. |
-+---------------------+------------+-----------------------------------------------+
-| `transition` | `show` | Transition effect to use if the action is | |
-| | `show`. Must be one of `none`, `css` | | | | `fade` or `slide`. |
-+---------------------+------------+-----------------------------------------------+
+| ----- | ------- | ----------- | 
+| `action` | `show` | Action to perform. One of `show` or `enable`. |
+| ----- | ------- | ----------- | 
+| `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
+| ----- | ------- | ----------- | 
 | `effect-duration` | `fast` | Duration of transition. This is ignored
-if | | | | the transition is `none` or `css`. |
-+---------------------+------------+-----------------------------------------------+
+if the transition is `none` or `css`. |
+| ----- | ------- | ----------- | 
