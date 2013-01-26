@@ -42,7 +42,7 @@ define([
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             if ($el.hasClass("record-history") && !("pushState" in history))
-                return;
+                return $el;
 
             var cfgs = _.extractConfig($el, opts);
             $el.data("patterns.inject", cfgs);
