@@ -8,7 +8,7 @@ Pattern provides a very simple way to make an item zoomable: just add a
 
     <img class="pat-zoom" src="image.jpg"/>
 
-when seeing this Patterns will prepend a range input. Modifying this will
+When seeing this Patterns will prepend a range input. Modifying the input will
 update the *zoom* style for the element.
 
 .. code-block:: html
