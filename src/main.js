@@ -62,9 +62,6 @@ requirejs.config({
 });
 
 define([
-    "jquery",
-    "./registry",
-    // below here modules that are only loaded
     "modernizr",
     "less",
     "prefixfree",
