@@ -34,8 +34,7 @@
 }
 /* slider window - top & bottom borders, default state */
 .anythingSlider-default .anythingWindow {
-	border-top: 3px solid #777;
-	border-bottom: 3px solid #777;
+
 }
 /* Navigation buttons + start/stop button, default state */
 .anythingSlider-default .anythingControls a {
@@ -243,13 +242,13 @@
 	display: none;
 }
 /* all panels inside the slider; horizontal mode */
-.anythingSlider .panel {
+.pat-carousel > .panel {
 	background: transparent;
 	display: block;
 	overflow: hidden;
 	float: left;
-	padding: 0;
 	margin: 0;
+	padding: 0;
 }
 /* vertical mode */
 .anythingSlider .vertical .panel {
@@ -292,8 +291,22 @@
 	-webkit-transition-duration: 0;
 }
 
-a.current {
-	background: grey;
+p.carousel-nav a {
+  background-color: white;
+  color: #247fad;
+	display: inline-block;
+	text-decoration: none;
+	padding-right: 12px;
+	padding-left: 12px;
+	border-radius: 14px;
+	line-height: 22px;
+	border: #85c5e5 solid 1px;
+}
+
+p.carousel-nav a.current {
+	background: #85c5e5;
+	border: #85c5e5 solid 1px;
+	color: white;
 }
 
 /* @end */
