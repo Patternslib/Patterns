@@ -86,7 +86,7 @@ want to use the same carousel as above but without expand we can write this:
 
 Enum values can also be used directly. For example the toggle pattern has a
 ``store`` argument which can the take three values ``none``, ``local`` and
-``store``. You can mention those directly:
+``session``. You can mention those directly:
 
 .. code-block:: html
 
