@@ -1,6 +1,6 @@
 # Documentation
 
-You may want to forms components differently depending on the state of
+You may want to form components differently depending on the state of
 their checkbox or radio button. Patterns supports this by automatically
 adding a `checked` or `unchecked` class to labels and fieldset to
 reflect if they contain any checked checkbox or radio buttons.
@@ -21,5 +21,5 @@ Patterns will modify this to look like this:
       <label class="unchecked"><input type="radio" name="radio"/> White</label>
     </fieldset>
 
-As you can see the fieldset and both labels have gotten a new class
+As you can see, the fieldset and both labels have gotten a new class
 which matches the selection state of the radio button.
