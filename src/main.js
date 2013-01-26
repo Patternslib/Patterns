@@ -62,8 +62,9 @@ requirejs.config({
 });
 
 define([
-    "./patterns/inject",
-    "./patterns/markdown", // Load these early so markdown is setup quickly
+    "jquery",
+    "registry",
+
     "modernizr",
     "less",
     "prefixfree",
@@ -86,6 +87,8 @@ define([
     "./patterns/form-state",
     "./patterns/fullcalendar",
     "./patterns/image-crop",
+    "./patterns/inject",
+    "./patterns/markdown",
     "./patterns/menu",
     "./patterns/modal",
     "./patterns/navigation",
@@ -98,4 +101,8 @@ define([
     "./patterns/tooltip",
     "./patterns/validate",
     "./patterns/zoom"
-], function() { });
+], function($, registry) {
+    $(document).ready(function() {
+        registry.scan(document.body);
+    });
+});
