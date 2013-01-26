@@ -23,7 +23,7 @@ via AJAX, the element with id ``content`` is extracted and used to
 replace the content of ``#content`` on the current page.
 
 In another situation you may not want to replace content but add new
-content. You can easily do that by using a modifier.
+content. You can easily do that by using a modifier:
 
 .. code-block:: html
 
@@ -38,7 +38,7 @@ In this example clicking on the *Tell me more* link will load the
 latest news content and inject it before the content of ``#news``.
 
 Perhaps inserting a single block of content is not enough for your
-needs? Don't worry! Lets give you another example:
+needs? Don't worry! Let's give you another example:
 
 .. code-block:: html
 
@@ -63,7 +63,7 @@ XXX: give an overview of sections with cross references
 Where and what to inject
 ------------------------
 
-The most simple injection fetches a source via ajax, extracts its
+The most simple injection fetches a source via AJAX, extracts its
 body's content and replaces the current body's content with it:
 
 .. code-block:: html
@@ -72,8 +72,8 @@ body's content and replaces the current body's content with it:
      Display news content in body content
    </a>
 
-Admittedly, this is a rare use case. However, it is ideal to
-understand the defaults:
+Admittedly, this is a rare use case. However, it is ideal for
+understanding the defaults:
 
 .. note:: Default source and target selector
 
@@ -88,7 +88,7 @@ understand the defaults:
 In the next section you will learn how to use element ids as ``source`` and
 ``target`` selectors, which covers most use cases. These can be
 combined with modifiers and finally the full injection power is
-unleashed with arbitrary jquery selectors.
+unleashed with arbitrary jQuery selectors.
 
 XXX: add references to the sections.
 
@@ -284,10 +284,10 @@ Source element after target content:
 
 
 
-Using full-blown jquery selectors
+Using full-blown jQuery selectors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For both selectors every conceivable jquery selector is allowed. If
+For both selectors every conceivable jQuery selector is allowed. If
 multiple elements match, all will be replaced.
 
 .. code-block:: html
@@ -341,7 +341,7 @@ Trigger
 -------
 
 By default injection is triggered on click for anchors and on submit
-for forms. Further, it can be trigger upon initialisation
+for forms. Further, it can be triggered upon initialisation
 (``autoload``) and when coming into view (``autoload-visible``).
 ``autoload`` injection is useful to deliver a page skeleton, where
 e.g. header, body, and sidebar load their content in parallel.
