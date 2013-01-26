@@ -10077,46 +10077,6 @@ define('core/logger',[
     return log;
 });
 
-define('transforms',[
-    "jquery"
-], function($) {
-    var transforms = {
-        _convertToIframes: function($root) {
-            $root.find("object[type='text/html']").each(function() {
-                var $object = $(this),
-                    $iframe = $("<iframe allowtransparency='true'/>");
-
-                $iframe
-                    .attr("id", $object.attr("id"))
-                    .attr("class", $object.attr("class"))
-                    .attr("src", $object.attr("data"))
-                    .attr("frameborder", "0")
-                    .attr("style", "background-color:transparent");
-                $object.replaceWith($iframe);
-            });
-        },
-
-        transformContent: function($root) {
-            $root
-                .filter(".record-history")
-                .add(".record-history", $root)
-                .addClass("cant-touch-this");
-
-            $root.find("legend:not(.cant-touch-this)").each(function() {
-                $(this).replaceWith("<p class='legend'>"+$(this).html()+"</p>");
-            });
-
-            // Replace objects with iframes for IE 8 and older.
-            if ($.browser.msie ) {
-                var version = Number( $.browser.version.split(".", 2).join(""));
-                if (version<=80)
-                    transforms._convertToIframes($root);
-            }
-        }
-    };
-    return transforms;
-});
-
 define('utils',[
     "jquery"
 ], function($) {
@@ -10167,10 +10127,17 @@ define('utils',[
         };
     };
 
+    var rebaseURL = function(base, url) {
+        if (url.indexOf("://")!==-1 || url[0]==="/")
+            return url;
+        return base.slice(0, base.lastIndexOf("/")+1) + url;
+    };
+
     var utils = {
         // pattern pimping - own module?
         jquery_plugin: jquery_plugin,
-        debounce: debounce
+        debounce: debounce,
+        rebaseURL: rebaseURL
     };
 
     return utils;
@@ -10633,11 +10600,10 @@ define('compat',[],function() {
 define('registry',[
     "jquery",
     "./core/logger",
-    "./transforms",
     "./utils",
     // below here modules that are only loaded
     "./compat"
-], function($, logger, transforms, utils) {
+], function($, logger, utils) {
     var log = logger.getLogger("registry"),
         jquery_plugin = utils.jquery_plugin;
 
@@ -10648,7 +10614,7 @@ define('registry',[
                 all = [], allsel,
                 pattern, $match, plog;
 
-            transforms.transformContent($content);
+            $content.trigger('patterns-registry-before-scan');
 
             // selector for all patterns
             for (var name in registry.patterns) {
@@ -10660,8 +10626,8 @@ define('registry',[
             allsel = all.join(",");
 
             // find all elements that belong to any pattern
-            $match = $content.filter(allsel);
-            $match = $match.add($content.find(allsel));
+            $match = $content.wrap("<div>").parent().find(allsel);
+            $content.unwrap();
             $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.
@@ -10733,6 +10699,46 @@ define('registry',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
+define('transforms',[
+    "jquery"
+], function($) {
+    var transforms = {
+        _convertToIframes: function($root) {
+            $root.find("object[type='text/html']").each(function() {
+                var $object = $(this),
+                    $iframe = $("<iframe allowtransparency='true'/>");
+
+                $iframe
+                    .attr("id", $object.attr("id"))
+                    .attr("class", $object.attr("class"))
+                    .attr("src", $object.attr("data"))
+                    .attr("frameborder", "0")
+                    .attr("style", "background-color:transparent");
+                $object.replaceWith($iframe);
+            });
+        },
+
+        transformContent: function($root) {
+            $root
+                .filter(".record-history")
+                .add(".record-history", $root)
+                .addClass("cant-touch-this");
+
+            $root.find("legend:not(.cant-touch-this)").each(function() {
+                $(this).replaceWith("<p class='legend'>"+$(this).html()+"</p>");
+            });
+
+            // Replace objects with iframes for IE 8 and older.
+            if ($.browser.msie ) {
+                var version = Number( $.browser.version.split(".", 2).join(""));
+                if (version<=80)
+                    transforms._convertToIframes($root);
+            }
+        }
+    };
+    return transforms;
+});
+
 /*!
  * Modernizr v2.0.6
  * http://www.modernizr.com
@@ -16401,8 +16407,6 @@ define('core/parser',[
         add_argument: function(name, default_value, choices, multiple) {
             var spec, m;
 
-            if (!multiple && default_value===undefined)
-                default_value=null;
             if (multiple && !Array.isArray(default_value))
                 default_value=[default_value];
             spec={name: name,
@@ -17350,7 +17354,7 @@ define("jquery_autosuggest", ["jquery"], function(){});
 
 /*!
  * jQuery Form Plugin
- * version: 3.18 (28-SEP-2012)
+ * version: 3.25.0-2013.01.18
  * @requires jQuery v1.5 or later
  *
  * Examples and documentation at: http://malsup.com/jquery/form/
@@ -17522,7 +17526,11 @@ $.fn.ajaxSubmit = function(options) {
     };
 
     // are there files to upload?
-    var fileInputs = $('input:file:enabled[value]', this); // [value] (issue #113)
+
+    // [value] (issue #113), also see comment:
+    // https://github.com/malsup/form/commit/588306aedba1de01388032d5f42a60159eea9228#commitcomment-2180219
+    var fileInputs = $('input[type=file]:enabled[value!=""]', this); 
+
     var hasFileInputs = fileInputs.length > 0;
     var mp = 'multipart/form-data';
     var multipart = ($form.attr('enctype') == mp || $form.attr('encoding') == mp);
@@ -17571,6 +17579,8 @@ $.fn.ajaxSubmit = function(options) {
         var result = {};
         var i, part;
         for (i=0; i < len; i++) {
+            // #252; undo param space replacement
+            serialized[i] = serialized[i].replace(/\+/g,' ');
             part = serialized[i].split('=');
             result[decodeURIComponent(part[0])] = decodeURIComponent(part[1]);
         }
@@ -17635,18 +17645,6 @@ $.fn.ajaxSubmit = function(options) {
         var form = $form[0], el, i, s, g, id, $io, io, xhr, sub, n, timedOut, timeoutHandle;
         var useProp = !!$.fn.prop;
         var deferred = $.Deferred();
-        var submitMethod,
-            $idSubmit = $(':input[id=submit]', form),
-            $nameSubmit = $(':input[name=submit]', form);
-
-        // if there is an input with a name or id of 'submit' then we won't be
-        // able to invoke the submit fn on the form (at least not x-browser).
-        // We temporarily rename, fetch the submit method and rename back.
-        $idSubmit.attr({id: 'submit_temporarily_renamed'});
-        $nameSubmit.attr({name: 'submit_temporarily_renamed'});
-        submitMethod = form.submit;
-        $idSubmit.attr({id: 'submit'});
-        $nameSubmit.attr({name: 'submit'});
 
         if (a) {
             // ensure that every serialized input is still enabled
@@ -17690,12 +17688,14 @@ $.fn.ajaxSubmit = function(options) {
                 var e = (status === 'timeout' ? 'timeout' : 'aborted');
                 log('aborting upload... ' + e);
                 this.aborted = 1;
-                // #214
-                if (io.contentWindow.document.execCommand) {
-                    try { // #214
+
+                try { // #214, #257
+                    if (io.contentWindow.document.execCommand) {
                         io.contentWindow.document.execCommand('Stop');
-                    } catch(ignore) {}
-                }
+                    }
+                } 
+                catch(ignore) {}
+
                 $io.attr('src', s.iframeSrc); // abort op in progress
                 xhr.error = e;
                 if (s.error)
@@ -17811,11 +17811,11 @@ $.fn.ajaxSubmit = function(options) {
                            // if using the $.param format that allows for multiple values with the same name
                            if($.isPlainObject(s.extraData[n]) && s.extraData[n].hasOwnProperty('name') && s.extraData[n].hasOwnProperty('value')) {
                                extraInputs.push(
-                               $('<input type="hidden" name="'+s.extraData[n].name+'">').attr('value',s.extraData[n].value)
+                               $('<input type="hidden" name="'+s.extraData[n].name+'">').val(s.extraData[n].value)
                                    .appendTo(form)[0]);
                            } else {
                                extraInputs.push(
-                               $('<input type="hidden" name="'+n+'">').attr('value',s.extraData[n])
+                               $('<input type="hidden" name="'+n+'">').val(s.extraData[n])
                                    .appendTo(form)[0]);
                            }
                         }
@@ -17831,7 +17831,9 @@ $.fn.ajaxSubmit = function(options) {
                         io.addEventListener('load', cb, false);
                 }
                 setTimeout(checkState,15);
-                submitMethod.call(form);
+                // just in case form has element with name/id of 'submit'
+                var submitFn = document.createElement('form').submit;
+                submitFn.apply(form);
             }
             finally {
                 // reset attrs and remove "extra" input elements
@@ -18118,9 +18120,9 @@ function captureSubmittingElement(e) {
     /*jshint validthis:true */
     var target = e.target;
     var $el = $(target);
-    if (!($el.is(":submit,input:image"))) {
+    if (!($el.is("[type=submit],[type=image]"))) {
         // is this a child element of the submit el?  (ex: a span within a button)
-        var t = $el.closest(':submit');
+        var t = $el.closest('[type=submit]');
         if (t.length === 0) {
             return;
         }
@@ -18278,19 +18280,19 @@ $.fn.fieldSerialize = function(successful) {
  *      <input name="C" type="radio" value="C2" />
  *  </fieldset></form>
  *
- *  var v = $(':text').fieldValue();
+ *  var v = $('input[type=text]').fieldValue();
  *  // if no values are entered into the text inputs
  *  v == ['','']
  *  // if values entered into the text inputs are 'foo' and 'bar'
  *  v == ['foo','bar']
  *
- *  var v = $(':checkbox').fieldValue();
+ *  var v = $('input[type=checkbox]').fieldValue();
  *  // if neither checkbox is checked
  *  v === undefined
  *  // if both checkboxes are checked
  *  v == ['B1', 'B2']
  *
- *  var v = $(':radio').fieldValue();
+ *  var v = $('input[type=radio]').fieldValue();
  *  // if neither radio is checked
  *  v === undefined
  *  // if first radio is checked
@@ -18391,6 +18393,13 @@ $.fn.clearFields = $.fn.clearInputs = function(includeHidden) {
         else if (tag == 'select') {
             this.selectedIndex = -1;
         }
+		else if (t == "file") {
+			if (/MSIE/.test(navigator.userAgent)) {
+				$(this).replaceWith($(this).clone());
+			} else {
+				$(this).val('');
+			}
+		}
         else if (includeHidden) {
             // includeHidden can be the value true, or it can be a selector string
             // indicating a special test; for example:
@@ -18489,7 +18498,12 @@ define('patterns/autosuggest',[
     parser.add_argument("as-html-id");
     parser.add_argument("selected-value-prop", "name");
     parser.add_argument("search-obj-prop", "name");
-    parser.add_argument("start-text", "Enter text");
+    parser.add_argument("placeholder", function($el) {
+        var placeholder = $el.attr("placeholder") || "Enter text";
+        // jquery_autosuggest does not like the placeholder attr (yet)
+        $el.attr("placeholder", "");
+        return placeholder;
+    });
 
     var _ = {
         name: "autosuggest",
@@ -18499,8 +18513,11 @@ define('patterns/autosuggest',[
                 return $el.each(function() { _.init($(this), opts); });
 
             var cfg = _.parser.parse($el, opts);
+
             if ($el.attr("readonly"))
                 cfg.startText = "";
+            else
+                cfg.startText = cfg.placeholder;
 
             if (cfg.preFill && (cfg.preFill.slice(0,1) === ","))
                 cfg.preFill = cfg.preFill.slice(1);
@@ -21040,2540 +21057,338 @@ define('lib/ajax',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-/*! http://mths.be/punycode by @mathias */
-;(function(root) {
+/*
+ * HTML Parser By John Resig (ejohn.org)
+ * Original code by Erik Arvidsson, Mozilla Public License
+ * http://erik.eae.net/simplehtmlparser/simplehtmlparser.js
+ *
+ * Modified by Wichert Akkerman to support act as a module and handle new
+ * HTML5 elements.
+ *
+ * // Use like so:
+ * HTMLParser(htmlString, {
+ *     start: function(tag, attrs, unary) {},
+ *     end: function(tag) {},
+ *     chars: function(text) {},
+ *     comment: function(text) {}
+ * });
+ *
+ * // or to get an XML string:
+ * HTMLtoXML(htmlString);
+ *
+ * // or to get an XML DOM Document
+ * HTMLtoDOM(htmlString);
+ *
+ * // or to inject into an existing document/DOM node
+ * HTMLtoDOM(htmlString, document);
+ * HTMLtoDOM(htmlString, document.body);
+ *
+ */
 
-	/**
-	 * The `punycode` object.
-	 * @name punycode
-	 * @type Object
-	 */
-	var punycode,
+define('lib/htmlparser',[],function(){
 
-	/** Detect free variables `define`, `exports`, `module` and `require` */
-	freeDefine = typeof define == 'function' && typeof define.amd == 'object' &&
-		define.amd && define,
-	freeExports = typeof exports == 'object' && exports,
-	freeModule = typeof module == 'object' && module,
-	freeRequire = typeof require == 'function' && require,
+	// Regular Expressions for parsing tags and attributes
+	var startTag = /^<([-A-Za-z0-9_]+)((?:\s+[-A-Za-z0-9_]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
+		endTag = /^<\/([-A-Za-z0-9_]+)[^>]*>/,
+		attr = /([-A-Za-z0-9_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
+		
+	// Empty Elements - HTML 5 Working Draft 25 October 2012
+	var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,command,source,embed,track");
 
-	/** Highest positive signed 32-bit float value */
-	maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
+	// Block Elements - HTML 5 Working Draft 25 October 2012
+	var block = makeMap("address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul,article,aside,details,dialog,summary,figure,footer,header,hgroup,nav,section,audio,video,canvas,datalist");
 
-	/** Bootstring parameters */
-	base = 36,
-	tMin = 1,
-	tMax = 26,
-	skew = 38,
-	damp = 700,
-	initialBias = 72,
-	initialN = 128, // 0x80
-	delimiter = '-', // '\x2D'
+	// Inline Elements - HTML 5 Working Draft 25 October 2012
+	var inline = makeMap("a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var,bdi,bdo,figcaption,mark,meter,progress,ruby,rt,rp,time,wbr");
 
-	/** Regular expressions */
-	regexNonASCII = /[^ -~]/, // unprintable ASCII chars + non-ASCII chars
-	regexPunycode = /^xn--/,
+	// Elements that you can, intentionally, leave open
+	// (and which close themselves)
+	var closeSelf = makeMap("colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr");
 
-	/** Error messages */
-	errors = {
-		'overflow': 'Overflow: input needs wider integers to process.',
-		'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
-		'invalid-input': 'Invalid input'
-	},
+	// Attributes that have their values filled in disabled="disabled"
+	var fillAttrs = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected");
 
-	/** Convenience shortcuts */
-	baseMinusTMin = base - tMin,
-	floor = Math.floor,
-	stringFromCharCode = String.fromCharCode,
+	// Special Elements (can contain anything)
+	var special = makeMap("script,style");
 
-	/** Temporary variable */
-	key;
+	var HTMLParser = this.HTMLParser = function( html, handler ) {
+		var index, chars, match, stack = [], last = html;
+		stack.last = function(){
+			return this[ this.length - 1 ];
+		};
 
-	/*--------------------------------------------------------------------------*/
-
-	/**
-	 * A generic error utility function.
-	 * @private
-	 * @param {String} type The error type.
-	 * @returns {Error} Throws a `RangeError` with the applicable error message.
-	 */
-	function error(type) {
-		throw RangeError(errors[type]);
-	}
-
-	/**
-	 * A generic `Array#map` utility function.
-	 * @private
-	 * @param {Array} array The array to iterate over.
-	 * @param {Function} callback The function that gets called for every array
-	 * item.
-	 * @returns {Array} A new array of values returned by the callback function.
-	 */
-	function map(array, fn) {
-		var length = array.length;
-		while (length--) {
-			array[length] = fn(array[length]);
-		}
-		return array;
-	}
-
-	/**
-	 * A simple `Array#map`-like wrapper to work with domain name strings.
-	 * @private
-	 * @param {String} domain The domain name.
-	 * @param {Function} callback The function that gets called for every
-	 * character.
-	 * @returns {Array} A new string of characters returned by the callback
-	 * function.
-	 */
-	function mapDomain(string, fn) {
-		var glue = '.';
-		return map(string.split(glue), fn).join(glue);
-	}
-
-	/**
-	 * Creates an array containing the decimal code points of each Unicode
-	 * character in the string. While JavaScript uses UCS-2 internally,
-	 * this function will convert a pair of surrogate halves (each of which
-	 * UCS-2 exposes as separate characters) into a single code point,
-	 * matching UTF-16.
-	 * @see `punycode.ucs2.encode`
-	 * @see <http://mathiasbynens.be/notes/javascript-encoding>
-	 * @memberOf punycode.ucs2
-	 * @name decode
-	 * @param {String} string The Unicode input string (UCS-2).
-	 * @returns {Array} The new array of code points.
-	 */
-	function ucs2decode(string) {
-		var output = [],
-		    counter = 0,
-		    length = string.length,
-		    value,
-		    extra;
-		while (counter < length) {
-			value = string.charCodeAt(counter++);
-			if ((value & 0xF800) == 0xD800 && counter < length) {
-				// high surrogate, and there is a next character
-				extra = string.charCodeAt(counter++);
-				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
-					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-				} else {
-					output.push(value, extra);
-				}
-			} else {
-				output.push(value);
-			}
-		}
-		return output;
-	}
-
-	/**
-	 * Creates a string based on an array of decimal code points.
-	 * @see `punycode.ucs2.decode`
-	 * @memberOf punycode.ucs2
-	 * @name encode
-	 * @param {Array} codePoints The array of decimal code points.
-	 * @returns {String} The new Unicode string (UCS-2).
-	 */
-	function ucs2encode(array) {
-		return map(array, function(value) {
-			var output = '';
-			if (value > 0xFFFF) {
-				value -= 0x10000;
-				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
-				value = 0xDC00 | value & 0x3FF;
-			}
-			output += stringFromCharCode(value);
-			return output;
-		}).join('');
-	}
-
-	/**
-	 * Converts a basic code point into a digit/integer.
-	 * @see `digitToBasic()`
-	 * @private
-	 * @param {Number} codePoint The basic (decimal) code point.
-	 * @returns {Number} The numeric value of a basic code point (for use in
-	 * representing integers) in the range `0` to `base - 1`, or `base` if
-	 * the code point does not represent a value.
-	 */
-	function basicToDigit(codePoint) {
-		return codePoint - 48 < 10
-			? codePoint - 22
-			: codePoint - 65 < 26
-				? codePoint - 65
-				: codePoint - 97 < 26
-					? codePoint - 97
-					: base;
-	}
-
-	/**
-	 * Converts a digit/integer into a basic code point.
-	 * @see `basicToDigit()`
-	 * @private
-	 * @param {Number} digit The numeric value of a basic code point.
-	 * @returns {Number} The basic code point whose value (when used for
-	 * representing integers) is `digit`, which needs to be in the range
-	 * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
-	 * used; else, the lowercase form is used. The behavior is undefined
-	 * if flag is non-zero and `digit` has no uppercase form.
-	 */
-	function digitToBasic(digit, flag) {
-		//  0..25 map to ASCII a..z or A..Z
-		// 26..35 map to ASCII 0..9
-		return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
-	}
-
-	/**
-	 * Bias adaptation function as per section 3.4 of RFC 3492.
-	 * http://tools.ietf.org/html/rfc3492#section-3.4
-	 * @private
-	 */
-	function adapt(delta, numPoints, firstTime) {
-		var k = 0;
-		delta = firstTime ? floor(delta / damp) : delta >> 1;
-		delta += floor(delta / numPoints);
-		for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
-			delta = floor(delta / baseMinusTMin);
-		}
-		return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
-	}
-
-	/**
-	 * Converts a basic code point to lowercase is `flag` is falsy, or to
-	 * uppercase if `flag` is truthy. The code point is unchanged if it's
-	 * caseless. The behavior is undefined if `codePoint` is not a basic code
-	 * point.
-	 * @private
-	 * @param {Number} codePoint The numeric value of a basic code point.
-	 * @returns {Number} The resulting basic code point.
-	 */
-	function encodeBasic(codePoint, flag) {
-		codePoint -= (codePoint - 97 < 26) << 5;
-		return codePoint + (!flag && codePoint - 65 < 26) << 5;
-	}
-
-	/**
-	 * Converts a Punycode string of ASCII code points to a string of Unicode
-	 * code points.
-	 * @memberOf punycode
-	 * @param {String} input The Punycode string of ASCII code points.
-	 * @returns {String} The resulting string of Unicode code points.
-	 */
-	function decode(input) {
-		// Don't use UCS-2
-		var output = [],
-		    inputLength = input.length,
-		    out,
-		    i = 0,
-		    n = initialN,
-		    bias = initialBias,
-		    basic,
-		    j,
-		    index,
-		    oldi,
-		    w,
-		    k,
-		    digit,
-		    t,
-		    length,
-		    /** Cached calculation results */
-		    baseMinusT;
-
-		// Handle the basic code points: let `basic` be the number of input code
-		// points before the last delimiter, or `0` if there is none, then copy
-		// the first basic code points to the output.
-
-		basic = input.lastIndexOf(delimiter);
-		if (basic < 0) {
-			basic = 0;
-		}
-
-		for (j = 0; j < basic; ++j) {
-			// if it's not a basic code point
-			if (input.charCodeAt(j) >= 0x80) {
-				error('not-basic');
-			}
-			output.push(input.charCodeAt(j));
-		}
-
-		// Main decoding loop: start just after the last delimiter if any basic code
-		// points were copied; start at the beginning otherwise.
-
-		for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
-
-			// `index` is the index of the next character to be consumed.
-			// Decode a generalized variable-length integer into `delta`,
-			// which gets added to `i`. The overflow checking is easier
-			// if we increase `i` as we go, then subtract off its starting
-			// value at the end to obtain `delta`.
-			for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
-
-				if (index >= inputLength) {
-					error('invalid-input');
-				}
-
-				digit = basicToDigit(input.charCodeAt(index++));
-
-				if (digit >= base || digit > floor((maxInt - i) / w)) {
-					error('overflow');
-				}
-
-				i += digit * w;
-				t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
-
-				if (digit < t) {
-					break;
-				}
-
-				baseMinusT = base - t;
-				if (w > floor(maxInt / baseMinusT)) {
-					error('overflow');
-				}
-
-				w *= baseMinusT;
-
-			}
-
-			out = output.length + 1;
-			bias = adapt(i - oldi, out, oldi == 0);
-
-			// `i` was supposed to wrap around from `out` to `0`,
-			// incrementing `n` each time, so we'll fix that now:
-			if (floor(i / out) > maxInt - n) {
-				error('overflow');
-			}
-
-			n += floor(i / out);
-			i %= out;
-
-			// Insert `n` at position `i` of the output
-			output.splice(i++, 0, n);
-
-		}
-
-		return ucs2encode(output);
-	}
-
-	/**
-	 * Converts a string of Unicode code points to a Punycode string of ASCII
-	 * code points.
-	 * @memberOf punycode
-	 * @param {String} input The string of Unicode code points.
-	 * @returns {String} The resulting Punycode string of ASCII code points.
-	 */
-	function encode(input) {
-		var n,
-		    delta,
-		    handledCPCount,
-		    basicLength,
-		    bias,
-		    j,
-		    m,
-		    q,
-		    k,
-		    t,
-		    currentValue,
-		    output = [],
-		    /** `inputLength` will hold the number of code points in `input`. */
-		    inputLength,
-		    /** Cached calculation results */
-		    handledCPCountPlusOne,
-		    baseMinusT,
-		    qMinusT;
-
-		// Convert the input in UCS-2 to Unicode
-		input = ucs2decode(input);
-
-		// Cache the length
-		inputLength = input.length;
-
-		// Initialize the state
-		n = initialN;
-		delta = 0;
-		bias = initialBias;
-
-		// Handle the basic code points
-		for (j = 0; j < inputLength; ++j) {
-			currentValue = input[j];
-			if (currentValue < 0x80) {
-				output.push(stringFromCharCode(currentValue));
+		if (html.indexOf("<!DOCTYPE")===0) {
+			index = html.indexOf(">");
+			if (index>=0) {
+				if (handler.doctype)
+					handler.doctype(html.substring(10, index));
+				html = html.substring(index + 1).trimLeft();
 			}
 		}
 
-		handledCPCount = basicLength = output.length;
+		while ( html ) {
+			chars = true;
 
-		// `handledCPCount` is the number of code points that have been handled;
-		// `basicLength` is the number of basic code points.
+			// Make sure we're not in a script or style element
+			if ( !stack.last() || !special[ stack.last() ] ) {
 
-		// Finish the basic string - if it is not empty - with a delimiter
-		if (basicLength) {
-			output.push(delimiter);
-		}
-
-		// Main encoding loop:
-		while (handledCPCount < inputLength) {
-
-			// All non-basic code points < n have been handled already. Find the next
-			// larger one:
-			for (m = maxInt, j = 0; j < inputLength; ++j) {
-				currentValue = input[j];
-				if (currentValue >= n && currentValue < m) {
-					m = currentValue;
-				}
-			}
-
-			// Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
-			// but guard against overflow
-			handledCPCountPlusOne = handledCPCount + 1;
-			if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
-				error('overflow');
-			}
-
-			delta += (m - n) * handledCPCountPlusOne;
-			n = m;
-
-			for (j = 0; j < inputLength; ++j) {
-				currentValue = input[j];
-
-				if (currentValue < n && ++delta > maxInt) {
-					error('overflow');
-				}
-
-				if (currentValue == n) {
-					// Represent delta as a generalized variable-length integer
-					for (q = delta, k = base; /* no condition */; k += base) {
-						t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
-						if (q < t) {
-							break;
-						}
-						qMinusT = q - t;
-						baseMinusT = base - t;
-						output.push(
-							stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
-						);
-						q = floor(qMinusT / baseMinusT);
+				// Comment
+				if ( html.indexOf("<!--") == 0 ) {
+					index = html.indexOf("-->");
+	
+					if ( index >= 0 ) {
+						if ( handler.comment )
+							handler.comment( html.substring( 4, index ) );
+						html = html.substring( index + 3 );
+						chars = false;
 					}
+	
+				// end tag
+				} else if ( html.indexOf("</") == 0 ) {
+					match = html.match( endTag );
+	
+					if ( match ) {
+						html = html.substring( match[0].length );
+						match[0].replace( endTag, parseEndTag );
+						chars = false;
+					}
+	
+				// start tag
+				} else if ( html.indexOf("<") == 0 ) {
+					match = html.match( startTag );
+	
+					if ( match ) {
+						html = html.substring( match[0].length );
+						match[0].replace( startTag, parseStartTag );
+						chars = false;
+					}
+				}
 
-					output.push(stringFromCharCode(digitToBasic(q, 0)));
-					bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
-					delta = 0;
-					++handledCPCount;
+				if ( chars ) {
+					index = html.indexOf("<");
+					
+					var text = index < 0 ? html : html.substring( 0, index );
+					html = index < 0 ? "" : html.substring( index );
+					
+					if ( handler.chars )
+						handler.chars( text );
+				}
+
+			} else {
+				html = html.replace(new RegExp("(.*)<\/" + stack.last() + "[^>]*>"), function(all, text){
+					text = text.replace(/<!--(.*?)-->/g, "$1")
+						.replace(/<!\[CDATA\[(.*?)]]>/g, "$1");
+
+					if ( handler.chars )
+						handler.chars( text );
+
+					return "";
+				});
+
+				parseEndTag( "", stack.last() );
+			}
+
+			if ( html == last )
+				throw "Parse Error: " + html;
+			last = html;
+		}
+		
+		// Clean up any remaining tags
+		parseEndTag();
+
+		function parseStartTag( tag, tagName, rest, unary ) {
+			tagName = tagName.toLowerCase();
+
+			if ( block[ tagName ] ) {
+				while ( stack.last() && inline[ stack.last() ] ) {
+					parseEndTag( "", stack.last() );
 				}
 			}
 
-			++delta;
-			++n;
+			if ( closeSelf[ tagName ] && stack.last() == tagName ) {
+				parseEndTag( "", tagName );
+			}
 
+			unary = empty[ tagName ] || !!unary;
+
+			if ( !unary )
+				stack.push( tagName );
+			
+			if ( handler.start ) {
+				var attrs = [];
+	
+				rest.replace(attr, function(match, name) {
+					var value = arguments[2] ? arguments[2] :
+						arguments[3] ? arguments[3] :
+						arguments[4] ? arguments[4] :
+						fillAttrs[name] ? name : "";
+					
+					attrs.push({
+						name: name,
+						value: value,
+						escaped: value.replace(/(^|[^\\])"/g, '$1\\\"') //"
+					});
+				});
+	
+				if ( handler.start )
+					handler.start( tagName, attrs, unary );
+			}
 		}
-		return output.join('');
-	}
 
-	/**
-	 * Converts a Punycode string representing a domain name to Unicode. Only the
-	 * Punycoded parts of the domain name will be converted, i.e. it doesn't
-	 * matter if you call it on a string that has already been converted to
-	 * Unicode.
-	 * @memberOf punycode
-	 * @param {String} domain The Punycode domain name to convert to Unicode.
-	 * @returns {String} The Unicode representation of the given Punycode
-	 * string.
-	 */
-	function toUnicode(domain) {
-		return mapDomain(domain, function(string) {
-			return regexPunycode.test(string)
-				? decode(string.slice(4).toLowerCase())
-				: string;
+		function parseEndTag( tag, tagName ) {
+			// If no tag name is provided, clean shop
+			if ( !tagName )
+				var pos = 0;
+				
+			// Find the closest opened tag of the same type
+			else
+				for ( var pos = stack.length - 1; pos >= 0; pos-- )
+					if ( stack[ pos ] == tagName )
+						break;
+			
+			if ( pos >= 0 ) {
+				// Close all the open elements, up the stack
+				for ( var i = stack.length - 1; i >= pos; i-- )
+					if ( handler.end )
+						handler.end( stack[ i ] );
+				
+				// Remove the open elements from the stack
+				stack.length = pos;
+			}
+		}
+	};
+	
+	this.HTMLtoXML = function( html ) {
+		var results = "";
+		
+		HTMLParser(html, {
+			start: function( tag, attrs, unary ) {
+				results += "<" + tag;
+		
+				for ( var i = 0; i < attrs.length; i++ )
+					results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+		
+				results += (unary ? "/" : "") + ">";
+			},
+			end: function( tag ) {
+				results += "</" + tag + ">";
+			},
+			chars: function( text ) {
+				results += text;
+			},
+			comment: function( text ) {
+				results += "<!--" + text + "-->";
+			}
 		});
-	}
-
-	/**
-	 * Converts a Unicode string representing a domain name to Punycode. Only the
-	 * non-ASCII parts of the domain name will be converted, i.e. it doesn't
-	 * matter if you call it with a domain that's already in ASCII.
-	 * @memberOf punycode
-	 * @param {String} domain The domain name to convert, as a Unicode string.
-	 * @returns {String} The Punycode representation of the given domain name.
-	 */
-	function toASCII(domain) {
-		return mapDomain(domain, function(string) {
-			return regexNonASCII.test(string)
-				? 'xn--' + encode(string)
-				: string;
+		
+		return results;
+	};
+	
+	this.HTMLtoDOM = function( html, doc ) {
+		// There can be only one of these elements
+		var one = makeMap("html,head,body,title");
+		
+		// Enforce a structure for the document
+		var structure = {
+			link: "head",
+			base: "head"
+		};
+	
+		if ( !doc ) {
+			if ( typeof DOMDocument != "undefined" )
+				doc = new DOMDocument();
+			else if ( typeof document != "undefined" && document.implementation && document.implementation.createDocument )
+				doc = document.implementation.createDocument("", "", null);
+			else if ( typeof ActiveX != "undefined" )
+				doc = new ActiveXObject("Msxml.DOMDocument");
+			
+		} else
+			doc = doc.ownerDocument ||
+				doc.getOwnerDocument && doc.getOwnerDocument() ||
+				doc;
+		
+		var elems = [],
+			documentElement = doc.documentElement ||
+				doc.getDocumentElement && doc.getDocumentElement();
+				
+		// If we're dealing with an empty document then we
+		// need to pre-populate it with the HTML document structure
+		if ( !documentElement && doc.createElement ) (function(){
+			var html = doc.createElement("html");
+			var head = doc.createElement("head");
+			head.appendChild( doc.createElement("title") );
+			html.appendChild( head );
+			html.appendChild( doc.createElement("body") );
+			doc.appendChild( html );
+		})();
+		
+		// Find all the unique elements
+		if ( doc.getElementsByTagName )
+			for ( var i in one )
+				one[ i ] = doc.getElementsByTagName( i )[0];
+		
+		// If we're working with a document, inject contents into
+		// the body element
+		var curParentNode = one.body;
+		
+		HTMLParser( html, {
+			start: function( tagName, attrs, unary ) {
+				// If it's a pre-built element, then we can ignore
+				// its construction
+				if ( one[ tagName ] ) {
+					curParentNode = one[ tagName ];
+					if ( !unary ) {
+						elems.push( curParentNode );
+					}
+					return;
+				}
+			
+				var elem = doc.createElement( tagName );
+				
+				for ( var attr in attrs )
+					elem.setAttribute( attrs[ attr ].name, attrs[ attr ].value );
+				
+				if ( structure[ tagName ] && typeof one[ structure[ tagName ] ] != "boolean" )
+					one[ structure[ tagName ] ].appendChild( elem );
+				
+				else if ( curParentNode && curParentNode.appendChild )
+					curParentNode.appendChild( elem );
+					
+				if ( !unary ) {
+					elems.push( elem );
+					curParentNode = elem;
+				}
+			},
+			end: function( tag ) {
+				elems.length -= 1;
+				
+				// Init the new parentNode
+				curParentNode = elems[ elems.length - 1 ];
+			},
+			chars: function( text ) {
+				curParentNode.appendChild( doc.createTextNode( text ) );
+			},
+			comment: function( text ) {
+				// create comment node
+			}
 		});
-	}
-
-	/*--------------------------------------------------------------------------*/
-
-	/** Define the public API */
-	punycode = {
-		/**
-		 * A string representing the current Punycode.js version number.
-		 * @memberOf punycode
-		 * @type String
-		 */
-		'version': '1.1.1',
-		/**
-		 * An object of methods to convert from JavaScript's internal character
-		 * representation (UCS-2) to decimal Unicode code points, and back.
-		 * @see <http://mathiasbynens.be/notes/javascript-encoding>
-		 * @memberOf punycode
-		 * @type Object
-		 */
-		'ucs2': {
-			'decode': ucs2decode,
-			'encode': ucs2encode
-		},
-		'decode': decode,
-		'encode': encode,
-		'toASCII': toASCII,
-		'toUnicode': toUnicode
+		
+		return doc;
 	};
 
-	/** Expose `punycode` */
-	if (freeExports) {
-		if (freeModule && freeModule.exports == freeExports) {
-			// in Node.js or Ringo 0.8+
-			freeModule.exports = punycode;
-		} else {
-			// in Narwhal or Ringo 0.7-
-			for (key in punycode) {
-				punycode.hasOwnProperty(key) && (freeExports[key] = punycode[key]);
-			}
-		}
-	} else if (freeDefine) {
-		// via curl.js or RequireJS
-		define('punycode', punycode);
-	} else {
-		// in a browser or Rhino
-		root.punycode = punycode;
+	function makeMap(str){
+		var obj = {}, items = str.split(",");
+		for ( var i = 0; i < items.length; i++ )
+			obj[ items[i] ] = true;
+		return obj;
 	}
 
-}(this));
-define("URIjs/punycode", function(){});
+	return {HTMLParser: HTMLParser,
+		HTMLtoXML: HTMLtoXML,
+		HTMLtoDOM: HTMLtoDOM
+	};
+});
 
-/*!
- * URI.js - Mutating URLs
- * IPv6 Support
- *
- * Version: 1.8.0
- *
- * Author: Rodney Rehm
- * Web: http://medialize.github.com/URI.js/
- *
- * Licensed under
- *   MIT License http://www.opensource.org/licenses/mit-license
- *   GPL v3 http://opensource.org/licenses/GPL-3.0
- *
- */
-(function (root, factory) {
-    // https://github.com/umdjs/umd/blob/master/returnExports.js
-    if (typeof exports === 'object') {
-        // Node
-        module.exports = factory();
-    } else if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define('URIjs/IPv6',factory);
-    } else {
-        // Browser globals (root is window)
-        root.IPv6 = factory();
-    }
-}(this, function () {
-
-
-/*
-var _in = "fe80:0000:0000:0000:0204:61ff:fe9d:f156";
-var _out = IPv6.best(_in);
-var _expected = "fe80::204:61ff:fe9d:f156";
-
-console.log(_in, _out, _expected, _out === _expected);
-*/
-
-function best(address) {
-    // based on:
-    // Javascript to test an IPv6 address for proper format, and to
-    // present the "best text representation" according to IETF Draft RFC at
-    // http://tools.ietf.org/html/draft-ietf-6man-text-addr-representation-04
-    // 8 Feb 2010 Rich Brown, Dartware, LLC
-    // Please feel free to use this code as long as you provide a link to
-    // http://www.intermapper.com
-    // http://intermapper.com/support/tools/IPV6-Validator.aspx
-    // http://download.dartware.com/thirdparty/ipv6validator.js
-
-    var _address = address.toLowerCase();
-    var segments = _address.split(':');
-    var length = segments.length;
-    var total = 8;
-
-    // trim colons (:: or ::a:b:c… or …a:b:c::)
-    if (segments[0] === '' && segments[1] === '' && segments[2] === '') {
-        // must have been ::
-        // remove first two items
-        segments.shift();
-        segments.shift();
-    } else if (segments[0] === '' && segments[1] === '') {
-        // must have been ::xxxx
-        // remove the first item
-        segments.shift();
-    } else if (segments[length - 1] === '' && segments[length - 2] === '') {
-        // must have been xxxx::
-        segments.pop();
-    }
-
-    length = segments.length;
-
-    // adjust total segments for IPv4 trailer
-    if (segments[length - 1].indexOf('.') !== -1) {
-        // found a "." which means IPv4
-        total = 7;
-    }
-
-    // fill empty segments them with "0000"
-    var pos;
-    for (pos = 0; pos < length; pos++) {
-        if (segments[pos] === '') {
-            break;
-        }
-    }
-
-    if (pos < total) {
-        segments.splice(pos, 1, '0000');
-        while (segments.length < total) {
-            segments.splice(pos, 0, '0000');
-        }
-
-        length = segments.length;
-    }
-
-    // strip leading zeros
-    var _segments;
-    for (var i = 0; i < total; i++) {
-        _segments = segments[i].split("");
-        for (var j = 0; j < 3 ; j++) {
-            if (_segments[0] === '0' && _segments.length > 1) {
-                _segments.splice(0,1);
-            } else {
-                break;
-            }
-        }
-
-        segments[i] = _segments.join("");
-    }
-
-    // find longest sequence of zeroes and coalesce them into one segment
-    var best = -1;
-    var _best = 0;
-    var _current = 0;
-    var current = -1;
-    var inzeroes = false;
-    // i; already declared
-
-    for (i = 0; i < total; i++) {
-        if (inzeroes) {
-            if (segments[i] === '0') {
-                _current += 1;
-            } else {
-                inzeroes = false;
-                if (_current > _best) {
-                    best = current;
-                    _best = _current;
-                }
-            }
-        } else {
-            if (segments[i] == '0') {
-                inzeroes = true;
-                current = i;
-                _current = 1;
-            }
-        }
-    }
-
-    if (_current > _best) {
-        best = current;
-        _best = _current;
-    }
-
-    if (_best > 1) {
-        segments.splice(best, _best, "");
-    }
-
-    length = segments.length;
-
-    // assemble remaining segments
-    var result = '';
-    if (segments[0] === '')  {
-        beststr = ":";
-    }
-
-    for (i = 0; i < length; i++) {
-        result += segments[i];
-        if (i === length - 1) {
-            break;
-        }
-
-        result += ':';
-    }
-
-    if (segments[length - 1] === '') {
-        result += ":";
-    }
-
-    return result;
-};
-
-return {
-    best: best
-};
-}));
-/*!
- * URI.js - Mutating URLs
- * Second Level Domain (SLD) Support
- *
- * Version: 1.8.0
- *
- * Author: Rodney Rehm
- * Web: http://medialize.github.com/URI.js/
- *
- * Licensed under
- *   MIT License http://www.opensource.org/licenses/mit-license
- *   GPL v3 http://opensource.org/licenses/GPL-3.0
- *
- */
-
-(function (root, factory) {
-    // https://github.com/umdjs/umd/blob/master/returnExports.js
-    if (typeof exports === 'object') {
-        // Node
-        module.exports = factory();
-    } else if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define('URIjs/SecondLevelDomains',factory);
-    } else {
-        // Browser globals (root is window)
-        root.SecondLevelDomains = factory();
-    }
-}(this, function () {
-
-
-var hasOwn = Object.prototype.hasOwnProperty;
-var SLD = {
-    // list of known Second Level Domains
-    // converted list of SLDs from https://github.com/gavingmiller/second-level-domains
-    // ----
-    // publicsuffix.org is more current and actually used by a couple of browsers internally.
-    // downside is it also contains domains like "dyndns.org" - which is fine for the security
-    // issues browser have to deal with (SOP for cookies, etc) - but is way overboard for URI.js
-    // ----
-    list: {
-        "ac":"com|gov|mil|net|org",
-        "ae":"ac|co|gov|mil|name|net|org|pro|sch",
-        "af":"com|edu|gov|net|org",
-        "al":"com|edu|gov|mil|net|org",
-        "ao":"co|ed|gv|it|og|pb",
-        "ar":"com|edu|gob|gov|int|mil|net|org|tur",
-        "at":"ac|co|gv|or",
-        "au":"asn|com|csiro|edu|gov|id|net|org",
-        "ba":"co|com|edu|gov|mil|net|org|rs|unbi|unmo|unsa|untz|unze",
-        "bb":"biz|co|com|edu|gov|info|net|org|store|tv",
-        "bh":"biz|cc|com|edu|gov|info|net|org",
-        "bn":"com|edu|gov|net|org",
-        "bo":"com|edu|gob|gov|int|mil|net|org|tv",
-        "br":"adm|adv|agr|am|arq|art|ato|b|bio|blog|bmd|cim|cng|cnt|com|coop|ecn|edu|eng|esp|etc|eti|far|flog|fm|fnd|fot|fst|g12|ggf|gov|imb|ind|inf|jor|jus|lel|mat|med|mil|mus|net|nom|not|ntr|odo|org|ppg|pro|psc|psi|qsl|rec|slg|srv|tmp|trd|tur|tv|vet|vlog|wiki|zlg",
-        "bs":"com|edu|gov|net|org",
-        "bz":"du|et|om|ov|rg",
-        "ca":"ab|bc|mb|nb|nf|nl|ns|nt|nu|on|pe|qc|sk|yk",
-        "ck":"biz|co|edu|gen|gov|info|net|org",
-        "cn":"ac|ah|bj|com|cq|edu|fj|gd|gov|gs|gx|gz|ha|hb|he|hi|hl|hn|jl|js|jx|ln|mil|net|nm|nx|org|qh|sc|sd|sh|sn|sx|tj|tw|xj|xz|yn|zj",
-        "co":"com|edu|gov|mil|net|nom|org",
-        "cr":"ac|c|co|ed|fi|go|or|sa",
-        "cy":"ac|biz|com|ekloges|gov|ltd|name|net|org|parliament|press|pro|tm",
-        "do":"art|com|edu|gob|gov|mil|net|org|sld|web",
-        "dz":"art|asso|com|edu|gov|net|org|pol",
-        "ec":"com|edu|fin|gov|info|med|mil|net|org|pro",
-        "eg":"com|edu|eun|gov|mil|name|net|org|sci",
-        "er":"com|edu|gov|ind|mil|net|org|rochest|w",
-        "es":"com|edu|gob|nom|org",
-        "et":"biz|com|edu|gov|info|name|net|org",
-        "fj":"ac|biz|com|info|mil|name|net|org|pro",
-        "fk":"ac|co|gov|net|nom|org",
-        "fr":"asso|com|f|gouv|nom|prd|presse|tm",
-        "gg":"co|net|org",
-        "gh":"com|edu|gov|mil|org",
-        "gn":"ac|com|gov|net|org",
-        "gr":"com|edu|gov|mil|net|org",
-        "gt":"com|edu|gob|ind|mil|net|org",
-        "gu":"com|edu|gov|net|org",
-        "hk":"com|edu|gov|idv|net|org",
-        "id":"ac|co|go|mil|net|or|sch|web",
-        "il":"ac|co|gov|idf|k12|muni|net|org",
-        "in":"ac|co|edu|ernet|firm|gen|gov|i|ind|mil|net|nic|org|res",
-        "iq":"com|edu|gov|i|mil|net|org",
-        "ir":"ac|co|dnssec|gov|i|id|net|org|sch",
-        "it":"edu|gov",
-        "je":"co|net|org",
-        "jo":"com|edu|gov|mil|name|net|org|sch",
-        "jp":"ac|ad|co|ed|go|gr|lg|ne|or",
-        "ke":"ac|co|go|info|me|mobi|ne|or|sc",
-        "kh":"com|edu|gov|mil|net|org|per",
-        "ki":"biz|com|de|edu|gov|info|mob|net|org|tel",
-        "km":"asso|com|coop|edu|gouv|k|medecin|mil|nom|notaires|pharmaciens|presse|tm|veterinaire",
-        "kn":"edu|gov|net|org",
-        "kr":"ac|busan|chungbuk|chungnam|co|daegu|daejeon|es|gangwon|go|gwangju|gyeongbuk|gyeonggi|gyeongnam|hs|incheon|jeju|jeonbuk|jeonnam|k|kg|mil|ms|ne|or|pe|re|sc|seoul|ulsan",
-        "kw":"com|edu|gov|net|org",
-        "ky":"com|edu|gov|net|org",
-        "kz":"com|edu|gov|mil|net|org",
-        "lb":"com|edu|gov|net|org",
-        "lk":"assn|com|edu|gov|grp|hotel|int|ltd|net|ngo|org|sch|soc|web",
-        "lr":"com|edu|gov|net|org",
-        "lv":"asn|com|conf|edu|gov|id|mil|net|org",
-        "ly":"com|edu|gov|id|med|net|org|plc|sch",
-        "ma":"ac|co|gov|m|net|org|press",
-        "mc":"asso|tm",
-        "me":"ac|co|edu|gov|its|net|org|priv",
-        "mg":"com|edu|gov|mil|nom|org|prd|tm",
-        "mk":"com|edu|gov|inf|name|net|org|pro",
-        "ml":"com|edu|gov|net|org|presse",
-        "mn":"edu|gov|org",
-        "mo":"com|edu|gov|net|org",
-        "mt":"com|edu|gov|net|org",
-        "mv":"aero|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro",
-        "mw":"ac|co|com|coop|edu|gov|int|museum|net|org",
-        "mx":"com|edu|gob|net|org",
-        "my":"com|edu|gov|mil|name|net|org|sch",
-        "nf":"arts|com|firm|info|net|other|per|rec|store|web",
-        "ng":"biz|com|edu|gov|mil|mobi|name|net|org|sch",
-        "ni":"ac|co|com|edu|gob|mil|net|nom|org",
-        "np":"com|edu|gov|mil|net|org",
-        "nr":"biz|com|edu|gov|info|net|org",
-        "om":"ac|biz|co|com|edu|gov|med|mil|museum|net|org|pro|sch",
-        "pe":"com|edu|gob|mil|net|nom|org|sld",
-        "ph":"com|edu|gov|i|mil|net|ngo|org",
-        "pk":"biz|com|edu|fam|gob|gok|gon|gop|gos|gov|net|org|web",
-        "pl":"art|bialystok|biz|com|edu|gda|gdansk|gorzow|gov|info|katowice|krakow|lodz|lublin|mil|net|ngo|olsztyn|org|poznan|pwr|radom|slupsk|szczecin|torun|warszawa|waw|wroc|wroclaw|zgora",
-        "pr":"ac|biz|com|edu|est|gov|info|isla|name|net|org|pro|prof",
-        "ps":"com|edu|gov|net|org|plo|sec",
-        "pw":"belau|co|ed|go|ne|or",
-        "ro":"arts|com|firm|info|nom|nt|org|rec|store|tm|www",
-        "rs":"ac|co|edu|gov|in|org",
-        "sb":"com|edu|gov|net|org",
-        "sc":"com|edu|gov|net|org",
-        "sh":"co|com|edu|gov|net|nom|org",
-        "sl":"com|edu|gov|net|org",
-        "st":"co|com|consulado|edu|embaixada|gov|mil|net|org|principe|saotome|store",
-        "sv":"com|edu|gob|org|red",
-        "sz":"ac|co|org",
-        "tr":"av|bbs|bel|biz|com|dr|edu|gen|gov|info|k12|name|net|org|pol|tel|tsk|tv|web",
-        "tt":"aero|biz|cat|co|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel",
-        "tw":"club|com|ebiz|edu|game|gov|idv|mil|net|org",
-        "mu":"ac|co|com|gov|net|or|org",
-        "mz":"ac|co|edu|gov|org",
-        "na":"co|com",
-        "nz":"ac|co|cri|geek|gen|govt|health|iwi|maori|mil|net|org|parliament|school",
-        "pa":"abo|ac|com|edu|gob|ing|med|net|nom|org|sld",
-        "pt":"com|edu|gov|int|net|nome|org|publ",
-        "py":"com|edu|gov|mil|net|org",
-        "qa":"com|edu|gov|mil|net|org",
-        "re":"asso|com|nom",
-        "ru":"ac|adygeya|altai|amur|arkhangelsk|astrakhan|bashkiria|belgorod|bir|bryansk|buryatia|cbg|chel|chelyabinsk|chita|chukotka|chuvashia|com|dagestan|e-burg|edu|gov|grozny|int|irkutsk|ivanovo|izhevsk|jar|joshkar-ola|kalmykia|kaluga|kamchatka|karelia|kazan|kchr|kemerovo|khabarovsk|khakassia|khv|kirov|koenig|komi|kostroma|kranoyarsk|kuban|kurgan|kursk|lipetsk|magadan|mari|mari-el|marine|mil|mordovia|mosreg|msk|murmansk|nalchik|net|nnov|nov|novosibirsk|nsk|omsk|orenburg|org|oryol|penza|perm|pp|pskov|ptz|rnd|ryazan|sakhalin|samara|saratov|simbirsk|smolensk|spb|stavropol|stv|surgut|tambov|tatarstan|tom|tomsk|tsaritsyn|tsk|tula|tuva|tver|tyumen|udm|udmurtia|ulan-ude|vladikavkaz|vladimir|vladivostok|volgograd|vologda|voronezh|vrn|vyatka|yakutia|yamal|yekaterinburg|yuzhno-sakhalinsk",
-        "rw":"ac|co|com|edu|gouv|gov|int|mil|net",
-        "sa":"com|edu|gov|med|net|org|pub|sch",
-        "sd":"com|edu|gov|info|med|net|org|tv",
-        "se":"a|ac|b|bd|c|d|e|f|g|h|i|k|l|m|n|o|org|p|parti|pp|press|r|s|t|tm|u|w|x|y|z",
-        "sg":"com|edu|gov|idn|net|org|per",
-        "sn":"art|com|edu|gouv|org|perso|univ",
-        "sy":"com|edu|gov|mil|net|news|org",
-        "th":"ac|co|go|in|mi|net|or",
-        "tj":"ac|biz|co|com|edu|go|gov|info|int|mil|name|net|nic|org|test|web",
-        "tn":"agrinet|com|defense|edunet|ens|fin|gov|ind|info|intl|mincom|nat|net|org|perso|rnrt|rns|rnu|tourism",
-        "tz":"ac|co|go|ne|or",
-        "ua":"biz|cherkassy|chernigov|chernovtsy|ck|cn|co|com|crimea|cv|dn|dnepropetrovsk|donetsk|dp|edu|gov|if|in|ivano-frankivsk|kh|kharkov|kherson|khmelnitskiy|kiev|kirovograd|km|kr|ks|kv|lg|lugansk|lutsk|lviv|me|mk|net|nikolaev|od|odessa|org|pl|poltava|pp|rovno|rv|sebastopol|sumy|te|ternopil|uzhgorod|vinnica|vn|zaporizhzhe|zhitomir|zp|zt",
-        "ug":"ac|co|go|ne|or|org|sc",
-        "uk":"ac|bl|british-library|co|cym|gov|govt|icnet|jet|lea|ltd|me|mil|mod|national-library-scotland|nel|net|nhs|nic|nls|org|orgn|parliament|plc|police|sch|scot|soc",
-        "us":"dni|fed|isa|kids|nsn",
-        "uy":"com|edu|gub|mil|net|org",
-        "ve":"co|com|edu|gob|info|mil|net|org|web",
-        "vi":"co|com|k12|net|org",
-        "vn":"ac|biz|com|edu|gov|health|info|int|name|net|org|pro",
-        "ye":"co|com|gov|ltd|me|net|org|plc",
-        "yu":"ac|co|edu|gov|org",
-        "za":"ac|agric|alt|bourse|city|co|cybernet|db|edu|gov|grondar|iaccess|imt|inca|landesign|law|mil|net|ngo|nis|nom|olivetti|org|pix|school|tm|web",
-        "zm":"ac|co|com|edu|gov|net|org|sch"
-    },
-    // SLD expression for each TLD
-    //expressions: {},
-    // SLD expression for all TLDs
-    has_expression: null,
-    is_expression: null,
-    // validate domain is a known SLD
-    has: function(domain) {
-        return !!domain.match(SLD.has_expression);
-    },
-    is: function(domain) {
-        return !!domain.match(SLD.is_expression);
-    },
-    get: function(domain) {
-        var t = domain.match(SLD.has_expression);
-        return t && t[1] || null;
-    },
-    init: function() {
-        var t = '';
-        for (var tld in SLD.list) {
-            if (!hasOwn.call(SLD.list, tld)) {
-                continue;
-            }
-
-            var expression = '(' + SLD.list[tld] + ')\.' + tld;
-            //SLD.expressions[tld] = new RegExp('\.' + expression + '$', 'i');
-            t += '|(' + expression + ')';
-        }
-
-        SLD.has_expression = new RegExp('\\.(' + t.substr(1) + ')$', 'i');
-        SLD.is_expression = new RegExp('^(' + t.substr(1) + ')$', 'i');
-    }
-};
-
-SLD.init();
-
-return SLD;
-}));
-/*!
- * URI.js - Mutating URLs
- *
- * Version: 1.8.0
- *
- * Author: Rodney Rehm
- * Web: http://medialize.github.com/URI.js/
- *
- * Licensed under
- *   MIT License http://www.opensource.org/licenses/mit-license
- *   GPL v3 http://opensource.org/licenses/GPL-3.0
- *
- */
-(function (root, factory) {
-    // https://github.com/umdjs/umd/blob/master/returnExports.js
-    if (typeof exports === 'object') {
-        // Node
-        module.exports = factory(require('./punycode'), require('./IPv6'), require('./SecondLevelDomains'));
-    } else if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define('URIjs/URI',['./punycode', './IPv6', './SecondLevelDomains'], factory);
-    } else {
-        // Browser globals (root is window)
-        root.URI = factory(root.punycode, root.IPv6, root.SecondLevelDomains);
-    }
-}(this, function (punycode, IPv6, SLD) {
-
-
-function URI(url, base) {
-    // Allow instantiation without the 'new' keyword
-    if (!(this instanceof URI)) {
-        return new URI(url, base);
-    }
-
-    if (url === undefined) {
-        if (typeof location !== 'undefined') {
-            url = location.href + "";
-        } else {
-            url = "";
-        }
-    }
-
-    this.href(url);
-
-    // resolve to base according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#constructor
-    if (base !== undefined) {
-        return this.absoluteTo(base);
-    }
-
-    return this;
-};
-
-var p = URI.prototype;
-var hasOwn = Object.prototype.hasOwnProperty;
-
-function escapeRegEx(string) {
-    // https://github.com/medialize/URI.js/commit/85ac21783c11f8ccab06106dba9735a31a86924d#commitcomment-821963
-    return string.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
-}
-
-function isArray(obj) {
-    return String(Object.prototype.toString.call(obj)) === "[object Array]";
-}
-
-function filterArrayValues(data, value) {
-    var lookup = {};
-    var i, length;
-
-    if (isArray(value)) {
-        for (i = 0, length = value.length; i < length; i++) {
-            lookup[value[i]] = true;
-        }
-    } else {
-        lookup[value] = true;
-    }
-
-    for (i = 0, length = data.length; i < length; i++) {
-        if (lookup[data[i]] !== undefined) {
-            data.splice(i, 1);
-            length--;
-            i--;
-        }
-    }
-
-    return data;
-}
-
-// state: allow duplicate query parameters (a=1&a=1)
-URI.duplicateQueryParameters = false;
-// static properties
-URI.protocol_expression = /^[a-z][a-z0-9-+-]*$/i;
-URI.idn_expression = /[^a-z0-9\.-]/i;
-URI.punycode_expression = /(xn--)/i;
-// well, 333.444.555.666 matches, but it sure ain't no IPv4 - do we care?
-URI.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
-// credits to Rich Brown
-// source: http://forums.intermapper.com/viewtopic.php?p=1096#1096
-// specification: http://www.ietf.org/rfc/rfc4291.txt
-URI.ip6_expression = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/ ;
-// gruber revised expression - http://rodneyrehm.de/t/url-regex.html
-URI.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
-// http://www.iana.org/assignments/uri-schemes.html
-// http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers#Well-known_ports
-URI.defaultPorts = {
-    http: "80",
-    https: "443",
-    ftp: "21",
-    gopher: "70",
-    ws: "80",
-    wss: "443"
-};
-// allowed hostname characters according to RFC 3986
-// ALPHA DIGIT "-" "." "_" "~" "!" "$" "&" "'" "(" ")" "*" "+" "," ";" "=" %encoded
-// I've never seen a (non-IDN) hostname other than: ALPHA DIGIT . -
-URI.invalid_hostname_characters = /[^a-zA-Z0-9\.-]/;
-// encoding / decoding according to RFC3986
-function strictEncodeURIComponent(string) {
-    // see https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/encodeURIComponent
-    return encodeURIComponent(string)
-        .replace(/[!'()*]/g, escape)
-        .replace(/\*/g, "%2A");
-}
-URI.encode = strictEncodeURIComponent;
-URI.decode = decodeURIComponent;
-URI.iso8859 = function() {
-    URI.encode = escape;
-    URI.decode = unescape;
-};
-URI.unicode = function() {
-    URI.encode = strictEncodeURIComponent;
-    URI.decode = decodeURIComponent;
-};
-URI.characters = {
-    pathname: {
-        encode: {
-            // RFC3986 2.1: For consistency, URI producers and normalizers should
-            // use uppercase hexadecimal digits for all percent-encodings.
-            expression: /%(24|26|2B|2C|3B|3D|3A|40)/ig,
-            map: {
-                // -._~!'()*
-                "%24": "$",
-                "%26": "&",
-                "%2B": "+",
-                "%2C": ",",
-                "%3B": ";",
-                "%3D": "=",
-                "%3A": ":",
-                "%40": "@"
-            }
-        },
-        decode: {
-            expression: /[\/\?#]/g,
-            map: {
-                "/": "%2F",
-                "?": "%3F",
-                "#": "%23"
-            }
-        }
-    },
-    reserved: {
-        encode: {
-            // RFC3986 2.1: For consistency, URI producers and normalizers should
-            // use uppercase hexadecimal digits for all percent-encodings.
-            expression: /%(21|23|24|26|27|28|29|2A|2B|2C|2F|3A|3B|3D|3F|40|5B|5D)/ig,
-            map: {
-                // gen-delims
-                "%3A": ":",
-                "%2F": "/",
-                "%3F": "?",
-                "%23": "#",
-                "%5B": "[",
-                "%5D": "]",
-                "%40": "@",
-                // sub-delims
-                "%21": "!",
-                "%24": "$",
-                "%26": "&",
-                "%27": "'",
-                "%28": "(",
-                "%29": ")",
-                "%2A": "*",
-                "%2B": "+",
-                "%2C": ",",
-                "%3B": ";",
-                "%3D": "="
-            }
-        }
-    }
-};
-URI.encodeQuery = function(string) {
-    return URI.encode(string + "").replace(/%20/g, '+');
-};
-URI.decodeQuery = function(string) {
-    return URI.decode((string + "").replace(/\+/g, '%20'));
-};
-URI.recodePath = function(string) {
-    var segments = (string + "").split('/');
-    for (var i = 0, length = segments.length; i < length; i++) {
-        segments[i] = URI.encodePathSegment(URI.decode(segments[i]));
-    }
-
-    return segments.join('/');
-};
-URI.decodePath = function(string) {
-    var segments = (string + "").split('/');
-    for (var i = 0, length = segments.length; i < length; i++) {
-        segments[i] = URI.decodePathSegment(segments[i]);
-    }
-
-    return segments.join('/');
-};
-// generate encode/decode path functions
-var _parts = {'encode':'encode', 'decode':'decode'};
-var _part;
-var generateAccessor = function(_group, _part) {
-    return function(string) {
-        return URI[_part](string + "").replace(URI.characters[_group][_part].expression, function(c) {
-            return URI.characters[_group][_part].map[c];
-        });
-    };
-};
-
-for (_part in _parts) {
-    URI[_part + "PathSegment"] = generateAccessor("pathname", _parts[_part]);
-}
-
-URI.encodeReserved = generateAccessor("reserved", "encode");
-
-URI.parse = function(string, parts) {
-    var pos, t;
-    if (!parts) {
-        parts = {};
-    }
-    // [protocol"://"[username[":"password]"@"]hostname[":"port]"/"?][path]["?"querystring]["#"fragment]
-
-    // extract fragment
-    pos = string.indexOf('#');
-    if (pos > -1) {
-        // escaping?
-        parts.fragment = string.substring(pos + 1) || null;
-        string = string.substring(0, pos);
-    }
-
-    // extract query
-    pos = string.indexOf('?');
-    if (pos > -1) {
-        // escaping?
-        parts.query = string.substring(pos + 1) || null;
-        string = string.substring(0, pos);
-    }
-
-    // extract protocol
-    if (string.substring(0, 2) === '//') {
-        // relative-scheme
-        parts.protocol = '';
-        string = string.substring(2);
-        // extract "user:pass@host:port"
-        string = URI.parseAuthority(string, parts);
-    } else {
-        pos = string.indexOf(':');
-        if (pos > -1) {
-            parts.protocol = string.substring(0, pos);
-            if (parts.protocol && !parts.protocol.match(URI.protocol_expression)) {
-                // : may be within the path
-                parts.protocol = undefined;
-            } else if (parts.protocol === 'file') {
-                // the file scheme: does not contain an authority
-                string = string.substring(pos + 3);
-            } else if (string.substring(pos + 1, pos + 3) === '//') {
-                string = string.substring(pos + 3);
-
-                // extract "user:pass@host:port"
-                string = URI.parseAuthority(string, parts);
-            } else {
-                string = string.substring(pos + 1);
-                parts.urn = true;
-            }
-        }
-    }
-
-    // what's left must be the path
-    parts.path = string;
-
-    // and we're done
-    return parts;
-};
-URI.parseHost = function(string, parts) {
-    // extract host:port
-    var pos = string.indexOf('/');
-    var bracketPos;
-    var t;
-
-    if (pos === -1) {
-        pos = string.length;
-    }
-
-    if (string[0] === "[") {
-        // IPv6 host - http://tools.ietf.org/html/draft-ietf-6man-text-addr-representation-04#section-6
-        // I claim most client software breaks on IPv6 anyways. To simplify things, URI only accepts
-        // IPv6+port in the format [2001:db8::1]:80 (for the time being)
-        bracketPos = string.indexOf(']');
-        parts.hostname = string.substring(1, bracketPos) || null;
-        parts.port = string.substring(bracketPos+2, pos) || null;
-    } else if (string.indexOf(':') !== string.lastIndexOf(':')) {
-        // IPv6 host contains multiple colons - but no port
-        // this notation is actually not allowed by RFC 3986, but we're a liberal parser
-        parts.hostname = string.substring(0, pos) || null;
-        parts.port = null;
-    } else {
-        t = string.substring(0, pos).split(':');
-        parts.hostname = t[0] || null;
-        parts.port = t[1] || null;
-    }
-
-    if (parts.hostname && string.substring(pos)[0] !== '/') {
-        pos++;
-        string = "/" + string;
-    }
-
-    return string.substring(pos) || '/';
-};
-URI.parseAuthority = function(string, parts) {
-    string = URI.parseUserinfo(string, parts);
-    return URI.parseHost(string, parts);
-};
-URI.parseUserinfo = function(string, parts) {
-    // extract username:password
-    var pos = string.indexOf('@');
-    var firstSlash = string.indexOf('/');
-    var t;
-
-    // authority@ must come before /path
-    if (pos > -1 && (firstSlash === -1 || pos < firstSlash)) {
-        t = string.substring(0, pos).split(':');
-        parts.username = t[0] ? URI.decode(t[0]) : null;
-        t.shift();
-        parts.password = t[0] ? URI.decode(t.join(':')) : null;
-        string = string.substring(pos + 1);
-    } else {
-        parts.username = null;
-        parts.password = null;
-    }
-
-    return string;
-};
-URI.parseQuery = function(string) {
-    if (!string) {
-        return {};
-    }
-
-    // throw out the funky business - "?"[name"="value"&"]+
-    string = string.replace(/&+/g, '&').replace(/^\?*&*|&+$/g, '');
-
-    if (!string) {
-        return {};
-    }
-
-    var items = {};
-    var splits = string.split('&');
-    var length = splits.length;
-    var v, name, value;
-
-    for (var i = 0; i < length; i++) {
-        v = splits[i].split('=');
-        name = URI.decodeQuery(v.shift());
-        // no "=" is null according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#collect-url-parameters
-        value = v.length ? URI.decodeQuery(v.join('=')) : null;
-
-        if (items[name]) {
-            if (typeof items[name] === "string") {
-                items[name] = [items[name]];
-            }
-
-            items[name].push(value);
-        } else {
-            items[name] = value;
-        }
-    }
-
-    return items;
-};
-
-URI.build = function(parts) {
-    var t = "";
-
-    if (parts.protocol) {
-        t += parts.protocol + ":";
-    }
-
-    if (!parts.urn && (t || parts.hostname)) {
-        t += '//';
-    }
-
-    t += (URI.buildAuthority(parts) || '');
-
-    if (typeof parts.path === "string") {
-        if (parts.path[0] !== '/' && typeof parts.hostname === "string") {
-            t += '/';
-        }
-
-        t += parts.path;
-    }
-
-    if (typeof parts.query === "string") {
-        t += '?' + parts.query;
-    }
-
-    if (typeof parts.fragment === "string") {
-        t += '#' + parts.fragment;
-    }
-    return t;
-};
-URI.buildHost = function(parts) {
-    var t = "";
-
-    if (!parts.hostname) {
-        return "";
-    } else if (URI.ip6_expression.test(parts.hostname)) {
-        if (parts.port) {
-            t += "[" + parts.hostname + "]:" + parts.port;
-        } else {
-            // don't know if we should always wrap IPv6 in []
-            // the RFC explicitly says SHOULD, not MUST.
-            t += parts.hostname;
-        }
-    } else {
-        t += parts.hostname;
-        if (parts.port) {
-            t += ':' + parts.port;
-        }
-    }
-
-    return t;
-};
-URI.buildAuthority = function(parts) {
-    return URI.buildUserinfo(parts) + URI.buildHost(parts);
-};
-URI.buildUserinfo = function(parts) {
-    var t = "";
-
-    if (parts.username) {
-        t += URI.encode(parts.username);
-
-        if (parts.password) {
-            t += ':' + URI.encode(parts.password);
-        }
-
-        t += "@";
-    }
-
-    return t;
-};
-URI.buildQuery = function(data, duplicates) {
-    // according to http://tools.ietf.org/html/rfc3986 or http://labs.apache.org/webarch/uri/rfc/rfc3986.html
-    // being »-._~!$&'()*+,;=:@/?« %HEX and alnum are allowed
-    // the RFC explicitly states ?/foo being a valid use case, no mention of parameter syntax!
-    // URI.js treats the query string as being application/x-www-form-urlencoded
-    // see http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type
-
-    var t = "";
-    var unique, key, i, length;
-    for (key in data) {
-        if (hasOwn.call(data, key) && key) {
-            if (isArray(data[key])) {
-                unique = {};
-                for (i = 0, length = data[key].length; i < length; i++) {
-                    if (data[key][i] !== undefined && unique[data[key][i] + ""] === undefined) {
-                        t += "&" + URI.buildQueryParameter(key, data[key][i]);
-                        if (duplicates !== true) {
-                            unique[data[key][i] + ""] = true;
-                        }
-                    }
-                }
-            } else if (data[key] !== undefined) {
-                t += '&' + URI.buildQueryParameter(key, data[key]);
-            }
-        }
-    }
-
-    return t.substring(1);
-};
-URI.buildQueryParameter = function(name, value) {
-    // http://www.w3.org/TR/REC-html40/interact/forms.html#form-content-type -- application/x-www-form-urlencoded
-    // don't append "=" for null values, according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#url-parameter-serialization
-    return URI.encodeQuery(name) + (value !== null ? "=" + URI.encodeQuery(value) : "");
-};
-
-URI.addQuery = function(data, name, value) {
-    if (typeof name === "object") {
-        for (var key in name) {
-            if (hasOwn.call(name, key)) {
-                URI.addQuery(data, key, name[key]);
-            }
-        }
-    } else if (typeof name === "string") {
-        if (data[name] === undefined) {
-            data[name] = value;
-            return;
-        } else if (typeof data[name] === "string") {
-            data[name] = [data[name]];
-        }
-
-        if (!isArray(value)) {
-            value = [value];
-        }
-
-        data[name] = data[name].concat(value);
-    } else {
-        throw new TypeError("URI.addQuery() accepts an object, string as the name parameter");
-    }
-};
-URI.removeQuery = function(data, name, value) {
-    var i, length, key;
-    
-    if (isArray(name)) {
-        for (i = 0, length = name.length; i < length; i++) {
-            data[name[i]] = undefined;
-        }
-    } else if (typeof name === "object") {
-        for (key in name) {
-            if (hasOwn.call(name, key)) {
-                URI.removeQuery(data, key, name[key]);
-            }
-        }
-    } else if (typeof name === "string") {
-        if (value !== undefined) {
-            if (data[name] === value) {
-                data[name] = undefined;
-            } else if (isArray(data[name])) {
-                data[name] = filterArrayValues(data[name], value);
-            }
-        } else {
-            data[name] = undefined;
-        }
-    } else {
-        throw new TypeError("URI.addQuery() accepts an object, string as the first parameter");
-    }
-};
-
-URI.commonPath = function(one, two) {
-    var length = Math.min(one.length, two.length);
-    var pos;
-
-    // find first non-matching character
-    for (pos = 0; pos < length; pos++) {
-        if (one[pos] !== two[pos]) {
-            pos--;
-            break;
-        }
-    }
-
-    if (pos < 1) {
-        return one[0] === two[0] && one[0] === '/' ? '/' : '';
-    }
-
-    // revert to last /
-    if (one[pos] !== '/') {
-        pos = one.substring(0, pos).lastIndexOf('/');
-    }
-
-    return one.substring(0, pos + 1);
-};
-
-URI.withinString = function(string, callback) {
-    // expression used is "gruber revised" (@gruber v2) determined to be the best solution in
-    // a regex sprint we did a couple of ages ago at
-    // * http://mathiasbynens.be/demo/url-regex
-    // * http://rodneyrehm.de/t/url-regex.html
-
-    return string.replace(URI.find_uri_expression, callback);
-};
-
-URI.ensureValidHostname = function(v) {
-    // Theoretically URIs allow percent-encoding in Hostnames (according to RFC 3986)
-    // they are not part of DNS and therefore ignored by URI.js
-
-    if (v.match(URI.invalid_hostname_characters)) {
-        // test punycode
-        if (!punycode) {
-            throw new TypeError("Hostname '" + v + "' contains characters other than [A-Z0-9.-] and Punycode.js is not available");
-        }
-
-        if (punycode.toASCII(v).match(URI.invalid_hostname_characters)) {
-            throw new TypeError("Hostname '" + v + "' contains characters other than [A-Z0-9.-]");
-        }
-    }
-};
-
-p.build = function(deferBuild) {
-    if (deferBuild === true) {
-        this._deferred_build = true;
-    } else if (deferBuild === undefined || this._deferred_build) {
-        this._string = URI.build(this._parts);
-        this._deferred_build = false;
-    }
-
-    return this;
-};
-
-p.clone = function() {
-    return new URI(this);
-};
-
-p.toString = function() {
-    return this.build(false)._string;
-};
-p.valueOf = function() {
-    return this.toString();
-};
-
-// generate simple accessors
-_parts = {protocol: 'protocol', username: 'username', password: 'password', hostname: 'hostname',  port: 'port'};
-generateAccessor = function(_part){
-    return function(v, build) {
-        if (v === undefined) {
-            return this._parts[_part] || "";
-        } else {
-            this._parts[_part] = v;
-            this.build(!build);
-            return this;
-        }
-    };
-};
-
-for (_part in _parts) {
-    p[_part] = generateAccessor(_parts[_part]);
-}
-
-// generate accessors with optionally prefixed input
-_parts = {query: '?', fragment: '#'};
-generateAccessor = function(_part, _key){
-    return function(v, build) {
-        if (v === undefined) {
-            return this._parts[_part] || "";
-        } else {
-            if (v !== null) {
-                v = v + "";
-                if (v[0] === _key) {
-                    v = v.substring(1);
-                }
-            }
-
-            this._parts[_part] = v;
-            this.build(!build);
-            return this;
-        }
-    };
-};
-
-for (_part in _parts) {
-    p[_part] = generateAccessor(_part, _parts[_part]);
-}
-
-// generate accessors with prefixed output
-_parts = {search: ['?', 'query'], hash: ['#', 'fragment']};
-generateAccessor = function(_part, _key){
-    return function(v, build) {
-        var t = this[_part](v, build);
-        return typeof t === "string" && t.length ? (_key + t) : t;
-    };
-};
-
-for (_part in _parts) {
-    p[_part] = generateAccessor(_parts[_part][1], _parts[_part][0]);
-}
-
-p.pathname = function(v, build) {
-    if (v === undefined || v === true) {
-        var res = this._parts.path || (this._parts.urn ? '' : '/');
-        return v ? URI.decodePath(res) : res;
-    } else {
-        this._parts.path = v ? URI.recodePath(v) : "/";
-        this.build(!build);
-        return this;
-    }
-};
-p.path = p.pathname;
-p.href = function(href, build) {
-    if (href === undefined) {
-        return this.toString();
-    }
-
-    this._string = "";
-    this._parts = {
-        protocol: null,
-        username: null,
-        password: null,
-        hostname: null,
-        urn: null,
-        port: null,
-        path: null,
-        query: null,
-        fragment: null,
-        // state
-        duplicateQueryParameters: URI.duplicateQueryParameters
-    };
-
-    var _URI = href instanceof URI;
-    var _object = typeof href === "object" && (href.hostname || href.path);
-    var key;
-    
-    // window.location is reported to be an object, but it's not the sort
-    // of object we're looking for: 
-    // * location.protocol ends with a colon
-    // * location.query != object.search
-    // * location.hash != object.fragment
-    // simply serializing the unknown object should do the trick 
-    // (for location, not for everything...)
-    if (!_URI && _object && Object.prototype.toString.call(href) !== "[object Object]") {
-        href = href.toString();
-    }
-
-    if (typeof href === "string") {
-        this._parts = URI.parse(href, this._parts);
-    } else if (_URI || _object) {
-        var src = _URI ? href._parts : href;
-        for (key in src) {
-            if (hasOwn.call(this._parts, key)) {
-                this._parts[key] = src[key];
-            }
-        }
-    } else {
-        throw new TypeError("invalid input");
-    }
-
-    this.build(!build);
-    return this;
-};
-
-// identification accessors
-p.is = function(what) {
-    var ip = false;
-    var ip4 = false;
-    var ip6 = false;
-    var name = false;
-    var sld = false;
-    var idn = false;
-    var punycode = false;
-    var relative = !this._parts.urn;
-
-    if (this._parts.hostname) {
-        relative = false;
-        ip4 = URI.ip4_expression.test(this._parts.hostname);
-        ip6 = URI.ip6_expression.test(this._parts.hostname);
-        ip = ip4 || ip6;
-        name = !ip;
-        sld = name && SLD && SLD.has(this._parts.hostname);
-        idn = name && URI.idn_expression.test(this._parts.hostname);
-        punycode = name && URI.punycode_expression.test(this._parts.hostname);
-    }
-
-    switch (what.toLowerCase()) {
-        case 'relative':
-            return relative;
-
-        case 'absolute':
-            return !relative;
-
-        // hostname identification
-        case 'domain':
-        case 'name':
-            return name;
-
-        case 'sld':
-            return sld;
-
-        case 'ip':
-            return ip;
-
-        case 'ip4':
-        case 'ipv4':
-        case 'inet4':
-            return ip4;
-
-        case 'ip6':
-        case 'ipv6':
-        case 'inet6':
-            return ip6;
-
-        case 'idn':
-            return idn;
-
-        case 'url':
-            return !this._parts.urn;
-
-        case 'urn':
-            return !!this._parts.urn;
-
-        case 'punycode':
-            return punycode;
-    }
-
-    return null;
-};
-
-// component specific input validation
-var _protocol = p.protocol;
-var _port = p.port;
-var _hostname = p.hostname;
-
-p.protocol = function(v, build) {
-    if (v !== undefined) {
-        if (v) {
-            // accept trailing ://
-            v = v.replace(/:(\/\/)?$/, '');
-
-            if (v.match(/[^a-zA-z0-9\.+-]/)) {
-                throw new TypeError("Protocol '" + v + "' contains characters other than [A-Z0-9.+-]");
-            }
-        }
-    }
-    return _protocol.call(this, v, build);
-};
-p.scheme = p.protocol;
-p.port = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v !== undefined) {
-        if (v === 0) {
-            v = null;
-        }
-
-        if (v) {
-            v += "";
-            if (v[0] === ":") {
-                v = v.substring(1);
-            }
-
-            if (v.match(/[^0-9]/)) {
-                throw new TypeError("Port '" + v + "' contains characters other than [0-9]");
-            }
-        }
-    }
-    return _port.call(this, v, build);
-};
-p.hostname = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v !== undefined) {
-        var x = {};
-        URI.parseHost(v, x);
-        v = x.hostname;
-    }
-    return _hostname.call(this, v, build);
-};
-
-// compound accessors
-p.host = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v === undefined) {
-        return this._parts.hostname ? URI.buildHost(this._parts) : "";
-    } else {
-        URI.parseHost(v, this._parts);
-        this.build(!build);
-        return this;
-    }
-};
-p.authority = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v === undefined) {
-        return this._parts.hostname ? URI.buildAuthority(this._parts) : "";
-    } else {
-        URI.parseAuthority(v, this._parts);
-        this.build(!build);
-        return this;
-    }
-};
-p.userinfo = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v === undefined) {
-        if (!this._parts.username) {
-            return "";
-        }
-
-        var t = URI.buildUserinfo(this._parts);
-        return t.substring(0, t.length -1);
-    } else {
-        if (v[v.length-1] !== '@') {
-            v += '@';
-        }
-
-        URI.parseUserinfo(v, this._parts);
-        this.build(!build);
-        return this;
-    }
-};
-p.resource = function(v, build) {
-    var parts;
-    
-    if (v === undefined) {
-        return this.path() + this.search() + this.hash();
-    }
-    
-    parts = URI.parse(v);
-    this._parts.path = parts.path;
-    this._parts.query = parts.query;
-    this._parts.fragment = parts.fragment;
-    this.build(!build);
-    return this;
-};
-
-// fraction accessors
-p.subdomain = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    // convenience, return "www" from "www.example.org"
-    if (v === undefined) {
-        if (!this._parts.hostname || this.is('IP')) {
-            return "";
-        }
-
-        // grab domain and add another segment
-        var end = this._parts.hostname.length - this.domain().length - 1;
-        return this._parts.hostname.substring(0, end) || "";
-    } else {
-        var e = this._parts.hostname.length - this.domain().length;
-        var sub = this._parts.hostname.substring(0, e);
-        var replace = new RegExp('^' + escapeRegEx(sub));
-
-        if (v && v[v.length - 1] !== '.') {
-            v += ".";
-        }
-
-        if (v) {
-            URI.ensureValidHostname(v);
-        }
-
-        this._parts.hostname = this._parts.hostname.replace(replace, v);
-        this.build(!build);
-        return this;
-    }
-};
-p.domain = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (typeof v === 'boolean') {
-        build = v;
-        v = undefined;
-    }
-
-    // convenience, return "example.org" from "www.example.org"
-    if (v === undefined) {
-        if (!this._parts.hostname || this.is('IP')) {
-            return "";
-        }
-
-        // if hostname consists of 1 or 2 segments, it must be the domain
-        var t = this._parts.hostname.match(/\./g);
-        if (t && t.length < 2) {
-            return this._parts.hostname;
-        }
-
-        // grab tld and add another segment
-        var end = this._parts.hostname.length - this.tld(build).length - 1;
-        end = this._parts.hostname.lastIndexOf('.', end -1) + 1;
-        return this._parts.hostname.substring(end) || "";
-    } else {
-        if (!v) {
-            throw new TypeError("cannot set domain empty");
-        }
-
-        URI.ensureValidHostname(v);
-
-        if (!this._parts.hostname || this.is('IP')) {
-            this._parts.hostname = v;
-        } else {
-            var replace = new RegExp(escapeRegEx(this.domain()) + "$");
-            this._parts.hostname = this._parts.hostname.replace(replace, v);
-        }
-
-        this.build(!build);
-        return this;
-    }
-};
-p.tld = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (typeof v === 'boolean') {
-        build = v;
-        v = undefined;
-    }
-
-    // return "org" from "www.example.org"
-    if (v === undefined) {
-        if (!this._parts.hostname || this.is('IP')) {
-            return "";
-        }
-
-        var pos = this._parts.hostname.lastIndexOf('.');
-        var tld = this._parts.hostname.substring(pos + 1);
-
-        if (build !== true && SLD && SLD.list[tld.toLowerCase()]) {
-            return SLD.get(this._parts.hostname) || tld;
-        }
-
-        return tld;
-    } else {
-        var replace;
-        
-        if (!v) {
-            throw new TypeError("cannot set TLD empty");
-        } else if (v.match(/[^a-zA-Z0-9-]/)) {
-            if (SLD && SLD.is(v)) {
-                replace = new RegExp(escapeRegEx(this.tld()) + "$");
-                this._parts.hostname = this._parts.hostname.replace(replace, v);
-            } else {
-                throw new TypeError("TLD '" + v + "' contains characters other than [A-Z0-9]");
-            }
-        } else if (!this._parts.hostname || this.is('IP')) {
-            throw new ReferenceError("cannot set TLD on non-domain host");
-        } else {
-            replace = new RegExp(escapeRegEx(this.tld()) + "$");
-            this._parts.hostname = this._parts.hostname.replace(replace, v);
-        }
-
-        this.build(!build);
-        return this;
-    }
-};
-p.directory = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v === undefined || v === true) {
-        if (!this._parts.path && !this._parts.hostname) {
-            return '';
-        }
-
-        if (this._parts.path === '/') {
-            return '/';
-        }
-
-        var end = this._parts.path.length - this.filename().length - 1;
-        var res = this._parts.path.substring(0, end) || (this._parts.hostname ? "/" : "");
-
-        return v ? URI.decodePath(res) : res;
-
-    } else {
-        var e = this._parts.path.length - this.filename().length;
-        var directory = this._parts.path.substring(0, e);
-        var replace = new RegExp('^' + escapeRegEx(directory));
-
-        // fully qualifier directories begin with a slash
-        if (!this.is('relative')) {
-            if (!v) {
-                v = '/';
-            }
-
-            if (v[0] !== '/') {
-                v = "/" + v;
-            }
-        }
-
-        // directories always end with a slash
-        if (v && v[v.length - 1] !== '/') {
-            v += '/';
-        }
-
-        v = URI.recodePath(v);
-        this._parts.path = this._parts.path.replace(replace, v);
-        this.build(!build);
-        return this;
-    }
-};
-p.filename = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v === undefined || v === true) {
-        if (!this._parts.path || this._parts.path === '/') {
-            return "";
-        }
-
-        var pos = this._parts.path.lastIndexOf('/');
-        var res = this._parts.path.substring(pos+1);
-
-        return v ? URI.decodePathSegment(res) : res;
-    } else {
-        var mutatedDirectory = false;
-        
-        if (v[0] === '/') {
-            v = v.substring(1);
-        }
-
-        if (v.match(/\.?\//)) {
-            mutatedDirectory = true;
-        }
-
-        var replace = new RegExp(escapeRegEx(this.filename()) + "$");
-        v = URI.recodePath(v);
-        this._parts.path = this._parts.path.replace(replace, v);
-
-        if (mutatedDirectory) {
-            this.normalizePath(build);
-        } else {
-            this.build(!build);
-        }
-
-        return this;
-    }
-};
-p.suffix = function(v, build) {
-    if (this._parts.urn) {
-        return v === undefined ? '' : this;
-    }
-
-    if (v === undefined || v === true) {
-        if (!this._parts.path || this._parts.path === '/') {
-            return "";
-        }
-
-        var filename = this.filename();
-        var pos = filename.lastIndexOf('.');
-        var s, res;
-
-        if (pos === -1) {
-            return "";
-        }
-
-        // suffix may only contain alnum characters (yup, I made this up.)
-        s = filename.substring(pos+1);
-        res = (/^[a-z0-9%]+$/i).test(s) ? s : "";
-        return v ? URI.decodePathSegment(res) : res;
-    } else {
-        if (v[0] === '.') {
-            v = v.substring(1);
-        }
-
-        var suffix = this.suffix();
-        var replace;
-
-        if (!suffix) {
-            if (!v) {
-                return this;
-            }
-
-            this._parts.path += '.' + URI.recodePath(v);
-        } else if (!v) {
-            replace = new RegExp(escapeRegEx("." + suffix) + "$");
-        } else {
-            replace = new RegExp(escapeRegEx(suffix) + "$");
-        }
-
-        if (replace) {
-            v = URI.recodePath(v);
-            this._parts.path = this._parts.path.replace(replace, v);
-        }
-
-        this.build(!build);
-        return this;
-    }
-};
-p.segment = function(segment, v, build) {
-    var separator = this._parts.urn ? ':' : '/';
-    var path = this.path();
-    var absolute = path.substring(0, 1) === '/';
-    var segments = path.split(separator);
-
-    if (typeof segment !== 'number') {
-        build = v;
-        v = segment;
-        segment = undefined;
-    }
-
-    if (segment !== undefined && typeof segment !== 'number') {
-        throw new Error("Bad segment '" + segment + "', must be 0-based integer");
-    }
-
-    if (absolute) {
-        segments.shift();
-    }
-
-    if (segment < 0) {
-        // allow negative indexes to address from the end
-        segment = Math.max(segments.length + segment, 0);
-    }
-
-    if (v === undefined) {
-        return segment === undefined
-            ? segments
-            : segments[segment];
-    } else if (segment === null || segments[segment] === undefined) {
-        if (isArray(v)) {
-            segments = v;
-        } else if (v || (typeof v === "string" && v.length)) {
-            if (segments[segments.length -1] === "") {
-                // empty trailing elements have to be overwritten
-                // to prefent results such as /foo//bar
-                segments[segments.length -1] = v;
-            } else {
-                segments.push(v);
-            }
-        }
-    } else {
-        if (v || (typeof v === "string" && v.length)) {
-            segments[segment] = v;
-        } else {
-            segments.splice(segment, 1);
-        }
-    }
-
-    if (absolute) {
-        segments.unshift("");
-    }
-
-    return this.path(segments.join(separator), build);
-};
-
-// mutating query string
-var q = p.query;
-p.query = function(v, build) {
-    if (v === true) {
-        return URI.parseQuery(this._parts.query);
-    } else if (v !== undefined && typeof v !== "string") {
-        this._parts.query = URI.buildQuery(v, this._parts.duplicateQueryParameters);
-        this.build(!build);
-        return this;
-    } else {
-        return q.call(this, v, build);
-    }
-};
-p.addQuery = function(name, value, build) {
-    var data = URI.parseQuery(this._parts.query);
-    URI.addQuery(data, name, value === undefined ? null : value);
-    this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters);
-    if (typeof name !== "string") {
-        build = value;
-    }
-
-    this.build(!build);
-    return this;
-};
-p.removeQuery = function(name, value, build) {
-    var data = URI.parseQuery(this._parts.query);
-    URI.removeQuery(data, name, value);
-    this._parts.query = URI.buildQuery(data, this._parts.duplicateQueryParameters);
-    if (typeof name !== "string") {
-        build = value;
-    }
-
-    this.build(!build);
-    return this;
-};
-p.addSearch = p.addQuery;
-p.removeSearch = p.removeQuery;
-
-// sanitizing URLs
-p.normalize = function() {
-    if (this._parts.urn) {
-        return this
-            .normalizeProtocol(false)
-            .normalizeQuery(false)
-            .normalizeFragment(false)
-            .build();
-    }
-
-    return this
-        .normalizeProtocol(false)
-        .normalizeHostname(false)
-        .normalizePort(false)
-        .normalizePath(false)
-        .normalizeQuery(false)
-        .normalizeFragment(false)
-        .build();
-};
-p.normalizeProtocol = function(build) {
-    if (typeof this._parts.protocol === "string") {
-        this._parts.protocol = this._parts.protocol.toLowerCase();
-        this.build(!build);
-    }
-
-    return this;
-};
-p.normalizeHostname = function(build) {
-    if (this._parts.hostname) {
-        if (this.is('IDN') && punycode) {
-            this._parts.hostname = punycode.toASCII(this._parts.hostname);
-        } else if (this.is('IPv6') && IPv6) {
-            this._parts.hostname = IPv6.best(this._parts.hostname);
-        }
-
-        this._parts.hostname = this._parts.hostname.toLowerCase();
-        this.build(!build);
-    }
-
-    return this;
-};
-p.normalizePort = function(build) {
-    // remove port of it's the protocol's default
-    if (typeof this._parts.protocol === "string" && this._parts.port === URI.defaultPorts[this._parts.protocol]) {
-        this._parts.port = null;
-        this.build(!build);
-    }
-
-    return this;
-};
-p.normalizePath = function(build) {
-    if (this._parts.urn) {
-        return this;
-    }
-
-    if (!this._parts.path || this._parts.path === '/') {
-        return this;
-    }
-
-    var _was_relative;
-    var _was_relative_prefix;
-    var _path = this._parts.path;
-    var _parent, _pos;
-
-    // handle relative paths
-    if (_path[0] !== '/') {
-        if (_path[0] === '.') {
-            _was_relative_prefix = _path.substring(0, _path.indexOf('/'));
-        }
-        _was_relative = true;
-        _path = '/' + _path;
-    }
-    // resolve simples
-    _path = _path.replace(/(\/(\.\/)+)|\/{2,}/g, '/');
-    // resolve parents
-    while (true) {
-        _parent = _path.indexOf('/../');
-        if (_parent === -1) {
-            // no more ../ to resolve
-            break;
-        } else if (_parent === 0) {
-            // top level cannot be relative...
-            _path = _path.substring(3);
-            break;
-        }
-
-        _pos = _path.substring(0, _parent).lastIndexOf('/');
-        if (_pos === -1) {
-            _pos = _parent;
-        }
-        _path = _path.substring(0, _pos) + _path.substring(_parent + 3);
-    }
-    // revert to relative
-    if (_was_relative && this.is('relative')) {
-        if (_was_relative_prefix){
-            _path = _was_relative_prefix + _path;
-        } else {
-            _path = _path.substring(1);
-        }
-    }
-
-    _path = URI.recodePath(_path);
-    this._parts.path = _path;
-    this.build(!build);
-    return this;
-};
-p.normalizePathname = p.normalizePath;
-p.normalizeQuery = function(build) {
-    if (typeof this._parts.query === "string") {
-        if (!this._parts.query.length) {
-            this._parts.query = null;
-        } else {
-            this.query(URI.parseQuery(this._parts.query));
-        }
-
-        this.build(!build);
-    }
-
-    return this;
-};
-p.normalizeFragment = function(build) {
-    if (!this._parts.fragment) {
-        this._parts.fragment = null;
-        this.build(!build);
-    }
-
-    return this;
-};
-p.normalizeSearch = p.normalizeQuery;
-p.normalizeHash = p.normalizeFragment;
-
-p.iso8859 = function() {
-    // expect unicode input, iso8859 output
-    var e = URI.encode;
-    var d = URI.decode;
-
-    URI.encode = escape;
-    URI.decode = decodeURIComponent;
-    this.normalize();
-    URI.encode = e;
-    URI.decode = d;
-    return this;
-};
-
-p.unicode = function() {
-    // expect iso8859 input, unicode output
-    var e = URI.encode;
-    var d = URI.decode;
-
-    URI.encode = strictEncodeURIComponent;
-    URI.decode = unescape;
-    this.normalize();
-    URI.encode = e;
-    URI.decode = d;
-    return this;
-};
-
-p.readable = function() {
-    var uri = this.clone();
-    // removing username, password, because they shouldn't be displayed according to RFC 3986
-    uri.username("").password("").normalize();
-    var t = '';
-    if (uri._parts.protocol) {
-        t += uri._parts.protocol + '://';
-    }
-
-    if (uri._parts.hostname) {
-        if (uri.is('punycode') && punycode) {
-            t += punycode.toUnicode(uri._parts.hostname);
-            if (uri._parts.port) {
-                t += ":" + uri._parts.port;
-            }
-        } else {
-            t += uri.host();
-        }
-    }
-
-    if (uri._parts.hostname && uri._parts.path && uri._parts.path[0] !== '/') {
-        t += '/';
-    }
-
-    t += uri.path(true);
-    if (uri._parts.query) {
-        var q = '';
-        for (var i = 0, qp = uri._parts.query.split('&'), l = qp.length; i < l; i++) {
-            var kv = (qp[i] || "").split('=');
-            q += '&' + URI.decodeQuery(kv[0])
-                .replace(/&/g, '%26');
-
-            if (kv[1] !== undefined) {
-                q += "=" + URI.decodeQuery(kv[1])
-                    .replace(/&/g, '%26');
-            }
-        }
-        t += '?' + q.substring(1);
-    }
-
-    t += uri.hash();
-    return t;
-};
-
-// resolving relative and absolute URLs
-p.absoluteTo = function(base) {
-    var resolved = this.clone();
-    var properties = ['protocol', 'username', 'password', 'hostname', 'port'];
-    var basedir, i, p;
-
-    if (this._parts.urn) {
-        throw new Error('URNs do not have any generally defined hierachical components');
-    }
-
-    if (this._parts.hostname) {
-        return resolved;
-    }
-
-    if (!(base instanceof URI)) {
-        base = new URI(base);
-    }
-
-    for (i = 0, p; p = properties[i]; i++) {
-        resolved._parts[p] = base._parts[p];
-    }
-    
-    properties = ['query', 'path'];
-    for (i = 0, p; p = properties[i]; i++) {
-        if (!resolved._parts[p] && base._parts[p]) {
-            resolved._parts[p] = base._parts[p];
-        }
-    }
-
-    if (resolved.path()[0] !== '/') {
-        basedir = base.directory();
-        resolved._parts.path = (basedir ? (basedir + '/') : '') + resolved._parts.path;
-        resolved.normalizePath();
-    }
-
-    resolved.build();
-    return resolved;
-};
-p.relativeTo = function(base) {
-    var relative = this.clone();
-    var properties = ['protocol', 'username', 'password', 'hostname', 'port'];
-    var common, _base;
-
-    if (this._parts.urn) {
-        throw new Error('URNs do not have any generally defined hierachical components');
-    }
-
-    if (!(base instanceof URI)) {
-        base = new URI(base);
-    }
-
-    if (this.path()[0] !== '/' || base.path()[0] !== '/') {
-        throw new Error('Cannot calculate common path from non-relative URLs');
-    }
-
-    common = URI.commonPath(relative.path(), base.path());
-    _base = base.directory();
-
-    for (var i = 0, p; p = properties[i]; i++) {
-        relative._parts[p] = null;
-    }
-
-    if (!common || common === '/') {
-        return relative;
-    }
-
-    if (_base + '/' === common) {
-        relative._parts.path = './' + relative.filename();
-    } else {
-        var parents = '../';
-        var _common = new RegExp('^' + escapeRegEx(common));
-        var _parents = _base.replace(_common, '/').match(/\//g).length -1;
-
-        while (_parents--) {
-            parents += '../';
-        }
-
-        relative._parts.path = relative._parts.path.replace(_common, parents);
-    }
-
-    relative.build();
-    return relative;
-};
-
-// comparing URIs
-p.equals = function(uri) {
-    var one = this.clone();
-    var two = new URI(uri);
-    var one_map = {};
-    var two_map = {};
-    var checked = {};
-    var one_query, two_query, key;
-
-    one.normalize();
-    two.normalize();
-
-    // exact match
-    if (one.toString() === two.toString()) {
-        return true;
-    }
-
-    // extract query string
-    one_query = one.query();
-    two_query = two.query();
-    one.query("");
-    two.query("");
-
-    // definitely not equal if not even non-query parts match
-    if (one.toString() !== two.toString()) {
-        return false;
-    }
-
-    // query parameters have the same length, even if they're permutated
-    if (one_query.length !== two_query.length) {
-        return false;
-    }
-
-    one_map = URI.parseQuery(one_query);
-    two_map = URI.parseQuery(two_query);
-
-    for (key in one_map) {
-        if (hasOwn.call(one_map, key)) {
-            if (!isArray(one_map[key])) {
-                if (one_map[key] !== two_map[key]) {
-                    return false;
-                }
-            } else {
-                if (!isArray(two_map[key])) {
-                    return false;
-                }
-
-                // arrays can't be equal if they have different amount of content
-                if (one_map[key].length !== two_map[key].length) {
-                    return false;
-                }
-
-                one_map[key].sort();
-                two_map[key].sort();
-
-                for (var i = 0, l = one_map[key].length; i < l; i++) {
-                    if (one_map[key][i] !== two_map[key][i]) {
-                        return false;
-                    }
-                }
-            }
-
-            checked[key] = true;
-        }
-    }
-
-    for (key in two_map) {
-        if (hasOwn.call(two_map, key)) {
-            if (!checked[key]) {
-                // two contains a parameter not present in one
-                return false;
-            }
-        }
-    }
-
-    return true;
-};
-
-// state
-p.duplicateQueryParameters = function(v) {
-    this._parts.duplicateQueryParameters = !!v;
-    return this;
-};
-
-return URI;
-}));
 /**
  * @license
  * Patterns @VERSION@ jquery-ext - various jQuery extensions
@@ -23868,245 +21683,6 @@ define('jquery_ext',["jquery"], function($) {
     };
 });
 
-/*!
- * URI.js - Mutating URLs
- * jQuery Plugin
- *
- * Version: 1.8.0
- *
- * Author: Rodney Rehm
- * Web: http://medialize.github.com/URI.js/jquery-uri-plugin.html
- *
- * Licensed under
- *   MIT License http://www.opensource.org/licenses/mit-license
- *   GPL v3 http://opensource.org/licenses/GPL-3.0
- *
- */
-
-(function (root, factory) {
-    // https://github.com/umdjs/umd/blob/master/returnExports.js
-    if (typeof exports === 'object') {
-        // Node
-        module.exports = factory(require('jquery', './URI'));
-    } else if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define('URIjs/jquery.URI',['jquery', './URI'], factory);
-    } else {
-        // Browser globals (root is window)
-        factory(root.jQuery, root.URI);
-    }
-}(this, function ($, URI) {
-
-
-var comparable = {};
-var compare = {
-    // equals 
-    '=': function(value, target) {
-        return value === target;
-    },
-    // ~= translates to value.match((?:^|\s)target(?:\s|$)) which is useless for URIs
-    // |= translates to value.match((?:\b)target(?:-|\s|$)) which is useless for URIs
-    // begins with
-    '^=': function(value, target, property) {
-        return !!(value + "").match(new RegExp('^' + escapeRegEx(target), 'i'));
-    },
-    // ends with
-    '$=': function(value, target, property) {
-        return !!(value + "").match(new RegExp(escapeRegEx(target) + '$', 'i'));
-    },
-    // contains
-    '*=': function(value, target, property) {
-        if (property == 'directory') {
-            // add trailing slash so /dir/ will match the deep-end as well
-            value += '/';
-        }
-        
-        return !!(value + "").match(new RegExp(escapeRegEx(target), 'i'));
-    },
-    'equals:': function(uri, target) {
-        return uri.equals(target);
-    },
-    'is:': function(uri, target) {
-        return uri.is(target);
-    }
-};
-
-function escapeRegEx(string) {
-    // https://github.com/medialize/URI.js/commit/85ac21783c11f8ccab06106dba9735a31a86924d#commitcomment-821963
-    return string.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
-}
-
-function getUriProperty(elem) {
-    var property;
-    
-    // Note: IE9 will report img.href, so check img.src first (Issue #48)
-    $.each(['src', 'href', 'action'], function(k, v) {
-        if (v in elem ) {
-            property = v;
-            return false;
-        }
-    
-        return true;
-    });
-    
-    // compensate ambiguous <input>
-    if (elem.nodeName.toLowerCase() === 'input' && elem.type !== 'image') {
-        return undefined;
-    }
-    
-    return property;
-}
-
-function generateAccessor(property) {
-    return {
-        get: function(elem) {
-            return $(elem).uri()[property]();
-        },
-        set: function(elem, value) {
-            $(elem).uri()[property](value);
-            return value;
-        }
-    };
-};
-
-// populate lookup table and register $.attr('uri:accessor') handlers
-$.each('authority directory domain filename fragment hash host hostname href password path pathname port protocol query resource scheme search subdomain suffix tld username'.split(" "), function(k, v) {
-    comparable[v] = true;
-    $.attrHooks['uri:' + v] = generateAccessor(v);
-});
-
-// pipe $.attr('src') and $.attr('href') through URI.js
-var _attrHooks = {
-    get: function(elem) {
-        return $(elem).uri();
-    },
-    set: function(elem, value) {
-        return $(elem).uri().href(value).toString();
-    }
-};
-$.each(['src', 'href', 'action', 'uri'], function(k, v) {
-    $.attrHooks[v] = {
-        set: _attrHooks.set
-    };
-});
-$.attrHooks.uri.get = _attrHooks.get;
-
-// general URI accessor
-$.fn.uri = function(uri) {
-    var $this = this.first();
-    var elem = $this.get(0);
-    var property = getUriProperty(elem);
-    
-    if (!property) {
-        throw new Error('Element "' + elem.nodeName + '" does not have either property: href, src, action');
-    }
-    
-    if (uri !== undefined) {
-        var old = $this.data('uri');
-        if (old) {
-            return old.href(uri);
-        }
-        
-        if (!(uri instanceof URI)) {
-            uri = URI(uri);
-        }
-    } else {
-        uri = $this.data('uri');
-        if (uri) {
-            return uri;
-        } else {
-    		uri = URI($this.attr(property));
-        }
-    }
-    
-    uri._dom_element = elem;
-    uri._dom_attribute = property;
-    uri.normalize();
-    $this.data('uri', uri);
-    return uri;
-};
-
-// overwrite URI.build() to update associated DOM element if necessary
-URI.prototype.build = function(deferBuild) {
-    if (this._dom_element) {
-        // cannot defer building when hooked into a DOM element
-        this._string = URI.build(this._parts);
-        this._deferred_build = false;
-        this._dom_element.setAttribute(this._dom_attribute, this._string);
-        this._dom_element[this._dom_attribute] = this._string;
-    } else if (deferBuild === true) {
-        this._deferred_build = true;
-    } else if (deferBuild === undefined || this._deferred_build) {
-        this._string = URI.build(this._parts);
-        this._deferred_build = false;
-    }
-    
-    return this;
-};
-
-// add :uri() pseudo class selector to sizzle
-var uriSizzle;
-var pseudoArgs = /^([a-zA-Z]+)\s*([\^\$*]?=|:)\s*(['"]?)(.+)\3|^\s*([a-zA-Z0-9]+)\s*$/;
-function uriPseudo (elem, text) {
-    var match, property, uri;
-    
-    // skip anything without src|href|action and bad :uri() syntax
-    if (!getUriProperty(elem) || !text) {
-        return false;
-    }
-    
-    match = text.match(pseudoArgs);
-
-    if (!match || (!match[5] && match[2] !== ':' && !compare[match[2]])) {
-        // abort because the given selector cannot be executed
-        // filers seem to fail silently
-        return false;
-    }
-
-    uri = $(elem).uri();
-    
-    if (match[5]) {
-        return uri.is(match[5]);
-    } else if (match[2] === ':') {
-        property = match[1].toLowerCase() + ':';
-        if (!compare[property]) {
-            // filers seem to fail silently
-            return false;
-        }
-        
-        return compare[property](uri, match[4]);
-    } else {
-        property = match[1].toLowerCase();
-        if (!comparable[property]) {
-            // filers seem to fail silently
-            return false;
-        }
-        
-        return compare[match[2]](uri[property](), match[4], property);
-    }
-
-    return false;
-}
-
-if ($.expr.createPseudo) {
-    // jQuery >= 1.8
-    uriSizzle = $.expr.createPseudo(function (text) {
-        return function (elem) {
-            return uriPseudo(elem, text);
-        };
-    });
-} else {
-    // jQuery < 1.8
-    uriSizzle = function (elem, i, match) {
-        return uriPseudo(elem, match[3]);
-    };
-}
-
-$.expr[":"].uri = uriSizzle;
-
-// extending existing object rather than defining something new
-return {};
-}));
 /*
  * changes to previous injection implementations
  * - no support for data-injection anymore, switch to new data-inject
@@ -24119,10 +21695,10 @@ define('patterns/inject',[
     "../core/logger",
     "../lib/ajax",
     "../registry",
-    "URIjs/URI",
-    "jquery_ext", // for :scrollable for autoLoading-visible
-    "URIjs/jquery.URI"
-], function($, Parser, logger, ajax, registry, URI) {
+    "../utils",
+    "../lib/htmlparser",
+    "jquery_ext"  // for :scrollable for autoLoading-visible
+], function($, Parser, logger, ajax, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
 
@@ -24273,8 +21849,8 @@ define('patterns/inject',[
         },
 
         _extractModifiers: function(cfg) {
-            var source_re = /^(.+?)(::element)?$/,
-                target_re = /^(.+?)(::element)?(::after|::before)?$/,
+            var source_re = /^(.*?)(::element)?$/,
+                target_re = /^(.*?)(::element)?(::after|::before)?$/,
                 source_match = source_re.exec(cfg.source),
                 target_match = target_re.exec(cfg.target),
                 targetMod, targetPosition;
@@ -24379,9 +21955,19 @@ define('patterns/inject',[
                     //    window.location.href = $el.attr('href');
                 }
                 $el.off("pat-ajax-success.pat-inject");
+                $el.off("pat-ajax-error.pat-inject");
+            };
+
+            var onError = function() {
+                cfgs.forEach(function(cfg) {
+                    cfg.$injected.remove();
+                });
+                $el.off("pat-ajax-success.pat-inject");
+                $el.off("pat-ajax-error.pat-inject");
             };
 
             $el.on("pat-ajax-success.pat-inject", onSuccess);
+            $el.on("pat-ajax-error.pat-inject", onError);
 
             ajax($el, {
                 url: cfgs[0].url
@@ -24425,8 +22011,18 @@ define('patterns/inject',[
 
                 var $source = $html.find(source);
 
-                if ($source.length === 0)
+                if ($source.length===0)
                     log.warn("No source elements for selector:", source, $html);
+
+                $source.find("a[href^=\"#\"]").each(function() {
+                    var href = this.getAttribute("href");
+                    // Skip in-document links pointing to an id that is inside
+                    // this fragment.
+                    if (href.length===1)  // Special case for top-of-page links
+                        this.href=url;
+                    else if (!$source.find(href).length)
+                        this.href=url+href;
+                });
 
                 return $source;
             });
@@ -24438,6 +22034,46 @@ define('patterns/inject',[
             IMG: "src"
         },
 
+        _rebaseHTML: function(base, html) {
+            var output = [],
+                i, link_attribute, value;
+
+            htmlparser.HTMLParser(html, {
+                start: function(tag, attrs, unary) {
+                    output.push("<"+tag);
+                    link_attribute=_._link_attributes[tag.toUpperCase()];
+                    for (i=0; i<attrs.length; i++) {
+                        if (attrs[i].name.toLowerCase()===link_attribute) {
+                            value=attrs[i].value;
+                            // Do not rewrite Zope views or in-document links.
+                            // In-document links will be processed later after
+                            // extracting the right fragment.
+                            if (value.slice(0, 2)!=="@@" && value[0]!=="#") {
+                                value=utils.rebaseURL(base, value);
+                                value=value.replace(/(^|[^\\])"/g, '$1\\\"');
+                            }
+                        }  else
+                            value=attrs[i].escaped;
+                        output.push(" "+attrs[i].name+"=\""+value+"\"");
+                    }
+                    output.push(unary ? "/>" : ">");
+                },
+
+                end: function(tag) {
+                    output.push("</"+tag+">");
+                },
+                
+                chars: function(text) {
+                    output.push(text);
+                },
+
+                comment: function(text) {
+                    output.push("<!--"+text+"-->");
+                }
+            });
+            return output.join("");
+        },
+
         _parseRawHtml: function(html, url) {
             url = url || "";
 
@@ -24447,36 +22083,16 @@ define('patterns/inject',[
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
                     .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
                     .replace(/<\/body([^>]*?)>/gi, "</div>");
+            try {
+                clean_html = _._rebaseHTML(url, clean_html);
+            } catch (e) {
+                log.error("Error rebasing urls", e);
+            }
             var $html = $("<div/>").html(clean_html);
 
             if ($html.children().length === 0)
                 log.warn("Parsing html resulted in empty jquery object:", clean_html);
 
-            // make relative links in _link_attributes relative to current page
-            $html.find(":uri(is:relative)").each(function() {
-                var attr = _._link_attributes[this.tagName],
-                    rel_url, new_rel_url;
-                if (!attr) {
-                    return;
-                }
-
-                // this.(href|action|src) yields absolute uri -> retrieve relative
-                // uris with getAttribute
-                rel_url = this.getAttribute(attr);
-                if (!rel_url) {
-                    log.info("Skipping empty url for (el, attr)", this, attr);
-                    return;
-                }
-                // leave hash and plone views untouched
-                if ((rel_url[0] === "#") || (rel_url[0] === "@")) {
-                    return;
-                }
-                new_rel_url = new URI(rel_url).absoluteTo(url).toString();
-                if (new_rel_url !== rel_url) {
-                    log.debug("Adjusted url from:", rel_url, "to:", new_rel_url);
-                    this[attr] = new_rel_url;
-                }
-            });
             return $html;
         },
 
@@ -24759,7 +22375,8 @@ define('patterns/collapsible',[
                 opts = [{
                     url: url,
                     source: id,
-                    $target: $(".panel-content", $el)
+                    $target: $(".panel-content", $el),
+                    dataType: "html"
                 }];
             inject.execute(opts, $el);
         },
@@ -44949,10 +42566,9 @@ define('patterns/edit-tinymce',[
     "../core/logger",
     "../registry",
     "../utils",
-    "URIjs/URI",
     "jquery_textchange",
     "tinymce"
-], function($, ajax, Parser, logger, registry, utils, URI) {
+], function($, ajax, Parser, logger, registry, utils) {
     var log = logger.getLogger("pat.editTinyMCE"),
         parser = new Parser("edit-tinymce");
 
@@ -45003,18 +42619,19 @@ define('patterns/edit-tinymce',[
                 return false;
             }
 
-            var u = new URI();
-            u._parts.query = null;
+            var base_url = window.location.toString(), idx;
+            if ((idx=base_url.indexOf("?"))!==-1)
+                base_url=base_url.slice(0, idx);
 
             // handle rebasing of own urls if we were injected
             var parents = $el.parents().filter(function() {
                 return $(this).data("pat-injected");
             });
             if (parents.length)
-                u = URI(parents.first().data("pat-injected").origin).absoluteTo(u);
+                base_url = utils.rebaseURL(base_url, parents.first().data("pat-injected").origin);
             if (cfg.content_css)
-                cfg.content_css = URI(cfg.content_css).absoluteTo(u).toString();
-            tinyMCE.baseURL = URI(args.tinymceBaseurl).absoluteTo(u).toString();
+                cfg.content_css = utils.rebaseURL(base_url, cfg.content_css);
+            tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
             var $tinymce, $tinyifr,
@@ -54056,14 +51673,228 @@ define("pagedown_converter", function(){});
 
 define("pagedown_sanitizer", ["pagedown_converter"], function(){});
 
+(function () {
+  Markdown.Extra = {};
+
+  // Needed for converting internal markdown (in tables for instance).
+  // This is necessary since these methods are meant to be called as
+  // preConversion hooks, and the Markdown converter won't convert
+  // any markdown contained in the html we return.
+  var conv = Markdown.getSanitizingConverter();
+
+  // fenced code block options
+  var _googleCodePrettify = false;
+  var _highlightJs = false;
+
+  // table options
+  var _tableClass = 'wmd-table';
+
+  Markdown.Extra.setup = function(options) {
+    if (typeof options.fencedCodeBlocks != "undefined") {
+      var fc = options.fencedCodeBlocks;
+      if (typeof fc.highlighter != "undefined") {
+        _googleCodePrettify = fc.highlighter === 'prettify';
+        _highlightJs = fc.highlighter === 'highlight';
+      }
+    }
+    if (typeof options.tables != "undefined") {
+      var tb = options.tables;
+      if (typeof tb.tableClass != "undefined")
+        _tableClass = tb.tableClass;
+    }
+  };
+
+  function strip(str) {
+    return str.replace(/^\s+|\s+$/g, '');
+  }
+
+  function sanitizeTag(tag, whitelist) {
+    if (tag.match(whitelist))
+      return tag;
+    return '';
+  }
+
+  function sanitizeHtml(html, whitelist) {
+    return html.replace(/<[^>]*>?/gi, function(match) {
+      return sanitizeTag(match, whitelist);
+    });
+  }
+
+  Markdown.Extra.tables = function(text) {
+    var _blocks = [],
+        _blockdata = [],
+        _lines = text.split('\n'),
+        _whitelist = /^(<\/?(b|del|em|i|s|sup|sub|strong|strike)>|<(br)\s?\/?>)$/i;
+        // I'm using this whitelist as a post-processing step after calling convert.makeHtml()
+        // to keep only span-level tags per the PHP Markdown Extra spec.
+
+    function convertInline(text) {
+      var html = conv.makeHtml(text);
+      return sanitizeHtml(html, _whitelist);
+    }
+
+    function splitRow(row, border) {
+      var r = strip(row);
+      if (border) {
+        if (r.indexOf('|') === 0)
+          r = r.slice(1);
+        if (r.lastIndexOf('|') === r.length - 1)
+          r = r.slice(0, -1);
+      }
+
+      var cols = r.split('|');
+      for (var i = 0; i < cols.length; i++)
+        cols[i] = strip(cols[i]);
+
+      return cols;
+    }
+
+    function buildRow(line, border, align, isHeader) {
+      var rowHtml = '<tr>';
+      var cols = splitRow(line, border);
+      var style, cellStart, cellEnd, content;
+
+      // use align to ensure each row has same number of columns
+      for (var i = 0; i < align.length; i++) {
+        style = align[i] && !isHeader ? ' style="text-align:' + align[i] + ';"' : '';
+        cellStart = isHeader ? '<th'+style+'>' : '<td'+style+'>';
+        cellEnd = isHeader ? "</th>" : "</td>";
+        content = i < cols.length ? convertInline(cols[i]) : '';
+        rowHtml += cellStart + content + cellEnd;
+      }
+
+      return rowHtml + "</tr>";
+    }
+
+   // find blocks (groups of lines matching our definition of a table)
+   function findBlocks() {
+      // find block potentially containing tables
+      var b = [], ndx = 0, bounds = {};
+      for (var i = 0; i < _lines.length; i++) {
+        var line = _lines[i];
+        // TODO: add ability to escape |, : per PHP Markdown Extra spec
+        // TODO: use a regex to find blocks. make sure blocks end with blank line
+        if (line.indexOf('|') != -1 && (ndx != 1 || line.indexOf('-') != -1)) {
+            if (typeof bounds.start == "undefined")
+              bounds.start = i;
+            b.push(line);
+            ndx++;
+        } else { // invalid line
+          if (b.length > 2) {// need head, sep, body
+            _blocks.push(b);
+            bounds.end = i - 1;
+            _blockdata.push(bounds);
+          }
+          b = [];
+          bounds = {};
+          ndx = 0;
+        }
+      }
+    }
+
+    function makeTables() {
+      findBlocks();
+      for (var i = 0; i < _blocks.length; i++) {
+        var block = _blocks[i],
+            header = strip(block[0]);
+            sep = strip(block[1]);
+            rows = strip(block[2]);
+            border = false;
+
+        if (header.indexOf('|') === 0 ||
+            header.lastIndexOf('|') === header.length-1)
+          border = true;
+
+        var align = [],
+            cols = splitRow(sep, border);
+
+        // determine alignment of columns
+        for (var j = 0; j < cols.length; j++) {
+          var c = cols[j];
+          if (c.indexOf(':') === 0 && c.lastIndexOf(':') == c.length - 1)
+            align.push('center');
+          else if (c.indexOf(':') === 0)
+            align.push('left');
+          else if (c.lastIndexOf(':') === c.length - 1)
+            align.push('right');
+          else
+            align.push(null);
+        }
+
+        // build html
+        var cls = _tableClass === '' ? '' : ' class="'+_tableClass+'"';
+        var tableHtml = '<table'+cls+'>' + buildRow(block[0], border, align, true);
+        for (j = 2; j < block.length; j++)
+          tableHtml += buildRow(block[j], border, align, false);
+        tableHtml += "</table>\n";
+
+        var toRemove = _blockdata[i].end - _blockdata[i].start + 1;
+        _lines.splice(_blockdata[i].start, toRemove, tableHtml);
+      }
+      return _lines.join('\n');
+    }
+
+    return makeTables();
+  }; // Markdown.Extra.tables
+
+  // gfm-inspired fenced code blocks
+  Markdown.Extra.fencedCodeBlocks = function(text) {
+    function encodeCode(code) {
+      code = code.replace(/&/g, "&amp;");
+      code = code.replace(/</g, "&lt;");
+      code = code.replace(/>/g, "&gt;");
+      return code;
+    }
+
+    var re = new RegExp(
+      '(\\n\\n|^\\n?)' +         // separator, $1 = leading whitespace
+      '^```(\\w+)?\\s*\\n' +     // opening fence, $2 = optional lang
+      '([\\s\\S]*?)' +           // $3 = code block content (no dotAll in js - dot doesn't match newline)
+      '^```\\s*\\n',             // closing fence
+      'gm');                     // Flags : global, multiline
+
+    var match, codeblock, codeclass, first, last;
+    while (match = re.exec(text)) {
+      preclass = _googleCodePrettify ? ' class="prettyprint"' : '';
+      codeclass = '';
+      if (typeof match[2] != "undefined" && (_googleCodePrettify || _highlightJs))
+        codeclass = ' class="language-' + match[2] + '"';
+      codeblock = '\n\n<pre' + preclass + '><code' + codeclass + '>';
+      codeblock += encodeCode(match[3]) + '</code></pre>\n\n';
+
+      // substitute wrapped content for fenced code block
+      first = text.substring(0, match.index);
+      last = text.substr(match.index + match[0].length);
+      text = first + codeblock + last;
+    }
+
+    return text;
+  };
+
+  Markdown.Extra.all = function(text) {
+    text = Markdown.Extra.tables(text);
+    text = Markdown.Extra.fencedCodeBlocks(text);
+    return text;
+  }
+
+})();
+
+
+define("pagedown_extra", ["pagedown_converter","pagedown_sanitizer"], function(){});
+
 define('patterns/markdown',[
     "jquery",
     "../registry",
     "./inject",
     "pagedown_converter",
+    "pagedown_extra",
     "pagedown_sanitizer"
 ], function($, registry, inject) {
-    var converter = Markdown.getSanitizingConverter();
+    // XXX: currently not supported,
+    // see: https://github.com/jmcmanus/pagedown-extra/issues/1
+    //var converter = Markdown.getSanitizingConverter();
+    var converter = new Markdown.Converter();
+    converter.hooks.chain("preConversion", Markdown.Extra.all);
 
     var _ = {
         name: "markdown",
@@ -54100,7 +51931,10 @@ define('patterns/markdown',[
     inject.registerTypeHandler("markdown", {
         sources: function(cfgs, data) {
             var $rendering = _._render(data);
-            return cfgs.map(function() { return $rendering; });
+            return cfgs.map(function(cfg) {
+                $rendering.attr("data-src", cfg.url);
+                return $rendering;
+            });
         }
     });
 
@@ -54629,7 +52463,7 @@ define('patterns/sortable',[
                 scrolldn = $("<div id=\"pat-scroll-dn\">&nbsp;</div>"),
                 scroll = $().add(scrollup).add(scrolldn);
 
-            scrollup.css({ top:0 });
+            scrollup.css({ top: 0 });
             scrolldn.css({ bottom: 0 });
             scroll.css({
                 position: "fixed", zIndex: 999999,
@@ -54654,6 +52488,19 @@ define('patterns/sortable',[
                     event.originalEvent.dataTransfer.setDragImage(
                         $(this).parent()[0], 0, 0);
                 $(this).parent().addClass("dragged");
+
+                // Scroll the list if near the borders
+                $el.bind("dragover.pat-sortable", function(event) {
+                    event.preventDefault();
+                    if ($el.is(":animated")) return;
+
+                    var pos = event.originalEvent.clientY + $("body").scrollTop();
+
+                    if (pos - $el.offset().top < 32)
+                        $el.animate({scrollTop: $el.scrollTop()-32}, 50, "linear");
+                    else if ($el.offset().top+$el.height() - pos < 32)
+                        $el.animate({scrollTop: $el.scrollTop()+32}, 50, "linear");
+                });
 
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
@@ -54687,12 +52534,15 @@ define('patterns/sortable',[
                     event.preventDefault();
                 });
 
-                scroll.appendTo("body");//.append(scrollup).append(scrolldn);
+                //XXX: Deactivate document scroll areas, as DnD affects only
+                //     scrolling of parent element
+                //scroll.appendTo("body");
             });
 
             $handles.bind("dragend", function() {
                 $(".dragged").removeClass("dragged");
                 $lis.unbind(".pat-sortable");
+                $el.unbind(".pat-sortable");
                 $("#pat-scroll-up, #pat-scroll-dn").detach();
             });
 
@@ -55101,8 +52951,9 @@ define('patterns/tooltip',[
                 inject.execute([{
                     url: source[0],
                     source: "#" + source[1],
-                    target: "#" + target_id + "::element"
-                }]);
+                    target: "#" + target_id + "::element",
+                    dataType: "html"
+                }], $trigger);
             }
 
             tooltip.positionContainer($trigger, $container);
@@ -57252,7 +55103,6 @@ define('patterns/zoom',[
 ;
 requirejs.config({
     paths: {
-        URIjs: "./3rdparty/URIjs/src",
         jquery: "./3rdparty/jquery-1.8.2",
         jquery_anythingslider: "./3rdparty/jquery.anythingslider",
         jquery_autosuggest: "./3rdparty/jquery.autoSuggest",
@@ -57268,6 +55118,7 @@ requirejs.config({
         logging: "./3rdparty/logging/src/logging",
         less: "./3rdparty/less-1.3.1",
         pagedown_converter: "./3rdparty/pagedown/Markdown.Converter",
+        pagedown_extra: "./3rdparty/pagedown-extra/Markdown.Extra",
         pagedown_sanitizer: "./3rdparty/pagedown/Markdown.Sanitizer",
         modernizr: "./3rdparty/modernizr-2.0.6",
         prefixfree: "./3rdparty/prefixfree",
@@ -57304,6 +55155,9 @@ requirejs.config({
         jquery_validate_additional_methods: {
             deps: ["jquery_validate"]
         },
+        pagedown_extra: {
+            deps: ["pagedown_converter", 'pagedown_sanitizer']
+        },
         pagedown_sanitizer: {
             deps: ["pagedown_converter"]
         }
@@ -57313,6 +55167,7 @@ requirejs.config({
 define('main',[
     "jquery",
     "./registry",
+    "./transforms",
     // below here modules that are only loaded
     "modernizr",
     "less",
@@ -57349,7 +55204,10 @@ define('main',[
     "./patterns/tooltip",
     "./patterns/validate",
     "./patterns/zoom"
-], function($, registry) {
+], function($, registry, transforms) {
+    $(document).on("patterns-registry-before-scan.patterns", function(e) {
+      transforms.transformContent($(e.target));
+    });
     // wait for the DOM to be ready and initialize
     $(document).ready(function(){
         registry.scan(document.body);
