@@ -289,7 +289,6 @@
 
 @media only screen and (max-width: 767px) { /* Global Misc --- */
   /*                 */
-  .left, .right { float: none; }
   body { -webkit-text-size-adjust: none; -ms-text-size-adjust: none; width: 100%; min-width: 0; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
   /* The Grid --- */
   /*              */
@@ -352,68 +351,10 @@
   .block-grid.mobile-eleven-up > li:nth-child(11n+1) { clear: both; }
   .block-grid.mobile-twelve-up > li { width: 8.33333%; }
   .block-grid.mobile-twelve-up > li:nth-child(12n+1) { clear: both; }
-  /* Forms --- */
-  /*           */
-  /* Label alignment */
-  label.right { text-align: left; }
-  /* Extend width of all inputs */
-  input[type="text"].one, .row input[type="text"].one, input[type="password"].one, .row input[type="password"].one, input[type="date"].one, .row input[type="date"].one, input[type="datetime"].one, .row input[type="datetime"].one, input[type="email"].one, .row input[type="email"].one, input[type="number"].one, .row input[type="number"].one, input[type="search"].one, .row input[type="search"].one, input[type="tel"].one, .row input[type="tel"].one, input[type="time"].one, .row input[type="time"].one, input[type="url"].one, .row input[type="url"].one, textarea.one, .row textarea.one { width: 100% !important; }
-  input[type="text"].two, .row input[type="text"].two, input[type="password"].two, .row input[type="password"].two, input[type="date"].two, .row input[type="date"].two, input[type="datetime"].two, .row input[type="datetime"].two, input[type="email"].two, .row input[type="email"].two, input[type="number"].two, .row input[type="number"].two, input[type="search"].two, .row input[type="search"].two, input[type="tel"].two, .row input[type="tel"].two, input[type="time"].two, .row input[type="time"].two, input[type="url"].two, .row input[type="url"].two, textarea.two, .row textarea.two { width: 100% !important; }
-  input[type="text"].three, .row input[type="text"].three, input[type="password"].three, .row input[type="password"].three, input[type="date"].three, .row input[type="date"].three, input[type="datetime"].three, .row input[type="datetime"].three, input[type="email"].three, .row input[type="email"].three, input[type="number"].three, .row input[type="number"].three, input[type="search"].three, .row input[type="search"].three, input[type="tel"].three, .row input[type="tel"].three, input[type="time"].three, .row input[type="time"].three, input[type="url"].three, .row input[type="url"].three, textarea.three, .row textarea.three { width: 100% !important; }
-  input[type="text"].four, .row input[type="text"].four, input[type="password"].four, .row input[type="password"].four, input[type="date"].four, .row input[type="date"].four, input[type="datetime"].four, .row input[type="datetime"].four, input[type="email"].four, .row input[type="email"].four, input[type="number"].four, .row input[type="number"].four, input[type="search"].four, .row input[type="search"].four, input[type="tel"].four, .row input[type="tel"].four, input[type="time"].four, .row input[type="time"].four, input[type="url"].four, .row input[type="url"].four, textarea.four, .row textarea.four { width: 100% !important; }
-  input[type="text"].five, .row input[type="text"].five, input[type="password"].five, .row input[type="password"].five, input[type="date"].five, .row input[type="date"].five, input[type="datetime"].five, .row input[type="datetime"].five, input[type="email"].five, .row input[type="email"].five, input[type="number"].five, .row input[type="number"].five, input[type="search"].five, .row input[type="search"].five, input[type="tel"].five, .row input[type="tel"].five, input[type="time"].five, .row input[type="time"].five, input[type="url"].five, .row input[type="url"].five, textarea.five, .row textarea.five { width: 100% !important; }
-  input[type="text"].six, .row input[type="text"].six, input[type="password"].six, .row input[type="password"].six, input[type="date"].six, .row input[type="date"].six, input[type="datetime"].six, .row input[type="datetime"].six, input[type="email"].six, .row input[type="email"].six, input[type="number"].six, .row input[type="number"].six, input[type="search"].six, .row input[type="search"].six, input[type="tel"].six, .row input[type="tel"].six, input[type="time"].six, .row input[type="time"].six, input[type="url"].six, .row input[type="url"].six, textarea.six, .row textarea.six { width: 100% !important; }
-  input[type="text"].seven, .row input[type="text"].seven, input[type="password"].seven, .row input[type="password"].seven, input[type="date"].seven, .row input[type="date"].seven, input[type="datetime"].seven, .row input[type="datetime"].seven, input[type="email"].seven, .row input[type="email"].seven, input[type="number"].seven, .row input[type="number"].seven, input[type="search"].seven, .row input[type="search"].seven, input[type="tel"].seven, .row input[type="tel"].seven, input[type="time"].seven, .row input[type="time"].seven, input[type="url"].seven, .row input[type="url"].seven, textarea.seven, .row textarea.seven { width: 100% !important; }
-  input[type="text"].eight, .row input[type="text"].eight, input[type="password"].eight, .row input[type="password"].eight, input[type="date"].eight, .row input[type="date"].eight, input[type="datetime"].eight, .row input[type="datetime"].eight, input[type="email"].eight, .row input[type="email"].eight, input[type="number"].eight, .row input[type="number"].eight, input[type="search"].eight, .row input[type="search"].eight, input[type="tel"].eight, .row input[type="tel"].eight, input[type="time"].eight, .row input[type="time"].eight, input[type="url"].eight, .row input[type="url"].eight, textarea.eight, .row textarea.eight { width: 100% !important; }
-  input[type="text"].nine, .row input[type="text"].nine, input[type="password"].nine, .row input[type="password"].nine, input[type="date"].nine, .row input[type="date"].nine, input[type="datetime"].nine, .row input[type="datetime"].nine, input[type="email"].nine, .row input[type="email"].nine, input[type="number"].nine, .row input[type="number"].nine, input[type="search"].nine, .row input[type="search"].nine, input[type="tel"].nine, .row input[type="tel"].nine, input[type="time"].nine, .row input[type="time"].nine, input[type="url"].nine, .row input[type="url"].nine, textarea.nine, .row textarea.nine { width: 100% !important; }
-  input[type="text"].ten, .row input[type="text"].ten, input[type="password"].ten, .row input[type="password"].ten, input[type="date"].ten, .row input[type="date"].ten, input[type="datetime"].ten, .row input[type="datetime"].ten, input[type="email"].ten, .row input[type="email"].ten, input[type="number"].ten, .row input[type="number"].ten, input[type="search"].ten, .row input[type="search"].ten, input[type="tel"].ten, .row input[type="tel"].ten, input[type="time"].ten, .row input[type="time"].ten, input[type="url"].ten, .row input[type="url"].ten, textarea.ten, .row textarea.ten { width: 100% !important; }
-  input[type="text"].eleven, .row input[type="text"].eleven, input[type="password"].eleven, .row input[type="password"].eleven, input[type="date"].eleven, .row input[type="date"].eleven, input[type="datetime"].eleven, .row input[type="datetime"].eleven, input[type="email"].eleven, .row input[type="email"].eleven, input[type="number"].eleven, .row input[type="number"].eleven, input[type="search"].eleven, .row input[type="search"].eleven, input[type="tel"].eleven, .row input[type="tel"].eleven, input[type="time"].eleven, .row input[type="time"].eleven, input[type="url"].eleven, .row input[type="url"].eleven, textarea.eleven, .row textarea.eleven { width: 100% !important; }
-  input[type="text"].twelve, .row input[type="text"].twelve, input[type="password"].twelve, .row input[type="password"].twelve, input[type="date"].twelve, .row input[type="date"].twelve, input[type="datetime"].twelve, .row input[type="datetime"].twelve, input[type="email"].twelve, .row input[type="email"].twelve, input[type="number"].twelve, .row input[type="number"].twelve, input[type="search"].twelve, .row input[type="search"].twelve, input[type="tel"].twelve, .row input[type="tel"].twelve, input[type="time"].twelve, .row input[type="time"].twelve, input[type="url"].twelve, .row input[type="url"].twelve, textarea.twelve, .row textarea.twelve { width: 100% !important; }
-  /* Buttons --- */
-  /*             */
-  /* Basic overrides */
-  .button { display: block; }
-  button.button, input[type="submit"].button, input[type="reset"].button { width: 100%; padding-left: 0; padding-right: 0; }
-  /* Button Groups */
-  .button-group button.button, .button-group input[type="submit"].button { width: auto; padding: 10px 20px 11px; }
-  .button-group button.button.large, .button-group input[type="submit"].button.large { padding: 15px 30px 16px; }
-  .button-group button.button.medium, .button-group input[type="submit"].button.medium { padding: 10px 20px 11px; }
-  .button-group button.button.small, .button-group input[type="submit"].button.small { padding: 7px 14px 8px; }
-  .button-group button.button.tiny, .button-group input[type="submit"].button.tiny { padding: 5px 10px 6px; }
-  .button-group.even button.button, .button-group.even input[type="submit"].button { width: 100%; padding-left: 0; padding-right: 0; }
-  /* Navbar --- */
-  /*            */
-  .nav-bar { height: auto; }
-  .nav-bar > li { float: none; display: block; border-right: none; }
-  .nav-bar > li > a.main { text-align: left; border-top: 1px solid #ddd; border-right: none; }
-  .nav-bar > li:first-child > a.main { border-top: none; }
-  .nav-bar > li.has-flyout > a.flyout-toggle { position: absolute; right: 0; top: 0; padding: 22px; z-index: 2; display: block; }
-  .nav-bar > li.has-flyout.is-touch > a.flyout-toggle span { content: ""; width: 0; height: 0; display: block; }
-  .nav-bar > li.has-flyout > a.flyout-toggle:hover span { border-top-color: #141414; }
-  .nav-bar.vertical > li.has-flyout > .flyout { left: 0; }
-  .flyout { position: relative; width: 100% !important; top: auto; margin-right: -2px; border-width: 1px 1px 0 1px; }
-  .flyout.right { float: none; right: auto; left: -1px; }
-  .flyout.small, .flyout.large { width: 100% !important; }
-  .flyout p:last-child { margin-bottom: 18px; }
-  /* Reveal --- */
-  /*            */
-  .reveal-modal-bg { position: absolute; }
-  .reveal-modal, .reveal-modal.small, .reveal-modal.medium, .reveal-modal.large, .reveal-modal.xlarge { width: 80%; top: 15px; left: 50%; margin-left: -40%; padding: 20px; height: auto; }
-  /* Clearing --- */
-  /*              */
-  .clearing-container { margin: 0; }
-  .clearing-close { z-index: 99; font-size: 37px; top: 0px; right: 5px; }
-  .clearing-caption { position: fixed; bottom: 0; left: 0; padding: 10px !important; line-height: 1.3; }
-  .clearing-main-right, .clearing-main-left { display: none; }
-  .clearing-blackout.clearing-assembled .visible-img, .clearing-blackout.clearing-assembled .clearing-container { height: 100%; }
-  .clearing-blackout.clearing-assembled ul[data-clearing] { display: none; }
-  /* Joyride --- */
-  /*             */
-  .joyride-tip-guide { width: 95% !important; left: 2.5% !important; -webkit-border-radius: 4px; -moz-border-radius: 4px; -ms-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px; }
-  .joyride-tip-guide-wrapper { width: 100%; }
-  /* Tabs --- */
-  /*          */
-  .tabs.mobile { width: auto; margin: 20px -20px 40px; border-bottom: solid 1px #ccc; height: auto; margin: 20px -15px 0px -15px; }
+
+/* @group Tabs */
+
+.tabs.mobile { width: auto; margin: 20px -20px 40px; border-bottom: solid 1px #ccc; height: auto; margin: 20px -15px 0px -15px; }
   .tabs.mobile dt, .tabs.mobile li, .tabs.mobile dd { float: none; height: auto; }
   .tabs.mobile dd a, .tabs.mobile li a { font-size: 15px; display: block; width: auto; height: auto; padding: 18px 20px; margin: 0; color: #555; line-height: 1; border: none; border-left: none; border-right: none; border-top: 1px solid #ccc; background: #fff; }
   .tabs.mobile dd a.active, .tabs.mobile li a.active { border: none; background: #2ba6cb; color: #fff; margin: 0; position: static; top: 0; height: auto; }
@@ -423,8 +364,5 @@
   .contained.mobile { margin-bottom: 0; }
   .contained.tabs.mobile dd a, .contained.tabs.mobile li a { padding: 18px 20px; }
   .tabs.mobile + ul.contained { margin-left: -20px; margin-right: -20px; border-width: 0 0 1px 0; }
-  /* UI Elements --- */
-  /*                 */
-  /* Tooltips */
-  .tooltip { font-size: 14px; line-height: 1.4; padding: 7px 10px 9px 10px; left: 50% !important; max-width: 80% !important; margin-left: -40%; font-size: 110%; }
-  .tooltip > .nub, .tooltip.top > .nub, .tooltip.left > .nub, .tooltip.right > .nub { border-color: transparent transparent black transparent; border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent; top: -12px; left: 10px; } }
+
+/* @end */ }
