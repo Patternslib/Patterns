@@ -69,6 +69,12 @@ define([
                 }
             }, null);
         },
+
+        _rescan: function() {
+            log.debug("Retriggering document scan for new pattern");
+            registry.scan(document.body);
+        },
+
         // XXX: differentiate between internal and custom patterns
         // _register vs register
         register: function(pattern) {
@@ -97,10 +103,8 @@ define([
             }
 
             log.debug("Registered pattern:", pattern.name, pattern);
-            if (registry._scanned) {
-                log.debug("Retriggering document scan for new pattern");
-                registry.scan(document.body);
-            }
+            if (registry._scanned)
+                utils.debounce(registry._rescan, 20)();
             return true;
         }
     };
@@ -110,10 +114,14 @@ define([
             registry.scan(ev.target);
             $(ev.target).trigger("patterns-injected-scanned");
         })
-        // wait for the DOM to be ready and initialize
+        // wait for the DOM to be ready and give patterns some time to
+        // registry.
+        // XXX This is a bit fragile
         .ready(function(){
-            registry._scanned=true;
-            registry.scan(document.body);
+            setTimeout(function() {
+                registry.scan(document.body);
+                registry._scanned=true;
+            }, 50);
         });
 
     return registry;

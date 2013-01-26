@@ -62,6 +62,8 @@ requirejs.config({
 });
 
 define([
+    "./patterns/inject",
+    "./patterns/markdown", // Load these early so markdown is setup quickly
     "modernizr",
     "less",
     "prefixfree",
@@ -84,8 +86,6 @@ define([
     "./patterns/form-state",
     "./patterns/fullcalendar",
     "./patterns/image-crop",
-    "./patterns/markdown",  // This must be loaded before injection
-    "./patterns/inject",
     "./patterns/menu",
     "./patterns/modal",
     "./patterns/navigation",
