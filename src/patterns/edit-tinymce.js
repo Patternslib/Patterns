@@ -5,10 +5,9 @@ define([
     "../core/logger",
     "../registry",
     "../utils",
-    "URIjs/URI",
     "jquery_textchange",
     "tinymce"
-], function($, ajax, Parser, logger, registry, utils, URI) {
+], function($, ajax, Parser, logger, registry, utils) {
     var log = logger.getLogger("pat.editTinyMCE"),
         parser = new Parser("edit-tinymce");
 
@@ -59,18 +58,19 @@ define([
                 return false;
             }
 
-            var u = new URI();
-            u._parts.query = null;
+            var base_url = window.location.toString(), idx;
+            if ((idx=base_url.indexOf("?"))!==-1)
+                base_url=base_url.slice(0, idx);
 
             // handle rebasing of own urls if we were injected
             var parents = $el.parents().filter(function() {
                 return $(this).data("pat-injected");
             });
             if (parents.length)
-                u = URI(parents.first().data("pat-injected").origin).absoluteTo(u);
+                base_url = utils.rebaseURL(base_url, parents.first().data("pat-injected").origin);
             if (cfg.content_css)
-                cfg.content_css = URI(cfg.content_css).absoluteTo(u).toString();
-            tinyMCE.baseURL = URI(args.tinymceBaseurl).absoluteTo(u).toString();
+                cfg.content_css = utils.rebaseURL(base_url, cfg.content_css);
+            tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
             var $tinymce, $tinyifr,

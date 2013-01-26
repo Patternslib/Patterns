@@ -10,10 +10,10 @@ define([
     "../core/logger",
     "../lib/ajax",
     "../registry",
-    "URIjs/URI",
-    "jquery_ext", // for :scrollable for autoLoading-visible
-    "URIjs/jquery.URI"
-], function($, Parser, logger, ajax, registry, URI) {
+    "../utils",
+    "../lib/htmlparser",
+    "jquery_ext"  // for :scrollable for autoLoading-visible
+], function($, Parser, logger, ajax, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
 
@@ -38,6 +38,11 @@ define([
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
+
+            // if the injection shall add a history entry and HTML5 pushState
+            // is missing, then don't initialize the injection.
+            if ($el.hasClass("record-history") && !("pushState" in history))
+                return;
 
             var cfgs = _.extractConfig($el, opts);
             $el.data("patterns.inject", cfgs);
@@ -254,6 +259,9 @@ define([
                             $injected.addClass(cfg["class"])
                                 .trigger("patterns-injected", cfg);
                         }
+                        if ($el.hasClass("record-history") &&
+                            ("pushState" in history))
+                            history.pushState({url: cfg.url}, "", cfg.url);
                     });
                 });
 
@@ -270,9 +278,19 @@ define([
                     //    window.location.href = $el.attr('href');
                 }
                 $el.off("pat-ajax-success.pat-inject");
+                $el.off("pat-ajax-error.pat-inject");
+            };
+
+            var onError = function() {
+                cfgs.forEach(function(cfg) {
+                    cfg.$injected.remove();
+                });
+                $el.off("pat-ajax-success.pat-inject");
+                $el.off("pat-ajax-error.pat-inject");
             };
 
             $el.on("pat-ajax-success.pat-inject", onSuccess);
+            $el.on("pat-ajax-error.pat-inject", onError);
 
             ajax($el, {
                 url: cfgs[0].url
@@ -321,11 +339,12 @@ define([
 
                 $source.find("a[href^=\"#\"]").each(function() {
                     var href = this.getAttribute("href");
-                    // Skip in-document links pointing to an id that is
-                    // inside this fragment.
-                    if ($source.find(href).length)
-                        return;
-                    this.href=url+href;
+                    // Skip in-document links pointing to an id that is inside
+                    // this fragment.
+                    if (href.length===1)  // Special case for top-of-page links
+                        this.href=url;
+                    else if (!$source.find(href).length)
+                        this.href=url+href;
                 });
 
                 return $source;
@@ -338,6 +357,46 @@ define([
             IMG: "src"
         },
 
+        _rebaseHTML: function(base, html) {
+            var output = [],
+                i, link_attribute, value;
+
+            htmlparser.HTMLParser(html, {
+                start: function(tag, attrs, unary) {
+                    output.push("<"+tag);
+                    link_attribute=_._link_attributes[tag.toUpperCase()];
+                    for (i=0; i<attrs.length; i++) {
+                        if (attrs[i].name.toLowerCase()===link_attribute) {
+                            value=attrs[i].value;
+                            // Do not rewrite Zope views or in-document links.
+                            // In-document links will be processed later after
+                            // extracting the right fragment.
+                            if (value.slice(0, 2)!=="@@" && value[0]!=="#") {
+                                value=utils.rebaseURL(base, value);
+                                value=value.replace(/(^|[^\\])"/g, '$1\\\"');
+                            }
+                        }  else
+                            value=attrs[i].escaped;
+                        output.push(" "+attrs[i].name+"=\""+value+"\"");
+                    }
+                    output.push(unary ? "/>" : ">");
+                },
+
+                end: function(tag) {
+                    output.push("</"+tag+">");
+                },
+                
+                chars: function(text) {
+                    output.push(text);
+                },
+
+                comment: function(text) {
+                    output.push("<!--"+text+"-->");
+                }
+            });
+            return output.join("");
+        },
+
         _parseRawHtml: function(html, url) {
             url = url || "";
 
@@ -347,42 +406,16 @@ define([
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
                     .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
                     .replace(/<\/body([^>]*?)>/gi, "</div>");
+            try {
+                clean_html = _._rebaseHTML(url, clean_html);
+            } catch (e) {
+                log.error("Error rebasing urls", e);
+            }
             var $html = $("<div/>").html(clean_html);
 
             if ($html.children().length === 0)
                 log.warn("Parsing html resulted in empty jquery object:", clean_html);
 
-            // make relative links in _link_attributes relative to current page
-            $html.find(":uri(is:relative)").each(function() {
-                var attr = _._link_attributes[this.tagName],
-                    rel_url, new_rel_url;
-                if (!attr) {
-                    return;
-                }
-
-                // this.(href|action|src) yields absolute uri -> retrieve relative
-                // uris with getAttribute
-                rel_url = this.getAttribute(attr);
-                if (!rel_url) {
-                    log.info("Skipping empty url for (el, attr)", this, attr);
-                    return;
-                }
-
-                // Do not rewrite Zope views but rebase them to the current context.
-                if (rel_url.slice(0, 2)==="@@")
-                    return;
-
-                // Do not rewrite in-document links; we will do another pass over these
-                // later when we have extracted the right fragment from the whole page.
-                if (rel_url[0] === "#")
-                    return;
-
-                new_rel_url = new URI(rel_url).absoluteTo(url).toString();
-                if (new_rel_url !== rel_url) {
-                    log.debug("Adjusted url from:", rel_url, "to:", new_rel_url);
-                    this[attr] = new_rel_url;
-                }
-            });
             return $html;
         },
 
@@ -460,6 +493,21 @@ define([
     $(document).on("patterns-injected", function(ev, cfg) {
         cfg.$target.removeClass(cfg.targetLoadClasses);
     });
+
+    $(window).bind("popstate", function (event) {
+        // popstate also triggers on traditional anchors
+        if (!event.originalEvent.state) {
+            history.replaceState("anchor", "", document.location.href);
+            return;
+        }
+        window.location.reload();
+    });
+
+    // this entry ensures that the initally loaded page can be reached with
+    // the back button
+    if ("replaceState" in history) {
+        history.replaceState("pageload", "", document.location.href);
+    }
 
     registry.register(_);
     return _;
