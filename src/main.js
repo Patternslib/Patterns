@@ -1,6 +1,5 @@
 requirejs.config({
     paths: {
-        URIjs: "./3rdparty/URIjs/src",
         jquery: "./3rdparty/jquery-1.8.2",
         jquery_anythingslider: "./3rdparty/jquery.anythingslider",
         jquery_autosuggest: "./3rdparty/jquery.autoSuggest",
