@@ -32,7 +32,7 @@ the injected content is markdown it will automatically be rendered.
 There are two ways for Patterns to detect that you are injection
 markdown: filename extension and explicit configuration.
 
-If you inject a URL which ends in `.md` it will be considered to be
+If you inject a URL which ends in `.md` it will be assumed to be
 markdown source.
 
     <a href="content.md" class="pat-inject" data-pat-inject="target: #target">Show me the money!</a>
