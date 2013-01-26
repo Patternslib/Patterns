@@ -71,11 +71,6 @@ define([
             }, null);
         },
 
-        _rescan: function() {
-            log.debug("Retriggering document scan for new pattern");
-            registry.scan(document.body);
-        },
-
         // XXX: differentiate between internal and custom patterns
         // _register vs register
         register: function(pattern) {
