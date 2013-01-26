@@ -58,6 +58,15 @@ define(function(){
 			return this[ this.length - 1 ];
 		};
 
+		if (html.indexOf("<!DOCTYPE")===0) {
+			index = html.indexOf(">");
+			if (index>=0) {
+				if (handler.doctype)
+					handler.doctype(html.substring(10, index));
+				html = html.substring(index + 1).trimLeft();
+			}
+		}
+
 		while ( html ) {
 			chars = true;
 
