@@ -48,10 +48,17 @@ define([
         };
     };
 
+    var rebaseURL = function(base, url) {
+        if (url.indexOf("://")!==-1 || url[0]==="/")
+            return url;
+        return base.slice(0, base.lastIndexOf("/")+1) + url;
+    };
+
     var utils = {
         // pattern pimping - own module?
         jquery_plugin: jquery_plugin,
-        debounce: debounce
+        debounce: debounce,
+        rebaseURL: rebaseURL
     };
 
     return utils;
