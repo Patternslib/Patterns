@@ -18,6 +18,8 @@ define([
 
     var registry = {
         patterns: {},
+        _scanned: false,
+
         scan: function(content) {
             var $content = $(content),
                 all = [], allsel,
@@ -28,8 +30,9 @@ define([
             // selector for all patterns
             for (var name in registry.patterns) {
                 pattern = registry.patterns[name];
-                if (pattern.trigger) {
+                if (pattern.trigger && !pattern._scanned) {
                     all.push(pattern.trigger);
+                    pattern._scanned=true;
                 }
             }
             allsel = all.join(",");
@@ -73,6 +76,7 @@ define([
                 log.error("Pattern lacks name:", pattern);
                 return false;
             }
+
             if (registry.patterns[pattern.name]) {
                 log.error("Already have a pattern called: " + pattern.name);
                 return false;
@@ -93,6 +97,10 @@ define([
             }
 
             log.debug("Registered pattern:", pattern.name, pattern);
+            if (registry._scanned) {
+                log.debug("Retriggering document scan for new pattern");
+                registry.scan(document.body);
+            }
             return true;
         }
     };
@@ -104,6 +112,7 @@ define([
         })
         // wait for the DOM to be ready and initialize
         .ready(function(){
+            registry._scanned=true;
             registry.scan(document.body);
         });
 
