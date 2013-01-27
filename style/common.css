@@ -377,6 +377,13 @@ section.demo {
 
 }
 
+section.demo .row {
+	margin-left: -15px;
+	margin-right: -15px;
+	width: auto;
+	max-width: 110%;
+}
+
 @media only screen and (max-width: 767px) {
 
 section.demo {
@@ -942,7 +949,8 @@ fieldset {
 }
 
 fieldset p.question,
-fieldset p.legend {
+fieldset p.legend
+fieldset legend {
 	width: 95% !important;
   margin-bottom: 1em;
 	letter-spacing: 1px;
@@ -1024,13 +1032,6 @@ form.concise fieldset label select {
 
 /* @group Fieldset Comprehensive */
 
-fieldset.condensed p.question {
-	width: auto;
-	margin: 0;
-	letter-spacing: 0;
-	text-transform: none;
-}
-
 .comprehensive,
 .comprehensive fieldset,
 .concise fieldset.comprehensive,
@@ -1046,17 +1047,8 @@ fieldset.condensed p.question {
 	padding-top: 1px;
 }
 
-fieldset.comprehensive legend {
-	position: absolute;
-	left: 260px;
-	font-weight: normal;
-	font-style: normal;
-}
-
 fieldset.comprehensive label,
-form.comprehensive fieldset label,
-form.concise fieldset.comprehensive label,
-form.compact fieldset.comprehensive label {
+form.concise fieldset.comprehensive label {
 	font-weight: normal;
 	font-style: normal;
 	position: static;
@@ -1082,6 +1074,13 @@ form.compact fieldset.comprehensive label * {
 	position: static;
 	margin: 0;
 	float: none;
+}
+
+fieldset.comprehensive legend {
+	position: absolute;
+	left: 0;
+	font-weight: normal !important;
+	font-style: normal;
 }
 
 fieldset.comprehensive p.question,
@@ -1142,6 +1141,13 @@ fieldset.condensed fieldset p.question {
 	font-style: normal;
 }
 
+fieldset.condensed p.question {
+	width: auto;
+	margin: 0;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
 /* @end */
 
 /* @end */
@@ -1180,7 +1186,9 @@ fieldset.condensed.radio-list p.legend {
 }
 
 fieldset.radio-list label,
-fieldset.condensed.radio-list label {
+fieldset.condensed.radio-list label,
+fieldset.comprehensive.radio-list label,
+form.concise fieldset.comprehensive.radio-list label  {
 	display: block;
 	width: auto !important;
 	padding-left: 28px;
@@ -1189,6 +1197,7 @@ fieldset.condensed.radio-list label {
 	margin-left: -10px;
 	padding-right: 10px;
 	border-radius: 4px;
+	margin-right: -10px;
 }
 
 .radio-list label input[type="radio"],
