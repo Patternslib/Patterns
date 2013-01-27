@@ -1,12 +1,10 @@
 # Markdown
+
 ## Description
 Produce web content while only focussing on the content itself instead of on tags or tools. That's markdown. With the Patterns Markdown pattern you can easily disclose Markdown based content in HTML pages in a prototype or production environment. 
 
 ## Documentation
-The markdown pattern can render
-[Markdown](http://en.wikipedia.org/wiki/Markdown) in a HTML page. This
-is done by putting markdown text in an element and adding a pat-markdown
-class.
+The markdown pattern can render [Markdown](http://en.wikipedia.org/wiki/Markdown) in a HTML page. This is done by putting markdown text in an element and adding a pat-markdown class.
 
     <pre class="pat-markdown">
        This is list of things.
