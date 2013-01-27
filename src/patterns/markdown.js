@@ -4,7 +4,7 @@ define([
     "./inject",
     "pagedown",
     "pagedown-extra"
-], function($, registry, inject) {
+], function($, registry, inject, pagedown) {
     // XXX: currently not supported,
     // see: https://github.com/jmcmanus/pagedown-extra/issues/1
     //var converter = Markdown.getSanitizingConverter();
