@@ -14,61 +14,60 @@ define([
     // - false -> delay=0
     // - true -> delay=default
     // - string "defocus"
-    parser.add_argument("delay", 400);
+    parser.add_argument("delay", "400ms");
 
     var _ = {
         name: "autosubmit",
-        trigger: ".pat-autosubmit",
+        trigger: ".pat-autosubmit,.pat-autosubmit :input,.pat-autosubmit textarea",
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
-            // submit if a (specific) form element changed
-            $el.on("change.pat-autosubmit", _.considerSubmit);
-
             var cfg = parser.parse($el, opts);
 
-            // XXX: defocus currently does not work as the parser
-            // returns the default value instead.
-            if (cfg.delay !== "defocus") {
-                var submit = _.considerSubmit;
-                if (cfg.delay === true)
-                    cfg.delay = 400;
-                if (cfg.delay)
-                    submit = utils.debounce(_.considerSubmit, cfg.delay);
-                ($el.is("input") ? $el : $el.find("input"))
-                    .on("keyup.pat-autosubmit", submit);
+            if ($el.is(":input")) {
+                // sets up triggering children
+                if (cfg.delay === "defocus") {
+                    $el.on("focusout.pat-autosubmit", function() {
+                        $el.trigger("autosubmit");
+                    });
+                } else if (cfg.delay !== "0" && $el.is("input:text, input[type=search], textarea")) {
+                    $el.on("keyup.pat-autosubmit", utils.debounce(function() {
+                        $el.trigger("autosubmit");
+                        }, parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10)
+                    ));
+                } else {
+                    $el.on("change.pat-autosubmit", function() {
+                        $el.trigger("autosubmit");
+                    });
+                }
             }
 
-            // XXX: test whether on webkit and enable only if
-            // supported
-            //
-            // XXX: this should be handled by writing code that
-            // triggers a change event in case the "Clear field
-            // button" inside the search is pressed
-            ($el.is("input[type=search]") ? $el : $el.find("input[type=search]"))
-                .on("click.pat-autosubmit", _.considerSubmit);
+            // Special handling for the clear search button
+            if ($el.is("input[type=search]")) {
+                $el.on("click.pat-autosubmit", function(){ $el.keyup(); });
+            }
+
+            if ($el.hasClass("pat-autosubmit")) {
+                // submit if a (specific) form element changed
+                $el.on("autosubmit.pat-autosubmit", _.autosubmit);
+            }
 
             return $el;
         },
-        parser: parser,
+
         destroy: function($el) {
             $el.off(".pat-autosubmit");
-            $el.find("input").off(".pat-autosubmit");
+            if (!$el.is(":input")) {
+                $el.find(":input").off(".pat-autosubmit");
+            }
         },
-        considerSubmit: function(ev) {
-            // XXX: check that the very same event did not submit the
-            // form already (see below)
+
+        autosubmit: function(ev) {
+            ev.stopPropagation();
 
             var $el = $(this),
                 $form = $el.is("form") ? $el : $el.parents("form").first();
-
-            // ignore auto-suggest fields, the change event will be
-            // triggered on the hidden input
-            if ($el.is(".pat-autosuggest")) {
-                log.debug("ignored event from autosuggest field");
-                return;
-            }
 
             if ($el.is("input[type=search]")) {
                 // clicking X on type=search deletes data attrs,
@@ -89,9 +88,6 @@ define([
             }
 
             log.debug("triggered by " + ev.type);
-
-            // XXX: mark event as used so we won't submit through a
-            // parent element again.
 
             $form.submit();
         }
