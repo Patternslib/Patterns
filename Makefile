@@ -18,7 +18,10 @@ bundles/patterns.js: $(SOURCES)
 	$(JAM) compile -i main --no-minify --almond $@
 
 bundles/patterns.min.js: bundles/patterns.js
-	$(UGLIFYJS) $# > $@
+	$(JAM) compile -i main --almond $@
+	#$(UGLIFYJS) $< > $@
+
+bundles: bundles/patterns.js bundles/patterns.min.js
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
@@ -47,4 +50,4 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap check clean doc
+.PHONY: all bootstrap check clean doc bundles
