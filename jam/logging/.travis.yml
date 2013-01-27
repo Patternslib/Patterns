@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+ - "0.8"
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#patterns"
+    on_success: change
+    on_failure: always
+    template:
+     - "%{branch}/%{commit} %{author} %{message}"
+     - "Build details: %{build_url}"
