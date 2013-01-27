@@ -952,7 +952,7 @@ fieldset p.question,
 fieldset p.legend,
 fieldset legend {
 	margin-bottom: 1em;
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: bold;
 }
 
@@ -1287,11 +1287,12 @@ fieldset.check-list label {
 }
 
 .radio-list label input[type="checkbox"],
-form.concise fieldset.radio-list label input[type="checkbox"] {
+form.concise fieldset.comprehensive.check-list label input[type="checkbox"] {
 	margin-left: -18px;
 	float: none;
 	position: relative;
-	top: -1px;
+	left: 0;
+	top: -2px;
 }
 
 /* @end */
