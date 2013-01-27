@@ -14,17 +14,19 @@ body {
 	padding: 70px 0;
 }
 
-/* @group Documentation section */
+/* @group Image */
 
-section.documentation {
-	margin-bottom: 40px;
+.documentation img {
+	max-width: 85%;
+	margin-right: auto;
+	margin-left: auto;
+	display: block;
 }
 
 @media only screen and (max-width: 767px) {
 
-section.documentation {
-	padding-left: 38px;
-	padding-right: 38px;
+.documentation img {
+	max-width: 100%;
 } }
 
 
@@ -349,14 +351,9 @@ div[data-src]:hover:after {
 
 section.description {
 	margin-bottom: 40px;
+	padding-right: 20px;
+	padding-left: 20px;
 }
-
-@media only screen and (max-width: 767px) {
-
-section.description {
-	padding-left: 38px;
-	padding-right: 38px;
-} }
 
 
 
@@ -470,6 +467,18 @@ section.demo:after {
 
 #global-navigation a:hover {
 	background-color: rgba(0,0,0,0.18);
+}
+
+
+
+/* @end */
+
+/* @group Documentation section */
+
+section.documentation {
+	margin-bottom: 40px;
+	padding-right: 20px;
+	padding-left: 20px;
 }
 
 
