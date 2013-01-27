@@ -23,11 +23,6 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
 	sed -i -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
-all doc:: build/docs/index.html
-
-build/docs/index.html: docs/conf.py $(wildcard docs/*.rst) $(wildcard docs/*/*.rst)
-	sphinx-build -b html docs build/docs
-
 demo/calender/calender.css: jam/jquery-fullcalendar/fullcalendar/fullcalendar.css
 	cp jam/jquery-fullcalendar/fullcalendar/fullcalendar.css demo/calender/calender.css
 
