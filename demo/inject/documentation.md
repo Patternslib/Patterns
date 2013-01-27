@@ -352,4 +352,4 @@ After injection was triggered:
     </div>
     </body>
     
-    <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal"\>
+    <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
