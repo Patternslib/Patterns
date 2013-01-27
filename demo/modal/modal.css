@@ -1,12 +1,12 @@
+/* @group Modal */
+
 div.pat-modal {
+	-webkit-animation: fade-in 1s;
   position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 1050;
-  max-height: 500px;
-  width: 560px;
-  margin: -250px 0 0 -280px;
-  background-color: #ffffff;
+  z-index: 10050;
+  background-color: #efefef;
   border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.3);
   *border: 1px solid #999;
@@ -21,36 +21,127 @@ div.pat-modal {
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding-box;
   background-clip: padding-box;
+	text-shadow: white 0 1px 0;
+	width: 500px;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	box-shadow: 0 0 20px 10px black;
+}
+
+div.pat-modal .panel-content {
+	background-color: white;
+	padding: 20px;
+}
+
+.lt-ie9 div.pat-modal {
+ 	top: 50%;
+ 	left: 50%;
+ 	width: 560px;
+ 	margin: -250px 0 0 -280px;
+	height: 500px;
+}
+
+/* @group Special sizes */
+
+div.pat-modal.large {
+	width: 800px;
+}
+
+.lt-ie9 div.pat-modal.large {
+  margin: -300px 0 0 -400px;
+	height: 600px;
+}
+
+div.pat-modal.small {
+	width: 400px;
+}
+
+.lt-ie9 div.pat-modal.small {
+  
+  margin: -100px 0 0 -200px;
+	height: 202px;
+}
+
+/* @end */
+
+div.pat-modal.tiny-image img {
+	max-height: 540px;
+}
+
+div.pat-modal img {
+	max-width: 100%;
 }
 
 div.pat-modal:after {
 	content: " ";
 	display: block;
 	position: fixed;
-	top: 0;
+	top: -10000px;
+	right: -10000px;
+	bottom: -10000px;
+	left: -10000px;
+	background-color: black;
+	z-index: -1;
+	opacity: 0.7;
+}
+
+.lt-ie9 div.pat-modal:after {
+	top: -10000px;
+	left: -10000px;
+	filter: alpha(opacity = 80);
+	background-color: transparent;
+	background-image: url(black-80p.png);
+}
+
+.lt-ie9 .wizard-box {
+	position: absolute;
+	top: 35px;
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background-color: black;
-	z-index: -1;
-	opacity: 0.78;
 }
-.pat-modal.fade {
-  -webkit-transition: opacity .3s linear, top .3s ease-out;
-  -moz-transition: opacity .3s linear, top .3s ease-out;
-  -ms-transition: opacity .3s linear, top .3s ease-out;
-  -o-transition: opacity .3s linear, top .3s ease-out;
-  transition: opacity .3s linear, top .3s ease-out;
-  top: -25%;
-}
-.pat-modal.fade.in {
-  top: 50%;
-}
-.pat-modal .header {
-  height: 20px;
-  padding: 9px 15px;
-  border-bottom: 1px solid #eee;
 
+.wizard-box .panel-body {
+	overflow: auto;
+	padding: 20px;
+	background-color: white;
+	margin-bottom: 0;
+	margin-top: 0;
+	max-height: 400px;
+}
+
+.lt-ie9 .wizard-box .panel-body {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 51px;
+	left: 0;
+}
+
+div.pat-modal.tiny-link .wizard-box .panel-body {
+	overflow: hidden;
+}
+
+.wizard-box .panel-footer {
+	margin: 0;
+	padding: 12px 20px;
+	border-top: 1px solid silver;
+	height: 26px;
+	background-color: #efefef;
+}
+
+.lt-ie9 .wizard-box .panel-footer {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+.pat-modal .header {
+  padding: 9px 20px;
+  border-bottom: 1px solid #eee;
+  
   background: rgb(206,220,231); /* Old browsers */
 background: -moz-linear-gradient(top, rgba(206,220,231,1) 0%, rgba(89,106,114,1) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(206,220,231,1)), color-stop(100%,rgba(89,106,114,1))); /* Chrome,Safari4+ */
@@ -62,27 +153,37 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', end
 	color: white;
 }
 
-.pat-modal .header h3 {
+.pat-modal .header h1,.pat-modal .header h3 {
 	margin: 0;
-	font-size: 16px;
-	line-height: 20px;
 	text-shadow: rgba(0,0,0,0.68) 0 -1px 0;
 	color: rgba(254,255,254,0.93);
+	font: 16px/20px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	letter-spacing: 1px;
 }
-.pat-modal .header .close-panel {
+.pat-modal .header .close-panel
+ {
 	position: absolute;
 	top: 7px;
 	right: 20px;
 	line-height: 22px;
-	padding-right: 5px;
-	padding-left: 5px;
 	height: 22px;
+	width: 22px;
+	padding: 0;
+	text-indent: -1000px;
+	overflow: hidden;
+	margin: 0;
+	background: url(buttons-modal.png) center center;
+	border-color: rgba(254,255,254,0.63);
+	filter: none;
 }
-.pat-modal .panel-content {
-  padding: 15px;
-	overflow: auto;
-	position: relative;
+
+.pat-modal .header .close-panel:active {
 	background-color: white;
+}
+
+.pat-modal .panel-content button,
+.pat-modal .panel-content .button {
+	border-color: #999;
 }
 .pat-modal .footer {
   padding: 14px 15px 15px;
@@ -97,10 +198,19 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', end
   box-shadow: inset 0 1px 0 #ffffff;
   *zoom: 1;
 }
-.pat-modal .footer:before, .pat-modal-footer:after {
+
+.pat-modal .footer button, 
+.pat-modal .footer a.button {
+	min-width: 100px;
+}
+.pat-modal .footer:before, .modal-footer:after {
   display: table;
   content: "";
 }
 .pat-modal .footer:after {
   clear: both;
 }
+
+
+
+/* @end */
