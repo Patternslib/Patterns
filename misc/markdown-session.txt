@@ -1,0 +1,178 @@
+# Markdown syntax
+
+## Markdown pattern on its own
+
+A pre-formatted tag containing markdown content, the markdown pattern is triggered by pat-markdown.
+
+    <pre class="pat-markdown">
+      Some markdown here. 
+      
+      - bla
+      - bla
+    </pre>
+
+The `pre`-element is replaced by the converted markdown.
+       
+    <p>Some markdown here.</p>
+    <ul>
+      <li>bla</li>
+      <li>bla</li>
+    </ul>  
+
+## Markdown with injection from a pure Markdown document
+
+Normal injection, type is recognised from the extension.
+
+    <a href="content.md" class="pat-inject" data-pat-inject="#target">
+      Load and inject markdown content.
+    </a>
+
+    <div id="target">
+      Here some markdown rendered content will apear if you click the link above.
+    </div>
+
+Rules:
+- source selector is whole document, i.e. a source selector is ignored
+
+Ideas:
+- ``##Markdown with injection from a pure Markdown document`` (As found in this document) to reference a section by its heading
+- Does markdown have cross-references that could be used instead, to extract portions of a pure markdown document?
+
+    
+## Three simple ways to render some content as markdown
+
+### Locally available content (within the current HTML document)
+
+    <pre class="markdown">
+
+### 'Distant' content (In a markdown file somewhere)
+    <object src="some-distant-location-for-the-content-instead-of-local" class="pat-markdown">
+    <a src="some-distant-location-for-the-content-instead-of-local" class="pat-markdown"> Replace yourself upon load
+
+Trigger as a tag with autoLoading:
+    
+    <a href="some-source.md" class="pat-markdown">
+      Load me.
+    </a>
+    
+replaced by:
+    
+    <p>
+      Content in HTML form of some-source.md
+    </p>
+
+Trigger replaced by a markdown source
+
+    <object src="some-source.md" class="pat-markdown">
+       This object tag will be replaced.
+    </object>
+
+Normal injection, type is explicitly declared.
+
+    <a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">
+      Load and inject markdown content.
+    </a>
+
+    <div id="target">
+      Here some markdown rendered content will appear if you click the link above.
+    </div>
+
+## Markdown with injection from HTML with source selector
+
+Normal injection.
+
+The source HTML looking like:
+
+    <body>
+      <div id="message-1">
+       <pre class="pat-markdown">
+          Some markdown here. 
+      
+          - bla
+          - bla
+       </pre>
+      </div>
+    </body>
+
+    <a href="content.html#message-1" class="pat-inject" data-pat-inject="target: #target">
+      Load and inject markdown content.
+    </a>
+
+    <body>
+       <pre id="message-1" class="pat-markdown">
+          Some markdown here. 
+      
+          - bla
+          - bla
+       </pre>
+    </body>
+
+    <a href="content.html#message-1" class="pat-inject" data-pat-inject="source: #message-1::element; target: #target">
+      Load and inject markdown content.
+    </a>
+
+
+
+
+
+
+# Revisiting injection
+
+## Single injection defaults
+
+  <a href="news.html" class="pat-inject">
+    Display news content in body content
+  </a>
+
+Replace link with news.html body's content.
+
+default source selector: body
+default target selector: self
+
+data-pat-inject="selector; target; source"
+
+data-pat-inject="#id" --> target and source
+data-pat-inject="#src #tgt"
+
+    <a href="news.html" class="pat-auto-loading">
+      Replae anchor with news content
+    </a>
+
+    <a href="source.html" class="pat-inject">
+    source: body
+    target: body, better: SELF
+
+    <a href="source.html" class="pat-inject" data-pat-inject="body">
+    source: body
+    target: body
+
+    <a href="source.html#selector" class="pat-inject">
+    source: #selector
+    target: #selector
+
+    <a href="source.html#selector" class="pat-inject" data-pat-inject="#other">
+    source: #selector (currently: #other)
+    target: #other
+
+    <a href="source.html" class="pat-inject" data-pat-inject="#other">
+    source: body
+    target: #other
+
+    <a href="source.html#selector" class="pat-inject" data-pat-inject="#source #target">
+    source: #source
+    target: #target
+
+Conclusions:
+- SELF as target default is very important if auto-loading would be part of injection (E.G. with a property 'event: auto-loading/visible/mouse-up/etc'), otherwise indifferent
+- only one specified -> target
+
+## Multinjection defaults
+
+
+## Injection trigger
+
+    <a href="source.html#selector" class="pat-inject" data-pat-inject="trigger: auto">
+    <a href="source.html#selector" class="pat-inject" data-pat-inject="trigger: visible">
+    <a href="source.html#selector" class="pat-inject" data-pat-inject="trigger: label-changed">
+    <a href="source.html#selector" class="pat-inject" data-pat-inject="trigger: label-changed, new-document">
+

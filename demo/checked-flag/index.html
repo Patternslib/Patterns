@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Checked flag demo page</title>
     <link rel="stylesheet" href="../../style/common.css" type="text/css">
-  <link rel="stylesheet" href="checkedflag.css" type="text/css">
+  	<link rel="stylesheet" href="checkedflag.css" type="text/css">
 </head>
   <body>
   	<section class="description">
@@ -12,49 +12,55 @@
   	</section>
   	<section class="demo">
 		<h2>Demo</h2>
-	    <form>
-	      <fieldset>
-	        <legend>Build your first sandwich</legend>
-	
-	        <button type="reset">Reset form</button>
-	
-	        <fieldset class="condensed">
-	          <legend>Type of bread</legend>
-	          <label><input type="radio" name="radio"/> Brown</label>
-	          <label><input type="radio" name="radio" checked="checked"/> Wheat</label>
-	          <label><input type="radio" name="radio"/> White</label>
-	        </fieldset>
-	
-	
-	        <fieldset class="condensed">
-	          <legend>Toppings</legend>
-	          <label><input type="checkbox" name="checkbox" checked="checked"/> Cheese</label>
-	          <label><input type="checkbox" name="checkbox"/> Peanutbutter</label>
-	          <label><input type="checkbox" name="checkbox" checked="checked"/> Salami</label>
-	        </fieldset>
-	      </fieldset>
-	    </form>
-	
-	    <form>
-	      <fieldset>
-	        <legend>Build your second sandwich</legend>
-	
-	        <fieldset class="condensed">
-	          <legend>Type of bread</legend>
-	          <label><input type="radio" name="radio"/> Brown</label>
-	          <label><input type="radio" name="radio" checked="checked"/> Wheat</label>
-	          <label><input type="radio" name="radio"/> White</label>
-	        </fieldset>
-	
-	
-	        <fieldset class="condensed">
-	          <legend>Toppings</legend>
-	          <label><input type="checkbox" name="checkbox" checked="checked"/> Cheese</label>
-	          <label><input type="checkbox" name="checkbox"/> Peanutbutter</label>
-	          <label><input type="checkbox" name="checkbox" checked="checked"/> Salami</label>
-	        </fieldset>
-	      </fieldset>
-	    </form>
+		<form>
+		
+		<fieldset>	        
+			<button type="reset">Reset form</button>
+		</fieldset>
+		<div class="row">		
+			<div class="six columns">
+		      <fieldset>
+		        <legend>Build your first sandwich</legend>
+		        <fieldset class="condensed radio-list">
+		          <legend>Type of bread</legend>
+		          <label><input type="radio" name="radio"/> Brown</label>
+		          <label><input type="radio" name="radio" checked="checked"/> Wheat</label>
+		          <label><input type="radio" name="radio"/> White</label>
+		        </fieldset>
+		
+		
+		        <fieldset class="condensed radio-list">
+		          <legend>Toppings</legend>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Cheese</label>
+		          <label><input type="checkbox" name="checkbox"/> Peanutbutter</label>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Salami</label>
+		        </fieldset>
+		      </fieldset>			
+		    </div>
+			<div class="six columns">
+		      <fieldset>
+		        <legend>Build your second sandwich</legend>
+		
+		        <fieldset class="condensed radio-list">
+		          <legend>Type of bread</legend>
+		          <label><input type="radio" name="radio"/> Brown</label>
+		          <label><input type="radio" name="radio" checked="checked"/> Wheat</label>
+		          <label><input type="radio" name="radio"/> White</label>
+		        </fieldset>
+		
+		
+		        <fieldset class="condensed radio-list">
+		          <legend>Toppings</legend>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Cheese</label>
+		          <label><input type="checkbox" name="checkbox"/> Peanutbutter</label>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Salami</label>
+		        </fieldset>
+		      </fieldset>
+				   
+				</div>
+			</div>
+		
+		</form>
     </section>
 	<section class="documentation">
 		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
