@@ -385,7 +385,7 @@ define([
                 end: function(tag) {
                     output.push("</"+tag+">");
                 },
-                
+
                 chars: function(text) {
                     output.push(text);
                 },
