@@ -41,6 +41,7 @@ define([
             // find all elements that belong to any pattern
             $match = $content.wrap("<div/>").parent().find(allsel);
             $content.unwrap();
+            $match = $match.filter(function() { return $(this).parents('pre').length === 0; });
             $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.
