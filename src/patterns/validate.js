@@ -2,8 +2,7 @@ define([
     "jquery",
     "../registry",
     "../core/logger",
-    "jquery_validate",
-    "jquery_validate_additional_methods"
+    "patterns-jquery-validation"
 ], function($, patterns, logger) {
     var log = logger.getLogger("pat.validate");
 
