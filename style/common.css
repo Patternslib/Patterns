@@ -949,12 +949,9 @@ fieldset {
 }
 
 fieldset p.question,
-fieldset p.legend
+fieldset p.legend,
 fieldset legend {
-	width: 95% !important;
-  margin-bottom: 1em;
-	letter-spacing: 1px;
-	line-height: 2em;
+	margin-bottom: 1em;
 	font-size: 14px;
 	font-weight: bold;
 }
@@ -1136,18 +1133,6 @@ fieldset.condensed label textarea {
 	float: left;
 }
 
-fieldset.condensed fieldset p.question {
-	font-weight: normal;
-	font-style: normal;
-}
-
-fieldset.condensed p.question {
-	width: auto;
-	margin: 0;
-	letter-spacing: 0;
-	text-transform: none;
-}
-
 /* @end */
 
 /* @end */
@@ -1176,7 +1161,8 @@ fieldset.condensed p.question {
 
 /* @group Radio List */
 
-fieldset.condensed.radio-list p.legend {
+.radio-list p.legend,
+.radio-list legend {
 	font-weight: normal;
 	font-style: normal;
 }
