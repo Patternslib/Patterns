@@ -152,8 +152,8 @@ be temporarily shown with a progress indicator:
       <span class="pointer" style="top: 111px; left: -22px"></span>
     </div>
 
-Option reference
-----------------
+Properties
+----------
 
 The tooltip can be configured through a `data-pat-tooltip` attribute.
 The available options are:
