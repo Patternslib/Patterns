@@ -150,7 +150,7 @@ body {
 	transition: opacity 1s;
 }
 
-.-ms- .pat-auto-scale {
+.-ms- #content.pat-auto-scale {
 	zoom: 1 !important;
 	margin-right: auto;
 	margin-left: auto;
