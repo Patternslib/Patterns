@@ -152,8 +152,8 @@ be temporarily shown with a progress indicator:
       <span class="pointer" style="top: 111px; left: -22px"></span>
     </div>
 
-Option reference
-----------------
+Properties
+----------
 
 The tooltip can be configured through a `data-pat-tooltip` attribute.
 The available options are:
@@ -161,16 +161,9 @@ The available options are:
 | Field | Default | Description |
 | ----- | ------- | ----------- |
 | `position` | | A `-`-separated list of tooltip positions. |
-| ----- | ------- | ----------- |
 | `force` | false | If set always use a provided position even if does not fit in the window. |
-| ----- | ------- | ----------- |
 | `click` | false | If set the user must click on a link to see the tooltip. |
-| ----- | ------- | ----------- |
 | `sticky` | false | If set the user must click on a close button in the tooltip to make it disappear. |
-| ----- | ------- | ----------- |
 | `close` | true | Indicates if a close button should automatically be added to a sticky tooltip. |
-| ----- | ------- | ----------- |
 | `ajax` | false | If set the tooltip content will be loaded from the `href` of the link. |
-| ----- | ------- | ----------- |
 | `content` | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. |
-| ----- | ------- | ----------- |

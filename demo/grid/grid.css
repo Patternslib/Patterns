@@ -1,7 +1,20 @@
+/*
+This code is based on Zurb Foundation's grid framework.
+
+@license Zurb Foundation @http://foundation.zurb.com@
+
+Copyright (c) 2012 Mark Hayes
+*/
+
 .row,.columns {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+section.demo > .row {
+	margin-left: -15px;
+	margin-right: -15px;
 }
 
 /* @group The Grid */
