@@ -4,9 +4,8 @@ define([
     "../registry",
     "../utils",
     "./inject",
-    "pagedown_converter",
-    "pagedown_extra",
-    "pagedown_sanitizer"
+    "pagedown",
+    "pagedown-extra"
 ], function($, logger, registry, utils, inject) {
     var log = logger.getLogger("pat.markdown");
 

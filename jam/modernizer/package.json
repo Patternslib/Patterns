@@ -1,0 +1,30 @@
+{
+  "name": "modernizer",
+  "version": "2.6.2",
+  "description": "Modernizr tests which native CSS3 and HTML5 features are available.",
+  "homepage": "https://github.com/GBKS/Wookmark-jQuery",
+  "keywords": [
+    "modernizer",
+    "css",
+    "layout",
+    "framework",
+    "progressive"
+  ],
+  "jam": {
+    "main": "modernizr-development.js"
+  },
+  "bugs": {
+    "web": "https://github.com/Modernizr/Modernizr/issues" 
+  },
+  "licenses": [{
+      "type": "MIT",
+      "url": "http://en.wikipedia.org/wiki/MIT_License"
+    }
+  ],
+  "repositories": [{
+      "type": "git", 
+      "url": "https://github.com/Modernizr/Modernizr.git"
+    }
+  ],
+  "github": "https://github.com/Modernizr/Modernizr"
+}

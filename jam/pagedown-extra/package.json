@@ -1,0 +1,17 @@
+{
+    "name": "pagedown-extra",
+    "version": "1.0.0-jam.2",
+    "description": "markdown extra",
+    "keywords": ["markdown"],
+    "license": "MIT",
+    "files": ["Markdown.Extra.js"],
+  "jam": {
+    "main": "Markdown.Extra.js",
+    "dependencies": {
+      "pagedown": ">=1.0.0-jam.2"
+    },
+    "shim": {
+      "deps": ["pagedown"]
+    }
+  }
+}

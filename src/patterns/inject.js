@@ -12,7 +12,7 @@ define([
     "../registry",
     "../utils",
     "../lib/htmlparser",
-    "jquery_ext"  // for :scrollable for autoLoading-visible
+    "../jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, Parser, logger, ajax, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");

@@ -1,0 +1,20 @@
+{
+    "name": "css"
+  , "description": "Optimizable CSS requiring with RequireJS"
+  , "version": "1.0.0"
+  , "main": "css.js"
+  , "keywords": ["requirejs", "css", "requirejs plugin"]
+  , "homepage": "https://github.com/guybedford/css"
+  , "repository": {
+      "type": "git"
+    , "url": "https://github.com/guybedford/css.git"
+  }
+  , "licenses": [
+    {
+        "type": "MIT"
+    }
+  ],
+  "dependencies": {
+      "text": ">2.0.0"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "jquery-placeholder",
+  "title": "jquery placeholder",
+  "version": "2.0.7",
+  "description": "jquery placeholder",
+  "author": {
+    "name": "Mathias"
+  },
+  "licenses": [
+  {
+    "type": "GPL",
+    "url": "http://www.gnu.org/licenses/gpl.html"
+  },
+  {
+    "type": "MIT",
+    "url": "http://www.opensource.org/licenses/mit-license.php"
+  }
+  ],
+  "dependencies": {
+    "jquery": ">=1.4.2"
+  },
+  "jam": {
+    "main": "jquery.placeholder.js",
+    "dependencies": {
+      "jquery": ">=1.4.2"
+    },
+    "shim": {
+      "deps": ["jquery"]
+    }
+  }
+}
