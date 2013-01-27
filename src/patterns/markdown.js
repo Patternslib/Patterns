@@ -1,11 +1,15 @@
 define([
     "jquery",
+    "../core/logger",
     "../registry",
+    "../utils",
     "./inject",
     "pagedown_converter",
     "pagedown_extra",
     "pagedown_sanitizer"
-], function($, registry, inject) {
+], function($, logger, registry, utils, inject) {
+    var log = logger.getLogger("pat.markdown");
+
     // XXX: currently not supported,
     // see: https://github.com/jmcmanus/pagedown-extra/issues/1
     //var converter = Markdown.getSanitizingConverter();
@@ -46,8 +50,23 @@ define([
 
     inject.registerTypeHandler("markdown", {
         sources: function(cfgs, data) {
-            var $rendering = _._render(data);
+            var $rendering, source, header;
             return cfgs.map(function(cfg) {
+                source=data;
+                if (cfg.source && (header=/^(#+)\s+(.*)/.exec(cfg.source))!==null) {
+                    var level = header[1].length,
+                        text = utils.escapeRegExp(header[2]),
+                        matcher = "^#{@LEVEL@}\\s+@TEXT@(.|\\n)*?^(?=#{1,@LEVEL@})";
+                    matcher=matcher.replace(/@LEVEL@/g, level).replace(/@TEXT@/g, text);
+                    matcher=new RegExp(matcher, "m");
+                    source=matcher.exec(source);
+                    if (source===null) {
+                        log.warn("Could not find section \"" + cfg.source + "\" in " + cfg.url);
+                        return $("<div/>").attr("data-src", cfg.url);
+                    }
+                    source=source[0]+"\n";  // Needed for some markdown syntax
+                }
+		$rendering = _._render(source);
                 $rendering.attr("data-src", cfg.url);
                 return $rendering;
             });

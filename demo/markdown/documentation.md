@@ -42,3 +42,21 @@ injection pattern that it is loading markdown content through its
 `data-type` option.
 
     <a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Show me the money!</a>
+
+You can also extract specific sections of your markdown source by specifying a 
+`source` option which points to a heading in your markdown source. For example
+if your markdown looks like thos:
+
+    # Top level section
+
+    ## An interesting section
+
+    ## Possibly less interesting
+
+You can include interesting section like this:
+
+    <a href="content.md" class="pat-inject"
+       data-pat-inject="source: ## An interesting section; target: #target">Show me the money!</a>
+
+Section much be defined in your markdown search a #-prefix. Underline headers are
+not supported.
