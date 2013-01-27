@@ -2,9 +2,8 @@ define([
     "jquery",
     "../registry",
     "./inject",
-    "pagedown_converter",
-    "pagedown_extra",
-    "pagedown_sanitizer"
+    "pagedown",
+    "pagedown-extra"
 ], function($, registry, inject) {
     // XXX: currently not supported,
     // see: https://github.com/jmcmanus/pagedown-extra/issues/1

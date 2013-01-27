@@ -1,8 +1,8 @@
 define([
     "jquery",
-    "registry",
+    "./registry",
 
-    "modernizr",
+    "modernizer",
     "less",
     "prefixfree",
     "./patterns/autofocus",

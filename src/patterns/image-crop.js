@@ -3,7 +3,7 @@ define([
     "../core/logger",
     "../core/parser",
     "../registry",
-    "jquery_jcrop"
+    "jcrop"
 ], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.image-crop"),
         parser = new Parser("image-crop");

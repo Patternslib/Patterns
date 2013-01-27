@@ -1,6 +1,6 @@
 define([
     "../registry",
-    "jquery_chosen"
+    "chosen-js"
 ], function(registry) {
     var _ = {
         name: "chosen",
