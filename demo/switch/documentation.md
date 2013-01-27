@@ -7,7 +7,7 @@ This is done by adding a `pat-switch` class along with a
     <button class="pat-switch" data-pat-switch="#status off on">Power on</button>
     <span id="status" class="off"/>
 
-If a user clicks on the *Power on* button the `off` class will be
+If a user clicks on the *Power on* button, the `off` class will be
 removed and the `on` class will be added. Note that this is similar to
 the toggle pattern. This pattern only triggers once though, while the
 toggle pattern toggles between two states.
@@ -22,13 +22,13 @@ This pattern takes three arguments:
 You must provide the selector and at least one of *remove* or *add*.
 
 You can use wildcards to identify classes that should be removed by
-using a wildcard (the `*` character) in the class name.
+using a wildcard (the `*` character) in the class name:
 
     <button class="pat-switch" data-pat-switch=".toolbar icon-*">Remove icons</button>
 
 Multiple changes can be provided if desired by separating them using the
 `&&` separator. The example below uses this to remove all icon classes
-in both the toolbar and the navigation tree.
+in both the toolbar and the navigation tree:
 
     <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree; icon-*">Remove icons</button>
 

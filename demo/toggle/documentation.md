@@ -33,7 +33,7 @@ checkbox:
 If you are manipulating the `class` attribute you can specify multiple
 classes separated by spaces to toggle multiple classes.
 
-    <a href="#" class="pat-toggle" data-pat-toggle="#work class active inactive">Start working</a>
+    <a href="#" data-pat-toggle="selector: #work; value: active inactive">Start working</a>
     </a>
     <div id="work" class="inactive">
       Working..
@@ -41,7 +41,7 @@ classes separated by spaces to toggle multiple classes.
 
 On the first click the `inactive` class will be removed and `active`
 will be added. On the next click `active` will be removed again and
-`active` restored.
+`active` restored. All listed classes will be toggled at the same time.
 
 Remembering the state
 ---------------------
