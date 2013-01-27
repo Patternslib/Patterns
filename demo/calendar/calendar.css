@@ -1,1 +1,6 @@
 @import url("../../src/3rdparty/fullcalendar/fullcalendar.css");
+
+.calendar-container {
+	overflow-y: scroll;
+	height: 500px;
+};

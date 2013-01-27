@@ -1,3 +1,5 @@
+@import url("../demo/grid/grid.css");
+
 body {
 	width: auto;
 	position: relative;
@@ -5,7 +7,7 @@ body {
 	font: 16px/2em "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
 	margin: 0;
-	background-color: #efefef;
+	background-color: #f5f5f5;
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
@@ -829,16 +831,13 @@ label.superImpose,
 	border-style: none;
 }
 
-input:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="time"]:focus,
 textarea:focus {
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
-	background: -o-gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
-	background:-moz-linear-gradient(19% 75% 90deg,whiteFFF, whiteFFF, whiteFFF 100%);
-	background: gradient(linear, 0% 0%, 0% 100%, from(whiteFFF), to(whiteFFF));
-	-webkit-box-shadow: 0 0 10px rgba(0,0,0,0.3);
-	-moz-box-shadow: 0 0 10px rgba(0,0,0,0.3);
-	box-shadow: 0 0 10px rgba(0,0,0,0.3);
-}
+	outline: solid black 1px;
+	}
 
 input[type="file"] {
 	margin-left: 0px !important;
@@ -929,9 +928,10 @@ fieldset p.question,
 fieldset p.legend {
 	width: 95% !important;
   margin-bottom: 1em;
-  font-size: 21px;
-  line-height: 1.3;
 	letter-spacing: 1px;
+	line-height: 2em;
+	font-size: 14px;
+	font-weight: bold;
 }
 
 /* @group Fieldset Concise */
@@ -969,7 +969,6 @@ fieldset.concise label *,
 form.concise fieldset label *,
 fieldset.concise label * {
 	position: relative;
-	vertical-align: top;
 	max-width: 320px;
 	left: 100%;
 	margin-right: -200%;
@@ -1068,16 +1067,6 @@ form.compact fieldset.comprehensive label * {
 	float: none;
 }
 
-fieldset.comprehenisve input[type="radio"],
-.concise fieldset.comprehensive input[type="radio"] {
-	margin-top: 10px;
-}
-
-fieldset.comprehenisve input[type="checkbox"],
-.concise fieldset.comprehensive input[type="checkbox"] {
-	margin-top: 3px;
-}
-
 fieldset.comprehensive p.question,
 form.comprehensive fieldset p.question,
 fieldset.comprehensive p.legend,
@@ -1120,17 +1109,15 @@ form.condensed fieldset label {
 	font-weight: normal;
 	font-style: normal;
 	display: inline-block;
-	margin-bottom: 20px;
 	float: left;
 	clear: left;
+	margin-bottom: 1em;
 }
 
 fieldset.condensed label input,
 form.condensed fieldset label input,
 fieldset.condensed label textarea {
 	float: left;
-	margin-top: 0;
-	margin-bottom: 0;
 }
 
 fieldset.condensed fieldset p.question {
@@ -1166,25 +1153,34 @@ fieldset.condensed fieldset p.question {
 
 /* @group Radio List */
 
-.radio-list {
-	list-style-type: none !important;
-	padding-bottom: 4px !important;
+fieldset.condensed.radio-list p.legend {
+	font-weight: normal;
+	font-style: normal;
 }
 
-.radio-list label {
+.radio-list {
+	list-style-type: none !important;
+}
+
+fieldset.radio-list label,
+fieldset.condensed.radio-list label {
 	display: block;
 	width: auto !important;
-	padding-left: 18px !important;
+	padding-left: 28px;
+	margin-bottom: 0;
+	float: none;
+	margin-left: -10px;
+	padding-right: 10px;
+	border-radius: 4px;
 }
 
 .radio-list label input[type="radio"],
-form.concise fieldset.radio-list label input[type="radio"] {
+form.concise fieldset.comprehensive.radio-list label input[type="radio"] {
 	margin-left: -18px;
-	float: left;
-}
-
-.portlet .radio-list label input {
-	margin-top: 2px !important;
+	float: none;
+	position: relative;
+	left: 0;
+	top: -2px;
 }
 
 /* @end */
@@ -1262,39 +1258,28 @@ ul.checkList li {
 	padding-bottom: 4px !important;
 }
 
-.checkList label,
-html>body fieldset.comprehensive.checkList label {
+fieldset.check-list.radio-list p.legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
+fieldset.check-list label {
 	display: block;
 	width: auto !important;
-	padding-left: 20px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	user-select: none;
+	padding-left: 18px !important;
+	margin-bottom: 0;
 }
 
 .checkList label:hover {
 	background-color: #efefef;
 }
 
-html>body fieldset.comprehensive.checkList label input {
-	float: left;
-	position: static !important;
-	margin: 4px 5px 0 0 !important;
-	margin-left: -20px!important;
-}
-
-.portlet .checkList input {
-	margin-top: 3px;
-}
-
-.checkList .column-1-of-3,
-.checkList .column-2-of-3,
-.checkList .column-3-of-3 {
-	padding: 0;
-	float: left;
-	width: 140px;
-	clear: none;
-	font-size: 10px;
+.radio-list label input[type="checkbox"],
+form.concise fieldset.radio-list label input[type="checkbox"] {
+	margin-left: -18px;
+	float: none;
+	position: relative;
+	top: -1px;
 }
 
 /* @end */

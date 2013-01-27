@@ -64,11 +64,11 @@ An example:
 
 This specifies that the preferred position of the tip is at the top left
 side of the tooltip (placing the tooltip itself on the right side of the
-link). Notice that position is the first defined argument so you can use
+link). Notice that the position is the first defined argument so you can use
 shorthand syntax directly. If the tooltip does not fit at that position
-the left-middle position should be tried, than the right-top or if all
-previous options failed the middle of the right side. If the tooltip
-does not fit at any none of the preferred positions the tooltip will be
+then the left-middle position is tried, and then the the right-top or if all
+previous options failed the middle of the right side is tried. If the tooltip
+does not fit at any of the preferred positions, then it will be
 positioned at the location that has the most space, even if this is not
 one of the preferred positions.
 
@@ -88,7 +88,7 @@ element or the triggering element is clicked. If this is not desired
 behaviour, there is the option to have a 'sticky' tooltip. This only
 disappears when a close button on the tooltip is clicked. When the
 sticky option is chosen, the close button will be inserted for you
-automatically.
+automatically:
 
     <a href="#" class="pat-tooltip" data-pat-tooltip="sticky">
      …
@@ -160,7 +160,7 @@ The available options are:
 
 | Field | Default | Description |
 | ----- | ------- | ----------- |
-| `position` | | A `-`-seperated list of tooltip positions. |
+| `position` | | A `-`-separated list of tooltip positions. |
 | ----- | ------- | ----------- |
 | `force` | false | If set always use a provided position even if does not fit in the window. |
 | ----- | ------- | ----------- |
