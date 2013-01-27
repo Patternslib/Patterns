@@ -28,8 +28,8 @@ all doc:: build/docs/index.html
 build/docs/index.html: docs/conf.py $(wildcard docs/*.rst) $(wildcard docs/*/*.rst)
 	sphinx-build -b html docs build/docs
 
-demo/calender/calender.css: jam/fullcalender
-	cp jam/fullcalender demo/calender/calender.css
+demo/calender/calender.css: jam/jquery-fullcalendar/fullcalendar/fullcalendar.css
+	cp jam/jquery-fullcalendar/fullcalendar/fullcalendar.css demo/calender/calender.css
 
 
 JSHINTEXCEPTIONS = src/core/parser.js \
@@ -42,11 +42,10 @@ CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 check:
 	@jshint --config jshintrc Gruntfile.js $(CHECKSOURCES)
 	@jshint --config tests/jshintrc tests/*.js
-	#$(GRUNT) test
+	$(GRUNT) test
 
 clean:
 	rm -f $(TARGETS)
-	$(GRUNT) clean
 	rm -rf build
 
 localize-demo-images:
