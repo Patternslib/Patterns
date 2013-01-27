@@ -1,9 +1,6 @@
 # Documentation
 
-A *bumper* is an element that, when the user starts scrolling, stays in
-view when a viewport border touches it.
-
-Below is a simple example.
+Below is a simple example of a bumper.
 
     <div class="pat-bumper">
        Bumper content
