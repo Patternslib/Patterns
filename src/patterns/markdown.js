@@ -9,11 +9,8 @@ define([
 ], function($, logger, registry, utils, inject) {
     var log = logger.getLogger("pat.markdown");
 
-    // XXX: currently not supported,
-    // see: https://github.com/jmcmanus/pagedown-extra/issues/1
-    //var converter = Markdown.getSanitizingConverter();
-    var converter = new Markdown.Converter();
-    converter.hooks.chain("preConversion", Markdown.Extra.all);
+    var converter = Markdown.getSanitizingConverter();
+    Markdown.Extra.init(converter, {extensions: "all"});
 
     var _ = {
         name: "markdown",
