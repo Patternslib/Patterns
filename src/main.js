@@ -1,4 +1,4 @@
-define([
+define('main', [
     "jquery",
     "./registry",
 
@@ -43,3 +43,4 @@ define([
         registry.scan(document.body);
     });
 });
+require('main');
