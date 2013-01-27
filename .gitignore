@@ -4,6 +4,5 @@
 /build/docs
 /build/patterns.min.js
 /bundles/
-/jam
 /node_modules
 /src/lib/jquery.mutations/build
