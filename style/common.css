@@ -16,6 +16,10 @@ body {
 
 /* @group Image */
 
+img {
+	outline: none;
+}
+
 .documentation img {
 	max-width: 85%;
 	margin-right: auto;
