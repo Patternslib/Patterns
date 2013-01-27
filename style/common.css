@@ -738,7 +738,9 @@ h6,
 hr {
 	border:none;
 	border-bottom:1px solid silver;
-	}
+	margin: 2em auto;
+	width: 85%;
+}
 
 
 
