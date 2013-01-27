@@ -54,10 +54,16 @@ define([
         return base.slice(0, base.lastIndexOf("/")+1) + url;
     };
 
+    // Taken from http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+    var escapeRegExp = function(str) {
+        return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    };
+
     var utils = {
         // pattern pimping - own module?
         jquery_plugin: jquery_plugin,
         debounce: debounce,
+        escapeRegExp: escapeRegExp,
         rebaseURL: rebaseURL
     };
 
