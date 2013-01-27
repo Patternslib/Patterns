@@ -36,6 +36,7 @@
         }
     ],
     "jam": {
+        "baseUrl": "src",
         "main": "src/main.js",
         "dependencies": {
             "anythingslider": ">=1.8.15",
