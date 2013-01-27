@@ -18,6 +18,7 @@ body {
 
 img {
 	outline: none;
+	border-style: none;
 }
 
 .documentation img {
