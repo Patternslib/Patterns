@@ -1,5 +1,6 @@
 NPM 		?= npm
 JAM 		?= node_modules/.bin/jam
+JSHINT 		?= node_modules/.bin/jshint
 UGLIFYJS 	?= node_modules/.bin/uglifyjs
 GRUNT		?= grunt
 PEGJS		?= pegjs
@@ -10,11 +11,11 @@ all:: check $(TARGETS)
 
 bootstrap:
 	mkdir -p bundles
-	$(NPM) install jamjs uglify-js
-	$(JAM) install
+	$(NPM) install
+	#$(JAM) install
 
 bundles/patterns.js: $(SOURCES)
-	$(JAM) compile -i src/main --no-minify --almond $@
+	$(JAM) compile -i main --no-minify --almond $@
 
 bundles/patterns.min.js: bundles/patterns.js
 	$(UGLIFYJS) $# > $@
@@ -35,8 +36,8 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 check:
-	@jshint --config jshintrc Gruntfile.js $(CHECKSOURCES)
-	@jshint --config tests/jshintrc tests/*.js
+	@$(JSHINT) --config jshintrc Gruntfile.js $(CHECKSOURCES)
+	@$(JSHINT) --config tests/jshintrc tests/*.js
 	$(GRUNT) test
 
 clean:
@@ -47,4 +48,3 @@ localize-demo-images:
 	tools/localize-demo-images.sh
 
 .PHONY: all bootstrap check clean doc
-
