@@ -151,6 +151,7 @@ background: -ms-linear-gradient(top, rgba(206,220,231,1) 0%,rgba(89,106,114,1) 1
 background: linear-gradient(top, rgba(206,220,231,1) 0%,rgba(89,106,114,1) 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', endColorstr='#596a72',GradientType=0 );
 	color: white;
+	height: 18px;
 }
 
 .pat-modal .header h1,.pat-modal .header h3 {
@@ -173,8 +174,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cedce7', end
 	overflow: hidden;
 	margin: 0;
 	background: url(buttons-modal.png) center center;
-	border-color: rgba(254,255,254,0.63);
 	filter: none;
+	border-style: none;
+	border-radius: 4px;
 }
 
 .pat-modal .header .close-panel:active {
