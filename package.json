@@ -39,7 +39,7 @@
     ],
     "files": ["dist/patterns.js"],
     "jam": {
-        "main": "bundles/patterns-standalone.js",
+        "main": "src/main.js",
         "dependencies": {
             "anythingslider": ">=1.8.15",
             "autoSuggest": "1.4.0",
