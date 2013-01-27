@@ -27,6 +27,7 @@ div.pat-modal {
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 	box-shadow: 0 0 20px 10px black;
+	max-height: 90%;
 }
 
 div.pat-modal .panel-content {
