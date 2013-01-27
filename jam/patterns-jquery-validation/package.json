@@ -1,0 +1,31 @@
+{
+  "name": "patterns-jquery-validation",
+  "title": "jquery validation",
+  "version": "1.10.0",
+  "description": "jquery validation plugin",
+  "author": {
+    "name": "Jörn Zaefferer"
+  },
+  "licenses": [
+  {
+    "type": "GPL",
+    "url": "http://www.gnu.org/licenses/gpl.html"
+  },
+  {
+    "type": "MIT",
+    "url": "http://www.opensource.org/licenses/mit-license.php"
+  }
+  ],
+  "dependencies": {
+    "jquery": ">=1.4.2"
+  },
+  "jam": {
+    "main": "main.js",
+    "dependencies": {
+      "jquery": ">=1.4.2"
+    },
+    "shim": {
+      "deps": ["jquery"]
+    }
+  }
+}
