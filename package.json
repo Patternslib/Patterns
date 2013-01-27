@@ -52,12 +52,12 @@
             "jquery-placeholder": "2.0.7",
             "jquery-textchange": "1.4.0",
             "less": ">=1.3.1",
-            "logging": ">=1.0.0pre",
+            "logging": ">=1.0.0-jam.1",
             "modernizer": ">=2.6.2",
             "pagedown": ">=1.0.0-jam.5",
             "pagedown-extra": ">=1.0.0-jam.4",
             "patterns-jquery-form": ">=3.2.24",
-            "patterns-jquery-validation": ">=1.10.0",
+            "patterns-jquery-validation": ">=1.10.0-jam.1",
             "prefixfree": "1.0.7",
             "tiny_mce": "3.5.7"
         }

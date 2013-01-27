@@ -1,7 +1,7 @@
 {
   "name": "patterns-jquery-validation",
   "title": "jquery validation",
-  "version": "1.10.0",
+  "version": "1.10.0-jam.1",
   "description": "jquery validation plugin",
   "author": {
     "name": "Jörn Zaefferer"

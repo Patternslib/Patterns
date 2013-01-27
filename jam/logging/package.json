@@ -2,7 +2,7 @@
 	"name": "logging",
 	"title": "logging",
 	"description": "Minimal logging framework",
-	"version": "1.0.0pre",
+	"version": "1.0.0-jam.1",
 	"homepage": "http://github.com/patterns/logging",
 	"author": {
 		"name": "Wichert Akkerman",
