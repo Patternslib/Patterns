@@ -1,0 +1,167 @@
+{
+  "name": "",
+  "glyphs": [
+    {
+      "search": [
+        "attention",
+        "warning",
+        "alert"
+      ],
+      "code": 9888,
+      "uid": "97902f87200ce74d181044df02a0458d",
+      "css": "attention",
+      "orig_css": "attention",
+      "orig_code": 9888,
+      "src": "entypo",
+      "from": 9888
+    },
+    {
+      "search": [
+        "pencil",
+        "write",
+        "reply",
+        "edit"
+      ],
+      "code": 9998,
+      "uid": "c77fd2fd065b5fe16d6f2b41e190b266",
+      "css": "pencil",
+      "orig_css": "pencil",
+      "orig_code": 9998,
+      "src": "entypo",
+      "from": 9998
+    },
+    {
+      "search": [
+        "pencil",
+        "write",
+        "reply",
+        "edit"
+      ],
+      "code": 10000,
+      "from": 10000,
+      "uid": "97var6sq7rzo72ktzg1c6ph46u9pftbr",
+      "css": "pencil-alt",
+      "orig_css": "pencil-alt",
+      "orig_code": 10000,
+      "src": "modernpics"
+    },
+    {
+      "search": [
+        "code"
+      ],
+      "code": 59156,
+      "from": 59156,
+      "uid": "838db85de51df09e2d0c34a17dc30ff6",
+      "css": "code",
+      "orig_css": "code",
+      "orig_code": 59156,
+      "src": "websymbols"
+    },
+    {
+      "search": [
+        "retweet",
+        "twitter"
+      ],
+      "code": 59159,
+      "uid": "216891b0093d4dbef19877d5b00d1b16",
+      "css": "retweet",
+      "orig_css": "retweet",
+      "orig_code": 59159,
+      "src": "entypo",
+      "from": 59159
+    },
+    {
+      "search": [
+        "qrcode"
+      ],
+      "code": 59281,
+      "from": 59281,
+      "uid": "fd45bb961d08f9f2092f0df3fba29fe9",
+      "css": "qrcode",
+      "orig_css": "qrcode",
+      "orig_code": 59281,
+      "src": "fontawesome"
+    },
+    {
+      "search": [
+        "building"
+      ],
+      "code": 61687,
+      "uid": "3d1e04316a48ace4e2b81be58343a41c",
+      "css": "building",
+      "orig_css": "building",
+      "orig_code": 61687,
+      "src": "fontawesome",
+      "from": 61687
+    },
+    {
+      "search": [
+        "gift",
+        "present",
+        "package",
+        "box"
+      ],
+      "code": 127873,
+      "from": 127873,
+      "uid": "28f308aa0a07a67433f54c089c400d82",
+      "css": "gift",
+      "orig_css": "gift",
+      "orig_code": 127873,
+      "src": "fontawesome"
+    },
+    {
+      "search": [
+        "attention",
+        "warning",
+        "alert"
+      ],
+      "code": 128165,
+      "uid": "39a5a0d7ce8342d149373b2ce219503a",
+      "css": "alert",
+      "orig_css": "alert",
+      "orig_code": 128165,
+      "src": "entypo",
+      "from": 128165
+    },
+    {
+      "search": [
+        "tv",
+        "screen",
+        "monitor"
+      ],
+      "code": 128187,
+      "uid": "b7a336095aa4535c3689cb557edf23db",
+      "css": "monitor",
+      "orig_css": "monitor",
+      "orig_code": 128187,
+      "src": "entypo",
+      "from": 128187
+    },
+    {
+      "search": [
+        "settings",
+        "wrench"
+      ],
+      "code": 59392,
+      "from": 128295,
+      "uid": "i7r8vgyqewsy2rlx0xhawybpw5uyss3z",
+      "css": "wrench",
+      "orig_css": "wrench",
+      "orig_code": 59392,
+      "src": "typicons"
+    },
+    {
+      "search": [
+        "settings",
+        "wrench"
+      ],
+      "code": 128295,
+      "from": 128295,
+      "uid": "zc0c8s0nyweeeo9i8a3rucu7alwxt56r",
+      "css": "tools",
+      "orig_css": "wrench",
+      "orig_code": 128295,
+      "src": "modernpics"
+    }
+  ]
+}
