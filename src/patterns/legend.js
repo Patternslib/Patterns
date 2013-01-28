@@ -1,8 +1,10 @@
 define([
-    "jquery"
-], function($) {
-    var transforms = {
-        name: "transforms",
+    "jquery",
+    "../registry"
+], function($, registry) {
+    var legend = {
+        name: "legend",
+        trigger: "legend",
 
         _convertToIframes: function($root) {
             $root.find("object[type='text/html']").each(function() {
@@ -30,11 +32,11 @@ define([
             if ($.browser.msie ) {
                 var version = Number( $.browser.version.split(".", 2).join(""));
                 if (version<=80)
-                    transforms._convertToIframes($root);
+                    legend._convertToIframes($root);
             }
         }
     };
 
-    return transforms;
-
+    registry.register(legend);
+    return legend;
 });
