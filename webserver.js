@@ -69,6 +69,11 @@ app.get('/getBundle', function(req, res){
     bundleBuilder(req, res, minify);
 });
 
+app.get('/bundles/:name', function(req, res){
+    var fullname = path.join(__dirname, 'bundles', req.params.name);
+    return res.download(fullname);
+});
+
 app.use(express.static(path.join(__dirname)));
 
 http.createServer(app).listen(app.get('port'), function(){
