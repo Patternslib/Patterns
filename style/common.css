@@ -1,5 +1,7 @@
 @import url("../demo/grid/grid.css");
 
+@import url("fontello/css/fontello.css");
+
 body {
 	width: auto;
 	position: relative;
