@@ -43,4 +43,4 @@ define('main', [
         registry.scan(document.body);
     });
 });
-require('main');
+require(['main']);
