@@ -1173,13 +1173,10 @@ fieldset.condensed label textarea {
 	list-style-type: none !important;
 }
 
-fieldset.radio-list label,
-fieldset.condensed.radio-list label,
-fieldset.comprehensive.radio-list label,
-form.concise fieldset.comprehensive.radio-list label  {
+fieldset.radio-list label   {
 	display: block;
 	width: auto !important;
-	padding-left: 28px;
+	padding-left: 30px;
 	margin-bottom: 0;
 	float: none;
 	margin-left: -10px;
@@ -1190,11 +1187,11 @@ form.concise fieldset.comprehensive.radio-list label  {
 
 .radio-list label input[type="radio"],
 form.concise fieldset.comprehensive.radio-list label input[type="radio"] {
-	margin-left: -18px;
 	float: none;
 	position: relative;
 	left: 0;
 	top: -2px;
+	margin-left: -18px;
 }
 
 /* @end */
@@ -1281,7 +1278,7 @@ fieldset.check-list legend,
 fieldset.check-list label {
 	display: block;
 	width: auto !important;
-	padding-left: 28px;
+	padding-left: 30px;
 	margin-bottom: 0;
 	float: none;
 	margin-left: -10px;
