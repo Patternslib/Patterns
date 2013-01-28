@@ -112,11 +112,6 @@ var jam = {
                 "pagedown"
             ]
         },
-        "patterns-jquery-validation": {
-            "deps": [
-                "jquery"
-            ]
-        },
         "anythingslider": {
             "deps": [
                 "jquery"
@@ -255,11 +250,6 @@ if (typeof require !== "undefined" && require.config) {
                 "pagedown"
             ]
         },
-        "patterns-jquery-validation": {
-            "deps": [
-                "jquery"
-            ]
-        },
         "anythingslider": {
             "deps": [
                 "jquery"
@@ -396,11 +386,6 @@ else {
         "pagedown-extra": {
             "deps": [
                 "pagedown"
-            ]
-        },
-        "patterns-jquery-validation": {
-            "deps": [
-                "jquery"
             ]
         },
         "anythingslider": {

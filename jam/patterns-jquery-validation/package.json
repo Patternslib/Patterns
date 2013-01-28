@@ -23,9 +23,6 @@
     "main": "main.js",
     "dependencies": {
       "jquery": ">=1.4.2"
-    },
-    "shim": {
-      "deps": ["jquery"]
     }
   }
 }
