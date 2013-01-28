@@ -8,7 +8,6 @@ define('main', [
     "./patterns/autofocus",
     "./patterns/autoscale",
     "./patterns/autosubmit",
-    "./patterns/autosubmit2",
     "./patterns/autosuggest",
     "./patterns/breadcrumbs",
     "./patterns/bumper",
