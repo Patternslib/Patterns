@@ -25,7 +25,7 @@ bundles/patterns.min.js: bundles/patterns.js
 bundles: bundles/patterns.js bundles/patterns.min.js
 
 use-bundle:
-	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html _SpecRunner.html
+	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html
 	sed -i -e 's,<script data-main="../src/main" src="../jam/require.js",<script src="../bundles/patterns.min.js",' demo/*html
 	sed -i -e 's,<script data-main="../../src/main" src="../../jam/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
 
