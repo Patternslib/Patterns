@@ -20,7 +20,9 @@ define([
         patterns: {},
         init: function() {
             $(document).ready(function() {
+                log.info('loaded: ' + Object.keys(registry.patterns).sort().join(', '));
                 registry.scan(document.body);
+                log.info('finished initial scan.');
             });
         },
 
