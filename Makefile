@@ -30,9 +30,9 @@ use-bundle:
 	sed -i -e 's,<script data-main="../../src/main" src="../../jam/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
 
 use-modular:
-	sed -i -e 's,<script src="bundles/patterns.min.js",<script data-main="src/main" src="jam/require.js",' index.html
-	sed -i -e 's,<script src="../bundles/patterns.min.js",<script data-main="../src/main" src="../jam/require.js",' demo/*html
-	sed -i -e 's,<script src="../../bundles/patterns.min.js",<script data-main="../../src/main" src="../../jam/require.js",' demo/*/*.html
+	sed -i -r -e 's,<script src="bundles/patterns.(min.)?js",<script data-main="src/main" src="jam/require.js",' index.html
+	sed -i -r -e 's,<script src="../bundles/patterns.(min.)?js",<script data-main="../src/main" src="../jam/require.js",' demo/*html
+	sed -i -r -e 's,<script src="../../bundles/patterns.(min.)?js",<script data-main="../../src/main" src="../../jam/require.js",' demo/*/*.html
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
