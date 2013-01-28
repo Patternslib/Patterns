@@ -1,3 +1,5 @@
+/* @override http://patternslib.com/style/common.css */
+
 @import url("../demo/grid/grid.css");
 
 @import url("fontello/css/fontello.css");
@@ -1292,7 +1294,7 @@ fieldset.check-list label {
 	background-color: #efefef;
 }
 
-.radio-list label input[type="checkbox"],
+.check-list label input[type="checkbox"],
 form.concise fieldset.comprehensive.check-list label input[type="checkbox"] {
 	margin-left: -18px;
 	float: none;

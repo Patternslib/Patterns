@@ -14,163 +14,167 @@
 		<![endif]-->
 	</head>
 	<body>
-		<form action="getBundle">
-			<fieldset class="radio-list">       
-                <legend>Bundle type</legend>    
-                <label>
-                    <input type="radio" name="minify" checked>Regular</input>
-                </label>
-                <label>
-                    <input type="radio" name="minify" value="minify">Minified</input>
-                </label>
-            </fieldset>
-            <fieldset class="check-list">
-            	<legend>Patterns</legend>
-            	
-            	  <div class="functions">
-            	    <button class="select-all" type="button">Select all</button>
-            	    <button class="deselect-all" type="button">Deselect all</button>
-            	  </div>
-                <label>
-                    <input type="checkbox" name="modernizer" checked/>
-                    modernizr
-                </label>
-                <label>
-                    <input type="checkbox" name="less" checked/>
-                    less
-                </label>
-                <label>
-                    <input type="checkbox" name="prefixfree" checked/>
-                    prefixfree
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/autofocus" checked/>
-                    Autofocus
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/autoscale" checked/>
-                    Autoscale
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/autosubmit" checked/>
-                    Autosubmit
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/autosuggest" checked/>
-                    Autosuggest
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/breadcrumbs" checked/>
-                    Breadcrumbs
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/bumper" checked/>
-                    Bumper
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/carousel" checked/>
-                    Carousel
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/checkedflag" checked/>
-                    Checkedflag
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/checklist" checked/>
-                    Checklist
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/chosen" checked/>
-                    Chosen
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/collapsible" checked/>
-                    Collapsible
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/depends" checked/>
-                    Depends
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/edit-tinymce" checked/>
-                    Edit-tinymce
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/expandable" checked/>
-                    Expandable
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/focus" checked/>
-                    Focus
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/form-state" checked/>
-                    Form-state
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/fullcalendar" checked/>
-                    Fullcalendar
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/image-crop" checked/>
-                    Image-crop
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/inject" checked/>
-                    Inject
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/legend" checked/>
-                    Legend Transform
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/markdown" checked/>
-                    Markdown
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/menu" checked/>
-                    Menu
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/modal" checked/>
-                    Modal
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/navigation" checked/>
-                    Navigation
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/placeholder" checked/>
-                    Placeholder
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/setclass" checked/>
-                    Setclass
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/sortable" checked/>
-                    Sortable
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/switch" checked/>
-                    Switch
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/toggle" checked/>
-                    Toggle
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/tooltip" checked/>
-                    Tooltip
-                </label>
-                <label>
-                    <input type="checkbox" name="patterns/zoom" checked/>
-                    Zoom
-                </label>
-            </fieldset>
-            <fieldset class="button-bar">
-            	<button type="submit">Download bundle</button>
-            </fieldset>
-        </form>
+		<div id="content" class="pat-auto-scale">
+			<section>
+				<form action="getBundle">
+					<fieldset class="radio-list">       
+		                <legend>Bundle type</legend>    
+		                <label>
+		                    <input type="radio" name="minify" checked>Regular</input>
+		                </label>
+		                <label>
+		                    <input type="radio" name="minify" value="minify">Minified</input>
+		                </label>
+		            </fieldset>
+		            <fieldset class="check-list">
+		            	<legend>Patterns</legend>
+		            	
+		            	  <div class="functions">
+		            	    <button class="select-all" type="button">Select all</button>
+		            	    <button class="deselect-all" type="button">Deselect all</button>
+		            	  </div>
+		                <label>
+		                    <input type="checkbox" name="modernizer" checked/>
+		                    modernizr
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="less" checked/>
+		                    less
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="prefixfree" checked/>
+		                    prefixfree
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/autofocus" checked/>
+		                    Autofocus
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/autoscale" checked/>
+		                    Autoscale
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/autosubmit" checked/>
+		                    Autosubmit
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/autosuggest" checked/>
+		                    Autosuggest
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/breadcrumbs" checked/>
+		                    Breadcrumbs
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/bumper" checked/>
+		                    Bumper
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/carousel" checked/>
+		                    Carousel
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/checkedflag" checked/>
+		                    Checkedflag
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/checklist" checked/>
+		                    Checklist
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/chosen" checked/>
+		                    Chosen
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/collapsible" checked/>
+		                    Collapsible
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/depends" checked/>
+		                    Depends
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/edit-tinymce" checked/>
+		                    Edit-tinymce
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/expandable" checked/>
+		                    Expandable
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/focus" checked/>
+		                    Focus
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/form-state" checked/>
+		                    Form-state
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/fullcalendar" checked/>
+		                    Fullcalendar
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/image-crop" checked/>
+		                    Image-crop
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/inject" checked/>
+		                    Inject
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/legend" checked/>
+		                    Legend Transform
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/markdown" checked/>
+		                    Markdown
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/menu" checked/>
+		                    Menu
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/modal" checked/>
+		                    Modal
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/navigation" checked/>
+		                    Navigation
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/placeholder" checked/>
+		                    Placeholder
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/setclass" checked/>
+		                    Setclass
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/sortable" checked/>
+		                    Sortable
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/switch" checked/>
+		                    Switch
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/toggle" checked/>
+		                    Toggle
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/tooltip" checked/>
+		                    Tooltip
+		                </label>
+		                <label>
+		                    <input type="checkbox" name="patterns/zoom" checked/>
+		                    Zoom
+		                </label>
+		            </fieldset>
+		            <fieldset class="button-bar">
+		            	<button type="submit">Download bundle</button>
+		            </fieldset>
+		        </form>
+	        </section>
+        </div>
     </body>
 </html>
