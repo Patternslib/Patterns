@@ -18,6 +18,33 @@ body {
 	padding: 70px 0;
 }
 
+/* @group Buttons */
+
+button,a.button {
+	display: inline-block;
+	border-style: none;
+	margin: 0;
+	background-color: #625647;
+	color: white;
+	padding-left: 15px;
+	padding-right: 15px;
+	border-radius: 4px;
+}
+
+button:hover,a.button:hover {
+	background-color: #8c7b65;
+	cursor: default;
+}
+
+button:active,
+a.button:active {
+	box-shadow: inset 0 1px 6px rgba(0,0,0,0.9)
+}
+
+
+
+/* @end */
+
 /* @group Image */
 
 img {
