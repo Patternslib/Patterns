@@ -55,6 +55,7 @@ define([
                         matcher = "^#{@LEVEL@}\\s+@TEXT@(.|\\n)*?^(?=#{1,@LEVEL@})";
                     matcher = matcher.replace(/@LEVEL@/g, level).replace(/@TEXT@/g, text);
                     matcher = new RegExp(matcher, "m");
+                    source = source + "\n\n" + Array(level+1).join("#") + ' Hail Eris.';
                     source = matcher.exec(source);
                     if (source === null) {
                         log.warn("Could not find section \"" + cfg.source + "\" in " + cfg.url);
