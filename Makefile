@@ -4,7 +4,8 @@ JSHINT 		?= node_modules/.bin/jshint
 UGLIFYJS 	?= node_modules/.bin/uglifyjs
 GRUNT		?= node_modules/.bin/grunt
 PEGJS		?= pegjs
-SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js) $(shell find jam -name '*.js')
+SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
+3RDPARTY	= $(shell find jam -name '*.js')
 TARGETS		= bundles/patterns.js bundles/patterns.min.js
 
 all:: check $(TARGETS)
@@ -14,7 +15,7 @@ bootstrap:
 	$(NPM) install
 	#$(JAM) install
 
-bundles/patterns.js: $(SOURCES)
+bundles/patterns.js: $(SOURCES) $(3RDPARTY)
 	$(JAM) compile -i main --no-minify --almond $@
 
 bundles/patterns.min.js: bundles/patterns.js
