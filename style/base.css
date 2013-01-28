@@ -1,30 +1,6 @@
+/* @override http://patternslib.com/style/base.css */
+
 @import url("common.css");
-
-@import url("../demo/auto-submit/autosubmit.css");
-
-@import url("../demo/auto-suggest/autosuggest.css");
-
-@import url("../demo/autofocus/autofocus.css");
-
-@import url("../demo/calendar/calendar.css");
-
-@import url("../demo/carousel/carousel.css");
-
-@import url("../demo/checked-flag/checkedflag.css");
-
-@import url("../demo/collapsible/collapsible.css");
-
-@import url("../demo/grid/grid.css");
-
-@import url("../demo/modal/modal.css");
-
-@import url("../demo/navigation/navigation.css");
-
-@import url("../demo/switch/switch.css");
-
-@import url("../demo/toggle/toggle.css");
-
-@import url("../demo/tooltip/tooltip.css");
 
 @font-face {
 	font-family: "Perpetua bold italic";
