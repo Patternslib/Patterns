@@ -180,9 +180,12 @@ table tbody tr:nth-child(even) {
 	vertical-align: middle;
 	margin: -5px 10px -3px 8px;
 	border-radius: 4px;
-	background: white url(../style/component-icons.svg) no-repeat 0 32px;
+	background: #feffff url(../style/component-icons.svg) no-repeat 0 32px;
 	border: 1px solid white;
 	box-shadow: inset 0 1px 3px silver;
+	text-align: center;
+	font: italic normal 22px perpetua;
+	color: #2F383F;
 }
 
 #component-index a sup {
@@ -419,8 +422,8 @@ section.demo:after {
 /* @group Global navigation */
 
 #global-navigation {
-	background-color: #925d79;
-	color: white;
+	background-color: #2F383F;
+	color: #33291A;
 	text-align: center;
 	line-height: 40px;
 	height: 40px;
@@ -451,6 +454,7 @@ section.demo:after {
 
 #global-navigation #home img {
 	transition: all 0.3s;
+	border: 2px solid white;
 }
 
 #global-navigation.bumped-top #home img {
@@ -464,12 +468,12 @@ section.demo:after {
 }
 
 #global-navigation a {
-	color: rgba(254,255,255,0.73);
 	text-decoration: none;
 	display: inline-block;
 	float: left;
 	width: 50%;
 	text-align: center;
+	color: rgba(254,255,255,0.73);
 }
 
 @media only screen and (max-width: 767px) {
