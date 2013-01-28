@@ -10,7 +10,7 @@ var app = express(),
     tag;
 
 app.configure(function(){
-    app.set('port', process.env.PORT || 3000);
+    app.set('port', process.env.PORT || 2652);
     app.use(express.logger());
     app.use(express.compress());
 });
