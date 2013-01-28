@@ -38,8 +38,6 @@ define('main', [
     "./patterns/validate",
     "./patterns/zoom"
 ], function($, registry) {
-    $(document).ready(function() {
-        registry.scan(document.body);
-    });
+    registry.init();
 });
 require(['main']);
