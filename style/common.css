@@ -1272,7 +1272,8 @@ ul.checkList li {
 	padding-bottom: 4px !important;
 }
 
-fieldset.check-list.radio-list p.legend {
+fieldset.check-list legend,
+.check-list p.legend {
 	font-weight: normal;
 	font-style: normal;
 }
@@ -1280,8 +1281,13 @@ fieldset.check-list.radio-list p.legend {
 fieldset.check-list label {
 	display: block;
 	width: auto !important;
-	padding-left: 18px !important;
+	padding-left: 28px;
 	margin-bottom: 0;
+	float: none;
+	margin-left: -10px;
+	padding-right: 10px;
+	border-radius: 4px;
+	margin-right: -10px;
 }
 
 .checkList label:hover {
