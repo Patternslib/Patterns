@@ -1,7 +1,7 @@
 describe("toggle", function() {
     var pattern;
 
-    requireDependencies(["patterns/toggle"], function(cls) {
+    requireDependencies(["pat/toggle"], function(cls) {
         pattern = cls;
     });
 

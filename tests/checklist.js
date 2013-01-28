@@ -1,7 +1,7 @@
 describe("checklist-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/checklist"], function(cls) {
+    requireDependencies(["pat/checklist"], function(cls) {
         pattern = cls;
     });
 

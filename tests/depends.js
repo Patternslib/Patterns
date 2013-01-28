@@ -1,7 +1,7 @@
 describe("depends-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/depends"], function(cls) {
+    requireDependencies(["pat/depends"], function(cls) {
         pattern = cls;
     });
 

@@ -1,7 +1,7 @@
 describe("bumper-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/autoscale"], function(cls) {
+    requireDependencies(["pat/autoscale"], function(cls) {
         pattern = cls;
     });
 

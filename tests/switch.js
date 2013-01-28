@@ -1,7 +1,7 @@
 describe("switch-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/switch"], function(cls) {
+    requireDependencies(["pat/switch"], function(cls) {
         pattern = cls;
     });
 
