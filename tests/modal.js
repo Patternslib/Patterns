@@ -1,7 +1,7 @@
 describe("modal-pattern", function () {
     var pattern;
 
-    requireDependencies(["patterns/modal"], function(cls) {
+    requireDependencies(["pat/modal"], function(cls) {
         pattern = cls;
     });
 

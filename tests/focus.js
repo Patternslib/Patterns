@@ -1,7 +1,7 @@
 describe("focus-plugin", function() {
     var pattern;
 
-    requireDependencies(["patterns/focus"], function(cls) {
+    requireDependencies(["pat/focus"], function(cls) {
         pattern = cls;
     });
 

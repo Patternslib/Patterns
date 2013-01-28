@@ -1,7 +1,7 @@
 describe("checkedflag-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/checkedflag"], function(cls) {
+    requireDependencies(["pat/checkedflag"], function(cls) {
         pattern = cls;
     });
 

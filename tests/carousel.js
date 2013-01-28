@@ -1,7 +1,7 @@
 describe("carousel-plugin", function() {
     var pattern;
 
-    requireDependencies(["patterns/carousel"], function(cls) {
+    requireDependencies(["pat/carousel"], function(cls) {
         pattern = cls;
     });
 

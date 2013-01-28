@@ -1,7 +1,7 @@
 describe("zoom-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/zoom"], function(cls) {
+    requireDependencies(["pat/zoom"], function(cls) {
         pattern = cls;
     });
 

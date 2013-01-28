@@ -1,7 +1,7 @@
 describe("collapsible-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/collapsible"], function(cls) {
+    requireDependencies(["pat/collapsible"], function(cls) {
         pattern = cls;
     });
 

@@ -1,7 +1,7 @@
 describe("markdown-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/markdown"], function(cls) {
+    requireDependencies(["pat/markdown"], function(cls) {
         pattern = cls;
     });
 

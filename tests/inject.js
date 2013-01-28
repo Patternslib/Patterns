@@ -1,7 +1,7 @@
 describe("inject-pattern", function() {
     var pattern, utils;
 
-    requireDependencies(["patterns/inject", "utils"], function(cls, u) {
+    requireDependencies(["pat/inject", "utils"], function(cls, u) {
         pattern=cls;
         utils=u;
     });

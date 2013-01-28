@@ -1,7 +1,7 @@
 describe("image-crop-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/image-crop"], function(cls) {
+    requireDependencies(["pat/image-crop"], function(cls) {
         pattern = cls;
     });
 

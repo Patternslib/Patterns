@@ -1,7 +1,7 @@
 describe("bumper-pattern", function() {
     var pattern;
 
-    requireDependencies(["patterns/bumper"], function(cls) {
+    requireDependencies(["pat/bumper"], function(cls) {
         pattern = cls;
     });
 
