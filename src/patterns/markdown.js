@@ -62,7 +62,7 @@ define([
                     }
                     source=source[0]+"\n";  // Needed for some markdown syntax
                 }
-		$rendering = _._render(source);
+                $rendering = _._render(source);
                 $rendering.attr("data-src", cfg.url);
                 return $rendering;
             });
