@@ -35,7 +35,8 @@ define('main', [
     "./patterns/transforms",
     "./patterns/toggle",
     "./patterns/tooltip",
-    "./patterns/validate",
+    // has racing problems, might be replaced anyway
+    //"./patterns/validate",
     "./patterns/zoom"
 ], function($, registry) {
     registry.init();
