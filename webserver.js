@@ -10,6 +10,7 @@ var app = express(),
     tag;
 
 app.configure(function(){
+    app.set('host', process.env.HOST || '127.0.0.1');
     app.set('port', process.env.PORT || 2652);
     app.use(express.logger());
     app.use(express.compress());
@@ -76,7 +77,7 @@ app.get('/bundles/:name', function(req, res){
 
 app.use(express.static(path.join(__dirname)));
 
-http.createServer(app).listen(app.get('port'), function(){
-    console.log("Express server listening on port " + app.get('port'));
+http.createServer(app).listen(app.get('port'), app.get('host'), function(){
+    console.log("Express server listening on: http://" + app.get('host') + ':' + app.get('port'));
 });
 
