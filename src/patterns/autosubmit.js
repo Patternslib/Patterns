@@ -19,11 +19,18 @@ define([
     var _ = {
         name: "autosubmit",
         trigger: ".pat-autosubmit,.pat-autosubmit :input,.pat-autosubmit textarea",
+        parser: {
+            parse: function($el, opts) {
+                var cfg = parser.parse($el, opts);
+                cfg.delay = parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10);
+                return cfg;
+            }
+        },
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
-            var cfg = parser.parse($el, opts);
+            var cfg = _.parser.parse($el, opts);
 
             if ($el.is(":input")) {
                 // sets up triggering children
@@ -34,8 +41,7 @@ define([
                 } else if (cfg.delay !== "0" && $el.is("input:text, input[type=search], textarea")) {
                     $el.on("keyup.pat-autosubmit", utils.debounce(function() {
                         $el.trigger("autosubmit");
-                        }, parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10)
-                    ));
+                    }, cfg.delay));
                 } else {
                     $el.on("change.pat-autosubmit", function() {
                         $el.trigger("autosubmit");

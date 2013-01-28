@@ -15,7 +15,7 @@ describe("autosubmit-plugin", function() {
 
     describe("parse", function() {
         it("Shorthand notation", function() {
-            var $trigger = $("<input data-pat-autosubmit='500'/>"),
+            var $trigger = $("<input data-pat-autosubmit='500ms'/>"),
                 options = pattern.parser.parse($trigger);
             expect(options.delay).toBe(500);
         });
