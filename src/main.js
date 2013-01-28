@@ -24,6 +24,7 @@ define('main', [
     "./patterns/fullcalendar",
     "./patterns/image-crop",
     "./patterns/inject",
+    "./patterns/legend",
     "./patterns/markdown",
     "./patterns/menu",
     "./patterns/modal",
@@ -32,7 +33,6 @@ define('main', [
     "./patterns/setclass",
     "./patterns/sortable",
     "./patterns/switch",
-    "./patterns/transforms",
     "./patterns/toggle",
     "./patterns/tooltip",
     // has racing problems, might be replaced anyway
