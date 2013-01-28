@@ -9,17 +9,28 @@
 
 		<link rel="icon" type="image/png" href="media/favicon.png" />
 		<!--[if IE]>
-                <script data-main="src/main" src="jam/require.js" type="text/javascript" charset="utf-8"></script>
-				<link rel="shortcut icon" type="image/x-icon" href="media/favicon.ico" />
+        <script data-main="src/main" src="jam/require.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="shortcut icon" type="image/x-icon" href="media/favicon.ico" />
 		<![endif]-->
 	</head>
 	<body>
-            <form action="getBundle">
+		<form action="getBundle">
+			<fieldset class="radio-list">       
+                <legend>Bundle type</legend>    
                 <label>
-                    Bundle type
                     <input type="radio" name="minify" checked>Regular</input>
+                </label>
+                <label>
                     <input type="radio" name="minify" value="minify">Minified</input>
                 </label>
+            </fieldset>
+            <fieldset class="check-list">
+            	<legend>Patterns</legend>
+            	
+            	  <div class="functions">
+            	    <button class="select-all" type="button">Select all</button>
+            	    <button class="deselect-all" type="button">Deselect all</button>
+            	  </div>
                 <label>
                     <input type="checkbox" name="modernizer" checked/>
                     modernizr
@@ -156,7 +167,10 @@
                     <input type="checkbox" name="patterns/zoom" checked/>
                     Zoom
                 </label>
-                <button type="submit">Download bundle</button>
-            </form>
-        </body>
-    </html>
+            </fieldset>
+            <fieldset class="button-bar">
+            	<button type="submit">Download bundle</button>
+            </fieldset>
+        </form>
+    </body>
+</html>
