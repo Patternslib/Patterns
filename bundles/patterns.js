@@ -53601,21 +53601,22 @@ define('patterns/markdown',[
         sources: function(cfgs, data) {
             var $rendering, source, header;
             return cfgs.map(function(cfg) {
-                source=data;
-                if (cfg.source && (header=/^(#+)\s+(.*)/.exec(cfg.source))!==null) {
+                source = data;
+                if (cfg.source && (header=/^(#+)\s+(.*)/.exec(cfg.source)) !== null) {
                     var level = header[1].length,
                         text = utils.escapeRegExp(header[2]),
                         matcher = "^#{@LEVEL@}\\s+@TEXT@(.|\\n)*?^(?=#{1,@LEVEL@})";
-                    matcher=matcher.replace(/@LEVEL@/g, level).replace(/@TEXT@/g, text);
-                    matcher=new RegExp(matcher, "m");
-                    source=matcher.exec(source);
-                    if (source===null) {
+                    matcher = matcher.replace(/@LEVEL@/g, level).replace(/@TEXT@/g, text);
+                    matcher = new RegExp(matcher, "m");
+                    source = source + "\n\n" + Array(level+1).join("#") + ' Hail Eris.';
+                    source = matcher.exec(source);
+                    if (source === null) {
                         log.warn("Could not find section \"" + cfg.source + "\" in " + cfg.url);
                         return $("<div/>").attr("data-src", cfg.url);
                     }
-                    source=source[0]+"\n";  // Needed for some markdown syntax
+                    source = source[0]+"\n";  // Needed for some markdown syntax
                 }
-		$rendering = _._render(source);
+                $rendering = _._render(source);
                 $rendering.attr("data-src", cfg.url);
                 return $rendering;
             });
@@ -56726,8 +56727,9 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
 
 define("patterns-jquery-validation/additional-methods", function(){});
 
-define('patterns-jquery-validation/main',['require','exports','module','./jquery.validate','./additional-methods'],function(require, exports, module) {
-    var a = require('./jquery.validate'),
+define('patterns-jquery-validation/main',['require','exports','module','jquery','./jquery.validate','./additional-methods'],function(require, exports, module) {
+    var j = require('jquery');
+        a = require('./jquery.validate'),
         b = require('./additional-methods');
 });
 define('patterns-jquery-validation', ['patterns-jquery-validation/main'], function (main) { return main; });
