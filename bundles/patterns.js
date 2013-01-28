@@ -17952,130 +17952,58 @@ define('patterns/autosubmit',[
 
     // XXX: would be great if the parser would handle validation and
     // interpretation of boolean values:
-    // - integer >=0
-    // - false -> delay=0
-    // - true -> delay=default
-    // - string "defocus"
+    // - 400ms -> 400
+    // - 400 -> 400
+    // - defocus
     parser.add_argument("delay", "400ms");
 
     var _ = {
         name: "autosubmit",
-        trigger: ".pat-autosubmit,.pat-autosubmit :input,.pat-autosubmit textarea",
+        trigger: ".pat-autosubmit :input",
+        parser: {
+            parse: function($el, opts) {
+                var cfg = parser.parse($el, opts);
+                if (cfg.delay !== 'defocus') {
+                    cfg.delay = parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10);
+                }
+                return cfg;
+            }
+        },
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
-            var cfg = parser.parse($el, opts);
+            var $form = $el.is("form") ? $el : $el.parents("form").first();
 
-            if ($el.is(":input")) {
-                // sets up triggering children
-                if (cfg.delay === "defocus") {
-                    $el.on("focusout.pat-autosubmit", function() {
-                        $el.trigger("autosubmit");
-                    });
-                } else if (cfg.delay !== "0" && $el.is("input:text, input[type=search], textarea")) {
-                    $el.on("keyup.pat-autosubmit", utils.debounce(function() {
-                        $el.trigger("autosubmit");
-                        }, parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10)
-                    ));
+            $form.off('.pat-autosubmit')
+                .on('form-change.pat-autosubmit', _.onFormChange);
+
+            var cfg = _.parser.parse($el, opts),
+                isText = $el.is("input:text, input[type=search], textarea");
+
+            // XXX: form-state pattern
+            if (cfg.delay === "defocus" || cfg.delay === 0) {
+                if (isText && cfg.delay === 0) {
+                    $el.on("keyup.pat-autosubmit", function() { $el.trigger("form-change"); });
                 } else {
-                    $el.on("change.pat-autosubmit", function() {
-                        $el.trigger("autosubmit");
-                    });
+                    $el.on("change.pat-autosubmit", function() { $el.trigger("form-change"); });
+                }
+            } else {
+                if (isText) {
+                    $el.on("keyup.pat-autosubmit change.pat-autosubmit", utils.debounce(function() {
+                        $el.trigger("form-change");
+                    }, cfg.delay));
+                } else {
+                    $el.on("change.pat-autosubmit", utils.debounce(function() {
+                        $el.trigger("form-change");
+                    }, cfg.delay));
                 }
             }
 
-            // Special handling for the clear search button
-            if ($el.is("input[type=search]")) {
-                $el.on("click.pat-autosubmit", function(){ $el.keyup(); });
-            }
-
-            if ($el.hasClass("pat-autosubmit")) {
-                // submit if a (specific) form element changed
-                $el.on("autosubmit.pat-autosubmit", _.autosubmit);
-            }
-
-            return $el;
-        },
-
-        destroy: function($el) {
-            $el.off(".pat-autosubmit");
-            if (!$el.is(":input")) {
-                $el.find(":input").off(".pat-autosubmit");
-            }
-        },
-
-        autosubmit: function(ev) {
-            ev.stopPropagation();
-
-            var $el = $(this),
-                $form = $el.is("form") ? $el : $el.parents("form").first();
-
-            if ($el.is("input[type=search]")) {
-                // clicking X on type=search deletes data attrs,
-                // therefore we store the old value on the form.
-                var name = $el.attr("name"),
-                    key = "pat-autosubmit-" + name + "-oldvalue",
-                    oldvalue = $form.data(key) || "",
-                    curvalue = $el[0].value || "";
-
-                if (!name)
-                    log.warn("type=search without name, will be a problem" +
-                             " if there are multiple", $el);
-
-                if (oldvalue === curvalue)
-                    return;
-
-                $form.data(key, curvalue);
-            }
-
-            log.debug("triggered by " + ev.type);
-
-            $form.submit();
-        }
-    };
-
-    registry.register(_);
-    return _;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-define('patterns/autosubmit2',[
-    "jquery",
-    '../registry',
-    '../core/logger',
-    '../utils'
-], function($, registry, logger, utils) {
-    var log = logger.getLogger('pat.autosubmit');
-
-    var _ = {
-        name: "autosubmit2",
-        trigger: ".pat-autosubmit2, .pat-autosubmit2-keyup",
-        init: function($el) {
-            return $el.each(function() {
-                var $el = $(this);
-
-                // submit if a (specific) form element changed
-                $el.on("change.pat-autosubmit2", _.submit);
-
-                // debounced keyup submit, if enabled
-                if ($el.hasClass('pat-autosubmit2-keyup')) {
-                    ($el.is('input') ? $el : $el.find('input'))
-                        .on("keyup.pat-autosubmit2", utils.debounce(_.submit, 400));
-                }
-
-                // XXX: test whether on webkit and enable only if supported
-                ($el.is('input[type=search]') ? $el : $el.find('input[type=search]'))
-                    .on("click.pat-autosubmit2", _.submit);
-            });
-        },
-        submit: function(ev) {
-            var $el = $(this),
-                $form = $el.is('form') ? $el : $el.parents('form').first();
-
-            if ($el.is('input[type=search]')) {
+            // fix browser bug: trigger change on search reset
+            // also form-state pattern or even more generic browser fixes
+            $form.on('click', 'input[type=search]', function(ev) {
+                var $el = $(ev.target);
                 // clicking X on type=search deletes data attrs,
                 // therefore we store the old value on the form.
                 var name = $el.attr('name'),
@@ -18087,14 +18015,27 @@ define('patterns/autosubmit2',[
                     log.warn('type=search without name, will be a problem' +
                              ' if there are multiple', $el);
                 }
-                if (oldvalue === curvalue) return;
+                if (oldvalue !== curvalue) {
+                    $el.trigger('form-change');
+                }
 
                 $form.data(key, curvalue);
-            }
+            });
+
+            return $el;
+        },
+
+        destroy: function($el) {
+            $el.off(".pat-autosubmit")
+                .find(":input").off(".pat-autosubmit");
+        },
+
+        onFormChange: function(ev) {
+            ev.stopPropagation();
+
+            $(this).submit();
 
             log.debug("triggered by " + ev.type);
-
-            $form.submit();
         }
     };
 
@@ -56906,7 +56847,6 @@ define('main', [
     "./patterns/autofocus",
     "./patterns/autoscale",
     "./patterns/autosubmit",
-    "./patterns/autosubmit2",
     "./patterns/autosuggest",
     "./patterns/breadcrumbs",
     "./patterns/bumper",
