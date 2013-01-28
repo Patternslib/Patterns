@@ -19,6 +19,11 @@ describe("autosubmit-plugin", function() {
                 options = pattern.parser.parse($trigger);
             expect(options.delay).toBe(500);
         });
+        it("defocus", function() {
+            var $trigger = $("<input data-pat-autosubmit='defocus'/>"),
+                options = pattern.parser.parse($trigger);
+            expect(options.delay).toBe('defocus');
+        });
     });
 });
 
