@@ -885,12 +885,6 @@ select {
 	margin-bottom: -1px;
 }
 
-input[type="checkbox"],
-input[type="radio"]{
-	background: none!important;
-	border: none;
-}
-
 form fieldset em.message {
 	clear: left;
 	float: left;
