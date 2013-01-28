@@ -1,7 +1,7 @@
-describe("transforms", function() {
+describe("legend transform", function() {
     var transforms;
 
-    requireDependencies(["patterns/transforms"], function(cls) {
+    requireDependencies(["patterns/legend"], function(cls) {
         transforms = cls;
     });
 
