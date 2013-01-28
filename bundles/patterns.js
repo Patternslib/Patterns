@@ -10680,6 +10680,11 @@ define('registry',[
 
     var registry = {
         patterns: {},
+        init: function() {
+            $(document).ready(function() {
+                registry.scan(document.body);
+            });
+        },
 
         scan: function(content) {
             var $content = $(content),
@@ -56877,8 +56882,6 @@ define('main', [
     "./patterns/validate",
     "./patterns/zoom"
 ], function($, registry) {
-    $(document).ready(function() {
-        registry.scan(document.body);
-    });
+    registry.init();
 });
 require(['main']);
