@@ -43,7 +43,7 @@ var bundleBuilder = function(req, res, min){
     // The CLI interface is:
     // jam compile -i pat1 [-i pat2 [-i pat3]] -o outfile
     var args = [ 'compile' ].concat(Object.keys(query).sort())
-        .join(' -i ').split(' ').concat(['-o', fullname, '-v']);
+        .join(' -i ').split(' ').concat(['-o', fullname, '--almond']);
 
     if (!min)
         args.push('--no-minify');
