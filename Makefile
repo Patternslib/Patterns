@@ -51,10 +51,19 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 		   src/lib/htmlparser.js
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
+nixenv/bin/phantomjs:
+	nix-build --out-link nixenv dev.nix
+
+phantom-via-nix: nixenv/bin/phantomjs
+	rm -f ./node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs
+	ln -s $(shell realpath ./nixenv/bin/phantomjs) ./node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs
+
 check:
 	@$(JSHINT) --config jshintrc Gruntfile.js $(CHECKSOURCES)
 	@$(JSHINT) --config tests/jshintrc tests/*.js
 	$(GRUNT) test
+
+check-nix: phantom-via-nix check
 
 clean:
 	rm -f $(TARGETS)
@@ -63,4 +72,4 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap check clean doc bundles
+.PHONY: all bootstrap check check-nix clean doc bundles phantom-via-nix
