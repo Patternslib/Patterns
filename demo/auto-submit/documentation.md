@@ -44,13 +44,13 @@ You can configure this behaviour with the delay option.
 no delay:
 
     <form>
-      <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 0"/>
+      <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 0ms"/>
     </form>
 
 longer delay:
 
     <form>
-      <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 1000"/>
+      <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 1000ms"/>
     </form>
 
 delay until element loses focus:
@@ -58,8 +58,6 @@ delay until element loses focus:
     <form>
       <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: defocus"/>
     </form>
-
-XXX: defocus does not work yet
 
 Combining with injection
 ------------------------
