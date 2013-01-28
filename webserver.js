@@ -50,7 +50,7 @@ var bundleBuilder = function(req, res, min){
 
     if (!fs.existsSync(fullname)) {
         // Not in cache, so generate
-        var p = spawn('jam', args);
+        var p = spawn('./node_modules/.bin/jam', args);
 
         p.on('exit', function(code) {
             if (code === 0) {
