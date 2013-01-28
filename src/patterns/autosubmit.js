@@ -22,7 +22,9 @@ define([
         parser: {
             parse: function($el, opts) {
                 var cfg = parser.parse($el, opts);
-                cfg.delay = parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10);
+                if (cfg.delay !== 'defocus') {
+                    cfg.delay = parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10);
+                }
                 return cfg;
             }
         },
@@ -38,7 +40,7 @@ define([
                     $el.on("focusout.pat-autosubmit", function() {
                         $el.trigger("autosubmit");
                     });
-                } else if (cfg.delay !== "0" && $el.is("input:text, input[type=search], textarea")) {
+                } else if (cfg.delay !== 0 && $el.is("input:text, input[type=search], textarea")) {
                     $el.on("keyup.pat-autosubmit", utils.debounce(function() {
                         $el.trigger("autosubmit");
                     }, cfg.delay));
