@@ -23,6 +23,12 @@ bundles/patterns.min.js: bundles/patterns.js
 
 bundles: bundles/patterns.js bundles/patterns.min.js
 
+use-bundle:
+	sed -i -e 's,<script data-main="../../src/main" src="../../jam/require.js",<script src="../../bundles/patterns.min.js",' index.html demo/*html demo/*/*.html
+
+use-modular:
+	sed -i -e 's,<script src="../../bundles/patterns.min.js",<script data-main="../../src/main" src="../../jam/require.js",' index.html demo/*html demo/*/*.html
+
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
 	sed -i -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
