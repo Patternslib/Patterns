@@ -1,5 +1,5 @@
 
-define("SpecRunner", function() {
+define("TestRunner", function() {
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
 
@@ -14,10 +14,10 @@ define("SpecRunner", function() {
         return htmlReporter.specFilter(spec);
     };
 
-    require([@SPECS@], function() {
+    require([@TESTS@], function() {
         jasmineEnv.execute();
     });
 });
 
-require(["SpecRunner"]);
+require(["TestRunner"]);
 

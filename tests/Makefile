@@ -1,11 +1,11 @@
 
 JAM 		?= ../node_modules/.bin/jam
 PATTERNS 	= $(shell find ../src -name "*.js")
-SPECS 		= $(wildcard ../tests/specs/*.js)
-TARGETS 	= SpecRunner-bundle.html \
-		  SpecRunner-bundle.js \
-		  SpecRunner-modules.html \
-		  SpecRunner-modules.js
+TESTS 		= $(wildcard ../tests/core/*.js) $(wildcard ../tests/pat/*.js)
+TARGETS 	= TestRunner-bundle.html \
+		  TestRunner-bundle.js \
+		  TestRunner-modules.html \
+		  TestRunner-modules.js
 
 
 all:: $(TARGETS)
@@ -14,25 +14,25 @@ clean:
 	@rm -f $(TARGETS)
 
 
-SpecRunner-bundle.html: SpecRunner.html.in
+TestRunner-bundle.html: TestRunner.html.in
 	@sed -e 's#@PATTERNS@#src="../bundles/patterns.min.js"#' \
-	     -e 's#@SPECRUNNER@#src="SpecRunner-bundle.js"#' $< > $@
+	     -e 's#@TESTRUNNER@#src="TestRunner-bundle.js"#' $< > $@
 
-SpecRunner-modules.html: SpecRunner.html.in
+TestRunner-modules.html: TestRunner.html.in
 	@sed -e 's#@PATTERNS@#src="../jam/require.js" data-main="../src/main"#' \
-	     -e 's#@SPECRUNNER@#src="SpecRunner-modules.js"#' $< > $@
+	     -e 's#@TESTRUNNER@#src="TestRunner-modules.js"#' $< > $@
 
-SpecRunner-bundle.js: SpecRunner-modules.js
-	@$(JAM) compile -i ../tests/$< $(patsubst %,-i %,$(SPECS)) \
+TestRunner-bundle.js: TestRunner-modules.js
+	@$(JAM) compile -i ../tests/$< $(patsubst %,-i %,$(TESTS)) \
 	    $(patsubst %,-E ../tests/%,$(PATTERNS)) -o $@
 
 empty  		:=
 space 		:= $(empty) $(empty)
 comma 		:= ,
-SPECLIST 	= $(subst $(space),$(comma),$(patsubst %,\"%\",$(SPECS)))
+TESTLIST 	= $(subst $(space),$(comma),$(patsubst %,\"%\",$(TESTS)))
 
-SpecRunner-modules.js: SpecRunner.js.in $(SPECS)
-	@sed -e "s#@SPECS@#$(SPECLIST)#" $< > $@
+TestRunner-modules.js: TestRunner.js.in $(TESTS)
+	@sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@
 
 
 
