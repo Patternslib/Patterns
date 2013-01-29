@@ -10,7 +10,7 @@
     <script src="../node_modules/phantom-jasmine/lib/console-runner.js" type="text/javascript"></script>
 
     <script @PATTERNS@ type="text/javascript"></script>
-    <script @SPECRUNNER@ type="text/javascript"></script>
+    <script @TESTRUNNER@ type="text/javascript"></script>
   </head>
   <body>
   </body>

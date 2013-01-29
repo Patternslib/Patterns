@@ -55,6 +55,6 @@ The first command is only needed once and will install all tools required to
 build patterns and run its tests.
 
 The command `npm test` will alse create the files
-`tests/SpecRunner-modules.html` and `tests/SpecRunner-bundle.html` which you
+`tests/TestRunner-modules.html` and `tests/TestRunner-bundle.html` which you
 can open in a browser to test the modularized oder bundled version Patterns.
 

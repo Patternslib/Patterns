@@ -55,12 +55,12 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 check: $(TARGETS) 
-	@$(JSHINT) --config tests/jshintrc tests/specs/*.js
+	@$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
 	make -C tests
 	@echo Running checks on modules and bundle
 	@echo ====================================
-	@$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/SpecRunner-modules.html
-	@$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/SpecRunner-bundle.html
+	@$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
+	@$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle.html
 
 nixenv/bin/phantomjs:
 	nix-build --out-link nixenv dev.nix
