@@ -14,7 +14,9 @@
         "git-rev": "0.2.0",
         "jamjs": "~0.2.13",
         "jshint": "~0.9.1",
-        "uglify-js": "~2.2.3"
+        "pegjs": "0.7.0",
+        "phantom-jasmine": "0.1.8",
+        "phantomjs": "1.8.0-1"
     },
     "scripts": {
         "test": "make check"
