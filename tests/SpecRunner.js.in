@@ -1,0 +1,23 @@
+
+define("SpecRunner", function() {
+    var jasmineEnv = jasmine.getEnv();
+    jasmineEnv.updateInterval = 1000;
+
+    var htmlReporter = new jasmine.HtmlReporter();
+    jasmineEnv.addReporter(htmlReporter);
+
+    var consoleReporter = new jasmine.ConsoleReporter();
+    window.console_reporter = consoleReporter;
+    jasmineEnv.addReporter(consoleReporter);
+
+    jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+    };
+
+    require([@SPECS@], function() {
+        jasmineEnv.execute();
+    });
+});
+
+require(["SpecRunner"]);
+
