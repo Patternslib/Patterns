@@ -52,15 +52,9 @@ The simplest way to run the tests are to use npm:
     npm test
 
 The first command is only needed once and will install all tools required to 
-build patterns and run its tests. You must have the `grunt-cli` package
-installed globally for this to work or npm will not be able to find the
-*grunt* command. You can install grunt-cli using `npm`:
+build patterns and run its tests.
 
-    npm install -g grunt-cli
+The command `npm test` will alse create the files
+`tests/SpecRunner-modules.html` and `tests/SpecRunner-bundle.html` which you
+can open in a browser to test the modularized oder bundled version Patterns.
 
-If you want to run the tests in a browser you will need to generate a
-testrunner template first:
-
-    grunt jasmine:src:build
-
-This will create a `_SpecRunner.html` file which you can open in a browser.
