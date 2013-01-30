@@ -1,10 +1,5 @@
 .DS_Store
-/_SpecRunner.html
-/.grunt
-/build/docs
-/build/patterns.min.js
 /bundles/
 /dev.nix
 /nixenv
 /node_modules
-/src/lib/jquery.mutations/build
