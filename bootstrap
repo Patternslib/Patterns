@@ -1,0 +1,18 @@
+#!/bin/sh
+
+cd "$(dirname "$0")"
+
+make bootstrap
+make bundles
+
+cat > .git/hooks/post-checkout <<-'EOF'
+	#!/bin/sh
+	cd "$(dirname "$0")/../.."
+	make bundles
+EOF
+
+chmod +x .git/hooks/post-checkout
+
+echo "\n\n\n"
+echo "Bootstraping done. Press ENTER to quit."
+read
