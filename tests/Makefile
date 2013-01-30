@@ -4,6 +4,7 @@ PATTERNS 	= $(shell find ../src -name "*.js")
 TESTS 		= $(wildcard ../tests/core/*.js) $(wildcard ../tests/pat/*.js)
 TARGETS 	= index.html \
 		  TestRunner-bundle.html \
+		  TestRunner-bundle-min.html \
 		  TestRunner-bundle.js \
 		  TestRunner-modules.html \
 		  TestRunner-modules.js
@@ -14,10 +15,14 @@ all:: $(TARGETS)
 clean:
 	@rm -f $(TARGETS)
 
-index.html: TestRunner-bundle.html
-	ln -s $< $@
+index.html: TestRunner-modules.html
+	ln -sf $< $@
 
 TestRunner-bundle.html: TestRunner.html.in
+	@sed -e 's#@PATTERNS@#src="../bundles/patterns.js"#' \
+	     -e 's#@TESTRUNNER@#src="TestRunner-bundle.js"#' $< > $@
+
+TestRunner-bundle-min.html: TestRunner.html.in
 	@sed -e 's#@PATTERNS@#src="../bundles/patterns.min.js"#' \
 	     -e 's#@TESTRUNNER@#src="TestRunner-bundle.js"#' $< > $@
 
