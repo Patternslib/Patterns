@@ -1,28 +1,33 @@
+
 NPM 		?= npm
 JAM 		?= node_modules/.bin/jam
 JSHINT 		?= node_modules/.bin/jshint
-UGLIFYJS 	?= node_modules/.bin/uglifyjs
-GRUNT		?= node_modules/.bin/grunt
-PEGJS		?= pegjs
+PEGJS		?= node_modules/.bin/pegjs
+PHANTOMJS	?= node_modules/.bin/phantomjs
+
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
-3RDPARTY	= $(shell find jam -name '*.js')
+THIRDPARTY	= $(shell find jam -name '*.js')
 TARGETS		= bundles/patterns.js bundles/patterns.min.js
 
-all:: check $(TARGETS)
+
+
+all:: $(TARGETS)
 
 bootstrap:
 	mkdir -p bundles
 	$(NPM) install
+	echo "Not calling \"jam install\". Jam packages are in git for now"
 	#$(JAM) install
 
-bundles/patterns.js: $(SOURCES) $(3RDPARTY)
+bundles: $(TARGETS)
+
+bundles/patterns.js: $(SOURCES) $(THIRDPARTY) 
+	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	$(JAM) compile -i main --no-minify --almond $@
 
-bundles/patterns.min.js: bundles/patterns.js
+bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) 
+	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	$(JAM) compile -i main --almond $@
-	#$(UGLIFYJS) $< > $@
-
-bundles: bundles/patterns.js bundles/patterns.min.js
 
 use-bundle:
 	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html
@@ -49,6 +54,14 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 		   src/lib/htmlparser.js
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
+check: $(TARGETS) 
+	@$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
+	make -C tests
+	@echo Running checks on modules and bundle
+	@echo ====================================
+	@$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
+	@$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle.html
+
 nixenv/bin/phantomjs:
 	nix-build --out-link nixenv dev.nix
 
@@ -56,18 +69,15 @@ phantom-via-nix: nixenv/bin/phantomjs
 	rm -f ./node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs
 	ln -s $(shell realpath ./nixenv/bin/phantomjs) ./node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs
 
-check:
-	@$(JSHINT) --config jshintrc Gruntfile.js $(CHECKSOURCES)
-	@$(JSHINT) --config tests/jshintrc tests/*.js
-	$(GRUNT) test
-
 check-nix: phantom-via-nix check
 
 clean:
+	make -C tests clean
 	rm -f $(TARGETS)
-	rm -rf build
+	
 
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap check check-nix clean doc bundles phantom-via-nix
+.PHONY: all bootstrap bundles check check-nix clean doc phantom-via-nix
+

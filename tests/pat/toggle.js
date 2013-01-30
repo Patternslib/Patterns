@@ -1,0 +1,68 @@
+define(["pat/toggle"], function(pattern) {
+
+    describe("toggle", function() {
+
+        beforeEach(function() {
+            $("<div/>", {id: "lab"}).appendTo(document.body);
+        });
+
+        afterEach(function() {
+            $("#lab").remove();
+        });
+
+        describe("_update", function() {
+            it("No targets", function() {
+                spyOn(jQuery.fn, "toggleClass");
+                spyOn(jQuery.fn, "removeAttr");
+                spyOn(jQuery.fn, "attr");
+                pattern._update(".missing");
+                expect(jQuery.fn.toggleClass).not.toHaveBeenCalled();
+                expect(jQuery.fn.removeAttr).not.toHaveBeenCalled();
+                expect(jQuery.fn.attr).not.toHaveBeenCalled();
+            });
+
+            it("Toggle class", function() {
+                $("#lab").html("<div id='victim' class='always'/>");
+                pattern._update("#victim", "class", "check on", false);
+                expect($("#victim").hasClass("on")).toBe(true);
+                expect($("#victim").hasClass("always")).toBe(true);
+                pattern._update("#victim", "class", "on", false);
+                expect($("#victim").hasClass("on")).toBe(false);
+                expect($("#victim").hasClass("always")).toBe(true);
+            });
+
+            it("Toggle attribute", function() {
+                $("#lab").html("<input type='checkbox' id='victim'/>");
+                var $checkbox = $("#victim");
+                pattern._update("#victim", "checked", "checked", false);
+                expect($checkbox.attr("checked")).toBeTruthy();
+                pattern._update("#victim", "checked", "checked", false);
+                expect($checkbox.attr("checked")).toBeFalsy();
+            });
+
+            it("Toggle does not reset initial state", function() {
+                $("#lab").html("<input type='checkbox' id='victim'/>");
+                var $checkbox = $("#victim");
+                $checkbox[0].defaultChecked=true;
+                $checkbox[0].checked=true;
+                pattern._update("#victim", "checked", "checked", false);
+                expect($checkbox.attr("checked")).toBeFalsy();
+                expect($checkbox[0].defaultChecked).toBe(true);
+            });
+
+            it("Multiple targets", function() {
+                $("#lab")
+                    .append("<div id='one' class='victim'/>")
+                    .append("<div id='two' class='victim'/>");
+                pattern._update(".victim", "class", "on", false);
+                expect($("#one").hasClass("on")).toBe(true);
+                expect($("#two").hasClass("on")).toBe(true);
+            });
+
+        });
+    });
+
+});
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
