@@ -21,11 +21,11 @@ bootstrap:
 
 bundles: $(TARGETS)
 
-bundles/patterns.js: $(SOURCES) $(THIRDPARTY) 
+bundles/patterns.js: $(SOURCES) $(THIRDPARTY) package.json
 	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	$(JAM) compile -i main --no-minify --almond $@
 
-bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) 
+bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) package.json
 	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	$(JAM) compile -i main --almond $@
 
