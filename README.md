@@ -6,8 +6,6 @@ are triggered by classes and other attributes in the HTML, without abusing the
 HTML as a programming language. Accessibility, SEO and well structured HTML are
 core values of Patterns.
 
-For more information please see the [documentation](http://patterns.readthedocs.org/).
-
 Install
 -------
 
