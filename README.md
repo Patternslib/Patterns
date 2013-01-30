@@ -18,10 +18,18 @@ Currently that means:
 - Firefox 17+
 - Microsoft Internet Explorer 8+
 
-## Development
+## Getting patterns
 
-To develop on Patterns or one of it's submodules, clone the repository
-and set it's push-url to your fork:
+
+### All-round carefree package
+
+To get the all-round carefree package please check
+http://patternslib.com/#download.
+
+
+### Development
+
+To develop on Patterns clone it and set its push-url to your fork:
 
     git remote set-url --push origin <url_to_your_fork>
 
@@ -29,13 +37,14 @@ Create a branch for the feature/bug you are working on:
 
     git checkout -b <feature>
 
+If you don't need bleeding edge features, you should base it on the
+latest stable release tag, e.g.
+
+    git checkout -b <feature> v1.0.1
+
 For inclusion use either a github pull request or create a ticket with
 a url to your external repository.
 
-### Installation
-
-    git clone git://github.com/Patternslib/Patterns.git
-    make
 
 ### Running tests
 
@@ -48,6 +57,7 @@ The first command is only needed once and will install all tools required to
 build patterns and run its tests.
 
 The command `npm test` will alse create the files
-`tests/TestRunner-modules.html` and `tests/TestRunner-bundle.html` which you
-can open in a browser to test the modularized oder bundled version Patterns.
+`tests/TestRunner-modules.html`, `tests/TestRunner-bundle.html`, and
+`tests/TestRunner-bundle-min.html` which you can open in a browser to
+test the modularized oder bundled version Patterns.
 
