@@ -66,15 +66,14 @@ nixenv/bin/phantomjs:
 	nix-build --out-link nixenv dev.nix
 
 phantom-via-nix: nixenv/bin/phantomjs
-	rm -f ./node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs
-	ln -s $(shell realpath ./nixenv/bin/phantomjs) ./node_modules/grunt-contrib-jasmine/node_modules/grunt-lib-phantomjs/node_modules/phantomjs/lib/phantom/bin/phantomjs
+	rm -f $(PHANTOMJS)
+	ln -s $(shell realpath ./nixenv/bin/phantomjs) $(PHANTOMJS)
 
 check-nix: phantom-via-nix check
 
 clean:
 	make -C tests clean
 	rm -f $(TARGETS)
-	
 
 localize-demo-images:
 	tools/localize-demo-images.sh
