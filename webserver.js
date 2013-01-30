@@ -7,7 +7,9 @@ var express = require('express'),
     fs = require('fs');
 
 var app = express(),
+    debug = process.env.DEBUG || false,
     tag;
+
 
 app.configure(function(){
     app.set('host', process.env.HOST || '127.0.0.1');
@@ -43,7 +45,7 @@ var bundleBuilder = function(req, res, min){
     // The CLI interface is:
     // jam compile -i pat1 [-i pat2 [-i pat3]] -o outfile
     var args = [ 'compile' ].concat(Object.keys(query).sort())
-        .join(' -i ').split(' ').concat(['-o', fullname, '--almond']);
+        .join(' -i ').split(' ').concat(['-o', fullname, '--almond', '-v']);
 
     if (!min)
         args.push('--no-minify');
@@ -52,6 +54,14 @@ var bundleBuilder = function(req, res, min){
         // Not in cache, so generate
         var p = spawn('./node_modules/.bin/jam', args);
 
+        if (debug) {
+            p.stdout.on('data', function(data){
+                console.log('stdout ' + data);
+            });
+            p.stderr.on('data', function(data){
+                console.log('stderr ' + data);
+            });
+        }
         p.on('exit', function(code) {
             if (code === 0) {
                 return res.download(fullname);
