@@ -15,6 +15,7 @@ Currently that means:
 
 - Apple Safari 5+
 - Google Chrome 20+
+- Firefox 17+
 - Microsoft Internet Explorer 8+
 
 ## Development
