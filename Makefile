@@ -21,13 +21,13 @@ bootstrap:
 
 bundles: $(TARGETS)
 
-bundles/patterns.js: $(SOURCES) $(THIRDPARTY) 
+bundles/patterns.js: $(SOURCES) $(THIRDPARTY) package.json
 	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
-	$(JAM) compile -i main --no-minify --almond $@
+	$(JAM) compile -i main --no-minify --almond $@ --verbose
 
-bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) 
+bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) package.json
 	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
-	$(JAM) compile -i main --almond $@
+	$(JAM) compile -i main --almond $@ --verbose
 
 use-bundle:
 	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html
