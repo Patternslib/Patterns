@@ -31,6 +31,7 @@ define([
     // to us
     parser.add_argument("url");
     parser.add_argument("class");
+    parser.add_argument("history");
 
     var _ = {
         name: "inject",
@@ -39,12 +40,14 @@ define([
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
+            var cfgs = _.extractConfig($el, opts);
+
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
-            if ($el.hasClass("record-history") && !("pushState" in history))
+            if (cfgs.some(function(e){return e.history === "record";}) &&
+                    !("pushState" in history))
                 return $el;
 
-            var cfgs = _.extractConfig($el, opts);
             $el.data("patterns.inject", cfgs);
 
             // In case next-href is specified the anchor's href will
@@ -259,7 +262,7 @@ define([
                             $injected.addClass(cfg["class"])
                                 .trigger("patterns-injected", cfg);
                         }
-                        if ($el.hasClass("record-history") &&
+                        if ((cfg.history === "record") &&
                             ("pushState" in history))
                             history.pushState({url: cfg.url}, "", cfg.url);
                     });
