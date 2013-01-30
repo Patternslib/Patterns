@@ -6,28 +6,16 @@ are triggered by classes and other attributes in the HTML, without abusing the
 HTML as a programming language. Accessibility, SEO and well structured HTML are
 core values of Patterns.
 
-Install
--------
-
-    git clone git://github.com/Patternslib/Patterns.git
-    make
-
-Browser support
----------------
+# Browser support
 
 Patterns aims to support at least the two latest major versions of all popular browsers.
 Currently that means:
 
-* Apple Safari 5
-* Apple Safari 6
-* Google Chrome 20
-* Google Chrome 21
-* Microsoft Internet Explorer 8
-* Microsoft Internet Explorer 9
-* Microsoft Internet Explorer 10
+- Apple Safari 5+
+- Google Chrome 20+
+- Microsoft Internet Explorer 8+
 
-Development
------------
+# Development
 
 To develop on Patterns or one of it's submodules, clone the repository
 and set it's push-url to your fork:
@@ -41,8 +29,12 @@ Create a branch for the feature/bug you are working on:
 For inclusion use either a github pull request or create a ticket with
 a url to your external repository.
 
-Running tests
--------------
+## Installation
+
+    git clone git://github.com/Patternslib/Patterns.git
+    make
+
+## Running tests
 
 The simplest way to run the tests are to use npm:
 
