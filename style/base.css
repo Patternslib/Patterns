@@ -87,6 +87,246 @@ body {
 	margin-top: 30px;
 }
 
+/* @group Postit */
+        
+.postit {
+	position: relative;    
+    padding: 1em; 
+    margin: 0 10px 40px; 
+	background-color: #fdfdc8;
+	color: #6f5a44;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
+	-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(0, 0, 0, 0.05) inset;
+	display: block;
+	border: 1px solid #e2e2e2;
+}
+
+.postit.pat-collapsible .panel-content {
+	padding-bottom: 0;
+}
+
+.postit *:last-child {
+	margin-bottom: 0;
+}
+
+.postit *:last-child:after {
+	content: " ";
+	clear: both;
+	display: block;
+}
+
+.section-dashboard .postit.guide {
+	background-color: rgba(0,0,0,0.77);
+	border: 1px solid #414141;
+	color: silver;
+	background-image: none;
+	padding-right: 1em;
+}
+
+.lt-ie9 .section-dashboard .postit.guide {
+	background-color: #535353;
+}
+
+.section-dashboard .postit a {
+	color: white;
+	font-weight: bold;
+}
+
+.postit a,
+aside.sidebar .postit a {
+	color: #59676e;
+	font-weight: bold;
+}
+
+        .postit:before,
+        .postit:after {
+            content:"";
+            position:absolute; 
+            z-index:-2;
+        }
+
+.postit.guide {
+	display: none;
+}
+
+html.js .postit {
+	display: block;
+}
+
+html.js .postit.guide.closed {
+	display: none;
+}
+
+.postit.guide.pat-collapsible h3 {
+	float: right;
+	line-height: 22px;
+	height: 16px;
+	width: 16px;
+	padding: 0;
+	text-indent: -1000px;
+	overflow: hidden;
+	background: url(buttons-modal.png) center center;
+	border-color: rgba(254,255,254,0.63);
+	filter: none;
+	border-radius: 4px;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 20px;
+}
+
+.postit img.inline
+ {
+	height: 1em;
+	vertical-align: text-bottom;
+}
+        
+        /* Lifted corners */
+
+        .lifted {
+            -moz-border-radius:4px; 
+                 border-radius:4px;
+        }
+        
+        .lifted:before,
+        .lifted:after { 
+            bottom:15px;
+            left:10px;
+            width:50%;
+            height:20%;
+            max-width:300px;
+            -webkit-box-shadow:0 15px 10px rgba(0, 0, 0, 0.4);   
+               -moz-box-shadow:0 15px 10px rgba(0, 0, 0, 0.4);
+                    box-shadow:0 15px 10px rgba(0, 0, 0, 0.4);
+            -webkit-transform:rotate(-3deg);    
+               -moz-transform:rotate(-3deg);   
+                -ms-transform:rotate(-3deg);   
+                 -o-transform:rotate(-3deg);
+                    transform:rotate(-3deg);
+}
+        
+        .lifted:after {
+            right:10px; 
+            left:auto;
+            -webkit-transform:rotate(3deg);   
+               -moz-transform:rotate(3deg);  
+                -ms-transform:rotate(3deg);  
+                 -o-transform:rotate(3deg);
+                    transform:rotate(3deg);
+}
+        
+        /* Curled corners */
+
+        .curled {
+            border:1px solid #efefef; 
+            -moz-border-radius:0 0 120px 120px / 0 0 6px 6px;    
+                 border-radius:0 0 120px 120px / 0 0 6px 6px;
+        }
+      
+        .curled:before,
+        .curled:after {
+            bottom:12px;
+            left:10px;
+            width:50%;
+            height:55%;
+            max-width:200px;
+            -webkit-box-shadow:0 8px 12px rgba(0, 0, 0, 0.5); 
+               -moz-box-shadow:0 8px 12px rgba(0, 0, 0, 0.5); 
+                    box-shadow:0 8px 12px rgba(0, 0, 0, 0.5); 
+            -webkit-transform:skew(-8deg) rotate(-3deg);
+               -moz-transform:skew(-8deg) rotate(-3deg);
+                -ms-transform:skew(-8deg) rotate(-3deg);
+                 -o-transform:skew(-8deg) rotate(-3deg);
+                    transform:skew(-8deg) rotate(-3deg);
+        } 
+      
+        .curled:after { 
+            right:10px; 
+            left:auto;
+            -webkit-transform:skew(8deg) rotate(3deg); 
+               -moz-transform:skew(8deg) rotate(3deg);     
+                -ms-transform:skew(8deg) rotate(3deg);     
+                 -o-transform:skew(8deg) rotate(3deg); 
+                    transform:skew(8deg) rotate(3deg);
+        }
+        
+        /* Perspective */
+
+        .perspective:before {
+            left:80px;
+            bottom:5px;
+            width:50%;
+            height:35%;
+            max-width:200px;
+            -webkit-box-shadow:-80px 0 8px rgba(0, 0, 0, 0.4);
+               -moz-box-shadow:-80px 0 8px rgba(0, 0, 0, 0.4);
+                    box-shadow:-80px 0 8px rgba(0, 0, 0, 0.4);
+            -webkit-transform:skew(50deg);
+               -moz-transform:skew(50deg);
+                -ms-transform:skew(50deg);
+                 -o-transform:skew(50deg);
+                    transform:skew(50deg);
+            -webkit-transform-origin:0 100%;
+               -moz-transform-origin:0 100%;
+                -ms-transform-origin:0 100%;
+                 -o-transform-origin:0 100%;
+                    transform-origin:0 100%;
+        }
+        
+        .perspective:after {
+            display:none;
+        }
+        
+        /* Raised shadow - no pseudo-elements needed */
+        
+        .raised {
+            -webkit-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+               -moz-box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+                    box-shadow: 0 15px 10px -10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        }
+        
+        /* Curved shadows */
+
+        .curved:before {
+            top:10px;
+            bottom:10px;
+            left:0;
+            right:50%;
+            -webkit-box-shadow:0 0 15px rgba(0,0,0,0.6);
+            -moz-box-shadow:0 0 15px rgba(0,0,0,0.6);
+            box-shadow:0 0 15px rgba(0,0,0,0.6);
+            -moz-border-radius:10px / 100px;
+            border-radius:10px / 100px;
+        }
+        
+        .curved-vt-2:before {
+            right:0;
+        }
+        
+        .curved-hz-1:before {
+            top:50%;
+            bottom:0;
+            left:10px;
+            right:10px;
+            -moz-border-radius:100px / 10px;
+            border-radius:100px / 10px;
+        }
+
+        .curved-hz-2:before {
+            top:0;
+            bottom:0;
+            left:10px;
+            right:10px;
+            -moz-border-radius:100px / 10px;
+            border-radius:100px / 10px;
+        }
+        
+    
+
+
+
+/* @end */
+
 /* @group Workflow */
 
 #patterns p:before {
