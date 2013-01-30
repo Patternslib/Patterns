@@ -2,7 +2,8 @@
 JAM 		?= ../node_modules/.bin/jam
 PATTERNS 	= $(shell find ../src -name "*.js")
 TESTS 		= $(wildcard ../tests/core/*.js) $(wildcard ../tests/pat/*.js)
-TARGETS 	= TestRunner-bundle.html \
+TARGETS 	= index.html \
+		  TestRunner-bundle.html \
 		  TestRunner-bundle.js \
 		  TestRunner-modules.html \
 		  TestRunner-modules.js
@@ -13,6 +14,8 @@ all:: $(TARGETS)
 clean:
 	@rm -f $(TARGETS)
 
+index.html: TestRunner-bundle.html
+	ln -s $< $@
 
 TestRunner-bundle.html: TestRunner.html.in
 	@sed -e 's#@PATTERNS@#src="../bundles/patterns.min.js"#' \
