@@ -3,3 +3,4 @@
 /dev.nix
 /nixenv
 /node_modules
+/tests/TestRunner*
