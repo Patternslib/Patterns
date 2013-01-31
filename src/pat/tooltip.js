@@ -23,6 +23,7 @@ define([
     parser.add_argument("position-policy", "auto", ["auto", "force"]);
     parser.add_argument("trigger", "click", ["click", "hover"]);
     parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
+    parser.add_argument("delay", 0);
     parser.add_argument("class");
     parser.add_argument("ajax", false);
     parser.add_argument("title", function($el) {
@@ -53,10 +54,34 @@ define([
             if (options.trigger==="click") {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
-                $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
+                if (options.delay) {
+                    $trigger.on("mouseover.tooltip", $trigger, tooltip.delayedShow);
+                } else
+                    $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             }
+        },
+
+        delayedShow: function(event) {
+            var $trigger = event.data,
+                options = $trigger.data("patterns.tooltip");
+
+            tooltip.removeShowEvents($trigger);
+            $trigger
+                .data("patterns.tooltip.timer", setTimeout(
+                    function() {
+                        tooltip.show(event);
+                    }, options.delay))
+                .on("mouseleave.tooltip", $trigger, tooltip.cancelDelayedShow);
+        },
+
+        cancelDelayedShow: function(event) {
+            var $trigger = event.data,
+                options = $trigger.data("patterns.tooltip");
+
+            clearTimeout($trigger.data("patterns.tooltip.timer"));
+            tooltip.setupShowEvents($trigger);
         },
 
         removeShowEvents: function($trigger) {
