@@ -77,14 +77,14 @@ It is possible to force a specific tooltip position by adding the
 Sticky tooltips
 ---------------
 
-By default, the tooltip disappears when the cursor is moved off the
-element or the triggering element is clicked. If this is not desired
-behaviour, there is the option to have a 'sticky' tooltip. This only
-disappears when a close button on the tooltip is clicked. When the
+By default, the tooltip disappears when the cursor is moved off the element or
+the triggering element is clicked. If this is not desired behaviour, there is
+the option to change the closing behaviour to `sticky`. When you do this the
+tooltip only disappears when a close button on the tooltip is clicked. When the
 sticky option is chosen, the close button will be inserted for you
 automatically:
 
-    <a href="#" class="pat-tooltip" data-pat-tooltip="sticky">
+    <a href="#" class="pat-tooltip" data-pat-tooltip="closing: sticky">
      …
     </a>
 
@@ -156,8 +156,8 @@ The available options are:
 | ----- | --------| -------- | ------- | ----------- |
 | `position-list`| `auto` | `tl` `tm` `tr` `rt` `rm` `rb`  `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view. | Multiple value |
 | `position-policy` | `auto` | `auto` `force` | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions. | Mutually exclusive |
+| `trigger` | `click` | `click` `hover` | Sets on which user action the tooltip should appear. | Mutually exclusive |
+| `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
 | `click` | false | If set the user must click on a link to see the tooltip. |
-| `sticky` | false | If set the user must click on a close button in the tooltip to make it disappear. |
-| `close` | true | Indicates if a close button should automatically be added to a sticky tooltip. |
 | `ajax` | false | If set the tooltip content will be loaded from the `href` of the link. |
 | `content` | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. |
