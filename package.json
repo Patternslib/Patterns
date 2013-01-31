@@ -10,7 +10,7 @@
     ],
     "dependencies": {},
     "devDependencies": {
-        "commmander": "0.1.0",
+        "commander": "0.6.1",
         "express": "3.0.6",
         "git-rev": "0.2.0",
         "jamjs": "~0.2.13",
