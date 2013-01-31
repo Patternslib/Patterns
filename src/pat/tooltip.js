@@ -15,9 +15,12 @@ define([
 ], function($, patterns, Parser, inject) {
     var parser = new Parser("tooltip");
 
-    parser.add_argument("position");
+    parser.add_argument("position-list", [], ["tl", "tm", "tr",
+                                              "rt", "rm", "rb",
+                                              "br", "bm", "bl",
+                                              "lb", "lm", "lt"], true);
+    parser.add_argument("position-policy", "auto", ["auto", "force"]);
     parser.add_argument("click", false);
-    parser.add_argument("force", false);
     parser.add_argument("sticky", false);
     parser.add_argument("close", true);
     parser.add_argument("ajax", false);
@@ -355,17 +358,10 @@ define([
                 tip_offset = {},
                 position;
 
-            if (options.position) {
-                var positions = options.position.split("-"), i;
-                for (i=0; i<positions.length; i++) {
-                    if (!tooltip.VALIDPOSITION.test(positions[i])) {
-                        continue;
-                    }
-
-                    if (options.force || tooltip.isVisible(status, positions[i])) {
-                        position = positions[i];
-                        break;
-                    }
+            for (i=0; i<options.position.length; i++) {
+                if (options.position.policy==="force" || tooltip.isVisible(status, options.position.list[i])) {
+                    position = options.position.list[i];
+                    break;
                 }
             }
 
