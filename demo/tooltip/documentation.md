@@ -159,4 +159,5 @@ The available options are:
 | `trigger` | `click` | `click` `hover` | Sets on which user action the tooltip should appear. | Mutually exclusive |
 | `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
 | `ajax` | `false` | `true` `false` | If set the tooltip content will be loaded from the `href` of the link. | Mutually exclusive |
+| `class` | *none* | *class value* | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour | |
 | `content` | | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. | Mutually exclusive |
