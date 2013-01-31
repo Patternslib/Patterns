@@ -28,7 +28,7 @@ Create a branch for the feature/bug you are working on:
 
     git checkout -b <feature>
 
-For inclusion use either a github pull request or create a ticket with
+For inclusion use either a GitHub pull request or create a ticket with
 a url to your external repository.
 
 ### Installation
