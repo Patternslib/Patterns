@@ -158,6 +158,5 @@ The available options are:
 | `position-policy` | `auto` | `auto` `force` | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions. | Mutually exclusive |
 | `trigger` | `click` | `click` `hover` | Sets on which user action the tooltip should appear. | Mutually exclusive |
 | `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
-| `click` | false | If set the user must click on a link to see the tooltip. |
-| `ajax` | false | If set the tooltip content will be loaded from the `href` of the link. |
-| `content` | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. |
+| `ajax` | `false` | `true` `false` | If set the tooltip content will be loaded from the `href` of the link. | Mutually exclusive |
+| `content` | | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. | Mutually exclusive |
