@@ -20,9 +20,8 @@ define([
                                               "br", "bm", "bl",
                                               "lb", "lm", "lt"], true);
     parser.add_argument("position-policy", "auto", ["auto", "force"]);
-    parser.add_argument("click", false);
-    parser.add_argument("sticky", false);
-    parser.add_argument("close", true);
+    parser.add_argument("trigger", "click", ["click", "hover"]);
+    parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
     parser.add_argument("ajax", false);
     parser.add_argument("title", function($el) {
         return $el.attr("title");
@@ -49,7 +48,7 @@ define([
 
         setupShowEvents: function($trigger) {
             var options = $trigger.data("patterns.tooltip");
-            if (options.click) {
+            if (options.trigger==="click") {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
                 $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
@@ -65,27 +64,28 @@ define([
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
                 options = $trigger.data("patterns.tooltip");
-            if (options.sticky) {
+            $container.find(".close-panel")
+                .on("click.tooltip", $trigger, tooltip.hide);
+
+            if (options.closing==="close-button") {
                 $container.find(".close-panel")
                     .on("click.tooltip", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+            } else if (options.closing==="sticky" || (options.trigger==="click" && options.closing==="auto")) {
+                $container.on("click.tooltip", $trigger, function(ev) {
+                    ev.stopPropagation();
+                });
+                $(document).on("click.tooltip", $trigger, tooltip.hide);
+                $trigger.on("click.tooltip", tooltip.blockDefault);
+                // close if something inside the tooltip triggered an injection
+                $container.on("patterns-inject-triggered.tooltip",
+                              $trigger, tooltip.hide);
+                $container.on("submit.tooltip", $trigger, tooltip.hide);
             } else {
-                if (options.click) {
-                    $container.on("click.tooltip", $trigger, function(ev) {
-                        ev.stopPropagation();
-                    });
-                    $(document).on("click.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", tooltip.blockDefault);
-                    // close if something inside the tooltip triggered an injection
-                    $container.on("patterns-inject-triggered.tooltip",
-                                  $trigger, tooltip.hide);
-                    $container.on("submit.tooltip", $trigger, tooltip.hide);
-                } else {
-                    $container.on("click.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", tooltip.blockDefault);
-                }
+                $container.on("click.tooltip", $trigger, tooltip.hide);
+                $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
+                $trigger.on("click.tooltip", tooltip.blockDefault);
             }
         },
 
@@ -184,7 +184,7 @@ define([
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.sticky && options.close) {
+            if (options.closing==="close-button") {
                 $("<button/>", {"class": "close-panel"})
                     .text("Close")
                     .insertBefore($container.find("*:first"));
