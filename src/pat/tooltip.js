@@ -15,13 +15,15 @@ define([
 ], function($, patterns, Parser, inject) {
     var parser = new Parser("tooltip");
 
-    parser.add_argument("position-list", [], ["tl", "tm", "tr",
-                                              "rt", "rm", "rb",
-                                              "br", "bm", "bl",
-                                              "lb", "lm", "lt"], true);
+    var all_positions = ["tl", "tm", "tr",
+                         "rt", "rm", "rb",
+                         "br", "bm", "bl",
+                         "lb", "lm", "lt"];
+    parser.add_argument("position-list", [], all_positions, true);
     parser.add_argument("position-policy", "auto", ["auto", "force"]);
     parser.add_argument("trigger", "click", ["click", "hover"]);
     parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
+    parser.add_argument("class");
     parser.add_argument("ajax", false);
     parser.add_argument("title", function($el) {
         return $el.attr("title");
@@ -175,6 +177,8 @@ define([
             $trigger.data("patterns.tooltip.number", count);
             $container = $("<div/>", {"class": "tooltip-container",
                                      "id": "tooltip" + count});
+            if (options["class"])
+                $container.addClass(options["class"]);
             $container.css("visibility", "hidden");
             if (options.ajax) {
                 $content = $("<progress/>", {"id": "tooltip-load-" + count});
@@ -451,7 +455,7 @@ define([
             }
 
             $container.find("> div").css(content_css);
-            $container.attr("class", "tooltip-container " + position);
+            $container.removeClass(all_positions.join(" ")).addClass(position);
             $container.css({
                 top: container_offset.top+"px",
                 left: container_offset.left+"px"
