@@ -14,8 +14,8 @@ define([
                 return;
             }
 
-            if (!namespace) {
-                log.error("The namespace for the eventhandlers has to be set.");
+            if (!pat) {
+                log.error("The name of the calling pattern has to be set.");
                 return;
             }
 
@@ -31,41 +31,22 @@ define([
                         isText = $el.is("input:text, input[type=search], textarea");
 
                     if (isText) {
-                        $el.on("keyup." + namespace, function() {
-                            log.debug('translating keyup');
-                            $el.trigger("input-change");
-                        });
-                        $el.on("change." + namespace, function() {
-                            log.debug('translating leave');
-                            $el.trigger("input-defocus");
-                        });
+                        if ("oninput" in window) {
+                            $el.on("input." + namespace, function() {
+                                log.debug('translating input');
+                                $el.trigger("input-change");
+                            });
+                        } else {
+                            // this is the legacy code path for IE8
+                            $el.on("propertychange." + namespace, function() {
+                                log.debug('translating propertychange');
+                                $el.trigger("input-change");
+                            });
+                        }
                     } else {
                         $el.on("change." + namespace, function() {
                             log.debug('translating change');
                             $el.trigger("input-change");
-                        });
-                    }
-
-                    // XXX: this still needs a little work
-                    // fix browser bug: trigger change on search reset
-                    if ($el.is("input[type=search]")) {
-                        $el.on('click.' + namespace, function() {
-                            // clicking X on type=search deletes data attrs,
-                            // therefore we store the old value on the form.
-                            var name = $el.attr('name'),
-                                key = name + '-autosubmit-oldvalue',
-                                oldvalue = $form.data(key) || "",
-                                curvalue = $el[0].value || "";
-
-                            if (!name) {
-                                log.warn('type=search without name, will be a problem' +
-                                         ' if there are multiple', $el);
-                            }
-                            if (oldvalue !== curvalue) {
-                                $el.trigger('input-change');
-                            }
-
-                            $form.data(key, curvalue);
                         });
                     }
                 });
