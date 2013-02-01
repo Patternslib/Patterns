@@ -25,8 +25,7 @@ element will be replaced with a div containing the renderer text:
       </ol>
     </div>
 
-Using markdown with injection
------------------------------
+### Using markdown with injection
 
 You can also use markdown rendering in combination with injection: if
 the injected content is markdown it will automatically be rendered.
