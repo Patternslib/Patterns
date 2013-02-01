@@ -1,0 +1,102 @@
+// helper functions to make all input elements
+define([
+    "jquery",
+    "../core/logger"
+], function($, logging) {
+    var namespace = "input-change-events",
+        log = logging.getLogger(namespace);
+
+    var _ = {
+        setup: function($form, pat) {
+
+            if (!$form.is("form")) {
+                log.error("Input change event handler can only be set on forms.");
+                return;
+            }
+
+            if (!namespace) {
+                log.error("The namespace for the eventhandlers has to be set.");
+                return;
+            }
+
+            // list of patterns that installed input-change-event handlers
+            var patterns = $form.data(namespace) || [];
+            log.debug("setup handlers for " + pat);
+
+            if (!patterns.length) {
+                log.debug("installing handlers");
+
+                $form.find(":input").each(function() {
+                    var $el = $(this),
+                        isText = $el.is("input:text, input[type=search], textarea");
+
+                    if (isText) {
+                        $el.on("keyup." + namespace, function() {
+                            log.debug('translating keyup');
+                            $el.trigger("input-change");
+                        });
+                        $el.on("change." + namespace, function() {
+                            log.debug('translating leave');
+                            $el.trigger("input-defocus");
+                        });
+                    } else {
+                        $el.on("change." + namespace, function() {
+                            log.debug('translating change');
+                            $el.trigger("input-change");
+                        });
+                    }
+
+                    // XXX: this still needs a little work
+                    // fix browser bug: trigger change on search reset
+                    if ($el.is("input[type=search]")) {
+                        $el.on('click.' + namespace, function() {
+                            // clicking X on type=search deletes data attrs,
+                            // therefore we store the old value on the form.
+                            var name = $el.attr('name'),
+                                key = name + '-autosubmit-oldvalue',
+                                oldvalue = $form.data(key) || "",
+                                curvalue = $el[0].value || "";
+
+                            if (!name) {
+                                log.warn('type=search without name, will be a problem' +
+                                         ' if there are multiple', $el);
+                            }
+                            if (oldvalue !== curvalue) {
+                                $el.trigger('input-change');
+                            }
+
+                            $form.data(key, curvalue);
+                        });
+                    }
+                });
+            }
+
+            if (patterns.indexOf(pat) == -1) {
+                patterns.push(pat);
+                $form.data(namespace, patterns);
+            }
+        },
+
+        remove: function($form, pat) {
+            var patterns = $form.data(namespace) || [];
+            if (patterns.indexOf(pat) == -1) {
+                log.warn("input-change-events were never installed for " + pat);
+            } else {
+                patterns = patterns.filter(function(e){return e!=pat});
+                if (patterns.length) {
+                    $form.data(namespace, patterns);
+                } else {
+                    log.debug('remove handlers');
+                    $form.removeData(namespace);
+                    $form.find(':input').off('.' + namespace);
+                }
+            }
+        }
+    };
+
+    return _;
+
+});
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
