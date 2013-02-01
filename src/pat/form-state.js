@@ -3,8 +3,9 @@ define([
     "../core/logger",
     "../registry",
     "../utils",
-    "./modal"
-], function($, logger, registry, utils, modal) {
+    "./modal",
+    "../lib/input-change-events"
+], function($, logger, registry, utils, modal, input_change_events) {
     var log = logger.getLogger("form-state");
 
     var _ = {
@@ -13,6 +14,8 @@ define([
         init: function($form) {
             if ($form.length > 1)
                 return $form.each(function() { _.init($(this)); });
+
+            input_change_events.setup($form, name);
 
             // XXX: hide reset buttons until we have proper handling for them
             $form.find("[type=reset]").hide();
@@ -43,8 +46,7 @@ define([
             $form
                 .removeClass("modified")
                 .off(".pat-form-state")
-                .one("change.pat-form-state textchange.pat-form-state",
-                     _.setModified);
+                .one("input-change.pat-form-state", _.setModified);
             log.debug("reset");
         },
         setError: function(event) {
