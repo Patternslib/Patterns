@@ -16,7 +16,7 @@ all:: $(TARGETS)
 bootstrap:
 	mkdir -p bundles
 	$(NPM) install
-	echo "Not calling \"jam install\". Jam packages are in git for now"
+	@echo "Not calling \"jam install\". Jam packages are in git for now"
 	#$(JAM) install
 
 bundles: $(TARGETS)

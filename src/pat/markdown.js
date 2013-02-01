@@ -9,7 +9,7 @@ define([
 ], function($, logger, registry, utils, inject) {
     var log = logger.getLogger("pat.markdown");
 
-    var converter = Markdown.getSanitizingConverter();
+    var converter = Markdown.getSanitizingConverter("html5");
     Markdown.Extra.init(converter, {extensions: "all"});
 
     var _ = {

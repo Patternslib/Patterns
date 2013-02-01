@@ -35,30 +35,24 @@ the left of the triggering element.
 
 The position of the tip within the tooltip can be specified with a
 *position* argument which specifies the preferred positions. This is
-formatted as `<preference>[-preference]*`. The possible preferences are:
+formatted as `<preference>[,preference]*`. The possible preferences are:
 
--   `tl`: tip placed at the leftmost corner of the top side of the
-    tooltip
--   `tm`: tip placed at the middle of the top side tooltip
--   `tr`: tip placed at the rightmost corner of the top side of the
-    tooltip
--   `rt`: tip placed at the top corner of the right side of the tooltip
--   `rm`: tip placed at the middle of the right side tooltip
--   `rb`: tip placed at the bottom corner of the right side of the
-    tooltip
--   `bl`: tip placed at the leftmost corner of the bottom side of the
-    tooltip
--   `bm`: tip placed at the middle of the bottom side tooltip
--   `br`: tip placed at the rightmost corner of the bottom side of the
-    tooltip
--   `lt`: tip placed at the top corner of the left side of the tooltip
--   `lm`: tip placed at the middle of the left side tooltip
--   `lb`: tip placed at the bottom corner of the left side of the
-    tooltip
+- `tl`: tip placed at the leftmost corner of the top side of the tooltip
+- `tm`: tip placed at the middle of the top side tooltip
+- `tr`: tip placed at the rightmost corner of the top side of the tooltip
+- `rt`: tip placed at the top corner of the right side of the tooltip
+- `rm`: tip placed at the middle of the right side tooltip
+- `rb`: tip placed at the bottom corner of the right side of the tooltip
+- `bl`: tip placed at the leftmost corner of the bottom side of the tooltip
+- `bm`: tip placed at the middle of the bottom side tooltip
+- `br`: tip placed at the rightmost corner of the bottom side of the tooltip
+- `lt`: tip placed at the top corner of the left side of the tooltip
+- `lm`: tip placed at the middle of the left side tooltip
+- `lb`: tip placed at the bottom corner of the left side of the tooltip
 
 An example:
 
-    <a href="#tip" class="pat-tooltip" data-pat-tooltip="lt-lm-rt-rm">
+    <a href="#tip" class="pat-tooltip" data-pat-tooltip="position: lt,lm,rt,rm">
      …
     </a>
 
@@ -76,21 +70,21 @@ It is possible to force a specific tooltip position by adding the
 `force` flag.
 
     <a href="#" title="Please enter the full URL for the website"
-       class="pat-tooltip" data-pat-tooltip="lt force">
+       class="pat-tooltip" data-pat-tooltip="position: lt force">
      …
     </a>
 
 Sticky tooltips
 ---------------
 
-By default, the tooltip disappears when the cursor is moved off the
-element or the triggering element is clicked. If this is not desired
-behaviour, there is the option to have a 'sticky' tooltip. This only
-disappears when a close button on the tooltip is clicked. When the
+By default, the tooltip disappears when the cursor is moved off the element or
+the triggering element is clicked. If this is not desired behaviour, there is
+the option to change the closing behaviour to `sticky`. When you do this the
+tooltip only disappears when a close button on the tooltip is clicked. When the
 sticky option is chosen, the close button will be inserted for you
 automatically:
 
-    <a href="#" class="pat-tooltip" data-pat-tooltip="sticky">
+    <a href="#" class="pat-tooltip" data-pat-tooltip="closing: sticky">
      …
     </a>
 
@@ -158,12 +152,13 @@ Properties
 The tooltip can be configured through a `data-pat-tooltip` attribute.
 The available options are:
 
-| Field | Default | Description |
-| ----- | ------- | ----------- |
-| `position` | | A `-`-separated list of tooltip positions. |
-| `force` | false | If set always use a provided position even if does not fit in the window. |
-| `click` | false | If set the user must click on a link to see the tooltip. |
-| `sticky` | false | If set the user must click on a close button in the tooltip to make it disappear. |
-| `close` | true | Indicates if a close button should automatically be added to a sticky tooltip. |
-| `ajax` | false | If set the tooltip content will be loaded from the `href` of the link. |
-| `content` | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. |
+| Property | Default value | Values | Description | Type |
+| ----- | --------| -------- | ------- | ----------- |
+| `position-list`| `auto` | `tl` `tm` `tr` `rt` `rm` `rb`  `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view. | Multiple value |
+| `position-policy` | `auto` | `auto` `force` | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions. | Mutually exclusive |
+| `trigger` | `click` | `click` `hover` | Sets on which user action the tooltip should appear. | Mutually exclusive |
+| `delay` | `0` | *time* | `The delay for the tooltip to appear, expressed in milliseconds | Time |
+| `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
+| `ajax` | `false` | `true` `false` | If set the tooltip content will be loaded from the `href` of the link. | Mutually exclusive |
+| `class` | *none* | *class value* | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour | |
+| `content` | | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. | Mutually exclusive |

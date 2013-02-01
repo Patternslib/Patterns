@@ -13,25 +13,25 @@ TARGETS 	= index.html \
 all:: $(TARGETS)
 
 clean:
-	@rm -f $(TARGETS)
+	rm -f $(TARGETS)
 
 index.html: TestRunner-modules.html
 	ln -sf $< $@
 
 TestRunner-bundle.html: TestRunner.html.in
-	@sed -e 's#@PATTERNS@#src="../bundles/patterns.js"#' \
+	sed -e 's#@PATTERNS@#src="../bundles/patterns.js"#' \
 	     -e 's#@TESTRUNNER@#src="TestRunner-bundle.js"#' $< > $@
 
 TestRunner-bundle-min.html: TestRunner.html.in
-	@sed -e 's#@PATTERNS@#src="../bundles/patterns.min.js"#' \
+	sed -e 's#@PATTERNS@#src="../bundles/patterns.min.js"#' \
 	     -e 's#@TESTRUNNER@#src="TestRunner-bundle.js"#' $< > $@
 
 TestRunner-modules.html: TestRunner.html.in
-	@sed -e 's#@PATTERNS@#src="../jam/require.js" data-main="../src/main"#' \
+	sed -e 's#@PATTERNS@#src="../jam/require.js" data-main="../src/main"#' \
 	     -e 's#@TESTRUNNER@#src="TestRunner-modules.js"#' $< > $@
 
 TestRunner-bundle.js: TestRunner-modules.js
-	@$(JAM) compile -i ../tests/$< $(patsubst %,-i %,$(TESTS)) \
+	$(JAM) compile -i ../tests/$< $(patsubst %,-i %,$(TESTS)) \
 	    $(patsubst %,-E ../tests/%,$(PATTERNS)) -o $@
 
 empty  		:=
@@ -40,7 +40,7 @@ comma 		:= ,
 TESTLIST 	= $(subst $(space),$(comma),$(patsubst %,\"%\",$(TESTS)))
 
 TestRunner-modules.js: TestRunner.js.in $(TESTS)
-	@sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@
+	sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@
 
 
 

@@ -15,11 +15,16 @@ define([
 ], function($, patterns, Parser, inject) {
     var parser = new Parser("tooltip");
 
-    parser.add_argument("position");
-    parser.add_argument("click", false);
-    parser.add_argument("force", false);
-    parser.add_argument("sticky", false);
-    parser.add_argument("close", true);
+    var all_positions = ["tl", "tm", "tr",
+                         "rt", "rm", "rb",
+                         "br", "bm", "bl",
+                         "lb", "lm", "lt"];
+    parser.add_argument("position-list", [], all_positions, true);
+    parser.add_argument("position-policy", "auto", ["auto", "force"]);
+    parser.add_argument("trigger", "click", ["click", "hover"]);
+    parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
+    parser.add_argument("delay", 0);
+    parser.add_argument("class");
     parser.add_argument("ajax", false);
     parser.add_argument("title", function($el) {
         return $el.attr("title");
@@ -46,13 +51,36 @@ define([
 
         setupShowEvents: function($trigger) {
             var options = $trigger.data("patterns.tooltip");
-            if (options.click) {
+            if (options.trigger==="click") {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
-                $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
+                if (options.delay) {
+                    $trigger.on("mouseover.tooltip", $trigger, tooltip.delayedShow);
+                } else
+                    $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             }
+        },
+
+        delayedShow: function(event) {
+            var $trigger = event.data,
+                options = $trigger.data("patterns.tooltip");
+
+            tooltip.removeShowEvents($trigger);
+            $trigger
+                .data("patterns.tooltip.timer", setTimeout(
+                    function() {
+                        tooltip.show(event);
+                    }, options.delay))
+                .on("mouseleave.tooltip", $trigger, tooltip.cancelDelayedShow);
+        },
+
+        cancelDelayedShow: function(event) {
+            var $trigger = event.data;
+
+            clearTimeout($trigger.data("patterns.tooltip.timer"));
+            tooltip.setupShowEvents($trigger);
         },
 
         removeShowEvents: function($trigger) {
@@ -62,27 +90,28 @@ define([
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
                 options = $trigger.data("patterns.tooltip");
-            if (options.sticky) {
+            $container.find(".close-panel")
+                .on("click.tooltip", $trigger, tooltip.hide);
+
+            if (options.closing==="close-button") {
                 $container.find(".close-panel")
                     .on("click.tooltip", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
+            } else if (options.closing==="sticky" || (options.trigger==="click" && options.closing==="auto")) {
+                $container.on("click.tooltip", $trigger, function(ev) {
+                    ev.stopPropagation();
+                });
+                $(document).on("click.tooltip", $trigger, tooltip.hide);
+                $trigger.on("click.tooltip", tooltip.blockDefault);
+                // close if something inside the tooltip triggered an injection
+                $container.on("patterns-inject-triggered.tooltip",
+                              $trigger, tooltip.hide);
+                $container.on("submit.tooltip", $trigger, tooltip.hide);
             } else {
-                if (options.click) {
-                    $container.on("click.tooltip", $trigger, function(ev) {
-                        ev.stopPropagation();
-                    });
-                    $(document).on("click.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", tooltip.blockDefault);
-                    // close if something inside the tooltip triggered an injection
-                    $container.on("patterns-inject-triggered.tooltip",
-                                  $trigger, tooltip.hide);
-                    $container.on("submit.tooltip", $trigger, tooltip.hide);
-                } else {
-                    $container.on("click.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
-                    $trigger.on("click.tooltip", tooltip.blockDefault);
-                }
+                $container.on("click.tooltip", $trigger, tooltip.hide);
+                $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
+                $trigger.on("click.tooltip", tooltip.blockDefault);
             }
         },
 
@@ -172,6 +201,8 @@ define([
             $trigger.data("patterns.tooltip.number", count);
             $container = $("<div/>", {"class": "tooltip-container",
                                      "id": "tooltip" + count});
+            if (options["class"])
+                $container.addClass(options["class"]);
             $container.css("visibility", "hidden");
             if (options.ajax) {
                 $content = $("<progress/>", {"id": "tooltip-load-" + count});
@@ -181,7 +212,7 @@ define([
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.sticky && options.close) {
+            if (options.closing==="close-button") {
                 $("<button/>", {"class": "close-panel"})
                     .text("Close")
                     .insertBefore($container.find("*:first"));
@@ -355,17 +386,10 @@ define([
                 tip_offset = {},
                 position;
 
-            if (options.position) {
-                var positions = options.position.split("-"), i;
-                for (i=0; i<positions.length; i++) {
-                    if (!tooltip.VALIDPOSITION.test(positions[i])) {
-                        continue;
-                    }
-
-                    if (options.force || tooltip.isVisible(status, positions[i])) {
-                        position = positions[i];
-                        break;
-                    }
+            for (var i=0; i<options.position.length; i++) {
+                if (options.position.policy==="force" || tooltip.isVisible(status, options.position.list[i])) {
+                    position = options.position.list[i];
+                    break;
                 }
             }
 
@@ -455,7 +479,7 @@ define([
             }
 
             $container.find("> div").css(content_css);
-            $container.attr("class", "tooltip-container " + position);
+            $container.removeClass(all_positions.join(" ")).addClass(position);
             $container.css({
                 top: container_offset.top+"px",
                 left: container_offset.left+"px"
