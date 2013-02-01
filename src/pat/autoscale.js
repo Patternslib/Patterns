@@ -5,6 +5,8 @@ define([
 ], function($, registry, Parser) {
     var parser = new Parser("auto-scale");
     parser.add_argument("method", "scale", ["scale", "zoom"]);
+    parser.add_argument("min-width", 0);
+    parser.add_argument("max-width", 1000000);
 
     var _ = {
         name: "autoscale",
@@ -22,29 +24,31 @@ define([
         init: function($el, opts) {
             return $el.each(function() {
                 var $el = $(this),
-                    method = _.force_method;
-                if (method===null) {
-                    var options = parser.parse($el, opts);
-                    method=options.method;
-                    $el.data("patterns.auto-scale", method);
-                }
+                    options = parser.parse($el, opts);
+
+                if (_.force_method!==null)
+                    options.method=_.force_method;
+
+                $el.data("patterns.auto-scale", options);
                 _.scale.apply(this, []);
             });
         },
 
         scale: function() {
             var $el = $(this),
-                method = _.force_method,
-                scale;
+                options = $el.data("patterns.auto-scale"),
+                available_space, scale;
 
             if ($el[0].tagName.toLowerCase()==="body")
-                scale = $(window).width()/$el.outerWidth();
+                available_space=$(window).width();
             else
-                scale = $el.parent().outerWidth()/$el.outerWidth();
+                available_space=$el.parent().outerWidth();
 
-            if (method===null)
-                method=$el.data("patterns.auto-scale");
-            switch (method) {
+            available_space=Math.min(available_space, options.maxWidth);
+            available_space=Math.max(available_space, options.minWidth);
+            scale=available_space/$el.outerWidth();
+
+            switch (options.method) {
             case "scale":
                 $el.css("transform", "scale(" + scale + ")");
                 break;
