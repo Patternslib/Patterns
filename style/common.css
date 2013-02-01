@@ -15,8 +15,15 @@ body {
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
-	padding: 70px 0;
+	padding: 70px 20px;
 }
+
+@media only screen and (max-width: 767px) {
+
+body {
+	padding-right: 20px;
+	padding-left: 20px;
+} }
 
 /* @group Buttons */
 
@@ -391,8 +398,8 @@ div[data-src]:hover:after {
 
 section.description {
 	margin-bottom: 40px;
-	padding-right: 20px;
-	padding-left: 20px;
+	padding-right: 0;
+	padding-left: 0;
 }
 
 
@@ -408,7 +415,8 @@ section.demo {
 	border-radius: 4px;
 	background-color: white;
 	border: 1px solid #d3d3d3;
-
+	margin-left: -20px;
+	margin-right: -20px;
 }
 
 section.demo .row {
@@ -525,8 +533,25 @@ section.demo:after {
 
 section.documentation {
 	margin-bottom: 40px;
-	padding-right: 20px;
-	padding-left: 20px;
+	column-count: 2;
+	column-gap: 60px;
+}
+
+@media only screen and (max-width: 767px) {
+
+section.demo {
+	column-count: 1;
+} }
+
+section.documentation h1
+ {
+	
+	column-span: all;
+}
+
+section.documentation h2
+ {
+	break-after: avoid;
 }
 
 

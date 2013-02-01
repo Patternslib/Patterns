@@ -6,32 +6,34 @@
 		<link rel="stylesheet" href="../../style/common.css" type="text/css">
 	</head>
 <body>
-	<section class="description">
-		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
-	</section>
-	<section class="demo">
-		<h2>Demo</h2>
-		<h1>Markdown formatted content</h1>
-		<h2>Inject Markdown formatted content as HTML</h2>
-		<ol>
-			<li><a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Load and inject markdown content with data-type declaration.</a></li>
-			<li><a href="content.md" class="pat-inject" data-pat-inject="target: #target">Load and inject markdown content, automatically detected as markdown based on the file name extension.</a></li>
-		</ol>
-		<div id="target">
-			Here some Markdown rendered content will appear if you click on one of the links above.
-		</div>
-		<hr />
-
-		<h2>Autoloading content from a separate Markdown file</h2>
-		
-		<a href="content.md" id="target-2" class="pat-inject autoLoading-visible" data-pat-inject="target: #target-2::element">This content will be replaced by the source content of the link, rendered as HTML.</a>
-		
-		<hr/>
-
-		<h2>Render inline Markdown content as HTML</h2>
-		<!-- this area's content will be converted to html and injected
-                into a div after the <pre>.
-		-->
+	<section>
+		<h1>Markdown</h1>
+		<section class="description">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+			<h2>Demo</h2>
+			<h1>Markdown formatted content</h1>
+			<h2>Inject Markdown formatted content as HTML</h2>
+			<ol>
+				<li><a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Load and inject markdown content with data-type declaration.</a></li>
+				<li><a href="content.md" class="pat-inject" data-pat-inject="target: #target">Load and inject markdown content, automatically detected as markdown based on the file name extension.</a></li>
+			</ol>
+			<div id="target">
+				Here some Markdown rendered content will appear if you click on one of the links above.
+			</div>
+			<hr />
+	
+			<h2>Autoloading content from a separate Markdown file</h2>
+			
+			<a href="content.md" id="target-2" class="pat-inject autoLoading-visible" data-pat-inject="target: #target-2::element">This content will be replaced by the source content of the link, rendered as HTML.</a>
+			
+			<hr/>
+	
+			<h2>Render inline Markdown content as HTML</h2>
+			<!-- this area's content will be converted to html and injected
+	                into a div after the <pre>.
+			-->
 		<pre class="pat-markdown"># Some Other Header 1
 
 ## Some Other Header 2
@@ -44,15 +46,15 @@ And a list numbered list:
 2. two
 3. three
 7. four
-		</pre>
+				</pre>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
 		</section>
-		<section class="documentation">
-			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
-		</section>
-		
-		<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
-		
-		
-		<script src="../../bundles/patterns.min.js" type="text/javascript" charset="utf-8"></script>
+			<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+			
+			
+			<script src="../../bundles/patterns.min.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>
