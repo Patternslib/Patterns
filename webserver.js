@@ -10,6 +10,7 @@ var app = express(),
     debug = process.env.DEBUG || false,
     tag;
 
+var error_message = "Could not build bundle at this time. Please try again later.";
 
 app.configure(function(){
     app.set('host', process.env.HOST || '127.0.0.1');
@@ -64,9 +65,30 @@ var bundleBuilder = function(req, res, min){
         }
         p.on('exit', function(code) {
             if (code === 0) {
-                return res.download(fullname);
+                fs.open(fullname, 'a+', 0666, function(err, fd){
+                    if (err) {
+                        console.log(err);
+                        return res.send(error_message);
+                    }
+                    var deps = Object.keys(query).sort()
+                        .map(function(e){ return '"'+e+'"';  })
+                        .join(', ');
+
+                    var code = "require(['registry', " + deps +
+                        "], function(r){r.init();});";
+                    fs.write(fd, code, null, undefined,
+                        function(err, written, buffer){
+                            if (err) {
+                                console.log(err);
+                                return res.send(error_message);
+                            }
+                            fs.close(fd, function(){
+                                return res.download(fullname);
+                            });
+                    });
+                });
             } else {
-                res.send('Something went wrong build the package');
+                return res.send(error_message);
             }
         });
         return;

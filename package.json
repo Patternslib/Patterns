@@ -1,6 +1,6 @@
 {
     "name": "Patterns",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "title": "Markup patterns to drive behaviour.",
     "description":
     "Patterns is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
@@ -10,13 +10,15 @@
     ],
     "dependencies": {},
     "devDependencies": {
+        "commander": "0.6.1",
         "express": "3.0.6",
         "git-rev": "0.2.0",
         "jamjs": "~0.2.13",
         "jshint": "~0.9.1",
         "pegjs": "0.7.0",
         "phantom-jasmine": "0.1.8",
-        "phantomjs": "1.8.0-1"
+        "phantomjs": "1.8.0-1",
+        "rimraf": "2.1.2"
     },
     "scripts": {
         "test": "make check"
