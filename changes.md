@@ -2,8 +2,8 @@
 
 ## 1.1.0 - Unreleased
 
-- Auto-scale pattern: add new `min-width` and `max-width` options. Ticket
-    [ticket 242](https://github.com/Patternslib/Patterns/issues/242).
+- Auto-scale pattern: add new `min-width` and `max-width` options.
+    [Ticket 242](https://github.com/Patternslib/Patterns/issues/242).
 
 - Tooltip pattern:
 
