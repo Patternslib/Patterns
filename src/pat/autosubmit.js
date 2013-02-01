@@ -3,13 +3,12 @@ define([
     "../registry",
     "../core/logger",
     "../core/parser",
+    "../lib/input-change-events",
     "../utils"
-], function($, registry, logging, Parser, utils) {
+], function($, registry, logging, Parser, input_change_events, utils) {
     var log = logging.getLogger("autosubmit"),
         parser = new Parser("autosubmit");
 
-    // XXX: would be great if the parser would handle validation and
-    // interpretation of boolean values:
     // - 400ms -> 400
     // - 400 -> 400
     // - defocus
@@ -27,68 +26,61 @@ define([
                 return cfg;
             }
         },
+
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
-            var $form = $el.is("form") ? $el : $el.parents("form").first();
+            // handle the form itself
+            if ($el.is("form")) {
+                if ($el.data("pat-autosubmit-initialized")) {
+                    return;
+                }
+                console.log("initializing form");
+                input_change_events.setup($el, "autosubmit");
+                $el.on('input-change-delayed.pat-autosubmit', _.onInputChange)
+                    .data("pat-autosubmit-initialized", true);
+                return;
+            }
 
-            $form.off('.pat-autosubmit')
-                .on('form-change.pat-autosubmit', _.onFormChange);
+            // make sure the form is initialized if it does not have the pat-autosubmit class
+            var $form = $el.parents("form").first();
+            if (!$form.data("pat-autosubmit-initialized")) {
+                _.init($form);
+            }
 
             var cfg = _.parser.parse($el, opts),
                 isText = $el.is("input:text, input[type=search], textarea");
 
-            // XXX: form-state pattern
-            if (cfg.delay === "defocus" || cfg.delay === 0) {
-                if (isText && cfg.delay === 0) {
-                    $el.on("keyup.pat-autosubmit", function() { $el.trigger("form-change"); });
-                } else {
-                    $el.on("change.pat-autosubmit", function() { $el.trigger("form-change"); });
-                }
-            } else {
-                if (isText) {
-                    $el.on("keyup.pat-autosubmit change.pat-autosubmit", utils.debounce(function() {
-                        $el.trigger("form-change");
-                    }, cfg.delay));
-                } else {
-                    $el.on("change.pat-autosubmit", utils.debounce(function() {
-                        $el.trigger("form-change");
-                    }, cfg.delay));
-                }
+            if (cfg.delay === "defocus" && !isText) {
+                log.error("The defocus delay value makes only sense on text input elements.");
+                return;
             }
 
-            // fix browser bug: trigger change on search reset
-            // also form-state pattern or even more generic browser fixes
-            $form.on('click', 'input[type=search]', function(ev) {
-                var $el = $(ev.target);
-                // clicking X on type=search deletes data attrs,
-                // therefore we store the old value on the form.
-                var name = $el.attr('name'),
-                    key = name + '-autosubmit-oldvalue',
-                    oldvalue = $form.data(key) || "",
-                    curvalue = $el[0].value || "";
-
-                if (!name) {
-                    log.warn('type=search without name, will be a problem' +
-                             ' if there are multiple', $el);
-                }
-                if (oldvalue !== curvalue) {
-                    $el.trigger('form-change');
-                }
-
-                $form.data(key, curvalue);
-            });
-
+            if (cfg.delay === "defocus") {
+                $el.on("input-defocus.pat-autosubmit", function() {
+                    $el.trigger("input-change-delayed");
+                });
+            } else if (cfg.delay > 0) {
+                $el.on("input-change.pat-autosubmit", utils.debounce(function() {
+                    $el.trigger("input-change-delayed");
+                }, cfg.delay));
+            } else {
+                $el.on("input-change.pat-autosubmit", function() {
+                    $el.trigger("input-change-delayed");
+                });
+            }
             return $el;
         },
 
         destroy: function($el) {
+            input_change_events.remove($el, "autosubmit");
+            $el.removeData("pat-autosubmit-initialized");
             $el.off(".pat-autosubmit")
                 .find(":input").off(".pat-autosubmit");
         },
 
-        onFormChange: function(ev) {
+        onInputChange: function(ev) {
             ev.stopPropagation();
 
             $(this).submit();
