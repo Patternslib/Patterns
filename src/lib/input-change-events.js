@@ -52,7 +52,7 @@ define([
                 });
             }
 
-            if (patterns.indexOf(pat) == -1) {
+            if (patterns.indexOf(pat) === -1) {
                 patterns.push(pat);
                 $form.data(namespace, patterns);
             }
@@ -60,10 +60,10 @@ define([
 
         remove: function($form, pat) {
             var patterns = $form.data(namespace) || [];
-            if (patterns.indexOf(pat) == -1) {
+            if (patterns.indexOf(pat) === -1) {
                 log.warn("input-change-events were never installed for " + pat);
             } else {
-                patterns = patterns.filter(function(e){return e!=pat});
+                patterns = patterns.filter(function(e){return e!==pat;});
                 if (patterns.length) {
                     $form.data(namespace, patterns);
                 } else {
