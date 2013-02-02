@@ -36,7 +36,6 @@ define([
                 if ($el.data("pat-autosubmit-initialized")) {
                     return;
                 }
-                console.log("initializing form");
                 input_change_events.setup($el, "autosubmit");
                 $el.on('input-change-delayed.pat-autosubmit', _.onInputChange)
                     .data("pat-autosubmit-initialized", true);
