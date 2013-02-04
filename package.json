@@ -57,7 +57,7 @@
             "logging": ">=1.0.0-jam.1",
             "modernizer": ">=2.6.2",
             "pagedown": ">=1.0.0-jam.5",
-            "pagedown-extra": ">=1.0.0-jam.4",
+            "pagedown-extra": ">=1.0.0-jam.5",
             "patterns-jquery-form": ">=3.2.24",
             "patterns-jquery-validation": ">=1.10.0-jam.2",
             "prefixfree": "1.0.7",
