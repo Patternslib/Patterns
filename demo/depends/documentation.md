@@ -81,7 +81,7 @@ complex example which demonstrates the use of `and`:
     <fieldset>
       <legend>Select your flavour</legend>
       <label><input type="radio" name="flavour" value="hawaii"/> Hawaii</label>
-      <label><input type="radio" name="flavour" value="meat"/> Meatfest </label>
+      <label><input type="radio" name="flavour" value="meat"/> Meat fest </label>
       <label><input type="radio" name="flavour" value="veg"/> Vegeration </label>
       <label><input type="checkbox" name="custom"/> Add extra ingredients</label>
     </fieldset>
@@ -103,8 +103,8 @@ Actions
 -------
 
 Two types of actions can be taken by the pattern: changing visibility
-and disabling elements. The action can be specified using an `action`
-parameter.
+and disabling elements. The action can be specified using the `action`
+property.
 
     <button data-pat-depends="title enable">Submit</button>
 
@@ -166,10 +166,6 @@ The available options are:
 | Field | Default | Description |
 | ----- | ------- | ----------- | 
 | `condition` | | The dependency condition. |
-| ----- | ------- | ----------- | 
 | `action` | `show` | Action to perform. One of `show` or `enable`. |
-| ----- | ------- | ----------- | 
 | `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
-| ----- | ------- | ----------- | 
-| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. |
-| ----- | ------- | ----------- | 
+| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
