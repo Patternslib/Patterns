@@ -15,7 +15,7 @@ define([
             if ($form.length > 1)
                 return $form.each(function() { _.init($(this)); });
 
-            input_change_events.setup($form, name);
+            input_change_events.setup($form, _.name);
 
             // XXX: hide reset buttons until we have proper handling for them
             $form.find("[type=reset]").hide();
