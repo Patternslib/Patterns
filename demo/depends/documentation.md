@@ -68,11 +68,20 @@ You can also revert a test by putting the `not` keyword in front of it.
 Here are some examples:
 
     <input type="checkbox" name="hidden"/>
-    <p class="pat-depends" data-pat-depends="condition:hidden">Hidden items will be included.</p>
-    <p class="pat-depends" data-pat-depends="condition:not hidden">Not showing hidden items.</p>
+    
+    <p class="pat-depends" data-pat-depends="condition: hidden">
+        Hidden items will be included.
+    </p>
+    
+    <p class="pat-depends" data-pat-depends="condition: not hidden">
+        Not showing hidden items.
+    </p>
 
     <input type="range" name="price" value="50"/>
-    <p class="pat-depends" data-pat-depends="price<100">Showing cheap options.</p>
+    
+    <p class="pat-depends" data-pat-depends="price<100">
+        Showing cheap options.
+    </p>
 
 You can also combine multiple tests using `and` and `or`, optionally
 using parenthesis to specify the desired grouping. Here is a more
