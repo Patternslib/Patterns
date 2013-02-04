@@ -34,12 +34,12 @@ define([
             // handle the form itself
             if ($el.is("form")) {
                 if ($el.data("pat-autosubmit-initialized")) {
-                    return;
+                    return $el;
                 }
                 input_change_events.setup($el, "autosubmit");
                 $el.on('input-change-delayed.pat-autosubmit', _.onInputChange)
                     .data("pat-autosubmit-initialized", true);
-                return;
+                return $el;
             }
 
             // make sure the form is initialized if it does not have the pat-autosubmit class
@@ -53,7 +53,7 @@ define([
 
             if (cfg.delay === "defocus" && !isText) {
                 log.error("The defocus delay value makes only sense on text input elements.");
-                return;
+                return $el;
             }
 
             if (cfg.delay === "defocus") {
