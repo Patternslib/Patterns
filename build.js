@@ -61,12 +61,16 @@ var build = function(tag, cleanup) {
                     console.log(err);
                     return cleanup();
                 }
-                var deps = modules
-                    .map(function(e){ return '"'+e+'"';  })
-                    .join(', ');
+                if (modules.indexOf('main') == -1) {
+                    var deps = modules
+                        .map(function(e){ return '"'+e+'"';  })
+                        .join(', ');
 
-                var code = "require(['registry', " + deps +
-                    "], function(r){r.init();});";
+                    var code = "require(['registry', " + deps +
+                        "], function(r){r.init();});";
+                } else {
+                    var code = "require(['main']);";
+                }
                 fs.write(fd, code, null, undefined,
                     function(err, written, buffer){
                         if (err) {
