@@ -59,6 +59,16 @@ define(["pat/autoscale"], function(pattern) {
         });
 
         describe("init", function() {
+            var force_method;
+
+            beforeEach(function() {
+                force_method=pattern.force_method;
+            });
+
+            afterEach(function() {
+                pattern.force_method=force_method;
+            });
+
             it("Return jQuery object", function() {
                 var jq = jasmine.createSpyObj("jQuery", ["each"]);
                 jq.each.andReturn(jq);
@@ -71,11 +81,20 @@ define(["pat/autoscale"], function(pattern) {
                       .css({width: "50px"}))
                   .appendTo("#lab");
                 var $child = $("#child");
-                pattern.init($child);
                 spyOn(pattern, "scale");
                 pattern.init($child);
-                expect($child.data("patterns.auto-scale")).toBe("scale");
                 expect(pattern.scale).toHaveBeenCalled();
+            });
+
+            it("Honour method override", function() {
+                $("<div/>", {id: "parent"}).css({width: "200px"})
+                  .append($("<div/>", {id: "child", "data-pat-auto-scale": "scale"})
+                      .css({width: "50px"}))
+                  .appendTo("#lab");
+                var $child = $("#child");
+                pattern.force_method = "forced";
+                pattern.init($child);
+                expect($child.data("patterns.auto-scale").method).toBe("forced");
             });
         });
 
@@ -85,7 +104,7 @@ define(["pat/autoscale"], function(pattern) {
                   .append($("<div/>", {id: "child"}).css({width: "50px"}))
                   .appendTo("#lab");
                 var child = document.getElementById("child");
-                $(child).data("patterns.auto-scale", "scale");
+                $(child).data("patterns.auto-scale", {method: "scale", minWidth: 0, maxWidth: 1000});
                 pattern.scale.apply(child, []);
                 expect(child.getAttribute("style")).toMatch(/transform: scale\(4\);/);
             });
@@ -95,9 +114,29 @@ define(["pat/autoscale"], function(pattern) {
                   .append($("<div/>", {id: "child"}).css({width: "50px"}))
                   .appendTo("#lab");
                 var child = document.getElementById("child");
-                $(child).data("patterns.auto-scale", "zoom");
+                $(child).data("patterns.auto-scale", {method: "zoom", minWidth: 0, maxWidth: 1000});
                 pattern.scale.apply(child, []);
                 expect(child.style.zoom).toBe("4");
+            });
+
+            it("Honour minimum width", function() {
+                $("<div/>", {id: "parent"}).css({width: "100px"})
+                  .append($("<div/>", {id: "child"}).css({width: "400px"}))
+                  .appendTo("#lab");
+                var child = document.getElementById("child");
+                $(child).data("patterns.auto-scale", {method: "zoom", minWidth: 200, maxWidth: 1000});
+                pattern.scale.apply(child, []);
+                expect(child.style.zoom).toBe("0.5");
+            });
+
+            it("Honour maximum width", function() {
+                $("<div/>", {id: "parent"}).css({width: "200px"})
+                  .append($("<div/>", {id: "child"}).css({width: "50px"}))
+                  .appendTo("#lab");
+                var child = document.getElementById("child");
+                $(child).data("patterns.auto-scale", {method: "zoom", minWidth: 0, maxWidth: 100});
+                pattern.scale.apply(child, []);
+                expect(child.style.zoom).toBe("2");
             });
 
             it("Add scaled class", function() {
@@ -105,7 +144,7 @@ define(["pat/autoscale"], function(pattern) {
                   .append($("<div/>", {id: "child"}).css({width: "50px"}))
                   .appendTo("#lab");
                 var child = document.getElementById("child");
-                $(child).data("patterns.auto-scale", "zoom");
+                $(child).data("patterns.auto-scale", {method: "zoom", minWidth: 0, maxWidth: 1000});
                 pattern.scale.apply(child, []);
                 expect($(child).hasClass("scaled")).toBeTruthy();
             });

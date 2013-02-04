@@ -77,8 +77,7 @@ define([
         },
 
         cancelDelayedShow: function(event) {
-            var $trigger = event.data,
-                options = $trigger.data("patterns.tooltip");
+            var $trigger = event.data;
 
             clearTimeout($trigger.data("patterns.tooltip.timer"));
             tooltip.setupShowEvents($trigger);
@@ -387,7 +386,7 @@ define([
                 tip_offset = {},
                 position;
 
-            for (i=0; i<options.position.length; i++) {
+            for (var i=0; i<options.position.length; i++) {
                 if (options.position.policy==="force" || tooltip.isVisible(status, options.position.list[i])) {
                     position = options.position.list[i];
                     break;

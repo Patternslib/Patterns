@@ -1,57 +1,9 @@
 var jam = {
     "packages": [
         {
-            "name": "anythingslider",
-            "location": "../jam/anythingslider",
-            "main": "js/jquery.anythingslider.js"
-        },
-        {
-            "name": "autoSuggest",
-            "location": "../jam/autoSuggest",
-            "main": "jquery.autoSuggest.js"
-        },
-        {
-            "name": "chosen-js",
-            "location": "../jam/chosen-js",
-            "main": "chosen/chosen.jquery.js"
-        },
-        {
-            "name": "jasmine",
-            "location": "../jam/jasmine"
-        },
-        {
-            "name": "jcrop",
-            "location": "../jam/jcrop"
-        },
-        {
-            "name": "jquery",
-            "location": "../jam/jquery",
-            "main": "dist/jquery.js"
-        },
-        {
-            "name": "jquery-fullcalendar",
-            "location": "../jam/jquery-fullcalendar",
-            "main": "fullcalendar/fullcalendar.js"
-        },
-        {
-            "name": "jquery-placeholder",
-            "location": "../jam/jquery-placeholder",
-            "main": "jquery.placeholder.js"
-        },
-        {
-            "name": "jquery-textchange",
-            "location": "../jam/jquery-textchange",
-            "main": "jquery.textchange.js"
-        },
-        {
-            "name": "less",
-            "location": "../jam/less",
-            "main": "./dist/less-1.4.0-alpha.js"
-        },
-        {
-            "name": "logging",
-            "location": "../jam/logging",
-            "main": "src/logging.js"
+            "name": "prefixfree",
+            "location": "../jam/prefixfree",
+            "main": "prefixfree.js"
         },
         {
             "name": "modernizer",
@@ -59,9 +11,28 @@ var jam = {
             "main": "modernizr-development.js"
         },
         {
-            "name": "pagedown",
-            "location": "../jam/pagedown",
-            "main": "main.js"
+            "name": "jasmine",
+            "location": "../jam/jasmine"
+        },
+        {
+            "name": "jquery-textchange",
+            "location": "../jam/jquery-textchange",
+            "main": "jquery.textchange.js"
+        },
+        {
+            "name": "jquery-placeholder",
+            "location": "../jam/jquery-placeholder",
+            "main": "jquery.placeholder.js"
+        },
+        {
+            "name": "autoSuggest",
+            "location": "../jam/autoSuggest",
+            "main": "jquery.autoSuggest.js"
+        },
+        {
+            "name": "jquery",
+            "location": "../jam/jquery",
+            "main": "dist/jquery.js"
         },
         {
             "name": "pagedown-extra",
@@ -69,9 +40,8 @@ var jam = {
             "main": "Markdown.Extra.js"
         },
         {
-            "name": "patterns-jquery-form",
-            "location": "../jam/patterns-jquery-form",
-            "main": "jquery.form.js"
+            "name": "jcrop",
+            "location": "../jam/jcrop"
         },
         {
             "name": "patterns-jquery-validation",
@@ -79,9 +49,14 @@ var jam = {
             "main": "main.js"
         },
         {
-            "name": "prefixfree",
-            "location": "../jam/prefixfree",
-            "main": "prefixfree.js"
+            "name": "anythingslider",
+            "location": "../jam/anythingslider",
+            "main": "js/jquery.anythingslider.js"
+        },
+        {
+            "name": "pagedown",
+            "location": "../jam/pagedown",
+            "main": "main.js"
         },
         {
             "name": "text",
@@ -89,19 +64,64 @@ var jam = {
             "main": "text.js"
         },
         {
+            "name": "patterns-jquery-form",
+            "location": "../jam/patterns-jquery-form",
+            "main": "jquery.form.js"
+        },
+        {
             "name": "tiny_mce",
             "location": "../jam/tiny_mce",
             "main": "tiny_mce_src.js"
+        },
+        {
+            "name": "less",
+            "location": "../jam/less",
+            "main": "./dist/less-1.4.0-alpha.js"
+        },
+        {
+            "name": "chosen-js",
+            "location": "../jam/chosen-js",
+            "main": "chosen/chosen.jquery.js"
+        },
+        {
+            "name": "logging",
+            "location": "../jam/logging",
+            "main": "src/logging.js"
+        },
+        {
+            "name": "jquery-fullcalendar",
+            "location": "../jam/jquery-fullcalendar",
+            "main": "fullcalendar/fullcalendar.js"
         }
     ],
     "version": "0.2.13",
     "shim": {
-        "anythingslider": {
+        "jquery-textchange": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "jquery-placeholder": {
             "deps": [
                 "jquery"
             ]
         },
         "autoSuggest": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "pagedown-extra": {
+            "deps": [
+                "pagedown"
+            ]
+        },
+        "anythingslider": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "patterns-jquery-form": {
             "deps": [
                 "jquery"
             ]
@@ -113,26 +133,6 @@ var jam = {
             "exports": "chosen"
         },
         "jquery-fullcalendar": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "jquery-placeholder": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "jquery-textchange": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "pagedown-extra": {
-            "deps": [
-                "pagedown"
-            ]
-        },
-        "patterns-jquery-form": {
             "deps": [
                 "jquery"
             ]
@@ -144,57 +144,9 @@ if (typeof require !== "undefined" && require.config) {
     require.config({
     "packages": [
         {
-            "name": "anythingslider",
-            "location": "../jam/anythingslider",
-            "main": "js/jquery.anythingslider.js"
-        },
-        {
-            "name": "autoSuggest",
-            "location": "../jam/autoSuggest",
-            "main": "jquery.autoSuggest.js"
-        },
-        {
-            "name": "chosen-js",
-            "location": "../jam/chosen-js",
-            "main": "chosen/chosen.jquery.js"
-        },
-        {
-            "name": "jasmine",
-            "location": "../jam/jasmine"
-        },
-        {
-            "name": "jcrop",
-            "location": "../jam/jcrop"
-        },
-        {
-            "name": "jquery",
-            "location": "../jam/jquery",
-            "main": "dist/jquery.js"
-        },
-        {
-            "name": "jquery-fullcalendar",
-            "location": "../jam/jquery-fullcalendar",
-            "main": "fullcalendar/fullcalendar.js"
-        },
-        {
-            "name": "jquery-placeholder",
-            "location": "../jam/jquery-placeholder",
-            "main": "jquery.placeholder.js"
-        },
-        {
-            "name": "jquery-textchange",
-            "location": "../jam/jquery-textchange",
-            "main": "jquery.textchange.js"
-        },
-        {
-            "name": "less",
-            "location": "../jam/less",
-            "main": "./dist/less-1.4.0-alpha.js"
-        },
-        {
-            "name": "logging",
-            "location": "../jam/logging",
-            "main": "src/logging.js"
+            "name": "prefixfree",
+            "location": "../jam/prefixfree",
+            "main": "prefixfree.js"
         },
         {
             "name": "modernizer",
@@ -202,9 +154,28 @@ if (typeof require !== "undefined" && require.config) {
             "main": "modernizr-development.js"
         },
         {
-            "name": "pagedown",
-            "location": "../jam/pagedown",
-            "main": "main.js"
+            "name": "jasmine",
+            "location": "../jam/jasmine"
+        },
+        {
+            "name": "jquery-textchange",
+            "location": "../jam/jquery-textchange",
+            "main": "jquery.textchange.js"
+        },
+        {
+            "name": "jquery-placeholder",
+            "location": "../jam/jquery-placeholder",
+            "main": "jquery.placeholder.js"
+        },
+        {
+            "name": "autoSuggest",
+            "location": "../jam/autoSuggest",
+            "main": "jquery.autoSuggest.js"
+        },
+        {
+            "name": "jquery",
+            "location": "../jam/jquery",
+            "main": "dist/jquery.js"
         },
         {
             "name": "pagedown-extra",
@@ -212,9 +183,8 @@ if (typeof require !== "undefined" && require.config) {
             "main": "Markdown.Extra.js"
         },
         {
-            "name": "patterns-jquery-form",
-            "location": "../jam/patterns-jquery-form",
-            "main": "jquery.form.js"
+            "name": "jcrop",
+            "location": "../jam/jcrop"
         },
         {
             "name": "patterns-jquery-validation",
@@ -222,9 +192,14 @@ if (typeof require !== "undefined" && require.config) {
             "main": "main.js"
         },
         {
-            "name": "prefixfree",
-            "location": "../jam/prefixfree",
-            "main": "prefixfree.js"
+            "name": "anythingslider",
+            "location": "../jam/anythingslider",
+            "main": "js/jquery.anythingslider.js"
+        },
+        {
+            "name": "pagedown",
+            "location": "../jam/pagedown",
+            "main": "main.js"
         },
         {
             "name": "text",
@@ -232,18 +207,63 @@ if (typeof require !== "undefined" && require.config) {
             "main": "text.js"
         },
         {
+            "name": "patterns-jquery-form",
+            "location": "../jam/patterns-jquery-form",
+            "main": "jquery.form.js"
+        },
+        {
             "name": "tiny_mce",
             "location": "../jam/tiny_mce",
             "main": "tiny_mce_src.js"
+        },
+        {
+            "name": "less",
+            "location": "../jam/less",
+            "main": "./dist/less-1.4.0-alpha.js"
+        },
+        {
+            "name": "chosen-js",
+            "location": "../jam/chosen-js",
+            "main": "chosen/chosen.jquery.js"
+        },
+        {
+            "name": "logging",
+            "location": "../jam/logging",
+            "main": "src/logging.js"
+        },
+        {
+            "name": "jquery-fullcalendar",
+            "location": "../jam/jquery-fullcalendar",
+            "main": "fullcalendar/fullcalendar.js"
         }
     ],
     "shim": {
-        "anythingslider": {
+        "jquery-textchange": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "jquery-placeholder": {
             "deps": [
                 "jquery"
             ]
         },
         "autoSuggest": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "pagedown-extra": {
+            "deps": [
+                "pagedown"
+            ]
+        },
+        "anythingslider": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "patterns-jquery-form": {
             "deps": [
                 "jquery"
             ]
@@ -255,26 +275,6 @@ if (typeof require !== "undefined" && require.config) {
             "exports": "chosen"
         },
         "jquery-fullcalendar": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "jquery-placeholder": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "jquery-textchange": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "pagedown-extra": {
-            "deps": [
-                "pagedown"
-            ]
-        },
-        "patterns-jquery-form": {
             "deps": [
                 "jquery"
             ]
@@ -286,57 +286,9 @@ else {
     var require = {
     "packages": [
         {
-            "name": "anythingslider",
-            "location": "../jam/anythingslider",
-            "main": "js/jquery.anythingslider.js"
-        },
-        {
-            "name": "autoSuggest",
-            "location": "../jam/autoSuggest",
-            "main": "jquery.autoSuggest.js"
-        },
-        {
-            "name": "chosen-js",
-            "location": "../jam/chosen-js",
-            "main": "chosen/chosen.jquery.js"
-        },
-        {
-            "name": "jasmine",
-            "location": "../jam/jasmine"
-        },
-        {
-            "name": "jcrop",
-            "location": "../jam/jcrop"
-        },
-        {
-            "name": "jquery",
-            "location": "../jam/jquery",
-            "main": "dist/jquery.js"
-        },
-        {
-            "name": "jquery-fullcalendar",
-            "location": "../jam/jquery-fullcalendar",
-            "main": "fullcalendar/fullcalendar.js"
-        },
-        {
-            "name": "jquery-placeholder",
-            "location": "../jam/jquery-placeholder",
-            "main": "jquery.placeholder.js"
-        },
-        {
-            "name": "jquery-textchange",
-            "location": "../jam/jquery-textchange",
-            "main": "jquery.textchange.js"
-        },
-        {
-            "name": "less",
-            "location": "../jam/less",
-            "main": "./dist/less-1.4.0-alpha.js"
-        },
-        {
-            "name": "logging",
-            "location": "../jam/logging",
-            "main": "src/logging.js"
+            "name": "prefixfree",
+            "location": "../jam/prefixfree",
+            "main": "prefixfree.js"
         },
         {
             "name": "modernizer",
@@ -344,9 +296,28 @@ else {
             "main": "modernizr-development.js"
         },
         {
-            "name": "pagedown",
-            "location": "../jam/pagedown",
-            "main": "main.js"
+            "name": "jasmine",
+            "location": "../jam/jasmine"
+        },
+        {
+            "name": "jquery-textchange",
+            "location": "../jam/jquery-textchange",
+            "main": "jquery.textchange.js"
+        },
+        {
+            "name": "jquery-placeholder",
+            "location": "../jam/jquery-placeholder",
+            "main": "jquery.placeholder.js"
+        },
+        {
+            "name": "autoSuggest",
+            "location": "../jam/autoSuggest",
+            "main": "jquery.autoSuggest.js"
+        },
+        {
+            "name": "jquery",
+            "location": "../jam/jquery",
+            "main": "dist/jquery.js"
         },
         {
             "name": "pagedown-extra",
@@ -354,9 +325,8 @@ else {
             "main": "Markdown.Extra.js"
         },
         {
-            "name": "patterns-jquery-form",
-            "location": "../jam/patterns-jquery-form",
-            "main": "jquery.form.js"
+            "name": "jcrop",
+            "location": "../jam/jcrop"
         },
         {
             "name": "patterns-jquery-validation",
@@ -364,9 +334,14 @@ else {
             "main": "main.js"
         },
         {
-            "name": "prefixfree",
-            "location": "../jam/prefixfree",
-            "main": "prefixfree.js"
+            "name": "anythingslider",
+            "location": "../jam/anythingslider",
+            "main": "js/jquery.anythingslider.js"
+        },
+        {
+            "name": "pagedown",
+            "location": "../jam/pagedown",
+            "main": "main.js"
         },
         {
             "name": "text",
@@ -374,18 +349,63 @@ else {
             "main": "text.js"
         },
         {
+            "name": "patterns-jquery-form",
+            "location": "../jam/patterns-jquery-form",
+            "main": "jquery.form.js"
+        },
+        {
             "name": "tiny_mce",
             "location": "../jam/tiny_mce",
             "main": "tiny_mce_src.js"
+        },
+        {
+            "name": "less",
+            "location": "../jam/less",
+            "main": "./dist/less-1.4.0-alpha.js"
+        },
+        {
+            "name": "chosen-js",
+            "location": "../jam/chosen-js",
+            "main": "chosen/chosen.jquery.js"
+        },
+        {
+            "name": "logging",
+            "location": "../jam/logging",
+            "main": "src/logging.js"
+        },
+        {
+            "name": "jquery-fullcalendar",
+            "location": "../jam/jquery-fullcalendar",
+            "main": "fullcalendar/fullcalendar.js"
         }
     ],
     "shim": {
-        "anythingslider": {
+        "jquery-textchange": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "jquery-placeholder": {
             "deps": [
                 "jquery"
             ]
         },
         "autoSuggest": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "pagedown-extra": {
+            "deps": [
+                "pagedown"
+            ]
+        },
+        "anythingslider": {
+            "deps": [
+                "jquery"
+            ]
+        },
+        "patterns-jquery-form": {
             "deps": [
                 "jquery"
             ]
@@ -397,26 +417,6 @@ else {
             "exports": "chosen"
         },
         "jquery-fullcalendar": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "jquery-placeholder": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "jquery-textchange": {
-            "deps": [
-                "jquery"
-            ]
-        },
-        "pagedown-extra": {
-            "deps": [
-                "pagedown"
-            ]
-        },
-        "patterns-jquery-form": {
             "deps": [
                 "jquery"
             ]

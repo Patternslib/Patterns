@@ -36,14 +36,15 @@ firefox zoom is not supported ([mozilla bug
 \#390936](https://bugzilla.mozilla.org/show_bug.cgi?id=390936)), and IE
 versions before 10 do not support the scale transform.
 
-Option reference
-----------------
+Properties
+----------
 
 The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:
 
-| Field    | Default | Description                                         |
-| ------- | ------- | ----------- |
-| `method` | `scale` | The scaling method to use. One of `scale` or `zoom` |
-| ------- | ------- | ----------- |
+| Property | Default value | Values| Description | Type |
+| -------- | ------- ----- | ------| ----------- | ---- |
+| `method` | `scale` | `scale` `zoom` | The scaling method to use. One of `scale` or `zoom` | Mutually exclusive |
+| `min-width` | *unset* | | The minimum width in pixels to scale to. | Number |
+| `max-width` | *unset* | | The maximum width in pixels to scale to. | Number |
 
