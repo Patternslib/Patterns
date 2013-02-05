@@ -22,7 +22,17 @@ define([
 
             _.setReset.call($form);
 
+            // remember initial state of the form and after
+            // successfull submission
+            _.saveState.call($form);
+            $form.on("pat-ajax-success", _.saveState);
+
             return $form;
+        },
+        saveState: function() {
+            var $form = $(this);
+            $form.data("pat-ajax.previous-state", $form.data("pat-ajax.state"));
+            $form.data("pat-ajax.state", $form.serializeArray());
         },
         setModified: function() {
             var $form = $(this);

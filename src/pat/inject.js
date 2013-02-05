@@ -6,14 +6,14 @@
  */
 define([
     "jquery",
+    "./ajax",
     "../core/parser",
     "../core/logger",
-    "../lib/ajax",
     "../registry",
     "../utils",
     "../lib/htmlparser",
     "../jquery-ext"  // for :scrollable for autoLoading-visible
-], function($, Parser, logger, ajax, registry, utils, htmlparser) {
+], function($, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
 
@@ -296,9 +296,7 @@ define([
             $el.on("pat-ajax-success.pat-inject", onSuccess);
             $el.on("pat-ajax-error.pat-inject", onError);
 
-            ajax($el, {
-                url: cfgs[0].url
-            });
+            ajax.request($el, {url: cfgs[0].url});
         },
 
         _inject: function($source, $target, action /* , classes */) {
