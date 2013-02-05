@@ -54,14 +54,10 @@ define([
             }
             allsel = all.join(",");
 
-            // find all elements that belong to any pattern. Prevent wrapping of the body
-            // to prevent javascript in the body being executed a second time by jQuery's.
-            // domManip.
-            if ($content[0].tagName!=="BODY") {
-                $match = $content.wrap("<div/>").parent().find(allsel);
-                $content.unwrap();
-            } else
-                $match = $content.find(allsel);
+            // Find all elements that belong to any pattern.
+            $match = $content.find(allsel);
+            if ($content.is(allsel))
+                $match = $match.add($content);
             $match = $match.filter(function() { return $(this).parents('pre').length === 0; });
             $match = $match.filter(":not(.cant-touch-this)");
 
