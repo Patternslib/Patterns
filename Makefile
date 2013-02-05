@@ -23,11 +23,11 @@ bundles: $(TARGETS)
 
 bundles/patterns.js: $(SOURCES) $(THIRDPARTY) package.json
 	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
-	$(JAM) compile -i main --no-minify --almond $@ --verbose
+	./build.js -n
 
 bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) package.json
 	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
-	$(JAM) compile -i main --almond $@ --verbose
+	./build.js
 
 use-bundle:
 	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html
