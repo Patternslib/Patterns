@@ -2,6 +2,10 @@
 
 ## 1.1.0 - Unreleased
 
+- Do not run javascript loaded in the document twice. This was causing problems
+  with third party modules such as [shower](http://shwr.me/) and was not expected
+  behaviour. [Ticket 231](https://github.com/Patternslib/Patterns/issues/231)..
+
 - Auto-scale pattern: add new `min-width` and `max-width` options.
     [Ticket 242](https://github.com/Patternslib/Patterns/issues/242).
 
