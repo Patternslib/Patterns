@@ -22,11 +22,11 @@ bootstrap:
 bundles: $(TARGETS)
 
 bundles/patterns.js: $(SOURCES) $(THIRDPARTY) package.json
-	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
+	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	./build.js -n
 
 bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) package.json
-	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
+	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	./build.js
 
 use-bundle:
@@ -55,7 +55,7 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 check: $(TARGETS) 
-	@$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
+	$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
 	make -C tests
 	@echo Running checks on modules and bundle
 	@echo ====================================
