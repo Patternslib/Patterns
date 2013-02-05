@@ -19,7 +19,7 @@ bootstrap:
 	@echo "Not calling \"jam install\". Jam packages are in git for now"
 	#$(JAM) install
 
-bundles: $(TARGETS)
+bundles: check-modules $(TARGETS)
 
 bundles/patterns.js: $(SOURCES) $(THIRDPARTY) package.json
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
@@ -54,14 +54,19 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 		   src/lib/htmlparser.js
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
-check: $(TARGETS) 
+check-modules:
 	$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
 	make -C tests
-	@echo Running checks on modules and bundle
-	@echo ====================================
+	@echo Running checks on modules
+	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
+
+check: check-modules $(TARGETS)
+	@echo Running checks on bundles
+	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle.html
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle-min.html
+
 
 nixenv/bin/phantomjs:
 	nix-build --out-link nixenv dev.nix
@@ -72,6 +77,7 @@ phantom-via-nix: nixenv/bin/phantomjs
 
 check-nix: phantom-via-nix check
 
+
 clean:
 	make -C tests clean
 	rm -f $(TARGETS)
@@ -79,5 +85,5 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap bundles check check-nix clean doc phantom-via-nix
+.PHONY: all bootstrap bundles check check-modules check-nix clean doc phantom-via-nix
 
