@@ -1,3 +1,10 @@
+/**
+ * Patterns autosuggest - suggestion/completion support
+ *
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012 JC Brand
+ * Copyright 2013 Marko Durkovic
+ */
 // auto-suggest docs:
 // http://code.drewwilson.com/entry/autosuggest-jquery-plugin
 // Changes to previous

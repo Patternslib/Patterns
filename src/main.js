@@ -1,4 +1,4 @@
-define('main', [
+define([
     "jquery",
     "./registry",
 
@@ -41,4 +41,3 @@ define('main', [
 ], function($, registry) {
     registry.init();
 });
-require(['main']);

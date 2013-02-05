@@ -1,7 +1,7 @@
 /**
  * Patterns remove - send event when objects are removed from the DOM
  *
- * Copyright 2012 Simplon B.V.
+ * Copyright 2012 Simplon B.V. - Wichert Akkerman
  */
 define([
     "jquery"

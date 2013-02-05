@@ -1,3 +1,12 @@
+/**
+ * Patterns registry - Central registry and scan logic for patterns
+ *
+ * Copyright 2012-2013 Simplon B.V.
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2013 Marko Durkovic
+ * Copyright 2013 Rok Garbas
+ */
+
 /*
  * changes to previous patterns.register/scan mechanism
  * - if you want initialised class, do it in init
@@ -45,9 +54,10 @@ define([
             }
             allsel = all.join(",");
 
-            // find all elements that belong to any pattern
-            $match = $content.wrap("<div/>").parent().find(allsel);
-            $content.unwrap();
+            // Find all elements that belong to any pattern.
+            $match = $content.find(allsel);
+            if ($content.is(allsel))
+                $match = $match.add($content);
             $match = $match.filter(function() { return $(this).parents('pre').length === 0; });
             $match = $match.filter(":not(.cant-touch-this)");
 
