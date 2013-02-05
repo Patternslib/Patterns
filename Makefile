@@ -34,7 +34,7 @@ use-bundle:
 	sed -i -e 's,<script data-main="../src/main" src="../jam/require.js",<script src="../bundles/patterns.min.js",' demo/*html
 	sed -i -e 's,<script data-main="../../src/main" src="../../jam/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
 
-use-modular:
+use-modules:
 	sed -i -r -e 's,<script src="bundles/patterns.(min.)?js",<script data-main="src/main" src="jam/require.js",' index.html
 	sed -i -r -e 's,<script src="../bundles/patterns.(min.)?js",<script data-main="../src/main" src="../jam/require.js",' demo/*html
 	sed -i -r -e 's,<script src="../../bundles/patterns.(min.)?js",<script data-main="../../src/main" src="../../jam/require.js",' demo/*/*.html
@@ -85,5 +85,5 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap bundles check check-modules check-nix clean doc phantom-via-nix
+.PHONY: all bootstrap bundles check check-modules check-nix clean doc phantom-via-nix use-modules use-bundles
 
