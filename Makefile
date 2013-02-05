@@ -71,12 +71,13 @@ CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 check-modules:
 	$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
-	make -C tests
+	make -C tests TestRunner-modules.html TestRunner-modules.js
 	@echo Running checks on modules
 	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
 
 check: check-modules $(TARGETS)
+	make -C tests
 	@echo Running checks on bundles
 	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle.html
