@@ -19,22 +19,37 @@ bootstrap:
 	@echo "Not calling \"jam install\". Jam packages are in git for now"
 	#$(JAM) install
 
-bundles: $(TARGETS)
+bundles: check-modules $(TARGETS)
 
 bundles/patterns.js: $(SOURCES) $(THIRDPARTY) package.json
-	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
-	$(JAM) compile -i main --no-minify --almond $@ --verbose
+	$(JSHINT) --config jshintrc $(CHECKSOURCES)
+	./build.js -n
 
 bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) package.json
-	@$(JSHINT) --config jshintrc $(CHECKSOURCES)
-	$(JAM) compile -i main --almond $@ --verbose
+	$(JSHINT) --config jshintrc $(CHECKSOURCES)
+	./build.js
+
+
+ifdef REF
+TAGARG = -t $(REF)
+endif
+bundle:
+	./build.js -n $(TAGARG)
+	echo $?
+	./build.js $(TAGARG)
+	echo $?
+
+bundles-all-tags:
+	$(foreach tag,$(shell git tag|sed 1d),./build.js -t $(tag); ./build.js -n -t $(tag);)
+
+
 
 use-bundle:
 	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html
 	sed -i -e 's,<script data-main="../src/main" src="../jam/require.js",<script src="../bundles/patterns.min.js",' demo/*html
 	sed -i -e 's,<script data-main="../../src/main" src="../../jam/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
 
-use-modular:
+use-modules:
 	sed -i -r -e 's,<script src="bundles/patterns.(min.)?js",<script data-main="src/main" src="jam/require.js",' index.html
 	sed -i -r -e 's,<script src="../bundles/patterns.(min.)?js",<script data-main="../src/main" src="../jam/require.js",' demo/*html
 	sed -i -r -e 's,<script src="../../bundles/patterns.(min.)?js",<script data-main="../../src/main" src="../../jam/require.js",' demo/*/*.html
@@ -54,14 +69,20 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 		   src/lib/htmlparser.js
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
-check: $(TARGETS) 
-	@$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
-	make -C tests
-	@echo Running checks on modules and bundle
-	@echo ====================================
+check-modules:
+	$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
+	make -C tests TestRunner-modules.html TestRunner-modules.js
+	@echo Running checks on modules
+	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
+
+check: check-modules $(TARGETS)
+	make -C tests
+	@echo Running checks on bundles
+	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle.html
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle-min.html
+
 
 nixenv/bin/phantomjs:
 	nix-build --out-link nixenv dev.nix
@@ -72,6 +93,7 @@ phantom-via-nix: nixenv/bin/phantomjs
 
 check-nix: phantom-via-nix check
 
+
 clean:
 	make -C tests clean
 	rm -f $(TARGETS)
@@ -79,5 +101,5 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap bundles check check-nix clean doc phantom-via-nix
+.PHONY: all bootstrap bundle bundles bundles-all-tags check check-modules check-nix clean doc phantom-via-nix use-modules use-bundles
 

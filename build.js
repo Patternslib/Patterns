@@ -61,12 +61,16 @@ var build = function(tag, cleanup) {
                     console.log(err);
                     return cleanup();
                 }
-                var deps = modules
-                    .map(function(e){ return '"'+e+'"';  })
-                    .join(', ');
+                if (modules.indexOf('main') == -1) {
+                    var deps = modules
+                        .map(function(e){ return '"'+e+'"';  })
+                        .join(', ');
 
-                var code = "require(['registry', " + deps +
-                    "], function(r){r.init();});";
+                    var code = "require(['registry', " + deps +
+                        "], function(r){r.init();});";
+                } else {
+                    var code = "require(['main']);";
+                }
                 fs.write(fd, code, null, undefined,
                     function(err, written, buffer){
                         if (err) {
@@ -108,7 +112,7 @@ var checkout = function(tmpdir, tag) {
         if (code === 0) {
             build(tag, function(){
                 rimraf.sync(tmpdir);
-                process.exit(1);
+                process.exit(0);
             });
         } else {
             console.log('could not checkout tag ' + tag);
@@ -152,7 +156,7 @@ if (program.tag) {
     };
     var tmpdir;
     do {
-        tmpdir = '/tmp/' + Array(8).join('.').split('').map(randChar).join('');
+        tmpdir = '/tmp/patterns-' + Array(8).join('.').split('').map(randChar).join('');
     } while(fs.existsSync(tmpdir));
     clone(tmpdir, program.tag);
 } else {
