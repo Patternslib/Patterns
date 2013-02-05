@@ -1,10 +1,9 @@
 /**
- * @license
- * Patterns @VERSION@ store - store pattern state locally in the browser
+ * Patterns store - store pattern state locally in the browser
  *
  * Copyright 2008-2012 Simplon B.V.
  * Copyright 2011 Humberto Sermeño
- * Copyright 2011 SYSLAB.COM GmbH
+ * Copyright 2011 Florian Friesdorf
  */
 define(function() {
     function Storage(backend, prefix) {

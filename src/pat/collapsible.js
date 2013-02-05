@@ -1,3 +1,12 @@
+/**
+ * Patterns collapsible - Collapsible content
+ *
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012 Markus Maier
+ * Copyright 2013 Peter Lamut
+ * Copyright 2012 Jonas Hoersch
+ */
 /*
  * changes:
  * - open($el, opts) instead of open($el, duration)

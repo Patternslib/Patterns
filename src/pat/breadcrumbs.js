@@ -1,3 +1,9 @@
+/**
+ * Patterns breadcrumbs - breadcrumb trails
+ *
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ */
 define([
     "jquery",
     "../registry"

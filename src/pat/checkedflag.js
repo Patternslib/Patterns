@@ -1,8 +1,9 @@
 /**
- * @license
- * Patterns @VERSION@ checkedflag - Add checked flag to checkbox labels
+ * Patterns checkedflag - Add checked flag to checkbox labels
  *
- * Copyright 2012 Simplon B.V.
+ * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012 JC Brand
+ * Copyright 2012 Florian Friesdorf
  */
 define([
     "jquery",

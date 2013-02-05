@@ -1,8 +1,8 @@
 /**
- * @license
- * Patterns @VERSION@ carousel
+ * Patterns carousel
  *
- * Copyright 2012 Simplon B.V.
+ * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012-2013 Florian Friesdorf
  */
 define([
     "jquery",
