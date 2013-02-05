@@ -29,6 +29,21 @@ bundles/patterns.min.js: $(SOURCES) $(THIRDPARTY) package.json
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	./build.js
 
+
+ifdef REF
+TAGARG = -t $(REF)
+endif
+bundle:
+	./build.js -n $(TAGARG)
+	echo $?
+	./build.js $(TAGARG)
+	echo $?
+
+bundles-all-tags:
+	$(foreach tag,$(shell git tag|sed 1d),./build.js -t $(tag); ./build.js -n -t $(tag);)
+
+
+
 use-bundle:
 	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html
 	sed -i -e 's,<script data-main="../src/main" src="../jam/require.js",<script src="../bundles/patterns.min.js",' demo/*html
@@ -85,5 +100,5 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap bundles check check-modules check-nix clean doc phantom-via-nix use-modules use-bundles
+.PHONY: all bootstrap bundle bundles bundles-all-tags check check-modules check-nix clean doc phantom-via-nix use-modules use-bundles
 
