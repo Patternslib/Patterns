@@ -1,3 +1,8 @@
+/**
+ * Patterns autofocus - enhanced autofocus form elements
+ *
+ * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ */
 define([
     "jquery",
     "../registry"

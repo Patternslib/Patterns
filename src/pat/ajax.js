@@ -1,3 +1,8 @@
+/**
+ * Patterns ajax - AJAX injection for forms
+ *
+ * Copyright 2012-2013 Florian Friesdorf
+ */
 // XXX: this could/should be merged with form-state and ajax be an
 // option of form-state
 define([

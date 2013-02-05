@@ -1,9 +1,8 @@
 /**
- * @license
- * Patterns @VERSION@ parser - argument parser
+ * Patterns parser - Argument parser
  *
- * Copyright 2012 Simplon B.V.
- * Copyright 2012 Florian Friesdorf
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
 define([
     'jquery',
