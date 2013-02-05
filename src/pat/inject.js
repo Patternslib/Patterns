@@ -286,7 +286,8 @@ define([
 
             var onError = function() {
                 cfgs.forEach(function(cfg) {
-                    cfg.$injected.remove();
+                    if ("$injected" in cfg)
+                        cfg.$injected.remove();
                 });
                 $el.off("pat-ajax-success.pat-inject");
                 $el.off("pat-ajax-error.pat-inject");
