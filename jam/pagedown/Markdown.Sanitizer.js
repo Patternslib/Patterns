@@ -1,4 +1,3 @@
-define(['./Markdown.Converter'], function() {
 (function () {
     var output, Converter;
     if (typeof exports === "object" && typeof require === "function") { // we're in a CommonJS (e.g. Node.js) module
@@ -107,4 +106,3 @@ define(['./Markdown.Converter'], function() {
         return html;
     }
 })();
-});
