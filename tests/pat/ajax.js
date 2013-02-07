@@ -50,6 +50,11 @@ define(['pat/ajax'], function(pattern) {
                 $button.click();
                 expect($.ajax).toHaveBeenCalled();
             });
+            it('does include submit button clicked', function() {
+                $button.click();
+                expect($.ajax.calls[0].args[0].url)
+                    .toEqual('action.html?input1=value1&submit=submit');
+            });
             it('does not include submit buttons if not clicked', function() {
                 $form.submit();
                 expect($.ajax.calls[0].args[0].url)

@@ -25,7 +25,9 @@ define([
         init: function($el) {
             $el.off('.pat-ajax');
             $el.filter('a').on('click.pat-ajax', _.onTriggerEvents);
-            $el.filter('form').on('submit.pat-ajax', _.onTriggerEvents);
+            $el.filter('form')
+                .on('submit.pat-ajax', _.onTriggerEvents)
+                .on('click.pat-ajax', '[type=submit]', _.onClickSubmit);
             $el.filter(':not(form,a)').each(function() {
                 log.warn('Unsupported element:', this);
             });
@@ -33,6 +35,16 @@ define([
         },
         destroy: function($el) {
             $el.off('.pat-ajax');
+        },
+        onClickSubmit: function(event) {
+            var $form = $(event.target).parent('form'),
+                name = event.target.name,
+                value = $(event.target).val(),
+                data = {};
+            if (name) {
+                data[name] = value;
+            }
+            $form.data('pat-ajax.clicked-data', data);
         },
         onTriggerEvents: function(event) {
             if (event) {
@@ -67,6 +79,7 @@ define([
                 },
                 args = {
                     context: $el,
+                    data: $el.data('pat-ajax.clicked-data'),
                     url: cfg.url,
                     error: onError,
                     success: onSuccess
