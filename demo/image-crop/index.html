@@ -13,41 +13,48 @@
 		</section>
 		<section class="demo">
 		<h2>Demo</h2>
-		…
-	    <div class="row">
+
             <form id="crop-demo-form">
-                <div class="column narrow">
-	                <div class="preview">
-	                    <img src="pool.jpg" id="image-crop-preview">
-	                </div>
-    	        </div>
-    	        <div class="column wide">
-		    <img src="pool.jpg" class="pat-image-crop" data-pat-image-crop="preview-id: #image-crop-preview;" />
-		</div>
-    	        <div class="column">
-        	        <fieldset class="concise">
-    	                <label for="x1">x1
-    	                    <input type="text" name="x1" />
-    	                </label>
-    	                <label for="y1">y1
-        	                <input type="text" name="y1" />
-        	            </label>
-    	                <label for="x2">x2
-        	                <input type="text" name="x2" />
-        	            </label>
-    	                <label for="y2">y2
-        	                <input type="text" name="y2" />
-     	                </label>
-    	                <label for="w">w
-        	                <input type="text" name="w" />
-    	                </label>
-    	                <label for="h">h
-        	                <input type="text" name="h" />
-                        </label>
-        	        </fieldset>
-        	    </div>
+            	<div class="row">
+	            	<div class="seven columns">
+		            	<img src="pool.jpg" class="pat-image-crop" data-pat-image-crop="preview-id: #image-crop-preview;" />
+		            </div>
+		            <div class="five columns pull-one">
+		                <div class="preview">
+		                    <img src="pool.jpg" id="image-crop-preview">
+		                </div>
+		                <div class="row">
+		                	<div class="three columns">
+		                		<fieldset class="vertical condensed">
+			                        <label>x1
+			                            <input type="text" size="2" name="x1" />
+			                        </label>
+			                        <label>y1
+			                            <input type="text" size="2" name="y1" />
+			                        </label>
+			                        <label>x2
+			                            <input type="text" size="2" name="x2" />
+			                        </label>
+		                        </fieldset>
+		                    </div>
+		                    <div class="three columns pull-six">
+		                    	<fieldset class="vertical condensed">
+			                        <label>y2
+			                            <input type="text" size="2" name="y2" />
+			                         </label>
+			                        <label>w
+			                            <input type="text" size="2" name="w" />
+			                        </label>
+			                        <label>h
+			                            <input type="text" size="2" name="h" />
+			                        </label>
+			                    </fieldset>
+		                    </div>
+		                 </div>
+		    	    </div>
+				</div>
         	</form>
-	    </div>
+
 		</section>
 		<section class="documentation">
 			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>

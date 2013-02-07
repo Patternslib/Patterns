@@ -15,8 +15,6 @@ Copyright (c) 2012 Mark Hayes
 /* @group The Grid */
 
 .row {
-	width: 940px;
-	max-width: 100%;
 	min-width: 768px;
 	margin: 0 -15px;
 }

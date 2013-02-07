@@ -29,11 +29,11 @@
 }
 
 .preview {
-    width: 168px;
+    width: 120px;
     border: 1px solid #DFDFDF;
     float: left;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    height: 168px;
+    height: 120px;
     overflow: hidden;
 }
 
