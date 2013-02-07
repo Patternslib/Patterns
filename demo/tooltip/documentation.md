@@ -94,7 +94,7 @@ AJAX tooltips
 The tooltip content can be loaded via an AJAX request by proving an ajax
 option:
 
-    <a href="balloon-contents.html#myTip" class="pat-tooltip" data-pat-tooltip="ajax">
+    <a href="balloon-contents.html#myTip" class="pat-tooltip" data-pat-tooltip="source: ajax">
      …
     </a>
 
@@ -157,8 +157,7 @@ The available options are:
 | `position-list`| `auto` | `tl` `tm` `tr` `rt` `rm` `rb`  `br` `bm` `bl` `lb` `lm` `lt` | The priority in which the pattern will try to position the tooltip. With the tooltip is positioned where the most space is on the screen. The two letters indicate the position of the triangle as opposed to the tooltip body. Adding `force` will force the tooltip position, even if it would end up out of view. | Multiple value |
 | `position-policy` | `auto` | `auto` `force` | Policy used to place a tooltip: either always use a listed position, or allow other positions if no space is available for the listed positions. | Mutually exclusive |
 | `trigger` | `click` | `click` `hover` | Sets on which user action the tooltip should appear. | Mutually exclusive |
+| `source` | `title` | `ajax` `content` `title` | Select where the contents of the tooltip is taken from: AJAX loading of the link target, the contents of element or its title attribute. | Mutually exclusive |
 | `delay` | `0` | *time* | `The delay for the tooltip to appear, expressed in milliseconds | Time |
 | `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
-| `ajax` | `false` | `true` `false` | If set the tooltip content will be loaded from the `href` of the link. | Mutually exclusive |
 | `class` | *none* | *class value* | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour | |
-| `content` | | | If set (and ajax is not set) use this as the tooltip content instead of the `title` attribute. | Mutually exclusive |
