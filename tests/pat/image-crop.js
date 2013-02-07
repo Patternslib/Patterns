@@ -45,7 +45,12 @@ define(["pat/image-crop"], function(pattern) {
                     width: 50,
                     height: 50
                 },
-                inputs: {}
+                inputs: {},
+                api: {
+                    getBounds: function() {
+                        return [ 500, 600 ];
+                    }
+                }
             };
 
             var c = {
@@ -57,12 +62,6 @@ define(["pat/image-crop"], function(pattern) {
                 y2: 600
             };
 
-            var attachedTo = {
-                getBounds: function() {
-                    return [ 500, 600 ];
-                }
-            };
-
             beforeEach(function(){
                 data.preview.element = $("<div>");
                 data.inputs.x1 = $("<input type=\"hidden\" name=\"p_x1\" />");
@@ -71,12 +70,10 @@ define(["pat/image-crop"], function(pattern) {
                 data.inputs.y2 = $("<input type=\"hidden\" name=\"p_y2\" />");
                 data.inputs.w  = $("<input type=\"hidden\" name=\"p_w\" />");
                 data.inputs.h  = $("<input type=\"hidden\" name=\"p_h\" />");
-
-                attachedTo.element = $("<div>").data("patterns.image-crop", data);
             });
 
             it("Update preview", function() {
-                pattern.updatePreview.apply(attachedTo, [c]);
+                pattern.updatePreview(c, data);
 
                 expect(data.preview.element.width()).toBe(125);
                 expect(data.preview.element.height()).toBe(100);
@@ -85,7 +82,7 @@ define(["pat/image-crop"], function(pattern) {
             });
 
             it("Update inputs", function() {
-                pattern.updateInputs.apply(attachedTo, [c]);
+                pattern.updateInputs(c, data);
 
                 expect(data.inputs.x1.val()).toBe("100");
                 expect(data.inputs.x2.val()).toBe("300");
@@ -99,7 +96,7 @@ define(["pat/image-crop"], function(pattern) {
                 spyOn(pattern, "updatePreview");
                 spyOn(pattern, "updateInputs");
 
-                pattern.onSelect.apply(attachedTo, [c]);
+                pattern.onSelect(c, data);
 
                 expect(pattern.updatePreview).toHaveBeenCalledWith(c, data);
                 expect(pattern.updateInputs).toHaveBeenCalledWith(c, data);
