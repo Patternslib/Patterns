@@ -533,31 +533,6 @@ section.demo:after {
 
 section.documentation {
 	margin-bottom: 40px;
-	column-count: 2;
-	column-gap: 60px;
-}
-
-@media only screen and (max-width: 767px) {
-
-section.demo {
-	column-count: 1;
-} }
-
-section.documentation h1
- {
-	
-	column-span: all;
-}
-
-section.documentation h2
- {
-	break-after: avoid;
-}
-
-section.documentation pre
- {
-	break-inside: avoid;
-	 -webkit-column-break-inside: avoid;
 }
 
 

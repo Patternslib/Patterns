@@ -18,29 +18,12 @@ define([
         name: "bumper",
         trigger: ".pat-bumper",
 
-        init: function($el, options) {
-            // initialize the elements
-            $el.each(function() {
-                var $this = $(this),
-                    opts = parser.parse($this, options),
-                    data = _._getElementBox($this);
-                
-                data.threshold = {
-                    top:    data.top - opts.margin,
-                    bottom: data.bottom + opts.margin,
-                    left:   data.left - opts.margin,
-                    right:  data.right + opts.margin
-                };
-                data.margin = opts.margin;
-                
-                $this.data("patterns.bumper", data);
-            });
-
+        init: function($el, opts) {
             $(window).on("scroll.bumper", function() {
-                _._testBump($el, _._getViewport());
+                _._testBump($el, opts, _._getViewport());
             });
 
-            _._testBump($el, _._getViewport());
+            _._testBump($el, opts, _._getViewport());
             return $el;
         },
         
@@ -82,11 +65,29 @@ define([
          * @param $el  The element to look for
          * @param view The bounding box in which the element will be bumped
          */
-        _testBump: function($el, box) {
+        _testBump: function($el, opts, box) {
+            // initialize the elements
             $el.each(function() {
                 var $this = $(this),
-                    data = $this.data("patterns.bumper"),
-                    bumped = false;
+                    bumped = false,
+                    data;
+
+                // get current ElementBox while not bumped, otherwise used
+                // saved state before bumping
+                if ($this.hasClass("bumped")) {
+                    data = $this.data("patterns.bumper");
+                } else {
+                    var cfg = parser.parse($this, opts);
+                    data = _._getElementBox($this);
+                    data.threshold = {
+                        top:    data.top - cfg.margin,
+                        bottom: data.bottom + cfg.margin,
+                        left:   data.left - cfg.margin,
+                        right:  data.right + cfg.margin
+                    };
+                    data.margin = cfg.margin;
+                    $el.data("patterns.bumper", data);
+                }
 
                 if (box.top > data.threshold.top) {
                     $this.addClass("bumped-top").removeClass("bumped-bottom");
