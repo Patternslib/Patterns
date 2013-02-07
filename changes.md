@@ -2,7 +2,7 @@
 
 ## 1.2.0 - Unreleased
 
-## 1.1.0 - Released January 28, 2013
+## 1.1.0 - Released February 7, 2013
 
 - bumper pattern fetches DOM info in event handler, not only during init.
   [Ticket 232](https://github.com/Patternslib/Patterns/issues/232). (durko)
