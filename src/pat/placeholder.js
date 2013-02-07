@@ -1,6 +1,5 @@
 define([
     "../registry",
-    "modernizer",
     "jquery-placeholder"
 ], function(patterns) {
     var pattern_spec = {
@@ -12,8 +11,11 @@ define([
         }
     };
 
-    if (!Modernizr.input.placeholder)
+    // This is slightly more accurate test than Modernizr uses.
+    if (!("placeholder" in document.createElement("input") &&
+          "placeholder" in document.createElement("textarea")))
         patterns.register(pattern_spec);
+    return pattern_spec;
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

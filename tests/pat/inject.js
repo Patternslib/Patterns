@@ -309,7 +309,7 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                     $form.trigger("submit");
 
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.mostRecentCall.args[0].data).toContain("param=somevalue");
+                    expect($.ajax.mostRecentCall.args[0].url).toContain("param=somevalue");
                 });
 
                 it("pass post form parameters in ajax call as data", function() {
