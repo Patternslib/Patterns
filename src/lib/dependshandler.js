@@ -76,6 +76,8 @@ define([
                             return value>node.value;
                         case ">=":
                             return value>=node.value;
+                        case "~=":
+                            return value.indexOf(node.value)!=-1;
                     }
                     break;
                 case "truthy":

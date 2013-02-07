@@ -63,6 +63,8 @@ specific value:
 -   `<input name> >= <value>`: indicates that an input element must have
     a value greater than or equal than the given value. This is most
     useful for number and range inputs.
+-   `<input name> ~= <value>`: check if the value is a substring of the
+    current value of the input.
 
 You can also revert a test by putting the `not` keyword in front of it.
 Here are some examples:

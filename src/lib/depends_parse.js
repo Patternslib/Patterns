@@ -386,6 +386,17 @@ define(function() {
               matchFailed("\"!=\"");
             }
           }
+          if (result0 === null) {
+            if (input.substr(pos, 2) === "~=") {
+              result0 = "~=";
+              pos += 2;
+            } else {
+              result0 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"~=\"");
+              }
+            }
+          }
         }
         reportFailures--;
         if (reportFailures === 0 && result0 === null) {
