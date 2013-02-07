@@ -16,8 +16,8 @@
 			<h1>Markdown formatted content</h1>
 			<h2>Inject Markdown formatted content as HTML</h2>
 			<ol>
-				<li><a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Load and inject markdown content with data-type declaration.</a></li>
-				<li><a href="content.md" class="pat-inject" data-pat-inject="target: #target">Load and inject markdown content, automatically detected as markdown based on the file name extension.</a></li>
+				<li><a href="content/content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Load and inject markdown content with data-type declaration.</a></li>
+				<li><a href="content/content.md" class="pat-inject" data-pat-inject="target: #target">Load and inject markdown content, automatically detected as markdown based on the file name extension.</a></li>
 			</ol>
 			<div id="target">
 				Here some Markdown rendered content will appear if you click on one of the links above.
@@ -26,7 +26,7 @@
 	
 			<h2>Autoloading content from a separate Markdown file</h2>
 			
-			<a href="content.md" id="target-2" class="pat-inject autoLoading-visible" data-pat-inject="target: #target-2::element">This content will be replaced by the source content of the link, rendered as HTML.</a>
+			<a href="content/content.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">This content will be replaced by the source content of the link, rendered as HTML.</a>
 			
 			<hr/>
 	
