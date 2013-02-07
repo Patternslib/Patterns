@@ -8,8 +8,6 @@ define([
     'jquery',
     './logger'
 ], function($, logger) {
-    var log = logger.getLogger('parser');
-
     function ArgumentParser(name) {
         this.order = [];
         this.parameters = {};
@@ -18,6 +16,7 @@ define([
         this.enum_conflicts = [];
         this.groups = {};
         this.possible_groups = {};
+        this.log = logger.getLogger(name + ".parser");
     }
 
     ArgumentParser.prototype = {
@@ -131,12 +130,12 @@ define([
                             throw ("Do not know how to convert value for " + name + " to " + spec.type);
                     }
                 } catch (e) {
-                    log.warn(e);
+                    this.log.warn(e);
                     return null;
                 }
 
             if (spec.choices && spec.choices.indexOf(value)===-1) {
-                log.warn("Illegal value for " + name + ": " + value);
+                this.log.warn("Illegal value for " + name + ": " + value);
                 return null;
             }
 
@@ -145,7 +144,7 @@ define([
 
         _set: function(opts, name, value) {
             if (!(name in this.parameters)) {
-                log.debug("Ignoring value for unknown argument " + name);
+                this.log.debug("Ignoring value for unknown argument " + name);
                 return;
             }
 
@@ -178,7 +177,7 @@ define([
 
                 matches = parts[i].match(this.named_param_pattern);
                 if (!matches) {
-                    log.warn("Invalid parameter: " + parts[i]);
+                    this.log.warn("Invalid parameter: " + parts[i]);
                     break;
                 }
 
@@ -192,7 +191,7 @@ define([
                     for (var field in subopt)
                         this._set(opts, name+"-"+field, subopt[field]);
                 } else {
-                    log.warn("Unknown named parameter " + matches[1]);
+                    this.log.warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
             }
@@ -234,7 +233,7 @@ define([
                     break;
             }
             if (parts.length)
-                log.warn("Ignore extra arguments: " + parts.join(" "));
+                this.log.warn("Ignore extra arguments: " + parts.join(" "));
             return opts;
         },
 
@@ -266,7 +265,7 @@ define([
                         result[name]=this.parameters[name].value($el, name);
                         this.parameters[name].type=typeof result[name];
                     } catch(e) {
-                        log.error("Default function for " + name + " failed.");
+                        this.log.error("Default function for " + name + " failed.");
                     }
                 else
                     result[name]=this.parameters[name].value;
