@@ -1,13 +1,12 @@
 define([
     "jquery",
-    "../lib/ajax",
     "../core/parser",
     "../core/logger",
     "../registry",
     "../utils",
     "jquery-textchange",
     "tiny_mce"
-], function($, ajax, Parser, logger, registry, utils) {
+], function($, Parser, logger, registry, utils) {
     var log = logger.getLogger("pat.editTinyMCE"),
         parser = new Parser("edit-tinymce");
 
@@ -73,44 +72,32 @@ define([
             tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
-            var $tinymce, $tinyifr,
-                propagate = function(ev) {
-                    $tinyifr.trigger(ev);
-                };
             cfg.oninit = function() {
+                var $tinymce, $tinyifr;
+
                 // find tiny's iframe and edit field
                 $tinyifr = $("#" + id + "_ifr");
                 $tinymce = $tinyifr.contents().find("#tinymce");
 
-                // propagate first textchange event outside the iframe
-                $tinymce.one("textchange.pat-tinymce", propagate)
-                    .one("change.pat-tinymce", propagate);
+                // XXX: add events for undo, redo, ...
+                if ("oninput" in window) {
+                    $tinymce.on("input.pat-tinymce", function() {
+                        log.debug('translating tiny input');
+                        tinyMCE.editors[id].save();
+                        $el.trigger("input-change");
+                    });
+                } else {
+                    // this is the legacy code path for IE8
+                    $tinymce.on("change.pat-tinymce textchange.pat-tinymce", function() {
+                        log.debug('translating tiny change and textchange');
+                        tinyMCE.editors[id].save();
+                        $el.trigger("input-change");
+                    });
+                }
             };
-
-            // reactivate textchange propagation on reset and successfull submit
-            $form.on("reset.pat-tinymce pat-ajax-success.pat-tinymce", function() {
-                $tinymce
-                    .off(".pat-tinymce")
-                    .one("textchange.pat-tinymce", propagate)
-                    .one("change.pat-tinymce", propagate);
-            });
 
             // initialize editor
             tinyMCE.init(cfg);
-
-            // ajaxify form
-            var ajaxopts = {
-                beforeSerialize: (function(id) {
-                    return function() {
-                        tinyMCE.editors[id].save();
-                    };
-                })(id)
-            };
-
-            $form.on("submit.pat-tinymce", function(ev) {
-                ev.preventDefault();
-                ajax($form, ajaxopts);
-            });
 
             return $el;
         },
