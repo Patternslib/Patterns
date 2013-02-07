@@ -23,12 +23,9 @@ define([
     parser.add_argument("position-policy", "auto", ["auto", "force"]);
     parser.add_argument("trigger", "click", ["click", "hover"]);
     parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
+    parser.add_argument("source", "title", ["ajax", "content", "title"]);
     parser.add_argument("delay", 0);
     parser.add_argument("class");
-    parser.add_argument("ajax", false);
-    parser.add_argument("title", function($el) {
-        return $el.attr("title");
-    });
 
     var tooltip = {
         name: "tooltip",
@@ -40,8 +37,12 @@ define([
             return $el.each(function() {
                 var $trigger = $(this),
                     options = parser.parse($trigger, opts);
+                if (options.source==="title") {
+                    options.title=$trigger.attr("title");
+                    $trigger.removeAttr("title");
+                } else if (options.trigger==="hover")
+                    $trigger.removeAttr("title");
                 $trigger
-                    .removeAttr("title")
                     .data("patterns.tooltip", options)
                     .on("destroy", $trigger, tooltip.onDestroy);
                 tooltip.setupShowEvents($trigger);
@@ -139,7 +140,7 @@ define([
             // trigger a hide as well.
             setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
 
-            if (options.ajax) {
+            if (options.source==="ajax") {
                 var source = $trigger.attr("href").split("#"),
                     target_id = $container.find("progress").attr("id");
                 inject.execute([{
@@ -204,10 +205,18 @@ define([
             if (options["class"])
                 $container.addClass(options["class"]);
             $container.css("visibility", "hidden");
-            if (options.ajax) {
-                $content = $("<progress/>", {"id": "tooltip-load-" + count});
-            } else {
-                $content = $("<p/>").text(options.title);
+            switch (options.source) {
+            case "ajax":
+                $content=$("<progress/>", {"id": "tooltip-load-" + count});
+                break;
+            case "title":
+                $content=$("<p/>").text(options.title);
+                break;
+            case "content":
+                $content=$trigger.children().clone();
+                if (!$content.length)
+                    $content=$("<p/>").text($trigger.text());
+                break;
             }
             $container.append(
                 $("<div/>").css("display", "block").append($content))
