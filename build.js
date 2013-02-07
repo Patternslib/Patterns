@@ -14,6 +14,7 @@ function list(val) {
 
 program
     .option('-n, --no-minify', 'Do no minify package')
+    .option('--no-symlink', 'Do not symlink new bundle')
     .option('-t, --tag [version]', 'Build specific version')
     .option('-m, --modules [module1,module2,...]',
             'Include only these modules in bundle', list)
@@ -85,12 +86,14 @@ var build = function(tag, cleanup) {
             var stream = fs.createWriteStream(fullname);
             stream.write(header + js + init);
             stream.end();
-            var link = path.join(__dirname, 'bundles',
-                'patterns' + (program.minify?'.min':'') + '.js');
-            if (fs.existsSync(link)) {
-                fs.unlinkSync(link);
+            if (program.symlink) {
+                var link = path.join(__dirname, 'bundles',
+                    'patterns' + (program.minify?'.min':'') + '.js');
+                if (fs.existsSync(link)) {
+                    fs.unlinkSync(link);
+                }
+                fs.symlinkSync(filename, link);
             }
-            fs.symlinkSync(filename, link);
             console.log('Great success!');
             return cleanup();
         } else {
