@@ -1,4 +1,4 @@
-## This text is formatted in Markdown **with file name extension**
+**This text is formatted in Markdown *with file name extension***
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultrices purus vitae erat convallis iaculis.
 
@@ -6,7 +6,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultrices purus 
 - Quam non sagittis
 - Nulla feugiat 
 
-### Faucibus convallis 
+**Faucibus convallis** 
 
 > Vivamus rutrum volutpat sagittis. Etiam eu lorem justo. Vestibulum sit amet placerat est. Nunc iaculis neque ac dui tempus vel vulputate quam laoreet. 
 
