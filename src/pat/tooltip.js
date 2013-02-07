@@ -386,7 +386,7 @@ define([
                 tip_offset = {},
                 position;
 
-            for (var i=0; i<options.position.length; i++) {
+            for (var i=0; i<options.position.list.length; i++) {
                 if (options.position.policy==="force" || tooltip.isVisible(status, options.position.list[i])) {
                     position = options.position.list[i];
                     break;
