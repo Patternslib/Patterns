@@ -34,7 +34,7 @@ define([
     };
 
     // XXX: Hack
-    $("a.pat-inject").on("patterns-inject-triggered.pat-markdown", function() {
+    $(document.body).on("patterns-inject-triggered.pat-markdown", "a.pat-inject", function() {
         var $this = $(this), cfgs = $this.data("patterns.inject");
 
         if (_.url_re.test(cfgs[0].url)) {
