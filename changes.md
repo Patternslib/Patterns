@@ -2,6 +2,9 @@
 
 ## 1.2.0 - Unreleased
 
+- Remove Modernizr dependency from placeholder pattern.
+
+
 ## 1.1.0 - Released February 7, 2013
 
 - bumper pattern fetches DOM info in event handler, not only during init.
