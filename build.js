@@ -56,39 +56,43 @@ var build = function(tag, cleanup) {
     });
     p.on('exit', function(code) {
         if (code === 0) {
-            fs.open(fullname, 'a+', parseInt('0666', 8), function(err, fd){
-                if (err) {
-                    console.log(err);
-                    return cleanup();
-                }
-                if (modules.indexOf('main') == -1) {
-                    var deps = modules
-                        .map(function(e){ return '"'+e+'"';  })
-                        .join(', ');
+            var header = "/**\n" +
+                " * Patterns bundle " + tag + (hex?"-"+hex:"") + "\n" +
+                " *\n" +
+                " * See http://patternslib.com/ for more information.\n" +
+                " *\n";
+            console.log(header);
+            if (modules.indexOf('main') === -1) {
+                header += " * Included patterns:\n * - ";
+                header += program.modules.sort().join("\n * - ") + "\n";
+            }
+            header += " */";
 
-                    var code = "require(['registry', " + deps +
-                        "], function(r){r.init();});";
-                } else {
-                    var code = "require(['main']);";
-                }
-                fs.write(fd, code, null, undefined,
-                    function(err, written, buffer){
-                        if (err) {
-                            console.log(err);
-                            return cleanup();
-                        }
-                        fs.close(fd, function(){
-                            var link = path.join(__dirname, 'bundles',
-                                'patterns' + (program.minify?'.min':'') + '.js');
-                            if (fs.existsSync(link)) {
-                                fs.unlinkSync(link);
-                            }
-                            fs.symlinkSync(filename, link);
-                            console.log('Great success!');
-                            return cleanup();
-                        });
-                });
-            });
+            var js = fs.readFileSync(fullname);
+
+            var init;
+            if (modules.indexOf('main') === -1) {
+                var deps = modules
+                    .map(function(e){ return '"'+e+'"';  })
+                    .join(', ');
+
+                init = "require(['registry', " + deps +
+                    "], function(r){r.init();});";
+            } else {
+                init = "require(['main']);";
+            }
+
+            var stream = fs.createWriteStream(fullname);
+            stream.write(header + js + init);
+            stream.end();
+            var link = path.join(__dirname, 'bundles',
+                'patterns' + (program.minify?'.min':'') + '.js');
+            if (fs.existsSync(link)) {
+                fs.unlinkSync(link);
+            }
+            fs.symlinkSync(filename, link);
+            console.log('Great success!');
+            return cleanup();
         } else {
             console.log('Build failed ...');
             return cleanup();
