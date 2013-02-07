@@ -72,10 +72,7 @@ define([
         },
 
         _onClick: function(event) {
-            // XXX: hack to ignore clicks on a tooltip in our trigger element
-            if ($(event.target).attr("data-tooltip") === undefined) {
-                _.toggle(event.data);
-            }
+            _.toggle(event.data);
         },
 
         destroy: function($el) {

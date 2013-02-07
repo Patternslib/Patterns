@@ -129,6 +129,9 @@ define([
         },
 
         show: function(event) {
+            // Stop bubbling, as it causes problems if ancestor
+            // is e.g. pat-collapsible.
+            event.stopPropagation();
             event.preventDefault();
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger, true),
