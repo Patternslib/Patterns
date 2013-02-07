@@ -881,11 +881,6 @@ textarea {
 	margin-bottom: 1px;
 }
 
-input[type="text"],input[type="password"] {
-	line-height: 20px;
-	width: 230px;
-}
-
 input[type="text"],textarea,label.superImpose {
 	cursor: text;
 }
