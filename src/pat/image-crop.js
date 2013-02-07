@@ -84,22 +84,18 @@ define([
                 data.minSize = _._parseOpt(opts.minSize);
                 data.maxSize = _._parseOpt(opts.maxSize);
 
-                $this.data("patterns.image-crop", data);
+                var handler = function(c) { _.onSelect(c, data); };
 
                 $this.Jcrop({
-                    onChange: data.preview ? _.updatePreview : $.noop(),
-                    onSelect: _.onSelect,
-                    onRelease: _.updateInputs,
+                    onChange: handler,
+                    onSelect: handler,
+                    onRelease: handler,
                     aspectRatio: data.aspectRatio,
                     setSelect: data.initialCoords,
                     minSize: data.minSize,
                     maxSize: data.maxSize
                 }, function() {
-                    this.element = $this;
-                    if (data.preview) {
-                        var selection = this.tellSelect();
-                        _.updatePreview(selection);
-                    }
+                    data.api = this;
                 });
             });
         },
@@ -118,20 +114,18 @@ define([
             return ret;
         },
 
-        onSelect: function(c) {
-            var data = this.element.data("patterns.image-crop");
+        onSelect: function(c, data) {
             if (data.preview)
-                _.updatePreview.apply(this, [c, data]);
-            _.updateInputs.apply(this, [c, data]);
+                _.updatePreview(c, data);
+            _.updateInputs(c, data);
         },
 
         updatePreview: function(c, data) {
+            if (!data.api)
+                return;
             if (parseInt(c.w, 10) > 0) {
-                if (!data)
-                    data = this.element.data("patterns.image-crop");
-
                 var rx = data.preview.width/c.w, ry = data.preview.height/c.h,
-                    bounds = this.getBounds();
+                    bounds = data.api.getBounds();
 
                 data.preview.element.css({
                     width: Math.round( rx * bounds[0] ) + "px",
@@ -144,9 +138,6 @@ define([
 
         updateInputs: function(c, data) {
             if (c && c.w && parseInt(c.w, 10) > 0) {
-                if (!data)
-                    data = this.element.data("patterns.image-crop");
-
                 data.inputs.x1.attr("value", c.x);
                 data.inputs.y1.attr("value", c.y);
                 data.inputs.x2.attr("value", c.x2);
