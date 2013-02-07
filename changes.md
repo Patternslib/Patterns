@@ -2,6 +2,8 @@
 
 ## 1.2.0 - Unreleased
 
+- Depends pattern: add support for a `~=` operator to test for substrings.
+
 - Include pattern name in the parser log output. This makes it much easier to
   debug problems.
 
