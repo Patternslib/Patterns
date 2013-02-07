@@ -1,6 +1,7 @@
 # Image crop
 
 ## Description
+…
 
 ## Documentation
 
