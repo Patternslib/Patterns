@@ -2,6 +2,10 @@
 
 ## 1.2.0 - Unreleased
 
+- Markdown pattern: make sure we correctly identify autoloaded markdown content
+  referenced from a just-injected HTML fragment.
+  [Ticket 188](https://github.com/Patternslib/Patterns/issues/188)
+
 - Remove Modernizr dependency from placeholder pattern.
 
 

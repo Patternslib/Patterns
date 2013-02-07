@@ -20,6 +20,25 @@ Currently that means:
 
 Other browser version may work too, but are not actively tested against.
 
+### Installation
+
+    git clone git://github.com/Patternslib/Patterns.git
+    cd Patterns
+    npm install
+    make
+
+This will generate minified and non-minified bundles of the current Patterns
+snapshot in the `bundles` subdirectory. If you want to create bundles for a
+specific version, you can use `make bundle REF=version`. For example
+
+    make bundle REF=v1.1.0
+
+will create bundles for Patterns 1.1.0. You can set `version` to any reference
+git understands. If, for some reason, you want to build bundles for all
+previous versions of Patterns you can use
+
+    make bundles-all-tags
+
 ## Development
 
 To develop on Patterns or one of it's submodules, clone the repository
@@ -34,10 +53,20 @@ Create a branch for the feature/bug you are working on:
 For inclusion use either a GitHub pull request or create a ticket with
 a url to your external repository.
 
-### Installation
+### Running the webservice locally
 
-    git clone git://github.com/Patternslib/Patterns.git
-    make
+For testing with a web browser you can start a small standalone web server from
+the patterns git checkout.
+
+Start the server with
+
+    node webserver.js
+
+and open
+
+    http://localhost:2652
+
+with your favourite internet browser.
 
 ### Running tests
 

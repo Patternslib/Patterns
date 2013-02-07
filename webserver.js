@@ -45,15 +45,14 @@ var bundleBuilder = function(req, res, min){
 
     // The CLI interface is:
     // jam compile -i pat1 [-i pat2 [-i pat3]] -o outfile
-    var args = [ 'compile' ].concat(Object.keys(query).sort())
-        .join(' -i ').split(' ').concat(['-o', fullname, '--almond', '-v']);
-
+    var args = [ '--no-symlink' ]
+        .concat(['-m', Object.keys(query).sort().join(',')]);
     if (!min)
-        args.push('--no-minify');
+        args.push('-n');
 
     if (!fs.existsSync(fullname)) {
         // Not in cache, so generate
-        var p = spawn('./node_modules/.bin/jam', args);
+        var p = spawn('./build.js', args);
 
         if (debug) {
             p.stdout.on('data', function(data){
@@ -65,28 +64,7 @@ var bundleBuilder = function(req, res, min){
         }
         p.on('exit', function(code) {
             if (code === 0) {
-                fs.open(fullname, 'a+', 0666, function(err, fd){
-                    if (err) {
-                        console.log(err);
-                        return res.send(error_message);
-                    }
-                    var deps = Object.keys(query).sort()
-                        .map(function(e){ return '"'+e+'"';  })
-                        .join(', ');
-
-                    var code = "require(['registry', " + deps +
-                        "], function(r){r.init();});";
-                    fs.write(fd, code, null, undefined,
-                        function(err, written, buffer){
-                            if (err) {
-                                console.log(err);
-                                return res.send(error_message);
-                            }
-                            fs.close(fd, function(){
-                                return res.download(fullname);
-                            });
-                    });
-                });
+                return res.download(fullname);
             } else {
                 return res.send(error_message);
             }
