@@ -2,6 +2,9 @@
 
 ## 1.2.0 - Unreleased
 
+- Injection pattern: add missing dependency on jquery.form. 
+  [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
+
 - Depends pattern: add support for a `~=` operator to test for substrings.
 
 - Modal pattern: make sure elements inside a modal do not accidentily loose
