@@ -1,4 +1,9 @@
-# Documentation
+# Injection
+
+## Description
+…
+
+## Documentation
 
 Injection is one of the most powerful features of Patterns. It makes it
 trivial to load content from a server and include it on a web page. This
