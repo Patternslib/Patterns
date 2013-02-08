@@ -329,6 +329,11 @@ html.js .postit.guide.closed {
 
 /* @group Workflow */
 
+#patterns p {
+	margin-right: 0;
+	margin-left: 0;
+}
+
 #patterns p:before {
 	font-size: 140px;
 	text-align: center;
@@ -338,6 +343,11 @@ html.js .postit.guide.closed {
 	display: block;
 	width: 100%;
 	margin: 0 0 30px;
+}
+
+.workflow p {
+	margin-right: 0;
+	margin-left: 0;
 }
 
 
