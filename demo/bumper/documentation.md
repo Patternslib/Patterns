@@ -46,24 +46,6 @@ Option Reference
 The collapsible can be configured through a `data-pat-bumper` attribute.
 The available options are:
 
-<table>
-<col width="23%" />
-<col width="16%" />
-<col width="60%" />
-<thead>
-<tr class="header">
-<th align="left">Field</th>
-<th align="left">default</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left"><code>margin</code></td>
-<td align="left"><blockquote>
-<p>0</p>
-</blockquote></td>
-<td align="left">The distance from the edge of the element from which the 'bumped' behavior will be activated</td>
-</tr>
-</tbody>
-</table>
+| Property | Default | Description |
+| ----- | ------- | ----------- |
+| <code>margin</code> | <code>0</code> | The distance from the edge of the element from which the 'bumped' behaviour will be activated |
