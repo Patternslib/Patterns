@@ -11,9 +11,14 @@
 - Include pattern name in the parser log output. This makes it much easier to
   debug problems.
 
-- Markdown pattern: make sure we correctly identify autoloaded markdown content
-  referenced from a just-injected HTML fragment.
-  [Ticket 188](https://github.com/Patternslib/Patterns/issues/188)
+- Markdown pattern:
+
+  - Correct detection of the end of a extracted sections.
+    [Ticket 268](https://github.com/Patternslib/Patterns/issues/268)
+
+  - Make sure we correctly identify autoloaded markdown content referenced from
+    a just-injected HTML fragment.
+    [Ticket 188](https://github.com/Patternslib/Patterns/issues/188)
 
 - Remove Modernizr dependency from placeholder pattern.
 
