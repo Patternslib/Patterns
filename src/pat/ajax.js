@@ -8,7 +8,8 @@ define([
     "jquery",
     "../core/logger",
     "../core/parser",
-    "../registry"
+    "../registry",
+    "patterns-jquery-form"
 ], function($, logger, Parser, registry) {
     var log = logger.getLogger('pat.ajax'),
         parser = new Parser('ajax');
