@@ -551,7 +551,7 @@ blockquote {
 	font-family: Georgia, "Times New Roman", Times, serif;
 	font-style: italic;
 	border-left: 4px solid silver;
-	margin-left: 0;
+	margin-left: 8px;
 	padding-left: 12px;
 }
 
@@ -589,6 +589,7 @@ pre {
 	border-left-style: none;
 	padding: 30px 60px;
 	margin-bottom: 1.5em;
+	font: 16px "Courier New", Courier, mono;
 }
 
 
@@ -754,7 +755,9 @@ body>section>h1 {
 	font-style: normal;
 }
 
-section.documentation h2,section.demo h2:first-child,section.description h2 {
+section.documentation h2,
+section.demo h2:first-child,
+section.description h2 {
 	margin-bottom: 1em;
 	line-height: 1.3;
 	font-weight: bold;

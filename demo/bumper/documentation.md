@@ -1,5 +1,9 @@
-# Documentation
+# Bumper
 
+## Description
+A bumper is an element that, when the user starts scrolling, stays within view when a viewport border touches it.
+
+## Documentation
 Below is a simple example of a bumper.
 
     <div class="pat-bumper">
