@@ -1,5 +1,11 @@
-# Documentation
+# Auto submit
 
+## Description
+Auto submit will submit what the user fills out on a form without the need for the user to press the submit button. It can be used to incrementally send form input data to a server. 
+
+For instance to create a live search pattern where the search results update on every keypress. 
+
+## Documentation
 The autosubmit pattern submits a form if a form element changes. It is
 enabled by class "pat-autosubmit" for individual form elements, on
 grouping elements for all elements in the group, and on forms for all
@@ -29,8 +35,7 @@ And on the form:
      </fieldset>
     </form>
 
-What constitutes a change
--------------------------
+### What constitutes a change
 
 While for a checkbox a change is clearly defined as uncheck/check, for
 input fields there are more options.
@@ -59,8 +64,7 @@ delay until element loses focus:
       <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: defocus"/>
     </form>
 
-Combining with injection
-------------------------
+### Combining with injection
 
 Autosubmit is most useful when combined with injection. This makes it
 trivial to create a form that automatically loads content and displays
