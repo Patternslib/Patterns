@@ -45,7 +45,7 @@ injection pattern that it is loading markdown content through its
 
 You can also extract specific sections of your markdown source by specifying a 
 `source` option which points to a heading in your markdown source. For example
-if your markdown looks like thos:
+if your markdown looks like this:
 
     # Top level section
 
