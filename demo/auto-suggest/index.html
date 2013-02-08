@@ -18,18 +18,23 @@
 		</style>
 	</head>
 	<body>
-		<section class="description">
-			<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-		</section>
-		<section class="demo">
-		<h2>Demo</h2>
-		<p>Try the auto suggest pattern below with the terms 'Apples', 'Oranges', 'Oranges' and 'Bananas'.</p>
-		<input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Oranges, Bananas" type="text"></input>
-		</section>
-		<section class="documentation">
-			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
-		</section>
+		<section>
+			<h1>
+				Auto suggest
+			</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+			<h2>Demo</h2>
+			<p>Try the auto suggest pattern below with the terms 'Apples', 'Oranges', 'Oranges' and 'Bananas'.</p>
+			<input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Oranges, Bananas" type="text"></input>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
 		
+		</section>
 		<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
 		
 	</body>

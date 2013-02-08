@@ -743,12 +743,15 @@ h1,h2,h3,h4,h5,h6 {
 
 body>section>h1 {
 	margin-bottom: 0;
-	font-size: 1.2em;
+	font-size: 5em;
 	border-top: 1px solid #353f2e;
-	padding: 135px 8px 4px 312px;
+	padding: 85px 8px 4px 312px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
+	letter-spacing: 10px;
 	margin-top: 0;
+	line-height: 1em;
+	font-weight: normal;
+	font-style: normal;
 }
 
 section.documentation h2,section.demo h2:first-child,section.description h2 {
