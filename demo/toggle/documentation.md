@@ -9,9 +9,8 @@ The *toggle* pattern can be used to toggle attribute values for objects.
 It is most commonly used to toggle a CSS class.
 
     <a href="#" class="pat-toggle" data-pat-toggle="selector: #work; attr: class; value: active">Start working</a>
-    </a>
     <div id="work">
-      Working..
+      Working…
     </div>
 
 If a user clicks on the *Start working* link the `active` class is added
@@ -19,9 +18,8 @@ to the div. If the link is clicked again the `active` class is removed
 again. You can also use shorthand notation for this pattern:
 
     <a href="#" class="pat-toggle" data-pat-toggle="#work class active">Start working</a>
-    </a>
     <div id="work">
-      Working..
+      Working…
     </div>
 
 The default attribute is *class*, so you do not need to specify that
@@ -48,8 +46,7 @@ On the first click the `inactive` class will be removed and `active`
 will be added. On the next click `active` will be removed again and
 `active` restored. All listed classes will be toggled at the same time.
 
-Remembering the state
----------------------
+### Remembering the state
 
 Sometimes you need to remember the toggle state of an element. For
 example when you use a toggle to hide or show a sidebar you do not want
