@@ -96,6 +96,7 @@ define([
                     maxSize: data.maxSize
                 }, function() {
                     data.api = this;
+                    _.onSelect(this.tellSelect(), data);
                 });
             });
         },
