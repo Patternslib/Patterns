@@ -809,6 +809,12 @@ hr {
 
 a {
 	color: #3d607d;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 
