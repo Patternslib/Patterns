@@ -4,6 +4,10 @@
 
 - Depends pattern: add support for a `~=` operator to test for substrings.
 
+- Modal pattern: make sure elements inside a modal do not accidentily loose
+  their focus. This broke the handling of autofocus in modals.
+  [Ticket 266](https://github.com/Patternslib/Patterns/issues/266)
+
 - Include pattern name in the parser log output. This makes it much easier to
   debug problems.
 

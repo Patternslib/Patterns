@@ -39,7 +39,8 @@ define([
         },
 
         _init_div1: function($el) {
-            var $header = $("<div class='header' />");
+            var $header = $("<div class='header' />"),
+                activeElement = document.activeElement;
 
             $("<button type='button' class='close-panel'>Close</button>").appendTo($header);
 
@@ -48,6 +49,10 @@ define([
                 .wrapAll("<div class='panel-content' />");
             $(".panel-content", $el).before($header);
             $el.children(":first:not(.header)").prependTo($header);
+
+            // Restore focus in case the active element was a child of $el and
+            // the focus was lost during the wrapping.
+            activeElement.focus();
 
             // event handlers remove modal - first arg to bind is ``this``
             $(document).on("click.pat-modal", ".close-panel",
