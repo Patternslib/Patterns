@@ -52,10 +52,10 @@ define([
                 if (cfg.source && (header=/^(#+)\s+(.*)/.exec(cfg.source)) !== null) {
                     var level = header[1].length,
                         text = utils.escapeRegExp(header[2]),
-                        matcher = "^#{@LEVEL@}\\s+@TEXT@(.|\\n)*?^(?=#{1,@LEVEL@}\\s)";
+                        matcher = "^#{@LEVEL@}\\s*@TEXT@((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)";
                     matcher = matcher.replace(/@LEVEL@/g, level).replace(/@TEXT@/g, text);
                     matcher = new RegExp(matcher, "m");
-                    source = matcher.exec(source + '\n\n# Hail Eris!');
+                    source = matcher.exec(source);
                     if (source === null) {
                         log.warn("Could not find section \"" + cfg.source + "\" in " + cfg.url);
                         return $("<div/>").attr("data-src", cfg.url);
