@@ -13,6 +13,9 @@
 
 - Markdown pattern:
 
+  - Include section selector in `data-src` attribute.
+    [Ticket 259](https://github.com/Patternslib/Patterns/issues/259)
+
   - Correct detection of the end of a extracted sections.
     [Ticket 268](https://github.com/Patternslib/Patterns/issues/268)
 
