@@ -1073,8 +1073,8 @@ form.concise fieldset label select {
 	padding-top: 1px;
 }
 
-fieldset.comprehensive label,
-form.concise fieldset.comprehensive label {
+.comprehensive label,
+.concise .comprehensive label {
 	font-weight: normal;
 	font-style: normal;
 	position: static;
@@ -1200,7 +1200,8 @@ fieldset.condensed label textarea {
 	list-style-type: none !important;
 }
 
-fieldset.radio-list label   {
+fieldset.radio-list label,
+fieldset.comprehensive.radio-list label   {
 	display: block;
 	width: auto !important;
 	padding-left: 30px;
@@ -1302,7 +1303,8 @@ fieldset.check-list legend,
 	font-style: normal;
 }
 
-fieldset.check-list label {
+fieldset.check-list label,
+fieldset.comprehensive.check-list label {
 	display: block;
 	width: auto !important;
 	padding-left: 30px;
