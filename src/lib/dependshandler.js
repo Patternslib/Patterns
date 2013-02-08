@@ -77,6 +77,8 @@ define([
                         case ">=":
                             return value>=node.value;
                         case "~=":
+                            if (value===null)
+                                return false;
                             return value.indexOf(node.value)!=-1;
                     }
                     break;
