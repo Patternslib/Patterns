@@ -7,29 +7,31 @@
 		<link rel="stylesheet" href="autoscale.css" type="text/css">
 	</head>
 	<body>
-		<section class="description">
-			<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-		</section>
-		<section class="demo">
-		<h2>Demo</h2>
-	    <div class="narrow">
-	        Example of transforming with respect to the parent element:
-
-	        <div class="smallbox">
-	            This is how it should look originally
-	        </div>
-	        <div class="smallbox pat-auto-scale">
-	            This is how it looks after scaling
-	        </div>
-	    </div>
-	    <div class="pat-auto-scale narrow">
-	        This is a narrow scaled to the body width
-	    </div>
+		<section>
+			<h1>Auto scale</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+			<h2>Demo</h2>
+		    <div class="narrow">
+		        Example of transforming with respect to the parent element:
+	
+		        <div class="smallbox">
+		            This is how it should look originally
+		        </div>
+		        <div class="smallbox pat-auto-scale">
+		            This is how it looks after scaling
+		        </div>
+		    </div>
+		    <div class="pat-auto-scale narrow">
+		        This is a narrow scaled to the body width
+		    </div>
+		    </section>
+		    <section class="documentation">
+		    	<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+		    </section>
 	    </section>
-	    <section class="documentation">
-	    	<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
-	    </section>
-	    
 	    <a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
 	    
             <script src="../../bundles/patterns.min.js" type="text/javascript" charset="utf-8"></script>
