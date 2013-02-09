@@ -4,6 +4,16 @@
 
 @import url("fontello/css/fontello.css");
 
+@font-face { 
+	font-family: "Patticons"; 
+	src: url('fonts/patticons/patticons.woff') format('woff');
+  }
+  
+/*@font-face {
+    font-family: 'Patticons';
+    src: url('fonts/patticons/patticons.svg') format('svg'); 
+}*/
+
 body {
 	width: auto;
 	position: relative;
@@ -16,6 +26,7 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	padding: 70px 20px;
+	text-rendering: optimizeLegibility;
 }
 
 @media only screen and (max-width: 767px) {
@@ -275,9 +286,17 @@ section.demo:after {
 	color: white;
 }
 
+#component-index .behavioural a:before {
+	color: #3d607e;
+}
+
 #component-index .navigation a {
 	background-color: #c37757;
 	color: white;
+}
+
+#component-index .navigation a:before {
+	color: #c37757;
 }
 
 #component-index .layout a {
@@ -285,14 +304,26 @@ section.demo:after {
 	color: white;
 }
 
+#component-index .layout a:before {
+	color: #915e79;
+}
+
 #component-index .forms a {
 	background-color: #9ba476;
 	color: white;
 }
 
+#component-index .forms a:before {
+	color: #9ba476;
+}
+
 #component-index .fancy-stuff a {
 	background-color: #a59baf;
 	color: white;
+}
+
+#component-index .fancy-stuff a:before {
+	color: #a59baf;
 }
 
 #component-index a.current {
@@ -311,16 +342,22 @@ section.demo:after {
 	border: 1px solid white;
 	box-shadow: inset 0 1px 3px silver;
 	text-align: center;
-	font: italic normal 22px perpetua;
 	color: #2F383F;
+	font: 32px/34px Patticons;
+	text-rendering: optimizeLegibility;
+	text-shadow: 0 1px 3px silver;
 }
 
 #component-index a sup {
 	display: none;
 }
 
+#component-index .bumper:before {
+	content: "b";
+}
+
 #component-index .ajax:before {
-	background-position: 0 -416px;
+	content: "i";
 }
 
 #component-index .switching:before {
@@ -336,7 +373,10 @@ section.demo:after {
 }
 
 #component-index .auto-submit:before {
-	background-position: 0 -32px;
+	content: "s";
+	font-size: 45px;
+	line-height: 55px;
+	text-indent: 3px;
 }
 
 #component-index .auto-suggest:before {
@@ -344,7 +384,7 @@ section.demo:after {
 }
 
 #component-index .carousel:before {
-	background-position: 0 -96px;
+	content: "a";
 }
 
 #component-index .full-calendar:before {
@@ -364,7 +404,7 @@ section.demo:after {
 }
 
 #component-index .tree:before {
-	background-position: 0 -192px;
+	content: "t";
 }
 
 #component-index .focus:before {
@@ -380,7 +420,7 @@ section.demo:after {
 }
 
 #component-index .checkboxes:before {
-	background-position: 0 -255px;
+	content: "c";
 }
 
 #component-index .menu:before {
@@ -388,7 +428,7 @@ section.demo:after {
 }
 
 #component-index .modal-panel:before {
-	background-position: 0 -287px;
+	content: "m";
 }
 
 #component-index .navigation-marker:before {
@@ -421,6 +461,10 @@ section.demo:after {
 
 #component-index .zoom:before {
 	background-position: 0 32px;
+}
+
+#component-index .image-crop:before {
+	content: "r";
 }
 
 
