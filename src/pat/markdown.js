@@ -52,7 +52,7 @@ define([
                 if (cfg.source && (header=/^(#+)\s+(.*)/.exec(cfg.source)) !== null) {
                     var level = header[1].length,
                         text = utils.escapeRegExp(header[2]),
-                        matcher = "^#{@LEVEL@}\\s*@TEXT@((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)";
+                        matcher = "^#{@LEVEL@}\\s*@TEXT@((?:.|\\n)*?(?=^#{1,@LEVEL@}[^#])|.*(?:.|\\n)*)";
                     matcher = matcher.replace(/@LEVEL@/g, level).replace(/@TEXT@/g, text);
                     matcher = new RegExp(matcher, "m");
                     source = matcher.exec(source);
