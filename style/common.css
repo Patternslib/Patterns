@@ -843,6 +843,8 @@ h4 {
 	margin-bottom: .8em;
 	font-size: 1.3em;
 	line-height: 1.6;
+	padding-right: 8px;
+	padding-left: 8px;
 }
 
 h5 {
