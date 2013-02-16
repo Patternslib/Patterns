@@ -2,7 +2,7 @@ define([
     "jquery",
     "./registry",
 
-    "modernizer",
+    "modernizr",
     "less",
     "prefixfree",
     "./pat/autofocus",

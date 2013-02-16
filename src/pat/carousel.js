@@ -9,7 +9,7 @@ define([
     "../registry",
     "../core/logger",
     "../core/parser",
-    "anythingslider"
+    "jquery.anythingslider"
 ], function($, patterns, logger, Parser) {
     var log = logger.getLogger("pat.carousel"),
         parser = new Parser("carousel");
