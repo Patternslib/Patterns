@@ -10,6 +10,7 @@
     ],
     "dependencies": {},
     "devDependencies": {
+        "bungle": ">=0.0.0",
         "commander": "0.6.1",
         "express": "3.0.6",
         "git-rev": "0.2.0",
