@@ -42,15 +42,21 @@ var build = function(tag, cleanup) {
 
     // The CLI interface is:
     // jam compile -i pat1 [-i pat2 [-i pat3]] -o outfile
-    var args = [ 'compile' ].concat(['--almond', '--verbose', '-i']).
-        concat(modules.join(' -i ').split(' ')).concat(['-o', fullname]);
+    var args = [
+            'build',
+            '--almond',
+            '--verbose',
+            '-i', modules.join(','),
+            '-o', fullname
+            ];
 
     if (!program.minify)
         args.push('--no-minify');
 
-    var p = spawn(path.join(__dirname, './node_modules/.bin/jam'), args);
+    //var p = spawn(path.join(__dirname, './node_modules/.bin/bungle'), args);
+    var p = spawn(path.join(__dirname, '../bungle/bin/bungle'), args);
     p.stdout.on('data', function(data){
-        console.log('stdout ' + data);
+        console.log(data.toString());
     });
     p.stderr.on('data', function(data){
         console.log('stderr ' + data);
@@ -62,7 +68,6 @@ var build = function(tag, cleanup) {
                 " *\n" +
                 " * See http://patternslib.com/ for more information.\n" +
                 " *\n";
-            console.log(header);
             if (modules.indexOf('main') === -1) {
                 header += " * Included patterns:\n * - ";
                 header += program.modules.sort().join("\n * - ") + "\n";
@@ -71,7 +76,7 @@ var build = function(tag, cleanup) {
 
             var js = fs.readFileSync(fullname);
 
-            var init;
+            var init = '';
             if (modules.indexOf('main') === -1) {
                 var deps = modules
                     .map(function(e){ return '"'+e+'"';  })
@@ -79,8 +84,6 @@ var build = function(tag, cleanup) {
 
                 init = "require(['registry', " + deps +
                     "], function(r){r.init();});";
-            } else {
-                init = "require(['main']);";
             }
 
             var stream = fs.createWriteStream(fullname);
