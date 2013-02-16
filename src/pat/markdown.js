@@ -5,10 +5,13 @@ define([
     "../utils",
     "./inject",
     "pagedown",
+    "pagedown/Markdown.Sanitizer",
     "pagedown-extra"
-], function($, logger, registry, utils, inject) {
+], function($, logger, registry, utils, inject, Markdown, Sanitizer) {
     var log = logger.getLogger("pat.markdown");
-
+    
+    // work around packaging oddities
+    Markdown.getSanitizingConverter = Sanitizer.getSanitizingConverter;
     var converter = Markdown.getSanitizingConverter("html5");
     Markdown.Extra.init(converter, {extensions: "all"});
 
