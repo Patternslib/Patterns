@@ -1,6 +1,6 @@
 
-JAM 		?= ../node_modules/.bin/jam
-PATTERNS 	= $(shell find ../src -name "*.js")
+BUNGLE 		= node_modules/.bin/bungle
+PATTERNS 	= $(shell cd ../src; find . -name "*.js")
 TESTS 		= $(wildcard ../tests/core/*.js) $(wildcard ../tests/pat/*.js)
 TARGETS 	= index.html \
 		  TestRunner-bundle.html \
@@ -27,17 +27,18 @@ TestRunner-bundle-min.html: TestRunner.html.in
 	     -e 's#@TESTRUNNER@#src="TestRunner-bundle.js"#' $< > $@
 
 TestRunner-modules.html: TestRunner.html.in
-	sed -e 's#@PATTERNS@#src="../jam/require.js" data-main="../src/main"#' \
+	sed -e 's#@PATTERNS@#src="../bungledeps/require.js" data-main="../src/main"#' \
 	     -e 's#@TESTRUNNER@#src="TestRunner-modules.js"#' $< > $@
-
-TestRunner-bundle.js: TestRunner-modules.js
-	$(JAM) compile -i ../tests/$< $(patsubst %,-i %,$(TESTS)) \
-	    $(patsubst %,-E ../tests/%,$(PATTERNS)) -o $@
 
 empty  		:=
 space 		:= $(empty) $(empty)
 comma 		:= ,
 TESTLIST 	= $(subst $(space),$(comma),$(patsubst %,\"%\",$(TESTS)))
+
+TestRunner-bundle.js: TestRunner-modules.js
+	cd ..; \
+	$(BUNGLE) build -i ../tests/$<,$(subst $(space),$(comma),$(TESTS)) \
+	    -E $(subst $(space),$(comma),$(PATTERNS)) -o tests/$@ 
 
 TestRunner-modules.js: TestRunner.js.in $(TESTS)
 	sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@

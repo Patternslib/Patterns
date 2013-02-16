@@ -1,12 +1,18 @@
 
 NPM 		?= npm
-JAM 		?= node_modules/.bin/jam
+BUNGLE 		?= node_modules/.bin/bungle
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
 
+ifeq ($(shell uname),Darwin)
+SED		= sed -i "" -E
+else
+SED		= sed -i -r
+endif
+
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
-THIRDPARTY	= $(shell find jam -name '*.js')
+THIRDPARTY	= $(shell find bungledeps -name '*.js')
 TARGETS		= bundles/patterns.js bundles/patterns.min.js
 
 
@@ -16,8 +22,7 @@ all:: $(TARGETS)
 bootstrap:
 	mkdir -p bundles
 	$(NPM) install
-	@echo "Not calling \"jam install\". Jam packages are in git for now"
-	#$(JAM) install
+	$(BUNGLE) install
 
 bundles: check-modules $(TARGETS)
 
@@ -45,21 +50,21 @@ bundles-all-tags:
 
 
 use-bundle:
-	sed -i -e 's,<script data-main="src/main" src="jam/require.js",<script src="bundles/patterns.min.js",' index.html
-	sed -i -e 's,<script data-main="../src/main" src="../jam/require.js",<script src="../bundles/patterns.min.js",' demo/*html
-	sed -i -e 's,<script data-main="../../src/main" src="../../jam/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
+	$(SED) -e 's,<script data-main="src/main" src="bungledeps/require.js",<script src="bundles/patterns.min.js",' index.html
+	$(SED) -e 's,<script data-main="../src/main" src="../bungledeps/require.js",<script src="../bundles/patterns.min.js",' demo/*html
+	$(SED) -e 's,<script data-main="../../src/main" src="../../bungledeps/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
 
 use-modules:
-	sed -i -r -e 's,<script src="bundles/patterns.(min.)?js",<script data-main="src/main" src="jam/require.js",' index.html
-	sed -i -r -e 's,<script src="../bundles/patterns.(min.)?js",<script data-main="../src/main" src="../jam/require.js",' demo/*html
-	sed -i -r -e 's,<script src="../../bundles/patterns.(min.)?js",<script data-main="../../src/main" src="../../jam/require.js",' demo/*/*.html
+	$(SED) -e 's,<script src="bundles/patterns.(min.)?js",<script data-main="src/main" src="bungledeps/require.js",' index.html
+	$(SED) -e 's,<script src="../bundles/patterns.(min.)?js",<script data-main="../src/main" src="../bungledeps/require.js",' demo/*html
+	$(SED) -e 's,<script src="../../bundles/patterns.(min.)?js",<script data-main="../../src/main" src="../../bungledeps/require.js",' demo/*/*.html
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
-	sed -i -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
+	$(SED) -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
-demo/calendar/fullcalendar.css: jam/jquery-fullcalendar/fullcalendar/fullcalendar.css
-	cp jam/jquery-fullcalendar/fullcalendar/fullcalendar.css demo/calendar/fullcalendar.css
+demo/calendar/fullcalendar.css: bungledeps/jquery.fullcalendar/fullcalendar/fullcalendar.css
+	cp bungledeps/jquery-fullcalendar/fullcalendar/fullcalendar.css demo/calendar/fullcalendar.css
 
 
 JSHINTEXCEPTIONS = src/core/parser.js \
