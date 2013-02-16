@@ -1,5 +1,6 @@
 .DS_Store
-/bundles/
+/bundles
+/bungledeps
 /nixenv
 /node_modules
 /tests/index.html

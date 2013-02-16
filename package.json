@@ -40,28 +40,27 @@
             "email": "flo@chaoflow.net"
         }
     ],
-    "jam": {
-        "baseUrl": "src",
-        "main": "src/main.js",
-        "dependencies": {
-            "anythingslider": ">=1.8.15",
-            "autoSuggest": "1.4.0",
-            "chosen-js": ">=0.9.8",
-            "jasmine": ">=1.3.1",
-            "jcrop": ">=1.0.0",
-            "jquery": "1.8.x",
-            "jquery-fullcalendar": ">=1.5.4-jam.2",
-            "jquery-placeholder": "2.0.7",
-            "jquery-textchange": "1.4.0",
-            "less": ">=1.3.1",
-            "logging": ">=1.0.0-jam.1",
-            "modernizer": ">=2.6.2",
-            "pagedown": ">=1.0.0-jam.5",
-            "pagedown-extra": ">=1.0.0-jam.4",
-            "patterns-jquery-form": ">=3.2.24",
-            "patterns-jquery-validation": ">=1.10.0-jam.2",
-            "prefixfree": "1.0.7",
-            "tiny_mce": "3.5.7"
-        }
+    "bungle": {
+        "dependencies": [
+            "jcrop",
+            "jquery",
+            "jquery.anythingslider",
+            "jquery.autosuggest",
+            "jquery.chosen",
+            "jquery.form",
+            "jquery.fullcalendar",
+            "jquery.placeholder",
+            "jquery.textchange",
+            "jquery.validation",
+            "less",
+            "logging",
+            "modernizr",
+            "pagedown",
+            "pagedown-extra",
+            "prefixfree",
+            "text",
+            "tinymce"
+        ],
+        "main": "src/main.js"
     }
 }
