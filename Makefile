@@ -12,7 +12,7 @@ SED		= sed -i -r
 endif
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
-THIRDPARTY	= $(shell find bungledeps -name '*.js')
+THIRDPARTY	= bungledeps $(shell find bungledeps -name '*.js')
 TARGETS		= bundles/patterns.js bundles/patterns.min.js
 
 
@@ -22,9 +22,12 @@ all:: $(TARGETS)
 bootstrap:
 	mkdir -p bundles
 	$(NPM) install
-	$(BUNGLE) install
 
 bundles: check-modules $(TARGETS)
+
+bungledeps:
+	$(BUNGLE) update
+	$(BUNGLE) install
 
 bundles/patterns.js: $(SOURCES) $(THIRDPARTY) package.json
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
