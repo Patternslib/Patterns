@@ -77,14 +77,14 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 		   src/lib/htmlparser.js
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
-check-modules:
+check-modules: $(TARGETS) $(THIRDPARTY)
 	$(JSHINT) --config tests/jshintrc tests/core/*.js tests/pat/*.js
 	make -C tests TestRunner-modules.html TestRunner-modules.js
 	@echo Running checks on modules
 	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
 
-check: check-modules $(TARGETS)
+check: check-modules $(TARGETS) $(THIRDPARTY)
 	make -C tests
 	@echo Running checks on bundles
 	@echo =========================
