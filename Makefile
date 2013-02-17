@@ -19,10 +19,6 @@ TARGETS		= bundles/patterns.js bundles/patterns.min.js
 
 all:: $(TARGETS)
 
-bootstrap:
-	mkdir -p bundles
-	$(NPM) install
-
 bundles: check-modules $(TARGETS)
 
 bungledeps:
@@ -109,5 +105,5 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bootstrap bundle bundles bundles-all-tags check check-modules check-nix clean doc phantom-via-nix use-modules use-bundles
+.PHONY: all bundle bundles bundles-all-tags check check-modules check-nix clean doc phantom-via-nix use-modules use-bundles
 

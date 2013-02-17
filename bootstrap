@@ -2,13 +2,18 @@
 
 cd "$(dirname "$0")"
 
-make bootstrap
-make bundles
+mkdir -p bundles
+npm install
+node_modules/.bin/bungle update
+node_modules/.bin/bungle install
+./build.js -n
+./build.js
 
 cat > .git/hooks/post-checkout <<-'EOF'
 	#!/bin/sh
 	cd "$(dirname "$0")/../.."
-	make bundles
+        ./build.js -n
+        ./build.js
 EOF
 
 chmod +x .git/hooks/post-checkout
