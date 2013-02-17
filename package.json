@@ -14,7 +14,6 @@
         "commander": "0.6.1",
         "express": "3.0.6",
         "git-rev": "0.2.0",
-        "jamjs": "~0.2.13",
         "jshint": "~0.9.1",
         "pegjs": "0.7.0",
         "phantom-jasmine": "0.1.8",

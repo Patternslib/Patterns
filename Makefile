@@ -12,7 +12,7 @@ SED		= sed -i -r
 endif
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
-THIRDPARTY	= bungledeps $(shell find bungledeps -name '*.js')
+THIRDPARTY	= bungledeps $(shell find bungledeps -name '*.js' 2>/dev/null)
 TARGETS		= bundles/patterns.js bundles/patterns.min.js
 
 

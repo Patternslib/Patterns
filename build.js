@@ -53,8 +53,7 @@ var build = function(tag, cleanup) {
     if (!program.minify)
         args.push('--no-minify');
 
-    //var p = spawn(path.join(__dirname, './node_modules/.bin/bungle'), args);
-    var p = spawn(path.join(__dirname, '../bungle/bin/bungle'), args);
+    var p = spawn(path.join(__dirname, 'node_modules/.bin/bungle'), args);
     p.stdout.on('data', function(data){
         console.log(data.toString());
     });
