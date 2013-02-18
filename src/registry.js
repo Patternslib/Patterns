@@ -35,7 +35,7 @@ define([
             });
         },
 
-        scan: function(content) {
+        scan: function(content, do_not_catch_init_exception) {
             var $content = $(content),
                 all = [], allsel,
                 pattern, $match, plog, name;
@@ -82,7 +82,11 @@ define([
                             pattern.init($el);
                             plog.debug("done.");
                         } catch (e) {
-                            plog.error("Caught error:", e);
+                            if (do_not_catch_init_exception) {
+                              throw e;
+                            } else {
+                              plog.error("Caught error:", e);
+                            }
                         }
                     }
                 }
