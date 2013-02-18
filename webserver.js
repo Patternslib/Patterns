@@ -19,10 +19,6 @@ app.configure(function(){
     app.use(express.compress());
 });
 
-git.tag(function (str) {
-    tag = str;
-});
-
 var bundleBuilder = function(req, res, min){
     var version = req.params.version || tag;
     var query = req.query;
@@ -77,7 +73,10 @@ var bundleBuilder = function(req, res, min){
 app.get('/getBundle', function(req, res){
     var minify = req.query.minify === 'minify';
     delete req.query.minify;
-    bundleBuilder(req, res, minify);
+    git.tag(function (str) {
+        tag = str;
+        bundleBuilder(req, res, minify);
+    });
 });
 
 app.get('/bundles/:name', function(req, res){
