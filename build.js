@@ -71,7 +71,7 @@ var build = function(tag, cleanup) {
                 header += " * Included patterns:\n * - ";
                 header += program.modules.sort().join("\n * - ") + "\n";
             }
-            header += " */";
+            header += " */\n\n";
 
             var js = fs.readFileSync(fullname);
 
