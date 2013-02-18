@@ -2,6 +2,9 @@
 
 ## 1.2.0 - Unreleased
 
+- Switch dependency management from jamjs to bungle. Remove all third party
+  packages from the source tree. 
+
 - Add option to registry.scan to let init exceptions through (garbas)
 
 - Injection pattern: add missing dependency on jquery.form. 
