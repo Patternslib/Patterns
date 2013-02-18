@@ -2,6 +2,8 @@
 
 ## 1.2.0 - Unreleased
 
+- Add option to registry.scan to let init exceptions through (garbas)
+
 - Injection pattern: add missing dependency on jquery.form. 
   [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
 
