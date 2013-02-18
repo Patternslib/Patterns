@@ -3,7 +3,7 @@ define([
     "../core/logger",
     "../utils",
     "../registry",
-    "jquery-fullcalendar"
+    "jquery.fullcalendar"
 ], function($, logger, utils, registry) {
     "use strict";
 
