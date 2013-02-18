@@ -4,8 +4,8 @@ define([
     "../core/logger",
     "../registry",
     "../utils",
-    "jquery-textchange",
-    "tiny_mce"
+    "jquery.textchange",
+    "tinymce"
 ], function($, Parser, logger, registry, utils) {
     var log = logger.getLogger("pat.editTinyMCE"),
         parser = new Parser("edit-tinymce");

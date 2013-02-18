@@ -13,8 +13,8 @@ define([
     "jquery",
     "../core/parser",
     "../registry",
-    "autoSuggest",
-    "patterns-jquery-form"
+    "jquery.autosuggest",
+    "jquery.form"
 ], function($, Parser, registry) {
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");
