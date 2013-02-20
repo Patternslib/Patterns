@@ -3,14 +3,6 @@
 cd "$(dirname "$0")"
 cd "$(dirname "$(readlink "$(basename "$0")")")"
 
-# remove old checkout hook, we use vercmp to detect this hook in a
-# copied form
-test -e .git/hooks/post-checkout -a ! -L .git/hooks/post-checkout \
-    && grep -q './build.js -n' .git/hooks/post-checkout \
-    && grep -v -q vercmp .git/hooks/post-checkout \
-    && rm .git/hooks/post-checkout
-
-
 # install bootstrap as checkout hook
 if [ ! -e .git/hooks/post-checkout ]; then
     while [ "$answer" != "y" -a "$answer" != "n" ]; do
