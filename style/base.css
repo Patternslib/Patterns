@@ -8,12 +8,14 @@
 }
 
 body {
-	width: 100%;
 	max-width: 100%;
-	margin: 0;
-	display: block;
-	float: left;
-	padding: 0;
+}
+
+#main
+ {
+	width: 940px;
+	overflow: hidden;
+	position: relative;
 }
 
 /* @group News */
@@ -63,7 +65,6 @@ body {
 
 #content {
 	clear: both;
-	width: 940px;
 	padding-right: 80px;
 	padding-left: 80px;
 }
@@ -86,6 +87,184 @@ body {
 	background-size: 100% auto;
 	margin-top: 30px;
 }
+
+/* @group Download form */
+
+.component-index {
+	padding-left: 80px;
+	padding-right: 80px;
+	position: relative;
+	top: 0;
+}
+
+.state-home .component-index {
+	transform: rotateX( 50deg ) scaleX(4);
+	top: -710px;
+	left: -1050px;
+}
+
+.component-index h2 {
+	clear: both;
+	padding-left: 23px;
+	font-size: 15px;
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	margin-bottom: 5px;
+	overflow: hidden;
+}
+
+.state-home .component-index h2 {
+	height: 0;
+}
+
+.component-index .checklist label {
+	overflow: hidden;
+	float: left;
+	width: 25%;
+	padding-right: 23px;
+	padding-left: 0;
+	box-sizing: border-box;
+	line-height: 50px;
+	position: relative;
+	margin-right: 0;
+	margin-left: 0;
+	margin-bottom: 10px;
+	user-select: none;
+}
+
+.state-documentation .component-index .checklist label {
+}
+
+.state-download .component-index .checklist label {
+	padding-left: 43px;
+}
+
+.state-home .component-index .checklist label {
+	height: 192px;
+}
+
+.component-index .checklist label:before,
+.component-index .checklist label:after {
+	content:  " ";
+	height: 1px;
+	background-color: silver;
+	display: block;
+	margin-left: -30px;
+	margin-right: -8px;
+}
+
+.state-home .component-index .checklist label:before,
+.component-index .checklist label:after {
+	opacity: 0;
+}
+
+/* @group Label link */
+
+.component-index .checklist label a {
+	display: block;
+	position: relative;
+	z-index: -1;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	color: white;
+	text-shadow: #000000 0 -1px 0;
+	font-weight: normal;
+	font-style: normal;
+	padding-right: 0;
+	transition: all 1s;
+}
+
+.state-documentation .component-index .checklist label a {
+	z-index: 0;
+}
+
+.state-home .component-index .checklist label a {
+	width: 60px;
+	-moz-transform: scale(3.5);
+	-moz-transform-origin: 0 0 ;
+	zoom: 3.5;
+	line-height: 60px;
+}
+
+.moz .state-home .component-index .checklist label a {
+	line-height: inherit;
+}
+
+/* @end */
+
+.component-index .checklist {
+	transition: margin-bottom 1s;
+}
+
+.state-home .component-index .checklist {
+	margin-bottom: 0;
+}
+
+.component-index .core label a:before {
+	box-shadow: inset 0 0 1px gray;
+	color: gray;
+}
+
+.component-index .behavioural label a:before {
+	background-color: #3d607e;
+	color: white;
+}
+
+.component-index .navigation label a:before {
+	background-color: #c37757;
+	color: white;
+}
+
+.component-index .layout label a:before {
+	background-color: #915e79;
+	color: white;
+}
+
+.component-index .forms label a:before {
+	background-color: #9ba476;
+	color: white;
+}
+
+.component-index .fancy label a:before {
+	background-color: #a59baf;
+	color: white;
+}
+
+.component-index label a:before {
+	content: " ";
+	width: 32px;
+	display: inline-block;
+	height: 32px;
+	vertical-align: middle;
+	margin: -8px 10px -3px 8px;
+	border-radius: 4px;
+	background: #feffff url(../style/component-icons.svg) no-repeat 0 32px;
+	border: 1px solid rgba(254,255,255,0.3);
+	text-align: center;
+	color: #2F383F;
+	font: 32px/34px Patticons;
+	text-rendering: optimizeLegibility;
+	text-shadow: 0 1px 3px silver;
+	padding: 5px;
+}
+
+.component-index .checklist label input {
+	/*position: absolute;*/
+	left: 4px;
+	position: absolute;
+	top: 16px;
+	transition: left 1s;
+}
+
+state-download .component-index .checklist label input {
+	left: 44px;
+}
+
+
+
+/* @end */
 
 /* @group Postit */
         
@@ -407,111 +586,22 @@ html.js .postit.guide.closed {
 
 /* @end */
 
-/* @group Section download */
-
-#download {
-	padding-bottom: 40px;
-}
-
-#download .download-options {
-		background: rgb(255,255,255); /* Old browsers */
-background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
-border-radius: 4px;
-	margin-left: 0;
-	margin-right: 0;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-	border: 1px solid #e0e0e0;
-}
-
-#download .columns {
-	text-shadow: white 0 1px 0;
-	text-align: center;
-	padding-top: 20px;
-	padding-bottom: 10px;
-	height: 180px;
-}
-
-#download .columns p {
-	font-size: 10px;
-	line-height: 20px;
-	margin-bottom: 12px;
-}
-
-#download .columns h3 {
-	font-size: 18px;
-	margin-bottom: 8px;
-}
-
-#download textarea.url {
-	width: 100%;
-	font-size: 9px;
-	line-height: 12px;
-	padding: 6px;
-	height: 64px;
-}
-
-.clone-patterns-large img {
-	margin-top: 25px;
-}
-
-a.download-patterns-large,
-a.clone-patterns-large {
-	text-decoration: none;
-}
-
-.download-patterns-large a:hover,
-.clone-patterns-large a :hover {
-	text-decoration: underline;
-}
-
-.download-patterns-large em.label {
-	clear: left;
-	display: block;
-	font-weight: bold;
-	color: #838383;
-	font-size: 12px;
-	text-align: center;
-	padding-top: 8px;
-	font-style: normal;
-}
-
-
-
-/* @end */
-
 /* @group Site header */
 
-/*body:before {
-	content: " ";
-	position: absolute;
-	top: 0;
-	right: 0;
-	left: 0;
-	width: 100%;
-	height: 469px;
-	display: block;
-	background-size: 100% auto;
-	border-bottom: 10px solid #8A637A;
-	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	background-color: rgb(226,211,182);  Old browsers 
-	z-index: 1;
-	border-top: 1px solid #bfb197;
-}*/
-
 #site-header {
-	width: 100%;
 	z-index: 10;
 	
 	position: relative;
-	margin: 20px 0 40px;
+	margin: 20px -80px 40px;
 	border-top: 1px solid silver;
 	box-shadow: 0 1px 4px gray;
+	perspective: 200px;
+	perspective-origin: 100% 30%;
+	background-image: radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%)
+}
+
+#site-header.state-home {
+	height: 500px;
 }
 
 #site-header > img {
@@ -523,31 +613,35 @@ a.clone-patterns-large {
 	position: absolute;
 	left: 50%;
 	margin-left: -50px;
-	top: 255px;
+	top: 40px;
 	padding-left: 10px;
 }
 
 #site-header .acquire a {
 	margin-right: 40px;
 	display: inline-block;
+	top: 40px;
 }
 
 #site-header .acquire a img {
 	max-width: 140px;
+	top: 40px;
 }
 
 #site-header blockquote {
-	color: #7f7c79;
-	text-shadow: white 0 1px 0;
+	color: white;
 	line-height: 1.8;
-	font-size: 20px;
-	padding-left: 500px;
-	padding-right: 50px;
-	width: 450px;
-	margin: -40px 0 -500px -50px;
+	font-size: 26px;
 	position: absolute;
-	top: 50%;
 	display: block;
+	margin-right: 0;
+	margin-top: 0;
+	margin-left: 0;
+	background-image: linear-gradient(bottom, rgba(0,0,0,0) 13%, rgba(0,0,0,1) 100%);
+	left: 0;
+	right: 0;
+	top: 0;
+	padding: 160px 30px 160px 495px;
 }
 
 @media (max-width: 570px) {

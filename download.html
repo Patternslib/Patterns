@@ -16,7 +16,7 @@
 	<body>
 		<div id="content" class="pat-auto-scale">
 			<section>
-				<form action="getBundle">
+				<form action="getBundle" class="row component-index ">
 					<fieldset class="radio-list">       
 		                <legend>Bundle type</legend>    
 		                <label>
@@ -26,7 +26,7 @@
 		                    <input type="radio" name="minify" value="minify">Minified</input>
 		                </label>
 		            </fieldset>
-		            <fieldset class="check-list pat-checklist">
+		            <fieldset class="checklist pat-checklist">
 		            	<legend>Patterns</legend>
 		            	
 		            	  <div class="functions">
@@ -36,18 +36,18 @@
 		            	 
 		           			<h2>Core</h2>
 		           			
-		           			<fieldset class="check-list">
+		           			<fieldset class="checklist core">
 			           			<label class="modernizr">
 			           			    <input type="checkbox" name="modernizer" checked/>
-			           			    Modernizr
+			           			    <a>Modernizr</a>
 			           			</label>
 			           			<label class="less">
 			           			    <input type="checkbox" name="less" checked/>
-			           			    Less
+			           			    <a>Less</a>
 			           			</label>
 			           			<label class="prefix-free">
 			           			    <input type="checkbox" name="prefixfree" checked/>
-			           			    Prefixfree
+			           			    <a>Prefixfree</a>
 			           			</label>
 			           			<label class="depends">
 			           			    <input type="checkbox" name="pat/depends" checked/>
@@ -57,7 +57,7 @@
 		            	 
 		            	  	<h2>Behavioural</h2>
 		            	  	
-		            	  	<fieldset class="check-list">
+		            	  	<fieldset class="checklist behavioural">
 			            	  	<label class="inject">
 			            	  	    <input type="checkbox" name="pat/inject" checked/>
 			            	  	    <a class="navigation ajax" href="inject/index.html" title="AJAX injection">Injection (AJAX)</a>
@@ -82,7 +82,7 @@
 		            	  	
 		            	  	<h2>Forms</h2>
 		            	  	
-		            	  	<fieldset class="check-list">
+		            	  	<fieldset class="checklist forms">
 			            	  	<label class="autofocus">
 			            	  	    <input type="checkbox" name="pat/autofocus" checked/>		            	  	    
 			            	  	    <a class="navigation autofocus" href="autofocus/index.html" title="Auto focus">Autofocus</a> 
@@ -105,7 +105,7 @@
 			            	  	</label>
 			            	  	<label class="checklist">
 			            	  	    <input type="checkbox" name="pat/checklist" checked/>
-			            	  	    <a class="navigation checkboxes" href="check-list/index.html" title="checklist">Checkboxes</a>
+			            	  	    <a class="navigation checkboxes" href="checklist/index.html" title="checklist">Checkboxes</a>
 			            	  	</label>   
 			            	  	<label class="form">
 			            	  	    <input type="checkbox" name="pat/form-state" checked/>
@@ -119,21 +119,23 @@
 		            	  	
 							<h2>Navigation</h2>
 							
-							<label class="tree">
-								<a class="navigation tree" href="expandable-tree/index.html" title="">Expandable tree</a>
-							</label>
-		            	  	<label class="navigation">
-		            	  	    <input type="checkbox" name="pat/navigation" checked/>
-								<a class="navigation navigation-marker" href="navigation/index.html" title="Navigation markers">Navigation marker</a>
-		            	  	</label>
-		               		<label class="bread-crumbs">
-		               		    <input type="checkbox" name="pat/breadcrumbs" checked/>
-		               		    <a>Breadcrumbs</a>
-		               		</label>
+							<fieldset class="checklist navigation">
+								<label class="tree">
+									<a class="navigation tree" href="expandable-tree/index.html" title="">Expandable tree</a>
+								</label>
+			            	  	<label class="navigation">
+			            	  	    <input type="checkbox" name="pat/navigation" checked/>
+									<a class="navigation navigation" href="navigation/index.html" title="Navigation markers">Navigation</a>
+			            	  	</label>
+			               		<label class="bread-crumbs">
+			               		    <input type="checkbox" name="pat/breadcrumbs" checked/>
+			               		    <a>Breadcrumbs</a>
+			               		</label>
+		               		</fieldset>
 		               		
 		               		<h2>Layout</h2>
 		               		
-		               		<fieldset class="check-list">
+		               		<fieldset class="checklist layout">
 			               		<label class="auto-scale">
 			               		    <input type="checkbox" name="pat/autoscale" checked/>
 			               		    <a class="navigation auto-scale" href="auto-scale/index.html" title="Auto scale">Auto scaling</a>
@@ -148,12 +150,13 @@
 			               		</label>
 			               		<label class="legend">
 			               		    <input type="checkbox" name="pat/legend" checked/>
-			               		    <a>Legend Transform</a>
+			               		    <a>Legend</a>
 			               		</label>
 		               		</fieldset>
 		               		               		
 	               			<h2>Fancy stuff</h2>
 	               			
+	               			<fieldset class="checklist fancy">
 	               			<label class="carousel">
 	               			    <input type="checkbox" name="pat/carousel" checked/>
 	               			    <a class="navigation carousel" href="carousel/index.html" title="">Carousel</a>
@@ -164,7 +167,7 @@
 	               			</label>
 	               			<label class="tinymce">
 	               			    <input type="checkbox" name="pat/edit-tinymce" checked/>
-	               			    <a class="navigation tiny-mce" href="edit-tinymce/index.html" title="Rich editor">Tiny MCE rich editor</a>
+	               			    <a class="navigation tiny-mce" href="edit-tinymce/index.html" title="Rich editor">Tiny MCE</a>
 	               			</label>
 	               			<label class="modal">
 	               			    <input type="checkbox" name="pat/modal" checked/>

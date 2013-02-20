@@ -236,7 +236,7 @@ section.demo:after {
 
 /* @group Component index */
 
-#component-index {
+nav.component-index {
 	float: left;
 	border: 1px solid silver;
 	margin-top: 60px;
@@ -251,17 +251,23 @@ section.demo:after {
 	width: 900px;
 }
 
-#component-index h4 {
+@media only screen and (max-width: 767px) {
+
+nav.component-index {
+	width: auto;
+} }
+
+nav.component-index h4 {
 	clear: both;
 	font-size: 16px;
 	margin-top: 0;
 }
 
-#demo #component-index {
+#demo nav.component-index {
 	margin-top: 0;
 }
 
-#component-index a {
+nav.component-index a {
 	float: left;
 	font-size: 12px;
 	background-color: #efefef;
@@ -281,56 +287,56 @@ section.demo:after {
 	margin-left: 2%;
 }
 
-#component-index .behavioural a {
+nav.component-index .behavioural a {
 	background-color: #3d607e;
 	color: white;
 }
 
-#component-index .behavioural a:before {
+nav.component-index .behavioural a:before {
 	color: #3d607e;
 }
 
-#component-index .navigation a {
+nav.component-index .navigation a {
 	background-color: #c37757;
 	color: white;
 }
 
-#component-index .navigation a:before {
+nav.component-index .navigation a:before {
 	color: #c37757;
 }
 
-#component-index .layout a {
+nav.component-index .layout a {
 	background-color: #915e79;
 	color: white;
 }
 
-#component-index .layout a:before {
+nav.component-index .layout a:before {
 	color: #915e79;
 }
 
-#component-index .forms a {
+nav.component-index .forms a {
 	background-color: #9ba476;
 	color: white;
 }
 
-#component-index .forms a:before {
+nav.component-index .forms a:before {
 	color: #9ba476;
 }
 
-#component-index .fancy-stuff a {
+nav.component-index .fancy-stuff a {
 	background-color: #a59baf;
 	color: white;
 }
 
-#component-index .fancy-stuff a:before {
+nav.component-index .fancy-stuff a:before {
 	color: #a59baf;
 }
 
-#component-index a.current {
+nav.component-index a.current {
 	outline: solid 2px black;
 }
 
-#component-index a:before {
+nav.component-index a:before {
 	content: " ";
 	width: 32px;
 	display: inline-block;
@@ -348,145 +354,149 @@ section.demo:after {
 	text-shadow: 0 1px 3px silver;
 }
 
-#component-index a sup {
+nav.component-index a sup {
 	display: none;
 }
 
-#component-index .bumper:before {
+/* @group Patticons */
+
+.component-index .bumper:before {
 	content: "b";
 }
 
-#component-index .ajax:before {
+.component-index .ajax:before {
 	content: "i";
 }
 
-#component-index .switching:before {
+.component-index .switching:before {
 	
 }
 
-#component-index .autofocus:before {
+.component-index .autofocus:before {
 	background-position: 0 0;
 }
 
-#component-index .auto-load:before {
+.component-index .auto-load:before {
 	
 }
 
-#component-index .auto-submit:before {
+.component-index .auto-submit:before {
 	content: "s";
 	font-size: 45px;
 	line-height: 55px;
 	text-indent: 3px;
 }
 
-#component-index .auto-suggest:before {
+.component-index .auto-suggest:before {
 	background-position: 0 -64px;
 }
 
-#component-index .carousel:before {
+.component-index .carousel:before {
 	content: "a";
 }
 
-#component-index .full-calendar:before {
+.component-index .full-calendar:before {
 	content: "k";
 }
 
-#component-index .toggle:before {
+.component-index .toggle:before {
 	background-position: 0 -480px;
 }
 
-#component-index .auto-scale:before {
+.component-index .auto-scale:before {
 	content: "f";
 	font-size: 87px;
 	line-height: 54px;
 }
 
-#component-index .collapsible:before {
+.component-index .collapsible:before {
 	background-position: 0 -128px;
 }
 
-#component-index .sortable:before {
+.component-index .sortable:before {
 	content: "o";
 }
 
-#component-index .tiny-mce:before {
+.component-index .tiny-mce:before {
 	content: "e";
 }
 
-#component-index .markdown:before {
+nav.component-index .markdown:before {
 	content: "d";
 }
 
-#component-index .depends:before {
+.component-index .depends:before {
 	background-position: 0 -160px;
 }
 
-#component-index .tree:before {
+.component-index .tree:before {
 	content: "t";
 }
 
-#component-index .focus:before {
+.component-index .focus:before {
 	background-position: 0 32px;
 }
 
-#component-index .form-validation:before {
+.component-index .form-validation:before {
 	background-position: 0 -225px;
 }
 
-#component-index .checked-flag:before {
+nav.component-index .checked-flag:before {
 	background-position: 0 -450px;
 }
 
-#component-index .checkboxes:before {
+.component-index .checkboxes:before {
 	content: "c";
 }
 
-#component-index .menu:before {
+.component-index .menu:before {
 	background-position: 0 32px;
 }
 
-#component-index .modal-panel:before {
+.component-index .modal-panel:before {
 	content: "m";
 }
 
-#component-index .navigation-marker:before {
+.component-index .navigation-marker:before {
 	background-position: 0 32px;
 }
 
-#component-index .multi-combobox:before {
+.component-index .multi-combobox:before {
 	background-position: 0 32px;
 }
 
-#component-index .placeholder:before {
+.component-index .placeholder:before {
 	background-position: 0 32px;
 }
 
-#component-index .self-healing:before {
+.component-index .self-healing:before {
 	background-position: 0 -352px;
 }
 
-#component-index .breadcrumbs:before {
+.component-index .breadcrumbs:before {
 	background-position: 0 -320px;
 }
 
-#component-index .sorting:before {
+.component-index .sorting:before {
 	background-position: 0 -383px;
 }
 
-#component-index .tooltip:before {
+.component-index .tooltip:before {
 	content: "l";
 	font-size: 68px;
 	line-height: 79px;
 	text-indent: 3px;
 }
 
-#component-index .zoom:before {
+.component-index .zoom:before {
 	content: "z";
 }
 
-#component-index .image-crop:before {
+.component-index .image-crop:before {
 	content: "r";
 }
+
+/* @end */
 
 
 
@@ -1370,37 +1380,31 @@ ul.checkList li {
 
 /* @group Check List */
 
-.checkList {
-	list-style-type: none !important;
-	margin: 0 0 20px;
-	padding-bottom: 4px !important;
-}
-
-fieldset.check-list legend,
-.check-list p.legend {
+fieldset.checklist legend,
+.checklist p.legend {
 	font-weight: normal;
 	font-style: normal;
 }
 
-fieldset.check-list label,
-fieldset.comprehensive.check-list label {
+fieldset.checklist label,
+fieldset.comprehensive.checklist label {
 	display: block;
-	width: auto !important;
-	padding-left: 30px;
+	width: auto;
 	margin-bottom: 0;
 	float: none;
 	margin-left: -10px;
 	padding-right: 10px;
 	border-radius: 4px;
 	margin-right: -10px;
+	padding-left: 30px;
 }
 
 .checkList label:hover {
 	background-color: #efefef;
 }
 
-.check-list label input[type="checkbox"],
-form.concise fieldset.comprehensive.check-list label input[type="checkbox"] {
+.checklist label input[type="checkbox"],
+form.concise fieldset.comprehensive.checklist label input[type="checkbox"] {
 	margin-left: -18px;
 	float: none;
 	position: relative;
