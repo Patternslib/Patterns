@@ -1,7 +1,9 @@
 #!/bin/bash
 
 cd "$(dirname "$0")"
-cd "$(dirname "$(readlink "$(basename "$0")")")"
+if [ $(basename $0) == "post-checkout" ]; then
+    cd ../..
+fi
 
 # install bootstrap as checkout hook
 if [ ! -e .git/hooks/post-checkout ]; then
