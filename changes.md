@@ -10,6 +10,12 @@
 - Switch dependency management from jamjs to bungle. Remove all third party
   packages from the source tree. 
 
+- Make zoom fallback control (text input field) react properly to change
+  events.
+
+- Autoscale pattern: avoid creating nasty infinite loops with the resize
+  handler.
+
 - Add option to registry.scan to let init exceptions through (garbas)
 
 - Injection pattern: add missing dependency on jquery.form. 
