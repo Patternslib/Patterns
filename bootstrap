@@ -16,6 +16,7 @@ if [ ! -e .git/hooks/post-checkout ]; then
         read answer
     done
     if [ $answer == "y" ]; then
+        mkdir -p .git/hooks
         ln -sf ../../bootstrap .git/hooks/post-checkout
     fi
 fi
