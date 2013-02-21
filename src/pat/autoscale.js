@@ -24,7 +24,9 @@ define([
                 _.force_method="scale";
             else if ($.browser.msie && parseInt($.browser.version, 10)<10)
                 _.force_method="zoom";
-            $(window).on("resize.autoscale", _.onResize);
+            $(document).ready(function() {
+                $(window).one("resize.autoscale", _.onResize);
+            });
         },
 
         init: function($el, opts) {
@@ -67,6 +69,11 @@ define([
 
         onResize: function() {
             $(_.trigger).each(_.scale);
+
+            // necassary at least for IE8
+            setTimeout(function() {
+                $(window).one("resize.autoscale", _.onResize);
+            }, 100);
         }
     };
 
