@@ -44,7 +44,7 @@ define([
         scan: function(content, do_not_catch_init_exception, patterns) {
             var $content = $(content),
                 all = [], allsel,
-                pattern, $match, plog, name;
+                pattern, $match, plog;
 
             // If no list of patterns was specified, we scan for all
             // patterns
