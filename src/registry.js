@@ -48,10 +48,10 @@ define([
 
             // If no list of patterns was specified, we scan for all
             // patterns
-            patterns = patterns || registry.patterns;
+            patterns = patterns || Object.keys(registry.patterns);
 
             // selector for all patterns
-            for (name in patterns) {
+            patterns.forEach(function(name) {
                 pattern = registry.patterns[name];
                 if (pattern.transform)
                     try {
@@ -61,7 +61,7 @@ define([
                     }
                 if (pattern.trigger)
                     all.push(pattern.trigger);
-            }
+            });
             allsel = all.join(",");
 
             // Find all elements that belong to any pattern.
