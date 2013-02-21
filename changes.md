@@ -2,6 +2,11 @@
 
 ## 1.2.0 - Unreleased
 
+- After init, registry rescans DOM for newly registered patterns (chaoflow)
+
+- new bootstrap to handle installation of all dependencies and build
+  bundles (durko, chaoflow)
+
 - Switch dependency management from jamjs to bungle. Remove all third party
   packages from the source tree. 
 
