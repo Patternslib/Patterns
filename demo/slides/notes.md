@@ -20,8 +20,8 @@ Source: Wikipedia
 ## Dialogues
 Dialogues are the brick and mortar of UX design. Customers interact with organisation through touchpoints. These touchpoints used to be quite physical like shops, help desks or intermediates. Today, more and more of these touchpoints are digital. This made customers also users. The moment of interaction between a user and an organisation — during which the user typically performs a task — is called a dialogue. 
 
-## Workshops
-Workshops are great to generate ideas in close cooperation with your client instead of behind your desk. 
+## Animations
+Like to use animations on your slides? Eat your heart out with animate.css to quickly add fancy animation to your slides. Add your own animations to top it off like with this rebellious pearl. 
 
 ## Cards
 Play your cards well!

@@ -6,6 +6,29 @@
 	<meta name="viewport" content="width=1274, user-scalable=no">
 	<link rel="stylesheet" href="slides.css" media="all">
 	<script src="http://patternslib.com/bundles/patterns.min.js" type="text/javascript"></script>
+	<style>
+		/* @group Single pearl */
+		
+		@keyframes drop-80 {
+			from 	 { margin-top: 0; }
+			to	 { margin-top: 80px; }
+		}
+		
+		#single-pearl {
+			animation: shake 1s 2.5s, drop-80 linear 0.5s 3.32s;
+			animation-fill-mode: forwards;
+		}
+		
+		}
+		
+		#single-pearl {
+			animation: drop-80 linear 0.5s;
+			animation-fill-mode: forwards;
+		}
+
+		/* @end */
+	</style>
+	
 </head>
 <body>
 	<div class="pat-slides list">	
@@ -61,24 +84,25 @@
 			<div class="slide-content">
 				<section>
 					<header>
-						<h2>Workshop</h2>
+						<h2>Animations</h2>
 					</header>
 					<figure class="middle">
 						<div class="compound" style="height: 640px; width: 1024px;">
-							<img style="-webkit-animation-delay: 0s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeIn" src="workshop-1-background.jpg" />
-							
-							<img style="-webkit-animation-delay: 1s; -webkit-animation-duration: 1.2s;" width="1024" height="640" class="animated bounceInDown" src="workshop-1-poster-1.png" />
-							<img style="-webkit-animation-delay: 1.5s; -webkit-animation-duration: 1.2s;" width="1024" height="640" class="animated bounceInDown" src="workshop-1-poster-2.png" />
-							<img style="-webkit-animation-delay: 2s; -webkit-animation-duration: 1.2s;" width="1024" height="640" class="animated bounceInDown" src="workshop-1-poster-3.png" />
-					
-							<img style="-webkit-animation-delay: 3s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInRight" src="workshop-1-client.png" />
-							<img style="-webkit-animation-delay: 2.8s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInLeft" src="workshop-1-susanne.png" />
+							<img style="margin-top: -30px; -webkit-animation-delay: 0s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated bounceInDown" src="pearl-bar.jpg" />
+							<img style="-webkit-animation-delay: 0.5s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInUpBig" src="pearl-slogan.png" />
+							<div class="animated fadeInLeftBig" style="width: 1024px; height: 640px; -webkit-animation-delay: 1s; -webkit-animation-duration: 1s;">
+								<img width="1024" height="640" src="pearl-jewel.png" />
+								
+								<img style="-webkit-animation-delay: 2.8s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInRightBig" src="pearl-model.png" />
+								<img width="1024" height="640" src="pearl-pearl.png" id="single-pearl" />
+								<img style="-webkit-animation-delay: 2.8s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInRightBig" src="pearl-model-fingers.png" />
+							</div>
 						</div>
 					</figure>
 				</section>
 			</div>
 			<div class="presenter-notes">
-				<a href="notes.md" class="pat-inject" data-pat-inject="source: ## Workshop::element; target: self::element; trigger: autoload">Notes</a>
+				<a href="notes.md" class="pat-inject" data-pat-inject="source: ## Animations::element; target: self::element; trigger: autoload">Notes</a>
 			</div>
 		</div>
 			
