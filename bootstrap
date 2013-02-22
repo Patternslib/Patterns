@@ -18,6 +18,7 @@ if [ ! -e .git/hooks/post-checkout ]; then
     if [ $answer == "y" ]; then
         mkdir -p .git/hooks
         ln -sf ../../bootstrap .git/hooks/post-checkout
+        ln -sf ../../bootstrap .git/hooks/post-merge
     fi
 fi
 
