@@ -102,10 +102,6 @@ attribute. The available options are:
 | Field          | Default | Description                               |
 | -------------- | ------- | ----------------------------------------- |
 | `load-content` |         | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible. |
-| -------------- | ------- | ----------------------------------------- |
 | `store`        | `none`  | How to remember the state of a collapsible. Must be one of `none`, `session` or `local`. |
-| -------------- | ------- | ----------------------------------------- |
 | `duration`     | `0.4s`  | Duration of the open/close animation. |
-| -------------- | ------- | ----------------------------------------- |
 | `easing` 		 | `swing` | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
-| -------------- | ------- | ----------------------------------------- |
