@@ -35,8 +35,13 @@
   their focus. This broke the handling of autofocus in modals.
   [Ticket 266](https://github.com/Patternslib/Patterns/issues/266)
 
-- Collapsible pattern: add new option to specify an (external) triggering
-  element. [Ticket 274](https://github.com/Patternslib/Patterns/issues/274)
+- Collapsible pattern: 
+
+  - Add new option to specify an (external) triggering element.
+    [Ticket 274](https://github.com/Patternslib/Patterns/issues/274)
+
+  - Make it possible to specify the transition effect to use when opening or
+    closing a panel.
 
 - Markdown pattern:
 

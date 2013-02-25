@@ -109,6 +109,40 @@ The possible values for the `store` parameter are:
 -  `local`: remember the state as part of the local storage.
 -  `session`: remember the status as part of the session storage.
 
+Transitions
+-----------
+
+You can specify the transition effect to use when a collapsible
+is opened or closed. The default behaviour is to not use a slide transition.
+If you prefer to control the effect completely with CSS you can use the `css`
+transition.
+
+    <style>
+      .pat-collapsible {
+          transition-property: opacity;
+          transition-duration: 1s;
+      }
+      .open {
+          opacity: 1;
+      }
+
+      .closed {
+          opacity: 0;
+      }
+    </style>
+
+    <section class="pat-collapsible" data-pat-depends="transition: css">
+      <h3>System status</h3>
+      ...
+    </section>
+
+This allow full control in CSS, including the use of animation for
+browsers supporting CSS animation. Two non-CSS based animation options
+are also included: `fade` will fade the element in and out, and `slide`
+uses a vertical sliding effect. During a transition an `in-progress`
+class will be set on the element.
+
+
 Option reference
 ----------------
 
@@ -120,5 +154,6 @@ attribute. The available options are:
 | `load-content` |         | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible. |
 | `trigger` | `::first` | Selector used to identify the open/close trigger for the collapsible. |
 | `store`        | `none`  | How to remember the state of a collapsible. Must be one of `none`, `session` or `local`. |
-| `duration`     | `0.4s`  | Duration of the open/close animation. |
-| `easing` 		 | `swing` | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
+| `transition` | `slide` | Transition effect when opening or closing a collapsinble. Must be one of `none`, `css`, `fade` or `slide`. |
+| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
+| `effect-easing`  | `swing` | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
