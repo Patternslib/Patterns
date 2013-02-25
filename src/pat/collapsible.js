@@ -20,8 +20,9 @@ define([
 
     parser.add_argument("load-content");
     parser.add_argument("store", "none", ["none", "session", "local"]);
-    parser.add_argument("duration", "0.4s");
-    parser.add_argument("easing", "swing");
+    parser.add_argument("transition", "slide", ["none", "css", "fade", "slide"]);
+    parser.add_argument("effect-duration", "fast");
+    parser.add_argument("effect-easing", "swing");
     parser.add_argument("closed", false);
     parser.add_argument("trigger", "::first");
 
@@ -29,6 +30,12 @@ define([
         name: "collapsible",
         trigger: ".pat-collapsible",
         jquery_plugin: true,
+
+        transitions: {
+            none: {closed: "hide", open: "show"},
+            fade: {closed: "fadeOut", open: "fadeIn"},
+            slide: {closed: "slideUp", open: "slideDown"}
+        },
 
         init: function($el, opts) {
             return $el.each(function() {
@@ -156,12 +163,16 @@ define([
         _transit: function($el, from_cls, to_cls, options) {
             if (to_cls === "open")
                 _.loadContent($el);
-            if (options.duration) {
+
+            var t = _.transitions[options.transition],
+                duration = ((options.transition==="css" || options.transition==="none") ? null : options.effect.duration);
+
+            if (duration) {
                 $el.addClass("in-progress");
                 options.$trigger.addClass("collapsible-in-progress");
             }
 
-            options.$panel.slideToggle(options.duration, options.easing, function() {
+            options.$panel[t[to_cls]](duration, options.effect.easing, function() {
                 options.$trigger
                         .removeClass("collapsible-" + from_cls)
                         .removeClass("collapsible-in-progress")
