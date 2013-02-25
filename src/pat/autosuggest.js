@@ -5,28 +5,17 @@
  * Copyright 2012 JC Brand
  * Copyright 2013 Marko Durkovic
  */
-// auto-suggest docs:
-// http://code.drewwilson.com/entry/autosuggest-jquery-plugin
-// Changes to previous
-// - prefill and ashtmlid in data-auto-suggest-config
 define([
     "jquery",
     "../core/parser",
     "../registry",
-    "jquery.autosuggest",
-    "jquery.form"
+    "jquery.select2"
 ], function($, Parser, registry) {
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");
     parser.add_argument("pre-fill");
-    parser.add_argument("as-html-id");
-    parser.add_argument("selected-value-prop", "name");
-    parser.add_argument("search-obj-prop", "name");
     parser.add_argument("placeholder", function($el) {
-        var placeholder = $el.attr("placeholder") || "Enter text";
-        // jquery_autosuggest does not like the placeholder attr (yet)
-        $el.attr("placeholder", "");
-        return placeholder;
+        return $el.attr("placeholder") || "Enter text";
     });
 
     var _ = {
@@ -36,63 +25,23 @@ define([
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
-            var cfg = _.parser.parse($el, opts);
+            var cfg = parser.parse($el, opts);
+            cfg.startText =  $el.attr("readonly") ? "" : cfg.placeholder;
 
-            if ($el.attr("readonly"))
-                cfg.startText = "";
-            else
-                cfg.startText = cfg.placeholder;
-
-            if (cfg.preFill && (cfg.preFill.slice(0,1) === ","))
-                cfg.preFill = cfg.preFill.slice(1);
-
-            $el.on("keydown.pat-autosuggest", _.onKeyDown);
-
-            var data = cfg.words.split(/\s*,\s*/).map(function(word) {
-                return {value: word, name: word};
-            });
-
-            cfg.selectionAdded = function() {
-                $el.next().trigger("change");
-            };
-            cfg.selectionRemoved = function(elem) {
-                elem.remove();
-                $el.next().trigger("change");
-            };
-
-            $el.on("change.pat-autosuggest", false);
-
-            // XXX: See https://github.com/Patternslib/Patterns/issues/149
-            if (cfg.asHtmlId !== undefined) {
-                cfg.asHtmlID = cfg.asHtmlId;
+            if (cfg.preFill) {
+                $el.val(cfg.preFill);
             }
-            $el.autoSuggest(data, cfg);
+            $el.select2({tags: cfg.words.split(/\s*,\s*/)});
 
+            // suppress propagation for second input field
+            $el.prev().on("input-change input-defocus input-change-delayed",
+                function(e) { e.stopPropagation(); }
+            );
             return $el;
         },
         destroy: function($el) {
             $el.off(".pat-autosuggest");
-
-            // XXX: destroy the jqueryPlugin, unfortunately it doesn't
-            // support this as of now
-        },
-
-        parser: parser,
-
-        onKeyDown: function(ev) {
-            var $this = $(this);
-            if (ev.which === 13) {
-                var $results = $this.parents(".as-selections").next();
-                ev.preventDefault();
-                // skip ENTER->comma translation, if selection is active
-                if (($results.is(":visible")) &&
-                    ($results.find(".active").length > 0)) return;
-                var newev = $.Event("keydown");
-                newev.ctrlKey = false;
-                newev.which = 188;
-                newev.keyCode = 188;
-                $this.trigger(newev);
-            }
+            $el.select2("destroy");
         }
     };
     registry.register(_);

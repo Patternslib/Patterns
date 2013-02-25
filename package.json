@@ -51,6 +51,7 @@
             "jquery.fullcalendar",
             "jquery.placeholder",
             "jquery.textchange",
+            "jquery.select2",
             "jquery.validation",
             "less",
             "logging",
