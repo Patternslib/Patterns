@@ -20,6 +20,9 @@
   - Include pattern name in the parser log output. This makes it much easier to
     debug problems.
 
+- The *setclass* pattern was removed in favour of the newer *switch* pattern.
+  [Ticket 270](https://github.com/Patternslib/Patterns/issues/270)
+
 - Zoom pattern: make zoom fallback control (text input field) react properly to
   change events.
 

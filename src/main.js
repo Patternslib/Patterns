@@ -30,7 +30,6 @@ define([
     "./pat/modal",
     "./pat/navigation",
     "./pat/placeholder",
-    "./pat/setclass",
     "./pat/sortable",
     "./pat/switch",
     "./pat/toggle",
