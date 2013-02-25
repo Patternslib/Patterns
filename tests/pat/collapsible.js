@@ -61,7 +61,7 @@ define(["pat/collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible, {duration: 0});
+                pattern.init($collapsible, {transition: "none"});
                 pattern.toggle($collapsible);
                 expect($collapsible.hasClass("open")).toBe(false);
                 expect($collapsible.hasClass("closed")).toBe(true);
@@ -79,7 +79,7 @@ define(["pat/collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible, {duration: 0});
+                pattern.init($collapsible, {transition: "none"});
                 pattern.toggle($collapsible);
                 expect($collapsible.hasClass("open")).toBe(true);
                 expect($collapsible.hasClass("closed")).toBe(false);
