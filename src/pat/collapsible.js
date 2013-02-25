@@ -76,7 +76,7 @@ define([
                     options.$panel.hide();
                 } else {
                     if (options.loadContent)
-                        _.loadContent($el, options.loadContent, options.$panel);
+                        _._loadContent($el, options.loadContent, options.$panel);
                     options.$trigger.removeClass("collapsible-closed").addClass("collapsible-open");
                     $el.removeClass("closed").addClass("open");
                     options.$panel.show();
@@ -124,7 +124,7 @@ define([
             return options;
         },
 
-        loadContent: function($el, url, $target) {
+        _loadContent: function($el, url, $target) {
             var components = url.split("#"),
                 base_url = components[0],
                 id = components[1] ? "#" + components[1] : null,
@@ -160,7 +160,7 @@ define([
 
         _transit: function($el, from_cls, to_cls, options) {
             if (to_cls === "open" && options.loadContent)
-                _.loadContent($el, options.loadContent, options.$panel);
+                _._loadContent($el, options.loadContent, options.$panel);
 
             var duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
 
