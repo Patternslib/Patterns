@@ -2,21 +2,29 @@
 
 ## 1.2.0 - Unreleased
 
-- After init, registry rescans DOM for newly registered patterns (chaoflow)
+- Packaging changes:
 
-- new bootstrap to handle installation of all dependencies and build
-  bundles (durko, chaoflow)
+  - new bootstrap to handle installation of all dependencies and build
+    bundles
 
-- Switch dependency management from jamjs to bungle. Remove all third party
-  packages from the source tree. 
+  - Switch dependency management from jamjs to bungle. Remove all third party
+    packages from the source tree. 
 
-- Make zoom fallback control (text input field) react properly to change
-  events.
+- Core logic changes:
+
+  - Registry: Add option to registry.scan to let init exceptions through.
+    
+  - Registry: rescans the DOM for patterns registered after the initial
+    DOM scan.
+
+  - Include pattern name in the parser log output. This makes it much easier to
+    debug problems.
+
+- Zoom pattern: make zoom fallback control (text input field) react properly to
+  change events.
 
 - Autoscale pattern: avoid creating nasty infinite loops with the resize
   handler.
-
-- Add option to registry.scan to let init exceptions through (garbas)
 
 - Injection pattern: add missing dependency on jquery.form. 
   [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
@@ -26,9 +34,6 @@
 - Modal pattern: make sure elements inside a modal do not accidentily loose
   their focus. This broke the handling of autofocus in modals.
   [Ticket 266](https://github.com/Patternslib/Patterns/issues/266)
-
-- Include pattern name in the parser log output. This makes it much easier to
-  debug problems.
 
 - Collapsible pattern: add new option to specify an (external) triggering
   element. [Ticket 274](https://github.com/Patternslib/Patterns/issues/274)
@@ -45,7 +50,7 @@
     a just-injected HTML fragment.
     [Ticket 188](https://github.com/Patternslib/Patterns/issues/188)
 
-- Remove Modernizr dependency from placeholder pattern.
+- Placeholder pattern: remove Modernizr dependency.
 
 
 ## 1.1.0 - Released February 7, 2013
