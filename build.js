@@ -76,14 +76,12 @@ var build = function(tag, cleanup) {
             var js = fs.readFileSync(fullname);
 
             var init = '';
-            if (modules.indexOf('main') === -1) {
-                var deps = modules
+            var deps = modules
                     .map(function(e){ return '"'+e+'"';  })
                     .join(', ');
 
-                init = "require(['registry', " + deps +
-                    "], function(r){r.init();});";
-            }
+            init = "require(['registry', " + deps +
+                "], function(r){r.init();});";
 
             var stream = fs.createWriteStream(fullname);
             stream.write(header + js + init);
