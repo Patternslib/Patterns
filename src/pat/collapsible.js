@@ -164,24 +164,30 @@ define([
             if (to_cls === "open")
                 _.loadContent($el);
 
-            var t = _.transitions[options.transition],
-                duration = ((options.transition==="css" || options.transition==="none") ? null : options.effect.duration);
+            var duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
 
-            if (duration) {
-                $el.addClass("in-progress");
-                options.$trigger.addClass("collapsible-in-progress");
-            }
-
-            options.$panel[t[to_cls]](duration, options.effect.easing, function() {
+            if (!duration) {
                 options.$trigger
                         .removeClass("collapsible-" + from_cls)
-                        .removeClass("collapsible-in-progress")
                         .addClass("collapsible-" + to_cls);
                 $el
                     .removeClass(from_cls)
-                    .removeClass("in-progress")
                     .addClass(to_cls);
-            });
+            } else {
+                var t = _.transitions[options.transition];
+                $el.addClass("in-progress");
+                options.$trigger.addClass("collapsible-in-progress");
+                options.$panel[t[to_cls]](duration, options.effect.easing, function() {
+                    options.$trigger
+                            .removeClass("collapsible-" + from_cls)
+                            .removeClass("collapsible-in-progress")
+                            .addClass("collapsible-" + to_cls);
+                    $el
+                        .removeClass(from_cls)
+                        .removeClass("in-progress")
+                        .addClass(to_cls);
+                });
+            }
         }
     };
 
