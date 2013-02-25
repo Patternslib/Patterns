@@ -75,7 +75,8 @@ define([
                     $el.removeClass("open").addClass("closed");
                     options.$panel.hide();
                 } else {
-                    _.loadContent($el);
+                    if (options.loadContent)
+                        _.loadContent($el, options.loadContent, options.$panel);
                     options.$trigger.removeClass("collapsible-closed").addClass("collapsible-open");
                     $el.removeClass("closed").addClass("open");
                     options.$panel.show();
@@ -123,17 +124,14 @@ define([
             return options;
         },
 
-        loadContent: function($el) {
-            var options = $el.data("patternCollapsible");
-            if (!options.loadContent)
-                return;
-            var components = options.loadContent.split("#"),
-                url = components[0],
+        loadContent: function($el, url, $target) {
+            var components = url.split("#"),
+                base_url = components[0],
                 id = components[1] ? "#" + components[1] : null,
                 opts = [{
-                    url: url,
+                    url: base_url,
                     source: id,
-                    $target: options.$panel,
+                    $target: $target,
                     dataType: "html"
                 }];
             inject.execute(opts, $el);
@@ -161,8 +159,8 @@ define([
         },
 
         _transit: function($el, from_cls, to_cls, options) {
-            if (to_cls === "open")
-                _.loadContent($el);
+            if (to_cls === "open" && options.loadContent)
+                _.loadContent($el, options.loadContent, options.$panel);
 
             var duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
 
