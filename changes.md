@@ -29,7 +29,11 @@
 - Injection pattern: add missing dependency on jquery.form. 
   [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
 
-- Depends pattern: add support for a `~=` operator to test for substrings.
+- Depends pattern:
+
+  - Add support for a `~=` operator to test for substrings.
+
+  - Make the easing used for animations configurable.
 
 - Modal pattern: make sure elements inside a modal do not accidentily loose
   their focus. This broke the handling of autofocus in modals.
