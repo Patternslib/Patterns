@@ -29,8 +29,8 @@
 define(function(){
 
 	// Regular Expressions for parsing tags and attributes
-	var startTag = /^<([-A-Za-z0-9_]+)((?:\s+[-A-Za-z0-9:_]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
-		endTag = /^<\/([-A-Za-z0-9_]+)[^>]*>/,
+	var startTag = /^<([-A-Za-z0-9:_]+)((?:\s+[-A-Za-z0-9:_]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
+		endTag = /^<\/([-A-Za-z0-9:_]+)[^>]*>/,
 		attr = /([-A-Za-z0-9:_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
 
 	// Empty Elements - HTML 5 Working Draft 25 October 2012
