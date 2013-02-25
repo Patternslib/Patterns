@@ -137,6 +137,16 @@ define([
             inject.execute(opts, $el);
         },
 
+        // jQuery method to force loading of content.
+        loadContent: function($el) {
+            return $el.each(function() {
+                var $el = $(this),
+                    options = $(this).data("patternCollapsible");
+                if (options.loadContent)
+                    _._loadContent($el, options.loadContent, options.$panel);
+            });
+        },
+
         toggle: function($el) {
             var options = $el.data("patternCollapsible"),
                 new_state = $el.hasClass("closed") ? "open" : "closed";
