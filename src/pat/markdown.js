@@ -27,10 +27,42 @@ define([
             });
         },
 
-        _makeConverter: function() {
+        _renderHtml5Headers: function(text, runBlockGamut) {
+                text = text.replace(/^(.+)?\s*\n=+\s*\n+((?:.|\n)*?(?=^.*?\n=+\s*$)|(?:.|\n)*)/gm,
+                    function (wholeMatch, m1, m2) {
+                        return "<section>\n" +
+                               "  <h1>" + (m1) + "</h1>\n" +
+                               runBlockGamut(m2) + "\n" +
+                               "</section>\n"; }
+                );
+
+                text = text.replace(/^(.+)?\s*\n-+\s*\n+((?:.|\n)*?(?=^.*?\n-+\s*$)|(?:.|\n)*)/gm,
+                    function (wholeMatch, m1, m2) {
+                        return "<section>\n" +
+                               "  <h1>" + (m1) + "</h1>\n" +
+                               runBlockGamut(m2) + "\n" +
+                               "</section>\n"; }
+                );
+
+                var pattern = "^#{@LEVEL@}\\s*(.+?)\\s*$\\n+((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)",
+                    replacer = (function(wholeMatch, m1, m2) {
+                        return "<section>\n" +
+                               "  <h1>" + (m1) + "</h1>\n" +
+                               runBlockGamut(m2) + "\n" +
+                               "</section>\n";
+                });
+                for (var level=6; level>0; level--) {
+                    var matcher = new RegExp(pattern.replace(/@LEVEL@/g, level), "gm");
+                    text = text.replace(matcher, replacer);
+                }
+                return text;
+        },
+
+	_makeConverter: function() {
             // A convertor can not be used in multiple threads at the same
             // time, so create a new one for every rendering.
             var converter = Markdown.getSanitizingConverter();
+            converter.hooks.chain("preBlockGamut", _._renderHtml5Headers);
             Markdown.Extra.init(converter, {extensions: "all"});
             return converter;
         },
