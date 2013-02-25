@@ -162,7 +162,7 @@ define([
             }
 
             options.$panel.slideToggle(options.duration, options.easing, function() {
-                option.$trigger
+                options.$trigger
                         .removeClass("collapsible-" + from_cls)
                         .removeClass("collapsible-in-progress")
                         .addClass("collapsible-" + to_cls);
