@@ -53,14 +53,16 @@ define([
             // selector for all patterns
             patterns.forEach(function(name) {
                 pattern = registry.patterns[name];
-                if (pattern.transform)
+                if (pattern.transform) {
                     try {
                         pattern.transform($content);
                     } catch (e) {
                         log.critical("Transform error for pattern" + name, e);
                     }
-                if (pattern.trigger)
+                }
+                if (pattern.trigger) {
                     all.push(pattern.trigger);
+                }
             });
             allsel = all.join(",");
 
