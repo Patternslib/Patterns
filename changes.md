@@ -10,16 +10,6 @@
   - Switch dependency management from jamjs to bungle. Remove all third party
     packages from the source tree. 
 
-- Core logic changes:
-
-  - Registry: Add option to registry.scan to let init exceptions through.
-    
-  - Registry: rescans the DOM for patterns registered after the initial
-    DOM scan.
-
-  - Include pattern name in the parser log output. This makes it much easier to
-    debug problems.
-
 - The *setclass* pattern was removed in favour of the newer *switch* pattern.
   [Ticket 270](https://github.com/Patternslib/Patterns/issues/270)
 
@@ -67,6 +57,18 @@
     markdown at the exact same time.
 
 - Placeholder pattern: remove Modernizr dependency.
+
+- Core logic changes:
+
+  - Registry: Add option to registry.scan to let init exceptions through.
+    
+  - Registry: rescans the DOM for patterns registered after the initial
+    DOM scan.
+
+  - Include pattern name in the parser log output. This makes it much easier to
+    debug problems.
+
+  - Correctly handle attribute names containing a colon.
 
 
 ## 1.1.0 - Released February 7, 2013
