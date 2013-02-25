@@ -64,6 +64,13 @@ What will happen is that `pat-slides` will trigger the slideshow pattern to bind
 
 Clicking on a slide will run the slide show from that slide on.
 
+### Filters
+It's possible to put a filter in the URI to show only specific slides. Consider the following URI format:
+
+    <a href="my-slides.html?slides=first-slide,last-slide">Run</a>
+    
+Using the above URL, the the slideshow(s) on the page will only show slides in list view that match any of the IDs. Without any IDs, all slides will be shown. Also in full screen mode, the slides that are not in the URI will be skipped using the keystroke navigation. 
+
 #### Injected slideshows
 The injection pattern may be used to launch slideshows on a page as part of another design. When a user clicks on a slide, it will still run full window, but the list view will be integrated in the rest of the design. 
 
@@ -96,13 +103,6 @@ The example below would extract one slide (`third-slide`) from my-slides.html an
 			</div>
 		</div>
 	</div>
-
-### Filters
-It's possible to put a filter in the URI to show only specific slides. Consider the following URI format:
-
-    <a href="my-slides.html?slides=first-slide,last-slide">Run</a>
-    
-Using the above URL, the the slideshow(s) on the page will only show slides in list view that match any of the IDs. Without any IDs, all slides will be shown. Also in full screen mode, the slides that are not in the URI will be skipped using the keystroke navigation. 
 
 ### Generated slideshows
 A user can generate slide shows by cherry picking stock slides from a form. This is desired in situations where you want to have stock slide shows where individual end users want to leave out specific slides based not he audience for the presentation. Or to create new slide shows out of individually stored stock slides. 
