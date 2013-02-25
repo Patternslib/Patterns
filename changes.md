@@ -5,58 +5,80 @@
 - Packaging changes:
 
   - new bootstrap to handle installation of all dependencies and build
-    bundles
+    bundles (Marko Đurković, Florian Friesdorf)
 
   - Switch dependency management from jamjs to bungle. Remove all third party
-    packages from the source tree. 
+    packages from the source tree. (Marko Đurković)
+
+- Core logic changes:
+
+  - Registry: Add option to registry.scan to let init exceptions
+    through. (Rok Garbas)
+    
+  - Registry: rescans the DOM for patterns registered after the initial
+    DOM scan. (Florian Friesdorf)
+
+  - Include pattern name in the parser log output. This makes it much easier to
+    debug problems. (Wichert Akkerman)
 
 - The *setclass* pattern was removed in favour of the newer *switch* pattern.
   [Ticket 270](https://github.com/Patternslib/Patterns/issues/270)
+  (Wichert Akkerman)
 
 - Zoom pattern: make zoom fallback control (text input field) react properly to
-  change events.
+  change events. (Marko Đurković)
 
 - Autoscale pattern: avoid creating nasty infinite loops with the resize
-  handler.
+  handler. (Marko Đurković)
 
 - Injection pattern: add missing dependency on jquery.form. 
   [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
+  (Wichert Akkerman)
 
 - Depends pattern:
 
   - Add support for a `~=` operator to test for substrings.
+    (Wichert Akkerman)
 
   - Make the easing used for animations configurable.
+    (Wichert Akkerman)
 
 - Modal pattern: make sure elements inside a modal do not accidentily loose
   their focus. This broke the handling of autofocus in modals.
   [Ticket 266](https://github.com/Patternslib/Patterns/issues/266)
+  (Wichert Akkerman)
 
 - Collapsible pattern: 
 
   - Add new option to specify an (external) triggering element.
     [Ticket 274](https://github.com/Patternslib/Patterns/issues/274)
+    (Wichert Akkerman)
 
   - Make it possible to specify the transition effect to use when opening or
     closing a panel.
+    (Wichert Akkerman)
 
 - Markdown pattern:
 
   - Include section selector in `data-src` attribute.
     [Ticket 259](https://github.com/Patternslib/Patterns/issues/259)
+    (Wichert Akkerman)
 
   - Correct detection of the end of a extracted sections.
     [Ticket 268](https://github.com/Patternslib/Patterns/issues/268)
+    (Wichert Akkerman)
 
   - Make sure we correctly identify autoloaded markdown content referenced from
     a just-injected HTML fragment.
     [Ticket 188](https://github.com/Patternslib/Patterns/issues/188)
+    (Wichert Akkerman)
 
   - Use a new markdown converter for every pattern. This fixes problems with
     shared converter state if the pattern tried to convert two pieces of
     markdown at the exact same time.
 
 - Placeholder pattern: remove Modernizr dependency.
+  (Wichert Akkerman)
 
 - Core logic changes:
 
@@ -75,51 +97,51 @@
 ## 1.1.0 - Released February 7, 2013
 
 - bumper pattern fetches DOM info in event handler, not only during init.
-  [Ticket 232](https://github.com/Patternslib/Patterns/issues/232). (durko)
+  [Ticket 232](https://github.com/Patternslib/Patterns/issues/232). (Marko Đurković)
 
-- pat/ajax to handle anchors and forms, supersedes lib/ajax (chaoflow, durko)
+- pat/ajax to handle anchors and forms, supersedes lib/ajax (Florian Friesdorf, Marko Đurković)
   including:
   [Ticket 148](https://github.com/Patternslib/Patterns/issues/148).
 
-- pagedown 1.1.0 and pagedown-extra with code in table support (durko,
-  chaoflow)
+- pagedown 1.1.0 and pagedown-extra with code in table support (Marko Đurković,
+  Florian Friesdorf)
   [Ticket 252](https://github.com/Patternslib/Patterns/issues/252).
 
-- edit-tinymce independent of ajax (durko)
+- edit-tinymce independent of ajax (Marko Đurković)
 
-- input-change events used by autosubmit and form-state (durko)
+- input-change events used by autosubmit and form-state (Marko Đurković)
 
-- Bring back API documentation (wichert)
+- Bring back API documentation (Wichert Akkerman)
 
 - Website improvements content/design (cornae)
 
 - Improved support for custom bundles (still experimental)
-  [Ticket 227](https://github.com/Patternslib/Patterns/issues/227). (durko)
-  [Ticket 235](https://github.com/Patternslib/Patterns/issues/235). (durko)
+  [Ticket 227](https://github.com/Patternslib/Patterns/issues/227). (Marko Đurković)
+  [Ticket 235](https://github.com/Patternslib/Patterns/issues/235). (Marko Đurković)
 
-- testrunner support on nixos (chaoflow)
+- testrunner support on nixos (Florian Friesdorf)
 
 - experimental support for yet undocumented `data-pat-inject="history:
-  record"`. (durko)
+  record"`. (Marko Đurković)
 
 - Generate test runners for modules and bundles ourselves, removing
-  dependency on grunt. (durko)
+  dependency on grunt. (Marko Đurković)
 
-- Registry informs about loaded patterns. (chaoflow)
+- Registry informs about loaded patterns. (Florian Friesdorf)
 
 - Renamed `patterns` folder to `pat`. Having `Patterns` mapped to
-  `Patterns/src/main` this enables `requires['Patterns/pat/inject']. (chaoflow)
+  `Patterns/src/main` this enables `requires['Patterns/pat/inject']. (Florian Friesdorf)
 
 - Do not run javascript loaded in the document twice. This was causing
   problems with third party modules such as [shower](http://shwr.me/)
   and was not expected behaviour. [Ticket
-  231](https://github.com/Patternslib/Patterns/issues/231).. (wichert)
+  231](https://github.com/Patternslib/Patterns/issues/231).. (Wichert Akkerman)
 
 - Auto-scale pattern: add new `min-width` and `max-width` options.
   [Ticket 242](https://github.com/Patternslib/Patterns/issues/242).
-  (wichert)
+  (Wichert Akkerman)
 
-- Tooltip pattern (wichert):
+- Tooltip pattern (Wichert Akkerman):
 
   - Change the options used to configure the tooltip. Part of
     [ticket 220](https://github.com/Patternslib/Patterns/issues/220).
