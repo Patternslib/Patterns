@@ -1,15 +1,8 @@
-
 NPM 		?= npm
 BUNGLE 		?= node_modules/.bin/bungle
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
-
-ifeq ($(shell uname),Darwin)
-SED		= sed -i "" -E
-else
-SED		= sed -i -r
-endif
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
 THIRDPARTY	= bungledeps $(shell find bungledeps -name '*.js' 2>/dev/null)
@@ -49,18 +42,18 @@ bundles-all-tags:
 
 
 use-bundle:
-	$(SED) -e 's,<script data-main="src/main" src="bungledeps/require.js",<script src="bundles/patterns.min.js",' index.html
-	$(SED) -e 's,<script data-main="../src/main" src="../bungledeps/require.js",<script src="../bundles/patterns.min.js",' demo/*html
-	$(SED) -e 's,<script data-main="../../src/main" src="../../bungledeps/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
+	sed -i~ -e 's,<script data-main="src/main" src="bungledeps/require.js",<script src="bundles/patterns.min.js",' index.html
+	sed -i~ -e 's,<script data-main="../src/main" src="../bungledeps/require.js",<script src="../bundles/patterns.min.js",' demo/*html
+	sed -i~ -e 's,<script data-main="../../src/main" src="../../bungledeps/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
 
 use-modules:
-	$(SED) -e 's,<script src="bundles/patterns.(min.)?js",<script data-main="src/main" src="bungledeps/require.js",' index.html
-	$(SED) -e 's,<script src="../bundles/patterns.(min.)?js",<script data-main="../src/main" src="../bungledeps/require.js",' demo/*html
-	$(SED) -e 's,<script src="../../bundles/patterns.(min.)?js",<script data-main="../../src/main" src="../../bungledeps/require.js",' demo/*/*.html
+	sed -i~ -e 's,<script src="bundles/patterns\.min\.js",<script data-main="src/main" src="bungledeps/require.js",' index.html
+	sed -i~ -e 's,<script src="../bundles/patterns\.min\..js",<script data-main="../src/main" src="../bungledeps/require.js",' demo/*html
+	sed -i~ -e 's,<script src="../../bundles/patterns\.min\.js",<script data-main="../../src/main" src="../../bungledeps/require.js",' demo/*/*.html
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
-	$(SED) -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
+	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 demo/calendar/fullcalendar.css: bungledeps/jquery.fullcalendar-*/fullcalendar/fullcalendar.css
 	cp bungledeps/jquery.fullcalendar-*/fullcalendar/fullcalendar.css demo/calendar/fullcalendar.css
@@ -105,5 +98,5 @@ clean:
 localize-demo-images:
 	tools/localize-demo-images.sh
 
-.PHONY: all bundle bundles bundles-all-tags check check-modules check-nix clean doc phantom-via-nix use-modules use-bundles
+.PHONY: all bundle bundles bundles-all-tags check check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
 
