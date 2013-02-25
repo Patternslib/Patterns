@@ -38,5 +38,5 @@ define([
     //"./pat/validate",
     "./pat/zoom"
 ], function($, registry) {
-    registry.init();
+    return registry;
 });

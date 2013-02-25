@@ -12,6 +12,11 @@
 
 - Core logic changes:
 
+  - Patterns main.js returns registry, you have to call
+    patterns.init() manually. For the bundles this happens
+    automatically. Depend on `patterns/autoinit`, if you really want
+    an auto-initializing modular patterns library. (Florian Friesdorf)
+
   - Registry: Add option to registry.scan to let init exceptions
     through. (Rok Garbas)
     
