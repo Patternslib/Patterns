@@ -10,22 +10,6 @@
   - Switch dependency management from jamjs to bungle. Remove all third party
     packages from the source tree. (Marko Đurković)
 
-- Core logic changes:
-
-  - Patterns main.js returns registry, you have to call
-    patterns.init() manually. For the bundles this happens
-    automatically. Depend on `patterns/autoinit`, if you really want
-    an auto-initializing modular patterns library. (Florian Friesdorf)
-
-  - Registry: Add option to registry.scan to let init exceptions
-    through. (Rok Garbas)
-    
-  - Registry: rescans the DOM for patterns registered after the initial
-    DOM scan. (Florian Friesdorf)
-
-  - Include pattern name in the parser log output. This makes it much easier to
-    debug problems. (Wichert Akkerman)
-
 - The *setclass* pattern was removed in favour of the newer *switch* pattern.
   [Ticket 270](https://github.com/Patternslib/Patterns/issues/270)
   (Wichert Akkerman)
@@ -81,22 +65,29 @@
   - Use a new markdown converter for every pattern. This fixes problems with
     shared converter state if the pattern tried to convert two pieces of
     markdown at the exact same time.
+    (Wichert Akkerman)
 
 - Placeholder pattern: remove Modernizr dependency.
   (Wichert Akkerman)
 
 - Core logic changes:
 
-  - Registry: Add option to registry.scan to let init exceptions through.
+  - Patterns main.js returns registry, you have to call
+    patterns.init() manually. For the bundles this happens
+    automatically. Depend on `patterns/autoinit`, if you really want
+    an auto-initializing modular patterns library. (Florian Friesdorf)
+
+  - Registry: Add option to registry.scan to let init exceptions
+    through. (Rok Garbas)
     
   - Registry: rescans the DOM for patterns registered after the initial
-    DOM scan.
+    DOM scan. (Florian Friesdorf)
 
   - Include pattern name in the parser log output. This makes it much easier to
-    debug problems.
+    debug problems. (Wichert Akkerman)
 
   - Correctly handle tag and attribute names containing a colon in the HTML
-    parser.
+    parser. (Wichert Akkerman)
 
 
 ## 1.1.0 - Released February 7, 2013
