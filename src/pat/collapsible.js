@@ -2,15 +2,10 @@
  * Patterns collapsible - Collapsible content
  *
  * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  * Copyright 2012 Markus Maier
  * Copyright 2013 Peter Lamut
  * Copyright 2012 Jonas Hoersch
- */
-/*
- * changes:
- * - open($el, opts) instead of open($el, duration)
- * - same for close
  */
 define([
     "jquery",
@@ -28,11 +23,13 @@ define([
     parser.add_argument("duration", "0.4s");
     parser.add_argument("easing", "swing");
     parser.add_argument("closed", false);
+    parser.add_argument("trigger", "::first");
 
     var _ = {
         name: "collapsible",
         trigger: ".pat-collapsible",
         jquery_plugin: true,
+
         init: function($el, opts) {
             return $el.each(function() {
                 var $el = $(this),
@@ -40,9 +37,20 @@ define([
                 // create collapsible structure
                     $content, state, storage;
 
-                options.$trigger = $el.children(":first");
-                $content = $el.children(":gt(0)");
-                if ($content.length > 0)
+                if (options.trigger === "::first") {
+                    options.$trigger = $el.children(":first");
+                    $content = $el.children(":gt(0)");
+                } else {
+                    options.$trigger = $(options.trigger);
+                    $content = $el.children();
+                }
+
+                if (options.$trigger.length===0) {
+                    log.error("Collapsible has no trigger.", this);
+                    return;
+                }
+
+                if ($content.length)
                     options.$panel = $content.wrapAll("<div class='panel-content' />")
                         .parent();
                 else
@@ -56,11 +64,13 @@ define([
                 }
 
                 if (state==="closed") {
+                    options.$trigger.removeClass("collapsible-open").addClass("collapsible-closed");
                     $el.removeClass("open").addClass("closed");
                     options.$panel.hide();
                 } else {
                     _.loadContent($el);
-                    $el.addClass("open");
+                    options.$trigger.removeClass("collapsible-closed").addClass("collapsible-open");
+                    $el.removeClass("closed").addClass("open");
                     options.$panel.show();
                 }
 
@@ -146,9 +156,16 @@ define([
         _transit: function($el, from_cls, to_cls, options) {
             if (to_cls === "open")
                 _.loadContent($el);
-            if (options.duration)
+            if (options.duration) {
                 $el.addClass("in-progress");
+                options.$trigger.addClass("collapsible-in-progress");
+            }
+
             options.$panel.slideToggle(options.duration, options.easing, function() {
+                option.$trigger
+                        .removeClass("collapsible-" + from_cls)
+                        .removeClass("collapsible-in-progress")
+                        .addClass("collapsible-" + to_cls);
                 $el
                     .removeClass(from_cls)
                     .removeClass("in-progress")

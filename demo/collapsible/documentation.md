@@ -27,6 +27,21 @@ to create a simple contextual menu.
 Collapsibles default to being open. You can change this by adding a
 `closed` class to the collapsible.
 
+External triggers
+-----------------
+
+The standard behaviour is to use the first element as the trigger to open or
+close a collapsible. You can also use the `trigger` option to specify a 
+different element.
+
+    <button id="trigger">About us</button>
+
+    <aside class="pat-collapsible" data-pat-collapsible="trigger: #trigger">
+      <h3>About us</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit...</p>
+      <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
+    </aside>
+
 Markup structure
 ----------------
 
@@ -35,16 +50,17 @@ of an element with the `pat-collapsible` class will be used as the
 triggering element and will always be visible. All further children will be
 part of the content.
 
-The trigger element will get a `open` or `closed` class which indicates
-if the collapsible is currently open (content is visible) or closed
-(content is not visible). Second the content of the collapsible is
-wrapped in a new `div` element with class `panel-content`.
+The containing element will get a `open` or `closed` class which indicates if
+the collapsible is currently open (content is visible) or closed (content is
+not visible). Likewise the triggering element will get a `collapsible-open` or
+`collapsible-closed` class.  the content of the collapsible is wrapped in a new
+`div` element with class `panel-content`.
 
 Post-processing our first example will look like this after the
 collapsible pattern has initialised:
 
     <section class="pat-collapsible open">
-      <h3>About us</h3>
+      <h3 class="collapsible-open">About us</h3>
       <div class="panel-content">
         <p>Sed ut perspiciatis unde omnis iste natus error sit...</p>
         <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
@@ -89,9 +105,9 @@ To use this you requirements must be met:
 
 The possible values for the `store` parameter are:
 
--   `none`: do not remember the toggle state (default).
--   `local`: remember the state as part of the local storage.
--   `session`: remember the status as part of the session storage.
+-  `none`: do not remember the toggle state (default).
+-  `local`: remember the state as part of the local storage.
+-  `session`: remember the status as part of the session storage.
 
 Option reference
 ----------------
@@ -102,10 +118,7 @@ attribute. The available options are:
 | Field          | Default | Description                               |
 | -------------- | ------- | ----------------------------------------- |
 | `load-content` |         | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible. |
-| -------------- | ------- | ----------------------------------------- |
+| `trigger` | `::first` | Selector used to identify the open/close trigger for the collapsible. |
 | `store`        | `none`  | How to remember the state of a collapsible. Must be one of `none`, `session` or `local`. |
-| -------------- | ------- | ----------------------------------------- |
 | `duration`     | `0.4s`  | Duration of the open/close animation. |
-| -------------- | ------- | ----------------------------------------- |
 | `easing` 		 | `swing` | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
-| -------------- | ------- | ----------------------------------------- |
