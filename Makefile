@@ -1,3 +1,5 @@
+export PATH := ./.node/bin:$(PATH)
+
 NPM 		?= npm
 BUNGLE 		?= node_modules/.bin/bungle
 JSHINT 		?= node_modules/.bin/jshint
