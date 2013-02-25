@@ -59,6 +59,10 @@
     a just-injected HTML fragment.
     [Ticket 188](https://github.com/Patternslib/Patterns/issues/188)
 
+  - Use a new markdown converter for every pattern. This fixes problems with
+    shared converter state if the pattern tried to convert two pieces of
+    markdown at the exact same time.
+
 - Placeholder pattern: remove Modernizr dependency.
 
 
