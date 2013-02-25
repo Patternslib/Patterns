@@ -109,13 +109,13 @@ A user can generate slide shows by cherry picking stock slides from a form. This
 
 A form that generates a slide show URL looks as follows:
 
-    <form action="my-slides.html">
+    <form action="my-slides.html" class="pat-slideshow-builder">
         <button type="submit">Run</button>
     </form>
 
 The pattern will inject a Checklist into the form based on the IDs of the slides in the source HTML. The slide names come from the first header that is found in the slide HTML.
 
-    <form action="my-slides.html">
+    <form action="my-slides.html" class="pat-slideshow-builder">
         <fieldset class="checklist">
             <label><input type="checkbox" name="slides" value="introduction" />Introduction</label>
             <label><input type="checkbox" name="slides" value="slide-1" />Slide 1</label>
