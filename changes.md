@@ -68,7 +68,8 @@
   - Include pattern name in the parser log output. This makes it much easier to
     debug problems.
 
-  - Correctly handle attribute names containing a colon.
+  - Correctly handle tag and attribute names containing a colon in the HTML
+    parser.
 
 
 ## 1.1.0 - Released February 7, 2013
