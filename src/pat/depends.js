@@ -18,6 +18,7 @@ define([
     parser.add_argument("action", "show", ["show", "enable"]);
     parser.add_argument("transition", "none", ["none", "css", "fade", "slide"]);
     parser.add_argument("effect-duration", "fast");
+    parser.add_argument("effect-easing", "swing");
 
     var depends = {
         name: "depends",
@@ -113,19 +114,18 @@ define([
                 options = event.data.options,
                 slave = event.data.slave,
                 $slave = $(slave),
-                state = handler.evaluate();
+                state = handler.evaluate(),
+                duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
 
             switch (options.action) {
                 case "show":
                     $slave.removeClass("visible hidden in-progress");
-                    if (options.transition==="css")
+                    if (!duration)
                         $slave.addClass(state ? "visible" : "hidden");
                     else {
-                        var t = depends.transitions[options.transition],
-                            duration = (options.transition==="none" ? null : options.effectDuration);
-                        if (duration)
-                            $slave.addClass("in-progress");
-                        $slave[state ? t.show : t.hide](duration, function() {
+                        var t = depends.transitions[options.transition];
+                        $slave.addClass("in-progress");
+                        $slave[state ? t.show : t.hide](duration, options.effect.easing, function() {
                             $slave
                                 .removeClass("visible in-progress hidden")
                                 .addClass(state ? "visible" : "hidden");
