@@ -16,7 +16,7 @@ define([
 
     parser.add_argument('url', function($el) {
         return ($el.is('a') ? $el.attr('href') :
-                ($el.is('form') ? $el.attr('action') : undefined)).split('#')[0];
+                ($el.is('form') ? $el.attr('action') : '')).split('#')[0];
     });
 
     var _ = {
