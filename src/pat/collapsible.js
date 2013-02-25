@@ -38,14 +38,15 @@ define([
                 var $el = $(this),
                     options = _._validateOptions(this, parser.parse($el, opts)),
                 // create collapsible structure
-                    $trigger = $el.children(":first"),
-                    $content = $el.children(":gt(0)"),
-                    $panel, state, storage;
+                    $content, state, storage;
+
+                options.$trigger = $el.children(":first");
+                $content = $el.children(":gt(0)");
                 if ($content.length > 0)
-                    $panel = $content.wrapAll("<div class='panel-content' />")
+                    options.$panel = $content.wrapAll("<div class='panel-content' />")
                         .parent();
                 else
-                    $panel = $("<div class='panel-content' />").insertAfter($trigger);
+                    options.$panel = $("<div class='panel-content' />").insertAfter(options.$trigger);
 
                 $el.data("patternCollapsible", options);
                 state=(options.closed || $el.hasClass("closed")) ? "closed" : "open";
@@ -56,14 +57,14 @@ define([
 
                 if (state==="closed") {
                     $el.removeClass("open").addClass("closed");
-                    $panel.hide();
+                    options.$panel.hide();
                 } else {
                     _.loadContent($el);
                     $el.addClass("open");
-                    $panel.show();
+                    options.$panel.show();
                 }
 
-                $trigger
+                options.$trigger
                     .off(".pat-collapsible")
                     .on("click.pat-collapsible", null, $el, _._onClick);
 
@@ -115,7 +116,7 @@ define([
                 opts = [{
                     url: url,
                     source: id,
-                    $target: $(".panel-content", $el),
+                    $target: options.$panel,
                     dataType: "html"
                 }];
             inject.execute(opts, $el);
@@ -123,7 +124,6 @@ define([
 
         toggle: function($el) {
             var options = $el.data("patternCollapsible"),
-                $panel = $el.find(".panel-content"),
                 new_state = $el.hasClass("closed") ? "open" : "closed";
 
             if (options.store!=="none") {
@@ -133,22 +133,22 @@ define([
 
             if (new_state==="open") {
                 $el.trigger("patterns-collapsible-open");
-                _._transit($el, $panel, "closed", "open", options);
+                _._transit($el, "closed", "open", options);
             } else {
                 $el.trigger("patterns-collapsible-close");
-                _._transit($el, $panel, "open", "closed", options);
+                _._transit($el, "open", "closed", options);
             }
 
             // allow for chaining
             return $el;
         },
 
-        _transit: function($el, $panel, from_cls, to_cls, options) {
+        _transit: function($el, from_cls, to_cls, options) {
             if (to_cls === "open")
                 _.loadContent($el);
             if (options.duration)
                 $el.addClass("in-progress");
-            $panel.slideToggle(options.duration, options.easing, function() {
+            options.$panel.slideToggle(options.duration, options.easing, function() {
                 $el
                     .removeClass(from_cls)
                     .removeClass("in-progress")
