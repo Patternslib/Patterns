@@ -30,6 +30,9 @@
 - Include pattern name in the parser log output. This makes it much easier to
   debug problems.
 
+- Collapsible pattern: add new option to specify an (external) triggering
+  element. [Ticket 274](https://github.com/Patternslib/Patterns/issues/274)
+
 - Markdown pattern:
 
   - Include section selector in `data-src` attribute.
