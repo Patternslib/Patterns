@@ -357,6 +357,7 @@ define([
             A: "href",
             FORM: "action",
             IMG: "src",
+            SOURCE: "src",
             VIDEO: "src"
         },
 
