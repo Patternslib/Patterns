@@ -25,7 +25,7 @@ define(["pat/select-option"], function(pattern) {
                 // Just in case the label was removed later
                 $("#lab").html("<select><option selected=\"selected\">Foo</option></select>");
                 var select = $("#lab select")[0];
-                pattern._onChange.apply(document.getElementById("select"), []);
+                pattern._onChange.apply(select, []);
             });
 
             it("Select with label", function() {
