@@ -21,7 +21,7 @@ define([
         _onChange: function() {
             var label = utils.findLabel(this);
             if (label!==null) {
-                var title = (this.selectedIndex==-1) ? "" : this.options[this.selectedIndex].label;
+                var title = (this.selectedIndex===-1) ? "" : this.options[this.selectedIndex].label;
                 label.setAttribute("data-option", title);
             }
         }
