@@ -64,7 +64,7 @@ define([
         if (input.id)
             $label = $("label[for="+input.id+"]");
         if ($label.length===0 && input.form)
-            $label = $("#" + input.form + " label[for="+input.name+"]");
+            $label = $("label[for="+input.name+"]", input.form);
         if ($label.length)
             return $label[0];
         else
