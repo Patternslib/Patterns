@@ -1808,7 +1808,6 @@ input[type="button"],
 .qq-upload-button,
 #calendar-filters .attendees .legend,
 label[data-option]:after {
-	margin: 0 10px 0 0;
 	border: 1px solid rgba(0,0,0,0.5);
 	color: rgba(0,0,0,0.78);
 	text-shadow: rgba(250,250,250,0.64) 0 1px 0;
@@ -1823,9 +1822,8 @@ text-decoration: none;
 	line-height: 1.5;
 	background-color: transparent;
 	display: inline-block;
-	padding-top: 0;
-	padding-left: 1em;
-	padding-right: 1em;
+	padding: 0 1em;
+	margin: 0;
 }
 
 a.button.confirmative,
