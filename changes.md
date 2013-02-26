@@ -23,9 +23,14 @@
 - Autoscale pattern: avoid creating nasty infinite loops with the resize
   handler. (Marko Đurković)
 
-- Injection pattern: add missing dependency on jquery.form. 
-  [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
-  (Wichert Akkerman)
+- Injection pattern:
+
+  - add missing dependency on jquery.form.
+    [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
+    (Wichert Akkerman)
+
+  - rebasing urls during injection for video and source tags
+    (Florian Friesdorf)
 
 - Depends pattern:
 
