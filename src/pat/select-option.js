@@ -14,9 +14,13 @@ define([
 
         init: function($el) {
             return $el
-                .on("change", select_option._onChange)
+                .on("change.pat-select-option", select_option._onChange)
                 .trigger("change");
         },
+
+	destroy: function($el) {
+            return $el.off(".pat-select-option");
+	},
 
         _onChange: function() {
             var label = utils.findLabel(this);
