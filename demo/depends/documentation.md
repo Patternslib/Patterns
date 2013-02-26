@@ -124,14 +124,14 @@ has no value.
 
 The available actions are:
 
--   `show`: make an item's visibility conditional, based on the
-    dependencies. If the dependencies are not met the item will
-    be made invisible. In addition a CSS class of `hidden` or
-	`visible` will be set.
--   `enable`: disables items and adds a `disabled` class if the
-    dependencies are not met. Input elements are disabled by setting
-    their disabled property. Links are disabled by registered a
-    temporary event handler that blocks their default behaviour.
+-  `show`: make an item's visibility conditional, based on the
+   dependencies. If the dependencies are not met the item will
+   be made invisible. In addition a CSS class of `hidden` or
+   `visible` will be set.
+-  `enable`: disables items and adds a `disabled` class if the
+   dependencies are not met. Input elements are disabled by setting
+   their disabled property. Links are disabled by registered a
+   temporary event handler that blocks their default behaviour.
 
 Transitions
 -----------
@@ -180,3 +180,4 @@ The available options are:
 | `action` | `show` | Action to perform. One of `show` or `enable`. |
 | `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
 | `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
+| `effect-easing`  | `swing` | Easing to use for the transition. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |

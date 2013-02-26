@@ -61,10 +61,13 @@ define(["pat/collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible, {duration: 0});
+                pattern.init($collapsible, {transition: "none"});
                 pattern.toggle($collapsible);
                 expect($collapsible.hasClass("open")).toBe(false);
                 expect($collapsible.hasClass("closed")).toBe(true);
+                var $trigger = $("#lab h3");
+                expect($trigger.hasClass("collapsible-open")).toBe(false);
+                expect($trigger.hasClass("collapsible-closed")).toBe(true);
             });
 
             it("Toggle a closed panel", function() {
@@ -76,10 +79,13 @@ define(["pat/collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible, {duration: 0});
+                pattern.init($collapsible, {transition: "none"});
                 pattern.toggle($collapsible);
                 expect($collapsible.hasClass("open")).toBe(true);
                 expect($collapsible.hasClass("closed")).toBe(false);
+                var $trigger = $("#lab h3");
+                expect($trigger.hasClass("collapsible-open")).toBe(true);
+                expect($trigger.hasClass("collapsible-closed")).toBe(false);
             });
         });
     });

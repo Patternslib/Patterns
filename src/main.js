@@ -30,14 +30,14 @@ define([
     "./pat/modal",
     "./pat/navigation",
     "./pat/placeholder",
-    "./pat/setclass",
     "./pat/sortable",
     "./pat/switch",
     "./pat/toggle",
     "./pat/tooltip",
+    "./pat/select-option",
     // has racing problems, might be replaced anyway
     //"./pat/validate",
     "./pat/zoom"
 ], function($, registry) {
-    registry.init();
+    return registry;
 });

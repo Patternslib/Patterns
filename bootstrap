@@ -1,23 +1,94 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 cd "$(dirname "$0")"
+if [ $(basename $0) = "post-checkout" -o $(basename $0) = "post-merge" ]; then
+    cd ../..
+fi
 
-mkdir -p bundles
-npm install
-node_modules/.bin/bungle update
-node_modules/.bin/bungle install
-./build.js -n
-./build.js
+# install bootstrap as checkout hook
+if [ ! -e .git/hooks/post-checkout ]; then
+    while [ "$answer" != "y" -a "$answer" != "n" ]; do
+        echo
+        echo "Bootstrap installs dependencies for you and creates the Javascript bundle."
+        echo "It is advisable to run it on every checkout."
+        echo
+        echo -n "Do you want to run bootstrap on every checkout automatically? (y/n) "
+        read answer
+    done
+    if [ $answer == "y" ]; then
+        mkdir -p .git/hooks
+        ln -sf ../../bootstrap .git/hooks/post-checkout
+        ln -sf ../../bootstrap .git/hooks/post-merge
+    fi
+fi
 
-cat > .git/hooks/post-checkout <<-'EOF'
-	#!/bin/sh
-	cd "$(dirname "$0")/../.."
-        ./build.js -n
-        ./build.js
-EOF
+vercmp () {
+    local i IFS=.
+    local v1=($1) v2=($2)
+    for ((i=${#v1[@]}; i<${#v2[@]}; i++)); do v1[i]=0; done
+    for ((i=${#v2[@]}; i<${#v1[@]}; i++)); do v2[i]=0; done
+    for ((i=0; i<${#v1[@]}; i++)); do
+        ((10#${v1[i]} > 10#${v2[i]})) && return 1
+        ((10#${v1[i]} < 10#${v2[i]})) && return 2
+    done
+    return 0
+}
 
-chmod +x .git/hooks/post-checkout
 
-echo "\n\n\n"
-echo "Bootstraping done. Press ENTER to quit."
-read
+# ensure that node is in path and its version is high enough
+node=$(which node 2>/dev/null)
+
+if [ -n "$node" ]; then
+    nver=$($node -v)
+    vercmp ${nver#v} 0.8
+    (($? == 2)) && unset node
+fi
+
+if [ "$node" == "" ]; then
+    if [ ! -d .node ]; then
+        mach=$(uname -sm)
+        if [ "$mach" == "Darwin x86_64" ]; then
+            FILE="node-v0.8.20-darwin-x64.tar.gz"
+            HASH="2b87bf077022b8fa1cbcec10ea3866574fed2b75"
+        elif [ "$mach" == "Darwin i368" ]; then
+            FILE="node-v0.8.20-darwin-x86.tar.gz"
+            HASH="42023ffbdbf36ef69250bd750f112e684eb97008"
+        elif [ "$mach" == "Linux x86_64" ]; then
+            FILE="node-v0.8.20-linux-x64.tar.gz"
+            HASH="93480cbc67f2c757879228434bce1fd765db7df8"
+        elif [ "$mach" == "Linux i386" ]; then
+            FILE="node-v0.8.20-linux-x86.tar.gz"
+            HASH="7fedae5ce4b366d5dcaa7f2e770b3ff739648a51"
+        else
+            echo "Local nodejs installation was not implemented for your OS."
+            echo "Please install nodejs."
+            exit 1
+        fi
+        curl -O "http://nodejs.org/dist/v0.8.20/$FILE" &&
+        shasum $FILE | grep -w $HASH &&
+        tar xfz $FILE &&
+        rm $FILE &&
+        mv ${FILE%.tar.gz} .node
+        echo "Node installed locally."
+    fi
+fi
+
+if [ -d .node ]; then
+    export PATH=$PWD/.node/bin:$PATH
+fi
+
+{
+    # npm's stderr is too noisy
+    npm install 2>&1 &&
+    npm install bungle 2>&1 &&
+    node_modules/.bin/bungle update &&
+    node_modules/.bin/bungle install &&
+    ./build.js -n
+    ./build.js
+}
+
+if [ $? == 0 ]; then
+    echo
+    echo "All done \o/"
+    echo
+fi
