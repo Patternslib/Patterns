@@ -1041,140 +1041,6 @@ sup.required {
 
 /* @end */
 
-/* @group Checkmarks */
-
-.checklist {
-	margin: 0 0 1em;
-}
-
-.checklist.tablesque {
-	border-top: 1px solid silver;
-}
-
-.checklist.tablesque label {
-	border-bottom: 1px solid silver;
-	padding-left: 30px;
-}
-
-.checklist .checklist {
-	margin-bottom: -2px;
-	border-style: none;
-}
-
-.checklist .jump {
-	float: right;
-	position: absolute;
-	top: 2px;
-	right: 5px;
-}
-
-.checklist legend,
-.checklist p.legend {
-	font-weight: normal;
-	font-style: normal;
-}
-
-.checklist label {
-	display: block;
-	width: auto !important;
-	padding-left: 1em;
-	margin-bottom: 0 !important;
-	float: none;
-	margin-left: 0;
-	padding-right: 0;
-	margin-right: 0;
-	position: relative;
-}
-
-.checklist input[type="radio"],
-.checklist input[type="checkbox"],
-.checkbox > input[type="checkbox"]  {
-	display: none !important;
-}
-
-.checklist label:before,
-label.checkbox:before {
-	content: '\f096';
-	font-family: fontello;
-	width: 1em;
-	display: inline-block;
-	margin-left: -1em;
-}
-
-.checklist label.checked:before,
-label.checkbox.checked:before {
-	content: '\2611';
-}
-
-@media only screen and (max-width: 767px) {
-
-label.checkbox:before {
-	padding-left: 1em;
-} }
-
-.checklist.radio label:before {
-	content: '\f10c';
-	font-family: fontello;
-	width: 1em;
-	display: inline-block;
-}
-
-.checklist.radio label.checked:before {
-	content: '\e702';
-}
-
-.checklist fieldset.composed {
-	padding-left: 0 !important;
-	margin-bottom: 0;
-	position: relative;
-}
-
-.checklist .checklist label {
-	padding-left: 50px;
-
-}
-
-.checklist .composed > select {
-	position: absolute;
-	top: 6px;
-	right: 40px;
-	font-size: 14px;
-	display: none;
-}
-
-.checklist .composed.checked > select {
-	display: inline-block;
-}
-
-.checklist .checklist .checklist label {
-	padding-left: 70px;
-}
-
-.checklist.tablesque label:hover {
-	background-color: #efefef;
-}
-
-.checklist.tablesque label.checked {
-	background-color: #5bb75b;
-	color: white;
-}
-
-.checklist .checked > a ,
-.checklist .checked > select {
-	color: white;
-}
-
-.checklist label input[type="checkbox"],
-form.concise fieldset.comprehensive.checklist label input[type="checkbox"] {
-	margin-left: -18px;
-	float: none;
-	position: relative;
-	left: 0;
-	top: -2px;
-}
-
-/* @end */
-
 /* @group Patterns fieldsets */
 
 @media only screen and (min-width: 768px) {
@@ -1208,12 +1074,12 @@ form.concise fieldset.comprehensive.checklist label input[type="checkbox"] {
 .horizontal label.checkbox:before,
 .horizontal label.select:after {
 	position: relative;
-	vertical-align: top;
 	max-width: 200%;
 	left: 100%;
 	margin-right: -200%;
 	margin-left: 0;
 	float: left;
+	top: 4px;
 }
 
 .horizontal label .iconified,
@@ -1919,85 +1785,19 @@ html.gecko .comprehensive .infoPanel {
 
 /* @end */
 
-/* @group Buttons */
+/* @group Button */
 
-.buttonBar,.button-bar {
-	height: 2em;
-	clear: left;
-	margin-bottom: 1px;
+.buttonBar,
+.button-bar {
 	border-top: 1px solid silver;
 	padding-top: 1em;
 	padding-bottom: 1em;
 }
 
-.application-portal .button-bar,
-.application-portal .buttonBar {
-	background-color: transparent;
-	text-align: right;
-	line-height: 26px;
-	padding-left: 0;
-	padding-right: 0;
-}
-
-.application-portal .header button,
-.application-portal .header a.button {
-		border-radius: 20px;
-		background: rgb(125,126,125); /* Old browsers */
-background: linear-gradient(top, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* W3C */
-	border-color: #656371;
-	color: #e2e2e2;
-	text-shadow: #000000 0 -1px 0;
-	padding-right: 18px;
-	padding-left: 18px;
-}
-
-.application-portal .header button:hover,
-.application-portal .header a.button:hover {
-	color: white;
-	text-shadow: white 0 0 2px;
-}
-
-.floatingPanel-modal .buttonBar,
-.kupu-drawer .buttonBar {
-	background-color: transparent;
-	margin-top: 20px;
-	margin-bottom: -10px;
-	padding: 0;
-}
-
-.aside .buttonBar {
-	width: 100%;
-	padding: 0;
-	margin-bottom: 0;
-}
-
 .buttonBar fieldset.group {
-	margin-left: 10px;
-	margin-right: 1px;
 	float: right;
-	padding-left: 10px;
 	border-left: 1px solid silver;
 	padding-bottom: 0;
-}
-
-.buttonBar fieldset.group button.floatAfter {
-	margin-left: 0;
-	margin-right: -1px;
-}
-
-.outdent .buttonBar {
-}
-
-button.floatAfter,
-a.button.floatAfter {
-	margin-left: 10px;
-	margin-right: 0;
-}
-
-button.floatBefore,
-a.button.floatBefore {
-	float: left;
-	margin-right: 10px;
 }
 
 a.button,
@@ -2047,35 +1847,6 @@ button.large {
 	font-size: 20px;
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
-}
-
-form.functions button,
-form.functions a.button {
-	line-height: 13px;
-	background: url(button-select.png) center -25px;
-	color: #666;
-	text-shadow: white 0 1px 1px;
-	text-decoration: none;
-	padding-top: 4px;
-	padding-bottom: 3px;
-	margin-right: 5px;
-	float: left;
-	height: 14px;
-	filter: none;
-	border: 1px solid #c5c5c5;
-	border-bottom-color: #969696;
-	border-top-color: #ededed;
-}
-
-form.functions button:before,
-form.functions a.button:before {
-	margin-left: -4px;
-	margin-right: 4px;
-	line-height: 8px;
-}
-
-form.functions button {
-	height: 23px;
 }
 
 button:active,
