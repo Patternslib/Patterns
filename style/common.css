@@ -1010,7 +1010,7 @@ label[data-option] select {
 }
 
 label[data-option]:after {
-	content: attr(data-option) ' ▼';
+	content: attr(data-option) ' ⊽';
 }
 
 
