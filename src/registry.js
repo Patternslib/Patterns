@@ -25,6 +25,14 @@ define([
     var log = logger.getLogger("registry"),
         jquery_plugin = utils.jquery_plugin;
 
+    var disable_re = /patterns-disable=([^&]+)/g,
+        disabled = {}, match;
+
+    while ((match=disable_re.exec(window.location.search))!==null) {
+        disabled[match[1]] = true;
+        log.info('Pattern disabled via url config:', match[1]);
+    }
+
     var registry = {
         patterns: {},
         // as long as the registry is not initialized, pattern
@@ -52,6 +60,10 @@ define([
 
             // selector for all patterns
             patterns.forEach(function(name) {
+                if (disabled[name]) {
+                    log.debug('Skipping disabled pattern:', name);
+                    return;
+                }
                 pattern = registry.patterns[name];
                 if (pattern.transform) {
                     try {
