@@ -36,33 +36,6 @@ body {
 	padding-left: 20px;
 } }
 
-/* @group Buttons */
-
-button,a.button {
-	display: inline-block;
-	border-style: none;
-	margin: 0;
-	background-color: #625647;
-	color: white;
-	padding-left: 15px;
-	padding-right: 15px;
-	border-radius: 4px;
-}
-
-button:hover,a.button:hover {
-	background-color: #8c7b65;
-	cursor: default;
-}
-
-button:active,
-a.button:active {
-	box-shadow: inset 0 1px 6px rgba(0,0,0,0.9)
-}
-
-
-
-/* @end */
-
 /* @group Image */
 
 img {
@@ -1942,6 +1915,185 @@ html.gecko .comprehensive .infoPanel {
 	-ms-border-radius: 4px;
 	-o-border-radius: 4px;
 	border-radius: 4px;
+}
+
+/* @end */
+
+/* @group Buttons */
+
+.buttonBar,.button-bar {
+	height: 2em;
+	clear: left;
+	margin-bottom: 1px;
+	border-top: 1px solid silver;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+.application-portal .button-bar,
+.application-portal .buttonBar {
+	background-color: transparent;
+	text-align: right;
+	line-height: 26px;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.application-portal .header button,
+.application-portal .header a.button {
+		border-radius: 20px;
+		background: rgb(125,126,125); /* Old browsers */
+background: linear-gradient(top, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%); /* W3C */
+	border-color: #656371;
+	color: #e2e2e2;
+	text-shadow: #000000 0 -1px 0;
+	padding-right: 18px;
+	padding-left: 18px;
+}
+
+.application-portal .header button:hover,
+.application-portal .header a.button:hover {
+	color: white;
+	text-shadow: white 0 0 2px;
+}
+
+.floatingPanel-modal .buttonBar,
+.kupu-drawer .buttonBar {
+	background-color: transparent;
+	margin-top: 20px;
+	margin-bottom: -10px;
+	padding: 0;
+}
+
+.aside .buttonBar {
+	width: 100%;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.buttonBar fieldset.group {
+	margin-left: 10px;
+	margin-right: 1px;
+	float: right;
+	padding-left: 10px;
+	border-left: 1px solid silver;
+	padding-bottom: 0;
+}
+
+.buttonBar fieldset.group button.floatAfter {
+	margin-left: 0;
+	margin-right: -1px;
+}
+
+.outdent .buttonBar {
+}
+
+button.floatAfter,
+a.button.floatAfter {
+	margin-left: 10px;
+	margin-right: 0;
+}
+
+button.floatBefore,
+a.button.floatBefore {
+	float: left;
+	margin-right: 10px;
+}
+
+a.button,
+button,
+.accordion .header,
+input[type="submit"],
+input[type="button"],
+.qq-upload-button,
+#calendar-filters .attendees .legend,
+label[data-option]:after {
+	margin: 0 10px 0 0;
+	border: 1px solid rgba(0,0,0,0.5);
+	color: rgba(0,0,0,0.78);
+	text-shadow: rgba(250,250,250,0.64) 0 1px 0;
+	cursor: default;
+	box-shadow: inset 0 1px 10px rgba(0,0,0,0);
+	border-radius: 4px;
+	
+	background-image: linear-gradient(bottom, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 100%);
+
+text-decoration: none;
+	font-size: 13px;
+	line-height: 1.5;
+	background-color: transparent;
+	display: inline-block;
+	padding-top: 0;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+a.button.confirmative,
+button.confirmative {
+	background-color: #5bb75b;
+	color: white;
+	text-shadow: rgba(0,0,0,0.35) 0 -1px 0;
+}
+
+a.button.negative,
+button.negative {
+	background-color: red;
+	color: white;
+	text-shadow: rgba(0,0,0,0.35) 0 -1px 0;
+}
+
+a.button.large,
+button.large {
+	font-size: 20px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+form.functions button,
+form.functions a.button {
+	line-height: 13px;
+	background: url(button-select.png) center -25px;
+	color: #666;
+	text-shadow: white 0 1px 1px;
+	text-decoration: none;
+	padding-top: 4px;
+	padding-bottom: 3px;
+	margin-right: 5px;
+	float: left;
+	height: 14px;
+	filter: none;
+	border: 1px solid #c5c5c5;
+	border-bottom-color: #969696;
+	border-top-color: #ededed;
+}
+
+form.functions button:before,
+form.functions a.button:before {
+	margin-left: -4px;
+	margin-right: 4px;
+	line-height: 8px;
+}
+
+form.functions button {
+	height: 23px;
+}
+
+button:active,
+.accordion .header.closed:active,
+button.small.sublime:active,
+button.sublime:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+button.on,
+a.button:active {
+	box-shadow: inset 0 1px 10px rgba(0,0,0,0.3);
+}
+
+a.button.disabled,
+button[disabled="disabled"],
+button:disabled {
+	opacity: 0.4;
+	filter: alpha(opacity = 40);
 }
 
 /* @end */
