@@ -67,7 +67,7 @@ define([
         onSelectAll: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:not(:checked)").prop("checked", true);
+            $trigger.find("input[type=checkbox]:not(:checked)").prop("checked", true).trigger("change");
             $trigger.find(options.deselect).prop("disabled", false);
             $trigger.find(options.select).attr({disabled: "disabled"});
             $trigger.change();
@@ -77,7 +77,7 @@ define([
         onDeselectAll: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:checked").prop("checked", false);
+            $trigger.find("input[type=checkbox]:checked").prop("checked", false).trigger("change");
             $trigger.find(options.select).prop("disabled", false);
             $trigger.find(options.deselect).attr({disabled: "disabled"});
             $trigger.change();

@@ -40,6 +40,9 @@
   [Ticket 266](https://github.com/Patternslib/Patterns/issues/266)
   (Wichert Akkerman)
 
+- Check-list pattern: send *change* event when a checkbox is toggled. This fixes
+  interaction with other patterns such as the checked-flag pattern.
+
 - Collapsible pattern: 
 
   - Add new option to specify an (external) triggering element.
