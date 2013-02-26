@@ -120,10 +120,22 @@ table thead tr th:last-child, table tfoot tr td:last-child {
 section.description,
 section.documentation,
 section.demo {
-	border-top: 1px solid #ddd;
 	position: relative;
-	padding: 1.3em 0 2em 33.3%;
 	box-sizing: border-box;
+	padding: 1.3em 0 2em 33.3%;
+}
+
+section.description:before,
+section.documentation:before,
+section.demo:before {
+	content: " ";
+	background: #ddd;
+	display: block !Important;
+	position: absolute;
+	top: 0;
+	right: -8px;
+	left: -8px;
+	height: 1px;
 }
 
 /* @group Data source */
@@ -139,7 +151,7 @@ section.documentation div[data-src]:before {
 	text-align: right;
 	padding-right: 8px;
 	width: 250px;
-	left: 0;
+	left: -8px;
 	font-style: italic;
 }
 
@@ -183,13 +195,11 @@ section.demo {
 	float: right;
 	width: 66.66666666%;
 	margin-left: -260px;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding-right: 0;
+	padding-left: 0;
 }
 
 section.demo h2:first-child {
-	margin-right: -8px;
-	margin-left: -8px;
 }
 
 section.demo:after {
@@ -769,7 +779,8 @@ pre {
 /* @group Typography */
 
 ul,ol,p,dl {
-	margin: 0 8px 1.5em;
+	margin-top: 0;
+	margin-bottom: 1.5em;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -779,16 +790,15 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 body>section>h1 {
-	margin-bottom: 0;
 	font-size: 5em;
 	border-top: 1px solid #353f2e;
 	padding: 85px 8px 4px 312px;
 	text-transform: uppercase;
 	letter-spacing: 10px;
-	margin-top: 0;
 	line-height: 1em;
 	font-weight: normal;
 	font-style: normal;
+	margin: 0 -8px;
 }
 
 section.documentation h2,
@@ -798,16 +808,16 @@ section.description h2 {
 	line-height: 1.3;
 	font-weight: bold;
 	border-bottom: 1px solid #ddd;
-	padding: 0 8px .3em 8px;
 	font-size: 1.2em;
+	margin-left: -8px;
+	margin-right: -8px;
+	padding: 0 8px .3em;
 }
 
 h3 {
 	margin-top: 0;
 	font-size: 1.2em;
 	line-height: 1.4;
-	padding-left: 8px;
-	padding-right: 8px;
 }
 
 h4 {
@@ -1043,6 +1053,12 @@ sup.required {
 
 /* @group Patterns fieldsets */
 
+fieldset {
+	border-style: none;
+	margin-bottom: 1em;
+	padding: 0;
+}
+
 @media only screen and (min-width: 768px) {
 
 /* @group Fieldset horizontal */
@@ -1240,433 +1256,6 @@ sup.required {
 .horizontal p {
 	margin-bottom: 0;
 } }
-
-/* @end */
-
-
-
-/* @end */
-
-/* @group Legacy */
-
-/* @group Fieldsets */
-
-fieldset {
-	border-style: none;
-	margin: 0 0 1em;
-}
-
-/* @group User and group select */
-
-.userandgroupselect .buttons {
-	display: inline-block;
-}
-
-.userandgroupselect input[type="button"],
-.querySelectSearch .searchButton
- {
-	display: inline-block;
-	font-size: 10px;
-	line-height: 10px;
-	padding-left: 5px;
-	padding-right: 5px;
-}
-
-
-
-/* @end */
-
-/* @group Select search */
-
-.querySelectSearch {
-	margin-bottom: 20px;
-	margin-top: 20px;
-}
-
-
-
-/* @end */
-
-/* @group Fieldset Concise */
-
-fieldset.concise,
-form.concise fieldset {
-	clear: left;
-	position: relative;
-}
-
-fieldset.concise p.question,
-form.concise fieldset p.question,
-fieldset.concise legend,
-form.concise fieldset legend {
-	width: auto;
-	margin: 0;
-	padding: 0;
-	font-weight: bold;
-	letter-spacing: 0;
-	text-transform: none;
-}
-
-fieldset.concise label,
-form.concise label {
-	position: relative;
-	float: left;
-	padding-right: 65%;
-	width: 35%;
-	left: 0;
-	margin-bottom: 10px;
-	padding-top: 1px;
-}
-
-
-form.concise fieldset label *,
-fieldset.concise label *,
-form.concise fieldset label *,
-fieldset.concise label *,
-.concise label.checkbox:before {
-	position: relative;
-	vertical-align: top;
-	max-width: 133%;
-	left: 100%;
-	margin-right: -200%;
-	margin-left: 0;
-	float: left;
-}
-
-form.concise fieldset label sup.required,
-fieldset.concise label sup.required,
-form.concise fieldset label sup.required,
-fieldset.concise label sup.required {
-	float: none;
-	position: static;
-	line-height: 20px;
-	margin: 0;
-}
-
-form.concise fieldset label input[type=checkbox],
-fieldset.concise label input[type=checkbox] {
-	top: 3px;
-}
-
-form.concise fieldset label select {
-	top: 1px;
-}
-
-.concise label textarea {
-	width: 170%;
-}
-
-.comprehensive textarea {
-	width: 100%;
-}
-
-/* @end */
-
-/* @group Fieldset Comprehensive */
-
-.comprehensive,
-.comprehensive fieldset,
-.concise fieldset.comprehensive,
-.compact fieldset.comprehensive {
-	width: 65%;
-	clear: left;
-	border-style: none;
-	margin: 0;
-	margin-bottom: 10px;
-	padding-left: 35%;
-	padding-bottom: 0;
-	position: relative;
-	padding-top: 1px;
-}
-
-fieldset.comprehensive legend {
-	position: absolute;
-	left: 0;
-	font-weight: normal;
-	font-style: normal;
-	top: 0;
-}
-
-fieldset.comprehensive label,
-form.comprehensive fieldset label,
-form.concise fieldset.comprehensive label,
-form.compact fieldset.comprehensive label {
-	font-weight: normal;
-	font-style: normal;
-	position: static;
-	margin: 0;
-	border-style: none;
-	width: auto;
-	padding: 0;
-	float: none;
-}
-
-.concise fieldset.comprehensive,
-.condensed fieldset.comprehensive {
-	border-bottom-style: none;
-	margin: 0 0 10px;
-	padding-bottom: 0 !important;
-	padding-top: 1px;
-	height: auto;
-}
-
-fieldset.comprehensive label *,
-form.comprehensive fieldset label *,
-form.concise fieldset.comprehensive label *,
-form.compact fieldset.comprehensive label * {
-	position: static !important;
-	margin: 0;
-	float: none;
-}
-
-fieldset.comprehenisve input[type="radio"],
-.concise fieldset.comprehensive input[type="radio"] {
-	margin-top: 3px;
-}
-
-fieldset.comprehenisve input[type="checkbox"],
-.concise fieldset.comprehensive input[type="checkbox"] {
-	margin-top: 3px;
-}
-
-fieldset.comprehensive p.question,
-form.comprehensive fieldset p.question,
-fieldset.comprehensive p.legend,
-form.comprehensive fieldset p.legend,
-form.concise fieldset.comprehensive p.question,
-form.compact fieldset.comprehensive p.question {
-	width: 48% !important;
-	display: inline;
-	text-align: left;
-	padding: 0;
-	position: relative;
-	float: left;
-	font-weight: normal;
-	font-style: normal;
-	color: black;
-	margin: 0 0 0 -54%;
-	text-transform: none;
-	letter-spacing: 0;
-}
-
-fieldset.comprehensive label a.floatAfter {
-	float: right;
-	margin-right: 22px;
-}
-
-/* @end */
-
-/* @group Fieldset Condensed */
-
-fieldset.condensed,
-form.condensed fieldset {
-	clear: left;
-	border-style: none;
-	margin: 0 0 20px;
-}
-
-fieldset.condensed label,
-form.condensed label {
-	font-weight: normal;
-	font-style: normal;
-	display: block;
-}
-
-fieldset.condensed p.question {
-	width: auto;
-	margin: 0;
-	letter-spacing: 0;
-	text-transform: none;
-}
-
-fieldset.condensed label input,
-form.condensed fieldset label input,
-fieldset.condensed label textarea {
-	margin-bottom: 0;
-	margin-top: 0;
-}
-
-fieldset.condensed fieldset p.question {
-	font-weight: normal;
-	font-style: normal;
-}
-
-.concise p.question,
-.concise p.legend {
-	width: 95%;
-	font-weight: bold;
-	color: #3f3f3f;
-	margin-bottom: 20px;
-	margin-top: 0;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-}
-
-.condensed p.question,
-.condensed p.legend {
-	font-weight: bold;
-	margin-bottom: 0;
-}
-
-/* @end */
-
-/* @end */
-
-/* @group Radio List */
-
-.radio-list {
-	margin: 0 0 20px;
-}
-
-.comprehensive.radio-list legend {
-	font-weight: normal;
-	font-style: normal;
-}
-
-fieldset.radio-list label,
-fieldset.comprehensive.radio-list label,
-form.concise fieldset.comprehensive.radio-list label {
-	display: block;
-	padding-left: 20px;
-	margin: 0;
-}
-
-.radio-list label input[type="radio"],
-fieldset.comprehensive.radio-list label input[type="radio"] {
-	margin-left: -20px;
-	float: left;
-}
-
-.lt-ie9 .radio-list label input[type="radio"],
-fieldset.comprehensive.radio-list label input[type="radio"] {
-	margin-top: 6px;
-}
-
-/* @end */
-
-/* @group Radio Row */
-
-.radioRow {
-
-}
-
-.radioRow label,
-label.radioRow {
-	display: inline;
-	width: auto !important;
-	float: left;
-	padding-right: 10px !important;
-}
-
-.radioRow input,
-label.radioRow input {
-	margin-top: 4px;
-	margin-right: 5px;
-	margin-bottom: 0;
-	position: static !important;
-}
-
-/* @end */
-
-/* @group Input Row */
-
-ul.inputRow,
-ol.inputRow {
-	display: inline;
-	margin-top: 0;
-	padding-top: 0;
-	margin-left: 0;
-	padding-left: 0;
-	list-style-type: none !important;
-}
-
-/* @end */
-
-/* @group Input List */
-
-ul.inputList,
-ol.inputList,
-ol.radioList,
-ul.radioList,
-ol.check-list,
-ul.check-list {
-	margin-top: 0;
-	padding-top: 0;
-	margin-left: 0;
-	padding-left: 0;
-	list-style-type: none !important;
-}
-
-ul.inputList li,
-ol.radioList li,
-ul.radioList li,
-ol.check-list li,
-ul.check-list li {
-	margin-left: 0;
-	padding-left: 0;
-	display: block;
-}
-
-/* @end */
-
-/* @group Check List */
-
-.check-list {
-	list-style-type: none !important;
-	margin: 0 0 20px;
-	padding-bottom: 4px !important;
-}
-
-.check-list label,
-html>body fieldset.comprehensive.check-list label {
-	display: block;
-	width: auto !important;
-	padding-left: 20px;
-	-webkit-user-select: none;
-	-moz-user-select: auto;
-	user-select: none;
-}
-
-fieldset.check-list label input[type="checkbox"] {
-	float: left;
-	margin-left: -20px;
-	margin-top: 7px;
-}
-
-.portlet .check-list input {
-	margin-top: 3px;
-}
-
-.check-list .column-1-of-3,
-.check-list .column-2-of-3,
-.check-list .column-3-of-3 {
-	padding: 0;
-	float: left;
-	width: 140px;
-	clear: none;
-	font-size: 10px;
-}
-
-/* @end */
-
-/* @group Check Row */
-
-ol.checkRow li,
-ul.checkRow li,
-ol.radioRow li,
-ul.radioRow li {
-	float: none;
-	margin-left: 0;
-	padding-left: 0;
-	display: inline;
-}
-
-ol.checkRow li label,
-ul.checkRow li label,
-ol.radioRow li label,
-ul.radioRow li label {
-	display: inline;
-}
 
 /* @end */
 
