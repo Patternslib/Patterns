@@ -14,6 +14,9 @@
   [Ticket 270](https://github.com/Patternslib/Patterns/issues/270)
   (Wichert Akkerman)
 
+- Add a new *select-option* pattern to faciliate styling of select elements.
+  [Ticket 276](https://github.com/Patternslib/Patterns/issues/276)
+
 - Zoom pattern: make zoom fallback control (text input field) react properly to
   change events. (Marko Đurković)
 
