@@ -356,7 +356,8 @@ define([
         _link_attributes: {
             A: "href",
             FORM: "action",
-            IMG: "src"
+            IMG: "src",
+            VIDEO: "src"
         },
 
         _rebaseHTML: function(base, html) {
