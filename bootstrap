@@ -5,6 +5,8 @@ if [ $(basename $0) = "post-checkout" -o $(basename $0) = "post-merge" ]; then
     cd ../..
 fi
 
+mkdir -p .git/hooks
+
 # install bootstrap as checkout hook
 if [ ! -e .git/hooks/post-checkout ]; then
     while [ "$answer" != "y" -a "$answer" != "n" ]; do
@@ -16,7 +18,6 @@ if [ ! -e .git/hooks/post-checkout ]; then
         read answer
     done
     if [ $answer == "y" ]; then
-        mkdir -p .git/hooks
         ln -sf ../../bootstrap .git/hooks/post-checkout
         ln -sf ../../bootstrap .git/hooks/post-merge
     fi
@@ -56,7 +57,7 @@ if [ "$node" == "" ]; then
         elif [ "$mach" == "Linux x86_64" ]; then
             FILE="node-v0.8.20-linux-x64.tar.gz"
             HASH="93480cbc67f2c757879228434bce1fd765db7df8"
-        elif [ "$mach" == "Linux i386" ]; then
+        elif [[ "$mach" =~ Linux\ i.86 ]]; then
             FILE="node-v0.8.20-linux-x86.tar.gz"
             HASH="7fedae5ce4b366d5dcaa7f2e770b3ff739648a51"
         else
