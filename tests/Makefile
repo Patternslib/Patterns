@@ -1,7 +1,6 @@
-
 BUNGLE 		= node_modules/.bin/bungle
 PATTERNS 	= $(shell cd ../src; find . -name "*.js")
-TESTS 		= $(wildcard ../tests/core/*.js) $(wildcard ../tests/pat/*.js)
+TESTS 		= $(wildcard ../tests/core/*.js) $(wildcard ../tests/lib/*.js) $(wildcard ../tests/pat/*.js)
 TARGETS 	= index.html \
 		  TestRunner-bundle.html \
 		  TestRunner-bundle-min.html \
@@ -43,7 +42,4 @@ TestRunner-bundle.js: TestRunner-modules.js
 TestRunner-modules.js: TestRunner.js.in $(TESTS)
 	sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@
 
-
-
 .PHONY: all clean
-

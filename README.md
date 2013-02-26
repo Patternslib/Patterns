@@ -24,8 +24,7 @@ Other browser version may work too, but are not actively tested against.
 
     git clone git://github.com/Patternslib/Patterns.git
     cd Patterns
-    npm install
-    make
+    ./bootstrap
 
 This will generate minified and non-minified bundles of the current Patterns
 snapshot in the `bundles` subdirectory. If you want to create bundles for a
@@ -41,8 +40,8 @@ previous versions of Patterns you can use
 
 ## Development
 
-To develop on Patterns or one of it's submodules, clone the repository
-and set it's push-url to your fork:
+To develop on Patterns, clone the repository and set it's push-url to
+your fork:
 
     git remote set-url --push origin <url_to_your_fork>
 
@@ -72,13 +71,11 @@ with your favourite internet browser.
 
 The simplest way to run the tests are to use npm:
 
-    npm install
     npm test
 
-The first command is only needed once and will install all tools required to 
-build patterns and run its tests.
-
 The command `npm test` will alse create the files
-`tests/TestRunner-modules.html` and `tests/TestRunner-bundle.html` which you
-can open in a browser to test the modularized oder bundled version Patterns.
+`tests/TestRunner-modules.html`, `tests/TestRunner-bundle.html`, and
+``tests/TestRunner-bundle-min.html` which you can open in a browser to
+test the modularized, bundled and minified version of Patterns. The
+modularized version is linked to `tests/index.html`.
 

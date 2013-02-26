@@ -27,31 +27,43 @@ define([
 
     var registry = {
         patterns: {},
+        // as long as the registry is not initialized, pattern
+        // registration just registers a pattern. Once init is called,
+        // the DOM is scanned. After that registering a new pattern
+        // results in rescanning the DOM only for this pattern.
+        initialized: false,
         init: function() {
             $(document).ready(function() {
                 log.info('loaded: ' + Object.keys(registry.patterns).sort().join(', '));
                 registry.scan(document.body);
+                registry.initialized = true;
                 log.info('finished initial scan.');
             });
         },
 
-        scan: function(content, do_not_catch_init_exception) {
+        scan: function(content, do_not_catch_init_exception, patterns) {
             var $content = $(content),
                 all = [], allsel,
-                pattern, $match, plog, name;
+                pattern, $match, plog;
+
+            // If no list of patterns was specified, we scan for all
+            // patterns
+            patterns = patterns || Object.keys(registry.patterns);
 
             // selector for all patterns
-            for (name in registry.patterns) {
+            patterns.forEach(function(name) {
                 pattern = registry.patterns[name];
-                if (pattern.transform)
+                if (pattern.transform) {
                     try {
                         pattern.transform($content);
                     } catch (e) {
                         log.critical("Transform error for pattern" + name, e);
                     }
-                if (pattern.trigger)
+                }
+                if (pattern.trigger) {
                     all.push(pattern.trigger);
-            }
+                }
+            });
             allsel = all.join(",");
 
             // Find all elements that belong to any pattern.
@@ -121,6 +133,10 @@ define([
             }
 
             log.debug("Registered pattern:", pattern.name, pattern);
+
+            if (registry.initialized) {
+                registry.scan(document.body, false, [pattern.name]);
+            }
             return true;
         }
     };

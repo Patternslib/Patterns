@@ -2,15 +2,10 @@
  * Patterns collapsible - Collapsible content
  *
  * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  * Copyright 2012 Markus Maier
  * Copyright 2013 Peter Lamut
  * Copyright 2012 Jonas Hoersch
- */
-/*
- * changes:
- * - open($el, opts) instead of open($el, duration)
- * - same for close
  */
 define([
     "jquery",
@@ -25,27 +20,48 @@ define([
 
     parser.add_argument("load-content");
     parser.add_argument("store", "none", ["none", "session", "local"]);
-    parser.add_argument("duration", "0.4s");
-    parser.add_argument("easing", "swing");
+    parser.add_argument("transition", "slide", ["none", "css", "fade", "slide"]);
+    parser.add_argument("effect-duration", "fast");
+    parser.add_argument("effect-easing", "swing");
     parser.add_argument("closed", false);
+    parser.add_argument("trigger", "::first");
 
     var _ = {
         name: "collapsible",
         trigger: ".pat-collapsible",
         jquery_plugin: true,
+
+        transitions: {
+            none: {closed: "hide", open: "show"},
+            fade: {closed: "fadeOut", open: "fadeIn"},
+            slide: {closed: "slideUp", open: "slideDown"}
+        },
+
         init: function($el, opts) {
             return $el.each(function() {
                 var $el = $(this),
                     options = _._validateOptions(this, parser.parse($el, opts)),
                 // create collapsible structure
-                    $trigger = $el.children(":first"),
-                    $content = $el.children(":gt(0)"),
-                    $panel, state, storage;
-                if ($content.length > 0)
-                    $panel = $content.wrapAll("<div class='panel-content' />")
+                    $content, state, storage;
+
+                if (options.trigger === "::first") {
+                    options.$trigger = $el.children(":first");
+                    $content = $el.children(":gt(0)");
+                } else {
+                    options.$trigger = $(options.trigger);
+                    $content = $el.children();
+                }
+
+                if (options.$trigger.length===0) {
+                    log.error("Collapsible has no trigger.", this);
+                    return;
+                }
+
+                if ($content.length)
+                    options.$panel = $content.wrapAll("<div class='panel-content' />")
                         .parent();
                 else
-                    $panel = $("<div class='panel-content' />").insertAfter($trigger);
+                    options.$panel = $("<div class='panel-content' />").insertAfter(options.$trigger);
 
                 $el.data("patternCollapsible", options);
                 state=(options.closed || $el.hasClass("closed")) ? "closed" : "open";
@@ -55,15 +71,18 @@ define([
                 }
 
                 if (state==="closed") {
+                    options.$trigger.removeClass("collapsible-open").addClass("collapsible-closed");
                     $el.removeClass("open").addClass("closed");
-                    $panel.hide();
+                    options.$panel.hide();
                 } else {
-                    _.loadContent($el);
-                    $el.addClass("open");
-                    $panel.show();
+                    if (options.loadContent)
+                        _._loadContent($el, options.loadContent, options.$panel);
+                    options.$trigger.removeClass("collapsible-closed").addClass("collapsible-open");
+                    $el.removeClass("closed").addClass("open");
+                    options.$panel.show();
                 }
 
-                $trigger
+                options.$trigger
                     .off(".pat-collapsible")
                     .on("click.pat-collapsible", null, $el, _._onClick);
 
@@ -105,25 +124,31 @@ define([
             return options;
         },
 
-        loadContent: function($el) {
-            var options = $el.data("patternCollapsible");
-            if (!options.loadContent)
-                return;
-            var components = options.loadContent.split("#"),
-                url = components[0],
+        _loadContent: function($el, url, $target) {
+            var components = url.split("#"),
+                base_url = components[0],
                 id = components[1] ? "#" + components[1] : null,
                 opts = [{
-                    url: url,
+                    url: base_url,
                     source: id,
-                    $target: $(".panel-content", $el),
+                    $target: $target,
                     dataType: "html"
                 }];
             inject.execute(opts, $el);
         },
 
+        // jQuery method to force loading of content.
+        loadContent: function($el) {
+            return $el.each(function() {
+                var $el = $(this),
+                    options = $(this).data("patternCollapsible");
+                if (options.loadContent)
+                    _._loadContent($el, options.loadContent, options.$panel);
+            });
+        },
+
         toggle: function($el) {
             var options = $el.data("patternCollapsible"),
-                $panel = $el.find(".panel-content"),
                 new_state = $el.hasClass("closed") ? "open" : "closed";
 
             if (options.store!=="none") {
@@ -133,27 +158,44 @@ define([
 
             if (new_state==="open") {
                 $el.trigger("patterns-collapsible-open");
-                _._transit($el, $panel, "closed", "open", options);
+                _._transit($el, "closed", "open", options);
             } else {
                 $el.trigger("patterns-collapsible-close");
-                _._transit($el, $panel, "open", "closed", options);
+                _._transit($el, "open", "closed", options);
             }
 
             // allow for chaining
             return $el;
         },
 
-        _transit: function($el, $panel, from_cls, to_cls, options) {
-            if (to_cls === "open")
-                _.loadContent($el);
-            if (options.duration)
-                $el.addClass("in-progress");
-            $panel.slideToggle(options.duration, options.easing, function() {
+        _transit: function($el, from_cls, to_cls, options) {
+            if (to_cls === "open" && options.loadContent)
+                _._loadContent($el, options.loadContent, options.$panel);
+
+            var duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
+
+            if (!duration) {
+                options.$trigger
+                        .removeClass("collapsible-" + from_cls)
+                        .addClass("collapsible-" + to_cls);
                 $el
                     .removeClass(from_cls)
-                    .removeClass("in-progress")
                     .addClass(to_cls);
-            });
+            } else {
+                var t = _.transitions[options.transition];
+                $el.addClass("in-progress");
+                options.$trigger.addClass("collapsible-in-progress");
+                options.$panel[t[to_cls]](duration, options.effect.easing, function() {
+                    options.$trigger
+                            .removeClass("collapsible-" + from_cls)
+                            .removeClass("collapsible-in-progress")
+                            .addClass("collapsible-" + to_cls);
+                    $el
+                        .removeClass(from_cls)
+                        .removeClass("in-progress")
+                        .addClass(to_cls);
+                });
+            }
         }
     };
 
