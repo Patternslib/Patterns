@@ -54,6 +54,23 @@ define([
         return base.slice(0, base.lastIndexOf("/")+1) + url;
     };
 
+    function findLabel(input) {
+        for (var label=input.parentNode; label && label.nodeType!==11; label=label.parentNode)
+            if (label.tagName==="LABEL")
+                return label;
+
+        var $label;
+
+        if (input.id)
+            $label = $("label[for="+input.id+"]");
+        if ($label.length===0 && input.form)
+            $label = $("#" + input.form + " label[for="+input.name+"]");
+        if ($label.length)
+            return $label[0];
+        else
+            return null;
+    }
+
     // Taken from http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
     var escapeRegExp = function(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -64,7 +81,8 @@ define([
         jquery_plugin: jquery_plugin,
         debounce: debounce,
         escapeRegExp: escapeRegExp,
-        rebaseURL: rebaseURL
+        rebaseURL: rebaseURL,
+        findLabel: findLabel
     };
 
     return utils;
