@@ -1,5 +1,9 @@
-# Documentation
+# Checklist
 
+## Description
+…
+
+## Documentation
 The checklist pattern provides a convenient method to add options to
 select and deselect all checkboxes in a block. This requires two changes
 in your markup:
