@@ -8,24 +8,31 @@
   </head>
   <body>
   	<section class="description">
-  		<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
+  		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
   	</section>
   	<section class="demo">
           <h2>Demo</h2>
           <form action="#">
-            <fieldset>
-              <label>
-                Take your pick
-                <select>
-                  <option>Item A</option>
-                  <option selected="selected">Item B</option>
-                </select>
-              </label>
-            </fieldset>
+          	<fieldset class="horizontal">
+          			<label class="select">
+          				Take your pick
+          				<select>
+          					<option>
+          						Bananas
+          					</option>
+          					<option>
+          						Strawberries
+          					</option>
+          					<option>
+          						Pears
+          					</option>
+          				</select>
+          			</label>
+          	</fieldset>
           </form>
-        </section>
+    </section>
 	<section class="documentation">
-		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
+		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
 	</section>
 
 	<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>

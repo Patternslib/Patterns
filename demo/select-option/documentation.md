@@ -1,5 +1,8 @@
-# Documentation
+# Select box
+## Description
+Use select boxes for lists where a user can choose from. Typically suitable for cases of 5 options and more.
 
+## Documentation
 This pattern adds a `data-option` attribute for a select''s label containing
 the text of the selected option. This can be useful for specific styling tricks.
 
@@ -22,8 +25,6 @@ will be transformed to:
     </label>
 
 
-Properties
-----------
-
+### Properties
 This pattern has no configurable properties.
 
