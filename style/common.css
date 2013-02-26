@@ -916,64 +916,94 @@ p img {
 /* @group Forms */
 
 input[type="text"],
-input[type="password"]
-,textarea {
+input[type="password"],
+input[type="search"],
+input[type="email"],
+textarea {
+	-webkit-appearance: none;
 	vertical-align: baseline;
-	-webkit-transition: all 0.7s;
-	-moz-transition: all 0.7s;
-	-ms-transition: all 0.7s;
-	-o-transition: all 0.7s;
-	transition: all 0.7s;
-	-webkit-box-shadow: 0 0 0 rgba(0,0,0,0.4);
-	-moz-box-shadow: 0 0 0 rgba(0,0,0,0.4);
-	box-shadow: 0 0 0 rgba(0,0,0,0.4);
+	transition: all 0.2s;
 	outline: none;
-	-webkit-background-size: auto 100%;
-	-moz-background-size: auto 100%;
-	background-size: auto 100%;
-	font: 12px/20px Verdana, "Lucida Grande", Lucida, sans-serif;
 	padding-left: 4px;
 	display: inline-block;
-	margin: 0;
+	box-shadow: inset 0 0 4px rgba(0,0,0,0.15);
+	cursor: text;
+	box-sizing: border-box;
 	padding-top: 0;
 	padding-bottom: 0;
-	border: 1px solid #dedede;
-	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
-	-moz-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
-	box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
+	margin-right: 0;
+	margin-left: 0;
+	user-select: text;
+	max-width: 100%;
+	font: 1em/1.5 Verdana, "Lucida Grande", Lucida, sans-serif;
+	background-color: rgba(0,0,0,0.05);
+	outline: 1px solid rgba(0,0,0,0.2);
+	border-style: none;
+	color: inherit;
+}
+
+input.block,textarea.block {
+	width: 100%;
+}
+
+input[type="text"]:disabled,
+input[type="password"]:disabled,
+input[type="search"]:disabled,
+input[type="email"]:disabled,
+textarea:disabled {
+	outline: none;
+	box-shadow: none;
+	padding: 0;
+	background-color: transparent;
+	color: rgba(0,0,0,0.7);
+}
+
+input[type="text"].dark,
+input[type="password"].dark,
+input[type="search"].dark,
+textarea.dark,
+.application-portal .header input[type="text"],
+.application-portal .header input[type="password"],
+.application-portal .header input[type="search"],
+.application-portal .header textarea {
+	border-radius: 20px;
+	background-color: #1f2028;
+	color: white;
+	border: 1px solid #474954;
+	box-shadow: inset 0 0 4px black;
+}
+
+input[type="text"].dark:focus,
+input[type="password"].dark:focus,
+input[type="search"].dark:focus,
+textarea.dark:focus,
+.application-portal .header input[type="text"]:focus,
+.application-portal .header input[type="password"]:focus,
+.application-portal .header input[type="search"]:focus,
+.application-portal .header textarea:focus {
+	border-color: silver;
+}
+
+.lt-ie9 input[type="text"],
+.lt-ie9 input[type="password"],
+.lt-ie9 input[type="search"]
+ {
+	height: 22px;
 }
 
 textarea {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-o-box-sizing: border-box;
 	box-sizing: border-box;
 	margin-bottom: 1px;
-}
-
-input[type="text"],textarea,label.superImpose {
+	width: 100%;
 	cursor: text;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
-label.superImpose,
-.concise .superImpose {
-	color: #707070;
-	display: block;
-	margin-left: 7px;
-	margin-top: 1px;
-	padding: 0 0 1px;
-	position: absolute;
-	white-space: nowrap;
-	border-style: none;
+input[type="text"].large {
+	font-size: 30px;
+	line-height: 40px;
 }
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="time"]:focus,
-textarea:focus {
-	outline: solid black 1px;
-	}
 
 input[type="file"] {
 	margin-left: 0px !important;
@@ -982,85 +1012,441 @@ input[type="file"] {
 	border-style: none;
 }
 
+/* @group Select */
+
 select {
-	position: relative;
-	top: -1px;
-	margin-top: -1px;
-	margin-bottom: -1px;
+	font-size: inherit;
+	background-color: transparent;
+	border: 1px solid rgba(0,0,0,0.2);
+	color: inherit;
 }
 
-form fieldset em.message {
-	clear: left;
-	float: left;
-	margin-bottom: 10px;
-	margin-top: 4px;
-	padding: 3px 10px;
-	color: red;
-	font-weight: bold;
+label[data-option] select {
+	opacity: 0;
+	z-index: 1;
 }
 
-sup.required {
-	color: red;
-	display: inline-block;
-	margin-top: -10px;
-	font-weight: bold;
-	font-size: 16px;
-}
-
-/* @group Info panels */
-
-.concise .infoPanel {
-	margin-left: -16px;
-	z-index: 1000;
-	position: absolute;
-	left: 100%;
-	top: auto;
-	margin-top: 3px;
-}
-
-.concise .infoPanel.open {
-	margin-top: 27px;
-}
-
-.comprehensive .infoPanel {
-	top: 0;
-	margin-left: -16px;
-}
-
-.comprehensive .infoPanel.open,
-.concise .infoPanel.open {
-	z-index: 999;
-}
-
-fieldset.richInput .infoPanel {
-	top: -1px;
-}
-
-/* Next statement is to compensate for Firefox' absolute positioning behaviour where it counts in the padding with the positioning */
-
-html.gecko .comprehensive .infoPanel {
-	left: 65%;
+label[data-option]:after {
+	content: attr(data-option) ' ▼';
 }
 
 
 
 /* @end */
 
+form fieldset em.message {
+	clear: left;
+	margin-bottom: 10px;
+	margin-top: 4px;
+	padding: 3px 10px;
+	color: red;
+	font-weight: bold;
+	float: left;
+}
+
+sup.required {
+	color: red;
+	display: inline-block;
+	font-weight: bold;
+	font-size: 16px;
+	margin-top: -11px;
+}
+
+/* @group date-eu */
+
+.date-eu {
+
+}
+
+.date-eu input.day {
+	width: 29px;
+}
+
+.date-eu input.year {
+	width: 45px;
+}
+
+/* @end */
+
+/* @group Checkmarks */
+
+.checklist {
+	margin: 0 0 1em;
+}
+
+.checklist.tablesque {
+	border-top: 1px solid silver;
+}
+
+.checklist.tablesque label {
+	border-bottom: 1px solid silver;
+	padding-left: 30px;
+}
+
+.checklist .checklist {
+	margin-bottom: -2px;
+	border-style: none;
+}
+
+.checklist .jump {
+	float: right;
+	position: absolute;
+	top: 2px;
+	right: 5px;
+}
+
+.checklist legend,
+.checklist p.legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
+.checklist label {
+	display: block;
+	width: auto !important;
+	padding-left: 1em;
+	margin-bottom: 0 !important;
+	float: none;
+	margin-left: 0;
+	padding-right: 0;
+	margin-right: 0;
+	position: relative;
+}
+
+.checklist input[type="radio"],
+.checklist input[type="checkbox"],
+.checkbox > input[type="checkbox"]  {
+	display: none !important;
+}
+
+.checklist label:before,
+label.checkbox:before {
+	content: '\f096';
+	font-family: fontello;
+	width: 1em;
+	display: inline-block;
+	margin-left: -1em;
+}
+
+.checklist label.checked:before,
+label.checkbox.checked:before {
+	content: '\2611';
+}
+
+@media only screen and (max-width: 767px) {
+
+label.checkbox:before {
+	padding-left: 1em;
+} }
+
+.checklist.radio label:before {
+	content: '\f10c';
+	font-family: fontello;
+	width: 1em;
+	display: inline-block;
+}
+
+.checklist.radio label.checked:before {
+	content: '\e702';
+}
+
+.checklist fieldset.composed {
+	padding-left: 0 !important;
+	margin-bottom: 0;
+	position: relative;
+}
+
+.checklist .checklist label {
+	padding-left: 50px;
+
+}
+
+.checklist .composed > select {
+	position: absolute;
+	top: 6px;
+	right: 40px;
+	font-size: 14px;
+	display: none;
+}
+
+.checklist .composed.checked > select {
+	display: inline-block;
+}
+
+.checklist .checklist .checklist label {
+	padding-left: 70px;
+}
+
+.checklist.tablesque label:hover {
+	background-color: #efefef;
+}
+
+.checklist.tablesque label.checked {
+	background-color: #5bb75b;
+	color: white;
+}
+
+.checklist .checked > a ,
+.checklist .checked > select {
+	color: white;
+}
+
+.checklist label input[type="checkbox"],
+form.concise fieldset.comprehensive.checklist label input[type="checkbox"] {
+	margin-left: -18px;
+	float: none;
+	position: relative;
+	left: 0;
+	top: -2px;
+}
+
+/* @end */
+
+/* @group Patterns fieldsets */
+
+@media only screen and (min-width: 768px) {
+
+/* @group Fieldset horizontal */
+
+.horizontal {
+	width: 100%;
+}
+
+.horizontal .legend {
+	width: auto;
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.horizontal label {
+	position: relative;
+	float: left;
+	padding-right: 65%;
+	width: 35%;
+	left: 0;
+	padding-top: 1px;
+	margin-bottom: 1em;
+}
+
+.horizontal label *,
+.horizontal label.checkbox:before,
+.horizontal label.select:after {
+	position: relative;
+	vertical-align: top;
+	max-width: 200%;
+	left: 100%;
+	margin-right: -200%;
+	margin-left: 0;
+	float: left;
+}
+
+.horizontal label .iconified,
+.horizontal label sup.required {
+	float: none;
+	position: static;
+}
+
+.horizontal label sup.required {
+	line-height: 20px;
+	margin: 0;
+}
+
+.horizontal label textarea {
+	width: 170%;
+}
+
+.horizontal .comprehensive textarea {
+	width: 100%;
+}
+
+/* @group Multiple elements */
+
+.horizontal fieldset.group {
+	width: 65%;
+	clear: left;
+	border-style: none;
+	margin: 0;
+	margin-bottom: 10px;
+	padding-left: 35%;
+	position: relative;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+.horizontal fieldset.group legend {
+	position: absolute;
+	left: 0;
+	font-weight: normal;
+	font-style: normal;
+	top: 0;
+}
+
+.horizontal fieldset.group label {
+	font-weight: normal;
+	font-style: normal;
+	position: static;
+	border-style: none;
+	width: auto;
+	float: none;
+}
+
+.horizontal fieldset.group:not(.checklist) label {
+	
+}
+
+.horizontal fieldset.group .legend {
+	width: 48% !important;
+	display: inline;
+	text-align: left;
+	padding: 0;
+	position: relative;
+	float: left;
+	font-weight: normal;
+	font-style: normal;
+	margin: 0 0 0 -54%;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.horizontal fieldset.button-bar {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+/* @end */
+
+/* @end */ }
+
+/* @group Fieldset vertical */
+
+.vertical fieldset .legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
+.vertical label,
+.vertical fieldset .legend,
+.vertical fieldset legend {
+	font-weight: bold;
+	display: block;
+	font-size: 12px;
+	color: rgba(0,0,0,0.5);
+	margin-bottom: 0;
+}
+
+.vertical label {
+	margin-bottom: 1em;
+}
+
+.vertical > br {
+	display: none;
+}
+
+.vertical input,
+.vertical select {
+	clear: both;
+	display: block;
+}
+
+.vertical fieldset input,
+.vertical fieldset select {
+	clear: none;
+	display: inline;
+}
+
+.vertical p {
+	margin-bottom: 0;
+}
+
+@media only screen and (max-width: 767px) {
+
+.horizontal fieldset .legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
+.horizontal label,
+.horizontal fieldset .legend,
+.horizontal fieldset legend {
+	font-weight: bold;
+	display: block;
+	font-size: 12px;
+	color: rgba(0,0,0,0.5);
+	margin-bottom: 0;
+}
+
+.horizontal label {
+	margin-bottom: 1em;
+}
+
+.horizontal > br {
+	display: none;
+}
+
+.horizontal input,
+.horizontal select {
+	clear: both;
+	display: block;
+}
+
+.horizontal fieldset.group input,
+.horizontal fieldset.group select {
+	clear: none;
+	display: inline;
+}
+
+.horizontal p {
+	margin-bottom: 0;
+} }
+
+/* @end */
+
+
+
+/* @end */
+
+/* @group Legacy */
+
 /* @group Fieldsets */
 
 fieldset {
-	padding: 0 0 2px;
 	border-style: none;
-	margin: 0 0 20px;
+	margin: 0 0 1em;
 }
 
-fieldset p.question,
-fieldset p.legend,
-fieldset legend {
-	margin-bottom: 1em;
-	font-size: 16px;
-	font-weight: bold;
+/* @group User and group select */
+
+.userandgroupselect .buttons {
+	display: inline-block;
 }
+
+.userandgroupselect input[type="button"],
+.querySelectSearch .searchButton
+ {
+	display: inline-block;
+	font-size: 10px;
+	line-height: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+
+
+/* @end */
+
+/* @group Select search */
+
+.querySelectSearch {
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
+
+
+/* @end */
 
 /* @group Fieldset Concise */
 
@@ -1089,15 +1475,19 @@ form.concise label {
 	padding-right: 65%;
 	width: 35%;
 	left: 0;
-	margin-bottom: 1em;
+	margin-bottom: 10px;
+	padding-top: 1px;
 }
+
 
 form.concise fieldset label *,
 fieldset.concise label *,
 form.concise fieldset label *,
-fieldset.concise label * {
+fieldset.concise label *,
+.concise label.checkbox:before {
 	position: relative;
-	max-width: 320px;
+	vertical-align: top;
+	max-width: 133%;
 	left: 100%;
 	margin-right: -200%;
 	margin-left: 0;
@@ -1109,9 +1499,9 @@ fieldset.concise label sup.required,
 form.concise fieldset label sup.required,
 fieldset.concise label sup.required {
 	float: none;
-	display: inline;
 	position: static;
 	line-height: 20px;
+	margin: 0;
 }
 
 form.concise fieldset label input[type=checkbox],
@@ -1143,15 +1533,25 @@ form.concise fieldset label select {
 	clear: left;
 	border-style: none;
 	margin: 0;
-	margin-bottom: 1em;
+	margin-bottom: 10px;
 	padding-left: 35%;
 	padding-bottom: 0;
 	position: relative;
 	padding-top: 1px;
 }
 
-.comprehensive label,
-.concise .comprehensive label {
+fieldset.comprehensive legend {
+	position: absolute;
+	left: 0;
+	font-weight: normal;
+	font-style: normal;
+	top: 0;
+}
+
+fieldset.comprehensive label,
+form.comprehensive fieldset label,
+form.concise fieldset.comprehensive label,
+form.compact fieldset.comprehensive label {
 	font-weight: normal;
 	font-style: normal;
 	position: static;
@@ -1165,25 +1565,29 @@ form.concise fieldset label select {
 .concise fieldset.comprehensive,
 .condensed fieldset.comprehensive {
 	border-bottom-style: none;
+	margin: 0 0 10px;
+	padding-bottom: 0 !important;
+	padding-top: 1px;
 	height: auto;
-	padding-top: 0;
-	padding-bottom: 0;
 }
 
 fieldset.comprehensive label *,
 form.comprehensive fieldset label *,
 form.concise fieldset.comprehensive label *,
 form.compact fieldset.comprehensive label * {
-	position: static;
+	position: static !important;
 	margin: 0;
 	float: none;
 }
 
-fieldset.comprehensive legend {
-	position: absolute;
-	left: 0;
-	font-weight: normal !important;
-	font-style: normal;
+fieldset.comprehenisve input[type="radio"],
+.concise fieldset.comprehensive input[type="radio"] {
+	margin-top: 3px;
+}
+
+fieldset.comprehenisve input[type="checkbox"],
+.concise fieldset.comprehensive input[type="checkbox"] {
+	margin-top: 3px;
 }
 
 fieldset.comprehensive p.question,
@@ -1200,11 +1604,10 @@ form.compact fieldset.comprehensive p.question {
 	float: left;
 	font-weight: normal;
 	font-style: normal;
+	color: black;
 	margin: 0 0 0 -54%;
 	text-transform: none;
 	letter-spacing: 0;
-	line-height: 2em;
-	font-size: 16px;
 }
 
 fieldset.comprehensive label a.floatAfter {
@@ -1224,79 +1627,80 @@ form.condensed fieldset {
 }
 
 fieldset.condensed label,
-form.condensed fieldset label {
+form.condensed label {
 	font-weight: normal;
 	font-style: normal;
-	display: inline-block;
-	float: left;
-	clear: left;
-	margin-bottom: 1em;
+	display: block;
+}
+
+fieldset.condensed p.question {
+	width: auto;
+	margin: 0;
+	letter-spacing: 0;
+	text-transform: none;
 }
 
 fieldset.condensed label input,
 form.condensed fieldset label input,
 fieldset.condensed label textarea {
-	float: left;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+fieldset.condensed fieldset p.question {
+	font-weight: normal;
+	font-style: normal;
+}
+
+.concise p.question,
+.concise p.legend {
+	width: 95%;
+	font-weight: bold;
+	color: #3f3f3f;
+	margin-bottom: 20px;
+	margin-top: 0;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.condensed p.question,
+.condensed p.legend {
+	font-weight: bold;
+	margin-bottom: 0;
 }
 
 /* @end */
-
-/* @end */
-
-/* @group Form Components */
-
-/* @group date-eu */
-
-.date-eu {
-
-}
-
-.date-eu label {
-	display: none;
-}
-
-.date-eu input.day {
-	width: 21px;
-}
-
-.date-eu input.year {
-	width: 38px;
-}
 
 /* @end */
 
 /* @group Radio List */
 
-.radio-list p.legend,
-.radio-list legend {
+.radio-list {
+	margin: 0 0 20px;
+}
+
+.comprehensive.radio-list legend {
 	font-weight: normal;
 	font-style: normal;
 }
 
-.radio-list {
-	list-style-type: none !important;
-}
-
 fieldset.radio-list label,
-fieldset.comprehensive.radio-list label   {
+fieldset.comprehensive.radio-list label,
+form.concise fieldset.comprehensive.radio-list label {
 	display: block;
-	width: auto !important;
-	padding-left: 30px;
-	margin-bottom: 0;
-	float: none;
-	margin-left: -10px;
-	padding-right: 10px;
-	border-radius: 4px;
-	margin-right: -10px;
+	padding-left: 20px;
+	margin: 0;
 }
 
 .radio-list label input[type="radio"],
-form.concise fieldset.comprehensive.radio-list label input[type="radio"] {
-	float: none;
-	position: relative;
-	left: 0;
-	top: -2px;
-	margin-left: -18px;
+fieldset.comprehensive.radio-list label input[type="radio"] {
+	margin-left: -20px;
+	float: left;
+}
+
+.lt-ie9 .radio-list label input[type="radio"],
+fieldset.comprehensive.radio-list label input[type="radio"] {
+	margin-top: 6px;
 }
 
 /* @end */
@@ -1343,10 +1747,10 @@ ol.inputRow {
 
 ul.inputList,
 ol.inputList,
-ol.radio-list,
-ul.radio-list,
-ol.checkList,
-ul.checkList {
+ol.radioList,
+ul.radioList,
+ol.check-list,
+ul.check-list {
 	margin-top: 0;
 	padding-top: 0;
 	margin-left: 0;
@@ -1355,10 +1759,10 @@ ul.checkList {
 }
 
 ul.inputList li,
-ol.radio-list li,
-ul.radio-list li,
-ol.checkList li,
-ul.checkList li {
+ol.radioList li,
+ul.radioList li,
+ol.check-list li,
+ul.check-list li {
 	margin-left: 0;
 	padding-left: 0;
 	display: block;
@@ -1368,42 +1772,40 @@ ul.checkList li {
 
 /* @group Check List */
 
-.checkList {
+.check-list {
 	list-style-type: none !important;
 	margin: 0 0 20px;
 	padding-bottom: 4px !important;
 }
 
-fieldset.check-list legend,
-.check-list p.legend {
-	font-weight: normal;
-	font-style: normal;
-}
-
-fieldset.check-list label,
-fieldset.comprehensive.check-list label {
+.check-list label,
+html>body fieldset.comprehensive.check-list label {
 	display: block;
 	width: auto !important;
-	padding-left: 30px;
-	margin-bottom: 0;
-	float: none;
-	margin-left: -10px;
-	padding-right: 10px;
-	border-radius: 4px;
-	margin-right: -10px;
+	padding-left: 20px;
+	-webkit-user-select: none;
+	-moz-user-select: auto;
+	user-select: none;
 }
 
-.checkList label:hover {
-	background-color: #efefef;
+fieldset.check-list label input[type="checkbox"] {
+	float: left;
+	margin-left: -20px;
+	margin-top: 7px;
 }
 
-.check-list label input[type="checkbox"],
-form.concise fieldset.comprehensive.check-list label input[type="checkbox"] {
-	margin-left: -18px;
-	float: none;
-	position: relative;
-	left: 0;
-	top: -2px;
+.portlet .check-list input {
+	margin-top: 3px;
+}
+
+.check-list .column-1-of-3,
+.check-list .column-2-of-3,
+.check-list .column-3-of-3 {
+	padding: 0;
+	float: left;
+	width: 140px;
+	clear: none;
+	font-size: 10px;
 }
 
 /* @end */
@@ -1428,6 +1830,67 @@ ul.radioRow li label {
 }
 
 /* @end */
+
+
+
+/* @end */
+
+/* @group Hyperlink title */
+
+input.hyperlink - title {
+	width: 100%;
+}
+
+
+
+/* @end */
+
+/* @group Hyperlink */
+
+input.hyperlink {
+	width: 100%;
+}
+
+
+
+/* @end */
+
+/* @group Info panels */
+
+.concise .infoPanel {
+	margin-left: -16px;
+	z-index: 1000;
+	position: absolute;
+	left: 100%;
+	top: auto;
+	margin-top: 3px;
+}
+
+.concise .infoPanel.open {
+	margin-top: 27px;
+}
+
+.comprehensive .infoPanel {
+	top: 0;
+	margin-left: -16px;
+}
+
+.comprehensive .infoPanel.open,
+.concise .infoPanel.open {
+	z-index: 999;
+}
+
+fieldset.richInput .infoPanel {
+	top: -1px;
+}
+
+/* Next statement is to compensate for Firefox' absolute positioning behaviour where it counts in the padding with the positioning */
+
+html.gecko .comprehensive .infoPanel {
+	left: 65%;
+}
+
+
 
 /* @end */
 
