@@ -27,7 +27,7 @@
 	</head>
 	<body>
 		<div class="pat-auto-scale" data-pat-auto-scale="zoom">
-			<header id="site-header" class="state-download">
+			<header id="site-header" class="state-documentation">
 				<form action="getBundle" class="component-index ">
 					<fieldset class="bundle-type">       
 				       Bundle type:  
@@ -70,10 +70,6 @@
 				        	  	<label class="inject">
 				        	  	    <input type="checkbox" name="pat/inject" checked/>
 				        	  	    <a class="navigation ajax" href="inject/index.html" title="AJAX injection">Injection (AJAX)</a>
-				        	  	</label>
-				        	  	<label class="set-class">
-				        	  	    <input type="checkbox" name="pat/setclass" checked/>
-				        	  	    <a>Set class</a>
 				        	  	</label>
 				        	  	<label class="switch">
 				        	  	    <input type="checkbox" name="pat/switch" checked/>
@@ -230,9 +226,9 @@
 
 			</header>
 			<nav id="global-navigation" class="pat-bumper">
-				<a href="#" id="home" class="pat-bumper"><img src="style/logo.png" alt="Patterns brandmark" id="logo" /></a>
-				<a href="#demo">Demos &amp; documentation</a> 
-				<a href="#download">Download &amp; contribute</a>
+				<a href="#" id="home" class="pat-bumper pat-switch" data-pat-switch="#site-header mode-* mode-home"><img src="style/logo.png" alt="Patterns brandmark" id="logo" /></a>
+				<a href="#demo" class="pat-switch" data-pat-switch="#site-header mode-* mode-documentation">Demos &amp; documentation</a> 
+				<a href="#download" class="pat-switch" data-pat-switch="#site-header mode-* mode-download">Download</a>
 			</nav>
 			<div id="content" class="pat-auto-scale">
 				<section id="news">

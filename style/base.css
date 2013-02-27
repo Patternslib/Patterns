@@ -602,7 +602,7 @@ html.js .postit.guide.closed {
 	position: absolute;
 	display: block;
 	margin-right: 0;
-	margin-top: 0;
+	margin-top: -1500px;
 	margin-left: 0;
 	background-image: linear-gradient(bottom, rgba(0,0,0,0) 13%, rgba(0,0,0,9) 100%);
 	left: 0;
@@ -610,10 +610,11 @@ html.js .postit.guide.closed {
 	top: 0;
 	padding: 160px 10% 160px 50%;
 	border-style: none;
+	transition: margin-top 1s;
 }
 
-#site-header.state-download  blockquote {
-	margin-top: -500px;
+#site-header.state-home  blockquote {
+	margin-top: 0;
 }
 
 #site-header blockquote p {
