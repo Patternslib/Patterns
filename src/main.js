@@ -35,8 +35,6 @@ define([
     "./pat/toggle",
     "./pat/tooltip",
     "./pat/select-option",
-    // has racing problems, might be replaced anyway
-    //"./pat/validate",
     "./pat/zoom"
 ], function($, registry) {
     return registry;
