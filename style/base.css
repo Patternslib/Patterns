@@ -637,14 +637,13 @@ html.js .postit.guide.closed {
 	margin-right: 0;
 	margin-top: -1500px;
 	margin-left: 0;
-	background-image: linear-gradient(bottom, rgba(0,0,0,0) 13%, rgba(0,0,0,9) 100%);
+	background-image: linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
 	left: 0;
 	right: 0;
 	top: 0;
 	padding: 160px 10% 0 50%;
 	border-style: none;
 	transition: margin-top 1s;
-	height: 340px;
 }
 
 #site-header.state-home  blockquote {
