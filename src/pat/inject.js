@@ -472,11 +472,8 @@ define([
         },
 
         callTypeHandler: function(type, fn, context, params) {
-            if (!type) {
-                log.warn("No type specified");
-                return null;
-            }
-
+            type = type || "html";
+            
             if (_.handlers[type] && $.isFunction(_.handlers[type][fn])) {
                 return _.handlers[type][fn].apply(context, params);
             } else {
