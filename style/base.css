@@ -133,6 +133,7 @@ label.checkbox:before {
 .component-index .functions {
 	float: right;
 	margin-top: -43px;
+	position: relative;
 }
 
 .component-index .bundle-type {
@@ -141,8 +142,14 @@ label.checkbox:before {
 	padding-left: 8px;
 }
 
+.component-index .bundle-type label {
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .state-home .component-index .functions,
-.component-index .bundle-type {
+.state-home .component-index .bundle-type {
 	opacity: 0;
 }
 
