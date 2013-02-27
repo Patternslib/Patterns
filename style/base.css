@@ -221,53 +221,6 @@ body {
 
 /* @group Component icon */
 
-.component-index .core label a:before {
-	box-shadow: inset 0 0 1px gray;
-	color: gray;
-}
-
-.component-index .behavioural label a:before {
-	background-color: #3d607e;
-	color: white;
-}
-
-.component-index .navigation label a:before {
-	background-color: #c37757;
-	color: white;
-}
-
-.component-index .layout label a:before {
-	background-color: #915e79;
-	color: white;
-}
-
-.component-index .forms label a:before {
-	background-color: #9ba476;
-	color: white;
-}
-
-.component-index .fancy label a:before {
-	background-color: #a59baf;
-	color: white;
-}
-
-.component-index label a:before {
-	content: " ";
-	width: 32px;
-	display: inline-block;
-	height: 32px;
-	vertical-align: middle;
-	margin: -8px 10px -3px 0;
-	border-radius: 4px;
-	background: #feffff url(../style/component-icons.svg) no-repeat 0 32px;
-	text-align: center;
-	color: #2F383F;
-	font: 32px/34px Patticons;
-	text-rendering: optimizeLegibility;
-	text-shadow: 0 1px 3px silver;
-	padding: 5px;
-}
-
 /* @end */
 
 .component-index .checklist label input {
