@@ -69,7 +69,13 @@ define([
                 base_url = utils.rebaseURL(base_url, parents.first().data("pat-injected").origin);
             if (cfg.content_css)
                 cfg.content_css = utils.rebaseURL(base_url, cfg.content_css);
-            tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
+            
+            if (args.tinymceBaseurl.indexOf("://")!==-1 || args.tinymceBaseurl[0]==="/") {
+                // tinyMCE.baseURL must be absolute
+                tinyMCE.baseURL = location.origin + args.tinymceBaseurl;
+            } else {
+                tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
+            }
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
             cfg.oninit = function() {
