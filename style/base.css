@@ -98,6 +98,7 @@ body {
 	top: 0;
 	color: silver;
 	padding-top: 140px;
+	transition: all 1s;
 }
 
 .state-home .component-index {
@@ -155,16 +156,17 @@ body {
 	margin-left: 2%;
 	margin-bottom: 10px;
 	user-select: none;
-	padding: 0 8px;
+	padding: 0;
 	border-top: 1px solid #757575;
 	border-bottom: 1px solid #757575;
+	transition: padding-left 1s;
 }
 
 .state-documentation .component-index .checklist label {
 }
 
 .state-download .component-index .checklist label {
-	padding-left: 43px;
+	padding-left: 30px;
 }
 
 .state-home .component-index .checklist label {
@@ -565,6 +567,8 @@ html.js .postit.guide.closed {
 	perspective-origin: 100% 30%;
 	background-image: radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
 	overflow: hidden;
+	transition: all 1s;
+	height: 1070px;
 }
 
 #site-header.state-home {
