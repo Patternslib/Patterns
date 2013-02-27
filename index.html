@@ -26,25 +26,222 @@
 		<![endif]-->
 	</head>
 	<body>
-		<header id="site-header">
-			<blockquote class="pat-auto-scale">
-				Patterns is a library that aims to bring webdesign and development together.
-			</blockquote>
-			<img alt="" src="media/hero-image.jpg" />
+		<div class="pat-auto-scale" data-pat-auto-scale="zoom">
+			<header id="site-header" class="state-home">
+				<form action="getBundle" class="component-index ">
+					<fieldset class="bundle-type">       
+				       Bundle type:  
+				        <label>
+				            <input type="radio" name="minify" checked>Regular</input>
+				        </label>
+				        <label>
+				            <input type="radio" name="minify" value="minify">Minified</input>
+				        </label>
+				    </fieldset>
+				    <fieldset class="checklist pat-checklist">				    	
+				    	  <div class="functions">
+				    	    <button class="select-all" type="button">Select all</button>
+				    	    <button class="deselect-all" type="button">Deselect all</button>
+				    	  </div>
+				   			<h2>Core</h2>
+				   			
+				   			<fieldset class="checklist core">
+				       			<label class="modernizr">
+				       			    <input type="checkbox" name="modernizer" checked/>
+				       			    <a>Modernizr</a>
+				       			</label>
+				       			<label class="less">
+				       			    <input type="checkbox" name="less" checked/>
+				       			    <a>Less</a>
+				       			</label>
+				       			<label class="prefix-free">
+				       			    <input type="checkbox" name="prefixfree" checked/>
+				       			    <a>Prefixfree</a>
+				       			</label>
+				       			<label class="depends">
+				       			    <input type="checkbox" name="pat/depends" checked/>
+				       			    <a class="navigation depends" href="depends/index.html" title="">Depends</a>
+				       			</label>
+				   			</fieldset>
+				    	 
+				    	  	<h2>Behavioural</h2>
+				    	  	
+				    	  	<fieldset class="checklist behavioural">
+				        	  	<label class="inject">
+				        	  	    <input type="checkbox" name="pat/inject" checked/>
+				        	  	    <a class="navigation ajax" href="inject/index.html" title="AJAX injection">Injection (AJAX)</a>
+				        	  	</label>
+				        	  	<label class="set-class">
+				        	  	    <input type="checkbox" name="pat/setclass" checked/>
+				        	  	    <a>Set class</a>
+				        	  	</label>
+				        	  	<label class="switch">
+				        	  	    <input type="checkbox" name="pat/switch" checked/>
+				        	  	    <a class="navigation switch" href="switch/index.html" title="Switch">Switching</a>
+				        	  	</label>
+				        	  	<label class="toggle">
+				        	  	    <input type="checkbox" name="pat/toggle" checked/>
+				        	  	    <a class="navigation toggle" href="toggle/index.html" title="Toggle">Class toggle</a>
+				        	  	</label>
+				        	  	<label class="expandable">
+				        	  	    <input type="checkbox" name="pat/expandable" checked/>
+				        	  	    <a>Expandable</a>
+				        	  	</label>
+				    	  	</fieldset>
+				    	  	
+				    	  	<h2>Forms</h2>
+				    	  	
+				    	  	<fieldset class="checklist forms">
+				        	  	<label class="autofocus">
+				        	  	    <input type="checkbox" name="pat/autofocus" checked/>		            	  	    
+				        	  	    <a class="navigation autofocus" href="autofocus/index.html" title="Auto focus">Autofocus</a> 
+				        	  	</label>	
+				        	  	<label class="auto-submit">
+				        	  	    <input type="checkbox" name="pat/autosubmit" checked/>
+				        	  	    <a class="navigation auto-submit" href="auto-submit/index.html" title="Auto submit">Auto submit</a>
+				        	  	</label>  
+				        	  	<label class="auto-suggest">
+				        	  	    <input type="checkbox" name="pat/autosuggest" checked/>
+				        	  	    <a class="navigation auto-suggest" href="auto-suggest/index.html" title="Auto suggest">Auto suggest</a>
+				        	  	</label>  
+				        	  	<label class="focus">
+				        	  	    <input type="checkbox" name="pat/focus" checked/>
+				        	  	    <a class="navigation focus" href="focus/index.html" title="">Focus</a>
+				        	  	</label>
+				        	  	<label class="checked-flag">
+				        	  	    <input type="checkbox" name="pat/checkedflag" checked/>
+				        	  	    <a class="navigation checked-flag" href="checked-flag/index.html" title="checkedflag">Checked flag</a>
+				        	  	</label>
+				        	  	<label class="checklist">
+				        	  	    <input type="checkbox" name="pat/checklist" checked/>
+				        	  	    <a class="navigation checkboxes" href="checklist/index.html" title="checklist">Checkboxes</a>
+				        	  	</label>   
+				        	  	<label class="form">
+				        	  	    <input type="checkbox" name="pat/form-state" checked/>
+				        	  	    <a>Form-state</a>
+				        	  	</label> 	
+				        	  	<label class="placeholder">
+				        	  	    <input type="checkbox" name="pat/placeholder" checked/>
+				        	  	    <a>Placeholder</a>
+				        	  	</label>  	
+				    	  	</fieldset>
+				    	  	
+							<h2>Navigation</h2>
+							
+							<fieldset class="checklist navigation">
+								<label class="tree">
+									<a class="navigation tree" href="expandable-tree/index.html" title="">Expandable tree</a>
+								</label>
+				        	  	<label class="navigation">
+				        	  	    <input type="checkbox" name="pat/navigation" checked/>
+									<a class="navigation navigation" href="navigation/index.html" title="Navigation markers">Navigation</a>
+				        	  	</label>
+				           		<label class="bread-crumbs">
+				           		    <input type="checkbox" name="pat/breadcrumbs" checked/>
+				           		    <a>Breadcrumbs</a>
+				           		</label>
+				       		</fieldset>
+				       		
+				       		<h2>Layout</h2>
+				       		
+				       		<fieldset class="checklist layout">
+				           		<label class="auto-scale">
+				           		    <input type="checkbox" name="pat/autoscale" checked/>
+				           		    <a class="navigation auto-scale" href="auto-scale/index.html" title="Auto scale">Auto scaling</a>
+				           		</label>
+				           		<label class="bumper">
+				           		    <input type="checkbox" name="pat/bumper" checked/>
+				           		    <a class="navigation bumper" href="bumper/index.html" title="Bumper">Bumper</a>
+				           		</label>
+				           		<label class="grid">
+				           		    <input type="checkbox" name="pat/grid" checked/>
+				           		    <a class="navigation bumper" href="grid/index.html" title="Grid">Grid</a>
+				           		</label>
+				           		<label class="legend">
+				           		    <input type="checkbox" name="pat/legend" checked/>
+				           		    <a>Legend</a>
+				           		</label>
+				       		</fieldset>
+				       		               		
+				   			<h2>Fancy stuff</h2>
+				   			
+				   			<fieldset class="checklist fancy">
+				   			<label class="carousel">
+				   			    <input type="checkbox" name="pat/carousel" checked/>
+				   			    <a class="navigation carousel" href="carousel/index.html" title="">Carousel</a>
+				   			</label>
+				   			<label class="collapsible">
+				   			    <input type="checkbox" name="pat/collapsible" checked/>
+				   			    <a class="navigation collapsible" href="collapsible/index.html" title="collapsible">Collapsible</a>
+				   			</label>
+				   			<label class="tinymce">
+				   			    <input type="checkbox" name="pat/edit-tinymce" checked/>
+				   			    <a class="navigation tiny-mce" href="edit-tinymce/index.html" title="Rich editor">Tiny MCE</a>
+				   			</label>
+				   			<label class="modal">
+				   			    <input type="checkbox" name="pat/modal" checked/>
+				   			    <a class="navigation modal-panel" href="modal/index.html" title="Modal panels">Modal panels</a>
+				   			</label>
+				   			<label class="image-crop">
+				   			    <input type="checkbox" name="pat/image-crop" checked/>
+				   			    <a class="navigation image-crop" href="image-crop/index.html" title="Image crop">Image crop</a>
+				   			</label>
+				   			<label class="chosen">
+				   			    <input type="checkbox" name="pat/chosen" checked/>
+				   			    <a>Chosen</a>
+				   			</label>
+				   			<label class="full-calendar">
+				   			    <input type="checkbox" name="pat/fullcalendar" checked/>
+				   			    <a class="navigation full-calendar" href="calendar/index.html" title="Calendar">Full calendar</a>
+				   			</label>
+				   			<label class="markdown">
+				   			    <input type="checkbox" name="pat/markdown" checked/>
+				   			    <a class="navigation markdown" href="markdown/index.html" title="Markdown rendering">Markdown</a>
+				   			</label>
+				   			<label class="menu">
+				   			    <input type="checkbox" name="pat/menu" checked/>
+				   			    <a>Menu</a>
+				   			</label>
+				   			<label class="sortable">
+				   			    <input type="checkbox" name="pat/sortable" checked/>
+				   			    <a class="navigation sortable" href="sortable/index.html" title="">Sortable</a>
+				   			</label>
+				   			<label class="tooltip">
+				   			    <input type="checkbox" name="pat/tooltip" checked/>
+				   			    <a class="navigation tooltip" href="tooltip/index.html" title="">Tooltips</a>
+				   			</label>
+				   			<label class="zoom">
+				   			    <input type="checkbox" name="pat/zoom" checked/>
+				   			    <a class="navigation zoom" href="zoom/index.html" title="">Zoom</a>
+				   			</label>
+				    	</fieldset>
+				        <fieldset class="button-bar">
+				        	<button type="submit">Download bundle</button>
+				        </fieldset>
+				     </fieldset>
+				</form>
+			
+				<blockquote class="pat-auto-scale">
+					<p>
+						Patterns is a library that aims to bring webdesign and development together.
+					</p>
+				</blockquote>
+				
+
+			</header>
 			<nav id="global-navigation" class="pat-bumper">
 				<a href="#" id="home" class="pat-bumper"><img src="style/logo.png" alt="Patterns brandmark" id="logo" /></a>
 				<a href="#demo">Demos &amp; documentation</a> 
 				<a href="#download">Download &amp; contribute</a>
 			</nav>
-		</header>
-		<div id="content" class="pat-auto-scale">
-			<section id="news">
-				<p class="introduction">Did you see the patterns talk at the Plone Conference in Arnhem 2012? Here are the slides that were used for the demonstration.</p>
-					<a href="http://www.slideshare.net/CornelisKolbach/presentation-plone-conference-2012" class="button-slides" id="button-slides">View slides</a>
-			</section>
-	
-			<section id="patterns">
-				
+			<div id="content" class="pat-auto-scale">
+				<section id="news">
+					<p class="introduction">Did you see the patterns talk at the Plone Conference in Arnhem 2012? Here are the slides that were used for the demonstration.</p>
+						<a href="http://www.slideshare.net/CornelisKolbach/presentation-plone-conference-2012" class="button-slides" id="button-slides">View slides</a>
+				</section>
+		
+				<section id="patterns">
+					
 				<section class="row workflow">
 					<p class="icon-pencil-alt four columns">
 						Working with Patterns goes like this: The designer creates an HTML5 prototype. By including Patterns library, they can use a series of rich interaction patterns by applying dedicated classes and data-attributes instead of writing JavaScript. The prototype contains examples of all important page types with working interaction patterns such as form elements, modal panels, and AJAX injections.
@@ -59,43 +256,18 @@
 				<p>
 					For changes to an existing design, the process will look more or less the same, except everything will likely happen in shorter iterations and more in parallel.
 				</p>
-			</section>
-			
-			<section id="demo">
-				<h2>Demos &amp; documentation</h2>
-				<a href="demo/index.html#component-index" class="pat-inject" data-pat-inject="#component-index::element; trigger: autoload-visible" id="component-index">Pattern index</a>
-			</section>
-			
-			<section class="row" id="download">
-				<h2>Got it? Get it!</h2>
-				<p>There are several ways of getting patterns into your site or prototype. You can download the patterns package and host it from your own server, or include it hosted from our server. It's up to you what you find easiest. </p>
-				<div  class="row download-options">
-					<div class="four columns">
-						<h3>1. Hosted externally</h3>
-						<p>To use patterns hosted externally, just paste the following line into your HTML:</p>
-						<textarea class="url" rows="3" readonly="readonly">&lt;script src="http://patternslib.com/bundles/patterns.min.js" type="text/javascript"&gt;&lt;/script&gt;</textarea>
-					</div>
-					<div class="four columns">
-						<h3>2. Hosted on your own site</h3>
-						<p>
-							<a href="bundles/patterns.min.js" class="download-patterns-large"><img src="media/icon-download.png" width="60" alt="" /><em class="label">Download</em></a>
-						</p>
-					</div>
-					<div class="four columns">
-						<h3>3. Contribute via GitHub</h3>
-						<p>
-							<a href="https://github.com/Patternslib/Patterns" class="clone-patterns-large"><img src="media/icon-github.png" width="160" alt="" /></a>
-						</p>
-					</div>
-				</div>
-			</section>
-			<section id="credits" class="row">
-				<p class="lifted postit">Patterns library was initiated and conceptualised by <a href="http://www.cornae.com">Cornelis Kolbach</a>. Notable contributors include: <a href="http://github.com/chaoflow">Florian Friesdorf</a>, <a href="http://www.simplon.biz">Wichert Akkerman</a>, Humberto Sermeño, Marko Đurković.
-				</p>
-			</section>
-			 <footer id="appendix">
-					 <a href="http://github.com/patternslib/">GitHub project</a> <a href="http://colorschemedesigner.com/#3y21ThIow--Ni2K-BaoMBTsqKyBprC-Y1">Colour scheme</a>
-			</footer> 
+				</section>
+
+				<section id="credits" class="row">
+					<p class="lifted postit">Patterns library was initiated and conceptualised by <a href="http://www.cornae.com">Cornelis Kolbach</a>. Notable contributors include: <a href="http://github.com/chaoflow">Florian Friesdorf</a>, <a href="http://www.simplon.biz">Wichert Akkerman</a>, Humberto Sermeño, Marko Đurković.
+					</p>
+				</section>
+		
+				 <footer id="appendix">
+						 <a href="http://github.com/patternslib/">GitHub project</a> <a href="http://colorschemedesigner.com/#3y21ThIow--Ni2K-BaoMBTsqKyBprC-Y1">Colour scheme</a>
+				</footer> 
+			</div>
+
 		</div>
 	</body>
 </html>
