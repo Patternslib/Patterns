@@ -17,7 +17,7 @@ define(["lib/htmlparser"], function(htmlparser) {
                 expect(handler.start).toHaveBeenCalledWith("tal:span", [], false);
             });
 
-            xit("Two consecutive double quotes in attribute", function() {
+            it("Two consecutive double quotes in attribute", function() {
                 var input = "<a data-test='\"\"'></a>",
                     handler = jasmine.createSpyObj("handler", ["start"]);
                 htmlparser.HTMLParser(input, handler);
