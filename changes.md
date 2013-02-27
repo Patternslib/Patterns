@@ -97,9 +97,13 @@
   - Include pattern name in the parser log output. This makes it much easier to
     debug problems. (Wichert Akkerman)
 
-  - Correctly handle tag and attribute names containing a colon in the HTML
-    parser. (Wichert Akkerman)
+  - HTML parser:
+  
+    - Correctly handle tag and attribute names containing a colon.
+      (Wichert Akkerman)
 
+    - Correct escaping of double quotes in attribute values.
+      (Wichert Akkerman)
 
 ## 1.1.0 - Released February 7, 2013
 
