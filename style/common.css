@@ -471,10 +471,6 @@ section.demo:after {
 
 /* @group Siteheader */
 
-#site-header img,#site-header blockquote {
-	display: none;
-}
-
 
 
 /* @end */
