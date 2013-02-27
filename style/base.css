@@ -9,6 +9,7 @@
 
 body {
 	max-width: 100%;
+	padding: 0;
 }
 
 #main
@@ -91,10 +92,12 @@ body {
 /* @group Download form */
 
 .component-index {
-	padding-left: 80px;
-	padding-right: 80px;
+	padding-left: 60px;
+	padding-right: 60px;
 	position: relative;
 	top: 0;
+	color: silver;
+	padding-top: 140px;
 }
 
 .state-home .component-index {
@@ -103,34 +106,58 @@ body {
 	left: -1050px;
 }
 
+/* @group Form header */
+
+.component-index .functions {
+	float: right;
+	margin-top: -43px;
+}
+
+.component-index .bundle-type {
+	margin-left: 2%;
+	margin-right: 2%;
+	padding-left: 8px;
+}
+
+.state-home .component-index .functions,
+.component-index .bundle-type {
+	opacity: 0;
+}
+
+/* @end */
+
 .component-index h2 {
 	clear: both;
-	padding-left: 23px;
+	padding-left: 3%;
 	font-size: 15px;
 	font-weight: bold;
 	text-transform: uppercase;
 	letter-spacing: 2px;
 	margin-bottom: 5px;
 	overflow: hidden;
+	color: silver;
 }
 
 .state-home .component-index h2 {
 	height: 0;
 }
 
+/* @group Labels */
+
 .component-index .checklist label {
 	overflow: hidden;
 	float: left;
-	width: 25%;
-	padding-right: 23px;
-	padding-left: 0;
+	width: 21%;
 	box-sizing: border-box;
 	line-height: 50px;
 	position: relative;
-	margin-right: 0;
-	margin-left: 0;
+	margin-right: 2%;
+	margin-left: 2%;
 	margin-bottom: 10px;
 	user-select: none;
+	padding: 0 8px;
+	border-top: 1px solid #757575;
+	border-bottom: 1px solid #757575;
 }
 
 .state-documentation .component-index .checklist label {
@@ -142,22 +169,12 @@ body {
 
 .state-home .component-index .checklist label {
 	height: 192px;
+	border-color: rgba(87,87,87,0);
+	padding-right: 0;
+	padding-left: 0;
 }
 
-.component-index .checklist label:before,
-.component-index .checklist label:after {
-	content:  " ";
-	height: 1px;
-	background-color: silver;
-	display: block;
-	margin-left: -30px;
-	margin-right: -8px;
-}
-
-.state-home .component-index .checklist label:before,
-.component-index .checklist label:after {
-	opacity: 0;
-}
+/* @end */
 
 /* @group Label link */
 
@@ -181,11 +198,11 @@ body {
 }
 
 .state-home .component-index .checklist label a {
-	width: 60px;
+	width: 43px;
 	-moz-transform: scale(3.5);
 	-moz-transform-origin: 0 0 ;
-	zoom: 3.5;
-	line-height: 60px;
+	zoom: 4.3;
+	line-height: 45px;
 }
 
 .moz .state-home .component-index .checklist label a {
@@ -201,6 +218,8 @@ body {
 .state-home .component-index .checklist {
 	margin-bottom: 0;
 }
+
+/* @group Component icon */
 
 .component-index .core label a:before {
 	box-shadow: inset 0 0 1px gray;
@@ -238,10 +257,9 @@ body {
 	display: inline-block;
 	height: 32px;
 	vertical-align: middle;
-	margin: -8px 10px -3px 8px;
+	margin: -8px 10px -3px 0;
 	border-radius: 4px;
 	background: #feffff url(../style/component-icons.svg) no-repeat 0 32px;
-	border: 1px solid rgba(254,255,255,0.3);
 	text-align: center;
 	color: #2F383F;
 	font: 32px/34px Patticons;
@@ -250,16 +268,10 @@ body {
 	padding: 5px;
 }
 
-.component-index .checklist label input {
-	/*position: absolute;*/
-	left: 4px;
-	position: absolute;
-	top: 16px;
-	transition: left 1s;
-}
+/* @end */
 
-state-download .component-index .checklist label input {
-	left: 44px;
+.component-index .checklist label input {
+	display: none; /*temporary*/
 }
 
 
@@ -542,6 +554,7 @@ html.js .postit.guide.closed {
 #global-navigation #home {
 	top: -10px;
 	position: absolute;
+	z-index: 10;
 }
 
 
@@ -550,7 +563,7 @@ html.js .postit.guide.closed {
 
 /* @group Logo */
 
-#site-header #logo {
+#global-navigation #logo {
 	width: auto;
 	margin-top: auto;
 	display: inline-block;
@@ -592,12 +605,13 @@ html.js .postit.guide.closed {
 	z-index: 10;
 	
 	position: relative;
-	margin: 20px -80px 40px;
+	margin: 20px 0 0;
 	border-top: 1px solid silver;
 	box-shadow: 0 1px 4px gray;
 	perspective: 200px;
 	perspective-origin: 100% 30%;
-	background-image: radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%)
+	background-image: radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	overflow: hidden;
 }
 
 #site-header.state-home {
@@ -637,11 +651,21 @@ html.js .postit.guide.closed {
 	margin-right: 0;
 	margin-top: 0;
 	margin-left: 0;
-	background-image: linear-gradient(bottom, rgba(0,0,0,0) 13%, rgba(0,0,0,1) 100%);
+	background-image: linear-gradient(bottom, rgba(0,0,0,0) 13%, rgba(0,0,0,9) 100%);
 	left: 0;
 	right: 0;
 	top: 0;
-	padding: 160px 30px 160px 495px;
+	padding: 160px 10% 160px 50%;
+	border-style: none;
+}
+
+#site-header.state-download  blockquote {
+	margin-top: -500px;
+}
+
+#site-header blockquote p {
+	margin-left: -50px;
+	text-shadow: #000000 0 0 10px;
 }
 
 @media (max-width: 570px) {

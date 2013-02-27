@@ -36,33 +36,6 @@ body {
 	padding-left: 20px;
 } }
 
-/* @group Buttons */
-
-button,a.button {
-	display: inline-block;
-	border-style: none;
-	margin: 0;
-	background-color: #625647;
-	color: white;
-	padding-left: 15px;
-	padding-right: 15px;
-	border-radius: 4px;
-}
-
-button:hover,a.button:hover {
-	background-color: #8c7b65;
-	cursor: default;
-}
-
-button:active,
-a.button:active {
-	box-shadow: inset 0 1px 6px rgba(0,0,0,0.9)
-}
-
-
-
-/* @end */
-
 /* @group Image */
 
 img {
@@ -147,10 +120,22 @@ table thead tr th:last-child, table tfoot tr td:last-child {
 section.description,
 section.documentation,
 section.demo {
-	border-top: 1px solid #ddd;
 	position: relative;
-	padding: 1.3em 0 2em 33.3%;
 	box-sizing: border-box;
+	padding: 1.3em 0 2em 33.3%;
+}
+
+section.description:before,
+section.documentation:before,
+section.demo:before {
+	content: " ";
+	background: #ddd;
+	display: block !Important;
+	position: absolute;
+	top: 0;
+	right: -8px;
+	left: -8px;
+	height: 1px;
 }
 
 /* @group Data source */
@@ -166,7 +151,7 @@ section.documentation div[data-src]:before {
 	text-align: right;
 	padding-right: 8px;
 	width: 250px;
-	left: 0;
+	left: -8px;
 	font-style: italic;
 }
 
@@ -210,13 +195,11 @@ section.demo {
 	float: right;
 	width: 66.66666666%;
 	margin-left: -260px;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding-right: 0;
+	padding-left: 0;
 }
 
 section.demo h2:first-child {
-	margin-right: -8px;
-	margin-left: -8px;
 }
 
 section.demo:after {
@@ -236,38 +219,30 @@ section.demo:after {
 
 /* @group Component index */
 
-nav.component-index {
+#component-index {
 	float: left;
 	border: 1px solid silver;
-	margin-top: 60px;
-	margin-bottom: 40px;
-	
-	
-	padding: 33px 20px 25px;
 	box-shadow: inset 0 1px 6px rgba(0,0,0,0.15);
-	margin-bottom: 40px;
 	border-radius: 4px;
 	background-color: white;
-	width: 900px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	margin-left: -8px;
+	margin-right: -8px;
 }
 
-@media only screen and (max-width: 767px) {
-
-nav.component-index {
-	width: auto;
-} }
-
-nav.component-index h4 {
+#component-index h4 {
 	clear: both;
 	font-size: 16px;
 	margin-top: 0;
+	padding-left: 8px;
 }
 
-#demo nav.component-index {
+#demo #component-index {
 	margin-top: 0;
 }
 
-nav.component-index a {
+#component-index a {
 	float: left;
 	font-size: 12px;
 	background-color: #efefef;
@@ -276,67 +251,67 @@ nav.component-index a {
 	color: gray;
 	transition: transform 0.2s;
 	line-height: 48px;
-	margin-bottom: 20px;
+	margin-bottom: 18px;
 	border: 1px solid #e2e2e2;
-	width: 20.8%;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	border-radius: 4px;
-	margin-right: 1.9%;
-	margin-left: 2%;
+	margin-right: 8px;
+	margin-left: 8px;
+	width: 209px;
 }
 
-nav.component-index .behavioural a {
+#component-index .behavioural a {
 	background-color: #3d607e;
 	color: white;
 }
 
-nav.component-index .behavioural a:before {
+#component-index .behavioural a:before {
 	color: #3d607e;
 }
 
-nav.component-index .navigation a {
+#component-index .navigation a {
 	background-color: #c37757;
 	color: white;
 }
 
-nav.component-index .navigation a:before {
+#component-index .navigation a:before {
 	color: #c37757;
 }
 
-nav.component-index .layout a {
+#component-index .layout a {
 	background-color: #915e79;
 	color: white;
 }
 
-nav.component-index .layout a:before {
+#component-index .layout a:before {
 	color: #915e79;
 }
 
-nav.component-index .forms a {
+#component-index .forms a {
 	background-color: #9ba476;
 	color: white;
 }
 
-nav.component-index .forms a:before {
+#component-index .forms a:before {
 	color: #9ba476;
 }
 
-nav.component-index .fancy-stuff a {
+#component-index .fancy-stuff a {
 	background-color: #a59baf;
 	color: white;
 }
 
-nav.component-index .fancy-stuff a:before {
+#component-index .fancy-stuff a:before {
 	color: #a59baf;
 }
 
-nav.component-index a.current {
+#component-index a.current {
 	outline: solid 2px black;
 }
 
-nav.component-index a:before {
+#component-index a:before {
 	content: " ";
 	width: 32px;
 	display: inline-block;
@@ -354,149 +329,145 @@ nav.component-index a:before {
 	text-shadow: 0 1px 3px silver;
 }
 
-nav.component-index a sup {
+#component-index a sup {
 	display: none;
 }
 
-/* @group Patticons */
-
-.component-index .bumper:before {
+#component-index .bumper:before {
 	content: "b";
 }
 
-.component-index .ajax:before {
+#component-index .ajax:before {
 	content: "i";
 }
 
-.component-index .switching:before {
+#component-index .switching:before {
 	
 }
 
-.component-index .autofocus:before {
+#component-index .autofocus:before {
 	background-position: 0 0;
 }
 
-.component-index .auto-load:before {
+#component-index .auto-load:before {
 	
 }
 
-.component-index .auto-submit:before {
+#component-index .auto-submit:before {
 	content: "s";
 	font-size: 45px;
 	line-height: 55px;
 	text-indent: 3px;
 }
 
-.component-index .auto-suggest:before {
+#component-index .auto-suggest:before {
 	background-position: 0 -64px;
 }
 
-.component-index .carousel:before {
+#component-index .carousel:before {
 	content: "a";
 }
 
-.component-index .full-calendar:before {
+#component-index .full-calendar:before {
 	content: "k";
 }
 
-.component-index .toggle:before {
+#component-index .toggle:before {
 	background-position: 0 -480px;
 }
 
-.component-index .auto-scale:before {
+#component-index .auto-scale:before {
 	content: "f";
 	font-size: 87px;
 	line-height: 54px;
 }
 
-.component-index .collapsible:before {
+#component-index .collapsible:before {
 	background-position: 0 -128px;
 }
 
-.component-index .sortable:before {
+#component-index .sortable:before {
 	content: "o";
 }
 
-.component-index .tiny-mce:before {
+#component-index .tiny-mce:before {
 	content: "e";
 }
 
-nav.component-index .markdown:before {
+#component-index .markdown:before {
 	content: "d";
 }
 
-.component-index .depends:before {
+#component-index .depends:before {
 	background-position: 0 -160px;
 }
 
-.component-index .tree:before {
+#component-index .tree:before {
 	content: "t";
 }
 
-.component-index .focus:before {
+#component-index .focus:before {
 	background-position: 0 32px;
 }
 
-.component-index .form-validation:before {
+#component-index .form-validation:before {
 	background-position: 0 -225px;
 }
 
-nav.component-index .checked-flag:before {
+#component-index .checked-flag:before {
 	background-position: 0 -450px;
 }
 
-.component-index .checkboxes:before {
+#component-index .checkboxes:before {
 	content: "c";
 }
 
-.component-index .menu:before {
+#component-index .menu:before {
 	background-position: 0 32px;
 }
 
-.component-index .modal-panel:before {
+#component-index .modal-panel:before {
 	content: "m";
 }
 
-.component-index .navigation-marker:before {
+#component-index .navigation-marker:before {
 	background-position: 0 32px;
 }
 
-.component-index .multi-combobox:before {
+#component-index .multi-combobox:before {
 	background-position: 0 32px;
 }
 
-.component-index .placeholder:before {
+#component-index .placeholder:before {
 	background-position: 0 32px;
 }
 
-.component-index .self-healing:before {
+#component-index .self-healing:before {
 	background-position: 0 -352px;
 }
 
-.component-index .breadcrumbs:before {
+#component-index .breadcrumbs:before {
 	background-position: 0 -320px;
 }
 
-.component-index .sorting:before {
+#component-index .sorting:before {
 	background-position: 0 -383px;
 }
 
-.component-index .tooltip:before {
+#component-index .tooltip:before {
 	content: "l";
 	font-size: 68px;
 	line-height: 79px;
 	text-indent: 3px;
 }
 
-.component-index .zoom:before {
+#component-index .zoom:before {
 	content: "z";
 }
 
-.component-index .image-crop:before {
+#component-index .image-crop:before {
 	content: "r";
 }
-
-/* @end */
 
 
 
@@ -808,7 +779,8 @@ pre {
 /* @group Typography */
 
 ul,ol,p,dl {
-	margin: 0 8px 1.5em;
+	margin-top: 0;
+	margin-bottom: 1.5em;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -818,16 +790,15 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 body>section>h1 {
-	margin-bottom: 0;
 	font-size: 5em;
 	border-top: 1px solid #353f2e;
 	padding: 85px 8px 4px 312px;
 	text-transform: uppercase;
 	letter-spacing: 10px;
-	margin-top: 0;
 	line-height: 1em;
 	font-weight: normal;
 	font-style: normal;
+	margin: 0 -8px;
 }
 
 section.documentation h2,
@@ -837,16 +808,16 @@ section.description h2 {
 	line-height: 1.3;
 	font-weight: bold;
 	border-bottom: 1px solid #ddd;
-	padding: 0 8px .3em 8px;
 	font-size: 1.2em;
+	margin-left: -8px;
+	margin-right: -8px;
+	padding: 0 8px .3em;
 }
 
 h3 {
 	margin-top: 0;
 	font-size: 1.2em;
 	line-height: 1.4;
-	padding-left: 8px;
-	padding-right: 8px;
 }
 
 h4 {
@@ -928,64 +899,94 @@ p img {
 /* @group Forms */
 
 input[type="text"],
-input[type="password"]
-,textarea {
+input[type="password"],
+input[type="search"],
+input[type="email"],
+textarea {
+	-webkit-appearance: none;
 	vertical-align: baseline;
-	-webkit-transition: all 0.7s;
-	-moz-transition: all 0.7s;
-	-ms-transition: all 0.7s;
-	-o-transition: all 0.7s;
-	transition: all 0.7s;
-	-webkit-box-shadow: 0 0 0 rgba(0,0,0,0.4);
-	-moz-box-shadow: 0 0 0 rgba(0,0,0,0.4);
-	box-shadow: 0 0 0 rgba(0,0,0,0.4);
+	transition: all 0.2s;
 	outline: none;
-	-webkit-background-size: auto 100%;
-	-moz-background-size: auto 100%;
-	background-size: auto 100%;
-	font: 12px/20px Verdana, "Lucida Grande", Lucida, sans-serif;
 	padding-left: 4px;
 	display: inline-block;
-	margin: 0;
+	box-shadow: inset 0 0 4px rgba(0,0,0,0.15);
+	cursor: text;
+	box-sizing: border-box;
 	padding-top: 0;
 	padding-bottom: 0;
-	border: 1px solid #dedede;
-	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
-	-moz-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
-	box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
+	margin-right: 0;
+	margin-left: 0;
+	user-select: text;
+	max-width: 100%;
+	font: 1em/1.5 Verdana, "Lucida Grande", Lucida, sans-serif;
+	background-color: rgba(0,0,0,0.05);
+	outline: 1px solid rgba(0,0,0,0.2);
+	border-style: none;
+	color: inherit;
+}
+
+input.block,textarea.block {
+	width: 100%;
+}
+
+input[type="text"]:disabled,
+input[type="password"]:disabled,
+input[type="search"]:disabled,
+input[type="email"]:disabled,
+textarea:disabled {
+	outline: none;
+	box-shadow: none;
+	padding: 0;
+	background-color: transparent;
+	color: rgba(0,0,0,0.7);
+}
+
+input[type="text"].dark,
+input[type="password"].dark,
+input[type="search"].dark,
+textarea.dark,
+.application-portal .header input[type="text"],
+.application-portal .header input[type="password"],
+.application-portal .header input[type="search"],
+.application-portal .header textarea {
+	border-radius: 20px;
+	background-color: #1f2028;
+	color: white;
+	border: 1px solid #474954;
+	box-shadow: inset 0 0 4px black;
+}
+
+input[type="text"].dark:focus,
+input[type="password"].dark:focus,
+input[type="search"].dark:focus,
+textarea.dark:focus,
+.application-portal .header input[type="text"]:focus,
+.application-portal .header input[type="password"]:focus,
+.application-portal .header input[type="search"]:focus,
+.application-portal .header textarea:focus {
+	border-color: silver;
+}
+
+.lt-ie9 input[type="text"],
+.lt-ie9 input[type="password"],
+.lt-ie9 input[type="search"]
+ {
+	height: 22px;
 }
 
 textarea {
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-o-box-sizing: border-box;
 	box-sizing: border-box;
 	margin-bottom: 1px;
-}
-
-input[type="text"],textarea,label.superImpose {
+	width: 100%;
 	cursor: text;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
-label.superImpose,
-.concise .superImpose {
-	color: #707070;
-	display: block;
-	margin-left: 7px;
-	margin-top: 1px;
-	padding: 0 0 1px;
-	position: absolute;
-	white-space: nowrap;
-	border-style: none;
+input[type="text"].large {
+	font-size: 30px;
+	line-height: 40px;
 }
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="time"]:focus,
-textarea:focus {
-	outline: solid black 1px;
-	}
 
 input[type="file"] {
 	margin-left: 0px !important;
@@ -994,30 +995,293 @@ input[type="file"] {
 	border-style: none;
 }
 
+/* @group Select */
+
 select {
-	position: relative;
-	top: -1px;
-	margin-top: -1px;
-	margin-bottom: -1px;
+	font-size: inherit;
+	background-color: transparent;
+	border: 1px solid rgba(0,0,0,0.2);
+	color: inherit;
 }
+
+label[data-option] select {
+	opacity: 0;
+	z-index: 1;
+}
+
+label[data-option]:after {
+	content: attr(data-option) ' ⊽';
+}
+
+
+
+/* @end */
 
 form fieldset em.message {
 	clear: left;
-	float: left;
 	margin-bottom: 10px;
 	margin-top: 4px;
 	padding: 3px 10px;
 	color: red;
 	font-weight: bold;
+	float: left;
 }
 
 sup.required {
 	color: red;
 	display: inline-block;
-	margin-top: -10px;
 	font-weight: bold;
 	font-size: 16px;
+	margin-top: -11px;
 }
+
+/* @group date-eu */
+
+.date-eu {
+
+}
+
+.date-eu input.day {
+	width: 29px;
+}
+
+.date-eu input.year {
+	width: 45px;
+}
+
+/* @end */
+
+/* @group Patterns fieldsets */
+
+fieldset {
+	border-style: none;
+	margin-bottom: 1em;
+	padding: 0;
+}
+
+@media only screen and (min-width: 768px) {
+
+/* @group Fieldset horizontal */
+
+.horizontal {
+	width: 100%;
+}
+
+.horizontal .legend {
+	width: auto;
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.horizontal label {
+	position: relative;
+	float: left;
+	padding-right: 65%;
+	width: 35%;
+	left: 0;
+	padding-top: 1px;
+	margin-bottom: 1em;
+}
+
+.horizontal label *,
+.horizontal label.checkbox:before,
+.horizontal label.select:after {
+	position: relative;
+	max-width: 200%;
+	left: 100%;
+	margin-right: -200%;
+	margin-left: 0;
+	float: left;
+	top: 4px;
+}
+
+.horizontal label .iconified,
+.horizontal label sup.required {
+	float: none;
+	position: static;
+}
+
+.horizontal label sup.required {
+	line-height: 20px;
+	margin: 0;
+}
+
+.horizontal label textarea {
+	width: 170%;
+}
+
+.horizontal .comprehensive textarea {
+	width: 100%;
+}
+
+/* @group Multiple elements */
+
+.horizontal fieldset.group {
+	width: 65%;
+	clear: left;
+	border-style: none;
+	margin: 0;
+	margin-bottom: 10px;
+	padding-left: 35%;
+	position: relative;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+.horizontal fieldset.group legend {
+	position: absolute;
+	left: 0;
+	font-weight: normal;
+	font-style: normal;
+	top: 0;
+}
+
+.horizontal fieldset.group label {
+	font-weight: normal;
+	font-style: normal;
+	position: static;
+	border-style: none;
+	width: auto;
+	float: none;
+}
+
+.horizontal fieldset.group:not(.checklist) label {
+	
+}
+
+.horizontal fieldset.group .legend {
+	width: 48% !important;
+	display: inline;
+	text-align: left;
+	padding: 0;
+	position: relative;
+	float: left;
+	font-weight: normal;
+	font-style: normal;
+	margin: 0 0 0 -54%;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.horizontal fieldset.button-bar {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+/* @end */
+
+/* @end */ }
+
+/* @group Fieldset vertical */
+
+.vertical fieldset .legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
+.vertical label,
+.vertical fieldset .legend,
+.vertical fieldset legend {
+	font-weight: bold;
+	display: block;
+	font-size: 12px;
+	color: rgba(0,0,0,0.5);
+	margin-bottom: 0;
+}
+
+.vertical label {
+	margin-bottom: 1em;
+}
+
+.vertical > br {
+	display: none;
+}
+
+.vertical input,
+.vertical select {
+	clear: both;
+	display: block;
+}
+
+.vertical fieldset input,
+.vertical fieldset select {
+	clear: none;
+	display: inline;
+}
+
+.vertical p {
+	margin-bottom: 0;
+}
+
+@media only screen and (max-width: 767px) {
+
+.horizontal fieldset .legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
+.horizontal label,
+.horizontal fieldset .legend,
+.horizontal fieldset legend {
+	font-weight: bold;
+	display: block;
+	font-size: 12px;
+	color: rgba(0,0,0,0.5);
+	margin-bottom: 0;
+}
+
+.horizontal label {
+	margin-bottom: 1em;
+}
+
+.horizontal > br {
+	display: none;
+}
+
+.horizontal input,
+.horizontal select {
+	clear: both;
+	display: block;
+}
+
+.horizontal fieldset.group input,
+.horizontal fieldset.group select {
+	clear: none;
+	display: inline;
+}
+
+.horizontal p {
+	margin-bottom: 0;
+} }
+
+/* @end */
+
+
+
+/* @end */
+
+/* @group Hyperlink title */
+
+input.hyperlink - title {
+	width: 100%;
+}
+
+
+
+/* @end */
+
+/* @group Hyperlink */
+
+input.hyperlink {
+	width: 100%;
+}
+
+
+
+/* @end */
 
 /* @group Info panels */
 
@@ -1055,385 +1319,6 @@ html.gecko .comprehensive .infoPanel {
 }
 
 
-
-/* @end */
-
-/* @group Fieldsets */
-
-fieldset {
-	padding: 0 0 2px;
-	border-style: none;
-	margin: 0 0 20px;
-}
-
-fieldset p.question,
-fieldset p.legend,
-fieldset legend {
-	margin-bottom: 1em;
-	font-size: 16px;
-	font-weight: bold;
-}
-
-/* @group Fieldset Concise */
-
-fieldset.concise,
-form.concise fieldset {
-	clear: left;
-	position: relative;
-}
-
-fieldset.concise p.question,
-form.concise fieldset p.question,
-fieldset.concise legend,
-form.concise fieldset legend {
-	width: auto;
-	margin: 0;
-	padding: 0;
-	font-weight: bold;
-	letter-spacing: 0;
-	text-transform: none;
-}
-
-fieldset.concise label,
-form.concise label {
-	position: relative;
-	float: left;
-	padding-right: 65%;
-	width: 35%;
-	left: 0;
-	margin-bottom: 1em;
-}
-
-form.concise fieldset label *,
-fieldset.concise label *,
-form.concise fieldset label *,
-fieldset.concise label * {
-	position: relative;
-	max-width: 320px;
-	left: 100%;
-	margin-right: -200%;
-	margin-left: 0;
-	float: left;
-}
-
-form.concise fieldset label sup.required,
-fieldset.concise label sup.required,
-form.concise fieldset label sup.required,
-fieldset.concise label sup.required {
-	float: none;
-	display: inline;
-	position: static;
-	line-height: 20px;
-}
-
-form.concise fieldset label input[type=checkbox],
-fieldset.concise label input[type=checkbox] {
-	top: 3px;
-}
-
-form.concise fieldset label select {
-	top: 1px;
-}
-
-.concise label textarea {
-	width: 170%;
-}
-
-.comprehensive textarea {
-	width: 100%;
-}
-
-/* @end */
-
-/* @group Fieldset Comprehensive */
-
-.comprehensive,
-.comprehensive fieldset,
-.concise fieldset.comprehensive,
-.compact fieldset.comprehensive {
-	width: 65%;
-	clear: left;
-	border-style: none;
-	margin: 0;
-	margin-bottom: 1em;
-	padding-left: 35%;
-	padding-bottom: 0;
-	position: relative;
-	padding-top: 1px;
-}
-
-.comprehensive label,
-.concise .comprehensive label {
-	font-weight: normal;
-	font-style: normal;
-	position: static;
-	margin: 0;
-	border-style: none;
-	width: auto;
-	padding: 0;
-	float: none;
-}
-
-.concise fieldset.comprehensive,
-.condensed fieldset.comprehensive {
-	border-bottom-style: none;
-	height: auto;
-	padding-top: 0;
-	padding-bottom: 0;
-}
-
-fieldset.comprehensive label *,
-form.comprehensive fieldset label *,
-form.concise fieldset.comprehensive label *,
-form.compact fieldset.comprehensive label * {
-	position: static;
-	margin: 0;
-	float: none;
-}
-
-fieldset.comprehensive legend {
-	position: absolute;
-	left: 0;
-	font-weight: normal !important;
-	font-style: normal;
-}
-
-fieldset.comprehensive p.question,
-form.comprehensive fieldset p.question,
-fieldset.comprehensive p.legend,
-form.comprehensive fieldset p.legend,
-form.concise fieldset.comprehensive p.question,
-form.compact fieldset.comprehensive p.question {
-	width: 48% !important;
-	display: inline;
-	text-align: left;
-	padding: 0;
-	position: relative;
-	float: left;
-	font-weight: normal;
-	font-style: normal;
-	margin: 0 0 0 -54%;
-	text-transform: none;
-	letter-spacing: 0;
-	line-height: 2em;
-	font-size: 16px;
-}
-
-fieldset.comprehensive label a.floatAfter {
-	float: right;
-	margin-right: 22px;
-}
-
-/* @end */
-
-/* @group Fieldset Condensed */
-
-fieldset.condensed,
-form.condensed fieldset {
-	clear: left;
-	border-style: none;
-	margin: 0 0 20px;
-}
-
-fieldset.condensed label,
-form.condensed fieldset label {
-	font-weight: normal;
-	font-style: normal;
-	display: inline-block;
-	float: left;
-	clear: left;
-	margin-bottom: 1em;
-}
-
-fieldset.condensed label input,
-form.condensed fieldset label input,
-fieldset.condensed label textarea {
-	float: left;
-}
-
-/* @end */
-
-/* @end */
-
-/* @group Form Components */
-
-/* @group date-eu */
-
-.date-eu {
-
-}
-
-.date-eu label {
-	display: none;
-}
-
-.date-eu input.day {
-	width: 21px;
-}
-
-.date-eu input.year {
-	width: 38px;
-}
-
-/* @end */
-
-/* @group Radio List */
-
-.radio-list p.legend,
-.radio-list legend {
-	font-weight: normal;
-	font-style: normal;
-}
-
-.radio-list {
-	list-style-type: none !important;
-}
-
-fieldset.radio-list label,
-fieldset.comprehensive.radio-list label   {
-	display: block;
-	width: auto !important;
-	padding-left: 30px;
-	margin-bottom: 0;
-	float: none;
-	margin-left: -10px;
-	padding-right: 10px;
-	border-radius: 4px;
-	margin-right: -10px;
-}
-
-.radio-list label input[type="radio"],
-form.concise fieldset.comprehensive.radio-list label input[type="radio"] {
-	float: none;
-	position: relative;
-	left: 0;
-	top: -2px;
-	margin-left: -18px;
-}
-
-/* @end */
-
-/* @group Radio Row */
-
-.radioRow {
-
-}
-
-.radioRow label,
-label.radioRow {
-	display: inline;
-	width: auto !important;
-	float: left;
-	padding-right: 10px !important;
-}
-
-.radioRow input,
-label.radioRow input {
-	margin-top: 4px;
-	margin-right: 5px;
-	margin-bottom: 0;
-	position: static !important;
-}
-
-/* @end */
-
-/* @group Input Row */
-
-ul.inputRow,
-ol.inputRow {
-	display: inline;
-	margin-top: 0;
-	padding-top: 0;
-	margin-left: 0;
-	padding-left: 0;
-	list-style-type: none !important;
-}
-
-/* @end */
-
-/* @group Input List */
-
-ul.inputList,
-ol.inputList,
-ol.radio-list,
-ul.radio-list,
-ol.checkList,
-ul.checkList {
-	margin-top: 0;
-	padding-top: 0;
-	margin-left: 0;
-	padding-left: 0;
-	list-style-type: none !important;
-}
-
-ul.inputList li,
-ol.radio-list li,
-ul.radio-list li,
-ol.checkList li,
-ul.checkList li {
-	margin-left: 0;
-	padding-left: 0;
-	display: block;
-}
-
-/* @end */
-
-/* @group Check List */
-
-fieldset.checklist legend,
-.checklist p.legend {
-	font-weight: normal;
-	font-style: normal;
-}
-
-fieldset.checklist label,
-fieldset.comprehensive.checklist label {
-	display: block;
-	width: auto;
-	margin-bottom: 0;
-	float: none;
-	margin-left: -10px;
-	padding-right: 10px;
-	border-radius: 4px;
-	margin-right: -10px;
-	padding-left: 30px;
-}
-
-.checkList label:hover {
-	background-color: #efefef;
-}
-
-.checklist label input[type="checkbox"],
-form.concise fieldset.comprehensive.checklist label input[type="checkbox"] {
-	margin-left: -18px;
-	float: none;
-	position: relative;
-	left: 0;
-	top: -2px;
-}
-
-/* @end */
-
-/* @group Check Row */
-
-ol.checkRow li,
-ul.checkRow li,
-ol.radioRow li,
-ul.radioRow li {
-	float: none;
-	margin-left: 0;
-	padding-left: 0;
-	display: inline;
-}
-
-ol.checkRow li label,
-ul.checkRow li label,
-ol.radioRow li label,
-ul.radioRow li label {
-	display: inline;
-}
-
-/* @end */
 
 /* @end */
 
@@ -1485,6 +1370,88 @@ ul.radioRow li label {
 	-ms-border-radius: 4px;
 	-o-border-radius: 4px;
 	border-radius: 4px;
+}
+
+/* @end */
+
+/* @group Button */
+
+.buttonBar,
+.button-bar {
+	border-top: 1px solid silver;
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+.buttonBar fieldset.group {
+	float: right;
+	border-left: 1px solid silver;
+	padding-bottom: 0;
+}
+
+a.button,
+button,
+.accordion .header,
+input[type="submit"],
+input[type="button"],
+.qq-upload-button,
+#calendar-filters .attendees .legend,
+label[data-option]:after {
+	border: 1px solid rgba(0,0,0,0.5);
+	color: rgba(0,0,0,0.78);
+	text-shadow: rgba(250,250,250,0.64) 0 1px 0;
+	cursor: default;
+	box-shadow: inset 0 1px 10px rgba(0,0,0,0);
+	border-radius: 4px;
+	
+	background-image: linear-gradient(bottom, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 100%);
+
+text-decoration: none;
+	font-size: 13px;
+	line-height: 1.5;
+	background-color: transparent;
+	display: inline-block;
+	padding: 0 1em;
+	margin: 0;
+}
+
+a.button.confirmative,
+button.confirmative {
+	background-color: #5bb75b;
+	color: white;
+	text-shadow: rgba(0,0,0,0.35) 0 -1px 0;
+}
+
+a.button.negative,
+button.negative {
+	background-color: red;
+	color: white;
+	text-shadow: rgba(0,0,0,0.35) 0 -1px 0;
+}
+
+a.button.large,
+button.large {
+	font-size: 20px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+button:active,
+.accordion .header.closed:active,
+button.small.sublime:active,
+button.sublime:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+button.on,
+a.button:active {
+	box-shadow: inset 0 1px 10px rgba(0,0,0,0.3);
+}
+
+a.button.disabled,
+button[disabled="disabled"],
+button:disabled {
+	opacity: 0.4;
+	filter: alpha(opacity = 40);
 }
 
 /* @end */
