@@ -2,6 +2,8 @@
 
 @import url("common.css");
 
+@import url("../demo/check-list/checklist.css");
+
 @font-face {
 	font-family: "Perpetua bold italic";
 	src: url("fonts/Perpetua Bold Italic.ttf")
@@ -105,6 +107,25 @@ body {
 	transform: rotateX( 50deg ) scaleX(4);
 	top: -710px;
 	left: -1050px;
+}
+
+.checklist label:before,
+label.checkbox:before {
+	position: absolute;
+	left: 26px;
+}
+
+.component-index button {
+	background-color: #595959;
+	color: white;
+	text-shadow: #000000 0px -1px 0px;
+	border-color: #b0b0b0;
+}
+
+.component-index .button-bar {
+	border-style: none;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 /* @group Form header */
@@ -612,9 +633,10 @@ html.js .postit.guide.closed {
 	left: 0;
 	right: 0;
 	top: 0;
-	padding: 160px 10% 160px 50%;
+	padding: 160px 10% 0 50%;
 	border-style: none;
 	transition: margin-top 1s;
+	height: 340px;
 }
 
 #site-header.state-home  blockquote {
