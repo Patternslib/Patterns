@@ -336,14 +336,14 @@ define([
 
                 var $source = $html.find(source);
 
-                if ($source.length===0)
+                if ($source.length === 0)
                     log.warn("No source elements for selector:", source, $html);
 
                 $source.find("a[href^=\"#\"]").each(function() {
                     var href = this.getAttribute("href");
                     // Skip in-document links pointing to an id that is inside
                     // this fragment.
-                    if (href.length===1)  // Special case for top-of-page links
+                    if (href.length === 1)  // Special case for top-of-page links
                         this.href=url;
                     else if (!$source.find(href).length)
                         this.href=url+href;
@@ -368,20 +368,20 @@ define([
             htmlparser.HTMLParser(html, {
                 start: function(tag, attrs, unary) {
                     output.push("<"+tag);
-                    link_attribute=_._link_attributes[tag.toUpperCase()];
+                    link_attribute = _._link_attributes[tag.toUpperCase()];
                     for (i=0; i<attrs.length; i++) {
-                        if (attrs[i].name.toLowerCase()===link_attribute) {
-                            value=attrs[i].value;
+                        if (attrs[i].name.toLowerCase() === link_attribute) {
+                            value = attrs[i].value;
                             // Do not rewrite Zope views or in-document links.
                             // In-document links will be processed later after
                             // extracting the right fragment.
-                            if (value.slice(0, 2)!=="@@" && value[0]!=="#") {
-                                value=utils.rebaseURL(base, value);
-                                value=value.replace(/(^|[^\\])"/g, '$1\\\"');
+                            if (value.slice(0, 2) !== "@@" && value[0] !== "#") {
+                                value = utils.rebaseURL(base, value);
+                                value = value.replace(/(^|[^\\])"/g, '$1\\\"');
                             }
                         }  else
-                            value=attrs[i].escaped;
-                        output.push(" "+attrs[i].name+"=\""+value+"\"");
+                            value = attrs[i].escaped;
+                        output.push(" " + attrs[i].name + "=\"" + value + "\"");
                     }
                     output.push(unary ? "/>" : ">");
                 },
