@@ -16,6 +16,14 @@ define(["lib/htmlparser"], function(htmlparser) {
                 expect(handler.start.calls.length).toEqual(1);
                 expect(handler.start).toHaveBeenCalledWith("tal:span", [], false);
             });
+            
+            it("Two consecutive double quotes in attribute", function() {
+                var input = "<a data-test='\"\"'></a>",
+                    handler = jasmine.createSpyObj("handler", ["start"]);
+                htmlparser.HTMLParser(input, handler);
+                expect(handler.start.calls.length).toEqual(1);
+                expect(handler.start).toHaveBeenCalledWith("a", [{name: "data-test", value: "\"\"", escaped: "\\\"\\\""}], false);
+            });
         });
     });
 });
