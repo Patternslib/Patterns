@@ -381,7 +381,7 @@ define([
                             }
                         }  else
                             value = attrs[i].escaped;
-                        output.push(" " + attrs[i].name + "=\"" + value + "\"");
+                        output.push(" " + attrs[i].name + "='" + value + "'");
                     }
                     output.push(unary ? "/>" : ">");
                 },

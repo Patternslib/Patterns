@@ -32,12 +32,17 @@
 
 - Injection pattern:
 
-  - add missing dependency on jquery.form.
+  - Add missing dependency on jquery.form.
     [Ticket 267](https://github.com/Patternslib/Patterns/issues/267)
     (Wichert Akkerman)
 
-  - rebasing urls during injection for video and source tags
+  - Also rebase URLs for `video` and `source` elements.
     (Florian Friesdorf)
+
+  - Modify URL rebasing logic to use a single quote character for attributes.
+    This fixes problems with escaped attribute, in particular attribute values
+	containing double quotes.
+    (Wichert Akkerman)
 
 - Depends pattern:
 
