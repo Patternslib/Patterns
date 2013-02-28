@@ -20,8 +20,15 @@
 - Zoom pattern: make zoom fallback control (text input field) react properly to
   change events. (Marko Đurković)
 
-- Autoscale pattern: avoid creating nasty infinite loops with the resize
-  handler. (Marko Đurković)
+- Autoscale pattern:
+
+  - Avoid creating infinite loops with the resize handler in IE8. This could
+    load to browser crashes.
+    (Marko Đurković)
+
+  - Use the *scale* method on IE 9 as well.
+    [Ticket 281](https://github.com/Patternslib/Patterns/issues/281)
+    (Wichert Akkerman)
 
 - Injection pattern:
 

@@ -31,13 +31,12 @@ attribute.
       <p>Lorem ipsum</p>
     </div>
 
-### Browser support
+The available methods are:
 
-The scaling method defaults to the [scale
-transform](http://www.w3.org/TR/css3-2d-transforms/#two-d-transform-functions)
-on most browsers. For IE versions older than 10
-[zoom](http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx) is
-used instead.
+* `scale`: Use a [scale transform](http://www.w3.org/TR/css3-2d-transforms/#two-d-transform-functions). (default)
+* `[zoom](http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx)1
+
+### Browser support
 
 Patterns will check if the browser supports the requested method; if the requested
 method is known to be broken another method will be used. The current overrides
@@ -46,7 +45,7 @@ are:
 * Firefox zoom does not not support zoom ([mozilla bug
   \#390936](https://bugzilla.mozilla.org/show_bug.cgi?id=390936)) so the scale
   transform is always used.
-* IE versions before 10 do not support the scale transform, so zoom is always
+* IE versions before 9 do not support the scale transform, so zoom is always
   used.
 
 ### Properties

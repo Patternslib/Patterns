@@ -23,7 +23,7 @@ define([
             if ($.browser.mozilla)
                 // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 _.force_method="scale";
-            else if ($.browser.msie && parseInt($.browser.version, 10)<10)
+            else if ($.browser.msie && parseInt($.browser.version, 10)<9)
                 _.force_method="zoom";
             $(document).ready(function() {
                 $(window).one("resize.autoscale", _.onResize);
