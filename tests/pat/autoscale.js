@@ -33,14 +33,14 @@ define(["pat/autoscale"], function(pattern) {
 
             it("Force zoom on old IE versions", function() {
                 jQuery.browser.msie=true;
-                jQuery.browser.version="9.192.921";
+                jQuery.browser.version="8.192.921";
                 pattern._setup();
                 expect(pattern.force_method).toBe("zoom");
             });
 
             it("Force nothing on recent IE versions", function() {
                 jQuery.browser.msie=true;
-                jQuery.browser.version="10.0.19A";
+                jQuery.browser.version="9.0.19A";
                 pattern._setup();
                 expect(pattern.force_method).toBe(null);
             });
