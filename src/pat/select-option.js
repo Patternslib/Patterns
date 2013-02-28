@@ -13,9 +13,9 @@ define([
         trigger: "label select",
 
         init: function($el) {
-            return $el
-                .on("change.pat-select-option", select_option._onChange)
-                .trigger("change");
+            $el.on("change.pat-select-option", select_option._onChange);
+            select_option._onChange();
+            return $el;
         },
 
         destroy: function($el) {
