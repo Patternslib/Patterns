@@ -41,7 +41,7 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                 spyOn(utils, "rebaseURL").andReturn("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a href=\"example.com\">This is a test</a>"))
-                    .toBe("<a href=\"REBASED\">This is a test</a>");
+                    .toBe("<a href='REBASED'>This is a test</a>");
                 expect(utils.rebaseURL).toHaveBeenCalledWith("base", "example.com");
             });
 
@@ -49,7 +49,7 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                 spyOn(utils, "rebaseURL").andReturn("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a HrEf=\"example.com\">This is a test</a>"))
-                    .toBe("<a HrEf=\"REBASED\">This is a test</a>");
+                    .toBe("<a HrEf='REBASED'>This is a test</a>");
             });
         });
 
