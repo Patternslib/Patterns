@@ -58,7 +58,16 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 demo/calendar/fullcalendar.css: bungledeps/jquery.fullcalendar-*/fullcalendar/fullcalendar.css
-	cp bungledeps/jquery.fullcalendar-*/fullcalendar/fullcalendar.css demo/calendar/fullcalendar.css
+	cp $< $@
+
+demo/auto-suggest/select2.css: bungledeps/jquery.select2-*/select2.css
+	cp $< $@
+
+demo/auto-suggest/select2.png: bungledeps/jquery.select2-*/select2.png
+	cp $< $@
+
+demo/auto-suggest/select2-spinner.gif: bungledeps/jquery.select2-*/select2-spinner.gif
+	cp $< $@
 
 
 JSHINTEXCEPTIONS = src/core/parser.js \
