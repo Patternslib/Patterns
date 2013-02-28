@@ -25,7 +25,7 @@ define(["lib/htmlparser"], function(htmlparser) {
                 expect(handler.start).toHaveBeenCalledWith("a", [{name: "data-test", value: "\"\"", escaped: "\\\"\\\""}], false);
             });
             
-            xit("Content followed by two consecutive double quotes in attribute", function() {
+            it("Content followed by two consecutive double quotes in attribute", function() {
                 var input = "<a data-test='foo \"\"'></a>",
                     handler = jasmine.createSpyObj("handler", ["start"]);
                 htmlparser.HTMLParser(input, handler);
