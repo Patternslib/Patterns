@@ -41,7 +41,7 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                 spyOn(utils, "rebaseURL").andReturn("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a href=\"example.com\">This is a test</a>"))
-                    .toBe("<a href='REBASED'>This is a test</a>");
+                    .toBe("<a href=\"REBASED\">This is a test</a>");
                 expect(utils.rebaseURL).toHaveBeenCalledWith("base", "example.com");
             });
 
@@ -49,7 +49,7 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                 spyOn(utils, "rebaseURL").andReturn("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a HrEf=\"example.com\">This is a test</a>"))
-                    .toBe("<a HrEf='REBASED'>This is a test</a>");
+                    .toBe("<a HrEf=\"REBASED\">This is a test</a>");
             });
         });
 
@@ -59,7 +59,13 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                     input = "<a data-tinymce-json='" + value + "'>Test</a>",
                     $output = pattern._parseRawHtml(input, null);
                 expect($output.find("a").attr("data-tinymce-json")).toBe(value);
+            });
 
+            it("Roundtrip attributes with single quotes", function() {
+                var value = "{'plugins': 'paste', 'content_css': '/_themes/Style/tiny-body.css'}",
+                    input = "<a data-tinymce-json=\"" + value + "\">Test</a>",
+                    $output = pattern._parseRawHtml(input, null);
+                expect($output.find("a").attr("data-tinymce-json")).toBe(value);
             });
 		}),
 

@@ -39,9 +39,9 @@
   - Also rebase URLs for `video` and `source` elements.
     (Florian Friesdorf)
 
-  - Modify URL rebasing logic to use a single quote character for attributes.
-    This fixes problems with escaped attribute, in particular attribute values
-	containing double quotes.
+  - Modify attribute value escaping in HTML parser to always use `&quot;` for
+    double quotes. This fixes problems attribute values containing double
+    quotes.
     (Wichert Akkerman)
 
 - Depends pattern:

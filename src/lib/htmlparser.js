@@ -167,7 +167,7 @@ define(function(){
 					attrs.push({
 						name: name,
 						value: value,
-						escaped: value.replace(/([^\\])(?=")/g, "$1\\").replace(/^"/, "\\\"")
+						escaped: value.replace(/"/g, "&quot;")
 					});
 				});
 
