@@ -1,13 +1,13 @@
 # Auto scale
 
 ## Description
-Auto scale scales up any element to the size of it's parent element. A typical use case is to let an entire webpage scale up to the width of the browser window, as an advanced kind of responsive design.
+Auto scale scales up any element to the size of it''s parent element. A typical use case is to let an entire webpage scale up to the width of the browser window, as an advanced kind of responsive design.
 
 ## Documentation
 
 The script scales an element with the .pat-auto-scale class by the ratio
 of its parent width and its own. If the pattern is applied to the body,
-the element is scaled with respect to the viewport's width. The scaling
+the element is scaled with respect to the viewport''s width. The scaling
 factor is automatically updated on window resize.
 
     <div class="column">
@@ -15,11 +15,6 @@ factor is automatically updated on window resize.
       <p>Lorem ipsum</p>
     </div>
 
-The scaling method defaults to the [scale
-transform](http://www.w3.org/TR/css3-2d-transforms/#two-d-transform-functions)
-on most browsers. For IE versions older than 10
-[zoom](http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx) is
-used instead.
 
 After an element has been scaled a new scaled class is be added.
 
@@ -36,19 +31,31 @@ attribute.
       <p>Lorem ipsum</p>
     </div>
 
-Patterns will check if the browser supports the requested method: on
-firefox zoom is not supported ([mozilla bug
-\#390936](https://bugzilla.mozilla.org/show_bug.cgi?id=390936)), and IE
-versions before 10 do not support the scale transform.
+### Browser support
 
-Properties
-----------
+The scaling method defaults to the [scale
+transform](http://www.w3.org/TR/css3-2d-transforms/#two-d-transform-functions)
+on most browsers. For IE versions older than 10
+[zoom](http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx) is
+used instead.
+
+Patterns will check if the browser supports the requested method; if the requested
+method is known to be broken another method will be used. The current overrides
+are:
+
+* Firefox zoom does not not supported zoom ([mozilla bug
+  \#390936](https://bugzilla.mozilla.org/show_bug.cgi?id=390936)) so the scale
+  transform is always used.
+* IE versions before 10 do not support the scale transform, so zoom is always
+  used.
+
+### Properties
 
 The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:
 
-| Property | Default value | Values| Description | Type |
-| -------- | ------- ----- | ------| ----------- | ---- |
+| Property | Default value | Values | Description | Type |
+| -------- | ------------- | ------ | ----------- | ---- |
 | `method` | `scale` | `scale` `zoom` | The scaling method to use. One of `scale` or `zoom` | Mutually exclusive |
 | `min-width` | *unset* | | The minimum width in pixels to scale to. | Number |
 | `max-width` | *unset* | | The maximum width in pixels to scale to. | Number |
