@@ -18,6 +18,19 @@ define([
         return $el.attr("placeholder") || "Enter text";
     });
 
+    var autosuggestTextToHidden = {
+        name: "autosuggestTextToHidden",
+        transform: function($content) {
+            $content.filter('input[type=text].pat-autosuggest').each(function() {
+                $(this).clone().attr('type','hidden').insertAfter($(this)).prev().remove();
+            });
+            $content.find('input[type=text].pat-autosuggest').each(function() {
+                $(this).clone().attr('type','hidden').insertAfter($(this)).prev().remove();
+            });
+        }
+    };
+    registry.register(autosuggestTextToHidden);
+
     var _ = {
         name: "autosuggest",
         trigger: "input.pat-autosuggest",
