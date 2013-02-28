@@ -20,11 +20,11 @@ Consider the following markup:
 					<img src="../../Media/illustrations/abdelaziz.jpg" />
 				</section>
 			</div>
-			<div class="presenter-notes">
+			<footer>
 				<p>
 				    Some notes
 				</p>
-			</div>
+			</footer>
 		</div>
 		
 		<div class="slide" id="second-slide">
@@ -36,11 +36,11 @@ Consider the following markup:
 					…
 				</section>
 			</div>
-			<div class="presenter-notes">	
+			<footer>
 				<p>
 				    Some notes
 				</p>
-			</div>
+			</footer>
 		</div>
 							
 		<div class="slide" id="third-slide">
@@ -52,11 +52,11 @@ Consider the following markup:
                 …	
 				</section>
 			</div>
-			<div class="presenter-notes">
+			<footer>
 				<p>
 				    Some notes
 				</p>				    
-			</div>
+			</footer>
 		</div>
 	</div>
 
