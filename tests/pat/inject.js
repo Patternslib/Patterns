@@ -53,6 +53,16 @@ define(["pat/inject", "utils"], function(pattern, utils) {
             });
         });
 
+		describe("parseRawHtml", function() {
+            it("Roundtrip attributes with double quotes", function() {
+                var value = "{\"plugins\": \"paste\", \"content_css\": \"/_themes/Style/tiny-body.css\"}",
+                    input = "<a data-tinymce-json='" + value + "'>Test</a>",
+                    $output = pattern._parseRawHtml(input, null);
+                expect($output.find("a").attr("data-tinymce-json")).toBe(value);
+
+            });
+		}),
+
         describe("Functional tests", function() {
             describe("extract/verifyConfig", function() {
                 var $a, $target;

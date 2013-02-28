@@ -380,7 +380,7 @@ define([
                                 value = value.replace(/(^|[^\\])"/g, '$1\\\"');
                             }
                         }  else
-                            value = attrs[i].escaped;
+                            value = attrs[i].value;
                         output.push(" " + attrs[i].name + "='" + value + "'");
                     }
                     output.push(unary ? "/>" : ">");
