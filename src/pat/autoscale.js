@@ -21,6 +21,7 @@ define([
 
         _setup: function() {
             if ($.browser.mozilla)
+                // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 _.force_method="scale";
             else if ($.browser.msie && parseInt($.browser.version, 10)<10)
                 _.force_method="zoom";
