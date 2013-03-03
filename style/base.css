@@ -115,6 +115,10 @@ label.checkbox:before {
 	left: 26px;
 }
 
+.state-home .checklist label:before {
+	display: none;
+}
+
 .component-index button {
 	background-color: #595959;
 	color: white;
