@@ -13,7 +13,7 @@ define([
 ], function($, Parser, registry) {
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");
-    parser.add_argument("pre-fill");
+    parser.add_argument("pre-fill", function($el) { return $el.val(); });
     parser.add_argument("placeholder", function($el) {
         return $el.attr("placeholder") || "Enter text";
     });
@@ -41,9 +41,7 @@ define([
             var cfg = parser.parse($el, opts);
             cfg.startText =  $el.attr("readonly") ? "" : cfg.placeholder;
 
-            if (cfg.preFill) {
-                $el.val(cfg.preFill);
-            }
+            $el.val(cfg.preFill.split(','));
             $el.select2({tags: cfg.words.split(/\s*,\s*/)});
 
             // suppress propagation for second input field
