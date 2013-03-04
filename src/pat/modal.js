@@ -10,6 +10,7 @@ define([
 
     var modal = {
         name: "modal",
+        jquery_plugin: true,
         // div's are turned into modals
         // links and forms inject modals
         trigger: "div.pat-modal, a.pat-modal, form.pat-modal",
