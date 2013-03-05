@@ -91,6 +91,9 @@ define([
                 });
 
                 $lis.bind("drop.pat-sortable", function() {
+                    if ($(this).hasClass("dragged"))
+                        return;
+
                     if ($(this).hasClass("drop-target-below"))
                         $(this).after($(".dragged"));
                     else
