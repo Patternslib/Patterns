@@ -93,6 +93,9 @@
 - Placeholder pattern: remove Modernizr dependency.
   (Wichert Akkerman)
 
+- Sortable pattern: fix weird behaviour when element is dropped on self.
+  (Markoi Đurković)
+
 - Core logic changes:
 
   - Patterns main.js returns registry, you have to call
