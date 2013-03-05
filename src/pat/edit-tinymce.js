@@ -72,7 +72,8 @@ define([
             
             if (args.tinymceBaseurl.indexOf("://")!==-1 || args.tinymceBaseurl[0]==="/") {
                 // tinyMCE.baseURL must be absolute
-                tinyMCE.baseURL = location.origin + args.tinymceBaseurl;
+                tinyMCE.baseURL = window.location.protocol + '//' +
+                    window.location.host+'/' + args.tinymceBaseurl;
             } else {
                 tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
             }
