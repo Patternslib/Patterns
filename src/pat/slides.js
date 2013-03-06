@@ -5,7 +5,8 @@
  */
 define([
     "jquery",
-    "../registry"
+    "../registry",
+    "shower"
 ], function($, patterns) {
     var slides = {
         name: "slides",
