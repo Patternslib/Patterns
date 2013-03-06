@@ -25,7 +25,7 @@ define([
 
         _reset: function() {
             slides._hook($(".slide"));
-            shower.init();
+            window.shower.init();
         }
     };
 

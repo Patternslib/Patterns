@@ -11,10 +11,21 @@ define(["pat/slides"], function(pattern) {
         });
 
         describe("init", function() {
+            it("Return result from _hook", function() {
+                spyOn(pattern, "_hook").andCallFake(function() {
+                    return "jq";
+                });
+                expect(pattern.init("jq")).toBe("jq");
+                expect(pattern._hook).toHaveBeenCalledWith("jq");
+            });
+        });
+
+        describe("_hook", function() {
             it("Return jQuery object", function() {
-                var jq = jasmine.createSpyObj("jQuery", ["each"]);
-                jq.each.andReturn(jq);
-                expect(pattern.init(jq)).toBe(jq);
+                var jq = jasmine.createSpyObj("jQuery", ["off", "on"]);
+                jq.off.andReturn(jq);
+                jq.on.andReturn(jq);
+                expect(pattern._hook(jq)).toBe(jq);
             });
         });
     });
