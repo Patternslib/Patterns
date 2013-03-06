@@ -6,19 +6,30 @@
 define([
     "jquery",
     "../registry",
+    "../utils",
+    "../core/remove",
     "shower"
-], function($, patterns) {
+], function($, patterns, utils) {
     var slides = {
-        name: "slides",
+        name: ".slide",
 
         init: function($el) {
-            return $el;
+            return slides._hook($el);
+        },
+
+        _hook: function($el) {
+            return $el
+                .off("destroy.pat-slide")
+                .on("destroy.pat-slide", utils.debounce(slides._reset, 100));
+        },
+
+        _reset: function() {
+            slides._hook($(".slide"));
+            shower.init();
         }
     };
 
-    $(document).on("patterns-injected", function() {
-        shower.init();
-    });
+    $(document).on("patterns-injected", utils.debounce(slides._reset, 100));
 
     patterns.register(slides);
     return slides;
