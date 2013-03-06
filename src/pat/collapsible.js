@@ -52,16 +52,22 @@ define([
                     $content = $el.children();
                 }
 
-                if (options.$trigger.length===0) {
+                if (options.$trigger.length === 0) {
                     log.error("Collapsible has no trigger.", this);
                     return;
                 }
 
-                if ($content.length)
-                    options.$panel = $content.wrapAll("<div class='panel-content' />")
-                        .parent();
-                else
-                    options.$panel = $("<div class='panel-content' />").insertAfter(options.$trigger);
+                options.$panel = $el.find('.panel-content');
+                if (options.$panel.length === 0) {
+                    if ($content.length) {
+                        options.$panel = $content
+                            .wrapAll("<div class='panel-content' />")
+                            .parent();
+                    } else {
+                        options.$panel = $("<div class='panel-content' />")
+                            .insertAfter(options.$trigger);
+                    }
+                }
 
                 $el.data("patternCollapsible", options);
                 state=(options.closed || $el.hasClass("closed")) ? "closed" : "open";
