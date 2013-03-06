@@ -16,6 +16,10 @@ define([
         }
     };
 
+    $(document).on("patterns-injected", function() {
+        shower.init();
+    });
+
     patterns.register(slides);
     return slides;
 });
