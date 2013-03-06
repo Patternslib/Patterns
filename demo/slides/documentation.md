@@ -21,9 +21,7 @@ Consider the following markup:
 				</section>
 			</div>
 			<footer>
-				<p>
-				    Some notes
-				</p>
+			    Some notes
 			</footer>
 		</div>
 		
@@ -37,9 +35,7 @@ Consider the following markup:
 				</section>
 			</div>
 			<footer>
-				<p>
-				    Some notes
-				</p>
+			    Some notes
 			</footer>
 		</div>
 							
@@ -60,9 +56,11 @@ Consider the following markup:
 		</div>
 	</div>
 
-What will happen is that `pat-slides` will trigger the slideshow pattern to bind the slideshow functions (such as key based hopping through slides) to the slides within the element that has `pat-slides` on it. 
+What will happen is that ``pat-slides`` will trigger the slideshow pattern to bind the slideshow functions (such as key based hopping through slides) to the slides within the element that has `pat-slides` on it. 
 
 Clicking on a slide will run the slide show from that slide on.
+
+You can use a ``footer`` element for presenter notes. These are pieces of plain text that are displayed in your browsers console when the slide is shown. 
 
 ### Filters
 It's possible to put a filter in the URI to show only specific slides. Consider the following URI format:
