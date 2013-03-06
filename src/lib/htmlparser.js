@@ -49,8 +49,8 @@ define(function(){
 	// Attributes that have their values filled in disabled="disabled"
 	var fillAttrs = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected");
 
-	// Special Elements (can contain anything)
-	var special = makeMap("script,style");
+	// Special Elements (can contain anything) Reference: http://www.w3.org/TR/html-markup/syntax.html#replaceable-character-data
+	var special = makeMap("script,style,textarea,title");
 
 	var HTMLParser = this.HTMLParser = function( html, handler ) {
 		var index, chars, match, stack = [], last = html;
