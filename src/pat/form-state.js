@@ -24,7 +24,7 @@ define([
 
             // remember initial state of the form and after
             // successfull submission
-            _.saveState.call($form);
+            $form.data("pat-ajax.state", $form.serializeArray());
             $form.on("pat-ajax-success", _.saveState);
 
             return $form;
