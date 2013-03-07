@@ -52,6 +52,9 @@
   - Make the easing used for animations configurable.
     (Wichert Akkerman)
 
+- Form-State pattern: add `form-state-saved` signal.
+  (Marko Đurković)
+
 - Modal pattern: make sure elements inside a modal do not accidentily loose
   their focus. This broke the handling of autofocus in modals.
   [Ticket 266](https://github.com/Patternslib/Patterns/issues/266)
