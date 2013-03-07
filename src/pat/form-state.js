@@ -33,6 +33,7 @@ define([
             var $form = $(this);
             $form.data("pat-ajax.previous-state", $form.data("pat-ajax.state"));
             $form.data("pat-ajax.state", $form.serializeArray());
+            $form.trigger("form-state-saved");
         },
         setModified: function() {
             var $form = $(this);
