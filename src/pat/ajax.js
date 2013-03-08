@@ -38,7 +38,7 @@ define([
             $el.off('.pat-ajax');
         },
         onClickSubmit: function(event) {
-            var $form = $(event.target).parent('form'),
+            var $form = $(event.target).parents('form').first(),
                 name = event.target.name,
                 value = $(event.target).val(),
                 data = {};
