@@ -29,7 +29,10 @@ define([
             cfg.startText =  $el.attr("readonly") ? "" : cfg.placeholder;
 
             $el.val(cfg.preFill.split(','));
-            $el.select2({tags: cfg.words.split(/\s*,\s*/)});
+            $el.select2({
+                tags: cfg.words.split(/\s*,\s*/),
+                tokenSeparators: [","]
+            });
 
             // suppress propagation for second input field
             $el.prev().on("input-change input-defocus input-change-delayed",
