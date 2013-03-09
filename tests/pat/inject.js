@@ -45,15 +45,29 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                 expect(utils.rebaseURL).toHaveBeenCalledWith("base", "example.com");
             });
 
-            it("Ignore casing of attribute", function() {
+            it("Automatically fix casing of attribute", function() {
                 spyOn(utils, "rebaseURL").andReturn("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a HrEf=\"example.com\">This is a test</a>"))
-                    .toBe("<a HrEf=\"REBASED\">This is a test</a>");
+                    .toBe("<a href=\"REBASED\">This is a test</a>");
+            });
+
+            it("Check if image is rebased correctly", function() {
+                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                expect(
+                    pattern._rebaseHTML("base", "<img src=\"example.com\">"))
+                    .toBe("<img src=\"REBASED\">");
+            });
+
+            it("Leave non attribute occurences of src intact", function() {
+                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                expect(
+                    pattern._rebaseHTML("base", "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"))
+                    .toBe("<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>");
             });
         });
 
-		describe("parseRawHtml", function() {
+	describe("parseRawHtml", function() {
             it("Roundtrip attributes with double quotes", function() {
                 var value = "{\"plugins\": \"paste\", \"content_css\": \"/_themes/Style/tiny-body.css\"}",
                     input = "<a data-tinymce-json='" + value + "'>Test</a>",
