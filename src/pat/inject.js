@@ -412,7 +412,7 @@ define([
         _rebaseHTML: function(base, html) {
             var $page = $(html.replace(
                 /(\s)(src\s*)=/gi,
-                '$1src="about:blank" data-pat-inject-rebase-$2='
+                '$1src="" data-pat-inject-rebase-$2='
             ).trim()).wrapAll('<div>').parent();
 
             $page.find(Object.keys(_._rebaseAttrs).join(',')).each(function() {
@@ -426,7 +426,7 @@ define([
                 }
             });
             return $page.html().replace(
-                    /src="about:blank" data-pat-inject-rebase-/g, ''
+                    /src="" data-pat-inject-rebase-/g, ''
                 ).trim();
         },
 
