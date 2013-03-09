@@ -361,7 +361,7 @@ define([
             VIDEO: "src"
         },
 
-        _rebaseHTML: function(base, html) {
+        _rebaseHTML_via_HTMLParser: function(base, html) {
             var output = [],
                 i, link_attribute, value;
 
@@ -399,6 +399,35 @@ define([
                 }
             });
             return output.join("");
+        },
+
+        _rebaseAttrs: {
+            A: "href",
+            FORM: "action",
+            IMG: "data-pat-inject-rebase-src",
+            SOURCE: "data-pat-inject-rebase-src",
+            VIDEO: "data-pat-inject-rebase-src"
+        },
+
+        _rebaseHTML: function(base, html) {
+            var $page = $(html.replace(
+                /(\s)(src\s*)=/gi,
+                '$1src="about:blank" data-pat-inject-rebase-$2='
+            ).trim()).wrapAll('<div>').parent();
+
+            $page.find(Object.keys(_._rebaseAttrs).join(',')).each(function() {
+                var $this = $(this),
+                    attrName = _._rebaseAttrs[this.tagName],
+                    value = $this.attr(attrName);
+
+                if (value && value.slice(0, 2) !== "@@" && value[0] !== "#") {
+                    value = utils.rebaseURL(base, value);
+                    $this.attr(attrName, value);
+                }
+            });
+            return $page.html().replace(
+                    /src="about:blank" data-pat-inject-rebase-/g, ''
+                ).trim();
         },
 
         _parseRawHtml: function(html, url) {
