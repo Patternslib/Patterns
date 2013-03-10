@@ -69,7 +69,7 @@ define([
                 base_url = utils.rebaseURL(base_url, parents.first().data("pat-injected").origin);
             if (cfg.content_css)
                 cfg.content_css = utils.rebaseURL(base_url, cfg.content_css);
-            
+
             if (args.tinymceBaseurl.indexOf("://")!==-1 || args.tinymceBaseurl[0]==="/") {
                 // tinyMCE.baseURL must be absolute
                 tinyMCE.baseURL = window.location.protocol + '//' +
@@ -87,7 +87,8 @@ define([
                 $tinymce = $tinyifr.contents().find("#tinymce");
 
                 // XXX: add events for undo, redo, ...
-                if ("oninput" in window) {
+                if ("oninput" in window ||
+                    ($.browser.msie && $.browser.version < 10)) {
                     $tinymce.on("input.pat-tinymce", function() {
                         log.debug('translating tiny input');
                         tinyMCE.editors[id].save();
@@ -95,7 +96,7 @@ define([
                     });
                 } else {
                     // this is the legacy code path for IE8
-                    $tinymce.on("change.pat-tinymce textchange.pat-tinymce", function() {
+                    $tinymce.on("textchange.pat-tinymce", function() {
                         log.debug('translating tiny change and textchange');
                         tinyMCE.editors[id].save();
                         $el.trigger("input-change");
