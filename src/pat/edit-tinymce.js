@@ -87,8 +87,8 @@ define([
                 $tinymce = $tinyifr.contents().find("#tinymce");
 
                 // XXX: add events for undo, redo, ...
-                if ("oninput" in window ||
-                    ($.browser.msie && $.browser.version < 10)) {
+                if ("oninput" in window &&
+                    !($.browser.msie && $.browser.version < 10)) {
                     $tinymce.on("input.pat-tinymce", function() {
                         log.debug('translating tiny input');
                         tinyMCE.editors[id].save();
@@ -97,7 +97,7 @@ define([
                 } else {
                     // this is the legacy code path for IE8
                     $tinymce.on("textchange.pat-tinymce", function() {
-                        log.debug('translating tiny change and textchange');
+                        log.debug('translating tiny textchange');
                         tinyMCE.editors[id].save();
                         $el.trigger("input-change");
                     });
