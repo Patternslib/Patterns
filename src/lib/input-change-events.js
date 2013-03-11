@@ -38,9 +38,11 @@ define([
                             });
                         } else {
                             // this is the legacy code path for IE8
-                            $el.on("propertychange." + namespace, function() {
-                                log.debug('translating propertychange');
-                                $el.trigger("input-change");
+                            $el.on("propertychange." + namespace, function(ev) {
+                                if (ev.originalEvent.propertyName === 'value') {
+                                    log.debug('translating propertychange');
+                                    $el.trigger("input-change");
+                                }
                             });
                         }
                     } else {
