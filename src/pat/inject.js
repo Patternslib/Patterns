@@ -482,6 +482,7 @@ define([
                     // checkVisibility was possibly installed as a scroll
                     // handler and has now served its purpose -> remove
                     $($scrollable[0]).off("scroll", checkVisibility);
+                    $(window).off("resize.pat-autoload", checkVisibility);
                     return trigger();
                 }
                 return false;
