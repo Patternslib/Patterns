@@ -38,7 +38,11 @@ define([
                             });
                         } else {
                             // this is the legacy code path for IE8
-                            $el.on("propertychange." + namespace, function(ev) {
+                            // XXX: propertychange would be more appropriate,
+                            // but has problems with the placeholder polyfill.
+                            // Maybe minimize use of 'keyup' by checking if 
+                            // there is a placeholder.
+                            $el.on("keyup." + namespace, function(ev) {
                                 if (ev.originalEvent.propertyName === 'value') {
                                     log.debug('translating propertychange');
                                     $el.trigger("input-change");
