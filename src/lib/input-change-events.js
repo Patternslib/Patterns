@@ -38,16 +38,20 @@ define([
                             });
                         } else {
                             // this is the legacy code path for IE8
-                            // XXX: propertychange would be more appropriate,
-                            // but has problems with the placeholder polyfill.
-                            // Maybe minimize use of 'keyup' by checking if
-                            // there is a placeholder.
-                            $el.on("keyup." + namespace, function(ev) {
-                                if (ev.originalEvent.propertyName === 'value') {
-                                    log.debug('translating propertychange');
+                            // Work around buggy placeholder polyfill.
+                            if ($el.attr('placeholder')) {
+                                $el.on("keyup." + namespace, function() {
+                                    log.debug('translating keyup');
                                     $el.trigger("input-change");
-                                }
-                            });
+                                });
+                            } else {
+                                $el.on("propertychange." + namespace, function(ev) {
+                                    if (ev.originalEvent.propertyName === 'value') {
+                                        log.debug('translating propertychange');
+                                        $el.trigger("input-change");
+                                    }
+                                });
+                            }
                         }
                     } else {
                         $el.on("change." + namespace, function() {
