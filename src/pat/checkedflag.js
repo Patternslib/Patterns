@@ -23,7 +23,7 @@ define([
                     if ($form.data("patternCheckedflag.reset"))
                         return;
                     $form.data("patternCheckedflag.reset", true);
-                    $forms=$forms.add(this.form);
+                    $forms = $forms.add(this.form);
                 })
                 .filter("[type=checkbox]")
                     .each(checkedflag.onChangeCheckbox)
@@ -32,7 +32,10 @@ define([
                 .filter("[type=radio]")
                     .each(checkedflag.onChangeRadio)
                     .on("change.patternCheckedflag", checkedflag.onChangeRadio)
-                    .end();
+                    .end()
+                .filter("input:disabled").each(function() {
+                    $(this).closest("label").addClass('disabled');
+                }).end();
             $forms.on("reset.patternCheckedflag", checkedflag.onFormReset);
         },
 
