@@ -25,10 +25,10 @@ define([
 
                 $trigger.data("patternChecklist", options);
                 $trigger.find(options.select)
-                    .on("click.checklist", {trigger: $trigger}, _.onSelectAll);
+                    .on("click.pat-checklist", {trigger: $trigger}, _.onSelectAll);
                 $trigger.find(options.deselect)
-                    .on("click.checklist", {trigger: $trigger}, _.onDeselectAll);
-                $trigger.on("change.checklist", "input[type=checkbox]", {trigger: $trigger}, _.onChange);
+                    .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
+                $trigger.on("change.pat-checklist", "input[type=checkbox]", {trigger: $trigger}, _.onChange);
             });
         },
 
@@ -36,9 +36,9 @@ define([
             return $el.each(function() {
                 var $trigger = $(this),
                     options = $trigger.data("patternChecklist");
-                $trigger.find(options.select).off("click.checklist");
-                $trigger.find(options.deselect).off("click.checklist");
-                $trigger.off("change.checklist", "input[type=checkbox]");
+                $trigger.find(options.select).off(".pat-checklist");
+                $trigger.find(options.deselect).off(".pat-checklist");
+                $trigger.off(".pat-checklist", "input[type=checkbox]");
                 $trigger.data("patternChecklist", null);
             });
         },
