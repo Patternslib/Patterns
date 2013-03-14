@@ -19,14 +19,19 @@ define([
                 if ($el.parent('label').length === 0) {
                     $el.wrap('<span />');
                 }
-                $el.parent().attr('data-option', $el.val() || "");
-            }).on("change.pat-select-option", function() {
-                $(this).parent().attr('data-option', $el.val() || "");
-            });
+                select_option.onChange.call(this);
+            }).on("change.pat-select-option", select_option.onChange);
         },
 
         destroy: function($el) {
             return $el.off(".pat-select-option");
+        },
+
+        onChange: function() {
+            var title = (this.selectedIndex === -1)
+                    ? ""
+                    : this.options[this.selectedIndex].text;
+            $(this).parent().setAttribute("data-option", title);
         }
     };
 
