@@ -30,7 +30,7 @@ define([
         onChange: function() {
             $(this).parent().attr(
                 'data-option',
-                $(this).find('option[value="' + l.val() + '"]').text()
+                $(this).find('option[value="' + $(this).val() + '"]').text()
             );
         }
     };
