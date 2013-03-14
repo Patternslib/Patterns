@@ -28,10 +28,10 @@ define([
         },
 
         onChange: function() {
-            var title = (this.selectedIndex === -1)
-                    ? ""
-                    : this.options[this.selectedIndex].text;
-            $(this).parent().setAttribute("data-option", title);
+            $(this).parent().attr(
+                'data-option',
+                $(this).find('option[value="' + l.val() + '"]').text()
+            );
         }
     };
 
