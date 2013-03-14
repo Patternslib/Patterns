@@ -13,25 +13,31 @@ define(["pat/select-option"], function(pattern) {
         describe("init", function() {
             it("Trigger onChange on initial load", function() {
                 $("#lab").html("<label><select><option selected=\"selected\">Foo</option></select></label>");
-                spyOn(pattern, "_onChange");
+                spyOn(pattern, "onChange");
                 pattern.init($("#lab select"));
-                expect(pattern._onChange).toHaveBeenCalled();
+                expect(pattern.onChange).toHaveBeenCalled();
             });
 
+            it("Adds span if label is absent", function() {
+                $("#lab").html(
+                    "<select><option selected=\"selected\">Foo</option></select>");
+                var $select = $("#lab select");
+                pattern.init($select, []);
+                expect($select.parent()[0].tagName).toBe('SPAN');
+                expect($select.parent().attr('data-option')).toBe('Foo');
+            });
         });
 
-        describe("_onChange", function() {
-            it("Select without label", function() {
-                // Just in case the label was removed later
-                $("#lab").html("<select><option selected=\"selected\">Foo</option></select>");
-                var select = $("#lab select")[0];
-                pattern._onChange.apply(select, []);
-            });
-
+        describe("onChange", function() {
             it("Select with label", function() {
-                $("#lab").html("<label><select><option selected=\"selected\" value=\"value\">Foo</option></select>");
+                $("#lab").html(
+                    '<label>' +
+                    '<select>' +
+                    '<option selected="selected" value="value">Foo</option>' +
+                    '</select>' +
+                    '</label>');
                 var select = $("#lab select")[0];
-                pattern._onChange.apply(select, []);
+                pattern.onChange.apply(select, []);
                 expect($("#lab label").attr("data-option")).toBe("Foo");
             });
         });
