@@ -6,28 +6,27 @@
  */
 define([
     "jquery",
-    "../registry",
-    "../utils"
-], function($, patterns, utils) {
+    "../registry"
+], function($, patterns) {
     var select_option = {
         name: "select-option",
-        trigger: "label select",
+        trigger: "select",
 
         init: function($el) {
-            $el.on("change.pat-select-option", select_option._onChange);
-            select_option._onChange.call(this);
-            return $el;
+            $el.each(function() {
+                var $el = $(this);
+                // create parent span if not direct child of a label
+                if ($el.parent('label').length === 0) {
+                    $el.wrap('<span />');
+                }
+                $el.parent().attr('data-option', $el.val() || "");
+            }).on("change.pat-select-option", function() {
+                $(this).parent().attr('data-option', $el.val() || "");
+            });
         },
 
         destroy: function($el) {
             return $el.off(".pat-select-option");
-        },
-
-        _onChange: function() {
-            var label = utils.findLabel(this);
-            if (label !== null) {
-                $(label).attr('data-option', $(this).val() || "");
-            }
         }
     };
 
