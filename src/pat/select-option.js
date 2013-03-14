@@ -2,6 +2,7 @@
  * Patterns checkedflag - Add checked flag to checkbox labels
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ * Copyright 2013 Florian Friesdorf
  */
 define([
     "jquery",
@@ -24,9 +25,8 @@ define([
 
         _onChange: function() {
             var label = utils.findLabel(this);
-            if (label!==null) {
-                var title = (this.selectedIndex===-1) ? "" : this.options[this.selectedIndex].text;
-                label.setAttribute("data-option", title);
+            if (label !== null) {
+                $(label).attr('data-option', $(this).val() || "");
             }
         }
     };
