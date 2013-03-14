@@ -168,8 +168,18 @@ define([
 
         _parseExtendedNotation: function(parameter) {
             var opts = {}, i,
-                parts = parameter.split(";"),
-                matches;
+                matches,
+                parts = parameter.split(";").reduce(function(acc, x) {
+                    var prev = acc[acc.length - 1];
+                    if (x === '') {
+                        acc[acc.length - 1] = prev + ';';
+                    } else if (prev && prev[prev.length - 1] === ';') {
+                        acc[acc.length - 1] = prev + x;
+                    } else {
+                        acc = acc.concat(x);
+                    }
+                    return acc;
+                }, []);
 
             for (i=0; i<parts.length; i++) {
                 if (!parts[i])

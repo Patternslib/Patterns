@@ -146,6 +146,16 @@ define(["core/parser"], function(ArgumentParser) {
                     expect(opts).toEqual({foo: "one", bar: "two"});
                 });
 
+                it("Escaping a semicolon by duplication", function() {
+                    var parser=new ArgumentParser();
+                    parser.add_argument("foo");
+                    parser.add_argument("bar");
+                    parser.add_argument("baz");
+                    var opts = parser._parse("foo: one;; bar: still one;baz: three");
+                    expect(opts).toEqual({foo: "one; bar: still one",
+                                          baz: "three"});
+                });
+
                 it("Ignore unknown named parameter", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("selector");
