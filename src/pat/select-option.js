@@ -15,7 +15,7 @@ define([
 
         init: function($el) {
             $el.on("change.pat-select-option", select_option._onChange);
-            select_option._onChange();
+            select_option._onChange.call(this);
             return $el;
         },
 
