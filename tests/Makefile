@@ -1,6 +1,6 @@
 BUNGLE 		= node_modules/.bin/bungle
 PATTERNS 	= $(shell cd ../src; find . -name "*.js")
-TESTS 		= $(wildcard ../tests/core/*.js) $(wildcard ../tests/lib/*.js) $(wildcard ../tests/pat/*.js)
+TESTS 		= $(wildcard ../tests/specs/*.js) $(wildcard ../tests/specs/**/*.js)
 TARGETS 	= index.html \
 		  TestRunner-bundle.html \
 		  TestRunner-bundle-min.html \
