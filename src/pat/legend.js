@@ -7,7 +7,7 @@ define([
         trigger: "legend",
 
         _convertToIframes: function($root) {
-            $root.find("object[type='text/html']").each(function() {
+            $root.findInclusive("object[type='text/html']").each(function() {
                 var $object = $(this),
                     $iframe = $("<iframe allowtransparency='true'/>");
 
@@ -24,7 +24,7 @@ define([
         transform: function($root) {
             // XXX: cant-touch-this is no more, so every legend should be
             // transformed?
-            $root.find("legend:not(.cant-touch-this)").each(function() {
+            $root.findInclusive("legend:not(.cant-touch-this)").each(function() {
                 $(this).replaceWith("<p class='legend'>"+$(this).html()+"</p>");
             });
 
