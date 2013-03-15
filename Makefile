@@ -77,7 +77,7 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 		   src/lib/htmlparser.js
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
-check-modules: $(TARGETS) $(THIRDPARTY)
+check-modules: $(THIRDPARTY)
 	make -C tests TestRunner-modules.html TestRunner-modules.js
 	@echo Running checks on modules
 	@echo =========================
