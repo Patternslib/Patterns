@@ -45,20 +45,7 @@ define([
             $el.select2("destroy");
         },
         transform: function($content) {
-            $content.filter('input[type=text].pat-autosuggest').each(function() {
-                var $src = $(this),
-                    $dest = $('<input type="hidden"/>').insertAfter($src);
-
-                $src.detach();
-                $.each($src.prop('attributes'), function() {
-                    if (this.name !== 'type') {
-                        $dest.attr(this.name, this.value);
-                    }
-                });
-                $src.remove();
-            });
-
-            $content.find('input[type=text].pat-autosuggest').each(function() {
+            $content.findInclusive('input[type=text].pat-autosuggest').each(function() {
                 var $src = $(this),
                     $dest = $('<input type="hidden"/>').insertAfter($src);
 
