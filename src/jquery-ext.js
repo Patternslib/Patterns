@@ -286,6 +286,10 @@ define(["jquery"], function($) {
         return this;
     };
 
+    $.fn.findInclusive = function(selector) {
+        return this.find('*').addBack().filter(selector);
+    };
+
     // case-insensitive :contains
     $.expr[":"].Contains = function(a, i, m) {
         return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
