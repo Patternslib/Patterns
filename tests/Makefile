@@ -1,4 +1,5 @@
 BUNGLE 		= ../node_modules/.bin/bungle
+JSHINT 		= ../node_modules/.bin/jshint
 PATTERNS 	= $(shell cd ../src; find . -name "*.js")
 TESTS 		= $(wildcard ../tests/specs/*.js) $(wildcard ../tests/specs/**/*.js)
 TARGETS 	= index.html \
@@ -33,6 +34,9 @@ empty  		:=
 space 		:= $(empty) $(empty)
 comma 		:= ,
 TESTLIST 	= $(subst $(space),$(comma),$(patsubst %,\"%\",$(TESTS)))
+
+jshint: $(TESTS)
+	$(JSHINT) $(TESTS)
 
 TestRunner-modules.js: TestRunner.js.in $(TESTS) jshint
 	sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@
