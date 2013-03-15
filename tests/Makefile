@@ -1,4 +1,4 @@
-BUNGLE 		= node_modules/.bin/bungle
+BUNGLE 		= ../node_modules/.bin/bungle
 PATTERNS 	= $(shell cd ../src; find . -name "*.js")
 TESTS 		= $(wildcard ../tests/specs/*.js) $(wildcard ../tests/specs/**/*.js)
 TARGETS 	= index.html \
@@ -36,7 +36,7 @@ TESTLIST 	= $(subst $(space),$(comma),$(patsubst %,\"%\",$(TESTS)))
 
 TestRunner-bundle.js: TestRunner-modules.js
 	cd ..; \
-	$(BUNGLE) build -i ../tests/$<,$(subst $(space),$(comma),$(TESTS)) \
+	tests/$(BUNGLE) build -i ../tests/$<,$(subst $(space),$(comma),$(TESTS)) \
 	    -E $(subst $(space),$(comma),$(PATTERNS)) -o tests/$@ 
 
 TestRunner-modules.js: TestRunner.js.in $(TESTS)
