@@ -79,9 +79,7 @@ define([
             allsel = all.join(",");
 
             // Find all elements that belong to any pattern.
-            $match = $content.find(allsel);
-            if ($content.is(allsel))
-                $match = $match.add($content);
+            $match = $content.findInclusive(allsel);
             $match = $match.filter(function() { return $(this).parents('pre').length === 0; });
             $match = $match.filter(":not(.cant-touch-this)");
 
