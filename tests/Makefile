@@ -34,12 +34,12 @@ space 		:= $(empty) $(empty)
 comma 		:= ,
 TESTLIST 	= $(subst $(space),$(comma),$(patsubst %,\"%\",$(TESTS)))
 
+TestRunner-modules.js: TestRunner.js.in $(TESTS) jshint
+	sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@
+
 TestRunner-bundle.js: TestRunner-modules.js
 	cd ..; \
 	tests/$(BUNGLE) build -i ../tests/$<,$(subst $(space),$(comma),$(TESTS)) \
 	    -E $(subst $(space),$(comma),$(PATTERNS)) -o tests/$@ 
-
-TestRunner-modules.js: TestRunner.js.in $(TESTS)
-	sed -e "s#@TESTS@#$(TESTLIST)#" $< > $@
 
 .PHONY: all clean
