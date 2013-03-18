@@ -45,7 +45,7 @@ BODY {
 	font: 22px/1.8 Verdana, "Lucida Grande", Lucida, sans-serif;
 	/*-webkit-transition: -webkit-transform 1s;
 	transition: transform 1s;*/
-	text- rendering:optimizeLegibility; 
+	text- rendering:optimizeLegibility;
 }
 
 p {
@@ -2066,7 +2066,7 @@ margin-left: 0;
 
 /* @group Full slide */
 
-pat-slides.full {
+body.full {
 	position:absolute;
 	top:50%;
 	left:50%;
