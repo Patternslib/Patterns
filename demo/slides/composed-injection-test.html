@@ -8,20 +8,22 @@
         <script data-main="../../src/autoinit" src="../../bungledeps/require.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-	<div class="pat-slides list">		
-	   <a href="standalone-test.html" class="pat-inject" data-pat-inject="source: #third-slide::element; target: self::element; trigger: autoload">Run</a>
+	<div class="pat-slides">		
+	    <a href="standalone-test.html" class="pat-inject" data-pat-inject="source: #third-slide::element; target: self::element; trigger: autoload">Run</a>
 		<div class="slide" id="first-slide">
 			<div class="slide-content">
 				<section>
 					<header>
 						<h2>My beautiful slide</h2>
 					</header>
-					<img src="../../Media/illustrations/abdelaziz.jpg" alt=""/>
+					<p>
+						This slide is not injected but all the previous ones were.
+					</p>
 				</section>
 			</div>
                         <footer>
 				<p>
-				    Some notes
+				    Some notes.
 				</p>
 			</footer>
 		</div>
