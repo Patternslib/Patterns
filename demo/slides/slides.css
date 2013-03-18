@@ -2,6 +2,29 @@
 
 @import url("animate.css/animate.css");
 
+/* @group Custom animations for this slideshow only */
+
+/* @group Single pearl */
+		
+		@keyframes drop-80 {
+			from 	 { margin-top: 0; }
+			to	 { margin-top: 80px; }
+		}
+		
+		.slide.active #single-pearl,
+		.list #single-pearl {
+			animation: shake 1s 2.5s, drop-80 linear 0.3s 3.6s;
+			animation-fill-mode: forwards;
+		}
+		
+		}
+
+		/* @end */
+
+
+
+/* @end */
+
 @font-face {
 	font-family: 'Frutiger 55 Roman';
 	src: url('fonts/frutiger-roman/frutigerltstd-roman-webfont.eot');
