@@ -845,7 +845,7 @@ ul.tabCloud li.current a {
 
 #globalNavigation li.active,
 #globalNavigation li.home.active.current {
-	background: white url(globalNavigation-current.png) no-repeat center 0;
+	background: white url(images/globalNavigation-current.png) no-repeat center 0;
 }
 
 #globalNavigation li.active a,
@@ -1090,7 +1090,7 @@ figure.shadowed {
 }
 
 .full .slide.draft .slide-content:after {
-	content: url(draft.png);
+	content: url(images/draft.png);
 	position: absolute;
 	z-index: 1000;
 	right: 20px;
@@ -1349,7 +1349,7 @@ h3 {
 
 .slide section:after {
 	top: -102px;
-	content: url(brandmark.png);
+	content: url(images/brandmark.png);
 	position: absolute;
 	right: 0;
 	transform: scale(0.3);
@@ -1603,7 +1603,7 @@ a.pat-markdown {
 @media print {
 
 .slide.full section header {
-	background: url(chrome-gradient-fix.png) repeat-x 0 0;
+	background: url(images/chrome-gradient-fix.png) repeat-x 0 0;
 }
 
 }
