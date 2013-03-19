@@ -80,9 +80,10 @@ define([
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
             cfg.oninit = function() {
-                var ed = tinyMCE.editors.filter(function(e) {
-                    return e.id === id;
-                })[0];
+                var editors = tinyMCE.editors.filter(function(e) {
+                        return e.id === id;
+                    }),
+                    ed = editors[editors.length-1];
 
                 var handler = function() {
                     tinyMCE.editors[id].save();
