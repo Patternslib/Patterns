@@ -104,7 +104,8 @@ define([
                     ev.stopPropagation();
                 });
                 $(document).on("click.tooltip", $trigger, tooltip.hide);
-                $trigger.on("click.tooltip", tooltip.blockDefault);
+                $(document).on("pat-tooltip-click.tooltip", $trigger, tooltip.hide);
+                $trigger.on("click.tooltip", $trigger, tooltip.onClick);
                 // close if something inside the tooltip triggered an injection
                 $container.on("patterns-inject-triggered.tooltip",
                               $trigger, tooltip.hide);
@@ -114,6 +115,15 @@ define([
                 $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
                 $trigger.on("click.tooltip", tooltip.blockDefault);
             }
+        },
+
+        onClick: function(event) {
+            // XXX: this handler is necessary in order to suppress the click
+            // on the trigger from bubbling. (see show function)
+            tooltip.hide(event);
+            event.preventDefault();
+            event.stopPropagation();
+            event.data.trigger('pat-tooltip-click');
         },
 
         removeHideEvents: function($trigger) {
@@ -131,7 +141,11 @@ define([
         show: function(event) {
             // Stop bubbling, as it causes problems if ancestor
             // is e.g. pat-collapsible.
-            event.stopPropagation();
+            if (event.type === 'click') {
+                event.stopPropagation();
+                event.data.trigger('pat-tooltip-click');
+            }
+
             event.preventDefault();
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger, true),
