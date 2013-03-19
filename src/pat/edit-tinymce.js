@@ -88,11 +88,18 @@ define([
                     tinyMCE.editors[id].save();
                     $el.trigger("input-change");
                 };
+
+                var setAttribHandler = function(ed, el) {
+                    // handle image resize
+                    if (el.tagName === "IMG") {
+                        handler();
+                    }
+                };
                 ed.onKeyUp.add(handler);
                 ed.onChange.add(handler);
-                ed.onNodeChange.add(handler);
                 ed.onUndo.add(handler);
                 ed.onRedo.add(handler);
+                ed.onSetAttrib.add(setAttribHandler);
             };
 
             // initialize editor
