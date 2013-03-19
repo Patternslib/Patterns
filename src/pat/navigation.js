@@ -28,8 +28,8 @@ define([
                     });
                 }
 
-                // An element within this navigation triggered injection
-                $el.on("patterns-inject-triggered", function(ev) {
+                // An anchor within this navigation triggered injection
+                $el.on("patterns-inject-triggered", "a", function(ev) {
                     var $target = $(ev.target);
 
                     // remove all set current classes
