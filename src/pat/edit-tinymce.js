@@ -96,11 +96,17 @@ define([
                         handler();
                     }
                 };
+                
+                var clickHandler = function() {
+                    $el.trigger("click");
+                };
+                
                 ed.onKeyUp.add(handler);
                 ed.onChange.add(handler);
                 ed.onUndo.add(handler);
                 ed.onRedo.add(handler);
                 ed.onSetAttrib.add(setAttribHandler);
+                ed.onClick.add(clickHandler);
             };
 
             // initialize editor
