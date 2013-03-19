@@ -80,28 +80,19 @@ define([
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
             cfg.oninit = function() {
-                var $tinymce, $tinyifr;
+                var ed = tinyMCE.editors.filter(function(e) {
+                    return e.id === id;
+                })[0];
 
-                // find tiny's iframe and edit field
-                $tinyifr = $("#" + id + "_ifr");
-                $tinymce = $tinyifr.contents().find("#tinymce");
-
-                // XXX: add events for undo, redo, ...
-                if ("oninput" in window &&
-                    !($.browser.msie && $.browser.version < 10)) {
-                    $tinymce.on("input.pat-tinymce", function() {
-                        log.debug('translating tiny input');
-                        tinyMCE.editors[id].save();
-                        $el.trigger("input-change");
-                    });
-                } else {
-                    // this is the legacy code path for IE8
-                    $tinymce.on("textchange.pat-tinymce", function() {
-                        log.debug('translating tiny textchange');
-                        tinyMCE.editors[id].save();
-                        $el.trigger("input-change");
-                    });
-                }
+                var handler = function() {
+                    tinyMCE.editors[id].save();
+                    $el.trigger("input-change");
+                };
+                ed.onKeyUp.add(handler);
+                ed.onChange.add(handler);
+                ed.onNodeChange.add(handler);
+                ed.onUndo.add(handler);
+                ed.onRedo.add(handler);
             };
 
             // initialize editor
