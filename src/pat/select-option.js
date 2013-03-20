@@ -13,11 +13,10 @@ define([
         trigger: "select",
 
         init: function($el) {
-            $el.each(function() {
+            $el.filter(function() {
+                return !$el.prop('multiple');
+            }).each(function() {
                 var $el = $(this);
-                if ($el.prop('multiple')) {
-                    return;
-                }
                 // create parent span if not direct child of a label
                 if ($el.parent('label').length === 0) {
                     $el.wrap('<span />');
