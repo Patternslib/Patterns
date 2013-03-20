@@ -22,15 +22,6 @@ define([
             var $content = $el.children()
                     .wrapAll("<div class='pat-breadcrumbs-content'></div>").parent();
 
-            // set fixed width on content
-            var width = $content.children().toArray().reduce(function(acc, el) {
-                // outerWidth is buggy http://bugs.jquery.com/ticket/8443 so
-                // add a magic buffer value of 5.
-                // XXX: maybe make the buffer configurable.
-                return acc + $(el).outerWidth(true) + 5;
-            }, 0);
-            $content.width(width);
-
             // shift ctrl
             var $ctrl = $("<span class='button shift'>shift</span>")
                     .prependTo($el);
@@ -84,8 +75,21 @@ define([
                     }
                 }
             };
-            maybeshift();
             $(window).on("resize.pat-breadcrumbs", maybeshift);
+
+            var recalculate = function() {
+                // set fixed width on content
+                var width = $content.children().toArray().reduce(function(acc, el) {
+                    // outerWidth is buggy http://bugs.jquery.com/ticket/8443 so
+                    // add a magic buffer value of 5.
+                    // XXX: maybe make the buffer configurable.
+                    return acc + $(el).outerWidth(true) + 5;
+                }, 0);
+                $content.width(width);
+                maybeshift();
+            };
+            $el.on("pat-breadcrumbs-changed.pat-breadcrumbs", recalculate);
+            recalculate();
 
             return $el;
         },
