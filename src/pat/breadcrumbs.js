@@ -24,7 +24,10 @@ define([
 
             // set fixed width on content
             var width = $content.children().toArray().reduce(function(acc, el) {
-                return acc + $(el).outerWidth(true);
+                // outerWidth is buggy http://bugs.jquery.com/ticket/8443 so
+                // add a magic buffer value of 5.
+                // XXX: maybe make the buffer configurable.
+                return acc + $(el).outerWidth(true) + 5;
             }, 0);
             $content.width(width);
 
