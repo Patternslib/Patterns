@@ -96,11 +96,11 @@ define([
                         handler();
                     }
                 };
-                
+
                 var clickHandler = function() {
                     $el.trigger("click");
                 };
-                
+
                 ed.onKeyUp.add(handler);
                 ed.onChange.add(handler);
                 ed.onUndo.add(handler);
