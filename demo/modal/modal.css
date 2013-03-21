@@ -16,6 +16,8 @@ div.pat-modal {
 	box-shadow: 0 0 20px 10px black;
 	margin-left: -250px;
 	left: 50%;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 div.pat-modal .panel-content {
