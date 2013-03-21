@@ -3,8 +3,6 @@
 div.pat-modal {
 	-webkit-animation: fade-in 1s;
   position: fixed;
-  top: 50%;
-  left: 50%;
   z-index: 10050;
   background-color: #efefef;
   border: 1px solid #999;
@@ -19,9 +17,7 @@ div.pat-modal {
 	text-shadow: white 0 1px 0;
 	width: 500px;
 
-	transform: translate(-50%, -50%);
 	box-shadow: 0 0 20px 10px black;
-	max-height: 90%;
 }
 
 div.pat-modal .panel-content {
