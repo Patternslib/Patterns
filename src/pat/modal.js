@@ -61,6 +61,28 @@ define([
             // remove on ESC
             $(document).on("keyup.pat-modal",
                            modal.destroy.bind($el, $el));
+
+            // allow DOM to render before positioning
+            setTimeout(modal.setPosition, 0);
+        },
+
+        setPosition: function() {
+            var $el = $('div.pat-modal,#pat-modal'),
+                maxHeight = window.innerHeight * 0.9;
+
+            if ($el.length === 0) {
+                return;
+            }
+
+            $el.css('max-height', maxHeight);
+            var top = (window.innerHeight - $el.outerHeight()) / 2;
+
+            if (maxHeight - $el.outerHeight() >= 0) {
+                $el.removeClass('max-height');
+            } else {
+                $el.addClass('max-height');
+            }
+            $el.css('top', top);
         },
 
         destroy: function($el, ev) {
@@ -70,6 +92,11 @@ define([
             $el.remove();
         }
     };
+
+    $(window).on('resize.pat-modal-position', modal.setPosition);
+    $(document).on('patterns-injected.pat-modal-position', '#pat-modal',
+        modal.setPosition);
+
     registry.register(modal);
     return modal;
 });
