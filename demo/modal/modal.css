@@ -1,23 +1,21 @@
 /* @group Modal */
 
 div.pat-modal {
-	-webkit-animation: fade-in 1s;
-  position: fixed;
-  z-index: 10050;
-  background-color: #efefef;
-  border: 1px solid #999;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  *border: 1px solid #999;
-  /* IE6-7 */
-
-  border-radius: 6px;
-
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-  background-clip: padding-box;
+	animation: fade-in 1s;
+	position: fixed;
+	z-index: 10050;
+	background-color: #efefef;
+	border: 1px solid #999;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	border-radius: 6px;
+	
+	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	background-clip: padding-box;
 	text-shadow: white 0 1px 0;
 	width: 500px;
-
 	box-shadow: 0 0 20px 10px black;
+	margin-left: -250px;
+	left: 50%;
 }
 
 div.pat-modal .panel-content {
@@ -25,40 +23,28 @@ div.pat-modal .panel-content {
 	padding: 20px;
 }
 
-.lt-ie9 div.pat-modal {
- 	top: 50%;
- 	left: 50%;
- 	width: 560px;
- 	margin: -250px 0 0 -280px;
-	height: 500px;
+div.pat-modal.max-height .panel-content {
+	overflow: scroll;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	top: 37px;
 }
 
 /* @group Special sizes */
 
 div.pat-modal.large {
 	width: 800px;
-}
-
-.lt-ie9 div.pat-modal.large {
-  margin: -300px 0 0 -400px;
-	height: 600px;
+	margin-left: -400px;
 }
 
 div.pat-modal.small {
 	width: 400px;
-}
-
-.lt-ie9 div.pat-modal.small {
-  
-  margin: -100px 0 0 -200px;
-	height: 202px;
+	margin-left: -200px;
 }
 
 /* @end */
-
-div.pat-modal.tiny-image img {
-	max-height: 540px;
-}
 
 div.pat-modal img {
 	max-width: 100%;
@@ -85,14 +71,6 @@ div.pat-modal:after {
 	background-image: url(black-80p.png);
 }
 
-.lt-ie9 .wizard-box {
-	position: absolute;
-	top: 35px;
-	right: 0;
-	bottom: 0;
-	left: 0;
-}
-
 .wizard-box .panel-body {
 	overflow: auto;
 	padding: 20px;
@@ -100,14 +78,6 @@ div.pat-modal:after {
 	margin-bottom: 0;
 	margin-top: 0;
 	max-height: 400px;
-}
-
-.lt-ie9 .wizard-box .panel-body {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 51px;
-	left: 0;
 }
 
 div.pat-modal.tiny-link .wizard-box .panel-body {

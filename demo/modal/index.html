@@ -12,22 +12,31 @@
 			<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
 		</section>
 		<section class="demo">
-		<h2>Demo</h2>
-		<form action="modal-sources.html" method="get" class="pat-modal">
-			<fieldset>
-				<button type="submit">Open</button> a Modal panel via a form submit.
-			</fieldset>
-		</form>
-		<p>
-			Open a <a href="modal-sources.html" class="pat-modal"> Modal panel via AJAX</a>.
-		</p>
-		<p>
-			Open a <a href="modal-sources.html" class="pat-modal" data-pat-modal="class: large"> Modal panel with an extra class 'large' on it.</a>
-		</p>
-		<div id="modal-on-load" class="pat-modal">
-			<h3>A modal that opens when the page is loaded/injected.</h3>
-			<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-		</div>
+			<h2>Demo</h2>
+			<form action="modal-sources.html" method="get" class="pat-modal">
+				<fieldset>
+					<button type="submit">Open</button> a Modal panel via a form submit.
+				</fieldset>
+			</form>
+			<p>
+				Open a <a href="modal-sources.html" class="pat-modal"> Modal panel via AJAX</a>.
+			</p>
+			<p>
+				Open a <a href="modal-sources.html" class="pat-modal" data-pat-modal="class: large"> Modal panel with an extra class 'large' on it.</a>
+			</p>
+			<div id="modal-on-load" class="pat-modal">
+				<h3>A modal that opens when the page is loaded/injected.</h3>
+				<pre class="pat-markdown">
+#### Use cases
+Frequent uses of modal windows include:
+- Drawing attention to vital pieces of information. This use has been criticised as ineffective because users are bombarded with too many dialog boxes, and habituate to simply clicking "Close", "Cancel", or "OK" without reading or understanding the message.[3][4][5]
+- Blocking the application flow until information required to continue is entered, as for example a password in a login process. Another example are file dialogs to open and save files in an application.
+- Collecting application configuration options in a centralized dialog. In such cases, typically the changes are applied upon closing the dialog, and access to the application is disabled while the edits are being made.
+- Warning that the effects of the current action are not reversible. This is a frequent interaction pattern for modal dialogs, but it is also criticised by usability experts as being ineffective for its intended use (protection against errors in destructive actions) due to habituation. Actually making the action reversible (providing an "undo" option) is recommended instead.[1]
+
+*Source: Wikipedia
+				</pre>
+			</div>
 		</section>
 		<section class="documentation">
 			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
