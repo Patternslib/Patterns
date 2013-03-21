@@ -67,7 +67,7 @@ define([
 
         setPosition: function() {
             var $el = $('div.pat-modal,#pat-modal'),
-                maxHeight = window.innerHeight - $el.outerHeight(true) +
+                maxHeight = $(window).innerHeight() - $el.outerHeight(true) +
                             $el.outerHeight();
 
             if ($el.length === 0) {
@@ -83,7 +83,7 @@ define([
                 $el.removeClass('max-height');
             }
 
-            var top = (window.innerHeight - $el.outerHeight(true)) / 2;
+            var top = ($(window).innerHeight() - $el.outerHeight(true)) / 2;
             $el.css('top', top);
         },
 
