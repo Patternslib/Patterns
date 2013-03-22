@@ -11,6 +11,7 @@ define([
     var _ = {
         name: "expandable",
         trigger: "ul.pat-expandable",
+	jquery_plugin: true,
         init: function($el) {
             // make sure inject folders have a ul
             $el.find(".folder[data-pat-expandable]:not(:has(ul))").append("<ul />");
