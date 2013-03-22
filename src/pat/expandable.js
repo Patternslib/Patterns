@@ -12,9 +12,6 @@ define([
         name: "expandable",
         trigger: "ul.pat-expandable",
         init: function($el) {
-
-            // XXX: data-pat-expandable with load-content: instead of injection
-
             // make sure inject folders have a ul
             $el.find(".folder[data-pat-expandable]:not(:has(ul))").append("<ul />");
 
