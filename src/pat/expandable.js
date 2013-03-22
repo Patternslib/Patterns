@@ -1,7 +1,13 @@
 define([
     "jquery",
+    "./inject",
+    "../core/parser",
     "../registry"
-], function($, registry) {
+], function($, inject, Parser, registry) {
+    var parser = new Parser("expandable");
+
+    parser.add_argument("load-content");
+
     var _ = {
         name: "expandable",
         trigger: "ul.pat-expandable",
@@ -30,12 +36,30 @@ define([
                 var $ctrl = $(this),
                     $folder = $ctrl.parent();
                 $ctrl.on("click.pat-expandable", function() {
-                    $folder.toggleClass("open closed");
-                    $folder.filter(".open").trigger("patterns-folder-open");
+                    $folder.toggleClass("open closed")
+			.filter(".open[data-pat-expandable]")
+                        .patExpandable("loadContent");
                 });
             });
             return $el;
+        },
+        loadContent: function($el) {
+            return $el.each(function() {
+                var $el = $(this),
+		    url = parser.parse($el).loadContent,
+		    components = url.split("#"),
+                    base_url = components[0],
+                    id = components[1] ? "#" + components[1] : null,
+                    opts = [{
+			url: base_url,
+			source: id,
+			$target: $el,
+			dataType: "html"
+                    }];
+		inject.execute(opts, $el);
+            });
         }
+
     };
     registry.register(_);
     return _;
