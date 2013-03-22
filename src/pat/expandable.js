@@ -52,7 +52,7 @@ define([
                     opts = [{
                         url: base_url,
                         source: id,
-                        $target: $el,
+                        $target: $el.find('ul'),
                         dataType: "html"
                     }];
                 inject.execute(opts, $el);
