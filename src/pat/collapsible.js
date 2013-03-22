@@ -133,7 +133,7 @@ define([
         _loadContent: function($el, url, $target) {
             var components = url.split("#"),
                 base_url = components[0],
-                id = components[1] ? "#" + components[1] : null,
+                id = components[1] ? "#" + components[1] : "body",
                 opts = [{
                     url: base_url,
                     source: id,
