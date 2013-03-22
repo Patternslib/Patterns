@@ -11,10 +11,11 @@ define([
     var _ = {
         name: "expandable",
         trigger: "ul.pat-expandable",
-	jquery_plugin: true,
+        jquery_plugin: true,
         init: function($el) {
             // make sure inject folders have a ul
-            $el.find(".folder[data-pat-expandable]:not(:has(ul))").append("<ul />");
+            $el.find(".folder[data-pat-expandable]:not(:has(ul))")
+                .append("<ul />");
 
             // find all folders that contain a ul
             var $folders = $el.find("li.folder:has(ul)");
@@ -35,7 +36,7 @@ define([
                     $folder = $ctrl.parent();
                 $ctrl.on("click.pat-expandable", function() {
                     $folder.toggleClass("open closed")
-			.filter(".open[data-pat-expandable]")
+                        .filter(".open[data-pat-expandable]")
                         .patExpandable("loadContent");
                 });
             });
@@ -44,17 +45,17 @@ define([
         loadContent: function($el) {
             return $el.each(function() {
                 var $el = $(this),
-		    url = parser.parse($el).loadContent,
-		    components = url.split("#"),
+                    url = parser.parse($el).loadContent,
+                    components = url.split("#"),
                     base_url = components[0],
                     id = components[1] ? "#" + components[1] : "body",
                     opts = [{
-			url: base_url,
-			source: id,
-			$target: $el,
-			dataType: "html"
+                        url: base_url,
+                        source: id,
+                        $target: $el,
+                        dataType: "html"
                     }];
-		inject.execute(opts, $el);
+                inject.execute(opts, $el);
             });
         }
 
