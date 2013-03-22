@@ -16,7 +16,7 @@ define([
             // XXX: data-pat-expandable with load-content: instead of injection
 
             // make sure inject folders have a ul
-            $el.find(".folder[data-pat-inject]:not(:has(ul))").append("<ul />");
+            $el.find(".folder[data-pat-expandable]:not(:has(ul))").append("<ul />");
 
             // find all folders that contain a ul
             var $folders = $el.find("li.folder:has(ul)");
