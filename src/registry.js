@@ -69,7 +69,7 @@ define([
                     try {
                         pattern.transform($content);
                     } catch (e) {
-                        log.critical("Transform error for pattern" + name, e);
+                        log.error("Transform error for pattern" + name, e);
                     }
                 }
                 if (pattern.trigger) {
