@@ -46,6 +46,9 @@
 
 - Depends pattern:
 
+  - Really hide/show elements if no transition type was specified (or
+    `none` was specified explicitly).
+
   - Add support for a `~=` operator to test for substrings.
     (Wichert Akkerman)
 
