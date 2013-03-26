@@ -70,6 +70,57 @@ define(["pat/depends"], function(pattern) {
                 expect($._data($slave[0]).events).toBe(undefined);
             });
         });
+
+        describe("_hide_or_show", function() {
+            beforeEach(function() {
+                jasmine.Clock.useMock();$("<div/>", {id: "lab"}).appendTo(document.body);
+                $.fx.off=true;
+            });
+
+            afterEach(function() {
+                $.fx.off=false;
+            });
+
+            it("Hide without a transition", function() {
+                $("#lab").append("<div/>");
+                var $slave = $("#lab div");
+                pattern._hide_or_show($slave, false, {transition: "none", effect: {duration: "fast", easing: "swing"}});
+                expect($slave[0].style.display).toBe("none");
+                expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
+            });
+
+            it("Show without a transition", function() {
+                $("#lab").append("<div style=\"display: none\"/>");
+                var $slave = $("#lab div");
+                pattern._hide_or_show($slave, true, {transition: "none", effect: {duration: "fast", easing: "swing"}});
+                expect($slave[0].style.display).toBe("");
+                expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["visible"]);
+            });
+
+            it("Fadeout with 0 duration", function() {
+                $("#lab").append("<div/>");
+                var $slave = $("#lab div");
+                pattern._hide_or_show($slave, false, {transition: "slide", effect: {duration: 0, easing: "swing"}});
+                expect($slave[0].style.display).toBe("none");
+                expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
+            });
+
+            it("Fadeout with non-zero duration", function() {
+                $("#lab").append("<div/>");
+                var $slave = $("#lab div");
+                pattern._hide_or_show($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}});
+                expect($slave[0].style.display).toBe("none");
+                expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
+            });
+
+            it("CSS-only hide", function() {
+                $("#lab").append("<div/>");
+                var $slave = $("#lab div");
+                pattern._hide_or_show($slave, false, {transition: "css", effect: {duration: "fast", easing: "swing"}});
+                expect($slave[0].style.display).toBe("");
+                expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
+            });
+        });
     });
 
 });
