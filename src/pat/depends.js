@@ -109,6 +109,30 @@ define([
             $slave.addClass("disabled");
         },
 
+        _hide_or_show: function($slave, new_state, options) {
+            var duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
+
+            $slave.removeClass("visible hidden in-progress");
+            var onComplete = function() {
+                $slave
+                    .removeClass("in-progress")
+                    .addClass(new_state ? "visible" : "hidden");
+            };
+            if (!duration) {
+                if (options.transition!=="css")
+                    $slave[new_state ? "show" : "hide"]();
+                onComplete();
+            } else {
+                var t = depends.transitions[options.transition];
+                $slave.addClass("in-progress");
+                $slave[new_state ? t.show : t.hide]({
+                    duration: duration,
+                    easing: options.effect.easing,
+                    complete: onComplete
+                });
+            }
+        },
+
         onChange: function(event) {
             var handler = event.data.handler,
                 options = event.data.options,
@@ -119,18 +143,7 @@ define([
 
             switch (options.action) {
                 case "show":
-                    $slave.removeClass("visible hidden in-progress");
-                    if (!duration)
-                        $slave.addClass(state ? "visible" : "hidden");
-                    else {
-                        var t = depends.transitions[options.transition];
-                        $slave.addClass("in-progress");
-                        $slave[state ? t.show : t.hide](duration, options.effect.easing, function() {
-                            $slave
-                                .removeClass("visible in-progress hidden")
-                                .addClass(state ? "visible" : "hidden");
-                        });
-                    }
+                    depends._hide_or_show($slave, state, options);
                     break;
                 case "enable":
                     if (state)
