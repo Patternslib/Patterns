@@ -138,8 +138,7 @@ define([
                 options = event.data.options,
                 slave = event.data.slave,
                 $slave = $(slave),
-                state = handler.evaluate(),
-                duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
+                state = handler.evaluate();
 
             switch (options.action) {
                 case "show":
