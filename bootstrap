@@ -84,8 +84,6 @@ fi
     npm install bungle --force 2>&1 &&
     node_modules/.bin/bungle update &&
     node_modules/.bin/bungle install &&
-    ./build.js -n
-    ./build.js
 }
 
 if [ $? == 0 ]; then
