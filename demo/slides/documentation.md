@@ -20,11 +20,9 @@ Consider the following markup:
 					<img src="../../Media/illustrations/abdelaziz.jpg" />
 				</section>
 			</div>
-			<div class="presenter-notes">
-				<p>
-				    Some notes
-				</p>
-			</div>
+			<footer>
+			    Some notes
+			</footer>
 		</div>
 		
 		<div class="slide" id="second-slide">
@@ -36,11 +34,9 @@ Consider the following markup:
 					…
 				</section>
 			</div>
-			<div class="presenter-notes">	
-				<p>
-				    Some notes
-				</p>
-			</div>
+			<footer>
+			    Some notes
+			</footer>
 		</div>
 							
 		<div class="slide" id="third-slide">
@@ -52,24 +48,30 @@ Consider the following markup:
                 …	
 				</section>
 			</div>
-			<div class="presenter-notes">
+			<footer>
 				<p>
 				    Some notes
 				</p>				    
-			</div>
+			</footer>
 		</div>
 	</div>
 
-What will happen is that `pat-slides` will trigger the slideshow pattern to bind the slideshow functions (such as key based hopping through slides) to the slides within the element that has `pat-slides` on it. 
+What will happen is that ``pat-slides`` will trigger the slideshow pattern to bind the slideshow functions (such as key based hopping through slides) to the slides within the element that has `pat-slides` on it. 
 
 Clicking on a slide will run the slide show from that slide on.
 
+You can use a ``footer`` element for presenter notes. These are pieces of plain text that are displayed in your browsers console when the slide is shown. 
+
 ### Filters
-It's possible to put a filter in the URI to show only specific slides. Consider the following URI format:
+It''s possible to put a filter in the URI to show only specific slides. Consider the following URI format:
 
     <a href="my-slides.html?slides=first-slide,last-slide">Run</a>
-    
-Using the above URL, the the slideshow(s) on the page will only show slides in list view that match any of the IDs. Without any IDs, all slides will be shown. Also in full screen mode, the slides that are not in the URI will be skipped using the keystroke navigation. 
+
+or the equivalent:
+
+    <a href="my-slides.html?slides=first-slide&slides=last-slide">Run</a>
+
+Using either of these URLs the slideshow(s) on the page will only include slides that match any of the IDs. All other slides will be removed from the DOM.
 
 #### Injected slideshows
 The injection pattern may be used to launch slideshows on a page as part of another design. When a user clicks on a slide, it will still run full window, but the list view will be integrated in the rest of the design. 
@@ -104,27 +106,7 @@ The example below would extract one slide (`third-slide`) from my-slides.html an
 		</div>
 	</div>
 
-### Generated slideshows
-A user can generate slide shows by cherry picking stock slides from a form. This is desired in situations where you want to have stock slide shows where individual end users want to leave out specific slides based not he audience for the presentation. Or to create new slide shows out of individually stored stock slides. 
+### Properties
 
-A form that generates a slide show URL looks as follows:
+This pattern has no configurable properties.
 
-    <form action="my-slides.html" class="pat-slideshow-builder">
-        <button type="submit">Run</button>
-    </form>
-
-The pattern will inject a Checklist into the form based on the IDs of the slides in the source HTML. The slide names come from the first header that is found in the slide HTML.
-
-    <form action="my-slides.html" class="pat-slideshow-builder">
-        <fieldset class="checklist">
-            <label><input type="checkbox" name="slides" value="introduction" />Introduction</label>
-            <label><input type="checkbox" name="slides" value="slide-1" />Slide 1</label>
-            <label><input type="checkbox" name="slides" value="slide-2" />Slide 2</label>
-            <label><input type="checkbox" name="slides" value="slide-3" />Slide 3</label>
-            <label><input type="checkbox" name="slides" value="slide-4" />Slide 4</label>
-        </fieldset>
-        <button type="submit">Run</button>
-    </form>
-    
-When the user clicks on the submit button, the slideshow is started with filters already applied in the URI based on the selection the user made.
-    

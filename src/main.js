@@ -35,6 +35,8 @@ define([
     "./pat/toggle",
     "./pat/tooltip",
     "./pat/select-option",
+    "./pat/slides",
+    "./pat/slideshow-builder",
     "./pat/zoom"
 ], function($, registry) {
     return registry;
