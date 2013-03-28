@@ -63,7 +63,7 @@ Clicking on a slide will run the slide show from that slide on.
 You can use a ``footer`` element for presenter notes. These are pieces of plain text that are displayed in your browsers console when the slide is shown. 
 
 ### Filters
-It's possible to put a filter in the URI to show only specific slides. Consider the following URI format:
+It''s possible to put a filter in the URI to show only specific slides. Consider the following URI format:
 
     <a href="my-slides.html?slides=first-slide,last-slide">Run</a>
     
