@@ -28,6 +28,31 @@ define(["pat/slides"], function(pattern) {
                 expect(pattern._hook(jq)).toBe(jq);
             });
         });
-    });
 
+        describe("_collapse_ids", function() {
+            it("Single id", function() {
+                expect(pattern._collapse_ids(["foo"])).toEqual(["foo"]);
+            });
+
+            it("Comma-separated list of ids", function() {
+                expect(pattern._collapse_ids(["foo,bar"])).toEqual(["foo", "bar"]);
+            });
+
+            it("Skip empty ids", function() {
+                expect(pattern._collapse_ids(["foo,,bar"])).toEqual(["foo", "bar"]);
+            });
+
+            it("Parameter without value", function() {
+                expect(pattern._collapse_ids([null])).toEqual([]);
+            });
+
+            it("Parameter with empty value", function() {
+                expect(pattern._collapse_ids([""])).toEqual([]);
+            });
+
+            it("Multiple parameters", function() {
+                expect(pattern._collapse_ids(["foo", "bar"])).toEqual(["foo", "bar"]);
+            });
+        });
+    });
 });
