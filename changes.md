@@ -2,6 +2,11 @@
 
 ## 1.3.0 - Unreleased
 
+- Modify included HTML pages to use modules instead of bundles. This makes
+  development easier by removing the need to always rebuild bundles.
+
+- Add new [slide pattern](demo/slides/index.html).
+
 - Add new [slide pattern](demo/slides/index.html).
   (Wichert Akkerman)
 
