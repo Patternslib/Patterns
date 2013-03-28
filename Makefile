@@ -70,8 +70,7 @@ demo/auto-suggest/select2-spinner.gif: bungledeps/jquery.select2-*/select2-spinn
 	cp $< $@
 
 
-JSHINTEXCEPTIONS = src/core/parser.js \
-		   src/lib/depends_parse.js \
+JSHINTEXCEPTIONS = src/lib/depends_parse.js \
 		   src/lib/dependshandler.js \
 		   src/lib/dependshandler.js \
 		   src/lib/htmlparser.js
