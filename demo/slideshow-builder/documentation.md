@@ -27,4 +27,8 @@ The pattern will inject a Checklist into the form based on the IDs of the slides
     </form>
     
 When the user clicks on the submit button, the slideshow is started with filters already applied in the URI based on the selection the user made.
-    
+
+### Properties
+
+This pattern has no configurable properties.
+
