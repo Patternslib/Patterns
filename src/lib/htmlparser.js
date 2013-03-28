@@ -29,9 +29,9 @@
 define(function(){
 
 	// Regular Expressions for parsing tags and attributes
-	var startTag = /^<([-A-Za-z0-9:_]+)((?:\s+[-A-Za-z0-9:_]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
-		endTag = /^<\/([-A-Za-z0-9:_]+)[^>]*>/,
-		attr = /([-A-Za-z0-9:_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
+	var startTag = /^<([\-A-Za-z0-9:_]+)((?:\s+[\-A-Za-z0-9:_]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/,
+		endTag = /^<\/([\-A-Za-z0-9:_]+)[^>]*>/,
+		attr = /([\-A-Za-z0-9:_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
 
 	// Empty Elements - HTML 5 Working Draft 25 October 2012
 	var empty = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed,command,source,embed,track");
@@ -74,7 +74,7 @@ define(function(){
 			if ( !stack.last() || !special[ stack.last() ] ) {
 
 				// Comment
-				if ( html.indexOf("<!--") == 0 ) {
+				if ( html.indexOf("<!--")=== 0 ) {
 					index = html.indexOf("-->");
 
 					if ( index >= 0 ) {
@@ -85,7 +85,7 @@ define(function(){
 					}
 
 				// end tag
-				} else if ( html.indexOf("</") == 0 ) {
+				} else if ( html.indexOf("</") === 0 ) {
 					match = html.match( endTag );
 
 					if ( match ) {
@@ -95,7 +95,7 @@ define(function(){
 					}
 
 				// start tag
-				} else if ( html.indexOf("<") == 0 ) {
+				} else if ( html.indexOf("<") === 0 ) {
 					match = html.match( startTag );
 
 					if ( match ) {
@@ -118,7 +118,7 @@ define(function(){
 			} else {
 				html = html.replace(new RegExp("(.*)<\/" + stack.last() + "[^>]*>"), function(all, text){
 					text = text.replace(/<!--(.*?)-->/g, "$1")
-						.replace(/<!\[CDATA\[(.*?)]]>/g, "$1");
+						.replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1");
 
 					if ( handler.chars )
 						handler.chars( text );
@@ -129,7 +129,7 @@ define(function(){
 				parseEndTag( "", stack.last() );
 			}
 
-			if ( html == last )
+			if ( html === last )
 				throw "Parse Error: " + html;
 			last = html;
 		}
@@ -146,7 +146,7 @@ define(function(){
 				}
 			}
 
-			if ( closeSelf[ tagName ] && stack.last() == tagName ) {
+			if ( closeSelf[ tagName ] && stack.last() === tagName ) {
 				parseEndTag( "", tagName );
 			}
 
@@ -177,14 +177,15 @@ define(function(){
 		}
 
 		function parseEndTag( tag, tagName ) {
+			var pos;
 			// If no tag name is provided, clean shop
 			if ( !tagName )
-				var pos = 0;
+				pos = 0;
 
 			// Find the closest opened tag of the same type
 			else
-				for ( var pos = stack.length - 1; pos >= 0; pos-- )
-					if ( stack[ pos ] == tagName )
+				for ( pos = stack.length - 1; pos >= 0; pos-- )
+					if ( stack[ pos ] === tagName )
 						break;
 
 			if ( pos >= 0 ) {
@@ -236,11 +237,11 @@ define(function(){
 		};
 
 		if ( !doc ) {
-			if ( typeof DOMDocument != "undefined" )
+			if ( typeof DOMDocument !== "undefined" )
 				doc = new DOMDocument();
-			else if ( typeof document != "undefined" && document.implementation && document.implementation.createDocument )
+			else if ( typeof document !== "undefined" && document.implementation && document.implementation.createDocument )
 				doc = document.implementation.createDocument("", "", null);
-			else if ( typeof ActiveX != "undefined" )
+			else if ( typeof ActiveX !== "undefined" )
 				doc = new ActiveXObject("Msxml.DOMDocument");
 
 		} else
@@ -289,7 +290,7 @@ define(function(){
 				for ( var attr in attrs )
 					elem.setAttribute( attrs[ attr ].name, attrs[ attr ].value );
 
-				if ( structure[ tagName ] && typeof one[ structure[ tagName ] ] != "boolean" )
+				if ( structure[ tagName ] && typeof one[ structure[ tagName ] ] !== "boolean" )
 					one[ structure[ tagName ] ].appendChild( elem );
 
 				else if ( curParentNode && curParentNode.appendChild )
@@ -300,7 +301,7 @@ define(function(){
 					curParentNode = elem;
 				}
 			},
-			end: function( tag ) {
+			end: function( /* tag */ ) {
 				elems.length -= 1;
 
 				// Init the new parentNode
@@ -309,7 +310,7 @@ define(function(){
 			chars: function( text ) {
 				curParentNode.appendChild( doc.createTextNode( text ) );
 			},
-			comment: function( text ) {
+			comment: function( /* text */ ) {
 				// create comment node
 			}
 		});
