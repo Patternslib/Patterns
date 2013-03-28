@@ -598,7 +598,9 @@ html.js .postit.guide.closed {
 	box-shadow: 0 1px 4px gray;
 	perspective: 200px;
 	perspective-origin: 100% 30%;
-	background-image: radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	background-image: -moz-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
 	overflow: hidden;
 	transition: all 1s;
 	height: 1070px;
