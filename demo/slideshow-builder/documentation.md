@@ -1,7 +1,7 @@
 # Slideshow builder
 
 ## Description
-This patterns provided a simple method to create custom slideshows.
+This patterns provides a simple method to create custom slideshows.
 
 ## Documentation
 
