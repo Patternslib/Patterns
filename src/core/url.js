@@ -60,6 +60,6 @@ define(function() {
 
     return {
         UrlArgumentParser: UrlArgumentParser,
-        parameters: url_parser.get
+        parameters: url_parser.get.bind(url_parser)
     };
 });
