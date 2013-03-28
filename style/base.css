@@ -124,6 +124,8 @@ label.checkbox:before {
 	color: white;
 	text-shadow: #000000 0px -1px 0px;
 	border-color: #858585;
+	background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 100%);
+	background-image: -moz-linear-gradient(bottom, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 100%);
 	background-image: linear-gradient(bottom, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 100%);
 }
 
@@ -643,6 +645,8 @@ html.js .postit.guide.closed {
 	margin-right: 0;
 	margin-top: -1500px;
 	margin-left: 0;
+	background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
+	background-image: -moz-linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
 	background-image: linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
 	left: 0;
 	right: 0;
