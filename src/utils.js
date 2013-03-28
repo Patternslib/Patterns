@@ -72,9 +72,9 @@ define([
     }
 
     // Taken from http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
-    var escapeRegExp = function(str) {
+    function escapeRegExp(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-    };
+    }
 
     var utils = {
         // pattern pimping - own module?
