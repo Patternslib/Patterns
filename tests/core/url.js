@@ -1,5 +1,5 @@
 define(["core/url"], function(url) {
-    describe("Core / UrlArgumentParser", function() {
+    describe("Core / url / UrlArgumentParser", function() {
         describe("_decodeQS", function() {
             it("Basic string", function() {
                 var parser=new url.UrlArgumentParser();
@@ -55,6 +55,11 @@ define(["core/url"], function(url) {
         });
     });
 
+    describe("Core / url / parameters", function() {
+        it("Bound to working parser", function() {
+            expect(url.parameters()).not.toBe(undefined);
+        });
+    });
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
