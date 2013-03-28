@@ -70,6 +70,7 @@ define([
                 fieldset.appendChild(label);
             }
             this.insertBefore(fieldset, this.firstChild);
+            patterns.scan(fieldset);
         }
     };
 
