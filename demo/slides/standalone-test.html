@@ -2,32 +2,13 @@
 <html lang="en-US">
 <head>
 	<title>Customer cases — Informaat</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=1274, user-scalable=no">
-	<link rel="stylesheet" href="slides.css" media="all">
-	<script src="../../bundles/patterns.min.js" type="text/javascript" charset="utf-8"></script>
-	<style>
-		/* @group Single pearl */
-		
-		@keyframes drop-80 {
-			from 	 { margin-top: 0; }
-			to	 { margin-top: 80px; }
-		}
-		
-		.slide.active #single-pearl,
-		.list #single-pearl {
-			animation: shake 1s 2.5s, drop-80 linear 0.3s 3.6s;
-			animation-fill-mode: forwards;
-		}
-		
-		}
-
-		/* @end */
-	</style>
-	
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=1274, user-scalable=no"/>
+	<link rel="stylesheet" href="slideshow.css" media="all"/>
+	<script data-main="../../src/autoinit" src="../../bungledeps/require.js" type="text/javascript" charset="utf-8"></script>
 </head>
-<body>
-	<div class="pat-slides list">	
+<body class="list">
+	<div class="pat-slides">	
 		<div class="slide cover" id="Cover">
 			<div class="slide-content">
 				<section>
@@ -39,9 +20,9 @@
 					</div>
 				</section>
 			</div>
-			<div class="presenter-notes">
+            <footer>
 				<a href="notes.md" class="pat-inject" data-pat-inject="source: ## Introduction::element; target: self::element; trigger: autoload">Notes</a>
-			</div>
+			</footer>
 		</div>
 	
 		<div class="slide full" id="first-slide">
@@ -50,12 +31,12 @@
 					<header>
 						<h2>Case study: Dutch government</h2>
 					</header>
-					<img src="binnenhof.jpg" alt=""  />
+					<img src="images/binnenhof.jpg" alt=""  />
 				</section>
 			</div>
-			<div class="presenter-notes">
+            <footer>
 				<a href="notes.md" class="pat-inject" data-pat-inject="source: ## Dutch government::element; target: self::element; trigger: autoload">Notes</a>
-			</div>
+			</footer>
 		</div>
 	
 		<div class="slide full" id="second-slide">
@@ -65,15 +46,14 @@
 						<h2 class="animated bounceInLeft">Dialogues</h2>
 						<p class="byline animated bounceInLeft" style="-webkit-animation-delay: 0.2s">The brick and mortar of UX Design</p>
 					</header>
-					<img src="dialogues.jpg" />
+					<img src="images/dialogues.jpg" />
 					<p id="plato" class="animated fadeIn" style="-webkit-animation-delay: 1s;">But Socrates, how do we communicate with our customers?</p>
 					<p id="socrates" class="animated fadeIn" style="-webkit-animation-delay: 3s;">Through dialogues…</p>
 				</section>
 			</div>
-
-			<div class="presenter-notes">
+			<footer>
 				<a href="notes.md" class="pat-inject" data-pat-inject="source: ## Dialogues::element; target: self::element; trigger: autoload">Notes</a>
-			</div>
+			</footer>
 		</div>
 		
 		<div class="slide clean no-logo" id="third-slide">
@@ -84,22 +64,22 @@
 					</header>
 					<figure class="middle">
 						<div class="compound" style="height: 640px; width: 1024px;">
-							<img style="margin-top: -30px; -webkit-animation-delay: 0s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated bounceInDown" src="pearl-bar.jpg" />
-							<img style="-webkit-animation-delay: 0.5s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeIn" src="pearl-slogan.png" />
+							<img style="margin-top: -30px; -webkit-animation-delay: 0s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated bounceInDown" src="images/pearl-bar.jpg" />
+							<img style="-webkit-animation-delay: 0.5s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeIn" src="images/pearl-slogan.png" />
 							<div class="animated fadeInLeftBig" style="width: 1024px; height: 640px; -webkit-animation-delay: 1s; -webkit-animation-duration: 1s;">
-								<img width="1024" height="640" src="pearl-jewel.png" />
+								<img width="1024" height="640" src="images/pearl-jewel.png" />
 								
-								<img style="-webkit-animation-delay: 2.8s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInRightBig" src="pearl-model.png" />
-								<img width="1024" height="640" src="pearl-pearl.png" id="single-pearl" />
-								<img style="-webkit-animation-delay: 2.8s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInRightBig" src="pearl-model-fingers.png" />
+								<img style="-webkit-animation-delay: 2.8s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInRightBig" src="images/pearl-model.png" />
+								<img width="1024" height="640" src="images/pearl-pearl.png" id="single-pearl" />
+								<img style="-webkit-animation-delay: 2.8s; -webkit-animation-duration: 1s;" width="1024" height="640" class="animated fadeInRightBig" src="images/pearl-model-fingers.png" />
 							</div>
 						</div>
 					</figure>
 				</section>
 			</div>
-			<div class="presenter-notes">
+            <footer>
 				<a href="notes.md" class="pat-inject" data-pat-inject="source: ## Animations::element; target: self::element; trigger: autoload">Notes</a>
-			</div>
+			</footer>
 		</div>
 			
 		<div class="slide" id="fourth-slide">
@@ -109,19 +89,18 @@
 						<h2>Play your cards well…</h2>
 					</header>
 					<figure class="fan">
-						<img src="joker.png" />
-						<img src="joker.png" />
-						<img src="joker.png" />
-						<img src="joker.png" />
-						<img src="joker.png" />
+						<img src="images/joker.png" />
+						<img src="images/joker.png" />
+						<img src="images/joker.png" />
+						<img src="images/joker.png" />
+						<img src="images/joker.png" />
 					</figure>
 				</section>
 			</div>
-			<div class="presenter-notes">
+            <footer>
 				<a href="notes.md" class="pat-inject" data-pat-inject="source: ## Cards::element; target: self::element; trigger: autoload">Notes</a>
-			</div>
-		</div>
-						
+			</footer>
+		</div>				
 	</div>
 </body>
 </html>
