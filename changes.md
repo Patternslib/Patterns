@@ -2,9 +2,11 @@
 
 ## 1.2.0 - Unreleased
 
+- Update the website design. (Cornelis Kolbach)
+
 - Packaging changes:
 
-  - new bootstrap to handle installation of all dependencies and build
+  - New bootstrap to handle installation of all dependencies and build
     bundles (Marko Đurković, Florian Friesdorf)
 
   - Switch dependency management from jamjs to bungle. Remove all third party
@@ -19,6 +21,10 @@
 
 - Zoom pattern: make zoom fallback control (text input field) react properly to
   change events. (Marko Đurković)
+
+- Improve documentation for the image-crop pattern.
+
+- Fix handling of position hints for tooltips. (Marko Đurković)
 
 - Autoscale pattern:
 
@@ -44,6 +50,10 @@
     quotes.
     (Wichert Akkerman)
 
+  - Rewrite URL rebasing logic to use the browser''s HTML parser again. This
+    should improve robustness when dealing with non-standard markup.
+    (Marko Đurković)
+
 - Depends pattern:
 
   - Really hide/show elements if no transition type was specified (or
@@ -58,10 +68,15 @@
 - Form-State pattern: add `form-state-saved` signal.
   (Marko Đurković)
 
-- Modal pattern: make sure elements inside a modal do not accidentily loose
-  their focus. This broke the handling of autofocus in modals.
-  [Ticket 266](https://github.com/Patternslib/Patterns/issues/266)
-  (Wichert Akkerman)
+- Modal pattern: 
+
+  - Automatically position modals using javascript to fix problems with IE9 and
+    make sure they always fit in the viewport.
+    (Cornelis Kolbach and Marko Đurković)
+
+  - Make sure elements inside a modal do not accidentily loose their focus.
+    This broke the handling of autofocus in modals.  [Ticket
+    266](https://github.com/Patternslib/Patterns/issues/266) (Wichert Akkerman)
 
 - Check-list pattern: send *change* event when a checkbox is toggled. This fixes
   interaction with other patterns such as the checked-flag pattern.
@@ -104,10 +119,10 @@
 
 - Core logic changes:
 
-  - Patterns main.js returns registry, you have to call
-    patterns.init() manually. For the bundles this happens
-    automatically. Depend on `patterns/autoinit`, if you really want
-    an auto-initializing modular patterns library. (Florian Friesdorf)
+  - Patterns main.js returns registry, you have to call patterns.init()
+    manually. For the bundles this happens automatically. Depend on
+    `patterns/autoinit`, if you really want an auto-initializing modular
+    patterns library. (Florian Friesdorf)
 
   - Registry: Add option to registry.scan to let init exceptions
     through. (Rok Garbas)
