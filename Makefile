@@ -78,13 +78,13 @@ JSHINTEXCEPTIONS = src/core/parser.js \
 CHECKSOURCES = $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 check-modules: $(THIRDPARTY)
-	make -C tests TestRunner-modules.html TestRunner-modules.js
+	$(MAKE) $(MFLAGS) -C tests TestRunner-modules.html TestRunner-modules.js
 	@echo Running checks on modules
 	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
 
 check: check-modules $(TARGETS) $(THIRDPARTY)
-	make -C tests
+	$(MAKE) $(MFLAGS) -C tests
 	@echo Running checks on bundles
 	@echo =========================
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle.html
@@ -102,7 +102,7 @@ check-nix: phantom-via-nix check
 
 
 clean:
-	make -C tests clean
+	$(MAKE) $(MFLAGS) -C tests clean
 	rm -f $(TARGETS)
 
 localize-demo-images:
