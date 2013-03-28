@@ -2,7 +2,11 @@
 
 ## 1.3.0 - Unreleased
 
-- ...
+- Add new [slide pattern](demo/slides/index.html).
+  (Wichert Akkerman)
+
+- Add new [slideshow builder pattern](demo/slideshow-builder/index.html).
+  (Wichert Akkerman)
 
 
 ## 1.2.0 - Released March 28, 2013
