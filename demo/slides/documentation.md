@@ -66,8 +66,12 @@ You can use a ``footer`` element for presenter notes. These are pieces of plain 
 It''s possible to put a filter in the URI to show only specific slides. Consider the following URI format:
 
     <a href="my-slides.html?slides=first-slide,last-slide">Run</a>
-    
-Using the above URL, the the slideshow(s) on the page will only show slides in list view that match any of the IDs. Without any IDs, all slides will be shown. Also in full screen mode, the slides that are not in the URI will be skipped using the keystroke navigation. 
+
+or the equivalent:
+
+    <a href="my-slides.html?slides=first-slide&slides=last-slide">Run</a>
+
+Using either of these URLs the slideshow(s) on the page will only include slides that match any of the IDs. All other slides will be removed from the DOM.
 
 #### Injected slideshows
 The injection pattern may be used to launch slideshows on a page as part of another design. When a user clicks on a slide, it will still run full window, but the list view will be integrated in the rest of the design. 
