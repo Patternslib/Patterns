@@ -106,3 +106,7 @@ The example below would extract one slide (`third-slide`) from my-slides.html an
 		</div>
 	</div>
 
+### Properties
+
+This pattern has no configurable properties.
+
