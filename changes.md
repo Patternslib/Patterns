@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 - Unreleased
+
+- ...
+
+
 ## 1.2.0 - Released March 28, 2013
 
 - Update the website design. (Cornelis Kolbach)
