@@ -54,5 +54,34 @@ define(["pat/slides"], function(pattern) {
                 expect(pattern._collapse_ids(["foo", "bar"])).toEqual(["foo", "bar"]);
             });
         });
+
+        describe("_disable_slides", function() {
+            it("Remove slides from DOM", function() {
+                var $show = $("<div/>", {"class": "pat-slides"});
+                for (var i=1; i<=4; i++)
+                    $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
+                pattern._disable_slides($show, ["slide1", "slide3"]);
+                var ids = $.makeArray($show.find(".slide").map(function(idx, el) { return el.id;}));
+                expect(ids).toEqual(["slide1", "slide3"]);
+            });
+
+            it("Trigger reset when removing slides", function() {
+                var $show = $("<div/>", {"class": "pat-slides"});
+                for (var i=1; i<=4; i++)
+                    $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
+                spyOn(pattern, "_reset");
+                pattern._disable_slides($show, ["slide1", "slide3"]);
+                expect(pattern._reset).toHaveBeenCalled();
+            });
+
+            it("Do not trigger reset when not doing anything", function() {
+                var $show = $("<div/>", {"class": "pat-slides"});
+                for (var i=1; i<=2; i++)
+                    $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
+                spyOn(pattern, "_reset");
+                pattern._disable_slides($show, ["slide1", "slide2"]);
+                expect(pattern._reset).not.toHaveBeenCalled();
+            });
+        });
     });
 });
