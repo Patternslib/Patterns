@@ -86,7 +86,6 @@ check: check-modules $(TARGETS) $(THIRDPARTY)
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle.html
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle-min.html
 
-
 nixenv/bin/phantomjs:
 	nix-build --out-link nixenv dev.nix
 
@@ -100,9 +99,6 @@ check-nix: phantom-via-nix check
 clean:
 	$(MAKE) $(MFLAGS) -C tests clean
 	rm -f $(TARGETS)
-
-localize-demo-images:
-	tools/localize-demo-images.sh
 
 .PHONY: all bundle bundles bundles-all-tags check check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
 
