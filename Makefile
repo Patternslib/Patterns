@@ -44,14 +44,10 @@ bundles-all-tags:
 
 
 use-bundle:
-	sed -i~ -e 's,<script data-main="src/autoinit" src="bungledeps/require.js",<script src="bundles/patterns.min.js",' index.html
-	sed -i~ -e 's,<script data-main="../src/autoinit" src="../bungledeps/require.js",<script src="../bundles/patterns.min.js",' demo/*html
-	sed -i~ -e 's,<script data-main="../../src/autoinit" src="../../bungledeps/require.js",<script src="../../bundles/patterns.min.js",' demo/*/*.html
+	sed -i~ -e 's,<script data-main="\(.*\)src/autoinit" src="\1bungledeps/require.js",<script src="\1bundles/patterns.min.js",' index.html demo/*.html demo/*/*.html
 
 use-modules:
-	sed -i~ -e 's,<script src="bundles/patterns\.min\.js",<script data-main="src/autoinit" src="bungledeps/require.js",' index.html
-	sed -i~ -e 's,<script src="../bundles/patterns\.min\..js",<script data-main="../src/autoinit" src="../bungledeps/require.js",' demo/*html
-	sed -i~ -e 's,<script src="../../bundles/patterns\.min\.js",<script data-main="../../src/autoinit" src="../../bungledeps/require.js",' demo/*/*.html
+	sed -i~ -e 's,<script src="\(.*\)bundles/patterns\.min\.js",<script data-main="\1src/autoinit" src="\1bungledeps/require.js",' index.html demo/*.html demo/*/*.html
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 	$(PEGJS) $^
