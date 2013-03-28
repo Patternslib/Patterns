@@ -36,6 +36,7 @@ define([
     "./pat/tooltip",
     "./pat/select-option",
     "./pat/slides",
+    "./pat/slideshow-builder",
     // has racing problems, might be replaced anyway
     //"./pat/validate",
     "./pat/zoom"
