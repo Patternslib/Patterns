@@ -159,7 +159,7 @@ define([
                 }
             } else {
                 value=this._coerce(name, value);
-                if (value===null) 
+                if (value===null)
                     return;
             }
 
@@ -213,7 +213,7 @@ define([
             var parts = parameter.split(/\s+/),
                 opts = {},
                 positional = true,
-                i, part, flag, sense, matches;
+                i, part, flag, sense;
 
             i=0;
             while (parts.length) {
@@ -284,7 +284,7 @@ define([
 
         _cleanupOptions: function(options) {
             var keys = Object.keys(options),
-                i, spec, name, group;
+                i, spec, name, target;
 
             // Resolve references
             for (i=0; i<keys.length; i++) {
