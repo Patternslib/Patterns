@@ -66,7 +66,7 @@ define(["pat/slideshow-builder"], function(pattern) {
             });
 
             it("Preserve slide order", function() {
-                var i, html = "<html><body>"
+                var i, html = "<html><body>";
                 for (i=0; i<5; i++)
                     html+="<div class=\"slide\" id=\"slide"+(i+1)+"\"><header><h2>Title</h2></header></div>";
                 html+="</div></body></html>";
