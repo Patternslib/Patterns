@@ -2,6 +2,8 @@
 
 ## 1.3.0 - Unreleased
 
+- Add a new [gallery](demo/gallery/index.html) pattern.
+
 - Fix handling of trailing semicolons in the the argument parser. This fixes
   [Ticket 295](https://github.com/Patternslib/Patterns/issues/295).
 
@@ -20,8 +22,6 @@
 
 - Modify included HTML pages to use modules instead of bundles. This makes
   development easier by removing the need to always rebuild bundles.
-
-- Add new [slide pattern](demo/slides/index.html).
 
 - Add new [slide pattern](demo/slides/index.html).
   (Wichert Akkerman)

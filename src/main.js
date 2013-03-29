@@ -22,6 +22,7 @@ define([
     "./pat/focus",
     "./pat/form-state",
     "./pat/fullcalendar",
+    "./pat/gallery",
     "./pat/image-crop",
     "./pat/inject",
     "./pat/legend",
