@@ -32,10 +32,16 @@ in both the toolbar and the navigation tree:
 
     <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree; icon-*">Remove icons</button>
 
-JavaScript API
---------------
 
-The JavaScript API is entirely optional since Patterns already
-automatically enables the switching behaviour for all elements with a
-`data-pat-switch` attribute. Developers may be interested in using the
-API to add behaviour to other elements or trigger switches manually.
+### Properties
+
+You can customise the behaviour of a switches through options in the
+`data-pat-switch` attribute.
+
+
+| Property | Default value | Values | Description | Type |
+| ----- | --------| -------- | ------- | ----------- |
+| `selector` | | | jQuery selector matching elements that should be updated.| |
+| `remove` | |  | Space-separated list of classes to remove.| |
+| `add` |  |  |  Space-separated list of classes to add.| |
+| `store` | `none` | `none` `session` `local`| How to store the state of a toggle.  `none` does not remember the toggle state, `local` stores the state as part of the local storage and `session` stores the status as part of the session storage.| Mutually exclusive|

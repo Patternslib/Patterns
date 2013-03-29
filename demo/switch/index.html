@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Demo page</title>
+		<title>Switch demo page</title>
     <link rel="stylesheet" href="../../style/common.css" type="text/css">
 		<link rel="stylesheet" href="switch.css" type="text/css">
 		<script data-main="../../src/autoinit" src="../../bungledeps/require.js" type="text/javascript" charset="utf-8"></script>
@@ -13,9 +13,9 @@
 		</section>
 		<section class="demo">
 		<h2>Demo</h2>
-			<h3>Selectively remove class</h3>
-			<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Blue ; add: mode-Green" title="Make all green">Green</button>
-			<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Green ; add: mode-Blue" title="Make all blue">Blue</button>
+			<h3>Selectively remove class and remember state</h3>
+			<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Blue ; add: mode-Green; store: session" title="Make all green">Green</button>
+			<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Green ; add: mode-Blue; store: session" title="Make all blue">Blue</button>
 			<ul class="test1">
 				<li class="foo mode-Blue bar">Entry 1</li>
 				<li class="mode-Green">Entry 2</li>
