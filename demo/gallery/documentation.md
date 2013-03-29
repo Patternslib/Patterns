@@ -17,5 +17,19 @@ element and links containing image to it.
 
 ### Properties
 
-This pattern has no configurable properties.
+You can customize the behaviour of a galery through options in the
+`data-pat-gallery` attribute.
+
+    <ul class="pat-gallery" data-pat-gallery="autoPlay: true">
+      ...
+    </ul>
+
+| Property | Default value | Values | Description | Type |
+| ----- | --------| -------- | ------- | ----------- |
+| `slideshow` | `manual` | `manual` `auto` `none` | Indicates if the gallery should offer a slideshow option (`manual`), should automatically start a slideshow when opened (`auto`) or not allow a slideshow (`none`).| Mutually exclusive |
+| `loop` | true | `true` `false` | Indicates if a slideshow should loop back to the beginning.|Mutually exclusive|
+| `scale-method` | `fit` | `fit` `fitNoUpscale` `zoom` | How images will fit onto the screen. `fit` ensures the image always fits the screen. `fitNoUpscale` works like `fit` but will never upscale the image. `zoom` the image will always fill the full screen, this may cause the image to be "zoomed" in and cropped.|Mutually exclusive |
+| `delay` | `30000` | | The delay, in milliseconds, an image is shown in a slideshow.|Number|
+| `effect-duration` | | `250` | How long it will take in milliseconds for an image to slide into view.|Number|
+| `effect-easing` | `ease-out` | | Easing function to use when sliding images.|
 
