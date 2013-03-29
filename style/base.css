@@ -2,7 +2,7 @@
 
 @import url("common.css");
 
-@import url("../demo/check-list/checklist.css");
+@import url("../demo/checklist/checklist.css");
 
 @font-face {
 	font-family: "Perpetua bold italic";
