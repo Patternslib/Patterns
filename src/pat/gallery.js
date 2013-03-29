@@ -6,16 +6,34 @@
 define([
     "jquery",
     "../registry",
+    "../core/parser",
     "klass", // Workaround because bungle is ignoring dependencies currently
     "photoswipe"
-], function($, patterns) {
+], function($, patterns, Parser) {
+    var parser = new Parser("gallery");
+
+    parser.add_argument("slideshow", "manual", ["auto", "manual", "none"]);
+    parser.add_argument("loop", true);
+    parser.add_argument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
+    parser.add_argument("delay", 30000);
+    parser.add_argument("effect-duration", 250);
+    parser.add_argument("effect-easing", "ease-out");
+
     var gallery = {
         name: "gallery",
         trigger: ".pat-gallery:has(a img)",
 
-        init: function($el) {
+        init: function($el, opts) {
             return $el.each(function() {
-                $("a:has(img)", this).photoSwipe();
+                var options = parser.parse($(this), opts);
+                $("a:has(img)", this).photoSwipe({
+                    autoStartSlideshow: options.slideshow==="auto",
+                    imageScaleMethod; options.scaleMethod,
+                    loop: options.loop,
+                    slideshowDelay: options.delay,
+                    slideSpeed: options.effect.duration,
+                    slideTimingFunction: options.effect.easing
+                });
             });
         }
     };
