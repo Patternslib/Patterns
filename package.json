@@ -57,6 +57,7 @@
             "modernizr",
             "pagedown",
             "pagedown-extra",
+	    "photoswipe",
             "prefixfree",
             "shower",
             "text",
