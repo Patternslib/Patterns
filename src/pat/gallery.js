@@ -32,9 +32,20 @@ define([
                     loop: options.loop,
                     slideshowDelay: options.delay,
                     slideSpeed: options.effect.duration,
-                    slideTimingFunction: options.effect.easing
+                    slideTimingFunction: options.effect.easing,
+
+                    zIndex: 10000,
+                    getImageCaption: gallery._getImageCaption
                 });
             });
+        },
+
+        _getImageCaption: function(el) {
+            if (el.nodeName==="IMG")
+                return el.title;
+            var $children = $("img[title]:first", el);
+            if ($children.length)
+                return $children.attr("title");
         }
     };
 

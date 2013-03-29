@@ -10,9 +10,9 @@ Creating a gallery is very simple: just add the `pat-gallery` class to an
 element and add links containing an image to it.
 
     <ul class="pat-gallery">
-      <li><a href="images/full/1.jpg"><img src="images/thumb/1.jpg" alt="Image caption"/></a></li>
-      <li><a href="images/full/2.jpg"><img src="images/thumb/2.jpg" alt="Image caption"/></a></li>
-      <li><a href="images/full/3.jpg"><img src="images/thumb/3.jpg" alt="Image caption"/></a></li>
+      <li><a href="images/full/1.jpg"><img src="images/thumb/1.jpg" title-"Image caption"/></a></li>
+      <li><a href="images/full/2.jpg"><img src="images/thumb/2.jpg" title-"Image caption"/></a></li>
+      <li><a href="images/full/3.jpg"><img src="images/thumb/3.jpg" title-"Image caption"/></a></li>
     </ul>
 
 ### Control
@@ -43,7 +43,7 @@ or a HTML5 `nav` container:
       <a href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a><
     </nav>
 
-The contents of the `alt` attribute of an image will be used as the caption.
+The contents of the `title` attribute of an image will be used as the caption.
 
 
 ### Properties
