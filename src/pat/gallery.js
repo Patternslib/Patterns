@@ -18,6 +18,7 @@ define([
     parser.add_argument("delay", 30000);
     parser.add_argument("effect-duration", 250);
     parser.add_argument("effect-easing", "ease-out");
+    parser.add_argument("hide-overlay", 5000);
 
     var gallery = {
         name: "gallery",
@@ -33,6 +34,7 @@ define([
                     slideshowDelay: options.delay,
                     slideSpeed: options.effect.duration,
                     slideTimingFunction: options.effect.easing,
+                    captionAndToolbarAutoHideDelay: options.hideOverlay,
 
                     zIndex: 10000,
                     getImageCaption: gallery._getImageCaption
