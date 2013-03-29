@@ -6,6 +6,7 @@
 define([
     "jquery",
     "../registry",
+    "klass", // Workaround because bungle is ignoring dependencies currently
     "photoswipe"
 ], function($, patterns) {
     var gallery = {
