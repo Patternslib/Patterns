@@ -172,7 +172,7 @@ define([
 
             parts = parameter.replace(";;", "\xff")
                         .split(";")
-                        .map(function(el) { return el.replace("\xff", ";") });
+                        .map(function(el) { return el.replace("\xff", ";"); });
             for (i=0; i<parts.length; i++) {
                 if (!parts[i])
                     continue;
