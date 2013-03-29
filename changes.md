@@ -2,6 +2,13 @@
 
 ## 1.3.0 - Unreleased
 
+- Rewrite top level makefile:
+
+  - Update the bungles if `packages.json` has changed.
+  - Move jshint out to a new `jshint` target. This is automatically invoked
+    when running `make check`, but is skipped when you only want to run
+    the unittests.
+
 - Modify included HTML pages to use modules instead of bundles. This makes
   development easier by removing the need to always rebuild bundles.
 
