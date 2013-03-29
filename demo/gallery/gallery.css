@@ -12,7 +12,8 @@ div.ps-document-overlay
 	position: fixed !important;
 }
 
-.ps-toolbar
+.ps-toolbar,
+.ps-caption
 {
 	z-index: 10002 !important;
 	position: fixed !important;
