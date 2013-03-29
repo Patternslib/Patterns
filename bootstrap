@@ -83,7 +83,7 @@ fi
     npm install 2>&1 &&
     npm install bungle --force 2>&1 &&
     node_modules/.bin/bungle update &&
-    node_modules/.bin/bungle install &&
+    node_modules/.bin/bungle install
 }
 
 if [ $? == 0 ]; then
