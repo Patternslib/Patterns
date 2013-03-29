@@ -2,6 +2,9 @@
 
 ## 1.3.0 - Unreleased
 
+- Fix handling of trailing semicolons in the the argument parser. This fixes
+  [Ticket 295](https://github.com/Patternslib/Patterns/issues/295).
+
 - Internal build-related changes:
 
   - Stop automatically using the latest CSS and iamges from jquery.fullcalendar
