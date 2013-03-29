@@ -1,2 +1,17 @@
 @import url("photoswipe.css");
 
+div.ps-document-overlay
+{
+	z-index: 10000 !important;
+}
+
+.ps-carousel
+{
+	z-index: 10001 !important;
+}
+
+.ps-toolbar
+{
+	z-index: 10002 !important;
+}
+
