@@ -11,10 +11,12 @@ define([
 ], function($, patterns) {
     var gallery = {
         name: "gallery",
-        trigger: ".pat-gallery",
+        trigger: ".pat-gallery:has(a img)",
 
         init: function($el) {
-            return $el;
+            return $el.each(function() {
+                $("a:has(img)", this).photoSwipe();
+            });
         }
     };
 
