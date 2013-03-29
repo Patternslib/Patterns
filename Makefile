@@ -6,7 +6,7 @@ PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
-TARGETS		= bundles/patterns.js bundles/patterns.min.js
+BUNDLES		= bundles/patterns.js bundles/patterns.min.js
 
 JSHINTEXCEPTIONS = src/lib/depends_parse.js \
 		   src/lib/dependshandler.js \
@@ -15,7 +15,7 @@ JSHINTEXCEPTIONS = src/lib/depends_parse.js \
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 
-all:: $(TARGETS)
+all:: $(BUNDLES)
 
 # Installation of dependencies:
 
@@ -27,7 +27,7 @@ bungledeps: package.json
 
 # Bundle related rules
 
-bundles: check-modules $(TARGETS)
+bundles: check-modules $(BUNDLES)
 
 bundles/patterns.js: $(SOURCES) bungledeps package.json
 	./build.js -n
@@ -51,7 +51,7 @@ bundles-all-tags:
 
 # Phony targets to switch all HTML pages between using modules and bundles.
 
-use-bundle:
+use-bundle: $(BUNDLES)
 	sed -i~ -e 's,<script data-main="\(.*\)src/autoinit" src="\1bungledeps/require.js",<script src="\1bundles/patterns.min.js",' index.html demo/*.html demo/*/*.html
 
 use-modules:
@@ -77,7 +77,7 @@ check-modules: bungledeps
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-modules.html
 
 check:: check-bundles
-check-bundles: $(TARGETS)
+check-bundles: $(BUNDLES)
 	@echo Running checks on bundles
 	@echo =========================
 	$(MAKE) $(MFLAGS) -C tests
@@ -99,7 +99,7 @@ check-nix: phantom-via-nix check
 
 clean:
 	$(MAKE) $(MFLAGS) -C tests clean
-	rm -f $(TARGETS)
+	rm -f $(BUNDLES)
 
 .PHONY: all bundle bundles bundles-all-tags jshint check check-bundles check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
 
