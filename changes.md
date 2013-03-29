@@ -2,7 +2,9 @@
 
 ## 1.2.1 - Unreleased
 
-- ...
+- Fix handling of trailing semicolons in the the argument parser. This fixes
+  [Ticket 295](https://github.com/Patternslib/Patterns/issues/295).
+
 
 
 ## 1.2.0 - Released March 28, 2013
