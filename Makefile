@@ -58,21 +58,6 @@ use-modules:
 	sed -i~ -e 's,<script src="\(.*\)bundles/patterns\.min\.js",<script data-main="\1src/autoinit" src="\1bungledeps/require.js",' index.html demo/*.html demo/*/*.html
 
 
-# Build documentation bits
-
-demo/calendar/fullcalendar.css: bungledeps/jquery.fullcalendar-*/fullcalendar/fullcalendar.css
-	cp $< $@
-
-demo/auto-suggest/select2.css: bungledeps/jquery.select2-*/select2.css
-	cp $< $@
-
-demo/auto-suggest/select2.png: bungledeps/jquery.select2-*/select2.png
-	cp $< $@
-
-demo/auto-suggest/select2-spinner.gif: bungledeps/jquery.select2-*/select2-spinner.gif
-	cp $< $@
-
-
 # Development related rules
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs
