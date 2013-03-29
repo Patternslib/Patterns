@@ -13,7 +13,7 @@ define(["pat/switch"], function(pattern) {
         describe("_validateOptions", function() {
             it("Bad options", function() {
                 var options = pattern._validateOptions([{}]);
-                expect(options).toBeFalsy();
+                expect(options).toEqual([]);
             });
 
             it("Mix valid and invalid options", function() {
@@ -83,7 +83,7 @@ define(["pat/switch"], function(pattern) {
                     $("#lab").html("<button>Click me</button>");
                     $("#lab button").patternSwitch({selector: "#victim", add: "pink"});
                     var $trigger = $("#lab button");
-                    expect($trigger.data("patternSwitch")).toEqual([{selector: "#victim", add: "pink"}]);
+                    expect($trigger.data("patternSwitch")).toEqual([{store: "none", selector: "#victim", add: "pink"}]);
                 });
 
                 it("Invalid defaults via API", function() {
@@ -97,7 +97,7 @@ define(["pat/switch"], function(pattern) {
                     $("#lab").html("<button data-pat-switch='#victim foo bar'>Click me</button>");
                     $("#lab button").patternSwitch();
                     var $trigger = $("#lab button");
-                    expect($trigger.data("patternSwitch")).toEqual([{selector: "#victim", remove:"foo", add: "bar"}]);
+                    expect($trigger.data("patternSwitch")).toEqual([{store: "none", selector: "#victim", remove:"foo", add: "bar"}]);
                 });
 
                 it("Setup click event handler", function() {

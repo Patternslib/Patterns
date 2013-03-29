@@ -1,14 +1,24 @@
+/**
+ * Patterns switch - toggle classes on click
+ *
+ * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ * Copyright 2012 Florian Friesdorf
+ * Copyright 2012 SYSLAB.COM GmbH
+ */
 define([
     "jquery",
     "../registry",
     "../core/logger",
-    "../core/parser"
-], function($, patterns, logger, Parser) {
+    "../core/parser",
+    "../core/store"
+], function($, patterns, logger, Parser, store) {
     var log = logger.getLogger("pat.switch"),
         parser = new Parser("switch");
+
     parser.add_argument("selector");
     parser.add_argument("remove");
     parser.add_argument("add");
+    parser.add_argument("store", "none", ["none", "session", "local"]);
 
     var switcher = {
         name: "switch",
@@ -20,11 +30,22 @@ define([
                 var $trigger = $(this),
                     options = parser.parse($trigger, defaults, true);
                 options=switcher._validateOptions(options);
-                if (options && options.length)
+                if (options.length) {
                     $trigger
                         .data("patternSwitch", options)
                         .off(".patternSwitch")
                         .on("click.patternSwitch", switcher._onClick);
+                    for (var i=0; i<options.length; i++) {
+                        var option = options[i];
+                        if (option.store!=="none") {
+                            option._storage = (option.store==="local" ? store.local : store.session)("switch");
+                            var state = option._storage.get(option.selector);
+                            if (state && state.remove===option.remove && state.add===option.add)
+                                switcher._update(option.selector, state.remove, state.add);
+                        }
+                    }
+                }
+
             });
         },
 
@@ -34,6 +55,7 @@ define([
             });
         },
 
+        // jQuery API to toggle a switch
         execute: function($el) {
             return $el.each(function() {
                 switcher._go($(this));
@@ -54,6 +76,8 @@ define([
             for (i=0; i<options.length; i++) {
                 option=options[i];
                 switcher._update(option.selector, option.remove, option.add);
+                if (option._storage)
+                    option._storage.set(option.selector, {remove: option.remove, add: option.add});
             }
         },
 
@@ -67,7 +91,7 @@ define([
                 else
                     log.error("Switch pattern requires selector and one of add or remove.");
             }
-            return correct.length ? correct : null;
+            return correct;
         },
 
         _update: function(selector, remove, add) {
@@ -106,5 +130,4 @@ define([
     return switcher;
 });
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 sts=4 expandtab

@@ -2,6 +2,9 @@
 
 ## 1.3.0 - Unreleased
 
+- The [switch pattern](demo/switch/index.html) can now remember the its state.
+  This fixes [Ticket 293](https://github.com/Patternslib/Patterns/issues/293).
+
 - Add a new [gallery](demo/gallery/index.html) pattern.
 
 - Fix handling of trailing semicolons in the the argument parser. This fixes
