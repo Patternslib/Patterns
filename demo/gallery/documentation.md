@@ -10,9 +10,9 @@ Creating a gallery is very simple: just add the `pat-gallery` class to an
 element and add links containing an image to it.
 
     <ul class="pat-gallery">
-      <li><a href="img/full1.jpg"><img src="img/thumb1.jpg" title="Image caption"/></a></li>
-      <li><a href="img/full2.jpg"><img src="img/thumb2.jpg" title="Image caption"/></a></li>
-      <li><a href="img/full3.jpg"><img src="img/thumb3.jpg" title="Image caption"/></a></li>
+      <li><a href="full1.jpg"><img src="thumb1.jpg" title="Image 1 caption"/></a></li>
+      <li><a href="full2.jpg"><img src="thumb2.jpg" title="Image 2 caption"/></a></li>
+      <li><a href="full3.jpg"><img src="thumb3.jpg" title="Image 3 caption"/></a></li>
     </ul>
 
 ### Control
@@ -35,8 +35,8 @@ When looking for images to show in the gallery the pattern looks for links conta
 or a HTML5 `nav` container:
 
     <nav class="pat-gallery">
-      <a href="images/full/1.jpg"><img src="images/thumb/1.jpg"/></a><
-      <a href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a><
+      <a href="images/full/1.jpg"><img src="images/thumb/1.jpg"/></a>
+      <a href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a>
     </nav>
 
 The contents of the `title` attribute of an image will be used as the caption.
