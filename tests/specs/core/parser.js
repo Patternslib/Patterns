@@ -146,6 +146,13 @@ define(["core/parser"], function(ArgumentParser) {
                     expect(opts).toEqual({foo: "one", bar: "two"});
                 });
 
+                it("Trailing semicolon", function() {
+                    var parser=new ArgumentParser();
+                    parser.add_argument("foo");
+                    var opts = parser._parse("foo: bar;");
+                    expect(opts).toEqual({foo: "bar"});
+                });
+
                 it("Escaping a semicolon by duplication", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("foo");
