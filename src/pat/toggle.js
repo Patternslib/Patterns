@@ -1,8 +1,7 @@
 /**
- * @license
- * Patterns @VERSION@ toggle - toggle class on click
+ * Patterns toggle - toggle class on click
  *
- * Copyright 2012 Simplon B.V.
+ * Copyright 2012 Simplon B.V. - Wichert Akkerman
  * Copyright 2011 Humberto Sermeño
  * Copyright 2011 SYSLAB.COM GmbH
  */
