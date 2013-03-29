@@ -28,7 +28,7 @@ define([
                 var options = parser.parse($(this), opts);
                 $("a:has(img)", this).photoSwipe({
                     autoStartSlideshow: options.slideshow==="auto",
-                    imageScaleMethod; options.scaleMethod,
+                    imageScaleMethod: options.scaleMethod,
                     loop: options.loop,
                     slideshowDelay: options.delay,
                     slideSpeed: options.effect.duration,
