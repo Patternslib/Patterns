@@ -1,4 +1,10 @@
-# Documentation
+# Switch
+
+## Description
+
+Add and remove classes from elements when a user clicks on a switch.
+
+## Documentation
 
 It is possible to add or remove classes when a user clicks on an item.
 This is done by adding a `pat-switch` class along with a
