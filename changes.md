@@ -2,6 +2,8 @@
 
 ## 1.3.0 - Unreleased
 
+- Add a new [gallery](demo/gallery/index.html) pattern.
+
 - Internal build-related changes:
 
   - Stop automatically using the latest CSS and iamges from jquery.fullcalendar
@@ -17,8 +19,6 @@
 
 - Modify included HTML pages to use modules instead of bundles. This makes
   development easier by removing the need to always rebuild bundles.
-
-- Add new [slide pattern](demo/slides/index.html).
 
 - Add new [slide pattern](demo/slides/index.html).
   (Wichert Akkerman)
