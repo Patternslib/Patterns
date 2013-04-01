@@ -458,7 +458,8 @@ define([
             if ($el.data("patterns.inject.autoloaded"))
                 return false;
 
-            var $scrollable = $el.parents(":scrollable");
+            var $scrollable = $el.parents(":scrollable"),
+                checkVisibility;
 
             // function to trigger the autoload and mark as triggered
             var trigger = function() {
@@ -467,32 +468,45 @@ define([
                 return true;
             };
 
-            // if autoload has no scrollable parent -> trigger it, it is visible
-            if ($scrollable.length === 0)
-                return trigger();
-
-            // if scrollable parent and visible -> trigger it
-            // we only look at the closest scrollable parent, no nesting
-            var checkVisibility = function() {
-                if ($el.data("patterns.autoload"))
+            // Use case 1: a (heigh-constrained) scrollable parent
+            if ($scrollable.length) {
+                // if scrollable parent and visible -> trigger it
+                // we only look at the closest scrollable parent, no nesting
+                checkVisibility = function() {
+                    if ($el.data("patterns.autoload"))
+                        return false;
+                    var reltop = $el.offset().top - $scrollable.offset().top - 1000,
+                        doTrigger = reltop <= $scrollable.innerHeight();
+                    if (doTrigger) {
+                        // checkVisibility was possibly installed as a scroll
+                        // handler and has now served its purpose -> remove
+                        $($scrollable[0]).off("scroll", checkVisibility);
+                        $(window).off("resize.pat-autoload", checkVisibility);
+                        return trigger();
+                    }
                     return false;
-                var reltop = $el.offset().top - $scrollable.offset().top - 1000,
-                    doTrigger = reltop <= $scrollable.innerHeight();
-                if (doTrigger) {
-                    // checkVisibility was possibly installed as a scroll
-                    // handler and has now served its purpose -> remove
-                    $($scrollable[0]).off("scroll", checkVisibility);
-                    $(window).off("resize.pat-autoload", checkVisibility);
-                    return trigger();
-                }
-                return false;
-            };
-            if (checkVisibility())
-                return true;
+                };
+                if (checkVisibility())
+                    return true;
 
-            // wait to become visible - again only immediate scrollable parent
-            $($scrollable[0]).on("scroll", checkVisibility);
-            $(window).on("resize.pat-autoload", checkVisibility);
+                // wait to become visible - again only immediate scrollable parent
+                $($scrollable[0]).on("scroll", checkVisibility);
+                $(window).on("resize.pat-autoload", checkVisibility);
+            } else {
+                // Use case 2: scrolling the entire page
+                checkVisibility = function() {
+                    if ($el.data("patterns.autoload"))
+                        return false;
+                    if (!utils.elementInViewport($el[0]))
+                        return false;
+
+                    $(window).off(".pat-autoload", checkVisibility);
+                    return trigger();
+                };
+                if (checkVisibility())
+                    return true;
+                $(window).on("resize.pat-autoload,scroll.pat-autoload", checkVisibility);
+            }
             return false;
         },
 
