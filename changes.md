@@ -2,6 +2,11 @@
 
 ## 1.3.0 - Unreleased
 
+- Injection pattern: extend *autoload-in-visible* to also apply for situations
+  where we are not dealing with a heigh-constrained scrollable parent but need
+  to look at the entire page.
+  This fixes [Ticket 296](https://github.com/Patternslib/Patterns/issues/296).
+
 - The [switch pattern](demo/switch/index.html) can now remember the its state.
   This fixes [Ticket 293](https://github.com/Patternslib/Patterns/issues/293).
 

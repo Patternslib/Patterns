@@ -71,6 +71,28 @@ define([
             return null;
     }
 
+    // Taken from http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+    function elementInViewport(el) {
+        var top = el.offsetTop;
+        var left = el.offsetLeft;
+        var width = el.offsetWidth;
+        var height = el.offsetHeight;
+
+        while (el.offsetParent) {
+            el = el.offsetParent;
+            top += el.offsetTop;
+            left += el.offsetLeft;
+        }
+
+        return (
+                top < (window.pageYOffset + window.innerHeight) &&
+                left < (window.pageXOffset + window.innerWidth) &&
+                (top + height) > window.pageYOffset &&
+                (left + width) > window.pageXOffset
+               );
+    }
+
+
     // Taken from http://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
     function escapeRegExp(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -82,7 +104,8 @@ define([
         debounce: debounce,
         escapeRegExp: escapeRegExp,
         rebaseURL: rebaseURL,
-        findLabel: findLabel
+        findLabel: findLabel,
+        elementInViewport: elementInViewport
     };
 
     return utils;
