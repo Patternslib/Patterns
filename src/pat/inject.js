@@ -505,7 +505,7 @@ define([
                 };
                 if (checkVisibility())
                     return true;
-                $(window).on("resize.pat-autoload,scroll.pat-autoload", checkVisibility);
+                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
             }
             return false;
         },
