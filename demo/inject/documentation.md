@@ -57,7 +57,7 @@ XXX: cross references for above
 
 XXX: give an overview of sections with cross references
 
-## Where and what to inject
+### Where and what to inject
 
 The most simple injection fetches a source via AJAX, extracts its body's
 content and replaces the current body's content with it:
@@ -138,20 +138,20 @@ content. In order to work on the elements instead of their content, and
 to put things relative to selected elements, we introduce three
 modifiers:
 
-`::element`  
+`::element`
 Select the element, instead of the content.
 
 Can be used for `source` and `target`, and in case of the latter be
 combined with `::before`/`::after`.
 
-`::before`  
+`::before`
 Like in CSS, the pseudo-element (a position) right before the content of
 the target element. The so far non-existing, but soon-to-be first child
 of the target element.
 
 Can be used for `target` and combined with `:element`.
 
-`::after`  
+`::after`
 Like in CSS, the pseudo-element (a position) right before the content of
 the selected element.
 
@@ -243,7 +243,7 @@ multiple elements match, all will be replaced.
       <div>to stay untouched</div>
     </div>
 
-## Non-existing targets
+### Non-existing targets
 
 In case the target selector returns no elements, we will attempt to
 create a matching element for you - the fuuuture, the apex of the vortex
@@ -288,7 +288,7 @@ with the next 10 entries and a new `autoload-visible` injection link.
 XXX: example infinite list
 
 
-## Change href after injection
+### Change href after injection
 
 EXPERIMENTAL FEATURE
 
@@ -323,7 +323,7 @@ after:
     </div>
 
 
-## Injection type (modals)
+### Injection type (modals)
 
 XXX: TODO
 
@@ -337,14 +337,12 @@ is wrapped into a `div#modal.modal`, any existing such modal is removed
 and the new modal injected as last element of the body:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
-
-	… 
-	</body>
+      …
+    </body>
 
 It corresponds and is shorthand notation for:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="target: div#modal.modal">
-    
     …
     </body>
 
@@ -356,5 +354,26 @@ After injection was triggered:
       Content from modal-source.html's ``body``.
     </div>
     </body>
-    
+
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
+
+### Properties
+
+You can customise the behaviour of injection through options in the
+`data-pat-inject` attribute.
+
+    <a href="#" class="pat-inject" data-pat-gallery="type: modal">
+      …
+    </a>
+
+| Property | Default value | Values | Description | Type |
+| ----- | --------| -------- | ------- | ----------- |
+| `selector` | `body` | | Selector identifying which section of the loaded document to inject. | |
+| `target` | `body` | | Selector identifying where to inject the loaded content. | |
+| `data-type` | `html` | `html` `markdown`| The type of content that is loaded. This is normally detected automatically. | Mutually exclusive. |
+| `next-href` | | | ? | |
+| `trigger` | `default` | `default` `autoload` `autoload-visible` | Determines when injection happens: on manual click (`default`), directly on page load (`autoload`) or when the trigger becomes visible (`autoload-visible`) | Mutually exclusive. |
+| `url` | | *href attribute* | URL to load content from. | |
+| `class` | | | A class which will be added to the injected content. | |
+| `history` | `none` | `none` `record` | If set to `record` injection will update the URL history. | Mutually exclusive. |
+
