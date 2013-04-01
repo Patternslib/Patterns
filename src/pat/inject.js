@@ -490,8 +490,8 @@ define([
                     return true;
 
                 // wait to become visible - again only immediate scrollable parent
-                $($scrollable[0]).on("scroll", checkVisibility);
-                $(window).on("resize.pat-autoload", checkVisibility);
+                $($scrollable[0]).on("scroll", utils.debounce(checkVisibility, 100));
+                $(window).on("resize.pat-autoload", utils.debounce(checkVisibility, 100));
             } else {
                 // Use case 2: scrolling the entire page
                 checkVisibility = function() {
@@ -505,7 +505,8 @@ define([
                 };
                 if (checkVisibility())
                     return true;
-                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
+                $(window).on("resize.pat-autoload scroll.pat-autoload",
+                        utils.debounce(checkVisibility, 100));
             }
             return false;
         },
