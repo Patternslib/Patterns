@@ -27,13 +27,13 @@ define([
             });
         },
 
-	_makeConverter: function() {
+        _makeConverter: function() {
             // A convertor can not be used in multiple threads at the same
             // time, so create a new one for every rendering.
             var converter = Markdown.getSanitizingConverter();
             Markdown.Extra.init(converter, {extensions: "all"});
             return converter;
-	},
+        },
 
         _render: function(text) {
             var $rendering = $("<div/>"),
