@@ -57,6 +57,3 @@ You can include interesting section like this:
 
     <a href="content.md" class="pat-inject"
        data-pat-inject="source: ## An interesting section; target: #target">Show me the money!</a>
-
-Section much be defined in your markdown search a #-prefix. Underline headers are
-not supported.

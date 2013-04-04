@@ -2,9 +2,14 @@
 
 ## 1.3.0 - Unreleased
 
-- Markdown pattern: generate HTML5 `<section>` elements with a `<h1>` header
-  when converting headers. This fixes 
-  [Ticket 216](https://github.com/Patternslib/Patterns/issues/216).
+- Markdown pattern:
+
+  - Generate HTML5 `<section>` elements with a `<h1>` header when converting
+    headers. This fixes [Ticket
+    216](https://github.com/Patternslib/Patterns/issues/216).
+
+  - Support filtering if injected markdown documents with headers using
+    underlined (equal signs or dashes) style notation.
 
 - Injection pattern: extend *autoload-in-visible* to also apply for situations
   where we are not dealing with a heigh-constrained scrollable parent but need
