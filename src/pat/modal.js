@@ -66,6 +66,11 @@ define([
         },
 
         setPosition: function() {
+            // bail if repositioning already in progress
+            if ($('#pat-modal-clone').length > 0) {
+                return;
+            }
+
             var $el = $('div.pat-modal,#pat-modal'),
                 maxHeight = $(window).innerHeight() - $el.outerHeight(true) +
                             $el.outerHeight();
@@ -74,13 +79,42 @@ define([
                 return;
             }
 
-            // set max-height first, then measure and change if necessary
-            $el.css('max-height', maxHeight).css('height', '');
-            if (maxHeight - $el.outerHeight() < 0) {
+            var $clone = $el.clone();
+
+            $clone
+                .attr('id', 'pat-modal-clone')
+                .css({
+                    'visibility': 'hidden',
+                    'position': 'absolute',
+                    'height': '',
+                    'max-height': maxHeight
+                }).appendTo('body');
+
+            // wait for browser to update DOM
+            setTimeout(modal.measure, 0);
+        },
+
+        measure: function() {
+            var $el = $('div.pat-modal,#pat-modal'),
+                $clone = $('#pat-modal-clone'),
+                maxHeight = $(window).innerHeight() - $clone.outerHeight(true) +
+                            $clone.outerHeight(),
+                height = $clone.outerHeight();
+
+            $clone.remove();
+
+            if (maxHeight - height < 0) {
                 $el.addClass('max-height')
-                   .css('height', maxHeight).css('max-height', '');
+                   .css({
+                       'height': maxHeight,
+                       'max-height': ''
+                   });
             } else {
-                $el.removeClass('max-height');
+                $el.removeClass('max-height')
+                   .css({
+                       'height': '',
+                       'max-height': maxHeight
+                   });
             }
 
             var top = ($(window).innerHeight() - $el.outerHeight(true)) / 2;
