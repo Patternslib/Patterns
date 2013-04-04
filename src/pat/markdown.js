@@ -126,9 +126,9 @@ define([
         },
 
         _extractSection: function(text, header) {
-            var header = utils.escapeRegExp(header),
-                matcher = new RegExp(
-                        "^((#+)\\s*@TEXT@\\s*|@TEXT@\\s*\\n([=-])+\\s*)$".replace(/@TEXT@/g, header), "m");
+            header=utils.escapeRegExp(header);
+            var matcher = new RegExp(
+                        "^((#+)\\s*@TEXT@\\s*|@TEXT@\\s*\\n([=-])+\\s*)$".replace(/@TEXT@/g, header), "m"),
                 match = matcher.exec(text);
             if (match===null)
                 return null;
@@ -143,9 +143,9 @@ define([
             } else if (match[3]) {
                 // We have an underscore-style header.
                 if (match[3]==="=")
-                    pattern="^@TEXT@\\s*\\n=+\\s\*\n+((?:.|\\n)*?(?=^.*?\\n=+\\s*$)|(?:.|\\n)*)";
+                    pattern="^@TEXT@\\s*\\n=+\\s*\\n+((?:.|\\n)*?(?=^.*?\\n=+\\s*$)|(?:.|\\n)*)";
                 else
-                    pattern="^@TEXT@\\s*\\n-+\\s\*\n+((?:.|\\n)*?(?=^.*?\\n[-=]+\\s*$)|(?:.|\\n)*)";
+                    pattern="^@TEXT@\\s*\\n-+\\s*\\n+((?:.|\\n)*?(?=^.*?\\n[-=]+\\s*$)|(?:.|\\n)*)";
             } else {
                 log.error("Unexpected section match result", match);
                 return null;
