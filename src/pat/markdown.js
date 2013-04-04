@@ -123,6 +123,39 @@ define([
                 converter = _._makeConverter();
             $rendering.html(converter.makeHtml(text));
             return $rendering;
+        },
+
+        _extractSection: function(text, header) {
+            var header = utils.escapeRegExp(header),
+                matcher = new RegExp(
+                        "^((#+)\\s*@TEXT@\\s*|@TEXT@\\s*\\n([=-])+\\s*)$".replace(/@TEXT@/g, header), "m");
+                match = matcher.exec(text);
+            if (match===null)
+                return null;
+
+            var pattern;
+
+            if (match[2]) {
+                // We have a ##-style header.
+                var level = match[2].length;
+                pattern="^#{@LEVEL@}\\s*@TEXT@\\s*$\\n+((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)";
+                pattern=pattern.replace(/@LEVEL@/g, level);
+            } else if (match[3]) {
+                // We have an underscore-style header.
+                if (match[3]==="=")
+                    pattern="^@TEXT@\\s*\\n=+\\s\*\n+((?:.|\\n)*?(?=^.*?\\n=+\\s*$)|(?:.|\\n)*)";
+                else
+                    pattern="^@TEXT@\\s*\\n-+\\s\*\n+((?:.|\\n)*?(?=^.*?\\n[-=]+\\s*$)|(?:.|\\n)*)";
+            } else {
+                log.error("Unexpected section match result", match);
+                return null;
+            }
+            pattern=pattern.replace(/@TEXT@/g, header);
+            matcher=new RegExp(pattern, "m");
+            match=matcher.exec(text);
+            if (match===null)
+                log.error("Failed to find section with known present header?");
+            return (match!==null) ? match[0] : null;
         }
     };
 
@@ -142,18 +175,13 @@ define([
             var $rendering, source, header;
             return cfgs.map(function(cfg) {
                 source = data;
-                if (cfg.source && (header=/^(#+)\s+(.*)/.exec(cfg.source)) !== null) {
-                    var level = header[1].length,
-                        text = utils.escapeRegExp(header[2]),
-                        matcher = "^#{@LEVEL@}\\s*@TEXT@((?:.|\\n)*?(?=^#{1,@LEVEL@}[^#])|.*(?:.|\\n)*)";
-                    matcher = matcher.replace(/@LEVEL@/g, level).replace(/@TEXT@/g, text);
-                    matcher = new RegExp(matcher, "m");
-                    source = matcher.exec(source);
-                    if (source === null) {
+                if (cfg.source && (header=/^#+\s*(.*)/.exec(cfg.source))!==null) {
+                    source=_._extractSection(source, header[1]);
+                    if (source===null) {
                         log.warn("Could not find section \"" + cfg.source + "\" in " + cfg.url);
                         return $("<div/>").attr("data-src", cfg.url);
                     }
-                    source = source[0]+"\n";  // Needed for some markdown syntax
+                    source+="\n";  // Needed for some markdown syntax
                 }
                 $rendering = _._render(source);
                 $rendering.attr("data-src", cfg.source ? cfg.url+cfg.source : cfg.url);

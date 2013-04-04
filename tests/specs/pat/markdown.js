@@ -1,6 +1,6 @@
 define(["pat/markdown", "pagedown"], function(pattern, Markdown) {
 
-    describe("markdown-pattern", function() {
+    describe("Markdown pattern", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
@@ -149,8 +149,57 @@ define(["pat/markdown", "pagedown"], function(pattern, Markdown) {
                 var $rendering = pattern._render("*This is markdown*");
                 expect($rendering.html()).toBe("<p><em>This is markdown</em></p>");
             });
+        });
 
+        describe("_extractSection", function() {
+            it("Unknown section", function() {
+                expect(pattern._extractSection("## My title\n\nContent", "Other title")).toBe(null);
+            });
+
+            it("Last hash-section", function() {
+                expect(pattern._extractSection("## My title\n\nContent", "My title"))
+                    .toBe("## My title\n\nContent");
+            });
+
+            it("Hash-section with following section at same level ", function() {
+                expect(pattern._extractSection("## My title\n\nContent\n## Next section\n", "My title"))
+                    .toBe("## My title\n\nContent\n");
+            });
+
+            it("Hash-section with following section at lower level ", function() {
+                expect(pattern._extractSection("## My title\n\nContent\n### Next section\n", "My title"))
+                    .toBe("## My title\n\nContent\n### Next section\n");
+            });
+
+            it("Double underscore section", function() {
+                expect(pattern._extractSection("My title\n=======\nContent", "My title"))
+                    .toBe("My title\n=======\nContent");
+            });
+
+            it("Double underscore section with following section at same level", function() {
+                expect(pattern._extractSection("My title\n=======\nContent\n\nNext\n====\n", "My title"))
+                    .toBe("My title\n=======\nContent\n\n");
+            });
+
+            it("Double underscore section with following section at lower level", function() {
+                expect(pattern._extractSection("My title\n=======\nContent\n\nNext\n----\n", "My title"))
+                    .toBe("My title\n=======\nContent\n\nNext\n----\n");
+            });
+
+            it("Single underscore section", function() {
+                expect(pattern._extractSection("My title\n-------\nContent", "My title"))
+                    .toBe("My title\n-------\nContent");
+            });
+
+            it("Single underscore section with following section at same level", function() {
+                expect(pattern._extractSection("My title\n-------\nContent\n\nNext\n----\n", "My title"))
+                    .toBe("My title\n-------\nContent\n\n");
+            });
+
+            it("Single underscore section with following section at higher level", function() {
+                expect(pattern._extractSection("My title\n-------\nContent\n\nNext\n====\n", "My title"))
+                    .toBe("My title\n-------\nContent\n\n");
+            });
         });
     });
-
 });
