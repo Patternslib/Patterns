@@ -43,7 +43,25 @@ define([
             });
         },
 
-        _renderHtml5Headers: function(text, runBlockGamut) {
+        _stash: function(text, cache) {
+            return "\n<p>~PM" + (cache.push(text) - 1) + "PM</p>\n";
+        },
+
+        _unstash: function(text, cache) {
+            return text.replace(/<p>~PM(\d+)PM<\/p>/g, function(wholeMatch, m1) {
+                return cache[parseInt(m1, 10)];
+            });
+        },
+
+        _rewrapSection: function(text, cache) {
+            return text.replace(/<section>(?:.|\n)*<\/section>/gm,
+                function (wholeMatch) {
+                    wholeMatch = _._unstash(wholeMatch, cache);
+                    return _._stash(wholeMatch, cache);
+                });
+        },
+
+        _renderHtml5Headers: function(text, runBlockGamut, cache) {
             var span_converter = Markdown.getSanitizingConverter();
 
             text = text.replace(/^(.+)?\s*\n=+\s*\n+((?:.|\n)*?(?=^.*?\n=+\s*$)|(?:.|\n)*)/gm,
@@ -51,7 +69,8 @@ define([
                     return "<section>\n" +
                            "  <h1>" + _._renderHeader(span_converter, m1) + "</h1>\n" +
                            runBlockGamut(m2) + "\n" +
-                           "</section>\n"; }
+                           "</section>";
+                }
             );
 
             text = text.replace(/^(.+)?\s*\n-+\s*\n+((?:.|\n)*?(?=^.*?\n-+\s*$)|(?:.|\n)*)/gm,
@@ -59,28 +78,42 @@ define([
                     return "<section>\n" +
                            "  <h1>" + _._renderHeader(span_converter, m1) + "</h1>\n" +
                            runBlockGamut(m2) + "\n" +
-                           "</section>\n"; }
+                           "</section>";
+                }
             );
 
-            var pattern = "^#{@LEVEL@}\\s*(.+?)\\s*$\\n+((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)",
+            text = _._rewrapSection(text, cache);
+
+            var pattern = "^#{@LEVEL@}\\s*([^#].+?)\\s*$\\n+((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)",
                 replacer = (function(wholeMatch, m1, m2) {
                     return "<section>\n" +
                            "  <h1>" + _._renderHeader(span_converter, m1) + "</h1>\n" +
                            runBlockGamut(m2) + "\n" +
-                           "</section>\n";
-            });
+                           "</section>";
+                }
+            );
             for (var level=6; level>0; level--) {
                 var matcher = new RegExp(pattern.replace(/@LEVEL@/g, level), "gm");
                 text = text.replace(matcher, replacer);
+                text = _._rewrapSection(text, cache);
             }
+
             return text;
         },
 
         _makeConverter: function() {
             // A convertor can not be used in multiple threads at the same
             // time, so create a new one for every rendering.
-            var converter = Markdown.getSanitizingConverter();
-            converter.hooks.chain("preBlockGamut", _._renderHtml5Headers);
+            var converter = Markdown.getSanitizingConverter(),
+                cache = [];
+            converter.hooks.chain("preBlockGamut",
+                function(text, runBlockGamut) {
+                    return _._renderHtml5Headers(text, runBlockGamut, cache);
+                });
+            converter.hooks.chain("postConversion",
+                function(text) {
+                    return _._unstash(text, cache);
+                });
             Markdown.Extra.init(converter, {extensions: "all"});
             return converter;
         },

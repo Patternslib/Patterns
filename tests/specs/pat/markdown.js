@@ -1,4 +1,4 @@
-define(["pat/markdown"], function(pattern) {
+define(["pat/markdown", "pagedown"], function(pattern, Markdown) {
 
     describe("markdown-pattern", function() {
 
@@ -41,6 +41,103 @@ define(["pat/markdown"], function(pattern) {
                 expect(pattern._render).toHaveBeenCalledWith("This is markdown");
             });
         });
+
+	describe("_renderHeader", function() {
+            var span_converter = Markdown.getSanitizingConverter();
+
+            it("Plain text only", function() {
+                expect(pattern._renderHeader(span_converter, "Plain text")).toBe("Plain text");
+            });
+
+            it("Render markdown", function() {
+                expect(pattern._renderHeader(span_converter, "*Rendered* text")).toBe("<em>Rendered</em> text");
+            });
+
+            it("Strip bad markup", function() {
+                expect(pattern._renderHeader(span_converter, "Plain <iframe>text</iframe>")).toBe("Plain text");
+            });
+	});
+
+        describe("_stash/_unstash", function() {
+            it("Unstash multiple", function() {
+                var cache = ["one", "two"];
+                expect(pattern._unstash("<p>~PM0PM</p><p>~PM1PM</p>", cache)).toBe("onetwo");
+            });
+
+            it("Roundtrip", function() {
+                var cache = [];
+                expect(pattern._unstash(pattern._stash("<p>Foo</p>", cache), cache)).toBe("\n<p>Foo</p>\n");
+            });
+        });
+
+        describe("_rewrapSection", function() {
+            it("Content without section", function() {
+                expect(pattern._rewrapSection("<p>~PM0PM</p>")).toBe("<p>~PM0PM</p>");
+            });
+
+            it("Content with section", function() {
+                var cache = ["content"],
+                    rewrapped;
+                rewrapped=pattern._rewrapSection("<section><h1>Title</h1>\n<p>~PM0PM</p></section>", cache);
+                expect(rewrapped).toBe("\n<p>~PM1PM</p>\n");
+                expect(cache[1]).toBe("<section><h1>Title</h1>\ncontent</section>");
+            });
+        });
+
+	describe("_renderHtml5Headers", function() {
+            it("Block without headers", function() {
+                expect(pattern._renderHtml5Headers("Foo bar buz")).toBe("Foo bar buz");
+            });
+
+            it("Block with double underlined header", function() {
+                var input = "Header 1\n========\n\nSection content\n",
+                    runBlockGamut = jasmine.createSpy("runBlockGamut").andReturn("BLOCK"),
+                    cache = [],
+                    output = pattern._renderHtml5Headers(input, runBlockGamut, cache);
+                expect(output).toBe("\n<p>~PM0PM</p>\n");
+                expect(cache[0]).toBe("<section>\n  <h1>Header 1</h1>\nBLOCK\n</section>");
+                expect(runBlockGamut).toHaveBeenCalledWith("Section content\n");
+            });
+
+            it("Two blocks with double underline headers", function() {
+                var input = "Header 1\n========\n\nSection content\nNext\n====\n",
+                    runBlockGamut = jasmine.createSpy("runBlockGamut").andReturn("BLOCK"),
+                    cache = [],
+                    output = pattern._renderHtml5Headers(input, runBlockGamut, cache);
+                expect(output).toBe("\n<p>~PM0PM</p>\n");
+                expect(cache[0]).toBe("<section>\n  <h1>Header 1</h1>\nBLOCK\n</section>" +
+                                      "<section>\n  <h1>Next</h1>\nBLOCK\n</section>");
+            });
+
+            it("Double header underline header includes single underline in section", function() {
+                var input = "Header 1\n========\n\nSection content\nSubsection\n----\nContent\n",
+                    runBlockGamut = jasmine.createSpy("runBlockGamut").andReturn("BLOCK"),
+                    cache = [],
+                    output = pattern._renderHtml5Headers(input, runBlockGamut, cache);
+                expect(output).toBe("\n<p>~PM0PM</p>\n");
+                expect(cache[0]).toBe("<section>\n  <h1>Header 1</h1>\nBLOCK\n</section>");
+                expect(runBlockGamut).toHaveBeenCalledWith("Section content\nSubsection\n----\nContent\n");
+            });
+
+            xit("Block with single underline headers", function() {
+                var input = "Header 1\n--------\n\nSection content\n",
+                    runBlockGamut = jasmine.createSpy("runBlockGamut").andReturn("BLOCK"),
+                    cache = [],
+                    output = pattern._renderHtml5Headers(input, runBlockGamut, cache);
+                expect(output).toBe("\n<p>~PM0PM</p>\n");
+                expect(cache[0]).toBe("<section>\n  <h1>Header 1</h1>\nBLOCK\n</section>");
+            });
+
+            xit("Block with single underline headers followed by same level header", function() {
+                var input = "Header 1\n--------\n\nSection content\nNext\n----\n",
+                    runBlockGamut = jasmine.createSpy("runBlockGamut").andReturn("BLOCK"),
+                    cache = [],
+                    output = pattern._renderHtml5Headers(input, runBlockGamut, cache);
+                expect(output).toBe("\n<p>~PM0PM</p>\n");
+                expect(cache[0]).toBe("<section>\n  <h1>Header 1</h1>\nBLOCK\n</section>\n" +
+                                      "<section>\n  <h1>Next</h1>\nBLOCK\n</section>");
+            });
+	});
 
         describe("_render", function(){
             it("Wrap rendering in a div", function() {
