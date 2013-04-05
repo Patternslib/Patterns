@@ -40,7 +40,7 @@
 	padding-right: 0;
 	margin-right: 0;
 	position: relative;
-	padding-left: 1px;
+	padding-left: 1em;
 }
 
 .checklist input[type="radio"],
