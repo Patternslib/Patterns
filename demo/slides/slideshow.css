@@ -1509,7 +1509,7 @@ a.pat-markdown {
 
 /* @group Clean */
 
-.slide.clean section {
+.slide.clean .slide-content section {
 	padding: 0;
 	width: 1024px;
 	height: 640px;
