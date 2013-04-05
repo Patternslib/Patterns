@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.2 - Unreleased
+
+- ...
+
+
 ## 1.2.1 - Released April 5, 2013
 
 - Fix use of an undeclared variable in the parser could result in problems
