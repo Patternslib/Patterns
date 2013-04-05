@@ -1,5 +1,3 @@
-@import url("../check-list/checklist.css");
-
 @import url("fontello/css/fontello.css");
 
 @import url("animate.css/animate.css");
@@ -1104,7 +1102,7 @@ figure.shadowed {
 	counter-increment:paging;
 	content:counter(paging, decimal-leading-zero);
 	}
-.slide section {
+.slide .slide-content section {
 	padding: 40px 60px 0;
 	width: 904px;
 	height: 600px;
@@ -1332,7 +1330,7 @@ h3 {
 
 /* @group Logo */
 
-.slide section:before {
+.slide .slide-content section:before {
 	content: "Patterns";
 	position: absolute;
 	top: 30px;
@@ -1344,12 +1342,12 @@ h3 {
 	font: 13px/17px pbi;
 }
 
-.slide.no-logo section:before,
-.slide.no-brandmark section:after {
+.slide.no-logo .slide-content section:before,
+.slide.no-brandmark .slide-content section:after {
 	display: none;	
 }
 
-.slide section:after {
+.slide .slide-content section:after {
 	top: -102px;
 	content: url(images/brandmark.png);
 	position: absolute;
@@ -2042,7 +2040,7 @@ margin-left: 0;
 			0 0 0 1px #305F8D,
 			0 0 0 10px #819da5
 		}
-	.list .slide section {
+	.list .slide-content section {
 		-webkit-transform-origin:0 0;
 		-webkit-transform:scale(0.5);
 		-moz-transform-origin:0 0;
@@ -2081,6 +2079,22 @@ margin-left: 0;
 
 .list .slide > footer * {
 	color: gray;
+}
+
+.list .slide > footer h1 {
+	color: black;
+	margin-top: 0;
+	letter-spacing: 1px;
+	margin-bottom: 0.5em;
+	font: bold 1.2em "flc";
+}
+
+.list .slide > footer section section h1 {
+	text-transform: uppercase;
+	margin-bottom: 1em;
+	letter-spacing: 2px;
+	margin-top: 0;
+	font: normal normal 1em "Lucida Grande", Lucida, Verdana, sans-serif;
 }
 
 /* @end */
