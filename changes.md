@@ -2,6 +2,10 @@
 
 ## 1.3.0 - Unreleased
 
+- Fix use of an undeclared variable in the parser which could result in
+  problems in IE8. This fixes
+  [Ticket 298](https://github.com/Patternslib/Patterns/issues/298).
+
 - Markdown pattern:
 
   - Generate HTML5 `<section>` elements with a `<h1>` header when converting
