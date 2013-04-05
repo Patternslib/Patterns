@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.0 - Unreleased
+## 1.3.0 - Released April 5, 2013
 
 - Fix use of an undeclared variable in the parser which could result in
   problems in IE8. This fixes
