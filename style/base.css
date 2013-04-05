@@ -104,19 +104,9 @@ body {
 }
 
 .state-home .component-index {
-	transform: rotateX( 50deg ) scaleX(4);
-	top: -710px;
-	left: -1050px;
-}
-
-.checklist label:before,
-label.checkbox:before {
-	position: absolute;
-	left: 26px;
-}
-
-.state-home .checklist label:before {
-	display: none;
+	transform: rotateY( 50deg ) scaleX(1);
+	/*top: -710px;*/
+	/*left: -1050px;*/
 }
 
 .component-index button {
@@ -133,6 +123,12 @@ label.checkbox:before {
 	border-style: none;
 	padding-left: 15px;
 	padding-right: 15px;
+	transition: all 1s;
+}
+
+.state-home .component-index .button-bar,
+.state-documentation .component-index .button-bar {
+	opacity: 0;
 }
 
 /* @group Form header */
@@ -141,12 +137,15 @@ label.checkbox:before {
 	float: right;
 	margin-top: -43px;
 	position: relative;
+	margin-right: 28px;
 }
 
 .component-index .bundle-type {
 	margin-left: 2%;
 	margin-right: 2%;
 	padding-left: 8px;
+	border-style: none;
+	display: inline-block;
 }
 
 .component-index .bundle-type label {
@@ -156,7 +155,9 @@ label.checkbox:before {
 }
 
 .state-home .component-index .functions,
-.state-home .component-index .bundle-type {
+.state-home .component-index .bundle-type,
+.state-documentation .component-index .functions,
+.state-documentation .component-index .bundle-type  {
 	opacity: 0;
 }
 
@@ -172,78 +173,31 @@ label.checkbox:before {
 	margin-bottom: 5px;
 	overflow: hidden;
 	color: silver;
+	transition: all 1s;
+	-webkit-transition: all 1s;
 }
 
 .state-home .component-index h2 {
 	height: 0;
+	margin: 0;
 }
 
 /* @group Labels */
 
-.component-index .checklist label {
-	overflow: hidden;
-	float: left;
-	width: 21%;
-	box-sizing: border-box;
-	line-height: 50px;
-	position: relative;
-	margin-right: 2%;
-	margin-left: 2%;
-	margin-bottom: 10px;
-	user-select: none;
-	padding: 0;
-	border-top: 1px solid #757575;
-	border-bottom: 1px solid #757575;
-	transition: padding-left 1s;
-}
-
 .state-documentation .component-index .checklist label {
-}
-
-.state-download .component-index .checklist label {
-	padding-left: 30px;
-}
-
-.state-home .component-index .checklist label {
-	height: 192px;
-	border-color: rgba(87,87,87,0);
-	padding-right: 0;
-	padding-left: 0;
 }
 
 /* @end */
 
 /* @group Label link */
 
-.component-index .checklist label a {
-	display: block;
-	position: relative;
-	z-index: -1;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	color: white;
-	text-shadow: #000000 0 -1px 0;
-	font-weight: normal;
-	font-style: normal;
-	padding-right: 0;
-	transition: all 1s;
-}
-
 .state-documentation .component-index .checklist label a {
 	z-index: 0;
 }
 
-.state-home .component-index .checklist label a {
-	width: 43px;
-	-moz-transform: scale(3.5);
-	-moz-transform-origin: 0 0 ;
-	zoom: 4.3;
-	line-height: 45px;
-}
-
-.moz .state-home .component-index .checklist label a {
-	line-height: inherit;
+.state-download .component-index .checklist label a {
+	left: 30px;
+	z-index: -1;
 }
 
 /* @end */
@@ -599,7 +553,7 @@ html.js .postit.guide.closed {
 	border-top: 1px solid silver;
 	box-shadow: 0 1px 4px gray;
 	perspective: 200px;
-	perspective-origin: 100% 30%;
+	perspective-origin: 100% 100%;
 	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
 	background-image: -moz-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
 	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
@@ -642,22 +596,23 @@ html.js .postit.guide.closed {
 	font-size: 26px;
 	position: absolute;
 	display: block;
-	margin-right: 0;
-	margin-top: -1500px;
-	margin-left: 0;
-	background-image: -webkit-linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	background-image: -moz-linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	background-image: linear-gradient(bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
+	background-image: -webkit-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
+	background-image: -moz-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
+	background-image: linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
 	left: 0;
 	right: 0;
 	top: 0;
 	padding: 160px 10% 0 50%;
 	border-style: none;
-	transition: margin-top 1s;
+	transition: all 1s;
+	transform: translateX(100%);
+	transform-style: preserve-3d;
+	bottom: 0;
+	margin: 0;
 }
 
 #site-header.state-home  blockquote {
-	margin-top: 0;
+	transform: translateX(0)
 }
 
 #site-header blockquote p {
