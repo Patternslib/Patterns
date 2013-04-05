@@ -26,17 +26,8 @@
 	</head>
 	<body>
 		<div class="pat-auto-scale" data-pat-auto-scale="zoom">
-			<header id="site-header" class="state-home">
+			<header id="site-header" class="state-download">
 				<form action="getBundle" class="component-index ">
-					<fieldset class="bundle-type">       
-				       Bundle type:  
-				        <label>
-				            <input type="radio" name="minify" checked>Regular</input>
-				        </label>
-				        <label>
-				            <input type="radio" name="minify" value="minify">Minified</input>
-				        </label>
-				    </fieldset>
 					<fieldset class="checklist pat-checklist">				    	
 						  <div class="functions">
 						    <button class="select-all" type="button">Select all</button>
@@ -222,10 +213,20 @@
 								    <a class="navigation zoom" href="demo/zoom/index.html" title="">Zoom</a>
 								</label>
 						</fieldset>
-				        <fieldset class="button-bar">
-				        	<button type="submit">Download bundle</button>
-				        </fieldset>
+				        
 				     </fieldset>
+				     <fieldset class="button-bar">
+				        	<button type="submit">Download bundle</button>
+							<fieldset class="bundle-type">       
+						       Bundle type:  
+						        <label>
+						            <input type="radio" name="minify" checked>Regular</input>
+						        </label>
+						        <label>
+						            <input type="radio" name="minify" value="minify">Minified</input>
+						        </label>
+						    </fieldset>
+				        </fieldset>
 				</form>
 			
 				<blockquote class="pat-auto-scale">

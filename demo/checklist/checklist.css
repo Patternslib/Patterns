@@ -34,13 +34,13 @@
 .checklist label {
 	display: block;
 	width: auto;
-	padding-left: 1em;
 	margin-bottom: 0;
 	float: none;
 	margin-left: 0;
 	padding-right: 0;
 	margin-right: 0;
 	position: relative;
+	padding-left: 1px;
 }
 
 .checklist input[type="radio"],
@@ -116,7 +116,7 @@ label.checkbox:before {
 	color: white;
 }
 
-.checklist .checked > a ,
+/*.checklist .checked > a ,*/
 .checklist .checked > select {
 	color: white;
 }
