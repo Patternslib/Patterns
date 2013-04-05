@@ -56,7 +56,7 @@
             "logging",
             "modernizr",
             "pagedown",
-            "pagedown-extra",
+	    "pagedown-extra-2013.04.02",
 	    "photoswipe",
             "prefixfree",
             "shower",

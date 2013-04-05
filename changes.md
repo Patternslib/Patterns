@@ -11,6 +11,11 @@
   - Support filtering if injected markdown documents with headers using
     underlined (equal signs or dashes) style notation.
 
+  - Update the version of
+    [pagedown-extra](https://github.com/jmcmanus/pagedown-extra) which could
+    case markdown constructs to be replaces with the word `undefined`.  This
+    fixes [ticket 297](https://github.com/Patternslib/Patterns/issues/297).
+
 - Injection pattern: extend *autoload-in-visible* to also apply for situations
   where we are not dealing with a heigh-constrained scrollable parent but need
   to look at the entire page.
