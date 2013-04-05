@@ -2,6 +2,8 @@
 
 @import url("animate.css/animate.css");
 
+@import url(http://fonts.googleapis.com/css?family=Just+Another+Hand);
+
 /* @group Custom animations for this slideshow only */
 
 /* @group Single pearl */
@@ -1569,15 +1571,14 @@ a.pat-markdown {
 	left: 593px;
 	width: 145px;
 	text-align: center;
-	font: 11px/16px dakota;
+	font: 19px/22px 'Just Another Hand';
 }
 
 #socrates {
 	position: absolute;
-	top: 275px;
+	top: 281px;
 	left: 381px;
-	font-size: 13px;
-	font: 11px/16px dakota;
+	font: 19px/21px 'Just Another Hand';
 	width: 110px;
 	text-align: center;
 				}
