@@ -13,10 +13,12 @@ define([
 ], function($, patterns, utils, url) {
     var slides = {
         name: "slides",
-        trigger: ".pat-slides",
+        trigger: ".pat-slides:has(.slide)",
 
         setup: function() {
             $(document).on("patterns-injected", utils.debounce(slides._reset, 100));
+            // Re-init shower to get the slide selector in.
+            window.shower.init(".pat-slides .slide");
         },
 
         init: function($el) {
@@ -60,7 +62,7 @@ define([
 
         _reset: function() {
             slides._hook($(this.trigger));
-            window.shower.init();
+            window.shower.init(".pat-slides .slide");
         }
     };
 
