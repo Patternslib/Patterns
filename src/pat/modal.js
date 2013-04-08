@@ -2,8 +2,9 @@ define([
     "jquery",
     "../core/parser",
     "../registry",
+    "../utils",
     "./inject"
-], function($, Parser, registry, inject) {
+], function($, Parser, registry, utils, inject) {
     var parser = new Parser("modal");
 
     parser.add_argument("class");
@@ -66,17 +67,14 @@ define([
         },
 
         setPosition: function() {
-            // bail if repositioning already in progress
-            if ($('#pat-modal-clone').length > 0) {
+            var $el = $('div.pat-modal,#pat-modal');
+            if ($el.length === 0) {
                 return;
             }
 
-            var $el = $('div.pat-modal,#pat-modal'),
-                maxHeight = $(window).innerHeight() - $el.outerHeight(true) +
-                            $el.outerHeight();
-
-            if ($el.length === 0) {
-                return;
+            var $oldClone = $('#pat-modal-clone');
+            if ($oldClone.length > 0) {
+                $oldClone.remove();
             }
 
             var $clone = $el.clone();
@@ -86,8 +84,7 @@ define([
                 .css({
                     'visibility': 'hidden',
                     'position': 'absolute',
-                    'height': '',
-                    'max-height': maxHeight
+                    'height': ''
                 }).appendTo('body');
 
             // wait for browser to update DOM
@@ -95,8 +92,12 @@ define([
         },
 
         measure: function() {
+            var $clone = $('#pat-modal-clone');
+            if ($clone.length === 0) {
+                return;
+            }
+
             var $el = $('div.pat-modal,#pat-modal'),
-                $clone = $('#pat-modal-clone'),
                 maxHeight = $(window).innerHeight() - $clone.outerHeight(true) +
                             $clone.outerHeight(),
                 height = $clone.outerHeight();
@@ -104,17 +105,9 @@ define([
             $clone.remove();
 
             if (maxHeight - height < 0) {
-                $el.addClass('max-height')
-                   .css({
-                       'height': maxHeight,
-                       'max-height': ''
-                   });
+                $el.addClass('max-height').css('height', maxHeight);
             } else {
-                $el.removeClass('max-height')
-                   .css({
-                       'height': '',
-                       'max-height': maxHeight
-                   });
+                $el.removeClass('max-height').css('height', '');
             }
 
             var top = ($(window).innerHeight() - $el.outerHeight(true)) / 2;
@@ -131,7 +124,7 @@ define([
 
     $(window).on('resize.pat-modal-position', modal.setPosition);
     $(window).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
-            modal.setPosition);
+        modal.setPosition);
     $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
         modal.setPosition);
 
