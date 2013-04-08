@@ -251,8 +251,19 @@ define([
 
                     // perform injection
                     cfg.$target.each(function() {
+                        var $src;
+
+                        // $source.clone() does not work with shived elements in IE8
+                        if (document.all && document.querySelector &&
+                            !document.addEventListener) {
+                            $src = $source.map(function() {
+                                return $(this.outerHTML)[0];
+                            });
+                        } else {
+                            $src = $source.clone();
+                        }
+
                         var $target = $(this),
-                            $src = $source.clone(),
                             $injected = cfg.$injected || $src;
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
                             $injected.filter(function() {
