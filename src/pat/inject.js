@@ -436,6 +436,14 @@ define([
                     $this.attr(attrName, value);
                 }
             });
+            // XXX: IE8 changes the order of attributes in html. The following
+            // lines move data-pat-inject-rebase-src to src.
+            $page.find('[data-pat-inject-rebase-src]').each(function() {
+                var $el = $(this);
+                $el.attr('src', $el.attr('data-pat-inject-rebase-src'))
+                   .removeAttr('data-pat-inject-rebase-src');
+            });
+
             return $page.html().replace(
                     /src="" data-pat-inject-rebase-/g, ''
                 ).trim();
