@@ -265,6 +265,11 @@ define([
 
                         var $target = $(this),
                             $injected = cfg.$injected || $src;
+
+                        $src.findInclusive('img').on('load', function() {
+                            $(this).trigger('pat-inject-content-loaded');
+                        });
+
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
                             $injected.filter(function() {
                                 // setting data on textnode fails in IE8
