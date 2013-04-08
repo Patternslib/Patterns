@@ -130,6 +130,7 @@ define([
     };
 
     $(window).on('resize.pat-modal-position', modal.setPosition);
+    $(window).on('load.pat-modal-position', '#pat-modal', modal.setPosition);
     $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
         modal.setPosition);
 
