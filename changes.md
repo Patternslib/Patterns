@@ -5,6 +5,8 @@
 - Slideshow builder pattern: make it possible to insert the slideshow fieldset
   in a different location than at the start of the form.
 
+- Modal pattern: improve browser compatibility.
+
 
 ## 1.3.0 - Released April 5, 2013
 
