@@ -40,13 +40,16 @@
 	padding-right: 0;
 	margin-right: 0;
 	position: relative;
-	padding-left: 1em;
+	user-select: none;
+	padding-left: 1.5em;
 }
 
 .checklist input[type="radio"],
 .checklist input[type="checkbox"],
 .checkbox > input[type="checkbox"]  {
-	display: none !important;
+	float: left;
+	margin-left: -1.5em;
+	visibility: hidden;
 }
 
 .checklist label:before,
@@ -55,7 +58,15 @@ label.checkbox:before {
 	font-family: fontello;
 	width: 1em;
 	display: inline-block;
-	margin-left: -1em;
+	margin-left: -1.5em;
+	float: left;
+	margin-top: -0.1em;
+}
+
+.checklist label:active:before,
+label.checkbox:active:before {
+	color: silver;
+	transform: scale(0.9)
 }
 
 .checklist label.checked:before,
@@ -116,7 +127,7 @@ label.checkbox:before {
 	color: white;
 }
 
-/*.checklist .checked > a ,*/
+.checklist .checked > a ,
 .checklist .checked > select {
 	color: white;
 }
