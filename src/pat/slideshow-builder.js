@@ -16,8 +16,21 @@ define([
 
         init: function($el) {
             return $el.each(function() {
+                var action;
+
+                if (this.tagName.toLowerCase()==="form")
+                    action=this.action;
+                else {
+                    var $form = $(this).closest("form");
+                    if ($form.length===0) {
+                        log.error("Can not find a containing form", this);
+                        return;
+                    }
+                    action = $form[0].action;
+                }
+
                 $.ajax({
-                    url: this.action,
+                    url: action,
                     context: this,
                     dataType: "html",
                     error: builder.onError,

@@ -13,7 +13,7 @@ A form that generates a slide show URL looks as follows:
         <button type="submit">Run</button>
     </form>
 
-The pattern will inject a Checklist into the form based on the IDs of the slides in the source HTML. The slide names come from the first header that is found in the slide HTML.
+The pattern will inject a Checklist at the beginning of the form based on the IDs of the slides in the source HTML. The slide names come from the first header that is found in the slide HTML.
 
     <form action="my-slides.html" class="pat-slideshow-builder">
         <fieldset class="checklist">
@@ -27,6 +27,33 @@ The pattern will inject a Checklist into the form based on the IDs of the slides
     </form>
     
 When the user clicks on the submit button, the slideshow is started with filters already applied in the URI based on the selection the user made.
+
+### Customising the form
+
+Since this pattern will only insert a fieldset into a form you can easily extend the form in several ways. For example you can also use the checklist pattern to give a convenient method to (de)select all slides:
+
+    <form action="my-slides.html" class="pat-slideshow-builder pas-checklist">
+        <div class="functions">
+            <button class="select-all">Select all</button>
+            <button class="deselect-all">Deselect all</button>
+        </div>
+        <button type="submit">Run</button>
+    </form>
+
+You can also put the `pat-slideshow-builder` class on another element inside the form to get the fieldset in a different position than the start of the form.
+
+    <form action="my-slides.html">
+        <fieldset>
+            <legend>Section one</section>
+            ...
+        </fieldset>
+        <fieldset class="pat-slideshow-builder">
+        </fieldset>
+            <legend>Section three</section>
+            ...
+        </fieldset>
+        <button type="submit">Run</button>
+    </form>
 
 ### Properties
 

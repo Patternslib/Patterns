@@ -17,7 +17,7 @@ define(["pat/slideshow-builder"], function(pattern) {
                 expect(pattern.init(jq)).toBe(jq);
             });
 
-            it("Invoke AJAX for all slideshows", function() {
+            it("Invoke AJAX for all slideshow", function() {
                 spyOn($, "ajax");
                 var form = document.createElement("form");
                 form.action="slideshow.html";
@@ -26,6 +26,26 @@ define(["pat/slideshow-builder"], function(pattern) {
                 var options = $.ajax.calls[0].args[0];
                 expect(options.url.endsWith("slideshow.html")).toBeTruthy();
                 expect(options.context).toBe(form);
+            });
+
+            it("Trigger inside form", function() {
+                spyOn($, "ajax");
+                var form = document.createElement("form");
+                form.action="slideshow.html";
+                var container = document.createElement("div");
+                form.appendChild(container);
+                pattern.init($(container));
+                expect($.ajax).toHaveBeenCalled();
+                var options = $.ajax.calls[0].args[0];
+                expect(options.url.endsWith("slideshow.html")).toBeTruthy();
+                expect(options.context).toBe(container);
+            });
+
+            it("Trigger not in a form", function() {
+                spyOn($, "ajax");
+                var container = document.createElement("div");
+                pattern.init($(container));
+                expect($.ajax).not.toHaveBeenCalled();
             });
         });
 
