@@ -2,7 +2,8 @@
 
 ## 1.3.1 - Unreleased
 
-- ...
+- Slideshow builder pattern: make it possible to insert the slideshow fieldset
+  in a different location than at the start of the form.
 
 
 ## 1.3.0 - Released April 5, 2013
