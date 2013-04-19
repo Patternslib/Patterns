@@ -38,6 +38,7 @@ define([
     "./pat/select-option",
     "./pat/slides",
     "./pat/slideshow-builder",
+    "./pat/validate",
     "./pat/zoom"
 ], function($, registry) {
     return registry;
