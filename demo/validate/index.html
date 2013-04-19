@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Form validation</title>
     <link rel="stylesheet" href="../../style/common.css" type="text/css">
+    <link rel="stylesheet" href="validate.css" type="text/css">
     <script data-main="../../src/autoinit" src="../../bungledeps/require.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
@@ -15,7 +16,12 @@
 
       <section class="demo">
         <h2>Demo</h2>
-        <p>...</p>
+
+        <form class="pat-validate vertical" method="get" action="#">
+          <label>Full name <input type="text" required="required"/></label>
+          <label>Age <input type="number" min="16" max="65" required="required"/></label>
+          <button>Test</button>
+        </form>
       </section>
       <section class="documentation">
         <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
@@ -23,6 +29,5 @@
     </section>
 
       <a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
-
   </body>
 </html>
