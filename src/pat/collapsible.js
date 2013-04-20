@@ -13,14 +13,15 @@ define([
     "../core/logger",
     "../core/parser",
     "../core/store",
-    "../registry"
+    "../registry",
+    "../jquery-ext"
 ], function($, inject, logger, Parser, store, registry) {
     var log = logger.getLogger("pat.collapsible"),
         parser = new Parser("collapsible");
 
     parser.add_argument("load-content");
     parser.add_argument("store", "none", ["none", "session", "local"]);
-    parser.add_argument("transition", "slide", ["none", "css", "fade", "slide"]);
+    parser.add_argument("transition", "slide", ["none", "css", "fade", "slide", "slide-horizontal"]);
     parser.add_argument("effect-duration", "fast");
     parser.add_argument("effect-easing", "swing");
     parser.add_argument("closed", false);
@@ -34,7 +35,8 @@ define([
         transitions: {
             none: {closed: "hide", open: "show"},
             fade: {closed: "fadeOut", open: "fadeIn"},
-            slide: {closed: "slideUp", open: "slideDown"}
+            slide: {closed: "slideUp", open: "slideDown"},
+            "slide-horizontal": {closed: "slideOut", open: "slideIn"}
         },
 
         init: function($el, opts) {
