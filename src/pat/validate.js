@@ -37,9 +37,12 @@ define([
         // Parsley error class handler, used to determine which element will
         // receive the status class.
         _classHandler: function(elem/*, isRadioOrCheckbox */) {
-            return $(elem).add(elem.map(function(idx, el) {
-                return utils.findLabel(el);
-            }));
+            var $result = elem;
+            for (var i=0; i<elem.length; i++) {
+                $result=$result.add(utils.findLabel(elem[i]));
+                $result=$result.add(elem.eq(i).closest("fieldset"));
+            }
+            return $result;
         },
 
         // Parsley hook to determine where error messages are inserted.
