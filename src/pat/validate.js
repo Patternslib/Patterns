@@ -23,7 +23,7 @@ define([
                     errorClass: "warning",
                     errors: {
                         classHandler: validate._classHandler,
-                        container: validate._container,
+                        container: validate._container
                     }
                 });
                 for (i=0; i<parsley_form.items.length; i++) {
@@ -36,28 +36,62 @@ define([
 
         // Parsley error class handler, used to determine which element will
         // receive the status class.
-        _classHandler: function(elem, isRadioOrCheckbox) {
-            return $(elem).add(elem.map(function(idx, el) { return utils.findLabel(el); }));
+        _classHandler: function(elem/*, isRadioOrCheckbox */) {
+            return $(elem).add(elem.map(function(idx, el) {
+                return utils.findLabel(el);
+            }));
         },
 
         // Parsley hook to determine where error messages are inserted.
-        _container: function(element, isRadioOrCheckbox) {
+        _container: function(/* element, isRadioOrCheckbox */) {
             return $();
+        },
+
+        _findErrorMessages: function($el, constraintName) {
+            var selector = "em.warning.message[data-validate-constraint="+constraintName+"]",
+                $messages = $el.siblings(selector);
+            if ($el.is("[type=radio],[type=checkbox]")) {
+                var $fieldset = $el.closest("fieldset.checklist");
+                if ($fieldset.length)
+                    $messages=$fieldset.find(selector);
+            }
+            return $messages;
         },
 
         // Parsley method to add an error to a field
         _addFieldError: function(error) {
-            for (var constraint in error) {
+            var $position = this.element,
+                strategy="after";
+
+            if (this.element.is("[type=radio],[type=checkbox]")) {
+                var $fieldset = this.element.closest("fieldset.checklist");
+                if ($fieldset.length) {
+                    $position=$fieldset;
+                    strategy="append";
+                }
+            }
+
+            for (var constraintName in error) {
+                if (validate._findErrorMessages(this.element, constraintName).length)
+                    return;
                 var $message = $("<em/>", {"class": "warning message"});
-                $message.attr("data-validate-constraint", constraint);
-                $message.text(error[constraint]);
-                $message.insertAfter(this.element);
+                $message.attr("data-validate-constraint", constraintName);
+                $message.text(error[constraintName]);
+                switch (strategy) {
+                    case "append":
+                        $message.appendTo($position);
+                        break;
+                    case "after":
+                        $message.insertAfter($position);
+                        break;
+                }
             }
         },
 
         // Parsley method to remove all error messages for a field
         _removeFieldError: function(constraintName) {
-            this.element.siblings("em.warning.message[data-validate-constraint="+constraintName+"]").remove();
+            var $messages = validate._findErrorMessages(this.element, constraintName);
+            $messages.remove();
         }
     };
 
