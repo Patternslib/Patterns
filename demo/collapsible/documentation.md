@@ -154,7 +154,7 @@ attribute. The available options are:
 | `load-content` |         | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible. |
 | `trigger` | `::first` | Selector used to identify the open/close trigger for the collapsible. |
 | `store`        | `none`  | How to remember the state of a collapsible. Must be one of `none`, `session` or `local`. |
-| `transition` | `slide` | Transition effect when opening or closing a collapsinble. Must be one of `none`, `css`, `fade` or `slide`. |
+| `transition` | `slide` | Transition effect when opening or closing a collapsinble. Must be one of `none`, `css`, `fade`, `slide` or `slide-horizontal`. |
 | `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
 | `effect-easing`  | `swing` | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
 

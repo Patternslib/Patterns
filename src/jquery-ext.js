@@ -290,6 +290,14 @@ define(["jquery"], function($) {
         return this.find('*').addBack().filter(selector);
     };
 
+    $.fn.slideIn = function(speed, easing, callback) {
+        return this.animate({width: "show"}, speed, easing, callback);
+    }
+
+    $.fn.slideOut = function(speed, easing, callback) {
+        return this.animate({width: "hide"}, speed, easing, callback);
+    }
+
     // case-insensitive :contains
     $.expr[":"].Contains = function(a, i, m) {
         return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
