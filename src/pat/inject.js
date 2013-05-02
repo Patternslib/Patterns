@@ -251,9 +251,25 @@ define([
 
                     // perform injection
                     cfg.$target.each(function() {
+                        var $src;
+
+                        // $source.clone() does not work with shived elements in IE8
+                        if (document.all && document.querySelector &&
+                            !document.addEventListener) {
+                            $src = $source.map(function() {
+                                return $(this.outerHTML)[0];
+                            });
+                        } else {
+                            $src = $source.clone();
+                        }
+
                         var $target = $(this),
-                            $src = $source.clone(),
                             $injected = cfg.$injected || $src;
+
+                        $src.findInclusive('img').on('load', function() {
+                            $(this).trigger('pat-inject-content-loaded');
+                        });
+
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
                             $injected.filter(function() {
                                 // setting data on textnode fails in IE8
@@ -425,6 +441,14 @@ define([
                     $this.attr(attrName, value);
                 }
             });
+            // XXX: IE8 changes the order of attributes in html. The following
+            // lines move data-pat-inject-rebase-src to src.
+            $page.find('[data-pat-inject-rebase-src]').each(function() {
+                var $el = $(this);
+                $el.attr('src', $el.attr('data-pat-inject-rebase-src'))
+                   .removeAttr('data-pat-inject-rebase-src');
+            });
+
             return $page.html().replace(
                     /src="" data-pat-inject-rebase-/g, ''
                 ).trim();
