@@ -7,7 +7,19 @@
 - Slideshow builder pattern: make it possible to insert the slideshow fieldset
   in a different location than at the start of the form.
 
-- Modal pattern: improve browser compatibility.
+- Packaging: Remove unneeded dependency on jquery.autosuggest.
+
+- Injection pattern:
+
+  - Fix injection of HTML5 elements in IE 8 and older.
+  - Fix the rebasing of URLs when injecting in IE 8 and older.
+  - Send a new ``pat-inject-content-laoded`` event when all images in injected
+    markup have finished loading.
+
+- Modal pattern: 
+
+  - Reposition the modal after its images have finished loading.
+  - Improve browser compatibility.
 
 
 ## 1.3.0 - Released April 5, 2013
