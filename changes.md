@@ -40,6 +40,13 @@
 
 - Add a new [gallery](demo/gallery/index.html) pattern.
 
+
+## 1.2.1 - Released April 5, 2013
+
+- Fix use of an undeclared variable in the parser could result in problems
+  in IE8. This fixes
+  [Ticket 298](https://github.com/Patternslib/Patterns/issues/298).
+
 - Fix handling of trailing semicolons in the the argument parser. This fixes
   [Ticket 295](https://github.com/Patternslib/Patterns/issues/295).
 
