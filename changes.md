@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.1 - Unreleased
+## 1.3.1 - Released May 6, 2013
 
 - Collapsible pattern: add a new `slide-horizontal` transition.
 
