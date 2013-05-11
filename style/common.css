@@ -720,21 +720,9 @@ pre {
 
 /* @group Form messages */
 
-.concise .message {
-	width: 100%;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	padding: 0;
-}
-
-.comprehensive .message {
-	width: 100%;
-}
-
-.concise .message.warning {
-	background-color: transparent;
-	color: #ff8100;
+fieldset em.message.warning {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
 }
 
 /* @end */
@@ -1041,13 +1029,7 @@ label[data-option]:after {
 /* @end */
 
 form fieldset em.message {
-	clear: left;
-	margin-bottom: 10px;
-	margin-top: 4px;
-	padding: 3px 10px;
-	color: red;
-	font-weight: bold;
-	float: left;
+
 }
 
 sup.required {
