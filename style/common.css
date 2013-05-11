@@ -1164,11 +1164,6 @@ fieldset {
 
 /* @group Fieldset vertical */
 
-.vertical fieldset .legend {
-	font-weight: normal;
-	font-style: normal;
-}
-
 .vertical label,
 .vertical .checklist label,
 .vertical fieldset .legend,
