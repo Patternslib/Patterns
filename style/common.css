@@ -1206,6 +1206,7 @@ fieldset {
 }
 
 .vertical label,
+.vertical .checklist label,
 .vertical fieldset .legend,
 .vertical fieldset legend {
 	font-weight: bold;
