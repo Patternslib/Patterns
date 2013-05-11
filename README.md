@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/Patternslib/Patterns.png?branch=master)](https://travis-ci.org/Patternslib/Patterns)
-
 # Patterns
 
 Patterns is a JavaScript library that enables designers to build rich
