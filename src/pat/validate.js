@@ -51,7 +51,7 @@ define([
         },
 
         _findErrorMessages: function($el, constraintName) {
-            var selector = "em.warning.message[data-validate-constraint="+constraintName+"]",
+            var selector = "em.validation.message[data-validate-constraint="+constraintName+"]",
                 $messages = $el.siblings(selector);
             if ($el.is("[type=radio],[type=checkbox]")) {
                 var $fieldset = $el.closest("fieldset.checklist");
@@ -77,7 +77,7 @@ define([
             for (var constraintName in error) {
                 if (validate._findErrorMessages(this.element, constraintName).length)
                     return;
-                var $message = $("<em/>", {"class": "warning message"});
+                var $message = $("<em/>", {"class": "validation warning message"});
                 $message.attr("data-validate-constraint", constraintName);
                 $message.text(error[constraintName]);
                 switch (strategy) {
