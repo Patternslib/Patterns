@@ -719,11 +719,17 @@ pre {
 
 /* @group Form messages */
 
-form em.message.warning {
+form em.validation.message {
 	margin-top: 0.5em;
 	margin-bottom: 1em;
 	padding-top: 2px;
 	padding-bottom: 2px;
+	box-sizing: border-box;
+}
+
+form.horizontal label em.validation.message {
+	clear: both;
+	width: 185%;
 }
 
 /* @end */
@@ -914,6 +920,8 @@ input[type="text"],
 input[type="password"],
 input[type="search"],
 input[type="email"],
+input[type="number"],
+input[type="date"],
 textarea {
 	-webkit-appearance: none;
 	vertical-align: baseline;
@@ -926,15 +934,13 @@ textarea {
 	box-sizing: border-box;
 	padding-top: 0;
 	padding-bottom: 0;
-	margin-right: 0;
-	margin-left: 0;
 	user-select: text;
 	max-width: 100%;
 	font: 1em/1.5 Verdana, "Lucida Grande", Lucida, sans-serif;
 	background-color: rgba(0,0,0,0.05);
-	outline: 1px solid rgba(0,0,0,0.2);
-	border-style: none;
+	border: 1px solid rgba(0,0,0,0.2);
 	color: inherit;
+	margin: -1px 0;
 }
 
 input.block,textarea.block {
@@ -945,38 +951,14 @@ input[type="text"]:disabled,
 input[type="password"]:disabled,
 input[type="search"]:disabled,
 input[type="email"]:disabled,
+input[type="date"]:disabled,
+input[type="number"]:disabled,
 textarea:disabled {
 	outline: none;
 	box-shadow: none;
 	padding: 0;
 	background-color: transparent;
 	color: rgba(0,0,0,0.7);
-}
-
-input[type="text"].dark,
-input[type="password"].dark,
-input[type="search"].dark,
-textarea.dark,
-.application-portal .header input[type="text"],
-.application-portal .header input[type="password"],
-.application-portal .header input[type="search"],
-.application-portal .header textarea {
-	border-radius: 20px;
-	background-color: #1f2028;
-	color: white;
-	border: 1px solid #474954;
-	box-shadow: inset 0 0 4px black;
-}
-
-input[type="text"].dark:focus,
-input[type="password"].dark:focus,
-input[type="search"].dark:focus,
-textarea.dark:focus,
-.application-portal .header input[type="text"]:focus,
-.application-portal .header input[type="password"]:focus,
-.application-portal .header input[type="search"]:focus,
-.application-portal .header textarea:focus {
-	border-color: silver;
 }
 
 .lt-ie9 input[type="text"],
@@ -1125,7 +1107,8 @@ fieldset {
 
 /* @group Multiple elements */
 
-.horizontal fieldset.group {
+.horizontal fieldset.group,
+.horizontal fieldset.checklist {
 	width: 65%;
 	clear: left;
 	border-style: none;
@@ -1137,7 +1120,8 @@ fieldset {
 	padding-top: 0;
 }
 
-.horizontal fieldset.group legend {
+.horizontal fieldset.group legend,
+.horizontal fieldset.checklist legend {
 	position: absolute;
 	left: 0;
 	font-weight: normal;
@@ -1154,11 +1138,8 @@ fieldset {
 	float: none;
 }
 
-.horizontal fieldset.group:not(.checklist) label {
-	
-}
-
-.horizontal fieldset.group .legend {
+.horizontal fieldset.group .legend,
+.horizontal fieldset.checklist .legend {
 	width: 48% !important;
 	display: inline;
 	text-align: left;
