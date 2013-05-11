@@ -659,7 +659,6 @@ pre {
 	margin-bottom: 20px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.20);
 	display: block;
-	border-radius: 4px
 }
 
 .message *:last-child {
@@ -720,21 +719,11 @@ pre {
 
 /* @group Form messages */
 
-.concise .message {
-	width: 100%;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	padding: 0;
-}
-
-.comprehensive .message {
-	width: 100%;
-}
-
-.concise .message.warning {
-	background-color: transparent;
-	color: #ff8100;
+form em.message.warning {
+	margin-top: 0.5em;
+	margin-bottom: 1em;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 /* @end */
@@ -1041,13 +1030,7 @@ label[data-option]:after {
 /* @end */
 
 form fieldset em.message {
-	clear: left;
-	margin-bottom: 10px;
-	margin-top: 4px;
-	padding: 3px 10px;
-	color: red;
-	font-weight: bold;
-	float: left;
+
 }
 
 sup.required {
@@ -1206,6 +1189,7 @@ fieldset {
 }
 
 .vertical label,
+.vertical .checklist label,
 .vertical fieldset .legend,
 .vertical fieldset legend {
 	font-weight: bold;
