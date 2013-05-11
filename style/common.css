@@ -659,7 +659,6 @@ pre {
 	margin-bottom: 20px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.20);
 	display: block;
-	border-radius: 4px
 }
 
 .message *:last-child {
@@ -720,9 +719,11 @@ pre {
 
 /* @group Form messages */
 
-fieldset em.message.warning {
+form em.message.warning {
 	margin-top: 0.5em;
-	margin-bottom: 0.5em;
+	margin-bottom: 1em;
+	padding-top: 2px;
+	padding-bottom: 2px;
 }
 
 /* @end */
