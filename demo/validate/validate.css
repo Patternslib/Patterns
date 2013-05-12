@@ -1,0 +1,9 @@
+@import url("../checklist/checklist.css");
+
+label.valid,fieldset.valid {
+    background-color: #f5fff5;
+}
+
+label.warning,fieldset.warning {
+    background-color: #ffefe6;
+}
