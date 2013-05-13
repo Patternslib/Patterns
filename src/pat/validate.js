@@ -17,7 +17,7 @@ define([
             return $el.each(function() {
                 this.noValidate=true;
                 var parsley_form, field, i;
-                
+
                 parsley_form=$(this).parsley({
                     successClass: "valid",
                     errorClass: "warning",
@@ -31,6 +31,8 @@ define([
                     field.addError=validate._addFieldError;
                     field.removeError=validate._removeFieldError;
                 }
+                $el.on('pat-ajax-before.pat-validate', validate.onPreSubmit)
+                   .on('pat-rest-before.pat-validate', validate.onPreSubmit);
             });
         },
 
@@ -95,6 +97,11 @@ define([
         _removeFieldError: function(constraintName) {
             var $messages = validate._findErrorMessages(this.element, constraintName);
             $messages.remove();
+        },
+
+        onPreSubmit: function(event, veto) {
+            veto.veto |= !$(event.target).parsley('isValid');
+            $(event.target).parsley('validate');
         }
     };
 
