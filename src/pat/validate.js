@@ -17,7 +17,7 @@ define([
             return $el.each(function() {
                 this.noValidate=true;
                 var parsley_form, field, i;
-                
+
                 parsley_form=$(this).parsley({
                     trigger: "change keyup",
                     successClass: "valid",
@@ -32,6 +32,8 @@ define([
                     field.addError=validate._addFieldError;
                     field.removeError=validate._removeFieldError;
                 }
+                $(this).on('pat-ajax-before.pat-validate',
+                           validate.onPreSubmit);
             });
         },
 
@@ -98,6 +100,11 @@ define([
             var $messages = validate._findErrorMessages(this.element, constraintName);
             $messages.parent().trigger("pat-update", {pattern: "validate"});
             $messages.remove();
+        },
+
+        onPreSubmit: function(event, veto) {
+            veto.veto |= !$(event.target).parsley('isValid');
+            $(event.target).parsley('validate');
         }
     };
 
