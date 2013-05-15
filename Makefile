@@ -8,8 +8,9 @@ PHANTOMJS	?= node_modules/.bin/phantomjs
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
 
-JSHINTEXCEPTIONS = src/lib/depends_parse.js \
-		   src/lib/dependshandler.js \
+GENERATED	= src/lib/depends_parse.js
+
+JSHINTEXCEPTIONS = $(GENERATED) \
 		   src/lib/dependshandler.js \
 		   src/lib/htmlparser.js
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
@@ -29,10 +30,10 @@ bungledeps: package.json
 
 bundles: check-modules $(BUNDLES)
 
-bundles/patterns.js: $(SOURCES) bungledeps package.json
+bundles/patterns.js: $(SOURCES) $(GENERATED) bungledeps package.json
 	./build.js -n
 
-bundles/patterns.min.js: $(SOURCES) bungledeps package.json
+bundles/patterns.min.js: $(SOURCES) $(GENERATED) bungledeps package.json
 	./build.js
 
 
@@ -70,7 +71,7 @@ jshint:
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 
 check:: check-modules
-check-modules: bungledeps
+check-modules: bungledeps $(GENERATED)
 	@echo Running checks on modules
 	@echo =========================
 	$(MAKE) $(MFLAGS) -C tests TestRunner-modules.html TestRunner-modules.js
@@ -101,5 +102,5 @@ clean:
 	$(MAKE) $(MFLAGS) -C tests clean
 	rm -f $(BUNDLES)
 
-.PHONY: all bundle bundles bundles-all-tags bungledeps jshint check check-bundles check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
+.PHONY: all bundle bundles bundles-all-tags jshint check check-bundles check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
 
