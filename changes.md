@@ -2,6 +2,9 @@
 
 ## 1.4 - Unreleased
 
+- Add new [validate pattern](demo/validate/index.html). This fixes
+  [Ticket 68](https://github.com/Patternslib/Patterns/issues/68).
+
 - Add a new internal `pat-update` event which is triggered for elements that
   are changed.
 
