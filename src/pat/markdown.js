@@ -47,7 +47,7 @@ define([
             // Swap back in all the special characters we've hidden.
             text = text.replace(/~E(\d+)E/g,
                 function (wholeMatch, m1) {
-                    var charCodeToReplace = parseInt(m1);
+                    var charCodeToReplace = parseInt(m1, 10);
                     return String.fromCharCode(charCodeToReplace);
                 }
             );
@@ -60,7 +60,6 @@ define([
         },
 
         _unstash: function(text, cache) {
-		text
             return text.replace(/<p>~PM(\d+)PM<\/p>/g, function(wholeMatch, m1) {
                 return cache[parseInt(m1, 10)];
             });
