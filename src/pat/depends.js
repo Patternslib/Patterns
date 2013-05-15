@@ -116,7 +116,10 @@ define([
             var onComplete = function() {
                 $slave
                     .removeClass("in-progress")
-                    .addClass(new_state ? "visible" : "hidden");
+                    .addClass(new_state ? "visible" : "hidden")
+                    .trigger("pat-update",
+                            {pattern: "depends",
+                             transition: "complete"});
             };
             if (!duration) {
                 if (options.transition!=="css")
@@ -124,7 +127,11 @@ define([
                 onComplete();
             } else {
                 var t = depends.transitions[options.transition];
-                $slave.addClass("in-progress");
+                $slave
+                    .addClass("in-progress")
+                    .trigger("pat-update",
+                            {pattern: "depends",
+                             transition: "start"});
                 $slave[new_state ? t.show : t.hide]({
                     duration: duration,
                     easing: options.effect.easing,

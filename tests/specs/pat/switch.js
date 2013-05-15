@@ -75,6 +75,14 @@ define(["pat/switch"], function(pattern) {
                 pattern._update("#lab div", null, "icon-alert");
                 expect($("#lab div").attr("class")).toBe("icon-alert");
             });
+
+            it("Send pat-update event", function() {
+                $("#lab").html("<div id='victim' class='always'/>");
+                spyOn($.fn, "trigger");
+                pattern._update("#lab div", null, "icon-alert");
+                expect($.fn.trigger).toHaveBeenCalledWith(
+                    "pat-update", {pattern: "switch"});
+            });
         });
 
         describe("jQuery plugin usage", function() {

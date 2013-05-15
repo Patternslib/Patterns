@@ -59,6 +59,13 @@ define(["pat/toggle"], function(pattern) {
                 expect($("#two").hasClass("on")).toBe(true);
             });
 
+            it("Send pat-update event", function() {
+                $("#lab").html("<div id='victim' class='always'/>");
+                spyOn($.fn, "trigger");
+                pattern._update("#victim", "class", "check on", false);
+                expect($.fn.trigger).toHaveBeenCalledWith(
+                    "pat-update", {pattern: "toggle"});
+            });
         });
     });
 
