@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4 - Unreleased
+
+- Add a new internal `pat-update` event which is triggered for elements that
+  are changed.
+
+
 ## 1.3.1 - Released May 6, 2013
 
 - Collapsible pattern: add a new `slide-horizontal` transition.

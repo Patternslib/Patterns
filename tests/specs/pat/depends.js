@@ -97,6 +97,16 @@ define(["pat/depends"], function(pattern) {
                 expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["visible"]);
             });
 
+            it("Single pat-update event without a transition", function() {
+                $("#lab").append("<div style=\"display: none\"/>");
+                var $slave = $("#lab div");
+                spyOn($.fn, "trigger");
+                pattern._hide_or_show($slave, true, {transition: "none", effect: {duration: "fast", easing: "swing"}});
+                expect($.fn.trigger.calls.length).toEqual(1);
+                expect($.fn.trigger).toHaveBeenCalledWith(
+                    "pat-update", {pattern: "depends", transition: "complete"});
+            });
+
             it("Fadeout with 0 duration", function() {
                 $("#lab").append("<div/>");
                 var $slave = $("#lab div");
@@ -111,6 +121,18 @@ define(["pat/depends"], function(pattern) {
                 pattern._hide_or_show($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}});
                 expect($slave[0].style.display).toBe("none");
                 expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
+            });
+
+            it("pat-update event with a transition", function() {
+                $("#lab").append("<div/>");
+                var $slave = $("#lab div");
+                spyOn($.fn, "trigger");
+                pattern._hide_or_show($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}});
+                expect($.fn.trigger.calls.length).toEqual(2);
+                expect($.fn.trigger).toHaveBeenCalledWith(
+                    "pat-update", {pattern: "depends", transition: "start"});
+                expect($.fn.trigger).toHaveBeenCalledWith(
+                    "pat-update", {pattern: "depends", transition: "complete"});
             });
 
             it("CSS-only hide", function() {

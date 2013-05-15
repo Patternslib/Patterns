@@ -123,6 +123,7 @@ define([
             }
             if (add)
                 $targets.addClass(add);
+            $targets.trigger("pat-update", {pattern: "switch"});
         }
     };
 
