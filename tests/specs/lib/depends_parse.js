@@ -63,6 +63,24 @@ define(["lib/depends_parse"], function(parser) {
                                      operator: "=",
                                      value: "bær"});
             });
+
+            // Currently not usable since the parser does not allow this
+            it("Single quoted value", function() {
+                var ast = parser.parse("foo='bar buz'");
+                expect(ast).toEqual({type: "comparison",
+                                     input: "foo",
+                                     operator: "=",
+                                     value: "bar buz"});
+            });
+
+            // Currently not usable since the parser does not allow this
+            it("Double quoted value", function() {
+                var ast = parser.parse("foo=\"bar buz\"");
+                expect(ast).toEqual({type: "comparison",
+                                     input: "foo",
+                                     operator: "=",
+                                     value: "bar buz"});
+            });
         });
 
         describe("Expressions", function() {

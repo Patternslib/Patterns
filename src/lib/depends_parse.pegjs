@@ -66,20 +66,22 @@ identifier "input name"
   }
 
 value "value"
-  = chars:IdentifierPart+ {
-      return chars.join("");
-  }
+  = chars:IdentifierPart+ { return chars.join(""); }
+  / StringLiteral
 
 number "number"
   = digits:[0-9]+ {
       return parseInt(digits.join(""), 10);
   }
+
 _
   = (WhiteSpace)+ 
 
 __ 
   = (WhiteSpace)*
 
+SourceCharacter
+  = .
 
 WhiteSpace "whitespace"
   = [\t\v\f \u00A0\uFEFF]
@@ -95,6 +97,71 @@ IdentifierPart
   / UnicodeConnectorPunctuation
   / "\u200C" { return "\u200C"; } // zero-width non-joiner
   / "\u200D" { return "\u200D"; } // zero-width joiner
+
+StringLiteral "string"
+  = parts:('"' DoubleStringCharacters? '"' / "'" SingleStringCharacters? "'") {
+      return parts[1];
+    }
+
+DoubleStringCharacters
+  = chars:DoubleStringCharacter+ { return chars.join(""); }
+
+SingleStringCharacters
+  = chars:SingleStringCharacter+ { return chars.join(""); }
+
+DoubleStringCharacter
+  = !('"' / "\\") char_:SourceCharacter { return char_;     }
+  / "\\" sequence:EscapeSequence        { return sequence;  }
+
+SingleStringCharacter
+  = !("'" / "\\") char_:SourceCharacter { return char_;     }
+  / "\\" sequence:EscapeSequence        { return sequence;  }
+
+EscapeSequence
+  = CharacterEscapeSequence
+  / "0" !DecimalDigit { return "\0"; }
+  / HexEscapeSequence
+  / UnicodeEscapeSequence
+
+CharacterEscapeSequence
+  = SingleEscapeCharacter
+  / NonEscapeCharacter
+
+SingleEscapeCharacter
+  = char_:['"\\bfnrtv] {
+      return char_
+        .replace("b", "\b")
+        .replace("f", "\f")
+        .replace("n", "\n")
+        .replace("r", "\r")
+        .replace("t", "\t")
+        .replace("v", "\x0B") // IE does not recognize "\v".
+    }
+
+NonEscapeCharacter
+  = (!EscapeCharacter) char_:SourceCharacter { return char_; }
+
+EscapeCharacter
+  = SingleEscapeCharacter
+  / DecimalDigit
+  / "x"
+  / "u"
+
+HexEscapeSequence
+  = "x" digits:(HexDigit HexDigit) {
+      return String.fromCharCode(parseInt("0x" + digits));
+    }
+
+UnicodeEscapeSequence
+  = "u" digits:(HexDigit HexDigit HexDigit HexDigit) {
+      return String.fromCharCode(parseInt("0x" + digits));
+    }
+
+DecimalDigit
+  = [0-9]
+
+HexDigit
+  = [0-9a-fA-F]
 
 UnicodeLetter
   = Lu
