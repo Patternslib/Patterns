@@ -8,8 +8,13 @@
 - Add a new internal `pat-update` event which is triggered for elements that
   are changed.
 
-- Depends pattern: support non-ASCII variable names and values. This fixes
-  [Ticket 304](https://github.com/Patternslib/Patterns/issues/304).
+- Depends pattern:
+
+  - Support non-ASCII variable names and values. This fixes [Ticket
+    304](https://github.com/Patternslib/Patterns/issues/304).
+
+  - Do not include generated parser in source tree. Instead the make rules
+    have been improved to generate/update the parser as needed.
 
 
 ## 1.3.1 - Released May 6, 2013
