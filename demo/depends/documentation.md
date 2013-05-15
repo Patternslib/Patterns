@@ -74,7 +74,7 @@ Here are some examples:
     <p class="pat-depends" data-pat-depends="condition: hidden">
         Hidden items will be included.
     </p>
-    
+
     <p class="pat-depends" data-pat-depends="condition: not hidden">
         Not showing hidden items.
     </p>
@@ -109,6 +109,14 @@ complex example which demonstrates the use of `and`:
 
 This pizza menu will show a warning if the user selects a vegetarian
 pizza but then also adds extra bacon to it.
+
+If you want test with a value containing whitespace you will need to quote the
+value. This can be done using either single or double quotes.
+
+    <p class="pat-depends" data-pat-depends="condition: visible = 'no elements'">
+        Hidden items will be included.
+    </p>
+
 
 Actions
 -------

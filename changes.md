@@ -2,6 +2,9 @@
 
 ## 1.4 - Unreleased
 
+- The argument parser has been updated to support quoted arguments in shorthand
+  notation.
+
 - Add new [validate pattern](demo/validate/index.html). This fixes
   [Ticket 68](https://github.com/Patternslib/Patterns/issues/68).
 
@@ -22,6 +25,9 @@
 
   - Do not include generated parser in source tree. Instead the make rules
     have been improved to generate/update the parser as needed.
+
+  - Support quoting of values. This makes it possible to test for values
+    containing whitespace.
 
 
 ## 1.3.1 - Released May 6, 2013

@@ -64,7 +64,6 @@ define(["lib/depends_parse"], function(parser) {
                                      value: "bær"});
             });
 
-            // Currently not usable since the parser does not allow this
             it("Single quoted value", function() {
                 var ast = parser.parse("foo='bar buz'");
                 expect(ast).toEqual({type: "comparison",
@@ -73,7 +72,6 @@ define(["lib/depends_parse"], function(parser) {
                                      value: "bar buz"});
             });
 
-            // Currently not usable since the parser does not allow this
             it("Double quoted value", function() {
                 var ast = parser.parse("foo=\"bar buz\"");
                 expect(ast).toEqual({type: "comparison",
