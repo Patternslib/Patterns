@@ -101,5 +101,5 @@ clean:
 	$(MAKE) $(MFLAGS) -C tests clean
 	rm -f $(BUNDLES)
 
-.PHONY: all bundle bundles bundles-all-tags jshint check check-bundles check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
+.PHONY: all bundle bundles bundles-all-tags bungledeps jshint check check-bundles check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
 
