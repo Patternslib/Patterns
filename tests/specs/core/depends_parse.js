@@ -47,6 +47,22 @@ define(["lib/depends_parse"], function(parser) {
                                      operator: "=",
                                      value: "15"});
             });
+
+            it("Unicode value", function() {
+                var ast = parser.parse("føø=bar");
+                expect(ast).toEqual({type: "comparison",
+                                     input: "føø",
+                                     operator: "=",
+                                     value: "bar"});
+            });
+
+            it("Unicode value", function() {
+                var ast = parser.parse("foo=bær");
+                expect(ast).toEqual({type: "comparison",
+                                     input: "foo",
+                                     operator: "=",
+                                     value: "bær"});
+            });
         });
 
         describe("Expressions", function() {
