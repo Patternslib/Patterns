@@ -8,6 +8,10 @@
 - Add a new internal `pat-update` event which is triggered for elements that
   are changed.
 
+- Markdown pattern: correct internal escaping behaviour which could cause
+  characters to show up in unexpected escaped form in literal blocks. This
+  fixes [Ticket 306](https://github.com/Patternslib/Patterns/issues/306).
+
 - Depends pattern:
 
   - Support non-ASCII variable names and values. This fixes [Ticket
