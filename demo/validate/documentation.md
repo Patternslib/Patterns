@@ -26,6 +26,8 @@ This pattern follows the HTML 5 form validation syntax as much as possible.
       <label>City <input type="text" required="required"/></label>
     </fieldset>
 
+In addition the extra validators from Parsley are support. You can find a complete list of supported
+validators at the [Parseley validators documentation](http://parsleyjs.org/documentation.html#validators).
 ### Error messages
 
 Error messages are inserted into the DOM as `em` elements with a `message warning` class. For most input elements error messages are inserted immediately after the input element. In addition both the input element and its label will get an `warning` class.
