@@ -186,10 +186,17 @@ define([
                         .addClass("collapsible-" + to_cls);
                 $el
                     .removeClass(from_cls)
-                    .addClass(to_cls);
+                    .addClass(to_cls)
+                    .trigger("pat-update",
+                            {pattern: "collapsible",
+                             transition: "complete"});
             } else {
                 var t = _.transitions[options.transition];
-                $el.addClass("in-progress");
+                $el
+                    .addClass("in-progress")
+                    .trigger("pat-update",
+                            {pattern: "collapsible",
+                             transition: "start"});
                 options.$trigger.addClass("collapsible-in-progress");
                 options.$panel[t[to_cls]](duration, options.effect.easing, function() {
                     options.$trigger
@@ -199,7 +206,10 @@ define([
                     $el
                         .removeClass(from_cls)
                         .removeClass("in-progress")
-                        .addClass(to_cls);
+                        .addClass(to_cls)
+                        .trigger("pat-update",
+                            {pattern: "collapsible",
+                             transition: "complete"});
                 });
             }
         }

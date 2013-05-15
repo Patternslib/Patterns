@@ -134,6 +134,7 @@ define([
                     }
                 }
             }
+            $targets.trigger("pat-update", {pattern: "toggle"});
         }
     };
 
