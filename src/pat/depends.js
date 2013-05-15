@@ -41,7 +41,7 @@ define([
                 try {
                     handler=new DependsHandler($slave, options.condition);
                 } catch (e) {
-                    log.error("Invalid condition: " + e.message);
+                    log.error("Invalid condition: " + e.message, slave);
                     return;
                 }
 

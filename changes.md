@@ -14,6 +14,9 @@
 
 - Depends pattern:
 
+  - Include element with invalid dependency in error log messages. This makes
+    it a lot simpler to find the source of errors.
+
   - Support non-ASCII variable names and values. This fixes [Ticket
     304](https://github.com/Patternslib/Patterns/issues/304).
 
