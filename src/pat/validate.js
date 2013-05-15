@@ -89,11 +89,13 @@ define([
                         break;
                 }
             }
+            $position.trigger("pat-update", {pattern: "validate"});
         },
 
         // Parsley method to remove all error messages for a field
         _removeFieldError: function(constraintName) {
             var $messages = validate._findErrorMessages(this.element, constraintName);
+            $messages.parent().trigger("pat-update", {pattern: "validate"});
             $messages.remove();
         }
     };
