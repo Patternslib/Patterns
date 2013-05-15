@@ -22,6 +22,7 @@ define([
     ArgumentParser.prototype = {
         group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
         named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
+        token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
         _camelCase: function(str) {
             return str.replace(/\-([a-z])/g, function(_, p1){
@@ -166,6 +167,18 @@ define([
             opts[name]=value;
         },
 
+        _split: function(text) {
+            var tokens = [];
+
+            text.replace(this.token_pattern, function(match, quoted, _, simple) {
+                if (quoted)
+                    tokens.push(quoted);
+                else if (simple)
+                    tokens.push(simple);
+            });
+            return tokens;
+        },
+
         _parseExtendedNotation: function(parameter) {
             var opts = {}, i,
                 parts, matches;
@@ -202,7 +215,7 @@ define([
         },
 
         _parseShorthandNotation: function(parameter) {
-            var parts = parameter.split(/\s+/),
+            var parts = this._split(parameter),
                 opts = {},
                 positional = true,
                 i, part, flag, sense;

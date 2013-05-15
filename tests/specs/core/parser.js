@@ -20,7 +20,6 @@ define(["core/parser"], function(ArgumentParser) {
 
 
     describe("Core / Parser", function() {
-
         describe("add_argument", function() {
             it("No group if prefix only used once", function() {
                 var parser = new ArgumentParser();
@@ -109,6 +108,13 @@ define(["core/parser"], function(ArgumentParser) {
                     expect(opts.flavour).toBe("bacon");
                 });
 
+                it("Double quoted argument", function() {
+                    var parser=new ArgumentParser();
+                    parser.add_argument("selector");
+                    var opts = parser._parse("\"#root .MyClass\"");
+                    expect(opts.selector).toBe("\"#root .MyClass\"");
+                });
+
                 it("Mix it all up", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("delay");
@@ -136,6 +142,20 @@ define(["core/parser"], function(ArgumentParser) {
                     parser.add_argument("selector");
                     var opts = parser._parse("selector: nav:first");
                     expect(opts.selector).toBe("nav:first");
+                });
+
+                it("Value with whitespace", function() {
+                    var parser=new ArgumentParser();
+                    parser.add_argument("selector");
+                    var opts = parser._parse("selector: #root .MyClass");
+                    expect(opts.selector).toBe("#root .MyClass");
+                });
+
+                it("Preserve quotes", function() {
+                    var parser=new ArgumentParser();
+                    parser.add_argument("selector");
+                    var opts = parser._parse("selector: \"#root .MyClass\"");
+                    expect(opts.selector).toBe("\"#root .MyClass\"");
                 });
 
                 it("Multiple arguments", function() {
@@ -477,7 +497,6 @@ define(["core/parser"], function(ArgumentParser) {
                     expect(parser._coerce("value", 15)).toBe("15");
                 });
             });
-
         });
 
         describe("_set", function() {
@@ -538,6 +557,34 @@ define(["core/parser"], function(ArgumentParser) {
                 });
             });
         });
+
+        describe("_split", function() {
+            it("Single simple token", function() {
+                var parser=new ArgumentParser("mypattern");
+                expect(parser._split("simple")).toEqual(["simple"]);
+            });
+
+            it("Multiple simple token", function() {
+                var parser=new ArgumentParser("mypattern");
+                expect(parser._split("one two three")).toEqual(["one", "two", "three"]);
+            });
+
+            it("Single quoted value", function() {
+                var parser=new ArgumentParser("mypattern");
+                expect(parser._split("'simple value'")).toEqual(["'simple value'"]);
+            });
+
+            it("Double quoted value", function() {
+                var parser=new ArgumentParser("mypattern");
+                expect(parser._split("\"simple value\"")).toEqual(["\"simple value\""]);
+            });
+
+            it("Quoted and simple tokens", function() {
+                var parser=new ArgumentParser("mypattern");
+                expect(parser._split("another 'simple value'")).toEqual(["another", "'simple value'"]);
+            });
+        });
+
 
         describe("_cleanupOptions", function() {
             describe("Variable references", function() {
