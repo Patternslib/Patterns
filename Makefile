@@ -16,7 +16,7 @@ JSHINTEXCEPTIONS = $(GENERATED) \
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 
-all:: $(BUNDLES)
+all:: $(BUNDLES) $(GENERATED)
 
 # Installation of dependencies:
 
