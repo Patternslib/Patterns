@@ -86,6 +86,11 @@ fi
     node_modules/.bin/bungle install
 }
 
+if [ ! -f src/lib/depends_parse.js -o src/lib/depends_parse.js -ot src/lib/depends_parse.pegjs ] ; then
+	node_modules/.bin/pegjs src/lib/depends_parse.pegjs
+	sed -i~ -e '1s/.*/define(function() {/' -e '$s/()//' src/lib/depends_parse.js || rm -f src/lib/depends_parse.js
+fi
+
 if [ $? == 0 ]; then
     echo
     echo "All done \o/"
