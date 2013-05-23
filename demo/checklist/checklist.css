@@ -127,10 +127,10 @@ label.checkbox:before {
 	color: white;
 }
 
-.checklist .checked > a ,
+/*.checklist .checked > a ,
 .checklist .checked > select {
 	color: white;
-}
+}*/
 
 .checklist label input[type="checkbox"],
 form.concise fieldset.comprehensive.checklist label input[type="checkbox"] {
