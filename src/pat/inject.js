@@ -73,7 +73,8 @@ define([
                 if ($el.is("a"))
                     $el.on("click.pat-inject", _.onClick);
                 else if ($el.is("form"))
-                    $el.on("submit.pat-inject", _.onSubmit);
+                    $el.on("submit.pat-inject", _.onSubmit)
+                       .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit);
                 break;
             case "autoload":
                 _.onClick.apply($el[0], []);
