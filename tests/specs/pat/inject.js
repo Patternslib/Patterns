@@ -352,6 +352,19 @@ define(["pat/inject", "utils"], function(pattern, utils) {
                     expect($.ajax).toHaveBeenCalled();
                     expect($.ajax.mostRecentCall.args[0].data).toContain("param=somevalue");
                 });
+
+                it("pass submit button value in ajax call as data", function() {
+                    var $submit = $("<input type=\"submit\" name=\"submit\" value=\"label\" />");
+
+                    $form.attr("method", "post");
+                    $form.append($submit);
+
+                    pattern.init($form);
+                    $submit.trigger("click");
+
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.mostRecentCall.args[0].data).toContain("submit=label");
+                });
             });
         });
     });
