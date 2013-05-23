@@ -86,6 +86,7 @@ define([
                     success: onSuccess
                 };
 
+            $el.removeData('pat-ajax.clicked-data');
             log.debug('request:', args, $el[0]);
             if ($el.is('form')) {
                 $el.ajaxSubmit(args);
