@@ -8,7 +8,10 @@ define([
     'jquery',
     './logger'
 ], function($, logger) {
-    function ArgumentParser(name) {
+    function ArgumentParser(name, opts) {
+        opts = opts || {};
+        this.inherit = typeof opts.inherit === "undefined" ?
+            true : opts.inherit;
         this.order = [];
         this.parameters = {};
         this.attribute = "data-pat-" + name;
@@ -333,11 +336,12 @@ define([
 
             var stack = [[this._defaults($el)]];
 
-            var $parents = $el.parents().andSelf(),
+            var $possible_config_providers = this.inherit ?
+                    $el.parents().andSelf() : $el,
                 final_length = 1,
                 i, data, frame;
-            for (i=0; i<$parents.length; i++) {
-                data = $parents.eq(i).attr(this.attribute);
+            for (i=0; i<$possible_config_providers.length; i++) {
+                data = $possible_config_providers.eq(i).attr(this.attribute);
                 if (data) {
                     var _parse = this._parse.bind(this); // Needed to fix binding in map call
                     if (data.match(/&&/))
