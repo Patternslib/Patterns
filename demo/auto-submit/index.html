@@ -16,7 +16,7 @@
 			<section class="demo">
 				<h2>Demo</h2>
 				<form action="pattern-test-response.html" method="get" data-pat-inject="target: #main-content" class="concise pat-inject">
-					<fieldset class="pat-autosubmit">
+					<fieldset class="horizontal pat-autosubmit">
 						<label>
 							Take your pick
 							<select name="mySelect">
@@ -28,14 +28,13 @@
 								</option>
 							</select>
 						</label>
-						<label><input type="checkbox" name="myCheckbox" /> My checkbox</label>
-						<fieldset class="comprehensive check-list">
+						<fieldset class="group checklist">
 							<legend>We like options</legend>
 							<label><input type="checkbox" name="cream" /> Cream</label>
 							<label><input type="checkbox" name="syrup" /> Syrup</label>
 						</fieldset>
 						<label><input type="file" name="myFile" /> Upload a file</label>
-						<fieldset class="comprehensive radio-list">
+						<fieldset class="group checklist radio">
 							<legend>Choose your flavour</legend>
 							<label><input type="radio" name="radio" /> Strawberry</label>
 							<label><input type="radio" name="radio" /> Banana</label>
