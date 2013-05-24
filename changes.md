@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.1 - Unreleased
+
+- ...
+
+
 ## 1.4.0 - Released May 24, 2013
 
 - Include value of used submit button when using forms for injection. This
