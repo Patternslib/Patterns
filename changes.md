@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4 - Unreleased
+## 1.4.0 - Released May 24, 2013
 
 - Include value of used submit button when using forms for injection. This
   fixes [Ticket 305](https://github.com/Patternslib/Patterns/issues/305).
