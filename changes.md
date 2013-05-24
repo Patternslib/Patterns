@@ -2,6 +2,9 @@
 
 ## 1.4 - Unreleased
 
+- Include value of used submit button when using forms for injection. This
+  fixes [Ticket 305](https://github.com/Patternslib/Patterns/issues/305).
+
 - The argument parser has been updated to support quoted arguments in shorthand
   notation.
 
