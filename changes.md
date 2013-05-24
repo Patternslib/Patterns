@@ -8,27 +8,27 @@
 ## 1.4.0 - Released May 24, 2013
 
 - Include value of used submit button when using forms for injection. This
-  fixes [Ticket 305](https://github.com/Patternslib/Patterns/issues/305).
+  fixes [ticket 305](https://github.com/Patternslib/Patterns/issues/305).
 
 - The argument parser has been updated to support quoted arguments in shorthand
   notation.
 
 - Add new [validate pattern](demo/validate/index.html). This fixes
-  [Ticket 68](https://github.com/Patternslib/Patterns/issues/68).
+  [ticket 68](https://github.com/Patternslib/Patterns/issues/68).
 
 - Add a new internal `pat-update` event which is triggered for elements that
   are changed.
 
 - Markdown pattern: correct internal escaping behaviour which could cause
   characters to show up in unexpected escaped form in literal blocks. This
-  fixes [Ticket 306](https://github.com/Patternslib/Patterns/issues/306).
+  fixes [ticket 306](https://github.com/Patternslib/Patterns/issues/306).
 
 - Depends pattern:
 
   - Include element with invalid dependency in error log messages. This makes
     it a lot simpler to find the source of errors.
 
-  - Support non-ASCII variable names and values. This fixes [Ticket
+  - Support non-ASCII variable names and values. This fixes [ticket
     304](https://github.com/Patternslib/Patterns/issues/304).
 
   - Do not include generated parser in source tree. Instead the make rules
@@ -64,12 +64,12 @@
 
 - Fix use of an undeclared variable in the parser which could result in
   problems in IE8. This fixes
-  [Ticket 298](https://github.com/Patternslib/Patterns/issues/298).
+  [ticket 298](https://github.com/Patternslib/Patterns/issues/298).
 
 - Markdown pattern:
 
   - Generate HTML5 `<section>` elements with a `<h1>` header when converting
-    headers. This fixes [Ticket
+    headers. This fixes [ticket
     216](https://github.com/Patternslib/Patterns/issues/216).
 
   - Support filtering if injected markdown documents with headers using
@@ -77,16 +77,16 @@
 
   - Update the version of
     [pagedown-extra](https://github.com/jmcmanus/pagedown-extra) which could
-    case markdown constructs to be replaces with the word `undefined`.  This
+    case markdown constructs to be replaces with the word `undefined`. This
     fixes [ticket 297](https://github.com/Patternslib/Patterns/issues/297).
 
 - Injection pattern: extend *autoload-in-visible* to also apply for situations
   where we are not dealing with a heigh-constrained scrollable parent but need
   to look at the entire page.
-  This fixes [Ticket 296](https://github.com/Patternslib/Patterns/issues/296).
+  This fixes [ticket 296](https://github.com/Patternslib/Patterns/issues/296).
 
 - The [switch pattern](demo/switch/index.html) can now remember the its state.
-  This fixes [Ticket 293](https://github.com/Patternslib/Patterns/issues/293).
+  This fixes [ticket 293](https://github.com/Patternslib/Patterns/issues/293).
 
 - Add a new [gallery](demo/gallery/index.html) pattern.
 
@@ -95,10 +95,10 @@
 
 - Fix use of an undeclared variable in the parser could result in problems
   in IE8. This fixes
-  [Ticket 298](https://github.com/Patternslib/Patterns/issues/298).
+  [ticket 298](https://github.com/Patternslib/Patterns/issues/298).
 
 - Fix handling of trailing semicolons in the the argument parser. This fixes
-  [Ticket 295](https://github.com/Patternslib/Patterns/issues/295).
+  [ticket 295](https://github.com/Patternslib/Patterns/issues/295).
 
 - Internal build-related changes:
 
@@ -198,7 +198,7 @@
     (Cornelis Kolbach and Marko Đurković)
 
   - Make sure elements inside a modal do not accidentily loose their focus.
-    This broke the handling of autofocus in modals.  [Ticket
+    This broke the handling of autofocus in modals. [Ticket
     266](https://github.com/Patternslib/Patterns/issues/266) (Wichert Akkerman)
 
 - Check-list pattern: send *change* event when a checkbox is toggled. This fixes
