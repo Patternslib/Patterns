@@ -589,9 +589,10 @@ section.demo:after {
 	color: rgba(254,255,255,0.73);
 }
 
-#global-navigation a.download,
-#global-navigation a.documentation {
-	
+#download:target #global-navigation a.download,
+#documentation:target #global-navigation a.documentation {
+	background-color: #efefef;
+	color: black;
 }
 
 @media only screen and (max-width: 767px) {
