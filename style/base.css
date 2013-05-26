@@ -514,6 +514,7 @@ html.js .postit.guide.closed {
 	position: relative;
 	z-index: 1;
 	margin-left: 0;
+	margin-bottom: -40px;
 }
 
 #global-navigation #home {
@@ -569,9 +570,13 @@ html.js .postit.guide.closed {
 	margin: 0;
 	border-top: 1px solid silver;
 	box-shadow: 0 1px 4px gray;
-	perspective: 200px;
-	perspective-origin: 100% 100%;
 	transition: all 1s;
+}
+
+#documentation:target #component-index,
+#download:target #component-index {
+	height: 870px;
+	padding-top: 145px;
 }
 
 #documentation > img {
