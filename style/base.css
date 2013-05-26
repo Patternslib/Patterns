@@ -203,7 +203,15 @@ form#download:before {
 
 /* @group Labels */
 
-#download:target .component-index .checklist label {
+@keyframes increase-z
+{
+0%   {z-index: 0;}
+99.9%  {z-index: 0;}
+100% {z-index: 1;}
+}
+
+#download:target .component-index .checklist label a{
+	animation: increase-z 1s;
 }
 
 /* @end */
@@ -228,10 +236,6 @@ form#download:before {
 .state-home .component-index .checklist {
 	margin-bottom: 0;
 }
-
-/* @group Component icon */
-
-/* @end */
 
 .component-index .checklist label input {
 	display: none; /*temporary*/
