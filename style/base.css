@@ -519,6 +519,9 @@ html.js .postit.guide.closed {
 
 #global-navigation #home {
 	z-index: 10;
+	position: absolute;
+	top: -450px;
+	transition: width 0.3s;
 }
 
 
@@ -605,7 +608,7 @@ html.js .postit.guide.closed {
 	padding-top: 0;
 }
 
-#welcome blockquote p {
+#documentation blockquote p {
 	margin-left: -50px;
 	text-shadow: #000000 0 0 10px;
 }
