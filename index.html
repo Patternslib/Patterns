@@ -25,34 +25,49 @@
 		<![endif]-->
 	</head>
 	<body>
-		<div class="pat-auto-scale" data-pat-auto-scale="zoom">
-			<header id="site-header" class="state-home">
-				<form action="getBundle" class="component-index ">
-					<fieldset class="checklist pat-checklist">				    	
-						  <div class="functions">
-						    <button class="select-all" type="button">Select all</button>
-						    <button class="deselect-all" type="button">Deselect all</button>
-						  </div>
-								<h2>Core</h2>
-								
-								<fieldset class="checklist core">
-					   			<label class="modernizr">
-					   			    <input type="checkbox" name="modernizr" checked/>
-					   			    <a>Modernizr</a>
-					   			</label>
-					   			<label class="less">
-					   			    <input type="checkbox" name="less" checked/>
-					   			    <a>Less</a>
-					   			</label>
-					   			<label class="prefix-free">
-					   			    <input type="checkbox" name="prefixfree" checked/>
-					   			    <a>Prefixfree</a>
-					   			</label>
-					   			<label class="depends">
-					   			    <input type="checkbox" name="pat/depends" checked/>
-					   			    <a class="navigation depends" href="demo/depends/index.html" title="">Depends</a>
-					   			</label>
-								</fieldset>
+	
+			<header id="documentation">
+				<form action="getBundle" id="download">
+					<blockquote class="pat-auto-scale">
+						<p>
+							Patterns is a library that aims to bring webdesign and development together.
+						</p>
+						<p>
+							<a href="https://github.com/Patternslib/Patterns"><img src="media/github-logo-dp.svg" height="60" widht="300px" /></a>
+						</p>
+					</blockquote>
+
+					<nav id="global-navigation" class="pat-bumper">
+						<a href="#" id="home" class="pat-bumper"><img src="style/logo.png" alt="Patterns brandmark" id="logo" /></a>
+						<a href="#documentation">Demos &amp; documentation</a> 
+						<a href="#download">Download</a>
+					</nav>
+
+					<fieldset class="checklist pat-checklist component-index" id="component-index">				    	
+							<div class="functions">
+								<button class="select-all" type="button">Select all</button>
+								<button class="deselect-all" type="button">Deselect all</button>
+							</div>
+							<h2>Core</h2>
+							
+							<fieldset class="checklist core">
+				   			<label class="modernizr">
+				   			    <input type="checkbox" name="modernizr" checked/>
+				   			    <a>Modernizr</a>
+				   			</label>
+				   			<label class="less">
+				   			    <input type="checkbox" name="less" checked/>
+				   			    <a>Less</a>
+				   			</label>
+				   			<label class="prefix-free">
+				   			    <input type="checkbox" name="prefixfree" checked/>
+				   			    <a>Prefixfree</a>
+				   			</label>
+				   			<label class="depends">
+				   			    <input type="checkbox" name="pat/depends" checked/>
+				   			    <a class="navigation depends" href="demo/depends/index.html" title="">Depends</a>
+				   			</label>
+							</fieldset>
 						 
 						  	<h2>Behavioural</h2>
 						  	
@@ -214,42 +229,27 @@
 								</label>
 						</fieldset>
 				        
+					    <fieldset class="button-bar">
+					        	<button type="submit">Download bundle</button>
+								<fieldset class="bundle-type">       
+							       Bundle type:  
+							        <label>
+							            <input type="radio" name="minify" checked>Regular</input>
+							        </label>
+							        <label>
+							            <input type="radio" name="minify" value="minify">Minified</input>
+							        </label>
+							    </fieldset>
+					    </fieldset>
 				     </fieldset>
-				     <fieldset class="button-bar">
-				        	<button type="submit">Download bundle</button>
-							<fieldset class="bundle-type">       
-						       Bundle type:  
-						        <label>
-						            <input type="radio" name="minify" checked>Regular</input>
-						        </label>
-						        <label>
-						            <input type="radio" name="minify" value="minify">Minified</input>
-						        </label>
-						    </fieldset>
-				        </fieldset>
 				</form>
-			
-				<blockquote class="pat-auto-scale">
-					<p>
-						Patterns is a library that aims to bring webdesign and development together.
-					</p>
-					<p>
-						<a href="https://github.com/Patternslib/Patterns"><img src="media/github-logo-dp.svg" height="60" widht="300px" /></a>
-					</p>
-				</blockquote>
-				
 
 			</header>
-			<nav id="global-navigation" class="pat-bumper">
-				<a href="#" id="home" class="pat-bumper pat-switch" data-pat-switch="#site-header state-* state-home"><img src="style/logo.png" alt="Patterns brandmark" id="logo" /></a>
-				<a href="#demo" class="pat-switch" data-pat-switch="#site-header state-* state-documentation">Demos &amp; documentation</a> 
-				<a href="#download" class="pat-switch" data-pat-switch="#site-header state-* state-download">Download</a>
-			</nav>
-			<div id="content" class="pat-auto-scale">
-				<section id="news">
+			<div id="content">
+				<!-- <section id="news">
 					<p class="introduction">Did you see the patterns talk at the Plone Conference in Arnhem 2012? Here are the slides that were used for the demonstration.</p>
 						<a href="http://www.slideshare.net/CornelisKolbach/presentation-plone-conference-2012" class="button-slides" id="button-slides">View slides</a>
-				</section>
+				</section> -->
 		
 				<section id="patterns">
 					
@@ -279,6 +279,6 @@
 				</footer> 
 			</div>
 
-		</div>
+	
 	</body>
 </html>

@@ -68,8 +68,11 @@ body {
 
 #content {
 	clear: both;
-	padding-right: 80px;
-	padding-left: 80px;
+	padding-right: 40px;
+	padding-left: 40px;
+	max-width: 960px;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 #content section {
@@ -93,20 +96,41 @@ body {
 
 /* @group Download form */
 
-.component-index {
-	padding-left: 60px;
-	padding-right: 60px;
-	position: relative;
-	top: 0;
-	color: silver;
-	padding-top: 140px;
-	transition: all 1s;
+form#download {
+	padding-top: 20px;
+	margin-top: 0;
 }
 
-.state-home .component-index {
-	transform: rotateY( 50deg ) scaleX(1);
-	/*top: -710px;*/
-	/*left: -1050px;*/
+form#download:before {
+	content: " ";
+	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	background-image: -moz-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	position: absolute;
+	top: 20px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+#component-index {
+	overflow: hidden;
+	height: 0;
+	padding-top: 0;
+	}
+
+.component-index {
+	padding-left: 0;
+	padding-right: 0;
+	color: silver;
+	padding-top: 0;
+	transition: all 1s;
+	overflow: hidden;
+	max-width: 960px;
+	margin-right: auto;
+	margin-left: auto;
+	transition: all 1s;
+	z-index: 0;
 }
 
 .component-index button {
@@ -124,11 +148,6 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	transition: all 1s;
-}
-
-.state-home .component-index .button-bar,
-.state-documentation .component-index .button-bar {
-	opacity: 0;
 }
 
 /* @group Form header */
@@ -492,12 +511,12 @@ html.js .postit.guide.closed {
 /* @group Global navigation */
 
 #global-navigation {
-	position: static;
+	position: relative;
+	z-index: 1;
+	margin-left: 0;
 }
 
 #global-navigation #home {
-	top: -10px;
-	position: absolute;
 	z-index: 10;
 }
 
@@ -545,92 +564,45 @@ html.js .postit.guide.closed {
 
 /* @group Site header */
 
-#site-header {
-	z-index: 10;
-	
+#documentation {
 	position: relative;
-	margin: 20px 0 0;
+	margin: 0;
 	border-top: 1px solid silver;
 	box-shadow: 0 1px 4px gray;
 	perspective: 200px;
 	perspective-origin: 100% 100%;
-	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
-	background-image: -moz-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
-	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
-	overflow: hidden;
 	transition: all 1s;
-	height: 1070px;
 }
 
-#site-header.state-home {
-	height: 500px;
-}
-
-#site-header > img {
+#documentation > img {
 	width: 100%;
 	display: block;
 }
 
-#site-header .acquire {
-	position: absolute;
-	left: 50%;
-	margin-left: -50px;
-	top: 40px;
-	padding-left: 10px;
-}
-
-#site-header .acquire a {
-	margin-right: 40px;
-	display: inline-block;
-	top: 40px;
-}
-
-#site-header .acquire a img {
-	max-width: 140px;
-	top: 40px;
-}
-
-#site-header blockquote {
+#documentation blockquote {
 	color: white;
 	line-height: 1.8;
 	font-size: 26px;
-	position: absolute;
 	display: block;
-	background-image: -webkit-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	background-image: -moz-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	background-image: linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	left: 0;
-	right: 0;
-	top: 0;
 	padding: 160px 10% 0 50%;
 	border-style: none;
-	transition: all 1s;
-	transform: translateX(100%);
-	transform-style: preserve-3d;
-	bottom: 0;
+	transition: height 1s;
 	margin: 0;
+	background-color: silver;
+	height: 280px;
+	overflow: hidden;
+	transition: all 1s;
 }
 
-#site-header.state-home  blockquote {
-	transform: translateX(0)
+#documentation:target blockquote,
+#download:target blockquote  {
+	height: 0;
+	padding-top: 0;
 }
 
-#site-header blockquote p {
+#welcome blockquote p {
 	margin-left: -50px;
 	text-shadow: #000000 0 0 10px;
-}
-
-@media (max-width: 570px) {
-
-#site-header {
-	background-size: auto 50%;
-}
-
-#site-header .acquire {
-	margin-left: 0;
-	text-align: center;
-	top: 220px;
-}
 }
 
 
