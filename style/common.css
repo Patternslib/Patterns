@@ -234,13 +234,6 @@ section.demo:after {
 /* @end */
 
 /* @group Component index */
-	
-
-#documentation:target #component-index,
-#download:target #component-index {
-	height: 870px;
-	padding-top: 100px;
-}
 
 #component-index h4 {
 	clear: both;
@@ -568,6 +561,7 @@ section.demo:after {
 	text-align: center;
 	background-color: transparent;
 	top: -10px;
+	transition: all 0.3s;
 }
 
 #global-navigation #home img {
