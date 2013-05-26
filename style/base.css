@@ -99,6 +99,8 @@ body {
 form#download {
 	padding-top: 20px;
 	margin-top: 0;
+	overflow: hidden;
+	padding-bottom: 26px;
 }
 
 form#download:before {
@@ -526,6 +528,10 @@ html.js .postit.guide.closed {
 	z-index: 1;
 	margin-left: 0;
 	margin-bottom: -40px;
+	width: 100%;
+	display: block;
+	margin-top: 0;
+	float: left;
 }
 
 #global-navigation #home {
