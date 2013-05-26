@@ -249,18 +249,19 @@ section.demo:after {
 .component-index .checklist label {
 	overflow: hidden;
 	float: left;
-	width: 21%;
+	width: 25%;
 	box-sizing: border-box;
 	line-height: 50px;
 	position: relative;
-	margin-right: 2%;
-	margin-left: 2%;
+	margin-right: 0;
+	margin-left: 0;
 	margin-bottom: 10px;
 	user-select: none;
 	padding: 0;
-	outline: 1px solid rgba(255,255,255,0.2);
 	-webkit-user-select: none;
-	user-select: none
+	user-select: none;
+	border-left: 4px solid rgba(0,0,0,0);
+	border-right: 4px solid rgba(0,0,0,0);
 }
 
 .component-index .checklist label:before {
@@ -272,14 +273,14 @@ section.demo:after {
 	font-size: 12px;
 	padding: 0;
 	text-decoration: none;
-	color: gray;
 	transition: left 0.2s;
 	line-height: 48px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	background-color: white;
+	background-color: gray;
 	margin: 0;
+	color: white;
 }
 
 .component-index .checklist label a {
