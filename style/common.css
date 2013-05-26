@@ -589,6 +589,11 @@ section.demo:after {
 	color: rgba(254,255,255,0.73);
 }
 
+#global-navigation a.download,
+#global-navigation a.documentation {
+	
+}
+
 @media only screen and (max-width: 767px) {
 
 #global-navigation a {
