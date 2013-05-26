@@ -538,7 +538,17 @@ html.js .postit.guide.closed {
 	z-index: 10;
 	position: absolute;
 	top: -450px;
-	transition: width 0.3s;
+	transition: all 1s;
+}
+
+#documentation:target #global-navigation #home,
+#download:target #global-navigation #home {
+	top: -10px;
+}
+
+#documentation:target #global-navigation.bumped-top #home,
+#download:target #global-navigation.bumped-top #home {
+	top: 0px;
 }
 
 
