@@ -147,7 +147,8 @@ form#download:before {
 	border-style: none;
 	padding-left: 5px;
 	padding-right: 15px;
-	transition: all 1s;
+	opacity: 0;
+	transition: opacity 1s;
 }
 
 /* @group Form header */
@@ -157,6 +158,13 @@ form#download:before {
 	margin-top: -43px;
 	position: relative;
 	margin-right: 5px;
+	opacity: 0;
+	transition: opacity 1s;
+}
+
+#download:target .component-index .functions,
+#download:target .component-index .button-bar {
+	opacity: 1;
 }
 
 .component-index .bundle-type {
@@ -230,8 +238,7 @@ form#download:before {
 /* @end */
 
 .component-index .checklist {
-	transition: margin-bottom 1s;
-}
+	margin-bottom: 1em;}
 
 .state-home .component-index .checklist {
 	margin-bottom: 0;
@@ -582,7 +589,7 @@ html.js .postit.guide.closed {
 
 #documentation:target #component-index,
 #download:target #component-index {
-	height: 870px;
+	height: 950px;
 	padding-top: 145px;
 }
 
