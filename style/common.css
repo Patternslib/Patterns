@@ -242,6 +242,8 @@ section.demo:after {
 	overflow: hidden;
 	float: left;
 	width: 25%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	line-height: 50px;
 	position: relative;
@@ -304,8 +306,9 @@ section.demo:after {
 	right: 0;
 	bottom: 0;
 	left: 0;
-	transition: all 1s;
 	-webkit-transition: left 1s;
+	-moz-transition: left 1s;
+	transition: all 1s;
 }
 
 .component-index a:before {
