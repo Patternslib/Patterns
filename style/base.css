@@ -241,8 +241,8 @@ form#download:before {
 
 .component-index .checklist {
 	margin-bottom: 1em;
-	margin-right: -10px;
-	margin-left: -10px;
+	margin-right: -8px;
+	margin-left: -8px;
 }
 
 .state-home .component-index .checklist {
