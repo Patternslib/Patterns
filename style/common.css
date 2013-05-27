@@ -372,8 +372,8 @@ section.demo:after {
 	background-position: -300px 0;
 }
 
-.component-index a.switching:before {
-	
+.component-index a.switch:before {
+	background-position: -250px -100px;
 }
 
 .component-index a.autofocus:before {
@@ -392,8 +392,16 @@ section.demo:after {
 
 }
 
+.component-index a.auto-scale:before {
+	background-position: -50px -100px;
+}
+
 .component-index a.carousel:before {
 	background-position: -150px 0;
+}
+
+.component-index a.grid:before {
+	background-position: 0 -150px;
 }
 
 .component-index a.full-calendar:before {
@@ -419,6 +427,16 @@ section.demo:after {
 	background-position: -150px -50px;
 }
 
+.component-index a.gallery:before {
+
+	background-position: -50px -150px;
+}
+
+.component-index a.slides:before {
+
+	background-position: -100px -150px;
+}
+
 .component-index a.tiny-mce:before {
 	background-position: -300px -50px;
 }
@@ -429,7 +447,7 @@ section.demo:after {
 }
 
 .component-index a.depends:before {
-	background-position: 0 -160px;
+	background-position: -200px -100px;
 }
 
 .component-index a.tree:before {
@@ -462,7 +480,7 @@ section.demo:after {
 }
 
 .component-index a.navigation-marker:before {
-	background-position: 0 32px;
+	background-position: -450px -100px;
 }
 
 .component-index a.multi-combobox:before {
@@ -471,6 +489,10 @@ section.demo:after {
 
 .component-index a.placeholder:before {
 	background-position: 0 32px;
+}
+
+.component-index a.prefixfree:before {
+	background-position: -150px -100px;
 }
 
 .component-index a.self-healing:before {
