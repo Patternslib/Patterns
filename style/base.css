@@ -619,7 +619,7 @@ html.js .postit.guide.closed {
 }
 
 #documentation blockquote {
-	color: white;
+	color: black;
 	line-height: 1.8;
 	font-size: 26px;
 	display: block;
@@ -648,7 +648,7 @@ html.js .postit.guide.closed {
 
 #documentation blockquote p {
 	margin-left: -50px;
-	text-shadow: #000000 0 0 10px;
+	text-shadow: white 0 0 10px;
 }
 
 
