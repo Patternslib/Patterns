@@ -240,7 +240,10 @@ form#download:before {
 /* @end */
 
 .component-index .checklist {
-	margin-bottom: 1em;}
+	margin-bottom: 1em;
+	margin-right: -10px;
+	margin-left: -10px;
+}
 
 .state-home .component-index .checklist {
 	margin-bottom: 0;
