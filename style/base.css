@@ -602,7 +602,6 @@ html.js .postit.guide.closed {
 #documentation {
 	position: relative;
 	margin: 0;
-	border-top: 1px solid silver;
 	box-shadow: 0 1px 4px gray;
 	transition: all 1s;
 }
