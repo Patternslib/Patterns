@@ -531,14 +531,20 @@ html.js .postit.guide.closed {
 	width: 100%;
 	display: block;
 	margin-top: 0;
-	float: left;
+	float: left;;
+}
+
+@keyframes move-logo-up
+{
+0%   {margin-top: -10px;}
+100% {margin-top: -450px;}
 }
 
 #global-navigation #home {
 	z-index: 10;
 	position: absolute;
 	top: -450px;
-	transition: all 1s;
+	/*transition: top 1s;*/
 }
 
 #global-navigation #home.bumped-top {
@@ -548,6 +554,7 @@ html.js .postit.guide.closed {
 #documentation:target #global-navigation #home,
 #download:target #global-navigation #home {
 	top: -10px;
+	transition: top 1s;
 }
 
 #documentation:target #global-navigation.bumped-top #home,
