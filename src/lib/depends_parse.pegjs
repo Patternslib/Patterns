@@ -93,6 +93,7 @@ IdentifierPart
   / "$"
   / "_"
   / "-"
+  / "."
   / UnicodeCombiningMark
   / UnicodeDigit
   / UnicodeConnectorPunctuation
