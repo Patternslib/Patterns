@@ -277,7 +277,7 @@ form#download:before {
 	margin-bottom: 0;
 }
 
-.postit *:last-child:after {
+.postit:after {
 	content: " ";
 	clear: both;
 	display: block;
