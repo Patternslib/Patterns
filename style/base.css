@@ -541,6 +541,10 @@ html.js .postit.guide.closed {
 	transition: all 1s;
 }
 
+#global-navigation #home.bumped-top {
+	transition: none;	
+}
+
 #documentation:target #global-navigation #home,
 #download:target #global-navigation #home {
 	top: -10px;
