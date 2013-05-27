@@ -92,6 +92,7 @@ IdentifierPart
   = UnicodeLetter
   / "$"
   / "_"
+  / "-"
   / UnicodeCombiningMark
   / UnicodeDigit
   / UnicodeConnectorPunctuation

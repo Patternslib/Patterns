@@ -2,7 +2,8 @@
 
 ## 1.4.1 - Unreleased
 
-- ...
+- Depends pattern: allow dahses in input names and values again. This fixes
+  [ticket 313](https://github.com/Patternslib/Patterns/issues/313).
 
 
 ## 1.4.0 - Released May 24, 2013
