@@ -29,6 +29,14 @@ body {
 	text-rendering: optimizeLegibility;
 }
 
+#test {
+	width: 100px;
+	height: 100px;
+	background: green url(pattern-icons.svg) 0 0;
+	text-indent: -1000px;
+	overflow: hidden;
+}
+
 @media only screen and (max-width: 767px) {
 
 body {
@@ -121,6 +129,8 @@ section.description,
 section.documentation,
 section.demo {
 	position: relative;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	padding: 1.3em 0 2em 33.3%;
 }
@@ -219,18 +229,6 @@ section.demo:after {
 
 /* @group Component index */
 
-#component-index {
-	float: left;
-	border: 1px solid silver;
-	box-shadow: inset 0 1px 6px rgba(0,0,0,0.15);
-	border-radius: 4px;
-	background-color: white;
-	padding-bottom: 10px;
-	padding-top: 10px;
-	margin-left: -8px;
-	margin-right: -8px;
-}
-
 #component-index h4 {
 	clear: both;
 	font-size: 16px;
@@ -245,18 +243,21 @@ section.demo:after {
 .component-index .checklist label {
 	overflow: hidden;
 	float: left;
-	width: 21%;
+	width: 25%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	line-height: 50px;
 	position: relative;
-	margin-right: 2%;
-	margin-left: 2%;
+	margin-right: 0;
+	margin-left: 0;
 	margin-bottom: 10px;
 	user-select: none;
 	padding: 0;
-	outline: 1px solid rgba(255,255,255,0.2);
 	-webkit-user-select: none;
-	user-select: none
+	user-select: none;
+	border-left: 4px solid rgba(0,0,0,0);
+	border-right: 4px solid rgba(0,0,0,0);
 }
 
 .component-index .checklist label:before {
@@ -268,14 +269,29 @@ section.demo:after {
 	font-size: 12px;
 	padding: 0;
 	text-decoration: none;
-	color: gray;
 	transition: left 0.2s;
 	line-height: 48px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	background-color: white;
+	background-color: gray;
 	margin: 0;
+	color: white;
+}
+
+.component-index label:after {
+	content: " ";
+	display: block;
+	width: 29px;
+	height: 48px;
+	background-color: rgba(254,255,255,0.11);
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+	border: 1px solid gray;
+	border-right-style: none;
 }
 
 .component-index .checklist label a {
@@ -292,22 +308,22 @@ section.demo:after {
 	right: 0;
 	bottom: 0;
 	left: 0;
+	-webkit-transition: left 1s;
+	-moz-transition: left 1s;
 	transition: all 1s;
-	-webkit-transition: all 1s;
 }
 
 .component-index a:before {
 	content: " ";
-	width: 40px;
+	width: 50px;
 	display: inline-block;
-	height: 40px;
+	height: 50px;
 	vertical-align: middle;
 	margin: 0 10px 0 12px;
-	border-radius: 4px;
 	text-align: center;
-	font: 32px/40px Patticons;
-	text-rendering: optimizeLegibility;
-	}
+	background-size: ;
+	background: url(pattern-icons.svg) -400px -100px;
+}
 
 .component-index .behavioural a {
 	background-color: #3d607e;
@@ -315,22 +331,22 @@ section.demo:after {
 }
 
 .component-index .navigation a {
-	background-color: #c37757;
+	background-color: #ee9847;
 	color: white;
 }
 
 .component-index .layout a {
-	background-color: #915e79;
+	background-color: #00dbb8;
 	color: white;
 }
 
 .component-index .forms a {
-	background-color: #9ba476;
+	background-color: #ae468f;
 	color: white;
 }
 
 .component-index .fancy a {
-	background-color: #a59baf;
+	background-color: #d2bd00;
 	color: white;
 }
 
@@ -345,11 +361,15 @@ section.demo:after {
 /* @group Icons */
 
 .component-index a.bumper:before {
-	content: "b";
+	background-position: 0 -100px;
+}
+
+.component-index a.modernizr:before {
+	background-position: -100px -100px;
 }
 
 .component-index a.ajax:before {
-	content: "i";
+	background-position: -300px 0;
 }
 
 .component-index a.switching:before {
@@ -365,49 +385,47 @@ section.demo:after {
 }
 
 .component-index a.auto-submit:before {
-	content: "s";
-	font-size: 45px;
-	line-height: 62px;
-	text-indent: 8px;
+	background-position: -50px 0;
 }
 
 .component-index a.auto-suggest:before {
-	background-position: 0 -64px;
+
 }
 
 .component-index a.carousel:before {
-	content: "a";
+	background-position: -150px 0;
 }
 
 .component-index a.full-calendar:before {
-	content: "k";
+
+	background-position: -200px -50px;
 }
 
 .component-index a.toggle:before {
-	background-position: 0 -480px;
+	background-position: -250px 0;
 }
 
 .component-index a.auto-scale:before {
-	content: "f";
-	font-size: 87px;
-	line-height: 63px;
-	text-indent: 3px;
+	
 }
 
 .component-index a.collapsible:before {
-	background-position: 0 -128px;
+
+	background-position: -200px 0;
 }
 
 .component-index a.sortable:before {
-	content: "o";
+
+	background-position: -150px -50px;
 }
 
 .component-index a.tiny-mce:before {
-	content: "e";
+	background-position: -300px -50px;
 }
 
 .component-index a.markdown:before {
-	content: "d";
+
+	background-position: -350px -50px;
 }
 
 .component-index a.depends:before {
@@ -415,23 +433,23 @@ section.demo:after {
 }
 
 .component-index a.tree:before {
-	content: "t";
+	background-position: 0 -50px;
 }
 
 .component-index a.focus:before {
-	background-position: 0 32px;
+
 }
 
 .component-index a.form-validation:before {
-	background-position: 0 -225px;
+
 }
 
 .component-index a.checked-flag:before {
-	background-position: 0 -450px;
+	background-position: -350px -400px;
 }
 
 .component-index a.checkboxes:before {
-	content: "c";
+	background-position: -450px 0;
 }
 
 .component-index a.menu:before {
@@ -439,7 +457,8 @@ section.demo:after {
 }
 
 .component-index a.modal-panel:before {
-	content: "m";
+
+	background-position: -600px -50px;
 }
 
 .component-index a.navigation-marker:before {
@@ -459,7 +478,7 @@ section.demo:after {
 }
 
 .component-index a.breadcrumbs:before {
-	background-position: 0 -320px;
+	background-position: -50px -50px;
 }
 
 .component-index a.sorting:before {
@@ -467,18 +486,18 @@ section.demo:after {
 }
 
 .component-index a.tooltip:before {
-	content: "l";
-	font-size: 68px;
-	line-height: 85px;
-	text-indent: 8px;
+	
+	background-position: -450px -50px;
+	
 }
 
 .component-index a.zoom:before {
-	content: "z";
+	background-position: -400px -50px;
 }
 
 .component-index a.image-crop:before {
-	content: "r";
+
+	background-position: -250px -50px;
 }
 
 /* @end */
@@ -516,10 +535,9 @@ section.demo:after {
 /* @group Logo */
 
 #logo {
-	width: 100px;
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	width: 46px;
 	margin-top: -18px;
+	width: 46px;
 }
 
 
@@ -529,7 +547,6 @@ section.demo:after {
 /* @group Global navigation */
 
 #global-navigation {
-	background-color: #2F383F;
 	color: #33291A;
 	text-align: center;
 	line-height: 40px;
@@ -542,25 +559,22 @@ section.demo:after {
 	z-index: 10000;
 }
 
-#global-navigation.bumped-top {
-	position: fixed;
-	right: 0;
-	top: 0;
-	left: 0;
-}
-
 #global-navigation #home {
-	position: fixed;
+	position: absolute;
 	left: 50%;
 	margin-left: -50px;
 	width: 100px;
 	text-align: center;
 	background-color: transparent;
-	top: 0;
+	top: -10px;
+	transition: all 0.3s;
+	z-index: 1;
 }
 
 #global-navigation #home img {
 	transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-webkit-transition: all 0.3s;
 	border: 2px solid white;
 }
 
@@ -581,6 +595,37 @@ section.demo:after {
 	width: 50%;
 	text-align: center;
 	color: rgba(254,255,255,0.73);
+	background-color: #2F383F;
+	transition: all 1s;
+	position: relative;
+}
+
+#global-navigation a:hover {
+	background-color: #3c4a54;
+}
+
+#download:target #global-navigation a.download,
+#documentation:target #global-navigation a.documentation {
+	background-color: #2F383F;
+	cursor: default;	
+}
+
+#download:target #global-navigation a.download:before,
+#documentation:target #global-navigation a.documentation:before {
+	content: " ";
+	
+	width: 0; 
+	height: 0; 
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	
+	border-top: 10px solid #2c373e;
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: 40px;
+	margin-left: -10px;
+	
 }
 
 @media only screen and (max-width: 767px) {
@@ -588,10 +633,6 @@ section.demo:after {
 #global-navigation a {
 	font-size: 12px;
 } }
-
-#global-navigation a:hover {
-	background-color: rgba(0,0,0,0.18);
-}
 
 
 
@@ -1305,6 +1346,11 @@ html.gecko .comprehensive .infoPanel {
 	background: #f2f2f2;
 	margin: 0 0 22px 0;
 	padding: 20px;
+	box-sizing: border-box;
+}
+
+.column > .panel,.columns > .panel {
+	height: 100%;
 }
 
 .panel > :first-child {

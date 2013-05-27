@@ -31,7 +31,7 @@
 	font-style: normal;
 }
 
-.checklist label {
+.checklist > label {
 	display: block;
 	width: auto;
 	margin-bottom: 0;
@@ -44,15 +44,15 @@
 	padding-left: 1.5em;
 }
 
-.checklist input[type="radio"],
-.checklist input[type="checkbox"],
+.checklist > label > input[type="radio"],
+.checklist > label > input[type="checkbox"],
 .checkbox > input[type="checkbox"]  {
 	float: left;
 	margin-left: -1.5em;
 	visibility: hidden;
 }
 
-.checklist label:before,
+.checklist > label:before,
 label.checkbox:before {
 	content: '\f096';
 	font-family: fontello;
@@ -69,7 +69,7 @@ label.checkbox:active:before {
 	transform: scale(0.9)
 }
 
-.checklist label.checked:before,
+.checklist > label.checked:before,
 label.checkbox.checked:before {
 	content: '\2611';
 }
