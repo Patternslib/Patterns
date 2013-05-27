@@ -64,6 +64,12 @@ define(["lib/depends_parse"], function(parser) {
                                      value: "bær"});
             });
 
+            it("Dashes in name", function() {
+                var ast = parser.parse("foo-bar");
+                expect(ast).toEqual({type: "truthy",
+                                     input: "foo-bar"});
+            });
+
             it("Single quoted value", function() {
                 var ast = parser.parse("foo='bar buz'");
                 expect(ast).toEqual({type: "comparison",
