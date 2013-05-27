@@ -531,13 +531,14 @@ html.js .postit.guide.closed {
 	width: 100%;
 	display: block;
 	margin-top: 0;
-	float: left;;
+	float: left;
 }
 
-@keyframes move-logo-up
-{
-0%   {margin-top: -10px;}
-100% {margin-top: -450px;}
+#global-navigation.bumped-top {
+	position: fixed;
+	right: 0;
+	top: 0;
+	left: 0;
 }
 
 #global-navigation #home {
@@ -549,6 +550,10 @@ html.js .postit.guide.closed {
 
 #global-navigation #home.bumped-top {
 	transition: none;	
+}
+
+#global-navigation #home img {
+	width: 90px;
 }
 
 #documentation:target #global-navigation #home,
