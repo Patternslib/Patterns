@@ -68,8 +68,11 @@ body {
 
 #content {
 	clear: both;
-	padding-right: 80px;
-	padding-left: 80px;
+	padding-right: 40px;
+	padding-left: 40px;
+	max-width: 960px;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 #content section {
@@ -93,20 +96,43 @@ body {
 
 /* @group Download form */
 
-.component-index {
-	padding-left: 60px;
-	padding-right: 60px;
-	position: relative;
-	top: 0;
-	color: silver;
-	padding-top: 140px;
-	transition: all 1s;
+form#download {
+	padding-top: 20px;
+	margin-top: 0;
+	overflow: hidden;
+	padding-bottom: 26px;
 }
 
-.state-home .component-index {
-	transform: rotateY( 50deg ) scaleX(1);
-	/*top: -710px;*/
-	/*left: -1050px;*/
+form#download:before {
+	content: " ";
+	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	background-image: -moz-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
+	position: absolute;
+	top: 20px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: -1;
+}
+
+#component-index {
+	overflow: hidden;
+	height: 0;
+	padding-top: 0;
+}
+
+.component-index {
+	padding-left: 0;
+	padding-right: 0;
+	color: silver;
+	padding-top: 0;
+	transition: all 1s;
+	overflow: hidden;
+	max-width: 970px;
+	margin-right: auto;
+	margin-left: auto;
+	transition: all 1s;
 }
 
 .component-index button {
@@ -121,14 +147,10 @@ body {
 
 .component-index .button-bar {
 	border-style: none;
-	padding-left: 15px;
+	padding-left: 5px;
 	padding-right: 15px;
-	transition: all 1s;
-}
-
-.state-home .component-index .button-bar,
-.state-documentation .component-index .button-bar {
 	opacity: 0;
+	transition: opacity 1s;
 }
 
 /* @group Form header */
@@ -137,7 +159,14 @@ body {
 	float: right;
 	margin-top: -43px;
 	position: relative;
-	margin-right: 28px;
+	margin-right: 5px;
+	opacity: 0;
+	transition: opacity 1s;
+}
+
+#download:target .component-index .functions,
+#download:target .component-index .button-bar {
+	opacity: 1;
 }
 
 .component-index .bundle-type {
@@ -165,7 +194,6 @@ body {
 
 .component-index h2 {
 	clear: both;
-	padding-left: 3%;
 	font-size: 15px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -175,6 +203,7 @@ body {
 	color: silver;
 	transition: all 1s;
 	-webkit-transition: all 1s;
+	padding-left: 5px;
 }
 
 .state-home .component-index h2 {
@@ -184,18 +213,26 @@ body {
 
 /* @group Labels */
 
-.state-documentation .component-index .checklist label {
+@keyframes increase-z
+{
+0%   {z-index: 0;}
+99.9%  {z-index: 0;}
+100% {z-index: 1;}
+}
+
+#download:target .component-index .checklist label a{
+	animation: increase-z 1s;
 }
 
 /* @end */
 
 /* @group Label link */
 
-.state-documentation .component-index .checklist label a {
+#download:target .component-index .checklist label a {
 	z-index: 0;
 }
 
-.state-download .component-index .checklist label a {
+#download:target .component-index .checklist label a {
 	left: 30px;
 	z-index: -1;
 }
@@ -203,16 +240,11 @@ body {
 /* @end */
 
 .component-index .checklist {
-	transition: margin-bottom 1s;
-}
+	margin-bottom: 1em;}
 
 .state-home .component-index .checklist {
 	margin-bottom: 0;
 }
-
-/* @group Component icon */
-
-/* @end */
 
 .component-index .checklist label input {
 	display: none; /*temporary*/
@@ -492,13 +524,47 @@ html.js .postit.guide.closed {
 /* @group Global navigation */
 
 #global-navigation {
-	position: static;
+	position: relative;
+	z-index: 1;
+	margin-left: 0;
+	margin-bottom: -40px;
+	width: 100%;
+	display: block;
+	margin-top: 0;
+	float: left;
+}
+
+#global-navigation.bumped-top {
+	position: fixed;
+	right: 0;
+	top: 0;
+	left: 0;
 }
 
 #global-navigation #home {
-	top: -10px;
-	position: absolute;
 	z-index: 10;
+	position: absolute;
+	top: -450px;
+	/*transition: top 1s;*/
+}
+
+#global-navigation #home.bumped-top {
+	transition: none;	
+}
+
+#global-navigation #home img {
+	width: 90px;
+}
+
+#documentation:target #global-navigation #home,
+#download:target #global-navigation #home {
+	top: -10px;
+	transition: top 1s;
+}
+
+#documentation:target #global-navigation.bumped-top #home,
+#download:target #global-navigation.bumped-top #home {
+	top: 0px;
 }
 
 
@@ -545,92 +611,55 @@ html.js .postit.guide.closed {
 
 /* @group Site header */
 
-#site-header {
-	z-index: 10;
-	
+#documentation {
 	position: relative;
-	margin: 20px 0 0;
-	border-top: 1px solid silver;
+	margin: 0;
 	box-shadow: 0 1px 4px gray;
-	perspective: 200px;
-	perspective-origin: 100% 100%;
-	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
-	background-image: -moz-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
-	background-image: -webkit-radial-gradient(50% 0%, ellipse farthest-corner, #ababab, #000000 100%);
-	overflow: hidden;
 	transition: all 1s;
-	height: 1070px;
 }
 
-#site-header.state-home {
-	height: 500px;
+#documentation:target #component-index,
+#download:target #component-index {
+	height: 950px;
+	padding-top: 145px;
 }
 
-#site-header > img {
+#documentation > img {
 	width: 100%;
 	display: block;
 }
 
-#site-header .acquire {
-	position: absolute;
-	left: 50%;
-	margin-left: -50px;
-	top: 40px;
-	padding-left: 10px;
-}
-
-#site-header .acquire a {
-	margin-right: 40px;
-	display: inline-block;
-	top: 40px;
-}
-
-#site-header .acquire a img {
-	max-width: 140px;
-	top: 40px;
-}
-
-#site-header blockquote {
-	color: white;
+#documentation blockquote {
+	color: black;
 	line-height: 1.8;
 	font-size: 26px;
-	position: absolute;
 	display: block;
-	background-image: -webkit-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	background-image: -moz-linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	background-image: linear-gradient(left, rgba(0,0,0,0) 0%, rgba(0,0,0,5) 100%);
-	left: 0;
-	right: 0;
-	top: 0;
 	padding: 160px 10% 0 50%;
 	border-style: none;
-	transition: all 1s;
-	transform: translateX(100%);
-	transform-style: preserve-3d;
-	bottom: 0;
+	transition: height 1s;
 	margin: 0;
+	height: 280px;
+	overflow: hidden;
+	transition: all 1s;
+	background: silver url(../media/hero-image.jpg) no-repeat center;
+	background-size: 100% auto;
 }
 
-#site-header.state-home  blockquote {
-	transform: translateX(0)
+@media only screen and (max-width: 1133px) {
+
+#documentation blockquote {
+	background-size: auto 100% ;
+} }
+
+#documentation:target blockquote,
+#download:target blockquote  {
+	height: 0;
+	padding-top: 0;
 }
 
-#site-header blockquote p {
+#documentation blockquote p {
 	margin-left: -50px;
-	text-shadow: #000000 0 0 10px;
-}
-
-@media (max-width: 570px) {
-
-#site-header {
-	background-size: auto 50%;
-}
-
-#site-header .acquire {
-	margin-left: 0;
-	text-align: center;
-	top: 220px;
-}
+	text-shadow: white 0 0 10px;
 }
 
 
