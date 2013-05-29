@@ -31,7 +31,8 @@ define([
                     field.addError=validate._addFieldError;
                     field.removeError=validate._removeFieldError;
                 }
-                $(this).on('pat-ajax-before.pat-validate', validate.onPreSubmit);
+                $(this).on('pat-ajax-before.pat-validate',
+                           validate.onPreSubmit);
             });
         },
 
