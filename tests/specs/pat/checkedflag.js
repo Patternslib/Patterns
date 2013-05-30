@@ -35,6 +35,25 @@ define(["pat/checkedflag"], function(pattern) {
                 expect(pattern.onChangeCheckbox).toHaveBeenCalled();
                 expect(pattern.onChangeRadio).not.toHaveBeenCalled();
             });
+
+        });
+
+        describe("init select", function() {
+            it("Trigger onChange on initial load", function() {
+                $("#lab").html("<label><select><option selected=\"selected\">Foo</option></select></label>");
+                spyOn(pattern, "onChangeSelect");
+                pattern.init($("#lab select"));
+                expect(pattern.onChangeSelect).toHaveBeenCalled();
+            });
+
+            it("Adds span if label is absent", function() {
+                $("#lab").html(
+                    "<select><option selected=\"selected\">Foo</option></select>");
+                var $select = $("#lab select");
+                pattern.init($select, []);
+                expect($select.parent()[0].tagName).toBe('SPAN');
+                expect($select.parent().attr('data-option')).toBe('Foo');
+            });
         });
 
         describe("onChangeCheckbox", function() {
@@ -110,6 +129,20 @@ define(["pat/checkedflag"], function(pattern) {
                 pattern.onChangeCheckbox.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("checked");
                 expect($("#lab label").eq(1).attr("class")).toBe("checked");
+            });
+        });
+
+        describe("onChange select", function() {
+            it("Select with label", function() {
+                $("#lab").html(
+                    '<label>' +
+                        '<select>' +
+                        '<option selected="selected" value="value">Foo</option>' +
+                        '</select>' +
+                        '</label>');
+                var select = $("#lab select")[0];
+                pattern.onChangeSelect.apply(select, []);
+                expect($("#lab label").attr("data-option")).toBe("Foo");
             });
         });
 

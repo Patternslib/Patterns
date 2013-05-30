@@ -34,7 +34,6 @@ define([
     "./pat/switch",
     "./pat/toggle",
     "./pat/tooltip",
-    "./pat/select-option",
     "./pat/validate",
     "./pat/zoom"
 ], function($, registry) {
