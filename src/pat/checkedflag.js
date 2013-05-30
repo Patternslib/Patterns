@@ -8,8 +8,11 @@
  */
 define([
     "jquery",
-    "../registry"
-], function($, patterns) {
+    "../registry",
+    "../core/logger"
+], function($, patterns, logger) {
+    var log = logger.getLogger("checkedflag");
+
     var _ = {
         name: "checkedflag",
         trigger: "input[type=checkbox],input[type=radio],select",
@@ -55,6 +58,43 @@ define([
 
         destroy: function($el) {
             return $el.off(".pat-checkedflag");
+        },
+
+        // XXX: so far I was under the assumption that prop is current
+        // state and attr is default and current state. Well, this
+        // does not seem to be the case. I feel like doing this
+        // without jquery.
+        set: function($el, val, opts) {
+            opts = opts || {};
+            // XXX: no support for radio yet
+            return $el.each(function() {
+                var $el = $(this);
+                if ($el.is('input[type=checkbox]')) {
+                    var $input = $(this);
+                    if (opts.setdefault) {
+                        // XXX: implement me
+                    } else {
+                        // just change the current state
+                        // XXX: not sure whether this is correct
+                        $input.prop('checked', val);
+                    }
+                    _.onChangeCheckbox.call(this);
+                } else if ($el.is('select:not([multiple])')) {
+                    var $select = $(this);
+                    if (opts.setdefault) {
+                        // XXX: implement me
+                    } else {
+                        // just change the current state
+                        $select.find('option:selected')
+                            .prop('selected', false);
+                        $select.find('option[value="' + val + '"]')
+                            .prop('selected', true);
+                    }
+                    _.onChangeSelect.call(this);
+                } else {
+                    log.error('Unsupported element', $el[0]);
+                }
+            });
         },
 
         onFormReset: function() {
