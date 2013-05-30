@@ -148,12 +148,22 @@ define(["pat/checkedflag"], function(pattern) {
 
         it("Handle form reset", function() {
             $("#lab").html([
-                "<form>",
-                "  <fieldset class=\"checked\">",
-                "    <label class=\"checked\"><input type=\"radio\" id=\"foo\" checked=\"checked\"/></label>",
-                "    <label class=\"unchecked\"><input type=\"radio\" id=\"bar\"/></label>",
-                "  </fieldset>",
-                "</form>"].join("\n"));
+                '<form>',
+                '  <fieldset class="checked">',
+                '    <label class="checked">',
+                '      <input type="radio" id="foo" checked="checked"/>',
+                '    </label>',
+                '    <label class="unchecked">',
+                '      <input type="radio" id="bar"/>',
+                '    </label>',
+                '    <label data-option="two">',
+                '      <select>',
+                '        <option selected="selected" value="1">one<option>',
+                '        <option value="2">two<option>',
+                '      </select>',
+                '    </label>',
+                '  </fieldset>',
+                '</form>'].join("\n"));
             var $input = $("#lab input");
             pattern.init($input);
             $("#foo").prop("checked", false).change();
@@ -164,6 +174,7 @@ define(["pat/checkedflag"], function(pattern) {
             expect($("label:has(#foo)").hasClass("checked")).toBe(true);
             expect($("label:has(#bar)").hasClass("unchecked")).toBe(true);
             expect($("#lab fieldset").hasClass("checked")).toBe(true);
+            expect($("label:has(select)").attr('data-option')).toBe("one");
         });
 
     });
