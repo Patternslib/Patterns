@@ -12,7 +12,7 @@ define([
 ], function($, patterns) {
     var _ = {
         name: "checkedflag",
-        trigger: "input[type=checkbox],input[type=radio]",
+        trigger: "input[type=checkbox],input[type=radio],select",
         jquery_plugin: true,
 
         init: function($el) {
@@ -35,11 +35,26 @@ define([
                 .each(_.onChangeRadio)
                 .on("change.pat-checkedflag", _.onChangeRadio);
 
+            $el.filter("select:not([multiple])")
+                .each(function() {
+                    var $el = $(this);
+                    // create parent span if not direct child of a label
+                    if ($el.parent('label').length === 0) {
+                        $el.wrap('<span />');
+                    }
+                    _.onChangeSelect.call(this);
+                })
+                .on("change.pat-checkedflag", _.onChangeSelect);
+
             $el.filter("input:disabled").each(function() {
                 $(this).closest("label").addClass('disabled');
             });
 
             $forms.on("reset.pat-checkedflag", _.onFormReset);
+        },
+
+        destroy: function($el) {
+            return $el.off(".pat-checkedflag");
         },
 
         onFormReset: function() {
@@ -50,6 +65,7 @@ define([
             setTimeout(function() {
                 $("input[type=checkbox]", form).each(_.onChangeCheckbox);
                 $("input[type=radio]", form).each(_.onChangeRadio);
+                $("select:not([multiple])", form).each(_.onChangeSelect);
             }, 50);
         },
 
@@ -93,6 +109,14 @@ define([
                     $fieldset.addClass("unchecked").removeClass("checked");
                 }
             }
+        },
+
+        onChangeSelect: function() {
+            var $select = $(this);
+            $select.parent().attr(
+                'data-option',
+                $select.find('option:selected').text()
+            );
         }
     };
 

@@ -36,7 +36,6 @@ define([
     "./pat/switch",
     "./pat/toggle",
     "./pat/tooltip",
-    "./pat/select-option",
     "./pat/slides",
     "./pat/slideshow-builder",
     "./pat/validate",
