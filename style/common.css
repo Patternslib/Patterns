@@ -279,7 +279,7 @@ section.demo:after {
 	color: white;
 }
 
-.component-index label:after {
+.component-index  .checklist label:after {
 	content: " ";
 	display: block;
 	width: 29px;
