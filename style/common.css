@@ -658,6 +658,11 @@ section.demo:after {
 
 @media only screen and (max-width: 767px) {
 
+#global-navigation #home.bumped-top {
+	position: absolute;
+	top: -10px;
+}
+
 #global-navigation a {
 	font-size: 12px;
 } }

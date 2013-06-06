@@ -559,7 +559,7 @@ html.js .postit.guide.closed {
 @media only screen and (max-width: 767px) {
 
 #global-navigation {
-	position: absolute;
+	position: absolute !important;
 	right: 0;
 	top: 0;
 	left: 0;
@@ -680,6 +680,18 @@ html.js .postit.guide.closed {
 	margin-left: -50px;
 	text-shadow: white 0 0 10px;
 }
+
+@media only screen and (max-width: 767px) {
+
+#documentation blockquote {
+	padding-left: 40px;
+	padding-top: 70px;
+}
+
+#documentation blockquote p {
+	margin-left: 0;
+	text-shadow: white 0 0 10px;
+} }
 
 
 
