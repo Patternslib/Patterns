@@ -690,11 +690,11 @@ html.js .postit.guide.closed {
 #documentation blockquote {
 	padding-left: 40px;
 	padding-top: 70px;
-	background-image: url(pattern-light-grain.png);
 	background-size: auto;
-	background-color: white;
-	height: 280px;
+	height: auto;
 	margin-bottom: -22px;
+	background: white url(texture-light-grain.png) repeat;
+	padding-bottom: 20px;
 }
 
 #documentation blockquote p {
