@@ -260,6 +260,12 @@ section.demo:after {
 	border-right: 4px solid rgba(0,0,0,0);
 }
 
+@media only screen and (max-width: 767px) {
+
+.component-index .checklist label {
+	width: 100%;
+} }
+
 .component-index .checklist label:before {
 	margin-left: -40px;
 	color: white;
