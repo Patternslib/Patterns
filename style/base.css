@@ -120,9 +120,6 @@ form#download:before {
 	overflow: hidden;
 	height: 0;
 	padding-top: 0;
-}
-
-.component-index {
 	padding-left: 0;
 	padding-right: 0;
 	color: silver;
@@ -134,6 +131,13 @@ form#download:before {
 	margin-left: auto;
 	transition: all 1s;
 }
+
+@media only screen and (max-width: 767px) {
+
+#component-index {
+	padding-right: 20px;
+	padding-left: 20px;
+} }
 
 .component-index button {
 	background-color: #595959;
@@ -181,13 +185,6 @@ form#download:before {
 	display: inline-block;
 	padding-left: 10px;
 	padding-right: 10px;
-}
-
-.state-home .component-index .functions,
-.state-home .component-index .bundle-type,
-.state-documentation .component-index .functions,
-.state-documentation .component-index .bundle-type  {
-	opacity: 0;
 }
 
 /* @end */
@@ -559,6 +556,20 @@ html.js .postit.guide.closed {
 	width: 90px;
 }
 
+@media only screen and (max-width: 767px) {
+
+#global-navigation {
+	position: absolute;
+	right: 0;
+	top: 0;
+	left: 0;
+}
+
+#global-navigation #home img {
+	width: 46px;
+	margin-top: -8px;
+} }
+
 #documentation:target #global-navigation #home,
 #download:target #global-navigation #home {
 	top: -10px;
@@ -652,6 +663,11 @@ html.js .postit.guide.closed {
 
 #documentation blockquote {
 	background-size: auto 100% ;
+}
+
+#documentation:target #component-index,
+#download:target #component-index {
+	height: auto
 } }
 
 #documentation:target blockquote,
