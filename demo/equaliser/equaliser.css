@@ -1,3 +1,5 @@
+@import url("../collapsible/collapsible.css");
+
 .column > .panel,
 .columns > .panel {
     height: 100%;
