@@ -19,6 +19,7 @@ define([
     "./pat/depends",
     "./pat/edit-tinymce",
     "./pat/expandable",
+    "./pat/equaliser",
     "./pat/focus",
     "./pat/form-state",
     "./pat/fullcalendar",
