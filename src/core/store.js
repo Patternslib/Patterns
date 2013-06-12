@@ -67,7 +67,7 @@ define(function() {
     };
 
     var store = {
-        supported: typeof window.sessionStorage !== 'undefined',
+        supported: false,
 
         local: function (name) {
             return new Storage(window.localStorage, name);
@@ -78,7 +78,14 @@ define(function() {
         }
     };
 
+    // Perform the test separately since this may throw a SecurityError as
+    // reported in #326
+    try {
+        store.supported=typeof window.sessionStorage !== 'undefined';
+    } catch(e) {
+    }
+
     return store;
 });
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
+
 // vim: sw=4 expandtab

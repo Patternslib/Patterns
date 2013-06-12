@@ -2,6 +2,9 @@
 
 ## 1.4.1 - Unreleased
 
+- Handle security errors when checking if a browser supports sessions storage.
+  This fixes [ticket 326](https://github.com/Patternslib/Patterns/issues/326).
+
 - Depends pattern: allow dahses in input names and values again. This fixes
   [ticket 313](https://github.com/Patternslib/Patterns/issues/313).
 
