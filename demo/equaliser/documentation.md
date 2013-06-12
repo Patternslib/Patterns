@@ -29,6 +29,37 @@ the direct children of that element will get the same height.
     </div>
 
 
+The pattern will remove any existing inline ``height`` styles for the direct
+children of the container when measuring their height.
+
+After resizing the pattern will add an ``equalised`` class to all direct
+children of the container.
+
+    <div class="row pat-equaliser">
+        <div class="six columns equalised">
+             ‥
+        </div>
+        <div class="six columns equalised">
+             ‥
+        </div>
+    </div>
+
+
+### Animating resizes
+
+You can use CSS transitions to animate the resizing. WHen doing this take care
+that you must only define the transition for elements with the ``equalised``
+class, otherwise the animation will break the size measurements done by the
+pattern.
+
+The above example uses this CSS:
+
+    .pat-equaliser .equalised {
+        -webkit-transition: height 1s;
+        -moz-transition: height 1s;
+        transition: height 1s;
+    }
+
 ### Properties
 
 This pattern has no configurable properties.

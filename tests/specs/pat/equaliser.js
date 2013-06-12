@@ -52,7 +52,9 @@ define(["pat/equaliser"], function(pattern) {
                 $container.appendTo("#lab");
                 pattern._update($container[0]);
                 expect($container.find(".large").height()).toBe(100);
+                expect($container.find(".large").hasClass("equalised")).toBeTruthy();
                 expect($container.find(".small").height()).toBe(100);
+                expect($container.find(".large").hasClass("equalised")).toBeTruthy();
             });
 
             it("Ignore inline styles", function() {

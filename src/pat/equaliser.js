@@ -26,10 +26,10 @@ define([
                 $children = $container.children(),
                 heights, max_height;
 
-            $children.css("height", "");
+            $children.css("height", "").removeClass("equalised");
             heights=$children.map(function() { return $(this).height(); }).get();
             max_height=Math.max.apply(null, heights);
-            $children.css("height", max_height+"px");
+            $children.css("height", max_height+"px").addClass("equalised");
         },
 
         _onEvent: function(event) {
