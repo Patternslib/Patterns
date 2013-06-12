@@ -50,6 +50,7 @@ define(["pat/equaliser"], function(pattern) {
                 $("<div/>", {"class": "small"}).appendTo($container);
                 $("<div/>", {"class": "large"}).appendTo($container);
                 $container.appendTo("#lab");
+		$container.data("pat-equaliser", {transition: "none"});
                 pattern._update($container[0]);
                 expect($container.find(".large").height()).toBe(100);
                 expect($container.find(".large").hasClass("equalised")).toBeTruthy();
@@ -64,6 +65,7 @@ define(["pat/equaliser"], function(pattern) {
                 $("<div/>", {"class": "small"}).css("height", "200px").appendTo($container);
                 $("<div/>", {"class": "large"}).css("height", "200px").appendTo($container);
                 $container.appendTo("#lab");
+		$container.data("pat-equaliser", {transition: "none"});
                 pattern._update($container[0]);
                 expect($container.find(".large").height()).toBe(100);
                 expect($container.find(".small").height()).toBe(100);

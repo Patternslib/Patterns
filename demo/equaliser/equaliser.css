@@ -4,10 +4,3 @@
 .columns > .panel {
     height: 100%;
 }
-
-.pat-equaliser .equalised {
-	-webkit-transition: height 1s;
-	-moz-transition: height 1s;
-	transition: height 1s;
-}
-
