@@ -45,21 +45,30 @@ children of the container.
     </div>
 
 
-### Animating resizes
+### Animating height changes
 
-You can use CSS transitions to animate the resizing. WHen doing this take care
-that you must only define the transition for elements with the ``equalised``
-class, otherwise the animation will break the size measurements done by the
-pattern.
+You can animate height using the `transition` property for the pattern using
+an `data-pat-equaliser` attribute.
 
-The above example uses this CSS:
+    <div class="row pat-equaliser" data-pat-equaliser="transition: grow">
+        <div class="six columns">
+             ‥
+        </div>
+        <div class="six columns">
+             ‥
+        </div>
+    </div>
 
-    .pat-equaliser .equalised {
-        -webkit-transition: height 1s;
-        -moz-transition: height 1s;
-        transition: height 1s;
-    }
+The `equalised` class will be set on an element after the animation has
+completed.
+
 
 ### Properties
 
 This pattern has no configurable properties.
+
+| Property | Default value | Values   | Description |
+| -------- | ------------- | -------- | ----------- |
+| `transition` | `none` | `none` `grow` | Transition effect to use when resizing.  the action is `show`. |
+| `effect-duration` | `fast` | | Duration of transition. This is ignored if the transition is `none`. |
+| `effect-easing`  | `swing` | | Easing to use for the transition. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |

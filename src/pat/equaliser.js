@@ -6,15 +6,23 @@
 define([
     "jquery",
     "../registry",
+    "../core/parser",
     "../utils"
-], function($, patterns, utils) {
+], function($, patterns, Parser, utils) {
+    var parser = new Parser("equaliser");
+    parser.add_argument("transition", "none", ["none", "grow"]);
+    parser.add_argument("effect-duration", "fast");
+    parser.add_argument("effect-easing", "swing");
+
     var equaliser = {
         name: "equaliser",
         trigger: ".pat-equaliser",
 
         init: function($el, opts) {
             return $el.each(function() {
-                var $container = $(this);
+                var $container = $(this),
+                    options = parser.parse($container, opts);
+                $container.data("pat-equaliser", options);
                 $container.on("pat-update.pat-equaliser", null, this, equaliser._onEvent);
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
                 equaliser._update(this);
@@ -23,13 +31,34 @@ define([
 
         _update: function(container) {
             var $container = $(container),
+                options = $container.data("pat-equaliser"),
                 $children = $container.children(),
-                heights, max_height;
+                max_height = 0;
 
-            $children.css("height", "").removeClass("equalised");
-            heights=$children.map(function() { return $(this).height(); }).get();
-            max_height=Math.max.apply(null, heights);
-            $children.css("height", max_height+"px").addClass("equalised");
+            for (var i=0; i<$children.length; i++) {
+                var $child = $children.eq(i),
+                    css = $child.css("height"),
+                    height;
+                $child.css("height", "").removeClass("equalised");
+                height=$child.height();
+                if (height>max_height)
+                    max_height=height;
+                if (css)
+                    $child.css("height", css);
+            }
+
+            var new_css = {height: max_height+"px"};
+
+            switch (options.transition) {
+                case "none":
+                    $children.css(new_css).addClass("equalised");
+                    break;
+                case "grow":
+                    $children.animate(new_css, options.effect.duration, options.effect.easing, function() {
+                        $(this).addClass("equalised");
+                    });
+                    break;
+            }
         },
 
         _onEvent: function(event) {
