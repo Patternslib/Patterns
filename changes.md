@@ -2,6 +2,9 @@
 
 ## 1.4.1 - Unreleased
 
+- Add new [equaliser pattern](demo/validate/index.html). This fixes
+  [ticket 307](https://github.com/Patternslib/Patterns/issues/307).
+
 - Depends pattern: allow dahses in input names and values again. This fixes
   [ticket 313](https://github.com/Patternslib/Patterns/issues/313).
 
