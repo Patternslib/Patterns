@@ -12,7 +12,8 @@ GENERATED	= src/lib/depends_parse.js
 
 JSHINTEXCEPTIONS = $(GENERATED) \
 		   src/lib/dependshandler.js \
-		   src/lib/htmlparser.js
+		   src/lib/htmlparser.js \
+		   src/pat/skeleton.js
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 
