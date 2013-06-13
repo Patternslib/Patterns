@@ -1,8 +1,104 @@
 # Changelog
 
-## 1.2.2 - Unreleased
+- Update to a new version of [shower](http://shwr.me/) which does not hijack
+  key events when not in presentation mode. This fixes 
+  [ticket 315](https://github.com/Patternslib/Patterns/issues/315).
 
-- ...
+
+- Handle security errors when checking if a browser supports sessions storage.
+  This fixes [ticket 326](https://github.com/Patternslib/Patterns/issues/326).
+
+- Add new [equaliser pattern](demo/validate/index.html). This fixes
+  [ticket 307](https://github.com/Patternslib/Patterns/issues/307).
+
+- Depends pattern: allow dahses in input names and values again. This fixes
+  [ticket 313](https://github.com/Patternslib/Patterns/issues/313).
+
+
+## 1.4.0 - Released May 24, 2013
+
+- Include value of used submit button when using forms for injection. This
+  fixes [ticket 305](https://github.com/Patternslib/Patterns/issues/305).
+
+- The argument parser has been updated to support quoted arguments in shorthand
+  notation.
+
+- Add new [validate pattern](demo/validate/index.html). This fixes
+  [ticket 68](https://github.com/Patternslib/Patterns/issues/68).
+
+- Add a new internal `pat-update` event which is triggered for elements that
+  are changed.
+
+- Markdown pattern: correct internal escaping behaviour which could cause
+  characters to show up in unexpected escaped form in literal blocks. This
+  fixes [ticket 306](https://github.com/Patternslib/Patterns/issues/306).
+
+- Depends pattern:
+
+  - Include element with invalid dependency in error log messages. This makes
+    it a lot simpler to find the source of errors.
+
+  - Support non-ASCII variable names and values. This fixes [ticket
+    304](https://github.com/Patternslib/Patterns/issues/304).
+
+  - Do not include generated parser in source tree. Instead the make rules
+    have been improved to generate/update the parser as needed.
+
+  - Support quoting of values. This makes it possible to test for values
+    containing whitespace.
+
+
+## 1.3.1 - Released May 6, 2013
+
+- Collapsible pattern: add a new `slide-horizontal` transition.
+
+- Slideshow builder pattern: make it possible to insert the slideshow fieldset
+  in a different location than at the start of the form.
+
+- Packaging: Remove unneeded dependency on jquery.autosuggest.
+
+- Injection pattern:
+
+  - Fix injection of HTML5 elements in IE 8 and older.
+  - Fix the rebasing of URLs when injecting in IE 8 and older.
+  - Send a new ``pat-inject-content-laoded`` event when all images in injected
+    markup have finished loading.
+
+- Modal pattern: 
+
+  - Reposition the modal after its images have finished loading.
+  - Improve browser compatibility.
+
+
+## 1.3.0 - Released April 5, 2013
+
+- Fix use of an undeclared variable in the parser which could result in
+  problems in IE8. This fixes
+  [ticket 298](https://github.com/Patternslib/Patterns/issues/298).
+
+- Markdown pattern:
+
+  - Generate HTML5 `<section>` elements with a `<h1>` header when converting
+    headers. This fixes [ticket
+    216](https://github.com/Patternslib/Patterns/issues/216).
+
+  - Support filtering if injected markdown documents with headers using
+    underlined (equal signs or dashes) style notation.
+
+  - Update the version of
+    [pagedown-extra](https://github.com/jmcmanus/pagedown-extra) which could
+    case markdown constructs to be replaces with the word `undefined`. This
+    fixes [ticket 297](https://github.com/Patternslib/Patterns/issues/297).
+
+- Injection pattern: extend *autoload-in-visible* to also apply for situations
+  where we are not dealing with a heigh-constrained scrollable parent but need
+  to look at the entire page.
+  This fixes [ticket 296](https://github.com/Patternslib/Patterns/issues/296).
+
+- The [switch pattern](demo/switch/index.html) can now remember the its state.
+  This fixes [ticket 293](https://github.com/Patternslib/Patterns/issues/293).
+
+- Add a new [gallery](demo/gallery/index.html) pattern.
 
 
 ## 1.2.1 - Released April 5, 2013
