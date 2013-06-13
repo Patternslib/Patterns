@@ -2,6 +2,11 @@
 
 ## 1.4.1 - Unreleased
 
+- Update to a new version of [shower](http://shwr.me/) which does not hijack
+  key events when not in presentation mode. This fixes 
+  [ticket 315](https://github.com/Patternslib/Patterns/issues/315).
+
+
 - Handle security errors when checking if a browser supports sessions storage.
   This fixes [ticket 326](https://github.com/Patternslib/Patterns/issues/326).
 
