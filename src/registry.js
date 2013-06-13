@@ -73,10 +73,14 @@ define([
                 }
                 pattern = registry.patterns[name];
                 if (pattern.transform) {
-                    try {
+                    if (do_not_catch_init_exception || dont_catch) {
                         pattern.transform($content);
-                    } catch (e) {
-                        log.error("Transform error for pattern" + name, e);
+                    } else {
+                        try {
+                            pattern.transform($content);
+                        } catch (e) {
+                            log.error("Transform error for pattern" + name, e);
+                        }
                     }
                 }
                 if (pattern.trigger) {
