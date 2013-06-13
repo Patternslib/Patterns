@@ -20,6 +20,7 @@
         <form class="pat-validate vertical" method="get" action="#">
           <label>Full name <input type="text" required="required"/></label>
           <label>Age <input type="number" min="16" max="65" required="required"/></label>
+          <label>Phone <input type="text" pattern="[0-9][0-9 -]+[0-9]" placeholder="###-#######" required="required"/></label>
           <fieldset class="checklist radio">
             <legend>Favourite colour</legend>
             <label><input name="colour" required="required" type="radio" value="blue"/> Blue</label>
