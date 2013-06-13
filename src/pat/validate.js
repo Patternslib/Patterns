@@ -19,6 +19,7 @@ define([
                 var parsley_form, field, i;
                 
                 parsley_form=$(this).parsley({
+                    trigger: "change keyup",
                     successClass: "valid",
                     errorClass: "warning",
                     errors: {
