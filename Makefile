@@ -7,6 +7,7 @@ PHANTOMJS	?= node_modules/.bin/phantomjs
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
+THIRDPARTY	= bungledeps $(shell find bungledeps -name '*.js' 2>/dev/null)
 
 GENERATED	= src/lib/depends_parse.js
 
@@ -30,11 +31,10 @@ bungledeps: package.json
 # Bundle related rules
 
 bundles: check-modules $(BUNDLES)
-
-bundles/patterns.js: $(SOURCES) $(GENERATED) bungledeps package.json
+bundles/patterns.js: $(SOURCES) $(GENERATED) $(THIRDPARTY) bungledeps package.json
 	./build.js -n
 
-bundles/patterns.min.js: $(SOURCES) $(GENERATED) bungledeps package.json
+bundles/patterns.min.js: $(SOURCES) $(GENERATED) $(THIRDPARTY) bungledeps package.json
 	./build.js
 
 
