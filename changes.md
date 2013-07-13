@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.1 - Unreleased
+## 1.4.1 - July 13, 2013
 
 - Validate pattern: always validate form elements when they are changed instead
   of waiting for a first form submit. This fixes 
@@ -16,7 +16,7 @@
 - Add new [equaliser pattern](demo/validate/index.html). This fixes
   [ticket 307](https://github.com/Patternslib/Patterns/issues/307).
 
-- Depends pattern: allow dahses in input names and values again. This fixes
+- Depends pattern: allow dashes in input names and values again. This fixes
   [ticket 313](https://github.com/Patternslib/Patterns/issues/313).
 
 
@@ -117,7 +117,7 @@
 
 - Internal build-related changes:
 
-  - Stop automatically using the latest CSS and iamges from jquery.fullcalendar
+  - Stop automatically using the latest CSS and images from jquery.fullcalendar
     and jquery.select2 in our demos to prevent unexpected changes. Instead we
     now use a copy we can update as needed.
 
