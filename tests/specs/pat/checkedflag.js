@@ -35,6 +35,25 @@ define(["pat/checkedflag"], function(pattern) {
                 expect(pattern.onChangeCheckbox).toHaveBeenCalled();
                 expect(pattern.onChangeRadio).not.toHaveBeenCalled();
             });
+
+        });
+
+        describe("init select", function() {
+            it("Trigger onChange on initial load", function() {
+                $("#lab").html("<label><select><option selected=\"selected\">Foo</option></select></label>");
+                spyOn(pattern, "onChangeSelect");
+                pattern.init($("#lab select"));
+                expect(pattern.onChangeSelect).toHaveBeenCalled();
+            });
+
+            it("Adds span if label is absent", function() {
+                $("#lab").html(
+                    "<select><option selected=\"selected\">Foo</option></select>");
+                var $select = $("#lab select");
+                pattern.init($select, []);
+                expect($select.parent()[0].tagName).toBe('SPAN');
+                expect($select.parent().attr('data-option')).toBe('Foo');
+            });
         });
 
         describe("onChangeCheckbox", function() {
@@ -113,14 +132,38 @@ define(["pat/checkedflag"], function(pattern) {
             });
         });
 
+        describe("onChange select", function() {
+            it("Select with label", function() {
+                $("#lab").html(
+                    '<label>' +
+                        '<select>' +
+                        '<option selected="selected" value="value">Foo</option>' +
+                        '</select>' +
+                        '</label>');
+                var select = $("#lab select")[0];
+                pattern.onChangeSelect.apply(select, []);
+                expect($("#lab label").attr("data-option")).toBe("Foo");
+            });
+        });
+
         it("Handle form reset", function() {
             $("#lab").html([
-                "<form>",
-                "  <fieldset class=\"checked\">",
-                "    <label class=\"checked\"><input type=\"radio\" id=\"foo\" checked=\"checked\"/></label>",
-                "    <label class=\"unchecked\"><input type=\"radio\" id=\"bar\"/></label>",
-                "  </fieldset>",
-                "</form>"].join("\n"));
+                '<form>',
+                '  <fieldset class="checked">',
+                '    <label class="checked">',
+                '      <input type="radio" id="foo" checked="checked"/>',
+                '    </label>',
+                '    <label class="unchecked">',
+                '      <input type="radio" id="bar"/>',
+                '    </label>',
+                '    <label data-option="two">',
+                '      <select>',
+                '        <option selected="selected" value="1">one<option>',
+                '        <option value="2">two<option>',
+                '      </select>',
+                '    </label>',
+                '  </fieldset>',
+                '</form>'].join("\n"));
             var $input = $("#lab input");
             pattern.init($input);
             $("#foo").prop("checked", false).change();
@@ -131,8 +174,74 @@ define(["pat/checkedflag"], function(pattern) {
             expect($("label:has(#foo)").hasClass("checked")).toBe(true);
             expect($("label:has(#bar)").hasClass("unchecked")).toBe(true);
             expect($("#lab fieldset").hasClass("checked")).toBe(true);
+            expect($("label:has(select)").attr('data-option')).toBe("one");
         });
 
+        describe("setting value", function() {
+            it("handles checkboxes", function() {
+                $("#lab").html([
+                    '<form>',
+                    '  <fieldset class="checked">',
+                    '    <label class="checked">',
+                    '      <input type="checkbox" id="foo" checked="checked"/>',
+                    '    </label>',
+                    '  </fieldset>',
+                    '</form>'
+                ].join("\n"));
+
+                $('input').patCheckedflag('set', false);
+                expect($("label").hasClass("checked")).toBe(false);
+                expect($("fieldset").hasClass("checked")).toBe(false);
+                expect($("label").hasClass("unchecked")).toBe(true);
+                expect($("fieldset").hasClass("unchecked")).toBe(true);
+                expect($("input").prop("checked")).toBe(false);
+
+                $('input').patCheckedflag('set', true);
+                expect($("label").hasClass("checked")).toBe(true);
+                expect($("fieldset").hasClass("checked")).toBe(true);
+                expect($("label").hasClass("unchecked")).toBe(false);
+                expect($("fieldset").hasClass("unchecked")).toBe(false);
+                expect($("input").prop("checked")).toBe(true);
+
+            });
+            it("handles selects", function() {
+                $("#lab").html([
+                    '<form>',
+                    '  <label>',
+                    '    <select>',
+                    '      <option value="1">one<option>',
+                    '      <option value="2">two<option>',
+                    '    </select>',
+                    '  </label>',
+                    '</form>'
+                ].join("\n"));
+
+                var $label = $('label'),
+                    $select = $('select'),
+                    $option1 = $('option[value="1"]'),
+                    $option2 = $('option[value="2"]');
+
+                $select.patCheckedflag('set', 1);
+                expect($option1.prop('selected')).toBe(true);
+                expect($option2.prop('selected')).toBe(false);
+                expect($label.attr("data-option")).toBe("one");
+
+                $select.patCheckedflag('set', 2);
+                expect($option1.prop('selected')).toBe(false);
+                expect($option2.prop('selected')).toBe(true);
+                expect($label.attr("data-option")).toBe("two");
+
+                $select.patCheckedflag('set', "1");
+                expect($option1.prop('selected')).toBe(true);
+                expect($option2.prop('selected')).toBe(false);
+                expect($label.attr("data-option")).toBe("one");
+
+                $select.patCheckedflag('set', "2");
+                expect($option1.prop('selected')).toBe(false);
+                expect($option2.prop('selected')).toBe(true);
+                expect($label.attr("data-option")).toBe("two");
+            });
+       });
     });
 
 });
