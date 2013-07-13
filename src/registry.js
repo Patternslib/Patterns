@@ -26,11 +26,18 @@ define([
         jquery_plugin = utils.jquery_plugin;
 
     var disable_re = /patterns-disable=([^&]+)/g,
+        dont_catch_re = /patterns-dont-catch/g,
+        dont_catch = false,
         disabled = {}, match;
 
-    while ((match=disable_re.exec(window.location.search))!==null) {
+    while ((match=disable_re.exec(window.location.search)) !== null) {
         disabled[match[1]] = true;
         log.info('Pattern disabled via url config:', match[1]);
+    }
+
+    while ((match=dont_catch_re.exec(window.location.search)) !== null) {
+        dont_catch = true;
+        log.info('I will not catch init exceptions');
     }
 
     var registry = {
@@ -66,10 +73,14 @@ define([
                 }
                 pattern = registry.patterns[name];
                 if (pattern.transform) {
-                    try {
+                    if (do_not_catch_init_exception || dont_catch) {
                         pattern.transform($content);
-                    } catch (e) {
-                        log.error("Transform error for pattern" + name, e);
+                    } else {
+                        try {
+                            pattern.transform($content);
+                        } catch (e) {
+                            log.error("Transform error for pattern" + name, e);
+                        }
                     }
                 }
                 if (pattern.trigger) {
@@ -100,15 +111,16 @@ define([
 
                     if ($el.is(pattern.trigger)) {
                         plog.debug("Initialising:", $el);
-                        try {
+                        if (do_not_catch_init_exception || dont_catch) {
+                            try {
+                                pattern.init($el);
+                                plog.debug("done.");
+                            } catch (e) {
+                                plog.error("Caught error:", e);
+                            }
+                        } else {
                             pattern.init($el);
                             plog.debug("done.");
-                        } catch (e) {
-                            if (do_not_catch_init_exception) {
-                              throw e;
-                            } else {
-                              plog.error("Caught error:", e);
-                            }
                         }
                     }
                 }
