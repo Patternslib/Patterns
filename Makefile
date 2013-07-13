@@ -87,23 +87,6 @@ check-bundles: $(BUNDLES)
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner-bundle-min.html
 
 
-demo/calendar/fullcalendar.css: bungledeps/jquery.fullcalendar-*/fullcalendar/fullcalendar.css
-	cp $< $@
-
-demo/auto-suggest/select2.css: bungledeps/jquery.select2-*/select2.css
-	cp $< $@
-
-demo/auto-suggest/select2.png: bungledeps/jquery.select2-*/select2.png
-	cp $< $@
-
-demo/auto-suggest/select2-spinner.gif: bungledeps/jquery.select2-*/select2-spinner.gif
-	cp $< $@
-
-update-demo-from-bungledeps: demo/calendar/fullcalendar.css demo/auto-suggest/select2.css demo/auto-suggest/select2.png demo/auto-suggest/select2-spinner.gif
-
-
-
-
 # PhantomJS installation on NixOS
 
 nixenv/bin/phantomjs:
@@ -120,5 +103,5 @@ clean:
 	$(MAKE) $(MFLAGS) -C tests clean
 	rm -f $(BUNDLES)
 
-.PHONY: all bundle bundles bundles-all-tags jshint check check-bundles check-modules check-nix clean doc phantom-via-nix update-demo-from-bungledeps use-modules use-bundle
+.PHONY: all bundle bundles bundles-all-tags jshint check check-bundles check-modules check-nix clean doc phantom-via-nix use-modules use-bundle
 
