@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.5.0 - Unreleased
+
+- Validate pattern: perform validation when submitting forms via AJAX.
+
+- The argument parser can now disable configuration inheritance if needed
+  by a pattern.
+
+- The select-option pattern has been merged into the [checked
+  flag](demo/checked-flag/index.html) pattern.
+
+- Checked flag pattern: add new API to control select and checkbox elements.
+
+- Do not handle exceptions during Patterns initialisation and transforms if a
+  `patterns-dont-catch` query string parameter is present.
+
+
 ## 1.4.1 - July 13, 2013
 
 - Validate pattern: always validate form elements when they are changed instead
