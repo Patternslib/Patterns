@@ -27,10 +27,36 @@ define([
                     slides._remove_slides($el, requested_ids);
             }
             $el.each(function() {
-                var presentation = new Presentation(this);
-                $(this).data("pat-slide", presentation);
+                var presentation = new Presentation(this),
+                    $container = $(this);
+                $container
+                    .data("pat-slide", presentation)
+                    .on("SlideDisplay", slides._onSlideDisplay)
+                    .on("SlideHide", slides._onSlideHide);
             });
             return slides._hook($el);
+        },
+
+        _onSlideDisplay: function(event) {
+            var slide = event.originalEvent.detail.slide.element,
+                $videos = $("video", slide);
+
+            $videos.each(function() {
+                if (this.paused) {
+                    this.currentTime=0;
+                    this.play();
+                }
+            });
+        },
+
+        _onSlideHide: function(event) {
+            var slide = event.originalEvent.detail.slide.element,
+                $videos = $("video", slide);
+
+            $videos.each(function() {
+                if (!this.paused)
+                    this.pause();
+            });
         },
 
         _collapse_ids: function(params) {
