@@ -2,6 +2,9 @@
 
 ## 1.5.0 - Unreleased
 
+- Add a missing dependency on jquery-ext to the registry module. This fixes
+  errors invoking the scan function when using a Patterns bundle.
+
 - Validate pattern: perform validation when submitting forms via AJAX.
 
 - The argument parser can now disable configuration inheritance if needed

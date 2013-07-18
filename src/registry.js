@@ -20,7 +20,8 @@ define([
     "./core/logger",
     "./utils",
     // below here modules that are only loaded
-    "./compat"
+    "./compat",
+    "./jquery-ext"
 ], function($, logger, utils) {
     var log = logger.getLogger("registry"),
         jquery_plugin = utils.jquery_plugin;
