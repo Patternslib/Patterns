@@ -100,7 +100,11 @@ define([
                 $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $el.trigger("patterns-inject-triggered");
+            try {
+                $el.trigger("patterns-inject-triggered");
+            } catch (e) {
+                log.error("patterns-inject-triggered", e);
+            }
             _.execute(cfgs, $el);
         },
 
@@ -109,7 +113,11 @@ define([
                 $el = $(this);
             if (ev)
                 ev.preventDefault();
-            $el.trigger("patterns-inject-triggered");
+            try {
+                $el.trigger("patterns-inject-triggered");
+            } catch (e) {
+                log.error("patterns-inject-triggered", e);
+            }
             _.execute(cfgs, $el);
         },
 
@@ -268,7 +276,11 @@ define([
                             $injected = cfg.$injected || $src;
 
                         $src.findInclusive('img').on('load', function() {
-                            $(this).trigger('pat-inject-content-loaded');
+                            try {
+                                $(this).trigger('pat-inject-content-loaded');
+                            } catch (e) {
+                                log.error("pat-inject-content-loaded", e);
+                            }
                         });
 
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
@@ -276,8 +288,12 @@ define([
                                 // setting data on textnode fails in IE8
                                 return this.nodeType !== 3; //Node.TEXT_NODE
                             }).data("pat-injected", {origin: cfg.url});
-                            $injected.addClass(cfg["class"])
-                                .trigger("patterns-injected", cfg);
+                            $injected.addClass(cfg["class"]);
+                            try {
+                                $injected.trigger("patterns-injected", cfg);
+                            } catch (e) {
+                                log.error("patterns-injected", e);
+                            }
                         }
                         if ((cfg.history === "record") &&
                             ("pushState" in history))
