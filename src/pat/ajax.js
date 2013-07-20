@@ -65,18 +65,26 @@ define([
                     // exception, not only errors described in the
                     // jqxhr.
                     log.error("load error for " + cfg.url + ":", error, jqxhr);
-                    $el.trigger({
-                        type: "pat-ajax-error",
-                        error: error,
-                        jqxhr: jqxhr
-                    });
+                    try {
+                        $el.trigger({
+                            type: "pat-ajax-error",
+                            error: error,
+                            jqxhr: jqxhr
+                        });
+                    } catch (e) {
+                        log.error('trigger pat-ajax-error', e);
+                    };
                 },
                 onSuccess = function(data, status, jqxhr) {
                     log.debug("success: jqxhr:", jqxhr);
-                    $el.trigger({
-                        type: "pat-ajax-success",
-                        jqxhr: jqxhr
-                    });
+                    try {
+                        $el.trigger({
+                            type: "pat-ajax-success",
+                            jqxhr: jqxhr
+                        });
+                    } catch (e) {
+                        log.error('trigger pat-ajax-success', e);
+                    };
                 },
                 args = {
                     context: $el,
