@@ -77,7 +77,11 @@ define([
                        .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit);
                 break;
             case "autoload":
-                _.onClick.apply($el[0], []);
+                try {
+                    _.onClick.apply($el[0], []);
+                } catch (e) {
+                    log.error("autoload", e);
+                }
                 break;
             case "autoload-visible":
                 _._initAutoloadVisible($el);
