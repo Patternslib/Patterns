@@ -90,7 +90,7 @@ define([
                     $lis.removeClass("drop-target-above drop-target-below");
                 });
 
-                $lis.bind("drop.pat-sortable", function() {
+                $lis.bind("drop.pat-sortable", function(event) {
                     if ($(this).hasClass("dragged"))
                         return;
 
