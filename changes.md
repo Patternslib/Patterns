@@ -2,6 +2,9 @@
 
 ## 1.5.0 - Unreleased
 
+- Fix event handling in the sortable pattern. This could result in unexpected
+  behaviour in Firefox.
+
 - Add a new [forward pattern](demo/forward/index.html).
 
 - Add a missing dependency on jquery-ext to the registry module. This fixes
@@ -22,7 +25,6 @@
 
 
 ## 1.4.1 - July 13, 2013
->>>>>>> ebd0dbe... Add a very quick new forward pattern.
 
 - Validate pattern: always validate form elements when they are changed instead
   of waiting for a first form submit. This fixes 
