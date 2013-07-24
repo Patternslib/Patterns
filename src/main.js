@@ -22,6 +22,7 @@ define([
     "./pat/equaliser",
     "./pat/focus",
     "./pat/form-state",
+    "./pat/forward",
     "./pat/fullcalendar",
     "./pat/gallery",
     "./pat/image-crop",

@@ -2,6 +2,8 @@
 
 ## 1.5.0 - Unreleased
 
+- Add a new [forward pattern](demo/forward/index.html).
+
 - Add a missing dependency on jquery-ext to the registry module. This fixes
   errors invoking the scan function when using a Patterns bundle.
 
