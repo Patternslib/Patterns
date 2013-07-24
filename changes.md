@@ -1,6 +1,28 @@
 # Changelog
 
-## 1.4.1 - Unreleased
+## 1.5.0 - Unreleased
+
+- Add a new [forward pattern](demo/forward/index.html).
+
+- Add a missing dependency on jquery-ext to the registry module. This fixes
+  errors invoking the scan function when using a Patterns bundle.
+
+- Validate pattern: perform validation when submitting forms via AJAX.
+
+- The argument parser can now disable configuration inheritance if needed
+  by a pattern.
+
+- The select-option pattern has been merged into the [checked
+  flag](demo/checked-flag/index.html) pattern.
+
+- Checked flag pattern: add new API to control select and checkbox elements.
+
+- Do not handle exceptions during Patterns initialisation and transforms if a
+  `patterns-dont-catch` query string parameter is present.
+
+
+## 1.4.1 - July 13, 2013
+>>>>>>> ebd0dbe... Add a very quick new forward pattern.
 
 - Validate pattern: always validate form elements when they are changed instead
   of waiting for a first form submit. This fixes 

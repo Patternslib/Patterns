@@ -21,6 +21,7 @@ define([
     "./pat/expandable",
     "./pat/focus",
     "./pat/form-state",
+    "./pat/forward",
     "./pat/fullcalendar",
     "./pat/image-crop",
     "./pat/inject",
