@@ -1,21 +1,31 @@
 define([
     "jquery",
     "pat-registry"
-], function($, patterns) {
+    "pat-logger",
+    "pat-parser"
+], function($, patterns, logger, Parser) {
+    var log = logger.getLogger("pat.sortable"),
+        parser = new Parser("sortable");
+
+    parser.add_argument("selector");
+
     var _ = {
         name: "sortable",
-        trigger: "ul.pat-sortable",
+        trigger: ".pat-sortable",
 
         init: function($el) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this)); });
 
+            var cfgs = parser.parse($el, true);
+            $el.data("patterns.sortable", cfgs);
+
             // use only direct descendants to support nested lists
-            var $lis = $el.children().filter("li");
+            var $sortables = $el.children().filter(cfgs[0].selector);
 
             // add handles and make them draggable for HTML5 and IE8/9
             // it has to be an "a" tag (or img) to make it draggable in IE8/9
-            var $handles = $("<a href=\"#\" class=\"handle\"></a>").appendTo($lis);
+            var $handles = $("<a href=\"#\" class=\"handle\"></a>").appendTo($sortables);
             if("draggable" in document.createElement("span"))
                 $handles.attr("draggable", true);
             else
@@ -69,7 +79,7 @@ define([
 
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
-                $lis.bind("dragover.pat-sortable", function(event) {
+                $sortables.bind("dragover.pat-sortable", function(event) {
                     var $this = $(this),
                         midlineY = $this.offset().top - $(document).scrollTop() +
                             $this.height()/2;
@@ -86,11 +96,11 @@ define([
                     event.preventDefault();
                 });
 
-                $lis.bind("dragleave.pat-sortable", function() {
-                    $lis.removeClass("drop-target-above drop-target-below");
+                $sortables.bind("dragleave.pat-sortable", function() {
+                    $sortables.removeClass("drop-target-above drop-target-below");
                 });
 
-                $lis.bind("drop.pat-sortable", function(event) {
+                $sortables.bind("drop.pat-sortable", function(event) {
                     if ($(this).hasClass("dragged"))
                         return;
 
@@ -109,7 +119,7 @@ define([
 
             $handles.bind("dragend", function() {
                 $(".dragged").removeClass("dragged");
-                $lis.unbind(".pat-sortable");
+                $sortables.unbind(".pat-sortable");
                 $el.unbind(".pat-sortable");
                 $("#pat-scroll-up, #pat-scroll-dn").detach();
             });
