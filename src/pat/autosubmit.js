@@ -39,7 +39,7 @@ define([
                 return $el.each(function() { _.init($(this), opts); });
 
             // handle the form itself
-            if ($el.is("form")) {
+            if ($el.is("form,.pat-subform")) {
                 if ($el.data("pat-autosubmit-initialized")) {
                     return $el;
                 }
@@ -50,7 +50,7 @@ define([
             }
 
             // make sure the form is initialized if it does not have the pat-autosubmit class
-            var $form = $el.parents("form").first();
+            var $form = $el.parents("form,.pat-subform").first();
             if (!$form.data("pat-autosubmit-initialized")) {
                 _.init($form);
             }
