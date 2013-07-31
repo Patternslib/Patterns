@@ -9,7 +9,7 @@ define([
     var _ = {
         setup: function($form, pat) {
 
-            if (!$form.is("form")) {
+            if (!$form.is("form,.pat-subform")) {
                 log.error("Input change event handler can only be set on forms.");
                 return;
             }

@@ -34,6 +34,7 @@ define([
     "./pat/navigation",
     "./pat/placeholder",
     "./pat/sortable",
+    "./pat/subform",
     "./pat/switch",
     "./pat/toggle",
     "./pat/tooltip",
