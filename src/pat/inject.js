@@ -35,7 +35,7 @@ define([
 
     var _ = {
         name: "inject",
-        trigger: "a.pat-inject, form.pat-inject",
+        trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
@@ -70,11 +70,14 @@ define([
             switch (cfgs[0].trigger) {
             case "default":
                 // setup event handlers
-                if ($el.is("a"))
+                if ($el.is("a")) {
                     $el.on("click.pat-inject", _.onClick);
-                else if ($el.is("form"))
+                } else if ($el.is("form")) {
                     $el.on("submit.pat-inject", _.onSubmit)
                        .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit);
+                } else if ($el.is(".pat-subform")) {
+                    log.debug("Initializing subform with injection");
+                }
                 break;
             case "autoload":
                 try {
@@ -125,26 +128,37 @@ define([
             _.execute(cfgs, $el);
         },
 
+        submitSubform: function($sub) {
+            var $el = $sub.parent('form'),
+                cfgs = $sub.data("patterns.inject");
+            try {
+                $el.trigger("patterns-inject-triggered");
+            } catch (e) {
+                log.error("patterns-inject-triggered", e);
+            }
+            _.execute(cfgs, $el);
+        },
+
         extractConfig: function($el, opts) {
             opts = $.extend({}, opts);
 
-            var urlparts, cfgs, defaultSelector;
-            // opts has priority, fallback to href/action
-            opts.url = opts.url || $el.attr("href") || $el.attr("action") || "";
-
-            // separate selector from url
-            urlparts = opts.url.split("#");
-            opts.url = urlparts[0];
-
-            // if no selector, check for selector as part of original url
-            defaultSelector = urlparts[1] && "#" + urlparts[1] || "body";
-
-            if (urlparts.length > 2) {
-                log.warn("Ignoring additional source ids:", urlparts.slice(2));
-            }
-
-            cfgs = parser.parse($el, opts, true);
+            var cfgs = parser.parse($el, opts, true);
             cfgs.forEach(function(cfg) {
+                var urlparts, defaultSelector;
+                // opts and cfg have priority, fallback to href/action
+                cfg.url = opts.url || cfg.url || $el.attr("href") || $el.attr("action") || "";
+
+                // separate selector from url
+                urlparts = cfg.url.split("#");
+                cfg.url = urlparts[0];
+
+                // if no selector, check for selector as part of original url
+                defaultSelector = urlparts[1] && "#" + urlparts[1] || "body";
+
+                if (urlparts.length > 2) {
+                    log.warn("Ignoring additional source ids:", urlparts.slice(2));
+                }
+
                 cfg.selector = cfg.selector || defaultSelector;
             });
             return cfgs;
