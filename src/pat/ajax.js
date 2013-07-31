@@ -73,7 +73,7 @@ define([
                         });
                     } catch (e) {
                         log.error('trigger pat-ajax-error', e);
-                    };
+                    }
                 },
                 onSuccess = function(data, status, jqxhr) {
                     log.debug("success: jqxhr:", jqxhr);
@@ -84,7 +84,7 @@ define([
                         });
                     } catch (e) {
                         log.error('trigger pat-ajax-success', e);
-                    };
+                    }
                 },
                 args = {
                     context: $el,
