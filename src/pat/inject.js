@@ -134,7 +134,9 @@ define([
             cfgs.forEach(function(cfg) {
                 var urlparts, defaultSelector;
                 // opts and cfg have priority, fallback to href/action
-                cfg.url = opts.url || cfg.url || $el.attr("href") || $el.attr("action") || "";
+                cfg.url = opts.url || cfg.url || $el.attr("href") ||
+                    $el.attr("action") || $el.parents('form').attr('action') ||
+                    "";
 
                 // separate selector from url
                 urlparts = cfg.url.split("#");
