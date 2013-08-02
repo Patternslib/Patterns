@@ -4,8 +4,7 @@ define([
     "pat-logger",
     "pat-parser"
 ], function($, patterns, logger, Parser) {
-    var log = logger.getLogger("pat.sortable"),
-        parser = new Parser("sortable");
+    var parser = new Parser("sortable");
 
     parser.add_argument("selector");
 
