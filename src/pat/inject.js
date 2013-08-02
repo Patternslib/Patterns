@@ -117,7 +117,7 @@ define([
         },
 
         submitSubform: function($sub) {
-            var $el = $sub.parent('form'),
+            var $el = $sub.parents('form'),
                 cfgs = $sub.data("patterns.inject");
             try {
                 $el.trigger("patterns-inject-triggered");
