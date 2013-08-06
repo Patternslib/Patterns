@@ -66,7 +66,14 @@ define([
 
         submit: function(ev) {
             ev.stopPropagation();
-            _.scopedSubmit($(this));
+
+            var $this = $(this),
+                $button = $this.find('button[type=submit][formaction]').first();
+            if ($button) {
+                $button.trigger('click');
+            } else {
+                _.scopedSubmit($this);
+            }
         },
 
         submitClicked: function(ev) {
