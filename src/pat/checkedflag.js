@@ -114,11 +114,10 @@ define([
                 $label = $el.closest("label"),
                 $fieldset = $el.closest("fieldset");
 
-            if ($el.closest("ul.radioList").length)
+            if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
-
-            if ($el.closest("ul.radioList").length)
-                $label=$label.add($el.closest("li"));
+                $siblings=$siblings.closest("li");
+            }
 
             if (this.checked) {
                 $label.add($fieldset)
@@ -143,8 +142,10 @@ define([
                 $siblings = (this.form === null) ?
                     $(selector) : $(selector, this.form);
 
-            if ($el.closest("ul.radioList").length)
+            if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
+                $siblings=$siblings.closest("li");
+            }
 
             $siblings.removeClass("checked").addClass("unchecked");
             if (this.checked) {
