@@ -114,10 +114,8 @@ define([
                 $label = $el.closest("label"),
                 $fieldset = $el.closest("fieldset");
 
-            if ($el.closest("ul.radioList").length) {
+            if ($el.closest("ul.radioList").length)
                 $label=$label.add($el.closest("li"));
-                $siblings=$siblings.closest("li");
-            }
 
             if (this.checked) {
                 $label.add($fieldset)
