@@ -8,3 +8,5 @@
 /src/lib/depends_parse.js
 /tests/index.html
 /tests/TestRunner*
+
+*.log
