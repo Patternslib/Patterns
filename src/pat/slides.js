@@ -6,19 +6,17 @@
 define([
     "jquery",
     "../registry",
+    "patternslib.slides",
     "../utils",
     "../core/url",
-    "../core/remove",
-    "shower"
-], function($, patterns, utils, url) {
+    "../core/remove"
+], function($, patterns, Presentation, utils, url) {
     var slides = {
         name: "slides",
         trigger: ".pat-slides:has(.slide)",
 
         setup: function() {
             $(document).on("patterns-injected", utils.debounce(slides._reset, 100));
-            // Re-init shower to get the slide selector in.
-            window.shower.init(".pat-slides .slide");
         },
 
         init: function($el) {
@@ -26,9 +24,39 @@ define([
             if (parameters.slides!==undefined) {
                 var requested_ids = slides._collapse_ids(parameters.slides);
                 if (requested_ids)
-                    slides._disable_slides($el, requested_ids);
+                    slides._remove_slides($el, requested_ids);
             }
+            $el.each(function() {
+                var presentation = new Presentation(this),
+                    $container = $(this);
+                $container
+                    .data("pat-slide", presentation)
+                    .on("SlideDisplay", slides._onSlideDisplay)
+                    .on("SlideHide", slides._onSlideHide);
+            });
             return slides._hook($el);
+        },
+
+        _onSlideDisplay: function(event) {
+            var slide = event.originalEvent.detail.slide.element,
+                $videos = $("video", slide);
+
+            $videos.each(function() {
+                if (this.paused) {
+                    this.currentTime=0;
+                    this.play();
+                }
+            });
+        },
+
+        _onSlideHide: function(event) {
+            var slide = event.originalEvent.detail.slide.element,
+                $videos = $("video", slide);
+
+            $videos.each(function() {
+                if (!this.paused)
+                    this.pause();
+            });
         },
 
         _collapse_ids: function(params) {
@@ -40,18 +68,14 @@ define([
             return ids;
         },
 
-        _disable_slides: function($shows, ids) {
-            var need_reset = false,
-               has_bad_id = function(idx, el) { return ids.indexOf(el.id)===-1; };
+        _remove_slides: function($shows, ids) {
+            var has_bad_id = function(idx, el) { return ids.indexOf(el.id)===-1; };
 
             for (var i=0; i<$shows.length; i++) {
                 var $show = $shows.eq(i),
                     $bad_slides = $show.find(".slide[id]").filter(has_bad_id);
-                need_reset=need_reset || $bad_slides.length;
                 $bad_slides.remove();
             }
-            if (need_reset)
-                slides._reset();
         },
 
         _hook: function($el) {
@@ -61,8 +85,11 @@ define([
         },
 
         _reset: function() {
+            var $container = $(this).closest(".pat-slides"),
+                presentation = $container.data("pat-slide");
+            if (presentation)
+                presentation.scan();
             slides._hook($(this.trigger));
-            window.shower.init(".pat-slides .slide");
         }
     };
 

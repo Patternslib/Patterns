@@ -1,5 +1,5 @@
 {
-    "name": "Patterns",
+    "name": "patterns",
     "version": "1.5.0pre",
     "title": "Markup patterns to drive behaviour.",
     "description":
@@ -59,7 +59,7 @@
 	    "parsley",
 	    "photoswipe",
             "prefixfree",
-            "shower-2013.06.13",
+            "patternslib.slides",
             "text",
             "tinymce"
         ],
