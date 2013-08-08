@@ -2,6 +2,9 @@
 
 ## 1.5.0 - Unreleased
 
+- Rewrite the [slides pattern](demo/slides/index.html) to use the new
+  Patternslib slides library, replacing shower.
+
 - Fix event handling in the sortable pattern. This could result in unexpected
   behaviour in Firefox.
 
