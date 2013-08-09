@@ -69,7 +69,7 @@ define([
 
             var $this = $(this),
                 $button = $this.find('button[type=submit][formaction]').first();
-            if ($button) {
+            if ($button.length) {
                 $button.trigger('click');
             } else {
                 _.scopedSubmit($this);
