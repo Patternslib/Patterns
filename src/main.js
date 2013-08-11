@@ -31,6 +31,7 @@ define([
     "./pat/modal",
     "./pat/navigation",
     "./pat/placeholder",
+    "./pat/selfhealing",
     "./pat/sortable",
     "./pat/subform",
     "./pat/switch",

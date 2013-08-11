@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Selfhealing demo page</title>
+    <link rel="stylesheet" href="../../style/common.css" type="text/css">
+    <link rel="stylesheet" href="selfhealing.css" type="text/css">
+</head>
+	<body>
+		<section>
+			<h1>
+				Selfhealing
+			</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+			<h2>Demo</h2>
+                                <p>This is a regular paragraph that is initially followed by a selfhealing paragraph.</p>
+                                <p class="pat-selfhealing">This content will be gone in three seconds...</p>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+
+		<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+
+                <script data-main="../../src/autoinit" src="../../bungledeps/require.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
