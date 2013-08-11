@@ -26,6 +26,7 @@ define([
     parser.add_argument("source", "title", ["ajax", "content", "title"]);
     parser.add_argument("delay", 0);
     parser.add_argument("class");
+    parser.add_argument("target", "body");
 
     var tooltip = {
         name: "tooltip",
@@ -243,7 +244,7 @@ define([
                     .text("Close")
                     .insertBefore($container.find("*:first"));
             }
-            $("body").append($container);
+            $(options.target).append($container);
             return $container;
         },
 
@@ -495,13 +496,13 @@ define([
                 break;
             }
 
-            var $body = $("body"),
-                body_pos = $body.css("position");
+            var $target = $(options.target),
+                target_pos = $target.css("position");
 
-            if (body_pos==="relative" || body_pos==="absolute") {
-                var body_offset = $body.offset();
-                container_offset.top-=body_offset.top;
-                container_offset.left-=body_offset.left;
+            if (target_pos==="relative" || target_pos==="absolute") {
+                var target_offset = $target.offset();
+                container_offset.top-=target_offset.top;
+                container_offset.left-=target_offset.left;
             }
 
             $container.find("> div").css(content_css);

@@ -161,3 +161,4 @@ The available options are:
 | `delay` | `0` | *time* | `The delay for the tooltip to appear, expressed in milliseconds | Time |
 | `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
 | `class` | *none* | *class value* | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour | |
+| `target` | `body` | *selector* | Selects where the tooltip container is appended in the DOM | |
