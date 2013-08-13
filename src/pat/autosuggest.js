@@ -26,10 +26,9 @@ define([
                 return $el.each(function() { _.init($(this), opts); });
 
             var cfg = parser.parse($el, opts);
-            cfg.startText =  $el.attr("readonly") ? "" : cfg.placeholder;
-
             $el.val(cfg.preFill.split(','));
             $el.select2({
+                placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
                 tokenSeparators: [","]
             });
