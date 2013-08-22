@@ -314,6 +314,7 @@ define([
                             } catch (e) {
                                 log.error("patterns-injected", e);
                             }
+                            $el.trigger('pat-inject-success');
                         }
                         if ((cfg.history === "record") &&
                             ("pushState" in history))
