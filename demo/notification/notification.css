@@ -9,6 +9,34 @@
 	border: 1px solid #d3d4a7;
 }
 
+.pat-notification-panel.success {
+  background-color: #5bb75b;
+  color: #ffffff;
+}
+
+.pat-notification-panel.warning {
+  background-color: #faa732;
+  color: #ffffff;
+}
+
+.pat-notification-panel.warning * {
+	color: white !important;
+}
+
+.pat-notification-panel.error {
+  background-color: #da4f49;
+  color: #ffffff;
+}
+
+.pat-notification-panel.error * {
+	color: white !important;
+}
+
+.pat-notification-panel.info {
+  background-color: #d9edf7;
+  color: #247fad;
+}
+
 .pat-notification-panel p:last-of-type {
 	margin-bottom: 0;
 }
