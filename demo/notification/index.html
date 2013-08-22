@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Selfhealing demo page</title>
+	<title>Notification demo page</title>
     <link rel="stylesheet" href="../../style/common.css" type="text/css">
     <link rel="stylesheet" href="notification.css" type="text/css">
 </head>
@@ -24,13 +24,28 @@
 	            	This content will be gone only if you dismiss it yourself
 	            </p>
 
+	            <p class="pat-notification" data-pat-notification="healing: persistent; class: warning">
+	            	This message gets an extra class 'warning' on it
+	            </p>
+
 	            <p class="pat-notification">
 	            	This content will be gone in five seconds
 	            </p>
 
-	            <a href="inject-source.html" class="pat-inject" data-pat-inject="target: self::element::after">
-	            	Inject content with banner notification
-	            </a>
+	            <form action="inject-source.html" method="get" class="pat-notification" data-pat-notification="type: banner">
+					<fieldset>
+						<button type="submit">Give feedback</button> in a banner via a form submit.
+					</fieldset>
+				</form>
+
+	            <p>
+		            <a href="inject-source.html" class="pat-notification">Inject content with banner notification</a>
+	        	</p>
+
+	            <p>
+		            <a href="inject-source.html" class="pat-inject" data-pat-inject="target: self::element::after">Inject content with banner notification using pattern Injection</a>
+	        	</p>
+
 			</section>
 			<section class="documentation">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>

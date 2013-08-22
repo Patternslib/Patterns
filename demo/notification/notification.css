@@ -1,4 +1,4 @@
-div.pat-notification {
+.pat-notification-panel {
 	padding: 8px;
 	margin-bottom: 20px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.20);
@@ -9,11 +9,7 @@ div.pat-notification {
 	border: 1px solid #d3d4a7;
 }
 
-div.pat-notification p {
-	
-}
-
-div.pat-notification p:last-of-type {
+.pat-notification-panel p:last-of-type {
 	margin-bottom: 0;
 }
 
