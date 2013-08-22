@@ -65,6 +65,7 @@ define([
 
                 $el = $el.wrap("<div/>").parent()
                     .attr("id", "selfhealing-message-" + _.count)
+                    .addClass("pat-notification")
                     .on("mouseenter.pat-notification", _.onMouseEnter)
                     .on("mouseleave.pat-notification", _.onMouseLeave);
 
@@ -72,12 +73,18 @@ define([
                     options.controls = [ options.controls ];
                 }
 
+                // add close icon if requsted
                 if (options.controls.indexOf("icons") >= 0) {
-                    $el.append("<div class='dismiss-button'/>")
-                        .on("click.pat-notification", _.onClick);
-                } else if (options.controls.indexOf("buttons") >= 0) {
-                    $el.append("<button class='dismiss-button'>Dismiss</button>")
-                        .on("click.pat-notification", _.onClick);
+                    $el.append("<button type='button' class='close-panel'>Close</button>");
+                }
+
+                // add close button if requested
+                if (options.controls.indexOf("buttons") >= 0) {
+                    $el.append("<div class='button-bar'><button type='button' class='close-panel'>Close</button></div>");
+                }
+
+                if ($el.find(".close-panel").length) {
+                    $el.on("click.pat-notification", ".close-panel", _.onClick);
                 } else {
                     $el.on("click.pat-notification", _.onClick);
                 }
@@ -124,8 +131,8 @@ define([
             _.initRemoveTimer($this);
         },
 
-        onClick: function() {
-            var $this = $(this);
+        onClick: function(event) {
+            var $this = $(event.delegateTarget);
 
             $this.data("persistent", false);
             _.remove($this);
