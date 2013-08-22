@@ -734,39 +734,6 @@ form.horizontal label em.validation.message {
 
 /* @end */
 
-/* @group Self healings */
-
-#selfhealing-messages {
-  position: fixed;
-  top: 15px;
-  width: 320px;
-  z-index: 10;
-	left: 15px;
-}
-
-#selfhealing-messages div {
- 	background-color: rgba(0,0,0,0.8);
-  	-moz-border-radius: 5px; /* Firefox */
-  	-webkit-border-radius: 5px;
-  	border-radius: 5px; /* CSS3 */
-	border: 1px solid gray;
-	-webkit-box-shadow: 0 2px 20px rgba(0,0,0,0.4);
-	-moz-box-shadow: 0 2px 20px rgba(0,0,0,0.4);
-	box-shadow: 0 2px 20px rgba(0,0,0,0.4);
-	margin-bottom: 10px;
-	padding: 10px;
-}
-
-#selfhealing-messages div {
-	color: #cccccc;
-	padding: 7px;
-}
-
-#selfhealing-messages div p {
-	margin: 0;
-}
-/* @end */
-
 
 
 /* @end */

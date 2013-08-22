@@ -9,17 +9,28 @@
 	<body>
 		<section>
 			<h1>
-				Selfhealing
+				Notification
 			</h1>
 			<section class="description">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
 			</section>
 			<section class="demo">
-			<h2>Demo</h2>
-                                <p>This is a regular paragraph that is initially followed by a selfhealing paragraph.</p>
-                                <p class="pat-notification">This content will be gone in five seconds...</p>
+				<h2>Demo</h2>
+	            <p>
+	            	This is a regular paragraph that is initially followed by a selfhealing paragraph.
+	            </p>
 
-                                <a href="inject-source.html" class="pat-inject" data-pat-inject="target: self::element::after">Inject content with banner notification</a>
+	            <p class="pat-notification" data-pat-notification="healing: persistent">
+	            	This content will be gone only if you dismiss it yourself
+	            </p>
+
+	            <p class="pat-notification">
+	            	This content will be gone in five seconds
+	            </p>
+
+	            <a href="inject-source.html" class="pat-inject" data-pat-inject="target: self::element::after">
+	            	Inject content with banner notification
+	            </a>
 			</section>
 			<section class="documentation">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>

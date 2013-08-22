@@ -1,3 +1,52 @@
+div.pat-notification {
+	padding: 8px;
+	margin-bottom: 20px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.20);
+	display: block;
+	border-radius: 4px;
+	background-color: #fdfdc8;
+	color: #6f5a44;
+	border: 1px solid #d3d4a7;
+}
 
+div.pat-notification p {
+	
+}
+
+div.pat-notification p:last-of-type {
+	margin-bottom: 0;
+}
+
+/* @group Self healings */
+
+#selfhealing-messages {
+	position: fixed;
+ 	top: 15px;
+	width: 320px;
+	z-index: 2147483647;
+	left: 15px;
+}
+
+#selfhealing-messages div {
+ 	background-color: rgba(254,255,255,0.95);
+  	-moz-border-radius: 5px; /* Firefox */
+  	-webkit-border-radius: 5px;
+  	border-radius: 5px; /* CSS3 */
+	border: 1px solid gray;
+	-webkit-box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+	box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+#selfhealing-messages div {
+	padding: 7px;
+}
+
+#selfhealing-messages div p {
+	margin: 0;
+}
+/* @end */
 
 
