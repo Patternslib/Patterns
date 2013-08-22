@@ -73,6 +73,7 @@
         "pat-menu": "pat/menu",
         "pat-modal": "pat/modal",
         "pat-navigation": "pat/navigation",
+        "pat-notification": "pat/notification",
         "pat-placeholder": "pat/placeholder",
         "pat-skeleton": "pat/skeleton",
         "pat-slides": "pat/slides",
