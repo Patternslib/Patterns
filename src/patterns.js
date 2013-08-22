@@ -41,6 +41,7 @@ define([
     "pat-modal",
     "modernizr",
     "pat-navigation",
+    "pat-notification",
     "pat-placeholder",
     "prefixfree",
     "pat-skeleton",
