@@ -496,13 +496,12 @@ define([
                 break;
             }
 
-            var $target = $(options.target),
-                target_pos = $target.css("position");
+            var $offsetParent = $container.offsetParent();
 
-            if (target_pos==="relative" || target_pos==="absolute") {
-                var target_offset = $target.offset();
-                container_offset.top-=target_offset.top;
-                container_offset.left-=target_offset.left;
+            if ($offsetParent.length) {
+                var offset = $offsetParent.offset();
+                container_offset.top -= offset.top;
+                container_offset.left -= offset.left;
             }
 
             $container.find("> div").css(content_css);
