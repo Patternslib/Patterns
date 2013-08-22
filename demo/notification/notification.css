@@ -18,6 +18,10 @@
   color: #ffffff;
 }
 
+.pat-notification-panel.success * {
+	color: white !important;
+}
+
 .pat-notification-panel.warning {
   background-color: #faa732;
   color: #ffffff;
