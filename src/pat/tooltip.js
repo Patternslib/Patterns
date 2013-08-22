@@ -173,7 +173,7 @@ define([
             $container.css("visibility", "visible");
 
             // reposition tooltip everytime we scroll or resize
-            $(window).on("scroll." + namespace + " resize." + namespace, function () {
+            $container.parents().on("scroll." + namespace + " resize." + namespace, function () {
                  tooltip.positionContainer($trigger, $container);
             });
 
@@ -186,7 +186,7 @@ define([
                 namespace = $container.attr("id");
             tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
-            $(window).off("." + namespace);
+            $container.parents().off("." + namespace);
             tooltip.setupShowEvents($trigger);
             $trigger.removeClass("active").addClass("inactive");
         },
