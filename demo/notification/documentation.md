@@ -22,6 +22,6 @@ It's not necessary to use a `<p>` tag. Also a `<div class="pat-notification">` c
 
 | Property | Values | Type | Description |
 | -- | -- | -- | -- |
-| `type` | `static` `banner` | Mutually exclusive | Use static (default) for an inline message box. Use banner for super imposed message boxes that can be self healing |
-| `healing` | 'A value in seconds' `persistent` | Mutually exclusive | Enter a value in seconds for when the message should heal itself or choose persistent if only the user can dismiss the message. The default value is `5s` (Five seconds). | 
+| `type` | `static` `banner` | ME | Use static (default) for an inline message box. Use banner for super imposed message boxes that can be self healing |
+| `healing` | 'A value in seconds' `persistent` | ME | Enter a value in seconds for when the message should heal itself or choose persistent if only the user can dismiss the message. The default value is `5s` (Five seconds). | 
 | 'controls' | `icons` `buttons` `none` | List | The value `icons` will display iconed controls. Typically styled in the top right corner of the message box. The value `buttons` will append buttons to the message markup. Both values can be used at the same time. When no value is used it defaults to `icons`. When only `buttons` is used, there will be only the appended buttons. |
