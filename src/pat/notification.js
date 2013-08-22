@@ -130,8 +130,7 @@ define([
             };
             $el.on("pat-inject-success.pat-notification", function() {
                 var $trigger = $(this),
-                    cfg = $.extend({ type: "banner" },
-                        $trigger.data("pat-notification"));
+                    cfg = parser.parse($trigger, { type: "banner"});
 
                 var $el = $("#pat-notification-temp").contents().wrapAll("<div/>")
                     .parent()
