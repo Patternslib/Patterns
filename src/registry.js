@@ -108,19 +108,21 @@ define([
 
                 for (var name in registry.patterns) {
                     pattern = registry.patterns[name];
-                    plog = logger.getLogger("pat." + name);
+                    if (pattern.init) {
+                        plog = logger.getLogger("pat." + name);
 
-                    if ($el.is(pattern.trigger)) {
-                        plog.debug("Initialising:", $el);
-                        if (do_not_catch_init_exception || dont_catch) {
-                            pattern.init($el);
-                            plog.debug("done.");
-                        } else {
-                            try {
+                        if ($el.is(pattern.trigger)) {
+                            plog.debug("Initialising:", $el);
+                            if (do_not_catch_init_exception || dont_catch) {
                                 pattern.init($el);
                                 plog.debug("done.");
-                            } catch (e) {
-                                plog.error("Caught error:", e);
+                            } else {
+                                try {
+                                    pattern.init($el);
+                                    plog.debug("done.");
+                                } catch (e) {
+                                    plog.error("Caught error:", e);
+                                }
                             }
                         }
                     }
