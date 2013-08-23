@@ -16,6 +16,7 @@ define([
         // links and forms inject modals
         trigger: "div.pat-modal, a.pat-modal, form.pat-modal",
         init: function($el, opts) {
+            this.$el = $el;
             return $el.each(function() {
                 var $el = $(this),
                     cfg = parser.parse($el, opts);
@@ -67,8 +68,7 @@ define([
         },
 
         setPosition: function() {
-            var $el = $("div.pat-modal,#pat-modal");
-            if ($el.length === 0) {
+            if (this.$el.length === 0) {
                 return;
             }
 
@@ -77,7 +77,7 @@ define([
                 $oldClone.remove();
             }
 
-            var $clone = $el.clone();
+            var $clone = this.$el.clone();
 
             $clone
                 .attr("id", "pat-modal-clone")
@@ -88,7 +88,7 @@ define([
                 }).appendTo("body");
 
             // wait for browser to update DOM
-            setTimeout(modal.measure, 0);
+            setTimeout($.proxy(modal.measure, this), 0);
         },
 
         measure: function() {
@@ -97,21 +97,20 @@ define([
                 return;
             }
 
-            var $el = $("div.pat-modal,#pat-modal"),
-                maxHeight = $(window).innerHeight() - $clone.outerHeight(true) +
+            var maxHeight = $(window).innerHeight() - $clone.outerHeight(true) +
                             $clone.outerHeight(),
                 height = $clone.outerHeight();
 
             $clone.remove();
 
             if (maxHeight - height < 0) {
-                $el.addClass("max-height").css("height", maxHeight);
+                this.$el.addClass("max-height").css("height", maxHeight);
             } else {
-                $el.removeClass("max-height").css("height", "");
+                this.$el.removeClass("max-height").css("height", "");
             }
 
-            var top = ($(window).innerHeight() - $el.outerHeight(true)) / 2;
-            $el.css("top", top);
+            var top = ($(window).innerHeight() - this.$el.outerHeight(true)) / 2;
+            this.$el.css("top", top);
         },
 
         destroy: function($el, ev) {
