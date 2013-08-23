@@ -113,15 +113,15 @@ define([
                     if ($el.is(pattern.trigger)) {
                         plog.debug("Initialising:", $el);
                         if (do_not_catch_init_exception || dont_catch) {
+                            pattern.init($el);
+                            plog.debug("done.");
+                        } else {
                             try {
                                 pattern.init($el);
                                 plog.debug("done.");
                             } catch (e) {
                                 plog.error("Caught error:", e);
                             }
-                        } else {
-                            pattern.init($el);
-                            plog.debug("done.");
                         }
                     }
                 }
