@@ -121,11 +121,11 @@ define([
         }
     };
 
-    $(window).on('resize.pat-modal-position', modal.setPosition);
+    $(window).on('resize.pat-modal-position', $.proxy(modal.setPosition, modal));
     $(window).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
-        modal.setPosition);
+        $.proxy(modal.setPosition, modal));
     $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
-        modal.setPosition);
+        $.proxy(modal.setPosition, modal));
 
     registry.register(modal);
     return modal;
