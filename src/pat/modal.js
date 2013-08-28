@@ -16,16 +16,21 @@ define([
         // links and forms inject modals
         trigger: "div.pat-modal, a.pat-modal, form.pat-modal",
         init: function($el, opts) {
-            this.$el = $el;
-            return $el.each(function() {
-                var $el = $(this),
-                    cfg = parser.parse($el, opts);
-
+            if ($el.length > 1) {
+                // We enforce a one-to-one mapping between modal objects and
+                // DOM elements, so here we recurse and instantiate a new modal
+                // for each $el
+                $el.each(function() {
+                    $(this).modal();
+                });
+            } else if ($el.length === 1) {
+                var cfg = parser.parse($el, opts);
+                this.$el = $el;
                 if ($el.is("div"))
                     modal._init_div1($el, cfg);
                 else
                     modal._init_inject1($el, cfg);
-            });
+            }
         },
 
         _init_inject1: function($el, cfg) {
