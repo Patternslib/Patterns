@@ -68,7 +68,7 @@ define([
         },
 
         setPosition: function() {
-            if (this.$el.length === 0) {
+            if ((this.$el === undefined) || (this.$el.length === 0)) {
                 return;
             }
 
