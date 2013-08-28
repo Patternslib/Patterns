@@ -11,6 +11,7 @@ define([
     "./pat/autosuggest",
     "./pat/breadcrumbs",
     "./pat/bumper",
+    "./pat/calendar",
     "./pat/carousel",
     "./pat/checkedflag",
     "./pat/checklist",
