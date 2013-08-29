@@ -53,31 +53,31 @@ define([
             $el.find('.fc-content').appendTo($el);
 
             // update title
-            $el.find('.calTitle').text($el.fullCalendar('getView').title);
+            $el.find('.cal-title').text($el.fullCalendar('getView').title);
 
-            $el.find('.jumpNext').on('click', function() {
+            $el.find('.jump-next').on('click', function() {
                 $el.fullCalendar('next');
-                $el.find('.calTitle').html($el.fullCalendar('getView').title);
+                $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
-            $el.find('.jumpPrev').on('click', function() {
+            $el.find('.jump-prev').on('click', function() {
                 $el.fullCalendar('prev');
-                $el.find('.calTitle').html($el.fullCalendar('getView').title);
+                $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
-            $el.find('.jumpToday').on('click', function() {
+            $el.find('.jump-today').on('click', function() {
                 $el.fullCalendar('today');
-                $el.find('.calTitle').html($el.fullCalendar('getView').title);
+                $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
-            $el.find('.viewMonth').on('click', function() {
+            $el.find('.view-month').on('click', function() {
                 $el.fullCalendar('changeView', 'month');
-                $el.find('.calTitle').html($el.fullCalendar('getView').title);
+                $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
-            $el.find('.viewWeek').on('click', function() {
+            $el.find('.view-week').on('click', function() {
                 $el.fullCalendar('changeView', 'basicWeek');
-                $el.find('.calTitle').html($el.fullCalendar('getView').title);
+                $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
-            $el.find('.viewDay').on('click', function() {
+            $el.find('.view-day').on('click', function() {
                 $el.fullCalendar('changeView', 'basicDay');
-                $el.find('.calTitle').html($el.fullCalendar('getView').title);
+                $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
 
             var refetch = function() {
@@ -87,8 +87,8 @@ define([
 
             var $filter = $el.find('.filter');
             if ($filter && $filter.length > 0) {
-                $('.searchText', $filter).on('keyup', refetch_deb);
-                $('.searchText[type=search]', $filter).on('click', refetch_deb);
+                $('.search-text', $filter).on('keyup', refetch_deb);
+                $('.search-text[type=search]', $filter).on('click', refetch_deb);
                 $('select[name=state]', $filter).on('change', refetch);
                 $('.check-list', $filter).on('change', refetch);
             }
@@ -104,7 +104,7 @@ define([
 
             // parse filters
             if ($filter && $filter.length > 0) {
-                searchText = $('.searchText', $filter).val();
+                searchText = $('.search-text', $filter).val();
                 regex = new RegExp(searchText, 'i');
             }
 
@@ -112,7 +112,7 @@ define([
                 var $event = $(this);
 
                 if (searchText && !regex.test($event.find('.title').text())) {
-                    log.debug('remove due to searchText='+searchText, $event);
+                    log.debug('remove due to search-text='+searchText, $event);
                     return false;
                 }
                 return true;
