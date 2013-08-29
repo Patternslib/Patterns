@@ -7,57 +7,60 @@
 		<link rel="stylesheet" href="calendar.css" type="text/css">
 	</head>
 	<body>
-		<section class="description">
-			<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-		</section>
+        <section>
+            <h1>Calendar</h1>
+            <section class="description">
+                <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+            </section>
 
-		<section class="demo">
-		<h2>Demo</h2>
-                <div class="pat-calendar" data-pat-calendar="height: 200; xtime: 2013-03">
-                    <a class="jumpPrev"> prev </a>
-                    <a class="jumpToday"> today </a>
-                    <a class="jumpNext"> next </a>
+    		<section class="demo">
+    		<h2>Demo</h2>
+                    <div class="pat-calendar" data-pat-calendar="height: 200; xtime: 2013-03">
+                        <a class="jumpPrev"> prev </a>
+                        <a class="jumpToday"> today </a>
+                        <a class="jumpNext"> next </a>
 
-                    <a class="viewMonth"> month </a>
-                    <a class="viewWeek"> week </a>
-                    <a class="viewDay"> day </a>
+                        <a class="viewMonth"> month </a>
+                        <a class="viewWeek"> week </a>
+                        <a class="viewDay"> day </a>
 
-                    <div class="filter">
-                        <input type="text" class="searchText" placeholder="Filter events"/>
+                        <div class="filter">
+                            <input type="text" class="searchText" placeholder="Filter events"/>
+                        </div>
+
+                        <h2 class="calTitle"></h2>
+
+                        <ul class="events">
+                                <li class="event all-day">
+                                        <a href="#" class="url external">
+                                                <h4 class="title">
+                                                        Read the patterns calendar documentation
+                                                </h4>
+                                                <ul class="details">
+                                                        <li>Starts <time class="start" datetime="2013-01-05">5 January 2013, 9:00</time></li>
+                                                        <li>Ends <time class="end" datetime="2013-01-08">8 January 2013, 17:00</time></li>
+                                                </ul>
+                                        </a>
+                                </li>
+                                <li class="event all-day editable">
+                                        <a href="some-event-details.html" class="url external" data-injection".modal">
+                                                <h4 class="title">
+                                                        Patterns sprint
+                                                </h4>
+                                                <p class="location">Munich</p>
+                                                <ul class="details">
+                                                        <li>Starts <time class="start" datetime="2013-01-11">11 January 2013</time></li>
+                                                </ul>
+                                        </a>
+                                </li>
+                        </ul>
                     </div>
+    		</section>
 
-                    <h2 class="calTitle"></h2>
-
-                    <ul class="events">
-                            <li class="event all-day">
-                                    <a href="#" class="url external">
-                                            <h4 class="title">
-                                                    Read the patterns calendar documentation
-                                            </h4>
-                                            <ul class="details">
-                                                    <li>Starts <time class="start" datetime="2013-01-05">5 January 2013, 9:00</time></li>
-                                                    <li>Ends <time class="end" datetime="2013-01-08">8 January 2013, 17:00</time></li>
-                                            </ul>
-                                    </a>
-                            </li>
-                            <li class="event all-day editable">
-                                    <a href="some-event-details.html" class="url external" data-injection".modal">
-                                            <h4 class="title">
-                                                    Patterns sprint
-                                            </h4>
-                                            <p class="location">Munich</p>
-                                            <ul class="details">
-                                                    <li>Starts <time class="start" datetime="2013-01-11">11 January 2013</time></li>
-                                            </ul>
-                                    </a>
-                            </li>
-                    </ul>
-                </div>
-		</section>
-
-		<section class="documentation">
-			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
-		</section>
+            <section class="documentation">
+                <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+            </section>
+        </section>
 
 		<a href="../../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
 
