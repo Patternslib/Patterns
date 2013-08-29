@@ -265,9 +265,12 @@ html .fc,
 	border: 1px solid #3a87ad; /* default BORDER color */
 	background-color: #3a87ad; /* default BACKGROUND color */
 	color: #fff;               /* default TEXT color */
-	font-size: .85em;
+	font-size: .7em;
 	cursor: default;
-	}
+	line-height: 1.5em;
+	font-weight: normal;
+	font-style: normal;
+}
 
 a.fc-event {
 	text-decoration: none;
