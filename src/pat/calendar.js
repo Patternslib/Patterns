@@ -75,11 +75,11 @@ define([
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
             $el.find('.view-week').on('click', function() {
-                $el.fullCalendar('changeView', 'basicWeek');
+                $el.fullCalendar('changeView', 'agendaWeek');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
             $el.find('.view-day').on('click', function() {
-                $el.fullCalendar('changeView', 'basicDay');
+                $el.fullCalendar('changeView', 'agendaDay');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
             });
 
