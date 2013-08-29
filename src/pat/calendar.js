@@ -18,9 +18,12 @@ define([
 
     parser.add_argument('height');
     parser.add_argument('time');
-    parser.add_argument('format-month', 'MMMM yyyy');
-    parser.add_argument('format-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
-    parser.add_argument('format-day', 'dddd, MMM d, yyyy');
+    parser.add_argument('title-month', 'MMMM yyyy');
+    parser.add_argument('title-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
+    parser.add_argument('title-day', 'dddd, MMM d, yyyy');
+    parser.add_argument('column-month', 'ddd');
+    parser.add_argument('column-week', 'ddd M/d');
+    parser.add_argument('column-day', 'dddd M/d');
 
     var _ = {
         name: 'calendar',
@@ -35,7 +38,8 @@ define([
                         var events = _.parseEvents($el);
                         callback(events);
                     },
-                    titleFormat: cfg.format
+                    titleFormat: cfg.title,
+                    columnFormat: cfg.column
                 };
 
             var ym = cfg.time || $el.find('time').first().attr('datetime');
