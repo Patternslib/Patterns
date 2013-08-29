@@ -18,6 +18,9 @@ define([
 
     parser.add_argument('height');
     parser.add_argument('time');
+    parser.add_argument('format-month', 'MMMM yyyy');
+    parser.add_argument('format-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
+    parser.add_argument('format-day', 'dddd, MMM d, yyyy');
 
     var _ = {
         name: 'calendar',
@@ -31,7 +34,8 @@ define([
                         var $events, $filter;
                         var events = _.parseEvents($el);
                         callback(events);
-                    }
+                    },
+                    titleFormat: cfg.format
                 };
 
             var ym = cfg.time || $el.find('time').first().attr('datetime');
@@ -40,7 +44,6 @@ define([
                 calOpts.year = ym[0];
                 calOpts.month = Number(ym[1]) - 1;
             }
-            console.log(calOpts.month);
 
             if (cfg.height) {
                 calOpts.height = cfg.height;
