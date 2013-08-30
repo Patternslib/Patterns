@@ -12,8 +12,7 @@ define([
 
     var _ = {
         draggable: function($el) {
-            console.log('Initializing dragables');
-            log.debug('Initializing dragables');
+            log.debug('Initializing draggables');
 
             if('draggable' in document.createElement('div')) {
                 $el.attr('draggable', true);
@@ -25,7 +24,6 @@ define([
 
             $el.on('dragstart', function(event) {
                 log.debug('Start drag');
-                console.log('Start drag');
                 event.originalEvent.dataTransfer.setData('text/plain', 'pat-dragable');
                 event.originalEvent.dataTransfer.effectAllowed = ['move'];
                 if ('setDragImage' in event.originalEvent.dataTransfer) {
