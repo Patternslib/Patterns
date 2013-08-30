@@ -18,6 +18,7 @@ define([
 
     parser.add_argument('height', 'auto');
     parser.add_argument('time');
+    parser.add_argument('time-format', 'h(:mm)t');
     parser.add_argument('title-month', 'MMMM yyyy');
     parser.add_argument('title-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
     parser.add_argument('title-day', 'dddd, MMM d, yyyy');
@@ -38,6 +39,8 @@ define([
                         var events = _.parseEvents($el);
                         callback(events);
                     },
+                    axisFormat: cfg.timeFormat,
+                    timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
                     columnFormat: cfg.column
                 };
