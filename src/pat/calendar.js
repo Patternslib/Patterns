@@ -44,7 +44,16 @@ define([
                             $cal = $(view.element).parents('.pat-calendar');
 
                         $ev.appendTo($cal.find('.cal-events'));
-                        $ev.find('.start').attr('datetime', date);
+                        var $start = $ev.find('.start');
+                        if (!$start.length) {
+                            $('<time class="start"/>').attr('datetime', date)
+                                .appendTo($ev);
+                        }
+                        var $end = $ev.find('.end');
+                        if (!$end.length) {
+                            $('<time class="end"/>').appendTo($ev);
+                        }
+
                         if (allDay) {
                             $ev.addClass('all-day');
                         } else {
