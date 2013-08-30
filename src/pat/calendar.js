@@ -16,7 +16,9 @@ define([
     var log = logger.getLogger('calendar'),
         parser = new Parser('calendar');
 
+    parser.add_argument('height', 'auto');
     parser.add_argument('time');
+    parser.add_argument('time-format', 'h(:mm)t');
     parser.add_argument('title-month', 'MMMM yyyy');
     parser.add_argument('title-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
     parser.add_argument('title-day', 'dddd, MMM d, yyyy');
@@ -37,8 +39,11 @@ define([
                         var events = _.parseEvents($el);
                         callback(events);
                     },
+                    axisFormat: cfg.timeFormat,
+                    timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
-                    columnFormat: cfg.column
+                    columnFormat: cfg.column,
+                    ignoreTimezone: false
                 };
 
             var ym = cfg.time || $el.find('time').first().attr('datetime');
@@ -48,13 +53,28 @@ define([
                 calOpts.month = Number(ym[1]) - 1;
             }
 
+            if (cfg.height !== 'auto') {
+                calOpts.height = cfg.height;
+            }
+
             $el.fullCalendar(calOpts);
 
             var cal = $el.data('fullCalendar');
 
             // move to end of $el
             $el.find('.fc-content').appendTo($el);
-            $el.fullCalendar('option', 'height', $('.fc-content').height());
+
+            if (cfg.height === 'auto') {
+                $el.fullCalendar('option', 'height',
+                    $el.find('.fc-content').height());
+
+                $(window).on('resize.pat-calendar', function() {
+                    if ($el.fullCalendar('getView').name === 'month') {
+                        $el.fullCalendar('option', 'height',
+                            $el.find('.fc-content').height());
+                    }
+                });
+            }
 
             // update title
             $el.find('.cal-title').text($el.fullCalendar('getView').title);
@@ -74,17 +94,24 @@ define([
             $el.find('.view-month').on('click', function() {
                 $el.fullCalendar('changeView', 'month');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
-                $el.fullCalendar('option', 'height', $('.fc-content').height());
+                if (cfg.height === 'auto') {
+                    $el.fullCalendar('option', 'height',
+                        $el.find('.fc-content').height());
+                }
             });
             $el.find('.view-week').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaWeek');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
-                $el.fullCalendar('option', 'height', null);
+                if (cfg.height === 'auto') {
+                    $el.fullCalendar('option', 'height', null);
+                }
             });
             $el.find('.view-day').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaDay');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
-                $el.fullCalendar('option', 'height', null);
+                if (cfg.height === 'auto') {
+                    $el.fullCalendar('option', 'height', null);
+                }
             });
 
             var refetch = function() {
