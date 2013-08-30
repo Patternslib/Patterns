@@ -16,7 +16,6 @@ define([
     var log = logger.getLogger('calendar'),
         parser = new Parser('calendar');
 
-    parser.add_argument('height');
     parser.add_argument('time');
     parser.add_argument('title-month', 'MMMM yyyy');
     parser.add_argument('title-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
@@ -49,15 +48,13 @@ define([
                 calOpts.month = Number(ym[1]) - 1;
             }
 
-            if (cfg.height) {
-                calOpts.height = cfg.height;
-            }
             $el.fullCalendar(calOpts);
 
             var cal = $el.data('fullCalendar');
 
             // move to end of $el
             $el.find('.fc-content').appendTo($el);
+            $el.fullCalendar('option', 'height', $('.fc-content').height());
 
             // update title
             $el.find('.cal-title').text($el.fullCalendar('getView').title);
@@ -77,14 +74,17 @@ define([
             $el.find('.view-month').on('click', function() {
                 $el.fullCalendar('changeView', 'month');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $el.fullCalendar('option', 'height', $('.fc-content').height());
             });
             $el.find('.view-week').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaWeek');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $el.fullCalendar('option', 'height', null);
             });
             $el.find('.view-day').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaDay');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $el.fullCalendar('option', 'height', null);
             });
 
             var refetch = function() {
