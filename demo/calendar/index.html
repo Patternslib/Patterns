@@ -15,7 +15,21 @@
 
     		<section class="demo">
                 <h2>Demo</h2>
-                <div class="pat-calendar" data-pat-calendar="height: auto; title-day: dddd, d MMM; column-week: ddd d.M.; column-day: ; time-format: H:mm">
+
+                <ul class="cal-events">
+                    <li class="cal-event">
+                    <h4 class="title">
+                        <a href="#" class="url external">Drag this event to the calendar</a>
+                    </h4>
+                    <ul class="details">
+                        <li>starts <time class="start" datetime="2013-01-01 09:00">18 february 2012, 9:00</time></li>
+                        <li>ends <time class="end" datetime="2013-01-01 13:00">18 february 2012, 17:00</time></li>
+                        <li>location <span class="location">munich, germany</span></li>
+                    </ul>
+                    </li>
+                </ul>
+
+                <div class="pat-calendar" data-pat-calendar="height: auto; title-day: dddd, d MMM; column-week: ddd d.M.; column-day: ; time-format: H:mm; first-day: mo">
                     <fieldset class="button-cluster float-after">
                         <button type="button" class="view-month">Month</button>
                         <button type="button" class="view-week">Week</button>
@@ -33,8 +47,8 @@
 
                     <h2 class="cal-title">Calendar</h2>
 
-                    <ul class="events">
-                        <li class="event all-day">
+                    <ul class="cal-events">
+                        <li class="cal-event all-day">
                                 <a href="#" class="url external">
                                     <h4 class="title">
                                         Read the patterns calendar documentation
@@ -49,7 +63,7 @@
                                     </ul>
                                 </a>
                         </li>
-                        <li class="event all-day editable">
+                        <li class="cal-event all-day editable">
                                 <a href="some-event-details.html" class="url external" data-injection".modal">
                                     <h4 class="title">
                                         Patterns sprint
@@ -64,7 +78,7 @@
                                     </ul>
                                 </a>
                         </li>
-                        <li class="event editable">
+                        <li class="cal-event editable">
                                 <a href="some-event-details.html" class="url external" data-injection".modal">
                                     <h4 class="title">
                                         Prototype review

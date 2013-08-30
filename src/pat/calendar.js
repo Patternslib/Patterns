@@ -9,8 +9,9 @@ define([
     '../core/parser',
     '../utils',
     '../registry',
+    '../lib/dnd',
     'jquery.fullcalendar'
-], function($, logger, Parser, utils, registry) {
+], function($, logger, Parser, utils, registry, dnd) {
     'use strict';
 
     var log = logger.getLogger('calendar'),
@@ -25,6 +26,7 @@ define([
     parser.add_argument('column-month', 'ddd');
     parser.add_argument('column-week', 'ddd M/d');
     parser.add_argument('column-day', 'dddd M/d');
+    parser.add_argument('first-day', '0');
 
     var _ = {
         name: 'calendar',
@@ -34,8 +36,23 @@ define([
             var cfg = parser.parse($el),
                 calOpts = {
                     header: false,
+                    droppable: true,
+                    drop: function(date, allDay, event, undef, view) {
+                        var $this = $(this),
+                            $ev = $this.hasClass('cal-event') ?
+                                $this : $this.parents('.cal-event'),
+                            $cal = $(view.element).parents('.pat-calendar');
+
+                        $ev.appendTo($cal.find('.cal-events'));
+                        $ev.find('.start').attr('datetime', date);
+                        if (allDay) {
+                            $ev.addClass('all-day');
+                        } else {
+                            $ev.removeClass('all-day');
+                        }
+                        $cal.fullCalendar('refetchEvents');
+                    },
                     events: function(start, end, callback) {
-                        var $events, $filter;
                         var events = _.parseEvents($el);
                         callback(events);
                     },
@@ -43,7 +60,8 @@ define([
                     timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
                     columnFormat: cfg.column,
-                    ignoreTimezone: false
+                    ignoreTimezone: false,
+                    viewRender: _.highlightButtons
                 };
 
             var ym = cfg.time || $el.find('time').first().attr('datetime');
@@ -57,9 +75,12 @@ define([
                 calOpts.height = cfg.height;
             }
 
-            $el.fullCalendar(calOpts);
+            var dayNames = [ 'su', 'mo', 'tu', 'we', 'th', 'fr', 'sa' ];
+            if (dayNames.indexOf(cfg.firstDay) >= 0) {
+                calOpts.firstDay = dayNames.indexOf(cfg.firstDay);
+            }
 
-            var cal = $el.data('fullCalendar');
+            $el.fullCalendar(calOpts);
 
             // move to end of $el
             $el.find('.fc-content').appendTo($el);
@@ -78,6 +99,9 @@ define([
 
             // update title
             $el.find('.cal-title').text($el.fullCalendar('getView').title);
+
+            $el.find('.view-month').addClass('active');
+
 
             $el.find('.jump-next').on('click', function() {
                 $el.fullCalendar('next');
@@ -127,11 +151,48 @@ define([
                 $('.check-list', $filter).on('change', refetch);
             }
 
-            $el.find('.events').css('display', 'none');
+            $el.find('.cal-events').css('display', 'none');
+
+            // make .cal-event elems draggable
+            dnd.draggable($('.cal-events .cal-event'));
+
+            // emulate jQueryUI dragstop and mousemove during drag.
+            $('.cal-events .cal-event').on('dragend', function() {
+                $(this).trigger('dragstop');
+            });
+            $el.on('dragover', function(event) {
+                event.type = 'mousemove';
+                $(document).trigger(event);
+            });
+        },
+
+        highlightButtons: function(view, element) {
+            var $el = element.parents('.pat-calendar').first(),
+                $today = $el.find('.jump-today');
+            $today.removeClass('active');
+            if (view.name === 'agendaDay') {
+                var calDate = $el.fullCalendar('getDate'),
+                    today = new Date();
+                if (calDate.getDate() === today.getDate() &&
+                    calDate.getMonth() === today.getMonth() &&
+                    calDate.getYear() === today.getYear()) {
+                    $today.addClass('active');
+                }
+            }
+
+            var classMap = {
+                month: '.view-month',
+                agendaWeek: '.view-week',
+                agendaDay: '.view-day'
+            };
+            $el.find('.view-month').removeClass('active');
+            $el.find('.view-week').removeClass('active');
+            $el.find('.view-day').removeClass('active');
+            $el.find(classMap[view.name]).addClass('active');
         },
 
         parseEvents: function($el) {
-            var $events = $el.find('.events'),
+            var $events = $el.find('.cal-events'),
                 $filter = $el.find('.filter'),
                 searchText,
                 regex;
@@ -142,7 +203,7 @@ define([
                 regex = new RegExp(searchText, 'i');
             }
 
-            var events = $events.find('.event').filter(function() {
+            var events = $events.find('.cal-event').filter(function() {
                 var $event = $(this);
 
                 if (searchText && !regex.test($event.find('.title').text())) {
@@ -155,7 +216,7 @@ define([
 
                 // classNames: all event classes without 'event' + anchor classes
                 var classNames = $(event).attr('class').split(/\s+/)
-                    .filter(function(cls) { return (cls !== 'event'); })
+                    .filter(function(cls) { return (cls !== 'cal-event'); })
                     .concat($('a', event).attr('class').split(/\s+/));
 
                 // attrs: all 'data-' attrs from anchor
@@ -171,7 +232,7 @@ define([
                 var location = ($('.location', event).html() || '').trim();
 
                 var ev = {
-                    title: $('.title', event).html().trim() +
+                    title: $('.title', event).text().trim() +
                         (location ? (' (' + location + ')') : ''),
                     start: $('.start', event).attr('datetime'),
                     end: $('.end', event).attr('datetime'),
