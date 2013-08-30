@@ -111,7 +111,7 @@ define([
             if (maxHeight - height < 0) {
                 this.$el.addClass("max-height").css("height", maxHeight);
             } else {
-                this.$el.removeClass("max-height").css("height", "");
+                this.$el.removeClass("max-height").css("height", height);
             }
 
             var top = ($(window).innerHeight() - this.$el.outerHeight(true)) / 2;
