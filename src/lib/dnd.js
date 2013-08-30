@@ -38,8 +38,7 @@ define([
                 log.debug('End drag');
                 $(this).removeClass('pat-dragged');
             });
-        },
-
+        }
     };
 
     return _;

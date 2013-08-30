@@ -53,7 +53,6 @@ define([
                         $cal.fullCalendar('refetchEvents');
                     },
                     events: function(start, end, callback) {
-                        var $events, $filter;
                         var events = _.parseEvents($el);
                         callback(events);
                     },
@@ -82,8 +81,6 @@ define([
             }
 
             $el.fullCalendar(calOpts);
-
-            var cal = $el.data('fullCalendar');
 
             // move to end of $el
             $el.find('.fc-content').appendTo($el);
@@ -160,7 +157,7 @@ define([
             dnd.draggable($('.cal-events .cal-event'));
 
             // emulate jQueryUI dragstop and mousemove during drag.
-            $('.cal-events .cal-event').on('dragend', function(event) {
+            $('.cal-events .cal-event').on('dragend', function() {
                 $(this).trigger('dragstop');
             });
             $el.on('dragover', function(event) {
