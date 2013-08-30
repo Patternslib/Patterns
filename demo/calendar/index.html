@@ -16,24 +16,22 @@
     		<section class="demo">
                 <h2>Demo</h2>
                 <div class="pat-calendar" data-pat-calendar="height: 200; title-day: dddd, d MMM; column-week: ddd d.M.; column-day: ">
-                    <p>
-                        <span class="button-cluster">
-                            <button type="button" class="jump-prev">Back</button>
-                            <button type="button" class="jump-today">Today</button>
-                            <button type="button" class="jump-next">Forward</button>
-                        </span>
-                        <span class="button-cluster float-after">
-                            <button type="button" class="view-month">Month</button>
-                            <button type="button" class="view-week">Week</button>
-                            <button type="button" class="view-day">Day</button>
-                        </span>
-                    </p>
+                    <fieldset class="button-cluster float-after">
+                        <button type="button" class="view-month">Month</button>
+                        <button type="button" class="view-week">Week</button>
+                        <button type="button" class="view-day">Day</button>
+                    </fieldset>
+                    <fieldset class="button-cluster">
+                        <button type="button" title="Back" class="jump-prev">&lt;</button>
+                        <button type="button" title="Today" class="jump-today">•</button>
+                        <button type="button" title="Forward" class="jump-next">&gt;</button>
+                    </fieldset>
 
                     <p class="filter float-after">
                         <input type="text" class="search-text" placeholder="Filter events"/>
                     </p>
 
-                    <h2 class="cal-title"></h2>
+                    <h2 class="cal-title">Calendar</h2>
 
                     <ul class="events">
                         <li class="event all-day">
@@ -69,14 +67,14 @@
                         <li class="event editable">
                                 <a href="some-event-details.html" class="url external" data-injection".modal">
                                     <h4 class="title">
-                                        Short event
+                                        Prototype review
                                     </h4>
                                     <ul class="details">
                                         <li>
-                                            Starts <time class="start" datetime="2013-01-04T09:00Z">04 January 2013, 9:00</time>
+                                            Starts <time class="start" datetime="2013-09-04T10:00Z">4 September 2013, 10:00</time>
                                         </li>
                                         <li>
-                                            Ends <time class="end" datetime="2013-01-04T10:00Z">04 January 2013, 10:00</time>
+                                            Ends <time class="end" datetime="2013-09-04T16:30Z">4 September 2013, 16:30</time>
                                         </li>
                                     </ul>
                                 </a>
