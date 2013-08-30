@@ -43,7 +43,8 @@ define([
                     timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
                     columnFormat: cfg.column,
-                    ignoreTimezone: false
+                    ignoreTimezone: false,
+                    viewRender: _.highlightButtons
                 };
 
             var ym = cfg.time || $el.find('time').first().attr('datetime');
@@ -78,6 +79,9 @@ define([
 
             // update title
             $el.find('.cal-title').text($el.fullCalendar('getView').title);
+
+            $el.find('.view-month').addClass('active');
+
 
             $el.find('.jump-next').on('click', function() {
                 $el.fullCalendar('next');
@@ -128,6 +132,31 @@ define([
             }
 
             $el.find('.events').css('display', 'none');
+        },
+
+        highlightButtons: function(view, element) {
+            var $el = element.parents('.pat-calendar').first(),
+                $today = $el.find('.jump-today');
+            $today.removeClass('active');
+            if (view.name === 'agendaDay') {
+                var calDate = $el.fullCalendar('getDate'),
+                    today = new Date();
+                if (calDate.getDate() === today.getDate() &&
+                    calDate.getMonth() === today.getMonth() &&
+                    calDate.getYear() === today.getYear()) {
+                    $today.addClass('active');
+                }
+            }
+
+            var classMap = {
+                month: '.view-month',
+                agendaWeek: '.view-week',
+                agendaDay: '.view-day'
+            };
+            $el.find('.view-month').removeClass('active');
+            $el.find('.view-week').removeClass('active');
+            $el.find('.view-day').removeClass('active');
+            $el.find(classMap[view.name]).addClass('active');
         },
 
         parseEvents: function($el) {
