@@ -42,7 +42,8 @@ define([
                     axisFormat: cfg.timeFormat,
                     timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
-                    columnFormat: cfg.column
+                    columnFormat: cfg.column,
+                    ignoreTimezone: false
                 };
 
             var ym = cfg.time || $el.find('time').first().attr('datetime');
