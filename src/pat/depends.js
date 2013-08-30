@@ -77,6 +77,7 @@ define([
                         $form.data("patDepends.slaves", slaves);
                     }
                     $(this).on("change.pat-depends", null, data, depends.onChange);
+                    $(this).on("keyup.pat-depends", null, data, depends.onChange);
                 });
             });
         },

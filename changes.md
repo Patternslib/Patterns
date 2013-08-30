@@ -2,6 +2,10 @@
 
 ## 1.5.0 - Unreleased
 
+- Depends pattern: also update dependencies on keyup. This makes sure
+  actions happen without forcing a user to move focus away after modifying
+  a text field.
+
 - Rewrite the [slides pattern](demo/slides/index.html) to use the new
   Patternslib slides library, replacing shower.
 
