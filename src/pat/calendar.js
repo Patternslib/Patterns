@@ -9,8 +9,9 @@ define([
     '../core/parser',
     '../utils',
     '../registry',
+    '../lib/dnd',
     'jquery.fullcalendar'
-], function($, logger, Parser, utils, registry) {
+], function($, logger, Parser, utils, registry, dnd) {
     'use strict';
 
     var log = logger.getLogger('calendar'),
@@ -35,6 +36,22 @@ define([
             var cfg = parser.parse($el),
                 calOpts = {
                     header: false,
+                    droppable: true,
+                    drop: function(date, allDay, event, undef, view) {
+                        var $this = $(this),
+                            $ev = $this.hasClass('cal-event') ?
+                                $this : $this.parents('.cal-event'),
+                            $cal = $(view.element).parents('.pat-calendar');
+
+                        $ev.appendTo($cal.find('.cal-events'));
+                        $ev.find('.start').attr('datetime', date);
+                        if (allDay) {
+                            $ev.addClass('all-day');
+                        } else {
+                            $ev.removeClass('all-day');
+                        }
+                        $cal.fullCalendar('refetchEvents');
+                    },
                     events: function(start, end, callback) {
                         var $events, $filter;
                         var events = _.parseEvents($el);
@@ -137,7 +154,19 @@ define([
                 $('.check-list', $filter).on('change', refetch);
             }
 
-            $el.find('.events').css('display', 'none');
+            $el.find('.cal-events').css('display', 'none');
+
+            // make .cal-event elems draggable
+            dnd.draggable($('.cal-events .cal-event'));
+
+            // emulate jQueryUI dragstop and mousemove during drag.
+            $('.cal-events .cal-event').on('dragend', function(event) {
+                $(this).trigger('dragstop');
+            });
+            $el.on('dragover', function(event) {
+                event.type = 'mousemove';
+                $(document).trigger(event);
+            });
         },
 
         highlightButtons: function(view, element) {
@@ -166,7 +195,7 @@ define([
         },
 
         parseEvents: function($el) {
-            var $events = $el.find('.events'),
+            var $events = $el.find('.cal-events'),
                 $filter = $el.find('.filter'),
                 searchText,
                 regex;
@@ -177,7 +206,7 @@ define([
                 regex = new RegExp(searchText, 'i');
             }
 
-            var events = $events.find('.event').filter(function() {
+            var events = $events.find('.cal-event').filter(function() {
                 var $event = $(this);
 
                 if (searchText && !regex.test($event.find('.title').text())) {
@@ -190,7 +219,7 @@ define([
 
                 // classNames: all event classes without 'event' + anchor classes
                 var classNames = $(event).attr('class').split(/\s+/)
-                    .filter(function(cls) { return (cls !== 'event'); })
+                    .filter(function(cls) { return (cls !== 'cal-event'); })
                     .concat($('a', event).attr('class').split(/\s+/));
 
                 // attrs: all 'data-' attrs from anchor
@@ -206,7 +235,7 @@ define([
                 var location = ($('.location', event).html() || '').trim();
 
                 var ev = {
-                    title: $('.title', event).html().trim() +
+                    title: $('.title', event).text().trim() +
                         (location ? (' (' + location + ')') : ''),
                     start: $('.start', event).attr('datetime'),
                     end: $('.end', event).attr('datetime'),
