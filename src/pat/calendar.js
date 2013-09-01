@@ -134,14 +134,16 @@ define([
                 $el.fullCalendar('changeView', 'agendaWeek');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
-                    $el.fullCalendar('option', 'height', null);
+                    $el.fullCalendar('option', 'height',
+                        $el.find('.fc-content').height());
                 }
             });
             $el.find('.view-day').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaDay');
                 $el.find('.cal-title').html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
-                    $el.fullCalendar('option', 'height', null);
+                    $el.fullCalendar('option', 'height',
+                        $el.find('.fc-content').height());
                 }
             });
 
