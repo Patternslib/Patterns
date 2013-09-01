@@ -99,10 +99,8 @@ define([
                     $el.find('.fc-content').height());
 
                 $(window).on('resize.pat-calendar', function() {
-                    if ($el.fullCalendar('getView').name === 'month') {
-                        $el.fullCalendar('option', 'height',
-                            $el.find('.fc-content').height());
-                    }
+                    $el.fullCalendar('option', 'height',
+                        $el.find('.fc-content').height());
                 });
             }
 
