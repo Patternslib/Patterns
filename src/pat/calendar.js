@@ -188,6 +188,7 @@ define([
                 $(this).trigger('dragstop');
             });
             $el.on('dragover', function(event) {
+                event.preventDefault();
                 event.type = 'mousemove';
                 $(document).trigger(event);
             });
