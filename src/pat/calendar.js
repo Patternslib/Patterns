@@ -27,6 +27,7 @@ define([
     parser.add_argument('column-week', 'ddd M/d');
     parser.add_argument('column-day', 'dddd M/d');
     parser.add_argument('first-day', '0');
+    parser.add_argument('first-hour', '6');
     parser.add_argument('calendar-controls', '');
     parser.add_argument('category-controls', '');
 
@@ -67,6 +68,7 @@ define([
                         var events = _.parseEvents($el);
                         callback(events);
                     },
+                    firstHour: cfg.first.hour,
                     axisFormat: cfg.timeFormat,
                     timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
@@ -75,11 +77,14 @@ define([
                     viewRender: _.highlightButtons
                 };
 
-            var ym = cfg.startDate || $el.find('time').first().attr('datetime');
-            if (ym) {
-                ym = ym.split('-');
+            if (cfg.startDate) {
+                var ym = cfg.startDate.split('-');
                 calOpts.year = ym[0];
                 calOpts.month = Number(ym[1]) - 1;
+            } else {
+                var today = new Date();
+                calOpts.year = today.getFullYear();
+                calOpts.month = today.getMonth();
             }
 
             if (cfg.height !== 'auto') {
@@ -87,8 +92,8 @@ define([
             }
 
             var dayNames = [ 'su', 'mo', 'tu', 'we', 'th', 'fr', 'sa' ];
-            if (dayNames.indexOf(cfg.firstDay) >= 0) {
-                calOpts.firstDay = dayNames.indexOf(cfg.firstDay);
+            if (dayNames.indexOf(cfg.first.day) >= 0) {
+                calOpts.firstDay = dayNames.indexOf(cfg.first.day);
             }
 
             var refetch = function() {
@@ -128,6 +133,10 @@ define([
                     $el.find('.fc-content').height());
 
                 $(window).on('resize.pat-calendar', function() {
+                    $el.fullCalendar('option', 'height',
+                        $el.find('.fc-content').height());
+                });
+                $(document).on('pat-update.pat-calendar', function() {
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
                 });
