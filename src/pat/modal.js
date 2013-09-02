@@ -21,7 +21,7 @@ define([
                 // DOM elements, so here we recurse and instantiate a new modal
                 // for each $el
                 $el.each(function() {
-                    $(this).modal();
+                    modal.init($(this));
                 });
             } else if ($el.length === 1) {
                 var cfg = parser.parse($el, opts);
