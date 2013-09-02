@@ -27,6 +27,7 @@ define([
     parser.add_argument('column-week', 'ddd M/d');
     parser.add_argument('column-day', 'dddd M/d');
     parser.add_argument('first-day', '0');
+    parser.add_argument('calendar-controls', '');
 
     var _ = {
         name: 'calendar',
@@ -105,42 +106,44 @@ define([
             }
 
             // update title
-            $el.find('.cal-title').text($el.fullCalendar('getView').title);
+            var $title = $el.find('.cal-title');
+            $title.text($el.fullCalendar('getView').title);
 
-            $el.find('.view-month').addClass('active');
+            var $controlRoot = cfg.calendarControls ?
+                $(cfg.calendarControls) : $el;
+            $controlRoot.find('.view-month').addClass('active');
 
-
-            $el.find('.jump-next').on('click', function() {
+            $controlRoot.find('.jump-next').on('click', function() {
                 $el.fullCalendar('next');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
             });
-            $el.find('.jump-prev').on('click', function() {
+            $controlRoot.find('.jump-prev').on('click', function() {
                 $el.fullCalendar('prev');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
             });
-            $el.find('.jump-today').on('click', function() {
+            $controlRoot.find('.jump-today').on('click', function() {
                 $el.fullCalendar('today');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
             });
-            $el.find('.view-month').on('click', function() {
+            $controlRoot.find('.view-month').on('click', function() {
                 $el.fullCalendar('changeView', 'month');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
                 }
             });
-            $el.find('.view-week').on('click', function() {
+            $controlRoot.find('.view-week').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaWeek');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
                 }
             });
-            $el.find('.view-day').on('click', function() {
+            $controlRoot.find('.view-day').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaDay');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
