@@ -7,3 +7,5 @@
 /node_modules
 /tests/index.html
 /tests/TestRunner*
+
+*.log
