@@ -77,11 +77,14 @@ define([
                     viewRender: _.highlightButtons
                 };
 
-            var ym = cfg.startDate || $el.find('time').first().attr('datetime');
-            if (ym) {
-                ym = ym.split('-');
+            if (cfg.startDate) {
+                var ym = cfg.startDate.split('-');
                 calOpts.year = ym[0];
                 calOpts.month = Number(ym[1]) - 1;
+            } else {
+                var today = new Date();
+                calOpts.year = today.getFullYear();
+                calOpts.month = today.getMonth();
             }
 
             if (cfg.height !== 'auto') {
