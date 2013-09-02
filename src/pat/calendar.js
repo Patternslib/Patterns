@@ -18,7 +18,7 @@ define([
         parser = new Parser('calendar');
 
     parser.add_argument('height', 'auto');
-    parser.add_argument('time');
+    parser.add_argument('start-date');
     parser.add_argument('time-format', 'h(:mm)t');
     parser.add_argument('title-month', 'MMMM yyyy');
     parser.add_argument('title-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
@@ -27,6 +27,8 @@ define([
     parser.add_argument('column-week', 'ddd M/d');
     parser.add_argument('column-day', 'dddd M/d');
     parser.add_argument('first-day', '0');
+    parser.add_argument('calendar-controls', '');
+    parser.add_argument('category-controls', '');
 
     var _ = {
         name: 'calendar',
@@ -73,7 +75,7 @@ define([
                     viewRender: _.highlightButtons
                 };
 
-            var ym = cfg.time || $el.find('time').first().attr('datetime');
+            var ym = cfg.startDate || $el.find('time').first().attr('datetime');
             if (ym) {
                 ym = ym.split('-');
                 calOpts.year = ym[0];
@@ -88,6 +90,33 @@ define([
             if (dayNames.indexOf(cfg.firstDay) >= 0) {
                 calOpts.firstDay = dayNames.indexOf(cfg.firstDay);
             }
+
+            var refetch = function() {
+                $el.fullCalendar('refetchEvents');
+            };
+            var refetch_deb = utils.debounce(refetch, 400);
+
+            var $filter = $el.find('.filter');
+            if ($filter && $filter.length > 0) {
+                $('.search-text', $filter).on('keyup', refetch_deb);
+                $('.search-text[type=search]', $filter).on('click', refetch_deb);
+                $('select[name=state]', $filter).on('change', refetch);
+                $('.check-list', $filter).on('change', refetch);
+            }
+
+            var $categoryRoot = cfg.categoryControls ?
+                $(cfg.categoryControls) : $el;
+
+            $el.categories = $el.find('.cal-events .cal-event')
+                .map(function() {
+                    return this.className.split(' ').filter(function(cls) {
+                        return (/^cal-cat/).test(cls);
+                    });
+                });
+
+            $el.$catControls = $categoryRoot.find('input[type=checkbox]');
+            $el.$catControls.on('change', refetch);
+
 
             $el.fullCalendar(calOpts);
 
@@ -105,60 +134,49 @@ define([
             }
 
             // update title
-            $el.find('.cal-title').text($el.fullCalendar('getView').title);
+            var $title = $el.find('.cal-title');
+            $title.text($el.fullCalendar('getView').title);
 
-            $el.find('.view-month').addClass('active');
+            var $controlRoot = cfg.calendarControls ?
+                $(cfg.calendarControls) : $el;
+            $controlRoot.find('.view-month').addClass('active');
 
-
-            $el.find('.jump-next').on('click', function() {
+            $controlRoot.find('.jump-next').on('click', function() {
                 $el.fullCalendar('next');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
             });
-            $el.find('.jump-prev').on('click', function() {
+            $controlRoot.find('.jump-prev').on('click', function() {
                 $el.fullCalendar('prev');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
             });
-            $el.find('.jump-today').on('click', function() {
+            $controlRoot.find('.jump-today').on('click', function() {
                 $el.fullCalendar('today');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
             });
-            $el.find('.view-month').on('click', function() {
+            $controlRoot.find('.view-month').on('click', function() {
                 $el.fullCalendar('changeView', 'month');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
                 }
             });
-            $el.find('.view-week').on('click', function() {
+            $controlRoot.find('.view-week').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaWeek');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
                 }
             });
-            $el.find('.view-day').on('click', function() {
+            $controlRoot.find('.view-day').on('click', function() {
                 $el.fullCalendar('changeView', 'agendaDay');
-                $el.find('.cal-title').html($el.fullCalendar('getView').title);
+                $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
                 }
             });
-
-            var refetch = function() {
-                $el.fullCalendar('refetchEvents');
-            };
-            var refetch_deb = utils.debounce(refetch, 400);
-
-            var $filter = $el.find('.filter');
-            if ($filter && $filter.length > 0) {
-                $('.search-text', $filter).on('keyup', refetch_deb);
-                $('.search-text[type=search]', $filter).on('click', refetch_deb);
-                $('select[name=state]', $filter).on('change', refetch);
-                $('.check-list', $filter).on('change', refetch);
-            }
 
             $el.find('.cal-events').css('display', 'none');
 
@@ -170,6 +188,7 @@ define([
                 $(this).trigger('dragstop');
             });
             $el.on('dragover', function(event) {
+                event.preventDefault();
                 event.type = 'mousemove';
                 $(document).trigger(event);
             });
@@ -212,6 +231,17 @@ define([
                 regex = new RegExp(searchText, 'i');
             }
 
+            var hiddenCats = $el.categories.filter(function() {
+                var cat = this;
+                return $el.$catControls.filter(function() {
+                    return !this.checked &&
+                        $(this)
+                            .parents()
+                            .andSelf()
+                            .hasClass(cat);
+                }).length;
+            });
+
             var events = $events.find('.cal-event').filter(function() {
                 var $event = $(this);
 
@@ -219,7 +249,10 @@ define([
                     log.debug('remove due to search-text='+searchText, $event);
                     return false;
                 }
-                return true;
+
+                return !hiddenCats.filter(function() {
+                    return $event.hasClass(this);
+                }).length;
             }).map(function(idx, event) {
                 var attr, i;
 

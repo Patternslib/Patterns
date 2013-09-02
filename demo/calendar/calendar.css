@@ -3,4 +3,12 @@
 .calendar-container {
 	overflow-y: scroll;
 	height: 500px;
-};
+}
+
+.cal-cat-work {
+    color: red;
+}
+
+.cal-cat-home {
+    color: blue;
+}
