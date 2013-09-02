@@ -28,6 +28,7 @@ define([
     parser.add_argument('column-day', 'dddd M/d');
     parser.add_argument('first-day', '0');
     parser.add_argument('calendar-controls', '');
+    parser.add_argument('category-controls', '');
 
     var _ = {
         name: 'calendar',
@@ -90,6 +91,33 @@ define([
                 calOpts.firstDay = dayNames.indexOf(cfg.firstDay);
             }
 
+            var refetch = function() {
+                $el.fullCalendar('refetchEvents');
+            };
+            var refetch_deb = utils.debounce(refetch, 400);
+
+            var $filter = $el.find('.filter');
+            if ($filter && $filter.length > 0) {
+                $('.search-text', $filter).on('keyup', refetch_deb);
+                $('.search-text[type=search]', $filter).on('click', refetch_deb);
+                $('select[name=state]', $filter).on('change', refetch);
+                $('.check-list', $filter).on('change', refetch);
+            }
+
+            var $categoryRoot = cfg.categoryControls ?
+                $(cfg.categoryControls) : $el;
+
+            $el.categories = $el.find('.cal-events .cal-event')
+                .map(function() {
+                    return this.className.split(' ').filter(function(cls) {
+                        return (/^cal-cat/).test(cls);
+                    });
+                });
+
+            $el.$catControls = $categoryRoot.find('input[type=checkbox]');
+            $el.$catControls.on('change', refetch);
+
+
             $el.fullCalendar(calOpts);
 
             // move to end of $el
@@ -150,19 +178,6 @@ define([
                 }
             });
 
-            var refetch = function() {
-                $el.fullCalendar('refetchEvents');
-            };
-            var refetch_deb = utils.debounce(refetch, 400);
-
-            var $filter = $el.find('.filter');
-            if ($filter && $filter.length > 0) {
-                $('.search-text', $filter).on('keyup', refetch_deb);
-                $('.search-text[type=search]', $filter).on('click', refetch_deb);
-                $('select[name=state]', $filter).on('change', refetch);
-                $('.check-list', $filter).on('change', refetch);
-            }
-
             $el.find('.cal-events').css('display', 'none');
 
             // make .cal-event elems draggable
@@ -215,6 +230,17 @@ define([
                 regex = new RegExp(searchText, 'i');
             }
 
+            var hiddenCats = $el.categories.filter(function() {
+                var cat = this;
+                return $el.$catControls.filter(function() {
+                    return !this.checked &&
+                        $(this)
+                            .parents()
+                            .andSelf()
+                            .hasClass(cat);
+                }).length;
+            });
+
             var events = $events.find('.cal-event').filter(function() {
                 var $event = $(this);
 
@@ -222,7 +248,10 @@ define([
                     log.debug('remove due to search-text='+searchText, $event);
                     return false;
                 }
-                return true;
+
+                return !hiddenCats.filter(function() {
+                    return $event.hasClass(this);
+                }).length;
             }).map(function(idx, event) {
                 var attr, i;
 

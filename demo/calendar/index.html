@@ -38,10 +38,17 @@
                         <button type="button" title="Today" class="jump-today">•</button>
                         <button type="button" title="Forward" class="jump-next">&gt;</button>
                     </fieldset>
-
+                </div>
+                <div class="cal-categories">
+                    <div class="cal-cat-work">
+                        <input type="checkbox" checked>Work
+                    </div>
+                    <div class="cal-cat-home">
+                        <input type="checkbox" checked>Home
+                    </div>
                 </div>
 
-                <div class="pat-calendar" data-pat-calendar="height: auto; title-day: dddd, d MMM; column-week: ddd d.M.; column-day: ; time-format: H:mm; first-day: mo; calendar-controls: .cal-controls">
+                <div class="pat-calendar" data-pat-calendar="height: auto; title-day: dddd, d MMM; column-week: ddd d.M.; column-day: ; time-format: H:mm; first-day: mo; calendar-controls: .cal-controls; category-controls: .cal-categories">
                     <p class="filter float-after">
                         <input type="text" class="search-text" placeholder="Filter events"/>
                     </p>
@@ -49,7 +56,7 @@
                     <h2 class="cal-title">Calendar</h2>
 
                     <ul class="cal-events">
-                        <li class="cal-event all-day">
+                        <li class="cal-event all-day cal-cat-work">
                                 <a href="#" class="url external">
                                     <h4 class="title">
                                         Read the patterns calendar documentation
@@ -64,7 +71,7 @@
                                     </ul>
                                 </a>
                         </li>
-                        <li class="cal-event all-day editable">
+                        <li class="cal-event all-day editable cal-cat-home">
                                 <a href="some-event-details.html" class="url external" data-injection".modal">
                                     <h4 class="title">
                                         Patterns sprint
