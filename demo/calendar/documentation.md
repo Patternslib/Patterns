@@ -6,4 +6,6 @@ With the calendar pattern you can turn any list of events into a day, week or mo
 
 ## Documentation
 
-…
+| Property | Default value | Values | Description | Type |
+| ----- | --------| -------- | ------- | ----------- |
+| `start-date`| Current day | Internation date format | Sets the starting date of the calendar | String |
