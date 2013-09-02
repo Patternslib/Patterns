@@ -18,7 +18,7 @@ define([
         parser = new Parser('calendar');
 
     parser.add_argument('height', 'auto');
-    parser.add_argument('time');
+    parser.add_argument('start-date');
     parser.add_argument('time-format', 'h(:mm)t');
     parser.add_argument('title-month', 'MMMM yyyy');
     parser.add_argument('title-week', 'MMM d[ yyyy]{ &#8212; [ MMM] d yyyy}');
@@ -75,7 +75,7 @@ define([
                     viewRender: _.highlightButtons
                 };
 
-            var ym = cfg.time || $el.find('time').first().attr('datetime');
+            var ym = cfg.startDate || $el.find('time').first().attr('datetime');
             if (ym) {
                 ym = ym.split('-');
                 calOpts.year = ym[0];
