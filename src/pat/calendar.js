@@ -27,6 +27,7 @@ define([
     parser.add_argument('column-week', 'ddd M/d');
     parser.add_argument('column-day', 'dddd M/d');
     parser.add_argument('first-day', '0');
+    parser.add_argument('first-hour', '6');
     parser.add_argument('calendar-controls', '');
     parser.add_argument('category-controls', '');
 
@@ -67,6 +68,7 @@ define([
                         var events = _.parseEvents($el);
                         callback(events);
                     },
+                    firstHour: cfg.first.hour,
                     axisFormat: cfg.timeFormat,
                     timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
@@ -87,8 +89,8 @@ define([
             }
 
             var dayNames = [ 'su', 'mo', 'tu', 'we', 'th', 'fr', 'sa' ];
-            if (dayNames.indexOf(cfg.firstDay) >= 0) {
-                calOpts.firstDay = dayNames.indexOf(cfg.firstDay);
+            if (dayNames.indexOf(cfg.first.day) >= 0) {
+                calOpts.firstDay = dayNames.indexOf(cfg.first.day);
             }
 
             var refetch = function() {
