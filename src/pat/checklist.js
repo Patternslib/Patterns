@@ -29,6 +29,9 @@ define([
                 $trigger.find(options.deselect)
                     .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
                 $trigger.on("change.pat-checklist", "input[type=checkbox]", {trigger: $trigger}, _.onChange);
+
+                // update select/deselect button status
+                _.onChange({data: {trigger: $trigger}});
             });
         },
 
