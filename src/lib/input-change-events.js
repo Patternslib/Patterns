@@ -59,6 +59,10 @@ define([
                             $el.trigger("input-change");
                         });
                     }
+
+                    $el.on("blur", function() {
+                        $el.trigger("input-defocus");
+                    });
                 });
             }
 
