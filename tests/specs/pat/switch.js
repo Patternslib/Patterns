@@ -10,6 +10,58 @@ define(["pat-switch"], function(pattern) {
             $("#lab").remove();
         });
 
+        describe("When the switch is clicked", function () {
+            describe("if the switch is a hyperlink", function () {
+                it("the default click action is prevented", function () {
+                    var $el = $('<a/>',
+                        {   id: 'anchor',
+                            href: '#anchor',
+                            'text': 'Switch',
+                            'class': 'pat-switch',
+                            'data-pat-switch': '#lab on off'
+                        }).appendTo(document.body);
+                    var ev= {
+                        type: 'click',
+                        preventDefault: function () {}
+                    };
+                    spyOn(pattern, "_onClick").andCallThrough();
+                    spyOn(pattern, "_go");
+                    spyOn(ev, 'preventDefault');
+                    pattern.init($el);
+                    $el.trigger(ev);
+                    expect(pattern._onClick).toHaveBeenCalled();
+                    expect(pattern._go).toHaveBeenCalled();
+                    expect(ev.preventDefault).toHaveBeenCalled();
+                    $el.remove();
+                });
+            });
+
+            describe("if the switch is not a hyperlink", function () {
+                it("the default click action is not prevented", function () {
+                    var $el = $('<button/>',
+                        {   id: 'anchor',
+                            'text': 'Switch',
+                            'class': 'pat-switch',
+                            'data-pat-switch': '#lab on off'
+                        }).appendTo(document.body);
+
+                    var ev= {
+                        type: 'click',
+                        preventDefault: function () {}
+                    };
+                    spyOn(pattern, "_onClick").andCallThrough();
+                    spyOn(pattern, "_go");
+                    spyOn(ev, 'preventDefault');
+                    pattern.init($el);
+                    $el.trigger(ev);
+                    expect(pattern._onClick).toHaveBeenCalled();
+                    expect(pattern._go).toHaveBeenCalled();
+                    expect(ev.preventDefault).not.toHaveBeenCalled();
+                    $el.remove();
+                });
+            });
+        });
+
         describe("_validateOptions", function() {
             it("Bad options", function() {
                 var options = pattern._validateOptions([{}]);
