@@ -1,4 +1,10 @@
-# Documentation
+# Dependencies
+
+## Description
+
+…
+
+## Documentation
 
 The *depends* pattern makes it possible to make visibility of content
 conditional on form data. A common use case is to only show parts of a
@@ -34,8 +40,7 @@ Another common use case is filtering a list based on some options:
       ....
     </ul>
 
-Dependency expressions
-----------------------
+### Dependency expressions
 
 Dependencies are specified via *dependency expression*. These are
 expressions that specify when an item should be visible or not.
@@ -110,16 +115,7 @@ complex example which demonstrates the use of `and`:
 This pizza menu will show a warning if the user selects a vegetarian
 pizza but then also adds extra bacon to it.
 
-If you want test with a value containing whitespace you will need to quote the
-value. This can be done using either single or double quotes.
-
-    <p class="pat-depends" data-pat-depends="condition: visible = 'no elements'">
-        Hidden items will be included.
-    </p>
-
-
-Actions
--------
+### Actions
 
 Two types of actions can be taken by the pattern: changing visibility
 and disabling elements. The action can be specified using the `action`
@@ -141,8 +137,7 @@ The available actions are:
    their disabled property. Links are disabled by registered a
    temporary event handler that blocks their default behaviour.
 
-Transitions
------------
+### Transitions
 
 When hiding or showing items you can specify a transition effect to be
 used. The default behaviour is to not use any transition and immediately
@@ -176,8 +171,7 @@ are also included: `fade` will fade the element in and out, and `slide`
 uses a vertical sliding effect. During a transition an `in-progress`
 class will be set on the element.
 
-Option reference
-----------------
+### Option reference
 
 The depends can be configured through a `data-pat-depends` attribute.
 The available options are:
