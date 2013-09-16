@@ -42,6 +42,7 @@
     ],
     "bungle": {
         "dependencies": [
+            "imagesloaded",
             "jcrop",
             "jquery",
             "jquery.anythingslider",
