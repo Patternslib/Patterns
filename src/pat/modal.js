@@ -3,9 +3,8 @@ define([
     "../core/parser",
     "../registry",
     "../utils",
-    "./inject",
-    "imagesloaded"
-], function($, Parser, registry, utils, inject, imagesLoaded) {
+    "./inject"
+], function($, Parser, registry, utils, inject) {
     var parser = new Parser("modal");
 
     parser.add_argument("class");
@@ -73,16 +72,6 @@ define([
             modal.setPosition();
         },
 
-        onInjection: function (ev) {
-            if ($("img", ev.target).length) {
-                imagesLoaded(ev.target, $.proxy(function() {
-                    this.setPosition();
-                }, this));
-            } else {
-                this.setPosition();
-            }
-        },
-
         setPosition: function() {
             if ((this.$el === undefined) || (this.$el.length === 0)) {
                 return;
@@ -137,12 +126,12 @@ define([
         }
     };
 
-    $(window).on('resize.pat-modal-position',
-        $.proxy(modal.onInjection, modal));
-    $(window).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
-        $.proxy(modal.onInjection, modal));
+    $(window).on('resize.pat-modal-position', 
+        $.proxy(modal.setPosition, modal));
+    $(document).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
+        $.proxy(modal.setPosition, modal));
     $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
-        $.proxy(modal.onInjection, modal));
+        $.proxy(modal.setPosition, modal));
 
     registry.register(modal);
     return modal;
