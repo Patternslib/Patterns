@@ -76,24 +76,42 @@ define([
             if ((this.$el === undefined) || (this.$el.length === 0)) {
                 return;
             }
-
             var $oldClone = $('#pat-modal-clone');
             if ($oldClone.length > 0) {
                 $oldClone.remove();
             }
-
+            var true_height = this.$el.outerHeight(); // the height of the highest element (after the function runs)
+            $(".panel-content", this.$el).each(function () {
+                if ($(this).outerHeight() > true_height) {
+                    true_height = $(this).outerHeight();
+                }
+            });
             var $clone = this.$el.clone();
-
             $clone
                 .attr('id', 'pat-modal-clone')
                 .css({
                     'visibility': 'hidden',
                     'position': 'absolute',
-                    'height': ''
+                    'height': true_height
                 }).appendTo('body');
 
-            // wait for browser to update DOM
-            setTimeout($.proxy(modal.measure, this), 0);
+            modal.callWhenReady(
+                '#pat-modal-clone',
+                $.proxy(modal.measure, this),
+                this);
+        },
+
+        callWhenReady: function (selector, callback, scope) {
+            // Call the callback only once we're certain the element identified
+            // by "selector" is attached to the DOM.
+            var self = this;
+            if ($(selector).closest('body').length) {
+                callback.call(scope);
+            } else {
+                setTimeout(function () {
+                    self.callWhenReady(selector, callback, scope);
+                }, 1);
+            }
         },
 
         measure: function() {
@@ -126,7 +144,7 @@ define([
         }
     };
 
-    $(window).on('resize.pat-modal-position', 
+    $(window).on('resize.pat-modal-position',
         $.proxy(modal.setPosition, modal));
     $(document).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
         $.proxy(modal.setPosition, modal));
