@@ -37,6 +37,16 @@ define([
             $el.prev().on("input-change input-defocus input-change-delayed",
                 function(e) { e.stopPropagation(); }
             );
+
+            $(document).on('pat-update', $.proxy(function (ev, data) {
+                // Clear the tags if the select2 input is hidden via pat-switch
+                if (!data) {
+                    return;
+                }
+                if ((data.pattern == 'switch') && (!$el.select2('container').is(':visible')) && $el.select2('val')) {
+                    $el.select2('val', '');
+                }
+            }, this));
             return $el;
         },
         destroy: function($el) {
