@@ -38,15 +38,10 @@ define([
                 function(e) { e.stopPropagation(); }
             );
 
-            $(document).on('pat-update', $.proxy(function (ev, data) {
-                // Clear the tags if the select2 input is hidden via pat-switch
-                if (!data) {
-                    return;
-                }
-                if ((data.pattern == 'switch') && (!$el.select2('container').is(':visible')) && $el.select2('val')) {
-                    $el.select2('val', '');
-                }
-            }, this));
+            // Clear the values when a reset button is pressed
+            $el.closest('form').find('button[type=reset]').on('click', function () {
+                $el.select2('val', '');
+            });
             return $el;
         },
         destroy: function($el) {
