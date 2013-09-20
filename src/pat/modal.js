@@ -8,7 +8,7 @@ define([
     var parser = new Parser("modal");
 
     parser.add_argument("class");
-
+    
     var modal = {
         name: "modal",
         jquery_plugin: true,
@@ -25,7 +25,6 @@ define([
                 });
             } else if ($el.length === 1) {
                 var cfg = parser.parse($el, opts);
-                this.$el = $el;
                 if ($el.is("div"))
                     modal._init_div1($el, cfg);
                 else
@@ -71,54 +70,37 @@ define([
             // remove on ESC
             $(document).on("keyup.pat-modal", modal.destroy.bind($el, $el));
 
-            $(document).on('resize.pat-modal-position', modal.setPosition.bind(modal, $el));
+            $(window).on('resize.pat-modal-position', 
+                utils.debounce(modal.setPosition.bind(modal, $el), 400));
             $(document).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
-                modal.setPosition.bind(modal, $el));
+                utils.debounce(modal.setPosition.bind(modal, $el), 400));
             $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
-                modal.setPosition.bind(modal, $el));
+                utils.debounce(modal.setPosition.bind(modal, $el), 400));
         },
 
         setPosition: function($el) {
-            var $oldClone = $('#pat-modal-clone');
-            if ($oldClone.length > 0) {
-                $oldClone.remove();
-            }
+            var $tallest_child;
             var true_height = $el.outerHeight(); // the height of the highest element (after the function runs)
-            $(".panel-content", $el).each(function () {
-                if ($(this).outerHeight() > true_height) {
-                    true_height = $(this).outerHeight();
+            $("*", $el).each(function () {
+                if ($(this).outerHeight(true) > true_height) {
+                    $tallest_child = $(this);
+                    true_height = $tallest_child.outerHeight(true);
                 }
             });
-            var $clone = $el.clone();
-            $clone
-                .attr('id', 'pat-modal-clone')
-                .css({
-                    'visibility': 'hidden',
-                    'position': 'absolute',
-                    'height': true_height
-                }).appendTo('body');
-
-            utils.callWhenReady(
-                '#pat-modal-clone',
-                modal.measure.bind(this, $el),
-                this);
-        },
-
-        measure: function($el) {
-            var $clone = $('#pat-modal-clone');
-            if ($clone.length === 0) {
-                return;
+            if ($tallest_child) {
+                // There is a child that's taller than $el. We need to make the
+                // height the height of this child plus it's offset from the top
+                // of $el.
+                true_height += $tallest_child.offset().top - $el.offset().top;
             }
-            var maxHeight = $(window).innerHeight() - $clone.outerHeight(true) +
-                            $clone.outerHeight(),
-                height = $clone.outerHeight();
-
-            $clone.remove();
-
-            if (maxHeight - height < 0) {
+            // Maximum height is visible browser area minus modal padding
+            var maxHeight = $(window).innerHeight() - ($el.outerHeight(true) - $el.outerHeight());
+            if (maxHeight - true_height < 0) {
                 $el.addClass('max-height').css('height', maxHeight);
+            } else if (true_height !== $el.height()) {
+                $el.removeClass('max-height').css('height', true_height);
             } else {
-                $el.removeClass('max-height').css('height', height);
+                return;
             }
             $el.css('top', ($(window).innerHeight() - $el.outerHeight(true)) / 2);
         },
