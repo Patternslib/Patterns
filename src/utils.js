@@ -76,14 +76,27 @@ define([
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     };
 
+    var callWhenReady = function (selector, callback, scope) {
+        // Call the callback only once we're certain the element identified
+        // by "selector" is attached to the DOM.
+        var self = this;
+        if ($(selector).closest('body').length) {
+            callback.call(scope);
+        } else {
+            setTimeout(function () {
+                self.callWhenReady(selector, callback, scope);
+            }, 1);
+        }
+    };
+
     var utils = {
         // pattern pimping - own module?
         jquery_plugin: jquery_plugin,
         debounce: debounce,
         escapeRegExp: escapeRegExp,
         rebaseURL: rebaseURL,
-        findLabel: findLabel
+        findLabel: findLabel,
+        callWhenReady: callWhenReady
     };
-
     return utils;
 });

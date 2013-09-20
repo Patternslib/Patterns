@@ -98,23 +98,10 @@ define([
                     'height': true_height
                 }).appendTo('body');
 
-            modal.callWhenReady(
+            utils.callWhenReady(
                 '#pat-modal-clone',
                 modal.measure.bind(this, $el),
                 this);
-        },
-
-        callWhenReady: function (selector, callback, scope) {
-            // Call the callback only once we're certain the element identified
-            // by "selector" is attached to the DOM.
-            var self = this;
-            if ($(selector).closest('body').length) {
-                callback.call(scope);
-            } else {
-                setTimeout(function () {
-                    self.callWhenReady(selector, callback, scope);
-                }, 1);
-            }
         },
 
         measure: function($el) {
