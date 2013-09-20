@@ -103,6 +103,16 @@ define([
                 return;
             }
             $el.css("top", ($(window).innerHeight() - $el.outerHeight(true)) / 2);
+
+            // XXX: This is a hack. When you have a modal inside a
+            // modal.max-height, the CSS of the outermost modal affects the
+            // innermost .panel-body. By redrawing here, it's fixed.
+            //
+            // I think ideally the CSS needs to be fixed here, but I need to
+            // discuss with Cornelis first.
+            if ($el.parent().closest('.pat-modal').length > 0) {
+                utils.redraw($el.find('.panel-body'));
+            }
         },
 
         destroy: function($el, ev) {
