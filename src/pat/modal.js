@@ -61,32 +61,35 @@ define([
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
             activeElement.focus();
-
-            // event handlers remove modal - first arg to bind is ``this``
-            $(document).on("click.pat-modal", ".close-panel",
-                           modal.destroy.bind($el, $el));
-            // remove on ESC
-            $(document).on("keyup.pat-modal",
-                           modal.destroy.bind($el, $el));
-
-            modal.setPosition();
+            modal._init_handlers($el);
+            modal.setPosition($el);
         },
 
-        setPosition: function() {
-            if ((this.$el === undefined) || (this.$el.length === 0)) {
-                return;
-            }
+        _init_handlers: function($el) {
+            // event handlers remove modal - first arg to bind is ``this``
+            $(document).on("click.pat-modal", ".close-panel", modal.destroy.bind($el, $el));
+            // remove on ESC
+            $(document).on("keyup.pat-modal", modal.destroy.bind($el, $el));
+
+            $(document).on('resize.pat-modal-position', modal.setPosition.bind(modal, $el));
+            $(document).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
+                modal.setPosition.bind(modal, $el));
+            $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
+                modal.setPosition.bind(modal, $el));
+        },
+
+        setPosition: function($el) {
             var $oldClone = $('#pat-modal-clone');
             if ($oldClone.length > 0) {
                 $oldClone.remove();
             }
-            var true_height = this.$el.outerHeight(); // the height of the highest element (after the function runs)
-            $(".panel-content", this.$el).each(function () {
+            var true_height = $el.outerHeight(); // the height of the highest element (after the function runs)
+            $(".panel-content", $el).each(function () {
                 if ($(this).outerHeight() > true_height) {
                     true_height = $(this).outerHeight();
                 }
             });
-            var $clone = this.$el.clone();
+            var $clone = $el.clone();
             $clone
                 .attr('id', 'pat-modal-clone')
                 .css({
@@ -97,7 +100,7 @@ define([
 
             modal.callWhenReady(
                 '#pat-modal-clone',
-                $.proxy(modal.measure, this),
+                modal.measure.bind(this, $el),
                 this);
         },
 
@@ -114,12 +117,11 @@ define([
             }
         },
 
-        measure: function() {
+        measure: function($el) {
             var $clone = $('#pat-modal-clone');
             if ($clone.length === 0) {
                 return;
             }
-
             var maxHeight = $(window).innerHeight() - $clone.outerHeight(true) +
                             $clone.outerHeight(),
                 height = $clone.outerHeight();
@@ -127,13 +129,11 @@ define([
             $clone.remove();
 
             if (maxHeight - height < 0) {
-                this.$el.addClass('max-height').css('height', maxHeight);
+                $el.addClass('max-height').css('height', maxHeight);
             } else {
-                this.$el.removeClass('max-height').css('height', height);
+                $el.removeClass('max-height').css('height', height);
             }
-
-            var top = ($(window).innerHeight() - this.$el.outerHeight(true)) / 2;
-            this.$el.css('top', top);
+            $el.css('top', ($(window).innerHeight() - $el.outerHeight(true)) / 2);
         },
 
         destroy: function($el, ev) {
@@ -143,14 +143,6 @@ define([
             $el.remove();
         }
     };
-
-    $(window).on('resize.pat-modal-position',
-        $.proxy(modal.setPosition, modal));
-    $(document).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
-        $.proxy(modal.setPosition, modal));
-    $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
-        $.proxy(modal.setPosition, modal));
-
     registry.register(modal);
     return modal;
 });
