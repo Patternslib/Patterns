@@ -30,7 +30,8 @@ define([
             $el.select2({
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
-                tokenSeparators: [","]
+                tokenSeparators: [","],
+                openOnEnter: false
             });
 
             // suppress propagation for second input field
