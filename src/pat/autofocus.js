@@ -12,12 +12,43 @@ define([
         trigger: ":input.pat-autofocus,:input[autofocus]",
 
         init: function($el) {
-            for (var i=0; i<$el.length; i+=1)
+            $el = $el.filter(
+                function () {
+                    // This function filters out all elements that have
+                    // .pat-depends ancestors.
+                    // If a .pat-autofocus element has a .pat-depends ancestor, then
+                    // autofocus is dependent on that ancestor being visible.
+                    var $el = $(this);
+                    var $depends_slave = $el.closest('.pat-depends').addBack('.pat-depends');
+                    if ($depends_slave.length > 0) {
+                        // We register an event handler so that the element is
+                        // only autofocused once the .pat-depends ancestor
+                        // becomes visible.
+                        $depends_slave.on("pat-update", function (e, data) {
+                            if ((data.pattern == 'depends') &&
+                                (data.transition == 'complete') &&
+                                ($(this).is(':visible'))) {
+
+                                if ($el.hasClass('select2-offscreen')) {
+                                    $el.parent().find('.select2-input').focus();
+                                } else {
+                                    $el.focus();
+                                }
+                            }
+                        });
+                        return false;
+                    }
+                    return true;
+                }
+            );
+            // $el is now only those elements not dependent on .pat-depends
+            // criteria.
+            for (var i=0; i<$el.length; i+=1) {
                 if (!$el.eq(i).val()) {
                     $el.get(i).focus();
                     return;
                 }
-
+            }
             $el.eq(0).focus();
         }
     };
