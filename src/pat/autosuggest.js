@@ -65,6 +65,17 @@ define([
 
             $el.select2(config);
 
+            $el.on('pat-update', function (e, data) {
+                if (data.pattern === 'depends') {
+                    if (data.enabled === true) {
+                        $el.select2('enable', true);
+                    } else if (data.enabled === false) {
+                        $el.select2('disable', true);
+                    }
+
+                }
+            });
+
             // suppress propagation for second input field
             $el.prev().on("input-change input-defocus input-change-delayed",
                 function(e) { e.stopPropagation(); }
