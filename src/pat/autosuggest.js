@@ -13,6 +13,9 @@ define([
 ], function($, Parser, registry) {
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");
+    parser.add_argument("ajax-url", "");
+    parser.add_argument("ajax-data-type", "");
+    parser.add_argument("ajax-search-index", "");
     parser.add_argument("pre-fill", function($el) { return $el.val(); });
     parser.add_argument("placeholder", function($el) {
         return $el.attr("placeholder") || "Enter text";
@@ -22,17 +25,45 @@ define([
         name: "autosuggest",
         trigger: "input.pat-autosuggest",
         init: function($el, opts) {
-            if ($el.length > 1)
+            if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });
-
+            }
             var cfg = parser.parse($el, opts);
             $el.val(cfg.preFill.split(','));
-            $el.select2({
+
+            var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
                 tokenSeparators: [","],
                 openOnEnter: false
-            });
+            };
+
+            if ((cfg.ajax) && (cfg.ajax.url)) {
+                config = $.extend(true, {
+                    minimumInputLength: 1,
+                    ajax: {
+                        url: cfg.ajax.url,
+                        dataType: cfg.ajax['data-type'],
+                        type: 'POST',
+                        quietMillis: 400,
+                        data: function (term, page) {
+                            return {
+                                index: cfg.ajax['search-index'],
+                                q: term, // search term
+                                page_limit: 10,
+                                page: page
+                            };
+                        },
+                        results: function (data, page) {
+                            // parse the results into the format expected by Select2.
+                            // data must be a list of objects with keys 'id' and 'text'
+                            return {results: data, page: page};
+                        }
+                    }
+                }, config);
+            }
+
+            $el.select2(config);
 
             // suppress propagation for second input field
             $el.prev().on("input-change input-defocus input-change-delayed",
