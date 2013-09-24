@@ -8,7 +8,7 @@ define([
     var parser = new Parser("modal");
 
     parser.add_argument("class");
-    
+
     var modal = {
         name: "modal",
         jquery_plugin: true,
@@ -70,7 +70,7 @@ define([
             // remove on ESC
             $(document).on("keyup.pat-modal", modal.destroy.bind($el, $el));
 
-            $(window).on('resize.pat-modal-position', 
+            $(window).on('resize.pat-modal-position',
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
             $(document).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
