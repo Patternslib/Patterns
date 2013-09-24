@@ -15,7 +15,7 @@ define([
         parser = new Parser("depends");
 
     parser.add_argument("condition");
-    parser.add_argument("action", "show", ["show", "enable"]);
+    parser.add_argument("action", "show", ["show", "enable", "both"]);
     parser.add_argument("transition", "none", ["none", "css", "fade", "slide"]);
     parser.add_argument("effect-duration", "fast");
     parser.add_argument("effect-easing", "swing");
@@ -59,6 +59,15 @@ define([
                         else
                             depends._disable($slave);
                         break;
+                    case "both":
+                        if (state) {
+                            $slave.show();
+                            depends._enable($slave);
+                        } else {
+                            $slave.hide();
+                            depends._disable($slave);
+                        }
+                        break;
                 }
 
                 var data = {handler: handler,
@@ -98,6 +107,12 @@ define([
                 $slave[0].disabled=null;
             else if ($slave.is("a"))
                 $slave.off("click.patternDepends");
+            else if ($slave.hasClass('pat-autosuggest')) {
+                $slave.findInclusive('input.pat-autosuggest').trigger("pat-update", {
+                    pattern: "depends",
+                    enabled: true
+                });
+            }
             $slave.removeClass("disabled");
         },
 
@@ -106,6 +121,12 @@ define([
                 $slave[0].disabled="disabled";
             else if ($slave.is("a"))
                 $slave.on("click.patternDepends", depends.blockDefault);
+            else if ($slave.hasClass('pat-autosuggest')) {
+                $slave.findInclusive('input.pat-autosuggest').trigger("pat-update", {
+                    pattern: "depends",
+                    enabled: false
+                });
+            }
             $slave.addClass("disabled");
         },
 
@@ -152,6 +173,13 @@ define([
                     depends._hide_or_show($slave, state, options);
                     break;
                 case "enable":
+                    if (state)
+                        depends._enable($slave);
+                    else
+                        depends._disable($slave);
+                    break;
+                case "both":
+                    depends._hide_or_show($slave, state, options);
                     if (state)
                         depends._enable($slave);
                     else
