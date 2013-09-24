@@ -25,8 +25,8 @@ define([
                         // only autofocused once the .pat-depends ancestor
                         // becomes visible.
                         $depends_slave.on("pat-update", function (e, data) {
-                            if ((data.pattern == 'depends') &&
-                                (data.transition == 'complete') &&
+                            if ((data.pattern === 'depends') &&
+                                (data.transition === 'complete') &&
                                 ($(this).is(':visible'))) {
 
                                 if ($el.hasClass('select2-offscreen')) {
