@@ -25,14 +25,17 @@ define([
                         // only autofocused once the .pat-depends ancestor
                         // becomes visible.
                         $depends_slave.on("pat-update", function (e, data) {
-                            if ((data.pattern === 'depends') &&
-                                (data.transition === 'complete') &&
-                                ($(this).is(':visible'))) {
+                            var $child = $el;
+                            if (data.pattern === 'depends') {
+                                if (((data.transition === 'complete') && ($(this).is(':visible'))) ||
+                                    ((data.enabled === 'true') && ($(this).is('visible')))) {
 
-                                if ($el.hasClass('select2-offscreen')) {
-                                    $el.parent().find('.select2-input').focus();
-                                } else {
-                                    $el.focus();
+                                    if ($el.hasClass('select2-offscreen')) {
+                                        $child = $el.parent().find('.select2-input');
+                                    }
+                                    if (!$child.is(':disabled')) {
+                                        $child.focus();
+                                    }
                                 }
                             }
                         });
