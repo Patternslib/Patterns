@@ -29,7 +29,9 @@ define([
                 return $el.each(function() { _.init($(this), opts); });
             }
             var cfg = parser.parse($el, opts);
-            $el.val(cfg.preFill.split(','));
+
+            var prefill = cfg.preFill.split(',');
+            $el.val(prefill);
 
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
@@ -37,6 +39,16 @@ define([
                 tokenSeparators: [","],
                 openOnEnter: false
             };
+
+            if (prefill) {
+                config.initSelection = function (element, callback) {
+                    var data = [];
+                    $(element.val().split(",")).each(function () {
+                        data.push({id: this, text: this});
+                    });
+                    callback(data);
+                };
+            }
 
             if ((cfg.ajax) && (cfg.ajax.url)) {
                 config = $.extend(true, {
