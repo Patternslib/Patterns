@@ -50,7 +50,7 @@
             "jquery.fullcalendar-1.5.4",
             "jquery.placeholder",
             "jquery.textchange",
-            "jquery.select2",
+            "jquery.select2-3.3.1",
             "less",
             "logging",
             "modernizr",
