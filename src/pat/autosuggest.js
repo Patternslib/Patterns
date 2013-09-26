@@ -25,8 +25,6 @@ define([
         name: "autosuggest",
         trigger: "input.pat-autosuggest",
         init: function($el, opts) {
-            var is_ie8 = ($.browser.msie && parseInt($.browser.version, 10) < 9);
-
             if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });
             }
@@ -40,13 +38,18 @@ define([
                 tags: cfg.words.split(/\s*,\s*/),
                 tokenSeparators: [","],
                 openOnEnter: false,
-                width: function () {
-                    if (is_ie8) {
-                        return '100%';
-                    }
-                    return $el.outerWidth(false) === 0 ? 'auto' : $el.outerWidth(false) + 'px';
-                }
+                width: 'resolve'
             };
+            /* XXX: Currently IE8 has width of 4px in Star. Keeping this
+                * here as fallback if Cornelis doesn't come up with a fix
+                * before tomorrow.
+            width: function () {
+                if ($.browser.msie && parseInt($.browser.version, 10) < 9) {
+                    return '100%';
+                }
+                return $el.outerWidth(false) === 0 ? 'auto' : $el.outerWidth(false) + 'px';
+            }
+            */
 
             if (prefill) {
                 config.initSelection = function (element, callback) {
