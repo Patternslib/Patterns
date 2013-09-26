@@ -37,9 +37,19 @@ define([
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
                 tokenSeparators: [","],
-                width: 'element',
-                openOnEnter: false
+                openOnEnter: false,
+                width: 'resolve'
             };
+            /* XXX: Currently IE8 has width of 4px in Star. Keeping this
+                * here as fallback if Cornelis doesn't come up with a fix
+                * before tomorrow.
+            width: function () {
+                if ($.browser.msie && parseInt($.browser.version, 10) < 9) {
+                    return '100%';
+                }
+                return $el.outerWidth(false) === 0 ? 'auto' : $el.outerWidth(false) + 'px';
+            }
+            */
 
             if (prefill) {
                 config.initSelection = function (element, callback) {
