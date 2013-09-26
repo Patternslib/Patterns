@@ -41,7 +41,7 @@ define([
                 openOnEnter: false
             };
 
-            if (prefill) {
+            if (prefill.length) {
                 config.initSelection = function (element, callback) {
                     var data = [];
                     $(element.val().split(",")).each(function () {
