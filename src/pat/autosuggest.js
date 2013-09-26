@@ -37,6 +37,7 @@ define([
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
                 tokenSeparators: [","],
+                width: 'element',
                 openOnEnter: false
             };
 
