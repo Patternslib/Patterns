@@ -42,10 +42,11 @@ define([
 
             if (prefill.length) {
                 config.initSelection = function (element, callback) {
-                    var data = [];
-                    $(element.val().split(",")).each(function () {
-                        data.push({id: this, text: this});
-                    });
+                    var i, data = [],
+                        values = element.val().split(",");
+                    for (i=0; i<values.length; i++) {
+                        data.push({id: values[i], text: values[i]});
+                    }
                     callback(data);
                 };
             }
