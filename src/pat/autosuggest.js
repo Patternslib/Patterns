@@ -109,6 +109,10 @@ define([
                 var $src = $(this),
                     $dest = $('<input type="hidden"/>').insertAfter($src);
 
+                // measure in IE8, otherwise hidden will have width 0
+                if (document.all && !document.addEventListener) {
+                    $dest.css('width', $src.outerWidth(false)+'px');
+                }
                 $src.detach();
                 $.each($src.prop('attributes'), function() {
                     if (this.name !== 'type') {
