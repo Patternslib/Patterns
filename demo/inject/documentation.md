@@ -362,7 +362,7 @@ After injection was triggered:
 You can customise the behaviour of injection through options in the
 `data-pat-inject` attribute.
 
-    <a href="#" class="pat-inject" data-pat-gallery="type: modal">
+    <a href="#" class="pat-inject" data-pat-inject="type: modal">
       …
     </a>
 
