@@ -1,7 +1,7 @@
 # Documentation
 
-The *depends* pattern makes it possible to make visibility of content
-conditional on form data. A common use case is to only show parts of a
+The *depends* pattern enables you to make the visibility of content
+dependent on form data. A common use case is to only show parts of a
 form when relevant. Here is an example from a hypothetical pizza order
 form:
 
@@ -42,8 +42,8 @@ expressions that specify when an item should be visible or not.
 
 The simplest form of a dependency expression is `<input name>` which
 indicates that an input element with the given name (or id) must have a
-value (if it is a checkbox must be checked). You can also test for a
-specific value:
+value (or in the case of checkboxes that it must be checked).
+You can also test for a specific value:
 
 -   `<input name>=<value>`: indicates that an input element must have a
     specific value. This is most useful when used to check which radio
@@ -70,17 +70,17 @@ You can also revert a test by putting the `not` keyword in front of it.
 Here are some examples:
 
     <input type="checkbox" name="hidden"/>
-    
+
     <p class="pat-depends" data-pat-depends="condition: hidden">
         Hidden items will be included.
     </p>
-    
+
     <p class="pat-depends" data-pat-depends="condition: not hidden">
         Not showing hidden items.
     </p>
 
     <input type="range" name="price" value="50"/>
-    
+
     <p class="pat-depends" data-pat-depends="price<100">
         Showing cheap options.
     </p>
@@ -105,7 +105,7 @@ complex example which demonstrates the use of `and`:
 
     <em class="warning pat-depends"
         data-pata-depends="condition:flavour=veg and custom and bacon">
-      Adding bacon means your pizza is no longer vegetarian!</em> 
+      Adding bacon means your pizza is no longer vegetarian!</em>
 
 This pizza menu will show a warning if the user selects a vegetarian
 pizza but then also adds extra bacon to it.
@@ -114,7 +114,9 @@ Actions
 -------
 
 Two types of actions can be taken by the pattern: changing visibility
-and disabling elements. The action can be specified using the `action`
+and disabling elements.
+
+The action can be specified using the `action`
 property.
 
     <button data-pat-depends="title enable">Submit</button>
@@ -128,10 +130,14 @@ The available actions are:
    dependencies. If the dependencies are not met the item will
    be made invisible. In addition a CSS class of `hidden` or
    `visible` will be set.
+
 -  `enable`: disables items and adds a `disabled` class if the
    dependencies are not met. Input elements are disabled by setting
    their disabled property. Links are disabled by registered a
    temporary event handler that blocks their default behaviour.
+
+-  `both`: both the `enable` and `show` actions will be applied. Conversely, an
+   element will be both hidden and disabled when the condition is not met.
 
 Transitions
 -----------
@@ -175,9 +181,9 @@ The depends can be configured through a `data-pat-depends` attribute.
 The available options are:
 
 | Field | Default | Description |
-| ----- | ------- | ----------- | 
+| ----- | ------- | ----------- |
 | `condition` | | The dependency condition. |
 | `action` | `show` | Action to perform. One of `show` or `enable`. |
 | `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
-| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
+| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`.
 | `effect-easing`  | `swing` | Easing to use for the transition. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
