@@ -14,7 +14,7 @@ form:
     <form>
       <label><input type="checkbox" name="custom"/> Add extra toppings</label>
 
-      <fieldset data-pat-depends="custom">
+      <fieldset class="pat-depends" data-pat-depends="custom">
         <legend>Extra toppings</legend>
         <label><input type="checkbox" name="pineapple"/> Pineapple</label>
         <label><input type="checkbox" name="gorgonzola"/> Gorgonzola</label>
@@ -33,11 +33,11 @@ Another common use case is filtering a list based on some options:
     <label><input type="checkbox" name="overdue" checked="checked"/> Show overdue invoices</label>
 
     <ul>
-      <li data-pat-depends="paid">A paid invoice</li>
-      <li data-pat-depends="paid">Another paid invoiceli>
-      <li data-pat-depends="overdue">An overdue invoiceli>
-      <li data-pat-depends="draft">A draft invoice</li>
-      ....
+      <li class="pat-depends" data-pat-depends="paid">A paid invoice</li>
+      <li class="pat-depends" data-pat-depends="paid">Another paid invoiceli>
+      <li class="pat-depends" data-pat-depends="overdue">An overdue invoiceli>
+      <li class="pat-depends" data-pat-depends="draft">A draft invoice</li>
+      …
     </ul>
 
 ### Dependency expressions
