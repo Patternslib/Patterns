@@ -6,8 +6,11 @@
   possible to completely bootstrap and build Patterns using make
   from a clean git clone.
 
-- Bumper pattern: add new `selector` option to allow overriding which
-  elements must be updated.
+- [Bumper pattern](demo/bumper/index.html): 
+  - add new `selector` option to allow overriding which elements must be
+    updated.
+  - Add new options to specify which classes much be added/removed when
+    an item is (un)bumped.
 
 - Depends pattern: also update dependencies on keyup. This makes sure
   actions happen without forcing a user to move focus away after modifying

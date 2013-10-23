@@ -8,8 +8,9 @@
 define([
     "jquery",
     "../core/parser",
-    "../registry"
-], function($, Parser, registry) {
+    "../registry",
+    "../utils"
+], function($, Parser, registry, utils) {
     var parser = new Parser("bumper");
 
     parser.add_argument("margin", 0);
@@ -49,7 +50,6 @@ define([
             
             view.right = view.left + $win.width();
             view.bottom = view.top + $win.height();
-            
             return view;
         },
         
@@ -82,49 +82,58 @@ define([
                 var $this = $(this),
                     options = $this.data("pat-bumper.config"),
                     $target = options.selector ? $(options.selector) : $this,
+                    already_bumped = !!$this.data("pat-bumper.bumped"),
+                    must_bump = false,
                     bumped = false,
-                    data;
+                    element_box;
 
                 // get current ElementBox while not bumped, otherwise used
                 // saved state before bumping
-                if ($target.hasClass("bumped")) {
-                    data = $this.data("patterns.bumper");
-                } else {
-                    data = _._getElementBox($this);
-                    data.threshold = {
-                        top:    data.top - options.margin,
-                        bottom: data.bottom + options.margin,
-                        left:   data.left - options.margin,
-                        right:  data.right + options.margin
+                if ($target.hasClass("bumped"))
+                    element_box = $this.data("pat-bumper.elementbox");
+                else {
+                    element_box = _._getElementBox($this);
+                    element_box.threshold = {
+                        top:    element_box.top - options.margin,
+                        bottom: element_box.bottom + options.margin,
+                        left:   element_box.left - options.margin,
+                        right:  element_box.right + options.margin
                     };
-                    data.margin = options.margin;
-                    $this.data("patterns.bumper", data);
+                    element_box.margin = options.margin;
+                    $this.data("pat-bumper.elementbox", element_box);
                 }
 
-                if (box.top > data.threshold.top) {
+                if (box.top > element_box.threshold.top) {
                     $target.addClass("bumped-top").removeClass("bumped-bottom");
-                    bumped = true;
-                } else if (box.bottom < data.threshold.bottom) {
+                    must_bump = true;
+                } else if (box.bottom < element_box.threshold.bottom) {
                     $target.addClass("bumped-bottom").removeClass("bumped-top");
-                    bumped = true;
-                } else {
+                    must_bump = true;
+                } else
                     $target.removeClass("bumped-top bumped-bottom");
-                }
-                
-                if (box.left > data.threshold.left) {
+
+                if (box.left > element_box.threshold.left) {
                     $target.addClass("bumped-left").removeClass("bumped-right");
-                    bumped = true;
-                } else if (box.right < data.threshold.right) {
+                    must_bump = true;
+                } else if (box.right < element_box.threshold.right) {
                     $target.addClass("bumped-right").removeClass("bumped-left");
-                    bumped = true;
-                } else {
+                    must_bump = true;
+                } else
                     $target.removeClass("bumped-left bumped-right");
-                }
-                
-                if (bumped) {
+
+                $this.data("pat-bumper.bumped", must_bump);
+                if (!already_bumped && must_bump) {
                     $target.addClass("bumped");
-                } else {
+                    if (options.bump.add)
+                        $target.addClass(options.bump.add);
+                    if (options.bump.remove)
+                        utils.removeWildcardClass($target, options.bump.remove);
+                } else if (already_bumped && !must_bump) {
                     $target.removeClass("bumped");
+                    if (options.unbump.add)
+                        $target.addClass(options.unbump.add);
+                    if (options.unbump.remove)
+                        utils.removeWildcardClass($target, options.unbump.remove);
                 }
             });
         }
