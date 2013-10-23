@@ -2,7 +2,7 @@
  * Patterns chosen - Wrapper for chosen
  *
  * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
 define([
     "../registry",

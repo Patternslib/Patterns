@@ -3,7 +3,7 @@
  *
  * Copyright 2013 Florian Friesdorf
  * Copyright 2012 Humberto Sermeno
- * Copyright 2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define([
     "jquery",
