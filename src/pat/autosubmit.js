@@ -2,7 +2,7 @@
  * Patterns autosubmit - automatic submission of forms
  *
  * Copyright 2012-2013 Florian Friesdorf
- * Copyright 2012 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012 Simplon B.V. - Wichert Akkerman
  * Copyright 2013 Marko Durkovic
  */
 define([

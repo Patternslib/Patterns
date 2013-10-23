@@ -22,7 +22,10 @@ all:: $(BUNDLES) $(GENERATED)
 
 # Installation of dependencies:
 
-bungledeps: package.json
+$(BUNGLE) $(JSHINT): package.json
+	npm install
+
+bungledeps: package.json $(BUNGLE)
 	$(BUNGLE) update
 	$(BUNGLE) install
 	touch bungledeps
@@ -68,7 +71,7 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs
 
 
 check:: jshint
-jshint:
+jshint: $(JSHINT)
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 
 check:: check-modules

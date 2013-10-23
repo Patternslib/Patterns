@@ -26,7 +26,7 @@ define(["pat/bumper"], function(pattern) {
                     ].join("\n"));
                 var $bumper = $("#lab .pat-bumper");
                 pattern.init($bumper);
-                expect($bumper.data("patterns.bumper").margin).toBe(0);
+                expect($bumper.data("pat-bumper:elementbox").margin).toBe(0);
             });
 
             it("Element with margin option", function(){
@@ -38,7 +38,7 @@ define(["pat/bumper"], function(pattern) {
                     ].join("\n"));
                 var $bumper = $("#lab .pat-bumper");
                 pattern.init($bumper);
-                expect($bumper.data("patterns.bumper").margin).toBe(100);
+                expect($bumper.data("pat-bumper:elementbox").margin).toBe(100);
             });
 
             it("Element with css margin", function(){
@@ -50,7 +50,7 @@ define(["pat/bumper"], function(pattern) {
                     ].join("\n"));
                 var $bumper = $("#lab .pat-bumper");
                 pattern.init($bumper);
-                expect($bumper.data("patterns.bumper").threshold.top === $bumper.offset().top - 30).toBeTruthy();
+                expect($bumper.data("pat-bumper:elementbox").threshold.top === $bumper.offset().top - 30).toBeTruthy();
             });
 
         });
@@ -66,7 +66,7 @@ define(["pat/bumper"], function(pattern) {
 
                 var $bumper = $("#lab .pat-bumper");
                 pattern.init($bumper);
-                var opts = $bumper.data("patterns.bumper");
+                var opts = $bumper.data("pat-bumper:elementbox");
                 var box = {
                     top: opts.threshold.top - 10, // should not be bumped on top
                     bottom: opts.threshold.bottom + 10, // not bumped on bottom
@@ -74,12 +74,12 @@ define(["pat/bumper"], function(pattern) {
                     right: opts.threshold.right + 10 // not bumped right
                 };
 
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBeFalsy();
 
                 // bump top
                 box.top += 20;
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBe(true);
                 expect($bumper.hasClass("bumped-top")).toBe(true);
                 expect($bumper.hasClass("bumped-bottom")).toBe(false);
@@ -89,7 +89,7 @@ define(["pat/bumper"], function(pattern) {
                 // bump bottom
                 box.top -= 20;
                 box.bottom -= 20;
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBe(true);
                 expect($bumper.hasClass("bumped-top")).toBe(false);
                 expect($bumper.hasClass("bumped-bottom")).toBe(true);
@@ -98,7 +98,7 @@ define(["pat/bumper"], function(pattern) {
 
                 // bump bottom and left
                 box.left += 20;
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBe(true);
                 expect($bumper.hasClass("bumped-top")).toBe(false);
                 expect($bumper.hasClass("bumped-bottom")).toBe(true);

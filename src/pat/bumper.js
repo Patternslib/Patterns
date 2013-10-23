@@ -3,27 +3,39 @@
  *
  * Copyright 2013 Florian Friesdorf
  * Copyright 2012 Humberto Sermeno
- * Copyright 2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define([
     "jquery",
     "../core/parser",
-    "../registry"
-], function($, Parser, registry) {
+    "../registry",
+    "../utils"
+], function($, Parser, registry, utils) {
     var parser = new Parser("bumper");
 
     parser.add_argument("margin", 0);
+    parser.add_argument("selector");
+    parser.add_argument("bump-add", "bumped");
+    parser.add_argument("bump-remove");
+    parser.add_argument("unbump-add");
+    parser.add_argument("unbump-remove", "bumped");
 
     var _ = {
         name: "bumper",
         trigger: ".pat-bumper",
 
         init: function($el, opts) {
-            $(window).on("scroll.bumper", function() {
-                _._testBump($el, opts, _._getViewport());
+            $el.each(function() {
+                var $trigger = $(this),
+                    options = parser.parse($trigger, opts);
+                $trigger.data("pat-bumper:config", options);
             });
 
-            _._testBump($el, opts, _._getViewport());
+            $(window).on("scroll.bumper", function() {
+                _._testBump($el, _._getViewport());
+            });
+
+            _._testBump($el, _._getViewport());
             return $el;
         },
         
@@ -38,7 +50,6 @@ define([
             
             view.right = view.left + $win.width();
             view.bottom = view.top + $win.height();
-            
             return view;
         },
         
@@ -63,56 +74,64 @@ define([
          * Determines whether an element should be bumped
          *
          * @param $el  The element to look for
-         * @param view The bounding box in which the element will be bumped
+         * @param box The bounding box in which the element will be bumped
          */
-        _testBump: function($el, opts, box) {
+        _testBump: function($el, box) {
             // initialize the elements
             $el.each(function() {
                 var $this = $(this),
+                    options = $this.data("pat-bumper:config"),
+                    $target = options.selector ? $(options.selector) : $this,
+                    already_bumped = !!$this.data("pat-bumper:bumped"),
+                    must_bump = false,
                     bumped = false,
-                    data;
+                    element_box = $this.data("pat-bumper:elementbox");
 
                 // get current ElementBox while not bumped, otherwise used
                 // saved state before bumping
-                if ($this.hasClass("bumped")) {
-                    data = $this.data("patterns.bumper");
-                } else {
-                    var cfg = parser.parse($this, opts);
-                    data = _._getElementBox($this);
-                    data.threshold = {
-                        top:    data.top - cfg.margin,
-                        bottom: data.bottom + cfg.margin,
-                        left:   data.left - cfg.margin,
-                        right:  data.right + cfg.margin
+                if (!element_box) {
+                    element_box = _._getElementBox($this);
+                    element_box.threshold = {
+                        top:    element_box.top - options.margin,
+                        bottom: element_box.bottom + options.margin,
+                        left:   element_box.left - options.margin,
+                        right:  element_box.right + options.margin
                     };
-                    data.margin = cfg.margin;
-                    $el.data("patterns.bumper", data);
+                    element_box.margin = options.margin;
+                    $this.data("pat-bumper:elementbox", element_box);
                 }
 
-                if (box.top > data.threshold.top) {
-                    $this.addClass("bumped-top").removeClass("bumped-bottom");
-                    bumped = true;
-                } else if (box.bottom < data.threshold.bottom) {
-                    $this.addClass("bumped-bottom").removeClass("bumped-top");
-                    bumped = true;
-                } else {
-                    $this.removeClass("bumped-top bumped-bottom");
-                }
-                
-                if (box.left > data.threshold.left) {
-                    $this.addClass("bumped-left").removeClass("bumped-right");
-                    bumped = true;
-                } else if (box.right < data.threshold.right) {
-                    $this.addClass("bumped-right").removeClass("bumped-left");
-                    bumped = true;
-                } else {
-                    $this.removeClass("bumped-left bumped-right");
-                }
-                
-                if (bumped) {
-                    $this.addClass("bumped");
-                } else {
-                    $this.removeClass("bumped");
+                if (box.top > element_box.threshold.top) {
+                    $target.addClass("bumped-top").removeClass("bumped-bottom");
+                    must_bump = true;
+                } else if (box.bottom < element_box.threshold.bottom) {
+                    $target.addClass("bumped-bottom").removeClass("bumped-top");
+                    must_bump = true;
+                } else
+                    $target.removeClass("bumped-top bumped-bottom");
+
+                if (box.left > element_box.threshold.left) {
+                    $target.addClass("bumped-left").removeClass("bumped-right");
+                    must_bump = true;
+                } else if (box.right < element_box.threshold.right) {
+                    $target.addClass("bumped-right").removeClass("bumped-left");
+                    must_bump = true;
+                } else
+                    $target.removeClass("bumped-left bumped-right");
+
+                $this.data("pat-bumper:bumped", must_bump);
+                if (!already_bumped && must_bump) {
+                    $target.addClass("bumped");
+                    if (options.bump.add)
+                        $target.addClass(options.bump.add);
+                    if (options.bump.remove)
+                        utils.removeWildcardClass($target, options.bump.remove);
+                } else if (already_bumped && !must_bump) {
+                    $target.removeClass("bumped");
+                    if (options.unbump.add)
+                        $target.addClass(options.unbump.add);
+                    if (options.unbump.remove)
+                        utils.removeWildcardClass($target, options.unbump.remove);
                 }
             });
         }
@@ -121,5 +140,4 @@ define([
     return _;
 });
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

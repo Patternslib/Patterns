@@ -89,6 +89,28 @@ define([
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     }
 
+    function removeWildcardClass($targets, classes) {
+        if (classes.indexOf("*")===-1)
+            $targets.removeClass(classes);
+        else {
+            var matcher = classes.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
+            matcher = matcher.replace(/[*]/g, ".*");
+            matcher = new RegExp("^" + matcher + "$");
+            $targets.filter("[class]").each(function() {
+                var $this = $(this),
+                    classes = $this.attr("class").split(/\s+/),
+                    ok=[];
+                for (var i=0; i<classes.length; i++)
+                    if (!matcher.test(classes[i]))
+                        ok.push(classes[i]);
+                if (ok.length)
+                    $this.attr("class", ok.join(" "));
+                else
+                    $this.removeAttr("class");
+            });
+        }
+    }
+
     var utils = {
         // pattern pimping - own module?
         jquery_plugin: jquery_plugin,
@@ -96,7 +118,8 @@ define([
         escapeRegExp: escapeRegExp,
         rebaseURL: rebaseURL,
         findLabel: findLabel,
-        elementInViewport: elementInViewport
+        elementInViewport: elementInViewport,
+        removeWildcardClass: removeWildcardClass
     };
 
     return utils;
