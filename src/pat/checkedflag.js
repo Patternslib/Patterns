@@ -2,7 +2,7 @@
  * Patterns checkedflag - Add checked flag to checkbox labels and API
  * for (un)checking.
  *
- * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  * Copyright 2012 JC Brand
  * Copyright 2012-2013 Florian Friesdorf
  */

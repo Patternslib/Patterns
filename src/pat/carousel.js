@@ -1,7 +1,7 @@
 /**
  * Patterns carousel
  *
- * Copyright 2012-2013 Simplon B.V. - Simplon B.V. - Wichert Akkerman
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  * Copyright 2012-2013 Florian Friesdorf
  */
 define([
