@@ -40,34 +40,10 @@ define(["pat/switch"], function(pattern) {
                 expect($("#lab div").hasClass("on")).toBe(false);
             });
 
-            it("Keep other classes", function() {
-                $("#lab").html("<div class='one two'/>");
-                pattern._update("#lab div", "one");
-                expect($("#lab div").attr("class")).toBe("two");
-            });
-
-            it("Remove uses whole words", function() {
-                $("#lab").html("<div class='cheese-on-bread'/>");
-                pattern._update("#lab div", "on");
-                expect($("#lab div").attr("class")).toBe("cheese-on-bread");
-            });
-
             it("Remove wildcard postfix class", function() {
                 $("#lab").html("<div class='icon-small/>");
                 pattern._update("#lab div", "icon-*");
                 expect($("#lab div").attr("class")).toBeFalsy();
-            });
-
-            it("Remove wildcard infix class", function() {
-                $("#lab").html("<div class='icon-small-alert'/>");
-                pattern._update("#lab div", "icon-*-alert");
-                expect($("#lab div").attr("class")).toBeFalsy();
-            });
-
-            it("Keep other classes when removing wildcards", function() {
-                $("#lab").html("<div class='icon-alert foo'/>");
-                pattern._update("#lab div", "icon-*");
-                expect($("#lab div").attr("class")).toBe("foo");
             });
 
             it("Add class", function() {
