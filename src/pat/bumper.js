@@ -13,17 +13,28 @@ define([
     var parser = new Parser("bumper");
 
     parser.add_argument("margin", 0);
+    parser.add_argument("selector");
+    parser.add_argument("bump-add", "bumped");
+    parser.add_argument("bump-remove");
+    parser.add_argument("unbump-add");
+    parser.add_argument("unbump-remove", "bumped");
 
     var _ = {
         name: "bumper",
         trigger: ".pat-bumper",
 
         init: function($el, opts) {
-            $(window).on("scroll.bumper", function() {
-                _._testBump($el, opts, _._getViewport());
+            $el.each(function() {
+                var $trigger = $(this),
+                    options = parser.parse($trigger, opts);
+                $trigger.data("pat-bumper", options);
             });
 
-            _._testBump($el, opts, _._getViewport());
+            $(window).on("scroll.bumper", function() {
+                _._testBump($el, _._getViewport());
+            });
+
+            _._testBump($el, _._getViewport());
             return $el;
         },
         
@@ -65,7 +76,7 @@ define([
          * @param $el  The element to look for
          * @param view The bounding box in which the element will be bumped
          */
-        _testBump: function($el, opts, box) {
+        _testBump: function($el, box) {
             // initialize the elements
             $el.each(function() {
                 var $this = $(this),
@@ -77,7 +88,7 @@ define([
                 if ($this.hasClass("bumped")) {
                     data = $this.data("patterns.bumper");
                 } else {
-                    var cfg = parser.parse($this, opts);
+                    var cfg = $this.data("pat-bumper");
                     data = _._getElementBox($this);
                     data.threshold = {
                         top:    data.top - cfg.margin,
@@ -121,5 +132,4 @@ define([
     return _;
 });
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

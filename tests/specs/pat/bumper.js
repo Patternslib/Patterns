@@ -74,12 +74,12 @@ define(["pat/bumper"], function(pattern) {
                     right: opts.threshold.right + 10 // not bumped right
                 };
 
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBeFalsy();
 
                 // bump top
                 box.top += 20;
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBe(true);
                 expect($bumper.hasClass("bumped-top")).toBe(true);
                 expect($bumper.hasClass("bumped-bottom")).toBe(false);
@@ -89,7 +89,7 @@ define(["pat/bumper"], function(pattern) {
                 // bump bottom
                 box.top -= 20;
                 box.bottom -= 20;
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBe(true);
                 expect($bumper.hasClass("bumped-top")).toBe(false);
                 expect($bumper.hasClass("bumped-bottom")).toBe(true);
@@ -98,7 +98,7 @@ define(["pat/bumper"], function(pattern) {
 
                 // bump bottom and left
                 box.left += 20;
-                pattern._testBump($bumper, undefined, box);
+                pattern._testBump($bumper, box);
                 expect($bumper.hasClass("bumped")).toBe(true);
                 expect($bumper.hasClass("bumped-top")).toBe(false);
                 expect($bumper.hasClass("bumped-bottom")).toBe(true);
