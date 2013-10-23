@@ -40,13 +40,18 @@ Please note that classes `bumped-left` and `bumped-right` will not be
 assigned at the same time. The same is true for `bumped-top` and
 `bumped-bottom`.
 
+
 Option Reference
 ----------------
 
-The collapsible can be configured through a `data-pat-bumper` attribute.
+The bumped pattern can be configured through a `data-pat-bumper` attribute.
 The available options are:
 
-| Property | Default value | Description | Tyhpe |
+| Property | Default value | Description | Type |
 | ----- | ------- | ----------- |
-| `margin` | 0| The distance from the edge of the element from which the 'bumped' behaviour will be activated | Size |
+| `margin` | 0| The distance from the edge of the element from which the 'bumped' behaviour will be activated. | Size |
 | `selector` | *unset* | CSS selector for elements whose classes must be updated. | CSS selector |
+| `bump-add` | `bumped` | CSS class(es) to add when an element is bumped. | String |
+| `bump-remove` | *unset* | CSS class(es) to removed when an element is bumped. | String |
+| `unbump-add` | *unset* | CSS class(es) to add when an element is no longer bumped. | String |
+| `unbump-remove` | `bumped` | CSS class(es) to removed when an element is no longer bumped. | String |
