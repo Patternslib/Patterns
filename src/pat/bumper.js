@@ -28,7 +28,7 @@ define([
             $el.each(function() {
                 var $trigger = $(this),
                     options = parser.parse($trigger, opts);
-                $trigger.data("pat-bumper.config", options);
+                $trigger.data("pat-bumper:config", options);
             });
 
             $(window).on("scroll.bumper", function() {
@@ -80,18 +80,16 @@ define([
             // initialize the elements
             $el.each(function() {
                 var $this = $(this),
-                    options = $this.data("pat-bumper.config"),
+                    options = $this.data("pat-bumper:config"),
                     $target = options.selector ? $(options.selector) : $this,
-                    already_bumped = !!$this.data("pat-bumper.bumped"),
+                    already_bumped = !!$this.data("pat-bumper:bumped"),
                     must_bump = false,
                     bumped = false,
-                    element_box;
+                    element_box = $this.data("pat-bumper:elementbox");
 
                 // get current ElementBox while not bumped, otherwise used
                 // saved state before bumping
-                if ($target.hasClass("bumped"))
-                    element_box = $this.data("pat-bumper.elementbox");
-                else {
+                if (!element_box) {
                     element_box = _._getElementBox($this);
                     element_box.threshold = {
                         top:    element_box.top - options.margin,
@@ -100,7 +98,7 @@ define([
                         right:  element_box.right + options.margin
                     };
                     element_box.margin = options.margin;
-                    $this.data("pat-bumper.elementbox", element_box);
+                    $this.data("pat-bumper:elementbox", element_box);
                 }
 
                 if (box.top > element_box.threshold.top) {
@@ -121,7 +119,7 @@ define([
                 } else
                     $target.removeClass("bumped-left bumped-right");
 
-                $this.data("pat-bumper.bumped", must_bump);
+                $this.data("pat-bumper:bumped", must_bump);
                 if (!already_bumped && must_bump) {
                     $target.addClass("bumped");
                     if (options.bump.add)
