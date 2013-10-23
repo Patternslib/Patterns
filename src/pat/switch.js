@@ -10,8 +10,9 @@ define([
     "../registry",
     "../core/logger",
     "../core/parser",
-    "../core/store"
-], function($, patterns, logger, Parser, store) {
+    "../core/store",
+    "../utils"
+], function($, patterns, logger, Parser, store, utils) {
     var log = logger.getLogger("pat.switch"),
         parser = new Parser("switch");
 
@@ -100,27 +101,8 @@ define([
             if (!$targets.length)
                 return;
 
-            if (remove) {
-                if (remove.indexOf("*")===-1)
-                    $targets.removeClass(remove);
-                else {
-                    remove = remove.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
-                    remove = remove.replace(/[*]/g, ".*");
-                    remove = new RegExp("^" + remove + "$");
-                    $targets.filter("[class]").each(function() {
-                        var $this = $(this),
-                            classes = $this.attr("class").split(/\s+/),
-                            ok=[];
-                        for (var i=0; i<classes.length; i++)
-                            if (!remove.test(classes[i]))
-                                ok.push(classes[i]);
-                        if (ok.length)
-                            $this.attr("class", ok.join(" "));
-                        else
-                            $this.removeAttr("class");
-                    });
-                }
-            }
+            if (remove)
+                utils.removeWildcardClass($targets, remove);
             if (add)
                 $targets.addClass(add);
             $targets.trigger("pat-update", {pattern: "switch"});
