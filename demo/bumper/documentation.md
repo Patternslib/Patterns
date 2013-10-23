@@ -46,6 +46,7 @@ Option Reference
 The collapsible can be configured through a `data-pat-bumper` attribute.
 The available options are:
 
-| Property | Default | Description |
+| Property | Default value | Description | Tyhpe |
 | ----- | ------- | ----------- |
-| <code>margin</code> | <code>0</code> | The distance from the edge of the element from which the 'bumped' behaviour will be activated |
+| `margin` | 0| The distance from the edge of the element from which the 'bumped' behaviour will be activated | Size |
+| `selector` | *unset* | CSS selector for elements whose classes must be updated. | CSS selector |

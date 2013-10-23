@@ -6,6 +6,9 @@
   possible to completely bootstrap and build Patterns using make
   from a clean git clone.
 
+- Bumper pattern: add new `selector` option to allow overriding which
+  elements must be updated.
+
 - Depends pattern: also update dependencies on keyup. This makes sure
   actions happen without forcing a user to move focus away after modifying
   a text field.

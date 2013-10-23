@@ -27,7 +27,7 @@ define([
             $el.each(function() {
                 var $trigger = $(this),
                     options = parser.parse($trigger, opts);
-                $trigger.data("pat-bumper", options);
+                $trigger.data("pat-bumper.config", options);
             });
 
             $(window).on("scroll.bumper", function() {
@@ -74,56 +74,57 @@ define([
          * Determines whether an element should be bumped
          *
          * @param $el  The element to look for
-         * @param view The bounding box in which the element will be bumped
+         * @param box The bounding box in which the element will be bumped
          */
         _testBump: function($el, box) {
             // initialize the elements
             $el.each(function() {
                 var $this = $(this),
+                    options = $this.data("pat-bumper.config"),
+                    $target = options.selector ? $(options.selector) : $this,
                     bumped = false,
                     data;
 
                 // get current ElementBox while not bumped, otherwise used
                 // saved state before bumping
-                if ($this.hasClass("bumped")) {
+                if ($target.hasClass("bumped")) {
                     data = $this.data("patterns.bumper");
                 } else {
-                    var cfg = $this.data("pat-bumper");
                     data = _._getElementBox($this);
                     data.threshold = {
-                        top:    data.top - cfg.margin,
-                        bottom: data.bottom + cfg.margin,
-                        left:   data.left - cfg.margin,
-                        right:  data.right + cfg.margin
+                        top:    data.top - options.margin,
+                        bottom: data.bottom + options.margin,
+                        left:   data.left - options.margin,
+                        right:  data.right + options.margin
                     };
-                    data.margin = cfg.margin;
-                    $el.data("patterns.bumper", data);
+                    data.margin = options.margin;
+                    $this.data("patterns.bumper", data);
                 }
 
                 if (box.top > data.threshold.top) {
-                    $this.addClass("bumped-top").removeClass("bumped-bottom");
+                    $target.addClass("bumped-top").removeClass("bumped-bottom");
                     bumped = true;
                 } else if (box.bottom < data.threshold.bottom) {
-                    $this.addClass("bumped-bottom").removeClass("bumped-top");
+                    $target.addClass("bumped-bottom").removeClass("bumped-top");
                     bumped = true;
                 } else {
-                    $this.removeClass("bumped-top bumped-bottom");
+                    $target.removeClass("bumped-top bumped-bottom");
                 }
                 
                 if (box.left > data.threshold.left) {
-                    $this.addClass("bumped-left").removeClass("bumped-right");
+                    $target.addClass("bumped-left").removeClass("bumped-right");
                     bumped = true;
                 } else if (box.right < data.threshold.right) {
-                    $this.addClass("bumped-right").removeClass("bumped-left");
+                    $target.addClass("bumped-right").removeClass("bumped-left");
                     bumped = true;
                 } else {
-                    $this.removeClass("bumped-left bumped-right");
+                    $target.removeClass("bumped-left bumped-right");
                 }
                 
                 if (bumped) {
-                    $this.addClass("bumped");
+                    $target.addClass("bumped");
                 } else {
-                    $this.removeClass("bumped");
+                    $target.removeClass("bumped");
                 }
             });
         }
