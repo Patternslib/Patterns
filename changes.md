@@ -2,6 +2,10 @@
 
 ## 1.5.0 - Unreleased
 
+- Update Makefile to install npm modules as needed. This makes it
+  possible to completely bootstrap and build Patterns using make
+  from a clean git clone.
+
 - Depends pattern: also update dependencies on keyup. This makes sure
   actions happen without forcing a user to move focus away after modifying
   a text field.
