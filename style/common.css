@@ -1086,6 +1086,7 @@ fieldset,
 div.field {
 	border-style: none;
 	margin: 0 0 1em;
+	min-width: 0;
 }
 
 @media only screen and (min-width: 768px) {
