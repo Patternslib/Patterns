@@ -5,9 +5,11 @@ This pattern provides a simple but powerful form validation beyond what HTML5 of
 
 ## Documentation
 
+The validation pattern is triggered by a single class `pat-validate` on the form tag. The rest is handled mostly with standard HTML5 validation attributes. 
+
 This pattern has several advantages over standard HTML 5 form validation: it supports older browsers, it uses simple documented HTML markup to allow non-browser-specific styling of error messages and it supports extra validation rules.
 
-This pattern follows the HTML 5 form validation syntax as much as possible.
+The following attributes may be used.
 
 | Name | Syntax | Description |
 | ---- | ------ | ----------- |
