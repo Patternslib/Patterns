@@ -9,8 +9,9 @@
 define([
     "jquery",
     "../registry",
-    "../core/logger"
-], function($, patterns, logger) {
+    "../core/logger",
+    "../utils"
+], function($, patterns, logger, utils) {
     var log = logger.getLogger("checkedflag");
 
     var _ = {
@@ -109,9 +110,24 @@ define([
             }, 50);
         },
 
+        _getLabelAndFieldset: function(el) {
+            var $result = $(utils.findLabel(el));
+            return $result.add($(el).closest("fieldset"));
+        },
+
+        _getSiblingsWithLabelsAndFieldsets: function(el) {
+            var selector = "input[name=\""+el.name+"\"]",
+                $related = (el.form===null) ? $(selector) : $(selector, el.form),
+                $result = $();
+            $result=$related=$related.not(el);
+            for (var i=0; i<$related.length; i++)
+                $result=$result.add(_._getLabelAndFieldset($related[i]));
+            return $result;
+        },
+
         onChangeCheckbox: function() {
             var $el = $(this),
-                $label = $el.closest("label"),
+                $label = $(utils.findLabel(this)),
                 $fieldset = $el.closest("fieldset");
 
             if ($el.closest("ul.radioList").length)
@@ -124,21 +140,16 @@ define([
                 $label.addClass("unchecked").removeClass("checked");
                 if ($fieldset.find("input:checked").length) {
                     $fieldset.removeClass("unchecked").addClass("checked");
-                } else{
+                } else
                     $fieldset.addClass("unchecked").removeClass("checked");
-                }
             }
         },
 
         onChangeRadio: function() {
             var $el = $(this),
-                $label = $el.closest("label"),
+                $label = $(utils.findLabel(this)),
                 $fieldset = $el.closest("fieldset"),
-                selector = 'label' +
-                    ':has(input[name="' + this.name + '"]' +
-                    ':not(:checked))',
-                $siblings = (this.form === null) ?
-                    $(selector) : $(selector, this.form);
+                $siblings = _._getSiblingsWithLabelsAndFieldsets(this);
 
             if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
@@ -153,9 +164,8 @@ define([
                 $label.addClass("unchecked").removeClass("checked");
                 if ($fieldset.find("input:checked").length) {
                     $fieldset.removeClass("unchecked").addClass("checked");
-                } else {
+                } else
                     $fieldset.addClass("unchecked").removeClass("checked");
-                }
             }
         },
 
@@ -172,5 +182,4 @@ define([
     return _;
 });
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab

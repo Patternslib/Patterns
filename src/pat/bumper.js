@@ -84,7 +84,6 @@ define([
                     $target = options.selector ? $(options.selector) : $this,
                     already_bumped = !!$this.data("pat-bumper:bumped"),
                     must_bump = false,
-                    bumped = false,
                     element_box = $this.data("pat-bumper:elementbox");
 
                 // get current ElementBox while not bumped, otherwise used
