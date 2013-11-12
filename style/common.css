@@ -236,6 +236,11 @@ section.demo:after {
 	padding-left: 8px;
 }
 
+body.component-index #component-index > div {
+	margin-bottom: 30px;
+	overflow: hidden;
+}
+
 #demo #component-index {
 	margin-top: 0;
 }
@@ -271,7 +276,18 @@ section.demo:after {
 	color: white;
 }
 
-.component-index a {
+.component-index div > a {
+	/* For autonomous demo page only */
+	width: 23%;
+	float: left;
+	margin-right: 1%;
+	margin-left: 1%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.component-index label a {
 	font-size: 12px;
 	padding: 0;
 	text-decoration: none;
@@ -283,6 +299,7 @@ section.demo:after {
 	background-color: gray;
 	margin: 0;
 	color: white;
+	display: inline-block;
 }
 
 .component-index  .checklist label:after {
