@@ -6,6 +6,10 @@
   possible to completely bootstrap and build Patterns using make
   from a clean git clone.
 
+- [Checked flag pattern](demo/checkedflag/index.html): make sure the fieldset
+  classes are updated correctly when changing the radio button selection. This
+  fixes [ticket 348](https://github.com/Patternslib/Patterns/issues/348).
+
 - [Bumper pattern](demo/bumper/index.html): 
   - add new `selector` option to allow overriding which elements must be
     updated.
