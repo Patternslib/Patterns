@@ -30,10 +30,9 @@ Consider the following markup:
         </section>
     </article>
 
-The class `pat-stacks` initialises the pattern, which will hide all child elements, except the first. 
+The class `pat-stacks` initialises the pattern. By default the stacks pattern will show its first direct child and hide all other children. However if the URL fragment points to another child that child will be shown instead.
 
-The pattern will look for anchors on the page that match with any of the IDs of the children of the element that has `pat-stacks` on it. By clicking on any of those anchors, the element with a matching ID becomes visible. 
-
+The pattern will look for anchors on the page that match with any of the IDs of the direct children of the element that has `pat-stacks` on it. By clicking on any of those anchors, the element with a matching ID becomes visible. 
 The anchor of the currently visible sheet automatically receives a class `current`. 
 
 ### Option reference
@@ -42,5 +41,5 @@ The Stacks pattern may be configured through a `data-pat-stacks` attribute. The 
 
 | Field | Default | Description |
 | ----- | ------- | ----------- | 
-| `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
+| `transition` | `none` | Transition effect to use. Must be one of `none`, `css`, `fade` or `slide`. |
 | `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
