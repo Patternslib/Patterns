@@ -1,39 +1,46 @@
 # Stacks
 
 ## Description
-Pattern stacks is a very simple pattern that allows for quickly changing out chunks of content on a page, typically styled as tabs.
+A simple pattern that allows for quickly changing out chunks of content on a page, typically styled as tabs.
 
 ## Documentation
-Consider the following markup:
+The stacks pattern provides a way to group a number of *sheets*, only one of which is vissible at a point
+in time. A common version of this pattern are tabs.
+
+The markup structure looks like this:
 
     <nav>
-        <a href="#sheet-1">Sheet one</a> | <a href="#sheet-2">Sheet two</a> | <a href="#sheet-3">Sheet three</a>
+        <a href="#sheet-1">One</a> | <a href="#sheet-2">Two</a>
     </nav>
     <article class="pat-stacks">
-        <section id="sheet-1">
-            <h2>Sheet one</h2>
-            <p>
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </p>
-        </section>
-        <section id="sheet-2">
-            <h2>Sheet two</h2>
-            <p>
-                Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. 
-            </p>
-        </section>
-        <section id="sheet-3">
-            <h2>Sheet three</h2>
-            <p>
-                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. 
-            </p>
-        </section>
+        <section id="sheet-1">...</section>
+        <section id="sheet-2">...</section>
     </article>
 
-The class `pat-stacks` initialises the pattern. By default the stacks pattern will show its first direct child and hide all other children. However if the URL fragment points to another child that child will be shown instead.
+The `pat-stacks` class is set on a grouping element, and its direct children
+are treated as sheets. By default the stacks pattern will show its first direct
+child and hide all other children. However if the URL fragment points to
+another child that child will be shown instead. The currently visible sheet
+will get a class of `visible`, all other sheets will get an `hidden` class.
 
-The pattern will look for anchors on the page that match with any of the IDs of the direct children of the element that has `pat-stacks` on it. By clicking on any of those anchors, the element with a matching ID becomes visible. 
-The anchor of the currently visible sheet automatically receives a class `current`. 
+Note that a leave must have an id so it can be selected.  Elements without an
+id are ignored.
+
+Any anchor in the document that point to one a sheet can be used to switch the
+stack to that sheet. The default action for the anchor will be blocked, but
+other events/patterns tied to the anchor will still work. The anchor of the
+currently visible sheet automatically receives a class `current`. 
+
+The above example will look like this in the DOM after initialisation:
+
+    <nav>
+        <a class="current" href="#sheet-1">One</a> | <a href="#sheet-2">Two</a>
+    </nav>
+    <article class="pat-stacks">
+        <section id="sheet-1" class="visible">...</section>
+        <section id="sheet-2" class="hidden">...</section>
+        <section id="sheet-3" class="hidden">...</section>
+    </article>
 
 ### Option reference
 
@@ -41,5 +48,6 @@ The Stacks pattern may be configured through a `data-pat-stacks` attribute. The 
 
 | Field | Default | Description |
 | ----- | ------- | ----------- | 
+| `selector` | `> *` | CSS selector used to find all sheets in a stack. |
 | `transition` | `none` | Transition effect to use. Must be one of `none`, `css`, `fade` or `slide`. |
 | `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 

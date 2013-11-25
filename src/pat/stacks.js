@@ -35,23 +35,23 @@ define([
 
         _setupStack: function(container, options, selected) {
             var $container = $(container),
-                $leaves, $visible, $invisible;
+                $sheets, $visible, $invisible;
             options=parser.parse($container, options);
             $container.data("pat-stacks", options);
-            $leaves=$container.find(options.selector);
-            if ($leaves.length<2) {
-                log.warn("Stacks pattern: must have more than one leaf.", $container[0]);
+            $sheets=$container.find(options.selector);
+            if ($sheets.length<2) {
+                log.warn("Stacks pattern: must have more than one sheet.", $container[0]);
                 return;
             }
 
             $visible=[];
             if (selected)
-                $visible=$leaves.filter("#"+selected);
+                $visible=$sheets.filter("#"+selected);
             if (!$visible.length) {
-                $visible=$leaves.first();
+                $visible=$sheets.first();
                 selected=$visible[0].id;
             }
-            $invisible=$leaves.not($visible);
+            $invisible=$sheets.not($visible);
             $visible.addClass("visible").removeClass("hidden").show();
             $invisible.removeClass("visible").addClass("hidden").hide();
             stacks._updateAnchors($container, selected);
@@ -85,26 +85,30 @@ define([
 
         _updateAnchors: function($container, selected) {
             var options = $container.data("pat-stacks"),
-                $leaves = $container.find(options.selector),
+                $sheets = $container.find(options.selector),
                 base_url = stacks._base_URL();
-            for (var i=0; i<$leaves.length; i++) {
-                var leaf = $leaves[i],
-                    $anchors = $("a[href=\""+base_url+"#"+leaf.id+"\"],a[href=\"#"+leaf.id+"\"]");
-                if (leaf.id===selected)
+            for (var i=0; i<$sheets.length; i++) {
+                // This may appear odd, but: when querying a browser uses the
+                // original href of an anchor as it appeared in the document
+                // source, but when you access the href property you always 
+                // the fully qualified version.
+                var sheet = $sheets[i],
+                    $anchors = $("a[href=\""+base_url+"#"+sheet.id+"\"],a[href=\"#"+sheet.id+"\"]");
+                if (sheet.id===selected)
                     $anchors.addClass("current");
                 else
                     $anchors.removeClass("current");
             }
         },
 
-        _switch: function($container, leaf_id) {
-            var $leaf = $container.find("#"+leaf_id);
-            if (!$leaf.length || $leaf.hasClass("visible"))
+        _switch: function($container, sheet_id) {
+            var $sheet = $container.find("#"+sheet_id);
+            if (!$sheet.length || $sheet.hasClass("visible"))
                 return;
 
             var options = $container.data("pat-stacks"),
-                $invisible = $container.find(options.selector).not($leaf);
-            $leaf.addClass("visible").removeClass("hidden").show();
+                $invisible = $container.find(options.selector).not($sheet);
+            $sheet.addClass("visible").removeClass("hidden").show();
             $invisible.removeClass("visible").addClass("hidden").hide();
         }
     };
