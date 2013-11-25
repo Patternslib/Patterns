@@ -7,10 +7,11 @@
 define([
     "jquery",
     "../registry",
+    "../utils",
     "../core/logger",
     "../lib/dependshandler",
     "../core/parser"
-], function($, patterns, logging, DependsHandler, Parser) {
+], function($, patterns, utils, logging, DependsHandler, Parser) {
     var log = logging.getLogger("depends"),
         parser = new Parser("depends");
 
@@ -110,37 +111,6 @@ define([
             $slave.addClass("disabled");
         },
 
-        _hide_or_show: function($slave, new_state, options) {
-            var duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
-
-            $slave.removeClass("visible hidden in-progress");
-            var onComplete = function() {
-                $slave
-                    .removeClass("in-progress")
-                    .addClass(new_state ? "visible" : "hidden")
-                    .trigger("pat-update",
-                            {pattern: "depends",
-                             transition: "complete"});
-            };
-            if (!duration) {
-                if (options.transition!=="css")
-                    $slave[new_state ? "show" : "hide"]();
-                onComplete();
-            } else {
-                var t = depends.transitions[options.transition];
-                $slave
-                    .addClass("in-progress")
-                    .trigger("pat-update",
-                            {pattern: "depends",
-                             transition: "start"});
-                $slave[new_state ? t.show : t.hide]({
-                    duration: duration,
-                    easing: options.effect.easing,
-                    complete: onComplete
-                });
-            }
-        },
-
         onChange: function(event) {
             var handler = event.data.handler,
                 options = event.data.options,
@@ -150,7 +120,7 @@ define([
 
             switch (options.action) {
                 case "show":
-                    depends._hide_or_show($slave, state, options);
+                    utils.hideOrShow($slave, state, options, depends.name);
                     break;
                 case "enable":
                     if (state)
