@@ -7,8 +7,9 @@ define([
     "jquery",
     "../core/parser",
     "../core/logger",
+    "../utils",
     "../registry"
-], function($, Parser, logging, registry) {
+], function($, Parser, logging, utils, registry) {
     var log = logging.getLogger("stacks"),
         parser = new Parser("stacks");
 
@@ -19,7 +20,6 @@ define([
     var stacks = {
         name: "stacks",
         trigger: ".pat-stacks",
-        _triggers: {},
 
         init: function($el, opts) {
             var fragment = this._currentFragment();
@@ -52,8 +52,8 @@ define([
                 selected=$visible[0].id;
             }
             $invisible=$sheets.not($visible);
-            $visible.addClass("visible").removeClass("hidden").show();
-            $invisible.removeClass("visible").addClass("hidden").hide();
+            utils.hideOrShow($visible, true, {transition: "none"}, stacks.name);
+            utils.hideOrShow($invisible, false, {transition: "none"}, stacks.name);
             stacks._updateAnchors($container, selected);
         },
 
@@ -90,7 +90,7 @@ define([
             for (var i=0; i<$sheets.length; i++) {
                 // This may appear odd, but: when querying a browser uses the
                 // original href of an anchor as it appeared in the document
-                // source, but when you access the href property you always 
+                // source, but when you access the href property you always
                 // the fully qualified version.
                 var sheet = $sheets[i],
                     $anchors = $("a[href=\""+base_url+"#"+sheet.id+"\"],a[href=\"#"+sheet.id+"\"]");
@@ -102,14 +102,14 @@ define([
         },
 
         _switch: function($container, sheet_id) {
-            var $sheet = $container.find("#"+sheet_id);
+            var options = $container.data("pat-stacks"),
+                $sheet = $container.find("#"+sheet_id),
+                $invisible;
             if (!$sheet.length || $sheet.hasClass("visible"))
                 return;
-
-            var options = $container.data("pat-stacks"),
-                $invisible = $container.find(options.selector).not($sheet);
-            $sheet.addClass("visible").removeClass("hidden").show();
-            $invisible.removeClass("visible").addClass("hidden").hide();
+            $invisible=$container.find(options.selector).not($sheet);
+            utils.hideOrShow($invisible, false, options, stacks.name);
+            utils.hideOrShow($sheet, true, options, stacks.name);
         }
     };
 
