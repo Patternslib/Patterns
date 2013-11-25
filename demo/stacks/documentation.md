@@ -51,3 +51,4 @@ The Stacks pattern may be configured through a `data-pat-stacks` attribute. The 
 | `selector` | `> *` | CSS selector used to find all sheets in a stack. |
 | `transition` | `none` | Transition effect to use. Must be one of `none`, `css`, `fade` or `slide`. |
 | `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
+| `effect-easing`  | `swing` | Easing to use for the transition. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
