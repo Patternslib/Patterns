@@ -17,19 +17,12 @@ The markup structure looks like this:
         <section id="sheet-2">...</section>
     </article>
 
-The `pat-stacks` class is set on a grouping element, and its direct children
-are treated as sheets. By default the stacks pattern will show its first direct
-child and hide all other children. However if the URL fragment points to
-another child that child will be shown instead. The currently visible sheet
-will get a class of `visible`, all other sheets will get an `hidden` class.
+The `pat-stacks` class is set on a grouping element and its direct children are treated as sheets. By default the stacks pattern will show its first direct child and hide all other children. However if the URL fragment points to another child that child will be shown instead. The currently visible sheet
+will get a class of `visible`, all other sheets will get a `hidden` class.
 
-Note that a leave must have an id so it can be selected.  Elements without an
-id are ignored.
+Note that each sheet must have an ID so it can be selected.  Elements without an ID are ignored.
 
-Any anchor in the document that point to one a sheet can be used to switch the
-stack to that sheet. The default action for the anchor will be blocked, but
-other events/patterns tied to the anchor will still work. The anchor of the
-currently visible sheet automatically receives a class `current`. 
+Any anchor in the document that points to a sheet can be used to switch the stack to that sheet. The default action for the anchor will be blocked, but other events/patterns tied to the anchor will still work. The anchor of the currently visible sheet automatically receives a class `current`. 
 
 The above example will look like this in the DOM after initialisation:
 
