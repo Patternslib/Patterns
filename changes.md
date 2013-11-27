@@ -2,6 +2,9 @@
 
 ## 1.5.0 - Unreleased
 
+- [Tooltip pattern:](demo/tooltip/index.html): Add a new `ajax-data-type`
+  option that makes it possible to use markdown content as AJAX source.
+
 - Update Makefile to install npm modules as needed. This makes it
   possible to completely bootstrap and build Patterns using make
   from a clean git clone.
