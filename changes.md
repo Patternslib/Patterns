@@ -2,6 +2,8 @@
 
 ## 1.5.0 - Unreleased
 
+- Add a new [stacks pattern](demo/stacks/index.html).
+
 - [Tooltip pattern:](demo/tooltip/index.html): Add a new `ajax-data-type`
   option that makes it possible to use markdown content as AJAX source.
 
