@@ -21,6 +21,7 @@ define([
     var stacks = {
         name: "stacks",
         trigger: ".pat-stacks",
+        document: document,
 
         init: function($el, opts) {
             var fragment = this._currentFragment();
@@ -31,7 +32,7 @@ define([
         },
 
         _setup: function() {
-            $(document).on("click", "a", this._onClick);
+            $(this.document).on("click", "a", this._onClick);
         },
 
         _setupStack: function(container, options, selected) {
@@ -59,11 +60,11 @@ define([
         },
 
          _base_URL: function() {
-            return document.URL.split("#")[0];
+            return this.document.URL.split("#")[0];
          },
 
         _currentFragment: function() {
-            var parts = document.URL.split("#");
+            var parts = this.document.URL.split("#");
             if (parts.length===1)
                 return null;
             return parts[parts.length-1];
