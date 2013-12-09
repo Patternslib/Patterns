@@ -532,6 +532,10 @@ body.component-index #component-index > div {
 	background-position: -450px -100px;
 }
 
+.component-index a.stacks:before {
+	background-position: -650px -152px;
+}
+
 .component-index a.multi-combobox:before {
 	background-position: 0 32px;
 }
