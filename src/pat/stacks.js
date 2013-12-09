@@ -71,7 +71,7 @@ define([
 
         _onClick: function(e) {
             var base_url = stacks._base_URL(),
-                href_parts = e.target.href.split("#"),
+                href_parts = e.currentTarget.href.split("#"),
                 $stack;
             // Check if this is an in-document link and has a fragment
             if (base_url!==href_parts[0] || !href_parts[1])
