@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.0 - Unreleased
+## 1.5.0 - January 22, 2014
 
 - Add a new [stacks pattern](demo/stacks/index.html).
 
