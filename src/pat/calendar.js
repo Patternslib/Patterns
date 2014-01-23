@@ -30,6 +30,7 @@ define([
     parser.add_argument('first-hour', '6');
     parser.add_argument('calendar-controls', '');
     parser.add_argument('category-controls', '');
+    parser.add_argument('default-view', 'month');
 
     var _ = {
         name: 'calendar',
@@ -74,13 +75,15 @@ define([
                     titleFormat: cfg.title,
                     columnFormat: cfg.column,
                     ignoreTimezone: false,
-                    viewRender: _.highlightButtons
+                    viewRender: _.highlightButtons,
+                    defaultView: cfg.defaultView
                 };
 
             if (cfg.startDate) {
                 var ym = cfg.startDate.split('-');
                 calOpts.year = ym[0];
                 calOpts.month = Number(ym[1]) - 1;
+                calOpts.date = ym[2];
             } else {
                 var today = new Date();
                 calOpts.year = today.getFullYear();
