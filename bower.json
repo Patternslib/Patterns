@@ -1,0 +1,11 @@
+{
+    "name": "patterns",
+    "version": "1.5.0",
+
+    "dependencies": {
+        "jcrop": "0.9.12"
+    },
+
+    "devDependencies": {
+    }
+ }

@@ -81,10 +81,8 @@ fi
 {
     # npm's stderr is too noisy
     npm install 2>&1 &&
-    npm install bower
-    # npm install bungle --force 2>&1 &&
-    # node_modules/.bin/bungle update &&
-    # node_modules/.bin/bungle install
+    npm install bower &&
+    node_modules/.bin/bower install
 }
 
 if [ ! -f src/lib/depends_parse.js -o src/lib/depends_parse.js -ot src/lib/depends_parse.pegjs ] ; then
