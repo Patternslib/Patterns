@@ -1,3 +1,4 @@
+BOWER 		?= node_modules/.bin/bower
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
@@ -25,7 +26,7 @@ stamp-npm: package.json
 	touch stamp-npm
 
 stamp-bower: stamp-npm
-	bower install
+	$(BOWER) install
 	touch stamp-bower
 
 clean::
