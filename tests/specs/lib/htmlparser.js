@@ -1,4 +1,4 @@
-define(["lib/htmlparser"], function(htmlparser) {
+define(["htmlparser"], function(htmlparser) {
     describe("HTMLParser", function() {
         describe("HTML syntax", function() {
             it("Colon in attribute name", function() {

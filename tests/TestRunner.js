@@ -17,14 +17,15 @@ define("TestRunner", function() {
 
     require([
         "specs/core/jquery-ext.js",
-         // "../tests/specs/utils.js",
-         // "../tests/specs/core/parser.js",
-         // "../tests/specs/core/utils.js",
-         // "../tests/specs/lib/htmlparser.js",
-         // "../tests/specs/pat/ajax.js",
-         // "../tests/specs/pat/inject.js",
-         // "../tests/specs/pat/markdown.js",
-         // "../tests/specs/pat/slides.js"
+        "specs/core/utils.js",
+        "specs/core/parser.js",
+        "specs/core/utils.js",
+        "specs/core/url.js",
+        "specs/lib/htmlparser.js",
+        // "../tests/specs/pat/ajax.js",
+        // "../tests/specs/pat/inject.js",
+        // "../tests/specs/pat/markdown.js",
+        // "../tests/specs/pat/slides.js"
     ], function() {
         jasmineEnv.execute();
     });

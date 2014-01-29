@@ -1,4 +1,4 @@
-define(["core/parser"], function(ArgumentParser) {
+define(["parser"], function(ArgumentParser) {
 
     describe("trim", function() {
         it("No whitespace", function() {

@@ -1,4 +1,4 @@
-define(["core/utils"], function(utils) {
+define(["utils"], function(utils) {
     describe("utils", function() {
         describe("rebaseURL", function() {
             it("Keep URL with scheme", function() {

@@ -6,7 +6,7 @@
  */
 define([
     'jquery',
-    './logger'
+    'logger'
 ], function($, logger) {
     function ArgumentParser(name, opts) {
         opts = opts || {};
