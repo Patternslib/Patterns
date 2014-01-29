@@ -8,8 +8,8 @@
 define([
     "jquery",
     "../core/parser",
-    "../registry",
-    "../utils"
+    "../core/registry",
+    "../core/utils"
 ], function($, Parser, registry, utils) {
     var parser = new Parser("bumper");
 

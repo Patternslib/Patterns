@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "../registry",
+    "../core/registry",
     "../core/parser"
 ], function($, registry, Parser) {
     var parser = new Parser("auto-scale");

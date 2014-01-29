@@ -2,8 +2,8 @@ define([
     "jquery",
     "../core/parser",
     "../core/logger",
-    "../registry",
-    "../utils",
+    "../core/registry",
+    "../core/utils",
     "jquery.textchange",
     "tinymce"
 ], function($, Parser, logger, registry, utils) {

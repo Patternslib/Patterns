@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "../registry"
+    "../core/registry"
 ], function($, patterns) {
     var focus = {
         name: "focus",

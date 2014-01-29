@@ -7,8 +7,8 @@ define([
     "jquery",
     "../core/parser",
     "../core/logger",
-    "../utils",
-    "../registry"
+    "../core/utils",
+    "../core/registry"
 ], function($, Parser, logging, utils, registry) {
     var log = logging.getLogger("stacks"),
         parser = new Parser("stacks");

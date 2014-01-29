@@ -5,7 +5,7 @@
  */
 define([
     "jquery",
-    "../registry",
+    "../core/registry",
     "../core/logger"
 ], function($, patterns, logging) {
     var log = logging.getLogger("slideshow-builder"),

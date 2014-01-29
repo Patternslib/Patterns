@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "../registry",
+    "../core/registry",
     "../core/parser"
 ], function($, patterns, Parser) {
     var parser = new Parser("zoom");

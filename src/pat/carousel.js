@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "../registry",
+    "../core/registry",
     "../core/logger",
     "../core/parser",
     "jquery.anythingslider"

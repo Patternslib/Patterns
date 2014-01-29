@@ -13,8 +13,8 @@ define([
     "../core/logger",
     "../core/parser",
     "../core/store",
-    "../registry",
-    "../jquery-ext"
+    "../core/registry",
+    "../core/jquery-ext"
 ], function($, inject, logger, Parser, store, registry) {
     var log = logger.getLogger("pat.collapsible"),
         parser = new Parser("collapsible");

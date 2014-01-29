@@ -1,8 +1,8 @@
 define([
     "jquery",
     "../core/logger",
-    "../registry",
-    "../utils",
+    "../core/registry",
+    "../core/utils",
     "./inject",
     "pagedown",
     "pagedown/Markdown.Sanitizer",

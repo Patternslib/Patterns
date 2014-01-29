@@ -5,9 +5,9 @@
  */
 define([
     "jquery",
-    "../registry",
+    "../core/registry",
     "patternslib.slides",
-    "../utils",
+    "../core/utils",
     "../core/url",
     "../core/remove"
 ], function($, patterns, Presentation, utils, url) {

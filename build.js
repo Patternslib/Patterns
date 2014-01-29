@@ -80,7 +80,7 @@ var build = function(tag, cleanup) {
                     .map(function(e){ return '"'+e+'"';  })
                     .join(', ');
 
-            init = "require(['registry', " + deps +
+            init = "require(['core/registry', " + deps +
                 "], function(r){r.init();});";
 
             var stream = fs.createWriteStream(fullname);

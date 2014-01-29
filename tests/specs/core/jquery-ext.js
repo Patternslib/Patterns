@@ -1,4 +1,4 @@
-define(["jquery-ext"], function() {
+define(["core/jquery-ext"], function() {
     describe("Find including top-level elements", function() {
         it("Top-level elements are included", function() {
             var $col = $(
