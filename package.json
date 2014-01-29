@@ -60,7 +60,6 @@
 	    "photoswipe",
             "prefixfree",
             "patternslib.slides",
-            "text",
             "tinymce"
         ],
         "main": "src/main.js"
