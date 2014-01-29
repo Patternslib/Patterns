@@ -7,7 +7,7 @@
  * directly in your RequireJS configuration.
  */
 define([
-    "jquery"
-], function(/* $ */) {
-    return {};
+    "registry"
+], function(registry) {
+    return registry;
 });
