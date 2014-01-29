@@ -1,6 +1,6 @@
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
-PHANTOMJS	?= node_modules/.bin/phantomjs
+PHANTOM_JASMINE	?= node_modules/.bin/phantom-jasmine
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
@@ -41,6 +41,9 @@ jshint: stamp-npm
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 
 
+check:: stamp-npm
+	$(PHANTOM_JASMINE) tests/TestRunner.html
+
 ########################################################################
 ## Bundle generation
 
@@ -48,9 +51,9 @@ bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
 	node_modules/.bin/r.js -o build.js
 
 
-src/lib/depends_parse.js: src/lib/depends_parse.pegjs
+src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $^
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 
-.PHONY: all bundle clean check jshint
+.PHONY: all bundle clean check jshint tests
