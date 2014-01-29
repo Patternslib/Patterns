@@ -8,7 +8,7 @@
  */
 define([
     "jquery",
-    "../registry",
+    "../core/registry",
     "../core/parser",
     "./inject",
     "../core/remove"

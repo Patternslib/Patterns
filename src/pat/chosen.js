@@ -5,7 +5,7 @@
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "../registry",
+    "../core/registry",
     "jquery.chosen"
 ], function(registry) {
     var _ = {

@@ -6,8 +6,8 @@
  */
 define([
     "jquery",
-    "../registry",
-    "../utils",
+    "../core/registry",
+    "../core/utils",
     "../core/logger",
     "../lib/dependshandler",
     "../core/parser"

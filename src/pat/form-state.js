@@ -1,8 +1,8 @@
 define([
     "jquery",
     "../core/logger",
-    "../registry",
-    "../utils",
+    "../core/registry",
+    "../core/utils",
     "./modal",
     "../lib/input-change-events"
 ], function($, logger, registry, utils, modal, input_change_events) {

@@ -8,7 +8,7 @@
 define([
     "jquery",
     "../core/parser",
-    "../registry",
+    "../core/registry",
     "jquery.select2"
 ], function($, Parser, registry) {
     var parser = new Parser("autosuggest");

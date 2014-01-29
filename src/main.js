@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "./registry",
+    "./core/registry",
 
     "modernizr",
     "less",

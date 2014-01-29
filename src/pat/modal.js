@@ -1,8 +1,8 @@
 define([
     "jquery",
     "../core/parser",
-    "../registry",
-    "../utils",
+    "../core/registry",
+    "../core/utils",
     "./inject"
 ], function($, Parser, registry, utils, inject) {
     var parser = new Parser("modal");

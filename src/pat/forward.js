@@ -6,7 +6,7 @@
 define([
     "jquery",
     "../core/parser",
-    "../registry"
+    "../core/registry"
 ], function($, Parser, registry) {
     var parser = new Parser("forward");
 

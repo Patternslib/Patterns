@@ -17,7 +17,7 @@
  */
 define([
     "jquery",
-    "./core/logger",
+    "./logger",
     "./utils",
     // below here modules that are only loaded
     "./compat",

@@ -5,9 +5,9 @@
  */
 define([
     "jquery",
-    "../registry",
+    "../core/registry",
     "../core/parser",
-    "../utils"
+    "../core/utils"
 ], function($, patterns, Parser, utils) {
     var parser = new Parser("equaliser");
     parser.add_argument("transition", "none", ["none", "grow"]);

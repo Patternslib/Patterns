@@ -9,10 +9,10 @@ define([
     "./ajax",
     "../core/parser",
     "../core/logger",
-    "../registry",
-    "../utils",
+    "../core/registry",
+    "../core/utils",
     "../lib/htmlparser",
-    "../jquery-ext"  // for :scrollable for autoLoading-visible
+    "../core/jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
