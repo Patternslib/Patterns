@@ -57,5 +57,8 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $^
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
+clean::
+	rm -f bundle.js
+
 
 .PHONY: all bundle clean check jshint tests
