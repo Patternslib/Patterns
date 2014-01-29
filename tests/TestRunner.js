@@ -6,9 +6,9 @@ define("TestRunner", function() {
     var htmlReporter = new jasmine.HtmlReporter();
     jasmineEnv.addReporter(htmlReporter);
 
-    //var consoleReporter = new jasmine.ConsoleReporter();
-    //window.console_reporter = consoleReporter;
-    //jasmineEnv.addReporter(consoleReporter);
+    var consoleReporter = new jasmine.ConsoleReporter();
+    window.console_reporter = consoleReporter;
+    jasmineEnv.addReporter(consoleReporter);
 
     jasmineEnv.specFilter = function(spec) {
         return htmlReporter.specFilter(spec);
