@@ -1,6 +1,6 @@
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
-PHANTOM_JASMINE	?= node_modules/.bin/phantom-jasmine
+PHANTOMJS	?= node_modules/.bin/phantomjs
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
@@ -42,7 +42,8 @@ jshint: stamp-npm
 
 
 check:: stamp-npm
-	$(PHANTOM_JASMINE) tests/TestRunner.html
+	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner.html
+
 
 ########################################################################
 ## Bundle generation
