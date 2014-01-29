@@ -17,11 +17,11 @@
  */
 define([
     "jquery",
-    "./logger",
-    "./utils",
+    "logger",
+    "utils",
     // below here modules that are only loaded
-    "./compat",
-    "./jquery-ext"
+    "compat",
+    "jquery-ext"
 ], function($, logger, utils) {
     var log = logger.getLogger("registry"),
         jquery_plugin = utils.jquery_plugin;
