@@ -7,7 +7,7 @@
  * directly in your RequireJS configuration.
  */
 define([
-    "registry"
+    "registry", "parser", "htmlparser", "url", 
 ], function(registry) {
     return registry;
 });

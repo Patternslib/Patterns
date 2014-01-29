@@ -18,6 +18,7 @@
         remove: 'core/remove',
         url: 'core/url',
         registry: 'core/registry',
+        htmlparser: 'lib/htmlparser',
 
         // Patterns
         patterns: 'patterns'
