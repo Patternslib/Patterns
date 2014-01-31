@@ -10,7 +10,8 @@ define([
     "registry",
     "parser",
     "htmlparser",
-    "url"
+    "url",
+    "ajax"
 ], function(registry) {
     return registry;
 });

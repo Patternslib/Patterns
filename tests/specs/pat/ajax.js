@@ -1,4 +1,4 @@
-define(['pat/ajax'], function(pattern) {
+define(['ajax'], function(pattern) {
     var $lab;
 
     describe('pat/ajax', function() {
