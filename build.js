@@ -33,7 +33,8 @@
         autosubmit: "pat/autosubmit",
         bumper: "pat/bumper",
         carousel: "pat/carousel",
-        checkedflag: "pat/checkedflag"
+        checkedflag: "pat/checkedflag",
+        checklist: "pat/checklist"
     },
 
     optimize: 'none'
