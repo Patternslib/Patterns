@@ -21,6 +21,7 @@
         store: 'core/store',
         registry: 'core/registry',
         htmlparser: 'lib/htmlparser',
+        depends_parse: 'lib/depends_parse',
 
         // Patterns
         patterns: 'patterns',

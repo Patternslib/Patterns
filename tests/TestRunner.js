@@ -24,6 +24,7 @@ define("TestRunner", function() {
         "specs/core/url.js",
         "specs/core/store.js",
         "specs/lib/htmlparser.js",
+        "specs/lib/depends_parse.js",
         "specs/pat/ajax.js",
         "specs/pat/inject.js",
         // "../tests/specs/pat/markdown.js",
