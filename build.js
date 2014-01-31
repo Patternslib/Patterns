@@ -36,7 +36,8 @@
         checkedflag: "pat/checkedflag",
         checklist: "pat/checklist",
         collapsible: "pat/collapsible",
-        depends: "pat/depends"
+        depends: "pat/depends",
+        equaliser: "pat/equaliser"
     },
 
     optimize: 'none'
