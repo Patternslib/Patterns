@@ -28,6 +28,7 @@ define("TestRunner", function() {
         "specs/lib/dependshandler",
         "specs/pat/ajax.js",
         "specs/pat/inject.js",
+        "specs/pat/autoscale.js"   
         // "../tests/specs/pat/markdown.js",
         // "../tests/specs/pat/slides.js"
     ], function() {

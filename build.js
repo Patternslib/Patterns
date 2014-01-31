@@ -28,6 +28,7 @@
         patterns: 'patterns',
         ajax: 'pat/ajax',
         inject: 'pat/inject',
+        autoscale: 'pat/autoscale',
     },
 
     optimize: 'none'
