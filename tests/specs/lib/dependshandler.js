@@ -1,4 +1,4 @@
-define(["lib/dependshandler"], function(DependsHandler) {
+define(["dependshandler"], function(DependsHandler) {
 
     describe("DependsHandler", function() {
 

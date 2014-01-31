@@ -14,7 +14,7 @@ define("TestRunner", function() {
         return htmlReporter.specFilter(spec);
     };
 
-    //   "../tests/specs/lib/depends_parse.js","../tests/specs/lib/dependshandler.js",,"../tests/specs/pat/autoscale.js","../tests/specs/pat/autosubmit.js","../tests/specs/pat/bumper.js","../tests/specs/pat/carousel.js","../tests/specs/pat/checkedflag.js","../tests/specs/pat/checklist.js","../tests/specs/pat/collapsible.js","../tests/specs/pat/depends.js","../tests/specs/pat/equaliser.js","../tests/specs/pat/focus.js","../tests/specs/pat/gallery.js","../tests/specs/pat/image-crop.js","../tests/specs/pat/inject.js","../tests/specs/pat/legend.js","../tests/specs/pat/markdown.js","../tests/specs/pat/modal.js","../tests/specs/pat/slideshow-builder.js","../tests/specs/pat/stacks.js","../tests/specs/pat/switch.js","../tests/specs/pat/toggle.js","../tests/specs/pat/validate.js","../tests/specs/pat/zoom.js"]
+    // "../tests/specs/pat/autoscale.js","../tests/specs/pat/autosubmit.js","../tests/specs/pat/bumper.js","../tests/specs/pat/carousel.js","../tests/specs/pat/checkedflag.js","../tests/specs/pat/checklist.js","../tests/specs/pat/collapsible.js","../tests/specs/pat/depends.js","../tests/specs/pat/equaliser.js","../tests/specs/pat/focus.js","../tests/specs/pat/gallery.js","../tests/specs/pat/image-crop.js","../tests/specs/pat/inject.js","../tests/specs/pat/legend.js","../tests/specs/pat/markdown.js","../tests/specs/pat/modal.js","../tests/specs/pat/slideshow-builder.js","../tests/specs/pat/stacks.js","../tests/specs/pat/switch.js","../tests/specs/pat/toggle.js","../tests/specs/pat/validate.js","../tests/specs/pat/zoom.js"]
 
     require([
         "specs/core/jquery-ext.js",
@@ -25,6 +25,7 @@ define("TestRunner", function() {
         "specs/core/store.js",
         "specs/lib/htmlparser.js",
         "specs/lib/depends_parse.js",
+        "specs/lib/dependshandler",
         "specs/pat/ajax.js",
         "specs/pat/inject.js",
         // "../tests/specs/pat/markdown.js",

@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "./depends_parse"
+    "depends_parse"
 ], function($, parser) {
     function DependsHandler($el, expression) {
         var $context = $el.closest("form");
