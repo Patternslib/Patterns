@@ -9,7 +9,7 @@
         jquery: 'bower_components/jquery/jquery',
         logging: 'bower_components/logging/src/logging',
         'jquery.form': 'bower_components/jquery-form/jquery.form',
-
+        'jquery.anythingslider': 'bower_components/AnythingSlider/js/jquery.anythingslider',
         // Core
         utils: 'core/utils',
         compat: 'core/compat',
@@ -31,7 +31,8 @@
         inject: 'pat/inject',
         autoscale: 'pat/autoscale',
         autosubmit: "pat/autosubmit",
-        bumper: "pat/bumper"
+        bumper: "pat/bumper",
+        carousel: "pat/carousel"
     },
 
     optimize: 'none'

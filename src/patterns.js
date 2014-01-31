@@ -19,7 +19,8 @@ define([
     "inject",
     "autoscale",
     "autosubmit",
-    "bumper"
+    "bumper",
+    "carousel"
 ], function(registry) {
     return registry;
 });
