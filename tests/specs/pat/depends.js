@@ -1,4 +1,4 @@
-define(["pat/depends"], function(pattern) {
+define(["depends"], function(pattern) {
 
     describe("depends-pattern", function() {
 

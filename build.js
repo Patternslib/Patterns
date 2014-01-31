@@ -35,7 +35,8 @@
         carousel: "pat/carousel",
         checkedflag: "pat/checkedflag",
         checklist: "pat/checklist",
-        collapsible: "pat/collapsible"
+        collapsible: "pat/collapsible",
+        depends: "pat/depends"
     },
 
     optimize: 'none'
