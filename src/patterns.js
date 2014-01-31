@@ -11,6 +11,7 @@ define([
     "parser",
     "htmlparser",
     "depends_parse",
+    "dependshandler",
     "url",
     "ajax",
     "inject",
