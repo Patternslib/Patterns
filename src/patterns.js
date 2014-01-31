@@ -21,7 +21,8 @@ define([
     "autosubmit",
     "bumper",
     "carousel",
-    "checkedflag"
+    "checkedflag",
+    "checklist"
 ], function(registry) {
     return registry;
 });
