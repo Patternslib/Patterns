@@ -30,7 +30,8 @@
         ajax: 'pat/ajax',
         inject: 'pat/inject',
         autoscale: 'pat/autoscale',
-        autosubmit: "pat/autosubmit"
+        autosubmit: "pat/autosubmit",
+        bumper: "pat/bumper"
     },
 
     optimize: 'none'
