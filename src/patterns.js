@@ -23,7 +23,8 @@ define([
     "carousel",
     "checkedflag",
     "checklist",
-    "collapsible"
+    "collapsible",
+    "depends"
 ], function(registry) {
     return registry;
 });
