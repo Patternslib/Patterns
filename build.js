@@ -32,7 +32,8 @@
         autoscale: 'pat/autoscale',
         autosubmit: "pat/autosubmit",
         bumper: "pat/bumper",
-        carousel: "pat/carousel"
+        carousel: "pat/carousel",
+        checkedflag: "pat/checkedflag"
     },
 
     optimize: 'none'

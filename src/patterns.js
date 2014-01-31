@@ -20,7 +20,8 @@ define([
     "autoscale",
     "autosubmit",
     "bumper",
-    "carousel"
+    "carousel",
+    "checkedflag"
 ], function(registry) {
     return registry;
 });
