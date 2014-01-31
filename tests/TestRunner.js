@@ -23,7 +23,7 @@ define("TestRunner", function() {
         "specs/core/url.js",
         "specs/lib/htmlparser.js",
         "specs/pat/ajax.js",
-        // "../tests/specs/pat/inject.js",
+        "specs/pat/inject.js",
         // "../tests/specs/pat/markdown.js",
         // "../tests/specs/pat/slides.js"
     ], function() {

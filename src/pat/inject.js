@@ -6,13 +6,13 @@
  */
 define([
     "jquery",
-    "./ajax",
-    "../core/parser",
-    "../core/logger",
-    "../core/registry",
-    "../core/utils",
-    "../lib/htmlparser",
-    "../core/jquery-ext"  // for :scrollable for autoLoading-visible
+    "ajax",
+    "parser",
+    "logger",
+    "registry",
+    "utils",
+    "htmlparser",
+    "jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject");
@@ -559,7 +559,7 @@ define([
 
         callTypeHandler: function(type, fn, context, params) {
             type = type || "html";
-            
+
             if (_.handlers[type] && $.isFunction(_.handlers[type][fn])) {
                 return _.handlers[type][fn].apply(context, params);
             } else {

@@ -11,7 +11,8 @@ define([
     "parser",
     "htmlparser",
     "url",
-    "ajax"
+    "ajax",
+    "inject"
 ], function(registry) {
     return registry;
 });
