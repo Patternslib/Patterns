@@ -23,7 +23,8 @@
 
         // Patterns
         patterns: 'patterns',
-        ajax: 'pat/ajax'
+        ajax: 'pat/ajax',
+        inject: 'pat/inject',
     },
 
     optimize: 'none'
