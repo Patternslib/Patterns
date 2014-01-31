@@ -18,7 +18,8 @@ define([
     "ajax",
     "inject",
     "autoscale",
-    "autosubmit"
+    "autosubmit",
+    "bumper"
 ], function(registry) {
     return registry;
 });
