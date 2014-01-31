@@ -1,7 +1,7 @@
 // helper functions to make all input elements
 define([
     "jquery",
-    "../core/logger"
+    "logger"
 ], function($, logging) {
     var namespace = "input-change-events",
         log = logging.getLogger(namespace);
