@@ -25,7 +25,8 @@ define([
     "checklist",
     "collapsible",
     "depends",
-    "equaliser"
+    "equaliser",
+    "focus"
 ], function(registry) {
     return registry;
 });

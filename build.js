@@ -37,7 +37,8 @@
         checklist: "pat/checklist",
         collapsible: "pat/collapsible",
         depends: "pat/depends",
-        equaliser: "pat/equaliser"
+        equaliser: "pat/equaliser",
+        focus: "pat/focus"
     },
 
     optimize: 'none'
