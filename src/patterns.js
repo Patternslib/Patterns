@@ -13,7 +13,6 @@ define([
     "depends_parse",
     "dependshandler",
     "input-change-events",
-    "klass",
     "url",
     "store",
     "ajax",
@@ -27,8 +26,8 @@ define([
     "collapsible",
     "depends",
     "equaliser",
-    "focus",
-    "gallery"
+    "focus"
+    // "gallery"
 ], function(registry) {
     return registry;
 });
