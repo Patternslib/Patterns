@@ -22,7 +22,8 @@ define([
     "bumper",
     "carousel",
     "checkedflag",
-    "checklist"
+    "checklist",
+    "collapsible"
 ], function(registry) {
     return registry;
 });

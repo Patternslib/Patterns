@@ -34,7 +34,8 @@
         bumper: "pat/bumper",
         carousel: "pat/carousel",
         checkedflag: "pat/checkedflag",
-        checklist: "pat/checklist"
+        checklist: "pat/checklist",
+        collapsible: "pat/collapsible"
     },
 
     optimize: 'none'
