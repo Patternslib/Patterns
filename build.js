@@ -18,6 +18,7 @@
         parser: 'core/parser',
         remove: 'core/remove',
         url: 'core/url',
+        store: 'core/store',
         registry: 'core/registry',
         htmlparser: 'lib/htmlparser',
 

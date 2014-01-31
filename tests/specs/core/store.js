@@ -1,4 +1,4 @@
-define(["core/store"], function(store) {
+define(["store"], function(store) {
 
     describe("Core / store", function() {
 
