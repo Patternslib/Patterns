@@ -13,9 +13,10 @@ define([
     "depends_parse",
     "dependshandler",
     "url",
+    "store",
     "ajax",
     "inject",
-    "store"
+    "autoscale"
 ], function(registry) {
     return registry;
 });
