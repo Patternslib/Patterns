@@ -24,7 +24,8 @@ define([
     "checkedflag",
     "checklist",
     "collapsible",
-    "depends"
+    "depends",
+    "equaliser"
 ], function(registry) {
     return registry;
 });
