@@ -13,7 +13,8 @@
         "jquery-textchange": "0.2.2",
         "logging": "",
         "modernizr": "",
-        "requirejs": ""
+        "requirejs": "",
+        "klass": ""
     },
 
     "devDependencies": {
