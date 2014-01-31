@@ -8,9 +8,9 @@
  */
 define([
     "jquery",
-    "../core/registry",
-    "../core/logger",
-    "../core/utils"
+    "registry",
+    "logger",
+    "utils"
 ], function($, patterns, logger, utils) {
     var log = logger.getLogger("checkedflag");
 
