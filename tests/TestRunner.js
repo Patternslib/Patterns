@@ -14,7 +14,7 @@ define("TestRunner", function() {
         return htmlReporter.specFilter(spec);
     };
 
-    // "../tests/specs/pat/image-crop.js","../tests/specs/pat/inject.js","../tests/specs/pat/legend.js","../tests/specs/pat/markdown.js","../tests/specs/pat/modal.js","../tests/specs/pat/slideshow-builder.js","../tests/specs/pat/stacks.js","../tests/specs/pat/switch.js","../tests/specs/pat/toggle.js","../tests/specs/pat/validate.js","../tests/specs/pat/zoom.js"]
+    // "specs/pat/image-crop.js","../tests/specs/pat/inject.js","../tests/specs/pat/legend.js","../tests/specs/pat/markdown.js","../tests/specs/pat/modal.js","../tests/specs/pat/slideshow-builder.js","../tests/specs/pat/stacks.js","../tests/specs/pat/switch.js","../tests/specs/pat/toggle.js","../tests/specs/pat/validate.js","../tests/specs/pat/zoom.js"]
 
     require([
         "specs/core/jquery-ext.js",
@@ -38,8 +38,8 @@ define("TestRunner", function() {
         "specs/pat/depends.js",
         "specs/pat/equaliser.js",
         "specs/pat/focus.js",
-        "specs/pat/gallery.js"
-        // "../tests/specs/pat/markdown.js",
+        // "specs/pat/gallery.js"
+        // "specs/pat/markdown.js",
         // "../tests/specs/pat/slides.js"
     ], function() {
         jasmineEnv.execute();
