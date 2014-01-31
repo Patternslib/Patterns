@@ -10,7 +10,10 @@
         logging: 'bower_components/logging/src/logging',
         'jquery.form': 'bower_components/jquery-form/jquery.form',
         'jquery.anythingslider': 'bower_components/AnythingSlider/js/jquery.anythingslider',
-        klass: "bower_components/klass/src/klass",
+        // klass: "bower_components/klass/src/klass",
+        // photoswipe: "bower_components/photoswipe/src/photoswipe",
+        // 'photoswipe.Util': "bower_components/photoswipe/src/lib/code.util-1.0.6/code.util.jquery-1.0.6",
+
 
         // Core
         utils: 'core/utils',
@@ -42,6 +45,10 @@
         equaliser: "pat/equaliser",
         focus: "pat/focus",
         gallery: "pat/gallery"
+    },
+
+    shim: {
+
     },
 
     optimize: 'none'
