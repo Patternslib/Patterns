@@ -8,6 +8,7 @@
         // Externals
         jquery: 'bower_components/jquery/jquery',
         logging: 'bower_components/logging/src/logging',
+        'jquery.form': 'bower_components/jquery-form/jquery.form',
 
         // Core
         utils: 'core/utils',
@@ -21,7 +22,8 @@
         htmlparser: 'lib/htmlparser',
 
         // Patterns
-        patterns: 'patterns'
+        patterns: 'patterns',
+        ajax: 'pat/ajax'
     },
 
     optimize: 'none'
