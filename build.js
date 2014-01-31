@@ -23,12 +23,14 @@
         htmlparser: 'lib/htmlparser',
         depends_parse: 'lib/depends_parse',
         dependshandler: 'lib/dependshandler',
+        "input-change-events": "lib/input-change-events",
 
         // Patterns
         patterns: 'patterns',
         ajax: 'pat/ajax',
         inject: 'pat/inject',
         autoscale: 'pat/autoscale',
+        autosubmit: "pat/autosubmit"
     },
 
     optimize: 'none'

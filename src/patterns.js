@@ -12,11 +12,13 @@ define([
     "htmlparser",
     "depends_parse",
     "dependshandler",
+    "input-change-events",
     "url",
     "store",
     "ajax",
     "inject",
-    "autoscale"
+    "autoscale",
+    "autosubmit"
 ], function(registry) {
     return registry;
 });
