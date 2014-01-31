@@ -5,8 +5,8 @@
  */
 define([
     "jquery",
-    "../core/registry",
-    "../core/parser",
+    "registry",
+    "parser",
     "klass", // Workaround because bungle is ignoring dependencies currently
     "photoswipe"
 ], function($, patterns, Parser) {

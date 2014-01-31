@@ -10,6 +10,8 @@
         logging: 'bower_components/logging/src/logging',
         'jquery.form': 'bower_components/jquery-form/jquery.form',
         'jquery.anythingslider': 'bower_components/AnythingSlider/js/jquery.anythingslider',
+        klass: "bower_components/klass/src/klass",
+
         // Core
         utils: 'core/utils',
         compat: 'core/compat',
@@ -38,7 +40,8 @@
         collapsible: "pat/collapsible",
         depends: "pat/depends",
         equaliser: "pat/equaliser",
-        focus: "pat/focus"
+        focus: "pat/focus",
+        gallery: "pat/gallery"
     },
 
     optimize: 'none'
