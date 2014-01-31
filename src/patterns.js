@@ -10,6 +10,7 @@ define([
     "registry",
     "parser",
     "htmlparser",
+    "depends_parse",
     "url",
     "ajax",
     "inject",

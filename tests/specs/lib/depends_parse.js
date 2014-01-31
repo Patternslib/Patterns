@@ -1,4 +1,4 @@
-define(["lib/depends_parse"], function(parser) {
+define(["depends_parse"], function(parser) {
 
     describe("Depedency expression parser", function() {
 
