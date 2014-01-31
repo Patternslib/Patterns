@@ -37,7 +37,7 @@ clean::
 ########################################################################
 ## Tests
 
-check:: jshint
+check:: jshint bundle
 jshint: stamp-npm
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 
