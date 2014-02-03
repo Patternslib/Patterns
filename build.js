@@ -50,7 +50,8 @@
         stacks: "pat/stacks",
         "switch": "pat/switch",
         toggle: "pat/toggle",
-        validate: "pat/validate"
+        validate: "pat/validate",
+        zoom: "pat/zoom"
 
         // gallery: "pat/gallery",
     },
