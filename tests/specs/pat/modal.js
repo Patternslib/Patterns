@@ -1,4 +1,4 @@
-define(["pat/modal"], function(pattern) {
+define(["modal"], function(pattern) {
 
     describe("modal-pattern", function () {
 
