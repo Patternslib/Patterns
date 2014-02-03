@@ -5,11 +5,11 @@
  */
 define([
     "jquery",
-    "../core/registry",
+    "registry",
     "patternslib.slides",
-    "../core/utils",
-    "../core/url",
-    "../core/remove"
+    "utils",
+    "url",
+    "remove"
 ], function($, patterns, Presentation, utils, url) {
     var slides = {
         name: "slides",

@@ -30,6 +30,7 @@ define([
     "legend",
     "modal",
     "slideshow-builder",
+    "slides",
     "stacks",
     "switch",
     "toggle",

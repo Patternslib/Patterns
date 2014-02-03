@@ -14,7 +14,7 @@
         // photoswipe: "bower_components/photoswipe/src/photoswipe",
         // 'photoswipe.Util': "bower_components/photoswipe/src/lib/code.util-1.0.6/code.util.jquery-1.0.6",
         'parsley': 'bower_components/parsleyjs/parsley',
-
+        'patternslib.slides': 'bower_components/slides/src/slides',
         // Core
         utils: 'core/utils',
         compat: 'core/compat',
@@ -46,6 +46,7 @@
         focus: "pat/focus",
         legend: "pat/legend",
         modal: "pat/modal",
+        slides: "pat/slides",
         "slideshow-builder": "pat/slideshow-builder",
         stacks: "pat/stacks",
         "switch": "pat/switch",
