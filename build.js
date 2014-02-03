@@ -45,7 +45,8 @@
         equaliser: "pat/equaliser",
         focus: "pat/focus",
         legend: "pat/legend",
-        modal: "pat/modal"
+        modal: "pat/modal",
+        "slideshow-builder": "pat/slideshow-builder"
         // gallery: "pat/gallery",
     },
 
