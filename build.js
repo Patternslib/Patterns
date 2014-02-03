@@ -49,7 +49,8 @@
         "slideshow-builder": "pat/slideshow-builder",
         stacks: "pat/stacks",
         "switch": "pat/switch",
-        
+        toggle: "pat/toggle"
+
         // gallery: "pat/gallery",
     },
 

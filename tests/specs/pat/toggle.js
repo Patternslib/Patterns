@@ -1,4 +1,4 @@
-define(["pat/toggle"], function(pattern) {
+define(["toggle"], function(pattern) {
 
     describe("toggle", function() {
 
