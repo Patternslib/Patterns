@@ -5,10 +5,10 @@
  */
 define([
     "jquery",
-    "../core/parser",
-    "../core/logger",
-    "../core/utils",
-    "../core/registry"
+    "parser",
+    "logger",
+    "utils",
+    "registry"
 ], function($, Parser, logging, utils, registry) {
     var log = logging.getLogger("stacks"),
         parser = new Parser("stacks");
