@@ -32,7 +32,8 @@ define([
     "slideshow-builder",
     "stacks",
     "switch",
-    "toggle"
+    "toggle",
+    "validate"
     // "gallery"
 ], function(registry) {
     return registry;
