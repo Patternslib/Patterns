@@ -31,7 +31,8 @@ define([
     "modal",
     "slideshow-builder",
     "stacks",
-    "switch"
+    "switch",
+    "toggle"
     // "gallery"
 ], function(registry) {
     return registry;
