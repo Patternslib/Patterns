@@ -30,7 +30,8 @@ define([
     "legend",
     "modal",
     "slideshow-builder",
-    "stacks"
+    "stacks",
+    "switch"
     // "gallery"
 ], function(registry) {
     return registry;

@@ -47,7 +47,9 @@
         legend: "pat/legend",
         modal: "pat/modal",
         "slideshow-builder": "pat/slideshow-builder",
-        stacks: "pat/stacks"
+        stacks: "pat/stacks",
+        "switch": "pat/switch",
+        
         // gallery: "pat/gallery",
     },
 
