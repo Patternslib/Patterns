@@ -44,7 +44,8 @@
         depends: "pat/depends",
         equaliser: "pat/equaliser",
         focus: "pat/focus",
-        gallery: "pat/gallery"
+        legend: "pat/legend"
+        // gallery: "pat/gallery",
     },
 
     shim: {

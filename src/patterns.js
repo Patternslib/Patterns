@@ -26,7 +26,8 @@ define([
     "collapsible",
     "depends",
     "equaliser",
-    "focus"
+    "focus",
+    "legend"
     // "gallery"
 ], function(registry) {
     return registry;
