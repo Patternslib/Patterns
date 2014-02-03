@@ -46,7 +46,8 @@
         focus: "pat/focus",
         legend: "pat/legend",
         modal: "pat/modal",
-        "slideshow-builder": "pat/slideshow-builder"
+        "slideshow-builder": "pat/slideshow-builder",
+        stacks: "pat/stacks"
         // gallery: "pat/gallery",
     },
 

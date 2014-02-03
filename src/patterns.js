@@ -29,7 +29,8 @@ define([
     "focus",
     "legend",
     "modal",
-    "slideshow-builder"
+    "slideshow-builder",
+    "stacks"
     // "gallery"
 ], function(registry) {
     return registry;
