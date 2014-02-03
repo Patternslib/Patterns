@@ -27,7 +27,8 @@ define([
     "depends",
     "equaliser",
     "focus",
-    "legend"
+    "legend",
+    "modal"
     // "gallery"
 ], function(registry) {
     return registry;

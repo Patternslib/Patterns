@@ -44,7 +44,8 @@
         depends: "pat/depends",
         equaliser: "pat/equaliser",
         focus: "pat/focus",
-        legend: "pat/legend"
+        legend: "pat/legend",
+        modal: "pat/modal"
         // gallery: "pat/gallery",
     },
 
