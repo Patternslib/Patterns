@@ -28,7 +28,8 @@ define([
     "equaliser",
     "focus",
     "legend",
-    "modal"
+    "modal",
+    "slideshow-builder"
     // "gallery"
 ], function(registry) {
     return registry;
