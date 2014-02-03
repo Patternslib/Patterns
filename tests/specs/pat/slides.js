@@ -1,4 +1,4 @@
-define(["pat/slides"], function(pattern) {
+define(["slides"], function(pattern) {
 
     describe("Slides pattern", function() {
 

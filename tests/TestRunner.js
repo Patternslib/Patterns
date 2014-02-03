@@ -42,6 +42,7 @@ define("TestRunner", function() {
         "specs/pat/legend",
         "specs/pat/modal",
         "specs/pat/slideshow-builder",
+        "specs/pat/slides.js",
         "specs/pat/stacks.js",
         "specs/pat/switch.js",
         "specs/pat/toggle.js",
@@ -49,7 +50,6 @@ define("TestRunner", function() {
         "specs/pat/zoom.js"
         // "specs/pat/gallery.js"
         // "specs/pat/markdown.js",
-        // "../tests/specs/pat/slides.js"
     ], function() {
         jasmineEnv.execute();
     });
