@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "../core/registry"
+    "registry"
 ], function($, registry) {
     var legend = {
         name: "legend",
