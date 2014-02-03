@@ -33,7 +33,8 @@ define([
     "stacks",
     "switch",
     "toggle",
-    "validate"
+    "validate",
+    "zoom"
     // "gallery"
 ], function(registry) {
     return registry;
