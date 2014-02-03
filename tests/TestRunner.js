@@ -15,7 +15,7 @@ define("TestRunner", function() {
     };
 
     // "specs/pat/image-crop.js","../tests/specs/pat/markdown.js",
-    // "../tests/specs/pat/toggle.js","../tests/specs/pat/validate.js","../tests/specs/pat/zoom.js"]
+    // "../tests/specs/pat/validate.js","../tests/specs/pat/zoom.js"]
 
     require([
         "specs/core/jquery-ext.js",
@@ -44,7 +44,8 @@ define("TestRunner", function() {
         "specs/pat/slideshow-builder",
         "specs/pat/stacks.js",
         "specs/pat/switch.js",
-        "specs/pat/toggle.js"
+        "specs/pat/toggle.js",
+        "specs/pat/validate.js"
         // "specs/pat/gallery.js"
         // "specs/pat/markdown.js",
         // "../tests/specs/pat/slides.js"

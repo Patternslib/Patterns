@@ -13,7 +13,7 @@
         // klass: "bower_components/klass/src/klass",
         // photoswipe: "bower_components/photoswipe/src/photoswipe",
         // 'photoswipe.Util': "bower_components/photoswipe/src/lib/code.util-1.0.6/code.util.jquery-1.0.6",
-
+        'parsley': 'bower_components/parsleyjs/parsley',
 
         // Core
         utils: 'core/utils',
@@ -49,7 +49,8 @@
         "slideshow-builder": "pat/slideshow-builder",
         stacks: "pat/stacks",
         "switch": "pat/switch",
-        toggle: "pat/toggle"
+        toggle: "pat/toggle",
+        validate: "pat/validate"
 
         // gallery: "pat/gallery",
     },
