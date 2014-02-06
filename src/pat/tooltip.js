@@ -92,12 +92,12 @@ define([
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
                 options = $trigger.data("patterns.tooltip");
-            $container.find(".close-panel")
-                .on("click.tooltip", $trigger, tooltip.hide);
+            $container
+                .on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
 
             if (options.closing==="close-button") {
-                $container.find(".close-panel")
-                    .on("click.tooltip", $trigger, tooltip.hide);
+                $container
+                    .on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else if (options.closing==="sticky" || (options.trigger==="click" && options.closing==="auto")) {
