@@ -42,12 +42,13 @@
     ],
     "bungle": {
         "dependencies": [
+            "bootstrap.datepicker",
             "jcrop",
             "jquery",
             "jquery.anythingslider",
             "jquery.chosen",
             "jquery.form",
-            "jquery.fullcalendar-1.5.4",
+            "jquery.fullcalendar-1.9.9900",
             "jquery.placeholder",
             "jquery.textchange",
             "jquery.select2",
@@ -59,6 +60,7 @@
             "parsley",
             "prefixfree",
             "shower-2013.06.13",
+            "spectrum",
             "text",
             "tinymce"
         ],
