@@ -2,6 +2,7 @@
     baseUrl: "src",
     out: 'bundle.js',
     name: 'patterns',
+    mainConfigFile: 'src/patterns.js',
 
     paths: {
 
