@@ -2,7 +2,7 @@ require.config({
 
     paths: {
         registry: '../bundle',
-        custom: 'custom' 
+        custom: 'custom'
     },
 
 });

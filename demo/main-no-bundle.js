@@ -16,7 +16,7 @@ require.config({
         registry: '../src/core/registry',
         ajax: '../src/pat/ajax',
 
-        custom: 'custom' 
+        custom: 'custom'
     },
 
     shim: {
