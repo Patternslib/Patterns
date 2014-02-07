@@ -59,6 +59,10 @@
 
     shim: {
 
+        jquery: {
+            exports: 'jQuery'
+        }
+
     },
 
     optimize: 'none'
