@@ -1,5 +1,5 @@
 define([
-    "patterns",
+    "registry",
 ], function(registry) {
 
    var _ = {
