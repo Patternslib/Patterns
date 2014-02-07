@@ -1,14 +1,14 @@
 require.config({
 
     paths: {
-        patterns: '../bundle',
+        registry: '../bundle',
         custom: 'custom' 
     },
 
 });
 
-define(['patterns', 'custom'], function (Patterns, custom) {
-    console.log(Patterns);
+define(['registry', 'custom'], function (registry, custom) {
+    console.log(registry);
     console.log(custom);
-    console.log(Patterns.patterns.custom);
+    console.log(registry.patterns.custom);
 });
