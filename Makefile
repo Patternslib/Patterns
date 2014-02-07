@@ -54,7 +54,7 @@ bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
 
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
-	$(PEGJS) $^
+	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 clean::
