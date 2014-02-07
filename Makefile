@@ -65,8 +65,8 @@ use-modules:
 
 # Development related rules
 
-src/lib/depends_parse.js: src/lib/depends_parse.pegjs
-	$(PEGJS) $^
+src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
+	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 
