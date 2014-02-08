@@ -11,7 +11,7 @@ define([
         name: "polyfill-color",
         trigger: "input[type=color]",
         init: function($el) {
-            return $el;
+            return $el.spectrum();
         },
 
         destroy: function() {
