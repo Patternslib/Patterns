@@ -3,7 +3,7 @@ JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
 
-SOURCES		= $(wildcard src/*.js) $(wildcard src/*/*.js)
+SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/legacy/*.js) $(wildcard src/lib/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
 THIRDPARTY	= bungledeps $(shell find bungledeps -name '*.js' 2>/dev/null)
 
