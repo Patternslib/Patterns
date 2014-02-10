@@ -16,9 +16,9 @@ define("TestRunner", function() {
 
     // "specs/pat/image-crop.js","../tests/specs/pat/markdown.js",
     // "../tests/specs/pat/validate.js","../tests/specs/pat/zoom.js"]
-
+    debugger;
     require([
-        "specs/core/jquery-ext.js",
+        "./specs/core/jquery-ext.js",
         "specs/core/utils.js",
         "specs/core/parser.js",
         "specs/core/utils.js",

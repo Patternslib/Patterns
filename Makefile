@@ -37,7 +37,7 @@ clean::
 ########################################################################
 ## Tests
 
-check:: jshint bundle
+check:: jshint test-bundle
 jshint: stamp-npm
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 
@@ -51,6 +51,9 @@ check:: stamp-npm
 
 bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
 	node_modules/.bin/r.js -o build.js
+
+test-bundle test-bundle.js: $(GENERATED) $(SOURCES) test-build.js stamp-bower
+	node_modules/.bin/r.js -o test-build.js
 
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
