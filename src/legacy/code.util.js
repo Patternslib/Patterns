@@ -27,7 +27,7 @@ define(['jquery', 'klass'], function ($, klass) {
 
 	var Code = {};
 
-	Code.Util = {
+	var Util = {
 
 
 		/*
@@ -266,12 +266,6 @@ define(['jquery', 'klass'], function ($, klass) {
 
 	};
 
-	return Code;
-});
-
-
-(function(window, Util) {
-
 	Util.Browser = {
 
 		ua: null,
@@ -357,19 +351,15 @@ define(['jquery', 'klass'], function ($, klass) {
 		isLandscape: function(){
 			return (Util.DOM.windowWidth() > Util.DOM.windowHeight());
 		}
-  };
+	};
 
 	Util.Browser._detect();
 
-}
-(
-	window,
-	window.Code.Util
-))
-;
-// Copyright (c) 2011 by Code Computerlove (http://www.codecomputerlove.com)
-// Licensed under the MIT license
-// version: 1.0.6
+	Code.Util = Util;
+
+	return Code;
+});
+
 
 (function (window, $, Util) {
 
