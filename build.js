@@ -1,12 +1,14 @@
 ({
     baseUrl: "src",
     out: 'bundle.js',
-    name: 'patterns',
-    mainConfigFile: 'src/patterns.js',
+    name: 'almond',
+    include: 'patterns',
+    insertRequire: ['patterns'],
 
     paths: {
 
         // Externals
+        almond: 'bower_components/almond/almond',
         jquery: 'bower_components/jquery/jquery',
         logging: 'bower_components/logging/src/logging',
         'jquery.form': 'bower_components/jquery-form/jquery.form',
