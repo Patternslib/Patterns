@@ -7,6 +7,7 @@
  * directly in your RequireJS configuration.
  */
 define([
+    "jquery",
     "registry",
     "parser",
     "htmlparser",
@@ -37,7 +38,10 @@ define([
     "validate",
     "zoom"
     // "gallery"
-], function(registry) {
+], function($, registry) {
     window.patterns = registry;
+    $(function () {
+        registry.init();
+    });
     return registry;
 });
