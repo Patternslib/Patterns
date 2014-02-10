@@ -355,14 +355,6 @@ define(['jquery', 'klass'], function ($, klass) {
 
 	Util.Browser._detect();
 
-	Code.Util = Util;
-
-	return Code;
-});
-
-
-(function (window, $, Util) {
-
 	Util.extend(Util, {
 
 		Events: {
@@ -473,15 +465,13 @@ define(['jquery', 'klass'], function ($, klass) {
 
 	});
 
+	Code.Util = Util;
 
-}
-(
-	window,
-	window.jQuery,
-	window.Code.Util
-));// Copyright (c) 2011 by Code Computerlove (http://www.codecomputerlove.com)
-// Licensed under the MIT license
-// version: 1.0.6
+
+	return Code;
+});
+
+
 
 (function (window, $, Util) {
 
