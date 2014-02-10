@@ -465,16 +465,6 @@ define(['jquery', 'klass'], function ($, klass) {
 
 	});
 
-	Code.Util = Util;
-
-
-	return Code;
-});
-
-
-
-(function (window, $, Util) {
-
 	Util.extend(Util, {
 
 		DOM: {
@@ -977,19 +967,6 @@ define(['jquery', 'klass'], function ($, klass) {
 
 	});
 
-
-}
-(
-	window,
-	window.jQuery,
-	window.Code.Util
-));
-// Copyright (c) 2011 by Code Computerlove (http://www.codecomputerlove.com)
-// Licensed under the MIT license
-// version: 1.0.6
-
-(function (window, Util) {
-
 	Util.extend(Util, {
 
 		Animation: {
@@ -1293,18 +1270,6 @@ define(['jquery', 'klass'], function ($, klass) {
 	});
 
 
-}
-(
-	window,
-	window.Code.Util
-));
-// Copyright (c) 2011 by Code Computerlove (http://www.codecomputerlove.com)
-// Licensed under the MIT license
-// version: 1.0.6
-
-(function(window, klass, Util){
-
-
 	Util.registerNamespace('Code.Util.TouchElement');
 
 
@@ -1313,7 +1278,6 @@ define(['jquery', 'klass'], function ($, klass) {
 		onTouch: 'CodeUtilTouchElementOnTouch'
 
 	};
-
 
 	Util.TouchElement.ActionTypes = {
 
@@ -1332,19 +1296,6 @@ define(['jquery', 'klass'], function ($, klass) {
 		gestureEnd: 'gestureEnd'
 
 	};
-
-
-}
-(
-	window,
-	window.klass,
-	window.Code.Util
-));// Copyright (c) 2011 by Code Computerlove (http://www.codecomputerlove.com)
-// Licensed under the MIT license
-// version: 1.0.6
-
-(function(window, klass, Util){
-
 
 	Util.registerNamespace('Util.TouchElement');
 
@@ -1920,15 +1871,12 @@ define(['jquery', 'klass'], function ($, klass) {
 
 		}
 
-
-
 	});
 
 
 
-}
-(
-	window,
-	window.klass,
-	window.Code.Util
-));
+	Code.Util = Util;
+
+
+	return Code;
+});
