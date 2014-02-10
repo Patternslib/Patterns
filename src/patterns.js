@@ -36,8 +36,8 @@ define([
     "switch",
     "toggle",
     "validate",
-    "zoom"
-    // "gallery"
+    "zoom",
+    "gallery"
 ], function($, registry) {
     window.patterns = registry;
     $(function () {

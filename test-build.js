@@ -10,9 +10,9 @@
         logging: 'bower_components/logging/src/logging',
         'jquery.form': 'bower_components/jquery-form/jquery.form',
         'jquery.anythingslider': 'bower_components/AnythingSlider/js/jquery.anythingslider',
-        // klass: "bower_components/klass/src/klass",
-        // photoswipe: "bower_components/photoswipe/src/photoswipe",
-        // 'photoswipe.Util': "bower_components/photoswipe/src/lib/code.util-1.0.6/code.util.jquery-1.0.6",
+        klass: "bower_components/klass/src/klass",
+        photoswipe: "bower_components/photoswipe/src/photoswipe",
+        'photoswipe.Util': "bower_components/photoswipe/src/lib/code.util-1.0.6/code.util.jquery-1.0.6",
         'parsley': 'bower_components/parsleyjs/parsley',
         'patternslib.slides': 'bower_components/slides/src/slides',
         // Core
@@ -52,9 +52,8 @@
         "switch": "pat/switch",
         toggle: "pat/toggle",
         validate: "pat/validate",
-        zoom: "pat/zoom"
-
-        // gallery: "pat/gallery",
+        zoom: "pat/zoom",
+        gallery: "pat/gallery",
     },
 
     shim: {
