@@ -1,8 +1,7 @@
 // Copyright (c) 2011 by Code Computerlove (http://www.codecomputerlove.com)
 // Licensed under the MIT license
 // version: 1.0.6
-
-(function (window) {
+define(['jquery', 'klass'], function ($, klass) {
 
 	// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/bind
 	if (!Function.prototype.bind ) {
@@ -26,14 +25,9 @@
 	}
 
 
+	var Code = {};
 
-	if (typeof window.Code === "undefined") {
-		window.Code = {};
-	}
-
-
-
-	window.Code.Util = {
+	Code.Util = {
 
 
 		/*
@@ -272,10 +266,9 @@
 
 	};
 
-}(window));
-// Copyright (c) 2011 by Code Computerlove (http://www.codecomputerlove.com)
-// Licensed under the MIT license
-// version: 1.0.6
+	return Code;
+});
+
 
 (function(window, Util) {
 
