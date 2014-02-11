@@ -1,4 +1,4 @@
-define(["pat/markdown", "pagedown"], function(pattern, Markdown) {
+define(["markdown", "Markdown.Converter"], function(pattern, Markdown) {
 
     describe("Markdown pattern", function() {
 

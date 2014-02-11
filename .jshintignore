@@ -1,0 +1,4 @@
+src/legacy/Markdown.Sanitizer.js
+src/legacy/Markdown.Extra.js
+src/legacy/Markdown.Editor.js
+src/legacy/Markdown.Converter.js

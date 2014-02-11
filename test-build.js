@@ -16,6 +16,9 @@
         "photoswipe.Util": "legacy/code.util",
         "parsley": "bower_components/parsleyjs/parsley",
         "patternslib.slides": "bower_components/slides/src/slides",
+        "Markdown.Converter": "legacy/Markdown.Converter",
+        "Markdown.Extra": "legacy/Markdown.Extra",
+        "Markdown.Sanitizer": "legacy/Markdown.Sanitizer",
 
         // Core
         utils: "core/utils",
@@ -57,6 +60,7 @@
         zoom: "pat/zoom",
         "image-crop": "pat/image-crop",
         gallery: "pat/gallery",
+        markdown: "pat/markdown"
     },
 
     shim: {
