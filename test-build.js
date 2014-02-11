@@ -11,7 +11,7 @@
         'jquery.form': 'bower_components/jquery-form/jquery.form',
         'jquery.anythingslider': 'bower_components/AnythingSlider/js/jquery.anythingslider',
         klass: "bower_components/klass/src/klass",
-        photoswipe: "bower_components/photoswipe/src/photoswipe",
+        photoswipe: "legacy/photoswipe",
         'photoswipe.Util': "legacy/code.util",
         'parsley': 'bower_components/parsleyjs/parsley',
         'patternslib.slides': 'bower_components/slides/src/slides',
