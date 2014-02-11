@@ -1270,9 +1270,9 @@ define(['jquery', 'klass'], function ($, klass) {
 	});
 
 
-	Util.registerNamespace('Code.Util.TouchElement');
+	// Util.registerNamespace('Code.Util.TouchElement');
 
-
+	Util.TouchElement = {};
 	Util.TouchElement.EventTypes = {
 
 		onTouch: 'CodeUtilTouchElementOnTouch'
@@ -1297,7 +1297,7 @@ define(['jquery', 'klass'], function ($, klass) {
 
 	};
 
-	Util.registerNamespace('Util.TouchElement');
+	// Util.registerNamespace('Util.TouchElement');
 
 
 	Util.TouchElement.TouchElementClass = klass({
