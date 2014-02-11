@@ -1,8 +1,8 @@
 define([
     "jquery",
-    "./inject",
-    "../core/parser",
-    "../core/registry"
+    "inject",
+    "parser",
+    "registry"
 ], function($, inject, Parser, registry) {
     var parser = new Parser("expandable");
 

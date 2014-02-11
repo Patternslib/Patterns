@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "../core/registry"
+    "registry"
 ], function($, patterns) {
     var menu = {
         name: "menu",

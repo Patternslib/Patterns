@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "../core/registry"
+    "registry"
 ], function($, registry) {
     var _ = {
         name: "breadcrumbs",

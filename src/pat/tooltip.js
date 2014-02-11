@@ -8,10 +8,10 @@
  */
 define([
     "jquery",
-    "../core/registry",
-    "../core/parser",
-    "./inject",
-    "../core/remove"
+    "registry",
+    "parser",
+    "inject",
+    "remove"
 ], function($, patterns, Parser, inject) {
     var parser = new Parser("tooltip");
 

@@ -5,7 +5,7 @@
  */
 define([
     "jquery",
-    "../core/registry"
+    "registry"
 ], function($, registry) {
     var autofocus = {
         name: "autofocus",

@@ -1,5 +1,5 @@
 define([
-    "../core/registry",
+    "registry",
     "jquery.placeholder"
 ], function(patterns) {
     var pattern_spec = {

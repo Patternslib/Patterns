@@ -5,8 +5,8 @@
  */
 define([
     "jquery",
-    "../core/registry",
-    "../core/parser"
+    "registry",
+    "parser"
 ], function($, patterns, Parser) {
     var parser = new Parser("<pattern name>");
 
