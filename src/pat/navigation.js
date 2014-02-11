@@ -1,7 +1,7 @@
 define([
     "jquery",
-    "../core/logger",
-    "../core/registry"
+    "logger",
+    "registry"
 ], function($, logger, registry) {
     var log = logger.getLogger("pat.navigation");
 
