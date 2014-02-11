@@ -6,8 +6,8 @@ define(['photoswipe.Util'], function (Code) {
 
 	var Util = Code.Util;
 	
-	Util.registerNamespace('Code.PhotoSwipe');
-	var PhotoSwipe = window.Code.PhotoSwipe;
+	// Util.registerNamespace('Code.PhotoSwipe');
+	var PhotoSwipe = {};
 	
 	PhotoSwipe.CssClasses = {
 		buildingBody: 'ps-building',
