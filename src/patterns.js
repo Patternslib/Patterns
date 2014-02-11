@@ -37,8 +37,8 @@ define([
     "toggle",
     "validate",
     "zoom",
-    "image-crop"
-    // "gallery"
+    "image-crop",
+    "gallery"
 ], function($, registry) {
     window.patterns = registry;
     $(function () {

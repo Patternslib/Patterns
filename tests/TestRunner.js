@@ -14,8 +14,6 @@ define("TestRunner", function() {
         return htmlReporter.specFilter(spec);
     };
 
-    // "../tests/specs/pat/markdown.js",
-
     require([
         "./specs/core/jquery-ext.js",
         "specs/core/utils.js",
@@ -47,8 +45,8 @@ define("TestRunner", function() {
         "specs/pat/toggle.js",
         "specs/pat/validate.js",
         "specs/pat/zoom.js",
-        "specs/pat/image-crop.js"
-        // "specs/pat/gallery.js"
+        "specs/pat/image-crop.js",
+        "specs/pat/gallery.js"
         // "specs/pat/markdown.js",
     ], function() {
         jasmineEnv.execute();
