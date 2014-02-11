@@ -46,8 +46,8 @@ define("TestRunner", function() {
         "specs/pat/validate.js",
         "specs/pat/zoom.js",
         "specs/pat/image-crop.js",
-        "specs/pat/gallery.js"
-        // "specs/pat/markdown.js",
+        "specs/pat/gallery.js",
+        "specs/pat/markdown.js"
     ], function() {
         jasmineEnv.execute();
     });
