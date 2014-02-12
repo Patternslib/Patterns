@@ -581,21 +581,26 @@ define([
 
                 var location = ($('.location', event).html() || '').trim();
 
+                var startstr = $('.start', event).attr('datetime'),
+                    endstr = $('.end', event).attr('datetime'),
+                    start = $.fullCalendar.moment.parseZone(startstr),
+                    end = $.fullCalendar.moment.parseZone(endstr);
+
+                if (timezone) {
+                    start = start.tz(timezone);
+                    end = end.tz(timezone);
+                }
                 var ev = {
                     title: $('.title', event).text().trim() +
                         (location ? (' (' + location + ')') : ''),
-                    start: $.fullCalendar.moment.utc($('.start', event).attr('datetime')),
-                    end: $.fullCalendar.moment.utc($('.end', event).attr('datetime')),
+                    start: start.format(),
+                    end: end.format(),
                     allDay: $(event).hasClass('all-day'),
                     url: $('a', event).attr('href'),
                     className: classNames,
                     attrs: attrs,
                     editable: $(event).hasClass('editable')
                 };
-                if (timezone) {
-                    ev.start = ev.start.tz(timezone);
-                    ev.end = ev.end.tz(timezone);
-                }
                 if (!ev.title) {
                     log.error('No event title for:', event);
                 }
