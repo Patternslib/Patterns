@@ -398,7 +398,6 @@ define([
             $el.$catControls = $categoryRoot.find('input[type=checkbox]');
             $el.$catControls.on('change', refetch);
 
-
             $el.fullCalendar(calOpts);
 
             // move to end of $el
@@ -461,6 +460,12 @@ define([
                     $el.fullCalendar('option', 'height',
                         $el.find('.fc-content').height());
                 }
+            });
+            $controlRoot.find('select.timezone').on('change', function(ev) {
+                var timezone = ev.target.value;
+                calOpts.timezone = timezone;
+                $el.fullCalendar('destroy');
+                $el.fullCalendar(calOpts);
             });
 
             $el.find('.cal-events').css('display', 'none');
