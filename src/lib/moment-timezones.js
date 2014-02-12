@@ -1,4 +1,4 @@
-define(["moment.timezone"], function (moment) { moment.tz.add({
+define(["moment", "moment.timezone"], function (moment) { moment.tz.add({
     "zones": {
         "Africa/Abidjan": [
             "-0:16:8 - LMT 1912 -0:16:8",
