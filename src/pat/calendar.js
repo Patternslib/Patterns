@@ -354,7 +354,6 @@ define([
                     timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
                     columnFormat: cfg.column,
-                    ignoreTimezone: false,
                     viewRender: _.highlightButtons,
                     defaultView: cfg.defaultView
                 };
@@ -400,6 +399,12 @@ define([
             $el.$catControls = $categoryRoot.find('input[type=checkbox]');
             $el.$catControls.on('change', refetch);
 
+            var $controlRoot = cfg.calendarControls ?
+                    $(cfg.calendarControls) : $el,
+                $timezoneControl = $controlRoot.find('select.timezone'),
+                timezone = $timezoneControl.val();
+            calOpts.timezone = timezone;
+
             $el.fullCalendar(calOpts);
 
             // move to end of $el
@@ -423,8 +428,6 @@ define([
             var $title = $el.find('.cal-title');
             $title.text($el.fullCalendar('getView').title);
 
-            var $controlRoot = cfg.calendarControls ?
-                $(cfg.calendarControls) : $el;
             $controlRoot.find('.view-month').addClass('active');
 
             $controlRoot.find('.jump-next').on('click', function() {
@@ -463,7 +466,7 @@ define([
                         $el.find('.fc-content').height());
                 }
             });
-            $controlRoot.find('select.timezone').on('change', function(ev) {
+            $timezoneControl.on('change', function(ev) {
                 var timezone = ev.target.value;
                 calOpts.timezone = timezone;
                 $el.fullCalendar('destroy');
