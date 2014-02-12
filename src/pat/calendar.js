@@ -584,8 +584,8 @@ define([
                 var ev = {
                     title: $('.title', event).text().trim() +
                         (location ? (' (' + location + ')') : ''),
-                    start: $.fullCalendar.moment($('.start', event).attr('datetime')),
-                    end: $.fullCalendar.moment($('.end', event).attr('datetime')),
+                    start: $.fullCalendar.moment.utc($('.start', event).attr('datetime')),
+                    end: $.fullCalendar.moment.utc($('.end', event).attr('datetime')),
                     allDay: $(event).hasClass('all-day'),
                     url: $('a', event).attr('href'),
                     className: classNames,
