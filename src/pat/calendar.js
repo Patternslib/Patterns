@@ -10,7 +10,7 @@ define([
     '../utils',
     '../registry',
     '../lib/dnd',
-    '../lib/moment-timezones',
+    '../lib/moment-timezone-data',
     'jquery.fullcalendar'
 ], function($, logger, Parser, utils, registry, dnd) {
     'use strict';
