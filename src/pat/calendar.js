@@ -11,7 +11,8 @@ define([
     '../registry',
     '../lib/dnd',
     '../lib/moment-timezone-data',
-    'jquery.fullcalendar'
+    'jquery.fullcalendar',
+    'moment.timezone'
 ], function($, logger, Parser, utils, registry, dnd) {
     'use strict';
 
@@ -345,7 +346,7 @@ define([
                         $cal.find('a').each(function(a) { $(a).draggable = 1; });
                     },
                     events: function(start, end, timezone, callback) {
-                        var events = _.parseEvents($el);
+                        var events = _.parseEvents($el, timezone);
                         callback(events);
                     },
                     firstHour: cfg.first.hour,
@@ -523,7 +524,7 @@ define([
             $el.find(classMap[view.name]).addClass('active');
         },
 
-        parseEvents: function($el) {
+        parseEvents: function($el, timezone) {
             var $events = $el.find('.cal-events'),
                 $filter = $el.find('.filter'),
                 searchText,
@@ -588,6 +589,10 @@ define([
                     attrs: attrs,
                     editable: $(event).hasClass('editable')
                 };
+                if (timezone) {
+                    ev.start = ev.start.tz(timezone);
+                    ev.end = ev.end.tz(timezone);
+                }
                 if (!ev.title) {
                     log.error('No event title for:', event);
                 }
