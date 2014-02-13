@@ -27,6 +27,7 @@ define([
     "chosen",
     "collapsible",
     "depends",
+    "edit-tinymce",
     "equaliser",
     "expandable",
     "focus",
