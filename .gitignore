@@ -2,6 +2,7 @@
 /test-bundle.js
 /stamp-bower
 /stamp-npm
+/stamp-tinymce
 /node_modules
 /src/bower_components
 /src/lib/depends_parse.js
