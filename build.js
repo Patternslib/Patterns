@@ -29,8 +29,9 @@
         "jquery.chosen": "bower_components/chosen/chosen/chosen.jquery",
         "jquery.fullcalendar": "bower_components/fullcalendar/fullcalendar.min",
         "jquery.placeholder": "bower_components/jquery-placeholder/jquery.placeholder.min",
-        "jqluery.textchange": "bower_components/jquery-textchange/jquery.textchange",
-        // tinymce: "bower_components/tinymce/"
+        "jquery.textchange": "bower_components/jquery-textchange/jquery.textchange",
+        tinymce: "bower_components/tinymce/jscripts/tiny_mce/jquery.tinymce",
+
         // Core
         utils: "core/utils",
         compat: "core/compat",
@@ -94,8 +95,11 @@
 
         jquery: {
             exports: "jQuery"
-        }
+        },
 
+        tinymce: {
+            depends: "jquery"
+        }
     },
 
     optimize: "none"
