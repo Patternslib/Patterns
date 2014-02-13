@@ -16,7 +16,6 @@
         "jcrop": "bower_components/jcrop/js/jquery.Jcrop",
         klass: "bower_components/klass/src/klass",
         photoswipe: "legacy/photoswipe",
-        "photoswipe.Util": "legacy/code.util",
         "parsley": "bower_components/parsleyjs/parsley",
         "patternslib.slides": "bower_components/slides/src/slides",
         "modernizr": "bower_components/modernizr/modernizr",
@@ -99,6 +98,10 @@
 
         tinymce: {
             depends: "jquery"
+        },
+
+        photoswipe: {
+            depends: "klass",
         }
     },
 
