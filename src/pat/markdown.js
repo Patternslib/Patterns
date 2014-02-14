@@ -3,7 +3,7 @@ define([
     "pat-logger",
     "pat-registry",
     "pat-utils",
-    "inject",
+    "pat-inject",
     "Markdown.Converter",
     "Markdown.Sanitizer",
     "Markdown.Extra"

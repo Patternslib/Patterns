@@ -1,4 +1,4 @@
-define(["switch"], function(pattern) {
+define(["pat-switch"], function(pattern) {
 
     describe("switch-pattern", function() {
 

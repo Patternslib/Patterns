@@ -9,7 +9,7 @@
  */
 define([
     "jquery",
-    "inject",
+    "pat-inject",
     "pat-logger",
     "pat-parser",
     "pat-store",

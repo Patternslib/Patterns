@@ -3,7 +3,7 @@ define([
     "pat-parser",
     "pat-registry",
     "pat-utils",
-    "inject"
+    "pat-inject"
 ], function($, Parser, registry, utils, inject) {
     var parser = new Parser("modal");
 

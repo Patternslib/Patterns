@@ -1,4 +1,4 @@
-define(["slideshow-builder"], function(pattern) {
+define(["pat-slideshow-builder"], function(pattern) {
 
     describe("Slideshow builder pattern", function() {
 

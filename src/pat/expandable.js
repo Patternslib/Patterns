@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "inject",
+    "pat-inject",
     "pat-parser",
     "pat-registry"
 ], function($, inject, Parser, registry) {
