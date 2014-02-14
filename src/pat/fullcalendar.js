@@ -1,8 +1,8 @@
 define([
     "jquery",
-    "logger",
+    "pat-logger",
     "pat-utils",
-    "registry",
+    "pat-registry",
     "jquery.fullcalendar"
 ], function($, logger, utils, registry) {
     "use strict";

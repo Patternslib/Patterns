@@ -7,10 +7,10 @@
  */
 define([
     "jquery",
-    "registry",
-    "logger",
-    "parser",
-    "input-change-events",
+    "pat-registry",
+    "pat-logger",
+    "pat-parser",
+    "pat-input-change-events",
     "pat-utils"
 ], function($, registry, logging, Parser, input_change_events, utils) {
     var log = logging.getLogger("autosubmit"),

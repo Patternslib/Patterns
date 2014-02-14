@@ -5,7 +5,7 @@
  */
 define([
     "jquery",
-    "registry",
+    "pat-registry",
     "pat-utils",
     "parsley"
 ], function($, patterns, utils) {

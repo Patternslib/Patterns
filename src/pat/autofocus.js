@@ -5,7 +5,7 @@
  */
 define([
     "jquery",
-    "registry"
+    "pat-registry"
 ], function($, registry) {
     var autofocus = {
         name: "autofocus",
