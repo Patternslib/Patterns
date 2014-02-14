@@ -5,8 +5,8 @@
  */
 define([
     "jquery",
-    "registry",
-    "parser",
+    "pat-registry",
+    "pat-parser",
     "pat-utils"
 ], function($, patterns, Parser, utils) {
     var parser = new Parser("equaliser");

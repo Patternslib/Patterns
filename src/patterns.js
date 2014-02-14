@@ -8,11 +8,11 @@
  */
 define([
     "jquery",
-    "registry",
-    "parser",
-    "htmlparser",
-    "depends_parse",
-    "dependshandler",
+    "pat-registry",
+    "pat-parser",
+    "pat-htmlparser",
+    "pat-depends_parse",
+    "pat-dependshandler",
 
     "ajax",
     "autofocus",
@@ -35,7 +35,7 @@ define([
     "forward",
     "fullcalendar",
     "inject",
-    "input-change-events",
+    "pat-input-change-events",
     "image-crop",
     "legend",
     "less",
@@ -50,7 +50,7 @@ define([
     "slideshow-builder",
     "sortable",
     "stacks",
-    "store",
+    "pat-store",
     "subform",
     "switch",
     "toggle",
@@ -60,7 +60,7 @@ define([
     "image-crop",
     "gallery",
     "markdown",
-    "url"
+    "pat-url"
 ], function($, registry) {
     window.patterns = registry;
     $(function () {

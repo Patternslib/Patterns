@@ -6,9 +6,9 @@
  */
 define([
     "jquery",
-    "registry",
-    "logger",
-    "parser",
+    "pat-registry",
+    "pat-logger",
+    "pat-parser",
     "jquery.anythingslider"
 ], function($, patterns, logger, Parser) {
     var log = logger.getLogger("pat.carousel"),

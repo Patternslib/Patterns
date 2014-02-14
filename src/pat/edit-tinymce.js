@@ -1,8 +1,8 @@
 define([
     "jquery",
-    "parser",
-    "logger",
-    "registry",
+    "pat-parser",
+    "pat-logger",
+    "pat-registry",
     "pat-utils",
     "jquery.textchange",
     "tinymce"

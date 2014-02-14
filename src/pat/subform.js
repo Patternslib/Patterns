@@ -5,9 +5,9 @@
  */
 define([
     "jquery",
-    "registry",
-    "logger",
-    "parser",
+    "pat-registry",
+    "pat-logger",
+    "pat-parser",
     "ajax",
     "inject"
 ], function($, registry, logging, Parser, ajax, inject) {

@@ -5,8 +5,8 @@
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
 define([
-    'jquery',
-    'logger'
+    "jquery",
+    "pat-logger"
 ], function($, logger) {
     function ArgumentParser(name, opts) {
         opts = opts || {};

@@ -1,4 +1,4 @@
-define(["store"], function(store) {
+define(["pat-store"], function(store) {
 
     describe("Core / store", function() {
 
@@ -62,7 +62,7 @@ define(["store"], function(store) {
                 });
             });
 
-            describe("remove", function() {
+            describe("pat-remove", function() {
                 it("Remove unknown key", function() {
                     var storage = store.session("mypattern");
                     storage.set("foo", "bar");

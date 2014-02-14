@@ -1,4 +1,4 @@
-define(["url"], function(url) {
+define(["pat-url"], function(url) {
     describe("Core / url / UrlArgumentParser", function() {
         describe("_decodeQS", function() {
             it("Basic string", function() {

@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "registry"
+    "pat-registry"
 ], function($, patterns) {
     var focus = {
         name: "focus",

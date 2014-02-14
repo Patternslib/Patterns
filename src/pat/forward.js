@@ -5,8 +5,8 @@
  */
 define([
     "jquery",
-    "parser",
-    "registry"
+    "pat-parser",
+    "pat-registry"
 ], function($, Parser, registry) {
     var parser = new Parser("forward");
 

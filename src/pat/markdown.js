@@ -1,7 +1,7 @@
 define([
     "jquery",
-    "logger",
-    "registry",
+    "pat-logger",
+    "pat-registry",
     "pat-utils",
     "inject",
     "Markdown.Converter",

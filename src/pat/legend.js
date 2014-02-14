@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "registry"
+    "pat-registry"
 ], function($, registry) {
     var legend = {
         name: "legend",
