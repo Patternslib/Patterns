@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "ajax",
+    "pat-ajax",
     "pat-parser",
     "pat-logger",
     "pat-registry",

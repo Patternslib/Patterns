@@ -1,4 +1,4 @@
-define(["autosubmit"], function(pattern) {
+define(["pat-autosubmit"], function(pattern) {
 
     describe("autosubmit-plugin", function() {
 

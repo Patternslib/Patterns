@@ -1,4 +1,4 @@
-define(["checkedflag"], function(pattern) {
+define(["pat-checkedflag"], function(pattern) {
 
     describe("checkedflag-pattern", function() {
 

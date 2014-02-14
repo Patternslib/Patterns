@@ -8,7 +8,7 @@ define([
     "pat-registry",
     "pat-logger",
     "pat-parser",
-    "ajax",
+    "pat-ajax",
     "inject"
 ], function($, registry, logging, Parser, ajax, inject) {
     var log = logging.getLogger("subform");
