@@ -32,7 +32,7 @@
         tinymce: "bower_components/tinymce/jscripts/tiny_mce/jquery.tinymce",
 
         // Core
-        utils: "core/utils",
+        "pat-utils": "core/utils",
         compat: "core/compat",
         "jquery-ext": "core/jquery-ext",
         logger: "core/logger",

@@ -11,7 +11,7 @@ define([
     "logger",
     "parser",
     "input-change-events",
-    "utils"
+    "pat-utils"
 ], function($, registry, logging, Parser, input_change_events, utils) {
     var log = logging.getLogger("autosubmit"),
         parser = new Parser("autosubmit");

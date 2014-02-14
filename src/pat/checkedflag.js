@@ -10,7 +10,7 @@ define([
     "jquery",
     "registry",
     "logger",
-    "utils"
+    "pat-utils"
 ], function($, patterns, logger, utils) {
     var log = logger.getLogger("checkedflag");
 

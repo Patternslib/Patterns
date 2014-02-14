@@ -18,7 +18,7 @@
 define([
     "jquery",
     "logger",
-    "utils",
+    "pat-utils",
     // below here modules that are only loaded
     "compat",
     "jquery-ext"
