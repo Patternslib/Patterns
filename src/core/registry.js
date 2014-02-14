@@ -20,7 +20,7 @@ define([
     "logger",
     "pat-utils",
     // below here modules that are only loaded
-    "compat",
+    "pat-compat",
     "jquery-ext"
 ], function($, logger, utils) {
     var log = logger.getLogger("registry"),
