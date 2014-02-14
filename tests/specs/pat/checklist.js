@@ -1,4 +1,4 @@
-define(['checklist'], function() {
+define(["pat-checklist"], function() {
 
     describe("checklist-pattern", function() {
 
