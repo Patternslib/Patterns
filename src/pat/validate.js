@@ -5,8 +5,8 @@
  */
 define([
     "jquery",
-    "registry",
-    "utils",
+    "pat-registry",
+    "pat-utils",
     "parsley"
 ], function($, patterns, utils) {
     var validate = {

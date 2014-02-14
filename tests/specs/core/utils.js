@@ -1,5 +1,5 @@
-define(["utils"], function(utils) {
-    describe("utils", function() {
+define(["pat-utils"], function(utils) {
+    describe("pat-utils", function() {
         describe("rebaseURL", function() {
             it("Keep URL with scheme", function() {
                 expect(

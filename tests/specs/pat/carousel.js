@@ -1,4 +1,4 @@
-define(["carousel"], function(pattern) {
+define(["pat-carousel"], function(pattern) {
 
     describe("carousel-plugin", function() {
 

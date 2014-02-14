@@ -1,4 +1,4 @@
-define(["stacks"], function(pattern) {
+define(["pat-stacks"], function(pattern) {
     describe("Stacks pattern", function() {
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
