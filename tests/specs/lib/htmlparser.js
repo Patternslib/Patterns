@@ -1,5 +1,5 @@
-define(["htmlparser"], function(htmlparser) {
-    describe("HTMLParser", function() {
+define(["pat-htmlparser"], function(htmlparser) {
+    describe("pat-htmlparser", function() {
         describe("HTML syntax", function() {
             it("Colon in attribute name", function() {
                 var input = "<html xml:lang=\"en\"></html>",

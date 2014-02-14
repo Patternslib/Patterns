@@ -7,10 +7,10 @@
  */
 define([
     "jquery",
-    "registry",
-    "logger",
-    "parser",
-    "store"
+    "pat-registry",
+    "pat-logger",
+    "pat-parser",
+    "pat-store"
 ], function($, patterns, logger, Parser, store) {
     var log = logger.getLogger("pat.toggle"),
         parser = new Parser("toggle");

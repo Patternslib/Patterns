@@ -1,4 +1,4 @@
-define(["legend"], function(transforms) {
+define(["pat-legend"], function(transforms) {
 
     describe("legend transform", function() {
 
