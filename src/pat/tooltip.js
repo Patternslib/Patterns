@@ -10,7 +10,7 @@ define([
     "jquery",
     "pat-registry",
     "pat-parser",
-    "inject",
+    "pat-inject",
     "pat-remove"
 ], function($, patterns, Parser, inject) {
     var parser = new Parser("tooltip");

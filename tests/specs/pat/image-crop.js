@@ -1,4 +1,4 @@
-define(["image-crop"], function(pattern) {
+define(["pat-image-crop"], function(pattern) {
 
     describe("image-crop-pattern", function() {
 

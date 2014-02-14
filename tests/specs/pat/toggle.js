@@ -1,6 +1,6 @@
-define(["toggle"], function(pattern) {
+define(["pat-toggle"], function(pattern) {
 
-    describe("toggle", function() {
+    describe("pat-toggle", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
