@@ -9,7 +9,7 @@ define([
     "jquery",
     "parser",
     "registry",
-    "utils"
+    "pat-utils"
 ], function($, Parser, registry, utils) {
     var parser = new Parser("bumper");
 

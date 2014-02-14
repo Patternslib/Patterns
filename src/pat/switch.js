@@ -11,7 +11,7 @@ define([
     "logger",
     "parser",
     "store",
-    "utils"
+    "pat-utils"
 ], function($, patterns, logger, Parser, store, utils) {
     var log = logger.getLogger("pat.switch"),
         parser = new Parser("switch");

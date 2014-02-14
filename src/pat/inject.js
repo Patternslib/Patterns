@@ -10,7 +10,7 @@ define([
     "parser",
     "logger",
     "registry",
-    "utils",
+    "pat-utils",
     "htmlparser",
     "jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, ajax, Parser, logger, registry, utils, htmlparser) {

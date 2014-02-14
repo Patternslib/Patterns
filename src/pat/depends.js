@@ -7,7 +7,7 @@
 define([
     "jquery",
     "registry",
-    "utils",
+    "pat-utils",
     "logger",
     "dependshandler",
     "parser"

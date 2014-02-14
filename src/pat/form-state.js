@@ -2,7 +2,7 @@ define([
     "jquery",
     "logger",
     "registry",
-    "utils",
+    "pat-utils",
     "modal",
     "input-change-events"
 ], function($, logger, registry, utils, modal, input_change_events) {

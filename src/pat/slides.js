@@ -7,7 +7,7 @@ define([
     "jquery",
     "registry",
     "patternslib.slides",
-    "utils",
+    "pat-utils",
     "url",
     "remove"
 ], function($, patterns, Presentation, utils, url) {

@@ -7,7 +7,7 @@ define([
     "jquery",
     "parser",
     "logger",
-    "utils",
+    "pat-utils",
     "registry"
 ], function($, Parser, logging, utils, registry) {
     var log = logging.getLogger("stacks"),

@@ -1,7 +1,7 @@
 define([
     "jquery",
     "logger",
-    "utils",
+    "pat-utils",
     "registry",
     "jquery.fullcalendar"
 ], function($, logger, utils, registry) {

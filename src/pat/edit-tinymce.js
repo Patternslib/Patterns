@@ -3,7 +3,7 @@ define([
     "parser",
     "logger",
     "registry",
-    "utils",
+    "pat-utils",
     "jquery.textchange",
     "tinymce"
 ], function($, Parser, logger, registry, utils) {
