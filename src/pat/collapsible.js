@@ -40,7 +40,7 @@ define([
         init: function($el, opts) {
             return $el.each(function() {
                 var $el = $(this),
-                    options = _._validateOptions(this, parser.parse($el, opts)),
+                    options = store.validateOptions(this, parser.parse($el, opts)),
                 // create collapsible structure
                     $content, state, storage;
 
@@ -115,19 +115,6 @@ define([
             if (!$el.hasClass("closed"))
                 _.toggle($el);
             return $el;
-        },
-
-        _validateOptions: function(trigger, options) {
-            if (options.store!=="none") {
-                if (!trigger.id) {
-                    log.warn("state persistance requested, but element has no id");
-                    options.store="none";
-                } else if (!store.supported) {
-                    log.warn("state persistance requested, but browser does not support webstorage");
-                    options.store="none";
-                }
-            }
-            return options;
         },
 
         _loadContent: function($el, url, $target) {

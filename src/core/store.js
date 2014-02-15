@@ -1,11 +1,15 @@
 /**
  * Patterns store - store pattern state locally in the browser
  *
- * Copyright 2008-2012 Simplon B.V.
+ * Copyright 2008-2014 Simplon B.V. - Wichert Akkerman
+ * Copyright 2011-2014 Florian Friesdorf
  * Copyright 2011 Humberto Sermeño
- * Copyright 2011 Florian Friesdorf
  */
-define(function() {
+define([
+    "./logger"
+], function(logger) {
+    var log = logger.getLogger("store");
+
     function Storage(backend, prefix) {
         this.prefix=prefix;
         this.backend=backend;
@@ -75,6 +79,19 @@ define(function() {
 
         session: function (name) {
             return new Storage(window.sessionStorage, name);
+        },
+
+        validateOptions: function(trigger, options) {
+            if (options.store !== "none") {
+                if (!trigger.id) {
+                    log.warn("state persistance requested, but element has no id", trigger);
+                    options.store = "none";
+                } else if (!store.supported) {
+                    log.warn("state persistance requested, but browser does not support webstorage", trigger);
+                    options.store = "none";
+                }
+            }
+            return options;
         }
     };
 
