@@ -1,7 +1,8 @@
 /**
  * Patterns calendar - Calendar with different views for patterns.
  *
- * Copyright 2013 Marko Durkovic
+ * Copyright 2013-2014 Marko Durkovic
+ * Copyright 2014 Florian Friesdorf
  */
 define([
     'jquery',
@@ -101,16 +102,14 @@ define([
             };
             var refetch_deb = utils.debounce(refetch, 400);
 
-            var $filter = $el.find('.filter');
-            if ($filter && $filter.length > 0) {
-                $('.search-text', $filter).on('keyup', refetch_deb);
-                $('.search-text[type=search]', $filter).on('click', refetch_deb);
-                $('select[name=state]', $filter).on('change', refetch);
-                $('.check-list', $filter).on('change', refetch);
-            }
-
-            var $categoryRoot = cfg.categoryControls ?
-                $(cfg.categoryControls) : $el;
+            $el.on('keyup.pat-calendar', '.filter .search-text',
+                   refetch_deb);
+            $el.on('click.pat-calendar', '.filter .search-text[type=search]',
+                   refetch_deb);
+            $el.on('change.pat-calendar', '.filter select[name=state]',
+                   refetch);
+            $el.on('change.pat-calendar', '.filter .check-list',
+                   refetch);
 
             $el.categories = $el.find('.cal-events .cal-event')
                 .map(function() {
@@ -119,14 +118,16 @@ define([
                     });
                 });
 
+            var $categoryRoot = cfg.categoryControls ?
+                    $(cfg.categoryControls) : $el;
+
             $el.$catControls = $categoryRoot.find('input[type=checkbox]');
-            $el.$catControls.on('change', refetch);
+            $el.$catControls.on('change.pat-calendar', refetch);
 
             var $controlRoot = cfg.calendarControls ?
-                    $(cfg.calendarControls) : $el,
-                $timezoneControl = $controlRoot.find('select.timezone'),
-                timezone = $timezoneControl.val();
-            calOpts.timezone = timezone;
+                    $(cfg.calendarControls) : $el;
+            $el.$controlRoot = $controlRoot;
+            calOpts.timezone = $controlRoot.find('select.timezone').val();
 
             $el.fullCalendar(calOpts);
 
@@ -153,19 +154,19 @@ define([
 
             $controlRoot.find('.view-month').addClass('active');
 
-            $controlRoot.find('.jump-next').on('click', function() {
+            $controlRoot.on('click.pat-calendar', '.jump-next', function() {
                 $el.fullCalendar('next');
                 $title.html($el.fullCalendar('getView').title);
             });
-            $controlRoot.find('.jump-prev').on('click', function() {
+            $controlRoot.on('click.pat-calendar', '.jump-prev', function() {
                 $el.fullCalendar('prev');
                 $title.html($el.fullCalendar('getView').title);
             });
-            $controlRoot.find('.jump-today').on('click', function() {
+            $controlRoot.on('click.pat-calendar', '.jump-today', function() {
                 $el.fullCalendar('today');
                 $title.html($el.fullCalendar('getView').title);
             });
-            $controlRoot.find('.view-month').on('click', function() {
+            $controlRoot.on('click.pat-calendar', '.view-month', function() {
                 $el.fullCalendar('changeView', 'month');
                 $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
@@ -173,7 +174,7 @@ define([
                         $el.find('.fc-content').height());
                 }
             });
-            $controlRoot.find('.view-week').on('click', function() {
+            $controlRoot.on('click.pat-calendar', '.view-week', function() {
                 $el.fullCalendar('changeView', 'agendaWeek');
                 $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
@@ -181,7 +182,7 @@ define([
                         $el.find('.fc-content').height());
                 }
             });
-            $controlRoot.find('.view-day').on('click', function() {
+            $controlRoot.on('click.pat-calendar', '.view-day', function() {
                 $el.fullCalendar('changeView', 'agendaDay');
                 $title.html($el.fullCalendar('getView').title);
                 if (cfg.height === 'auto') {
@@ -189,11 +190,9 @@ define([
                         $el.find('.fc-content').height());
                 }
             });
-            $timezoneControl.on('change', function(ev) {
-                var timezone = ev.target.value;
-                calOpts.timezone = timezone;
-                $el.fullCalendar('destroy');
-                $el.fullCalendar(calOpts);
+            $controlRoot.on('change.pat-calendar', 'select.timezone', function(ev) {
+                _.destroy($el);
+                _.init($el);
             });
 
             $el.find('.cal-events').css('display', 'none');
@@ -202,10 +201,10 @@ define([
             dnd.draggable($('.cal-events .cal-event'));
 
             // emulate jQueryUI dragstop and mousemove during drag.
-            $('.cal-events .cal-event').on('dragend', function() {
+            $('.cal-events .cal-event').on('dragend.pat-calendar', function() {
                 $(this).trigger('dragstop');
             });
-            $el.on('dragover', function(event) {
+            $el.on('dragover.pat-calendar', function(event) {
                 event.preventDefault();
                 event.type = 'mousemove';
                 $(document).trigger(event);
@@ -223,6 +222,16 @@ define([
                     });
                 };
             }
+        },
+
+        destroy: function($el) {
+            $el.off('.pat-calendar');
+            $el.$catControls.off('.pat-calendar');
+            $el.$controlRoot.off('.pat-calendar');
+            $(window).off('.pat-calendar');
+            $(document).off('.pat-calendar');
+            $('.cal-events .cal-event').off('.pat-calendar');
+            $el.fullCalendar('destroy');
         },
 
         highlightButtons: function(view, element) {
