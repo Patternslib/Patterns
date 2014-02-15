@@ -8,13 +8,14 @@ define([
     'jquery',
     '../core/logger',
     '../core/parser',
+    "../core/store",
     '../utils',
     '../registry',
     '../lib/dnd',
     '../lib/moment-timezone-data',
     'jquery.fullcalendar',
     'moment.timezone'
-], function($, logger, Parser, utils, registry, dnd) {
+], function($, logger, Parser, store, utils, registry, dnd) {
     'use strict';
 
     var log = logger.getLogger('calendar'),
@@ -34,13 +35,17 @@ define([
     parser.add_argument('calendar-controls', '');
     parser.add_argument('category-controls', '');
     parser.add_argument('default-view', 'month');
+    parser.add_argument("store", "none", ["none", "session", "local"]);
 
     var _ = {
         name: 'calendar',
         trigger: '.pat-calendar',
 
         init: function($el) {
-            var cfg = parser.parse($el),
+            var cfg = store.validateOptions($el[0], parser.parse($el)),
+                storage = cfg.store === "none"
+                    ? null
+                    : store[cfg.store](_.name + $el[0].id),
                 calOpts = {
                     header: false,
                     droppable: true,
@@ -79,14 +84,12 @@ define([
                     titleFormat: cfg.title,
                     columnFormat: cfg.column,
                     viewRender: _.highlightButtons,
-                    defaultView: cfg.defaultView
+                    defaultDate: storage.get('date') || cfg.startDate,
+                    defaultView: storage.get('view') || cfg.defaultView
                 };
 
-            if (cfg.startDate) {
-                calOpts.defaultDate = $.fullCalendar.moment(cfg.startDate, 'YYYY-MM-DD');
-            } else {
-                calOpts.defaultDate = $.fullCalendar.moment();
-            }
+            $el.__cfg = cfg;
+            $el.__storage = storage;
 
             if (cfg.height !== 'auto') {
                 calOpts.height = cfg.height;
@@ -156,39 +159,27 @@ define([
 
             $controlRoot.on('click.pat-calendar', '.jump-next', function() {
                 $el.fullCalendar('next');
-                $title.html($el.fullCalendar('getView').title);
+                _._viewChanged($el);
             });
             $controlRoot.on('click.pat-calendar', '.jump-prev', function() {
                 $el.fullCalendar('prev');
-                $title.html($el.fullCalendar('getView').title);
+                _._viewChanged($el);
             });
             $controlRoot.on('click.pat-calendar', '.jump-today', function() {
                 $el.fullCalendar('today');
-                $title.html($el.fullCalendar('getView').title);
+                _._viewChanged($el);
             });
             $controlRoot.on('click.pat-calendar', '.view-month', function() {
                 $el.fullCalendar('changeView', 'month');
-                $title.html($el.fullCalendar('getView').title);
-                if (cfg.height === 'auto') {
-                    $el.fullCalendar('option', 'height',
-                        $el.find('.fc-content').height());
-                }
+                _._viewChanged($el);
             });
             $controlRoot.on('click.pat-calendar', '.view-week', function() {
                 $el.fullCalendar('changeView', 'agendaWeek');
-                $title.html($el.fullCalendar('getView').title);
-                if (cfg.height === 'auto') {
-                    $el.fullCalendar('option', 'height',
-                        $el.find('.fc-content').height());
-                }
+                _._viewChanged($el);
             });
             $controlRoot.on('click.pat-calendar', '.view-day', function() {
                 $el.fullCalendar('changeView', 'agendaDay');
-                $title.html($el.fullCalendar('getView').title);
-                if (cfg.height === 'auto') {
-                    $el.fullCalendar('option', 'height',
-                        $el.find('.fc-content').height());
-                }
+                _._viewChanged($el);
             });
             $controlRoot.on('change.pat-calendar', 'select.timezone', function(ev) {
                 _.destroy($el);
@@ -232,6 +223,25 @@ define([
             $(document).off('.pat-calendar');
             $('.cal-events .cal-event').off('.pat-calendar');
             $el.fullCalendar('destroy');
+        },
+
+        _viewChanged: function($el) {
+            // update title
+            var $title = $el.find('.cal-title');
+            $title.html($el.fullCalendar('getView').title);
+
+            // adjust height
+            if ($el.__cfg.height === 'auto') {
+                $el.fullCalendar('option', 'height',
+                                 $el.find('.fc-content').height());
+            }
+
+            // store current date and view
+            var date = $el.fullCalendar('getDate').format(),
+                view = $el.fullCalendar('getView').name;
+
+            $el.__storage.set('date', date);
+            $el.__storage.set('view', view);
         },
 
         highlightButtons: function(view, element) {
