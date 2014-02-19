@@ -5141,6 +5141,18 @@ define(["moment", "moment.timezone"], function (moment) { moment.tz.add({
         "Europe/Sarajevo": "Europe/Belgrade",
         "Europe/Skopje": "Europe/Belgrade",
         "Europe/Vatican": "Europe/Rome",
-        "Europe/Zagreb": "Europe/Belgrade"
+        "Europe/Zagreb": "Europe/Belgrade",
+        "US/Alaska": "America/Juneau",
+        "US/Arizona": "America/Phoenix",
+        "US/Central": "America/Monterrey",
+        "US/Eastern": "America/New_York",
+        "US/East-Indiana": "America/Indiana/Indianapolis",
+        "US/Hawaii": "Pacific/Honolulu",
+        "US/Mountain": "America/Edmonton",
+        "US/Pacific": "America/Los_Angeles",
+        "Canada/Atlantic": "America/Halifax",
+        "Canada/Newfoundland": "America/St_Johns",
+        "Canada/Saskatchewan": "America/Regina",
+        "Brazil/East": "America/Sao_Paulo"
     }
 }); });
