@@ -1,7 +1,7 @@
 /**
  * Patterns autosuggest - suggestion/completion support
  *
- * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012-2014 Florian Friesdorf
  * Copyright 2012 JC Brand
  * Copyright 2013 Marko Durkovic
  */
@@ -33,11 +33,24 @@ define([
             var prefill = cfg.preFill.split(',');
             $el.val(prefill);
 
+            var cssClasses = $el.data('pat-autosuggest-classes') || {};
+
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
                 tokenSeparators: [","],
-                openOnEnter: false
+                openOnEnter: false,
+                formatSelection: function(obj, container, query) {
+                    // XXX: This would be what we want, but select2
+                    // discards the container...
+                    //container.addClass('foo');
+                    var classes = cssClasses[obj.text];
+                    return '<div' +
+                        (classes ? ' class="' + classes.join(' ') + '"' : '') +
+                        '>' +
+                        obj.text +
+                        '</div>';
+                }
             };
 
             if (prefill.length) {
