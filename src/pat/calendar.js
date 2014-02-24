@@ -34,19 +34,55 @@ define([
     parser.add_argument('first-hour', '6');
     parser.add_argument('calendar-controls', '');
     parser.add_argument('category-controls', '');
-    parser.add_argument('default-view', 'month');
+    parser.add_argument('default-view', 'month',
+                        ['month', 'basicWeek', 'basicDay',
+                         'agendaWeek', 'agendaDay']);
     parser.add_argument("store", "none", ["none", "session", "local"]);
+    parser.add_argument("ignore-url", false);
 
     var _ = {
         name: 'calendar',
         trigger: '.pat-calendar',
 
-        init: function($el) {
+        _parseSearchString: function() {
+            var context = {};
+            window.location.search.substr(1).split('&').forEach(function(str) {
+                if (str) {
+                    var keyValue = str.split('='),
+                        key = keyValue[0],
+                        value = decodeURIComponent(keyValue[1]);
+                    if (value && (value.match(/^\[.*\]$/) ||
+                                  value.match(/^\{.*\}$/))) {
+                        context[key] = JSON.parse(value);
+                    } else {
+                        context[key] = value;
+                    }
+                }
+            });
+            return context;
+        },
+
+        init: function($el, opts) {
+            opts = opts || {};
             var cfg = store.validateOptions($el[0], parser.parse($el)),
                 storage = cfg.store === "none"
                     ? null
-                    : store[cfg.store](_.name + $el[0].id),
-                calOpts = {
+                    : store[cfg.store](_.name + $el[0].id);
+
+            cfg.defaultDate = storage.get('date') || cfg.defaultDate,
+            cfg.defaultView = storage.get('view') || cfg.defaultView;
+
+            if (!opts.ignoreUrl) {
+                var search = _._parseSearchString();
+                if (search['default-date']) {
+                    cfg.defaultDate = search['default-date'];
+                }
+                if (search['default-view']) {
+                    cfg.defaultView = search['default-view'];
+                }
+            }
+
+            var calOpts = {
                     header: false,
                     droppable: true,
                     drop: function(date, event, undef, view) {
@@ -84,8 +120,8 @@ define([
                     titleFormat: cfg.title,
                     columnFormat: cfg.column,
                     viewRender: _.highlightButtons,
-                    defaultDate: storage.get('date') || cfg.startDate,
-                    defaultView: storage.get('view') || cfg.defaultView
+                    defaultDate: cfg.defaultDate,
+                    defaultView: cfg.defaultView
                 };
 
             $el.__cfg = cfg;
@@ -183,7 +219,7 @@ define([
             });
             $controlRoot.on('change.pat-calendar', 'select.timezone', function(ev) {
                 _.destroy($el);
-                _.init($el);
+                _.init($el, {ignoreUrl: true});
             });
 
             $el.find('.cal-events').css('display', 'none');
