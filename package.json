@@ -55,6 +55,8 @@
             "less",
             "logging",
             "modernizr",
+            "moment",
+            "moment.timezone"
             "pagedown",
             "pagedown-extra",
             "parsley",
