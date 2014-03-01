@@ -191,7 +191,13 @@ define([
             var $title = $el.find('.cal-title');
             $title.text($el.fullCalendar('getView').title);
 
-            $controlRoot.find('.view-month').addClass('active');
+            var classMap = {
+                month: '.view-month',
+                agendaWeek: '.view-week',
+                agendaDay: '.view-day'
+            };
+
+            $controlRoot.find(classMap[calOpts.defaultView]).addClass('active');
 
             $controlRoot.on('click.pat-calendar', '.jump-next', function() {
                 $el.fullCalendar('next');
