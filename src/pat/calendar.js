@@ -288,6 +288,7 @@ define([
 
         highlightButtons: function(view, element) {
             var $el = element.parents('.pat-calendar').first(),
+                $body = element.parents('body').first(),
                 $today = $el.find('.jump-today');
             $today.removeClass('active');
             if (view.name === 'agendaDay') {
@@ -305,10 +306,10 @@ define([
                 agendaWeek: '.view-week',
                 agendaDay: '.view-day'
             };
-            $el.find('.view-month').removeClass('active');
-            $el.find('.view-week').removeClass('active');
-            $el.find('.view-day').removeClass('active');
-            $el.find(classMap[view.name]).addClass('active');
+            $body.find('.view-month').removeClass('active');
+            $body.find('.view-week').removeClass('active');
+            $body.find('.view-day').removeClass('active');
+            $body.find(classMap[view.name]).addClass('active');
         },
 
         parseEvents: function($el, timezone) {
