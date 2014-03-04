@@ -65,9 +65,14 @@ define([
             }
 
             if (cfg.data.length) {
-                $el.val(cfg.data);
+                var data = jQuery.parseJSON(cfg.data);
+                var ids = [];
+                for (d in data) {
+                    ids.push(data[d].id);
+                }
+                $el.val(ids);
+                
                 config.initSelection = function (element, callback) {
-                    var data = jQuery.parseJSON(cfg.data);
                     callback(data);
                 };
             }
