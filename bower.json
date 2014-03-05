@@ -20,7 +20,7 @@
     "jquery-textchange": "0.2.2",
     "logging": "",
     "parsleyjs": "1.2.3",
-    "tinymce": "3.5.8"
+    "jquery.tinymce": ""
   },
   "devDependencies": {},
   "resolutions": {
