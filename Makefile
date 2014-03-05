@@ -29,10 +29,6 @@ stamp-bower: stamp-npm
 	$(BOWER) install
 	touch stamp-bower
 
-stamp-tinymce:
-	cd src/bower_components/tinymce ; ant
-	touch stamp-tinymce
-
 clean::
 	rm -f stamp-npm stamp-bower
 	rm -rf node_modules src/bower_components
@@ -53,10 +49,10 @@ check:: stamp-npm
 ########################################################################
 ## Bundle generation
 
-bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower stamp-tinymce
+bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
 	node_modules/.bin/r.js -o build.js
 
-test-bundle test-bundle.js: $(GENERATED) $(SOURCES) test-build.js stamp-bower stamp-tinymce
+test-bundle test-bundle.js: $(GENERATED) $(SOURCES) test-build.js stamp-bower
 	node_modules/.bin/r.js -o test-build.js
 
 
