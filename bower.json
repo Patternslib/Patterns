@@ -19,7 +19,7 @@
     "slides": "",
     "jquery-textchange": "0.2.2",
     "logging": "",
-    "parsleyjs": "1.2.3",
+    "parsleyjs": "1.1.18",
     "jquery.tinymce": ""
   },
   "devDependencies": {},
