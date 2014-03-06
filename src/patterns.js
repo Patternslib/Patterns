@@ -8,8 +8,8 @@
  */
 define([
     "jquery",
-    "logging",
     "pat-registry",
+    "logging",
     "pat-parser",
     "pat-htmlparser",
     "pat-depends_parse",
