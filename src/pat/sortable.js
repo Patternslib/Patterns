@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "../registry"
+    "pat-registry"
 ], function($, patterns) {
     var _ = {
         name: "sortable",

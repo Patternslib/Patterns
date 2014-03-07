@@ -1,4 +1,4 @@
-define(["pat/slides"], function(pattern) {
+define(["pat-slides"], function(pattern) {
 
     describe("Slides pattern", function() {
 
@@ -70,7 +70,7 @@ define(["pat/slides"], function(pattern) {
                 var $show = $("<div/>", {"class": "pat-slides"});
                 for (var i=1; i<=4; i++)
                     $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
-                var utils = require("utils");
+                var utils = require("pat-utils");
                 spyOn(utils, "debounce").andCallFake(function(func) {
                     return func;
                 });

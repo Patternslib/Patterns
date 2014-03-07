@@ -1,8 +1,8 @@
 define([
     "jquery",
-    "../core/logger",
-    "../core/parser",
-    "../registry",
+    "pat-logger",
+    "pat-parser",
+    "pat-registry",
     "jcrop"
 ], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.image-crop"),

@@ -6,8 +6,8 @@
  */
 define([
     "jquery",
-    "../registry",
-    "../core/parser"
+    "pat-registry",
+    "pat-parser"
 ], function($, registry, Parser) {
     var parser = new Parser("auto-scale");
     parser.add_argument("method", "scale", ["scale", "zoom"]);

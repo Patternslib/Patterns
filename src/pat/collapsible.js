@@ -9,12 +9,12 @@
  */
 define([
     "jquery",
-    "./inject",
-    "../core/logger",
-    "../core/parser",
-    "../core/store",
-    "../registry",
-    "../jquery-ext"
+    "pat-inject",
+    "pat-logger",
+    "pat-parser",
+    "pat-store",
+    "pat-registry",
+    "pat-jquery-ext"
 ], function($, inject, logger, Parser, store, registry) {
     var log = logger.getLogger("pat.collapsible"),
         parser = new Parser("collapsible");

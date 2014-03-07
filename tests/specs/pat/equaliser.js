@@ -1,4 +1,4 @@
-define(["pat/equaliser"], function(pattern) {
+define(["pat-equaliser"], function(pattern) {
     describe("Equaliser pattern", function() {
 
         beforeEach(function() {

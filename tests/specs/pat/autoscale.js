@@ -1,4 +1,4 @@
-define(["pat/autoscale"], function(pattern) {
+define(["pat-autoscale"], function(pattern) {
 
     describe("bumper-pattern", function() {
 

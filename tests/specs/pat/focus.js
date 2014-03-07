@@ -1,4 +1,4 @@
-define(["pat/focus"], function(pattern) {
+define(["pat-focus"], function(pattern) {
 
     describe("focus-plugin", function() {
 

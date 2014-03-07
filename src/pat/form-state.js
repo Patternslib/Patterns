@@ -1,10 +1,10 @@
 define([
     "jquery",
-    "../core/logger",
-    "../registry",
-    "../utils",
-    "./modal",
-    "../lib/input-change-events"
+    "pat-logger",
+    "pat-registry",
+    "pat-utils",
+    "pat-modal",
+    "pat-input-change-events"
 ], function($, logger, registry, utils, modal, input_change_events) {
     var log = logger.getLogger("form-state");
 

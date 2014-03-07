@@ -1,4 +1,4 @@
-define(["pat/inject", "utils"], function(pattern, utils) {
+define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
     describe("inject-pattern", function() {
 

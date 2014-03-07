@@ -1,4 +1,4 @@
-define(["pat/bumper"], function(pattern) {
+define(["pat-bumper"], function(pattern) {
 
     describe("bumper-pattern", function() {
 

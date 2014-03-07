@@ -5,11 +5,11 @@
  */
 define([
     "jquery",
-    "../registry",
-    "../core/logger",
-    "../core/parser",
-    "./ajax",
-    "./inject"
+    "pat-registry",
+    "pat-logger",
+    "pat-parser",
+    "pat-ajax",
+    "pat-inject"
 ], function($, registry, logging, Parser, ajax, inject) {
     var log = logging.getLogger("subform");
 

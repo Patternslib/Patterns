@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "../registry"
+    "pat-registry"
 ], function($, registry) {
     var _ = {
         name: "breadcrumbs",
