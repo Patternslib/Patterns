@@ -7,9 +7,9 @@
  */
 define([
     "jquery",
-    "../core/parser",
-    "../registry",
-    "jquery.select2"
+    "pat-parser",
+    "pat-registry",
+    "select2"
 ], function($, Parser, registry) {
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");

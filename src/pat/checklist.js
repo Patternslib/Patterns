@@ -6,8 +6,8 @@
  */
 define([
     "jquery",
-    "../core/parser",
-    "../registry"
+    "pat-parser",
+    "pat-registry"
 ], function($, Parser, registry) {
     var parser = new Parser("checklist");
     parser.add_argument("select", ".functions .select-all");

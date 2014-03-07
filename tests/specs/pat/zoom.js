@@ -1,4 +1,4 @@
-define(["pat/zoom"], function(pattern) {
+define(["pat-zoom"], function(pattern) {
 
     describe("zoom-pattern", function() {
 

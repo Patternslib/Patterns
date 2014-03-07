@@ -1,2 +1,0 @@
-# Zoom
-The Zoom pattern creates a zoom slider for any (group of) object the user should be able to change size of. A very typical application of this pattern is a group of thumbnails that the user may change in size. 

@@ -1,4 +1,4 @@
-define(["pat/collapsible"], function(pattern) {
+define(["pat-collapsible"], function(pattern) {
 
     describe("collapsible-pattern", function() {
 

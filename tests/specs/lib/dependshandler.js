@@ -1,6 +1,6 @@
-define(["lib/dependshandler"], function(DependsHandler) {
+define(["pat-dependshandler"], function(DependsHandler) {
 
-    describe("DependsHandler", function() {
+    describe("pat-dependshandler", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

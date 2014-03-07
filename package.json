@@ -10,18 +10,12 @@
     ],
     "dependencies": {},
     "devDependencies": {
-        "bungle": ">=0.0.0",
-        "commander": "0.6.1",
-        "express": "3.0.6",
-        "git-rev": "0.2.0",
+        "bower": "latest",
         "jshint": "~0.9.1",
         "pegjs": "0.7.0",
         "phantom-jasmine": "0.1.8",
         "phantomjs": "1.8.0-1",
-        "rimraf": "2.1.2"
-    },
-    "scripts": {
-        "test": "make check"
+        "requirejs": ""
     },
     "homepage": "https://gitub.com/Patternslib/Patterns",
     "docs": "http://patternslib.com/",
@@ -39,30 +33,5 @@
             "name": "Florian Friesdorf",
             "email": "flo@chaoflow.net"
         }
-    ],
-    "bungle": {
-        "dependencies": [
-            "jcrop",
-            "jquery",
-            "jquery.anythingslider",
-            "jquery.chosen",
-            "jquery.form",
-            "jquery.fullcalendar",
-            "jquery.placeholder",
-            "jquery.textchange",
-            "jquery.select2",
-            "less",
-            "logging",
-            "modernizr",
-            "pagedown",
-	    "pagedown-extra-2013.04.02",
-	    "parsley",
-	    "photoswipe",
-            "prefixfree",
-            "patternslib.slides",
-            "text",
-            "tinymce"
-        ],
-        "main": "src/main.js"
-    }
+    ]
 }

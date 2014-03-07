@@ -6,11 +6,11 @@
  */
 define([
     "jquery",
-    "../registry",
-    "../utils",
-    "../core/logger",
-    "../lib/dependshandler",
-    "../core/parser"
+    "pat-registry",
+    "pat-utils",
+    "pat-logger",
+    "pat-dependshandler",
+    "pat-parser"
 ], function($, patterns, utils, logging, DependsHandler, Parser) {
     var log = logging.getLogger("depends"),
         parser = new Parser("depends");
