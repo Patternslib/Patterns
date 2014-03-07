@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.1 - Unreleased
+
+- Tooltip pattern: correctly handle a button with ``close-panel`` class
+  in AJAX-loaded tooltip content. This fixes 
+  fixes [ticket 356](https://github.com/Patternslib/Patterns/issues/356).
+
+
 ## 1.5.0 - January 22, 2014
 
 - Add a new [stacks pattern](demo/stacks/index.html).
