@@ -9,3 +9,5 @@
 *~
 *.swp
 *.swo
+src/patterns-custom.js
+build-custom.js
