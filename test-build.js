@@ -26,7 +26,7 @@
         "jquery.fullcalendar": "bower_components/fullcalendar/fullcalendar.min",
         "jquery.placeholder": "bower_components/jquery-placeholder/jquery.placeholder.min",
         "jquery.textchange": "bower_components/jquery-textchange/jquery.textchange",
-        "tinymce": "bower_components/tinymce/jscripts/tiny_mce/jquery.tinymce",
+        "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
 
         // Core
         "pat-utils": "core/utils",
