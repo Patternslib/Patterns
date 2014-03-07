@@ -9,11 +9,8 @@
 define([
     "jquery",
     "pat-registry",
-    "logging",
     "pat-parser",
     "pat-htmlparser",
-    "pat-depends_parse",
-    "pat-dependshandler",
 
     "pat-ajax",
     "pat-autofocus",
