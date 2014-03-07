@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.1 - Unreleased
+## 2.0.0 - Unreleased
 
 - Tooltip pattern: correctly handle a button with ``close-panel`` class
   in AJAX-loaded tooltip content. This fixes 
