@@ -35,11 +35,13 @@ define([
     "pat-formstate",
     "pat-forward",
     "pat-fullcalendar",
+    "pat-gallery",
     "pat-inject",
     "pat-input-change-events",
     "pat-image-crop",
     "pat-legend",
     "less",
+    "pat-markdown",
     "pat-menu",
     "pat-modal",
     "modernizr",
@@ -58,9 +60,6 @@ define([
     "pat-tooltip",
     "pat-validate",
     "pat-zoom",
-    "pat-image-crop",
-    "pat-gallery",
-    "pat-markdown",
     "pat-url"
 ], function($, registry) {
     window.patterns = registry;
