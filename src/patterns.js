@@ -60,11 +60,11 @@ define([
     "pat-validate",
     "pat-zoom",
     "pat-url"
-], function($, registry, parser, store, utils, logger) {
+], function($, registry, Parser, store, utils, logger) {
 
     // Since we are in a non-AMD env, register a few useful utilites
 
-    registry.parser = parser;
+    registry.Parser = parser;
     registry.store = store;
     registry.utils = utils;
     registry.logger = logger;
