@@ -10,6 +10,9 @@ define([
     "jquery",
     "pat-registry",
     "pat-parser",
+    "pat-store",
+    "pat-utils",
+    "pat-logger",
     "pat-htmlparser",
 
     "pat-ajax",
@@ -50,7 +53,6 @@ define([
     "pat-slideshow-builder",
     "pat-sortable",
     "pat-stacks",
-    "pat-store",
     "pat-subform",
     "pat-switch",
     "pat-toggle",
@@ -58,8 +60,17 @@ define([
     "pat-validate",
     "pat-zoom",
     "pat-url"
-], function($, registry) {
+], function($, registry, parser, store, utils, logger) {
+
+    // Since we are in a non-AMD env, register a few useful utilites
+
+    registry.parser = parser;
+    registry.store = store;
+    registry.utils = utils;
+    registry.logger = logger;
+
     window.patterns = registry;
+
     $(function () {
         registry.init();
     });
