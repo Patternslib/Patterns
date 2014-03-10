@@ -1,8 +1,8 @@
 (function(root) {
   root.patterns=require('patterns');
-  patterns.Parser=require("pat-parser");
-  patterns.logging=require("pat-logger");
-  patterns.utils=require("pat-utils");
-  patterns.logger=require("pat-logger");
+  root.patterns.Parser=require("pat-parser");
+  root.patterns.logging=require("pat-logger");
+  root.patterns.utils=require("pat-utils");
+  root.patterns.logger=require("pat-logger");
 })(window);
 window.define=undefined;
