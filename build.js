@@ -3,7 +3,10 @@
     out: "bundle.js",
     name: "almond",
     include: "patterns",
-    insertRequire: ["patterns"],
+
+    wrap: {
+        endFile: "src/wrap-end.js"
+    },
 
     paths: {
 

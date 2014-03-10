@@ -9,11 +9,6 @@
 define([
     "jquery",
     "pat-registry",
-    "pat-parser",
-    "pat-store",
-    "pat-utils",
-    "pat-logger",
-    "pat-htmlparser",
 
     "pat-ajax",
     "pat-autofocus",
@@ -60,17 +55,8 @@ define([
     "pat-validate",
     "pat-zoom",
     "pat-url"
-], function($, registry, Parser, store, utils, logger) {
-
+], function($, registry) {
     // Since we are in a non-AMD env, register a few useful utilites
-
-    registry.Parser = Parser;
-    registry.store = store;
-    registry.utils = utils;
-    registry.logger = logger;
-
-    window.patterns = registry;
-
     $(function () {
         registry.init();
     });
