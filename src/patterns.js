@@ -64,7 +64,7 @@ define([
 
     // Since we are in a non-AMD env, register a few useful utilites
 
-    registry.Parser = parser;
+    registry.Parser = Parser;
     registry.store = store;
     registry.utils = utils;
     registry.logger = logger;
