@@ -42,6 +42,7 @@ define([
     "modernizr",
     "pat-navigation",
     "pat-notification",
+    "pat-colour-picket",
     "pat-placeholder",
     "prefixfree",
     "pat-skeleton",

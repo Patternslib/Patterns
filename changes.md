@@ -2,6 +2,12 @@
 
 ## 2.0.0 - Unreleased
 
+- New patterns:
+  - Colour picker pattern. This can be used as a polyfill for browsers which do
+    not support colour inputs.
+  - Notifications pattern for self-healing messages.
+
+
 - Autofocus pattern: never give an input element the focus if it was hidden
   by the depends pattern.
 
@@ -20,8 +26,6 @@
 - Inject pattern: do not try to rebase ``mailto:`` URLs.
 
 - Modal pattern: various positioning improvements.
-
-- Add a new notification pattern.
 
 - Sortable pattern: add a new ``selector`` option to specify which elements
   to sort. This makes it possible to use the pattern outside lists.
