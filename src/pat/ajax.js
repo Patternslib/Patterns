@@ -11,12 +11,12 @@ define([
     "pat-registry",
     "jquery.form"
 ], function($, logger, Parser, registry) {
-    var log = logger.getLogger('pat.ajax'),
-        parser = new Parser('ajax');
+    var log = logger.getLogger("pat.ajax"),
+        parser = new Parser("ajax");
 
-    parser.add_argument('url', function($el) {
-        return ($el.is('a') ? $el.attr('href') :
-                ($el.is('form') ? $el.attr('action') : '')).split('#')[0];
+    parser.add_argument("url", function($el) {
+        return ($el.is("a") ? $el.attr("href") :
+                ($el.is("form") ? $el.attr("action") : "")).split("#")[0];
     });
 
     var _ = {
@@ -24,28 +24,28 @@ define([
         trigger: ".pat-ajax",
         parser: parser,
         init: function($el) {
-            $el.off('.pat-ajax');
-            $el.filter('a').on('click.pat-ajax', _.onTriggerEvents);
-            $el.filter('form')
-                .on('submit.pat-ajax', _.onTriggerEvents)
-                .on('click.pat-ajax', '[type=submit]', _.onClickSubmit);
-            $el.filter(':not(form,a)').each(function() {
-                log.warn('Unsupported element:', this);
+            $el.off(".pat-ajax");
+            $el.filter("a").on("click.pat-ajax", _.onTriggerEvents);
+            $el.filter("form")
+                .on("submit.pat-ajax", _.onTriggerEvents)
+                .on("click.pat-ajax", "[type=submit]", _.onClickSubmit);
+            $el.filter(":not(form,a)").each(function() {
+                log.warn("Unsupported element:", this);
             });
             return $el;
         },
         destroy: function($el) {
-            $el.off('.pat-ajax');
+            $el.off(".pat-ajax");
         },
         onClickSubmit: function(event) {
-            var $form = $(event.target).parents('form').first(),
+            var $form = $(event.target).parents("form").first(),
                 name = event.target.name,
                 value = $(event.target).val(),
                 data = {};
             if (name) {
                 data[name] = value;
             }
-            $form.data('pat-ajax.clicked-data', data);
+            $form.data("pat-ajax.clicked-data", data);
         },
         onTriggerEvents: function(event) {
             if (event) {
@@ -80,15 +80,15 @@ define([
                 },
                 args = {
                     context: $el,
-                    data: $el.data('pat-ajax.clicked-data'),
+                    data: $el.data("pat-ajax.clicked-data"),
                     url: cfg.url,
                     error: onError,
                     success: onSuccess
                 };
 
-            $el.removeData('pat-ajax.clicked-data');
-            log.debug('request:', args, $el[0]);
-            if ($el.is('form')) {
+            $el.removeData("pat-ajax.clicked-data");
+            log.debug("request:", args, $el[0]);
+            if ($el.is("form")) {
                 $el.ajaxSubmit(args);
             } else {
                 $.ajax(args);

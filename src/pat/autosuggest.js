@@ -26,7 +26,7 @@ define([
                 return $el.each(function() { _.init($(this), opts); });
 
             var cfg = parser.parse($el, opts);
-            $el.val(cfg.preFill.split(','));
+            $el.val(cfg.preFill.split(","));
             $el.select2({
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
@@ -44,13 +44,13 @@ define([
             $el.select2("destroy");
         },
         transform: function($content) {
-            $content.findInclusive('input[type=text].pat-autosuggest').each(function() {
+            $content.findInclusive("input[type=text].pat-autosuggest").each(function() {
                 var $src = $(this),
-                    $dest = $('<input type="hidden"/>').insertAfter($src);
+                    $dest = $("<input type='hidden'/>").insertAfter($src);
 
                 $src.detach();
-                $.each($src.prop('attributes'), function() {
-                    if (this.name !== 'type') {
+                $.each($src.prop("attributes"), function() {
+                    if (this.name !== "type") {
                         $dest.attr(this.name, this.value);
                     }
                 });

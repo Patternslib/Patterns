@@ -18,11 +18,11 @@ define([
         trigger: ".pat-markdown",
 
         _url_re: /\.md$/,
-        _header_tags: new RegExp(['^<\\/?(a|abbr|acronym|b|bdo|big|button|',
-                    'cite|code|del|dfn|em|i|img|input|ins|kbd|label|map|mark|',
-                    'meter|progress|q|ruby|rp|rt|s|samp|select|small|span|',
-                    ',strike|strong|sub|sup|time|tt|u|var|wbr)[^>]*>$']
-            .join(''), 'i'),
+        _header_tags: new RegExp(["^<\\/?(a|abbr|acronym|b|bdo|big|button|",
+                                  "cite|code|del|dfn|em|i|img|input|ins|kbd|label|map|mark|",
+                                  "meter|progress|q|ruby|rp|rt|s|samp|select|small|span|",
+                                  ",strike|strong|sub|sup|time|tt|u|var|wbr)[^>]*>$"]
+            .join(""), "i"),
 
         init: function($el) {
             return $el.each(function() {
@@ -39,7 +39,7 @@ define([
             text = text.replace(/~T/g, "~");
             var html = converter.makeHtml(text);
             return html.replace(/<[^>]*>?/gi, function(tag) {
-                return tag.match(_._header_tags) ? tag : '';
+                return tag.match(_._header_tags) ? tag : "";
             });
         },
 

@@ -27,7 +27,7 @@ define([
         parser: {
             parse: function($el, opts) {
                 var cfg = parser.parse($el, opts);
-                if (cfg.delay !== 'defocus') {
+                if (cfg.delay !== "defocus") {
                     cfg.delay = parseInt(cfg.delay.replace(/[^\d]*/g, ""), 10);
                 }
                 return cfg;
@@ -44,7 +44,7 @@ define([
                     return $el;
                 }
                 input_change_events.setup($el, "autosubmit");
-                $el.on('input-change-delayed.pat-autosubmit', _.onInputChange)
+                $el.on("input-change-delayed.pat-autosubmit", _.onInputChange)
                     .data("pat-autosubmit-initialized", true);
                 return $el;
             }

@@ -52,8 +52,8 @@ define([
             var $form = $(this);
 
             // hide only if form has changeable inputs
-            if ($form.find(':input[type!="hidden"][type!="submit"]' +
-                '[type!="reset"][type!=button]').not('button').length) {
+            if ($form.find(":input[type!=\"hidden\"][type!=\"submit\"]" +
+                "[type!=\"reset\"][type!=button]").not("button").length) {
 
                 $form.find("[type=reset]").prop("disabled", true);
                 $form.find("[type=submit]").prop("disabled", true);
