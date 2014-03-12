@@ -5,6 +5,16 @@
 - Autofocus pattern: never give an input element the focus if it was hidden
   by the depends pattern.
 
+- Autosuggest pattern:
+
+  - Add AJAX-support to load available options from a backend server.
+
+  - Clear the selected value from a reset button for the form is pressed.
+
+  - Do not open the auto-suggest dropdown on enter.
+
+  - Fix width-related layout problems.
+
 - Checklist pattern: correctly initialise the state on initial page view.
 
 - Inject pattern: do not try to rebase ``mailto:`` URLs.
