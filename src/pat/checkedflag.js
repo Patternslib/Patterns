@@ -43,15 +43,15 @@ define([
                 .each(function() {
                     var $el = $(this);
                     // create parent span if not direct child of a label
-                    if ($el.parent('label').length === 0) {
-                        $el.wrap('<span />');
+                    if ($el.parent("label").length === 0) {
+                        $el.wrap("<span />");
                     }
                     _.onChangeSelect.call(this);
                 })
                 .on("change.pat-checkedflag", _.onChangeSelect);
 
             $el.filter("input:disabled").each(function() {
-                $(this).closest("label").addClass('disabled');
+                $(this).closest("label").addClass("disabled");
             });
 
             $forms.on("reset.pat-checkedflag", _.onFormReset);
@@ -70,30 +70,30 @@ define([
             // XXX: no support for radio yet
             return $el.each(function() {
                 var $el = $(this);
-                if ($el.is('input[type=checkbox]')) {
+                if ($el.is("input[type=checkbox]")) {
                     var $input = $(this);
                     if (opts.setdefault) {
                         // XXX: implement me
                     } else {
                         // just change the current state
                         // XXX: not sure whether this is correct
-                        $input.prop('checked', val);
+                        $input.prop("checked", val);
                     }
                     _.onChangeCheckbox.call(this);
-                } else if ($el.is('select:not([multiple])')) {
+                } else if ($el.is("select:not([multiple])")) {
                     var $select = $(this);
                     if (opts.setdefault) {
                         // XXX: implement me
                     } else {
                         // just change the current state
-                        $select.find('option:selected')
-                            .prop('selected', false);
-                        $select.find('option[value="' + val + '"]')
-                            .prop('selected', true);
+                        $select.find("option:selected")
+                            .prop("selected", false);
+                        $select.find("option[value=\"" + val + "\"]")
+                            .prop("selected", true);
                     }
                     _.onChangeSelect.call(this);
                 } else {
-                    log.error('Unsupported element', $el[0]);
+                    log.error("Unsupported element", $el[0]);
                 }
             });
         },
@@ -172,8 +172,8 @@ define([
         onChangeSelect: function() {
             var $select = $(this);
             $select.parent().attr(
-                'data-option',
-                $select.find('option:selected').text()
+                "data-option",
+                $select.find("option:selected").text()
             );
         }
     };

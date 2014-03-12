@@ -32,7 +32,7 @@ define([
                     field.addError=validate._addFieldError;
                     field.removeError=validate._removeFieldError;
                 }
-                $(this).on('pat-ajax-before.pat-validate',
+                $(this).on("pat-ajax-before.pat-validate",
                            validate.onPreSubmit);
             });
         },
@@ -103,8 +103,8 @@ define([
         },
 
         onPreSubmit: function(event, veto) {
-            veto.veto |= !$(event.target).parsley('isValid');
-            $(event.target).parsley('validate');
+            veto.veto |= !$(event.target).parsley("isValid");
+            $(event.target).parsley("validate");
         }
     };
 
