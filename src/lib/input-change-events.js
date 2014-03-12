@@ -27,7 +27,7 @@ define([
                 log.debug("installing handlers");
                 _.setupInputHandlers($form);
 
-                $form.on('patterns-injected.' + namespace, function(event) {
+                $form.on("patterns-injected." + namespace, function(event) {
                     _.setupInputHandlers($(event.target));
                 });
             }
@@ -46,21 +46,21 @@ define([
                 if (isText) {
                     if ("oninput" in window) {
                         $el.on("input." + namespace, function() {
-                            log.debug('translating input');
+                            log.debug("translating input");
                             $el.trigger("input-change");
                         });
                     } else {
                         // this is the legacy code path for IE8
                         // Work around buggy placeholder polyfill.
-                        if ($el.attr('placeholder')) {
+                        if ($el.attr("placeholder")) {
                             $el.on("keyup." + namespace, function() {
-                                log.debug('translating keyup');
+                                log.debug("translating keyup");
                                 $el.trigger("input-change");
                             });
                         } else {
                             $el.on("propertychange." + namespace, function(ev) {
-                                if (ev.originalEvent.propertyName === 'value') {
-                                    log.debug('translating propertychange');
+                                if (ev.originalEvent.propertyName === "value") {
+                                    log.debug("translating propertychange");
                                     $el.trigger("input-change");
                                 }
                             });
@@ -68,7 +68,7 @@ define([
                     }
                 } else {
                     $el.on("change." + namespace, function() {
-                        log.debug('translating change');
+                        log.debug("translating change");
                         $el.trigger("input-change");
                     });
                 }
@@ -88,10 +88,10 @@ define([
                 if (patterns.length) {
                     $form.data(namespace, patterns);
                 } else {
-                    log.debug('remove handlers');
+                    log.debug("remove handlers");
                     $form.removeData(namespace);
-                    $form.find(':input').off('.' + namespace);
-                    $form.off('.' + namespace);
+                    $form.find(":input").off("." + namespace);
+                    $form.off("." + namespace);
                 }
             }
         }

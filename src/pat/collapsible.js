@@ -59,7 +59,7 @@ define([
                     return;
                 }
 
-                options.$panel = $el.find('.panel-content');
+                options.$panel = $el.find(".panel-content");
                 if (options.$panel.length === 0) {
                     if ($content.length) {
                         options.$panel = $content

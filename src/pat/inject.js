@@ -117,7 +117,7 @@ define([
         },
 
         submitSubform: function($sub) {
-            var $el = $sub.parents('form'),
+            var $el = $sub.parents("form"),
                 cfgs = $sub.data("patterns.inject");
             try {
                 $el.trigger("patterns-inject-triggered");
@@ -135,7 +135,7 @@ define([
                 var urlparts, defaultSelector;
                 // opts and cfg have priority, fallback to href/action
                 cfg.url = opts.url || cfg.url || $el.attr("href") ||
-                    $el.attr("action") || $el.parents('form').attr('action') ||
+                    $el.attr("action") || $el.parents("form").attr("action") ||
                     "";
 
                 // separate selector from url
@@ -283,8 +283,8 @@ define([
                         var $target = $(this),
                             $injected = cfg.$injected || $src;
 
-                        $src.findInclusive('img').on('load', function() {
-                            $(this).trigger('pat-inject-content-loaded');
+                        $src.findInclusive("img").on("load", function() {
+                            $(this).trigger("pat-inject-content-loaded");
                         });
 
                         if (_._inject($src, $target, cfg.action, cfg["class"])) {
@@ -311,7 +311,7 @@ define([
                     //
                     // jump to new href target
                     //if (!$el.hasClass("autoLoading-visible"))
-                    //    window.location.href = $el.attr('href');
+                    //    window.location.href = $el.attr("href");
                 }
                 $el.off("pat-ajax-success.pat-inject");
                 $el.off("pat-ajax-error.pat-inject");
@@ -410,7 +410,7 @@ define([
                             // extracting the right fragment.
                             if (value.slice(0, 2) !== "@@" && value[0] !== "#") {
                                 value = utils.rebaseURL(base, value);
-                                value = value.replace(/(^|[^\\])"/g, '$1\\\"');
+                                value = value.replace(/(^|[^\\])"/g, "$1\\\"");
                             }
                         }  else
                             value = attrs[i].escaped;
@@ -445,10 +445,10 @@ define([
         _rebaseHTML: function(base, html) {
             var $page = $(html.replace(
                 /(\s)(src\s*)=/gi,
-                '$1src="" data-pat-inject-rebase-$2='
-            ).trim()).wrapAll('<div>').parent();
+                "$1src=\"\" data-pat-inject-rebase-$2="
+            ).trim()).wrapAll("<div>").parent();
 
-            $page.find(Object.keys(_._rebaseAttrs).join(',')).each(function() {
+            $page.find(Object.keys(_._rebaseAttrs).join(",")).each(function() {
                 var $this = $(this),
                     attrName = _._rebaseAttrs[this.tagName],
                     value = $this.attr(attrName);
@@ -461,14 +461,14 @@ define([
             });
             // XXX: IE8 changes the order of attributes in html. The following
             // lines move data-pat-inject-rebase-src to src.
-            $page.find('[data-pat-inject-rebase-src]').each(function() {
+            $page.find("[data-pat-inject-rebase-src]").each(function() {
                 var $el = $(this);
-                $el.attr('src', $el.attr('data-pat-inject-rebase-src'))
-                   .removeAttr('data-pat-inject-rebase-src');
+                $el.attr("src", $el.attr("data-pat-inject-rebase-src"))
+                   .removeAttr("data-pat-inject-rebase-src");
             });
 
             return $page.html().replace(
-                    /src="" data-pat-inject-rebase-/g, ''
+                    /src="" data-pat-inject-rebase-/g, ""
                 ).trim();
         },
 

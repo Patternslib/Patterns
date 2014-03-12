@@ -22,34 +22,34 @@ define([
                 var $el = $(this);
 
                 $el.submit(_.submit);
-                $el.find('button[type=submit]').on('click', _.submitClicked);
+                $el.find("button[type=submit]").on("click", _.submitClicked);
                 return $el;
             });
         },
 
         destroy: function($el) {
-            $el.off('submit');
+            $el.off("submit");
         },
 
         scopedSubmit: function($el) {
-            var $form = $el.parents('form'),
+            var $form = $el.parents("form"),
                 $exclude = $form
-                            .find(':input')
+                            .find(":input")
                             .filter(function() {
-                                return !$(this).is($el.find('*'));
+                                return !$(this).is($el.find("*"));
                             });
 
-            // make other controls 'unsuccessful'
-            log.debug('Hiding unwanted elements from submission.');
+            // make other controls "unsuccessful"
+            log.debug("Hiding unwanted elements from submission.");
             var names = $exclude.map(function() {
-                return $(this).attr('name');
+                return $(this).attr("name");
             });
 
             $exclude.each(function() {
-                $(this).attr('name', '');
+                $(this).attr("name", "");
             });
 
-            if ($el.is('.pat-inject')) {
+            if ($el.is(".pat-inject")) {
                 inject.submitSubform($el);
             } else {
                 // use the native handler, since there could be event handlers
@@ -58,9 +58,9 @@ define([
             }
 
             // reenable everything
-            log.debug('Restoring previous state.');
+            log.debug("Restoring previous state.");
             $exclude.each(function(i) {
-                $(this).attr('name', names[i]);
+                $(this).attr("name", names[i]);
             });
         },
 
@@ -68,9 +68,9 @@ define([
             ev.stopPropagation();
 
             var $this = $(this),
-                $button = $this.find('button[type=submit][formaction]').first();
+                $button = $this.find("button[type=submit][formaction]").first();
             if ($button.length) {
-                $button.trigger('click');
+                $button.trigger("click");
             } else {
                 _.scopedSubmit($this);
             }
@@ -84,22 +84,22 @@ define([
             ajax.onClickSubmit(ev);
 
             var $button = $(ev.target),
-                $sub = $button.parents('.pat-subform').first(),
-                formaction = $button.attr('formaction');
+                $sub = $button.parents(".pat-subform").first(),
+                formaction = $button.attr("formaction");
 
             if (formaction) {
                 // override the default action and restore afterwards
-                if ($sub.is('.pat-inject')) {
-                    var previousValue = $sub.data('patterns.inject');
-                    $sub.data('patterns.inject', inject.extractConfig($sub, {
+                if ($sub.is(".pat-inject")) {
+                    var previousValue = $sub.data("patterns.inject");
+                    $sub.data("patterns.inject", inject.extractConfig($sub, {
                         url: formaction
                     }));
 
                     _.scopedSubmit($sub);
 
-                    $sub.data('patterns.inject', previousValue);
+                    $sub.data("patterns.inject", previousValue);
                 } else {
-                    $sub.parents('form').attr('action', formaction);
+                    $sub.parents("form").attr("action", formaction);
                     _.scopedSubmit($sub);
                 }
             } else {
