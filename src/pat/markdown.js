@@ -21,7 +21,7 @@ define([
         _header_tags: new RegExp(["^<\\/?(a|abbr|acronym|b|bdo|big|button|",
                                   "cite|code|del|dfn|em|i|img|input|ins|kbd|label|map|mark|",
                                   "meter|progress|q|ruby|rp|rt|s|samp|select|small|span|",
-                                  ",strike|strong|sub|sup|time|tt|u|var|wbr)[^>]*>$"]
+                                  "strike|strong|sub|sup|time|tt|u|var|wbr)[^>]*>$"]
             .join(""), "i"),
 
         init: function($el) {
