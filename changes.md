@@ -21,6 +21,8 @@
 
 - Modal pattern: various positioning improvements.
 
+- Add a new notification pattern.
+
 - Sortable pattern: add a new ``selector`` option to specify which elements
   to sort. This makes it possible to use the pattern outside lists.
 
