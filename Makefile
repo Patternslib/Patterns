@@ -25,7 +25,7 @@ stamp-npm: package.json
 	npm install
 	touch stamp-npm
 
-stamp-bower: stamp-npm
+stamp-bower: stamp-npm bower.json
 	$(BOWER) install
 	touch stamp-bower
 
