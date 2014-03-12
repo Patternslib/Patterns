@@ -22,6 +22,8 @@
 - Sortable pattern: add a new ``selector`` option to specify which elements
   to sort. This makes it possible to use the pattern outside lists.
 
+- Switch pattern: prevent default action when a link is clicked.
+
 - Tooltip pattern: correctly handle a button with ``close-panel`` class
   in AJAX-loaded tooltip content. This fixes 
   fixes [ticket 356](https://github.com/Patternslib/Patterns/issues/356).
