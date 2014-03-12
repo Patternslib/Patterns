@@ -27,6 +27,7 @@
         "jquery.placeholder": "bower_components/jquery-placeholder/jquery.placeholder.min",
         "jquery.textchange": "bower_components/jquery-textchange/jquery.textchange",
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
+	"spectrum": "bower_components/spectrum/spectrum",
 
         // Core
         "pat-utils": "core/utils",
@@ -57,6 +58,7 @@
         "pat-checklist": "pat/checklist",
         "pat-chosen": "pat/chosen",
         "pat-collapsible": "pat/collapsible",
+	"pat-colour-picket": "pat/colour-picker",
         "pat-depends": "pat/depends",
         "pat-edit-tinymce": "pat/edit-tinymce",
         "pat-equaliser": "pat/equaliser",
