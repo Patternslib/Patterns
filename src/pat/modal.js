@@ -67,12 +67,12 @@ define([
         },
 
         setPosition: function() {
-            var $el = $('div.pat-modal,#pat-modal');
+            var $el = $("div.pat-modal,#pat-modal");
             if ($el.length === 0) {
                 return;
             }
 
-            var $oldClone = $('#pat-modal-clone');
+            var $oldClone = $("#pat-modal-clone");
             if ($oldClone.length > 0) {
                 $oldClone.remove();
             }
@@ -80,24 +80,24 @@ define([
             var $clone = $el.clone();
 
             $clone
-                .attr('id', 'pat-modal-clone')
+                .attr("id", "pat-modal-clone")
                 .css({
-                    'visibility': 'hidden',
-                    'position': 'absolute',
-                    'height': ''
-                }).appendTo('body');
+                    "visibility": "hidden",
+                    "position": "absolute",
+                    "height": ""
+                }).appendTo("body");
 
             // wait for browser to update DOM
             setTimeout(modal.measure, 0);
         },
 
         measure: function() {
-            var $clone = $('#pat-modal-clone');
+            var $clone = $("#pat-modal-clone");
             if ($clone.length === 0) {
                 return;
             }
 
-            var $el = $('div.pat-modal,#pat-modal'),
+            var $el = $("div.pat-modal,#pat-modal"),
                 maxHeight = $(window).innerHeight() - $clone.outerHeight(true) +
                             $clone.outerHeight(),
                 height = $clone.outerHeight();
@@ -105,13 +105,13 @@ define([
             $clone.remove();
 
             if (maxHeight - height < 0) {
-                $el.addClass('max-height').css('height', maxHeight);
+                $el.addClass("max-height").css("height", maxHeight);
             } else {
-                $el.removeClass('max-height').css('height', '');
+                $el.removeClass("max-height").css("height", "");
             }
 
             var top = ($(window).innerHeight() - $el.outerHeight(true)) / 2;
-            $el.css('top', top);
+            $el.css("top", top);
         },
 
         destroy: function($el, ev) {
@@ -122,10 +122,10 @@ define([
         }
     };
 
-    $(window).on('resize.pat-modal-position', modal.setPosition);
-    $(window).on('pat-inject-content-loaded.pat-modal-position', '#pat-modal',
+    $(window).on("resize.pat-modal-position", modal.setPosition);
+    $(window).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
         modal.setPosition);
-    $(document).on('patterns-injected.pat-modal-position', '#pat-modal,div.pat-modal',
+    $(document).on("patterns-injected.pat-modal-position", "#pat-modal,div.pat-modal",
         modal.setPosition);
 
     registry.register(modal);

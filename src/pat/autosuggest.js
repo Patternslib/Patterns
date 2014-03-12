@@ -30,7 +30,7 @@ define([
             }
             var cfg = parser.parse($el, opts);
 
-            var prefill = cfg.preFill.split(',');
+            var prefill = cfg.preFill.split(",");
             $el.val(prefill);
 
             var config = {
@@ -56,12 +56,12 @@ define([
                     minimumInputLength: 1,
                     ajax: {
                         url: cfg.ajax.url,
-                        dataType: cfg.ajax['data-type'],
-                        type: 'POST',
+                        dataType: cfg.ajax["data-type"],
+                        type: "POST",
                         quietMillis: 400,
                         data: function (term, page) {
                             return {
-                                index: cfg.ajax['search-index'],
+                                index: cfg.ajax["search-index"],
                                 q: term, // search term
                                 page_limit: 10,
                                 page: page
@@ -69,7 +69,7 @@ define([
                         },
                         results: function (data, page) {
                             // parse the results into the format expected by Select2.
-                            // data must be a list of objects with keys 'id' and 'text'
+                            // data must be a list of objects with keys "id" and "text"
                             return {results: data, page: page};
                         }
                     }
@@ -78,12 +78,12 @@ define([
 
             $el.select2(config);
 
-            $el.on('pat-update', function (e, data) {
-                if (data.pattern === 'depends') {
+            $el.on("pat-update", function (e, data) {
+                if (data.pattern === "depends") {
                     if (data.enabled === true) {
-                        $el.select2('enable', true);
+                        $el.select2("enable", true);
                     } else if (data.enabled === false) {
-                        $el.select2('disable', true);
+                        $el.select2("disable", true);
                     }
 
                 }
@@ -95,8 +95,8 @@ define([
             );
 
             // Clear the values when a reset button is pressed
-            $el.closest('form').find('button[type=reset]').on('click', function () {
-                $el.select2('val', '');
+            $el.closest("form").find("button[type=reset]").on("click", function () {
+                $el.select2("val", "");
             });
             return $el;
         },
@@ -105,17 +105,17 @@ define([
             $el.select2("destroy");
         },
         transform: function($content) {
-            $content.findInclusive('input[type=text].pat-autosuggest').each(function() {
+            $content.findInclusive("input[type=text].pat-autosuggest").each(function() {
                 var $src = $(this),
-                    $dest = $('<input type="hidden"/>').insertAfter($src);
+                    $dest = $("<input type='hidden'/>").insertAfter($src);
 
                 // measure in IE8, otherwise hidden will have width 0
                 if (document.all && !document.addEventListener) {
-                    $dest.css('width', $src.outerWidth(false)+'px');
+                    $dest.css("width", $src.outerWidth(false)+"px");
                 }
                 $src.detach();
-                $.each($src.prop('attributes'), function() {
-                    if (this.name !== 'type') {
+                $.each($src.prop("attributes"), function() {
+                    if (this.name !== "type") {
                         $dest.attr(this.name, this.value);
                     }
                 });

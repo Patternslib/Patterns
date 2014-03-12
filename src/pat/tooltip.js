@@ -125,7 +125,7 @@ define([
             tooltip.hide(event);
             event.preventDefault();
             event.stopPropagation();
-            event.data.trigger('pat-tooltip-click');
+            event.data.trigger("pat-tooltip-click");
         },
 
         removeHideEvents: function($trigger) {
@@ -143,9 +143,9 @@ define([
         show: function(event) {
             // Stop bubbling, as it causes problems if ancestor
             // is e.g. pat-collapsible.
-            if (event.type === 'click') {
+            if (event.type === "click") {
                 event.stopPropagation();
-                event.data.trigger('pat-tooltip-click');
+                event.data.trigger("pat-tooltip-click");
             }
 
             event.preventDefault();
