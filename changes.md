@@ -24,9 +24,15 @@
 
 - Switch pattern: prevent default action when a link is clicked.
 
-- Tooltip pattern: correctly handle a button with ``close-panel`` class
-  in AJAX-loaded tooltip content. This fixes 
-  fixes [ticket 356](https://github.com/Patternslib/Patterns/issues/356).
+- Tooltip pattern: 
+
+  - Correctly handle a button with ``close-panel`` class in AJAX-loaded tooltip
+    content. This fixes fixes [ticket
+    356](https://github.com/Patternslib/Patterns/issues/356).
+
+  - Add new ``target`` option to specify where to insert a tooltip in the DOM.
+
+  - Update the tooltip position of a parent is scrolled.
 
 
 ## 1.5.0 - January 22, 2014
