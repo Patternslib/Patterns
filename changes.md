@@ -7,6 +7,8 @@
 
 - Checklist pattern: correctly initialise the state on initial page view.
 
+- Inject pattern: do not try to rebase ``mailto:`` URLs.
+
 - Tooltip pattern: correctly handle a button with ``close-panel`` class
   in AJAX-loaded tooltip content. This fixes 
   fixes [ticket 356](https://github.com/Patternslib/Patterns/issues/356).
