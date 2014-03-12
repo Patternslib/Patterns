@@ -5,10 +5,11 @@
  */
 define([
     "jquery",
-    "../registry",
-    "../core/logger",
-    "../core/parser"
-], function($, patterns, logger, Parser) {
+    "pat-registry",
+    "pat-logger",
+    "pat-parser",
+    "pat-inject"
+], function($, patterns, logger, Parser, inject) {
     var log = logger.getLogger("notification"),
         parser = new Parser("notification");
 
@@ -92,7 +93,7 @@ define([
 
             // add close icon if requsted
             if (options.controls.indexOf("icons") >= 0) {
-                $el.append("<button type="button" class="close-panel">Close</button>");
+                $el.append("<button type='button' class=.close-panel'>Close</button>");
             }
 
             // add close button if requested
@@ -146,7 +147,7 @@ define([
                 // XXX: Do this later as inject tries to access its target afterwards.
                 // This should be fixed in injection.
                 setTimeout(function() {
-                    $('#pat-notification-temp').remove();
+                    $("#pat-notification-temp").remove();
                 }, 0);
             });
             inject.init($el, inject_opts);
