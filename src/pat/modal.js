@@ -127,7 +127,7 @@ define([
     };
 
     $(window).on("resize.pat-modal-position", $.proxy(modal.setPosition, modal));
-    $(window).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
+    $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
         $.proxy(modal.setPosition, modal));
     $(document).on("patterns-injected.pat-modal-position", "#pat-modal,div.pat-modal",
         $.proxy(modal.setPosition, modal));
