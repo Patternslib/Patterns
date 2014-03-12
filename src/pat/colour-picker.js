@@ -10,7 +10,7 @@ define([
 ], function(registry) {
     var _ = {
         name: "polyfill-color",
-        trigger: "input.pat-colourpicker,input.pat-colorpicker",
+        trigger: "input.pat-colour-picker,input.pat-color-picker",
         init: function($el) {
             return $el.spectrum();
         }
