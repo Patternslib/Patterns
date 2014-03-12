@@ -70,7 +70,7 @@ define([
             // remove on ESC
             $(document).on("keyup.pat-modal", modal.destroy.bind($el, $el));
 
-            $(window).on("resize.pat-modal-position", 
+            $(window).on("resize.pat-modal-position",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
             $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
@@ -110,8 +110,8 @@ define([
             //
             // I think ideally the CSS needs to be fixed here, but I need to
             // discuss with Cornelis first.
-            if ($el.parent().closest('.pat-modal').length > 0) {
-                utils.redraw($el.find('.panel-body'));
+            if ($el.parent().closest(".pat-modal").length > 0) {
+                utils.redraw($el.find(".panel-body"));
             }
         },
 
