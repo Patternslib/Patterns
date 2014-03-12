@@ -19,6 +19,8 @@
 
 - Inject pattern: do not try to rebase ``mailto:`` URLs.
 
+- Modal pattern: various positioning improvements.
+
 - Sortable pattern: add a new ``selector`` option to specify which elements
   to sort. This makes it possible to use the pattern outside lists.
 
