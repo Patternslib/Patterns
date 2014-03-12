@@ -2,6 +2,9 @@
 
 ## 2.0.0 - Unreleased
 
+- Autofocus pattern: never give an input element the focus if it was hidden
+  by the depends pattern.
+
 - Tooltip pattern: correctly handle a button with ``close-panel`` class
   in AJAX-loaded tooltip content. This fixes 
   fixes [ticket 356](https://github.com/Patternslib/Patterns/issues/356).
