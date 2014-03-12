@@ -19,21 +19,21 @@ define([
                     // If a .pat-autofocus element has a .pat-depends ancestor, then
                     // autofocus is dependent on that ancestor being visible.
                     var $el = $(this);
-                    var $depends_slave = $el.closest('.pat-depends').addBack('.pat-depends');
+                    var $depends_slave = $el.closest(".pat-depends").addBack(".pat-depends");
                     if ($depends_slave.length > 0) {
                         // We register an event handler so that the element is
                         // only autofocused once the .pat-depends ancestor
                         // becomes visible.
                         $depends_slave.on("pat-update", function (e, data) {
                             var $child = $el;
-                            if (data.pattern === 'depends') {
-                                if (((data.transition === 'complete') && ($(this).is(':visible'))) ||
-                                    ((data.enabled === 'true') && ($(this).is('visible')))) {
+                            if (data.pattern === "depends") {
+                                if (((data.transition === "complete") && ($(this).is(":visible"))) ||
+                                    ((data.enabled === "true") && ($(this).is("visible")))) {
 
-                                    if ($el.hasClass('select2-offscreen')) {
-                                        $child = $el.parent().find('.select2-input');
+                                    if ($el.hasClass("select2-offscreen")) {
+                                        $child = $el.parent().find(".select2-input");
                                     }
-                                    if (!$child.is(':disabled')) {
+                                    if (!$child.is(":disabled")) {
                                         $child.focus();
                                     }
                                 }

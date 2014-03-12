@@ -64,7 +64,7 @@ define([
         },
 
         _onClick: function(ev) {
-            if ($(ev.target).is('a')) {
+            if ($(ev.target).is("a")) {
                 ev.preventDefault();
             }
             switcher._go($(this));

@@ -454,7 +454,7 @@ define([
                     value = $this.attr(attrName);
 
                 if (value && value.slice(0, 2) !== "@@" && value[0] !== "#" &&
-                    value.slice(0, 7) !== 'mailto:') {
+                    value.slice(0, 7) !== "mailto:") {
                     value = utils.rebaseURL(base, value);
                     $this.attr(attrName, value);
                 }
