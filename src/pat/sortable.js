@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "pat-registry"
+    "pat-registry",
     "pat-logger",
     "pat-parser"
 ], function($, patterns, logger, Parser) {
