@@ -42,7 +42,7 @@ define([
         init: function($el, opts) {
             return $el.each(function() {
                 var $el = $(this),
-                    options = _._validateOptions(this, parser.parse($el, opts)),
+                    options = store.updateOptions(this, parser.parse($el, opts)),
                 // create collapsible structure
                     $content, state, storage;
 

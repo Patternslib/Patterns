@@ -21,10 +21,9 @@
     "jquery-textchange": "0.2.2",
     "logging": "",
     "parsleyjs": "1.1.18",
-    "jquery.tinymce": ""
+    "jquery.tinymce": "",
+    "moment": "",
+    "moment-timezone": ""
   },
-  "devDependencies": {},
-  "resolutions": {
-    "jquery": "1.8.3"
-  }
+  "devDependencies": {}
 }

@@ -93,7 +93,14 @@
         "pat-toggle": "pat/toggle",
         "pat-tooltip": "pat/tooltip",
         "pat-validate": "pat/validate",
-        "pat-zoom": "pat/zoom"
+        "pat-zoom": "pat/zoom",
+
+	// Calendar pattern
+	"moment": "bower_components/moment/moment",
+	"moment-timezone": "bower_components/moment-timezone/moment-timezone",
+	"pat-calendar": "pat/calendar/calendar",
+	"pat-calendar-dnd": "pat/calendar/dnd",
+	"pat-calendar-moment-timezone-data": "pat/calendar/moment-timezone-data"
     },
 
     shim: {
