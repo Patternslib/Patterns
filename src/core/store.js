@@ -75,7 +75,22 @@ define(function() {
 
         session: function (name) {
             return new Storage(window.sessionStorage, name);
-        }
+        },
+
+        // Update storage options for a given element.
+        updateOptions: function(trigger, options) {
+            if (options.store!=="none") {
+                if (!trigger.id) {
+                    log.warn("state persistance requested, but element has no id");
+                    options.store="none";
+                } else if (!store.supported) {
+                    log.warn("state persistance requested, but browser does not support webstorage");
+                    options.store="none";
+                }
+            }
+            return options;
+        },
+
     };
 
     // Perform the test separately since this may throw a SecurityError as
