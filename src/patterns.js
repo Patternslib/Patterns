@@ -45,7 +45,6 @@ define([
     "pat-colour-picket",
     "pat-placeholder",
     "prefixfree",
-    "pat-skeleton",
     "pat-selectbox",
     "pat-slides",
     "pat-slideshow-builder",
