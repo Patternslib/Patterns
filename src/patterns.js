@@ -46,6 +46,7 @@ define([
     "pat-placeholder",
     "prefixfree",
     "pat-skeleton",
+    "pat-selectbox",
     "pat-slides",
     "pat-slideshow-builder",
     "pat-sortable",
