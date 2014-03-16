@@ -15,7 +15,7 @@ define([
         // div's are turned into modals
         // links and forms inject modals
         trigger: "div.pat-modal, a.pat-modal, form.pat-modal",
-        init: function($el, opts) {
+        init: function($el, opts, trigger) {
             if ($el.length > 1) {
                 // We enforce a one-to-one mapping between modal objects and
                 // DOM elements, so here we recurse and instantiate a new modal
@@ -25,6 +25,8 @@ define([
                 });
             } else if ($el.length === 1) {
                 var cfg = parser.parse($el, opts);
+                if (trigger && trigger.type==="injection")
+                    $.extend(cfg, parser.parse($(trigger.element), {}, false, false));
                 if ($el.is("div"))
                     modal._init_div1($el, cfg);
                 else
@@ -45,7 +47,7 @@ define([
             inject.init($el, opts);
         },
 
-        _init_div1: function($el) {
+        _init_div1: function($el, cfg) {
             var $header = $("<div class='header' />"),
                 activeElement = document.activeElement;
 
@@ -60,25 +62,25 @@ define([
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
             activeElement.focus();
-            modal._init_handlers($el);
-            modal.setPosition($el);
+            modal._init_handlers($el, cfg);
+            modal.setPosition($el, cfg);
         },
 
-        _init_handlers: function($el) {
+        _init_handlers: function($el, cfg) {
             // event handlers remove modal - first arg to bind is ``this``
             $(document).on("click.pat-modal", ".close-panel", modal.destroy.bind($el, $el));
             // remove on ESC
             $(document).on("keyup.pat-modal", modal.destroy.bind($el, $el));
 
             $(window).on("resize.pat-modal-position",
-                utils.debounce(modal.setPosition.bind(modal, $el), 400));
+                utils.debounce(modal.setPosition.bind(modal, $el, cfg), 400));
             $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
             $(document).on("patterns-injected.pat-modal-position", "#pat-modal,div.pat-modal",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
         },
 
-        setPosition: function($el) {
+        setPosition: function($el, cfg) {
             var $tallest_child;
             var true_height = $el.outerHeight(); // the height of the highest element (after the function runs)
             $("*", $el).each(function () {
