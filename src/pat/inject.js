@@ -293,7 +293,7 @@ define([
                                 return this.nodeType !== 3; //Node.TEXT_NODE
                             }).data("pat-injected", {origin: cfg.url});
                             $injected.addClass(cfg["class"])
-                                .trigger("patterns-injected", cfg);
+                                .trigger("patterns-injected", [cfg, $el[0]]);
                         }
                         if ((cfg.history === "record") &&
                             ("pushState" in history))

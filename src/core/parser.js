@@ -10,8 +10,6 @@ define([
 ], function($, logger) {
     function ArgumentParser(name, opts) {
         opts = opts || {};
-        this.inherit = typeof opts.inherit === "undefined" ?
-            true : opts.inherit;
         this.order = [];
         this.parameters = {};
         this.attribute = "data-pat-" + name;
@@ -328,7 +326,7 @@ define([
             }
         },
 
-        parse: function($el, options, multiple) {
+        parse: function($el, options, multiple, inherit) {
             if (typeof options==="boolean" && multiple===undefined) {
                 multiple=options;
                 options={};
@@ -336,8 +334,7 @@ define([
 
             var stack = [[this._defaults($el)]];
 
-            var $possible_config_providers = this.inherit ?
-                    $el.parents().andSelf() : $el,
+            var $possible_config_providers = (inherit!==false) ? $el.parents().andSelf() : $el,
                 final_length = 1,
                 i, data, frame;
             for (i=0; i<$possible_config_providers.length; i++) {
