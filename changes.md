@@ -25,7 +25,12 @@
 
 - Inject pattern: do not try to rebase ``mailto:`` URLs.
 
-- Modal pattern: various positioning improvements.
+- Modal pattern: 
+
+  - Add a new ``closing`` option. This allows configuring how a modal can be
+    closed.
+  - Various positioning improvements.
+
 
 - Sortable pattern: add a new ``selector`` option to specify which elements
   to sort. This makes it possible to use the pattern outside lists.
