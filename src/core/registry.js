@@ -114,11 +114,11 @@ define([
                         if ($el.is(pattern.trigger)) {
                             plog.debug("Initialising:", $el);
                             if (do_not_catch_init_exception || dont_catch) {
-                                pattern.init($el);
+                                pattern.init($el, null, trigger);
                                 plog.debug("done.");
                             } else {
                                 try {
-                                    pattern.init($el);
+                                    pattern.init($el, null, trigger);
                                     plog.debug("done.");
                                 } catch (e) {
                                     plog.error("Caught error:", e);
@@ -167,7 +167,7 @@ define([
     };
 
     $(document) .on("patterns-injected.patterns", function(ev, inject_config, inject_trigger) {
-        registry.scan(ev.target, null, {type: "inject", element: inject_trigger});
+        registry.scan(ev.target, null, {type: "injection", element: inject_trigger});
         $(ev.target).trigger("patterns-injected-scanned");
     });
 
