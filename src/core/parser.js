@@ -332,9 +332,11 @@ define([
                 options={};
             }
 
-            var stack = [[this._defaults($el)]];
+            inherit = (inherit!==false);
 
-            var $possible_config_providers = (inherit!==false) ? $el.parents().andSelf() : $el,
+            var stack = inherit ? [[this._defaults($el)]] : [[{}]];
+
+            var $possible_config_providers = inherit ? $el.parents().andSelf() : $el,
                 final_length = 1,
                 i, data, frame;
             for (i=0; i<$possible_config_providers.length; i++) {
