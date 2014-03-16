@@ -57,7 +57,7 @@ define([
             });
         },
 
-        scan: function(content, do_not_catch_init_exception, patterns) {
+        scan: function(content, patterns, trigger, do_not_catch_init_exception) {
             var $content = $(content),
                 all = [], allsel,
                 pattern, $match, plog;
@@ -160,14 +160,14 @@ define([
             log.debug("Registered pattern:", pattern.name, pattern);
 
             if (registry.initialized) {
-                registry.scan(document.body, false, [pattern.name]);
+                registry.scan(document.body, [pattern.name], undefined, false);
             }
             return true;
         }
     };
 
-    $(document) .on("patterns-injected.patterns", function(ev) {
-        registry.scan(ev.target);
+    $(document) .on("patterns-injected.patterns", function(ev, inject_config, inject_trigger) {
+        registry.scan(ev.target, null, {type: "inject", element: inject_trigger});
         $(ev.target).trigger("patterns-injected-scanned");
     });
 
