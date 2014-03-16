@@ -8,6 +8,7 @@ define([
     var parser = new Parser("modal");
 
     parser.add_argument("class");
+    parser.add_argument("top", "center");
 
     var modal = {
         name: "modal",
@@ -104,7 +105,11 @@ define([
             } else {
                 return;
             }
-            $el.css("top", ($(window).innerHeight() - $el.outerHeight(true)) / 2);
+
+            if (cfg.top==="center")
+                $el.css("top", ($(window).innerHeight() - $el.outerHeight(true)) / 2);
+            else
+                $el.css("top", cfg.top);
 
             // XXX: This is a hack. When you have a modal inside a
             // modal.max-height, the CSS of the outermost modal affects the
