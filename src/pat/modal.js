@@ -93,7 +93,7 @@ define([
                 modal.destroy($el);
         },
 
-        setPosition: function($el, cfg) {
+        setPosition: function($el/*, cfg */) {
             var $tallest_child;
             var true_height = $el.outerHeight(); // the height of the highest element (after the function runs)
             $("*", $el).each(function () {
