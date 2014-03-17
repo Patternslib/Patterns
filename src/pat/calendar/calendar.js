@@ -323,10 +323,10 @@ define([
                 regex = new RegExp(searchText, "i");
             }
 
-            var hiddenCats = $el.categories.filter(function() {
+            var shownCats = $el.categories.filter(function() {
                 var cat = this;
                 return $el.$catControls.filter(function() {
-                    return !this.checked &&
+                    return this.checked &&
                         $(this)
                             .parents()
                             .andSelf()
@@ -342,7 +342,7 @@ define([
                     return false;
                 }
 
-                return !hiddenCats.filter(function() {
+                return shownCats.filter(function() {
                     return $event.hasClass(this);
                 }).length;
             }).map(function(idx, event) {
