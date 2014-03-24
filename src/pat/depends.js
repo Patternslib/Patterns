@@ -150,7 +150,7 @@ define([
                         depends._disable($slave);
                     break;
                 case "both":
-                    depends._hide_or_show($slave, state, options);
+                    utils.hideOrShow($slave, state, options, depends.name);
                     if (state)
                         depends._enable($slave);
                     else
