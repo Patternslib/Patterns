@@ -28,9 +28,17 @@ define([
                     }
                 });
                 for (i=0; i<parsley_form.items.length; i++) {
-                    field=parsley_form.items[i];
-                    field.addError=validate._addFieldError;
-                    field.removeError=validate._removeFieldError;
+                    field = parsley_form.items[i];
+                    if (typeof field.UI !== 'undefined') {
+                        // Parsley 1.2.x
+                        field.UI.addError = validate._addFieldError;
+                        field.UI.removeError = validate._removeFieldError;
+                        validate.parsley12 = true;
+                    } else {
+                        // Parsley 1.1.x
+                        field.addError = validate._addFieldError;
+                        field.removeError = validate._removeFieldError;
+                    }
                 }
                 $(this).on("pat-ajax-before.pat-validate",
                            validate.onPreSubmit);
@@ -66,11 +74,16 @@ define([
 
         // Parsley method to add an error to a field
         _addFieldError: function(error) {
-            var $position = this.element,
+            if (validate.parsley12) {
+                $el = this.ParsleyInstance.element;
+            } else {
+                $el = this.element;
+            }
+            var $position = $el,
                 strategy="after";
 
-            if (this.element.is("[type=radio],[type=checkbox]")) {
-                var $fieldset = this.element.closest("fieldset.checklist");
+            if ($el.is("[type=radio],[type=checkbox]")) {
+                var $fieldset = $el.closest("fieldset.checklist");
                 if ($fieldset.length) {
                     $position=$fieldset;
                     strategy="append";
@@ -78,7 +91,7 @@ define([
             }
 
             for (var constraintName in error) {
-                if (validate._findErrorMessages(this.element, constraintName).length)
+                if (validate._findErrorMessages($el, constraintName).length)
                     return;
                 var $message = $("<em/>", {"class": "validation warning message"});
                 $message.attr("data-validate-constraint", constraintName);
@@ -97,7 +110,12 @@ define([
 
         // Parsley method to remove all error messages for a field
         _removeFieldError: function(constraintName) {
-            var $messages = validate._findErrorMessages(this.element, constraintName);
+            if (validate.parsley12) {
+                $el = this.ParsleyInstance.element;
+            } else {
+                $el = this.element;
+            }
+            var $messages = validate._findErrorMessages($el, constraintName);
             $messages.parent().trigger("pat-update", {pattern: "validate"});
             $messages.remove();
         },
