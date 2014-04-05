@@ -64,9 +64,7 @@ define([
         init: function($el, opts) {
             opts = opts || {};
             var cfg = store.updateOptions($el[0], parser.parse($el)),
-                storage = cfg.store === "none"
-                    ? null
-                    : store[cfg.store](_.name + $el[0].id);
+                storage = cfg.store === "none" ? null : store[cfg.store](_.name + $el[0].id);
 
             cfg.defaultDate = storage.get("date") || cfg.defaultDate,
             cfg.defaultView = storage.get("view") || cfg.defaultView;
@@ -168,7 +166,6 @@ define([
             calOpts.timezone = $controlRoot.find("select.timezone").val();
 
             $el.fullCalendar(calOpts);
-
             // move to end of $el
             $el.find(".fc-content").appendTo($el);
 

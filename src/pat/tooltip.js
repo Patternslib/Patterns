@@ -27,6 +27,7 @@ define([
     parser.add_argument("ajax-data-type", "html", ["html", "markdown"]);
     parser.add_argument("delay", 0);
     parser.add_argument("class");
+    parser.add_argument("url");
     parser.add_argument("target", "body");
 
     var tooltip = {
@@ -148,7 +149,9 @@ define([
                 event.data.trigger("pat-tooltip-click");
             }
 
-            event.preventDefault();
+            if (event.preventDefault) {
+                event.preventDefault();
+            }
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger, true),
                 namespace = $container.attr("id"),
@@ -160,7 +163,7 @@ define([
             setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
 
             if (options.source==="ajax") {
-                var source = $trigger.attr("href").split("#"),
+                var source = ($trigger.attr("href") || options.url).split("#"),
                     target_id = $container.find("progress").attr("id");
                 inject.execute([{
                     url: source[0],
