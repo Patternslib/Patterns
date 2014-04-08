@@ -131,7 +131,7 @@ define([
                                 ).find('a.pat-tooltip');
                             registry.scan($tooltip);
                         }
-                        $tooltip.click();
+                        $tooltip.trigger('click.tooltip');
                     }
                 };
 
