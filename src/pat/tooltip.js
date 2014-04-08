@@ -21,6 +21,7 @@ define([
                          "lb", "lm", "lt"];
     parser.add_argument("position-list", [], all_positions, true);
     parser.add_argument("position-policy", "auto", ["auto", "force"]);
+    parser.add_argument("height", "auto", ["auto", "max"]);
     parser.add_argument("trigger", "click", ["click", "hover"]);
     parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
     parser.add_argument("source", "title", ["ajax", "content", "title"]);
@@ -262,7 +263,8 @@ define([
         },
 
         positionStatus: function($trigger, $container) {
-            var trigger_box = tooltip.boundingBox($trigger),
+            var options = $trigger.data("patterns.tooltip"),
+                trigger_box = tooltip.boundingBox($trigger),
                 tooltip_box = tooltip.boundingBox($container),
                 $window = $(window),
                 window_width = $window.width(),
@@ -448,8 +450,12 @@ define([
                 content_css["max-width"] = (x - container_offset.left - 30) + "px";
                 break;
             case "b":
-                container_offset.top = trigger_box.top - tooltip_box.height + 10;
-                tip_offset.top = tooltip_box.height;
+                if (options.height === 'max') {
+                    container_offset.top = 30;
+                } else {
+                    container_offset.top = trigger_box.top - tooltip_box.height + 10;
+                    tip_offset.top = tooltip_box.height;
+                }
                 x = (status.scroll.top + 10) - container_offset.top;
                 if (x>0) {
                     tip_offset.top -= x;
@@ -485,18 +491,35 @@ define([
             case "r":
                 switch (position[1]) {
                     case "t":
-                        container_offset.top = trigger_center.top;
-                        tip_offset.top = 0;
+                        if (options.height === 'max') {
+                            container_offset.top = 30;
+                            tip_offset.top = trigger_center.top - container_offset.top - 20;
+                        } else {
+                            container_offset.top = trigger_center.top;
+                            tip_offset.top = 0;
+                        }
                         bottom_row = status.scroll.top + status.window.height,
                         content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
                         break;
                     case "m":
-                        container_offset.top = trigger_center.top - (tooltip_box.height/2);
+                        if (options.height === 'max') {
+                            container_offset.top = 30;
+                            bottom_row = status.scroll.top + status.window.height,
+                            content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
+                        } else {
+                            container_offset.top = trigger_center.top - (tooltip_box.height/2);
+                        }
                         tip_offset.top = tooltip_box.height/2 - 10;
                         break;
                     case "b":
-                        container_offset.top = trigger_center.top + 20 - tooltip_box.height;
-                        tip_offset.top = tooltip_box.height - 20;
+                        if (options.height === 'max') {
+                            container_offset.top = 30;
+                            bottom_row = status.scroll.top + status.window.height,
+                            content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
+                        } else {
+                            container_offset.top = trigger_center.top - tooltip_box.height;
+                        }
+                        tip_offset.top = trigger_center.top - 20;
                         break;
                 }
                 break;
