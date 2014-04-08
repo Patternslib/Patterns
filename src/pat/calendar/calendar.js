@@ -132,8 +132,10 @@ define([
                         }
                         var $tooltip = $(this).find('a.pat-tooltip');
                         if ($tooltip.length === 0) {
+                            var url = cfg.tooltip.match(/url:[ ](.*?);/)[1];
+                            url = utils.addURLQueryParameter(url, 'date', $(this).data('date'));
                             // Add this day's date to the injection url.
-                            var data = cfg.tooltip.replace(/url:[ ](.*?)(#.*?);/, 'url:$1?date='+$(this).data('date')+'$2;');
+                            var data = cfg.tooltip.replace(/(url:[ ])(.*?);/, '$1'+url+';');
                             $tooltip = $(this).append(
                                     $('<a/>').attr({'data-pat-tooltip': data}).addClass('pat-tooltip')
                                 ).find('a.pat-tooltip');
