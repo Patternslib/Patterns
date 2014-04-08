@@ -66,7 +66,7 @@ define([
             var cfg = store.updateOptions($el[0], parser.parse($el)),
                 storage = cfg.store === "none" ? null : store[cfg.store](_.name + $el[0].id);
 
-            cfg.defaultDate = storage.get("date") || cfg.defaultDate,
+            cfg.defaultDate = storage.get("date") || cfg.defaultDate;
             cfg.defaultView = storage.get("view") || cfg.defaultView;
             cfg.tooltip = $el.data('patCalendarTooltip');
 
@@ -121,13 +121,21 @@ define([
                     defaultDate: cfg.defaultDate,
                     defaultView: cfg.defaultView,
                     dayClick: function () {
+                        /* Allows for a tooltip (via pat-tooltip) to be shown
+                         * when a user clicks on a day.
+                         *
+                         * The configuration is the same as pat-tooltip but
+                         * appears under "data-pat-calendar-tooltip".
+                         */
                         if (!cfg.tooltip) {
                             return;
                         }
                         var $tooltip = $(this).find('a.pat-tooltip');
                         if ($tooltip.length === 0) {
+                            // Add this day's date to the injection url.
+                            var data = cfg.tooltip.replace(/url:[ ](.*?)(#.*?);/, 'url:$1?date='+$(this).data('date')+'$2;');
                             $tooltip = $(this).append(
-                                    $('<a/>').attr({'data-pat-tooltip': cfg.tooltip}).addClass('pat-tooltip')
+                                    $('<a/>').attr({'data-pat-tooltip': data}).addClass('pat-tooltip')
                                 ).find('a.pat-tooltip');
                             registry.scan($tooltip);
                         }
