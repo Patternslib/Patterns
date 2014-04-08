@@ -485,8 +485,10 @@ define([
             case "r":
                 switch (position[1]) {
                     case "t":
-                        container_offset.top = trigger_center.top - 30;
+                        container_offset.top = trigger_center.top;
                         tip_offset.top = 0;
+                        bottom_row = status.scroll.top + status.window.height,
+                        content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
                         break;
                     case "m":
                         container_offset.top = trigger_center.top - (tooltip_box.height/2);
