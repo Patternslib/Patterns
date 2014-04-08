@@ -68,6 +68,7 @@ define([
 
             cfg.defaultDate = storage.get("date") || cfg.defaultDate,
             cfg.defaultView = storage.get("view") || cfg.defaultView;
+            cfg.tooltip = $el.data('patCalendarTooltip');
 
             if (!opts.ignoreUrl) {
                 var search = _._parseSearchString();
@@ -118,7 +119,20 @@ define([
                     columnFormat: cfg.column,
                     viewRender: _.highlightButtons,
                     defaultDate: cfg.defaultDate,
-                    defaultView: cfg.defaultView
+                    defaultView: cfg.defaultView,
+                    dayClick: function () {
+                        if (!cfg.tooltip) {
+                            return;
+                        }
+                        var $tooltip = $(this).find('a.pat-tooltip');
+                        if ($tooltip.length === 0) {
+                            $tooltip = $(this).append(
+                                    $('<a/>').attr({'data-pat-tooltip': cfg.tooltip}).addClass('pat-tooltip')
+                                ).find('a.pat-tooltip');
+                            registry.scan($tooltip);
+                        }
+                        $tooltip.click();
+                    }
                 };
 
             $el.__cfg = cfg;
