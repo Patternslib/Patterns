@@ -9,7 +9,6 @@
     },
 
     paths: {
-
         // Externals
         "almond": "bower_components/almond/almond",
         "jquery": "bower_components/jquery/jquery",
@@ -29,11 +28,12 @@
         "Markdown.Sanitizer": "legacy/Markdown.Sanitizer",
         "select2": "bower_components/select2/select2.min",
         "jquery.chosen": "bower_components/chosen/chosen/chosen.jquery",
-        "jquery.fullcalendar": "bower_components/fullcalendar/fullcalendar.min",
+        "jquery.fullcalendar": "bower_components/fullcalendar/fullcalendar/fullcalendar.min",
+        "jquery.fullcalendar.dnd": "bower_components/fullcalendar/lib/jquery-ui.custom.min",
         "jquery.placeholder": "bower_components/jquery-placeholder/jquery.placeholder.min",
         "jquery.textchange": "bower_components/jquery-textchange/jquery.textchange",
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
-	"spectrum": "bower_components/spectrum/spectrum",
+        "spectrum": "bower_components/spectrum/spectrum",
 
         // Core
         "pat-utils": "core/utils",
@@ -64,7 +64,7 @@
         "pat-checklist": "pat/checklist",
         "pat-chosen": "pat/chosen",
         "pat-collapsible": "pat/collapsible",
-	"pat-colour-picket": "pat/colour-picker",
+        "pat-colour-picket": "pat/colour-picker",
         "pat-depends": "pat/depends",
         "pat-edit-tinymce": "pat/edit-tinymce",
         "pat-equaliser": "pat/equaliser",
@@ -96,24 +96,24 @@
         "pat-validate": "pat/validate",
         "pat-zoom": "pat/zoom",
 
-	// Calendar pattern
-	"moment": "bower_components/moment/moment",
-	"moment-timezone": "bower_components/moment-timezone/moment-timezone",
-	"pat-calendar": "pat/calendar/calendar",
-	"pat-calendar-dnd": "pat/calendar/dnd",
-	"pat-calendar-moment-timezone-data": "pat/calendar/moment-timezone-data"
+        // Calendar pattern
+        "moment": "bower_components/moment/moment",
+        "moment-timezone": "bower_components/moment-timezone/moment-timezone",
+        "pat-calendar": "pat/calendar/calendar",
+        "pat-calendar-dnd": "pat/calendar/dnd",
+        "pat-calendar-moment-timezone-data": "pat/calendar/moment-timezone-data"
     },
 
     shim: {
-
         "jquery": {
             exports: "jQuery"
         },
-
+        "jquery.fullcalendar.dnd": {
+            depends: "jQuery",
+        },
         "tinymce": {
             depends: "jquery"
         },
-
         "photoswipe": {
             depends: "klass",
         }
