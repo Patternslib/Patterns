@@ -21,6 +21,10 @@
 
   - Fix width-related layout problems.
 
+- Checked flag pattern: fix initialisation of radio buttons. Pre-checked
+  radio buttons would not marked as such if there were unchecked radio
+  buttons later in the DOM.
+
 - Checklist pattern: correctly initialise the state on initial page view.
 
 - Inject pattern: do not try to rebase ``mailto:`` URLs.
