@@ -3,6 +3,7 @@
  *
  * Copyright 2013-2014 Marko Durkovic
  * Copyright 2014 Florian Friesdorf
+ * Copyright 2014 Syslab.com GmbH
  */
 define([
     "jquery",
@@ -13,10 +14,10 @@ define([
     "pat-registry",
     "pat-calendar-dnd",
     "pat-calendar-moment-timezone-data",
+    "jquery.fullcalendar.dnd",
     "jquery.fullcalendar"
 ], function($, logger, Parser, store, utils, registry, dnd) {
     "use strict";
-
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
 
@@ -81,45 +82,35 @@ define([
             }
 
             var calOpts = {
-                    header: false,
+                    axisFormat: cfg.timeFormat,
+                    columnFormat: cfg.column,
+                    defaultDate: cfg.defaultDate,
+                    defaultView: cfg.defaultView,
                     droppable: true,
-                    drop: function(date, event, undef, view) {
-                        var $this = $(this),
-                            $ev = $this.hasClass("cal-event") ?
-                                $this : $this.parents(".cal-event"),
-                            $cal = $(view.element).parents(".pat-calendar");
+                    editable: true,
+                    firstHour: cfg.first.hour,
+                    header: false,
+                    timeFormat: cfg.timeFormat,
+                    titleFormat: cfg.title,
+                    viewRender: _.highlightButtons,
 
-                        $ev.appendTo($cal.find(".cal-events"));
-                        var $start = $ev.find(".start");
-                        if (!$start.length) {
-                            $("<time class='start'/>").attr("datetime", date.format())
-                                .appendTo($ev);
-                        }
-                        var $end = $ev.find(".end");
-                        if (!$end.length) {
-                            $("<time class='end'/>").appendTo($ev);
-                        }
-
-                        if (date.hasTime()) {
-                            $ev.addClass("all-day");
-                        } else {
-                            $ev.removeClass("all-day");
-                        }
-                        $cal.fullCalendar("refetchEvents");
-                        $cal.find("a").each(function(a) { $(a).draggable = 1; });
+                    // Callback functions
+                    // ------------------
+                    eventDrop: function(event) {
+                        alert('event dropped');
+                        /*
+                        $.getJSON(
+                            event.url,
+                            event,
+                            function () {
+                                alert('event callback!');
+                            });
+                        */
                     },
                     events: function(start, end, timezone, callback) {
                         var events = _.parseEvents($el, timezone);
                         callback(events);
                     },
-                    firstHour: cfg.first.hour,
-                    axisFormat: cfg.timeFormat,
-                    timeFormat: cfg.timeFormat,
-                    titleFormat: cfg.title,
-                    columnFormat: cfg.column,
-                    viewRender: _.highlightButtons,
-                    defaultDate: cfg.defaultDate,
-                    defaultView: cfg.defaultView,
                     dayClick: function () {
                         /* Allows for a tooltip (via pat-tooltip) to be shown
                          * when a user clicks on a day.
@@ -250,31 +241,34 @@ define([
 
             $el.find(".cal-events").css("display", "none");
 
-            // make .cal-event elems draggable
-            dnd.draggable($(".cal-events .cal-event"));
+            // XXX: Old dnd stuff that doesn't seem to be working anymore
+            // ----------------------------------------------------------
+            // // make .cal-event elems draggable
+            // dnd.draggable($(".cal-events .cal-event"));
 
-            // emulate jQueryUI dragstop and mousemove during drag.
-            $(".cal-events .cal-event").on("dragend.pat-calendar", function() {
-                $(this).trigger("dragstop");
-            });
-            $el.on("dragover.pat-calendar", function(event) {
-                event.preventDefault();
-                event.type = "mousemove";
-                $(document).trigger(event);
-            });
+            // // emulate jQueryUI dragstop and mousemove during drag.
+            // $(".cal-events .cal-event").on("dragend.pat-calendar", function() {
+            //     $(this).trigger("dragstop");
+            // });
 
-            if (!$.fn.draggable) {
-                $.fn.draggable = function(opts) {
-                    var start = opts.start,
-                        stop = opts.stop;
-                    this.on("dragstart", function(event) {
-                        start(event, null);
-                    });
-                    this.on("dragend", function(event) {
-                        stop(event, null);
-                    });
-                };
-            }
+            // $el.on("dragover.pat-calendar", function(event) {
+            //     event.preventDefault();
+            //     event.type = "mousemove";
+            //     $(document).trigger(event);
+            // });
+
+            // if (!$.fn.draggable) {
+            //     $.fn.draggable = function(opts) {
+            //         var start = opts.start,
+            //             stop = opts.stop;
+            //         this.on("dragstart", function(event) {
+            //             start(event, null);
+            //         });
+            //         this.on("dragend", function(event) {
+            //             stop(event, null);
+            //         });
+            //     };
+            // }
         },
 
         destroy: function($el) {
@@ -404,7 +398,7 @@ define([
                     url: $("a", event).attr("href"),
                     className: classNames,
                     attrs: attrs,
-                    editable: $(event).hasClass("editable")
+                    editable: true // FIXME: $(event).hasClass("editable")
                 };
                 if (!ev.title) {
                     log.error("No event title for:", event);
@@ -420,7 +414,6 @@ define([
             return events;
         }
     };
-
     registry.register(_);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
