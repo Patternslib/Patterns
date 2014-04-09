@@ -97,15 +97,13 @@ define([
                     // Callback functions
                     // ------------------
                     eventDrop: function(event) {
-                        alert('event dropped');
-                        /*
                         $.getJSON(
                             event.url,
-                            event,
-                            function () {
-                                alert('event callback!');
-                            });
-                        */
+                            { 'start': event.start.toISOString(),
+                              'end': event.end.toISOString(),
+                              'pat-calendar-event-drop': true
+                            }
+                        );
                     },
                     events: function(start, end, timezone, callback) {
                         var events = _.parseEvents($el, timezone);
@@ -240,35 +238,6 @@ define([
             });
 
             $el.find(".cal-events").css("display", "none");
-
-            // XXX: Old dnd stuff that doesn't seem to be working anymore
-            // ----------------------------------------------------------
-            // // make .cal-event elems draggable
-            // dnd.draggable($(".cal-events .cal-event"));
-
-            // // emulate jQueryUI dragstop and mousemove during drag.
-            // $(".cal-events .cal-event").on("dragend.pat-calendar", function() {
-            //     $(this).trigger("dragstop");
-            // });
-
-            // $el.on("dragover.pat-calendar", function(event) {
-            //     event.preventDefault();
-            //     event.type = "mousemove";
-            //     $(document).trigger(event);
-            // });
-
-            // if (!$.fn.draggable) {
-            //     $.fn.draggable = function(opts) {
-            //         var start = opts.start,
-            //             stop = opts.stop;
-            //         this.on("dragstart", function(event) {
-            //             start(event, null);
-            //         });
-            //         this.on("dragend", function(event) {
-            //             stop(event, null);
-            //         });
-            //     };
-            // }
         },
 
         destroy: function($el) {
@@ -379,7 +348,6 @@ define([
                 }
 
                 var location = ($(".location", event).html() || "").trim();
-
                 var startstr = $(".start", event).attr("datetime"),
                     endstr = $(".end", event).attr("datetime"),
                     start = $.fullCalendar.moment.parseZone(startstr),
