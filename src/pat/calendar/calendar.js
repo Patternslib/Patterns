@@ -12,11 +12,10 @@ define([
     "pat-store",
     "pat-utils",
     "pat-registry",
-    "pat-calendar-dnd",
     "pat-calendar-moment-timezone-data",
     "jquery.fullcalendar.dnd",
     "jquery.fullcalendar"
-], function($, logger, Parser, store, utils, registry, dnd) {
+], function($, logger, Parser, store, utils, registry) {
     "use strict";
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
