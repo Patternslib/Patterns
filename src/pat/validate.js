@@ -29,7 +29,7 @@ define([
                 });
                 for (i=0; i<parsley_form.items.length; i++) {
                     field = parsley_form.items[i];
-                    if (typeof field.UI !== 'undefined') {
+                    if (typeof field.UI !== "undefined") {
                         // Parsley 1.2.x
                         field.UI.addError = validate._addFieldError;
                         field.UI.removeError = validate._removeFieldError;
@@ -74,6 +74,7 @@ define([
 
         // Parsley method to add an error to a field
         _addFieldError: function(error) {
+            var $el;
             if (validate.parsley12) {
                 $el = this.ParsleyInstance.element;
             } else {
@@ -110,6 +111,7 @@ define([
 
         // Parsley method to remove all error messages for a field
         _removeFieldError: function(constraintName) {
+            var $el;
             if (validate.parsley12) {
                 $el = this.ParsleyInstance.element;
             } else {
