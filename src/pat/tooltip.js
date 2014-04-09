@@ -263,8 +263,7 @@ define([
         },
 
         positionStatus: function($trigger, $container) {
-            var options = $trigger.data("patterns.tooltip"),
-                trigger_box = tooltip.boundingBox($trigger),
+            var trigger_box = tooltip.boundingBox($trigger),
                 tooltip_box = tooltip.boundingBox($container),
                 $window = $(window),
                 window_width = $window.width(),
@@ -450,7 +449,7 @@ define([
                 content_css["max-width"] = (x - container_offset.left - 30) + "px";
                 break;
             case "b":
-                if (options.height === 'max') {
+                if (options.height === "max") {
                     container_offset.top = 30;
                 } else {
                     container_offset.top = trigger_box.top - tooltip_box.height + 10;
@@ -491,7 +490,7 @@ define([
             case "r":
                 switch (position[1]) {
                     case "t":
-                        if (options.height === 'max') {
+                        if (options.height === "max") {
                             container_offset.top = 30;
                             tip_offset.top = trigger_center.top - container_offset.top - 20;
                         } else {
@@ -502,7 +501,7 @@ define([
                         content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
                         break;
                     case "m":
-                        if (options.height === 'max') {
+                        if (options.height === "max") {
                             container_offset.top = 30;
                             bottom_row = status.scroll.top + status.window.height,
                             content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
@@ -512,7 +511,7 @@ define([
                         tip_offset.top = tooltip_box.height/2 - 10;
                         break;
                     case "b":
-                        if (options.height === 'max') {
+                        if (options.height === "max") {
                             container_offset.top = 30;
                             bottom_row = status.scroll.top + status.window.height,
                             content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
