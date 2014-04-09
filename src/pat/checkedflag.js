@@ -32,12 +32,12 @@ define([
             });
 
             $el.filter("[type=checkbox]")
-                .each(_.onChangeCheckbox)
-                .on("change.pat-checkedflag", _.onChangeCheckbox);
+                .each(_._onChangeCheckbox)
+                .on("change.pat-checkedflag", _._onChangeCheckbox);
 
             $el.filter("[type=radio]")
-                .each(_.onChangeRadio)
-                .on("change.pat-checkedflag", _.onChangeRadio);
+                .each(_._initRadio)
+                .on("change.pat-checkedflag", _._onChangeRadio);
 
             $el.filter("select:not([multiple])")
                 .each(function() {
@@ -54,7 +54,7 @@ define([
                 $(this).closest("label").addClass("disabled");
             });
 
-            $forms.on("reset.pat-checkedflag", _.onFormReset);
+            $forms.on("reset.pat-checkedflag", _._onFormReset);
         },
 
         destroy: function($el) {
@@ -79,7 +79,7 @@ define([
                         // XXX: not sure whether this is correct
                         $input.prop("checked", val);
                     }
-                    _.onChangeCheckbox.call(this);
+                    _._onChangeCheckbox.call(this);
                 } else if ($el.is("select:not([multiple])")) {
                     var $select = $(this);
                     if (opts.setdefault) {
@@ -98,14 +98,14 @@ define([
             });
         },
 
-        onFormReset: function() {
+        _onFormReset: function() {
             // This event is triggered before the form is reset, and we need
             // the post-reset state to update our pattern. Use a small delay
             // to fix this.
             var form = this;
             setTimeout(function() {
-                $("input[type=checkbox]", form).each(_.onChangeCheckbox);
-                $("input[type=radio]", form).each(_.onChangeRadio);
+                $("input[type=checkbox]", form).each(_._onChangeCheckbox);
+                $("input[type=radio]", form).each(_._initRadio);
                 $("select:not([multiple])", form).each(_.onChangeSelect);
             }, 50);
         },
@@ -125,7 +125,7 @@ define([
             return $result;
         },
 
-        onChangeCheckbox: function() {
+        _onChangeCheckbox: function() {
             var $el = $(this),
                 $label = $(utils.findLabel(this)),
                 $fieldset = $el.closest("fieldset");
@@ -145,7 +145,15 @@ define([
             }
         },
 
-        onChangeRadio: function() {
+        _initRadio: function() {
+            _._updateRadio(this, false);
+        },
+
+        _onChangeRadio: function() {
+            _._updateRadio(this, true);
+        },
+
+        _updateRadio: function(input, update_siblings) {
             var $el = $(this),
                 $label = $(utils.findLabel(this)),
                 $fieldset = $el.closest("fieldset"),
@@ -156,15 +164,16 @@ define([
                 $siblings=$siblings.closest("li");
             }
 
-            $siblings.removeClass("checked").addClass("unchecked");
-            if (this.checked) {
+	    if (update_siblings)
+                 $siblings.removeClass("checked").addClass("unchecked");
+            if (this.checked)
                 $label.add($fieldset)
                     .removeClass("unchecked").addClass("checked");
-            } else {
+            else {
                 $label.addClass("unchecked").removeClass("checked");
-                if ($fieldset.find("input:checked").length) {
+                if ($fieldset.find("input:checked").length)
                     $fieldset.removeClass("unchecked").addClass("checked");
-                } else
+                else
                     $fieldset.addClass("unchecked").removeClass("checked");
             }
         },
