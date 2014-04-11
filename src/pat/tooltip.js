@@ -220,7 +220,7 @@ define([
         createContainer: function($trigger) {
             var options = $trigger.data("patterns.tooltip"),
                 count = ++tooltip.count,
-                $content, $container;
+                $content, $container, source;
 
             $trigger.data("patterns.tooltip.number", count);
             $container = $("<div/>", {"class": "tooltip-container",
@@ -236,9 +236,15 @@ define([
                 $content=$("<p/>").text(options.title);
                 break;
             case "content":
-                $content=$trigger.children().clone();
-                if (!$content.length)
-                    $content=$("<p/>").text($trigger.text());
+                source = ($trigger.attr("href") || options.url);
+                if (typeof(source) === "string" && source.indexOf("#") !== -1) {
+                    $content = $("#"+$trigger.attr("href").split("#")[1]).children().clone();
+                } else {
+                    $content = $trigger.children().clone();
+                    if (!$content.length) {
+                        $content = $("<p/>").text($trigger.text());
+                    }
+                }
                 break;
             }
             $container.append(
