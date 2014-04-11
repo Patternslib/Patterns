@@ -154,10 +154,10 @@ define([
         },
 
         _updateRadio: function(input, update_siblings) {
-            var $el = $(this),
-                $label = $(utils.findLabel(this)),
+            var $el = $(input),
+                $label = $(utils.findLabel(input)),
                 $fieldset = $el.closest("fieldset"),
-                $siblings = _._getSiblingsWithLabelsAndFieldsets(this);
+                $siblings = _._getSiblingsWithLabelsAndFieldsets(input);
 
             if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
@@ -166,7 +166,7 @@ define([
 
 	    if (update_siblings)
                  $siblings.removeClass("checked").addClass("unchecked");
-            if (this.checked)
+            if (input.checked)
                 $label.add($fieldset)
                     .removeClass("unchecked").addClass("checked");
             else {
