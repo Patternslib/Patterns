@@ -8,12 +8,14 @@
  */
 define([
     "jquery",
+    "pat-logger",
     "pat-registry",
     "pat-parser",
     "pat-inject",
     "pat-remove"
-], function($, patterns, Parser, inject) {
-    var parser = new Parser("tooltip");
+], function($, logger, registry, Parser, inject) {
+    var log = logger.getLogger("calendar"),
+        parser = new Parser("tooltip");
 
     var all_positions = ["tl", "tm", "tr",
                          "rt", "rm", "rb",
@@ -24,28 +26,42 @@ define([
     parser.add_argument("height", "auto", ["auto", "max"]);
     parser.add_argument("trigger", "click", ["click", "hover"]);
     parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
-    parser.add_argument("source", "title", ["ajax", "content", "title"]);
+    parser.add_argument("source", "title", ["auto", "ajax", "content", "title"]);
     parser.add_argument("ajax-data-type", "html", ["html", "markdown"]);
     parser.add_argument("delay", 0);
     parser.add_argument("class");
-    parser.add_argument("url");
     parser.add_argument("target", "body");
 
     var tooltip = {
         name: "tooltip",
         trigger: ".pat-tooltip",
-
         count: 0,
 
         init: function($el, opts) {
             return $el.each(function() {
                 var $trigger = $(this),
+                    href,
                     options = parser.parse($trigger, opts);
+
+                if (options.source==="auto") {
+                    href = $trigger.attr("href");
+                    if (typeof(href) !== "string") {
+                        log.error("href must be specififed if 'source' is set to 'auto'");
+                        return;
+                    }
+                    if (href.indexOf("#") === 0) {
+                        options.source = "content";
+                    } else {
+                        options.source = "ajax";
+                    }
+                }
+
                 if (options.source==="title") {
                     options.title=$trigger.attr("title");
                     $trigger.removeAttr("title");
-                } else if (options.trigger==="hover")
+                } else if (options.trigger==="hover") {
                     $trigger.removeAttr("title");
+                }
                 $trigger
                     .data("patterns.tooltip", options)
                     .on("destroy", $trigger, tooltip.onDestroy);
@@ -164,7 +180,7 @@ define([
             setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
 
             if (options.source==="ajax") {
-                var source = ($trigger.attr("href") || options.url).split("#"),
+                var source = $trigger.attr("href").split("#"),
                     target_id = $container.find("progress").attr("id");
                 inject.execute([{
                     url: source[0],
@@ -220,7 +236,7 @@ define([
         createContainer: function($trigger) {
             var options = $trigger.data("patterns.tooltip"),
                 count = ++tooltip.count,
-                $content, $container, source;
+                $content, $container, href;
 
             $trigger.data("patterns.tooltip.number", count);
             $container = $("<div/>", {"class": "tooltip-container",
@@ -236,9 +252,9 @@ define([
                 $content=$("<p/>").text(options.title);
                 break;
             case "content":
-                source = ($trigger.attr("href") || options.url);
-                if (typeof(source) === "string" && source.indexOf("#") !== -1) {
-                    $content = $("#"+$trigger.attr("href").split("#")[1]).children().clone();
+                href = $trigger.attr("href");
+                if (typeof(href) === "string" && href.indexOf("#") !== -1) {
+                    $content = $("#"+href.split("#")[1]).children().clone();
                 } else {
                     $content = $trigger.children().clone();
                     if (!$content.length) {
@@ -550,7 +566,7 @@ define([
         }
     };
 
-    patterns.register(tooltip);
+    registry.register(tooltip);
     return tooltip; // XXX Replace for tests
 });
 
