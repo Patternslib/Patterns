@@ -251,15 +251,40 @@ define([
                 cfg.$target.addClass(cfg.targetLoadClasses);
             });
 
+            var stopBubblingFromRemovedElement = function(ev) {
+                /* IE8 fix.
+                 *
+                 * Stop event from propagating IF $el will be removed from
+                 * the DOM.
+                 * With pat-inject, often $el is the target that will
+                 * itself be replaced with injected content.
+                 *
+                 * IE8 cannot handle events bubbling up from an element removed
+                 * from the DOM.
+                 *
+                 * See:
+                 * http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
+                 */
+                var s; // jquery selector
+                for (var i=0; i<cfgs.length; i++) {
+                    s= cfgs[i].target;
+                    if ($el.parents(s).addBack(s) && !ev.isPropagationStopped()) {
+                        ev.stopPropagation();
+                        return;
+                    }
+                }
+            };
+
             var onSuccess = function(ev) {
-                var data = ev && ev.jqxhr && ev.jqxhr.responseText;
+                var sources$,
+                    data = ev && ev.jqxhr && ev.jqxhr.responseText;
                 if (!data) {
                     log.warn("No response content, aborting", ev);
                     return;
                 }
+                stopBubblingFromRemovedElement(ev);
 
-                var sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
-
+                sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
                 cfgs.forEach(function(cfg, idx) {
                     var $source = sources$[idx];
 
