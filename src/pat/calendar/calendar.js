@@ -120,12 +120,18 @@ define([
                         }
                         var $tooltip = $(this).find('a.pat-tooltip');
                         if ($tooltip.length === 0) {
-                            var url = cfg.tooltip.match(/url:[ ](.*?);/)[1];
-                            url = utils.addURLQueryParameter(url, 'date', $(this).data('date'));
-                            // Add this day's date to the injection url.
-                            var data = cfg.tooltip.replace(/(url:[ ])(.*?);/, '$1'+url+';');
+                            /* Retrieve the injection URL from the tooltip
+                             * config data and add the day's date to its query
+                             * string.
+                             * Then take this data and use it to create and
+                             * configure a tooltip trigger element, which is
+                             * then triggered.
+                             */
+                            var match = cfg.tooltip.match(/url:[ ](.*?);/)[1],
+                                data = cfg.tooltip.replace(match[0], ''),
+                                url = utils.addURLQueryParameter(match[1], 'date', $(this).data('date'));
                             $tooltip = $(this).append(
-                                    $('<a/>').attr({'data-pat-tooltip': data}).addClass('pat-tooltip')
+                                    $('<a/>').attr({'url': url}).attr({'data-pat-tooltip': data}).addClass('pat-tooltip')
                                 ).find('a.pat-tooltip');
                             registry.scan($tooltip);
                         }
