@@ -490,6 +490,7 @@ define([
                 break;
             case "r":
                 if (tooltip_box.width > trigger_box.left) {
+                    // Tooltip is too wide, we need to restrict its width.
                     container_offset.left = 5;
                     tip_offset.left = trigger_box.left -5;
                     container_css["max-width"] = (trigger_box.left - 5) + "px";
@@ -507,6 +508,11 @@ define([
                 case "l":
                     container_offset.left = trigger_center.left - 20;
                     tip_offset.left = 0;
+                    if ((trigger_center.left - tooltip_box.width) < 0) {
+                        // Tooltip is too wide, we need to restrict its width.
+                        container_css["max-width"] = (status.window.width - trigger_center.left -5) + "px";
+                        container_offset.right = 5;
+                    }
                     break;
                 case "m":
                     container_offset.left = trigger_center.left - (tooltip_box.width/2);
