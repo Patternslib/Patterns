@@ -262,6 +262,7 @@ define([
                         $content = $("<p/>").text($trigger.text());
                     }
                 }
+                registry.scan($content);
                 break;
             }
             $container.append(
