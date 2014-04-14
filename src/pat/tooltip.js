@@ -457,6 +457,7 @@ define([
                 tooltip_box = status.tooltip_box,
                 trigger_center = status.trigger_center,
                 content_css = {"max-height": "", "max-width": ""},
+                container_css = {"max-height": "", "max-width": ""},
                 bottom_row, x;
 
             switch (position[0]) {
@@ -475,20 +476,27 @@ define([
             case "b":
                 if (options.height === "max") {
                     container_offset.top = 30;
+                    content_css["max-height"] = (trigger_box.top - container_offset.top) + "px";
                 } else {
                     container_offset.top = trigger_box.top - tooltip_box.height + 10;
                     tip_offset.top = tooltip_box.height;
-                }
-                x = (status.scroll.top + 10) - container_offset.top;
-                if (x>0) {
-                    tip_offset.top -= x;
-                    content_css["max-height"] = (tooltip_box.height - x) + "px";
-                    container_offset.top += x;
+                    x = (status.scroll.top + 10) - container_offset.top;
+                    if (x>0) {
+                        tip_offset.top -= x;
+                        content_css["max-height"] = (tooltip_box.height - x) + "px";
+                        container_offset.top += x;
+                    }
                 }
                 break;
             case "r":
-                container_offset.left = trigger_box.left - tooltip_box.width - 20;
-                tip_offset.left = tooltip_box.width;
+                if (tooltip_box.width > trigger_box.left) {
+                    container_offset.left = 5;
+                    tip_offset.left = trigger_box.left -5;
+                    container_css["max-width"] = (trigger_box.left - 5) + "px";
+                } else {
+                    container_offset.left = trigger_box.left - tooltip_box.width - 20;
+                    tip_offset.left = tooltip_box.width;
+                }
                 break;
             }
 
@@ -516,7 +524,7 @@ define([
                     case "t":
                         if (options.height === "max") {
                             container_offset.top = 30;
-                            tip_offset.top = trigger_center.top - container_offset.top - 20;
+                            tip_offset.top = trigger_box.top;
                         } else {
                             container_offset.top = trigger_center.top - 30;
                             tip_offset.top = 0;
@@ -529,20 +537,22 @@ define([
                             container_offset.top = 30;
                             bottom_row = status.scroll.top + status.window.height,
                             content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
+                            tip_offset.top = trigger_box.bottom - trigger_box.height/2;
                         } else {
                             container_offset.top = trigger_center.top - (tooltip_box.height/2);
+                            tip_offset.top = tooltip_box.height/2 - 10;
                         }
-                        tip_offset.top = tooltip_box.height/2 - 10;
                         break;
                     case "b":
                         if (options.height === "max") {
                             container_offset.top = 30;
                             bottom_row = status.scroll.top + status.window.height,
                             content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
+                            tip_offset.top = trigger_box.top;
                         } else {
                             container_offset.top = trigger_center.top - tooltip_box.height;
+                            tip_offset.top = trigger_center.top - 20;
                         }
-                        tip_offset.top = trigger_center.top - 20;
                         break;
                 }
                 break;
@@ -556,6 +566,7 @@ define([
                 container_offset.left -= offset.left;
             }
 
+            $container.css(container_css);
             $container.find("> div").css(content_css);
             $container.removeClass(all_positions.join(" ")).addClass(position);
             $container.css({
