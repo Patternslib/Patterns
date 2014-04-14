@@ -127,7 +127,7 @@ define([
                              * configure a tooltip trigger element, which is
                              * then triggered.
                              */
-                            var match = cfg.tooltip.match(/url:[ ](.*?);/),
+                            var match = cfg.tooltip.match(/url:[ ](.*?)(;|$)/),
                                 data = cfg.tooltip.replace(match[0], ''),
                                 url = utils.addURLQueryParameter(match[1], 'date', $(this).data('date'));
                             $tooltip = $(this).append(
