@@ -127,11 +127,11 @@ define([
                              * configure a tooltip trigger element, which is
                              * then triggered.
                              */
-                            var match = cfg.tooltip.match(/url:[ ](.*?);/)[1],
+                            var match = cfg.tooltip.match(/url:[ ](.*?);/),
                                 data = cfg.tooltip.replace(match[0], ''),
                                 url = utils.addURLQueryParameter(match[1], 'date', $(this).data('date'));
                             $tooltip = $(this).append(
-                                    $('<a/>').attr({'url': url}).attr({'data-pat-tooltip': data}).addClass('pat-tooltip')
+                                    $('<a/>').attr({'href': url}).attr({'data-pat-tooltip': data}).addClass('pat-tooltip')
                                 ).find('a.pat-tooltip');
                             registry.scan($tooltip);
                         }
