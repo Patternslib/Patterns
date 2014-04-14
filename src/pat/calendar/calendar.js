@@ -118,8 +118,8 @@ define([
                         if (!cfg.tooltip) {
                             return;
                         }
-                        var $tooltip = $(this).find('a.pat-tooltip');
-                        if ($tooltip.length === 0) {
+                        var $el = $(this);
+                        if (!$el.hasClass('pat-tooltip')) {
                             /* Retrieve the injection URL from the tooltip
                              * config data and add the day's date to its query
                              * string.
@@ -130,12 +130,9 @@ define([
                             var match = cfg.tooltip.match(/url:[ ](.*?)(;|$)/),
                                 data = cfg.tooltip.replace(match[0], ''),
                                 url = utils.addURLQueryParameter(match[1], 'date', $(this).data('date'));
-                            $tooltip = $(this).append(
-                                    $('<a/>').attr({'href': url}).attr({'data-pat-tooltip': data}).addClass('pat-tooltip')
-                                ).find('a.pat-tooltip');
-                            registry.scan($tooltip);
+                            registry.scan($el.addClass('pat-tooltip').attr({'data-pat-tooltip': data}).attr({'href': url}));
+                            $el.trigger('click.tooltip');
                         }
-                        $tooltip.trigger('click.tooltip');
                     }
                 };
 
