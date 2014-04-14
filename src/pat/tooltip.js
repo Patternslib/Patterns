@@ -35,6 +35,7 @@ define([
     var tooltip = {
         name: "tooltip",
         trigger: ".pat-tooltip",
+
         count: 0,
 
         init: function($el, opts) {
@@ -516,7 +517,7 @@ define([
                             container_offset.top = 30;
                             tip_offset.top = trigger_center.top - container_offset.top - 20;
                         } else {
-                            container_offset.top = trigger_center.top;
+                            container_offset.top = trigger_center.top - 30;
                             tip_offset.top = 0;
                         }
                         bottom_row = status.scroll.top + status.window.height,
