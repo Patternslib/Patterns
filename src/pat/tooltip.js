@@ -206,11 +206,12 @@ define([
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
                 namespace = $container.attr("id");
-            tooltip.removeHideEvents($trigger);
             $container.css("visibility", "hidden");
             $container.parents().add(window).off("." + namespace);
+            tooltip.removeHideEvents($trigger);
             tooltip.setupShowEvents($trigger);
             $trigger.removeClass("active").addClass("inactive");
+            $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
         },
 
         onDestroy: function(event) {
