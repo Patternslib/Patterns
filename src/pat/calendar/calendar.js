@@ -61,18 +61,19 @@ define([
             return context;
         },
 
-        init: function($el, opts) {
+        init: function($elem, opts) {
             opts = opts || {};
-            var cfg = store.updateOptions($el[0], parser.parse($el)),
+            var $el = $elem,
+                cfg = store.updateOptions($el[0], parser.parse($el)),
                 storage = cfg.store === "none" ? null : store[cfg.store](calendar.name + $el[0].id);
             calendar.cfg = cfg;
             calendar.storage = storage;
             cfg.defaultDate = storage.get("date") || cfg.defaultDate;
             cfg.defaultView = storage.get("view") || cfg.defaultView;
-            cfg.tooltipConfig = $el.data('patCalendarTooltip');
+            cfg.tooltipConfig = $el.data("patCalendarTooltip");
             if (cfg.tooltipConfig) {
                 var match = cfg.tooltipConfig.match(/url:[ ](.*?)(;|$)/);
-                cfg.tooltipConfig = cfg.tooltipConfig.replace(match[0], '');
+                cfg.tooltipConfig = cfg.tooltipConfig.replace(match[0], "");
                 cfg.newEventURL = match[1];
             }
 
@@ -105,9 +106,9 @@ define([
                 eventDrop: function(event) {
                     $.getJSON(
                         event.url,
-                        { 'start': event.start.toISOString(),
-                            'end': event.end.toISOString(),
-                            'pat-calendar-event-drop': true
+                        { "start": event.start.toISOString(),
+                            "end": event.end.toISOString(),
+                            "pat-calendar-event-drop": true
                         }
                     );
                 },
@@ -115,33 +116,52 @@ define([
                     var events = calendar.parseEvents($el, timezone);
                     callback(events);
                 },
-                dayClick: function (moment, ev, view) {
-                    /* Allows for a tooltip (via pat-tooltip) to be shown
-                        * when a user clicks on a day.
-                        *
-                        * The configuration is the same as pat-tooltip but
-                        * appears under "data-pat-calendar-tooltip".
-                        */
-                    var $el;
-                    if (!cfg.tooltipConfig) {
-                        return;
-                    }
-                    if (view.name === "agendaWeek") {
-                        $el = $(this);
-                    } else {
-                        $el = $(ev.target);
-                    }
-                    if ($el.hasClass('pat-tooltip') && view.name === "agendaMonth") {
-                        // agendaMonth gets triggered automatically via click event
-                        // bubbling up from contained div
+                eventAfterRender: function(ev, $event, view) {
+                    if (ev.id !== "pat-calendar-new-event") {
                         return;
                     }
                     /* Take the data from data-pat-calendar-tooltip to
                      * configure a tooltip trigger element.
                      */
-                    var url = utils.addURLQueryParameter(cfg.newEventURL, 'date', moment.format());
-                    registry.scan($el.addClass('pat-tooltip').attr({'data-pat-tooltip': cfg.tooltipConfig}).attr({'href': url}));
-                    $el.trigger('click.tooltip');
+                    if (!cfg.tooltipOpen) {
+                        cfg.tooltipOpen = true;
+                        var url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
+                        registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
+                        $event.trigger("click.tooltip");
+                        $event.on("pat-update", function (event, data) {
+                            if (data.pattern === "tooltip" && data.hidden === true) {
+                                event.stopPropagation();
+                                if ($(this).is(":visible")) {
+                                    $el.fullCalendar("removeEvents", ev.id);
+                                    cfg.tooltipOpen = false;
+                                }
+                            }
+                        });
+                    }
+                },
+                dayClick: function (moment, ev, view) {
+                    /* If "data-pat-calendar-tooltip" was configured, we open
+                     * a tooltip when the user clicks on an day in the
+                     * calendar.
+                     */
+                    if (!cfg.tooltipConfig) {
+                        return;
+                    }
+                    // TODO
+                    // if (view.name == "agendaWeek") {
+                    //     end = moment.add("minutes", 30);
+                    // } else {
+                    //     end = undefined;
+                    // }
+                    var id = "pat-calendar-new-event";
+                    $el.fullCalendar("removeEvents", id);
+                    cfg.tooltipOpen = false;
+                    $el.fullCalendar("renderEvent", {
+                        title: "New Event",
+                        start: moment,
+                        // end: end, TODO
+                        id: id
+                    });
                 }
             };
 
@@ -177,10 +197,12 @@ define([
                     $el.fullCalendar("option", "height",
                         $el.find(".fc-content").height());
                 });
+                /*
                 $(document).on("pat-update.pat-calendar", function() {
                     $el.fullCalendar("option", "height",
                         $el.find(".fc-content").height());
                 });
+                */
             }
 
             // update title
