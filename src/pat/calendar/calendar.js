@@ -66,6 +66,7 @@ define([
             var $el = $elem,
                 cfg = store.updateOptions($el[0], parser.parse($el)),
                 storage = cfg.store === "none" ? null : store[cfg.store](calendar.name + $el[0].id);
+            calendar.$el = $el;
             calendar.cfg = cfg;
             calendar.storage = storage;
             cfg.defaultDate = storage.get("date") || cfg.defaultDate;
@@ -92,7 +93,6 @@ define([
                 columnFormat: cfg.column,
                 defaultDate: cfg.defaultDate,
                 defaultView: cfg.defaultView,
-                droppable: true,
                 editable: true,
                 firstHour: cfg.first.hour,
                 header: false,
@@ -103,15 +103,8 @@ define([
 
                 // Callback functions
                 // ------------------
-                eventDrop: function(event) {
-                    $.getJSON(
-                        event.url,
-                        { "start": event.start.toISOString(),
-                            "end": event.end.toISOString(),
-                            "pat-calendar-event-drop": true
-                        }
-                    );
-                },
+                eventDrop: calendar._changeEventDates,
+                eventResize: calendar._changeEventDates,
                 events: function(start, end, timezone, callback) {
                     var events = calendar.parseEvents($el, timezone);
                     callback(events);
@@ -183,7 +176,7 @@ define([
             var $controlRoot = cfg.calendarControls ?
                     $(cfg.calendarControls) : $el;
             $el.$controlRoot = $controlRoot;
-            calOpts.timezone = $controlRoot.find("select.timezone").val();
+            cfg.timezone = calOpts.timezone = $controlRoot.find("select.timezone").val();
 
             $el.fullCalendar(calOpts);
             // move to end of $el
@@ -220,6 +213,26 @@ define([
 
             calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
+        },
+
+        _changeEventDates: function(evt) {
+            /* Called when an event's dates have changed due to a drag&drop or
+             * drag&resize action.
+             */
+            var $event = calendar.findEventByURL(calendar.$el, evt.url),
+                regex = /\+[0-9]{2}:[0-9]{2}$/,
+                tzstr = evt.start.clone().tz(calendar.cfg.timezone).format().match(regex)[0],
+                startstr = evt.start.format() + tzstr,
+                endstr = evt.end.format() + tzstr;
+            $event.find('time.start').attr('datetime', startstr).text(startstr);
+            $event.find('time.end').attr('datetime', endstr).text(endstr);
+            $.getJSON(
+                evt.url,
+                { "start": evt.start.toISOString(),
+                    "end": evt.end.toISOString(),
+                    "pat-calendar-event-drop": true
+                }
+            );
         },
 
         _refetchEvents: function($el) {
@@ -341,6 +354,13 @@ define([
             $body.find(classMap[view.name]).addClass("active");
         },
 
+        findEventByURL: function($el, url) {
+            var regex = new RegExp("^"+url+"$");
+            return $el.find(".cal-events .cal-event").filter(function() {
+                return regex.test($(this).find("a").attr('href'));
+            });
+        },
+
         parseEvents: function($el, timezone) {
             var $events = $el.find(".cal-events"),
                 $filter = $el.find(".filter"),
@@ -366,23 +386,19 @@ define([
 
             var events = $events.find(".cal-event").filter(function() {
                 var $event = $(this);
-
                 if (searchText && !regex.test($event.find(".title").text())) {
                     log.debug("remove due to search-text="+searchText, $event);
                     return false;
                 }
-
                 return shownCats.filter(function() {
                     return $event.hasClass(this);
                 }).length;
             }).map(function(idx, event) {
                 var attr, i;
-
                 // classNames: all event classes without "event" + anchor classes
                 var classNames = $(event).attr("class").split(/\s+/)
                     .filter(function(cls) { return (cls !== "cal-event"); })
                     .concat($("a", event).attr("class").split(/\s+/));
-
                 // attrs: all "data-" attrs from anchor
                 var allattrs = $("a", event)[0].attributes,
                     attrs = {};
@@ -406,7 +422,6 @@ define([
                     // pat-calendar API stays the same and stays intuitive.
                     end.add("days", 1);
                 }
-
                 if (timezone) {
                     start = start.tz(timezone);
                     end = end.tz(timezone);
