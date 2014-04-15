@@ -69,7 +69,12 @@ define([
             calendar.storage = storage;
             cfg.defaultDate = storage.get("date") || cfg.defaultDate;
             cfg.defaultView = storage.get("view") || cfg.defaultView;
-            cfg.tooltip = $el.data('patCalendarTooltip');
+            cfg.tooltipConfig = $el.data('patCalendarTooltip');
+            if (cfg.tooltipConfig) {
+                var match = cfg.tooltipConfig.match(/url:[ ](.*?)(;|$)/);
+                cfg.tooltipConfig = cfg.tooltipConfig.replace(match[0], '');
+                cfg.newEventURL = match[1];
+            }
 
             if (!opts.ignoreUrl) {
                 var search = calendar._parseSearchString();
@@ -110,31 +115,33 @@ define([
                     var events = calendar.parseEvents($el, timezone);
                     callback(events);
                 },
-                dayClick: function () {
+                dayClick: function (moment, ev, view) {
                     /* Allows for a tooltip (via pat-tooltip) to be shown
                         * when a user clicks on a day.
                         *
                         * The configuration is the same as pat-tooltip but
                         * appears under "data-pat-calendar-tooltip".
                         */
-                    if (!cfg.tooltip) {
+                    var $el;
+                    if (!cfg.tooltipConfig) {
                         return;
                     }
-                    var $el = $(this);
-                    if (!$el.hasClass('pat-tooltip')) {
-                        /* Retrieve the injection URL from the tooltip
-                            * config data and add the day's date to its query
-                            * string.
-                            * Then take this data and use it to create and
-                            * configure a tooltip trigger element, which is
-                            * then triggered.
-                            */
-                        var match = cfg.tooltip.match(/url:[ ](.*?)(;|$)/),
-                            data = cfg.tooltip.replace(match[0], ''),
-                            url = utils.addURLQueryParameter(match[1], 'date', $(this).data('date'));
-                        registry.scan($el.addClass('pat-tooltip').attr({'data-pat-tooltip': data}).attr({'href': url}));
-                        $el.trigger('click.tooltip');
+                    if (view.name === "agendaWeek") {
+                        $el = $(this);
+                    } else {
+                        $el = $(ev.target);
                     }
+                    if ($el.hasClass('pat-tooltip') && view.name === "agendaMonth") {
+                        // agendaMonth gets triggered automatically via click event
+                        // bubbling up from contained div
+                        return;
+                    }
+                    /* Take the data from data-pat-calendar-tooltip to
+                     * configure a tooltip trigger element.
+                     */
+                    var url = utils.addURLQueryParameter(cfg.newEventURL, 'date', moment.format());
+                    registry.scan($el.addClass('pat-tooltip').attr({'data-pat-tooltip': cfg.tooltipConfig}).attr({'href': url}));
+                    $el.trigger('click.tooltip');
                 }
             };
 
