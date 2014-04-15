@@ -147,19 +147,19 @@ define([
                     if (!cfg.tooltipConfig) {
                         return;
                     }
-                    // TODO
-                    // if (view.name == "agendaWeek") {
-                    //     end = moment.add("minutes", 30);
-                    // } else {
-                    //     end = undefined;
-                    // }
+                    var end;
+                    if (view.name !== "month") {
+                        end = moment.clone().add("minutes", 30);
+                    } else {
+                        end = undefined;
+                    }
                     var id = "pat-calendar-new-event";
                     $el.fullCalendar("removeEvents", id);
                     cfg.tooltipOpen = false;
                     $el.fullCalendar("renderEvent", {
                         title: "New Event",
                         start: moment,
-                        // end: end, TODO
+                        end: end,
                         id: id
                     });
                 }
