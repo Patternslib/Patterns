@@ -82,61 +82,61 @@ define([
             }
 
             var calOpts = {
-                    axisFormat: cfg.timeFormat,
-                    columnFormat: cfg.column,
-                    defaultDate: cfg.defaultDate,
-                    defaultView: cfg.defaultView,
-                    droppable: true,
-                    editable: true,
-                    firstHour: cfg.first.hour,
-                    header: false,
-                    timeFormat: cfg.timeFormat,
-                    titleFormat: cfg.title,
-                    viewRender: calendar.highlightButtons,
-                    height: cfg.height !== "auto" ? cfg.height : undefined,
+                axisFormat: cfg.timeFormat,
+                columnFormat: cfg.column,
+                defaultDate: cfg.defaultDate,
+                defaultView: cfg.defaultView,
+                droppable: true,
+                editable: true,
+                firstHour: cfg.first.hour,
+                header: false,
+                timeFormat: cfg.timeFormat,
+                titleFormat: cfg.title,
+                viewRender: calendar.highlightButtons,
+                height: cfg.height !== "auto" ? cfg.height : undefined,
 
-                    // Callback functions
-                    // ------------------
-                    eventDrop: function(event) {
-                        $.getJSON(
-                            event.url,
-                            { 'start': event.start.toISOString(),
-                              'end': event.end.toISOString(),
-                              'pat-calendar-event-drop': true
-                            }
-                        );
-                    },
-                    events: function(start, end, timezone, callback) {
-                        var events = calendar.parseEvents($el, timezone);
-                        callback(events);
-                    },
-                    dayClick: function () {
-                        /* Allows for a tooltip (via pat-tooltip) to be shown
-                         * when a user clicks on a day.
-                         *
-                         * The configuration is the same as pat-tooltip but
-                         * appears under "data-pat-calendar-tooltip".
-                         */
-                        if (!cfg.tooltip) {
-                            return;
+                // Callback functions
+                // ------------------
+                eventDrop: function(event) {
+                    $.getJSON(
+                        event.url,
+                        { 'start': event.start.toISOString(),
+                            'end': event.end.toISOString(),
+                            'pat-calendar-event-drop': true
                         }
-                        var $el = $(this);
-                        if (!$el.hasClass('pat-tooltip')) {
-                            /* Retrieve the injection URL from the tooltip
-                             * config data and add the day's date to its query
-                             * string.
-                             * Then take this data and use it to create and
-                             * configure a tooltip trigger element, which is
-                             * then triggered.
-                             */
-                            var match = cfg.tooltip.match(/url:[ ](.*?)(;|$)/),
-                                data = cfg.tooltip.replace(match[0], ''),
-                                url = utils.addURLQueryParameter(match[1], 'date', $(this).data('date'));
-                            registry.scan($el.addClass('pat-tooltip').attr({'data-pat-tooltip': data}).attr({'href': url}));
-                            $el.trigger('click.tooltip');
-                        }
+                    );
+                },
+                events: function(start, end, timezone, callback) {
+                    var events = calendar.parseEvents($el, timezone);
+                    callback(events);
+                },
+                dayClick: function () {
+                    /* Allows for a tooltip (via pat-tooltip) to be shown
+                        * when a user clicks on a day.
+                        *
+                        * The configuration is the same as pat-tooltip but
+                        * appears under "data-pat-calendar-tooltip".
+                        */
+                    if (!cfg.tooltip) {
+                        return;
                     }
-                };
+                    var $el = $(this);
+                    if (!$el.hasClass('pat-tooltip')) {
+                        /* Retrieve the injection URL from the tooltip
+                            * config data and add the day's date to its query
+                            * string.
+                            * Then take this data and use it to create and
+                            * configure a tooltip trigger element, which is
+                            * then triggered.
+                            */
+                        var match = cfg.tooltip.match(/url:[ ](.*?)(;|$)/),
+                            data = cfg.tooltip.replace(match[0], ''),
+                            url = utils.addURLQueryParameter(match[1], 'date', $(this).data('date'));
+                        registry.scan($el.addClass('pat-tooltip').attr({'data-pat-tooltip': data}).attr({'href': url}));
+                        $el.trigger('click.tooltip');
+                    }
+                }
+            };
 
             var dayNames = [ "su", "mo", "tu", "we", "th", "fr", "sa" ];
             if (dayNames.indexOf(cfg.first.day) >= 0) {
