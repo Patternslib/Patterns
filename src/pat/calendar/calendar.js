@@ -222,7 +222,7 @@ define([
             $el.find(".cal-events").css("display", "none");
         },
 
-        _refetchEvents: function($el) { 
+        _refetchEvents: function($el) {
             $el.fullCalendar("refetchEvents");
         },
 
@@ -399,12 +399,12 @@ define([
                     start = $.fullCalendar.moment.parseZone(startstr),
                     end = $.fullCalendar.moment.parseZone(endstr),
                     allday = $(event).hasClass("all-day");
-                    
+
                 if (allday) {
                     // In fullcalendar 2 the end-dat is no longer inclusive, but
                     // it should be. We fix that by adding a day so that the
                     // pat-calendar API stays the same and stays intuitive.
-                    end.add('days', 1);
+                    end.add("days", 1);
                 }
 
                 if (timezone) {
