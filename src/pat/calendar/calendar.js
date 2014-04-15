@@ -39,7 +39,7 @@ define([
     parser.add_argument("store", "none", ["none", "session", "local"]);
     parser.add_argument("ignore-url", false);
 
-    var _ = {
+    var calendar = {
         name: "calendar",
         trigger: ".pat-calendar",
 
@@ -64,14 +64,15 @@ define([
         init: function($el, opts) {
             opts = opts || {};
             var cfg = store.updateOptions($el[0], parser.parse($el)),
-                storage = cfg.store === "none" ? null : store[cfg.store](_.name + $el[0].id);
-
+                storage = cfg.store === "none" ? null : store[cfg.store](calendar.name + $el[0].id);
+            calendar.cfg = cfg;
+            calendar.storage = storage;
             cfg.defaultDate = storage.get("date") || cfg.defaultDate;
             cfg.defaultView = storage.get("view") || cfg.defaultView;
             cfg.tooltip = $el.data('patCalendarTooltip');
 
             if (!opts.ignoreUrl) {
-                var search = _._parseSearchString();
+                var search = calendar._parseSearchString();
                 if (search["default-date"]) {
                     cfg.defaultDate = search["default-date"];
                 }
@@ -91,7 +92,8 @@ define([
                     header: false,
                     timeFormat: cfg.timeFormat,
                     titleFormat: cfg.title,
-                    viewRender: _.highlightButtons,
+                    viewRender: calendar.highlightButtons,
+                    height: cfg.height !== "auto" ? cfg.height : undefined,
 
                     // Callback functions
                     // ------------------
@@ -105,7 +107,7 @@ define([
                         );
                     },
                     events: function(start, end, timezone, callback) {
-                        var events = _.parseEvents($el, timezone);
+                        var events = calendar.parseEvents($el, timezone);
                         callback(events);
                     },
                     dayClick: function () {
@@ -136,31 +138,10 @@ define([
                     }
                 };
 
-            $el.__cfg = cfg;
-            $el.__storage = storage;
-
-            if (cfg.height !== "auto") {
-                calOpts.height = cfg.height;
-            }
-
             var dayNames = [ "su", "mo", "tu", "we", "th", "fr", "sa" ];
             if (dayNames.indexOf(cfg.first.day) >= 0) {
                 calOpts.firstDay = dayNames.indexOf(cfg.first.day);
             }
-
-            var refetch = function() {
-                $el.fullCalendar("refetchEvents");
-            };
-            var refetch_deb = utils.debounce(refetch, 400);
-
-            $el.on("keyup.pat-calendar", ".filter .search-text",
-                   refetch_deb);
-            $el.on("click.pat-calendar", ".filter .search-text[type=search]",
-                   refetch_deb);
-            $el.on("change.pat-calendar", ".filter select[name=state]",
-                   refetch);
-            $el.on("change.pat-calendar", ".filter .check-list",
-                   refetch);
 
             $el.categories = $el.find(".cal-events .cal-event")
                 .map(function() {
@@ -169,11 +150,8 @@ define([
                     });
                 });
 
-            var $categoryRoot = cfg.categoryControls ?
-                    $(cfg.categoryControls) : $el;
-
-            $el.$catControls = $categoryRoot.find("input[type=checkbox]");
-            $el.$catControls.on("change.pat-calendar", refetch);
+            calendar._registerEventRefetchers($el);
+            calendar._registerCategoryControls($el);
 
             var $controlRoot = cfg.calendarControls ?
                     $(cfg.calendarControls) : $el;
@@ -207,39 +185,77 @@ define([
                 agendaWeek: ".view-week",
                 agendaDay: ".view-day"
             };
+            $el.$controlRoot.find(classMap[calOpts.defaultView]).addClass("active");
 
-            $controlRoot.find(classMap[calOpts.defaultView]).addClass("active");
-
-            $controlRoot.on("click.pat-calendar", ".jump-next", function() {
-                $el.fullCalendar("next");
-                _._viewChanged($el);
-            });
-            $controlRoot.on("click.pat-calendar", ".jump-prev", function() {
-                $el.fullCalendar("prev");
-                _._viewChanged($el);
-            });
-            $controlRoot.on("click.pat-calendar", ".jump-today", function() {
-                $el.fullCalendar("today");
-                _._viewChanged($el);
-            });
-            $controlRoot.on("click.pat-calendar", ".view-month", function() {
-                $el.fullCalendar("changeView", "month");
-                _._viewChanged($el);
-            });
-            $controlRoot.on("click.pat-calendar", ".view-week", function() {
-                $el.fullCalendar("changeView", "agendaWeek");
-                _._viewChanged($el);
-            });
-            $controlRoot.on("click.pat-calendar", ".view-day", function() {
-                $el.fullCalendar("changeView", "agendaDay");
-                _._viewChanged($el);
-            });
-            $controlRoot.on("change.pat-calendar", "select.timezone", function(ev) {
-                _.destroy($el);
-                _.init($el, {ignoreUrl: true});
-            });
-
+            calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
+        },
+
+        _refetchEvents: function($el) { 
+            $el.fullCalendar("refetchEvents");
+        },
+
+        _registerEventRefetchers: function($el) {
+            /* Register handlers for those IO events that necessitate a refetching
+             * of the calendar's event objects.
+             */
+            $el.on("keyup.pat-calendar", ".filter .search-text",
+                   utils.debounce(calendar._refetchEvents.bind(calendar, $el), 400));
+            $el.on("click.pat-calendar", ".filter .search-text[type=search]",
+                   utils.debounce(calendar._refetchEvents.bind(calendar, $el), 400));
+            $el.on("change.pat-calendar", ".filter select[name=state]",
+                   calendar._refetchEvents.bind(calendar, $el));
+            $el.on("change.pat-calendar", ".filter .check-list",
+                   calendar._refetchEvents.bind(calendar, $el));
+        },
+
+        _registerCategoryControls: function($el) {
+            /* The "category controls" are checkboxes that cause different
+             * types of events to be shown or hidden.
+             *
+             * Configured via the "category-controls" parser argument.
+             *
+             * Events will be refetched.
+             */
+            var $categoryRoot = calendar.cfg.categoryControls ?
+                    $(calendar.cfg.categoryControls) : $el;
+            $el.$catControls = $categoryRoot.find("input[type=checkbox]");
+            $el.$catControls.on("change.pat-calendar", calendar._refetchEvents.bind(calendar, $el));
+        },
+
+        _registerCalendarControls: function($el) {
+            /* Register handlers for the calendar control elements.
+             *
+             * Configured via the "calendar-controls" parser argument.
+             */
+            $el.$controlRoot.on("click.pat-calendar", ".jump-next", function() {
+                $el.fullCalendar("next");
+                calendar._viewChanged($el);
+            });
+            $el.$controlRoot.on("click.pat-calendar", ".jump-prev", function() {
+                $el.fullCalendar("prev");
+                calendar._viewChanged($el);
+            });
+            $el.$controlRoot.on("click.pat-calendar", ".jump-today", function() {
+                $el.fullCalendar("today");
+                calendar._viewChanged($el);
+            });
+            $el.$controlRoot.on("click.pat-calendar", ".view-month", function() {
+                $el.fullCalendar("changeView", "month");
+                calendar._viewChanged($el);
+            });
+            $el.$controlRoot.on("click.pat-calendar", ".view-week", function() {
+                $el.fullCalendar("changeView", "agendaWeek");
+                calendar._viewChanged($el);
+            });
+            $el.$controlRoot.on("click.pat-calendar", ".view-day", function() {
+                $el.fullCalendar("changeView", "agendaDay");
+                calendar._viewChanged($el);
+            });
+            $el.$controlRoot.on("change.pat-calendar", "select.timezone", function(ev) {
+                calendar.destroy($el);
+                calendar.init($el, {ignoreUrl: true});
+            });
         },
 
         destroy: function($el) {
@@ -256,19 +272,16 @@ define([
             // update title
             var $title = $el.find(".cal-title");
             $title.html($el.fullCalendar("getView").title);
-
             // adjust height
-            if ($el.__cfg.height === "auto") {
+            if (calendar.cfg.height === "auto") {
                 $el.fullCalendar("option", "height",
                                  $el.find(".fc-content").height());
             }
-
             // store current date and view
             var date = $el.fullCalendar("getDate").format(),
                 view = $el.fullCalendar("getView").name;
-
-            $el.__storage.set("date", date);
-            $el.__storage.set("view", view);
+            calendar.storage.set("date", date);
+            calendar.storage.set("view", view);
         },
 
         highlightButtons: function(view, element) {
@@ -384,7 +397,7 @@ define([
             return events;
         }
     };
-    registry.register(_);
+    registry.register(calendar);
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
