@@ -197,12 +197,14 @@ define([
                     $el.fullCalendar("option", "height",
                         $el.find(".fc-content").height());
                 });
-                /*
-                $(document).on("pat-update.pat-calendar", function() {
-                    $el.fullCalendar("option", "height",
-                        $el.find(".fc-content").height());
+                $(document).on("pat-update.pat-calendar", function(ev, data) {
+                    if (data.pattern !== "validate") {
+                        timeout = setTimeout(function() {
+                            $el.fullCalendar("option", "height",
+                                $el.find(".fc-content").height());
+                        }, 500);
+                    }
                 });
-                */
             }
 
             // update title
