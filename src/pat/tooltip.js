@@ -454,7 +454,12 @@ define([
                 position = tooltip.findBestPosition(status);
             }
 
-            var trigger_box = status.trigger_box,
+            var container_margin = 30,
+                // FIXME: this 20 is due to a margin placed on the
+                // tooltip pointer's CSS. This is not reusable/generic,
+                // we'll have to find a different solution.
+                tip_margin = 20,
+                trigger_box = status.trigger_box,
                 tooltip_box = status.tooltip_box,
                 trigger_center = status.trigger_center,
                 content_css = {"max-height": "", "max-width": ""},
@@ -463,21 +468,21 @@ define([
 
             switch (position[0]) {
             case "t":
-                container_offset.top = trigger_box.bottom + 20;
+                container_offset.top = trigger_box.bottom + tip_margin;
                 tip_offset.top = -23;
                 bottom_row = status.scroll.top + status.window.height,
-                content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
+                content_css["max-height"] = (bottom_row - container_offset.top - container_margin) + "px";
                 break;
             case "l":
-                container_offset.left = trigger_box.right + 20;
+                container_offset.left = trigger_box.right + tip_margin;
                 tip_offset.left = -23;
                 x = status.window.width + status.scroll.left;
-                content_css["max-width"] = (x - container_offset.left - 30) + "px";
+                content_css["max-width"] = (x - container_offset.left - container_margin) + "px";
                 break;
             case "b":
                 if (options.height === "max") {
-                    container_offset.top = 30;
-                    content_css["max-height"] = (trigger_box.top - container_offset.top) + "px";
+                    container_offset.top = container_margin;
+                    content_css["max-height"] = (trigger_box.top - 2*container_margin) + "px";
                 } else {
                     container_offset.top = trigger_box.top - tooltip_box.height + 10;
                     tip_offset.top = tooltip_box.height;
@@ -492,11 +497,11 @@ define([
             case "r":
                 if (tooltip_box.width > trigger_box.left) {
                     // Tooltip is too wide, we need to restrict its width.
-                    container_offset.left = 5;
-                    tip_offset.left = trigger_box.left -5;
-                    container_css["max-width"] = (trigger_box.left - 5) + "px";
+                    container_offset.left = container_margin;
+                    tip_offset.left = trigger_box.left - container_margin;
+                    container_css["max-width"] = (trigger_box.left - container_margin) + "px";
                 } else {
-                    container_offset.left = trigger_box.left - tooltip_box.width - 20;
+                    container_offset.left = trigger_box.left - tooltip_box.width - tip_margin;
                     tip_offset.left = tooltip_box.width;
                 }
                 break;
@@ -507,21 +512,21 @@ define([
             case "b":
                 switch (position[1]) {
                 case "l":
-                    container_offset.left = trigger_center.left - 20;
+                    container_offset.left = trigger_center.left - tip_margin;
                     tip_offset.left = 0;
                     if ((trigger_center.left - tooltip_box.width) < 0) {
                         // Tooltip is too wide, we need to restrict its width.
-                        container_css["max-width"] = (status.window.width - trigger_center.left -5) + "px";
-                        container_offset.right = 5;
+                        container_css["max-width"] = (status.window.width - trigger_center.left -container_margin) + "px";
+                        container_offset.right = container_margin;
                     }
                     break;
                 case "m":
                     container_offset.left = trigger_center.left - (tooltip_box.width/2);
-                    tip_offset.left = tooltip_box.width/2 - 10;
+                    tip_offset.left = tooltip_box.width/2 - tip_margin/2;
                     break;
                 case "r":
                     container_offset.left = trigger_center.left + 29 - tooltip_box.width;
-                    tip_offset.left = tooltip_box.width - 20;
+                    tip_offset.left = tooltip_box.width - tip_margin;
                     break;
                 }
                 break;
@@ -530,35 +535,35 @@ define([
                 switch (position[1]) {
                     case "t":
                         if (options.height === "max") {
-                            container_offset.top = 30;
-                            tip_offset.top = trigger_box.top;
+                            container_offset.top = container_margin;
+                            tip_offset.top = trigger_box.top - container_margin - tip_margin;
                         } else {
-                            container_offset.top = trigger_center.top - 30;
+                            container_offset.top = trigger_center.top - container_margin;
                             tip_offset.top = 0;
                         }
                         bottom_row = status.scroll.top + status.window.height,
-                        content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
+                        content_css["max-height"] = (bottom_row - container_offset.top - container_margin) + "px";
                         break;
                     case "m":
                         if (options.height === "max") {
-                            container_offset.top = 30;
+                            container_offset.top = container_margin;
                             bottom_row = status.scroll.top + status.window.height,
-                            content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
-                            tip_offset.top = trigger_box.bottom - trigger_box.height/2;
+                            content_css["max-height"] = (bottom_row - 2*container_margin) + "px";
+                            tip_offset.top = trigger_box.top - container_margin;
                         } else {
                             container_offset.top = trigger_center.top - (tooltip_box.height/2);
-                            tip_offset.top = tooltip_box.height/2 - 10;
+                            tip_offset.top = tooltip_box.height/2 - tip_margin/2;
                         }
                         break;
                     case "b":
                         if (options.height === "max") {
-                            container_offset.top = 30;
+                            container_offset.top = 2*container_margin;
                             bottom_row = status.scroll.top + status.window.height,
-                            content_css["max-height"] = (bottom_row - container_offset.top - 30) + "px";
-                            tip_offset.top = trigger_box.top;
+                            content_css["height"] = (bottom_row - 3*container_margin) + "px";
+                            tip_offset.top = trigger_center.top - container_margin - tip_margin;
                         } else {
                             container_offset.top = trigger_center.top - tooltip_box.height;
-                            tip_offset.top = trigger_center.top - 20;
+                            tip_offset.top = trigger_center.top - tip_margin;
                         }
                         break;
                 }
