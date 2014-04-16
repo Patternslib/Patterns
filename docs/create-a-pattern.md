@@ -21,6 +21,16 @@ This code does several number of things:
 This pattern can be loaded directly in your browser after a standard Patterns
 bundle has been loaded.
 
+```html
+<html>
+  <body>
+    ...
+    <script src="patterns-2.0.0.js"></script>
+    <script src="mypattern.js"></script>
+  </body>
+</html>
+```
+
 
 Handling DOM elements
 ----------------------
