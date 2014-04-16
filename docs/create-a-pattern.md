@@ -10,7 +10,6 @@ var mypattern = {
 };
 
 window.patterns.register(mypattern);
-}());
 ```
 
 This code does several number of things:
@@ -39,7 +38,6 @@ var mypattern = {
     init: function mypattern_init($el) {
         $el.addClass("i-am-a-header");
     }
-
 };
 ```
 
