@@ -49,6 +49,7 @@ var mypattern = {
         $el.addClass("i-am-a-header");
     }
 };
+window.patterns.register(mypattern);
 ```
 
 There is a general rule that patterns should only trigger for elements that
