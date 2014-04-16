@@ -37,8 +37,8 @@ Handling DOM elements
 
 The minimal pattern shown before works, but does not actually do anything. Lets
 extend it to add a CSS class to headers in your document. To do this we need
-to do two things: 1) add an ``init`` function to the pattern which will update
-the DOM, and 2) specify for which DOM elements our init function must be called.
+to do two things: 1) specify which DOM elements our pattern wants to handle, and
+2) add an ``init`` function which will update the DOM.
 
 ```javascript
 var mypattern = {
