@@ -43,7 +43,7 @@ to do two things: 1) specify which DOM elements our pattern wants to handle, and
 ```javascript
 var mypattern = {
     name: "mypattern",
-    trigger: "h1.pat-mypattern,h2.pat-mypatterh,h3.pat-mypattern",
+    trigger: "h1.pat-mypattern,h2.pat-mypattern,h3.pat-mypattern",
 
     init: function mypattern_init($el) {
         $el.addClass("i-am-a-header");
