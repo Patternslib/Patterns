@@ -1,4 +1,3 @@
-
 define("TestRunner", function() {
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 1000;
@@ -46,12 +45,11 @@ define("TestRunner", function() {
         "specs/pat/stacks.js",
         "specs/pat/switch.js",
         "specs/pat/toggle.js",
+        "specs/pat/tooltip",
         "specs/pat/validate.js",
         "specs/pat/zoom.js"
     ], function() {
         jasmineEnv.execute();
     });
 });
-
 require(["TestRunner"]);
-
