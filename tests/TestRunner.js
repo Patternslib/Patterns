@@ -28,6 +28,7 @@ define("TestRunner", function() {
         "specs/pat/autoscale.js",
         "specs/pat/autosubmit.js",
         "specs/pat/bumper.js",
+        "specs/pat/calendar.js",
         "specs/pat/carousel.js",
         "specs/pat/checkedflag.js",
         "specs/pat/checklist.js",
