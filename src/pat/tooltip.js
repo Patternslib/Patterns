@@ -126,7 +126,7 @@ define([
                 });
                 $(document).on("click.tooltip", $trigger, tooltip.hide);
                 $(document).on("pat-tooltip-click.tooltip", $trigger, tooltip.hide);
-                $trigger.on("click.tooltip", $trigger, tooltip.onClick);
+                $trigger.on("click.tooltip", $trigger, tooltip._onClick);
                 // close if something inside the tooltip triggered an injection
                 $container.on("patterns-inject-triggered.tooltip",
                               $trigger, tooltip.hide);
@@ -138,7 +138,7 @@ define([
             }
         },
 
-        onClick: function(event) {
+        _onClick: function(event) {
             // XXX: this handler is necessary in order to suppress the click
             // on the trigger from bubbling. (see show function)
             tooltip.hide(event);
