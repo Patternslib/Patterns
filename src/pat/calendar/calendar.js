@@ -78,6 +78,13 @@ define([
                 cfg.newEventURL = match[1];
             }
 
+            // FIXME: should be configurable
+            $(".cal-event").draggable({
+                zIndex: 200,
+                helper: "clone",
+                appendTo: "body"
+            });
+
             if (!opts.ignoreUrl) {
                 var search = calendar._parseSearchString();
                 if (search["default-date"]) {
@@ -93,16 +100,36 @@ define([
                 columnFormat: cfg.column,
                 defaultDate: cfg.defaultDate,
                 defaultView: cfg.defaultView,
-                editable: true,
+                droppable: true,    // Enable dropping of external elements (i.e. not events)
+                editable: true,     // Enable drag&drop and drag2resize of events
+                // dropAccept: "[draggable=true]", // FIXME: make configurable
                 firstHour: cfg.first.hour,
                 header: false,
+                height: cfg.height !== "auto" ? cfg.height : undefined,
                 timeFormat: cfg.timeFormat,
                 titleFormat: cfg.title,
                 viewRender: calendar.highlightButtons,
-                height: cfg.height !== "auto" ? cfg.height : undefined,
 
                 // Callback functions
                 // ------------------
+                drop: function (moment, ev, obj, view) {
+                    var $event = $(this),
+                        url = $event.find("a").addBack("a").attr("href"),
+                        data = {
+                            "start": moment.format(),
+                            "pat-calendar-event-drop": true
+                        };
+                    if (view.name === "month") {
+                        data.end = moment.clone().format();
+                        data.allDay = true;
+                    } else {
+                        data.end = moment.clone().add("minutes", 30).format();
+                        data.allDay = false;
+                    }
+                    calendar._addNewEvent($el, $event, data);
+                    calendar._refetchEvents($el);
+                    $.getJSON(url, data);
+                },
                 eventDrop: calendar._changeEventDates,
                 eventResize: calendar._changeEventDates,
                 events: function(start, end, timezone, callback) {
@@ -162,7 +189,6 @@ define([
             if (dayNames.indexOf(cfg.first.day) >= 0) {
                 calOpts.firstDay = dayNames.indexOf(cfg.first.day);
             }
-
             $el.categories = $el.find(".cal-events .cal-event")
                 .map(function() {
                     return this.className.split(" ").filter(function(cls) {
@@ -199,40 +225,64 @@ define([
                     }
                 });
             }
-
             // update title
             var $title = $el.find(".cal-title");
             $title.text($el.fullCalendar("getView").title);
-
             var classMap = {
                 month: ".view-month",
                 agendaWeek: ".view-week",
                 agendaDay: ".view-day"
             };
             $el.$controlRoot.find(classMap[calOpts.defaultView]).addClass("active");
-
             calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
+        },
+
+        _addNewEvent: function($el, $event, data) {
+            /* Add a new event to the list of events parsed by fullcalendar.
+             * Used when dropping a foreign element.
+             */
+            // FIXME: this code is makes too much assumptions of the structure
+            // of the dropped element. Needs to be made more generic, together
+            // with parseEvents.
+            var $events = $el.find(".cal-events");
+            var $details = $event.find("ul.details");
+            $details.append($("<li>").append($("<time>").addClass("start").attr("datetime", data.start).text(data.start)));
+            $details.append($("<li>").append($("<time>").addClass("end").attr("datetime", data.end).text(data.end)));
+            $events.append($event);
         },
 
         _changeEventDates: function(evt) {
             /* Called when an event's dates have changed due to a drag&drop or
              * drag&resize action.
              */
-            var $event = calendar.findEventByURL(calendar.$el, evt.url),
+            var tzstr, $event = calendar.findEventByURL(calendar.$el, evt.url),
                 regex = /\+[0-9]{2}:[0-9]{2}$/,
-                tzstr = evt.start.clone().tz(calendar.cfg.timezone).format().match(regex)[0],
-                startstr = evt.start.format() + tzstr,
-                endstr = evt.end.format() + tzstr;
+                match = evt.start.clone().tz(calendar.cfg.timezone).format().match(regex),
+                data = {
+                    "allDay": evt.allDay,
+                    "pat-calendar-event-drop": true,
+                    "start": evt.start.format()
+                };
+            if (match && match.length > 0) {
+                tzstr = match[0];
+            } else {
+                tzstr = "";
+            }
+            if (evt.end === null){
+                if (evt.allDay === true) {
+                    data.end = evt.start.clone().format();
+                } else {
+                    data.end = evt.start.clone().add("minutes", 30).format();
+                }
+            } else {
+                data.end = evt.end.format();
+            }
+            var startstr = data.start + tzstr;
+            var endstr = data.end + tzstr;
             $event.find("time.start").attr("datetime", startstr).text(startstr);
             $event.find("time.end").attr("datetime", endstr).text(endstr);
-            $.getJSON(
-                evt.url,
-                { "start": evt.start.toISOString(),
-                    "end": evt.end.toISOString(),
-                    "pat-calendar-event-drop": true
-                }
-            );
+            $.getJSON(evt.url, data);
         },
 
         _refetchEvents: function($el) {
