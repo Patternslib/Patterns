@@ -61,10 +61,12 @@ define([
             return context;
         },
 
-        init: function($el, opts) {
+        init: function($elem, opts) {
             opts = opts || {};
-            var cfg = store.updateOptions($el[0], parser.parse($el)),
+            var $el = $elem,
+                cfg = store.updateOptions($el[0], parser.parse($el)),
                 storage = cfg.store === "none" ? null : store[cfg.store](calendar.name + $el[0].id);
+            calendar.$el = $el;
             calendar.cfg = cfg;
             calendar.storage = storage;
             cfg.defaultDate = storage.get("date") || cfg.defaultDate;
@@ -91,7 +93,6 @@ define([
                 columnFormat: cfg.column,
                 defaultDate: cfg.defaultDate,
                 defaultView: cfg.defaultView,
-                droppable: true,
                 editable: true,
                 firstHour: cfg.first.hour,
                 header: false,
@@ -102,46 +103,58 @@ define([
 
                 // Callback functions
                 // ------------------
-                eventDrop: function(event) {
-                    $.getJSON(
-                        event.url,
-                        { "start": event.start.toISOString(),
-                            "end": event.end.toISOString(),
-                            "pat-calendar-event-drop": true
-                        }
-                    );
-                },
+                eventDrop: calendar._changeEventDates,
+                eventResize: calendar._changeEventDates,
                 events: function(start, end, timezone, callback) {
                     var events = calendar.parseEvents($el, timezone);
                     callback(events);
                 },
-                dayClick: function (moment, ev, view) {
-                    /* Allows for a tooltip (via pat-tooltip) to be shown
-                        * when a user clicks on a day.
-                        *
-                        * The configuration is the same as pat-tooltip but
-                        * appears under "data-pat-calendar-tooltip".
-                        */
-                    var $el;
-                    if (!cfg.tooltipConfig) {
-                        return;
-                    }
-                    if (view.name === "agendaWeek") {
-                        $el = $(this);
-                    } else {
-                        $el = $(ev.target);
-                    }
-                    if ($el.hasClass("pat-tooltip") && view.name === "agendaMonth") {
-                        // agendaMonth gets triggered automatically via click event
-                        // bubbling up from contained div
+                eventAfterRender: function(ev, $event, view) {
+                    if (ev.id !== "pat-calendar-new-event") {
                         return;
                     }
                     /* Take the data from data-pat-calendar-tooltip to
                      * configure a tooltip trigger element.
                      */
-                    var url = utils.addURLQueryParameter(cfg.newEventURL, "date", moment.format());
-                    registry.scan($el.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
-                    $el.trigger("click.tooltip");
+                    if (!cfg.tooltipOpen) {
+                        cfg.tooltipOpen = true;
+                        var url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
+                        registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
+                        $event.trigger("click.tooltip");
+                        $event.on("pat-update", function (event, data) {
+                            if (data.pattern === "tooltip" && data.hidden === true) {
+                                event.stopPropagation();
+                                if ($(this).is(":visible")) {
+                                    $el.fullCalendar("removeEvents", ev.id);
+                                    cfg.tooltipOpen = false;
+                                }
+                            }
+                        });
+                    }
+                },
+                dayClick: function (moment, ev, view) {
+                    /* If "data-pat-calendar-tooltip" was configured, we open
+                     * a tooltip when the user clicks on an day in the
+                     * calendar.
+                     */
+                    if (!cfg.tooltipConfig) {
+                        return;
+                    }
+                    var end;
+                    if (view.name !== "month") {
+                        end = moment.clone().add("minutes", 30);
+                    } else {
+                        end = undefined;
+                    }
+                    var id = "pat-calendar-new-event";
+                    $el.fullCalendar("removeEvents", id);
+                    cfg.tooltipOpen = false;
+                    $el.fullCalendar("renderEvent", {
+                        title: "New Event",
+                        start: moment,
+                        end: end,
+                        id: id
+                    });
                 }
             };
 
@@ -163,7 +176,7 @@ define([
             var $controlRoot = cfg.calendarControls ?
                     $(cfg.calendarControls) : $el;
             $el.$controlRoot = $controlRoot;
-            calOpts.timezone = $controlRoot.find("select.timezone").val();
+            cfg.timezone = calOpts.timezone = $controlRoot.find("select.timezone").val();
 
             $el.fullCalendar(calOpts);
             // move to end of $el
@@ -177,9 +190,13 @@ define([
                     $el.fullCalendar("option", "height",
                         $el.find(".fc-content").height());
                 });
-                $(document).on("pat-update.pat-calendar", function() {
-                    $el.fullCalendar("option", "height",
-                        $el.find(".fc-content").height());
+                $(document).on("pat-update.pat-calendar", function(ev, data) {
+                    if (data.pattern !== "validate") {
+                        timeout = setTimeout(function() {
+                            $el.fullCalendar("option", "height",
+                                $el.find(".fc-content").height());
+                        }, 500);
+                    }
                 });
             }
 
@@ -196,6 +213,26 @@ define([
 
             calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
+        },
+
+        _changeEventDates: function(evt) {
+            /* Called when an event's dates have changed due to a drag&drop or
+             * drag&resize action.
+             */
+            var $event = calendar.findEventByURL(calendar.$el, evt.url),
+                regex = /\+[0-9]{2}:[0-9]{2}$/,
+                tzstr = evt.start.clone().tz(calendar.cfg.timezone).format().match(regex)[0],
+                startstr = evt.start.format() + tzstr,
+                endstr = evt.end.format() + tzstr;
+            $event.find('time.start').attr('datetime', startstr).text(startstr);
+            $event.find('time.end').attr('datetime', endstr).text(endstr);
+            $.getJSON(
+                evt.url,
+                { "start": evt.start.toISOString(),
+                    "end": evt.end.toISOString(),
+                    "pat-calendar-event-drop": true
+                }
+            );
         },
 
         _refetchEvents: function($el) {
@@ -320,6 +357,13 @@ define([
             $body.find(classMap[view.name]).addClass("active");
         },
 
+        findEventByURL: function($el, url) {
+            var regex = new RegExp("^"+url+"$");
+            return $el.find(".cal-events .cal-event").filter(function() {
+                return regex.test($(this).find("a").attr('href'));
+            });
+        },
+
         parseEvents: function($el, timezone) {
             var $events = $el.find(".cal-events"),
                 $filter = $el.find(".filter"),
@@ -360,23 +404,19 @@ define([
 
             var events = $events.find(".cal-event").filter(function() {
                 var $event = $(this);
-
                 if (searchText && !regex.test($event.find(".title").text())) {
                     log.debug("remove due to search-text="+searchText, $event);
                     return false;
                 }
-
                 return shownCats.filter(function() {
                     return $event.hasClass(this);
                 }).length;
             }).map(function(idx, event) {
                 var attr, i;
-
                 // classNames: all event classes without "event" + anchor classes
                 var classNames = $(event).attr("class").split(/\s+/)
                     .filter(function(cls) { return (cls !== "cal-event"); })
                     .concat($("a", event).attr("class").split(/\s+/));
-
                 // attrs: all "data-" attrs from anchor
                 var allattrs = $("a", event)[0].attributes,
                     attrs = {};
@@ -400,7 +440,6 @@ define([
                     // pat-calendar API stays the same and stays intuitive.
                     end.add("days", 1);
                 }
-
                 if (timezone) {
                     start = start.tz(timezone);
                     end = end.tz(timezone);
