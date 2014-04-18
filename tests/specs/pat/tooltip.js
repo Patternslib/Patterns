@@ -87,17 +87,13 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     spyOn(pattern, "show").andCallThrough();
                     spyOn(inject, "execute"); //.andCallThrough();
                     pattern.init($el);
-                    // XXX: Have to disable runs/waits methods because older
-                    // phantomjs-jasmine can't handle it. Newer jasmine appears
-                    // to cause problems on Jenkins, which has old Node.js
-                    // version. :-/
-                    // XXX: runs(function () {
-                    $el.trigger(utils.click);
-                    // });
-                    // XXX: waits(200);
-                    // XXX: runs(function () {
-                    expect(pattern.show).toHaveBeenCalled();
-                    expect(inject.execute).toHaveBeenCalled();
+                    runs(function () {
+                        $el.trigger(utils.click);
+                    });
+                    waits(200);
+                    runs(function () {
+                        expect(pattern.show).toHaveBeenCalled();
+                        expect(inject.execute).toHaveBeenCalled();
                         /* XXX: The ajax call works fine in the browser but not
                          * via PhantomJS. Will have to debug later.
                          *
@@ -105,8 +101,8 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                         // Content is fetched from ./tests/content.html#content
                         expect($container.text()).toBe(
                             "External content fetched via an HTTP request.");
+                        */
                     });
-                    */
                 });
             });
 
