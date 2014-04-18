@@ -5,9 +5,9 @@ require.config({
         "console-runner": "../node_modules/phantom-jasmine/lib/console-runner"
     },
     shim: {
-        'jasmine-html': {
-            deps: ['jasmine'],
-            exports: 'jasmine'
+        "jasmine-html": {
+            deps: ["jasmine"],
+            exports: "jasmine"
         }
     }
 });

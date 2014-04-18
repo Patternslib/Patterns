@@ -109,7 +109,7 @@ define([
                     var events = calendar.parseEvents($el, timezone);
                     callback(events);
                 },
-                eventAfterRender: function(ev, $event, view) {
+                eventAfterRender: function(ev, $event) {
                     if (ev.id !== "pat-calendar-new-event") {
                         return;
                     }
@@ -192,7 +192,7 @@ define([
                 });
                 $(document).on("pat-update.pat-calendar", function(ev, data) {
                     if (data.pattern !== "validate") {
-                        timeout = setTimeout(function() {
+                        setTimeout(function() {
                             $el.fullCalendar("option", "height",
                                 $el.find(".fc-content").height());
                         }, 500);
@@ -224,8 +224,8 @@ define([
                 tzstr = evt.start.clone().tz(calendar.cfg.timezone).format().match(regex)[0],
                 startstr = evt.start.format() + tzstr,
                 endstr = evt.end.format() + tzstr;
-            $event.find('time.start').attr('datetime', startstr).text(startstr);
-            $event.find('time.end').attr('datetime', endstr).text(endstr);
+            $event.find("time.start").attr("datetime", startstr).text(startstr);
+            $event.find("time.end").attr("datetime", endstr).text(endstr);
             $.getJSON(
                 evt.url,
                 { "start": evt.start.toISOString(),
@@ -360,7 +360,7 @@ define([
         findEventByURL: function($el, url) {
             var regex = new RegExp("^"+url+"$");
             return $el.find(".cal-events .cal-event").filter(function() {
-                return regex.test($(this).find("a").attr('href'));
+                return regex.test($(this).find("a").attr("href"));
             });
         },
 
