@@ -99,8 +99,8 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     expect(pattern.show).toHaveBeenCalled();
                     expect(inject.execute).toHaveBeenCalled();
                         /* XXX: The ajax call works fine in the browser but not
-                            * via PhantomJS. Will have to debug later. 
-                            *
+                         * via PhantomJS. Will have to debug later.
+                         *
                         var $container = $el.data("patterns.tooltip.container");
                         // Content is fetched from ./tests/content.html#content
                         expect($container.text()).toBe(
