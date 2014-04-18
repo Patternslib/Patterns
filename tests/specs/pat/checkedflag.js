@@ -207,7 +207,7 @@ define(["pat-checkedflag"], function(pattern) {
             it("handles selects", function() {
                 $("#lab").html([
                     '<form>',
-                    '  <label>',
+                    '  <label id="checkedflag">',
                     '    <select>',
                     '      <option value="1">one<option>',
                     '      <option value="2">two<option>',
@@ -216,7 +216,7 @@ define(["pat-checkedflag"], function(pattern) {
                     '</form>'
                 ].join("\n"));
 
-                var $label = $('label'),
+                var $label = $('label#checkedflag'),
                     $select = $('select'),
                     $option1 = $('option[value="1"]'),
                     $option2 = $('option[value="2"]');
@@ -240,6 +240,7 @@ define(["pat-checkedflag"], function(pattern) {
                 expect($option1.prop('selected')).toBe(false);
                 expect($option2.prop('selected')).toBe(true);
                 expect($label.attr("data-option")).toBe("two");
+                $label.remove();
             });
        });
     });
