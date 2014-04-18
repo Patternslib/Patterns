@@ -13,8 +13,8 @@
         "bower": "latest",
         "jshint": "~0.9.1",
         "pegjs": "0.7.0",
-        "phantom-jasmine": "0.3.0",
-        "phantomjs": "~1.9.1-0",
+        "phantom-jasmine": "0.1.8",
+        "phantomjs": "~1.9.7-0",
         "requirejs": ""
     },
     "homepage": "https://gitub.com/Patternslib/Patterns",
