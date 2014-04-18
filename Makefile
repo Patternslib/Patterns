@@ -43,8 +43,7 @@ jshint: stamp-npm
 
 
 check:: stamp-npm
-	# $(PHANTOMJS) --debug=true node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner.html
-	$(PHANTOMJS) node_modules/jasmine-reporters/test/phantomjs-testrunner.js  $(shell pwd)/tests/TestRunner.html
+	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner.html
 
 
 ########################################################################
