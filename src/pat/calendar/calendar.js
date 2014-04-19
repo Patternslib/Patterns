@@ -208,6 +208,7 @@ define([
             var $details = $event.find("ul.details");
             $details.append($("<li>").append($("<time>").addClass("start").attr("datetime", data.start).text(data.start)));
             $details.append($("<li>").append($("<time>").addClass("end").attr("datetime", data.end).text(data.end)));
+            if (data.allDay === true) { $event.addClass("all-day"); }
             $events.append($event);
         },
 
@@ -234,7 +235,7 @@ define([
             /* Called when an event's dates have changed due to a drag&drop or
              * drag&resize action.
              */
-            var tzstr, $event = calendar.findEventByURL(calendar.$el, evt.url),
+            var $event = calendar.findEventByURL(calendar.$el, evt.url),
                 regex = /\+[0-9]{2}:[0-9]{2}$/,
                 match = evt.start.clone().tz(calendar.cfg.timezone).format().match(regex),
                 data = {
@@ -242,20 +243,14 @@ define([
                     "pat-calendar-event-drop": true,
                     "start": evt.start.format()
                 };
-            if (match && match.length > 0) {
-                tzstr = match[0];
+            if (evt.allDay === true) {
+                // XXX: In fullcalendar 2 the end-date is no longer inclusive,
+                // so we substract a day here.
+                data.end = ((evt.end === null) ? evt.start.clone() : evt.end.clone().subtract("days", 1)).format();
             } else {
-                tzstr = "";
+                data.end = ((evt.end === null) ? evt.start.clone().add("minutes", 30) : evt.end).format();
             }
-            if (evt.end === null){
-                if (evt.allDay === true) {
-                    data.end = evt.start.clone().format();
-                } else {
-                    data.end = evt.start.clone().add("minutes", 30).format();
-                }
-            } else {
-                data.end = evt.end.format();
-            }
+            var tzstr = (match && match.length > 0) ? match[0] : "";
             var startstr = data.start + tzstr;
             var endstr = data.end + tzstr;
             $event.find("time.start").attr("datetime", startstr).text(startstr);
@@ -484,7 +479,7 @@ define([
                     allday = $(event).hasClass("all-day");
 
                 if (allday) {
-                    // In fullcalendar 2 the end-dat is no longer inclusive, but
+                    // XXX: In fullcalendar 2 the end-date is no longer inclusive, but
                     // it should be. We fix that by adding a day so that the
                     // pat-calendar API stays the same and stays intuitive.
                     end.add("days", 1);
