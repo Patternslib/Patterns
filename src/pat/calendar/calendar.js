@@ -20,24 +20,25 @@ define([
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
 
-    parser.add_argument("height", "auto");
-    parser.add_argument("start-date");
-    parser.add_argument("time-format", "h(:mm)t");
-    parser.add_argument("title-month", "MMMM YYYY");
-    parser.add_argument("title-week", "MMM D YYYY");
-    parser.add_argument("title-day", "dddd, MMM d, YYYY");
-    parser.add_argument("column-month", "ddd");
-    parser.add_argument("column-week", "ddd M/d");
-    parser.add_argument("column-day", "dddd M/d");
-    parser.add_argument("first-day", "0");
-    parser.add_argument("first-hour", "6");
     parser.add_argument("calendar-controls", "");
     parser.add_argument("category-controls", "");
-    parser.add_argument("default-view", "month",
-                        ["month", "basicWeek", "basicDay",
-                         "agendaWeek", "agendaDay"]);
-    parser.add_argument("store", "none", ["none", "session", "local"]);
+    parser.add_argument("column-day", "dddd M/d");
+    parser.add_argument("column-month", "ddd");
+    parser.add_argument("column-week", "ddd M/d");
+    parser.add_argument("default-view", "month", ["month", "basicWeek", "basicDay", "agendaWeek", "agendaDay"]);
+    parser.add_argument("drag-and-drop", true, [true, false]);
+    parser.add_argument("drop-external-events", true, [true, false]);
+    parser.add_argument("external-event-selector", "");
+    parser.add_argument("first-day", "0");
+    parser.add_argument("first-hour", "6");
+    parser.add_argument("height", "auto");
     parser.add_argument("ignore-url", false);
+    parser.add_argument("start-date");
+    parser.add_argument("store", "none", ["none", "session", "local"]);
+    parser.add_argument("time-format", "h(:mm)t");
+    parser.add_argument("title-day", "dddd, MMM d, YYYY");
+    parser.add_argument("title-month", "MMMM YYYY");
+    parser.add_argument("title-week", "MMM D YYYY");
 
     var calendar = {
         name: "calendar",
@@ -78,12 +79,13 @@ define([
                 cfg.newEventURL = match[1];
             }
 
-            // FIXME: should be configurable
-            $(".cal-event").draggable({
-                zIndex: 200,
-                helper: "clone",
-                appendTo: "body"
-            });
+            if (cfg.externalEventSelector) {
+                $(cfg.externalEventSelector).draggable({
+                    zIndex: 200,
+                    helper: "clone",
+                    appendTo: "body"
+                });
+            }
 
             if (!opts.ignoreUrl) {
                 var search = calendar._parseSearchString();
@@ -100,9 +102,9 @@ define([
                 columnFormat: cfg.column,
                 defaultDate: cfg.defaultDate,
                 defaultView: cfg.defaultView,
-                droppable: true,    // Enable dropping of external elements (i.e. not events)
-                editable: true,     // Enable drag&drop and drag2resize of events
-                // dropAccept: "[draggable=true]", // FIXME: make configurable
+                droppable: cfg.dropExternalEvents,  // Enable dropping of external elements (i.e. not events)
+                editable: cfg.dragAndDrop,          // Enable drag&drop and drag2resize of events
+                dropAccept: cfg.externalEventSelector,
                 firstHour: cfg.first.hour,
                 header: false,
                 height: cfg.height !== "auto" ? cfg.height : undefined,
