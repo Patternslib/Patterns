@@ -210,23 +210,7 @@ define([
             // move to end of $el
             $el.find(".fc-content").appendTo($el);
 
-            if (cfg.height === "auto") {
-                $el.fullCalendar("option", "height",
-                    $el.find(".fc-content").height());
-
-                $(window).on("resize.pat-calendar", function() {
-                    $el.fullCalendar("option", "height",
-                        $el.find(".fc-content").height());
-                });
-                $(document).on("pat-update.pat-calendar", function(ev, data) {
-                    if (data.pattern !== "validate") {
-                        setTimeout(function() {
-                            $el.fullCalendar("option", "height",
-                                $el.find(".fc-content").height());
-                        }, 500);
-                    }
-                });
-            }
+            this._registerRedrawHandlers();
             // update title
             var $title = $el.find(".cal-title");
             $title.text($el.fullCalendar("getView").title);
@@ -289,6 +273,33 @@ define([
 
         _refetchEvents: function($el) {
             $el.fullCalendar("refetchEvents");
+        },
+
+        _redrawCalendar: function() {
+            this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
+        },
+
+        _registerRedrawHandlers: function() {
+            if (calendar.cfg.height === "auto") {
+                this._redrawCalendar();
+
+                $(window).on("resize.pat-calendar", function(ev) {
+                    if ($(ev.target).hasClass("fc-event")) { 
+                        // Don't do anything if the element being resized is a
+                        // calendar event.
+                        // Otherwise drag2resize breaks.
+                        return;
+                    }
+                    this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
+                });
+                $(document).on("pat-update.pat-calendar", function(ev, data) {
+                    if (data.pattern !== "validate") {
+                        timeout = setTimeout(function() {
+                            this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
+                        }, 500);
+                    }
+                });
+            }
         },
 
         _registerEventRefetchers: function($el) {
