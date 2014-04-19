@@ -20,7 +20,7 @@ define([
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
 
-    parser.add_argument("calendar-controls", "");
+    parser.add_argument("calendar-controls", ""); // Calendar controls must have "id" attr set
     parser.add_argument("category-controls", "");
     parser.add_argument("column-day", "dddd M/d");
     parser.add_argument("column-month", "ddd");
@@ -271,7 +271,7 @@ define([
                 this._redrawCalendar();
 
                 $(window).on("resize.pat-calendar", function(ev) {
-                    if ($(ev.target).hasClass("fc-event")) { 
+                    if ($(ev.target).hasClass("fc-event")) {
                         // Don't do anything if the element being resized is a
                         // calendar event.
                         // Otherwise drag2resize breaks.
@@ -281,7 +281,7 @@ define([
                 });
                 $(document).on("pat-update.pat-calendar", function(ev, data) {
                     if (data.pattern !== "validate") {
-                        timeout = setTimeout(function() {
+                        setTimeout(function() {
                             this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
                         }, 500);
                     }
@@ -315,7 +315,9 @@ define([
                     $(calendar.cfg.categoryControls) : $el;
             $el.$catControls = $categoryRoot.find("input[type=checkbox]");
             $el.$catControls.on("change.pat-calendar", function() {
-                calendar.storage.set(this.id, this.checked);
+                if (this.id) {
+                    calendar.storage.set(this.id, this.checked);
+                }
                 calendar._refetchEvents($el);
              });
         },
@@ -422,6 +424,9 @@ define([
 
             var calKeys = calendar.storage._allKeys();
             $el.$catControls.each(function() {
+                if (!this.id) {
+                    return;
+                }
                 if (calKeys.indexOf(calendar.storage.prefix + ":" + this.id) !== -1) {
                     if (calendar.storage.get(this.id) === false) {
                         $(this).attr("checked", false);
