@@ -52,8 +52,9 @@ define([
             }
 
             if (cfg.data.length) {
-                var data = jQuery.parseJSON(cfg.data);
+                var data = $.parseJSON(cfg.data);
                 var ids = [];
+                var d;
                 for (d in data) {
                     ids.push(data[d].id);
                 }
