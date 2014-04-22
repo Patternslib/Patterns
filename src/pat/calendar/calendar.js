@@ -268,7 +268,7 @@ define([
 
         _registerRedrawHandlers: function() {
             if (calendar.cfg.height === "auto") {
-                this._redrawCalendar();
+                calendar._redrawCalendar();
 
                 $(window).on("resize.pat-calendar", function(ev) {
                     if ($(ev.target).hasClass("fc-event")) {
@@ -277,13 +277,13 @@ define([
                         // Otherwise drag2resize breaks.
                         return;
                     }
-                    this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
+                    calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                 });
                 $(document).on("pat-update.pat-calendar", function(ev, data) {
                     if (data.pattern !== "validate") {
                         setTimeout(function() {
-                            this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
-                        }, 500);
+                            calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
+                        }, 300);
                     }
                 });
             }
