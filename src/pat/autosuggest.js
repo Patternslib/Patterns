@@ -17,6 +17,7 @@ define([
     parser.add_argument("ajax-data-type", "");
     parser.add_argument("ajax-search-index", "");
     parser.add_argument("pre-fill", function($el) { return $el.val(); });
+    parser.add_argument("data", "");
     parser.add_argument("placeholder", function($el) {
         return $el.attr("placeholder") || "Enter text";
     });
@@ -30,9 +31,6 @@ define([
             }
             var cfg = parser.parse($el, opts);
 
-            var prefill = cfg.preFill.split(",");
-            $el.val(prefill);
-
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
@@ -40,13 +38,28 @@ define([
                 openOnEnter: false
             };
 
-            if (prefill.length) {
+            if (cfg.preFill.length) {
+                var prefill = cfg.preFill.split(",");
+                $el.val(prefill);
                 config.initSelection = function (element, callback) {
                     var i, data = [],
                         values = element.val().split(",");
                     for (i=0; i<values.length; i++) {
                         data.push({id: values[i], text: values[i]});
                     }
+                    callback(data);
+                };
+            }
+
+            if (cfg.data.length) {
+                var data = jQuery.parseJSON(cfg.data);
+                var ids = [];
+                for (d in data) {
+                    ids.push(data[d].id);
+                }
+                $el.val(ids);
+                
+                config.initSelection = function (element, callback) {
                     callback(data);
                 };
             }
