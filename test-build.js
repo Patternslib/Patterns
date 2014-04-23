@@ -14,6 +14,7 @@
         "klass": "bower_components/klass/src/klass",
         "photoswipe": "legacy/photoswipe",
         "parsley": "bower_components/parsleyjs/parsley",
+        "parsley.extend": "bower_components/parsleyjs/parsley.extend",
         "patternslib.slides": "bower_components/slides/src/slides",
         "modernizr": "bower_components/modernizr/modernizr",
         "less": "bower_components/less.js/dist/less-1.6.2",
