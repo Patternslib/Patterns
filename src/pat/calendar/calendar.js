@@ -156,7 +156,7 @@ define([
                      * a tooltip when the user clicks on an day in the
                      * calendar.
                      */
-                    if (!cfg.tooltipConfig) {
+                    if (!(cfg.tooltipConfig && cfg.newEventURL)) {
                         return;
                     }
                     var end;
@@ -502,7 +502,7 @@ define([
                     url: $("a", event).attr("href"),
                     className: classNames,
                     attrs: attrs,
-                    editable: true // FIXME: $(event).hasClass("editable")
+                    editable: $(event).hasClass("editable")
                 };
                 if (!ev.title) {
                     log.error("No event title for:", event);
