@@ -7,7 +7,8 @@ define([
     "jquery",
     "pat-registry",
     "pat-utils",
-    "parsley"
+    "parsley",
+    "parsley.extend"
 ], function($, patterns, utils) {
     var validate = {
         name: "validate",
@@ -25,6 +26,12 @@ define([
                     errors: {
                         classHandler: validate._classHandler,
                         container: validate._container
+                    },
+                    messages: {
+                        beforedate:     "This date should be before another date.",
+                        onorbeforedate: "This date should be on or before another date.",
+                        afterdate:      "This date should be after another date.",
+                        onorafterdate:  "This date should be on or after another date."
                     }
                 });
                 for (i=0; i<parsley_form.items.length; i++) {
