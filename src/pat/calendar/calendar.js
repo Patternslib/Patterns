@@ -195,6 +195,7 @@ define([
             $el.$controlRoot.find(this.classMap[calOpts.defaultView]).addClass("active");
             calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
+            this._restoreCalendarControls();
         },
 
         _addNewEvent: function($el, $event, data) {
@@ -410,6 +411,29 @@ define([
             });
         },
 
+        _restoreCalendarControls: function () {
+            /* Restore values of the calendar controls as stored in
+             * localStorage.
+             */
+            var calKeys = calendar.storage._allKeys();
+            calendar.$el.$catControls.each(function() {
+                if (!this.id) {
+                    return;
+                }
+                if (calKeys.indexOf(calendar.storage.prefix + ":" + this.id) !== -1) {
+                    if (calendar.storage.get(this.id) === false) {
+                        $(this).prop("checked", false).trigger("change");
+                        $(this).parent().removeClass("checked");
+                        $(this).parent().addClass("unchecked");
+                    } else {
+                        $(this).prop("checked", true).trigger("change");
+                        $(this).parent().removeClass("unchecked");
+                        $(this).parent().addClass("checked");
+                    }
+                }
+            });
+        },
+
         parseEvents: function($el, timezone) {
             var $events = $el.find(".cal-events"),
                 $filter = $el.find(".filter"),
@@ -421,25 +445,6 @@ define([
                 searchText = $(".search-text", $filter).val();
                 regex = new RegExp(searchText, "i");
             }
-
-            var calKeys = calendar.storage._allKeys();
-            $el.$catControls.each(function() {
-                if (!this.id) {
-                    return;
-                }
-                if (calKeys.indexOf(calendar.storage.prefix + ":" + this.id) !== -1) {
-                    if (calendar.storage.get(this.id) === false) {
-                        $(this).attr("checked", false);
-                        $(this).parent().removeClass("checked");
-                        $(this).parent().addClass("unchecked");
-                    } else {
-                        $(this).attr("checked", true);
-                        $(this).parent().removeClass("unchecked");
-                        $(this).parent().addClass("checked");
-                    }
-                }
-            });
-
             var shownCats = $el.categories.filter(function() {
                 var cat = this;
                 return $el.$catControls.filter(function() {
