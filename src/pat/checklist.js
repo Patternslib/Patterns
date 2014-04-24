@@ -10,8 +10,8 @@ define([
     "pat-registry"
 ], function($, Parser, registry) {
     var parser = new Parser("checklist");
-    parser.add_argument("select", ".functions .select-all");
-    parser.add_argument("deselect", ".functions .deselect-all");
+    parser.add_argument("select", ".select-all");
+    parser.add_argument("deselect", ".deselect-all");
 
     var _ = {
         name: "checklist",
@@ -28,7 +28,7 @@ define([
                     .on("click.pat-checklist", {trigger: $trigger}, _.onSelectAll);
                 $trigger.find(options.deselect)
                     .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
-                $trigger.on("change.pat-checklist", "input[type=checkbox]", {trigger: $trigger}, _.onChange);
+                $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
                 // update select/deselect button status
                 _.onChange({data: {trigger: $trigger}});
             });
@@ -50,17 +50,15 @@ define([
                 options = $trigger.data("patternChecklist"),
                 deselect = $trigger.find(options.deselect),
                 select = $trigger.find(options.select);
-            if (($trigger.find("input[type=checkbox]:visible:checked").length===0) &&
-                (!deselect.prop("disabled"))) {
-                deselect.attr({disabled: "disabled"});
-            } else if (deselect.prop("disabled")) {
+            if ($trigger.find("input[type=checkbox]:visible:checked").length===0) {
+                deselect.prop("disabled", true);
+            } else {
                 deselect.prop("disabled", false);
             }
 
-            if (($trigger.find("input[type=checkbox]:visible:not(:checked)").length===0) &&
-                (!select.prop("disabled"))) {
-                select.attr({disabled: "disabled"});
-            } else if (select.prop("disabled")) {
+            if ($trigger.find("input[type=checkbox]:visible:not(:checked)").length===0) {
+                select.prop("disabled", true);
+            } else {
                 select.prop("disabled", false);
             }
         },
