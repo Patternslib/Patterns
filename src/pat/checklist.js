@@ -29,7 +29,6 @@ define([
                 $trigger.find(options.deselect)
                     .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
                 $trigger.on("change.pat-checklist", "input[type=checkbox]", {trigger: $trigger}, _.onChange);
-
                 // update select/deselect button status
                 _.onChange({data: {trigger: $trigger}});
             });
@@ -51,7 +50,6 @@ define([
                 options = $trigger.data("patternChecklist"),
                 deselect = $trigger.find(options.deselect),
                 select = $trigger.find(options.select);
-
             if (($trigger.find("input[type=checkbox]:visible:checked").length===0) &&
                 (!deselect.prop("disabled"))) {
                 deselect.attr({disabled: "disabled"});
@@ -70,24 +68,33 @@ define([
         onSelectAll: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:not(:checked)").prop("checked", true).trigger("change");
-            $trigger.find(options.deselect).prop("disabled", false);
-            $trigger.find(options.select).attr({disabled: "disabled"});
-            $trigger.change();
+            $trigger.find("input[type=checkbox]:not(:checked)").each(function () {
+                $(this).prop("checked", true).trigger("change");
+            });
+            $trigger.find(options.deselect).each(function () {
+                $(this).prop("disabled", false);
+            });
+            $trigger.find(options.select).each(function () {
+                $(this).attr({disabled: "disabled"});
+            });
             event.preventDefault();
         },
 
         onDeselectAll: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:checked").prop("checked", false).trigger("change");
-            $trigger.find(options.select).prop("disabled", false);
-            $trigger.find(options.deselect).attr({disabled: "disabled"});
-            $trigger.change();
+            $trigger.find("input[type=checkbox]:checked").each(function () {
+                $(this).prop("checked", false).trigger("change");
+            });
+            $trigger.find(options.select).each(function () {
+                $(this).prop("disabled", false);
+            });
+            $trigger.find(options.deselect).each(function () {
+                $(this).attr({disabled: "disabled"});
+            });
             event.preventDefault();
         }
     };
-
     registry.register(_);
     return _;
 });
