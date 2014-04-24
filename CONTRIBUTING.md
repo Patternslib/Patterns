@@ -11,6 +11,9 @@ If you find a bug in Patterns please report to it us. Doing so is very simple:
   issue](https://github.com/Patternslib/Patterns/issues/new), assuming one does
   not already exist. Make sure to clearly describe the issue, including steps
   to reproduce when it is a bug.
+* If possible include a small test case demonstrating the problem. This can either
+  be provided in the ticket itself, or through a pointer to a
+  [JSFiddle](http://jsfiddle.net/).
 
 Contributing code
 -----------------
