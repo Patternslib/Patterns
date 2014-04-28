@@ -1,6 +1,6 @@
 define(["pat-bumper"], function(pattern) {
 
-    describe("bumper-pattern", function() {
+    describe("Bumper pattern", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
@@ -16,97 +16,153 @@ define(["pat-bumper"], function(pattern) {
                 jq.each.andReturn(jq);
                 expect(pattern.init(jq)).toBe(jq);
             });
-
-            it("Element witout margin option", function(){
-                var $lab = $("#lab");
-                $lab.html([
-                    "<div class=\"pat-bumper\">",
-                    "<p>Hello World</p>",
-                    "</div>"
-                    ].join("\n"));
-                var $bumper = $("#lab .pat-bumper");
-                pattern.init($bumper);
-                expect($bumper.data("pat-bumper:elementbox").margin).toBe(0);
-            });
-
-            it("Element with margin option", function(){
-                var $lab = $("#lab");
-                $lab.html([
-                    "<div class=\"pat-bumper\" data-pat-bumper=\"margin: 100\">",
-                    "<p>Hello World</p>",
-                    "</div>"
-                    ].join("\n"));
-                var $bumper = $("#lab .pat-bumper");
-                pattern.init($bumper);
-                expect($bumper.data("pat-bumper:elementbox").margin).toBe(100);
-            });
-
-            it("Element with css margin", function(){
-                var $lab = $("#lab");
-                $lab.html([
-                    "<div class=\"pat-bumper\" style=\"margin-top: 30px;\">",
-                    "<p>Hello World</p>",
-                    "</div>"
-                    ].join("\n"));
-                var $bumper = $("#lab .pat-bumper");
-                pattern.init($bumper);
-                expect($bumper.data("pat-bumper:elementbox").threshold.top === $bumper.offset().top - 30).toBeTruthy();
-            });
-
         });
 
-        describe("_testBump", function() {
-            it("Element bumped/not bumped", function() {
-                var $lab = $("#lab");
-                $lab.html([
-                    "<div class=\"pat-bumper\">",
-                    "<p>Hello World</p>",
-                    "</div>"
-                    ].join("\n"));
+        describe("Check if _findScrollContainer", function() {
+            it("handles an normal object", function() {
+                $("#lab").append("<div id='sticker'/>");
+                var el = document.getElementById("sticker");
+                expect(pattern._findScrollContainer(el)).toBeNull();
+            });
 
-                var $bumper = $("#lab .pat-bumper");
-                pattern.init($bumper);
-                var opts = $bumper.data("pat-bumper:elementbox");
-                var box = {
-                    top: opts.threshold.top - 10, // should not be bumped on top
-                    bottom: opts.threshold.bottom + 10, // not bumped on bottom
-                    left: opts.threshold.left - 10, // not bumped left
-                    right: opts.threshold.right + 10 // not bumped right
-                };
+            it("handles an object in an overflow-auto container", function() {
+                var lab = document.getElementById("lab"),
+                    container = document.createElement("div"),
+                    sticker = document.createElement("p");
+                container.style.overflowY="auto";
+                sticker.style.margin="0";
+                sticker.style.height="50px";
+                container.appendChild(sticker);
+                lab.appendChild(container);
+                expect(pattern._findScrollContainer(sticker)).toBeNull();
+                container.style.height="15px";
+                expect(pattern._findScrollContainer(sticker)).toBe(container);
+            });
 
-                pattern._testBump($bumper, box);
-                expect($bumper.hasClass("bumped")).toBeFalsy();
+            it("handles an object in an overflow-scroll container", function() {
+                var lab = document.getElementById("lab"),
+                    container = document.createElement("div"),
+                    sticker = document.createElement("p");
+                container.style.overflowY="scroll";
+                sticker.style.margin="0";
+                sticker.style.height="50px";
+                container.appendChild(sticker);
+                lab.appendChild(container);
+                expect(pattern._findScrollContainer(sticker)).toBeNull();
+                container.style.height="15px";
+                expect(pattern._findScrollContainer(sticker)).toBe(container);
+            });
+        });
 
-                // bump top
-                box.top += 20;
-                pattern._testBump($bumper, box);
-                expect($bumper.hasClass("bumped")).toBe(true);
-                expect($bumper.hasClass("bumped-top")).toBe(true);
-                expect($bumper.hasClass("bumped-bottom")).toBe(false);
-                expect($bumper.hasClass("bumped-left")).toBe(false);
-                expect($bumper.hasClass("bumped-right")).toBe(false);
+        describe("Check if _markBumped", function() {
+            it("updates classes for bumped item", function() {
+                var sticker = document.createElement("p"),
+                    $sticker = $(sticker);
+                $sticker.addClass("plain");
+                pattern._markBumped($sticker, {bump: {add: "bumped", remove: "plain"}}, true);
+                expect(sticker.className).toBe("bumped");
+            });
 
-                // bump bottom
-                box.top -= 20;
-                box.bottom -= 20;
-                pattern._testBump($bumper, box);
-                expect($bumper.hasClass("bumped")).toBe(true);
-                expect($bumper.hasClass("bumped-top")).toBe(false);
-                expect($bumper.hasClass("bumped-bottom")).toBe(true);
-                expect($bumper.hasClass("bumped-left")).toBe(false);
-                expect($bumper.hasClass("bumped-right")).toBe(false);
+            it("updates classes for unbumped item", function() {
+                var sticker = document.createElement("p"),
+                    $sticker = $(sticker);
+                $sticker.addClass("bumped");
+                pattern._markBumped($sticker, {unbump: {add: "plain", remove: "bumped"}}, false);
+                expect(sticker.className).toBe("plain");
+            });
+        });
 
-                // bump bottom and left
-                box.left += 20;
-                pattern._testBump($bumper, box);
-                expect($bumper.hasClass("bumped")).toBe(true);
-                expect($bumper.hasClass("bumped-top")).toBe(false);
-                expect($bumper.hasClass("bumped-bottom")).toBe(true);
-                expect($bumper.hasClass("bumped-left")).toBe(true);
-                expect($bumper.hasClass("bumped-right")).toBe(false);
+        describe("Check if _updateContainedStatus", function() {
+            it("correctly transitions an element to bumped", function() {
+                var lab = document.getElementById("lab"),
+                    container = document.createElement("div"),
+                    padding = document.createElement("div"),
+                    sticker = document.createElement("p");
+                container.style.overflowY="scroll";
+                container.style.height="15px";
+                container.style.position="relative";
+                lab.appendChild(container);
+                sticker.style.margin="0";
+                sticker.style.height="5px";
+                sticker.style.position="relative";
+                container.appendChild(sticker);
+                padding.style.clear="both";
+                padding.style.height="30px";
+                container.appendChild(padding);
+                container.scrollTop=5;
+                spyOn(pattern, "_markBumped");
+                pattern._updateContainedStatus(container, sticker);
+                expect(pattern._markBumped).toHaveBeenCalled()
+                expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy()
+                expect(sticker.style.top).toBe("5px");
+            });
 
+            it("correctly transitions an element to unbumped", function() {
+                var lab = document.getElementById("lab"),
+                    container = document.createElement("div"),
+                    padding = document.createElement("div"),
+                    sticker = document.createElement("p");
+                container.style.overflowY="scroll";
+                container.style.height="15px";
+                container.style.position="relative";
+                lab.appendChild(container);
+                sticker.style.margin="0";
+                sticker.style.height="5px";
+                sticker.style.position="relative";
+                container.appendChild(sticker);
+                padding.style.clear="both";
+                padding.style.height="30px";
+                container.appendChild(padding);
+                container.scrollTop=0;
+                spyOn(pattern, "_markBumped");
+                pattern._updateContainedStatus(container, sticker);
+                expect(pattern._markBumped).toHaveBeenCalled()
+                expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy()
+                expect(sticker.style.top).toBe("");
+            });
+        });
+
+        describe("Check if _updateStatus", function() {
+            it("correctly transitions to bumped", function() {
+                var lab = document.getElementById("lab"),
+                    padding = document.createElement("div"),
+                    sticker = document.createElement("p");
+                sticker.style.margin="0";
+                sticker.style.height="5px";
+                sticker.style.position="relative";
+                lab.appendChild(sticker);
+                $(sticker).data("pat-bumper:config", {margin: 0});
+                padding.style.clear="both";
+                padding.style.height="3000px";
+                lab.appendChild(padding);
+                window.scrollTo(0, sticker.offsetTop+5);
+                spyOn(pattern, "_markBumped");
+                pattern._updateStatus(sticker);
+                expect(pattern._markBumped).toHaveBeenCalled()
+                expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy();
+                expect(sticker.style.top).toBe("5px");
+            });
+
+            it("correctly transitions to unbumped", function() {
+                var lab = document.getElementById("lab"),
+                    padding = document.createElement("div"),
+                    sticker = document.createElement("p");
+                sticker.style.margin="0";
+                sticker.style.height="5px";
+                sticker.style.position="relative";
+                sticker.style.top="5px";
+                lab.appendChild(sticker);
+                $(sticker).data("pat-bumper:config", {margin: 0});
+                padding.style.clear="both";
+                padding.style.height="3000px";
+                lab.appendChild(padding);
+                window.scrollTo(0, 0);
+                spyOn(pattern, "_markBumped");
+                pattern._updateStatus(sticker);
+                expect(pattern._markBumped).toHaveBeenCalled()
+                expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy();
+                expect(sticker.style.top).toBe("");
             });
         });
     });
-
 });
