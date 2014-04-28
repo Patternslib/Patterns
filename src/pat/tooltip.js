@@ -14,7 +14,7 @@ define([
     "pat-inject",
     "pat-remove"
 ], function($, logger, registry, Parser, inject) {
-    var log = logger.getLogger("calendar"),
+    var log = logger.getLogger("tooltip"),
         parser = new Parser("tooltip");
 
     var all_positions = ["tl", "tm", "tr",
