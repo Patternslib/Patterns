@@ -22,19 +22,10 @@ Other browser version may work too, but are not actively tested against.
 
     git clone git://github.com/Patternslib/Patterns.git
     cd Patterns
-    ./bootstrap
+    make
 
-This will generate minified and non-minified bundles of the current Patterns
-snapshot in the `bundles` subdirectory. If you want to create bundles for a
-specific version, you can use `make bundle REF=version`. For example
-
-    make bundle REF=v1.1.0
-
-will create bundles for Patterns 1.1.0. You can set `version` to any reference
-git understands. If, for some reason, you want to build bundles for all
-previous versions of Patterns you can use
-
-    make bundles-all-tags
+This will generate a `bundle.js` file which contains Patterns and all its
+dependencies.
 
 ## Development
 
@@ -50,30 +41,10 @@ Create a branch for the feature/bug you are working on:
 For inclusion use either a GitHub pull request or create a ticket with
 a url to your external repository.
 
-### Running the webservice locally
-
-For testing with a web browser you can start a small standalone web server from
-the patterns git checkout.
-
-Start the server with
-
-    node webserver.js
-
-and open
-
-    http://localhost:2652
-
-with your favourite internet browser.
-
 ### Running tests
 
-The simplest way to run the tests are to use npm:
+The simplest way to run the tests are to use make:
 
-    npm test
+    make check
 
-The command `npm test` will alse create the files
-`tests/TestRunner-modules.html`, `tests/TestRunner-bundle.html`, and
-``tests/TestRunner-bundle-min.html` which you can open in a browser to
-test the modularized, bundled and minified version of Patterns. The
-modularized version is linked to `tests/index.html`.
-
+This will install all required npm and bower packages and run the tests.
