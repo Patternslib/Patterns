@@ -1,17 +1,18 @@
 /**
  * Patterns bumper - `bumper' handling for elements
  *
- * Copyright 2013 Florian Friesdorf
  * Copyright 2012 Humberto Sermeno
- * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ * Copyright 2013 Florian Friesdorf
+ * Copyright 2013-2014 Simplon B.V. - Wichert Akkerman
  */
 define([
     "jquery",
+    "pat-logger",
     "pat-parser",
-    "pat-registry",
-    "pat-utils"
-], function($, Parser, registry, utils) {
-    var parser = new Parser("bumper");
+    "pat-registry"
+], function($, logger, Parser, registry) {
+    var parser = new Parser("bumper"),
+        log = logger.getLogger("bumper");
 
     parser.add_argument("margin", 0);
     parser.add_argument("selector");
@@ -20,119 +21,140 @@ define([
     parser.add_argument("unbump-add");
     parser.add_argument("unbump-remove", "bumped");
 
+    // XXX Handle resize
     var bumper = {
         name: "bumper",
         trigger: ".pat-bumper",
 
         init: function bumper_init($el, opts) {
-            $el.each(function() {
-                var $trigger = $(this),
-                    options = parser.parse($trigger, opts);
-                $trigger.data("pat-bumper:config", options);
-            });
+            return $el.each(function() {
+                var container = bumper._findScrollContainer(this),
+                    $sticker = $(this),
+                    options = parser.parse($sticker, opts);
+                $sticker.data("pat-bumper:config", options);
 
-            $(window).on("scroll.bumper", function bumper_onScroll() {
-                bumper._testBump($el, bumper._getViewport());
+                this.style.position="relative";
+                if (container===null) {
+                    $(window).on("scroll.bumper", null, this, bumper._onScrollWindow);
+                    bumper._updateStatus(this);
+                } else {
+                    container.style.position="relative";
+                    if (this.offsetParent!==container) {
+                        log.error("The offset parent for ", this,
+                                  " must be its scrolling container ", container,
+                                  "but it is ", this.offsetParent);
+                        return;
+                    }
+                    $(container).on("scroll.bumper", null, this, bumper._onScrollContainer);
+                    bumper._updateContainedStatus(container, this);
+                }
             });
-
-            bumper._testBump($el, bumper._getViewport());
-            return $el;
         },
-        
-        /**
-         * Calculates the bounding box for the current viewport
-         */
+
+        _findScrollContainer: function bumper_findScrollContainer(el) {
+            var parent = el.parentElement;
+            while (parent!==document.body && parent!==null) {
+                if ((parent.style.overflowY==="auto" || parent.style.overflowY==="scroll") &&
+                        parent.scrollHeight>parent.clientHeight)
+                    return parent;
+                parent=parent.parentElement;
+            }
+            return null;
+        },
+
+        _markBumped: function bumper_markBumper($sticker, options, is_bumped) {
+            var $target = options.selector ? $(options.selector) : $sticker,
+                todo = is_bumped ? options.bump : options.unbump;
+
+            if (todo.add)
+                $target.addClass(todo.add);
+            if (todo.remove)
+                $target.removeClass(todo.remove);
+        },
+
+        _onScrollContainer: function bumper_onScrollContainer(e) {
+            var container = e.currentTarget,
+                sticker = e.data;
+            bumper._updateContainedStatus(container, sticker);
+        },
+
+        _onScrollWindow: function bumper_onScrollWindow(e) {
+            bumper._updateStatus(e.data);
+        },
+
+        _updateContainedStatus: function bumper_updateContainerSstatus(container, sticker) {
+            var $sticker = $(sticker),
+                options = $sticker.data("pat-bumper:config"),
+                top = sticker.style.top ? parseInt(sticker.style.top, 10) : 0,
+                delta = sticker.offsetTop - container.scrollTop - top;
+
+            if (delta<0) {
+                bumper._markBumped($sticker, options, true);
+                sticker.style.top=(-delta)+"px";
+            } else {
+                bumper._markBumped($sticker, options, false);
+                sticker.style.top="";
+            }
+        },
+
+        _updateStatus: function(sticker) {
+            var $sticker = $(sticker),
+                options = $sticker.data("pat-bumper:config"),
+                viewport = bumper._getViewport(),
+                box = bumper._getBoundingBox($sticker, options.margin),
+                delta = {};
+
+            delta.top=sticker.style.top ? parseFloat(sticker.style.top) : 0;
+            delta.left=sticker.style.left ? parseFloat(sticker.style.left) : 0;
+
+            box.top-=delta.top;
+            box.bottom-=delta.top;
+            box.left-=delta.left;
+            box.right-=delta.left;
+
+            if (viewport.top > box.top)
+                sticker.style.top=(viewport.top - box.top) + "px";
+            else if (viewport.bottom < box.bottom)
+                sticker.style.top=(viewport.bottom - box.bottom) + "px";
+            else
+                sticker.style.top="";
+
+            if (viewport.left > box.left)
+                sticker.style.left=(viewport.left - box.left) + "px";
+            else if (viewport.right < box.right)
+                sticker.style.left=(viewport.right - box.right) + "px";
+            else
+                sticker.style.left="";
+
+            bumper._markBumped($sticker, options, !!(sticker.style.top || sticker.style.left));
+        },
+
+        // Calculates the bounding box for the current viewport
         _getViewport: function bumper_getViewport() {
-            var $win = $(window), view = {
-                top: $win.scrollTop(),
-                left: $win.scrollLeft()
-            };
-            
-            view.right = view.left + $win.width();
-            view.bottom = view.top + $win.height();
+            var $win = $(window),
+                view = {
+                    top: $win.scrollTop(),
+                    left: $win.scrollLeft()
+                };
+
+            view.right=view.left + $win.width();
+            view.bottom=view.top + $win.height();
             return view;
         },
-        
+
         /**
          * Calculates the bounding box for a given element, taking margins
          * into consideration
-         *
-         * @param $elem The element
          */
-        _getElementBox: function bumper_getElementBox($elem) {
-            var box = $elem.offset();
-            
-            box.top -= parseFloat($elem.css("marginTop").replace(/auto/, 0));
-            box.left -= parseFloat($elem.css("marginLeft").replace(/auto/, 0));
-            box.right = box.left + $elem.outerWidth(true);
-            box.bottom = box.top + $elem.outerHeight(true);
-            
+        _getBoundingBox: function bumper_getBoundingBox($sticker, margin) {
+            var box = $sticker.offset(),
+                style = $sticker[0].style;
+            margin = margin ? margin : 0;
+            box.top -= (parseFloat(style.marginTyop) || 0) + margin;
+            box.left -= (parseFloat(style.marginLeft) || 0) + margin;
+            box.right = box.left + $sticker.outerWidth(true) + (2 * margin);
+            box.bottom = box.top + $sticker.outerHeight(true) + (2 * margin);
             return box;
-        },
-
-        /**
-         * Determines whether an element should be bumped
-         *
-         * @param $el  The element to look for
-         * @param box The bounding box in which the element will be bumped
-         */
-        _testBump: function bumper_testBump($el, box) {
-            // initialize the elements
-            $el.each(function bumper_testBump_each() {
-                var $this = $(this),
-                    options = $this.data("pat-bumper:config"),
-                    $target = options.selector ? $(options.selector) : $this,
-                    already_bumped = !!$this.data("pat-bumper:bumped"),
-                    must_bump = false,
-                    element_box = $this.data("pat-bumper:elementbox");
-
-                // get current ElementBox while not bumped, otherwise used
-                // saved state before bumping
-                if (!element_box) {
-                    element_box = bumper._getElementBox($this);
-                    element_box.threshold = {
-                        top:    element_box.top - options.margin,
-                        bottom: element_box.bottom + options.margin,
-                        left:   element_box.left - options.margin,
-                        right:  element_box.right + options.margin
-                    };
-                    element_box.margin = options.margin;
-                    $this.data("pat-bumper:elementbox", element_box);
-                }
-
-                if (box.top > element_box.threshold.top) {
-                    $target.addClass("bumped-top").removeClass("bumped-bottom");
-                    must_bump = true;
-                } else if (box.bottom < element_box.threshold.bottom) {
-                    $target.addClass("bumped-bottom").removeClass("bumped-top");
-                    must_bump = true;
-                } else
-                    $target.removeClass("bumped-top bumped-bottom");
-
-                if (box.left > element_box.threshold.left) {
-                    $target.addClass("bumped-left").removeClass("bumped-right");
-                    must_bump = true;
-                } else if (box.right < element_box.threshold.right) {
-                    $target.addClass("bumped-right").removeClass("bumped-left");
-                    must_bump = true;
-                } else
-                    $target.removeClass("bumped-left bumped-right");
-
-                $this.data("pat-bumper:bumped", must_bump);
-                if (!already_bumped && must_bump) {
-                    $target.addClass("bumped");
-                    if (options.bump.add)
-                        $target.addClass(options.bump.add);
-                    if (options.bump.remove)
-                        utils.removeWildcardClass($target, options.bump.remove);
-                } else if (already_bumped && !must_bump) {
-                    $target.removeClass("bumped");
-                    if (options.unbump.add)
-                        $target.addClass(options.unbump.add);
-                    if (options.unbump.remove)
-                        utils.removeWildcardClass($target, options.unbump.remove);
-                }
-            });
         }
     };
     registry.register(bumper);
