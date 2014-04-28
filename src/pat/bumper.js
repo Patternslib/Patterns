@@ -20,29 +20,29 @@ define([
     parser.add_argument("unbump-add");
     parser.add_argument("unbump-remove", "bumped");
 
-    var _ = {
+    var bumper = {
         name: "bumper",
         trigger: ".pat-bumper",
 
-        init: function($el, opts) {
+        init: function bumper_init($el, opts) {
             $el.each(function() {
                 var $trigger = $(this),
                     options = parser.parse($trigger, opts);
                 $trigger.data("pat-bumper:config", options);
             });
 
-            $(window).on("scroll.bumper", function() {
-                _._testBump($el, _._getViewport());
+            $(window).on("scroll.bumper", function bumper_onScroll() {
+                bumper._testBump($el, bumper._getViewport());
             });
 
-            _._testBump($el, _._getViewport());
+            bumper._testBump($el, bumper._getViewport());
             return $el;
         },
         
         /**
          * Calculates the bounding box for the current viewport
          */
-        _getViewport: function() {
+        _getViewport: function bumper_getViewport() {
             var $win = $(window), view = {
                 top: $win.scrollTop(),
                 left: $win.scrollLeft()
@@ -59,7 +59,7 @@ define([
          *
          * @param $elem The element
          */
-        _getElementBox: function($elem) {
+        _getElementBox: function bumper_getElementBox($elem) {
             var box = $elem.offset();
             
             box.top -= parseFloat($elem.css("marginTop").replace(/auto/, 0));
@@ -76,9 +76,9 @@ define([
          * @param $el  The element to look for
          * @param box The bounding box in which the element will be bumped
          */
-        _testBump: function($el, box) {
+        _testBump: function bumper_testBump($el, box) {
             // initialize the elements
-            $el.each(function() {
+            $el.each(function bumper_testBump_each() {
                 var $this = $(this),
                     options = $this.data("pat-bumper:config"),
                     $target = options.selector ? $(options.selector) : $this,
@@ -89,7 +89,7 @@ define([
                 // get current ElementBox while not bumped, otherwise used
                 // saved state before bumping
                 if (!element_box) {
-                    element_box = _._getElementBox($this);
+                    element_box = bumper._getElementBox($this);
                     element_box.threshold = {
                         top:    element_box.top - options.margin,
                         bottom: element_box.bottom + options.margin,
@@ -135,8 +135,8 @@ define([
             });
         }
     };
-    registry.register(_);
-    return _;
+    registry.register(bumper);
+    return bumper;
 });
 
 // vim: sw=4 expandtab
