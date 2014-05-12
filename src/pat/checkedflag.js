@@ -3,8 +3,8 @@
  * for (un)checking.
  *
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- * Copyright 2012 JC Brand
  * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012-2014 Syslab.com GmBH
  */
 define([
     "jquery",
@@ -14,7 +14,7 @@ define([
 ], function($, patterns, logger, utils) {
     var log = logger.getLogger("checkedflag");
 
-    var _ = {
+    var checkedflag = {
         name: "checkedflag",
         trigger: "input[type=checkbox],input[type=radio],select",
         jquery_plugin: true,
@@ -22,22 +22,24 @@ define([
         init: function($el) {
             var $forms = $();
             $el.each(function() {
-                if (this.form === null)
+                if (this.form === null) {
                     return;
+                }
                 var $form = $(this.form);
-                if ($form.data("pat-checkedflag.reset"))
+                if ($form.data("pat-checkedflag.reset")) {
                     return;
+                }
                 $form.data("pat-checkedflag.reset", true);
                 $forms = $forms.add(this.form);
             });
 
             $el.filter("[type=checkbox]")
-                .each(_._onChangeCheckbox)
-                .on("change.pat-checkedflag", _._onChangeCheckbox);
+                .each(checkedflag._onChangeCheckbox)
+                .on("change.pat-checkedflag", checkedflag._onChangeCheckbox);
 
             $el.filter("[type=radio]")
-                .each(_._initRadio)
-                .on("change.pat-checkedflag", _._onChangeRadio);
+                .each(checkedflag._initRadio)
+                .on("change.pat-checkedflag", checkedflag._onChangeRadio);
 
             $el.filter("select:not([multiple])")
                 .each(function() {
@@ -46,15 +48,15 @@ define([
                     if ($el.parent("label").length === 0) {
                         $el.wrap("<span />");
                     }
-                    _.onChangeSelect.call(this);
+                    checkedflag.onChangeSelect.call(this);
                 })
-                .on("change.pat-checkedflag", _.onChangeSelect);
+                .on("change.pat-checkedflag", checkedflag.onChangeSelect);
 
             $el.filter("input:disabled").each(function() {
                 $(this).closest("label").addClass("disabled");
             });
 
-            $forms.on("reset.pat-checkedflag", _._onFormReset);
+            $forms.on("reset.pat-checkedflag", checkedflag._onFormReset);
         },
 
         destroy: function($el) {
@@ -79,7 +81,7 @@ define([
                         // XXX: not sure whether this is correct
                         $input.prop("checked", val);
                     }
-                    _._onChangeCheckbox.call(this);
+                    checkedflag._onChangeCheckbox.call(this);
                 } else if ($el.is("select:not([multiple])")) {
                     var $select = $(this);
                     if (opts.setdefault) {
@@ -91,7 +93,7 @@ define([
                         $select.find("option[value=\"" + val + "\"]")
                             .prop("selected", true);
                     }
-                    _.onChangeSelect.call(this);
+                    checkedflag.onChangeSelect.call(this);
                 } else {
                     log.error("Unsupported element", $el[0]);
                 }
@@ -104,9 +106,9 @@ define([
             // to fix this.
             var form = this;
             setTimeout(function() {
-                $("input[type=checkbox]", form).each(_._onChangeCheckbox);
-                $("input[type=radio]", form).each(_._initRadio);
-                $("select:not([multiple])", form).each(_.onChangeSelect);
+                $("input[type=checkbox]", form).each(checkedflag._onChangeCheckbox);
+                $("input[type=radio]", form).each(checkedflag._initRadio);
+                $("select:not([multiple])", form).each(checkedflag.onChangeSelect);
             }, 50);
         },
 
@@ -119,9 +121,10 @@ define([
             var selector = "input[name=\""+el.name+"\"]",
                 $related = (el.form===null) ? $(selector) : $(selector, el.form),
                 $result = $();
-            $result=$related=$related.not(el);
-            for (var i=0; i<$related.length; i++)
-                $result=$result.add(_._getLabelAndFieldset($related[i]));
+            $result = $related=$related.not(el);
+            for (var i=0; i<$related.length; i++) {
+                $result=$result.add(checkedflag._getLabelAndFieldset($related[i]));
+            }
             return $result;
         },
 
@@ -130,12 +133,12 @@ define([
                 $label = $(utils.findLabel(this)),
                 $fieldset = $el.closest("fieldset");
 
-            if ($el.closest("ul.radioList").length)
+            if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
+            }
 
             if (this.checked) {
-                $label.add($fieldset)
-                    .removeClass("unchecked").addClass("checked");
+                $label.add($fieldset).removeClass("unchecked").addClass("checked");
             } else {
                 $label.addClass("unchecked").removeClass("checked");
                 if ($fieldset.find("input:checked").length) {
@@ -146,35 +149,36 @@ define([
         },
 
         _initRadio: function() {
-            _._updateRadio(this, false);
+            checkedflag._updateRadio(this, false);
         },
 
         _onChangeRadio: function() {
-            _._updateRadio(this, true);
+            checkedflag._updateRadio(this, true);
         },
 
         _updateRadio: function(input, update_siblings) {
             var $el = $(input),
                 $label = $(utils.findLabel(input)),
                 $fieldset = $el.closest("fieldset"),
-                $siblings = _._getSiblingsWithLabelsAndFieldsets(input);
+                $siblings = checkedflag._getSiblingsWithLabelsAndFieldsets(input);
 
             if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
                 $siblings=$siblings.closest("li");
             }
 
-	    if (update_siblings)
+            if (update_siblings) {
                  $siblings.removeClass("checked").addClass("unchecked");
-            if (input.checked)
-                $label.add($fieldset)
-                    .removeClass("unchecked").addClass("checked");
-            else {
+            }
+            if (input.checked) {
+                $label.add($fieldset).removeClass("unchecked").addClass("checked");
+            } else {
                 $label.addClass("unchecked").removeClass("checked");
-                if ($fieldset.find("input:checked").length)
+                if ($fieldset.find("input:checked").length) {
                     $fieldset.removeClass("unchecked").addClass("checked");
-                else
+                } else {
                     $fieldset.addClass("unchecked").removeClass("checked");
+                }
             }
         },
 
@@ -187,8 +191,8 @@ define([
         }
     };
 
-    patterns.register(_);
-    return _;
+    patterns.register(checkedflag);
+    return checkedflag;
 });
 
 // vim: sw=4 expandtab
