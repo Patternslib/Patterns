@@ -104,8 +104,8 @@ define([
                 box = bumper._getBoundingBox($sticker, options.margin),
                 delta = {};
 
-            delta.top=sticker.style.top ? parseFloat(sticker.style.top) : 0;
-            delta.left=sticker.style.left ? parseFloat(sticker.style.left) : 0;
+            delta.top=sticker.style.top ? parseFloat($sticker.css("top")) : 0;
+            delta.left=sticker.style.left ? parseFloat($sticker.css("left")) : 0;
 
             box.top-=delta.top;
             box.bottom-=delta.top;
@@ -147,11 +147,10 @@ define([
          * into consideration
          */
         _getBoundingBox: function bumper_getBoundingBox($sticker, margin) {
-            var box = $sticker.offset(),
-                style = $sticker[0].style;
+            var box = $sticker.offset();
             margin = margin ? margin : 0;
-            box.top -= (parseFloat(style.marginTyop) || 0) + margin;
-            box.left -= (parseFloat(style.marginLeft) || 0) + margin;
+            box.top -= (parseFloat($sticker.css("margin-top")) || 0) + margin;
+            box.left -= (parseFloat($sticker.css("margin-left")) || 0) + margin;
             box.right = box.left + $sticker.outerWidth(true) + (2 * margin);
             box.bottom = box.top + $sticker.outerHeight(true) + (2 * margin);
             return box;
