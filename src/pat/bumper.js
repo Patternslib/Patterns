@@ -54,7 +54,8 @@ define([
         _findScrollContainer: function bumper_findScrollContainer(el) {
             var parent = el.parentElement;
             while (parent!==document.body && parent!==null) {
-                if ((parent.style.overflowY==="auto" || parent.style.overflowY==="scroll") &&
+                var overflowY = $(parent).css("overflow-y");
+                if ((overflowY==="auto" || overflowY==="scroll") &&
                         parent.scrollHeight>parent.clientHeight)
                     return parent;
                 parent=parent.parentElement;
