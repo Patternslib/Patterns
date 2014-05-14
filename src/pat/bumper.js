@@ -27,7 +27,7 @@ define([
         trigger: ".pat-bumper",
 
         init: function bumper_init($el, opts) {
-            return $el.each(function() {
+            return $el.each(function bumper_initElement() {
                 var container = bumper._findScrollContainer(this),
                     $sticker = $(this),
                     options = parser.parse($sticker, opts);
