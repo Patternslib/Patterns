@@ -92,7 +92,8 @@ define([
 
                 options.$trigger
                     .off(".pat-collapsible")
-                    .on("click.pat-collapsible", null, $el, _._onClick);
+                    .on("click.pat-collapsible", null, $el, _._onClick)
+                    .on("keypress.pat-collapsible", null, $el, _._onKeyPress);
 
                 return $el;
             });
@@ -100,6 +101,14 @@ define([
 
         _onClick: function(event) {
             _.toggle(event.data);
+        },
+
+        _onKeyPress : function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                _.toggle(event.data);;
+            }
+            event.stopPropagation();
         },
 
         destroy: function($el) {
