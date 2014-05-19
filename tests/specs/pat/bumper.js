@@ -34,8 +34,6 @@ define(["pat-bumper"], function(pattern) {
                 sticker.style.height="50px";
                 container.appendChild(sticker);
                 lab.appendChild(container);
-                expect(pattern._findScrollContainer(sticker)).toBeNull();
-                container.style.height="15px";
                 expect(pattern._findScrollContainer(sticker)).toBe(container);
             });
 
@@ -48,8 +46,6 @@ define(["pat-bumper"], function(pattern) {
                 sticker.style.height="50px";
                 container.appendChild(sticker);
                 lab.appendChild(container);
-                expect(pattern._findScrollContainer(sticker)).toBeNull();
-                container.style.height="15px";
                 expect(pattern._findScrollContainer(sticker)).toBe(container);
             });
         });
