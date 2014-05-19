@@ -39,8 +39,10 @@ define([
                     bumper._updateStatus(this);
                 } else {
                     if (this.offsetParent!==container) {
+                        var old_style = container.style.position;
                         container.style.position="relative";
                         if (this.offsetParent!==container) {
+                            container.style.position=old_style;
                             log.error("The offset parent for ", this,
                                       " must be its scrolling container ", container,
                                       "but it is ", this.offsetParent);
