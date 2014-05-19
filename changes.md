@@ -21,6 +21,8 @@
 
   - Fix width-related layout problems.
 
+- Bumper pattern: support bumping inside scrolling containers.
+
 - Checked flag pattern: fix initialisation of radio buttons. Pre-checked
   radio buttons would not marked as such if there were unchecked radio
   buttons later in the DOM.
