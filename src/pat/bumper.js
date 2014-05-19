@@ -38,12 +38,14 @@ define([
                     $(window).on("scroll.bumper", null, this, bumper._onScrollWindow);
                     bumper._updateStatus(this);
                 } else {
-                    container.style.position="relative";
                     if (this.offsetParent!==container) {
-                        log.error("The offset parent for ", this,
-                                  " must be its scrolling container ", container,
-                                  "but it is ", this.offsetParent);
-                        return;
+                        container.style.position="relative";
+                        if (this.offsetParent!==container) {
+                            log.error("The offset parent for ", this,
+                                      " must be its scrolling container ", container,
+                                      "but it is ", this.offsetParent);
+                            return;
+                        }
                     }
                     $(container).on("scroll.bumper", null, this, bumper._onScrollContainer);
                     bumper._updateContainedStatus(container, this);
