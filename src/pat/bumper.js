@@ -57,8 +57,7 @@ define([
             var parent = el.parentElement;
             while (parent!==document.body && parent!==null) {
                 var overflowY = $(parent).css("overflow-y");
-                if ((overflowY==="auto" || overflowY==="scroll") &&
-                        parent.scrollHeight>parent.clientHeight)
+                if ((overflowY==="auto" || overflowY==="scroll"))
                     return parent;
                 parent=parent.parentElement;
             }
