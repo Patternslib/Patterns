@@ -106,9 +106,8 @@ define([
         _onKeyPress : function(event){
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if(keycode == '13'){
-                _.toggle(event.data);;
+                _.toggle(event.data);
             }
-            event.stopPropagation();
         },
 
         destroy: function($el) {
