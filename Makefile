@@ -5,7 +5,6 @@ PHANTOMJS	?= node_modules/.bin/phantomjs
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/pat/calendar/*.js) $(wildcard src/lib/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
-THIRDPARTY	= bungledeps $(shell find bungledeps -name '*.js' 2>/dev/null)
 
 GENERATED	= src/lib/depends_parse.js
 
