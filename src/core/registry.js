@@ -48,7 +48,7 @@ define([
         // the DOM is scanned. After that registering a new pattern
         // results in rescanning the DOM only for this pattern.
         initialized: false,
-        init: function() {
+        init: function registry_init() {
             $(document).ready(function() {
                 log.info('loaded: ' + Object.keys(registry.patterns).sort().join(', '));
                 registry.scan(document.body);
@@ -57,7 +57,7 @@ define([
             });
         },
 
-        scan: function(content, patterns, trigger, do_not_catch_init_exception) {
+        scan: function registry_scan(content, patterns, trigger, do_not_catch_init_exception) {
             var $content = $(content),
                 all = [], allsel,
                 pattern, $match, plog;
@@ -67,7 +67,7 @@ define([
             patterns = patterns || Object.keys(registry.patterns);
 
             // selector for all patterns
-            patterns.forEach(function(name) {
+            patterns.forEach(function registry_scan_loop(name) {
                 if (disabled[name]) {
                     log.debug('Skipping disabled pattern:', name);
                     return;
@@ -103,7 +103,7 @@ define([
             //
             // Advantages: Order of pattern initialization controled
             // via order of pat-classes and more efficient.
-            $match.toArray().reduceRight(function(acc, el) {
+            $match.toArray().reduceRight(function registry_pattern_init(acc, el) {
                 var $el = $(el);
 
                 for (var name in registry.patterns) {
@@ -132,7 +132,7 @@ define([
 
         // XXX: differentiate between internal and custom patterns
         // _register vs register
-        register: function(pattern) {
+        register: function registry_register(pattern) {
             if (!pattern.name) {
                 log.error("Pattern lacks name:", pattern);
                 return false;
@@ -166,10 +166,11 @@ define([
         }
     };
 
-    $(document) .on("patterns-injected.patterns", function(ev, inject_config, inject_trigger) {
-        registry.scan(ev.target, null, {type: "injection", element: inject_trigger});
-        $(ev.target).trigger("patterns-injected-scanned");
-    });
+    $(document).on("patterns-injected.patterns",
+            function registry_onInject(ev, inject_config, inject_trigger) {
+                registry.scan(ev.target, null, {type: "injection", element: inject_trigger});
+                $(ev.target).trigger("patterns-injected-scanned");
+            });
 
     return registry;
 });

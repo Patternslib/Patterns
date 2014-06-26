@@ -31,7 +31,7 @@ define([
             });
         },
 
-        add_argument: function(name, default_value, choices, multiple) {
+        add_argument: function ArgumentParser_add_argument(name, default_value, choices, multiple) {
             var spec, m;
 
             if (multiple && !Array.isArray(default_value))
@@ -86,14 +86,14 @@ define([
             this.parameters[name]=spec;
         },
 
-        _typeof: function(obj) {
+        _typeof: function ArgumentParser_typeof(obj) {
             var type = typeof obj;
             if (obj===null)
                 return "null";
             return type;
         },
 
-        _coerce: function(name, value) {
+        _coerce: function ArgumentParser_coerce(name, value) {
             var spec=this.parameters[name];
 
             if (typeof value !== spec.type)
@@ -144,7 +144,7 @@ define([
             return value;
         },
 
-        _set: function(opts, name, value) {
+        _set: function ArgumentParser_set(opts, name, value) {
             if (!(name in this.parameters)) {
                 this.log.debug("Ignoring value for unknown argument " + name);
                 return;
@@ -168,7 +168,7 @@ define([
             opts[name]=value;
         },
 
-        _split: function(text) {
+        _split: function ArgumentParser_split(text) {
             var tokens = [];
 
             text.replace(this.token_pattern, function(match, quoted, _, simple) {
@@ -180,7 +180,7 @@ define([
             return tokens;
         },
 
-        _parseExtendedNotation: function(parameter) {
+        _parseExtendedNotation: function ArgumentParser_parseExtendedNotation(parameter) {
             var opts = {}, i,
                 parts, matches;
 
@@ -215,7 +215,7 @@ define([
             return opts;
         },
 
-        _parseShorthandNotation: function(parameter) {
+        _parseShorthandNotation: function ArgumentParser_parseShorthandNotation(parameter) {
             var parts = this._split(parameter),
                 opts = {},
                 positional = true,
@@ -253,7 +253,7 @@ define([
             return opts;
         },
 
-        _parse: function(parameter) {
+        _parse: function ArgumentParser_parse(parameter) {
             var opts, extended, sep;
 
             if (!parameter)
@@ -273,7 +273,7 @@ define([
             return opts;
         },
 
-        _defaults: function($el) {
+        _defaults: function ArgumentParser_defaults($el) {
             var result = {};
             for (var name in this.parameters)
                 if (typeof this.parameters[name].value==="function")
@@ -288,7 +288,7 @@ define([
             return result;
         },
 
-        _cleanupOptions: function(options) {
+        _cleanupOptions: function ArgumentParser_cleanupOptions(options) {
             var keys = Object.keys(options),
                 i, spec, name, target;
 
@@ -326,7 +326,7 @@ define([
             }
         },
 
-        parse: function($el, options, multiple, inherit) {
+        parse: function ArgumentParser_parse($el, options, multiple, inherit) {
             if (typeof options==="boolean" && multiple===undefined) {
                 multiple=options;
                 options={};
