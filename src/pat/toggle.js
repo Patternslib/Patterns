@@ -24,8 +24,8 @@ define([
         name: "toggle",
         trigger: ".pat-toggle",
 
-        init: function($el) {
-            return $el.each(function() {
+        init: function toggle_init($el) {
+            return $el.each(function toggle_init_el() {
                 var $trigger = $(this),
                     options = toggle._validateOptions(this, parser.parse($trigger, true)),
                     state = {toggled: false, options: options},
@@ -47,11 +47,11 @@ define([
                 $trigger
                     .off(".toggle")
                     .data("patternToggle", state)
-                    .on("click.toggle", toggle.onClick);
+                    .on("click.toggle", toggle._onClick);
             });
         },
 
-        _validateOptions: function(trigger, options) {
+        _validateOptions: functioni toggle_validateOptions(trigger, options) {
             var correct=[],
                 i, option, store_error;
 
@@ -85,7 +85,7 @@ define([
             return correct;
         },
 
-        onClick: function(event) {
+        _onClick: function toggle_onClick(event) {
             var $trigger = $(this),
                 state = $trigger.data("patternToggle"),
                 option, i;
@@ -108,7 +108,7 @@ define([
             event.preventDefault();
         },
 
-        _update: function(selector, attr, value, reset) {
+        _update: function toggle_update(selector, attr, value, reset) {
             var $targets = $(selector),
                 $target;
 
