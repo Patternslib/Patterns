@@ -51,7 +51,7 @@ define([
             });
         },
 
-        _validateOptions: functioni toggle_validateOptions(trigger, options) {
+        _validateOptions: function toggle_validateOptions(trigger, options) {
             var correct=[],
                 i, option, store_error;
 
