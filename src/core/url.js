@@ -14,15 +14,15 @@ define(function() {
         space_pattern: /\+/g,
         keyvalue_pattern: /^(.+?)(?:=(.*))/,
 
-        _reset: function() {
+        _reset: function UrlArgumentParser_reset() {
             this._cache=null;
         },
 
-        _decodeQS: function(bit) {
+        _decodeQS: function UrlArgumentParser_decodeQS(bit) {
             return decodeURIComponent(bit.replace(this.space_pattern, " "));
         },
 
-        _parse: function(qs) {
+        _parse: function UrlArgumentParser_parse(qs) {
             var query = /\?(.+)/.exec(qs),
                 params = {};
 
@@ -49,7 +49,7 @@ define(function() {
             return params;
         },
 
-        get: function() {
+        get: function UrlArgumentParser_get() {
             if (this._cache===null)
                 this._cache=this._parse(window.location.search);
             return this._cache;

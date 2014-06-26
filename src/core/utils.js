@@ -35,9 +35,9 @@ define([
     // Returns a function, that, as long as it continues to be invoked, will not
     // be triggered. The function will be called after it stops being called for
     // N milliseconds.
-    var debounce = function(func, wait) {
+    function debounce(func, wait) {
         var timeout;
-        return function() {
+        return function debounce_run() {
             var context = this, args = arguments;
             var later = function() {
                 timeout = null;
@@ -48,7 +48,7 @@ define([
         };
     };
 
-    var rebaseURL = function(base, url) {
+    function rebaseURL(base, url) {
         if (url.indexOf("://")!==-1 || url[0]==="/")
             return url;
         return base.slice(0, base.lastIndexOf("/")+1) + url;

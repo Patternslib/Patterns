@@ -8,7 +8,7 @@ define([
 ], function($) {
     var real_cleanData = $.cleanData;
 
-    $.cleanData = function(elems) {
+    $.cleanData = function remove_cleanData(elems) {
         var i, el;
         for (i=0; (el=elems[i])!==undefined; i++)
             $(el).triggerHandler("destroy");

@@ -11,11 +11,11 @@ define(function() {
         this.backend=backend;
     }
 
-    Storage.prototype._key = function(name) {
+    Storage.prototype._key = function Storage_key(name) {
         return this.prefix + ":" + name;
     };
 
-    Storage.prototype._allKeys = function() {
+    Storage.prototype._allKeys = function Storage_allKeys() {
         var keys = [],
             prefix = this.prefix + ":",
             prefix_length = prefix.length,
@@ -29,7 +29,7 @@ define(function() {
         return keys;
     };
 
-    Storage.prototype.get = function(name) {
+    Storage.prototype.get = function Storage_get(name) {
         var key = this._key(name),
             value = this.backend.getItem(key);
         if (value!==null)
@@ -37,23 +37,23 @@ define(function() {
         return value;
     };
 
-    Storage.prototype.set = function(name, value) {
+    Storage.prototype.set = function Storage_set(name, value) {
         var key = this._key(name);
         return this.backend.setItem(key, JSON.stringify(value));
     };
 
-    Storage.prototype.remove = function(name) {
+    Storage.prototype.remove = function Storage_remove(name) {
         var key = this._key(name);
         return this.backend.removeItem(key);
     };
 
-    Storage.prototype.clear = function() {
+    Storage.prototype.clear = function Storage_clear() {
         var keys = this._allKeys();
         for (var i=0; i<keys.length; i++)
             this.backend.removeItem(keys[i]);
     };
 
-    Storage.prototype.all = function() {
+    Storage.prototype.all = function Storage_all() {
         var keys = this._allKeys(),
             prefix_length = this.prefix.length + 1,
             lk,
@@ -69,16 +69,16 @@ define(function() {
     var store = {
         supported: false,
 
-        local: function (name) {
+        local: function(name) {
             return new Storage(window.localStorage, name);
         },
 
-        session: function (name) {
+        session: function(name) {
             return new Storage(window.sessionStorage, name);
         },
 
         // Update storage options for a given element.
-        updateOptions: function(trigger, options) {
+        updateOptions: function store_updateOptions(trigger, options) {
             if (options.store!=="none") {
                 if (!trigger.id) {
                     log.warn("state persistance requested, but element has no id");
