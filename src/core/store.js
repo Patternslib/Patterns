@@ -66,6 +66,23 @@ define(function() {
         return data;
     };
 
+    function ValueStorage(store, name) {
+        this.store=store;
+        this.name=name;
+    }
+
+    ValueStorage.prototype.get = function ValueStorage_get() {
+        return this.store.get(this.name);
+    }
+
+    ValueStorage.prototype.set = function ValueStorage_get(value) {
+        return this.store.set(this.name, value);
+    }
+
+    ValueStorage.prototype.remove = function ValueStorage_remove() {
+        return this.store.remove(this.name);
+    }
+
     var store = {
         supported: false,
 
@@ -76,6 +93,8 @@ define(function() {
         session: function(name) {
             return new Storage(window.sessionStorage, name);
         },
+
+        ValueStorage: ValueStorage,
 
         // Update storage options for a given element.
         updateOptions: function store_updateOptions(trigger, options) {
