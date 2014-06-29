@@ -88,8 +88,8 @@ define(["pat-bumper"], function(pattern) {
                 container.scrollTop=5;
                 spyOn(pattern, "_markBumped");
                 pattern._updateContainedStatus(container, sticker);
-                expect(pattern._markBumped).toHaveBeenCalled()
-                expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy()
+                expect(pattern._markBumped).toHaveBeenCalled();
+                expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy();
                 expect(sticker.style.top).toBe("5px");
             });
 
@@ -112,8 +112,8 @@ define(["pat-bumper"], function(pattern) {
                 container.scrollTop=0;
                 spyOn(pattern, "_markBumped");
                 pattern._updateContainedStatus(container, sticker);
-                expect(pattern._markBumped).toHaveBeenCalled()
-                expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy()
+                expect(pattern._markBumped).toHaveBeenCalled();
+                expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy();
                 expect(sticker.style.top).toBe("");
             });
         });
@@ -134,7 +134,7 @@ define(["pat-bumper"], function(pattern) {
                 window.scrollTo(0, sticker.offsetTop+5);
                 spyOn(pattern, "_markBumped");
                 pattern._updateStatus(sticker);
-                expect(pattern._markBumped).toHaveBeenCalled()
+                expect(pattern._markBumped).toHaveBeenCalled();
                 expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy();
                 expect(sticker.style.top).toBe("5px");
             });
@@ -155,7 +155,7 @@ define(["pat-bumper"], function(pattern) {
                 window.scrollTo(0, 0);
                 spyOn(pattern, "_markBumped");
                 pattern._updateStatus(sticker);
-                expect(pattern._markBumped).toHaveBeenCalled()
+                expect(pattern._markBumped).toHaveBeenCalled();
                 expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy();
                 expect(sticker.style.top).toBe("");
             });

@@ -21,23 +21,23 @@ define(["pat-checklist"], function() {
                 $("#lab fieldset.pat-checklist").patternChecklist();
             },
             removeCheckList: function () {
-                $("#lab").children('fieldset.pat-checklist').remove();
+                $("#lab").children("fieldset.pat-checklist").remove();
             },
             checkAllBoxes: function () {
-                $('fieldset.pat-checklist input[type=checkbox]').each(function () {
+                $("fieldset.pat-checklist input[type=checkbox]").each(function () {
                     $(this).prop("checked", true).trigger("change");
                 });
             },
             uncheckAllBoxes: function () {
-                $('fieldset.pat-checklist input[type=checkbox]').each(function () {
+                $("fieldset.pat-checklist input[type=checkbox]").each(function () {
                     $(this).prop("checked", false).trigger("change");
                 });
             },
             checkBox: function (idx) {
-                $('fieldset.pat-checklist input[type=checkbox]:nth-child('+(idx||1)+')').prop("checked", true).trigger("change");
+                $("fieldset.pat-checklist input[type=checkbox]:nth-child("+(idx||1)+")").prop("checked", true).trigger("change");
             },
             uncheckBox: function (idx) {
-                $('fieldset.pat-checklist input[type=checkbox]:nth-child('+(idx||1)+')').prop("checked", false).trigger("change");
+                $("fieldset.pat-checklist input[type=checkbox]:nth-child("+(idx||1)+")").prop("checked", false).trigger("change");
             }
         };
 
@@ -80,14 +80,14 @@ define(["pat-checklist"], function() {
             it("unchecks all checkboxes if it is clicked", function () {
                 // Test with all boxes ticked
                 utils.checkAllBoxes();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(3);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(3);
                 $(".deselect-all").click();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(0);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(0);
                 // Test with one box ticked
                 utils.checkBox();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(1);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(1);
                 $(".deselect-all").click();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(0);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(0);
             });
 
             it("becomes disabled when the last checked checkbox is unchecked", function () {
@@ -125,15 +125,15 @@ define(["pat-checklist"], function() {
             it("checks all boxes if it is clicked", function () {
                 // Test with zero boxes ticked
                 utils.uncheckAllBoxes();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(0);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(0);
                 $(".select-all").click();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(3);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(3);
                 // Test with one box ticked
                 utils.uncheckAllBoxes();
                 utils.checkBox();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(1);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(1);
                 $(".select-all").click();
-                expect($('fieldset.pat-checklist input[type=checkbox]:checked').length).toBe(3);
+                expect($("fieldset.pat-checklist input[type=checkbox]:checked").length).toBe(3);
             });
 
             it("becomes enabled when the first checked box is unchecked", function () {
