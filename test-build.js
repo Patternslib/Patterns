@@ -24,7 +24,7 @@
         "Markdown.Sanitizer": "legacy/Markdown.Sanitizer",
         "select2": "bower_components/select2/select2.min",
         "jquery.chosen": "bower_components/chosen/chosen/chosen.jquery",
-        "jquery.fullcalendar": "bower_components/fullcalendar/fullcalendar/fullcalendar.min",
+        "jquery.fullcalendar": "bower_components/fullcalendar/fullcalendar.min",
         "jquery.fullcalendar.dnd": "bower_components/fullcalendar/lib/jquery-ui.custom.min",
         "jquery.placeholder": "bower_components/jquery-placeholder/jquery.placeholder.min",
         "jquery.textchange": "bower_components/jquery-textchange/jquery.textchange",
