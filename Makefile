@@ -13,6 +13,7 @@ JSHINTEXCEPTIONS = $(GENERATED) \
 		   src/lib/htmlparser.js \
 		   src/pat/skeleton.js
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
+TESTSOURCES	= $(wildcard tests/specs/*/*.js)
 
 
 all:: bundle.js
@@ -39,6 +40,7 @@ clean::
 check:: jshint test-bundle
 jshint: stamp-npm
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
+	$(JSHINT) --config jshintrc-tests $(TESTSOURCES)
 
 
 check:: stamp-npm

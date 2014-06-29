@@ -19,7 +19,7 @@ define(["pat-autosubmit"], function(pattern) {
             it("defocus", function() {
                 var $trigger = $("<input data-pat-autosubmit='defocus'/>"),
                     options = pattern.parser.parse($trigger);
-                expect(options.delay).toBe('defocus');
+                expect(options.delay).toBe("defocus");
             });
         });
     });
