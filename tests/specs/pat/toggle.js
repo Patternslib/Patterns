@@ -1,4 +1,4 @@
-define(["pat-toggle"], function(pattern) {
+define(["pat-toggle", "jquery"], function(pattern, $) {
 
     describe("pat-toggle", function() {
 
@@ -12,13 +12,13 @@ define(["pat-toggle"], function(pattern) {
 
         describe("_update", function() {
             it("No targets", function() {
-                spyOn(jQuery.fn, "toggleClass");
-                spyOn(jQuery.fn, "removeAttr");
-                spyOn(jQuery.fn, "attr");
+                spyOn($.fn, "toggleClass");
+                spyOn($.fn, "removeAttr");
+                spyOn($.fn, "attr");
                 pattern._update(".missing");
-                expect(jQuery.fn.toggleClass).not.toHaveBeenCalled();
-                expect(jQuery.fn.removeAttr).not.toHaveBeenCalled();
-                expect(jQuery.fn.attr).not.toHaveBeenCalled();
+                expect($.fn.toggleClass).not.toHaveBeenCalled();
+                expect($.fn.removeAttr).not.toHaveBeenCalled();
+                expect($.fn.attr).not.toHaveBeenCalled();
             });
 
             it("Toggle class", function() {
