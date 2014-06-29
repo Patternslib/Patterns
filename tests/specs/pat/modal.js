@@ -103,7 +103,7 @@ define(["pat-modal"], function(pattern) {
                     "</div>"
                 ].join("\n"));
 
-                var $modals = $('.foo');
+                var $modals = $(".foo");
                 pattern.init($modals);
                 $modals.each(function (idx, modal) {
                     var $modal = $(modal);

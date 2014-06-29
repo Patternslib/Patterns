@@ -1,4 +1,4 @@
-define(["pat-switch"], function(pattern) {
+define(["pat-switch", "jquery"], function(pattern, jQuery) {
 
     describe("switch-pattern", function() {
 
@@ -13,20 +13,20 @@ define(["pat-switch"], function(pattern) {
         describe("When the switch is clicked", function () {
             describe("if the switch is a hyperlink", function () {
                 it("the default click action is prevented", function () {
-                    var $el = $('<a/>',
-                        {   id: 'anchor',
-                            href: '#anchor',
-                            'text': 'Switch',
-                            'class': 'pat-switch',
-                            'data-pat-switch': '#lab on off'
+                    var $el = $("<a/>",
+                        {   id: "anchor",
+                            href: "#anchor",
+                            "text": "Switch",
+                            "class": "pat-switch",
+                            "data-pat-switch": "#lab on off"
                         }).appendTo(document.body);
                     var ev= {
-                        type: 'click',
+                        type: "click",
                         preventDefault: function () {}
                     };
                     spyOn(pattern, "_onClick").andCallThrough();
                     spyOn(pattern, "_go");
-                    spyOn(ev, 'preventDefault');
+                    spyOn(ev, "preventDefault");
                     pattern.init($el);
                     $el.trigger(ev);
                     expect(pattern._onClick).toHaveBeenCalled();
@@ -38,20 +38,20 @@ define(["pat-switch"], function(pattern) {
 
             describe("if the switch is not a hyperlink", function () {
                 it("the default click action is not prevented", function () {
-                    var $el = $('<button/>',
-                        {   id: 'anchor',
-                            'text': 'Switch',
-                            'class': 'pat-switch',
-                            'data-pat-switch': '#lab on off'
+                    var $el = $("<button/>",
+                        {   id: "anchor",
+                            "text": "Switch",
+                            "class": "pat-switch",
+                            "data-pat-switch": "#lab on off"
                         }).appendTo(document.body);
 
                     var ev= {
-                        type: 'click',
+                        type: "click",
                         preventDefault: function () {}
                     };
                     spyOn(pattern, "_onClick").andCallThrough();
                     spyOn(pattern, "_go");
-                    spyOn(ev, 'preventDefault');
+                    spyOn(ev, "preventDefault");
                     pattern.init($el);
                     $el.trigger(ev);
                     expect(pattern._onClick).toHaveBeenCalled();
@@ -93,7 +93,7 @@ define(["pat-switch"], function(pattern) {
             });
 
             it("Remove wildcard postfix class", function() {
-                $("#lab").html("<div class='icon-small/>");
+                $("#lab").html("<div class='icon-small'/>");
                 pattern._update("#lab div", "icon-*");
                 expect($("#lab div").attr("class")).toBeFalsy();
             });
