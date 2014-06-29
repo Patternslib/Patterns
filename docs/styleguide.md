@@ -88,6 +88,9 @@ $el.on("click", function button_click(event) {
 });
 ```
 
+The only exception to this rule are trivial functions that do not call any
+other functions, such as functions passed to Array.filter or Array.forEach.
+
 Pattern methods must always be named, and the name should be prefixed with the
 Pattern with the pattern name to make them easy to recognize.
 
@@ -102,3 +105,28 @@ var mypattern = {
 ```
 
 
+Events listeners
+----------------
+
+All event listeners registered using [jQuery.fn.on](http://api.jquery.com/on/)
+must be namespaced with `pat-<pattern name>`.
+
+```javascript
+function mypattern_init($el) {
+    $el.on("click.pat-mypattern", mypattern._onClick);
+}
+```
+
+
+Storing arbitrary data
+----------------------
+
+When using [jQuery.fn.data](http://api.jquery.com/data/) the storage key
+must either be `patterns.<pattern-name>` if a single value is stored, or
+`patterns.<pattern name>.<name>` of multiple values are stored. This prevents
+conflicts with other code.
+
+```javascript
+// Store parsed options
+$(el).data("patterns.mypattern, options);
+```
