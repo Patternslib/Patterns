@@ -36,7 +36,7 @@ define([
     var _ = {
         name: "inject",
         trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
-        init: function($el, opts) {
+        init: function inject_init($el, opts) {
             if ($el.length > 1)
                 return $el.each(function() { _.init($(this), opts); });
 
@@ -92,13 +92,13 @@ define([
             return $el;
         },
 
-        destroy: function($el) {
+        destroy: function inject_destroy($el) {
             $el.off(".pat-inject");
             $el.data("patterns.inject", null);
             return $el;
         },
 
-        onClick: function(ev) {
+        onClick: function inject_onClick(ev) {
             var cfgs = $(this).data("patterns.inject"),
                 $el = $(this);
             if (ev)
@@ -107,7 +107,7 @@ define([
             _.execute(cfgs, $el);
         },
 
-        onSubmit: function(ev) {
+        onSubmit: function inject_onSubmit(ev) {
             var cfgs = $(this).data("patterns.inject"),
                 $el = $(this);
             if (ev)
@@ -116,7 +116,7 @@ define([
             _.execute(cfgs, $el);
         },
 
-        submitSubform: function($sub) {
+        submitSubform: function inject_submitSubform($sub) {
             var $el = $sub.parents("form"),
                 cfgs = $sub.data("patterns.inject");
             try {
@@ -127,11 +127,11 @@ define([
             _.execute(cfgs, $el);
         },
 
-        extractConfig: function($el, opts) {
+        extractConfig: function inject_extractConfig($el, opts) {
             opts = $.extend({}, opts);
 
             var cfgs = parser.parse($el, opts, true);
-            cfgs.forEach(function(cfg) {
+            cfgs.forEach(function inject_extractConfig_each(cfg) {
                 var urlparts, defaultSelector;
                 // opts and cfg have priority, fallback to href/action
                 cfg.url = opts.url || cfg.url || $el.attr("href") ||
@@ -155,11 +155,11 @@ define([
         },
         // verify and post-process config
         // XXX: this should return a command instead of messing around on the config
-        verifyConfig: function(cfgs, $el) {
+        verifyConfig: function inject_verifyConfig(cfgs, $el) {
             var url = cfgs[0].url;
 
             // verification for each cfg in the array needs to succeed
-            return cfgs.every(function(cfg) {
+            return cfgs.every(function inject_verifyConfig_each(cfg) {
                 // in case of multi-injection, all injections need to use
                 // the same url
                 if (cfg.url !== url) {
@@ -188,7 +188,7 @@ define([
             });
         },
 
-        _extractModifiers: function(cfg) {
+        _extractModifiers: function inject_extractModifiers(cfg) {
             var source_re = /^(.*?)(::element)?$/,
                 target_re = /^(.*?)(::element)?(::after|::before)?$/,
                 source_match = source_re.exec(cfg.source),
@@ -224,7 +224,7 @@ define([
         //
         // XXX: so far we only support #target and create a div with
         // that id appended to the body.
-        _createTarget: function(selector) {
+        _createTarget: function inject_createTarget(selector) {
             var $target;
             if (selector.slice(0,1) !== "#") {
                 log.error("only id supported for non-existing target");
@@ -235,7 +235,7 @@ define([
             return $target;
         },
 
-        execute: function(cfgs, $el) {
+        execute: function inject_execute(cfgs, $el) {
             // get a kinda deep copy, we scribble on it
             cfgs = cfgs.map(function(cfg) {
                 return $.extend({}, cfg);
@@ -251,7 +251,7 @@ define([
                 cfg.$target.addClass(cfg.targetLoadClasses);
             });
 
-            var stopBubblingFromRemovedElement = function(ev) {
+            function stopBubblingFromRemovedElement(ev) {
                 /* IE8 fix.
                  *
                  * Stop event from propagating IF $el will be removed from
@@ -273,9 +273,9 @@ define([
                         return;
                     }
                 }
-            };
+            }
 
-            var onSuccess = function(ev) {
+            var onSuccess = function inject_onSuccess(ev) {
                 var sources$,
                     data = ev && ev.jqxhr && ev.jqxhr.responseText;
                 if (!data) {
@@ -292,7 +292,7 @@ define([
                         $source = $source.contents();
 
                     // perform injection
-                    cfg.$target.each(function() {
+                    cfg.$target.each(function inject_onSuccess_perform() {
                         var $src;
 
                         // $source.clone() does not work with shived elements in IE8
@@ -342,7 +342,7 @@ define([
                 $el.off("pat-ajax-error.pat-inject");
             };
 
-            var onError = function() {
+            var onError = function inject_onError() {
                 cfgs.forEach(function(cfg) {
                     if ("$injected" in cfg)
                         cfg.$injected.remove();
@@ -357,7 +357,7 @@ define([
             ajax.request($el, {url: cfgs[0].url});
         },
 
-        _inject: function($source, $target, action /* , classes */) {
+        _inject: function inject_inject($source, $target, action /* , classes */) {
             // action to jquery method mapping, except for "content"
             // and "element"
             var method = {
@@ -386,9 +386,9 @@ define([
             return true;
         },
 
-        _sourcesFromHtml: function(html, url, sources) {
+        _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
             var $html = _._parseRawHtml(html, url);
-            return sources.map(function(source) {
+            return sources.map(function inject_sourcesFromHtml_map(source) {
                 if (source === "body")
                     source = "#__original_body";
 
@@ -419,7 +419,7 @@ define([
             VIDEO: "src"
         },
 
-        _rebaseHTML_via_HTMLParser: function(base, html) {
+        _rebaseHTML_via_HTMLParser: function inject_rebaseHTML_via_HTMLParser(base, html) {
             var output = [],
                 i, link_attribute, value;
 
@@ -467,7 +467,7 @@ define([
             VIDEO: "data-pat-inject-rebase-src"
         },
 
-        _rebaseHTML: function(base, html) {
+        _rebaseHTML: function inject_rebaseHTML(base, html) {
             var $page = $(html.replace(
                 /(\s)(src\s*)=/gi,
                 "$1src=\"\" data-pat-inject-rebase-$2="
@@ -497,7 +497,7 @@ define([
                 ).trim();
         },
 
-        _parseRawHtml: function(html, url) {
+        _parseRawHtml: function inject_parseRawHtml(html, url) {
             url = url || "";
 
             // remove script tags and head and replace body by a div
@@ -520,7 +520,7 @@ define([
         },
 
         // XXX: hack
-        _initAutoloadVisible: function($el) {
+        _initAutoloadVisible: function inject_initAutoloadVisible($el) {
             // ignore executed autoloads
             if ($el.data("patterns.inject.autoloaded"))
                 return false;
@@ -529,17 +529,17 @@ define([
                 checkVisibility;
 
             // function to trigger the autoload and mark as triggered
-            var trigger = function() {
+            function trigger() {
                 $el.data("patterns.inject.autoloaded", true);
                 _.onClick.apply($el[0], []);
                 return true;
-            };
+            }
 
             // Use case 1: a (heigh-constrained) scrollable parent
             if ($scrollable.length) {
                 // if scrollable parent and visible -> trigger it
                 // we only look at the closest scrollable parent, no nesting
-                checkVisibility = function() {
+                checkVisibility = function inject_checkVisibility_scrollable() {
                     if ($el.data("patterns.autoload"))
                         return false;
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
@@ -561,7 +561,7 @@ define([
                 $(window).on("resize.pat-autoload", utils.debounce(checkVisibility, 100));
             } else {
                 // Use case 2: scrolling the entire page
-                checkVisibility = function() {
+                checkVisibility = function inject_checkVisibility_not_scrollable() {
                     if ($el.data("patterns.autoload"))
                         return false;
                     if (!utils.elementInViewport($el[0]))
@@ -579,11 +579,11 @@ define([
         },
 
         // XXX: simple so far to see what the team thinks of the idea
-        registerTypeHandler: function(type, handler) {
+        registerTypeHandler: function inject_registerTypeHandler(type, handler) {
             _.handlers[type] = handler;
         },
 
-        callTypeHandler: function(type, fn, context, params) {
+        callTypeHandler: function inject_callTypeHandler(type, fn, context, params) {
             type = type || "html";
 
             if (_.handlers[type] && $.isFunction(_.handlers[type][fn])) {
