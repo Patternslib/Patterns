@@ -105,6 +105,38 @@ var mypattern = {
 ```
 
 
+Custom events
+-------------
+
+A pattern can send custom events for either internal purposes, or as a hook for
+third party javascript. Since IE8 is still supported use
+[CustomEvent](http://dochub.io/#dom/customevent) can not be used. Instead you must
+send custom events using [jQuery's trigger
+function](http://api.jquery.com/trigger/). Event names must follow the
+`pat-<pattern name>-<event name>` pattern.
+
+```javascript
+$(el).trigger("pat-tooltip-open");
+```
+
+All extra data must be passed via a single object. In a future Patterns release
+this will be moved to the `detail` property of a CustomEvent instance.
+
+```javascript
+$(el).trigger("pat-toggle-toggled", {value: new_value});
+```
+
+Event listeners can access the provided data as an extra parameter passed to
+the event handler.
+
+```javascript
+function onToggled(event, detail) {
+}
+
+$(".myclass").on("pat-toggle-toggled", onToggled);
+```
+
+
 Events listeners
 ----------------
 
