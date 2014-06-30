@@ -173,7 +173,7 @@ define([
 
     // XXX: Hack
     $(document.body).on("patterns-inject-triggered.pat-markdown", "a.pat-inject", function() {
-        var $this = $(this), cfgs = $this.data("patterns.inject");
+        var $this = $(this), cfgs = $this.data("pat-inject");
 
         if (_._url_re.test(cfgs[0].url)) {
             cfgs.forEach(function(cfg) {
