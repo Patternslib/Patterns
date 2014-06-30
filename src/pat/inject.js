@@ -48,7 +48,7 @@ define([
                     !("pushState" in history))
                 return $el;
 
-            $el.data("patterns.inject", cfgs);
+            $el.data("pat-inject", cfgs);
 
             // In case next-href is specified the anchor's href will
             // be set to it after the injection is triggered. In case
@@ -94,12 +94,12 @@ define([
 
         destroy: function inject_destroy($el) {
             $el.off(".pat-inject");
-            $el.data("patterns.inject", null);
+            $el.data("pat-inject", null);
             return $el;
         },
 
         onClick: function inject_onClick(ev) {
-            var cfgs = $(this).data("patterns.inject"),
+            var cfgs = $(this).data("pat-inject"),
                 $el = $(this);
             if (ev)
                 ev.preventDefault();
@@ -108,7 +108,7 @@ define([
         },
 
         onSubmit: function inject_onSubmit(ev) {
-            var cfgs = $(this).data("patterns.inject"),
+            var cfgs = $(this).data("pat-inject"),
                 $el = $(this);
             if (ev)
                 ev.preventDefault();
@@ -118,7 +118,7 @@ define([
 
         submitSubform: function inject_submitSubform($sub) {
             var $el = $sub.parents("form"),
-                cfgs = $sub.data("patterns.inject");
+                cfgs = $sub.data("pat-inject");
             try {
                 $el.trigger("patterns-inject-triggered");
             } catch (e) {
@@ -522,7 +522,7 @@ define([
         // XXX: hack
         _initAutoloadVisible: function inject_initAutoloadVisible($el) {
             // ignore executed autoloads
-            if ($el.data("patterns.inject.autoloaded"))
+            if ($el.data("pat-inject-autoloaded"))
                 return false;
 
             var $scrollable = $el.parents(":scrollable"),
@@ -530,7 +530,7 @@ define([
 
             // function to trigger the autoload and mark as triggered
             function trigger() {
-                $el.data("patterns.inject.autoloaded", true);
+                $el.data("pat-inject-autoloaded", true);
                 _.onClick.apply($el[0], []);
                 return true;
             }

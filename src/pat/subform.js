@@ -90,14 +90,14 @@ define([
             if (formaction) {
                 // override the default action and restore afterwards
                 if ($sub.is(".pat-inject")) {
-                    var previousValue = $sub.data("patterns.inject");
-                    $sub.data("patterns.inject", inject.extractConfig($sub, {
+                    var previousValue = $sub.data("pat-inject");
+                    $sub.data("pat-inject", inject.extractConfig($sub, {
                         url: formaction
                     }));
 
                     _.scopedSubmit($sub);
 
-                    $sub.data("patterns.inject", previousValue);
+                    $sub.data("pat-inject", previousValue);
                 } else {
                     $sub.parents("form").attr("action", formaction);
                     _.scopedSubmit($sub);
