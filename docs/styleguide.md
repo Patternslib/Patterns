@@ -154,11 +154,11 @@ Storing arbitrary data
 ----------------------
 
 When using [jQuery.fn.data](http://api.jquery.com/data/) the storage key
-must either be `patterns.<pattern-name>` if a single value is stored, or
-`patterns.<pattern name>.<name>` of multiple values are stored. This prevents
+must either be `pat.<pattern name>` if a single value is stored, or
+`pat-<pattern name>-<name>` if multiple values are stored. This prevents
 conflicts with other code.
 
 ```javascript
 // Store parsed options
-$(el).data("patterns.mypattern, options);
+$(el).data("pat-mypattern, options);
 ```
