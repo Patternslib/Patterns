@@ -119,6 +119,9 @@ function](http://api.jquery.com/trigger/). Event names must follow the
 $(el).trigger("pat-tooltip-open");
 ```
 
+The element must be dispatched from the element that caused something to
+happen, *not* from the elements that are changed as a result of an action.
+
 All extra data must be passed via a single object. In a future Patterns release
 this will be moved to the `detail` property of a CustomEvent instance.
 
@@ -135,6 +138,7 @@ function onToggled(event, detail) {
 
 $(".myclass").on("pat-toggle-toggled", onToggled);
 ```
+
 
 
 Events listeners
