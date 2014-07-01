@@ -276,7 +276,8 @@ define([
             }
 
             var onSuccess = function inject_onSuccess(ev) {
-                var sources$,
+                var trigger = ev.target,
+                    sources$,
                     data = ev && ev.jqxhr && ev.jqxhr.responseText;
                 if (!data) {
                     log.warn("No response content, aborting", ev);
@@ -312,7 +313,7 @@ define([
                             $(this).trigger("pat-inject-content-loaded");
                         });
 
-                        if (_._inject($src, $target, cfg.action, cfg["class"])) {
+                        if (_._inject(trigger, $src, $target, cfg)) {
                             $injected.filter(function() {
                                 // setting data on textnode fails in IE8
                                 return this.nodeType !== 3; //Node.TEXT_NODE
@@ -357,7 +358,7 @@ define([
             ajax.request($el, {url: cfgs[0].url});
         },
 
-        _inject: function inject_inject($source, $target, action /* , classes */) {
+        _inject: function inject_inject(trigger, $source, $target, cfg) {
             // action to jquery method mapping, except for "content"
             // and "element"
             var method = {
@@ -365,20 +366,25 @@ define([
                 contentafter:  "append",
                 elementbefore: "before",
                 elementafter:  "after"
-            }[action];
+            }[cfg.action];
 
             if ($source.length === 0) {
                 log.warn("Aborting injection, source not found:", $source);
+                $(trigger).trigger("pat-inject-missingSource",
+                        {url: cfg.url,
+                         selector: cfg.source});
                 return false;
             }
             if ($target.length === 0) {
                 log.warn("Aborting injection, target not found:", $target);
+                $(trigger).trigger("pat-inject-missingTarget",
+                        {selector: cfg.target});
                 return false;
             }
 
-            if (action === "content")
+            if (cfg.action === "content")
                 $target.empty().append($source);
-            else if (action === "element")
+            else if (cfg.action === "element")
                 $target.replaceWith($source);
             else
                 $target[method]($source);
