@@ -3,7 +3,7 @@
  *
  * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
  */
-define("pat-toggle", [
+define([
     "jquery",
     "pat-registry",
     "pat-logger",
@@ -111,7 +111,7 @@ define("pat-toggle", [
 
                 $trigger
                     .off(".toggle")
-                    .on("click.toggle", null, options, toggle._onClick)
+                    .on("click.toggle", null, options, toggle._onClick);
                     .on("keypress.toggle", null, options, toggle._onKeyPress);
             });
         },
@@ -199,4 +199,5 @@ define("pat-toggle", [
     patterns.register(toggle);
     return toggle;
 });
+
 // vim: sw=4 expandtab
