@@ -188,11 +188,10 @@ define([
             event.preventDefault();
         },
 
-        _onKeyPress : function toggle_onKeyPress(event){
-            var keycode = (event.keyCode ? event.keyCode : event.which);
-            if(keycode == '13'){
-                $(this).trigger('click',event);
-            }
+        _onKeyPress : function toggle_onKeyPress(event) {
+            var keycode = event.keyCode ? event.keyCode : event.which;
+            if (keycode==="13")
+                $(this).trigger('click', event);
         },
     };
 
