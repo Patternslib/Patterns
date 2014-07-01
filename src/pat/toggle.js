@@ -111,7 +111,8 @@ define([
 
                 $trigger
                     .off(".toggle")
-                    .on("click.toggle", null, options, toggle._onClick);
+                    .on("click.toggle", null, options, toggle._onClick)
+                    .on("keypress.toggle", null, options, toggle._onKeyPress);
             });
         },
 
@@ -185,7 +186,14 @@ define([
                     toggler.set(victims[j], next_state);
             }
             event.preventDefault();
-        }
+        },
+
+        _onKeyPress : function toggle_onKeyPress(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                $(this).trigger('click',event);
+            }
+        },
     };
 
     patterns.register(toggle);
