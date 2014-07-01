@@ -111,7 +111,7 @@ define([
 
                 $trigger
                     .off(".toggle")
-                    .on("click.toggle", null, options, toggle._onClick);
+                    .on("click.toggle", null, options, toggle._onClick)
                     .on("keypress.toggle", null, options, toggle._onKeyPress);
             });
         },
