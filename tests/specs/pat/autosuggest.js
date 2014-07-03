@@ -12,7 +12,7 @@ define(["pat-autosuggest"], function(pattern) {
 
         removeElement: function removeElement(c) {
             var cfg = c || {};
-            $('#'+cfg.id||"select2").remove()
+            $("#"+cfg.id||"select2").remove();
         },
 
         click: {
@@ -58,7 +58,7 @@ define(["pat-autosuggest"], function(pattern) {
 
             it("can be given custom CSS classes", function() {
                 utils.createElement({
-                    data: 'words: apple,orange,pear; pre-fill: orange; selection-classes: {"orange": ["fruit", "orange"]}'
+                    data: "words: apple,orange,pear; pre-fill: orange; selection-classes: {\"orange\": [\"fruit\", \"orange\"]}"
                 });
                 var $el = $("input.pat-autosuggest");
                 expect($(".select2-search-choice").length).toBe(0);
