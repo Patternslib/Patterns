@@ -16,6 +16,13 @@ define([
     parser.add_argument("ajax-url", "");
     parser.add_argument("ajax-data-type", "");
     parser.add_argument("ajax-search-index", "");
+    // "selection-classes" allows you to add custom CSS classes to currently
+    // selected elements.
+    // The value passed in must be an object with each id being the text inside
+    // a selection and value being a list of classes to be added to the
+    // selection.
+    // e.g. {'BMW': ['selected', 'car'], 'BMX': ['selected', 'bicycle']}
+    parser.add_argument("selection-classes", "");
     parser.add_argument("pre-fill", function($el) { return $el.val(); });
     parser.add_argument("data", "");
     parser.add_argument("placeholder", function($el) {
@@ -37,6 +44,18 @@ define([
                 tokenSeparators: [","],
                 openOnEnter: false
             };
+
+            if (cfg.selectionClasses) {
+                // We need to customize the formatting/markup of the selection
+                config.formatSelection = function(obj, container) {
+                    var selectionClasses = $.parseJSON(cfg.selectionClasses)[obj.text];
+                    if (selectionClasses)
+                        // According to Cornelis the classes need to be applied on
+                        // the <li>, which is the container's parent
+                        container.parent().addClass(selectionClasses.join(" "));
+                    return obj.text;
+                };
+            }
 
             if (cfg.preFill.length) {
                 var prefill = cfg.preFill.split(",");

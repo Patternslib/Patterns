@@ -79,8 +79,8 @@
         "pat-navigation": "pat/navigation",
         "pat-notification": "pat/notification",
         "pat-placeholder": "pat/placeholder",
-        "pat-skeleton": "pat/skeleton",
         "pat-selectbox": "pat/selectbox",
+        "pat-skeleton": "pat/skeleton",
         "pat-slides": "pat/slides",
         "pat-slideshow-builder": "pat/slideshow-builder",
         "pat-sortable": "pat/sortable",
@@ -116,6 +116,3 @@
 
     optimize: "none"
 })
-
-
-
