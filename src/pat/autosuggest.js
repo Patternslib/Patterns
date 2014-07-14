@@ -7,10 +7,12 @@
  */
 define([
     "jquery",
+    "pat-logger",
     "pat-parser",
     "pat-registry",
     "select2"
-], function($, Parser, registry) {
+], function($, logger, Parser, registry) {
+    var log = logger.getLogger("calendar");
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");
     parser.add_argument("ajax-url", "");
@@ -71,17 +73,23 @@ define([
             }
 
             if (cfg.data.length) {
-                var data = $.parseJSON(cfg.data);
+                var data;
                 var ids = [];
                 var d;
-                for (d in data) {
-                    ids.push(data[d].id);
+                try {
+                   data = $.parseJSON(cfg.data);
+                    for (d in data) {
+                        ids.push(data[d].id);
+                    }
+                    $el.val(ids);
+                    config.initSelection = function (element, callback) {
+                        callback(data);
+                    };
                 }
-                $el.val(ids);
-                
-                config.initSelection = function (element, callback) {
-                    callback(data);
-                };
+                catch(SyntaxError) {
+                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+
+                }
             }
 
             if ((cfg.ajax) && (cfg.ajax.url)) {
