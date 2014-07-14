@@ -162,7 +162,7 @@ define([
                         option.store="none";
                     } else {
                         var storage = (option.store==="local" ? store.local : store.session)(toggle.name);
-                        option.value_storage = store.ValueStore(storage, (trigger.id+"-"+i));
+                        option.value_storage = store.ValueStorage(storage, (trigger.id+"-"+i));
                     }
                 }
                 option.toggler=this._makeToggler(option);
