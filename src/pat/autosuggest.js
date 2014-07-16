@@ -27,6 +27,7 @@ define([
     parser.add_argument("selection-classes", "");
     parser.add_argument("pre-fill", function($el) { return $el.val(); });
     parser.add_argument("data", "");
+    parser.add_argument("maximum-selection-size", 0);
     parser.add_argument("placeholder", function($el) {
         return $el.attr("placeholder") || "Enter text";
     });
@@ -39,12 +40,12 @@ define([
                 return $el.each(function() { _.init($(this), opts); });
             }
             var cfg = parser.parse($el, opts);
-
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: cfg.words.split(/\s*,\s*/),
                 tokenSeparators: [","],
-                openOnEnter: false
+                openOnEnter: false,
+                maximumSelectionSize: cfg.maximumSelectionSize
             };
 
             if (cfg.selectionClasses) {

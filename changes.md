@@ -21,6 +21,8 @@
 
   - Fix width-related layout problems.
 
+  - Add option to restrict the max amount of selected items.
+
 - Bumper pattern: support bumping inside scrolling containers.
 
 - Checked flag pattern: fix initialisation of radio buttons. Pre-checked
