@@ -51,11 +51,17 @@ define([
             if (cfg.selectionClasses) {
                 // We need to customize the formatting/markup of the selection
                 config.formatSelection = function(obj, container) {
-                    var selectionClasses = $.parseJSON(cfg.selectionClasses)[obj.text];
-                    if (selectionClasses)
+                    var selectionClasses = null;
+                    try {
+                        selectionClasses = $.parseJSON(cfg.selectionClasses)[obj.text];
+                    } catch(SyntaxError) {
+                        log.error("SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)");
+                    }
+                    if (selectionClasses) {
                         // According to Cornelis the classes need to be applied on
                         // the <li>, which is the container's parent
                         container.parent().addClass(selectionClasses.join(" "));
+                    }
                     return obj.text;
                 };
             }
@@ -86,10 +92,8 @@ define([
                     config.initSelection = function (element, callback) {
                         callback(data);
                     };
-                }
-                catch(SyntaxError) {
+                } catch(SyntaxError) {
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
-
                 }
             }
 
