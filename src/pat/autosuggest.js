@@ -99,7 +99,7 @@ define([
 
             if ((cfg.ajax) && (cfg.ajax.url)) {
                 config = $.extend(true, {
-                    minimumInputLength: 1,
+                    minimumInputLength: 2,
                     ajax: {
                         url: cfg.ajax.url,
                         dataType: cfg.ajax["data-type"],
