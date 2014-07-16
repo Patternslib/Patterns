@@ -10,9 +10,12 @@ define(["pat-autosuggest"], function(pattern) {
             }).appendTo($("div#lab"));
         },
 
-        removeElement: function removeElement(c) {
-            var cfg = c || {};
-            $("#"+cfg.id||"select2").remove();
+        removeSelect2: function removeSelect2() {
+            $("#select2").remove();
+            $("#select2-drop").remove();
+            $("#select2-drop-mask").remove();
+            $(".select2-container").remove();
+            $(".select2-sizer").remove();
         },
 
         click: {
@@ -42,7 +45,7 @@ define(["pat-autosuggest"], function(pattern) {
                 pattern.init($el);
                 expect($el.hasClass("select2-offscreen")).toBeTruthy();
                 expect($(".select2-container").length).toBe(1);
-                utils.removeElement();
+                utils.removeSelect2();
             });
         });
 
@@ -66,7 +69,34 @@ define(["pat-autosuggest"], function(pattern) {
                 expect($(".select2-search-choice").length).toBe(1);
                 expect($(".select2-search-choice").hasClass("fruit")).toBeTruthy();
                 expect($(".select2-search-choice").hasClass("orange")).toBeTruthy();
-                utils.removeElement();
+                utils.removeSelect2();
+            });
+
+            it("can be restricted to a certain amount", function() {
+                // First check without limit
+                utils.createElement({
+                    data: "words: apple,orange,pear; pre-fill: orange"
+                });
+                expect($(".select2-input").length).toBe(0);
+                pattern.init($("input.pat-autosuggest"));
+                expect($(".select2-input").length).toBe(1);
+                expect($(".select2-selection-limit").length).toBe(0);
+                $(".select2-input").val("apple").click();
+                expect($(".select2-selection-limit").length).toBe(0);
+                utils.removeSelect2();
+
+                // Then with limit
+                utils.createElement({
+                    data: "maximum-selection-size: 1; words: apple,orange,pear; pre-fill: orange"
+                });
+                expect($(".select2-input").length).toBe(0);
+                pattern.init($("input.pat-autosuggest"));
+                expect($(".select2-input").length).toBe(1);
+                expect($(".select2-selection-limit").length).toBe(0);
+                $(".select2-input").val("apple").click();
+                expect($(".select2-selection-limit").length).toBe(1);
+                expect($(".select2-selection-limit").text()).toBe("You can only select 1 item");
+                utils.removeSelect2();
             });
         });
     });
