@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 - Unreleased
+## 2.0.0-a1 - July 17, 2014
 
 - New patterns:
   - Colour picker pattern. This can be used as a polyfill for browsers which do
