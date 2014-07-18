@@ -1,16 +1,25 @@
-Making a release
-================
+# Making a release
 
-* merge master into the "release" branch
-* make sure all tests are passing
+## Merge master into the "release" branch
 
-    ```make check```
+    git checkout -b release
+    git merge master
 
-* create a new bundle and commit that
+## Make sure all tests are passing
 
-    ```make bundle```
+    make check
 
-* tag the release
+## If tests pass, commit the merge
 
-    ```git tag 2.0.0```
-    ```git push --tags```
+    git commit -am "Merge master into release branch"
+
+## Create a new bundle and commit that
+
+    make bundle
+    git add -f bundle.js
+    git commit bundle.js -m "Add bundle for next release 2.0.0"
+
+## Tag the release and set it free
+
+    git tag 2.0.0
+    git push --tags
