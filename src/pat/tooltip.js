@@ -125,9 +125,18 @@ define([
                 $(document).on("click.tooltip", $trigger, tooltip.hide);
                 $(document).on("pat-tooltip-click.tooltip", $trigger, tooltip.hide);
                 $trigger.on("click.tooltip", $trigger, tooltip._onClick);
-                // close if something inside the tooltip triggered an injection
-                $container.on("patterns-inject-triggered.tooltip",
-                              $trigger, tooltip.hide);
+                /* XXX: It's also not clear what this was for, but we
+                 * definitely don't want tooltips to close whenever an
+                 * injection has happened.
+                 * I've added a regression test to prevent this being enabled
+                 * again.
+                 * If there is a reason why a tooltip must close after an
+                 * injection, it needs to be much more specific.
+                 
+                    // close if something inside the tooltip triggered an injection
+                    $container.on("patterns-inject-triggered.tooltip",
+                                $trigger, tooltip.hide);
+                */
                 $container.on("submit.tooltip", $trigger, tooltip.hide);
             } else {
                 $container.on("click.tooltip", $trigger, tooltip.hide);
