@@ -137,7 +137,7 @@ define([
                     $container.on("patterns-inject-triggered.tooltip",
                                 $trigger, tooltip.hide);
                 */
-                $container.on("submit.tooltip", $trigger, tooltip.hide);
+                $container.on("submit.tooltip", '.close-panel', $trigger, tooltip.hide);
             } else {
                 $container.on("click.tooltip", $trigger, tooltip.hide);
                 $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
