@@ -116,8 +116,6 @@ define([
                 .on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
 
             if (options.closing==="close-button") {
-                $container
-                    .on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             } else if (options.closing==="sticky" || (options.trigger==="click" && options.closing==="auto")) {
