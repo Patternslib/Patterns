@@ -37,6 +37,59 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
             $("#lab").remove();
         });
 
+        describe("A Tooltip", function () {
+            it("gets a .close-panel element when closing=close-button", function () {
+                utils.createTooltip({
+                    data: "closing: close-button",
+                    href: "/tests/content.html#content"
+                });
+                var $el = $("a#tooltip");
+                pattern.init($el);
+                $el.trigger(utils.click);
+                expect($(".close-panel").length).toBeTruthy();
+            });
+            it("is closed when one clicks on a .close-panel element", function () {
+                runs(function () {
+                    utils.createTooltip({
+                        data: "trigger: click; closing: close-button",
+                        href: "/tests/content.html#content"
+                    });
+                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "hide").andCallThrough();
+                    var $el = $("a#tooltip");
+                    pattern.init($el);
+                    $el.trigger(utils.click);
+                    expect(pattern.show).toHaveBeenCalled();
+                });
+                waits(100); // hide events get registered 50 ms after show
+                runs(function () {
+                    $(".close-panel").click();
+                    expect(pattern.hide).toHaveBeenCalled();
+                    });
+            });
+            it("is NOT closed when an injection happens", function () {
+                    runs(function () {
+                        utils.createTooltip({
+                            data: "trigger: click; closing: auto",
+                            href: "/tests/content.html#content"
+                        });
+                        var $el = $("a#tooltip");
+                        spyOn(pattern, "show").andCallThrough();
+                        spyOn(pattern, "hide").andCallThrough();
+                        pattern.init($el);
+                        $el.trigger(utils.click);
+                        expect(pattern.show).toHaveBeenCalled();
+                    });
+                    waits(100); // hide events get registered 50 ms after show
+                    runs(function () {
+                        var $el = $("a#tooltip");
+                        var $container = $el.data("patterns.tooltip.container");
+                        $container.trigger("patterns-inject-triggered");
+                        expect(pattern.hide).not.toHaveBeenCalled();
+                    });
+            });
+        });
+
         describe("When a tooltip is clicked", function () {
             describe("if the tootip is a hyperlink", function () {
                 beforeEach(function() {
@@ -60,7 +113,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 afterEach(function() {
                     utils.removeTooltip();
                 });
-                it("will will show the contents of the 'title' attribute", function () {
+                it("will show the contents of the 'title' attribute", function () {
                     utils.createTooltip({data: "source: title"});
                     var $el = $("a#tooltip");
                     spyOn(pattern, "show").andCallThrough();
@@ -134,7 +187,6 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     var options = $el.data("patterns.tooltip");
                     expect(options.source).toBe("ajax");
                 });
-
                 it("will revert to 'content' if 'href' points to a document fragment", function () {
                     utils.createTooltipSource();
                     utils.createTooltip({data: "source: auto", href: "#tooltip-source"});
@@ -146,6 +198,5 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
             });
         });
     });
-
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
