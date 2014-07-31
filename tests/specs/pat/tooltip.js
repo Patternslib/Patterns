@@ -38,6 +38,59 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
         });
 
         describe("A Tooltip", function () {
+
+            it("will be closed when a form with class .close-panel is submitted", function () {
+                runs(function () {
+                    var $div = $("<div/>", {id: "content"});
+                    var $form = $("<form/>", {"class": "close-panel"});
+                    $div.appendTo(document.body);
+                    $form.appendTo($div[0]);
+                    utils.createTooltip({
+                        data: "source: content",
+                        href: "#content"
+                    });
+                    var $el = $("a#tooltip");
+                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "hide").andCallThrough();
+                    pattern.init($el);
+                    $el.trigger(utils.click);
+                    expect(pattern.show).toHaveBeenCalled();
+                });
+                waits(100); // hide events get registered 50 ms after show
+                runs(function () {
+                    $(document).on("submit", function (ev) { ev.preventDefault(); });
+                    $("form.close-panel").submit();
+                    expect(pattern.hide).toHaveBeenCalled();
+                    $("div#content").remove();
+                });
+            });
+
+            it("will NOT be closed when a form WITHOUT class .close-panel is submitted", function () {
+                runs(function () {
+                    var $div = $("<div/>", {id: "content"});
+                    var $form = $("<form/>");
+                    $div.appendTo(document.body);
+                    $form.appendTo($div[0]);
+                    utils.createTooltip({
+                        data: "source: content",
+                        href: "#content"
+                    });
+                    var $el = $("a#tooltip");
+                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "hide").andCallThrough();
+                    pattern.init($el);
+                    $el.trigger(utils.click);
+                    expect(pattern.show).toHaveBeenCalled();
+                });
+                waits(100); // hide events get registered 50 ms after show
+                runs(function () {
+                    $(document).on("submit", function (ev) { ev.preventDefault(); });
+                    $("#content form").submit();
+                    expect(pattern.hide).not.toHaveBeenCalled();
+                    $("div#content").remove();
+                });
+            });
+
             it("gets a .close-panel element when closing=close-button", function () {
                 utils.createTooltip({
                     data: "closing: close-button",
@@ -48,6 +101,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 $el.trigger(utils.click);
                 expect($(".close-panel").length).toBeTruthy();
             });
+
             it("is closed when one clicks on a .close-panel element", function () {
                 runs(function () {
                     utils.createTooltip({
@@ -65,8 +119,9 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 runs(function () {
                     $(".close-panel").click();
                     expect(pattern.hide).toHaveBeenCalled();
-                    });
+                });
             });
+
             it("is NOT closed when an injection happens", function () {
                     runs(function () {
                         utils.createTooltip({
