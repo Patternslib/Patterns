@@ -103,7 +103,7 @@ define([
                         if (!victims.length)
                             continue;
                         state=options[i].toggler.get(victims[0]),
-                        last_state=options[i].store_value.get();
+                        last_state=options[i].value_storage.get();
                         if (state!==last_state)
                             for (var j=0; j<victims.length; j++)
                                 options[i].toggler.set(victims[j], last_state);
@@ -162,7 +162,7 @@ define([
                         option.store="none";
                     } else {
                         var storage = (option.store==="local" ? store.local : store.session)(toggle.name);
-                        option.value_storage = store.ValueStorage(storage, (trigger.id+"-"+i));
+                        option.value_storage = new store.ValueStorage(storage, (trigger.id+"-"+i));
                     }
                 }
                 option.toggler=this._makeToggler(option);
@@ -174,16 +174,19 @@ define([
 
         _onClick: function toggle_onClick(event) {
             var options = event.data,
-                victims, toggler, next_state, j;
+                option, victims, toggler, next_state, j;
 
             for (var i=0; i<options.length; i++) {
-                victims=document.querySelectorAll(options[i].selector);
+                option=options[i];
+                victims=document.querySelectorAll(option.selector);
                 if (!victims.length)
                     continue;
-                toggler=options[i].toggler;
+                toggler=option.toggler;
                 next_state=toggler.toggle(victims[0]);
                 for (j=1; j<victims.length; j++)
                     toggler.set(victims[j], next_state);
+                if (option.value_storage)
+                    option.value_storage.set(next_state);
             }
             event.preventDefault();
         },
@@ -198,5 +201,3 @@ define([
     patterns.register(toggle);
     return toggle;
 });
-
-// vim: sw=4 expandtab
