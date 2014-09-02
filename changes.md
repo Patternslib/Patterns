@@ -1,9 +1,10 @@
 # Changelog
 
 
-## 2.0.1 - Unreleased
+## 2.0.1 - Sept. 2, 2014
 
-- ...
+- Bugfix in pat-toggle. Check that the previous state is not null before
+  attempting to restore it.
 
 
 ## 2.0.0 - August 11, 2014
