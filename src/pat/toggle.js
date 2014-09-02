@@ -104,7 +104,7 @@ define([
                             continue;
                         state=options[i].toggler.get(victims[0]),
                         last_state=options[i].value_storage.get();
-                        if (state!==last_state)
+                        if (state!==last_state && last_state !== null)
                             for (var j=0; j<victims.length; j++)
                                 options[i].toggler.set(victims[j], last_state);
                 }
