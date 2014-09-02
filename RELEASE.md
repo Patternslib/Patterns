@@ -2,7 +2,7 @@
 
 ## Merge master into the "release" branch
 
-    git checkout -b release
+    git checkout --track origin/release
     git merge master
 
 ## Make sure all tests are passing
@@ -22,4 +22,4 @@
 ## Tag the release and set it free
 
     git tag 2.0.0
-    git push --tags
+    git push && git push --tags
