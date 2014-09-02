@@ -1,0 +1,144 @@
+/* @group Checkmarks */
+
+.checklist {
+	margin: 0 0 1em;
+}
+
+.checklist.tablesque {
+	border-top: 1px solid silver;
+}
+
+.checklist.tablesque label {
+	border-bottom: 1px solid silver;
+	padding-left: 30px;
+}
+
+.checklist .checklist {
+	margin-bottom: -2px;
+	border-style: none;
+}
+
+.checklist .jump {
+	float: right;
+	position: absolute;
+	top: 2px;
+	right: 5px;
+}
+
+.checklist legend,
+.checklist p.legend {
+	font-weight: normal;
+	font-style: normal;
+}
+
+.checklist > label {
+	display: block;
+	width: auto;
+	margin-bottom: 0;
+	float: none;
+	margin-left: 0;
+	padding-right: 0;
+	margin-right: 0;
+	position: relative;
+	user-select: none;
+	padding-left: 1.5em;
+}
+
+.checklist > label > input[type="radio"],
+.checklist > label > input[type="checkbox"],
+.checkbox > input[type="checkbox"]  {
+	float: left;
+	margin-left: -1.5em;
+	visibility: hidden;
+}
+
+.checklist > label:before,
+label.checkbox:before {
+	content: '\f096';
+	font-family: fontello;
+	width: 1em;
+	display: inline-block;
+	margin-left: -1.5em;
+	float: left;
+	margin-top: -0.1em;
+}
+
+.checklist label:active:before,
+label.checkbox:active:before {
+	color: silver;
+	transform: scale(0.9)
+}
+
+.checklist > label.checked:before,
+label.checkbox.checked:before {
+	content: '\2611';
+}
+
+@media only screen and (max-width: 767px) {
+
+label.checkbox:before {
+	padding-left: 1em;
+} }
+
+.checklist.radio label:before {
+	content: '\f10c';
+	font-family: fontello;
+	width: 1em;
+	display: inline-block;
+}
+
+.checklist.radio label.checked:before {
+	content: '\e702';
+}
+
+.checklist fieldset.composed {
+	padding-left: 0 !important;
+	margin-bottom: 0;
+	position: relative;
+}
+
+.checklist .checklist label {
+	padding-left: 50px;
+
+}
+
+.checklist .composed > select {
+	position: absolute;
+	top: 6px;
+	right: 40px;
+	font-size: 14px;
+	display: none;
+}
+
+.checklist .composed.checked > select {
+	display: inline-block;
+}
+
+.checklist .checklist .checklist label {
+	padding-left: 70px;
+}
+
+.checklist.tablesque label:hover {
+	background-color: #efefef;
+}
+
+.checklist.tablesque label.checked {
+	background-color: #5bb75b;
+	color: white;
+}
+
+/*.checklist .checked > a ,
+.checklist .checked > select {
+	color: white;
+}*/
+
+.checklist label input[type="checkbox"],
+form.concise fieldset.comprehensive.checklist label input[type="checkbox"] {
+	margin-left: -18px;
+	float: none;
+	position: relative;
+	left: 0;
+	top: -2px;
+}
+
+/* @end */

@@ -1,0 +1,34 @@
+---
+layout: shell
+---
+
+<form action="pattern-test-response.html" method="get" data-pat-inject="target: #main-content" class="concise pat-inject">
+	<fieldset class="horizontal pat-autosubmit">
+		<label>
+			Take your pick
+			<select name="mySelect">
+				<option value="A">
+					Item A
+				</option>
+				<option value="B">
+					Item B
+				</option>
+			</select>
+		</label>
+		<fieldset class="group checklist">
+			<legend>We like options</legend>
+			<label><input type="checkbox" name="cream" /> Cream</label>
+			<label><input type="checkbox" name="syrup" /> Syrup</label>
+		</fieldset>
+		<label><input type="file" name="myFile" /> Upload a file</label>
+		<fieldset class="group checklist radio">
+			<legend>Choose your flavour</legend>
+			<label><input type="radio" name="radio" /> Strawberry</label>
+			<label><input type="radio" name="radio" /> Banana</label>
+			<label><input type="radio" name="radio" /> Raspberry</label>
+		</fieldset>
+		<label>Free text field triggers with default delay <input type="text" name="keyup"/></label>
+		<label>Free text field triggers with 3000 ms delay <input type="search" name="keyup" data-pat-autosubmit="delay: 3000ms" /></label>
+		<label>Free text field triggers when field loses focus <input type="text" name="defocus" data-pat-autosubmit="delay: defocus" /></label>
+	</fieldset>
+</form>
