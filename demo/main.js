@@ -93,18 +93,19 @@ config = {
     },
 
     shim: {
-        "jquery": {
-            exports: "jQuery"
-        },
-        "jquery.fullcalendar.dnd": {
-            depends: "jquery",
-        },
-        "tinymce": {
-            depends: "jquery"
-        },
-        "photoswipe": {
-            depends: "klass",
-        }
+        "jcrop":                        { deps: "jquery" },
+        "jquery":                       { exports: "jQuery" },
+        "jquery.anythingslider":        { deps: "jquery" },
+        "jquery.chosen":                { deps: "jquery" },
+        "jquery.fullcalendar.dnd":      { deps: "jquery" },
+        "jquery.placeholder":           { deps: "jquery" },
+        "jquery.textchange":            { deps: "jquery" },
+        "parsley":                      { deps: "jquery" },
+        "parsley.extend":               { deps: "jquery" },
+        "photoswipe":                   { deps: "klass" },
+        "select2":                      { deps: "jquery" },
+        "spectrum":                     { deps: "jquery" },
+        "tinymce":                      { deps: "jquery" }
     },
 };
 
