@@ -10340,7 +10340,6 @@ define('pat-utils',[
         hideOrShow: hideOrShow,
         addURLQueryParameter: addURLQueryParameter
     };
-
     return utils;
 });
 
@@ -11093,6 +11092,17 @@ define('pat-jquery-ext',["jquery"], function($) {
     // case-insensitive :contains
     $.expr[":"].Contains = function(a, i, m) {
         return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+    };
+
+    $.fn.scopedFind = function (selector) {
+        /*  If the selector starts with an object id do a global search,
+         *  otherwise do a local search.
+         */
+        if (selector.startsWith('#')) {
+            return $(selector);
+        } else {
+            return this.find(selector);
+        }
     };
 });
 
@@ -15089,9 +15099,10 @@ define('pat-checkedflag',[
  */
 define('pat-checklist',[
     "jquery",
+    "pat-jquery-ext",
     "pat-parser",
     "pat-registry"
-], function($, Parser, registry) {
+], function($, dummy, Parser, registry) {
     var parser = new Parser("checklist");
     parser.add_argument("select", ".select-all");
     parser.add_argument("deselect", ".deselect-all");
@@ -15107,9 +15118,9 @@ define('pat-checklist',[
                     options = parser.parse($trigger, opts, false);
 
                 $trigger.data("patternChecklist", options);
-                $trigger.find(options.select)
+                $trigger.scopedFind(options.select)
                     .on("click.pat-checklist", {trigger: $trigger}, _.onSelectAll);
-                $trigger.find(options.deselect)
+                $trigger.scopedFind(options.deselect)
                     .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
                 $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
                 // update select/deselect button status
@@ -15121,8 +15132,8 @@ define('pat-checklist',[
             return $el.each(function() {
                 var $trigger = $(this),
                     options = $trigger.data("patternChecklist");
-                $trigger.find(options.select).off(".pat-checklist");
-                $trigger.find(options.deselect).off(".pat-checklist");
+                $trigger.scopedFind(options.select).off(".pat-checklist");
+                $trigger.scopedFind(options.deselect).off(".pat-checklist");
                 $trigger.off(".pat-checklist", "input[type=checkbox]");
                 $trigger.data("patternChecklist", null);
             });
@@ -15131,8 +15142,8 @@ define('pat-checklist',[
         onChange: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist"),
-                deselect = $trigger.find(options.deselect),
-                select = $trigger.find(options.select);
+                deselect = $trigger.scopedFind(options.deselect),
+                select = $trigger.scopedFind(options.select);
             if ($trigger.find("input[type=checkbox]:visible:checked").length===0) {
                 deselect.prop("disabled", true);
             } else {
@@ -15152,10 +15163,10 @@ define('pat-checklist',[
             $trigger.find("input[type=checkbox]:not(:checked)").each(function () {
                 $(this).prop("checked", true).trigger("change");
             });
-            $trigger.find(options.deselect).each(function () {
+            $trigger.scopedFind(options.deselect).each(function () {
                 $(this).prop("disabled", false);
             });
-            $trigger.find(options.select).each(function () {
+            $trigger.scopedFind(options.select).each(function () {
                 $(this).attr({disabled: "disabled"});
             });
             event.preventDefault();
@@ -15167,10 +15178,10 @@ define('pat-checklist',[
             $trigger.find("input[type=checkbox]:checked").each(function () {
                 $(this).prop("checked", false).trigger("change");
             });
-            $trigger.find(options.select).each(function () {
+            $trigger.scopedFind(options.select).each(function () {
                 $(this).prop("disabled", false);
             });
-            $trigger.find(options.deselect).each(function () {
+            $trigger.scopedFind(options.deselect).each(function () {
                 $(this).attr({disabled: "disabled"});
             });
             event.preventDefault();
@@ -16988,7 +16999,20 @@ define('pat-inject',[
             $el.on("pat-ajax-success.pat-inject", onSuccess);
             $el.on("pat-ajax-error.pat-inject", onError);
 
-            ajax.request($el, {url: cfgs[0].url});
+            if (cfgs[0].url.length) {
+                ajax.request($el, {url: cfgs[0].url});
+            } else {
+                // If there is no url specified, then content is being fetched
+                // from the same page.
+                // No need to do an ajax request for this, so we spoof the ajax
+                // event.
+                $el.trigger({
+                    type: "pat-ajax-success",
+                    jqxhr: {
+                        responseText:  $("body").html()
+                    }
+                });
+            }
         },
 
         _inject: function inject_inject(trigger, $source, $target, cfg) {
@@ -47614,7 +47638,7 @@ define('pat-switch',[
         },
 
         _onClick: function(ev) {
-            if ($(ev.target).is("a")) {
+            if ($(ev.currentTarget).is("a")) {
                 ev.preventDefault();
             }
             switcher._go($(this));
