@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+        <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="bumper.css" type="text/css">
+        <script data-main="../main" src="../../src/bower_components/requirejs/require.js"></script>
+	</head>
+	<body>
+		<section>
+			<h1>Bumper</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+				<h2>Demo</h2>
+				<div class="row" style="height: 82px">
+					<div class="pat-bumper message info" data-pat-bumper="margin: 40" style="margin-left: 8px; width: 589px; z-index: 1000">
+						This bar will stick to the top of the screen when you scroll.
+					</div>
+				</div>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+		
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+		
+	</body>
+</html>

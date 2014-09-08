@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+		<link rel="stylesheet" href="../common.css" type="text/css">
+	</head>
+<body>
+	<section>
+		<h1>Markdown</h1>
+		<section class="description">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+			<h2>Demo</h2>
+			<p>Markdown formatted content</p>
+			<h3>Inject Markdown formatted content as HTML</h3>
+			<ol>
+				<li><a href="content/content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Load and inject markdown content with data-type declaration.</a></li>
+				<li><a href="content/content.md" class="pat-inject" data-pat-inject="target: #target">Load and inject markdown content, automatically detected as markdown based on the file name extension.</a></li>
+			</ol>
+			<div id="target">
+				Here some Markdown rendered content will appear if you click on one of the links above.
+			</div>
+			<hr />
+			<h3>Autoloading content from a separate Markdown file</h3>
+			
+			<a href="content/content.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">This content will be replaced by the source content of the link, rendered as HTML.</a>
+			
+			<hr/>
+	
+			<h3>Render inline Markdown content as HTML</h3>
+			<!-- this area's content will be converted to html and injected
+	                into a div after the <pre>.
+			-->
+		<pre class="pat-markdown"># Some Other Header 1
+## Some Other Header 2
+
+Some _other_ __markdown__ ___content___.
+
+And a list numbered list:
+
+1. one
+2. two
+3. three
+7. four
+				</pre>
+				<h2>Inject a page that has a self injecting link for Markdown content in it.</h2>
+				<a href="injected-page.html" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">This content will be replaced by the source content of the link that is in the HTML this link links to, rendered as HTML.</a>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+			<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+			
+			
+			<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

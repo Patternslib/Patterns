@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="calendar.css" type="text/css">
+		<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<section class="description">
+			<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
+		</section>
+
+		<section class="demo">
+		<h2>Demo</h2>
+		<div class="calendar-container pat-fullcalendar">
+			<div class="month" id="2013-01">
+				<h2>
+					<time datetime="2013-01">January 2013</time>
+				</h2>
+				<p class="controls">
+					<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-02; source: #2013-02::element; target: #2013-01::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-02">Next month</a>
+				</p>
+
+				<ul id="eventlistinbody" class="events pat-fullcalendar">
+					<li class="event all-day">
+						<a href="#" class="url external">
+							<h4 class="title">
+								Event of the year
+							</h4>
+							<p class="description">
+								Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+							<ul class="details">
+								<li>Starts <time class="start" datetime="2013-01-05">5 January 2013, 9:00</time></li>
+								<li>Ends <time class="end" datetime="2013-01-08">8 January 2013, 17:00</time></li>
+							</ul>
+						</a>
+					</li>
+					<li class="event all-day editable">
+						<a href="some-event-details.html" class="url external" data-injection".modal">
+							<h4 class="title">
+								Another event of the year
+							</h4>
+							<p class="description">
+								Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+							<ul class="details">
+								<li>Starts <time class="start" datetime="2013-01-11">11 January 2013</time></li>
+							</ul>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+		</section>
+
+		<section class="documentation">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
+		</section>
+
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+
+	</body>
+</html>

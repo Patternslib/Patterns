@@ -190,6 +190,5 @@ define([
         hideOrShow: hideOrShow,
         addURLQueryParameter: addURLQueryParameter
     };
-
     return utils;
 });

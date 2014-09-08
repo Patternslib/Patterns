@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Demo page</title>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+    <link rel="stylesheet" href="tooltip.css" type="text/css">
+    <script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<section class="description">
+		<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
+	</section>
+	<section class="demo">
+		<h2>Demo</h2>
+	<p>
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                <a href="#" title="This is just the title" class="pat-tooltip" data-pat-tooltip="trigger: click; source: content">Tooltip contents</a>. And more text.
+		Ut <a href="#" title="This tooltip prefers to be in the top-middle position, but doesn't have enough space there. Poor fellow." class="pat-tooltip" data-pat-tooltip="class: unicorn; position: tm,rt,rm,rb,lt; trigger: hover">tooltip top middle, show on hover</a> gravida ligula quis feugiat. Mauris tellus purus, venenatis non faucibus dignissim,
+		imperdiet eget purus. Sed imperdiet, libero eu dignissim sollicitudin, dui augue porta orci,
+		commodo malesuada diam diam eu ligula.
+		Donec <a href="#" title="This is one sticky tooltip" class="pat-tooltip" data-pat-tooltip="position: rm; closing: sticky">tooltip right middle</a>, neque eu congue commodo, magna elit luctus elit, ut semper quam elit nec nisi.
+		Aenean accumsan ultrices porta. Etiam at tristique mi.
+	</p>
+	<p>
+		<img src="http://farm8.staticflickr.com/7123/7591044464_e593c023df_z_d.jpg" class="float-before pat-tooltip" width="300" data-pat-tooltip="closing: sticky" title="this is a sticky tooltip" alt="starwars meeting"/>
+		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+		Aenean malesuada laoreet magna, et <a href="#" title="This tooltip prefers to be in the top-middle" class="pat-tooltip" data-pat-tooltip="position: tm,rt,rm,rb,lt; trigger: hover">top middle on hover</a> magna tempus eleifend.
+		In posuere nunc eros. Curabitur odio enim, rutrum id cursus ut, dapibus feugiat mi. <a href="documentation.md#Display" class="pat-tooltip" data-pat-tooltip="ajax hover; ajax-data-type: markdown" title="Tittle attribute content">this content is loaded by Ajax on hover</a> and <a href="pattern-test-response.html#myTip" class="pat-tooltip" data-pat-tooltip="ajax; trigger: click" title="Tittle attribute content">this on by Ajax too, but on click</a>.  Interdum sit amet fringilla sit amet, pellentesque non nisl. Quisque egestas aliquam scelerisque. Phasellus ligula lectus, rutrum in gravida hendrerit,
+		rutrum sit amet felis.
+	</p>
+	<p>
+		Nam aliquet sodales risus, sed vulputate ligula ullamcorper et.
+		Pellentesque egestas imperdiet erat viverra lacinia. Aliquam magna orci, lobortis eu aliquam quis,
+		tempor at tortor. <a href="#" title="Tittle attribute content" class="pat-tooltip">tooltip default</a> vel mauris pharetra a tempor turpis rhoncus.
+		Vivamus rutrum blandit leo, a vehicula leo condimentum accumsan.
+		Vestibulum sodales accumsan est, a luctus turpis auctor sit amet.
+		Etiam vehicula ligula ac libero pulvinar nec ultrices dolor rutrum.
+		Aenean at ultrices erat. Fusce sollicitudin euismod congue. Cras eu elit augue.
+		<img src="http://farm3.staticflickr.com/2581/3881246563_187586ddc5_z_d.jpg" width="400" class="float-after pat-tooltip" data-pat-tooltip="trigger: hover; delay: 500" title="Tittle attribute content shown after half second delay." alt="starwars"/> Nunc a ante non justo pretium imperdiet. Praesent diam nunc, sodales in pretium sit amet,
+		auctor nec orci. Ut commodo magna at diam tempor nec sodales augue sagittis. Suspendisse potenti.
+	</p>
+	<p>
+		Proin eu metus ante, quis sagittis justo. Aenean magna mi, ultrices at tincidunt id, volutpat non eros.
+		<a href="#" class="pat-tooltip" data-pat-tooltip="click; position: tl" title="tooltip left top, show on click">Nunc interdum venenatis eros, et lacinia turpis ornare non.
+		Suspendisse quis sem varius felis convallis feugiat non id lorem.</a>
+		Aliquam lobortis porta sapien, vel vehicula augue dapibus at.
+		Nam turpis nibh, mollis quis mollis a, dictum quis elit. Fusce feugiat dapibus lacus,
+		non condimentum ante varius at. Cras at nunc elit, quis tempor quam
+	</p>
+	</section>
+	<section class="documentation">
+		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
+	</section>
+	
+	<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+	
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Switch demo page</title>
+        <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="switch.css" type="text/css">
+		<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<section class="description">
+                <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+		<h2>Demo</h2>
+			<h3>Selectively remove class and remember state</h3>
+			<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Blue ; add: mode-Green; store: session" title="Make all green">Green</button>
+			<button class="pat-switch" data-pat-switch="selector: ul.test1 li; remove: mode-Green ; add: mode-Blue; store: session" title="Make all blue">Blue</button>
+			<ul class="test1">
+				<li class="foo mode-Blue bar">Entry 1</li>
+				<li class="mode-Green">Entry 2</li>
+				<li class="mode-Red">Stays red</li>
+			</ul>
+			<h3>Remove using prefix</h3>
+			<button class="pat-switch" data-pat-switch="selector: ul.test2 li; remove: mode-* ; add: mode-Red" title="Make all red">Red</button>
+			<button class="pat-switch" data-pat-switch="selector: ul.test2 li; remove: mode-* ; add: mode-Green" title="Make all green">Green</button>
+			<button class="pat-switch" data-pat-switch="selector: ul.test2 li; remove: mode-* ; add: mode-Blue" title="Make all blue">Blue</button>
+			<ul class="test2">
+				<li class="foo mode-Blue bar">Entry 1</li>
+				<li class="mode-Green">Entry 2</li>
+				<li>Entry 3</li>
+			</ul>
+			<h3>Anchors inside the switch element are still clickable</h3>
+            <p>When the switch element contains sub-elements, then any anchors
+               inside that switch element should still be clickable.
+               See ticket <a href="https://github.com/Patternslib/Patterns/issues/378">#387</a>
+            </p>
+			<ul class="test3">
+				<li class="foo mode-Blue bar">Entry 1</li>
+				<li class="mode-Green">Entry 2</li>
+				<li>Entry 3</li>
+			</ul>
+            <section class="pat-switch" data-pat-switch="selector: ul.test3 li; remove: mode-* ; add: mode-Red" title="Make all red">
+                <button>Red</button> <a href="index.html" class="button">This is an anchor</a>
+            </section>
+		</section>
+		<section class="documentation">
+            <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+		</section>
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+	</body>
+</html>
+

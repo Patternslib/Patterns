@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Auto submit</title>
+        <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="autosubmit.css" type="text/css">
+        <script data-main="../main" src="../../src/bower_components/requirejs/require.js"></script>
+	</head>
+	<body class="home">
+		<section>
+			<h1>Auto submit</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+				<h2>Demo</h2>
+				<form action="pattern-test-response.html" method="get" data-pat-inject="target: #main-content" class="concise pat-inject">
+					<fieldset class="horizontal pat-autosubmit">
+						<label>
+							Take your pick
+							<select name="mySelect">
+								<option value="A">
+									Item A
+								</option>
+								<option value="B">
+									Item B
+								</option>
+							</select>
+						</label>
+						<fieldset class="group checklist">
+							<legend>We like options</legend>
+							<label><input type="checkbox" name="cream" /> Cream</label>
+							<label><input type="checkbox" name="syrup" /> Syrup</label>
+						</fieldset>
+						<label><input type="file" name="myFile" /> Upload a file</label>
+						<fieldset class="group checklist radio">
+							<legend>Choose your flavour</legend>
+							<label><input type="radio" name="radio" /> Strawberry</label>
+							<label><input type="radio" name="radio" /> Banana</label>
+							<label><input type="radio" name="radio" /> Raspberry</label>
+						</fieldset>
+						<label>Free text field triggers with default delay <input type="text" name="keyup"/></label>
+						<label>Free text field triggers with 3000 ms delay <input type="search" name="keyup" data-pat-autosubmit="delay: 3000ms" /></label>
+						<label>Free text field triggers when field loses focus <input type="text" name="defocus" data-pat-autosubmit="delay: defocus" /></label>
+					</fieldset>
+				</form>
+				<div id="main-content">
+					<p>Some content will appear here if you change anything in the form…</p>
+				</div>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+	</body>
+</html>

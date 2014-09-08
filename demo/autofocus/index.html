@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Focus demo page</title>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+    <link rel="stylesheet" href="autofocus.css" type="text/css">
+    <script data-main="../main" src="../../src/bower_components/requirejs/require.js"></script>
+</head>
+	<body>
+		<section>
+			<h1>
+				Autofocus
+			</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+			<h2>Demo</h2>
+				<fieldset class="concise">
+					<label>Title <input autofocus="autofocus" type="text" value="Prefilled title"/></label>
+					<label>Keywords <input autofocus="autofocus" type="text" placeholder="This field should get the focus"/></label>
+				</fieldset>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+		
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+	</body>
+</html>

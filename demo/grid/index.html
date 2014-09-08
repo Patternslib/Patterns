@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Patterns — Grid</title>
+    	<link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="grid.css" type="text/css">
+	</head>
+	<body class="home">
+		<section>
+			<h1>Grid</h1>
+		
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+	
+	
+			<section class="demo">
+			  <div class="row">
+			      <div class="eight columns">
+			        <h3>The Grid</h3>
+			  
+			        <!-- Grid Example -->
+			        <div class="row">
+			          <div class="twelve columns">
+			            <div class="panel">
+			              <p>This is a twelve column section in a row. Each of these includes a div.panel element so you can see where the columns are - it's not required at all for the grid.</p>
+			            </div>
+			          </div>
+			        </div>
+			        <div class="row">
+			          <div class="six columns">
+			            <div class="panel">
+			              <p>Six columns</p>
+			            </div>
+			          </div>
+			          <div class="six columns">
+			            <div class="panel">
+			              <p>Six columns</p>
+			            </div>
+			          </div>
+			        </div>
+			        <div class="row">
+			          <div class="four columns">
+			            <div class="panel">
+			              <p>Four columns</p>
+			            </div>
+			          </div>
+			          <div class="four columns">
+			            <div class="panel">
+			              <p>Four columns</p>
+			            </div>
+			          </div>
+			          <div class="four columns">
+			            <div class="panel">
+			              <p>Four columns</p>
+			            </div>
+			          </div>
+			        </div>
+				</div>
+	  
+				<div class="four columns">
+					<h3>How does it work?</h3>
+					<p>The grid is built up out of row and columns. When you resize your browser window to the size of a mobile device, all adjacent columns are positioned underneath each other.</p>
+					<p>To use this grid in your websites, please follow the guidelines in the document below.</p>
+				</div>
+		    </div>
+			</section>
+	
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+		
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+
+		<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

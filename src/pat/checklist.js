@@ -6,9 +6,10 @@
  */
 define([
     "jquery",
+    "pat-jquery-ext",
     "pat-parser",
     "pat-registry"
-], function($, Parser, registry) {
+], function($, dummy, Parser, registry) {
     var parser = new Parser("checklist");
     parser.add_argument("select", ".select-all");
     parser.add_argument("deselect", ".deselect-all");
@@ -24,9 +25,9 @@ define([
                     options = parser.parse($trigger, opts, false);
 
                 $trigger.data("patternChecklist", options);
-                $trigger.find(options.select)
+                $trigger.scopedFind(options.select)
                     .on("click.pat-checklist", {trigger: $trigger}, _.onSelectAll);
-                $trigger.find(options.deselect)
+                $trigger.scopedFind(options.deselect)
                     .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
                 $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
                 // update select/deselect button status
@@ -38,8 +39,8 @@ define([
             return $el.each(function() {
                 var $trigger = $(this),
                     options = $trigger.data("patternChecklist");
-                $trigger.find(options.select).off(".pat-checklist");
-                $trigger.find(options.deselect).off(".pat-checklist");
+                $trigger.scopedFind(options.select).off(".pat-checklist");
+                $trigger.scopedFind(options.deselect).off(".pat-checklist");
                 $trigger.off(".pat-checklist", "input[type=checkbox]");
                 $trigger.data("patternChecklist", null);
             });
@@ -48,8 +49,8 @@ define([
         onChange: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist"),
-                deselect = $trigger.find(options.deselect),
-                select = $trigger.find(options.select);
+                deselect = $trigger.scopedFind(options.deselect),
+                select = $trigger.scopedFind(options.select);
             if ($trigger.find("input[type=checkbox]:visible:checked").length===0) {
                 deselect.prop("disabled", true);
             } else {
@@ -69,10 +70,10 @@ define([
             $trigger.find("input[type=checkbox]:not(:checked)").each(function () {
                 $(this).prop("checked", true).trigger("change");
             });
-            $trigger.find(options.deselect).each(function () {
+            $trigger.scopedFind(options.deselect).each(function () {
                 $(this).prop("disabled", false);
             });
-            $trigger.find(options.select).each(function () {
+            $trigger.scopedFind(options.select).each(function () {
                 $(this).attr({disabled: "disabled"});
             });
             event.preventDefault();
@@ -84,10 +85,10 @@ define([
             $trigger.find("input[type=checkbox]:checked").each(function () {
                 $(this).prop("checked", false).trigger("change");
             });
-            $trigger.find(options.select).each(function () {
+            $trigger.scopedFind(options.select).each(function () {
                 $(this).prop("disabled", false);
             });
-            $trigger.find(options.deselect).each(function () {
+            $trigger.scopedFind(options.deselect).each(function () {
                 $(this).attr({disabled: "disabled"});
             });
             event.preventDefault();

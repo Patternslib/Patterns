@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Toggle</title>
+                <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="forward.css" type="text/css">
+                <script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<section>
+			<h1>Toggle</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+				<h2>Demo</h2>
+
+                                <button type="button" class="pat-forward" data-pat-forward="#checkbox">Click me</button>
+                                <input id="checkbox" type="checkbox"/>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+        </section>
+          <a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+          
+	</body>
+</html>
