@@ -1,0 +1,11 @@
+@import url("photoswipe.css");
+
+div.ps-document-overlay,
+.ps-carousel,
+.ps-toolbar,
+.ps-caption
+{
+	/*Added to compensate for misplacement due to body: relative*/
+	position: fixed !important;
+}
+

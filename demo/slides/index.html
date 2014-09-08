@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Slideshows </title>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+    <link rel="stylesheet" href="slides.css" media="all"/>
+    <script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+  	<section>
+  		<h1>Slideshows</h1>
+  		<section class="description">
+  			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+  		</section>	
+    <section class="demo">
+      <h2>Demo</h2>
+      <ul>
+      	<li><a href="standalone-test.html">Standalone slideshow page</a></li>
+      	<li><a href="standalone-test.html">Page with injected slides</a></li>
+      	<li><a href="standalone-test.html">Page with a composition of embedded and injected slides</a></li>
+      </ul>
+      <ul>
+      	<li><a href="standalone-test.html?slides=first-slide,third-slide">Standalone slideshow page with filters for the first and the third slide.</a></li>
+      </ul>
+    </section>
+    	<section class="documentation">
+    		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+    	</section>
+    </section>
+      <a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+
+  </body>
+</html>

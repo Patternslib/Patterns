@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Auto scale</title>
+        <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="autoscale.css" type="text/css">
+        <script data-main="../main" src="../../src/bower_components/requirejs/require.js"></script>
+	</head>
+	<body>
+		<section>
+			<h1>Auto scale</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+			<h2>Demo</h2>
+		    <div class="narrow">
+		        Example of transforming with respect to the parent element:
+	
+		        <div class="smallbox">
+		            This is how it should look originally
+		        </div>
+		        <div class="smallbox pat-auto-scale">
+		            This is how it looks after scaling
+		        </div>
+		    </div>
+		    <div class="pat-auto-scale narrow">
+		        This is a narrow scaled to the body width
+		    </div>
+		    </section>
+		    <section class="documentation">
+		    	<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+		    </section>
+	    </section>
+	    <a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+	    
+    </body>
+</html>

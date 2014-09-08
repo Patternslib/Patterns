@@ -1,4 +1,10 @@
 # Changelog
+ 
+## 2.0.2 - Sept. 8, 2014
+
+- #377 Local inject doesn't work for IE10 and 11
+- #378 pat-switch detecting click on container of link prevent default on anchor
+- #379 Local inject doesn't work for IE10 and 11
 
 
 ## 2.0.1 - Sept. 2, 2014

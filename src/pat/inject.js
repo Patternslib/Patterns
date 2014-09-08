@@ -355,7 +355,20 @@ define([
             $el.on("pat-ajax-success.pat-inject", onSuccess);
             $el.on("pat-ajax-error.pat-inject", onError);
 
-            ajax.request($el, {url: cfgs[0].url});
+            if (cfgs[0].url.length) {
+                ajax.request($el, {url: cfgs[0].url});
+            } else {
+                // If there is no url specified, then content is being fetched
+                // from the same page.
+                // No need to do an ajax request for this, so we spoof the ajax
+                // event.
+                $el.trigger({
+                    type: "pat-ajax-success",
+                    jqxhr: {
+                        responseText:  $("body").html()
+                    }
+                });
+            }
         },
 
         _inject: function inject_inject(trigger, $source, $target, cfg) {

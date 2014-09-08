@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+		<link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="stacks.css" type="text/css">
+
+		<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<section>
+			<h1>
+				Stacks
+			</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+				<h2>Demo</h2>
+				<nav class="tabs">
+					<a href="#sheet-1" class="current">Sheet one</a> <a href="#sheet-2">Sheet two</a> <a href="#sheet-3">Sheet three</a>
+				</nav>
+				<article class="pat-stacks">
+					<section id="sheet-1">
+						<h2>Sheet one</h2>
+						<p>
+							Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+						</p>
+					</section>
+					<section id="sheet-2">
+						<h2>Sheet two</h2>
+						<p>
+							Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. 
+						</p>
+					</section>
+					<section id="sheet-3">
+						<h2>Sheet three</h2>
+						<p>
+							Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. 
+						</p>
+					</section>
+				</article>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		
+		</section>
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+		
+	</body>
+</html>

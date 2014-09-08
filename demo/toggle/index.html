@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Toggle</title>
+                <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="toggle.css" type="text/css">
+                <script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<section>
+			<h1>Toggle</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+				<h2>Demo</h2>
+				<div class="row">
+					<div class="six columns">
+						<h3>Toggle a class</h3>
+						<p><span class="red" id="toToggle">This is getting toggled</span></p>
+						<p>
+						<button id="colour" class="pat-toggle" data-pat-toggle="selector: #toToggle; value: red blue; store: session">Change colour</button></p>
+						<p>Also notice how the status persists across page reloads!</p>
+					</div>
+					<div class="six columns">
+						<h3>Toggling of attributes</h3>
+						<fieldset>
+							<p><input type="checkbox" id="toCheck" /></p>
+							<p><button class="pat-toggle" data-pat-toggle="#toCheck checked checked">Toggle checkbox</button></p>
+						</fieldset>
+					</div>
+				</div>
+				</fieldset>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+        </section>
+          <a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+          
+	</body>
+</html>

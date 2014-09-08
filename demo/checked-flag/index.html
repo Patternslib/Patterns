@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Checked flag demo page</title>
+    <link rel="stylesheet" href="../common.css" type="text/css">
+  	<link rel="stylesheet" href="checkedflag.css" type="text/css">
+</head>
+  <body>
+  	<section class="description">
+  		<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
+  	</section>
+  	<section class="demo">
+		<h2>Demo</h2>
+		<form>
+		
+		<fieldset>	        
+			<button type="reset">Reset form</button>
+		</fieldset>
+		<div class="row">		
+			<div class="six columns">
+		      <fieldset class="vertical">
+		        <legend>Build your first sandwich</legend>
+		        <fieldset class="checklist radio">
+		          <legend>Type of bread</legend>
+		          <label><input type="radio" name="radio-1"/> Brown</label>
+		          <label><input type="radio" name="radio-1" checked="checked"/> Wheat</label>
+		          <label><input type="radio" name="radio-1"/> White</label>
+		        </fieldset>
+		
+		
+		        <fieldset class="checklist">
+		          <legend>Toppings</legend>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Cheese</label>
+		          <label><input type="checkbox" name="checkbox"/> Peanutbutter</label>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Salami</label>
+		        </fieldset>
+		      </fieldset>			
+		    </div>
+			<div class="six columns">
+		      <fieldset class="vertical">
+		        <legend>Build your second sandwich</legend>
+		
+		        <fieldset class="checklist radio">
+		          <legend>Type of bread</legend>
+		          <label><input type="radio" name="radio-2"/> Brown</label>
+		          <label><input type="radio" name="radio-2" checked="checked"/> Wheat</label>
+		          <label><input type="radio" name="radio-2"/> White</label>
+		        </fieldset>
+		
+		
+		        <fieldset class="checklist">
+		          <legend>Toppings</legend>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Cheese</label>
+		          <label><input type="checkbox" name="checkbox"/> Peanutbutter</label>
+		          <label><input type="checkbox" name="checkbox" checked="checked"/> Salami</label>
+		        </fieldset>
+		      </fieldset>
+				   
+				</div>
+			</div>
+		
+		</form>
+    </section>
+	<section class="documentation">
+		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
+	</section>
+
+	<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+
+    <script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>

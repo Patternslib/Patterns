@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+        <link rel="stylesheet" href="../common.css" type="text/css">
+		<link rel="stylesheet" href="select2.css" type="text/css">
+        <script data-main="../main" src="../../src/bower_components/requirejs/require.js"></script>
+	</head>
+	<body>
+		<section>
+			<h1>
+				Auto suggest
+			</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+			<h2>Demo</h2>
+			<p>Try the auto suggest pattern below with the terms 'Apples', 'Oranges', 'Pears' and 'Bananas'.</p>
+			<input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas" type="text"></input>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+	</body>
+</html>

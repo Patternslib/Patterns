@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Demo page</title>
+        <link rel="stylesheet" href="../common.css" type="text/css">
+        <link rel="stylesheet" href="image-crop.css" type="text/css">
+		<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<section class="description">
+			<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
+		</section>
+		<section class="demo">
+		<h2>Demo</h2>
+
+            <form id="crop-demo-form">
+            	<div class="row">
+	            	<div class="seven columns">
+		            	<img src="pool.jpg" class="pat-image-crop" data-pat-image-crop="preview-id: #image-crop-preview;" />
+		            </div>
+		            <div class="five columns pull-one">
+		                <div class="preview">
+		                    <img src="pool.jpg" id="image-crop-preview">
+		                </div>
+		                <div class="row">
+		                	<div class="three columns">
+		                		<fieldset class="vertical condensed">
+			                        <label>x1
+			                            <input type="text" size="2" name="x1" />
+			                        </label>
+			                        <label>y1
+			                            <input type="text" size="2" name="y1" />
+			                        </label>
+			                        <label>x2
+			                            <input type="text" size="2" name="x2" />
+			                        </label>
+		                        </fieldset>
+		                    </div>
+		                    <div class="three columns pull-six">
+		                    	<fieldset class="vertical condensed">
+			                        <label>y2
+			                            <input type="text" size="2" name="y2" />
+			                         </label>
+			                        <label>w
+			                            <input type="text" size="2" name="w" />
+			                        </label>
+			                        <label>h
+			                            <input type="text" size="2" name="h" />
+			                        </label>
+			                    </fieldset>
+		                    </div>
+		                 </div>
+		    	    </div>
+				</div>
+        	</form>
+
+		</section>
+		<section class="documentation">
+			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
+		</section>
+		
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+	
+	</body>
+</html>

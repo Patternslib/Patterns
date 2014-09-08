@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Injection pattern</title>
+        <link rel="stylesheet" href="../common.css" type="text/css">
+        <link rel="stylesheet" href="inject.css" type="text/css">
+        <script data-main="../main" src="../../src/bower_components/requirejs/require.js"></script>
+	</head>
+	<body>
+		<section>
+			<h1>Injection</h1>
+			<section class="description">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+			</section>
+			<section class="demo">
+			<h2>Demo</h2>
+				<p><a href="pattern-test-response.html#content"
+				      class="pat-inject">
+					Minimal inject into content div</a></p>
+		
+				<div id="content">
+					<p>Content will appear in this div</p>
+				</div>
+		
+				<hr />
+		
+				<ul>
+					<li data-pat-inject="source: #notes > .note1::element">
+						Add note1 to the
+						<a href="pattern-test-response.html"
+						   class="pat-inject"
+						   data-pat-inject="target: #list::before">top</a>
+						or
+						<a href="pattern-test-response.html"
+						   class="pat-inject"
+						   data-pat-inject="target: #list::after">bottom</a>
+						of the list.
+					</li>
+					<li data-pat-inject="source: #notes > .note2::element">
+						Add note2 to the
+						<a href="pattern-test-response.html"
+						   class="pat-inject"
+						   data-pat-inject="target:#list::before">top</a>
+						or
+						<a href="pattern-test-response.html"
+						   class="pat-inject"
+						   data-pat-inject="target: #list::after">bottom</a>
+						or
+						<a href="pattern-test-response.html"
+						   class="pat-inject"
+						   data-pat-inject="target: #list > .marker::element::after">after each marker</a>
+						of the list.
+					</li>
+					<li data-pat-inject="source: #notes > .marker::element">
+						Add new marker to the
+						<a href="pattern-test-response.html"
+						   class="pat-inject" data-pat-inject="target: #list::after">bottom</a>
+						of the list.
+					</li>
+				</ul>
+		
+				<ul id="list">
+					<li class="marker">Will be build up to the top and bottom (marker)</li>
+				</ul>
+		
+				<p>
+					<a href="pattern-test-response.html"
+					   class="pat-inject"
+					   data-pat-inject="#empty-list #list::element
+							    && #empty-content #content">
+						Empty notices and content</a>
+				</p>
+
+				<p>
+                    <a href="#local-content" class="pat-inject" data-pat-inject="target: self::element">Inject an element from the same page</a>
+				</p>
+                <p id="local-content" style="display: none">
+                    This is local content
+                </p>
+		
+				<hr />
+		
+		
+				<div id="panel1">
+					<ul data-pat-inject="target: #panel2">
+						<li><a href="pattern-test-response.html#cata-panel2"
+						       class="pat-inject">
+							Cat A</a></li>
+						<li><a href="pattern-test-response.html#catb-panel2"
+						       class="pat-inject">
+							Cat B</a></li>
+						<li>etc...</li>
+					</ul>
+				</div>
+		
+				<div id="panel2">
+				</div>
+		
+				<div id="panel3"></div>
+				<div id="panel4"></div>
+			</section>
+			<section class="documentation">
+				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+			</section>
+		</section>
+		
+		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+		
+	</body>
+</html>
