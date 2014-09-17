@@ -213,12 +213,15 @@ define([
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
                 namespace = $container.attr("id");
-            $container.css("visibility", "hidden");
-            $container.parents().add(window).off("." + namespace);
-            tooltip.removeHideEvents($trigger);
-            tooltip.setupShowEvents($trigger);
-            $trigger.removeClass("active").addClass("inactive");
-            $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
+            // when another tooltip trigger is clicked, only close the previous tooltip if it does not contain the trigger
+            if (event.type !== "pat-tooltip-click" || $container.has(event.target).length <= 0) {
+                $container.css("visibility", "hidden");
+                $container.parents().add(window).off("." + namespace);
+                tooltip.removeHideEvents($trigger);
+                tooltip.setupShowEvents($trigger);
+                $trigger.removeClass("active").addClass("inactive");
+                $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
+            }
         },
 
         onDestroy: function(event) {
