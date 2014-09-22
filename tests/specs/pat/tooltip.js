@@ -252,6 +252,43 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 });
             });
         });
+
+        describe("A tooltip that opens on click and contains another tooltip trigger", function () {
+            beforeEach(function() {
+                utils.createTooltip({
+                    data: "trigger: click; source: content",
+                    href: "#tooltip-content"
+                });
+                $("<div />", {
+                    "id":   "tooltip-content"
+                }).appendTo($("div#lab"));
+                $("<a/>", {
+                    "id":   "nested-tooltip",
+                    "href": "#nested-tooltip-content",
+                    "title": "nested tooltip title attribute",
+                    "data-pat-tooltip": "trigger: click; source: content",
+                    "class": "pat-tooltip"
+                }).appendTo($("div#tooltip-content"));
+            });
+            afterEach(function() {
+                utils.removeTooltip();
+            });
+            it("will not close if the contained trigger is clicked", function () {
+                runs(function () {
+                    spyOn(pattern, "show").andCallThrough();
+                    var $el = $("a#tooltip");
+                    pattern.init($el);
+                    pattern.init($("a#nested-tooltip"));
+                    $el.trigger(utils.click);
+                    expect(pattern.show).toHaveBeenCalled();
+                });
+                waits(100); // hide events get registered 50 ms after show
+                runs(function () {
+                    $(".tooltip-container a#nested-tooltip").trigger(utils.click);
+                    expect($(".tooltip-container a#nested-tooltip").css("visibility")).toBe("visible");
+                });
+            });
+        });
     });
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

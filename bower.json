@@ -16,7 +16,7 @@
     "AnythingSlider": "1.8.17",
     "chosen": "0.9.11",
     "jquery-form": "3.46.0",
-    "fullcalendar": "http://arshaw.com/fullcalendar/downloads/fullcalendar-2.0.0.zip",
+    "fullcalendar": "https://github.com/arshaw/fullcalendar/releases/download/v2.0.0/fullcalendar-2.0.0.zip",
     "jquery-placeholder": "2.0.7",
     "prefixfree": "",
     "select2": "3.4.3",

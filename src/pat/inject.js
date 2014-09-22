@@ -558,7 +558,7 @@ define([
             if ($scrollable.length) {
                 // if scrollable parent and visible -> trigger it
                 // we only look at the closest scrollable parent, no nesting
-                checkVisibility = function inject_checkVisibility_scrollable() {
+                checkVisibility = utils.debounce(function inject_checkVisibility_scrollable() {
                     if ($el.data("patterns.autoload"))
                         return false;
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
@@ -571,16 +571,16 @@ define([
                         return trigger();
                     }
                     return false;
-                };
+                }, 100);
                 if (checkVisibility())
                     return true;
 
                 // wait to become visible - again only immediate scrollable parent
-                $($scrollable[0]).on("scroll", utils.debounce(checkVisibility, 100));
-                $(window).on("resize.pat-autoload", utils.debounce(checkVisibility, 100));
+                $($scrollable[0]).on("scroll", checkVisibility);
+                $(window).on("resize.pat-autoload", checkVisibility);
             } else {
                 // Use case 2: scrolling the entire page
-                checkVisibility = function inject_checkVisibility_not_scrollable() {
+                checkVisibility = utils.debounce(function inject_checkVisibility_not_scrollable() {
                     if ($el.data("patterns.autoload"))
                         return false;
                     if (!utils.elementInViewport($el[0]))
@@ -588,11 +588,11 @@ define([
 
                     $(window).off(".pat-autoload", checkVisibility);
                     return trigger();
-                };
+                }, 100);
                 if (checkVisibility())
                     return true;
                 $(window).on("resize.pat-autoload scroll.pat-autoload",
-                        utils.debounce(checkVisibility, 100));
+                        checkVisibility);
             }
             return false;
         },
