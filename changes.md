@@ -4,7 +4,7 @@
 
 - #377 Local inject doesn't work for IE10 and 11
 - #378 pat-switch detecting click on container of link prevent default on anchor
-- #379 Local inject doesn't work for IE10 and 11
+- #379 pat-checklist selectAll/deselectAll only works inside .pat-checklist element
 
 
 ## 2.0.1 - Sept. 2, 2014
