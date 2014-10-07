@@ -12,7 +12,7 @@ define([
         name: "polyfill-color",
         trigger: "input.pat-colour-picker,input.pat-color-picker",
         init: function($el) {
-            return $el.spectrum({preferredFormat: 'hex'});
+            return $el.spectrum({preferredFormat: "hex"});
         }
     };
 
