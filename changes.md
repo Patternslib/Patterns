@@ -1,4 +1,16 @@
 # Changelog
+
+## 2.0.4 - Oct. 7, 2014
+
+- spectrum lib for colour picker now defaults to hsv values. Keep hex as 
+  default for backward compatibility, slc ref #9849
+
+## 2.0.3 - Sept. 22, 2014
+
+- when another tooltip trigger is clicked, only close the previous tooltip if 
+  it does not contain the trigger. slc ref #9801
+- moved utils.debounce() call to fix removal of event handler
+  slc ref #10695
  
 ## 2.0.2 - Sept. 8, 2014
 
