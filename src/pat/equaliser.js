@@ -7,8 +7,9 @@ define([
     "jquery",
     "pat-registry",
     "pat-parser",
-    "pat-utils"
-], function($, patterns, Parser, utils) {
+    "pat-utils",
+    "imagesloaded"
+], function($, patterns, Parser, utils, imagesLoaded) {
     var parser = new Parser("equaliser");
     parser.add_argument("transition", "none", ["none", "grow"]);
     parser.add_argument("effect-duration", "fast");
@@ -25,7 +26,9 @@ define([
                 $container.data("pat-equaliser", options);
                 $container.on("pat-update.pat-equaliser", null, this, equaliser._onEvent);
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
-                equaliser._update(this);
+                imagesLoaded(this, $.proxy(function() {
+                    equaliser._update(this);
+                }, this));
             });
         },
 

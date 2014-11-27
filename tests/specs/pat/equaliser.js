@@ -15,13 +15,6 @@ define(["pat-equaliser"], function(pattern) {
                 jq.each.andReturn(jq);
                 expect(pattern.init(jq)).toBe(jq);
             });
-
-            it("Perform initial update", function() {
-                var $el = $("<div/>");
-                spyOn(pattern, "_update");
-                pattern.init($el);
-                expect(pattern._update).toHaveBeenCalledWith($el[0]);
-            });
         });
 
         describe("_update", function() {

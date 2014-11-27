@@ -27,6 +27,7 @@
     "parsleyjs": "1.1.18",
     "jquery.tinymce": "",
     "moment": "",
-    "moment-timezone": ""
+    "moment-timezone": "",
+    "imagesloaded": "~3.1.8"
   }
 }
