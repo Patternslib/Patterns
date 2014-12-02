@@ -102,7 +102,7 @@ define([
                         victims=document.querySelectorAll(options[i].selector);
                         if (!victims.length)
                             continue;
-                        state=options[i].toggler.get(victims[0]),
+                        state=options[i].toggler.get(victims[0]);
                         last_state=options[i].value_storage.get();
                         if (state!==last_state && last_state !== null)
                             for (var j=0; j<victims.length; j++)
