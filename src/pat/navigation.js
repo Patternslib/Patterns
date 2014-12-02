@@ -50,7 +50,11 @@ define([
                         var $a = $(this),
                             $li = $a.parents("li:first"),
                             url = $a.attr("href"),
-                            path = _._pathfromurl(url);
+                            path;
+                        if (typeof url === "undefined") {
+                            return;
+                        }
+                        path = _._pathfromurl(url);
                         log.debug("checking url:", url, "extracted path:", path);
                         if (_._match(curpath, path)) {
                             log.debug("found match", $li);
