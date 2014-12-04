@@ -44675,7 +44675,11 @@ define('pat-navigation',[
                         var $a = $(this),
                             $li = $a.parents("li:first"),
                             url = $a.attr("href"),
-                            path = _._pathfromurl(url);
+                            path;
+                        if (typeof url === "undefined") {
+                            return;
+                        }
+                        path = _._pathfromurl(url);
                         log.debug("checking url:", url, "extracted path:", path);
                         if (_._match(curpath, path)) {
                             log.debug("found match", $li);
@@ -48837,7 +48841,7 @@ define('pat-toggle',[
                         victims=document.querySelectorAll(options[i].selector);
                         if (!victims.length)
                             continue;
-                        state=options[i].toggler.get(victims[0]),
+                        state=options[i].toggler.get(victims[0]);
                         last_state=options[i].value_storage.get();
                         if (state!==last_state && last_state !== null)
                             for (var j=0; j<victims.length; j++)
@@ -49419,7 +49423,7 @@ define('pat-tooltip',[
             case "t":
                 container_offset.top = trigger_box.bottom + tip_margin;
                 tip_offset.top = -23;
-                bottom_row = status.scroll.top + status.window.height,
+                bottom_row = status.scroll.top + status.window.height;
                 content_css["max-height"] = (bottom_row - container_offset.top - container_margin) + "px";
                 break;
             case "l":
@@ -49490,13 +49494,13 @@ define('pat-tooltip',[
                             container_offset.top = trigger_center.top - container_margin;
                             tip_offset.top = 0;
                         }
-                        bottom_row = status.scroll.top + status.window.height,
+                        bottom_row = status.scroll.top + status.window.height;
                         content_css["max-height"] = (bottom_row - container_offset.top - container_margin) + "px";
                         break;
                     case "m":
                         if (options.height === "max") {
-                            container_offset.top = container_margin;
-                            bottom_row = status.scroll.top + status.window.height,
+                            container_offset.top = container_margin ;
+                            bottom_row = status.scroll.top + status.window.height;
                             content_css["max-height"] = (bottom_row - 2*container_margin) + "px";
                             tip_offset.top = trigger_box.top - container_margin;
                         } else {
@@ -49507,7 +49511,7 @@ define('pat-tooltip',[
                     case "b":
                         if (options.height === "max") {
                             container_offset.top = 2*container_margin;
-                            bottom_row = status.scroll.top + status.window.height,
+                            bottom_row = status.scroll.top + status.window.height;
                             content_css.height = (bottom_row - 3*container_margin) + "px";
                             tip_offset.top = trigger_center.top - container_margin - tip_margin;
                         } else {
