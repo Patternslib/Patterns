@@ -81,7 +81,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     $output = pattern._parseRawHtml(input, null);
                 expect($output.find("a").attr("data-tinymce-json")).toBe(value);
             });
-		}),
+		});
 
         describe("Functional tests", function() {
             describe("extract/verifyConfig", function() {
