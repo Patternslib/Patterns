@@ -1,9 +1,13 @@
 # Changelog
+ 
+## 2.0.5 - Dec. 4, 2014
+
+- #383 pat-equaliser sets the height to early
 
 ## 2.0.4 - Oct. 7, 2014
 
-- spectrum lib for colour picker now defaults to hsv values. Keep hex as 
-  default for backward compatibility, slc ref #9849
+- spectrum lib for colour picker now defaults to hsv values. Keep hex as default for backward compatibility (SLC ref 9849)
+- pat-inject autoload did not properly remove event handlers, so that they were called over and over. (SLC ref 10695)
 
 ## 2.0.3 - Sept. 22, 2014
 
