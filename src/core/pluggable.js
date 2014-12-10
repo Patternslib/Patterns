@@ -13,10 +13,11 @@ define([
         },
 
         initializePlugins: function () {
+            var i, keys = _.keys(this.plugins);
             var args = arguments;
-            _.each(_.keys(this.plugins), $.proxy(function (k) {
-                $.proxy(this.plugins[k], this)(this, args);
-            }, this));
+            for (i=0; i<keys.length; i++) {
+                $.proxy(this.plugins[keys[i]], this).apply(this, args);
+            }
             return args;
         }
     };
