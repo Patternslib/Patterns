@@ -24,6 +24,7 @@ define([
         return plugin;
     };
 
+
     //     Underscore.js 1.3.1
     //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
     //     Underscore is freely distributable under the MIT license.
@@ -46,13 +47,35 @@ define([
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
-    };
+    }
+
+    // Is a given variable an object?
+    function isObject(obj) {
+        var type = typeof obj;
+        return type === 'function' || type === 'object' && !!obj;
+    }
+
+    // Extend a given object with all the properties in passed-in object(s).
+    function extend(obj) {
+        if (!isObject(obj)) return obj;
+        var source, prop;
+        for (var i = 1, length = arguments.length; i < length; i++) {
+            source = arguments[i];
+            for (prop in source) {
+                if (hasOwnProperty.call(source, prop)) {
+                    obj[prop] = source[prop];
+                }
+            }
+        }
+        return obj;
+    }
+    // END: Taken from Underscore.js until here.
 
     function rebaseURL(base, url) {
         if (url.indexOf("://")!==-1 || url[0]==="/")
             return url;
         return base.slice(0, base.lastIndexOf("/")+1) + url;
-    };
+    }
 
     function findLabel(input) {
         for (var label=input.parentNode; label && label.nodeType!==11; label=label.parentNode)
@@ -183,6 +206,8 @@ define([
         jquery_plugin: jquery_plugin,
         debounce: debounce,
         escapeRegExp: escapeRegExp,
+        isObject: isObject,
+        extend: extend,
         rebaseURL: rebaseURL,
         findLabel: findLabel,
         elementInViewport: elementInViewport,
