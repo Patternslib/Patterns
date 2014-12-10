@@ -41,6 +41,7 @@
 
         // Core
         "pat-utils": "core/utils",
+        "pat-pluggable": "core/pluggable",
         "pat-compat": "core/compat",
         "pat-jquery-ext": "core/jquery-ext",
         "pat-logger": "core/logger",

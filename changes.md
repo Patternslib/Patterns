@@ -4,6 +4,14 @@
 
 - #383 pat-equaliser sets the height to early
 
+## 2.0.6 - Dec. 10, 2014
+
+- New core module pluggable.js which allows the creation of Pluggable patterns.
+ 
+## 2.0.5 - Dec. 4, 2014
+
+- #383 pat-equaliser sets the height to early
+
 ## 2.0.4 - Oct. 7, 2014
 
 - spectrum lib for colour picker now defaults to hsv values. Keep hex as default for backward compatibility (SLC ref 9849)
