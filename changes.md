@@ -1,4 +1,8 @@
 # Changelog
+
+## 2.0.6 - Dec. 10, 2014
+
+- New core module pluggable.js which allows the creation of Pluggable patterns.
  
 ## 2.0.5 - Dec. 4, 2014
 
