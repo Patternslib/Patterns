@@ -1,5 +1,5 @@
 /**
- * @license almond 0.3.0 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
+ * @license almond 0.2.9 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/almond for details
  */
@@ -150,15 +150,7 @@ var requirejs, require, define;
             //A version of a require function that passes a moduleName
             //value for items that may need to
             //look up paths relative to the moduleName
-            var args = aps.call(arguments, 0);
-
-            //If first arg is not require('string'), and there is only
-            //one arg, it is the array form without a callback. Insert
-            //a null so that the following concat is correct.
-            if (typeof args[0] !== 'string' && args.length === 1) {
-                args.push(null);
-            }
-            return req.apply(undef, args.concat([relName, forceSync]));
+            return req.apply(undef, aps.call(arguments, 0).concat([relName, forceSync]));
         };
     }
 
@@ -10103,11 +10095,10 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
         writer=w;
     }
 
-    if (!window.console || !window.console.log || typeof window.console.log.apply !== "function") {
-        setWriter(new IEConsoleWriter());
-    } else {
+    if (window.console && window.console.log && window.console.log.apply!==undefined)
         setWriter(new ConsoleWriter());
-    }
+    else
+        setWriter(new IEConsoleWriter());
 
     root=new Logger();
 
@@ -10183,6 +10174,7 @@ define('pat-utils',[
         return plugin;
     };
 
+
     //     Underscore.js 1.3.1
     //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
     //     Underscore is freely distributable under the MIT license.
@@ -10205,13 +10197,35 @@ define('pat-utils',[
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
-    };
+    }
+
+    // Is a given variable an object?
+    function isObject(obj) {
+        var type = typeof obj;
+        return type === 'function' || type === 'object' && !!obj;
+    }
+
+    // Extend a given object with all the properties in passed-in object(s).
+    function extend(obj) {
+        if (!isObject(obj)) return obj;
+        var source, prop;
+        for (var i = 1, length = arguments.length; i < length; i++) {
+            source = arguments[i];
+            for (prop in source) {
+                if (hasOwnProperty.call(source, prop)) {
+                    obj[prop] = source[prop];
+                }
+            }
+        }
+        return obj;
+    }
+    // END: Taken from Underscore.js until here.
 
     function rebaseURL(base, url) {
         if (url.indexOf("://")!==-1 || url[0]==="/")
             return url;
         return base.slice(0, base.lastIndexOf("/")+1) + url;
-    };
+    }
 
     function findLabel(input) {
         for (var label=input.parentNode; label && label.nodeType!==11; label=label.parentNode)
@@ -10342,6 +10356,8 @@ define('pat-utils',[
         jquery_plugin: jquery_plugin,
         debounce: debounce,
         escapeRegExp: escapeRegExp,
+        isObject: isObject,
+        extend: extend,
         rebaseURL: rebaseURL,
         findLabel: findLabel,
         elementInViewport: elementInViewport,
@@ -19890,13 +19906,13 @@ define('pat-edit-tinymce',[
 // vim: sw=4 expandtab
 ;
 /*!
- * EventEmitter v4.2.9 - git.io/ee
+ * EventEmitter v4.2.10 - git.io/ee
  * Oliver Caldwell
  * MIT license
  * @preserve
  */
 
-(function () {
+;(function () {
     
 
     /**
@@ -21287,7 +21303,7 @@ define('pat-forward',[
 
 ;
 //! moment.js
-//! version : 2.8.4
+//! version : 2.8.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -21298,12 +21314,11 @@ define('pat-forward',[
     ************************************/
 
     var moment,
-        VERSION = '2.8.4',
+        VERSION = '2.8.1',
         // the global-scope this is NOT the global object in Node.js
         globalScope = typeof global !== 'undefined' ? global : this,
         oldGlobalMoment,
         round = Math.round,
-        hasOwnProperty = Object.prototype.hasOwnProperty,
         i,
 
         YEAR = 0,
@@ -21321,7 +21336,7 @@ define('pat-forward',[
         momentProperties = [],
 
         // check for nodeJS
-        hasModule = (typeof module !== 'undefined' && module && module.exports),
+        hasModule = (typeof module !== 'undefined' && module.exports),
 
         // ASP.NET json date format regex
         aspNetJsonRegex = /^\/?Date\((\-?\d+)/i,
@@ -21332,8 +21347,8 @@ define('pat-forward',[
         isoDurationRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/,
 
         // format tokens
-        formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|x|X|zz?|ZZ?|.)/g,
-        localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,
+        formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|X|zz?|ZZ?|.)/g,
+        localFormattingTokens = /(\[[^\[]*\])|(\\)?(LT|LL?L?L?|l{1,4})/g,
 
         // parsing token regexes
         parseTokenOneOrTwoDigits = /\d\d?/, // 0 - 99
@@ -21344,8 +21359,8 @@ define('pat-forward',[
         parseTokenWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i, // any word (or two) characters or numbers including two/three word month in arabic.
         parseTokenTimezone = /Z|[\+\-]\d\d:?\d\d/gi, // +00:00 -00:00 +0000 -0000 or Z
         parseTokenT = /T/i, // T (ISO separator)
-        parseTokenOffsetMs = /[\+\-]?\d+/, // 1234567890123
         parseTokenTimestampMs = /[\+\-]?\d+(\.\d{1,3})?/, // 123456789 123456789.123
+        parseTokenOrdinal = /\d{1,2}/,
 
         //strict parsing regexes
         parseTokenOneDigit = /\d/, // 0 - 9
@@ -21377,7 +21392,7 @@ define('pat-forward',[
             ['HH', /(T| )\d\d/]
         ],
 
-        // timezone chunker '+10:00' > ['10', '00'] or '-1530' > ['-15', '30']
+        // timezone chunker "+10:00" > ["10", "00"] or "-1530" > ["-15", "30"]
         parseTimezoneChunker = /([\+\-]|\d\d)/gi,
 
         // getter and setter names
@@ -21560,9 +21575,6 @@ define('pat-forward',[
             zz : function () {
                 return this.zoneName();
             },
-            x    : function () {
-                return this.valueOf();
-            },
             X    : function () {
                 return this.unix();
             },
@@ -21585,10 +21597,6 @@ define('pat-forward',[
         }
     }
 
-    function hasOwnProp(a, b) {
-        return hasOwnProperty.call(a, b);
-    }
-
     function defaultParsingFlags() {
         // We need to deep clone this object, and es5 standard is not very
         // helpful.
@@ -21609,7 +21617,7 @@ define('pat-forward',[
     function printMsg(msg) {
         if (moment.suppressDeprecationWarnings === false &&
                 typeof console !== 'undefined' && console.warn) {
-            console.warn('Deprecation warning: ' + msg);
+            console.warn("Deprecation warning: " + msg);
         }
     }
 
@@ -21712,16 +21720,16 @@ define('pat-forward',[
 
     function extend(a, b) {
         for (var i in b) {
-            if (hasOwnProp(b, i)) {
+            if (b.hasOwnProperty(i)) {
                 a[i] = b[i];
             }
         }
 
-        if (hasOwnProp(b, 'toString')) {
+        if (b.hasOwnProperty('toString')) {
             a.toString = b.toString;
         }
 
-        if (hasOwnProp(b, 'valueOf')) {
+        if (b.hasOwnProperty('valueOf')) {
             a.valueOf = b.valueOf;
         }
 
@@ -21829,7 +21837,7 @@ define('pat-forward',[
             var dur, tmp;
             //invert the arguments, but complain about it
             if (period !== null && !isNaN(+period)) {
-                deprecateSimple(name, 'moment().' + name  + '(period, number) is deprecated. Please use moment().' + name + '(number, period).');
+                deprecateSimple(name, "moment()." + name  + "(period, number) is deprecated. Please use moment()." + name + "(number, period).");
                 tmp = val; val = period; period = tmp;
             }
 
@@ -21899,7 +21907,7 @@ define('pat-forward',[
             prop;
 
         for (prop in inputObject) {
-            if (hasOwnProp(inputObject, prop)) {
+            if (inputObject.hasOwnProperty(prop)) {
                 normalizedProp = normalizeUnits(prop);
                 if (normalizedProp) {
                     normalizedInput[normalizedProp] = inputObject[prop];
@@ -21989,10 +21997,7 @@ define('pat-forward',[
             overflow =
                 m._a[MONTH] < 0 || m._a[MONTH] > 11 ? MONTH :
                 m._a[DATE] < 1 || m._a[DATE] > daysInMonth(m._a[YEAR], m._a[MONTH]) ? DATE :
-                m._a[HOUR] < 0 || m._a[HOUR] > 24 ||
-                    (m._a[HOUR] === 24 && (m._a[MINUTE] !== 0 ||
-                                           m._a[SECOND] !== 0 ||
-                                           m._a[MILLISECOND] !== 0)) ? HOUR :
+                m._a[HOUR] < 0 || m._a[HOUR] > 23 ? HOUR :
                 m._a[MINUTE] < 0 || m._a[MINUTE] > 59 ? MINUTE :
                 m._a[SECOND] < 0 || m._a[SECOND] > 59 ? SECOND :
                 m._a[MILLISECOND] < 0 || m._a[MILLISECOND] > 999 ? MILLISECOND :
@@ -22019,8 +22024,7 @@ define('pat-forward',[
             if (m._strict) {
                 m._isValid = m._isValid &&
                     m._pf.charsLeftOver === 0 &&
-                    m._pf.unusedTokens.length === 0 &&
-                    m._pf.bigHour === undefined;
+                    m._pf.unusedTokens.length === 0;
             }
         }
         return m._isValid;
@@ -22072,18 +22076,8 @@ define('pat-forward',[
 
     // Return a moment from input, that is local/utc/zone equivalent to model.
     function makeAs(input, model) {
-        var res, diff;
-        if (model._isUTC) {
-            res = model.clone();
-            diff = (moment.isMoment(input) || isDate(input) ?
-                    +input : +moment(input)) - (+res);
-            // Use low-level api, because this fn is low-level api.
-            res._d.setTime(+res._d + diff);
-            moment.updateOffset(res, false);
-            return res;
-        } else {
-            return moment(input).local();
-        }
+        return model._isUTC ? moment(input).zone(model._offset || 0) :
+            moment(input).local();
     }
 
     /************************************
@@ -22103,9 +22097,6 @@ define('pat-forward',[
                     this['_' + i] = prop;
                 }
             }
-            // Lenient ordinal parsing accepts just a number in addition to
-            // number + (possibly) stuff coming from _ordinalParseLenient.
-            this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + /\d{1,2}/.source);
         },
 
         _months : 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_'),
@@ -22118,32 +22109,22 @@ define('pat-forward',[
             return this._monthsShort[m.month()];
         },
 
-        monthsParse : function (monthName, format, strict) {
+        monthsParse : function (monthName) {
             var i, mom, regex;
 
             if (!this._monthsParse) {
                 this._monthsParse = [];
-                this._longMonthsParse = [];
-                this._shortMonthsParse = [];
             }
 
             for (i = 0; i < 12; i++) {
                 // make the regex if we don't have it already
-                mom = moment.utc([2000, i]);
-                if (strict && !this._longMonthsParse[i]) {
-                    this._longMonthsParse[i] = new RegExp('^' + this.months(mom, '').replace('.', '') + '$', 'i');
-                    this._shortMonthsParse[i] = new RegExp('^' + this.monthsShort(mom, '').replace('.', '') + '$', 'i');
-                }
-                if (!strict && !this._monthsParse[i]) {
+                if (!this._monthsParse[i]) {
+                    mom = moment.utc([2000, i]);
                     regex = '^' + this.months(mom, '') + '|^' + this.monthsShort(mom, '');
                     this._monthsParse[i] = new RegExp(regex.replace('.', ''), 'i');
                 }
                 // test the regex
-                if (strict && format === 'MMMM' && this._longMonthsParse[i].test(monthName)) {
-                    return i;
-                } else if (strict && format === 'MMM' && this._shortMonthsParse[i].test(monthName)) {
-                    return i;
-                } else if (!strict && this._monthsParse[i].test(monthName)) {
+                if (this._monthsParse[i].test(monthName)) {
                     return i;
                 }
             }
@@ -22186,7 +22167,6 @@ define('pat-forward',[
         },
 
         _longDateFormat : {
-            LTS : 'h:mm:ss A',
             LT : 'h:mm A',
             L : 'MM/DD/YYYY',
             LL : 'MMMM D, YYYY',
@@ -22227,9 +22207,9 @@ define('pat-forward',[
             lastWeek : '[Last] dddd [at] LT',
             sameElse : 'L'
         },
-        calendar : function (key, mom, now) {
+        calendar : function (key, mom) {
             var output = this._calendar[key];
-            return typeof output === 'function' ? output.apply(mom, [now]) : output;
+            return typeof output === 'function' ? output.apply(mom) : output;
         },
 
         _relativeTime : {
@@ -22264,7 +22244,6 @@ define('pat-forward',[
             return this._ordinal.replace('%d', number);
         },
         _ordinal : '%d',
-        _ordinalParse : /\d{1,2}/,
 
         preparse : function (string) {
             return string;
@@ -22406,8 +22385,6 @@ define('pat-forward',[
         case 'a':
         case 'A':
             return config._locale._meridiemParse;
-        case 'x':
-            return parseTokenOffsetMs;
         case 'X':
             return parseTokenTimestampMs;
         case 'Z':
@@ -22442,7 +22419,7 @@ define('pat-forward',[
         case 'E':
             return parseTokenOneOrTwoDigits;
         case 'Do':
-            return strict ? config._locale._ordinalParse : config._locale._ordinalParseLenient;
+            return parseTokenOrdinal;
         default :
             a = new RegExp(regexpEscape(unescapeFormat(token.replace('\\', '')), 'i'));
             return a;
@@ -22479,7 +22456,7 @@ define('pat-forward',[
             break;
         case 'MMM' : // fall through to MMMM
         case 'MMMM' :
-            a = config._locale.monthsParse(input, token, config._strict);
+            a = config._locale.monthsParse(input);
             // if we didn't find a month name, mark the date as invalid.
             if (a != null) {
                 datePartArray[MONTH] = a;
@@ -22496,8 +22473,7 @@ define('pat-forward',[
             break;
         case 'Do' :
             if (input != null) {
-                datePartArray[DATE] = toInt(parseInt(
-                            input.match(/\d{1,2}/)[0], 10));
+                datePartArray[DATE] = toInt(parseInt(input, 10));
             }
             break;
         // DAY OF YEAR
@@ -22522,13 +22498,11 @@ define('pat-forward',[
         case 'A' :
             config._isPm = config._locale.isPM(input);
             break;
-        // HOUR
+        // 24 HOUR
+        case 'H' : // fall through to hh
+        case 'HH' : // fall through to hh
         case 'h' : // fall through to hh
         case 'hh' :
-            config._pf.bigHour = true;
-            /* falls through */
-        case 'H' : // fall through to HH
-        case 'HH' :
             datePartArray[HOUR] = toInt(input);
             break;
         // MINUTE
@@ -22547,10 +22521,6 @@ define('pat-forward',[
         case 'SSS' :
         case 'SSSS' :
             datePartArray[MILLISECOND] = toInt(('0.' + input) * 1000);
-            break;
-        // UNIX OFFSET (MILLISECONDS)
-        case 'x':
-            config._d = new Date(toInt(input));
             break;
         // UNIX TIMESTAMP WITH MS
         case 'X':
@@ -22688,24 +22658,11 @@ define('pat-forward',[
             config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
         }
 
-        // Check for 24:00:00.000
-        if (config._a[HOUR] === 24 &&
-                config._a[MINUTE] === 0 &&
-                config._a[SECOND] === 0 &&
-                config._a[MILLISECOND] === 0) {
-            config._nextDay = true;
-            config._a[HOUR] = 0;
-        }
-
         config._d = (config._useUTC ? makeUTCDate : makeDate).apply(null, input);
         // Apply timezone offset from input. The actual zone can be changed
         // with parseZone.
         if (config._tzm != null) {
             config._d.setUTCMinutes(config._d.getUTCMinutes() + config._tzm);
-        }
-
-        if (config._nextDay) {
-            config._a[HOUR] = 24;
         }
     }
 
@@ -22720,7 +22677,7 @@ define('pat-forward',[
         config._a = [
             normalizedInput.year,
             normalizedInput.month,
-            normalizedInput.day || normalizedInput.date,
+            normalizedInput.day,
             normalizedInput.hour,
             normalizedInput.minute,
             normalizedInput.second,
@@ -22793,10 +22750,6 @@ define('pat-forward',[
             config._pf.unusedInput.push(string);
         }
 
-        // clear _12h flag if hour is <= 12
-        if (config._pf.bigHour === true && config._a[HOUR] <= 12) {
-            config._pf.bigHour = undefined;
-        }
         // handle am pm
         if (config._isPm && config._a[HOUR] < 12) {
             config._a[HOUR] += 12;
@@ -22805,6 +22758,7 @@ define('pat-forward',[
         if (config._isPm === false && config._a[HOUR] === 12) {
             config._a[HOUR] = 0;
         }
+
         dateFromConfig(config);
         checkOverflow(config);
     }
@@ -22838,9 +22792,6 @@ define('pat-forward',[
         for (i = 0; i < config._f.length; i++) {
             currentScore = 0;
             tempConfig = copyConfig({}, config);
-            if (config._useUTC != null) {
-                tempConfig._useUTC = config._useUTC;
-            }
             tempConfig._pf = defaultParsingFlags();
             tempConfig._f = config._f[i];
             makeDateFromStringAndFormat(tempConfig);
@@ -22876,7 +22827,7 @@ define('pat-forward',[
             config._pf.iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
-                    // match[5] should be 'T' or undefined
+                    // match[5] should be "T" or undefined
                     config._f = isoDates[i][0] + (match[6] || ' ');
                     break;
                 }
@@ -22905,14 +22856,6 @@ define('pat-forward',[
         }
     }
 
-    function map(arr, fn) {
-        var res = [], i;
-        for (i = 0; i < arr.length; ++i) {
-            res.push(fn(arr[i], i));
-        }
-        return res;
-    }
-
     function makeDateFromInput(config) {
         var input = config._i, matched;
         if (input === undefined) {
@@ -22924,9 +22867,7 @@ define('pat-forward',[
         } else if (typeof input === 'string') {
             makeDateFromString(config);
         } else if (isArray(input)) {
-            config._a = map(input.slice(0), function (obj) {
-                return parseInt(obj, 10);
-            });
+            config._a = input.slice(0);
             dateFromConfig(config);
         } else if (typeof(input) === 'object') {
             dateFromObject(config);
@@ -23064,8 +23005,7 @@ define('pat-forward',[
 
     function makeMoment(config) {
         var input = config._i,
-            format = config._f,
-            res;
+            format = config._f;
 
         config._locale = config._locale || moment.localeData(config._l);
 
@@ -23089,20 +23029,13 @@ define('pat-forward',[
             makeDateFromInput(config);
         }
 
-        res = new Moment(config);
-        if (res._nextDay) {
-            // Adding is smart enough around DST
-            res.add(1, 'd');
-            res._nextDay = undefined;
-        }
-
-        return res;
+        return new Moment(config);
     }
 
     moment = function (input, format, locale, strict) {
         var c;
 
-        if (typeof(locale) === 'boolean') {
+        if (typeof(locale) === "boolean") {
             strict = locale;
             locale = undefined;
         }
@@ -23128,7 +23061,7 @@ define('pat-forward',[
         'release. Please refer to ' +
         'https://github.com/moment/moment/issues/1407 for more info.',
         function (config) {
-            config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+            config._d = new Date(config._i);
         }
     );
 
@@ -23170,7 +23103,7 @@ define('pat-forward',[
     moment.utc = function (input, format, locale, strict) {
         var c;
 
-        if (typeof(locale) === 'boolean') {
+        if (typeof(locale) === "boolean") {
             strict = locale;
             locale = undefined;
         }
@@ -23257,7 +23190,7 @@ define('pat-forward',[
 
         ret = new Duration(duration);
 
-        if (moment.isDuration(input) && hasOwnProp(input, '_locale')) {
+        if (moment.isDuration(input) && input.hasOwnProperty('_locale')) {
             ret._locale = input._locale;
         }
 
@@ -23294,7 +23227,7 @@ define('pat-forward',[
     };
 
     moment.lang = deprecate(
-        'moment.lang is deprecated. Use moment.locale instead.',
+        "moment.lang is deprecated. Use moment.locale instead.",
         function (key, value) {
             return moment.locale(key, value);
         }
@@ -23306,7 +23239,7 @@ define('pat-forward',[
     moment.locale = function (key, values) {
         var data;
         if (key) {
-            if (typeof(values) !== 'undefined') {
+            if (typeof(values) !== "undefined") {
                 data = moment.defineLocale(key, values);
             }
             else {
@@ -23341,7 +23274,7 @@ define('pat-forward',[
     };
 
     moment.langData = deprecate(
-        'moment.langData is deprecated. Use moment.localeData instead.',
+        "moment.langData is deprecated. Use moment.localeData instead.",
         function (key) {
             return moment.localeData(key);
         }
@@ -23374,7 +23307,7 @@ define('pat-forward',[
     // compare moment object
     moment.isMoment = function (obj) {
         return obj instanceof Moment ||
-            (obj != null && hasOwnProp(obj, '_isAMomentObject'));
+            (obj != null &&  obj.hasOwnProperty('_isAMomentObject'));
     };
 
     // for typechecking Duration objects
@@ -23430,7 +23363,7 @@ define('pat-forward',[
         },
 
         toString : function () {
-            return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
+            return this.clone().locale('en').format("ddd MMM DD YYYY HH:mm:ss [GMT]ZZ");
         },
 
         toDate : function () {
@@ -23440,12 +23373,7 @@ define('pat-forward',[
         toISOString : function () {
             var m = moment(this).utc();
             if (0 < m.year() && m.year() <= 9999) {
-                if ('function' === typeof Date.prototype.toISOString) {
-                    // native implementation is ~50x faster, use it when we can
-                    return this.toDate().toISOString();
-                } else {
-                    return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
-                }
+                return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
             } else {
                 return formatMoment(m, 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
             }
@@ -23494,7 +23422,7 @@ define('pat-forward',[
                 this._isUTC = false;
 
                 if (keepLocalTime) {
-                    this.add(this._dateTzOffset(), 'm');
+                    this.add(this._d.getTimezoneOffset(), 'm');
                 }
             }
             return this;
@@ -23512,7 +23440,7 @@ define('pat-forward',[
         diff : function (input, units, asFloat) {
             var that = makeAs(input, this),
                 zoneDiff = (this.zone() - that.zone()) * 6e4,
-                diff, output, daysAdjust;
+                diff, output;
 
             units = normalizeUnits(units);
 
@@ -23523,12 +23451,11 @@ define('pat-forward',[
                 output = ((this.year() - that.year()) * 12) + (this.month() - that.month());
                 // adjust by taking difference in days, average number of days
                 // and dst in the given months.
-                daysAdjust = (this - moment(this).startOf('month')) -
-                    (that - moment(that).startOf('month'));
+                output += ((this - moment(this).startOf('month')) -
+                        (that - moment(that).startOf('month'))) / diff;
                 // same as above but with zones, to negate all dst
-                daysAdjust -= ((this.zone() - moment(this).startOf('month').zone()) -
-                        (that.zone() - moment(that).startOf('month').zone())) * 6e4;
-                output += daysAdjust / diff;
+                output -= ((this.zone() - moment(this).startOf('month').zone()) -
+                        (that.zone() - moment(that).startOf('month').zone())) * 6e4 / diff;
                 if (units === 'year') {
                     output = output / 12;
                 }
@@ -23564,7 +23491,7 @@ define('pat-forward',[
                     diff < 1 ? 'sameDay' :
                     diff < 2 ? 'nextDay' :
                     diff < 7 ? 'nextWeek' : 'sameElse';
-            return this.format(this.localeData().calendar(format, this, moment(now)));
+            return this.format(this.localeData().calendar(format, this));
         },
 
         isLeapYear : function () {
@@ -23633,46 +23560,22 @@ define('pat-forward',[
 
         endOf: function (units) {
             units = normalizeUnits(units);
-            if (units === undefined || units === 'millisecond') {
-                return this;
-            }
             return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
         },
 
         isAfter: function (input, units) {
-            var inputMs;
-            units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
-            if (units === 'millisecond') {
-                input = moment.isMoment(input) ? input : moment(input);
-                return +this > +input;
-            } else {
-                inputMs = moment.isMoment(input) ? +input : +moment(input);
-                return inputMs < +this.clone().startOf(units);
-            }
+            units = typeof units !== 'undefined' ? units : 'millisecond';
+            return +this.clone().startOf(units) > +moment(input).startOf(units);
         },
 
         isBefore: function (input, units) {
-            var inputMs;
-            units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
-            if (units === 'millisecond') {
-                input = moment.isMoment(input) ? input : moment(input);
-                return +this < +input;
-            } else {
-                inputMs = moment.isMoment(input) ? +input : +moment(input);
-                return +this.clone().endOf(units) < inputMs;
-            }
+            units = typeof units !== 'undefined' ? units : 'millisecond';
+            return +this.clone().startOf(units) < +moment(input).startOf(units);
         },
 
         isSame: function (input, units) {
-            var inputMs;
-            units = normalizeUnits(units || 'millisecond');
-            if (units === 'millisecond') {
-                input = moment.isMoment(input) ? input : moment(input);
-                return +this === +input;
-            } else {
-                inputMs = +moment(input);
-                return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
-            }
+            units = units || 'ms';
+            return +this.clone().startOf(units) === +makeAs(input, this).startOf(units);
         },
 
         min: deprecate(
@@ -23712,7 +23615,7 @@ define('pat-forward',[
                     input = input * 60;
                 }
                 if (!this._isUTC && keepLocalTime) {
-                    localAdjust = this._dateTzOffset();
+                    localAdjust = this._d.getTimezoneOffset();
                 }
                 this._offset = input;
                 this._isUTC = true;
@@ -23730,7 +23633,7 @@ define('pat-forward',[
                     }
                 }
             } else {
-                return this._isUTC ? offset : this._dateTzOffset();
+                return this._isUTC ? offset : this._d.getTimezoneOffset();
             }
             return this;
         },
@@ -23834,38 +23737,28 @@ define('pat-forward',[
         // instance.  Otherwise, it will return the locale configuration
         // variables for this instance.
         locale : function (key) {
-            var newLocaleData;
-
             if (key === undefined) {
                 return this._locale._abbr;
             } else {
-                newLocaleData = moment.localeData(key);
-                if (newLocaleData != null) {
-                    this._locale = newLocaleData;
-                }
+                this._locale = moment.localeData(key);
                 return this;
             }
         },
 
         lang : deprecate(
-            'moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.',
+            "moment().lang() is deprecated. Use moment().localeData() instead.",
             function (key) {
                 if (key === undefined) {
                     return this.localeData();
                 } else {
-                    return this.locale(key);
+                    this._locale = moment.localeData(key);
+                    return this;
                 }
             }
         ),
 
         localeData : function () {
             return this._locale;
-        },
-
-        _dateTzOffset : function () {
-            // On Firefox.24 Date#getTimezoneOffset returns a floating point.
-            // https://github.com/moment/moment/pull/1871
-            return Math.round(this._d.getTimezoneOffset() / 15) * 15;
         }
     });
 
@@ -24063,21 +23956,19 @@ define('pat-forward',[
             var days, months;
             units = normalizeUnits(units);
 
+            days = this._days + this._milliseconds / 864e5;
             if (units === 'month' || units === 'year') {
-                days = this._days + this._milliseconds / 864e5;
                 months = this._months + daysToYears(days) * 12;
                 return units === 'month' ? months : months / 12;
             } else {
-                // handle milliseconds separately because of floating point math errors (issue #1867)
-                days = this._days + Math.round(yearsToDays(this._months / 12));
+                days += yearsToDays(this._months / 12);
                 switch (units) {
-                    case 'week': return days / 7 + this._milliseconds / 6048e5;
-                    case 'day': return days + this._milliseconds / 864e5;
-                    case 'hour': return days * 24 + this._milliseconds / 36e5;
-                    case 'minute': return days * 24 * 60 + this._milliseconds / 6e4;
-                    case 'second': return days * 24 * 60 * 60 + this._milliseconds / 1000;
-                    // Math.floor prevents floating point math errors here
-                    case 'millisecond': return Math.floor(days * 24 * 60 * 60 * 1000) + this._milliseconds;
+                    case 'week': return days / 7;
+                    case 'day': return days;
+                    case 'hour': return days * 24;
+                    case 'minute': return days * 24 * 60;
+                    case 'second': return days * 24 * 60 * 60;
+                    case 'millisecond': return days * 24 * 60 * 60 * 1000;
                     default: throw new Error('Unknown unit ' + units);
                 }
             }
@@ -24087,8 +23978,8 @@ define('pat-forward',[
         locale : moment.fn.locale,
 
         toIsoString : deprecate(
-            'toIsoString() is deprecated. Please use toISOString() instead ' +
-            '(notice the capitals)',
+            "toIsoString() is deprecated. Please use toISOString() instead " +
+            "(notice the capitals)",
             function () {
                 return this.toISOString();
             }
@@ -24125,8 +24016,6 @@ define('pat-forward',[
         }
     });
 
-    moment.duration.fn.toString = moment.duration.fn.toISOString;
-
     function makeDurationGetter(name) {
         moment.duration.fn[name] = function () {
             return this._data[name];
@@ -24134,7 +24023,7 @@ define('pat-forward',[
     }
 
     for (i in unitMillisecondFactors) {
-        if (hasOwnProp(unitMillisecondFactors, i)) {
+        if (unitMillisecondFactors.hasOwnProperty(i)) {
             makeDurationGetter(i.toLowerCase());
         }
     }
@@ -24171,7 +24060,6 @@ define('pat-forward',[
 
     // Set default locale, other locale will inherit from English.
     moment.locale('en', {
-        ordinalParse: /\d{1,2}(th|st|nd|rd)/,
         ordinal : function (number) {
             var b = number % 10,
                 output = (toInt(number % 100 / 10) === 1) ? 'th' :
@@ -44947,24 +44835,12 @@ define('pat-notification',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-// Spectrum Colorpicker v1.5.2
+// Spectrum Colorpicker v1.4.1
 // https://github.com/bgrins/spectrum
 // Author: Brian Grinstead
 // License: MIT
 
-(function (factory) {
-    
-
-    if (typeof define === 'function' && define.amd) { // AMD
-        define('spectrum',['jquery'], factory);
-    }
-    else if (typeof exports == "object" && typeof module == "object") { // CommonJS
-        module.exports = factory;
-    }
-    else { // Browser
-        factory(jQuery);
-    }
-})(function($, undefined) {
+(function (window, $, undefined) {
     
 
     var defaultOpts = {
@@ -44986,7 +44862,6 @@ define('pat-notification',[
         showInitial: false,
         showPalette: false,
         showPaletteOnly: false,
-        hideAfterPaletteSelect: false,
         togglePaletteOnly: false,
         showSelectionPalette: true,
         localStorageKey: false,
@@ -45286,8 +45161,7 @@ define('pat-notification',[
             cancelButton.bind("click.spectrum", function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-                revert();
-                hide();
+                hide("cancel");
             });
 
             clearButton.attr("title", opts.clearText);
@@ -45411,9 +45285,7 @@ define('pat-notification',[
                     set($(e.target).closest(".sp-thumb-el").data("color"));
                     move();
                     updateOriginalInput(true);
-                    if (opts.hideAfterPaletteSelect) {
-                      hide();
-                    }
+                    hide();
                 }
 
                 return false;
@@ -45566,7 +45438,7 @@ define('pat-notification',[
             hideAll();
             visible = true;
 
-            $(doc).bind("click.spectrum", clickout);
+            $(doc).bind("click.spectrum", hide);
             $(window).bind("resize.spectrum", resize);
             replacer.addClass("sp-active");
             container.removeClass("sp-hidden");
@@ -45581,29 +45453,31 @@ define('pat-notification',[
             boundElement.trigger('show.spectrum', [ colorOnShow ]);
         }
 
-        function clickout(e) {
-            // Return on right click.
-            if (e.button == 2) { return; }
+        function hide(e) {
 
-            if (clickoutFiresChange) {
-                updateOriginalInput(true);
-            }
-            else {
-                revert();
-            }
-            hide();
-        }
+            // Return on right click
+            if (e && e.type == "click" && e.button == 2) { return; }
 
-        function hide() {
             // Return if hiding is unnecessary
             if (!visible || flat) { return; }
             visible = false;
 
-            $(doc).unbind("click.spectrum", clickout);
+            $(doc).unbind("click.spectrum", hide);
             $(window).unbind("resize.spectrum", resize);
 
             replacer.removeClass("sp-active");
             container.addClass("sp-hidden");
+
+            var colorHasChanged = !tinycolor.equals(get(), colorOnShow);
+
+            if (colorHasChanged) {
+                if (clickoutFiresChange && e !== "cancel") {
+                    updateOriginalInput(true);
+                }
+                else {
+                    revert();
+                }
+            }
 
             callbacks.hide(get());
             boundElement.trigger('hide.spectrum', [ get() ]);
@@ -45803,6 +45677,8 @@ define('pat-notification',[
                 boundElement.val(displayColor);
             }
 
+            colorOnShow = color;
+
             if (fireCallback && hasChanged) {
                 callbacks.change(color);
                 boundElement.trigger('change', [ color ]);
@@ -45951,7 +45827,7 @@ define('pat-notification',[
         onmove = onmove || function () { };
         onstart = onstart || function () { };
         onstop = onstop || function () { };
-        var doc = document;
+        var doc = element.ownerDocument || document;
         var dragging = false;
         var offset = {};
         var maxHeight = 0;
@@ -45977,7 +45853,7 @@ define('pat-notification',[
         function move(e) {
             if (dragging) {
                 // Mouseup happened outside of window
-                if (IE && doc.documentMode < 9 && !e.button) {
+                if (IE && document.documentMode < 9 && !e.button) {
                     return stop();
                 }
 
@@ -45999,6 +45875,7 @@ define('pat-notification',[
 
         function start(e) {
             var rightclick = (e.which) ? (e.which == 3) : (e.button == 2);
+            var touches = e.originalEvent.touches;
 
             if (!rightclick && !dragging) {
                 if (onstart.apply(element, arguments) !== false) {
@@ -47213,7 +47090,9 @@ define('pat-notification',[
         }
     });
 
-});
+})(window, jQuery);
+
+define("spectrum", function(){});
 
 /**
  * Patterns pat-polyfill-colour - Polyfill for colour inputs.
@@ -51202,7 +51081,7 @@ define('pat-zoom',[
 // vim: sw=4 sts=4 expandtab
 ;
 //! moment-timezone.js
-//! version : 0.2.5
+//! version : 0.2.1
 //! author : Tim Wood
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -51224,18 +51103,9 @@ define('pat-zoom',[
 	// Do not load moment-timezone a second time.
 	if (moment.tz !== undefined) { return moment; }
 
-	var VERSION = "0.2.5",
+	var VERSION = "0.2.1",
 		zones = {},
-		links = {},
-
-		momentVersion = moment.version.split('.'),
-		major = +momentVersion[0],
-		minor = +momentVersion[1];
-
-	// Moment.js version check
-	if (major < 2 || (major === 2 && minor < 6)) {
-		logError('Moment Timezone requires Moment.js >= 2.6.0. You are using Moment.js ' + moment.version + '. See momentjs.com');
-	}
+		links = {};
 
 	/************************************
 		Unpacking
@@ -51486,7 +51356,9 @@ define('pat-zoom',[
 	function zoneExists (name) {
 		if (!zoneExists.didShowError) {
 			zoneExists.didShowError = true;
-				logError("moment.tz.zoneExists('" + name + "') has been deprecated in favor of !moment.tz.zone('" + name + "')");
+			if (typeof console !== 'undefined' && typeof console.error === 'function') {
+				console.error("moment.tz.zoneExists('" + name + "') has been deprecated in favor of !moment.tz.zone('" + name + "')");
+			}
 		}
 		return !!getZone(name);
 	}
@@ -51593,7 +51465,7 @@ define('pat-zoom',[
 		// moment 2.8.1+
 		momentProperties.push('_z');
 		momentProperties.push('_a');
-	} else if (momentProperties) {
+	} else {
 		// moment 2.7.0
 		momentProperties._z = null;
 	}
