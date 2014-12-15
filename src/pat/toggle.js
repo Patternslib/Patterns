@@ -99,7 +99,7 @@ define([
                 for (var i=0; i<options.length; i++)
                     if (options[i].value_storage) {
                         var victims, state, last_state;
-                        victims=document.querySelectorAll(options[i].selector);
+                        victims = $(options[i].selector);
                         if (!victims.length)
                             continue;
                         state=options[i].toggler.get(victims[0]);
@@ -178,7 +178,7 @@ define([
 
             for (var i=0; i<options.length; i++) {
                 option=options[i];
-                victims=document.querySelectorAll(option.selector);
+                victims = $(option.selector);
                 if (!victims.length)
                     continue;
                 toggler=option.toggler;
