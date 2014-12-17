@@ -308,7 +308,7 @@ define([
             $el.off("pat-ajax-error.pat-inject");
         },
 
-        _onInjectError: function ($el, cfgs, ev) {
+        _onInjectError: function ($el, cfgs) {
             cfgs.forEach(function(cfg) {
                 if ("$injected" in cfg)
                     cfg.$injected.remove();

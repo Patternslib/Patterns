@@ -49,7 +49,7 @@ define([
                 $(this).attr("name", "");
             });
 
-            if ($el.is(".pat-inject")) {
+            if ($el.is(".pat-inject") || $el.is(".pat-modal")) {
                 inject.submitSubform($el);
             } else {
                 // use the native handler, since there could be event handlers
@@ -79,9 +79,7 @@ define([
         submitClicked: function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-
-            // make sure the submitting button is send with the form
-            ajax.onClickSubmit(ev);
+            ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
 
             var $button = $(ev.target),
                 $sub = $button.parents(".pat-subform").first(),
@@ -91,13 +89,12 @@ define([
                 // override the default action and restore afterwards
                 if ($sub.is(".pat-inject")) {
                     var previousValue = $sub.data("pat-inject");
-                    $sub.data("pat-inject", inject.extractConfig($sub, {
-                        url: formaction
-                    }));
-
+                    $sub.data("pat-inject", inject.extractConfig($sub, {url: formaction}));
                     _.scopedSubmit($sub);
-
                     $sub.data("pat-inject", previousValue);
+                } else if ($sub.is(".pat-modal")) {
+                    $sub.data("pat-inject", [$.extend($sub.data("pat-inject")[0], {url: formaction})]);
+                    _.scopedSubmit($sub);
                 } else {
                     $sub.parents("form").attr("action", formaction);
                     _.scopedSubmit($sub);
@@ -105,7 +102,6 @@ define([
             } else {
                 _.scopedSubmit($sub);
             }
-
         }
     };
 
