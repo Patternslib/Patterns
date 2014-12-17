@@ -70,7 +70,7 @@ define([
                     this.groups[group]=new ArgumentParser();
                     this.groups[group].add_argument(
                             first_name,
-                            spec.value, spec.cohices, spec.multiple);
+                            spec.value, spec.choices, spec.multiple);
                     delete this.possible_groups[group];
                 }
                 if (group in this.groups) {
