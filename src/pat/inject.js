@@ -37,17 +37,15 @@ define([
         name: "inject",
         trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function inject_init($el, opts) {
-            if ($el.length > 1)
+            if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });
-
+            }
             var cfgs = _.extractConfig($el, opts);
-
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             if (cfgs.some(function(e){return e.history === "record";}) &&
                     !("pushState" in history))
                 return $el;
-
             $el.data("pat-inject", cfgs);
 
             // In case next-href is specified the anchor's href will
@@ -68,27 +66,25 @@ define([
             }
 
             switch (cfgs[0].trigger) {
-            case "default":
-                // setup event handlers
-                if ($el.is("a")) {
-                    $el.on("click.pat-inject", _.onClick);
-                } else if ($el.is("form")) {
-                    $el.on("submit.pat-inject", _.onSubmit)
-                       .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit);
-                } else if ($el.is(".pat-subform")) {
-                    log.debug("Initializing subform with injection");
-                }
-                break;
-            case "autoload":
-                _.onClick.apply($el[0], []);
-                break;
-            case "autoload-visible":
-                _._initAutoloadVisible($el);
-                break;
+                case "default":
+                    // setup event handlers
+                    if ($el.is("a")) {
+                        $el.on("click.pat-inject", _.onClick);
+                    } else if ($el.is("form")) {
+                        $el.on("submit.pat-inject", _.onSubmit)
+                        .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit);
+                    } else if ($el.is(".pat-subform")) {
+                        log.debug("Initializing subform with injection");
+                    }
+                    break;
+                case "autoload":
+                    _.onClick.apply($el[0], []);
+                    break;
+                case "autoload-visible":
+                    _._initAutoloadVisible($el);
+                    break;
             }
-
             log.debug("initialised:", $el);
-
             return $el;
         },
 
@@ -214,7 +210,6 @@ define([
                 cfg.targetLoadClasses += " injecting-" + targetPosition;
 
             cfg.action = targetMod + targetPosition;
-
             // Once we start detecting illegal combinations, we'll
             // return false in case of error
             return true;
@@ -224,7 +219,7 @@ define([
         //
         // XXX: so far we only support #target and create a div with
         // that id appended to the body.
-        _createTarget: function inject_createTarget(selector) {
+        _createTarget: function inject_createTarget (selector) {
             var $target;
             if (selector.slice(0,1) !== "#") {
                 log.error("only id supported for non-existing target");
@@ -235,125 +230,106 @@ define([
             return $target;
         },
 
-        execute: function inject_execute(cfgs, $el) {
-            // get a kinda deep copy, we scribble on it
-            cfgs = cfgs.map(function(cfg) {
-                return $.extend({}, cfg);
-            });
-
-            // XXX: this need to get functional, returning a command
-            // for internal use, instead of passing on cfgs
-            if (!_.verifyConfig(cfgs, $el))
+        _onInjectSuccess: function ($el, cfgs, ev) {
+            var trigger = ev.target,
+                sources$,
+                data = ev && ev.jqxhr && ev.jqxhr.responseText;
+            if (!data) {
+                log.warn("No response content, aborting", ev);
                 return;
+            }
 
-            // possibility for spinners on targets
-            cfgs.forEach(function(cfg) {
-                cfg.$target.addClass(cfg.targetLoadClasses);
-            });
-
-            function stopBubblingFromRemovedElement(ev) {
-                /* IE8 fix.
-                 *
-                 * Stop event from propagating IF $el will be removed from
-                 * the DOM.
-                 * With pat-inject, often $el is the target that will
-                 * itself be replaced with injected content.
-                 *
-                 * IE8 cannot handle events bubbling up from an element removed
-                 * from the DOM.
-                 *
-                 * See:
-                 * http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
-                 */
+            function stopBubblingFromRemovedElement (ev) {
+               /* IE8 fix. Stop event from propagating IF $el will be removed
+                * from the DOM. With pat-inject, often $el is the target that
+                * will itself be replaced with injected content.
+                *
+                * IE8 cannot handle events bubbling up from an element removed
+                * from the DOM.
+                *
+                * See: http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
+                */
                 var s; // jquery selector
                 for (var i=0; i<cfgs.length; i++) {
-                    s= cfgs[i].target;
+                    s = cfgs[i].target;
                     if ($el.parents(s).addBack(s) && !ev.isPropagationStopped()) {
                         ev.stopPropagation();
                         return;
                     }
                 }
             }
+            stopBubblingFromRemovedElement(ev);
+            sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
+            cfgs.forEach(function(cfg, idx) {
+                var $source = sources$[idx];
+                if (cfg.sourceMod === "content")
+                    $source = $source.contents();
 
-            var onSuccess = function inject_onSuccess(ev) {
-                var trigger = ev.target,
-                    sources$,
-                    data = ev && ev.jqxhr && ev.jqxhr.responseText;
-                if (!data) {
-                    log.warn("No response content, aborting", ev);
-                    return;
-                }
-                stopBubblingFromRemovedElement(ev);
-
-                sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
-                cfgs.forEach(function(cfg, idx) {
-                    var $source = sources$[idx];
-
-                    if (cfg.sourceMod === "content")
-                        $source = $source.contents();
-
-                    // perform injection
-                    cfg.$target.each(function inject_onSuccess_perform() {
-                        var $src;
-
-                        // $source.clone() does not work with shived elements in IE8
-                        if (document.all && document.querySelector &&
-                            !document.addEventListener) {
-                            $src = $source.map(function() {
-                                return $(this.outerHTML)[0];
-                            });
-                        } else {
-                            $src = $source.clone();
-                        }
-
-                        var $target = $(this),
-                            $injected = cfg.$injected || $src;
-
-                        $src.findInclusive("img").on("load", function() {
-                            $(this).trigger("pat-inject-content-loaded");
+                // perform injection
+                cfg.$target.each(function inject_onSuccess_perform() {
+                    var $src;
+                    // $source.clone() does not work with shived elements in IE8
+                    if (document.all && document.querySelector &&
+                        !document.addEventListener) {
+                        $src = $source.map(function() {
+                            return $(this.outerHTML)[0];
                         });
+                    } else {
+                        $src = $source.clone();
+                    }
 
-                        if (_._inject(trigger, $src, $target, cfg)) {
-                            $injected.filter(function() {
-                                // setting data on textnode fails in IE8
-                                return this.nodeType !== 3; //Node.TEXT_NODE
-                            }).data("pat-injected", {origin: cfg.url});
-                            $injected.addClass(cfg["class"])
-                                .trigger("patterns-injected", [cfg, $el[0]]);
-                        }
-                        if ((cfg.history === "record") &&
-                            ("pushState" in history))
-                            history.pushState({url: cfg.url}, "", cfg.url);
+                    var $target = $(this),
+                        $injected = cfg.$injected || $src;
+
+                    $src.findInclusive("img").on("load", function() {
+                        $(this).trigger("pat-inject-content-loaded");
                     });
+
+                    if (_._inject(trigger, $src, $target, cfg)) {
+                        $injected.filter(function() {
+                            // setting data on textnode fails in IE8
+                            return this.nodeType !== 3; //Node.TEXT_NODE
+                        }).data("pat-injected", {origin: cfg.url});
+                        $injected.addClass(cfg["class"])
+                            .trigger("patterns-injected", [cfg, $el[0]]);
+                    }
+                    if ((cfg.history === "record") &&
+                        ("pushState" in history))
+                        history.pushState({url: cfg.url}, "", cfg.url);
                 });
+            });
 
-                if (cfgs[0].nextHref) {
-                    $el.attr({href: (window.location.href.split("#")[0] || "") +
-                              cfgs[0].nextHref});
-                    _.destroy($el);
+            if (cfgs[0].nextHref) {
+                $el.attr({href: (window.location.href.split("#")[0] || "") +
+                            cfgs[0].nextHref});
+                _.destroy($el);
+            }
+            $el.off("pat-ajax-success.pat-inject");
+            $el.off("pat-ajax-error.pat-inject");
+        },
 
-                    // XXX: this used to be the case, but I don't see
-                    // why that would be a good idea.
-                    //
-                    // jump to new href target
-                    //if (!$el.hasClass("autoLoading-visible"))
-                    //    window.location.href = $el.attr("href");
-                }
-                $el.off("pat-ajax-success.pat-inject");
-                $el.off("pat-ajax-error.pat-inject");
-            };
+        _onInjectError: function ($el, cfgs, ev) {
+            cfgs.forEach(function(cfg) {
+                if ("$injected" in cfg)
+                    cfg.$injected.remove();
+            });
+            $el.off("pat-ajax-success.pat-inject");
+            $el.off("pat-ajax-error.pat-inject");
+        },
 
-            var onError = function inject_onError() {
-                cfgs.forEach(function(cfg) {
-                    if ("$injected" in cfg)
-                        cfg.$injected.remove();
-                });
-                $el.off("pat-ajax-success.pat-inject");
-                $el.off("pat-ajax-error.pat-inject");
-            };
+        execute: function inject_execute(cfgs, $el) {
+            // get a kinda deep copy, we scribble on it
+            cfgs = cfgs.map(function(cfg) {
+                return $.extend({}, cfg);
+            });
+            if (!_.verifyConfig(cfgs, $el)) {
+                return;
+            }
+            // possibility for spinners on targets
+            cfgs.forEach(function(cfg) { cfg.$target.addClass(cfg.targetLoadClasses); });
 
-            $el.on("pat-ajax-success.pat-inject", onSuccess);
-            $el.on("pat-ajax-error.pat-inject", onError);
+            $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
+            $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
 
             if (cfgs[0].url.length) {
                 ajax.request($el, {url: cfgs[0].url});
