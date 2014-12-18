@@ -175,7 +175,7 @@ define([
             } else {
                 $label.addClass("unchecked").removeClass("checked");
                 if ($fieldset.find("input:checked").length) {
-                    $fieldset.removeClass("unchecked").addClass("checked");
+                    $siblings.removeClass("unchecked").addClass("checked");
                 } else {
                     $fieldset.addClass("unchecked").removeClass("checked");
                 }
