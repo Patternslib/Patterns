@@ -38,17 +38,15 @@ define([
                             .filter(function() {
                                 return !$(this).is($el.find("*"));
                             });
-
             // make other controls "unsuccessful"
             log.debug("Hiding unwanted elements from submission.");
             var names = $exclude.map(function() {
-                return $(this).attr("name");
+                var name = $(this).attr("name");
+                return name ? name : 0;
             });
-
             $exclude.each(function() {
                 $(this).attr("name", "");
             });
-
             if ($el.is(".pat-inject") || $el.is(".pat-modal")) {
                 inject.submitSubform($el);
             } else {
@@ -56,11 +54,12 @@ define([
                 // redirecting to inject/ajax.
                 $form[0].submit();
             }
-
             // reenable everything
             log.debug("Restoring previous state.");
             $exclude.each(function(i) {
-                $(this).attr("name", names[i]);
+                if (names[i]) {
+                    $(this).attr("name", names[i]);
+                }
             });
         },
 
