@@ -1,5 +1,7 @@
 # Changelog
  
+- #381 pat-checkedflag initial state of radio buttons depends on order in which _updateRadio is called in init on each() button.
+
 ## 2.0.5 - Dec. 4, 2014
 
 - #383 pat-equaliser sets the height to early
