@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 18.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Laag_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="1300.4px" height="1599.1px" viewBox="0 0 1300.4 1599.1" enable-background="new 0 0 1300.4 1599.1" xml:space="preserve">
+<g>
+	<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="1150,200.1 1150,150.1 800,150.1 800,698.1 1200,698.1 
+		1200,200.1 	"/>
+	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="1150" y1="150.1" x2="1200" y2="200.1"/>
+</g>
+<rect x="849" y="391.1" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="300" height="209"/>
+<text transform="matrix(1 0 0 1 888.9999 433.1032)" font-family="'SourceSansPro-Regular'" font-size="36">Main content B</text>
+<rect x="847" y="201.1" fill="none" width="304" height="78"/>
+<text transform="matrix(1 0 0 1 975.6802 258.0621)" font-family="'SourceSansPro-Regular'" font-size="80">B</text>
+<rect x="848" y="277.1" fill="none" width="111" height="20"/>
+<text transform="matrix(1 0 0 1 848 290.4029)" opacity="0.5" font-family="'PTMono-Regular'" font-size="19">#intro</text>
+<g>
+	<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="451,200.1 451,150.1 99,150.1 99,698.1 499,698.1 500,200.1 
+			"/>
+	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="451" y1="150.1" x2="500" y2="200.1"/>
+</g>
+<rect x="247" y="300.1" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="202" height="302"/>
+<text transform="matrix(1 0 0 1 272.9999 371.1032)" font-family="'SourceSansPro-Regular'" font-size="24">Main content A</text>
+<rect x="146" y="201.1" fill="none" width="304" height="78"/>
+<text transform="matrix(1 0 0 1 276.4805 258.0621)" font-family="'SourceSansPro-Regular'" font-size="80">A</text>
+<rect x="247" y="277.1" fill="none" width="201" height="20"/>
+<text transform="matrix(1 0 0 1 247 289.003)" opacity="0.5" font-family="'PTMono-Regular'" font-size="17">#main</text>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="8,8" x1="999" y1="451.1" x2="363" y2="451.1"/>
+		<g>
+			<path d="M351,451.1c5.7-2.1,12.7-5.7,17.1-9.5l-3.4,9.5l3.4,9.5C363.7,456.8,356.7,453.2,351,451.1z"/>
+		</g>
+	</g>
+</g>
+<line fill="none" stroke="#000000" stroke-width="5" stroke-miterlimit="10" stroke-dasharray="8" x1="47" y1="799.6" x2="549" y2="799.6"/>
+<rect x="50" y="773.1" fill="none" width="499" height="20"/>
+<text transform="matrix(1 0 0 1 273.7363 786.5928)" opacity="0.5" font-family="'MyriadPro-Regular'" font-size="19">Before</text>
+<rect x="48" y="814.1" fill="none" width="499" height="20"/>
+<text transform="matrix(1 0 0 1 277.9019 827.5928)" opacity="0.5" font-family="'MyriadPro-Regular'" font-size="19">After</text>
+<g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="4" stroke-miterlimit="10" d="M577.6,994.2c46.6-50.8,74.9-119.9,74.9-196.1
+			c0-85.1-35.3-161.4-92-213.1"/>
+		<g>
+			<path d="M560.5,1011.3c11-5.1,26-10,37.6-10.9l-18.4-8.5l-8.7-18.3C570.3,985.1,565.5,1000.2,560.5,1011.3z"/>
+		</g>
+	</g>
+</g>
+<rect x="514" y="473.1" fill="none" width="275" height="110.2"/>
+<text transform="matrix(1 0 0 1 533.1426 485.8832)"><tspan x="0" y="0" font-family="'MyriadPro-Regular'" font-size="18">Pat-inject extracts content from </tspan><tspan x="-12.9" y="24" font-family="'MyriadPro-Regular'" font-size="18">various regions of the remote page </tspan><tspan x="-14.6" y="48" font-family="'MyriadPro-Regular'" font-size="18">and injects  it into the current page, </tspan><tspan x="4.8" y="72" font-family="'MyriadPro-Regular'" font-size="18">without refresing the browser.</tspan></text>
+<rect x="150" y="301.1" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="80" height="199"/>
+<text transform="matrix(4.489659e-11 -1 1 4.489659e-11 200.0001 475.1031)" font-family="'SourceSansPro-Regular'" font-size="24">Introduction A</text>
+<rect x="150" y="277.1" fill="none" width="201" height="20"/>
+<text transform="matrix(1 0 0 1 150 289.003)" opacity="0.5" font-family="'PTMono-Regular'" font-size="17">#intro</text>
+<rect x="849" y="300.1" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="300" height="60"/>
+<text transform="matrix(1 0 0 1 892.9999 342.1032)" font-family="'SourceSansPro-Regular'" font-size="36">Introduction B</text>
+<rect x="849" y="371.1" fill="none" width="111" height="20"/>
+<text transform="matrix(1 0 0 1 849 384.4029)" opacity="0.5" font-family="'PTMono-Regular'" font-size="19">#content</text>
+<g>
+	<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="452,950.1 452,900.1 100,900.1 100,1448.1 500,1448.1 
+		501,950.1 	"/>
+	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="452" y1="900.1" x2="501" y2="950.1"/>
+</g>
+<rect x="248" y="1050.1" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="202" height="302"/>
+<text transform="matrix(1 0 0 1 273.9999 1095.1033)" font-family="'SourceSansPro-Regular'" font-size="24">Main content B</text>
+<rect x="147" y="951.1" fill="none" width="304" height="78"/>
+<text transform="matrix(1 0 0 1 277.4805 1008.0621)" font-family="'SourceSansPro-Regular'" font-size="80">A</text>
+<rect x="248" y="1027.1" fill="none" width="201" height="20"/>
+<text transform="matrix(1 0 0 1 248 1039.0031)" opacity="0.5" font-family="'PTMono-Regular'" font-size="17">#main</text>
+<rect x="151" y="1051.1" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="80" height="199"/>
+<text transform="matrix(4.489659e-11 -1 1 4.489659e-11 201.0001 1225.1031)" font-family="'SourceSansPro-Regular'" font-size="24">Introduction B</text>
+<rect x="151" y="1027.1" fill="none" width="201" height="20"/>
+<text transform="matrix(1 0 0 1 151 1039.0031)" opacity="0.5" font-family="'PTMono-Regular'" font-size="17">#intro</text>
+<g>
+	<g>
+		
+			<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="8,8" x1="873" y1="332.1" x2="222" y2="332.1"/>
+		<g>
+			<path d="M210,332.1c5.7-2.1,12.7-5.7,17.1-9.5l-3.4,9.5l3.4,9.5C222.7,337.8,215.7,334.2,210,332.1z"/>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,9 +1,27 @@
 # Injection
 
 ## Description
-Injection is one of the most powerful features of Patterns. It makes it trivial to load content from a server and include it on a web page. This can be used to do on-demand loading of content, do in-page form submission, perform AJAX requests with results shown as notifications and many other things.
+Injection is one of the most powerful features of Patterns. It makes it trivial to load content from a server and include it on a web page. This can be used to do on-demand loading of content, do in-page form submission, perform AJAX requests with results shown as notifications and many other things. Pat-inject is designed with respect for accessibility and follows the principles of progressive enhancement. 
 
 ## Documentation
+
+### Concept
+
+Injection is an enhancement on regular links that point from one HTML page to another. Without JavaScript and injection, you would keep this standard behaviour. With JavaScript and pat-inject, a richer experience is created for modern graphical browser. 
+
+Pat-inject intercepts the page refresh, invisibly collect the remote page, extract parts out of it that we're interested and replace the content somewhere on the currently visible page without refreshing the browser window. 
+
+The principle is illustrated in the following graphic.
+
+![image](injection-single.svg)
+
+This typical example illustrates how in this case the content of the main content region is replace by the content of the same region of another page. One could for instance create a series of links styled as tabs this way, that would each refresh the content area of the page, without refreshing the browser window.
+
+A slightly more complex case is illustrated below. You see how multiple regions are extracted out of one page and injected into similar areas on another page. It doesn't matter if the regions on the remote page are differently named or styled.
+
+![image](injection-multiple.svg) 
+
+### Code examples
 
 The simplest form of injection is a link which loads content when clicked:
 
@@ -38,10 +56,6 @@ Perhaps inserting a single block of content is not enough for your needs? Don't 
 When you submit this form two things happen: `#content` from the
 response is used to replace `#section`'s content of the page, replacing the current form with a new form or a feedback message. In addition a `#notice` element is extracted from the response and added at the bottom
 of `#notices`.
-
-XXX: cross references for above
-
-XXX: give an overview of sections with cross references
 
 ### Where and what to inject
 
