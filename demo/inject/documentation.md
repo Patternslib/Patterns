@@ -1,18 +1,16 @@
 # Injection
 
 ## Description
-…
+Injection is one of the most powerful features of Patterns. It makes it trivial to load content from a server and include it on a web page. This can be used to do on-demand loading of content, do in-page form submission, perform AJAX requests with results shown as notifications and many other things.
 
 ## Documentation
-
-Injection is one of the most powerful features of Patterns. It makes it trivial to load content from a server and include it on a web page. This can be used to do on-demand loading of content, do in-page form submission, perform AJAX requests with results shown as notifications and many other things.
 
 The simplest form of injection is a link which loads content when clicked:
 
     <a href="demos/frobber.html#content" class="pat-inject">Demo the frobber</a>
 
     <section id="content">
-      ...
+      …
     </section>
 
 When a user clicks this link `demos/frobber.html` will be fetched via AJAX, the element with id `content` is extracted and used to replace the content of `#content` on the current page.
@@ -23,7 +21,7 @@ In another situation you may not want to replace content but add new content. Yo
        data-pat-inject="target: #news::before">Tell me more</a>
 
     <section id="news">
-      ...
+      …
     </section>
 
 In this example clicking on the *Tell me more* link will load the latest news content and inject it before the content of `#news`.
@@ -33,7 +31,7 @@ Perhaps inserting a single block of content is not enough for your needs? Don't 
     <section id="section">
       <form action="/my/form" class="pat-inject"
        data-pat-inject="#content && #notice #notices::after">
-        ...
+        …
       </form>
     </section>
 
@@ -217,22 +215,18 @@ For both selectors every conceivable jQuery selector is allowed. If multiple ele
 
 ### Non-existing targets
 
-In case the target selector returns no elements, we will attempt to create a matching element for you - the fuuuture, the apex of the vortex of injection.
+In case the target selector returns no elements, we will attempt to create a matching element for you.
 
-So far we are able to handle `target` selectors that consist of only an
-id: A `div` with that id will be created and injected as the last child
-of `body`:
+So far we are able to handle 'target' selectors that consist of only an id: A `div` with that id will be created and injected as the last child of `body`:
 
-    <a class="pat-inject" href="sources.html"
-       data-pat-inject="target: #non-existing">
-    ...
+    <a class="pat-inject" href="sources.html" data-pat-inject="target: #non-existing">
+    …
     </body>
 
 After the injection:
 
-    <a class="pat-inject" href="sources.html"
-       data-pat-inject="target: #non-existing">
-    ...
+    <a class="pat-inject" href="sources.html" data-pat-inject="target: #non-existing">
+    …
     <div id="non-existing">
       Content of body of sources.html
     </div>
