@@ -255,25 +255,22 @@ XXX: example infinite list
 
 ### Change href after injection
 
-EXPERIMENTAL FEATURE
-
-WILL DO SOMETHING WHEN COMBINED WITH MULTI-INJECTION
+THIS FEATURE IS EXPERIMENTAL
 
 For anchors, you can specify an href to point to, after the injection was triggered. If that element exists already during initialisation, the injection is not initialised and the href changed to next-href.
 
 before:
 
-    <a class="next-month pat-inject" href="calendar.html#2012-05"
-       data-pat-inject="post: #2012-04; next-href: #2012-05">Next month</a>
-    ...
+    <a class="next-month pat-inject" ref="calendar.html#2012-05"
+       data-pat-inject="post: #2012-04; next-href: 2012-05">Next month</a>
+    …
     <div class="month" id="2012-04">
-      ...
+      …
     </div>
 
 after:
 
-    <a class="next-month" href="#2012-05"
-       data-pat-inject="">Next month</a>
+    <a class="next-month" href="#2012-05" data-pat-inject="">Next month</a>
     …
     <div class="month" id="2012-04">
 	    …
@@ -287,9 +284,7 @@ after:
 
 ### Modals
 
-Inject a modal panel: modal-source.html is fetched, its body's content
-is wrapped into a `div#modal.modal`, any existing such modal is removed
-and the new modal injected as last element of the body:
+Inject a modal panel: modal-source.html is fetched, its body's content is wrapped into a `div#modal.modal`, any existing such modal is removed and the new modal injected as last element of the body:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
       …
