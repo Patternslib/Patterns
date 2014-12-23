@@ -5,19 +5,20 @@
 	 width="1300.4px" height="1599.1px" viewBox="10 -399.1 1300.4 1599.1" enable-background="new 10 -399.1 1300.4 1599.1"
 	 xml:space="preserve">
 <g>
-	<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="1160,-199 1160,-249 810,-249 810,299 1210,299 1210,-199 	
+	<polygon fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" points="1160,176 1160,126 810,126 810,674 1210,674 1210,176 	
 		"/>
-	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="1160" y1="-249" x2="1210" y2="-199"/>
+	<line fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" x1="1160" y1="126" x2="1210" y2="176"/>
 </g>
-<rect x="859" y="-101" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="300" height="302"/>
-<text transform="matrix(1 0 0 1 898.9999 -36.9968)" font-family="'SourceSansPro-Regular'" font-size="38.0054">Content B</text>
-<rect x="857" y="-198" fill="none" width="304" height="78"/>
-<text transform="matrix(1 0 0 1 985.6802 -141.0378)" font-family="'SourceSansPro-Regular'" font-size="80">B</text>
-<rect x="858" y="-122" fill="none" width="111" height="20"/>
-<text transform="matrix(1 0 0 1 858 -108.6971)" opacity="0.5" enable-background="new    " font-family="'PTMono-Regular'" font-size="19">#content</text>
+<rect x="859" y="274" fill="#F2F2F2" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="300" height="302"/>
+<text transform="matrix(1 0 0 1 898.9999 338.038)" font-family="'SourceSansPro-Regular'" font-size="38.0054">Content B</text>
+<rect x="857" y="177" fill="none" width="304" height="78"/>
+<text transform="matrix(1 0 0 1 985.6802 233.9969)" font-family="'SourceSansPro-Regular'" font-size="80">B</text>
+<rect x="858" y="253" fill="none" width="111" height="20"/>
+<text transform="matrix(1 0 0 1 858 266.3377)" opacity="0.5" enable-background="new    " font-family="'PTMono-Regular'" font-size="19">#content</text>
 <g>
-	<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="461,-199 461,-249 109,-249 109,299 509,299 510,-199 	"/>
-	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="461" y1="-249" x2="510" y2="-199"/>
+	<polygon fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" points="461,-199 461,-249 109,-249 109,299 509,299 510,-199 	
+		"/>
+	<line fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" x1="461" y1="-249" x2="510" y2="-199"/>
 </g>
 <rect x="158" y="-101" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="300" height="302"/>
 <text transform="matrix(1 0 0 1 197.9999 -36.9968)" font-family="'SourceSansPro-Regular'" font-size="38.0054">Content A</text>
@@ -26,19 +27,10 @@
 <rect x="157" y="-122" fill="none" width="111" height="20"/>
 <text transform="matrix(1 0 0 1 157 -108.6971)" opacity="0.5" enable-background="new    " font-family="'PTMono-Regular'" font-size="19">#content</text>
 <g>
-	<g>
-		
-			<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="8,8" x1="1009" y1="52" x2="333" y2="52"/>
-		<g>
-			<path d="M309,52c11.4-4.2,25.5-11.4,34.2-19l-6.9,19l6.9,19C334.5,63.4,320.4,56.2,309,52z"/>
-		</g>
-	</g>
+	<polygon fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" points="463,552 463,502 111,502 111,1050 511,1050 512,552 	"/>
+	<line fill="#FFFFFF" stroke="#000000" stroke-miterlimit="10" x1="463" y1="502" x2="512" y2="552"/>
 </g>
-<g>
-	<polygon fill="none" stroke="#000000" stroke-miterlimit="10" points="463,552 463,502 111,502 111,1050 511,1050 512,552 	"/>
-	<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="463" y1="502" x2="512" y2="552"/>
-</g>
-<rect x="160" y="650" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="300" height="302"/>
+<rect x="160" y="650" fill="#F2F2F2" stroke="#000000" stroke-miterlimit="10" stroke-dasharray="8" width="300" height="302"/>
 <text transform="matrix(1 0 0 1 199.9999 714.0033)" font-family="'SourceSansPro-Regular'" font-size="38.0054">Content B</text>
 <rect x="158" y="553" fill="none" width="304" height="78"/>
 <text transform="matrix(1 0 0 1 288.4805 609.9621)" font-family="'SourceSansPro-Regular'" font-size="80">A</text>
@@ -59,8 +51,21 @@
 	</g>
 </g>
 <rect x="530" y="-69.2" fill="none" width="263" height="91.2"/>
-<text transform="matrix(1 0 0 1 543.1426 -56.4078)" font-family="'MyriadPro-Regular'" font-size="18">Pat-inject extracts content from </text>
-<text transform="matrix(1 0 0 1 532.3426 -32.4078)" font-family="'MyriadPro-Regular'" font-size="18">the remote page and injects it into </text>
-<text transform="matrix(1 0 0 1 530.3426 -8.4078)" font-family="'MyriadPro-Regular'" font-size="18">the current page, without refresing </text>
-<text transform="matrix(1 0 0 1 614.6426 15.5922)" font-family="'MyriadPro-Regular'" font-size="18">the browser.</text>
+<text transform="matrix(1.1361 0 0 1 875.4404 715.87)" font-family="'MyriadPro-Regular'" font-size="18">Pat-inject extracts content from </text>
+<text transform="matrix(1.1361 0 0 1 863.1699 739.87)" font-family="'MyriadPro-Regular'" font-size="18">the remote page and injects it into </text>
+<text transform="matrix(1.1361 0 0 1 860.8984 763.87)" font-family="'MyriadPro-Regular'" font-size="18">the current page, without refresing </text>
+<text transform="matrix(1.1361 0 0 1 956.6699 787.87)" font-family="'MyriadPro-Regular'" font-size="18">the browser.</text>
+<g>
+	<g>
+		<g>
+			<g>
+				
+					<line fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="8,8" x1="1009" y1="400" x2="313.4" y2="804.8"/>
+				<g>
+					<path d="M303,810.9c3.8-4.7,8.1-11.3,10-16.8l1.8,10l7.8,6.5C316.9,809.4,309,809.9,303,810.9z"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
 </svg>
