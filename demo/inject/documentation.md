@@ -1,15 +1,15 @@
 # Injection
 
 ## Description
-Injection is one of the most powerful features of Patterns. It makes it trivial to load content from a server and include it on a web page. This can be used to do on-demand loading of content, do in-page form submission, perform AJAX requests with results shown as notifications and many other things. Pat-inject is designed with respect for accessibility and follows the principles of progressive enhancement. 
+Injection makes it trivial to load content from a server and display it on a web page with a rich, modern web experience without any page reloads. Pat-inject works on existing infra structures, is designed with respect for accessibility and follows the principles of progressive enhancement. 
 
 ## Documentation
 
 ### Concept
 
-Injection is an enhancement on regular HTML links that point from one HTML page to another. Without JavaScript and injection, you would keep this standard behaviour. With JavaScript and pat-inject, a richer experience is created for modern graphical browser. 
+Injection is an enhancement on regular HTML links that point from one HTML page to another. Without JavaScript and injection, you would keep this standard behaviour. With JavaScript and pat-inject, a richer experience is created for modern graphical browsers. 
 
-Pat-inject intercepts the page refresh, invisibly collect the remote page, extract parts out of it that we're interested and replace the content somewhere on the currently visible page without refreshing the browser window. 
+Pat-inject intercepts the page refresh, invisibly collects the remote page, extracts parts out of it that you're interested in and replaces the content somewhere on the currently visible page without refreshing the browser window. 
 
 The principle is illustrated in the following graphic.
 
@@ -25,11 +25,11 @@ It's also possible to inject content from another page into a modal panel:
 
 ![image](injection-modal.svg) 
 
-The possibilities don't stop here. Other methods of injection include injection in tooltips (pat-tooltip) and injection in 'self healing messages' (Similar to Mac OS banners or Growl) (pat-notification). Those ways of working with injection are explained in the respective documentation of the components pat-tooltip and pat-notification. 
+The possibilities don't stop here. Other applications of injection include injection in tooltips (pat-tooltip) and injection in 'self healing messages' (Similar to Mac OS banners or Growl) (pat-notification). Those ways of working with injection are explained in the respective documentation sections of the components pat-tooltip and pat-notification. 
 
 ### Code examples
 
-The simplest form of injection is a link which loads content when clicked:
+The most simple form of injection is a link which loads content when clicked:
 
     <a href="demos/frobber.html#content" class="pat-inject">Demo the frobber</a>
 
