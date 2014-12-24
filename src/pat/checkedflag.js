@@ -149,9 +149,7 @@ define([
         },
 
         _initRadio: function() {
-            if ($(this):is(":checked")) {
-                checkedflag._updateRadio(this, false);
-            }
+            checkedflag._updateRadio(this, false);
         },
 
         _onChangeRadio: function() {
