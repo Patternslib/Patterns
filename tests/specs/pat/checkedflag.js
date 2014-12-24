@@ -125,6 +125,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"foo\"/></label>",
                     "  <label><input type=\"radio\" name=\"bar\" checked=\"checked\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input:checked")[0];
                 pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("checked");
@@ -138,6 +139,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"foo\" checked=\"checked\"/></label>",
                     "  <label><input type=\"radio\" name=\"bar\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input:checked")[0];
                 pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("checked");
@@ -151,6 +153,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"foo\"/></label>",
                     "  <label><input type=\"radio\" name=\"bar\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input")[0];
                 pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("unchecked");
@@ -166,6 +169,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"bar\"/></label>",
                     "  <label><input type=\"radio\" name=\"baz\" checked=\"checked\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input:checked")[0];
                 pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("checked");
@@ -181,6 +185,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"bar\" checked=\"checked\"/></label>",
                     "  <label><input type=\"radio\" name=\"baz\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input:checked")[0];
                 pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("checked");
@@ -196,6 +201,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"bar\"/></label>",
                     "  <label><input type=\"radio\" name=\"baz\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input:checked")[0];
                 pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("checked");
@@ -211,6 +217,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"bar\"/></label>",
                     "  <label><input type=\"radio\" name=\"baz\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input")[0];
                 pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("unchecked");
