@@ -105,12 +105,10 @@ define([
             // via order of pat-classes and more efficient.
             $match.toArray().reduceRight(function registry_pattern_init(acc, el) {
                 var $el = $(el);
-
                 for (var name in registry.patterns) {
                     pattern = registry.patterns[name];
                     if (pattern.init) {
                         plog = logger.getLogger("pat." + name);
-
                         if ($el.is(pattern.trigger)) {
                             plog.debug("Initialising:", $el);
                             if (do_not_catch_init_exception || dont_catch) {
@@ -137,7 +135,6 @@ define([
                 log.error("Pattern lacks name:", pattern);
                 return false;
             }
-
             if (registry.patterns[pattern.name]) {
                 log.error("Already have a pattern called: " + pattern.name);
                 return false;
@@ -156,9 +153,7 @@ define([
                 // BBB 2012-12-10
                 $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
             }
-
             log.debug("Registered pattern:", pattern.name, pattern);
-
             if (registry.initialized) {
                 registry.scan(document.body, [pattern.name], undefined, false);
             }
