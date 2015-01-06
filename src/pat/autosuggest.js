@@ -15,6 +15,7 @@ define([
     var log = logger.getLogger("calendar");
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");
+    parser.add_argument("words-json");
     parser.add_argument("ajax-url", "");
     parser.add_argument("ajax-data-type", "");
     parser.add_argument("ajax-search-index", "");
@@ -39,10 +40,23 @@ define([
             if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });
             }
+            var data, ids = [], d, words;
             var cfg = parser.parse($el, opts);
+
+            if (cfg.wordsJson && cfg.wordsJson.length) {
+                try {
+                    words = $.parseJSON(cfg.wordsJson);
+                } catch(SyntaxError) {
+                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+                }
+            }
+            if (cfg.words.length) {
+                words = cfg.words.split(/\s*,\s*/);
+            }
+
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
-                tags: cfg.words.split(/\s*,\s*/),
+                tags: words,
                 tokenSeparators: [","],
                 openOnEnter: false,
                 maximumSelectionSize: cfg.maximumSelectionSize
@@ -80,9 +94,6 @@ define([
             }
 
             if (cfg.data.length) {
-                var data;
-                var ids = [];
-                var d;
                 try {
                    data = $.parseJSON(cfg.data);
                     for (d in data) {
