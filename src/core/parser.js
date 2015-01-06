@@ -256,22 +256,25 @@ define([
         _parse: function ArgumentParser_parse(parameter) {
             var opts, extended, sep;
             if (!parameter) { return {}; }
-            try {
-                return JSON.parse(parameter);
-            } catch (e) {
-                if (parameter.match(this.named_param_pattern))
-                    return this._parseExtendedNotation(parameter);
-
-                sep = parameter.indexOf(";");
-                if (sep===-1)
-                    return this._parseShorthandNotation(parameter);
-
-                opts = this._parseShorthandNotation(parameter.slice(0, sep));
-                extended = this._parseExtendedNotation(parameter.slice(sep+1));
-                for (var name in extended)
-                    opts[name] = extended[name];
-                return opts;
+            if (parameter.match(/^{/)) {
+                try {
+                    return JSON.parse(parameter);
+                } catch (e) {
+                this.log.warn("Invalid JSON argument found: "+parameter);
+                }
             }
+            if (parameter.match(this.named_param_pattern))
+                return this._parseExtendedNotation(parameter);
+
+            sep = parameter.indexOf(";");
+            if (sep===-1)
+                return this._parseShorthandNotation(parameter);
+
+            opts = this._parseShorthandNotation(parameter.slice(0, sep));
+            extended = this._parseExtendedNotation(parameter.slice(sep+1));
+            for (var name in extended)
+                opts[name] = extended[name];
+            return opts;
         },
 
         _defaults: function ArgumentParser_defaults($el) {
