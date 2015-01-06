@@ -49,11 +49,9 @@ define([
                 } catch(SyntaxError) {
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
                 }
-            }
-            if (cfg.words.length) {
+            } else {
                 words = cfg.words.split(/\s*,\s*/);
             }
-
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: words,
