@@ -8,8 +8,9 @@
  */
 define([
     "jquery",
-    "pat-registry",
-
+    "less",
+    "modernizr",
+    "prefixfree",
     "pat-ajax",
     "pat-autofocus",
     "pat-autoscale",
@@ -17,11 +18,13 @@ define([
     "pat-autosuggest",
     "pat-breadcrumbs",
     "pat-bumper",
+    "pat-calendar",
     "pat-carousel",
     "pat-checkedflag",
     "pat-checklist",
     "pat-chosen",
     "pat-collapsible",
+    "pat-colour-picket",
     "pat-depends",
     "pat-edit-tinymce",
     "pat-equaliser",
@@ -31,20 +34,17 @@ define([
     "pat-forward",
     "pat-fullcalendar",
     "pat-gallery",
+    "pat-image-crop",
     "pat-inject",
     "pat-input-change-events",
-    "pat-image-crop",
     "pat-legend",
-    "less",
     "pat-markdown",
     "pat-menu",
     "pat-modal",
-    "modernizr",
     "pat-navigation",
     "pat-notification",
-    "pat-colour-picket",
     "pat-placeholder",
-    "prefixfree",
+    "pat-registry",
     "pat-selectbox",
     "pat-slides",
     "pat-slideshow-builder",
@@ -54,10 +54,9 @@ define([
     "pat-switch",
     "pat-toggle",
     "pat-tooltip",
-    "pat-validate",
-    "pat-zoom",
     "pat-url",
-    "pat-calendar"
+    "pat-validate",
+    "pat-zoom"
 ], function($, registry) {
     // Since we are in a non-AMD env, register a few useful utilites
     $(function () {
