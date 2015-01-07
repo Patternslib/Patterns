@@ -1,8 +1,14 @@
 config = {
     baseUrl: '/src',
     paths: {
+        "Markdown.Converter":       "legacy/Markdown.Converter",
+        "Markdown.Extra":           "legacy/Markdown.Extra",
+        "Markdown.Sanitizer":       "legacy/Markdown.Sanitizer",
+        "doc-ready":                "bower_components/doc-ready",
         "eventEmitter":             "bower_components/eventEmitter",
         "eventie":                  "bower_components/eventie",
+        "get-size":                 "bower_components/get-size",
+        "get-style-property":       "bower_components/get-style-property",
         "imagesloaded":             "bower_components/imagesloaded/imagesloaded",
         "jcrop":                    "bower_components/jcrop/js/jquery.Jcrop",
         "jquery":                   "bower_components/jquery/jquery",
@@ -16,10 +22,10 @@ config = {
         "klass":                    "bower_components/klass/src/klass",
         "less":                     "bower_components/less.js/dist/less-1.6.2",
         "logging":                  "bower_components/logging/src/logging",
-        "Markdown.Converter":       "legacy/Markdown.Converter",
-        "Markdown.Extra":           "legacy/Markdown.Extra",
-        "Markdown.Sanitizer":       "legacy/Markdown.Sanitizer",
+        "masonry":                  "bower_components/masonry/masonry",
+        "matches-selector":         "bower_components/matches-selector",
         "modernizr":                "bower_components/modernizr/modernizr",
+        "outlayer":                 "bower_components/outlayer",
         "parsley":                  "bower_components/parsleyjs/parsley",
         "parsley.extend":           "bower_components/parsleyjs/parsley.extend",
         "patternslib.slides":       "bower_components/slides/src/slides",
@@ -28,6 +34,7 @@ config = {
         "select2":                  "bower_components/select2/select2.min",
         "spectrum":                 "bower_components/spectrum/spectrum",
         "tinymce":                  "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
+
         // Core
         "pat-utils": "core/utils",
         "pat-compat": "core/compat",
@@ -42,6 +49,7 @@ config = {
         "pat-depends_parse": "lib/depends_parse",
         "pat-dependshandler": "lib/dependshandler",
         "pat-input-change-events": "lib/input-change-events",
+
         // Patterns
         "patterns": "patterns",
         "pat-ajax": "pat/ajax",
@@ -70,6 +78,7 @@ config = {
         "pat-inject": "pat/inject",
         "pat-legend": "pat/legend",
         "pat-markdown": "pat/markdown",
+        "pat-masonry": "pat/masonry",
         "pat-menu": "pat/menu",
         "pat-modal": "pat/modal",
         "pat-navigation": "pat/navigation",
