@@ -25,6 +25,9 @@ config = {
         "jquery.textchange": "bower_components/jquery-textchange/jquery.textchange",
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "spectrum": "bower_components/spectrum/spectrum",
+        "imagesloaded": "bower_components/imagesloaded/imagesloaded",
+        "eventEmitter": "bower_components/eventEmitter",
+        "eventie": "bower_components/eventie",
         // Core
         "pat-utils": "core/utils",
         "pat-compat": "core/compat",
