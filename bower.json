@@ -28,6 +28,7 @@
     "jquery.tinymce": "",
     "moment": "",
     "moment-timezone": "",
-    "imagesloaded": "~3.1.8"
+    "imagesloaded": "~3.1.8",
+    "masonry": "~3.2.2"
   }
 }
