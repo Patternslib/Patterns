@@ -8,6 +8,7 @@
  */
 define([
     "jquery",
+    "pat-registry",
     "less",
     "modernizr",
     "prefixfree",
@@ -43,8 +44,8 @@ define([
     "pat-modal",
     "pat-navigation",
     "pat-notification",
+    "pat-masonry",
     "pat-placeholder",
-    "pat-registry",
     "pat-selectbox",
     "pat-slides",
     "pat-slideshow-builder",
