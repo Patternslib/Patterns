@@ -1,11 +1,12 @@
 /**
- * Patternslib pattern for Masonry 
+ * Patternslib pattern for Masonry
  * Copyright 2015 Syslab.com GmBH
  */
 
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
+    if (typeof define === "function" && define.amd) {
         define([
+            "jquery",
             "pat-registry",
             "pat-parser",
             "masonry",
@@ -14,9 +15,9 @@
                 return factory.apply(this, arguments);
         });
     } else {
-        factory(root.patterns, root.patterns.Parser, root.Masonry, root.imagesLoaded);
+        factory(root.$, root.patterns, root.patterns.Parser, root.Masonry, root.imagesLoaded);
     }
-}(this, function(registry, Parser, Masonry, imagesLoaded) {
+}(this, function($, registry, Parser, Masonry, imagesLoaded) {
     "use strict";
     var parser = new Parser("masonry");
     parser.add_argument("column-width");
@@ -42,13 +43,13 @@
                     containerStyle:         options.containerStyle,
                     gutter:                 this.getTypeCastedValue(options.gutter),
                     hiddenStyle:            options.hiddenStyle,
-                    isFitWidth:             options.is['fit-width'],
-                    isOriginTOp:            options.is['origin-top'],
-                    isOriginLeft:           options.is['origin-left'],
+                    isFitWidth:             options.is["fit-width"],
+                    isOriginTOp:            options.is["origin-top"],
+                    isOriginLeft:           options.is["origin-left"],
                     itemSelector:           options.itemSelector,
                     stamp:                  options.stamp,
                     transitionDuration:     options.transitionDuration,
-                    visibleStyle:           options.visibleStyle,
+                    visibleStyle:           options.visibleStyle
                 });
             }, this));
         },
