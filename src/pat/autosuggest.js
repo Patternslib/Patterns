@@ -104,8 +104,8 @@ define([
                 try {
                    data = $.parseJSON(cfg.data);
                     for (d in data) {
-                        if (typeof data === "object") {
-                            ids.push(data[d].id);
+                        if (typeof d === "object") {
+                            ids.push(d.id);
                         } else {
                             ids.push(data[d]);
                         }
