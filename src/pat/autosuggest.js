@@ -12,6 +12,7 @@ define([
     "pat-registry",
     "select2"
 ], function($, logger, Parser, registry) {
+    "use strict";
     var log = logger.getLogger("calendar");
     var parser = new Parser("autosuggest");
     parser.add_argument("words", "");
@@ -50,7 +51,7 @@ define([
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
                 }
             } else {
-                words = cfg.words.split(/\s*,\s*/);
+                words = cfg.words ? cfg.words.split(/\s*,\s*/) : [];
             }
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
@@ -92,14 +93,34 @@ define([
             }
 
             if (cfg.data.length) {
+                /* We support two types of JSON data for preFill data:
+                 *   {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}
+                 * or
+                 *   {
+                 *    {"id": "john-snow", "text": "John Snow"},
+                 *    {"id": "tywin-lannister", "text":"Tywin Lannister"}
+                 *   }
+                 */
                 try {
                    data = $.parseJSON(cfg.data);
                     for (d in data) {
-                        ids.push(data[d].id);
+                        if (typeof data === "object") {
+                            ids.push(data[d].id);
+                        } else {
+                            ids.push(data[d]);
+                        }
                     }
                     $el.val(ids);
                     config.initSelection = function (element, callback) {
-                        callback(data);
+                        var d, _data = [];
+                        for (d in data) {
+                            if (typeof d === "object") {
+                                _data.push(d);
+                            } else {
+                                _data.push({id: data[d], text: data[d]});
+                            }
+                        }
+                        callback(_data);
                     };
                 } catch(SyntaxError) {
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
