@@ -14,7 +14,7 @@
         "jshint": "~0.9.1",
         "pegjs": "0.7.0",
         "phantom-jasmine": "0.1.8",
-        "phantomjs": "1.9.7-1",
+        "phantomjs": "^1.9.12",
         "requirejs": ""
     },
     "homepage": "https://gitub.com/Patternslib/Patterns",
