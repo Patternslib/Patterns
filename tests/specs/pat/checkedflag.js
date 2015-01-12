@@ -101,7 +101,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label class=\"unchecked\"><input type=\"radio\" name=\"foo\" checked=\"checked\"/></label>",
                     "</fieldset>"].join("\n"));
                 var input = $("#lab input")[0];
-                pattern._onChangeCheckbox.apply(input, []);
+                pattern._onChangeRadio.apply(input, []);
                 expect($("#lab label").hasClass("checked")).toBe(true);
                 expect($("#lab fieldset").hasClass("checked")).toBe(true);
                 expect($("#lab .unchecked").length).toBe(0);
@@ -113,7 +113,7 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label class=\"checked\"><input type=\"radio\" name=\"foo\"/></label>",
                     "</fieldset>"].join("\n"));
                 var input = $("#lab input")[0];
-                pattern._onChangeCheckbox.apply(input, []);
+                pattern._onChangeRadio.apply(input, []);
                 expect($("#lab label").hasClass("unchecked")).toBe(true);
                 expect($("#lab fieldset").hasClass("unchecked")).toBe(true);
                 expect($("#lab .checked").length).toBe(0);
@@ -125,12 +125,108 @@ define(["pat-checkedflag"], function(pattern) {
                     "  <label><input type=\"radio\" name=\"foo\"/></label>",
                     "  <label><input type=\"radio\" name=\"bar\" checked=\"checked\"/></label>",
                     "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
                 var input = $("#lab input:checked")[0];
-                pattern._onChangeCheckbox.apply(input, []);
+                pattern._onChangeRadio.apply(input, []);
                 expect($("#lab fieldset").attr("class")).toBe("checked");
+                expect($("#lab label").eq(0).attr("class")).toBe("unchecked");
                 expect($("#lab label").eq(1).attr("class")).toBe("checked");
             });
-        });
+
+            it("Fieldset with both checked and unchecked items in reverse order", function() {
+                $("#lab").html([
+                    "<fieldset>",
+                    "  <label><input type=\"radio\" name=\"foo\" checked=\"checked\"/></label>",
+                    "  <label><input type=\"radio\" name=\"bar\"/></label>",
+                    "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
+                var input = $("#lab input:checked")[0];
+                pattern._onChangeRadio.apply(input, []);
+                expect($("#lab fieldset").attr("class")).toBe("checked");
+                expect($("#lab label").eq(0).attr("class")).toBe("checked");
+                expect($("#lab label").eq(1).attr("class")).toBe("unchecked");
+            });
+
+            it("Fieldset with two unchecked items", function() {
+                $("#lab").html([
+                    "<fieldset>",
+                    "  <label><input type=\"radio\" name=\"foo\"/></label>",
+                    "  <label><input type=\"radio\" name=\"bar\"/></label>",
+                    "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
+                var input = $("#lab input")[0];
+                pattern._onChangeRadio.apply(input, []);
+                expect($("#lab fieldset").attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(0).attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(1).attr("class")).toBe("unchecked");
+                expect($("#lab .checked").length).toBe(0);
+            });
+
+            it("Fieldset with two unchecked items and one checked item", function() {
+                $("#lab").html([
+                    "<fieldset>",
+                    "  <label><input type=\"radio\" name=\"foo\"/></label>",
+                    "  <label><input type=\"radio\" name=\"bar\"/></label>",
+                    "  <label><input type=\"radio\" name=\"baz\" checked=\"checked\"/></label>",
+                    "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
+                var input = $("#lab input:checked")[0];
+                pattern._onChangeRadio.apply(input, []);
+                expect($("#lab fieldset").attr("class")).toBe("checked");
+                expect($("#lab label").eq(0).attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(1).attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(2).attr("class")).toBe("checked");
+            });
+
+            it("Fieldset with one unchecked item, one checked item, and another unchecked item", function() {
+                $("#lab").html([
+                    "<fieldset>",
+                    "  <label><input type=\"radio\" name=\"foo\"/></label>",
+                    "  <label><input type=\"radio\" name=\"bar\" checked=\"checked\"/></label>",
+                    "  <label><input type=\"radio\" name=\"baz\"/></label>",
+                    "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
+                var input = $("#lab input:checked")[0];
+                pattern._onChangeRadio.apply(input, []);
+                expect($("#lab fieldset").attr("class")).toBe("checked");
+                expect($("#lab label").eq(0).attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(1).attr("class")).toBe("checked");
+                expect($("#lab label").eq(2).attr("class")).toBe("unchecked");
+            });
+
+            it("Fieldset with one checked item and two unchecked items", function() {
+                $("#lab").html([
+                    "<fieldset>",
+                    "  <label><input type=\"radio\" name=\"foo\" checked=\"checked\"/></label>",
+                    "  <label><input type=\"radio\" name=\"bar\"/></label>",
+                    "  <label><input type=\"radio\" name=\"baz\"/></label>",
+                    "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
+                var input = $("#lab input:checked")[0];
+                pattern._onChangeRadio.apply(input, []);
+                expect($("#lab fieldset").attr("class")).toBe("checked");
+                expect($("#lab label").eq(0).attr("class")).toBe("checked");
+                expect($("#lab label").eq(1).attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(2).attr("class")).toBe("unchecked");
+            });
+
+            it("Fieldset with three unchecked items", function() {
+                $("#lab").html([
+                    "<fieldset>",
+                    "  <label><input type=\"radio\" name=\"foo\"/></label>",
+                    "  <label><input type=\"radio\" name=\"bar\"/></label>",
+                    "  <label><input type=\"radio\" name=\"baz\"/></label>",
+                    "</fieldset>"].join("\n"));
+                pattern.init($("#lab input"));
+                var input = $("#lab input")[0];
+                pattern._onChangeRadio.apply(input, []);
+                expect($("#lab fieldset").attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(0).attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(1).attr("class")).toBe("unchecked");
+                expect($("#lab label").eq(2).attr("class")).toBe("unchecked");
+                expect($("#lab .checked").length).toBe(0);
+            });
+         });
 
         describe("onChange select", function() {
             it("Select with label", function() {
