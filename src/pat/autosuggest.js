@@ -43,16 +43,22 @@ define([
             }
             var data, ids = [], d, words;
             var cfg = parser.parse($el, opts);
-
             if (cfg.wordsJson && cfg.wordsJson.length) {
                 try {
                     words = $.parseJSON(cfg.wordsJson);
                 } catch(SyntaxError) {
+                    words = [];
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+                }
+                if (! Array.isArray(words)) {
+                    words = $.map(words, function (v, k) {
+                        var x = {}; x[k] = v; return x;
+                    });
                 }
             } else {
                 words = cfg.words ? cfg.words.split(/\s*,\s*/) : [];
             }
+
             var config = {
                 placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
                 tags: words,
