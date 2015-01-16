@@ -51,9 +51,7 @@ define([
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
                 }
                 if (! Array.isArray(words)) {
-                    words = $.map(words, function (v, k) {
-                        var x = {}; x[k] = v; return x;
-                    });
+                    words = $.map(words, function (v, k) { return {id: k, text: v}; });
                 }
             } else {
                 words = cfg.words ? cfg.words.split(/\s*,\s*/) : [];
