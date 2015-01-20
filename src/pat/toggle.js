@@ -174,6 +174,7 @@ define([
 
         _onClick: function toggle_onClick(event) {
             var options = event.data,
+                updated = false,
                 option, victims, toggler, next_state, j;
 
             for (var i=0; i<options.length; i++) {
@@ -187,6 +188,10 @@ define([
                     toggler.set(victims[j], next_state);
                 if (option.value_storage)
                     option.value_storage.set(next_state);
+                updated = true;
+            }
+            if (updated) {
+                $(this).trigger("pat-update", {pattern: "toggle"});
             }
             event.preventDefault();
         },
