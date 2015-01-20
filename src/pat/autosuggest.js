@@ -36,41 +36,25 @@ define([
 
     var _ = {
         name: "autosuggest",
-        trigger: "input.pat-autosuggest",
+        trigger: ".pat-autosuggest",
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });
             }
-            var data, ids = [], d, words;
-            var cfg = parser.parse($el, opts);
-            if (cfg.wordsJson && cfg.wordsJson.length) {
-                try {
-                    words = $.parseJSON(cfg.wordsJson);
-                } catch(SyntaxError) {
-                    words = [];
-                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
-                }
-                if (! Array.isArray(words)) {
-                    words = $.map(words, function (v, k) { return {id: k, text: v}; });
-                }
-            } else {
-                words = cfg.words ? cfg.words.split(/\s*,\s*/) : [];
-            }
-
+            var pat_config = parser.parse($el, opts);
             var config = {
-                placeholder: $el.attr("readonly") ? "" : cfg.placeholder,
-                tags: words,
+                placeholder: $el.attr("readonly") ? "" : pat_config.placeholder,
                 tokenSeparators: [","],
                 openOnEnter: false,
-                maximumSelectionSize: cfg.maximumSelectionSize
+                maximumSelectionSize: pat_config.maximumSelectionSize
             };
 
-            if (cfg.selectionClasses) {
+            if (pat_config.selectionClasses) {
                 // We need to customize the formatting/markup of the selection
                 config.formatSelection = function(obj, container) {
                     var selectionClasses = null;
                     try {
-                        selectionClasses = $.parseJSON(cfg.selectionClasses)[obj.text];
+                        selectionClasses = $.parseJSON(pat_config.selectionClasses)[obj.text];
                     } catch(SyntaxError) {
                         log.error("SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)");
                     }
@@ -83,81 +67,10 @@ define([
                 };
             }
 
-            if (cfg.preFill.length) {
-                var prefill = cfg.preFill.split(",");
-                $el.val(prefill);
-                config.initSelection = function (element, callback) {
-                    var i, data = [],
-                        values = element.val().split(",");
-                    for (i=0; i<values.length; i++) {
-                        data.push({id: values[i], text: values[i]});
-                    }
-                    callback(data);
-                };
+            if ($el[0].tagName === "INPUT") {
+                this.configureInput($el, pat_config, config);
             }
-
-            if (cfg.data.length) {
-                /* We support two types of JSON data for preFill data:
-                 *   {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}
-                 * or
-                 *   {
-                 *    {"id": "john-snow", "text": "John Snow"},
-                 *    {"id": "tywin-lannister", "text":"Tywin Lannister"}
-                 *   }
-                 */
-                try {
-                   data = $.parseJSON(cfg.data);
-                    for (d in data) {
-                        if (typeof d === "object") {
-                            ids.push(d.id);
-                        } else {
-                            ids.push(data[d]);
-                        }
-                    }
-                    $el.val(ids);
-                    config.initSelection = function (element, callback) {
-                        var d, _data = [];
-                        for (d in data) {
-                            if (typeof d === "object") {
-                                _data.push(d);
-                            } else {
-                                _data.push({id: data[d], text: data[d]});
-                            }
-                        }
-                        callback(_data);
-                    };
-                } catch(SyntaxError) {
-                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
-                }
-            }
-
-            if ((cfg.ajax) && (cfg.ajax.url)) {
-                config = $.extend(true, {
-                    minimumInputLength: 2,
-                    ajax: {
-                        url: cfg.ajax.url,
-                        dataType: cfg.ajax["data-type"],
-                        type: "POST",
-                        quietMillis: 400,
-                        data: function (term, page) {
-                            return {
-                                index: cfg.ajax["search-index"],
-                                q: term, // search term
-                                page_limit: 10,
-                                page: page
-                            };
-                        },
-                        results: function (data, page) {
-                            // parse the results into the format expected by Select2.
-                            // data must be a list of objects with keys "id" and "text"
-                            return {results: data, page: page};
-                        }
-                    }
-                }, config);
-            }
-
             $el.select2(config);
-
             $el.on("pat-update", function (e, data) {
                 if (data.pattern === "depends") {
                     if (data.enabled === true) {
@@ -180,10 +93,104 @@ define([
             });
             return $el;
         },
+
+        configureInput: function ($el, pat_config, select2_config) {
+            var d, data, words, ids = [], prefill;
+
+            if (pat_config.wordsJson && pat_config.wordsJson.length) {
+                try {
+                    words = $.parseJSON(pat_config.wordsJson);
+                } catch(SyntaxError) {
+                    words = [];
+                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+                }
+                if (! Array.isArray(words)) {
+                    words = $.map(words, function (v, k) { return {id: k, text: v}; });
+                }
+            } else {
+                words = pat_config.words ? pat_config.words.split(/\s*,\s*/) : [];
+            }
+            select2_config.tags = words;
+
+            if (pat_config.preFill && pat_config.preFill.length) {
+                prefill = pat_config.preFill.split(",");
+                $el.val(prefill);
+                select2_config.initSelection = function (element, callback) {
+                    var i, data = [],
+                    values = element.val().split(",");
+                    for (i=0; i<values.length; i++) {
+                        data.push({id: values[i], text: values[i]});
+                    }
+                    callback(data);
+                };
+            }
+
+            if (pat_config.data.length) {
+                /* We support two types of JSON data for preFill data:
+                 *   {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}
+                 * or
+                 *   {
+                 *    {"id": "john-snow", "text": "John Snow"},
+                 *    {"id": "tywin-lannister", "text":"Tywin Lannister"}
+                 *   }
+                 */
+                try {
+                    data = $.parseJSON(pat_config.data);
+                    for (d in data) {
+                        if (typeof d === "object") {
+                            ids.push(d.id);
+                        } else {
+                            ids.push(data[d]);
+                        }
+                    }
+                    $el.val(ids);
+                    select2_config.initSelection = function (element, callback) {
+                        var d, _data = [];
+                        for (d in data) {
+                            if (typeof d === "object") {
+                                _data.push(d);
+                            } else {
+                                _data.push({id: data[d], text: data[d]});
+                            }
+                        }
+                        callback(_data);
+                    };
+                } catch(SyntaxError) {
+                    log.error("SyntaxError: non-JSON data given to pat-autosuggest");
+                }
+            }
+
+            if ((pat_config.ajax) && (pat_config.ajax.url)) {
+                select2_config = $.extend(true, {
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: pat_config.ajax.url,
+                        dataType: pat_config.ajax["data-type"],
+                        type: "POST",
+                        quietMillis: 400,
+                        data: function (term, page) {
+                            return {
+                                index: pat_config.ajax["search-index"],
+                                q: term, // search term
+                                page_limit: 10,
+                                page: page
+                            };
+                        },
+                        results: function (data, page) {
+                            // parse the results into the format expected by Select2.
+                            // data must be a list of objects with keys "id" and "text"
+                            return {results: data, page: page};
+                        }
+                    }
+                }, select2_config);
+            }
+        },
+
         destroy: function($el) {
             $el.off(".pat-autosuggest");
             $el.select2("destroy");
         },
+
         transform: function($content) {
             $content.findInclusive("input[type=text].pat-autosuggest").each(function() {
                 var $src = $(this),
