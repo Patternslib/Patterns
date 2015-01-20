@@ -77,10 +77,14 @@ define([
 
             $(window).on("resize.pat-modal-position",
                 utils.debounce(modal.setPosition.bind(modal, $el, cfg), 400));
+
             $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
             $(document).on("patterns-injected.pat-modal-position", "#pat-modal,div.pat-modal",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
+            // XXX: Should this check be more strict?
+            $(document).on("pat-update.pat-modal-position", "#pat-modal,div.pat-modal",
+                utils.debounce(modal.setPosition.bind(modal, $el), 50));
         },
 
         _onPossibleOutsideClick: function($el, ev) {
