@@ -73,14 +73,11 @@ define([
                 }
                 pattern = registry.patterns[name];
                 if (pattern.transform) {
-                    if (dont_catch) {
+                    try {
                         pattern.transform($content);
-                    } else {
-                        try {
-                            pattern.transform($content);
-                        } catch (e) {
-                            log.error("Transform error for pattern" + name, e);
-                        }
+                    } catch (e) {
+                        if (dont_catch) { throw(e); }
+                        log.error("Transform error for pattern" + name, e);
                     }
                 }
                 if (pattern.trigger) {
@@ -102,16 +99,12 @@ define([
                         plog = logger.getLogger("pat." + name);
                         if ($el.is(pattern.trigger)) {
                             plog.debug("Initialising:", $el);
-                            if (dont_catch) {
+                            try {
                                 pattern.init($el, null, trigger);
                                 plog.debug("done.");
-                            } else {
-                                try {
-                                    pattern.init($el, null, trigger);
-                                    plog.debug("done.");
-                                } catch (e) {
-                                    plog.error("Caught error:", e);
-                                }
+                            } catch (e) {
+                                if (dont_catch) { throw(e); }
+                                plog.error("Caught error:", e);
                             }
                         }
                     }
