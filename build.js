@@ -38,6 +38,12 @@
         "select2": "bower_components/select2/select2.min",
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "spectrum": "bower_components/spectrum/spectrum",
+        "masonry": "bower_components/masonry/masonry",
+        "outlayer": "bower_components/outlayer",
+        "doc-ready": "bower_components/doc-ready",
+        "get-size": "bower_components/get-size",
+        "get-style-property": "bower_components/get-style-property",
+        "matches-selector": "bower_components/matches-selector",
 
         // Core
         "pat-utils": "core/utils",
@@ -83,6 +89,7 @@
         "pat-inject": "pat/inject",
         "pat-legend": "pat/legend",
         "pat-markdown": "pat/markdown",
+        "pat-masonry": "pat/masonry",
         "pat-menu": "pat/menu",
         "pat-modal": "pat/modal",
         "pat-navigation": "pat/navigation",
