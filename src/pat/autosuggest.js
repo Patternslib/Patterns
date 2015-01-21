@@ -68,7 +68,7 @@ define([
             }
 
             if ($el[0].tagName === "INPUT") {
-                this.configureInput($el, pat_config, config);
+                config = this.configureInput($el, pat_config, config);
             }
             $el.select2(config);
             $el.on("pat-update", function (e, data) {
@@ -184,6 +184,7 @@ define([
                     }
                 }, select2_config);
             }
+            return select2_config;
         },
 
         destroy: function($el) {
