@@ -57,13 +57,12 @@ define([
             });
         },
 
-        scan: function registry_scan(content, patterns, trigger, do_not_catch_init_exception) {
+        scan: function registry_scan(content, patterns, trigger) {
             var $content = $(content),
                 all = [], allsel,
                 pattern, $match, plog;
 
-            // If no list of patterns was specified, we scan for all
-            // patterns
+            // If no list of patterns was specified, we scan for all patterns
             patterns = patterns || Object.keys(registry.patterns);
 
             // selector for all patterns
@@ -74,7 +73,7 @@ define([
                 }
                 pattern = registry.patterns[name];
                 if (pattern.transform) {
-                    if (do_not_catch_init_exception || dont_catch) {
+                    if (dont_catch) {
                         pattern.transform($content);
                     } else {
                         try {
@@ -88,21 +87,13 @@ define([
                     all.push(pattern.trigger);
                 }
             });
-            allsel = all.join(",");
-
             // Find all elements that belong to any pattern.
+            allsel = all.join(",");
             $match = $content.findInclusive(allsel);
             $match = $match.filter(function() { return $(this).parents('pre').length === 0; });
             $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.
-            //
-            // XXX: If patterns would only trigger via classes, we
-            // could iterate over an element classes and trigger
-            // patterns in order.
-            //
-            // Advantages: Order of pattern initialization controled
-            // via order of pat-classes and more efficient.
             $match.toArray().reduceRight(function registry_pattern_init(acc, el) {
                 var $el = $(el);
                 for (var name in registry.patterns) {
@@ -111,7 +102,7 @@ define([
                         plog = logger.getLogger("pat." + name);
                         if ($el.is(pattern.trigger)) {
                             plog.debug("Initialising:", $el);
-                            if (do_not_catch_init_exception || dont_catch) {
+                            if (dont_catch) {
                                 pattern.init($el, null, trigger);
                                 plog.debug("done.");
                             } else {
