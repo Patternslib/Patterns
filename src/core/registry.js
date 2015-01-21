@@ -57,10 +57,79 @@ define([
             });
         },
 
+        // FIXME: from mockup
+        getOptions: function($el, patternName, options) {
+            options = options || {};
+            // get options from parent element first, stop if element tag name is 'body'
+            if ($el.length !== 0 && !$.nodeName($el[0], 'body')) {
+                options = registry.getOptions($el.parent(), patternName, options);
+            }
+            // collect all options from element
+            var elOptions = {};
+            if ($el.length !== 0) {
+                elOptions = $el.data('pat-' + patternName);
+                if (elOptions) {
+                    // parse options if string
+                    if (typeof(elOptions) === 'string') {
+                        var tmpOptions = {};
+                        $.each(elOptions.split(';'), function(i, item) {
+                            item = item.split(':');
+                            item.reverse();
+                            var key = item.pop();
+                            key = key.replace(/^\s+|\s+$/g, '');  // trim
+                            item.reverse();
+                            var value = item.join(':');
+                            value = value.replace(/^\s+|\s+$/g, '');  // trim
+                            tmpOptions[key] = value;
+                        });
+                        elOptions = tmpOptions;
+                    }
+                }
+            }
+            return $.extend(true, {}, options, elOptions);
+        },
+
+        initMockup: function($el, name, options) {
+            var plog = logger.getLogger("pat." + name);
+            var pattern = $el.data('pattern-' + name);
+            if (pattern === undefined && registry.patterns[name]) {
+                try {
+                    pattern = new registry.patterns[name]($el, registry.getOptions($el, name, options));
+                } catch (e) {
+                    if (dont_catch) { throw(e); }
+                    plog.error('Failed while initializing "' + name + '" pattern.');
+                }
+                $el.data('pattern-' + name, pattern);
+            }
+            return pattern;
+        },
+
+        isMockupPattern: function(pattern) {
+            if (typeof pattern.prototype !== "undefined") {
+                return pattern.prototype.is_mockup_pattern;
+            } else {
+                return false;
+            }
+        },
+
+        initPattern: function registry_initPattern($el, pattern, name, trigger) {
+            var plog = logger.getLogger("pat." + name);
+            plog.debug("Initialising:", $el);
+            if (registry.isMockupPattern(pattern)) {
+                registry.initMockup($el, name);
+            } else if (pattern.init) {
+                try {
+                    pattern.init($el, null, trigger);
+                } catch (e) {
+                    if (dont_catch) { throw(e); }
+                    plog.error("Caught error:", e);
+                }
+                plog.debug("done.");
+            }
+        },
+
         scan: function registry_scan(content, patterns, trigger) {
-            var $content = $(content),
-                all = [], allsel,
-                pattern, $match, plog;
+            var $content = $(content), all = [], allsel, $match;
 
             // If no list of patterns was specified, we scan for all patterns
             patterns = patterns || Object.keys(registry.patterns);
@@ -71,7 +140,7 @@ define([
                     log.debug('Skipping disabled pattern:', name);
                     return;
                 }
-                pattern = registry.patterns[name];
+                var pattern = registry.patterns[name];
                 if (pattern.transform) {
                     try {
                         pattern.transform($content);
@@ -80,7 +149,9 @@ define([
                         log.error("Transform error for pattern" + name, e);
                     }
                 }
-                if (pattern.trigger) {
+                if (registry.isMockupPattern(pattern) && !pattern.trigger) {
+                    all.push(pattern.prototype.trigger);
+                } else {
                     all.push(pattern.trigger);
                 }
             });
@@ -92,64 +163,68 @@ define([
 
             // walk list backwards and initialize patterns inside-out.
             $match.toArray().reduceRight(function registry_pattern_init(acc, el) {
-                var $el = $(el);
+                var trigger;
+                var pattern, $el = $(el);
                 for (var name in registry.patterns) {
                     pattern = registry.patterns[name];
-                    if (pattern.init) {
-                        plog = logger.getLogger("pat." + name);
-                        if ($el.is(pattern.trigger)) {
-                            plog.debug("Initialising:", $el);
-                            try {
-                                pattern.init($el, null, trigger);
-                                plog.debug("done.");
-                            } catch (e) {
-                                if (dont_catch) { throw(e); }
-                                plog.error("Caught error:", e);
-                            }
-                        }
+                    if (registry.isMockupPattern(pattern)) {
+                        trigger = pattern.prototype.trigger;
+                    } else {
+                        trigger = pattern.trigger;
+                    }
+                    if ($el.is(trigger)) {
+                        registry.initPattern($el, pattern, name, trigger);
                     }
                 }
             }, null);
         },
 
-        // XXX: differentiate between internal and custom patterns
-        // _register vs register
         register: function registry_register(pattern) {
-            if (!pattern.name) {
-                log.error("Pattern lacks name:", pattern);
+            var mockup = registry.isMockupPattern(pattern);
+            var name = mockup ? pattern.prototype.name : pattern.name;
+            if (!name) {
+                log.error("Pattern lacks a name:", pattern);
                 return false;
             }
-            if (registry.patterns[pattern.name]) {
+            if (registry.patterns[name]) {
                 log.error("Already have a pattern called: " + pattern.name);
                 return false;
             }
-
             // register pattern to be used for scanning new content
-            registry.patterns[pattern.name] = pattern;
+            registry.patterns[name] = pattern;
 
-            // register pattern as jquery plugin
-            if (pattern.jquery_plugin) {
-                var pluginName = ("pat-" + pattern.name)
-                        .replace(/-([a-zA-Z])/g, function(match, p1) {
-                            return p1.toUpperCase();
-                        });
-                $.fn[pluginName] = jquery_plugin(pattern);
-                // BBB 2012-12-10
-                $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
+            if (mockup) {
+                // automatically create jquery plugin from pattern
+                if (pattern.prototype.jqueryPlugin === undefined) {
+                    // FIXME: make jquery name similar to Patternslib
+                    pattern.prototype.jqueryPlugin = 'pattern' + name.charAt(0).toUpperCase() + name.slice(1);
+                }
+                $.fn[pattern.prototype.jqueryPlugin] = utils.mockup_jquery_plugin;
+            } else {
+                // register pattern as jquery plugin
+                if (pattern.jquery_plugin) {
+                    var pluginName = ("pat-" + name)
+                            .replace(/-([a-zA-Z])/g, function(match, p1) {
+                                return p1.toUpperCase();
+                            });
+                    $.fn[pluginName] = jquery_plugin(pattern);
+                    // BBB 2012-12-10
+                    $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
+                }
             }
-            log.debug("Registered pattern:", pattern.name, pattern);
+            log.debug("Registered pattern:", name, pattern);
             if (registry.initialized) {
-                registry.scan(document.body, [pattern.name], undefined, false);
+                registry.scan(document.body, [name]);
             }
             return true;
         }
     };
 
     $(document).on("patterns-injected.patterns",
-            function registry_onInject(ev, inject_config, inject_trigger) {
-                registry.scan(ev.target, null, {type: "injection", element: inject_trigger});
-                $(ev.target).trigger("patterns-injected-scanned");
-            });
+        function registry_onInject(ev, inject_config, inject_trigger) {
+            registry.scan(ev.target, null, {type: "injection", element: inject_trigger});
+            $(ev.target).trigger("patterns-injected-scanned");
+        });
 
     return registry;
 });
