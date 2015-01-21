@@ -57,6 +57,30 @@ define(["pat-autosuggest"], function(pattern) {
             });
         });
 
+        describe("An <input> element with an ajax option", function () {
+            beforeEach(function() {
+                $("div#lab").remove(); // Looks likes some specs don't clean up after themselves.
+                $("<div/>", {id: "lab"}).appendTo(document.body);
+            });
+
+            afterEach(function() {
+                $("#lab").remove();
+            });
+
+            it("keeps the ajax option when turning into a select2 widget", function() {
+                utils.createInputElement(
+                    {
+                        data: "ajax-url: http://test.org/test"
+                    });
+                var $el = $("input.pat-autosuggest");
+                spyOn($el, "select2");
+
+                pattern.init($el);
+                expect($el.select2.mostRecentCall.args[0].ajax).toBeDefined();
+                utils.removeSelect2();
+            });
+        });
+
         describe("A <select> element", function () {
             beforeEach(function() {
                 $("div#lab").remove(); // Looks likes some specs don't clean up after themselves.
