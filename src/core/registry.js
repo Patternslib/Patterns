@@ -89,21 +89,6 @@ define([
             return $.extend(true, {}, options, elOptions);
         },
 
-        initMockup: function($el, name, options) {
-            var plog = logger.getLogger("pat." + name);
-            var pattern = $el.data('pattern-' + name);
-            if (pattern === undefined && registry.patterns[name]) {
-                try {
-                    pattern = new registry.patterns[name]($el, registry.getOptions($el, name, options));
-                } catch (e) {
-                    if (dont_catch) { throw(e); }
-                    plog.error('Failed while initializing "' + name + '" pattern.');
-                }
-                $el.data('pattern-' + name, pattern);
-            }
-            return pattern;
-        },
-
         isMockupPattern: function(pattern) {
             if (typeof pattern.prototype !== "undefined") {
                 return pattern.prototype.is_mockup_pattern;
@@ -115,9 +100,7 @@ define([
         initPattern: function registry_initPattern($el, pattern, name, trigger) {
             var plog = logger.getLogger("pat." + name);
             plog.debug("Initialising:", $el);
-            if (registry.isMockupPattern(pattern)) {
-                registry.initMockup($el, name);
-            } else if (pattern.init) {
+            if (pattern.init) {
                 try {
                     pattern.init($el, null, trigger);
                 } catch (e) {
@@ -150,6 +133,9 @@ define([
                     }
                 }
                 if (registry.isMockupPattern(pattern)) {
+                    if (typeof pattern.prototype.trigger === 'undefined') {
+                        debugger;
+                    }
                     all.push(pattern.prototype.trigger);
                 } else if (pattern.trigger) {
                     all.push(pattern.trigger);
@@ -183,11 +169,11 @@ define([
             var mockup = registry.isMockupPattern(pattern);
             var name = mockup ? pattern.prototype.name : pattern.name;
             if (!name) {
-                log.error("Pattern lacks a name:", pattern);
+                log.warn("Pattern lacks a name:", pattern);
                 return false;
             }
             if (registry.patterns[name]) {
-                log.error("Already have a pattern called: " + pattern.name);
+                log.error("Already have a pattern called: " + name);
                 return false;
             }
             // register pattern to be used for scanning new content
@@ -199,7 +185,30 @@ define([
                     // FIXME: make jquery name similar to Patternslib
                     pattern.prototype.jqueryPlugin = 'pattern' + name.charAt(0).toUpperCase() + name.slice(1);
                 }
-                $.fn[pattern.prototype.jqueryPlugin] = utils.mockup_jquery_plugin;
+                $.fn[pattern.prototype.jqueryPlugin] = function mockupJQueryPlugin(method, options) {
+                    var pattern = registry.patterns[name];
+                    var log = logger.getLogger("pat." + name);
+                    $(this).each(function() {
+                        var pat, $el = $(this);
+                        if (typeof method === 'object') {
+                            options = method;
+                            method = undefined;
+                        }
+                        pat = pattern.init($el, name, options);
+                        if (method) {
+                            if (pat[method] === undefined) {
+                                log.error('Method "' + method + '" does not exists.');
+                                return false;
+                            }
+                            if (method.charAt(0) === '_') {
+                                log.warn('Method "' + method + '" is private.');
+                                return false;
+                            }
+                            pat[method].apply(pat, [options]);
+                        }
+                    });
+                    return this;
+                };
             } else {
                 // register pattern as jquery plugin
                 if (pattern.jquery_plugin) {

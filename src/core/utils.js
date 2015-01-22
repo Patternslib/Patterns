@@ -24,33 +24,6 @@ define([
         return plugin;
     };
 
-    var mockup_jquery_plugin = function(pattern) {
-        $(this).each(function() {
-                if (typeof method === 'object') {
-                options = method;
-                method = undefined;
-            }
-            var $el = $(this),
-                pattern = Registry.init(
-                    $el,
-                    Pattern.prototype.name,
-                    options
-                );
-            if (method) {
-                if (pattern[method] === undefined) {
-                    Registry.error('Method "' + method + '" does not exists.');
-                    return false;
-                }
-                if (method.charAt(0) === '_') {
-                    Registry.warn('Method "' + method + '" is private.');
-                    return false;
-                }
-                pattern[method].apply(pattern, [options]);
-            }
-        });
-        return this;
-    };
-
     //     Underscore.js 1.3.1
     //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
     //     Underscore is freely distributable under the MIT license.
@@ -230,7 +203,6 @@ define([
     var utils = {
         // pattern pimping - own module?
         jquery_plugin: jquery_plugin,
-        mockup_jquery_plugin: mockup_jquery_plugin,
         debounce: debounce,
         escapeRegExp: escapeRegExp,
         isObject: isObject,
