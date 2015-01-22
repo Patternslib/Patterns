@@ -133,9 +133,6 @@ define([
                     }
                 }
                 if (registry.isMockupPattern(pattern)) {
-                    if (typeof pattern.prototype.trigger === 'undefined') {
-                        debugger;
-                    }
                     all.push(pattern.prototype.trigger);
                 } else if (pattern.trigger) {
                     all.push(pattern.trigger);
