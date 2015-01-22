@@ -149,9 +149,9 @@ define([
                         log.error("Transform error for pattern" + name, e);
                     }
                 }
-                if (registry.isMockupPattern(pattern) && !pattern.trigger) {
+                if (registry.isMockupPattern(pattern)) {
                     all.push(pattern.prototype.trigger);
-                } else {
+                } else if (pattern.trigger) {
                     all.push(pattern.trigger);
                 }
             });
