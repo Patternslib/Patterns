@@ -56,22 +56,10 @@ define([
             });
         },
 
-        initPattern: function registry_initPattern($el, pattern, name, trigger) {
-            var plog = logger.getLogger("pat." + name);
-            plog.debug("Initialising:", $el);
-            if (pattern.init) {
-                try {
-                    pattern.init($el, null, trigger);
-                } catch (e) {
-                    if (dont_catch) { throw(e); }
-                    plog.error("Caught error:", e);
-                }
-                plog.debug("done.");
-            }
-        },
-
         scan: function registry_scan(content, patterns, trigger) {
-            var $content = $(content), all = [], allsel, $match;
+            var $content = $(content),
+                all = [], allsel,
+                $match, plog;
 
             // If no list of patterns was specified, we scan for all patterns
             patterns = patterns || Object.keys(registry.patterns);
@@ -106,8 +94,18 @@ define([
                 var pattern, $el = $(el);
                 for (var name in registry.patterns) {
                     pattern = registry.patterns[name];
-                    if ($el.is(pattern.trigger)) {
-                        registry.initPattern($el, pattern, name, pattern.trigger);
+                    if (pattern.init) {
+                        plog = logger.getLogger("pat." + name);
+                        if ($el.is(pattern.trigger)) {
+                            plog.debug("Initialising:", $el);
+                            try {
+                                pattern.init($el, null, trigger);
+                                plog.debug("done.");
+                            } catch (e) {
+                                if (dont_catch) { throw(e); }
+                                plog.error("Caught error:", e);
+                            }
+                        }
                     }
                 }
             }, null);
@@ -117,13 +115,14 @@ define([
             var plugin_name, jquery_plugin;
             name = name || pattern.name;
             if (!name) {
-                log.warn("Pattern lacks a name:", pattern);
+                log.error("Pattern lacks a name:", pattern);
                 return false;
             }
             if (registry.patterns[name]) {
                 log.error("Already have a pattern called: " + name);
                 return false;
             }
+
             // register pattern to be used for scanning new content
             registry.patterns[name] = pattern;
 
@@ -146,10 +145,10 @@ define([
     };
 
     $(document).on("patterns-injected.patterns",
-        function registry_onInject(ev, inject_config, inject_trigger) {
-            registry.scan(ev.target, null, {type: "injection", element: inject_trigger});
-            $(ev.target).trigger("patterns-injected-scanned");
-        });
+            function registry_onInject(ev, inject_config, inject_trigger) {
+                registry.scan(ev.target, null, {type: "injection", element: inject_trigger});
+                $(ev.target).trigger("patterns-injected-scanned");
+            });
 
     return registry;
 });
