@@ -1,27 +1,75 @@
 define([
     "jquery"
 ], function($) {
-    var jquery_plugin = function(pattern) {
-        var plugin = function(method) {
-            var $this = this;
-            if ($this.length === 0)
-                return $this;
-            if (!method || typeof method === "object") {
-                pattern.init.apply(
-                    $this,
-                    [$this].concat(Array.prototype.slice.call(arguments)));
-            } else if (pattern[method]) {
-                return pattern[method].apply(
-                    $this,
-                    [$this].concat(Array.prototype.slice.call(arguments, 1))
-                );
+
+    var singleBoundJQueryPlugin = function (pattern, method, options) {
+        /* This is a jQuery plugin for patterns which are invoked ONCE FOR EACH
+         * matched element in the DOM.
+         *
+         * This is how the Mockup-type patterns behave. They are constructor
+         * functions which need to be invoked once per jQuery-wrapped DOM node
+         * for all DOM nodes on which the pattern applies.
+         */
+        var $this = this;
+        $this.each(function() {
+            var pat, $el = $(this);
+            pat = pattern.init($el, options);
+            if (method) {
+                if (pat[method] === undefined) {
+                    $.error("Method " + method +
+                            " does not exist on jQuery." + pattern.name);
+                    return false;
+                }
+                if (method.charAt(0) === '_') {
+                    $.error("Method " + method +
+                            " is private on jQuery." + pattern.name);
+                    return false;
+                }
+                pat[method].apply(pat, [options]);
+            }
+        });
+        return $this;
+    };
+
+    var pluralBoundJQueryPlugin = function (pattern, method, options) {
+        /* This is a jQuery plugin for patterns which are invoked ONCE FOR ALL
+         * matched elements in the DOM.
+         *
+         * This is how the vanilla Patternslib-type patterns behave. They are
+         * simple objects with an init method and this method gets called once
+         * with a list of jQuery-wrapped DOM nodes on which the pattern
+         * applies.
+         */
+        var $this = this;
+        if (method) {
+            if (pattern[method]) {
+                return pattern[method].apply($this, [$this].concat([options]));
             } else {
                 $.error("Method " + method +
                         " does not exist on jQuery." + pattern.name);
             }
-            return $this;
+        } else {
+            pattern.init.apply($this, [$this].concat([options]));
+        }
+        return $this;
+    };
+
+    var jqueryPlugin = function(pattern) {
+        return function(method, options) {
+            var $this = this;
+            if ($this.length === 0) {
+                return $this;
+            }
+            if (typeof method === 'object') {
+                options = method;
+                method = undefined;
+            }
+            if (typeof pattern === "function") {
+                return singleBoundJQueryPlugin.call(this, pattern, method, options);
+            } else {
+                return pluralBoundJQueryPlugin.call(this, pattern, method, options);
+            }
         };
-        return plugin;
     };
 
     //     Underscore.js 1.3.1
@@ -202,7 +250,7 @@ define([
 
     var utils = {
         // pattern pimping - own module?
-        jquery_plugin: jquery_plugin,
+        jqueryPlugin: jqueryPlugin,
         debounce: debounce,
         escapeRegExp: escapeRegExp,
         isObject: isObject,
