@@ -191,7 +191,7 @@ define([
                             options = method;
                             method = undefined;
                         }
-                        pat = pattern.init($el, name, options);
+                        pat = pattern.init($el, options);
                         if (method) {
                             if (pat[method] === undefined) {
                                 log.error('Method "' + method + '" does not exists.');
