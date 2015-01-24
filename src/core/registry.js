@@ -57,38 +57,6 @@ define([
             });
         },
 
-        // FIXME: from mockup
-        getOptions: function($el, patternName, options) {
-            options = options || {};
-            // get options from parent element first, stop if element tag name is 'body'
-            if ($el.length !== 0 && !$.nodeName($el[0], 'body')) {
-                options = registry.getOptions($el.parent(), patternName, options);
-            }
-            // collect all options from element
-            var elOptions = {};
-            if ($el.length !== 0) {
-                elOptions = $el.data('pat-' + patternName);
-                if (elOptions) {
-                    // parse options if string
-                    if (typeof(elOptions) === 'string') {
-                        var tmpOptions = {};
-                        $.each(elOptions.split(';'), function(i, item) {
-                            item = item.split(':');
-                            item.reverse();
-                            var key = item.pop();
-                            key = key.replace(/^\s+|\s+$/g, '');  // trim
-                            item.reverse();
-                            var value = item.join(':');
-                            value = value.replace(/^\s+|\s+$/g, '');  // trim
-                            tmpOptions[key] = value;
-                        });
-                        elOptions = tmpOptions;
-                    }
-                }
-            }
-            return $.extend(true, {}, options, elOptions);
-        },
-
         isMockupPattern: function(pattern) {
             if (typeof pattern.prototype !== "undefined") {
                 return pattern.prototype.is_mockup_pattern;
