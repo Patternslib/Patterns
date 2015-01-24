@@ -23,8 +23,7 @@ define([
     "pat-compat",
     "pat-jquery-ext"
 ], function($, logger, utils) {
-    var log = logger.getLogger("registry"),
-        jquery_plugin = utils.jquery_plugin;
+    var log = logger.getLogger("registry");
 
     var disable_re = /patterns-disable=([^&]+)/g,
         dont_catch_re = /patterns-dont-catch/g,
@@ -130,9 +129,10 @@ define([
             }, null);
         },
 
-        register: function registry_register(pattern) {
+        register: function registry_register(pattern, name) {
             var mockup = registry.isMockupPattern(pattern);
-            var name = mockup ? pattern.prototype.name : pattern.name;
+            var plugin_name, jquery_plugin;
+            name = name || pattern.name;
             if (!name) {
                 log.warn("Pattern lacks a name:", pattern);
                 return false;
@@ -144,47 +144,15 @@ define([
             // register pattern to be used for scanning new content
             registry.patterns[name] = pattern;
 
-            if (mockup) {
-                // automatically create jquery plugin from pattern
-                if (pattern.prototype.jqueryPlugin === undefined) {
-                    // FIXME: make jquery name similar to Patternslib
-                    pattern.prototype.jqueryPlugin = 'pattern' + name.charAt(0).toUpperCase() + name.slice(1);
-                }
-                $.fn[pattern.prototype.jqueryPlugin] = function mockupJQueryPlugin(method, options) {
-                    var pattern = registry.patterns[name];
-                    var log = logger.getLogger("pat." + name);
-                    $(this).each(function() {
-                        var pat, $el = $(this);
-                        if (typeof method === 'object') {
-                            options = method;
-                            method = undefined;
-                        }
-                        pat = pattern.init($el, options);
-                        if (method) {
-                            if (pat[method] === undefined) {
-                                log.error('Method "' + method + '" does not exists.');
-                                return false;
-                            }
-                            if (method.charAt(0) === '_') {
-                                log.warn('Method "' + method + '" is private.');
-                                return false;
-                            }
-                            pat[method].apply(pat, [options]);
-                        }
-                    });
-                    return this;
-                };
-            } else {
-                // register pattern as jquery plugin
-                if (pattern.jquery_plugin) {
-                    var pluginName = ("pat-" + name)
-                            .replace(/-([a-zA-Z])/g, function(match, p1) {
-                                return p1.toUpperCase();
-                            });
-                    $.fn[pluginName] = jquery_plugin(pattern);
-                    // BBB 2012-12-10
-                    $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
-                }
+            // register pattern as jquery plugin
+            if (pattern.jquery_plugin) {
+                plugin_name = ("pat-" + name)
+                        .replace(/-([a-zA-Z])/g, function(match, p1) {
+                            return p1.toUpperCase();
+                        });
+                $.fn[plugin_name] = utils.jqueryPlugin(pattern);
+                // BBB 2012-12-10 and also for Mockup patterns.
+                $.fn[plugin_name.replace(/^pat/, "pattern")] = utils.jqueryPlugin(pattern);
             }
             log.debug("Registered pattern:", name, pattern);
             if (registry.initialized) {
