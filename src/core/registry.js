@@ -56,14 +56,6 @@ define([
             });
         },
 
-        isMockupPattern: function(pattern) {
-            if (typeof pattern.prototype !== "undefined") {
-                return pattern.prototype.is_mockup_pattern;
-            } else {
-                return false;
-            }
-        },
-
         initPattern: function registry_initPattern($el, pattern, name, trigger) {
             var plog = logger.getLogger("pat." + name);
             plog.debug("Initialising:", $el);
@@ -99,9 +91,7 @@ define([
                         log.error("Transform error for pattern" + name, e);
                     }
                 }
-                if (registry.isMockupPattern(pattern)) {
-                    all.push(pattern.prototype.trigger);
-                } else if (pattern.trigger) {
+                if (pattern.trigger) {
                     all.push(pattern.trigger);
                 }
             });
@@ -113,24 +103,17 @@ define([
 
             // walk list backwards and initialize patterns inside-out.
             $match.toArray().reduceRight(function registry_pattern_init(acc, el) {
-                var trigger;
                 var pattern, $el = $(el);
                 for (var name in registry.patterns) {
                     pattern = registry.patterns[name];
-                    if (registry.isMockupPattern(pattern)) {
-                        trigger = pattern.prototype.trigger;
-                    } else {
-                        trigger = pattern.trigger;
-                    }
-                    if ($el.is(trigger)) {
-                        registry.initPattern($el, pattern, name, trigger);
+                    if ($el.is(pattern.trigger)) {
+                        registry.initPattern($el, pattern, name, pattern.trigger);
                     }
                 }
             }, null);
         },
 
         register: function registry_register(pattern, name) {
-            var mockup = registry.isMockupPattern(pattern);
             var plugin_name, jquery_plugin;
             name = name || pattern.name;
             if (!name) {
