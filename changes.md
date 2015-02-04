@@ -1,8 +1,15 @@
 # Changelog
  
-## 2.0.5 - Dec. 4, 2014
+## 2.0.7 - Feb. 4, 2014
 
-- #383 pat-equaliser sets the height to early
+- #381 Checked class not set on checklist 
+- Add stub module i18n.js. Provides compatibility with Mockup patterns.
+- Add support for Mockup patterns.
+- Add support for parsing JSON as pattern configuration
+- Add support for using pat-subform together with pat-modal.
+- Give pattern plugins the change to modify arguments before returning them.
+- New arg for pat-autosuggest: words-json
+- New pattern: pat-masonry
 
 ## 2.0.6 - Dec. 10, 2014
 
