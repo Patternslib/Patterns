@@ -99,7 +99,7 @@ define([
                 for (var i=0; i<options.length; i++)
                     if (options[i].value_storage) {
                         var victims, state, last_state;
-                        victims=document.querySelectorAll(options[i].selector);
+                        victims = $(options[i].selector);
                         if (!victims.length)
                             continue;
                         state=options[i].toggler.get(victims[0]);
@@ -174,11 +174,12 @@ define([
 
         _onClick: function toggle_onClick(event) {
             var options = event.data,
+                updated = false,
                 option, victims, toggler, next_state, j;
 
             for (var i=0; i<options.length; i++) {
                 option=options[i];
-                victims=document.querySelectorAll(option.selector);
+                victims = $(option.selector);
                 if (!victims.length)
                     continue;
                 toggler=option.toggler;
@@ -187,6 +188,10 @@ define([
                     toggler.set(victims[j], next_state);
                 if (option.value_storage)
                     option.value_storage.set(next_state);
+                updated = true;
+            }
+            if (updated) {
+                $(this).trigger("pat-update", {pattern: "toggle"});
             }
             event.preventDefault();
         },

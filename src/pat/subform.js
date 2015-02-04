@@ -38,29 +38,28 @@ define([
                             .filter(function() {
                                 return !$(this).is($el.find("*"));
                             });
-
             // make other controls "unsuccessful"
             log.debug("Hiding unwanted elements from submission.");
             var names = $exclude.map(function() {
-                return $(this).attr("name");
+                var name = $(this).attr("name");
+                return name ? name : 0;
             });
-
             $exclude.each(function() {
                 $(this).attr("name", "");
             });
-
-            if ($el.is(".pat-inject")) {
+            if ($el.is(".pat-inject") || $el.is(".pat-modal")) {
                 inject.submitSubform($el);
             } else {
                 // use the native handler, since there could be event handlers
                 // redirecting to inject/ajax.
                 $form[0].submit();
             }
-
             // reenable everything
             log.debug("Restoring previous state.");
             $exclude.each(function(i) {
-                $(this).attr("name", names[i]);
+                if (names[i]) {
+                    $(this).attr("name", names[i]);
+                }
             });
         },
 
@@ -79,9 +78,7 @@ define([
         submitClicked: function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-
-            // make sure the submitting button is send with the form
-            ajax.onClickSubmit(ev);
+            ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
 
             var $button = $(ev.target),
                 $sub = $button.parents(".pat-subform").first(),
@@ -91,13 +88,12 @@ define([
                 // override the default action and restore afterwards
                 if ($sub.is(".pat-inject")) {
                     var previousValue = $sub.data("pat-inject");
-                    $sub.data("pat-inject", inject.extractConfig($sub, {
-                        url: formaction
-                    }));
-
+                    $sub.data("pat-inject", inject.extractConfig($sub, {url: formaction}));
                     _.scopedSubmit($sub);
-
                     $sub.data("pat-inject", previousValue);
+                } else if ($sub.is(".pat-modal")) {
+                    $sub.data("pat-inject", [$.extend($sub.data("pat-inject")[0], {url: formaction})]);
+                    _.scopedSubmit($sub);
                 } else {
                     $sub.parents("form").attr("action", formaction);
                     _.scopedSubmit($sub);
@@ -105,7 +101,6 @@ define([
             } else {
                 _.scopedSubmit($sub);
             }
-
         }
     };
 

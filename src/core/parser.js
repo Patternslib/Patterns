@@ -22,6 +22,7 @@ define([
 
     ArgumentParser.prototype = {
         group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
+        json_param_pattern: /^\s*{/i,
         named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
         token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
@@ -70,7 +71,7 @@ define([
                     this.groups[group]=new ArgumentParser();
                     this.groups[group].add_argument(
                             first_name,
-                            spec.value, spec.cohices, spec.multiple);
+                            spec.value, spec.choices, spec.multiple);
                     delete this.possible_groups[group];
                 }
                 if (group in this.groups) {
@@ -255,21 +256,25 @@ define([
 
         _parse: function ArgumentParser_parse(parameter) {
             var opts, extended, sep;
-
-            if (!parameter)
-                return {};
-
-            if (parameter.match(this.named_param_pattern))
+            if (!parameter) { return {}; }
+            if (parameter.match(this.json_param_pattern)) {
+                try {
+                    return JSON.parse(parameter);
+                } catch (e) {
+                    this.log.warn("Invalid JSON argument found: "+parameter);
+                }
+            }
+            if (parameter.match(this.named_param_pattern)) {
                 return this._parseExtendedNotation(parameter);
-
-            sep=parameter.indexOf(";");
-            if (sep===-1)
+            }
+            sep = parameter.indexOf(";");
+            if (sep===-1) {
                 return this._parseShorthandNotation(parameter);
-
-            opts=this._parseShorthandNotation(parameter.slice(0, sep));
-            extended=this._parseExtendedNotation(parameter.slice(sep+1));
+            }
+            opts = this._parseShorthandNotation(parameter.slice(0, sep));
+            extended = this._parseExtendedNotation(parameter.slice(sep+1));
             for (var name in extended)
-                opts[name]=extended[name];
+                opts[name] = extended[name];
             return opts;
         },
 

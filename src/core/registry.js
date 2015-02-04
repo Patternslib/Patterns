@@ -23,8 +23,7 @@ define([
     "pat-compat",
     "pat-jquery-ext"
 ], function($, logger, utils) {
-    var log = logger.getLogger("registry"),
-        jquery_plugin = utils.jquery_plugin;
+    var log = logger.getLogger("registry");
 
     var disable_re = /patterns-disable=([^&]+)/g,
         dont_catch_re = /patterns-dont-catch/g,
@@ -57,13 +56,12 @@ define([
             });
         },
 
-        scan: function registry_scan(content, patterns, trigger, do_not_catch_init_exception) {
+        scan: function registry_scan(content, patterns, trigger) {
             var $content = $(content),
                 all = [], allsel,
-                pattern, $match, plog;
+                $match, plog;
 
-            // If no list of patterns was specified, we scan for all
-            // patterns
+            // If no list of patterns was specified, we scan for all patterns
             patterns = patterns || Object.keys(registry.patterns);
 
             // selector for all patterns
@@ -72,57 +70,40 @@ define([
                     log.debug('Skipping disabled pattern:', name);
                     return;
                 }
-                pattern = registry.patterns[name];
+                var pattern = registry.patterns[name];
                 if (pattern.transform) {
-                    if (do_not_catch_init_exception || dont_catch) {
+                    try {
                         pattern.transform($content);
-                    } else {
-                        try {
-                            pattern.transform($content);
-                        } catch (e) {
-                            log.error("Transform error for pattern" + name, e);
-                        }
+                    } catch (e) {
+                        if (dont_catch) { throw(e); }
+                        log.error("Transform error for pattern" + name, e);
                     }
                 }
                 if (pattern.trigger) {
                     all.push(pattern.trigger);
                 }
             });
-            allsel = all.join(",");
-
             // Find all elements that belong to any pattern.
+            allsel = all.join(",");
             $match = $content.findInclusive(allsel);
             $match = $match.filter(function() { return $(this).parents('pre').length === 0; });
             $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.
-            //
-            // XXX: If patterns would only trigger via classes, we
-            // could iterate over an element classes and trigger
-            // patterns in order.
-            //
-            // Advantages: Order of pattern initialization controled
-            // via order of pat-classes and more efficient.
             $match.toArray().reduceRight(function registry_pattern_init(acc, el) {
-                var $el = $(el);
-
+                var pattern, $el = $(el);
                 for (var name in registry.patterns) {
                     pattern = registry.patterns[name];
                     if (pattern.init) {
                         plog = logger.getLogger("pat." + name);
-
                         if ($el.is(pattern.trigger)) {
                             plog.debug("Initialising:", $el);
-                            if (do_not_catch_init_exception || dont_catch) {
+                            try {
                                 pattern.init($el, null, trigger);
                                 plog.debug("done.");
-                            } else {
-                                try {
-                                    pattern.init($el, null, trigger);
-                                    plog.debug("done.");
-                                } catch (e) {
-                                    plog.error("Caught error:", e);
-                                }
+                            } catch (e) {
+                                if (dont_catch) { throw(e); }
+                                plog.error("Caught error:", e);
                             }
                         }
                     }
@@ -130,37 +111,34 @@ define([
             }, null);
         },
 
-        // XXX: differentiate between internal and custom patterns
-        // _register vs register
-        register: function registry_register(pattern) {
-            if (!pattern.name) {
-                log.error("Pattern lacks name:", pattern);
+        register: function registry_register(pattern, name) {
+            var plugin_name, jquery_plugin;
+            name = name || pattern.name;
+            if (!name) {
+                log.error("Pattern lacks a name:", pattern);
                 return false;
             }
-
-            if (registry.patterns[pattern.name]) {
-                log.error("Already have a pattern called: " + pattern.name);
+            if (registry.patterns[name]) {
+                log.error("Already have a pattern called: " + name);
                 return false;
             }
 
             // register pattern to be used for scanning new content
-            registry.patterns[pattern.name] = pattern;
+            registry.patterns[name] = pattern;
 
             // register pattern as jquery plugin
             if (pattern.jquery_plugin) {
-                var pluginName = ("pat-" + pattern.name)
+                plugin_name = ("pat-" + name)
                         .replace(/-([a-zA-Z])/g, function(match, p1) {
                             return p1.toUpperCase();
                         });
-                $.fn[pluginName] = jquery_plugin(pattern);
-                // BBB 2012-12-10
-                $.fn[pluginName.replace(/^pat/, "pattern")] = jquery_plugin(pattern);
+                $.fn[plugin_name] = utils.jqueryPlugin(pattern);
+                // BBB 2012-12-10 and also for Mockup patterns.
+                $.fn[plugin_name.replace(/^pat/, "pattern")] = utils.jqueryPlugin(pattern);
             }
-
-            log.debug("Registered pattern:", pattern.name, pattern);
-
+            log.debug("Registered pattern:", name, pattern);
             if (registry.initialized) {
-                registry.scan(document.body, [pattern.name], undefined, false);
+                registry.scan(document.body, [name]);
             }
             return true;
         }

@@ -1,11 +1,19 @@
 define(["pat-autosuggest"], function(pattern) {
 
     var utils = {
-        createElement: function(c) {
+        createInputElement: function(c) {
             var cfg = c || {};
             return $("<input/>", {
                 "id":   cfg.id || "select2",
                 "data-pat-autosuggest": "" || cfg.data,
+                "class": "pat-autosuggest"
+            }).appendTo($("div#lab"));
+        },
+
+        createSelectElement: function(c) {
+            var cfg = c || {};
+            return $("<select/>", {
+                "id":   cfg.id || "select2",
                 "class": "pat-autosuggest"
             }).appendTo($("div#lab"));
         },
@@ -37,7 +45,7 @@ define(["pat-autosuggest"], function(pattern) {
             });
 
             it("gets converted into a select2 widget", function() {
-                utils.createElement();
+                utils.createInputElement();
                 var $el = $("input.pat-autosuggest");
 
                 expect($(".select2-container").length).toBe(0);
@@ -48,6 +56,53 @@ define(["pat-autosuggest"], function(pattern) {
                 utils.removeSelect2();
             });
         });
+
+        describe("An <input> element with an ajax option", function () {
+            beforeEach(function() {
+                $("div#lab").remove(); // Looks likes some specs don't clean up after themselves.
+                $("<div/>", {id: "lab"}).appendTo(document.body);
+            });
+
+            afterEach(function() {
+                $("#lab").remove();
+            });
+
+            it("keeps the ajax option when turning into a select2 widget", function() {
+                utils.createInputElement(
+                    {
+                        data: "ajax-url: http://test.org/test"
+                    });
+                var $el = $("input.pat-autosuggest");
+                spyOn($el, "select2");
+
+                pattern.init($el);
+                expect($el.select2.mostRecentCall.args[0].ajax).toBeDefined();
+                utils.removeSelect2();
+            });
+        });
+
+        describe("A <select> element", function () {
+            beforeEach(function() {
+                $("div#lab").remove(); // Looks likes some specs don't clean up after themselves.
+                $("<div/>", {id: "lab"}).appendTo(document.body);
+            });
+
+            afterEach(function() {
+                $("#lab").remove();
+            });
+
+            it("gets converted into a select2 widget", function() {
+                utils.createSelectElement();
+                var $el = $("select.pat-autosuggest");
+                expect($(".select2-container").length).toBe(0);
+                expect($el.hasClass("select2-offscreen")).toBeFalsy();
+                pattern.init($el);
+                expect($el.hasClass("select2-offscreen")).toBeTruthy();
+                expect($(".select2-container").length).toBe(1);
+                utils.removeSelect2();
+            });
+        });
+
 
         describe("Selected items", function () {
             beforeEach(function() {
@@ -60,7 +115,7 @@ define(["pat-autosuggest"], function(pattern) {
             });
 
             it("can be given custom CSS classes", function() {
-                utils.createElement({
+                utils.createInputElement({
                     data: "words: apple,orange,pear; pre-fill: orange; selection-classes: {\"orange\": [\"fruit\", \"orange\"]}"
                 });
                 var $el = $("input.pat-autosuggest");
@@ -74,7 +129,7 @@ define(["pat-autosuggest"], function(pattern) {
 
             it("can be restricted to a certain amount", function() {
                 // First check without limit
-                utils.createElement({
+                utils.createInputElement({
                     data: "words: apple,orange,pear; pre-fill: orange"
                 });
                 expect($(".select2-input").length).toBe(0);
@@ -86,7 +141,7 @@ define(["pat-autosuggest"], function(pattern) {
                 utils.removeSelect2();
 
                 // Then with limit
-                utils.createElement({
+                utils.createInputElement({
                     data: "maximum-selection-size: 1; words: apple,orange,pear; pre-fill: orange"
                 });
                 expect($(".select2-input").length).toBe(0);

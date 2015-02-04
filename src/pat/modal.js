@@ -6,7 +6,6 @@ define([
     "pat-inject"
 ], function($, Parser, registry, utils, inject) {
     var parser = new Parser("modal");
-
     parser.add_argument("class");
     parser.add_argument("closing", ["close-button"], ["close-button", "outside"], true);
 
@@ -14,9 +13,9 @@ define([
         name: "modal",
         jquery_plugin: true,
         // div's are turned into modals
-        // links and forms inject modals
-        trigger: "div.pat-modal, a.pat-modal, form.pat-modal",
-        init: function($el, opts, trigger) {
+        // links, forms and subforms inject modals
+        trigger: "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
+        init: function ($el, opts, trigger) {
             if ($el.length > 1) {
                 // We enforce a one-to-one mapping between modal objects and
                 // DOM elements, so here we recurse and instantiate a new modal
@@ -28,14 +27,15 @@ define([
                 var cfg = parser.parse($el, opts);
                 if (trigger && trigger.type==="injection")
                     $.extend(cfg, parser.parse($(trigger.element), {}, false, false));
-                if ($el.is("div"))
+                if ($el.is("div")) {
                     modal._init_div1($el, cfg);
-                else
+                } else {
                     modal._init_inject1($el, cfg);
+                }
             }
         },
 
-        _init_inject1: function($el, cfg) {
+        _init_inject1: function ($el, cfg) {
             var opts = {
                 target: "#pat-modal",
                 "class": "pat-modal" + (cfg["class"] ? " " + cfg["class"] : "")
@@ -48,7 +48,7 @@ define([
             inject.init($el, opts);
         },
 
-        _init_div1: function($el, cfg) {
+        _init_div1: function ($el, cfg) {
             var $header = $("<div class='header' />"),
                 activeElement = document.activeElement;
 
@@ -77,10 +77,14 @@ define([
 
             $(window).on("resize.pat-modal-position",
                 utils.debounce(modal.setPosition.bind(modal, $el, cfg), 400));
+
             $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
             $(document).on("patterns-injected.pat-modal-position", "#pat-modal,div.pat-modal",
                 utils.debounce(modal.setPosition.bind(modal, $el), 400));
+            // XXX: Should this check be more strict?
+            $(document).on("pat-update.pat-modal-position", "#pat-modal,div.pat-modal",
+                utils.debounce(modal.setPosition.bind(modal, $el), 50));
         },
 
         _onPossibleOutsideClick: function($el, ev) {
