@@ -1,6 +1,10 @@
 # Changelog
+
+## 2.0.8 - Feb. 5, 2015
+
+- #395 add body class after patterns loaded from registry
  
-## 2.0.7 - Feb. 4, 2014
+## 2.0.7 - Feb. 4, 2015
 
 - #381 Checked class not set on checklist 
 - Add stub module i18n.js. Provides compatibility with Mockup patterns.
