@@ -31,5 +31,8 @@
     "imagesloaded": "~3.1.8",
     "masonry": "~3.2.2",
     "jquery.browser": "~0.0.7"
+  },
+  "resolutions": {
+    "jquery": "1.11.1"
   }
 }
