@@ -15,7 +15,8 @@ require.config({
 define("TestRunner", function() {
     require([
         "jquery",
-        "jasmine-html"
+        "jasmine-html",
+        "jquery.browser"
     ], function($, jasmine) {
         require([
             "console-runner",

@@ -11,7 +11,8 @@
     paths: {
         // Externals
         "almond": "bower_components/almond/almond",
-        "jquery": "bower_components/jquery/jquery",
+        "jquery": "bower_components/jquery/dist/jquery",
+        "jquery.browser": "bower_components/jquery.browser/dist/jquery.browser",
         "logging": "bower_components/logging/src/logging",
         "jquery.form": "bower_components/jquery-form/jquery.form",
         "jquery.anythingslider": "bower_components/AnythingSlider/js/jquery.anythingslider",
@@ -38,7 +39,7 @@
         "select2": "bower_components/select2/select2.min",
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "spectrum": "bower_components/spectrum/spectrum",
-        "masonry": "bower_components/masonry/masonry",
+        "masonry": "bower_components/masonry/dist/masonry.pkgd",
         "outlayer": "bower_components/outlayer",
         "doc-ready": "bower_components/doc-ready",
         "get-size": "bower_components/get-size",
