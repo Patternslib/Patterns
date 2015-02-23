@@ -37,7 +37,7 @@
         trigger: ".pat-masonry",
         init: function mypattern_init($el, opts) {
             var options = parser.parse($el, opts);
-            $(document).trigger('clear-imagesloaded-cache');
+            $(document).trigger("clear-imagesloaded-cache");
             var msnry = new Masonry($el[0], {
                 columnWidth:            this.getTypeCastedValue(options.columnWidth),
                 containerStyle:         options.containerStyle,
@@ -52,13 +52,13 @@
                 transitionDuration:     options.transitionDuration,
                 visibleStyle:           options.visibleStyle
             });
-            imagesLoaded(this, this.layout($el, msnry, options));
+            imagesLoaded(this, this.layout($el, msnry));
         },
 
-        layout: function ($el, msnry, options) {
-            $el.removeClass('masonry-ready');
-            msnry.on('layoutComplete', function() { 
-                $el.addClass('masonry-ready');
+        layout: function ($el, msnry) {
+            $el.removeClass("masonry-ready");
+            msnry.on("layoutComplete", function() {
+                $el.addClass("masonry-ready");
             });
             msnry.layout();
         },
