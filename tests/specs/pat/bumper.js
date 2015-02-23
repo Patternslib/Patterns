@@ -1,13 +1,9 @@
 define(["pat-bumper"], function(pattern) {
 
     describe("Bumper pattern", function() {
-
         beforeEach(function() {
-            $("<div/>", {id: "lab"}).appendTo(document.body);
-        });
-
-        afterEach(function() {
             $("#lab").remove();
+            $("<div/>", {id: "lab"}).appendTo(document.body);
         });
 
         describe("init", function(){
