@@ -43,6 +43,7 @@ define("TestRunner", function() {
             "specs/pat/equaliser.js",
             "specs/pat/focus.js",
             "specs/pat/legend",
+            "specs/pat/masonry",
             "specs/pat/modal",
             "specs/pat/slideshow-builder",
             "specs/pat/slides.js",
