@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "almond": "",
-    "jquery": "1.8.3",
+    "jquery": "1.11.1",
     "modernizr": "",
     "requirejs": "",
     "klass": "",
@@ -29,6 +29,7 @@
     "moment": "",
     "moment-timezone": "",
     "imagesloaded": "~3.1.8",
-    "masonry": "~3.2.2"
+    "masonry": "~3.2.2",
+    "jquery.browser": "~0.0.7"
   }
 }
