@@ -54,7 +54,7 @@ Perhaps inserting a single block of content is not enough for your needs? Don't 
 
     <section id="section">
       <form action="/my/form" class="pat-inject"
-       data-pat-inject="#content && #notice #notices::after">
+       data-pat-inject="#content #section && #notice #notices::after">
         …
       </form>
     </section>
