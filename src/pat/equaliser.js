@@ -65,7 +65,9 @@ define([
         },
 
         _onEvent: function(event) {
-            equaliser._update(event.data);
+            if (typeof event.data !== "undefined") {
+                equaliser._update(event.data);
+            }
         }
     };
 
