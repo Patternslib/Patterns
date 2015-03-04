@@ -116,16 +116,18 @@ define([
             ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
 
             var $button = $(ev.target),
-                $form = $button.parents(".pat-inject").first(),
-                cfgs = $form.data("pat-inject"),
                 formaction = $button.attr("formaction");
 
             if (formaction) {
-                cfgs = cfgs.map( function(cfg) { return $.extend(cfg, {url: formaction})});
+                var $form = $button.parents(".pat-inject").first(),
+                    opts = {url: formaction},
+                    cfgs = _.extractConfig($form, opts);
+
                 ev.preventDefault();
                 $form.trigger("patterns-inject-triggered");
                 _.execute(cfgs, $form);
             }
+            // else: fall through to onSubmit
         },
 
         submitSubform: function inject_submitSubform($sub) {

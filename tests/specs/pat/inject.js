@@ -67,7 +67,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
         });
 
-	describe("parseRawHtml", function() {
+    	describe("parseRawHtml", function() {
             it("Roundtrip attributes with double quotes", function() {
                 var value = "{\"plugins\": \"paste\", \"content_css\": \"/_themes/Style/tiny-body.css\"}",
                     input = "<a data-tinymce-json='" + value + "'>Test</a>",
@@ -364,6 +364,113 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     expect($.ajax).toHaveBeenCalled();
                     expect($.ajax.mostRecentCall.args[0].data).toContain("submit=label");
+                });
+
+                it("use submit button formaction value as action URL", function() {
+                    var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
+                        $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
+                        $target = $("<div id=\"otherid\" />");
+
+                    $submit2.attr("formaction", "other.html");
+                    $form.append($submit1).append($submit2);
+
+                    pattern.init($form);
+                    $submit2.trigger("click");
+
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                });
+
+                it("use fragment in formaction value as source + target selector", function() {
+                    var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
+                        $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
+                        $target = $("<div id=\"otherid\" />");
+
+                    $submit2.attr("formaction", "other.html#otherid");
+                    $form.append($submit1).append($submit2);
+                    $div.append($target);
+
+                    pattern.init($form);
+                    $submit2.trigger("click");
+                    answer("<html><body>" +
+                           "<div id=\"otherid\">other</div>" +
+                           "</body></html>");
+
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
+                    expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                    expect($target.html()).toBe("other");
+                });
+
+                it("use fragment in formaction value as source selector, respect target", function() {
+                    var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
+                        $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
+                        $target = $("<div id=\"othertarget\" />");
+
+                    $form.attr("data-pat-inject", "target: #othertarget");
+                    $submit2.attr("formaction", "other.html#otherid");
+                    $form.append($submit1).append($submit2);
+                    $div.append($target);
+
+                    pattern.init($form);
+                    $submit2.trigger("click");
+                    answer("<html><body>" +
+                           "<div id=\"otherid\">other</div>" +
+                           "</body></html>");
+
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
+                    expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                    expect($target.html()).toBe("other");
+                });
+
+                it("formaction works with multiple targets", function() {
+                    var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
+                        $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
+                        $target1 = $("<div id=\"target1\" />");
+                        $target2 = $("<div id=\"target2\" />");
+
+                    $form.attr("data-pat-inject", "target: #target1 && target: #target2");
+                    $submit2.attr("formaction", "other.html#otherid");
+                    $form.append($submit1).append($submit2);
+                    $div.append($target1).append($target2);
+
+                    pattern.init($form);
+                    $submit2.trigger("click");
+                    answer("<html><body>" +
+                           "<div id=\"otherid\">other</div>" +
+                           "</body></html>");
+
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
+                    expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                    expect($target1.html()).toBe("other");
+                    expect($target2.html()).toBe("other");
+                });
+
+                it("formaction works with multiple sources", function() {
+                    var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
+                        $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
+                        $target1 = $("<div id=\"target1\" />");
+                        $target2 = $("<div id=\"target2\" />");
+
+                    $form.attr("data-pat-inject", "#someid #target1 && #otherid #target2");
+                    $submit2.attr("formaction", "other.html#otherid");
+                    $form.append($submit1).append($submit2);
+                    $div.append($target1).append($target2);
+
+                    pattern.init($form);
+                    $submit2.trigger("click");
+                    answer("<html><body>" +
+                           "<div id=\"someid\">some</div>" +
+                           "<div id=\"otherid\">other</div>" +
+                           "</body></html>");
+
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
+                    expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                    expect($target1.html()).toBe("some");
+                    expect($target2.html()).toBe("other");
                 });
             });
         });
