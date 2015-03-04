@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.9 - Unreleased
+
+- Fixed IE bug in pat-equalizer
+
 ## 2.0.8 - Feb. 5, 2015
 
 - #395 add body class after patterns loaded from registry
