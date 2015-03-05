@@ -122,9 +122,9 @@ define([
                 opts = {url: formaction},
                 cfgs = _.extractConfig($form, opts);
 
-                ev.preventDefault();
-                $form.trigger("patterns-inject-triggered");
-                _.execute(cfgs, $form);
+            ev.preventDefault();
+            $form.trigger("patterns-inject-triggered");
+            _.execute(cfgs, $form);
         },
 
         submitSubform: function inject_submitSubform($sub) {
