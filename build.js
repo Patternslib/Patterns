@@ -47,6 +47,7 @@
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
 
         // Core
+        "pat-base": "core/base",
         "pat-compat": "core/compat",
         "pat-depends_parse": "lib/depends_parse",
         "pat-dependshandler": "lib/dependshandler",

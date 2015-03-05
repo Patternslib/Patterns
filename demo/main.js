@@ -38,6 +38,7 @@ config = {
 
         // Core
         "pat-compat":               "core/compat",
+        "pat-base":                 "core/base",
         "pat-depends_parse":        "lib/depends_parse",
         "pat-dependshandler":       "lib/dependshandler",
         "pat-htmlparser":           "lib/htmlparser",
