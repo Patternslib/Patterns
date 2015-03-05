@@ -72,7 +72,8 @@ define([
                         $el.on("click.pat-inject", _.onClick);
                     } else if ($el.is("form")) {
                         $el.on("submit.pat-inject", _.onSubmit)
-                        .on("click.pat-inject", "[type=submit]", _.onButtonClick);
+                        .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
+                        .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", _.onFormActionSubmit);
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     }
@@ -112,22 +113,18 @@ define([
             _.execute(cfgs, $el);
         },
 
-        onButtonClick: function inject_onButtonClick(ev) {
+        onFormActionSubmit: function inject_onFormActionSubmit(ev) {
             ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
 
             var $button = $(ev.target),
-                formaction = $button.attr("formaction");
-
-            if (formaction) {
-                var $form = $button.parents(".pat-inject").first(),
-                    opts = {url: formaction},
-                    cfgs = _.extractConfig($form, opts);
+                formaction = $button.attr("formaction"),
+                $form = $button.parents(".pat-inject").first(),
+                opts = {url: formaction},
+                cfgs = _.extractConfig($form, opts);
 
                 ev.preventDefault();
                 $form.trigger("patterns-inject-triggered");
                 _.execute(cfgs, $form);
-            }
-            // else: fall through to onSubmit
         },
 
         submitSubform: function inject_submitSubform($sub) {
