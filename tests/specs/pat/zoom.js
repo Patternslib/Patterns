@@ -1,6 +1,6 @@
 define(["pat-zoom"], function(pattern) {
 
-    describe("zoom-pattern", function() {
+    describe("pat-zoom", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

@@ -1,6 +1,6 @@
 define(["pat-autosubmit"], function(pattern) {
 
-    describe("autosubmit-plugin", function() {
+    describe("pat-autosubmit", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

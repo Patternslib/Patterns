@@ -1,6 +1,6 @@
 define(["pat-autoscale", "jquery"], function(pattern, jQuery) {
 
-    describe("bumper-pattern", function() {
+    describe("pat-autoscale", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

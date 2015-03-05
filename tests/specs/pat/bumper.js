@@ -1,6 +1,6 @@
 define(["pat-bumper"], function(pattern) {
 
-    describe("Bumper pattern", function() {
+    describe("pat-bumper", function() {
         beforeEach(function() {
             $("#lab").remove();
             $("<div/>", {id: "lab"}).appendTo(document.body);

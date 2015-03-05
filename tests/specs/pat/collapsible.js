@@ -1,6 +1,6 @@
 define(["pat-collapsible"], function(pattern) {
 
-    describe("collapsible-pattern", function() {
+    describe("pat-collapsible", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

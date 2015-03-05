@@ -1,6 +1,6 @@
 define(["pat-checkedflag"], function(pattern) {
 
-    describe("checkedflag-pattern", function() {
+    describe("pat-checkedflag", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

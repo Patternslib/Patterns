@@ -1,5 +1,6 @@
 define(["pat-validate"], function(pattern) {
-    describe("Validate pattern", function() {
+
+    describe("pat-validate", function() {
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
         });

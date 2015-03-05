@@ -1,7 +1,7 @@
 define(["pat-ajax"], function(pattern) {
     var $lab;
 
-    describe("pat/ajax", function() {
+    describe("pat-ajax", function() {
 
         beforeEach(function() {
             $lab = $("<div/>", {id: "lab"}).appendTo(document.body);
