@@ -381,6 +381,20 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
                     });
 
+                    it("use an image submit with a formaction value as action URL", function() {
+                        var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
+                            $submit2 = $("<input type=\"image\" name=\"submit\" value=\"special\" />");
+
+                        $submit2.attr("formaction", "other.html");
+                        $form.append($submit1).append($submit2);
+
+                        pattern.init($form);
+                        $submit2.trigger("click");
+
+                        expect($.ajax).toHaveBeenCalled();
+                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                    });
+
                     it("use fragment in formaction value as source + target selector", function() {
                         var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
                             $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
