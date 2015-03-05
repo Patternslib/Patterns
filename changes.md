@@ -3,6 +3,7 @@
 ## 2.0.9 - Unreleased
 
 - Fixed IE bug in pat-equalizer
+- #389 Add support in pat-inject for the HTML5 formaction attribute
 
 ## 2.0.8 - Feb. 5, 2015
 
