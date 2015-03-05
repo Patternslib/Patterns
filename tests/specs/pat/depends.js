@@ -1,6 +1,6 @@
 define(["pat-depends"], function(pattern) {
 
-    describe("depends-pattern", function() {
+    describe("pat-depends", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

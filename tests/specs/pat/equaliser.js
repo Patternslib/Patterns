@@ -1,5 +1,6 @@
 define(["pat-equaliser"], function(pattern) {
-    describe("Equaliser pattern", function() {
+
+    describe("pat-equaliser", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

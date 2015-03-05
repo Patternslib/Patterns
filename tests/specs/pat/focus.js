@@ -1,6 +1,6 @@
 define(["pat-focus"], function(pattern) {
 
-    describe("focus-plugin", function() {
+    describe("pat-focus", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

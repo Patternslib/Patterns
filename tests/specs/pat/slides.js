@@ -1,6 +1,6 @@
 define(["pat-slides"], function(pattern) {
 
-    describe("Slides pattern", function() {
+    describe("pat-slides", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

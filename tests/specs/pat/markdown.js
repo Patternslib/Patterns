@@ -1,6 +1,6 @@
 define(["pat-markdown", "Markdown.Converter"], function(pattern, Markdown) {
 
-    describe("Markdown pattern", function() {
+    describe("pat-markdown", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

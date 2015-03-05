@@ -1,6 +1,6 @@
 define(["pat-switch", "jquery"], function(pattern, jQuery) {
 
-    describe("switch-pattern", function() {
+    describe("pat-switch", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);

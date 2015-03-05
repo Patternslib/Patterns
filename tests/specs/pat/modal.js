@@ -1,6 +1,6 @@
 define(["pat-modal"], function(pattern) {
 
-    describe("modal-pattern", function () {
+    describe("pat-modal", function () {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
