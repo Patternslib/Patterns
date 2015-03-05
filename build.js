@@ -45,6 +45,7 @@
         "select2": "bower_components/select2/select2.min",
         "spectrum": "bower_components/spectrum/spectrum",
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
+        "lodash": "bower_components/lodash/lodash",
 
         // Core
         "pat-base": "core/base",

@@ -1,5 +1,13 @@
-config = {
-    baseUrl: '/src',
+var config;
+if (typeof(require) === 'undefined') {
+    /* XXX: Hack to work around r.js's stupid parsing.
+     * We want to save the configuration in a variable so that we can reuse it in
+     * tests/main.js.
+     */
+    require = { config: function (c) { config = c; } };
+}
+require.config({
+    baseUrl: 'src',
     paths: {
         "Markdown.Converter":       "legacy/Markdown.Converter",
         "Markdown.Extra":           "legacy/Markdown.Extra",
@@ -35,6 +43,7 @@ config = {
         "select2":                  "bower_components/select2/select2.min",
         "spectrum":                 "bower_components/spectrum/spectrum",
         "tinymce":                  "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
+        "lodash":                   "bower_components/lodash/lodash",
 
         // Core
         "pat-compat":               "core/compat",
@@ -121,9 +130,8 @@ config = {
         "spectrum":                     { deps: ["jquery"] },
         "tinymce":                      { deps: ["jquery"] }
     },
-};
+});
 
-if (typeof(require) !== 'undefined') {
-    require.config(config);
+if (typeof(require) === 'function') {
     require(["patterns"], function(patterns) {});
 }
