@@ -132,7 +132,7 @@ define(["pat-bumper"], function(pattern) {
                 pattern._updateStatus(sticker);
                 expect(pattern._markBumped).toHaveBeenCalled();
                 expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy();
-                expect(sticker.style.top).toBe("5px");
+                expect(Math.floor(sticker.style.top.replace("px", ""))).toBe(5);
             });
 
             it("correctly transitions to unbumped", function() {
