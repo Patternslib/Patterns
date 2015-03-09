@@ -1,5 +1,5 @@
 /**
- * @license almond 0.3.0 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
+ * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
  * see: http://github.com/jrburke/almond for details
  */
@@ -44,12 +44,6 @@ var requirejs, require, define;
             //otherwise, assume it is a top-level require that will
             //be relative to baseUrl in the end.
             if (baseName) {
-                //Convert baseName to array, and lop off the last part,
-                //so that . matches that "directory" and not name of the baseName's
-                //module. For instance, baseName of "one/two/three", maps to
-                //"one/two/three.js", but we want the directory, "one/two" for
-                //this normalization.
-                baseParts = baseParts.slice(0, baseParts.length - 1);
                 name = name.split('/');
                 lastIndex = name.length - 1;
 
@@ -58,7 +52,11 @@ var requirejs, require, define;
                     name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
                 }
 
-                name = baseParts.concat(name);
+                //Lop off the last part of baseParts, so that . matches the
+                //"directory" and not name of the baseName's module. For instance,
+                //baseName of "one/two/three", maps to "one/two/three.js", but we
+                //want the directory, "one/two" for this normalization.
+                name = baseParts.slice(0, baseParts.length - 1).concat(name);
 
                 //start trimDots
                 for (i = 0; i < name.length; i += 1) {
@@ -408,6 +406,9 @@ var requirejs, require, define;
     requirejs._defined = defined;
 
     define = function (name, deps, callback) {
+        if (typeof name !== 'string') {
+            throw new Error('See almond README: incorrect module build, no module name');
+        }
 
         //This module may not have dependencies
         if (!deps.splice) {
@@ -12081,7 +12082,13 @@ define('pat-registry',[
             });
         },
 
-        scan: function registry_scan(content, patterns, trigger) {
+        clear: function clearRegistry() {
+            // Removes all patterns from the registry. Currently only being
+            // used in tests.
+            this.patterns = {};
+        },
+
+        scan: function registryScan(content, patterns, trigger) {
             var $content = $(content),
                 all = [], allsel,
                 $match, plog;
@@ -23816,6 +23823,22 @@ define('pat-breadcrumbs',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
+// Sticky positioning - constrains an element to be positioned inside the
+// intersection of its container box, and the viewport.
+Modernizr.addTest('csspositionsticky', function () {
+
+    var prop = 'position:';
+    var value = 'sticky';
+    var el = document.createElement('modernizr');
+    var mStyle = el.style;
+
+    mStyle.cssText = prop + Modernizr._prefixes.join(value + ';' + prop).slice(0, -prop.length);
+
+    return mStyle.position.indexOf(value) !== -1;
+});
+
+define("modernizr-csspositionsticky", function(){});
+
 /**
  * Patterns bumper - `bumper' handling for elements
  *
@@ -23827,7 +23850,9 @@ define('pat-bumper',[
     "jquery",
     "pat-logger",
     "pat-parser",
-    "pat-registry"
+    "pat-registry",
+    "modernizr",
+    "modernizr-csspositionsticky"
 ], function($, logger, Parser, registry) {
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
@@ -23849,6 +23874,10 @@ define('pat-bumper',[
                 var container = bumper._findScrollContainer(this),
                     $sticker = $(this),
                     options = parser.parse($sticker, opts);
+
+                if (Modernizr.csspositionsticky) {
+                    options.bump.add += " sticky-supported";
+                }
                 $sticker.data("pat-bumper:config", options);
 
                 this.style.position="relative";
@@ -23925,7 +23954,6 @@ define('pat-bumper',[
                 viewport = bumper._getViewport(),
                 box = bumper._getBoundingBox($sticker, options.margin),
                 delta = {};
-
             delta.top=sticker.style.top ? parseFloat($sticker.css("top")) : 0;
             delta.left=sticker.style.left ? parseFloat($sticker.css("left")) : 0;
 
@@ -36180,7 +36208,8 @@ define('pat-inject',[
                         $el.on("click.pat-inject", _.onClick);
                     } else if ($el.is("form")) {
                         $el.on("submit.pat-inject", _.onSubmit)
-                        .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit);
+                        .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
+                        .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", _.onFormActionSubmit);
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     }
@@ -36218,6 +36247,20 @@ define('pat-inject',[
                 ev.preventDefault();
             $el.trigger("patterns-inject-triggered");
             _.execute(cfgs, $el);
+        },
+
+        onFormActionSubmit: function inject_onFormActionSubmit(ev) {
+            ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
+
+            var $button = $(ev.target),
+                formaction = $button.attr("formaction"),
+                $form = $button.parents(".pat-inject").first(),
+                opts = {url: formaction},
+                cfgs = _.extractConfig($form, opts);
+
+            ev.preventDefault();
+            $form.trigger("patterns-inject-triggered");
+            _.execute(cfgs, $form);
         },
 
         submitSubform: function inject_submitSubform($sub) {
