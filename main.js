@@ -34,6 +34,7 @@ require.config({
         "masonry":                  "bower_components/masonry/dist/masonry.pkgd",
         "matches-selector":         "bower_components/matches-selector",
         "modernizr":                "bower_components/modernizr/modernizr",
+        "modernizr-csspositionsticky": "bower_components/modernizr/feature-detects/css-positionsticky",
         "outlayer":                 "bower_components/outlayer",
         "parsley":                  "bower_components/parsleyjs/parsley",
         "parsley.extend":           "bower_components/parsleyjs/parsley.extend",
