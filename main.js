@@ -71,6 +71,7 @@ require.config({
         "pat-breadcrumbs": "pat/breadcrumbs",
         "pat-bumper": "pat/bumper",
         "pat-carousel": "pat/carousel",
+        "pat-clone": "pat/clone",
         "pat-checkedflag": "pat/checkedflag",
         "pat-checklist": "pat/checklist",
         "pat-chosen": "pat/chosen",
