@@ -140,6 +140,9 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                         var $el = $("a#tooltip");
                         var $container = $el.data("patterns.tooltip.container");
                         $container.trigger("patterns-inject-triggered");
+                    });
+                    waits(100); // hide events get registered 50 ms after show
+                    runs(function () {
                         expect(pattern.hide).not.toHaveBeenCalled();
                     });
             });
