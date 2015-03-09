@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-base", "lodash"], function(registry, Base, _) {
+define(["pat-registry", "pat-base", "underscore"], function(registry, Base, _) {
 
     describe("pat-base: The Base class for patterns", function() {
 
