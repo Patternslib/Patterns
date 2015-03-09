@@ -123,28 +123,28 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
             });
 
             it("is NOT closed when an injection happens", function () {
-                    runs(function () {
-                        utils.createTooltip({
-                            data: "trigger: click; closing: auto",
-                            href: "/tests/content.html#content"
-                        });
-                        var $el = $("a#tooltip");
-                        spyOn(pattern, "show").andCallThrough();
-                        spyOn(pattern, "hide").andCallThrough();
-                        pattern.init($el);
-                        $el.trigger(utils.click);
-                        expect(pattern.show).toHaveBeenCalled();
+                runs(function () {
+                    utils.createTooltip({
+                        data: "trigger: click; closing: auto",
+                        href: "/tests/content.html#content"
                     });
-                    waits(100); // hide events get registered 50 ms after show
-                    runs(function () {
-                        var $el = $("a#tooltip");
-                        var $container = $el.data("patterns.tooltip.container");
-                        $container.trigger("patterns-inject-triggered");
-                    });
-                    waits(100); // hide events get registered 50 ms after show
-                    runs(function () {
-                        expect(pattern.hide).not.toHaveBeenCalled();
-                    });
+                    var $el = $("a#tooltip");
+                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "hide").andCallThrough();
+                    pattern.init($el);
+                    $el.trigger(utils.click);
+                    expect(pattern.show).toHaveBeenCalled();
+                });
+                waits(100); // hide events get registered 50 ms after show
+                runs(function () {
+                    var $el = $("a#tooltip");
+                    var $container = $el.data("patterns.tooltip.container");
+                    $container.trigger("patterns-inject-triggered");
+                });
+                waits(100); // hide events get registered 50 ms after show
+                runs(function () {
+                    expect(pattern.hide).not.toHaveBeenCalled();
+                });
             });
         });
 
