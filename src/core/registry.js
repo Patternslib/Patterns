@@ -56,7 +56,13 @@ define([
             });
         },
 
-        scan: function registry_scan(content, patterns, trigger) {
+        clear: function clearRegistry() {
+            // Removes all patterns from the registry. Currently only being
+            // used in tests.
+            this.patterns = {};
+        },
+
+        scan: function registryScan(content, patterns, trigger) {
             var $content = $(content),
                 all = [], allsel,
                 $match, plog;

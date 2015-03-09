@@ -37,14 +37,14 @@ clean::
 ########################################################################
 ## Tests
 
-check:: jshint test-bundle
+check:: jshint
 jshint: stamp-npm
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	$(JSHINT) --config jshintrc-tests $(TESTSOURCES)
 
 
 check:: stamp-npm
-	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests/TestRunner.html
+	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests.html
 
 
 ########################################################################
@@ -52,10 +52,6 @@ check:: stamp-npm
 
 bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
 	node_modules/.bin/r.js -o build.js
-
-test-bundle test-bundle.js: $(GENERATED) $(SOURCES) test-build.js stamp-bower
-	node_modules/.bin/r.js -o test-build.js
-
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $<
