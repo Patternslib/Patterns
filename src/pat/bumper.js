@@ -35,7 +35,7 @@ define([
                     options = parser.parse($sticker, opts);
 
                 if (Modernizr.csspositionsticky) {
-                    options.bump.add += " sticky-supported";
+                    $sticker.addClass("sticky-supported");
                 }
                 $sticker.data("pat-bumper:config", options);
 
