@@ -9,7 +9,9 @@ define([
     "jquery",
     "pat-logger",
     "pat-parser",
-    "pat-registry"
+    "pat-registry",
+    "modernizr",
+    "modernizr-csspositionsticky"
 ], function($, logger, Parser, registry) {
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
@@ -31,6 +33,10 @@ define([
                 var container = bumper._findScrollContainer(this),
                     $sticker = $(this),
                     options = parser.parse($sticker, opts);
+
+                if (Modernizr.csspositionsticky) {
+                    $sticker.addClass("sticky-supported");
+                }
                 $sticker.data("pat-bumper:config", options);
 
                 this.style.position="relative";
@@ -107,7 +113,6 @@ define([
                 viewport = bumper._getViewport(),
                 box = bumper._getBoundingBox($sticker, options.margin),
                 delta = {};
-
             delta.top=sticker.style.top ? parseFloat($sticker.css("top")) : 0;
             delta.left=sticker.style.left ? parseFloat($sticker.css("left")) : 0;
 

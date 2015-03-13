@@ -36,6 +36,7 @@
         "masonry": "bower_components/masonry/dist/masonry.pkgd",
         "matches-selector": "bower_components/matches-selector",
         "modernizr": "bower_components/modernizr/modernizr",
+        "modernizr-csspositionsticky": "bower_components/modernizr/feature-detects/css-positionsticky",
         "outlayer": "bower_components/outlayer",
         "parsley": "bower_components/parsleyjs/parsley",
         "parsley.extend": "bower_components/parsleyjs/parsley.extend",
@@ -45,7 +46,7 @@
         "select2": "bower_components/select2/select2.min",
         "spectrum": "bower_components/spectrum/spectrum",
         "tinymce": "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
-        "lodash": "bower_components/lodash/lodash",
+        "underscore": "bower_components/underscore/underscore",
 
         // Core
         "pat-base": "core/base",
