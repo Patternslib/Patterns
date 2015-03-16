@@ -2,8 +2,14 @@ define(["pat-registry", "pat-base", "underscore"], function(registry, Base, _) {
 
     describe("pat-base: The Base class for patterns", function() {
 
+        var patterns = registry.patterns;
+
         beforeEach(function () {
             registry.clear();
+        });
+
+        afterEach(function () {
+            registry.patterns = patterns;
         });
 
         it("can be extended and used in similar way as classes", function() {

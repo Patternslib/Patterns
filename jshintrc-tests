@@ -9,7 +9,7 @@
     "undef": true,
     "unused": true,
     "white": false,
-    "quotmark": "double",
+    "quotmark": false,
     "predef": [
         "Markdown",
         "Modernizr",

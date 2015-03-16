@@ -37,6 +37,7 @@ require([
             "../tests/specs/pat/carousel",
             "../tests/specs/pat/checkedflag",
             "../tests/specs/pat/checklist",
+            "../tests/specs/pat/clone",
             "../tests/specs/pat/collapsible",
             "../tests/specs/pat/depends",
             "../tests/specs/pat/equaliser",
