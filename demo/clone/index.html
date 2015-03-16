@@ -8,13 +8,21 @@
     <script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+    <a href="/index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
     <section class="demo">
         <h2>Demo</h2>
         <h3>List of family members</h3>
-        <div class="pat-clone" data-pat-clone="template: #my-template">
+        <div class="pat-clone" data-pat-clone="template: #my-template; trigger-element: .clone-trigger">
             <!-- First visible instance and also template -->
             <fieldset>
                 <legend>Family member 1</legend>
+                <input name="name-1" type="text" placeholder="Name" />
+                <input name="date-1" type="date" placeholder="birthdate" /><br/>
+                <button type="button" class="remove-clone">Remove</button>
+            </fieldset>
+
+            <fieldset id="my-template" hidden>
+                <legend>Family member #{1}</legend>
                 <input name="name-1" type="text" placeholder="Name" />
                 <input name="date-1" type="date" placeholder="birthdate" /><br/>
                 <button type="button" class="remove-clone">Remove</button>
@@ -23,11 +31,8 @@
             <button type="button" class="clone-trigger">Add an extra family member</button>
         </div>
     </section>
-
     <section class="documentation">
         <a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
     </section>
-
-    <a href="/index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
 </body>
 </html>
