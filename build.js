@@ -77,6 +77,7 @@
         "pat-checkedflag": "pat/checkedflag",
         "pat-checklist": "pat/checklist",
         "pat-chosen": "pat/chosen",
+        "pat-clone": "pat/clone",
         "pat-collapsible": "pat/collapsible",
         "pat-colour-picket": "pat/colour-picker",
         "pat-depends": "pat/depends",
