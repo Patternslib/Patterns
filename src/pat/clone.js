@@ -5,6 +5,7 @@ define([
     "pat-registry",
     "pat-base"
 ], function($, Parser, registry, Base) {
+    "use strict";
     var parser = new Parser("clone");
     parser.add_argument("max");
     parser.add_argument("template", ":first");
@@ -30,14 +31,17 @@ define([
         clone: function clone() {
             this.num_clones += 1;
             var $clone = this.$template.clone();
-            $clone.find(":contains('#{1}')").addBack(":contains('#{1}')").each(this.incrementValues.bind(this));
+            $clone.removeAttr("hidden");
+            $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
             $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
             $clone.appendTo(this.$el);
         },
 
         incrementValues: function incrementValues(idx, el) {
             var $el = $(el);
-            $el.text($el.text().replace("#{1}", this.num_clones+1));
+            if (el.nodeType === 3) {
+                el.data = el.data.replace("#{1}", this.num_clones+1);
+            }
             if ($el.attr("name")) {
                 $el.attr("name", $el.attr("name").replace("1", this.num_clones+1));
             }
