@@ -29,12 +29,19 @@ define([
         },
 
         clone: function clone() {
+            if (this.num_clones >= this.options.max) {
+                alert("Sorry, only "+this.options.max+" elements allowed.");
+                return;
+            }
             this.num_clones += 1;
             var $clone = this.$template.clone();
             $clone.removeAttr("hidden");
             $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
             $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
             $clone.appendTo(this.$el);
+            if (this.num_clones >= this.options.max) {
+                $(this.options.triggerElement).hide();
+            }
         },
 
         incrementValues: function incrementValues(idx, el) {
@@ -52,6 +59,10 @@ define([
 
         remove: function remove($el) {
             $el.remove();
+            this.num_clones -= 1;
+            if (this.num_clones < this.options.max) {
+                $(this.options.triggerElement).show();
+            }
         }
     });
 });
