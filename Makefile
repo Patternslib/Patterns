@@ -2,6 +2,7 @@ BOWER 		?= node_modules/.bin/bower
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
+HTTPSERVE   ?= node_modules/.bin/http-server
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/pat/calendar/*.js) $(wildcard src/lib/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
@@ -33,7 +34,6 @@ clean::
 	rm -f stamp-npm stamp-bower
 	rm -rf node_modules src/bower_components
 
-
 ########################################################################
 ## Tests
 
@@ -60,5 +60,12 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 clean::
 	rm -f bundle.js
 
+########################################################################
+
+serve:: build.js
+	printf "\n\n Designer, you can be happy now.\n Go to http://localhost:4001/demo/ to see the demo \n\n\n\n"
+	$(HTTPSERVE) -p 4001
+
+designerhappy:: serve
 
 .PHONY: all bundle clean check jshint tests
