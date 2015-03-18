@@ -9,7 +9,7 @@ define([
     var parser = new Parser("clone");
     parser.add_argument("max");
     parser.add_argument("template", ":first");
-    parser.add_argument("trigger-element", ".clone-trigger");
+    parser.add_argument("trigger-element", ".add-clone");
     parser.add_argument("remove-element", ".remove-clone");
 
     return Base.extend({

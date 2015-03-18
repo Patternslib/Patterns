@@ -1,5 +1,15 @@
 # Cloning
 
+## properties:
+
+
+| Property | Description | Default | Type |
+|------|------|-----|------|
+| template |Selects the element that will be cloned each time. You might often want to refer to a piece of template markup for this that is hidden with though the CSS. |:first | CSS Selector |
+| max  |Maximum number of clones that is allowed | | Integer |
+| trigger-element |Selector of the element that will remove the clone when clicked upon. | .add-clone | CSS Selector |
+| remove-element |Selector of the element that will remove the clone when clicked upon. | .remove-clone | CSS Selector|
+
 ## Concept
 
 The clone pattern is typically used in case you want to create a form on which it is unknown how many instances the user will need for a certain field or group of fields. For instance if you want to ask the user to fill out the name and birthdate of each family member.
@@ -16,22 +26,21 @@ Clone is triggered by the class `pat-clone` on a container element that contains
     <div class="pat-clone" data-pat-clone="template: #my-template">
 
       <!-- First visible instance and also template -->
-
       <fieldset>
         <legend>Family member 1</legend>
         <input name="name-1" type="text" placeholder="Name" />
         <input name="date-1" type="date" placeholder="birthdate" /><br/>
         <button type="button" class="remove-clone">Remove</button>
       </fieldset>
-
       <!-- Clone trigger -->
 
-      <button type="button" class="clone-trigger">Add an extra family member</button>
+      <button type="button" class="add-clone">Add an extra family member</button>
     </div>
 
-Each time the user clicks on the button saying 'Add an extra family member', the pattern will make a copy the template element. The copy is always created as the next element after the template element in the DOM-tree.
+Each time the user clicks on the button saying 'Add an extra family member', the pattern will make a copy the template element.
+The copy is always appended at the end inside the `.pat-clone` element.
 
-By default the first found element is the element that will be cloned. It's also possible to point the pattern to a specific piece of markup with the property '`template`'. This element will be used as a template for each clone. Typically such an element would be hidden from view. 
+By default the first found element is the element that will be cloned. It's also possible to point the pattern to a specific piece of markup with the property `template`. This element will be used as a template for each clone. Typically such an element would be hidden from view. 
 
 The pattern will automatically add up any number in the values of name and value attributes. For instance, if you have `name="item-1"` in your markup, then the first clone will be `name="item-2"` and the one after that `name="item-3"` etc.. If you want to print a number — for instance in a header of each clone — then you can use the syntax: `#{1}`. This string will be replaced by an number that's also increased by 1 for each clone. 
 
@@ -63,6 +72,6 @@ The markup below would have exactly the same effect as the first example, but us
 
       <!-- Clone trigger -->
 
-      <button type="button" class="clone-trigger">Add an extra family member</button>
+      <button type="button" class="add-clone">Add an extra family member</button>
     </div>
 
