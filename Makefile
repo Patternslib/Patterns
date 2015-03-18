@@ -62,7 +62,7 @@ clean::
 
 ########################################################################
 
-serve:: build.js
+serve:: all
 	printf "\n\n Designer, you can be happy now.\n Go to http://localhost:4001/demo/ to see the demo \n\n\n\n"
 	$(HTTPSERVE) -p 4001
 
