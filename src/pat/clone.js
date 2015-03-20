@@ -35,10 +35,11 @@ define([
             }
             this.num_clones += 1;
             var $clone = this.$template.clone();
-            $clone.removeAttr("hidden");
+            $clone.appendTo(this.$el);
             $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
             $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
-            $clone.appendTo(this.$el);
+            $clone.removeAttr("hidden");
+            registry.scan($clone);
             if (this.num_clones >= this.options.max) {
                 $(this.options.triggerElement).hide();
             }
@@ -46,6 +47,7 @@ define([
 
         incrementValues: function incrementValues(idx, el) {
             var $el = $(el);
+            $el.children().addBack().contents().filter(this.incrementValues.bind(this));
             if (el.nodeType === 3) {
                 el.data = el.data.replace("#{1}", this.num_clones+1);
             }
