@@ -51,12 +51,11 @@ define([
             if (el.nodeType === 3) {
                 el.data = el.data.replace("#{1}", this.num_clones+1);
             }
-            if ($el.attr("name")) {
-                $el.attr("name", $el.attr("name").replace("1", this.num_clones+1));
-            }
-            if ($el.attr("value")) {
-                $el.attr("value", $el.attr("value").replace("1", this.num_clones+1));
-            }
+            var callback = function (idx, attrname) {
+                if (!$el.attr(attrname)) { return; }
+                $el.attr(attrname, $el.attr(attrname).replace("1", this.num_clones+1));
+            };
+            $.each(["name", "value", "placeholder"], callback.bind(this));
         },
 
         remove: function remove($el) {
