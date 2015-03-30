@@ -37,30 +37,37 @@
         trigger: ".pat-masonry",
         init: function mypattern_init($el, opts) {
             var options = parser.parse($el, opts);
-            imagesLoaded(this, $.proxy(function() {
-                new Masonry($el[0], {
-                    columnWidth:            this.getTypeCastedValue(options.columnWidth),
-                    containerStyle:         options.containerStyle,
-                    gutter:                 this.getTypeCastedValue(options.gutter),
-                    hiddenStyle:            options.hiddenStyle,
-                    isFitWidth:             options.is["fit-width"],
-                    isOriginTOp:            options.is["origin-top"],
-                    isOriginLeft:           options.is["origin-left"],
-                    itemSelector:           options.itemSelector,
-                    stamp:                  options.stamp,
-                    transitionDuration:     options.transitionDuration,
-                    visibleStyle:           options.visibleStyle
-                });
-            }, this));
+            $(document).trigger("clear-imagesloaded-cache");
+            var msnry = new Masonry($el[0], {
+                columnWidth:            this.getTypeCastedValue(options.columnWidth),
+                containerStyle:         options.containerStyle,
+                gutter:                 this.getTypeCastedValue(options.gutter),
+                hiddenStyle:            options.hiddenStyle,
+                isFitWidth:             options.is["fit-width"],
+                isInitLayout:           false,
+                isOriginLeft:           options.is["origin-left"],
+                isOriginTOp:            options.is["origin-top"],
+                itemSelector:           options.itemSelector,
+                stamp:                  options.stamp,
+                transitionDuration:     options.transitionDuration,
+                visibleStyle:           options.visibleStyle
+            });
+            imagesLoaded(this, this.layout($el, msnry));
+        },
+
+        layout: function ($el, msnry) {
+            $el.removeClass("masonry-ready");
+            msnry.on("layoutComplete", function() {
+                $el.addClass("masonry-ready");
+            });
+            msnry.layout();
         },
 
         getTypeCastedValue: function (original) {
             var val = Number(original);
-            if (isNaN(val)) {
-                val = original || 0;
-            }
-            return val;
+            return (isNaN(val)) ? (original || 0) : val;
         }
     };
     registry.register(masonry);
+    return masonry;
 }));

@@ -1,10 +1,15 @@
 /* @group Bumper */
 
+.pat-bumper .message .info {
+    margin-left: 8px;
+    width: 589px;
+    z-index: 1000
+}
+
 .pat-bumper {
 }
 
 .bumped {
-	position: fixed !important;
 	z-index: 1;
 }
 

@@ -9,6 +9,7 @@
 define([
     "jquery",
     "pat-registry",
+    "jquery.browser",
     "less",
     "modernizr",
     "prefixfree",
@@ -24,6 +25,7 @@ define([
     "pat-checkedflag",
     "pat-checklist",
     "pat-chosen",
+    "pat-clone",
     "pat-collapsible",
     "pat-colour-picket",
     "pat-depends",

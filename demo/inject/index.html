@@ -5,6 +5,7 @@
         <title>Injection pattern</title>
         <link rel="stylesheet" href="../common.css" type="text/css">
         <link rel="stylesheet" href="inject.css" type="text/css">
+        <script src="../../main.js" type="text/javascript" charset="utf-8"></script>
         <script data-main="../main" src="../../src/bower_components/requirejs/require.js"></script>
 	</head>
 	<body>
@@ -99,6 +100,26 @@
 		
 				<div id="panel3"></div>
 				<div id="panel4"></div>
+
+				<hr />
+
+				<section id="notes">
+					A form with multiple buttons, and different <code>formaction</code>
+					attributes.  All three buttons inject their content into the left colum
+					and underneath this section.
+					<ul>
+						<li>The default button injects Channel 1</li>
+						<li>The cut button injects from the inject-sources.html file</li>
+						<li>The copy button injects fin!</li>
+					</ul>
+					<form action="pattern-test-response.html#ch1-panel4" class="pat-inject"
+					 data-pat-inject="target: section.description && target: #notes::after">
+						<input type="submit" value="default" />
+						<button title="Cut" formaction="inject-sources.html#srctgt" value="cut" name="batch-function" type="submit">Cut</button>
+						<button title="Copy" formaction="pattern-test-response.html#listToUpdate3" value="copy" name="batch-function" type="submit">Copy</button>
+					</form>
+				</section>
+
 			</section>
 			<section class="documentation">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>

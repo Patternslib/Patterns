@@ -1,5 +1,6 @@
 define(["pat-gallery"], function(pattern) {
-    describe("Gallery pattern", function() {
+
+    describe("pat-gallery", function() {
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
         });

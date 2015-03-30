@@ -1,5 +1,6 @@
 define(["pat-toggle"], function(pattern) {
-    describe("Toggle Pattern", function() {
+
+    describe("pat-toggle", function() {
         describe("ClassToggler", function() {
             var ClassToggler=pattern._ClassToggler;
 

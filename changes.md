@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.9 - Unreleased
+
+- Fixed IE bug in pat-equalizer
+- #389 Add support in pat-inject for the HTML5 formaction attribute
+- New pattern: pat-clone.
+- Upgrade to jQuery 1.11.1
+
 ## 2.0.8 - Feb. 5, 2015
 
 - #395 add body class after patterns loaded from registry
