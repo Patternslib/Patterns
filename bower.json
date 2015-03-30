@@ -1,10 +1,11 @@
 {
   "name": "patterns",
-  "version": "2.0.6",
+  "version": "2.0.9",
   "main": "bundle.js",
   "devDependencies": {
     "jasmine": "https://github.com/jcbrand/jasmine.git#1_3_x"
   },
+  "ignore": {},
   "dependencies": {
     "almond": "",
     "jquery": "1.11.1",
