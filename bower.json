@@ -14,7 +14,7 @@
     "jcrop": "0.9.12",
     "less.js": "1.6.3",
     "AnythingSlider": "1.8.17",
-    "chosen": "0.9.11",
+    "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",
     "jquery-form": "3.46.0",
     "fullcalendar": "https://github.com/arshaw/fullcalendar/releases/download/v2.0.0/fullcalendar-2.0.0.zip",
     "jquery-placeholder": "2.0.7",
