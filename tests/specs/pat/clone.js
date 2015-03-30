@@ -75,7 +75,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone">' +
-                '    <p class="legend" name="item-1">Family member #{1}</p>' +
+                '    <p class="legend" name="item-#{1}">Family member #{1}</p>' +
                 '</div>' +
                 '<button class="add-clone">Clone!</button>');
             registry.scan($lab);
