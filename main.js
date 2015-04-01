@@ -69,6 +69,7 @@ require.config({
         "pat-autoscale": "pat/autoscale",
         "pat-autosubmit": "pat/autosubmit",
         "pat-autosuggest": "pat/autosuggest",
+        "pat-blink": "pat/blink",
         "pat-breadcrumbs": "pat/breadcrumbs",
         "pat-bumper": "pat/bumper",
         "pat-carousel": "pat/carousel",
