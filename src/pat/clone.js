@@ -11,6 +11,7 @@ define([
     parser.add_argument("template", ":first");
     parser.add_argument("trigger-element", ".add-clone");
     parser.add_argument("remove-element", ".remove-clone");
+    var TEXT_NODE = 3;
 
     return Base.extend({
         name: "clone",
@@ -48,14 +49,15 @@ define([
         incrementValues: function incrementValues(idx, el) {
             var $el = $(el);
             $el.children().addBack().contents().filter(this.incrementValues.bind(this));
-            if (el.nodeType === 3) {
+            var callback = function (idx, attr) {
+                if (!$el.attr(attr.name)) { return; }
+                $el.attr(attr.name, $el.attr(attr.name).replace("#{1}", this.num_clones+1));
+            };
+            if (el.nodeType !== TEXT_NODE) {
+                $.each(el.attributes, callback.bind(this));
+            } else {
                 el.data = el.data.replace("#{1}", this.num_clones+1);
             }
-            var callback = function (idx, attrname) {
-                if (!$el.attr(attrname)) { return; }
-                $el.attr(attrname, $el.attr(attrname).replace("#{1}", this.num_clones+1));
-            };
-            $.each(["name", "value", "placeholder"], callback.bind(this));
         },
 
         remove: function remove($el) {

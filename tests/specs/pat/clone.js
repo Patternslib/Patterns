@@ -71,23 +71,26 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($("div.item:contains('Clone template')").length).toBe(2);
         });
 
-        it("will automatically increment any number in name and value attributes.", function() {
+        it("will automatically increment any number in element attributes.", function() {
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone">' +
-                '    <p class="legend" name="item-#{1}">Family member #{1}</p>' +
+                '    <p class="legend clone#{1}" name="item-#{1}">Family member #{1}</p>' +
                 '</div>' +
                 '<button class="add-clone">Clone!</button>');
             registry.scan($lab);
             expect($('p.legend').length).toBe(1);
+            expect($('p.legend:last').attr('class')).toBe('legend clone#{1}');
 
             $lab.find('.add-clone').click();
             expect($('p.legend').length).toBe(2);
             expect($('p.legend:last').attr('name')).toBe('item-2');
+            expect($('p.legend:last').attr('class')).toBe('legend clone2');
 
             $lab.find('.add-clone').click();
             expect($('p.legend').length).toBe(3);
             expect($('p.legend:last').attr('name')).toBe('item-3');
+            expect($('p.legend:last').attr('class')).toBe('legend clone3');
         });
 
         it("will remove a clone when .remove-clone inside the clone is clicked.", function() {
