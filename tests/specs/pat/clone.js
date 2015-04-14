@@ -71,7 +71,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($("div.item:contains('Clone template')").length).toBe(2);
         });
 
-        it("will automatically increment any number in element attributes.", function() {
+        it("will replace #{1} in element attributes with the number of the clone", function() {
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone">' +
@@ -91,6 +91,26 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('p.legend').length).toBe(3);
             expect($('p.legend:last').attr('name')).toBe('item-3');
             expect($('p.legend:last').attr('class')).toBe('legend clone3');
+        });
+
+        it("will replace #{1} in the element id with the number of the clone and remove ids without the substring #{1}", function() {
+            var $lab = $('#lab');
+            $lab.html(
+                '<div class="pat-clone">' +
+                '    <p id="hello world#{1}" class="legend clone#{1}" name="item-#{1}">Family member #{1}</p>' +
+                '</div>' +
+                '<button class="add-clone">Clone!</button>');
+            registry.scan($lab);
+            expect($('p.legend').length).toBe(1);
+            expect($('p.legend:last').attr('id')).toBe('hello world#{1}');
+
+            $lab.find('.add-clone').click();
+            expect($('p.legend').length).toBe(2);
+            expect($('p.legend:last').attr('id')).toBe('world2');
+
+            $lab.find('.add-clone').click();
+            expect($('p.legend').length).toBe(3);
+            expect($('p.legend:last').attr('id')).toBe('world3');
         });
 
         it("will remove a clone when .remove-clone inside the clone is clicked.", function() {
