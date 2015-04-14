@@ -43,7 +43,7 @@ define("pat-clone",[
             $.each(ids, function (idx, id) {
                 if (id.indexOf("#{1}") !== -1) {
                     $clone.attr("id",
-                        $clone.attr("id") ? $clone.attr("id") + " " : '' + 
+                        $clone.attr("id") ? $clone.attr("id") + " " : "" +
                             id.replace("#{1}", this.num_clones+1));
                 }
             }.bind(this));
