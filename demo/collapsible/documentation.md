@@ -27,8 +27,8 @@ to create a simple contextual menu.
 Collapsibles default to being open. You can change this by adding a
 `closed` class to the collapsible.
 
-External triggers
------------------
+Custom triggers
+---------------
 
 The standard behaviour is to use the first element as the trigger to open or
 close a collapsible. You can also use the `trigger` option to specify a 
@@ -37,6 +37,19 @@ different element.
     <button id="trigger">About us</button>
 
     <aside class="pat-collapsible" data-pat-collapsible="trigger: #trigger">
+      <h3>About us</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit...</p>
+      <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
+    </aside>
+
+You can also specify triggers specifically for *closing* or *opening* a
+collapsible.
+
+The options for doing so are **open-trigger** and **close-trigger**.
+
+    <button id="open-trigger">About us</button>
+
+    <aside class="pat-collapsible" data-pat-collapsible="open-trigger: #open-trigger">
       <h3>About us</h3>
       <p>Sed ut perspiciatis unde omnis iste natus error sit...</p>
       <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
@@ -154,6 +167,8 @@ attribute. The available options are:
 | -------------- | ------- | ----------------------------------------- |
 | `load-content` |         | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible. |
 | `trigger` | `::first` | Selector used to identify the open/close trigger for the collapsible. |
+| `close-trigger` |  | Selector used to identify a trigger for closing the collapsible. |
+| `open-trigger` |  | Selector used to identify a trigger for opening the collapsible. |
 | `store`        | `none`  | How to remember the state of a collapsible. Must be one of `none`, `session` or `local`. |
 | `transition` | `slide` | Transition effect when opening or closing a collapsinble. Must be one of `none`, `css`, `fade`, `slide` or `slide-horizontal`. |
 | `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
