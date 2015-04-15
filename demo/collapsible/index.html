@@ -14,25 +14,27 @@
 		</section>
 			<section class="demo">
 		<h2>Demo</h2>
-			<div class="pat-collapsible" id="implicit-open" data-pat-collapsible="store: session">
+            <button id="close">Close All</button>
+            <button id="open">Open All</button>
+			<div class="pat-collapsible" id="implicit-open" data-pat-collapsible="store: session; close-trigger: #close; open-trigger: #open">
 				<h3>Click me - my open class is added automatically and my state is remembered</h3>
 				<p>
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
 				</p>
 			</div>
-			<div class="pat-collapsible open" id="explicit-open" data-pat-collapsible="transition: slide-horizontal">
+			<div class="pat-collapsible open" id="explicit-open" data-pat-collapsible="transition: slide-horizontal; close-trigger: #close; open-trigger: #open">
 				<h3>Click me - I explicitly start out open</h3>
 				<p>
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
 				</p>
 			</div>
-			<div class="pat-collapsible closed" id="explicit-closed" data-pat-collapsible="transition: fade; effect: slow">
+			<div class="pat-collapsible closed" id="explicit-closed" data-pat-collapsible="transition: fade; effect: slow; close-trigger: #close; open-trigger: #open">
 				<h3>Click me - I explicitly start out closed and will fade in</h3>
 				<p>
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
 				</p>
 			</div>
-			<div class="pat-collapsible closed" id="load-on-open" data-pat-collapsible="load-content: collapsible-sources.html#panel1">
+			<div class="pat-collapsible closed" id="load-on-open" data-pat-collapsible="load-content: collapsible-sources.html#panel1; close-trigger: #close; open-trigger: #open">
 				<h3>Click me - I will load my content when opened</h3>
 			</div>
 		</section>
