@@ -1,4 +1,4 @@
-define(["pat-collapsible"], function(pattern) {
+define(["pat-registry", "pat-collapsible"], function(registry, Pattern) {
 
     describe("pat-collapsible", function() {
 
@@ -20,7 +20,7 @@ define(["pat-collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible);
+                Pattern.init($collapsible);
                 expect($collapsible.find(".panel-content").length).toBe(1);
             });
 
@@ -33,7 +33,7 @@ define(["pat-collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible);
+                Pattern.init($collapsible);
                 expect($collapsible.hasClass("open")).toBeTruthy();
             });
 
@@ -46,7 +46,7 @@ define(["pat-collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible);
+                Pattern.init($collapsible);
                 expect($collapsible.hasClass("open")).toBeFalsy();
             });
         });
@@ -61,8 +61,8 @@ define(["pat-collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible, {transition: "none"});
-                pattern.toggle($collapsible);
+                var pat = Pattern.init($collapsible, {transition: "none"});
+                pat.toggle($collapsible);
                 expect($collapsible.hasClass("open")).toBe(false);
                 expect($collapsible.hasClass("closed")).toBe(true);
                 var $trigger = $("#lab h3");
@@ -79,8 +79,8 @@ define(["pat-collapsible"], function(pattern) {
                     "</div>"
                     ].join("\n"));
                 var $collapsible = $("#lab .pat-collapsible");
-                pattern.init($collapsible, {transition: "none"});
-                pattern.toggle($collapsible);
+                var pat = Pattern.init($collapsible, {transition: "none"});
+                pat.toggle($collapsible);
                 expect($collapsible.hasClass("open")).toBe(true);
                 expect($collapsible.hasClass("closed")).toBe(false);
                 var $trigger = $("#lab h3");
