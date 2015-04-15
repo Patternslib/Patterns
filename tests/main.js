@@ -16,6 +16,7 @@ require([
     "jasmine-html",
     "jquery.browser"
     ], function($, jasmine) {
+        $.fx.off = true;
         require([
             "console-runner",
             "pat-compat",

@@ -112,12 +112,10 @@ define(["pat-utils"], function(utils) {
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
             jasmine.Clock.useMock();$("<div/>", {id: "lab"}).appendTo(document.body);
-            $.fx.off=true;
         });
 
         afterEach(function() {
             $("#lab").remove();
-            $.fx.off=false;
         });
 
         it("Hide without a transition", function() {

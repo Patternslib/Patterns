@@ -90,13 +90,13 @@ define(["pat-registry", "pat-collapsible"], function(registry, Pattern) {
                 var $lab = $("#lab"), $collapsible;
                 $lab.html([
                     "<div class=\"closed pat-collapsible\" data-pat-collapsible=\"open-trigger: #open\">",
-                    "<button id=\"open\">open</button>",
+                    "<button>toggle</button>",
                     "<p>Collapsible content</p>",
+                    "<button id=\"open\">open</button>",
                     "</div>"
                     ].join("\n"));
                 $collapsible = $("#lab .pat-collapsible");
                 registry.scan($collapsible);
-                Pattern.init($collapsible, {transition: "none"});
                 expect($collapsible.hasClass("open")).toBe(false);
                 expect($collapsible.hasClass("closed")).toBe(true);
                 $('#open').click();
@@ -107,18 +107,18 @@ define(["pat-registry", "pat-collapsible"], function(registry, Pattern) {
             it("can be configured to have trigger which only closes it", function() {
                 var $lab = $("#lab"), $collapsible;
                 $lab.html([
-                    "<div class=\"pat-collapsible\" data-pat-collapsible=\"open-trigger: #close\">",
-                    "<button id=\"close\">close</button>",
+                    "<div class=\"pat-collapsible\" data-pat-collapsible=\"close-trigger: #close\">",
+                    "<button>toggle</button>",
                     "<p>Collapsible content</p>",
+                    "<button id=\"close\">close</button>",
                     "</div>"
                     ].join("\n"));
                 $collapsible = $("#lab .pat-collapsible");
                 registry.scan($collapsible);
-                Pattern.init($collapsible, {transition: "none"});
-                expect($collapsible.hasClass("close")).toBe(false);
+                expect($collapsible.hasClass("closed")).toBe(false);
                 expect($collapsible.hasClass("open")).toBe(true);
                 $('#close').click();
-                expect($collapsible.hasClass("close")).toBe(true);
+                expect($collapsible.hasClass("closed")).toBe(true);
                 expect($collapsible.hasClass("open")).toBe(false);
             });
         });
