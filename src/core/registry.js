@@ -141,7 +141,7 @@ define([
                         });
                 $.fn[plugin_name] = utils.jqueryPlugin(pattern);
                 // BBB 2012-12-10 and also for Mockup patterns.
-                $.fn[plugin_name.replace(/^pat/, "pattern")] = utils.jqueryPlugin(pattern);
+                $.fn[plugin_name.replace(/^pat/, "pattern")] = $.fn[plugin_name];
             }
             log.debug("Registered pattern:", name, pattern);
             if (registry.initialized) {
