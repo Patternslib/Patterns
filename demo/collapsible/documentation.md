@@ -1,8 +1,8 @@
 # Documentation
 
-A *collapsible* is an element where content is can be shown or visible
+A *collapsible* is an element inside which content can be shown or hidden
 by clicking on a triggering element. One way to use this is to implement
-a very minimal accordeon.
+a very minimal accordion.
 
     <section class="pat-collapsible">
       <h3>About us</h3>
@@ -11,7 +11,7 @@ a very minimal accordeon.
     </section>
 
 In the above example clicking on the *About us* header will hide or
-shown the remainder of the section content. Another possible use case is
+show the remainder of the section content. Another possible use case is
 to create a simple contextual menu.
 
     <div class="pat-collapsible">
@@ -47,8 +47,9 @@ Markup structure
 
 The markup structure for a collapsible is very simple: the first child
 of an element with the `pat-collapsible` class will be used as the
-triggering element and will always be visible. All further children will be
-part of the content.
+triggering element (unless otherwise configured) and will always be visible.
+
+All further children will be part of the content that collapses.
 
 The containing element will get a `open` or `closed` class which indicates if
 the collapsible is currently open (content is visible) or closed (content is
@@ -73,7 +74,7 @@ AJAX loading of content
 Occasionally you may want to display content in a collapsible that
 should be loaded on demand. This is supported through the `load-content`
 option. Using this option you can provide a URL for content that should
-be loaded and shown in a collapsibnle when it is opened.
+be loaded and shown in a collapsible when it is opened.
 
     <section class="pat-collapsible"
         data-pat-collapsible="load-content: /status.html#summary">
