@@ -39,8 +39,10 @@ define("pat-clone",[
             this.num_clones += 1;
             var $clone = this.$template.clone();
             var ids = ($clone.attr("id") || "").split(" ");
-            $clone.removeAttr("id");
+            $clone.removeAttr("id").removeClass("cant-touch-this");
             $.each(ids, function (idx, id) {
+                // Re-add all ids that have the substring #{1} in them, while
+                // also replacing that substring with the number of clones.
                 if (id.indexOf("#{1}") !== -1) {
                     $clone.attr("id",
                         $clone.attr("id") ? $clone.attr("id") + " " : "" +
