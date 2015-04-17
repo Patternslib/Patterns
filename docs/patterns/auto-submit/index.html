@@ -16,6 +16,7 @@
 			</section>
 			<section class="demo">
 				<h2>Demo</h2>
+				<div id="demo">
 				<form action="pattern-test-response.html" method="get" data-pat-inject="target: #main-content" class="concise pat-inject">
 					<fieldset class="horizontal pat-autosubmit">
 						<label>
@@ -29,13 +30,13 @@
 								</option>
 							</select>
 						</label>
-						<fieldset class="group checklist">
+						<fieldset class="group pat-checklist">
 							<legend>We like options</legend>
 							<label><input type="checkbox" name="cream" /> Cream</label>
 							<label><input type="checkbox" name="syrup" /> Syrup</label>
 						</fieldset>
 						<label><input type="file" name="myFile" /> Upload a file</label>
-						<fieldset class="group checklist radio">
+						<fieldset class="group pat-checklist radio">
 							<legend>Choose your flavour</legend>
 							<label><input type="radio" name="radio" /> Strawberry</label>
 							<label><input type="radio" name="radio" /> Banana</label>
@@ -46,6 +47,7 @@
 						<label>Free text field triggers when field loses focus <input type="text" name="defocus" data-pat-autosubmit="delay: defocus" /></label>
 					</fieldset>
 				</form>
+				<div/>
 				<div id="main-content">
 					<p>Some content will appear here if you change anything in the form…</p>
 				</div>
