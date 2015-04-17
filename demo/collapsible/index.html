@@ -14,6 +14,7 @@
 		</section>
 			<section class="demo">
 		<h2>Demo</h2>
+        <div id="demo">
             <button id="close">Close All</button>
             <button id="open">Open All</button>
 			<div class="pat-collapsible" id="implicit-open" data-pat-collapsible="store: session; close-trigger: #close; open-trigger: #open">
@@ -34,9 +35,11 @@
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
 				</p>
 			</div>
-			<div class="pat-collapsible closed" id="load-on-open" data-pat-collapsible="load-content: collapsible-sources.html#panel1; close-trigger: #close; open-trigger: #open">
+			<div class="pat-collapsible closed" id="load-on-open" data-pat-collapsible="load-content: /demo/collapsible/collapsible-sources.html#panel1; close-trigger: #close; open-trigger: #open">
 				<h3>Click me - I will load my content when opened</h3>
 			</div>
+        </div>
+
 		</section>
 		<section class="documentation">
 			<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
