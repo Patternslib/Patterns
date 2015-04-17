@@ -18,6 +18,7 @@ define([
     "pat-autoscale",
     "pat-autosubmit",
     "pat-autosuggest",
+    "pat-blink",
     "pat-breadcrumbs",
     "pat-bumper",
     "pat-calendar",
