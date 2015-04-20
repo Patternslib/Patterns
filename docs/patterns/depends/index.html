@@ -16,6 +16,7 @@
 			</section>
 			<section class="demo">
 			<h2>Demo</h2>
+            <div id="demo">
 			<form class="horizontal" action="#">
 	            <fieldset>
 	             	<button type="reset">Reset</button>
@@ -38,9 +39,9 @@
 					<label><input type="checkbox" name="redonion"/> Red onions</label>
 				</fieldset>
 			</form>
-	
 			<strong class="pat-depends" data-pat-depends="condition: flavour=bacon; transition: fade">This pizza is bad for your health!</strong>
-	                <p class="pat-depends" data-pat-depends="condition: flavour=bacon and gorgonzola">Bad, but <em>extremely</em> tasty!</p>
+            <p class="pat-depends" data-pat-depends="condition: flavour=bacon and gorgonzola">Bad, but <em>extremely</em> tasty!</p>
+            </div>
 		    </section>
 	        <section class="documentation">
 	        	<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>

@@ -1,9 +1,3 @@
-# Dependencies
-
-## Description
-
-…
-
 ## Documentation
 
 The *depends* pattern makes it possible to make visibility of content

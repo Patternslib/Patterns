@@ -1,5 +1,3 @@
-# Forward
-
 ## Description
 The *forward* pattern forwards click events to another element(s).
 
@@ -12,7 +10,6 @@ more other elements.
     <form>
       <submit id="submit">Submit</submit>
     </form>
-
 
 ### Properties
 

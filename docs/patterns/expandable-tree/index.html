@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
 		<link rel="stylesheet" href="../common.css" type="text/css">
@@ -9,9 +8,9 @@
         <script src="../../main.js" type="text/javascript" charset="utf-8"></script>
 		<style>
 			.current {
-			font-weight: bold;
-			display: inline-block;
-			color: red;
+                font-weight: bold;
+                display: inline-block;
+                color: red;
 			}
 		</style>
 	</head>
@@ -23,13 +22,11 @@
 			</section>
 			<section class="demo">
 			<h2>Demo</h2>
-				<!--
-						Toggle is injected like:
-		
-						<li class="folder closed"><span class="toggle"></span>Folder name
-							…
-							-->
-		
+				<!-- Toggle is injected like:
+                    <li class="folder closed"><span class="toggle"></span>Folder name
+                        …
+                -->
+                <div id="demo">
 				<ul class="pat-expandable">
 					<li class="folder">Folder name</li>
 					<li class="folder open">Folder name
@@ -51,14 +48,13 @@
 					<li class="folder">Folder name</li>
 					<li class="folder">Folder name</li>
 				</ul>
+                </div>
 			</section>
 			<section class="documentation">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
 			</section>
 		</section>
-		
 		<a href="../index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
-		
 		<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>

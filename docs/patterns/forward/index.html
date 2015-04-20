@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Toggle</title>
                 <link rel="stylesheet" href="../common.css" type="text/css">
@@ -17,9 +16,20 @@
 			</section>
 			<section class="demo">
 				<h2>Demo</h2>
-
-                                <button type="button" class="pat-forward" data-pat-forward="#checkbox">Click me</button>
-                                <input id="checkbox" type="checkbox"/>
+                <div id="demo">
+                <form>
+                    <fieldset class="vertical">
+                        <fieldset class="pat-checklist">
+                            <label>
+                                <input id="checkbox" type="checkbox"/> I may be ticked through the button too!
+                            </label>
+                        </fieldset>
+                        <fieldset class="pat-button-bar">
+                            <button type="button" class="pat-button pat-forward" data-pat-forward="#checkbox">Click me…</button>
+                        </fieldset>
+                    </fieldset>
+                </form>
+                </div>
 			</section>
 			<section class="documentation">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
