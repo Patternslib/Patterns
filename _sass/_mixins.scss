@@ -1,0 +1,20 @@
+@mixin pat-avatar($border-radius: 50%, $border: 0.055556em solid rgba(0,0,0,0.2), $height: 2em, $width: 2em) {
+    display: inline-block;
+    overflow: hidden;
+    border-radius: $border-radius;
+    border: $border;
+    height: $height;
+    width: $width;
+    img {
+        width: 100%;
+    }
+}
+
+@mixin pat-separator ($height: 0.05em, $margin: 1em 10% 2em, $colour: gray) {
+	background-color: $colour;
+	height: $height;
+	border: none;
+	display: block;
+    margin: $margin;
+    clear: both;
+}

@@ -1,0 +1,63 @@
+.pat-notification-panel {
+	padding: 8px;
+	margin-bottom: 20px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.20);
+	display: block;
+	border-radius: 4px;
+	background-color: rgba(254,255,255,0.98);
+	color: #6f5a44;
+	border: 1px solid #d3d4a7;
+}
+
+.pat-notification-panel.notice {
+	background-color: #fdfdc8;
+}
+
+.pat-notification-panel.success {
+  background-color: #5bb75b;
+  color: #ffffff;
+}
+
+.pat-notification-panel.success * {
+	color: white !important;
+}
+
+.pat-notification-panel.warning {
+  background-color: #faa732;
+  color: #ffffff;
+}
+
+.pat-notification-panel.warning * {
+	color: white !important;
+}
+
+.pat-notification-panel.error {
+  background-color: #da4f49;
+  color: #ffffff;
+}
+
+.pat-notification-panel.error * {
+	color: white !important;
+}
+
+.pat-notification-panel.info {
+  background-color: #d9edf7;
+  color: #247fad;
+}
+
+.pat-notification-panel p:last-of-type {
+	margin-bottom: 0;
+}
+
+/* @group Banners */
+
+#pat-notification-banners {
+	position: fixed;
+ 	top: 15px;
+	width: 320px;
+	z-index: 2147483647;
+	left: 15px;
+}
+/* @end */
+
+

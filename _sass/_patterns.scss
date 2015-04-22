@@ -1,0 +1,69 @@
+// Patterns uses font based icons instead of images. Those are generated
+// with Fontello.com Make sure the fontello folder is placed in your
+// style folder
+
+@import "fontello/css/fontello.css";
+
+// Colours
+
+$colour-alert: red !default;
+$colour-success: green !default;
+$colour-notice: #FFFFD6 !default;
+$colour-warning: orange !default;
+
+// Responsive variables
+
+$break-small: 768px !default;
+$break-large: 769px !default;
+
+// Each pattern comes with a mixin. They may also be included seperately
+// in a project and applied on custom markup.
+
+@import "mixins";
+
+// Individual scss files are imported for each Pattern. These files may
+// also be imported seperately in a project, but always require the Patterns
+// mixins
+
+@import "/docs/patterns/auto-suggest/auto-suggest";
+@import "/docs/patterns/autofocus/autofocus";
+@import "/docs/patterns/autoscale/autoscale";
+@import "/docs/patterns/autosubmit/autosubmit";
+@import "/docs/patterns/avatar/avatar";
+@import "/docs/patterns/button/button";
+@import "/docs/patterns/button-bar/button-bar";
+@import "/docs/patterns/bumper/bumper";
+@import "/docs/patterns/calendar/calendar";
+@import "/docs/patterns/carousel/carousel";
+@import "/docs/patterns/checkedflag/checkedflag";
+@import "/docs/patterns/checklist/checklist";
+@import "/docs/patterns/collapsible/collapsible";
+@import "/docs/patterns/depends/depends";
+@import "/docs/patterns/edit-tinymce/edit-tinymce";
+@import "/docs/patterns/equaliser/equaliser";
+@import "/docs/patterns/expandable-tree/expandable-tree";
+@import "/docs/patterns/focus/focus";
+@import "/docs/patterns/form/form";
+@import "/docs/patterns/gallery/gallery";
+@import "/docs/patterns/grid/grid";
+@import "/docs/patterns/icon/icon";
+@import "/docs/patterns/image-crop/image-crop";
+@import "/docs/patterns/inject/inject";
+@import "/docs/patterns/injection/injection";
+@import "/docs/patterns/markdown/markdown";
+@import "/docs/patterns/modal/modal";
+@import "/docs/patterns/navigation/navigation";
+@import "/docs/patterns/notification/notification";
+@import "/docs/patterns/photoswipe/photoswipe";
+@import "/docs/patterns/select2/select2";
+@import "/docs/patterns/separator/separator";
+@import "/docs/patterns/settings/settings";
+@import "/docs/patterns/slideshow-builder/slideshow-builder";
+@import "/docs/patterns/sortable/sortable";
+@import "/docs/patterns/stacks/stacks";
+@import "/docs/patterns/switch/switch";
+@import "/docs/patterns/tiny-content/tiny-content";
+@import "/docs/patterns/toggle/toggle";
+@import "/docs/patterns/tooltip/tooltip";
+@import "/docs/patterns/validate/validate";
+@import "/docs/patterns/zoom/zoom";
