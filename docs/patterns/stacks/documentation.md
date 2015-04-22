@@ -1,9 +1,5 @@
-# Stacks
+# Documentation
 
-## Description
-A simple pattern that allows for quickly changing out chunks of content on a page, typically styled as tabs.
-
-## Documentation
 The stacks pattern provides a way to group a number of *sheets*, only one of which is vissible at a point
 in time. A common version of this pattern are tabs.
 
