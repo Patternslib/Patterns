@@ -12,33 +12,27 @@ Below is a simple example of a bumper.
     </div>
 
 When the user starts scrolling the page and an edge of the above div reaches an
-edge of the viewport, a `bumped` class will be added. Additionally, it will be
-assigned a `bumped-{top|left|right|bottom}` class depending on which edge(s) of
-the element was touched by the viewport. If you want the item to stick at the
-edge of the viewport you can use this CSS:
+edge of the viewport, a `bumped` class will be added. For this to work the pattern
+will automatically set the ``position`` of the div to ``relative``.
 
-    .bumped {
-       position: fixed;
-    }
+### Bumpers in scrolling containers
 
-    .bumped-top {
-       top: 0;
-    }
+You can also put a bumper in a scrolling container. Here is an example:
 
-    .bumped-bottom {
-       bottom: 0;
-    }
+    <div class="container">
+      <em class="pat-bumper">Hello!</em>
+      <p>...</p>
+    </div>
 
-    .bumped-left {
-       left: 0;
-    }
+If the container has its overflow style set to ``auto`` or ``scroll`` and its
+contents do not fit in the available space the browser will automatically
+add scrollbars. The bumper pattern will detect this and *stick* the bumped
+element so it is always visible in its container.
 
-    .bumped-right {
-       right: 0;
-    }
-
-Please note that classes `bumped-left` and `bumped-right` will not be assigned
-at the same time. The same is true for `bumped-top` and `bumped-bottom`.
+To implement this the bumper pattern will set the ``position`` of both the
+bumper and its scrolling container to ``relative``. In addition it is required
+that the scrolling container is the first positioned parent of the bumper
+(i.e. its *offset parent*).
 
 ### Class specification
 
@@ -65,7 +59,7 @@ The available options are:
 
 | Property | Default value | Description | Type |
 | ----- | ------- | ----------- |
-| `margin` | 0| The distance from the edge of the element from which the 'bumped' behaviour will be activated. | Size |
+| `margin` | 0| The distance (in pixels) from the edge of the element from which the 'bumped' behaviour will be activated. | Number |
 | `selector` | *unset* | CSS selector for elements whose classes must be updated. | CSS selector |
 | `bump-add` | `bumped` | CSS class(es) to add when an element is bumped. | String |
 | `bump-remove` | *unset* | CSS class(es) to removed when an element is bumped. | String |
