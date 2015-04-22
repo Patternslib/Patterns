@@ -29,17 +29,17 @@ The possibilities don't stop here. Other applications of injection include injec
 
 The most simple form of injection is a link which loads content when clicked:
 
-    <a href="demos/frobber.html#content" class="pat-inject">Demo the frobber</a>
+    <a href="demos/frobber.html#demo-content" class="pat-inject">Demo the frobber</a>
 
-    <section id="content">
+    <section id="demo-content">
       …
     </section>
 
-When a user clicks this link `demos/frobber.html` will be fetched via AJAX, the element with id `content` is extracted and used to replace the content of `#content` on the current page.
+When a user clicks this link `demos/frobber.html` will be fetched via AJAX, the element with id `demo-content` is extracted and used to replace the content of `#demo-content` on the current page.
 
 In another situation you may not want to replace content but add new content. You can easily do that by using a modifier:
 
-    <a href="latest-news.html#content" class="pat-inject"
+    <a href="latest-news.html#demo-content" class="pat-inject"
        data-pat-inject="target: #news::before">Tell me more</a>
 
     <section id="news">
@@ -52,12 +52,12 @@ Perhaps inserting a single block of content is not enough for your needs? Don't 
 
     <section id="section">
       <form action="/my/form" class="pat-inject"
-       data-pat-inject="#content #section && #notice #notices::after">
+       data-pat-inject="#demo-content #section && #notice #notices::after">
         …
       </form>
     </section>
 
-When you submit this form two things happen: `#content` from the
+When you submit this form two things happen: `#demo-content` from the
 response is used to replace `#section`'s content of the page, replacing the current form with a new form or a feedback message. In addition a `#notice` element is extracted from the response and added at the bottom
 of `#notices`.
 
