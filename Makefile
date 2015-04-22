@@ -79,6 +79,7 @@ css::
 	@$(SASS) docs/patterns/equaliser/_equaliser.scss > docs/patterns/equaliser/equaliser.css
 	@$(SASS) docs/patterns/expandable-tree/_expandable-tree.scss > docs/patterns/expandable-tree/expandable-tree.css
 	@$(SASS) docs/patterns/focus/_focus.scss > docs/patterns/focus/focus.css
+	@echo "Almost there, don't give up!"
 	@$(SASS) docs/patterns/forward/_forward.scss > docs/patterns/forward/forward.css
 	@$(SASS) docs/patterns/gallery/_gallery.scss > docs/patterns/gallery/gallery.css
 	@$(SASS) docs/patterns/grid/_grid.scss > docs/patterns/grid/grid.css
@@ -103,8 +104,8 @@ css::
 ########################################################################
 
 serve:: all
-	@printf "\n\n Designer, you can be happy now.\n Go to http://localhost:4001/demo/ to see the demo \n\n\n\n"
-	$(HTTPSERVE) -p 4001
+	@printf "\nDesigner, you can be happy now.\n Go to http://localhost:4001/demo/ to see the demo \n\n"
+	@$(HTTPSERVE) -p 4001
 
 designerhappy:: serve
 
