@@ -39,7 +39,7 @@
 /* Navigation buttons + start/stop button, default state */
 .anythingSlider-default .anythingControls a {
 	/* top shadow */
-	background: #777 url(carousel-arrows.png) center -288px repeat-x;
+	background: #777 url(/docs/patterns/carousel/carousel-arrows.png) center -288px repeat-x;
 	color: #000;
 	border-radius: 0 0 5px 5px;
 	-moz-border-radius: 0 0 5px 5px;
@@ -128,7 +128,7 @@
 	margin: -70px 0 0 0; /* half height of image */
 	text-align: center;
 	outline: 0;
-	background: url(carousel-arrows.png) no-repeat;
+	background: url(/docs/patterns/carousel/carousel-arrows.png) no-repeat;
 }
 
 /* back arrow */
