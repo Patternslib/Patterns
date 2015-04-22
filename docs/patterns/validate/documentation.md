@@ -1,11 +1,9 @@
-# Form validation
-
-## Description
+# Description
 This pattern provides a simple but powerful form validation beyond what HTML5 offers.
 
-## Documentation
+# Documentation
 
-The validation pattern is triggered by a single class `pat-validate` on the form tag. The rest is handled mostly with standard HTML5 validation attributes. 
+The validation pattern is triggered by a single class `pat-validate` on the form tag. The rest is handled mostly with standard HTML5 validation attributes.
 
 This pattern has several advantages over standard HTML 5 form validation: it supports older browsers, it uses simple documented HTML markup to allow non-browser-specific styling of error messages and it supports extra validation rules.
 
@@ -30,7 +28,7 @@ The following attributes may be used.
 
 In addition the extra validators from Parsley are support. You can find a complete list of supported
 validators at the [Parseley validators documentation](http://parsleyjs.org/documentation.html#validators).
-### Error messages
+## Error messages
 
 Error messages are inserted into the DOM as `em` elements with a `message warning` class. For most input elements error messages are inserted immediately after the input element. In addition both the input element and its label will get an `warning` class.
 
@@ -49,7 +47,7 @@ Checkboxes and radio buttons are treated differently: if they are contained in a
         <em class="message warning">Please make a choice</em>
     </fieldset>
 
-### Properties
+## Properties
 
 This pattern has no configurable properties.
 
