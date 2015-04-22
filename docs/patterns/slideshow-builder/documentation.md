@@ -1,9 +1,4 @@
-# Slideshow builder
-
-## Description
-This patterns provides a simple method to create custom slideshows.
-
-## Documentation
+# Documentation
 
 A user can generate slide shows by cherry picking stock slides from a form. This is desired in situations where you want to have stock slide shows where individual end users want to leave out specific slides based not he audience for the presentation. Or to create new slide shows out of individually stored stock slides. 
 
@@ -28,7 +23,7 @@ The pattern will inject a Checklist at the beginning of the form based on the ID
     
 When the user clicks on the submit button, the slideshow is started with filters already applied in the URI based on the selection the user made.
 
-### Customising the form
+## Customising the form
 
 Since this pattern will only insert a fieldset into a form you can easily extend the form in several ways. For example you can also use the checklist pattern to give a convenient method to (de)select all slides:
 
@@ -55,7 +50,7 @@ You can also put the `pat-slideshow-builder` class on another element inside the
         <button type="submit">Run</button>
     </form>
 
-### Properties
+## Properties
 
 This pattern has no configurable properties.
 
