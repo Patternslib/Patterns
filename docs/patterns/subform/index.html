@@ -14,66 +14,67 @@
             <section class="description">
                     <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
             </section>
-            <section class="demo">
-                <h2>Demo</h2>
-                <h3>Auto-vanilla in auto-vanilla (same action)</h3>
-                <form action="form-response.html" method="get" class="concise">
-                    <fieldset class="pat-autosubmit">
-                        <label>Name <input name="name" type="text" value=""></label>
-                    </fieldset>
-                    <fieldset class="pat-subform pat-autosubmit">
-                        <label>Zipcode <input name="zipcode" type="text" value=""></label>
-                    </fieldset>
-                </form>
-                <h3>Auto-inject in auto-vanilla (other action via data-pat-inject="url: ...")</h3>
-                <form action="form-response.html" method="get" class="concise">
-                    <fieldset class="pat-autosubmit">
-                        <label>Name <input name="name" type="text" value=""></label>
-                    </fieldset>
-                    <fieldset class="pat-subform pat-autosubmit pat-inject" data-pat-inject="url: subform-response.html; target: #subform-target">
-                        <label>Zipcode <input name="zipcode" type="text" value=""></label>
-                    </fieldset>
-                </form>
-                <h3>Auto-inject in auto-inject (other action via data-pat-inject="url: ...")</h3>
-                <form action="form-response.html" method="get" class="concise pat-inject" data-pat-inject="target: #form-target">
-                    <fieldset class="pat-autosubmit">
-                        <label>Name <input name="name" type="text" value=""></label>
-                    </fieldset>
-                    <fieldset class="pat-subform pat-autosubmit pat-inject" data-pat-inject="url: subform-response.html; target: #subform-target">
-                        <label>Zipcode <input name="zipcode" type="text" value=""></label>
-                    </fieldset>
-                </form>
-                <h3>Manual-inject in Manual-inject (other action via data-pat-inject="url: ...")</h3>
-                <form action="form-response.html" method="get" class="concise pat-inject" data-pat-inject="target: #form-target">
-                    <fieldset>
-                        <label>Name <input name="name" type="text" value=""></label>
-                    </fieldset>
-                    <fieldset class="pat-subform pat-inject" data-pat-inject="url: subform-response.html; target: #subform-target">
-                        <label>Zipcode <input name="zipcode" type="text" value=""></label>
-                        <button type="submit" name="localsubmit" value="clicked">Local</button>
-                    </fieldset>
-                    <button type="submit" name="globalsubmit" value="clicked">Global</button>
-                </form>
-                <h3>Manual-inject in Manual-inject (other action via data-pat-inject="url: ...")</h3>
-                <form action="form-response.html" method="get" class="concise pat-inject" data-pat-inject="target: #form-target">
-                    <fieldset>
-                        <label>Name <input name="name" type="text" value=""></label>
-                    </fieldset>
-                    <fieldset class="pat-subform pat-inject" data-pat-inject="url: subform-response.html; target: #subform-target">
-                        <label>Zipcode <input name="zipcode" type="text" value=""></label>
-                        <button type="submit" name="localsubmit" value="clicked">Local</button>
-                        <button type="submit" name="othersubmit" value="clicked" formaction="subform-other-response.html">Local (other action)</button>
-                    </fieldset>
-                    <button type="submit" name="globalsubmit" value="clicked">Global</button>
-                </form>
-                </div>
-                <div id="form-target">
-                    <p>Some content will appear here if you change name or address in the form…</p>
-                </div>
-                <div id="subform-target">
-                    <p>Some content will appear here if you change zipcode or city in the form…</p>
-                </div>
-            </section>
+            <h2>Demo</h2>
+	    <div id="demo">
+		<section class="demo">
+		    <h3>Auto-vanilla in auto-vanilla (same action)</h3>
+		    <form action="/docs/patterns/subform/form-response.html" method="get" class="concise">
+			<fieldset class="pat-autosubmit">
+			    <label>Name <input name="name" type="text" value=""></label>
+			</fieldset>
+			<fieldset class="pat-subform pat-autosubmit">
+			    <label>Zipcode <input name="zipcode" type="text" value=""></label>
+			</fieldset>
+		    </form>
+		    <h3>Auto-inject in auto-vanilla (other action via data-pat-inject="url: ...")</h3>
+		    <form action="/docs/patterns/subform/form-response.html" method="get" class="concise">
+			<fieldset class="pat-autosubmit">
+			    <label>Name <input name="name" type="text" value=""></label>
+			</fieldset>
+			<fieldset class="pat-subform pat-autosubmit pat-inject" data-pat-inject="url: /docs/patterns/subform/subform-response.html; target: #subform-target">
+			    <label>Zipcode <input name="zipcode" type="text" value=""></label>
+			</fieldset>
+		    </form>
+		    <h3>Auto-inject in auto-inject (other action via data-pat-inject="url: ...")</h3>
+		    <form action="/docs/patterns/subform/form-response.html" method="get" class="concise pat-inject" data-pat-inject="target: #form-target">
+			<fieldset class="pat-autosubmit">
+			    <label>Name <input name="name" type="text" value=""></label>
+			</fieldset>
+			<fieldset class="pat-subform pat-autosubmit pat-inject" data-pat-inject="url: /docs/patterns/subform/subform-response.html; target: #subform-target">
+			    <label>Zipcode <input name="zipcode" type="text" value=""></label>
+			</fieldset>
+		    </form>
+		    <h3>Manual-inject in Manual-inject (other action via data-pat-inject="url: ...")</h3>
+		    <form action="/docs/patterns/subform/form-response.html" method="get" class="concise pat-inject" data-pat-inject="target: #form-target">
+			<fieldset>
+			    <label>Name <input name="name" type="text" value=""></label>
+			</fieldset>
+			<fieldset class="pat-subform pat-inject" data-pat-inject="url: /docs/patterns/subform/subform-response.html; target: #subform-target">
+			    <label>Zipcode <input name="zipcode" type="text" value=""></label>
+			    <button type="submit" name="localsubmit" value="clicked">Local</button>
+			</fieldset>
+			<button type="submit" name="globalsubmit" value="clicked">Global</button>
+		    </form>
+		    <h3>Manual-inject in Manual-inject (other action via data-pat-inject="url: ...")</h3>
+		    <form action="/docs/patterns/subform/form-response.html" method="get" class="concise pat-inject" data-pat-inject="target: #form-target">
+			<fieldset>
+			    <label>Name <input name="name" type="text" value=""></label>
+			</fieldset>
+			<fieldset class="pat-subform pat-inject" data-pat-inject="url: /docs/patterns/subform/subform-response.html; target: #subform-target">
+			    <label>Zipcode <input name="zipcode" type="text" value=""></label>
+			    <button type="submit" name="localsubmit" value="clicked">Local</button>
+			    <button type="submit" name="othersubmit" value="clicked" formaction="/docs/patterns/subform/subform-other-response.html">Local (other action)</button>
+			</fieldset>
+			<button type="submit" name="globalsubmit" value="clicked">Global</button>
+		    </form>
+		    <div id="form-target">
+			<p>Some content will appear here if you change name or address in the form…</p>
+		    </div>
+		    <div id="subform-target">
+			<p>Some content will appear here if you change zipcode or city in the form…</p>
+		    </div>
+		</section>
+	    </div>
             <section class="documentation">
                 <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
             </section>
