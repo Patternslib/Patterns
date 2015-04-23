@@ -20,7 +20,7 @@ The grid allows for nesting down as far as you'd like, though at a certain point
 
 Offsets allow you to create additional space between columns in a row. The offsets run from offset-by-one all the way up to offset-by-eleven. Like the rest of the grid, they're nestable.
 
-![image](/docs/patterns/grid/offsets.png)
+![image](/src/pat/grid/offsets.png)
 
 #### Centered Columns
 
@@ -30,7 +30,7 @@ Centred columns are placed in the middle of the row. This does not centre their 
 
 Sometimes within the grid you want the order of your markup to not necessarily be the same as the order items are flowed into the grid. Using our source ordering classes, `.push-#/pull-#`, you can shift columns around on desktops and tablets. On phones, the grid will still be linearised into the order of the markup.
 
-![image](/docs/patterns/grid/source-ordering.png)
+![image](/src/pat/grid/source-ordering.png)
 
 The syntax supports push and pull for two to ten columns, and is added directly to the columns themselves.
 

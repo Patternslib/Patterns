@@ -11,17 +11,17 @@ Pat-inject intercepts the page refresh, invisibly collects the remote page, extr
 
 The principle is illustrated in the following graphic.
 
-![image](/docs/patterns/inject/injection-single.svg)
+![image](/src/pat/inject/injection-single.svg)
 
 This typical example illustrates how in this case the content of the main content region is replaced by the content of the same region of another page. One could for instance create a series of links styled as tabs this way, which would each refresh the content area of the page, without refreshing the browser window.
 
 A slightly more complex case is illustrated below. You see how multiple regions are extracted out of one page and injected into similar areas on another page. It doesn't matter if the regions on the remote page are differently named or styled.
 
-![image](/docs/patterns/inject/injection-multiple.svg) 
+![image](/src/pat/inject/injection-multiple.svg) 
 
 It's also possible to inject content from another page into a modal panel:
 
-![image](/docs/patterns/inject/injection-modal.svg) 
+![image](/src/pat/inject/injection-modal.svg) 
 
 The possibilities don't stop here. Other applications of injection include injection in tooltips (pat-tooltip) and injection in 'self healing messages' (Similar to Mac OS banners or Growl) (pat-notification). Those ways of working with injection are explained in the respective documentation sections of the components pat-tooltip and pat-notification. 
 

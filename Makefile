@@ -63,42 +63,42 @@ clean::
 
 css::
 	@echo "Hang tight!"
-	@$(SASS) docs/patterns/auto-scale/_auto-scale.scss > docs/patterns/auto-scale/auto-scale.css
-	@$(SASS) docs/patterns/auto-submit/_auto-submit.scss > docs/patterns/auto-submit/auto-submit.css
-	@$(SASS) docs/patterns/auto-suggest/_auto-suggest.scss > docs/patterns/auto-suggest/auto-suggest.css
-	@$(SASS) docs/patterns/autofocus/_autofocus.scss > docs/patterns/autofocus/autofocus.css
-	@$(SASS) docs/patterns/bumper/_bumper.scss > docs/patterns/bumper/bumper.css
-	@$(SASS) docs/patterns/calendar/_calendar.scss > docs/patterns/calendar/calendar.css
-	@$(SASS) docs/patterns/carousel/_carousel.scss > docs/patterns/carousel/carousel.css
-	@$(SASS) docs/patterns/checked-flag/_checked-flag.scss > docs/patterns/checked-flag/checked-flag.css
-	@$(SASS) docs/patterns/checklist/_checklist.scss > docs/patterns/checklist/checklist.css
-	@$(SASS) docs/patterns/clone/_clone.scss > docs/patterns/clone/clone.css
-	@$(SASS) docs/patterns/collapsible/_collapsible.scss > docs/patterns/collapsible/collapsible.css
-	@$(SASS) docs/patterns/depends/_depends.scss > docs/patterns/depends/depends.css
-	@$(SASS) docs/patterns/edit-tinymce/_edit-tinymce.scss > docs/patterns/edit-tinymce/edit-tinymce.css
-	@$(SASS) docs/patterns/equaliser/_equaliser.scss > docs/patterns/equaliser/equaliser.css
-	@$(SASS) docs/patterns/expandable-tree/_expandable-tree.scss > docs/patterns/expandable-tree/expandable-tree.css
-	@$(SASS) docs/patterns/focus/_focus.scss > docs/patterns/focus/focus.css
+	@$(SASS) src/pat/auto-scale/_auto-scale.scss > src/pat/auto-scale/auto-scale.css
+	@$(SASS) src/pat/auto-submit/_auto-submit.scss > src/pat/auto-submit/auto-submit.css
+	@$(SASS) src/pat/auto-suggest/_auto-suggest.scss > src/pat/auto-suggest/auto-suggest.css
+	@$(SASS) src/pat/autofocus/_autofocus.scss > src/pat/autofocus/autofocus.css
+	@$(SASS) src/pat/bumper/_bumper.scss > src/pat/bumper/bumper.css
+	@$(SASS) src/pat/calendar/_calendar.scss > src/pat/calendar/calendar.css
+	@$(SASS) src/pat/carousel/_carousel.scss > src/pat/carousel/carousel.css
+	@$(SASS) src/pat/checked-flag/_checked-flag.scss > src/pat/checked-flag/checked-flag.css
+	@$(SASS) src/pat/checklist/_checklist.scss > src/pat/checklist/checklist.css
+	@$(SASS) src/pat/clone/_clone.scss > src/pat/clone/clone.css
+	@$(SASS) src/pat/collapsible/_collapsible.scss > src/pat/collapsible/collapsible.css
+	@$(SASS) src/pat/depends/_depends.scss > src/pat/depends/depends.css
+	@$(SASS) src/pat/edit-tinymce/_edit-tinymce.scss > src/pat/edit-tinymce/edit-tinymce.css
+	@$(SASS) src/pat/equaliser/_equaliser.scss > src/pat/equaliser/equaliser.css
+	@$(SASS) src/pat/expandable-tree/_expandable-tree.scss > src/pat/expandable-tree/expandable-tree.css
+	@$(SASS) src/pat/focus/_focus.scss > src/pat/focus/focus.css
 	@echo "Almost there, don't give up!"
-	@$(SASS) docs/patterns/forward/_forward.scss > docs/patterns/forward/forward.css
-	@$(SASS) docs/patterns/gallery/_gallery.scss > docs/patterns/gallery/gallery.css
-	@$(SASS) docs/patterns/grid/_grid.scss > docs/patterns/grid/grid.css
-	@$(SASS) docs/patterns/image-crop/_image-crop.scss > docs/patterns/image-crop/image-crop.css
-	@$(SASS) docs/patterns/inject-history/_inject-history.scss > docs/patterns/inject-history/inject-history.css
-	@$(SASS) docs/patterns/inject/_inject.scss > docs/patterns/inject/inject.css
-	@$(SASS) docs/patterns/markdown/_markdown.scss > docs/patterns/markdown/markdown.css
-	@$(SASS) docs/patterns/masonry/_masonry.scss > docs/patterns/masonry/masonry.css
-	@$(SASS) docs/patterns/modal/_modal.scss > docs/patterns/modal/modal.css
-	@$(SASS) docs/patterns/navigation/_navigation.scss > docs/patterns/navigation/navigation.css
-	@$(SASS) docs/patterns/notification/_notification.scss > docs/patterns/notification/notification.css
-	@$(SASS) docs/patterns/slideshow-builder/_slideshow-builder.scss > docs/patterns/slideshow-builder/slideshow-builder.css
-	@$(SASS) docs/patterns/sortable/_sortable.scss > docs/patterns/sortable/sortable.css
-	@$(SASS) docs/patterns/stacks/_stacks.scss > docs/patterns/stacks/stacks.css
-	@$(SASS) docs/patterns/switch/_switch.scss > docs/patterns/switch/switch.css
-	@$(SASS) docs/patterns/toggle/_toggle.scss > docs/patterns/toggle/toggle.css
-	@$(SASS) docs/patterns/tooltip/_tooltip.scss > docs/patterns/tooltip/tooltip.css
-	@$(SASS) docs/patterns/validate/_validate.scss > docs/patterns/validate/validate.css
-	@$(SASS) docs/patterns/zoom/_zoom.scss > docs/patterns/zoom/zoom.css
+	@$(SASS) src/pat/forward/_forward.scss > src/pat/forward/forward.css
+	@$(SASS) src/pat/gallery/_gallery.scss > src/pat/gallery/gallery.css
+	@$(SASS) src/pat/grid/_grid.scss > src/pat/grid/grid.css
+	@$(SASS) src/pat/image-crop/_image-crop.scss > src/pat/image-crop/image-crop.css
+	@$(SASS) src/pat/inject-history/_inject-history.scss > src/pat/inject-history/inject-history.css
+	@$(SASS) src/pat/inject/_inject.scss > src/pat/inject/inject.css
+	@$(SASS) src/pat/markdown/_markdown.scss > src/pat/markdown/markdown.css
+	@$(SASS) src/pat/masonry/_masonry.scss > src/pat/masonry/masonry.css
+	@$(SASS) src/pat/modal/_modal.scss > src/pat/modal/modal.css
+	@$(SASS) src/pat/navigation/_navigation.scss > src/pat/navigation/navigation.css
+	@$(SASS) src/pat/notification/_notification.scss > src/pat/notification/notification.css
+	@$(SASS) src/pat/slideshow-builder/_slideshow-builder.scss > src/pat/slideshow-builder/slideshow-builder.css
+	@$(SASS) src/pat/sortable/_sortable.scss > src/pat/sortable/sortable.css
+	@$(SASS) src/pat/stacks/_stacks.scss > src/pat/stacks/stacks.css
+	@$(SASS) src/pat/switch/_switch.scss > src/pat/switch/switch.css
+	@$(SASS) src/pat/toggle/_toggle.scss > src/pat/toggle/toggle.css
+	@$(SASS) src/pat/tooltip/_tooltip.scss > src/pat/tooltip/tooltip.css
+	@$(SASS) src/pat/validate/_validate.scss > src/pat/validate/validate.css
+	@$(SASS) src/pat/zoom/_zoom.scss > src/pat/zoom/zoom.css
 	@$(SASS) _sass/_patterns.scss > patterns.css
 
 ########################################################################

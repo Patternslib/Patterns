@@ -2,7 +2,7 @@
 
 We have working demos for all the patterns.
 
-Each pattern's demo is in ./docs/patterns/${pattern-name}/
+Each pattern's demo is in ./src/pat/${pattern-name}/
 
 To view the demos, you can run the following in the root of the Patterns
 repository
