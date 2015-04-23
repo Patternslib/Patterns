@@ -26,7 +26,7 @@ The pattern will inject a Checklist at the beginning of the form based on the ID
     
 When the user clicks on the submit button, the slideshow is started with filters already applied in the URI based on the selection the user made.
 
-### Customising the form
+## Customising the form
 
 Since this pattern will only insert a fieldset into a form you can easily extend the form in several ways. For example you can also use the checklist pattern to give a convenient method to (de)select all slides:
 
