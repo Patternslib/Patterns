@@ -1,20 +1,12 @@
-# Cloning
+## Description
 
-## properties:
+Pat clone is used to offer users a control to clone (groups of) (form) elements on a page.
 
-
-| Property | Description | Default | Type |
-|------|------|-----|------|
-| template |Selects the element that will be cloned each time. You might often want to refer to a piece of template markup for this that is hidden with though the CSS. |:first | CSS Selector |
-| max  |Maximum number of clones that is allowed | | Integer |
-| trigger-element |Selector of the element that will remove the clone when clicked upon. | .add-clone | CSS Selector |
-| remove-element |Selector of the element that will remove the clone when clicked upon. | .remove-clone | CSS Selector|
-
-## Concept
+## Documentation
 
 The clone pattern is typically used in case you want to create a form on which it is unknown how many instances the user will need for a certain field or group of fields. For instance if you want to ask the user to fill out the name and birthdate of each family member.
 
-## Usage
+### Usage
 
 Clone is triggered by the class `pat-clone` on a container element that contains the clones. Consider the following markup:
 
@@ -75,3 +67,12 @@ The markup below would have exactly the same effect as the first example, but us
       <button type="button" class="add-clone">Add an extra family member</button>
     </div>
 
+
+### Option reference
+
+| Property | Description | Default | Type |
+|------|------|-----|------|
+| template |Selects the element that will be cloned each time. You might often want to refer to a piece of template markup for this that is hidden with though the CSS. |:first | CSS Selector |
+| max  |Maximum number of clones that is allowed | | Integer |
+| trigger-element |Selector of the element that will remove the clone when clicked upon. | .add-clone | CSS Selector |
+| remove-element |Selector of the element that will remove the clone when clicked upon. | .remove-clone | CSS Selector|

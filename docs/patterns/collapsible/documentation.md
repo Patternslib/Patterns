@@ -1,4 +1,9 @@
-# Documentation
+## Description
+
+A *collapsible* is an element where content is can be shown or visible by clicking on a triggering element.
+
+
+## Documentation
 
 A *collapsible* is an element inside which content can be shown or hidden
 by clicking on a triggering element. One way to use this is to implement
@@ -27,8 +32,7 @@ to create a simple contextual menu.
 Collapsibles default to being open. You can change this by adding a
 `closed` class to the collapsible.
 
-Custom triggers
----------------
+### Custom triggers
 
 The standard behaviour is to use the first element as the trigger to open or
 close a collapsible. You can also use the `trigger` option to specify a 
@@ -55,8 +59,7 @@ The options for doing so are **open-trigger** and **close-trigger**.
       <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
     </aside>
 
-Markup structure
-----------------
+## Markup structure
 
 The markup structure for a collapsible is very simple: the first child
 of an element with the `pat-collapsible` class will be used as the
@@ -81,8 +84,7 @@ collapsible pattern has initialised:
       </div>
     </section>
 
-AJAX loading of content
------------------------
+### AJAX loading of content
 
 Occasionally you may want to display content in a collapsible that
 should be loaded on demand. This is supported through the `load-content`
@@ -98,8 +100,7 @@ This example will load the system status from `/status.html`, extract
 the element with the id `summary` and use that as the panel content.
 When the collapsible is closed and reopened the content is reloaded.
 
-Remembering the state
----------------------
+### Remembering the state
 
 Sometimes you need to remember the toggle state of an collapsible. This
 can be done by telling the collapsible pattern to store the state of an
@@ -114,8 +115,7 @@ element using the `store` parameter.
 To use this you requirements must be met:
 
 1.  the element must have an `id`
-2.  The browser must support [Web
-    Storage](http://www.w3.org/TR/webstorage/)
+2.  The browser must support [Web Storage](http://www.w3.org/TR/webstorage/)
 
 The possible values for the `store` parameter are:
 
@@ -123,8 +123,7 @@ The possible values for the `store` parameter are:
 -  `local`: remember the state as part of the local storage.
 -  `session`: remember the status as part of the session storage.
 
-Transitions
------------
+### Transitions
 
 You can specify the transition effect to use when a collapsible
 is opened or closed. The default behaviour is to not use a slide transition.
@@ -157,8 +156,7 @@ uses a vertical sliding effect. During a transition an `in-progress`
 class will be set on the element.
 
 
-Option reference
-----------------
+### Option reference
 
 The collapsible can be configured through a `data-pat-collapsible`
 attribute. The available options are:
@@ -173,4 +171,3 @@ attribute. The available options are:
 | `transition` | `slide` | Transition effect when opening or closing a collapsinble. Must be one of `none`, `css`, `fade`, `slide` or `slide-horizontal`. |
 | `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
 | `effect-easing`  | `swing` | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
-

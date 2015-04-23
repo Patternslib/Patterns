@@ -319,7 +319,7 @@ After injection was triggered:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
 
-### Properties
+### Options reference
 
 You can customise the behaviour of injection through options in the `data-pat-inject` attribute.
 

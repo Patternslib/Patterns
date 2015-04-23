@@ -1,3 +1,7 @@
+## Description
+
+The *depends* pattern makes it possible to make visibility of content conditional on form data.
+
 ## Documentation
 
 The *depends* pattern makes it possible to make visibility of content

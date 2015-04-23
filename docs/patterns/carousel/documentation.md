@@ -1,4 +1,4 @@
-# Documentation
+## Documentation
 
 Patterns builds on the excellent
 [AnythingSlider](https://github.com/CSS-Tricks/AnythingSlider/wiki)
@@ -46,8 +46,7 @@ carousel to jump to the linked panel when clicked.
 Such links will automatically get a `current` class when the panel they
 are pointing to is displayed.
 
-Lazy loading
-------------
+### Lazy loading
 
 The carousel supports lazy loading. To use this simply give your images
 a `data-src` attribute. When a panel is about to be displayed the
@@ -58,8 +57,7 @@ carousel will move all `data-src` attributes to `src`
       <li><img data-src="images/img2.jpg/></li>
     </ul>
 
-Customizing behaviour
----------------------
+### Customizing behaviour
 
 The default carousel is quite spartan. You can customize it through
 options in the `data-pat-carousel` attribute.

@@ -1,4 +1,4 @@
-# Documentation
+## Documentation
 
 Panels, perhaps better (but incorrectly) known as dialogs or popups, can
 be created using standard links or buttons with the `pat-modal` class.

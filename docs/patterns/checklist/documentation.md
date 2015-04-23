@@ -1,7 +1,7 @@
-# Checklist
-
 ## Description
-…
+
+The checklist pattern provides a convenient method to add options to
+select and deselect all checkboxes in a block.
 
 ## Documentation
 The checklist pattern provides a convenient method to add options to
@@ -41,7 +41,7 @@ is: if all checkboxes are already checked the select-all button will be
 disabled. And if no checkboxes are checked the deselect-all button will
 be disabled.
 
-## JavaScript API
+### JavaScript API
 
 The JavaScript API is entirely optional since Patterns already
 automatically enables the switching behaviour for all elements with a

@@ -1,4 +1,4 @@
-# Documentation
+## Documentation
 
 For a very basic usage of this pattern:
 
@@ -8,8 +8,7 @@ For a very basic usage of this pattern:
         ...
     </form>
 
-Live Preview
-------------
+### Live Preview
 
 The Image Crop pattern can create a live preview of the cropping
 selection. The following HTML and CSS fragments illustrate the use of
@@ -38,8 +37,7 @@ this feature:
         padding: 0;
     }
 
-Form Elements
--------------
+### Form Elements
 
 By default, this pattern uses the form ancestor to the trigger image
 element. However, a different form can be used by using the form-id
@@ -60,8 +58,7 @@ If input fields with those names do not exist within the form, they will
 be created. Additionally, the names of the input fields can be prefixed
 by using the `input-prefix` option.
 
-Option Reference
-----------------
+### Option Reference
 
 The collapsible can be configured through a `data-pat-image-crop`
 attribute. The available options are:

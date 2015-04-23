@@ -1,4 +1,5 @@
 ## Description
+
 The equaliser pattern makes sure elements in a row have the same height.
 
 ## Documentation
@@ -61,7 +62,7 @@ The `equalised` class will be set on an element after the animation has
 completed.
 
 
-### Properties
+## Option reference
 
 This pattern has no configurable properties.
 

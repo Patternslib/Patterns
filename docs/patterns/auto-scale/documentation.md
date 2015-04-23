@@ -1,5 +1,3 @@
-# Auto scale
-
 ## Description
 Auto scale scales up any element to the size of it''s parent element. A typical use case is to let an entire webpage scale up to the width of the browser window, as an advanced kind of responsive design.
 
@@ -48,7 +46,7 @@ are:
 * IE versions before 9 do not support the scale transform, so zoom is always
   used.
 
-### Properties
+### Option reference
 
 The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:

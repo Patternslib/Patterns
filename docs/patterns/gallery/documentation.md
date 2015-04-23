@@ -1,4 +1,5 @@
 ## Description
+
 This pattern provides a simple method to create galleries supporting fullscreen
 display and touch controls.
 
@@ -40,7 +41,7 @@ or a HTML5 `nav` container:
 The contents of the `title` attribute of an image will be used as the caption.
 
 
-### Properties
+### Option reference
 
 You can customise the behaviour of a gallery through options in the
 `data-pat-gallery` attribute.

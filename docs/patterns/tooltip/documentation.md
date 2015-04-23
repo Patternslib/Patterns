@@ -1,18 +1,16 @@
-# Documentation
+## Documentation
 
 Tooltips are intended to display contextual information and function
 about the trigger element.
 
-Markup structure
-----------------
+### Markup structure
 
     <label>Website address
       <a href="#" title="Please enter the full URL for the website"
           class="pat-tooltip">More information</a>
     </label>
 
-Display
--------
+### Display
 
 Tooltips are shown when the mouse hovers over the triggering element,
 and are hidden when the mouse leaves the triggering element.
@@ -23,8 +21,7 @@ by adding a `click` option.
     <a href="#" title="Please enter the full URL for the website"
        class="pat-tooltip" data-pat-tooltip="click">More information</a>
 
-Positioning
------------
+### Positioning
 
 Tooltips will be positioned close to the element that triggered them,
 with an arrow tip pointing to the centre of the triggering item. The
@@ -74,8 +71,7 @@ It is possible to force a specific tooltip position by adding the
      …
     </a>
 
-Sticky tooltips
----------------
+### Sticky tooltips
 
 By default, the tooltip disappears when the cursor is moved off the element or
 the triggering element is clicked. If this is not desired behaviour, there is
@@ -88,8 +84,7 @@ automatically:
      …
     </a>
 
-AJAX tooltips
--------------
+### AJAX tooltips
 
 The tooltip content can be loaded via an AJAX request by proving an ajax
 option:
@@ -101,8 +96,7 @@ option:
 This will load the contents of the `#myTip` element of
 balloon-contents.html and display it in a tooltip.
 
-Generated markup
-----------------
+### Generated markup
 
 The first time the tooltip is shown the tip itself will be wrapped in a
 new tooltip container. This container will be positioned correctly.
@@ -146,8 +140,7 @@ be temporarily shown with a progress indicator:
       <span class="pointer" style="top: 111px; left: -22px"></span>
     </div>
 
-Properties
-----------
+### Options reference
 
 The tooltip can be configured through a `data-pat-tooltip` attribute.
 The available options are:

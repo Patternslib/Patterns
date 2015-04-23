@@ -1,5 +1,3 @@
-# Slideshow builder
-
 ## Description
 This patterns provides a simple method to create custom slideshows.
 
@@ -55,7 +53,7 @@ You can also put the `pat-slideshow-builder` class on another element inside the
         <button type="submit">Run</button>
     </form>
 
-### Properties
+### Options reference
 
 This pattern has no configurable properties.
 

@@ -13,7 +13,6 @@ of type reset inside the same form as the input.
 
     <button type="reset">Reset</button>
 
-Example
--------
+### Example
 
     <input type="text" class="pat-autosuggest" data-pat-autosuggest="words: Apple, Pear, Banana; pre-fill: Apple; placeholder: Search by tag…" />

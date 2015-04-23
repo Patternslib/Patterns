@@ -1,8 +1,8 @@
-# Description
+## Description
 
 Add and remove classes from elements when a user clicks on a switch.
 
-# Documentation
+## Documentation
 
 It is possible to add or remove classes when a user clicks on an item.
 This is done by adding a `pat-switch` class along with a
@@ -37,7 +37,7 @@ in both the toolbar and the navigation tree:
     <button class="pat-switch" data-pat-switch=".toolbar icon-* && .navtree; icon-*">Remove icons</button>
 
 
-## Properties
+### Options reference
 
 You can customise the behaviour of a switches through options in the
 `data-pat-switch` attribute.
