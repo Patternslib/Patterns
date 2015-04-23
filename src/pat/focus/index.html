@@ -3,33 +3,36 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>focus pattern demo</title>
-    <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js"></script>
-    <link rel="stylesheet" href="/src/pat/common.css" type="text/css">
+    <link rel="stylesheet" href="/common.css" type="text/css">
     <link rel="stylesheet" href="focus.css" type="text/css">
-        <script src="/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/main.js" type="text/javascript" charset="utf-8"></script>
+	<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
-    <div id="demo">
-    <form class="concise" action="#">
-      <h2>Form one</h2>
-      <fieldset>
-        <label>Title <input type="text" name="title"></label>
-        <label>Keywords <input type="text" name="keywords"></label>
-      </fieldset>
-    </form>
+  	<section>
+  		<h1>Focus</h1>
+        <div id="demo">
+            <form class="concise" action="#">
+            <h2>Form one</h2>
+            <fieldset>
+                <label>Title <input type="text" name="title"></label>
+                <label>Keywords <input type="text" name="keywords"></label>
+            </fieldset>
+            </form>
 
-    <form class="concise" action="#">
-      <h2>Form two</h2>
-      <fieldset>
-        <label for="title">This is a non-parent label.</label>
-        <input type="text" name="title">
-      </fieldset>
-    </form>
-    </div>
+            <form class="concise" action="#">
+            <h2>Form two</h2>
+            <fieldset>
+                <label for="title">This is a non-parent label.</label>
+                <input type="text" name="title">
+            </fieldset>
+            </form>
+        </div>
+    </section>
     <section class="documentation">
 	  <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
 	</section>
-	<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+    <a href="/index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
   </body>
 </html>
 
