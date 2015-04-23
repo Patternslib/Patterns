@@ -35,7 +35,6 @@ define([
     "pat-focus",
     "pat-formstate",
     "pat-forward",
-    "pat-fullcalendar",
     "pat-gallery",
     "pat-image-crop",
     "pat-inject",
