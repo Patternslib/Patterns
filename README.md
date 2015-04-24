@@ -1,6 +1,6 @@
 # Patterns
 
-Patterns is a JavaScript library that enables designers to build rich
+Patterns is a toolkit that enables designers to build rich
 interactive prototypes without the need for writing any JavaScript. All events
 are triggered by classes and other attributes in the HTML, without abusing the
 HTML as a programming language. Accessibility, SEO and well structured HTML are
@@ -13,12 +13,12 @@ Patterns aims to support at least the two latest major versions of all popular b
 Currently that means:
 
 - Apple Safari 5+
-- Google Chrome 20+
-- Microsoft Internet Explorer 8+
+- Google Chrome 30+
+- Microsoft Internet Explorer 9+
 
 Other browser version may work too, but are not actively tested against.
 
-### Installation
+## Installation
 
     git clone git://github.com/Patternslib/Patterns.git
     cd Patterns
@@ -27,7 +27,31 @@ Other browser version may work too, but are not actively tested against.
 This will generate a `bundle.js` file which contains Patterns and all its
 dependencies.
 
-## Development
+## Layout
+
+The individual patterns are located in their own folders in ./src/pat.
+
+Each pattern folder contains some or all of the following files:
+
+- *index.html* which contains markup that shows a demonstration of the pattern.
+- *documentation.md* which is a Markdown file that documents each pattern's purpose,
+  how to use it and how to configure it.
+- A javascript file which implements the pattern's functionality.
+- A Sass (.scss) file which provides CSS associated with the pattern.
+
+To generate CSS files from the pattern's included Sass files, type ``make all_css``
+and the css files will be generated in the same location as the Sass files.
+
+You'll need to has a Sass compiler installed.
+
+## How to demo patterns
+
+To demo the patterns, simply type ``make serve`` to install the necessary
+dependencies and to start a simple Node.js HTTP server.
+
+You can then visit http://localhost:4001 to see the demo site.
+
+## Contributing fixes
 
 To develop on Patterns, clone the repository and set it's push-url to
 your fork:

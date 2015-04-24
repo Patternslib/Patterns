@@ -1,6 +1,6 @@
 /* @override http://patternslib.com/style/common.css */
 @import url("fontello/css/fontello.css");
-@import url("patterns.css");
+@import url("patterns.min.css");
 
 @font-face { 
 	font-family: "Patticons"; 
