@@ -104,10 +104,10 @@ all_css:: css
 	@echo "Done. Each pattern now has a CSS file."
 
 css::
-	@$(SASS) -I style -I . _sass/_patterns.scss style/patterns.css
+	@$(SASS) -I style -I . -t compressed _sass/_patterns.scss style/patterns.min.css
 
 watch:: 
-	$(SASS) --watch -I style -I . _sass/_patterns.scss style/patterns.css
+	$(SASS) --watch -I style -I . t compressed _sass/_patterns.scss style/patterns.min.css
 
 ########################################################################
 
