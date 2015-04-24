@@ -1,8 +1,7 @@
 /* @override http://patternslib.com/style/common.css */
-
-@import url("grid/grid.css");
-
+@import url("/src/pat/grid/grid.css");
 @import url("fontello/css/fontello.css");
+@import url("patterns.css");
 
 @font-face { 
 	font-family: "Patticons"; 
@@ -21,7 +20,6 @@ body {
 	font: 14px/2em "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
 	margin: 0;
-	background-color: white;
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
@@ -1376,8 +1374,6 @@ input.hyperlink {
 	width: 100%;
 }
 
-
-
 /* @end */
 
 /* @group Info panels */
@@ -1414,8 +1410,6 @@ fieldset.richInput .infoPanel {
 html.gecko .comprehensive .infoPanel {
 	left: 65%;
 }
-
-
 
 /* @end */
 
