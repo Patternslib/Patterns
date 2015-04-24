@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Checked flag demo page</title>
     <link rel="stylesheet" href="/src/pat/style/common.css" type="text/css">
-    <link rel="stylesheet" href="/src/pat/checked-flag/checked-flag.css" type="text/css">
     <script src="/main.js" type="text/javascript" charset="utf-8"></script>
-  </head>
-	<body>
+	  <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
 	  <section class="description">
 	    <a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
 	  </section>
@@ -68,9 +68,5 @@
 	  <section class="documentation">
 	    <a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
 	  </section>
-
-	  <a href="/index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
-
-	  <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
-	</body>
-      </html>
+</body>
+</html>

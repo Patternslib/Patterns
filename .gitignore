@@ -3,6 +3,7 @@
 /stamp-tinymce
 /node_modules
 /src/bower_components
+*.css.map
 *~
 *.swp
 *.swo
@@ -13,11 +14,8 @@ test-reports
 Gemfile.lock
 .bundle
 
-patterns.css
-
 src/pat/auto-scale/auto-scale.css
 src/pat/auto-submit/auto-submit.css
-src/pat/auto-suggest/auto-suggest.css
 src/pat/autofocus/autofocus.css
 src/pat/bumper/bumper.css
 src/pat/calendar/calendar.css
@@ -25,6 +23,7 @@ src/pat/carousel/carousel.css
 src/pat/checked-flag/checked-flag.css
 src/pat/checklist/checklist.css
 src/pat/clone/clone.css
+src/pat/collapsible/_collapsible.css
 src/pat/collapsible/collapsible.css
 src/pat/depends/depends.css
 src/pat/edit-tinymce/edit-tinymce.css
@@ -42,11 +41,11 @@ src/pat/masonry/masonry.css
 src/pat/modal/modal.css
 src/pat/navigation/navigation.css
 src/pat/notification/notification.css
-src/pat/slides/slides.css
+src/pat/slides/style/fontello/css/fontello-embedded.css
+src/pat/slides/style/fontello/css/fontello.css
 src/pat/slideshow-builder/slideshow-builder.css
 src/pat/sortable/sortable.css
 src/pat/stacks/stacks.css
-src/pat/subform/subform.css
 src/pat/switch/switch.css
 src/pat/toggle/toggle.css
 src/pat/tooltip/tooltip.css

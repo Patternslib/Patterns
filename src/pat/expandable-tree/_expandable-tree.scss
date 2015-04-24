@@ -4,6 +4,12 @@
   padding: 10px;
   margin-left: 0;
 
+    .current {
+        font-weight: bold;
+        display: inline-block;
+        color: red;
+    }
+
 	li {
 		li {
 		  display: block;

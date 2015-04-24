@@ -1,8 +1,0 @@
-fieldset.focus {
-  background: rgab(0, 0, 0, 0.2); }
-
-label.focus {
-  background: #aaa; }
-
-input.focus {
-  background: #888; }
