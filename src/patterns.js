@@ -33,7 +33,7 @@ define([
     "pat-equaliser",
     "pat-expandable",
     "pat-focus",
-    "pat-formstate",
+    "pat-form-state",
     "pat-forward",
     "pat-gallery",
     "pat-image-crop",
