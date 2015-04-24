@@ -18,7 +18,7 @@ CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 TESTSOURCES	= $(wildcard tests/specs/*/*.js)
 
 
-all:: bundle.js all_css
+all:: bundle.js css
 
 ########################################################################
 ## Install dependencies
