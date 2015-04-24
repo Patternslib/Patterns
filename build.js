@@ -88,7 +88,7 @@
         "pat-equaliser":               "pat/equaliser/equaliser",
         "pat-expandable":              "pat/expandable-tree/expandable-tree",
         "pat-focus":                   "pat/focus/focus",
-        "pat-formstate":               "pat/form-state/form-state",
+        "pat-form-state":              "pat/form-state/form-state",
         "pat-forward":                 "pat/forward/forward",
         "pat-calendar":                "pat/calendar/calendar",
         "pat-gallery":                 "pat/gallery/gallery",
