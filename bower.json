@@ -13,7 +13,6 @@
     "requirejs": "",
     "klass": "",
     "jcrop": "0.9.12",
-    "less.js": "1.6.3",
     "AnythingSlider": "1.8.17",
     "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",
     "jquery-form": "3.46.0",

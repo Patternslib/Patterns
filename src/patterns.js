@@ -10,7 +10,6 @@ define([
     "jquery",
     "pat-registry",
     "jquery.browser",
-    "less",
     "modernizr",
     "prefixfree",
     "pat-ajax",

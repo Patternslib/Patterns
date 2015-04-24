@@ -31,7 +31,6 @@
         "jquery.placeholder":          "bower_components/jquery-placeholder/jquery.placeholder.min",
         "jquery.textchange":           "bower_components/jquery-textchange/jquery.textchange",
         "klass":                       "bower_components/klass/src/klass",
-        "less":                        "bower_components/less.js/dist/less-1.6.2",
         "logging":                     "bower_components/logging/src/logging",
         "masonry":                     "bower_components/masonry/dist/masonry.pkgd",
         "matches-selector":            "bower_components/matches-selector",
