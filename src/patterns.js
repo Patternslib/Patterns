@@ -26,7 +26,7 @@ define([
     "pat-chosen",
     "pat-clone",
     "pat-collapsible",
-    "pat-colour-picket",
+    "pat-colour-picker",
     "pat-depends",
     "pat-edit-tinymce",
     "pat-equaliser",
