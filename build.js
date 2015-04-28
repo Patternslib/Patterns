@@ -10,9 +10,6 @@
 
     paths: {
         // Externals
-        "Markdown.Converter":          "legacy/Markdown.Converter",
-        "Markdown.Extra":              "legacy/Markdown.Extra",
-        "Markdown.Sanitizer":          "legacy/Markdown.Sanitizer",
         "almond":                      "bower_components/almond/almond",
         "eventEmitter/EventEmitter":   "bower_components/eventEmitter/EventEmitter",
         "eventie/eventie":             "bower_components/eventie/eventie",
@@ -44,6 +41,10 @@
         "photoswipe":                  "legacy/photoswipe",
         "prefixfree":                  "bower_components/prefixfree/prefixfree.min",
         "select2":                     "bower_components/select2/select2.min",
+        "showdown":                    "bower_components/showdown/src/showdown",
+        "showdown-github":             "bower_components/showdown/src/extensions/github",
+        "showdown-prettify":           "bower_components/showdown/src/extensions/prettify",
+        "showdown-table":              "bower_components/showdown/src/extensions/table",
         "spectrum":                    "bower_components/spectrum/spectrum",
         "tinymce":                     "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "underscore":                  "bower_components/underscore/underscore",

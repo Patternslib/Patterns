@@ -9,9 +9,6 @@ if (typeof(require) === 'undefined') {
 require.config({
     baseUrl: 'src',
     paths: {
-        "Markdown.Converter":       "legacy/Markdown.Converter",
-        "Markdown.Extra":           "legacy/Markdown.Extra",
-        "Markdown.Sanitizer":       "legacy/Markdown.Sanitizer",
         "eventEmitter":             "bower_components/eventEmitter",
         "eventie":                  "bower_components/eventie",
         "get-size":                 "bower_components/get-size",
@@ -40,6 +37,10 @@ require.config({
         "photoswipe":               "legacy/photoswipe",
         "prefixfree":               "bower_components/prefixfree/prefixfree.min",
         "select2":                  "bower_components/select2/select2.min",
+        "showdown":                 "bower_components/showdown/src/showdown",
+        "showdown-github":             "bower_components/showdown/src/extensions/github",
+        "showdown-prettify":           "bower_components/showdown/src/extensions/prettify",
+        "showdown-table":              "bower_components/showdown/src/extensions/table",
         "spectrum":                 "bower_components/spectrum/spectrum",
         "tinymce":                  "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "underscore":               "bower_components/underscore/underscore",

@@ -31,7 +31,8 @@
     "imagesloaded": "~3.1.8",
     "masonry": "~3.2.2",
     "jquery.browser": "~0.0.7",
-    "underscore": "~1.8.2"
+    "underscore": "~1.8.2",
+    "showdown": "~0.5.0"
   },
   "resolutions": {
     "jquery": "1.11.1"
