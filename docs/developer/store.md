@@ -1,4 +1,4 @@
-# The Patterns storage utility
+# The Patterns storage utility API
 
 Patternslib includes a simple storage utility which you can use to store
 data for a pattern. The implementation is similar to the

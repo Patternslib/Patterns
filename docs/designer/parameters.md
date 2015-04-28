@@ -1,4 +1,4 @@
-# Parameter syntax
+# The declarative syntax for configuring a pattern
 
 You can change the bevaiour for some patterns by configuring them using ``data-pat-<pattern name>`` attributes in your markup.
 These attributes can be written either using the *extended notation* or a *shorthand notation*.
