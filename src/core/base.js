@@ -21,8 +21,8 @@ define([
     var log = logger.getLogger("Patternslib Base");
 
     var initBasePattern = function initBasePattern($el, options, trigger) {
-        var log = logger.getLogger("pat." + name);
         var name = this.prototype.name;
+        var log = logger.getLogger("pat." + name);
         var pattern = $el.data('pattern-' + name);
         if (pattern === undefined && Registry.patterns[name]) {
             try {

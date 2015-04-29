@@ -1,6 +1,8 @@
 /* @override http://patternslib.com/style/common.css */
 @import url("fontello/css/fontello.css");
 @import url("patterns.min.css");
+@import url("/src/bower_components/google-code-prettify/src/prettify.css");
+@import url("/src/bower_components/google-code-prettify/styles/sunburst.css");
 
 @font-face { 
 	font-family: "Patticons"; 
@@ -750,23 +752,6 @@ p code {
 
 
 /* @end */
-
-/* @group Code preview */
-
-pre {
-	background-color: black;
-	border: 1px solid #d3d3d3;
-	overflow: auto;
-	color: #a0a0a0;
-	margin-left: -302px;
-	border-right-style: none;
-	border-left-style: none;
-	padding: 30px 60px;
-	margin-bottom: 1.5em;
-	font: 16px "Courier New", Courier, mono;
-}
-
-
 
 /* @end */
 
