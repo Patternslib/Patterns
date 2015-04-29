@@ -93,15 +93,17 @@ define([
         }}];
     };
 
-    $(document.body).on("patterns-inject-triggered.pat-markdown", "a.pat-inject", function identifyMarkdownURLs() {
-        /* Identify injected URLs which point to markdown files and set their
-         * datatype so that we can register a type handler for them.
-         */
-        var cfgs = $(this).data("pat-inject");
-        cfgs.forEach(function(cfg) {
-            if (is_markdown_resource.test(cfg.url)) {
-                cfg.dataType = "markdown";
-            }
+    $(document).ready(function () {
+        $(document.body).on("patterns-inject-triggered.pat-markdown", "a.pat-inject", function identifyMarkdownURLs() {
+            /* Identify injected URLs which point to markdown files and set their
+            * datatype so that we can register a type handler for them.
+            */
+            var cfgs = $(this).data("pat-inject");
+            cfgs.forEach(function(cfg) {
+                if (is_markdown_resource.test(cfg.url)) {
+                    cfg.dataType = "markdown";
+                }
+            });
         });
     });
 
