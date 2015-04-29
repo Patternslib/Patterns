@@ -1,8 +1,6 @@
 /* @override http://patternslib.com/style/common.css */
 @import url("fontello/css/fontello.css");
 @import url("patterns.min.css");
-@import url("/src/bower_components/google-code-prettify/src/prettify.css");
-@import url("/src/bower_components/google-code-prettify/styles/sunburst.css");
 
 @font-face { 
 	font-family: "Patticons"; 
