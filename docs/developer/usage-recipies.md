@@ -6,8 +6,8 @@ If you are using a precompiled bundle with require.js, then the following approa
 
 You should have an entry point for `require.js` in this example `main.js`. So your html will contain:
 
-```html
-	<script data-main="main" src="require.js" type="text/javascript"></script>
+```
+<script data-main="main" src="require.js" type="text/javascript"></script>
 ```
 
 In your `main.js`, you should define the `registry` module pointing to the bundle as well as any custom modules.
@@ -15,18 +15,18 @@ For the sake of simplicity we assume here that there is only one additional modu
 
 So our `main.js` looks like:
 
-```javascript
-	require.config({
-	    paths: {
-	        registry: 'bundle',
-	        custom: 'custom'
-	    },
-	});
-	define(['registry', 'custom'], function (registry, custom) {
-	    console.log(registry);
-	    console.log(custom);
-	    console.log(registry.patterns.custom);
-	});
+```
+require.config({
+    paths: {
+        registry: 'bundle',
+        custom: 'custom'
+    },
+});
+define(['registry', 'custom'], function (registry, custom) {
+    console.log(registry);
+    console.log(custom);
+    console.log(registry.patterns.custom);
+});
 ```
 
 ## Without using the bundle
@@ -39,31 +39,31 @@ In the case of the `ajax` pattern we depend on `jquery`, `jquery.form`, `logging
 
 Your `main.js` will look similar to:
 
-``` javascript
-	require.config({
+```
+require.config({
 
-	    paths: {
-	        jquery: 'jquery',
-	        logging: 'logging',
-	        'jquery.form': 'jquery.form',
+    paths: {
+        jquery: 'jquery',
+        logging: 'logging',
+        'jquery.form': 'jquery.form',
 
-	        logger: 'patterns_dir/core/logger',
-	        parser: 'patterns_dir/core/parser',
-	        utils: 'patterns_dir/core/utils',
-	        compat: 'patterns_dir/core/compat',
-	        'jquery-ext': 'patterns_dir/core/jquery-ext',
+        logger: 'patterns_dir/core/logger',
+        parser: 'patterns_dir/core/parser',
+        utils: 'patterns_dir/core/utils',
+        compat: 'patterns_dir/core/compat',
+        'jquery-ext': 'patterns_dir/core/jquery-ext',
 
-	        registry: 'patterns_dir/core/registry',
-	        ajax: 'patterns_dir/pat/ajax',
+        registry: 'patterns_dir/core/registry',
+        ajax: 'patterns_dir/pat/ajax',
 
-	        custom: 'custom'
-	    }
-	});
+        custom: 'custom'
+    }
+});
 
-	define(['registry', 'ajax', 'custom'], function (registry, ajax, custom) {
-	    console.log(registry);
-	    console.log(ajax);
-	    console.log(custom);
-	    console.log(registry.patterns.custom);
-	});
+define(['registry', 'ajax', 'custom'], function (registry, ajax, custom) {
+    console.log(registry);
+    console.log(ajax);
+    console.log(custom);
+    console.log(registry.patterns.custom);
+});
 ```

@@ -5,7 +5,7 @@ by passing arguments to the parser in data-pat-\* attributes or by using
 an internal javascript API. All processing of arguments is done by the
 argument parser. Using the parser is easy:
 
-```javascript
+```
 var parser = new ArgumentParser("tooltip");
 parser.add_argument("delay", 150);
 parser.add_argument("loop", false);

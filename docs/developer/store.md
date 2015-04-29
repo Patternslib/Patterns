@@ -9,7 +9,7 @@ it easier to use in patterns.
 
 ## Example
 
-``` javascript
+```
    var store = require("../core/store");
 
    if (store.supported)
