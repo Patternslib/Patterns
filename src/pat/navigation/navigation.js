@@ -7,7 +7,7 @@ define([
 
     var _ = {
         name: "navigation",
-        trigger: "nav, .navigation",
+        trigger: "nav, .navigation, .pat-navigation",
         init: function($el) {
             return $el.each(function() {
                 var $el = $(this);
@@ -31,16 +31,12 @@ define([
                 // An anchor within this navigation triggered injection
                 $el.on("patterns-inject-triggered", "a", function(ev) {
                     var $target = $(ev.target);
-
                     // remove all set current classes
                     $el.find(".current").removeClass("current");
-
                     // set .current on target
                     $target.addClass("current");
-
                     // If target's parent is an LI, also set current there
                     $target.parent("li").addClass("current");
-
                     _._updatenavpath($el);
                 });
 
@@ -62,7 +58,6 @@ define([
                         }
                     });
                 }
-
                 _._updatenavpath($el);
             });
         },
@@ -75,13 +70,11 @@ define([
                 log.debug("path empty");
                 return false;
             }
-
             // current path needs to end in the anchor's path
             if (path !== curpath.slice(- path.length)) {
                 log.debug(curpath, "does not end in", path);
                 return false;
             }
-
             // XXX: we might need more exclusion tests
             return true;
         },
@@ -95,7 +88,6 @@ define([
             return path[1].split("/").slice(1).join("/");
         }
     };
-
     registry.register(_);
     return _;
 });

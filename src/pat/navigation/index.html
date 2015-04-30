@@ -3,8 +3,8 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Demo page</title>
-    <link rel="stylesheet" href="/src/pat/style/common.css" type="text/css">
+<title>pat-navigation demo page</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css">
     <script src="/main.js" type="text/javascript" charset="utf-8"></script>
     <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -16,35 +16,32 @@
 	<div id="demo">
 	<section class="demo">
 		<p>Testing tab .current behaviour</p>
-		<ul class="navigation">
+		<ul class="pat-navigation">
 			<li>
-				<a href="pattern-test-response.html#inject-tab-1"
-				   class="pat-inject" data-pat-inject="target: #content-tab">Tab 1</a>
+				<a href="pattern-test-response.html#inject-tab-1" class="pat-inject"
+                    data-pat-inject="target: #content-tab">Tab 1</a>
 
 			    <ul class="navigation">
 			      <li>
-				    <a href="pattern-test-response.html#inject-tab-1-1"
-								   class="pat-inject" data-pat-inject="target: #content-tab">Link 1.1</a>
+				    <a href="pattern-test-response.html#inject-tab-1-1" class="pat-inject" 
+                        data-pat-inject="target: #content-tab">Link 1.1</a>
 				  </li>
 				  <li>
 					<a href="pattern-test-response.html#inject-tab-1-2" class="pat-inject"
-					   class="pat-inject" data-pat-inject="target: #content-tab">Link 1.2</a>
+                        data-pat-inject="target: #content-tab">Link 1.2</a>
                   </li>
                 </ul>
 			</li>
 			<li>
-				<a href="pattern-test-response.html#inject-tab-2"
-				   class="pat-inject" data-pat-inject="target: #content-tab">Tab 2</a>
+				<a href="pattern-test-response.html#inject-tab-2" class="pat-inject"
+                    data-pat-inject="target: #content-tab">Tab 2</a>
 			</li>
 		</ul>
-
-		<div id="content-tab">
-			Content will appear here
-		</div>
+		<div id="content-tab">Content will appear here</div>
 	</section>
 	</div>
 	<section class="documentation">
-		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
+        <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
 	</section>
 </body>
 </html>
