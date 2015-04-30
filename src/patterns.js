@@ -35,7 +35,7 @@ define([
     "pat-form-state",
     "pat-forward",
     "pat-gallery",
-    "pat-highlight",
+    "pat-syntax-highlight",
     "pat-image-crop",
     "pat-inject",
     "pat-input-change-events",

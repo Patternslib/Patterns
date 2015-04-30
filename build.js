@@ -91,7 +91,7 @@
         "pat-forward":                 "pat/forward/forward",
         "pat-calendar":                "pat/calendar/calendar",
         "pat-gallery":                 "pat/gallery/gallery",
-        "pat-highlight":               "pat/highlight/highlight",
+        "pat-syntax-highlight":        "pat/syntax-highlight/syntax-highlight",
         "pat-image-crop":              "pat/image-crop/image-crop",
         "pat-inject":                  "pat/inject/inject",
         "pat-legend":                  "pat/legend/legend",

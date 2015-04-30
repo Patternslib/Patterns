@@ -1,6 +1,6 @@
 ## Description
 
-The highlight pattern is used to add syntax highlighting to code examples in your page.
+The syntax highlight pattern is used to add syntax highlighting to code examples in your page.
 
 ## Documentation
 
@@ -10,14 +10,14 @@ to be included in a page.
 This pattern will add automatic syntax highlighting to these snippets of code.
 
 
-Simply add the `pat-highlight` class to a DOM element surrounding the code
+Simply add the `pat-syntax-highlight` class to a DOM element surrounding the code
 snippet. Usually you'll want to use the `<pre>` (Preformatted Text) element for
 this.
 
 For example:
 
 ```
-    <pre class="pat-highlight">
+    <pre class="pat-syntax-highlight">
         var pattern = registry.patterns[name];
         if (pattern.transform) {
             try {

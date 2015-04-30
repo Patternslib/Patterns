@@ -9,10 +9,9 @@ define([
     var log = logger.getLogger("pat.markdown");
     var is_markdown_resource = /\.md$/;
 
-    // TODO: Add support for linenums
     return Base.extend({
-        name: "highlight",
-        trigger: ".pat-highlight",
+        name: "syntax-highlight",
+        trigger: ".pat-syntax-highlight",
 
         init: function() {
             this.$el.addClass("prettyprint");

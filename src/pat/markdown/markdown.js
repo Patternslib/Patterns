@@ -80,14 +80,14 @@ define([
         }
     });
 
-    // Add support for syntax highlighting via pat-highlight
+    // Add support for syntax highlighting via pat-syntax-highlight
     Showdown.extensions.prettify = function(converter) {
         return [{ type: 'output', filter: function(source){
             return source.replace(/(<pre>)?<code>/gi, function(match, pre) {
                 if (pre) {
-                    return '<pre class="pat-highlight" tabIndex="0"><code data-inner="1">';
+                    return '<pre class="pat-syntax-highlight" tabIndex="0"><code data-inner="1">';
                 } else {
-                    return '<code class="pat-highlight">';
+                    return '<code class="pat-syntax-highlight">';
                 }
             });
         }}];
