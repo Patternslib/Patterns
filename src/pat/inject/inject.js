@@ -15,9 +15,9 @@ define([
     "pat-jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
-        parser = new Parser("inject");
+        parser = new Parser("inject"),
+        TEXT_NODE = 3;
 
-    //parser.add_argument("selector", "body");
     parser.add_argument("selector");
     //XXX: (yet) unsupported: parser.add_argument("target", "$selector");
     parser.add_argument("target");
@@ -305,8 +305,13 @@ define([
                             // setting data on textnode fails in IE8
                             return this.nodeType !== 3; //Node.TEXT_NODE
                         }).data("pat-injected", {origin: cfg.url});
-                        $injected.addClass(cfg["class"])
-                            .trigger("patterns-injected", [cfg, $el[0]]);
+
+                        if ($injected[0].nodeType !== TEXT_NODE) {
+                            $injected.addClass(cfg["class"])
+                                .trigger("patterns-injected", [cfg, $el[0]]);
+                        } else { // Makes no sense adding a class to a text node.
+                            $injected.parent().trigger("patterns-injected", [cfg, $el[0]]);
+                        }
                     }
                     if ((cfg.history === "record") &&
                         ("pushState" in history))
