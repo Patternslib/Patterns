@@ -19,13 +19,15 @@ define([
         TEXT_NODE = 3;
 
     parser.add_argument("selector");
-    //XXX: (yet) unsupported: parser.add_argument("target", "$selector");
     parser.add_argument("target");
     parser.add_argument("data-type", "html");
     parser.add_argument("next-href");
-    //XXX: (yet) unsupported: parser.add_argument("source", "$selector");
     parser.add_argument("source");
     parser.add_argument("trigger", "default", ["default", "autoload", "autoload-visible"]);
+    /* Once injection has completed successfully, pat-inject will trigger
+     * an event for each hook: pat-inject-hook-$(hook)
+     */
+    parser.add_argument("hooks", [], ["raptor"], true);
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
@@ -253,6 +255,9 @@ define([
                 log.warn("No response content, aborting", ev);
                 return;
             }
+            $.each(cfgs[0].hooks || [], function (idx, hook) {
+                $el.trigger("pat-inject-hook-"+hook);
+            });
 
             function stopBubblingFromRemovedElement (ev) {
                /* IE8 fix. Stop event from propagating IF $el will be removed
@@ -277,8 +282,9 @@ define([
             sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
             cfgs.forEach(function(cfg, idx) {
                 var $source = sources$[idx];
-                if (cfg.sourceMod === "content")
+                if (cfg.sourceMod === "content") {
                     $source = $source.contents();
+                }
 
                 // perform injection
                 cfg.$target.each(function inject_onSuccess_perform() {
