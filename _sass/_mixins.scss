@@ -10,11 +10,4 @@
     }
 }
 
-@mixin pat-separator ($height: 0.05em, $margin: 1em 10% 2em, $colour: gray) {
-	background-color: $colour;
-	height: $height;
-	border: none;
-	display: block;
-    margin: $margin;
-    clear: both;
-}
+
