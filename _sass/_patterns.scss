@@ -1,9 +1,3 @@
-// Patterns uses font based icons instead of images. Those are generated
-// with Fontello.com Make sure the fontello folder is placed in your
-// style folder
-
-@import "/style/fontello/css/fontello.css";
-
 // Each pattern comes with a mixin. They may also be included seperately
 // in a project and applied on custom markup.
 
@@ -20,10 +14,9 @@
 @import "components/form";
 @import "components/icon";
 @import "components/photoswipe";
-@import "components/select2";
-@import "components/settings";
-@import "components/tiny-content";
-
+// @import "components/select2";
+// @import "components/settings";
+// @import "components/tiny-content";
 @import "src/pat/auto-suggest/auto-suggest";
 @import "src/pat/autofocus/autofocus";
 @import "src/pat/auto-scale/auto-scale";

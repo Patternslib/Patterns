@@ -8,25 +8,12 @@
         <script src="/main.js" type="text/javascript" charset="utf-8"></script>
         <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js"></script>
 	</head>
-	<body>
-		<section>
-			<h1>
-				Auto suggest
-			</h1>
-			<section class="description">
-				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
-			</section>
-			<h2>Demo</h2>
-			<div id="demo">
-			<section class="demo">
-			<p>Try the auto suggest pattern below with the terms 'Apples', 'Oranges', 'Pears' and 'Bananas'.</p>
+	<body>		
+		<section class="demo">
+			<article class="pat-rich">
+				<p>Try the auto suggest pattern below with the terms 'Apples', 'Oranges', 'Pears' and 'Bananas'.</p>
+			</article>
 			<input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas" type="text"></input>
-			</section>
-			</div>
-			<section class="documentation">
-				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
-			</section>
-		</section>
-		<a href="/index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
+		</section>	
 	</body>
 </html>

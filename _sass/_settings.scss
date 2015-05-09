@@ -1,20 +1,38 @@
-// ----- Taken from _settings.scss -----
+// Patterns uses font based icons instead of images. Those are generated
+// with Fontello.com Make sure the fontello folder is placed in your
+// style folder
+
+@import "/style/fontello/css/fontello.css";
+
 // Assets
 //@import url(http://fonts.googleapis.com/css?family=Sorts+Mill+Goudy:400,400italic);
 //@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700);
-@import url(/style/fonts/font.css);
+// @import url(/style/fonts/font.css);
+// @import url(/style/fontello/fontello.css);
 
 // Colours
 // $felt: #89AA74;
 $felt: #565656;
-$colour-alert: red;
-$colour-accent: #0198E1;
+
+$colour-accent: #0198E1 !default;
+$colour-base: #efefef !default;
+$colour-alert: red !default;
+$colour-success: green !default;
+$colour-notice: #FFFFD6 !default;
+$colour-warning: orange !default;
 
 // Font treatment
 $base-font-size: 18px;
 $base-line-height: 150%;
 $font-weight-normal: normal;
 $font-weight-bold: bold;
+
+// Glyphs
+$glyph-checkbox: "\e808";
+$glyph-checkbox-active: "\e809";
+$glyph-radio-button: "\e807";
+$glyph-radio-button-active: "\e806";
+$glyph-close: "\e805";
 
 // We use these to control various global styles
 $body-font-family: 'Source Sans Pro', sans-serif;
@@ -26,17 +44,6 @@ $cat-behavioural: #717dd7;
 $cat-fancy-stuff: #bf9230;
 $cat-form: #be9ac1;
 $cat-layout: #a1ced2;
-
-// Breakpoints
-$mobile: 768px;
-// ------------- Until here ---------------
-
-// Colours
-
-$colour-alert: red !default;
-$colour-success: green !default;
-$colour-notice: #FFFFD6 !default;
-$colour-warning: orange !default;
 
 // Responsive variables
 

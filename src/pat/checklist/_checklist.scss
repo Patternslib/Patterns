@@ -1,20 +1,28 @@
+@charset "UTF-8";
+
 .pat-checklist {
+
+	> br {
+		display: none;
+	}
+
 	label {
 		padding-left: 1.5em;
+		position: relative;
 		display: block;
 
 		&.checked:before,
 		&.unchecked:before {
 			font-family: fontello;
-			content: "\e808";
+			content: '#{$glyph-checkbox}';
 			float: left;
 			position: absolute;
 			left: 0;
-			top: 0.1em;
+			top: 0em;
 		}
 
 		&.checked:before {
-			content: "\e809";
+			content: '#{$glyph-checkbox-active}'
 		}
 
 		input[type="checkbox"],
@@ -26,10 +34,10 @@
 
 	&.radio label {
 		&:before {
-			content: '\e807';
+			content: '#{$glyph-radio-button}';
 		}
 		&.checked:before {
-			content: '\e806';
+			content: '#{$glyph-radio-button-active}';
 		}
 	}
 
