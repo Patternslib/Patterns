@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.10 - Unreleased
+
+- Bugfix in pat-masonry. Wait until images are loaded.
+- Added Sass files for all patterns.
+- New layout. All files relevant to individual patterns (except for tests) are now in ./src/pat
+
 ## 2.0.9 - Mar 30, 2015
 
 - Fixed IE bug in pat-equalizer

@@ -18,19 +18,20 @@
         "require",
         "requirejs",
         "tinyMCE",
-
-	"describe",
-	"it",
-	"xdescribe",
-	"xit",
-	"beforeEach",
-	"afterEach",
-	"expect",
-	"spyOn",
-	"runs",
-	"waits",
-	"jasmine",
-	"$"
+        "runs",
+        "waits",
+        "describe",
+        "it",
+        "xdescribe",
+        "xit",
+        "beforeEach",
+        "afterEach",
+        "expect",
+        "spyOn",
+        "runs",
+        "waits",
+        "jasmine",
+        "$"
     ]
 }
 

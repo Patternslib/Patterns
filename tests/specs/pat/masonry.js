@@ -20,8 +20,13 @@ define(["pat-masonry"], function(pattern) {
                 "</div>");
             var $msnry = $("#lab .pat-masonry");
             expect($msnry.hasClass("masonry-ready")).toBeFalsy();
-            pattern.init($msnry);
-            expect($msnry.hasClass("masonry-ready")).toBeTruthy();
+            runs(function () {
+                pattern.init($msnry);
+            });
+            waits(300);
+            runs(function () {
+                expect($msnry.hasClass("masonry-ready")).toBeTruthy();
+            });
         });
     });
 });

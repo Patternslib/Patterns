@@ -9,15 +9,16 @@
             "jquery",
             "pat-registry",
             "pat-parser",
+            "pat-base",
             "masonry",
             "imagesloaded"
             ], function() {
                 return factory.apply(this, arguments);
         });
     } else {
-        factory(root.$, root.patterns, root.patterns.Parser, root.Masonry, root.imagesLoaded);
+        factory(root.$, root.patterns, root.patterns.Parser, root.Base, root.Masonry, root.imagesLoaded);
     }
-}(this, function($, registry, Parser, Masonry, imagesLoaded) {
+}(this, function($, registry, Parser, Base, Masonry, imagesLoaded) {
     "use strict";
     var parser = new Parser("masonry");
     parser.add_argument("column-width");
@@ -32,42 +33,41 @@
     parser.add_argument("transition-duration", "0.4s");
     parser.add_argument("visible-style", "{ opacity: 1, transform: 'scale(1)' }");
 
-    var masonry = {
+    return Base.extend({
         name: "masonry",
         trigger: ".pat-masonry",
-        init: function mypattern_init($el, opts) {
-            var options = parser.parse($el, opts);
+
+        init: function masonryInit($el, opts) {
+            var options = parser.parse(this.$el, opts);
             $(document).trigger("clear-imagesloaded-cache");
-            var msnry = new Masonry($el[0], {
-                columnWidth:            this.getTypeCastedValue(options.columnWidth),
-                containerStyle:         options.containerStyle,
-                gutter:                 this.getTypeCastedValue(options.gutter),
-                hiddenStyle:            options.hiddenStyle,
-                isFitWidth:             options.is["fit-width"],
-                isInitLayout:           false,
-                isOriginLeft:           options.is["origin-left"],
-                isOriginTOp:            options.is["origin-top"],
-                itemSelector:           options.itemSelector,
-                stamp:                  options.stamp,
-                transitionDuration:     options.transitionDuration,
-                visibleStyle:           options.visibleStyle
+            this.msnry = new Masonry(this.$el[0], {
+                columnWidth:         this.getTypeCastedValue(options.columnWidth),
+                containerStyle:      options.containerStyle,
+                gutter:              this.getTypeCastedValue(options.gutter),
+                hiddenStyle:         options.hiddenStyle,
+                isFitWidth:          options.is["fit-width"],
+                isInitLayout:        false,
+                isOriginLeft:        options.is["origin-left"],
+                isOriginTOp:         options.is["origin-top"],
+                itemSelector:        options.itemSelector,
+                stamp:               options.stamp,
+                transitionDuration:  options.transitionDuration,
+                visibleStyle:        options.visibleStyle
             });
-            imagesLoaded(this, this.layout($el, msnry));
+            this.$el.imagesLoaded(this.layout.bind(this));
         },
 
-        layout: function ($el, msnry) {
-            $el.removeClass("masonry-ready");
-            msnry.on("layoutComplete", function() {
-                $el.addClass("masonry-ready");
-            });
-            msnry.layout();
+        layout: function () {
+            this.$el.removeClass("masonry-ready");
+            this.msnry.on("layoutComplete", function() {
+                this.$el.addClass("masonry-ready");
+            }.bind(this));
+            this.msnry.layout();
         },
 
         getTypeCastedValue: function (original) {
             var val = Number(original);
             return (isNaN(val)) ? (original || 0) : val;
         }
-    };
-    registry.register(masonry);
-    return masonry;
+    });
 }));
