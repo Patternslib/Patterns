@@ -1,13 +1,13 @@
 ## Description
-Injection makes it trivial to load content from a server and display it on a web page with a rich, modern web experience without any page reloads. Pat-inject works on existing infra structures, is designed with respect for accessibility and follows the principles of progressive enhancement. 
+Injection makes it trivial to load content from a server and display it on a web page with a rich, modern web experience without any page reloads. Pat-inject works on existing infra structures, is designed with respect for accessibility and follows the principles of progressive enhancement.
 
 ## Documentation
 
 ### Concept
 
-Injection is an enhancement on regular HTML links that point from one HTML page to another. Without JavaScript and injection, you would keep this standard behaviour. With JavaScript and pat-inject, a richer experience is created for modern graphical browsers. 
+Injection is an enhancement on regular HTML links that point from one HTML page to another. Without JavaScript and injection, you would keep this standard behaviour. With JavaScript and pat-inject, a richer experience is created for modern graphical browsers.
 
-Pat-inject intercepts the page refresh, invisibly collects the remote page, extracts parts out of it that you're interested in and replaces the content somewhere on the currently visible page without refreshing the browser window. 
+Pat-inject intercepts the page refresh, invisibly collects the remote page, extracts parts out of it that you're interested in and replaces the content somewhere on the currently visible page without refreshing the browser window.
 
 The principle is illustrated in the following graphic.
 
@@ -17,13 +17,13 @@ This typical example illustrates how in this case the content of the main conten
 
 A slightly more complex case is illustrated below. You see how multiple regions are extracted out of one page and injected into similar areas on another page. It doesn't matter if the regions on the remote page are differently named or styled.
 
-![image](/src/pat/inject/injection-multiple.svg) 
+![image](/src/pat/inject/injection-multiple.svg)
 
 It's also possible to inject content from another page into a modal panel:
 
-![image](/src/pat/inject/injection-modal.svg) 
+![image](/src/pat/inject/injection-modal.svg)
 
-The possibilities don't stop here. Other applications of injection include injection in tooltips (pat-tooltip) and injection in 'self healing messages' (Similar to Mac OS banners or Growl) (pat-notification). Those ways of working with injection are explained in the respective documentation sections of the components pat-tooltip and pat-notification. 
+The possibilities don't stop here. Other applications of injection include injection in tooltips (pat-tooltip) and injection in 'self healing messages' (Similar to Mac OS banners or Growl) (pat-notification). Those ways of working with injection are explained in the respective documentation sections of the components pat-tooltip and pat-notification.
 
 ### Code examples
 
@@ -337,4 +337,4 @@ You can customise the behaviour of injection through options in the `data-pat-in
 | `url` | | *href attribute* | URL to load content from. | |
 | `class` | | | A class which will be added to the injected content. | |
 | `history` | `none` | `none` `record` | If set to `record` injection will update the URL history. | Mutually exclusive. |
-
+| `hooks` | `[]` | `["raptor"]` | Once injection has completed successfully, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook). Useful for other patterns which need to know whether injection relevant to them has finished, for example `pat-raptor`. | |
