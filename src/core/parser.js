@@ -6,8 +6,9 @@
  */
 define([
     "jquery",
+    "underscore",
     "pat-logger"
-], function($, logger) {
+], function($, _, logger) {
     function ArgumentParser(name, opts) {
         opts = opts || {};
         this.order = [];
@@ -32,7 +33,20 @@ define([
             });
         },
 
-        add_argument: function ArgumentParser_add_argument(name, default_value, choices, multiple) {
+        addAlias: function ArgumentParserAddAlias(alias, original) {
+            /* Add an alias for a previously added parser argument.
+             *
+             * Useful when you want to support both US and UK english argument
+             * names.
+             */
+            if (this.parameters[original]) {
+                this.parameters[original].alias = alias;
+            } else {
+                throw ("Attempted to add an alias for a non-existing parser argument.");
+            }
+        },
+
+        addArgument: function ArgumentParserAddArgument(name, default_value, choices, multiple) {
             var spec, m;
 
             if (multiple && !Array.isArray(default_value))
@@ -145,7 +159,7 @@ define([
             return value;
         },
 
-        _set: function ArgumentParser_set(opts, name, value) {
+        _set: function ArgumentParserSet(opts, name, value) {
             if (!(name in this.parameters)) {
                 this.log.debug("Ignoring value for unknown argument " + name);
                 return;
@@ -197,22 +211,25 @@ define([
                     this.log.warn("Invalid parameter: " + parts[i]);
                     break;
                 }
-
                 var name = matches[1],
-                    value = matches[2].trim();
+                    value = matches[2].trim(),
+                    arg = _.chain(this.parameters).where({'alias': name}).value(),
+                    is_alias = arg.length === 1;
 
-                if (name in this.parameters)
+                if (is_alias) {
+                    this._set(opts, arg[0].name, value);
+                } else if (name in this.parameters) {
                     this._set(opts, name, value);
-                else if (name in this.groups) {
+                } else if (name in this.groups) {
                     var subopt = this.groups[name]._parseShorthandNotation(value);
-                    for (var field in subopt)
+                    for (var field in subopt) {
                         this._set(opts, name+"-"+field, subopt[field]);
+                    }
                 } else {
                     this.log.warn("Unknown named parameter " + matches[1]);
                     continue;
                 }
             }
-
             return opts;
         },
 
@@ -244,7 +261,6 @@ define([
                     parts.unshift(part);
                     break;
                 }
-
                 i++;
                 if (i>=this.order.length)
                     break;
@@ -387,7 +403,8 @@ define([
             return multiple ? results : results[0];
         }
     };
-
+    // BBB
+    ArgumentParser.prototype.add_argument = ArgumentParser.prototype.addArgument;
     return ArgumentParser;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

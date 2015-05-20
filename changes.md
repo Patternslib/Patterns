@@ -8,6 +8,7 @@
 - Add new argument "hooks" to pat-inject.
 - pat-gallery now uses Photoswipe 4.0.7 and is based on pat-base.
 - Fixed a bug where the page reloads when the image viewer from pat-gallery is closed.
+- Add new parser method addAlias for adding aliases of parser arguments.
 
 ## 2.0.9 - Mar 30, 2015
 

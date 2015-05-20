@@ -19,16 +19,23 @@ define(["pat-parser"], function(ArgumentParser) {
     });
 
 
-    describe("Core / Parser", function() {
-        describe("add_argument", function() {
-            it("No group if prefix only used once", function() {
+    describe("The Patterns parser", function() {
+        describe("When adding an argument", function() {
+            it("preserves the argument order", function() {
+                var parser = new ArgumentParser();
+                parser.add_argument("dummy-one");
+                parser.add_argument("dummy-two");
+                expect(parser.groups.dummy.order).toEqual(["one", "two"]);
+            });
+
+            it("won't group a prefixed argument if the prefix is used only once", function() {
                 var parser = new ArgumentParser();
                 parser.add_argument("dummy-field", "default");
                 expect("dummy" in parser.groups).toBeFalsy();
                 expect(parser.parameters["dummy-field"].dest).toBe("dummyField");
             });
 
-            it("Create new group", function() {
+            it("will create a group out of multiple arguments with the same prefix", function() {
                 var parser = new ArgumentParser();
                 parser.add_argument("dummy-field", "default");
                 parser.add_argument("dummy-field-two", "default");
@@ -36,7 +43,7 @@ define(["pat-parser"], function(ArgumentParser) {
                 expect(parser.groups.dummy.order).toEqual(["field", "field-two"]);
             });
 
-            it("Add argument to sub-parser", function() {
+            it("will assign to each argument in a group its own parameters config", function() {
                 var parser = new ArgumentParser();
                 parser.add_argument("dummy-foo");
                 parser.add_argument("dummy-field", "default", ["yes", "no"], false);
@@ -47,16 +54,16 @@ define(["pat-parser"], function(ArgumentParser) {
                 expect(spec.multiple).toBe(false);
             });
 
-            it("Preserve argument order", function() {
+            it("is also possible to add an alias for that argument", function () {
                 var parser = new ArgumentParser();
-                parser.add_argument("dummy-one");
-                parser.add_argument("dummy-two");
-                expect(parser.groups.dummy.order).toEqual(["one", "two"]);
+                parser.addArgument("color", "red", ["red", "blue"]);
+                parser.addAlias("colour", "color");
+                expect(parser.parameters.color.alias).toBe("colour");
             });
         });
 
-        describe("_parse", function() {
-            describe("Shorthand notation", function() {
+        describe("When parsing", function() {
+            describe("the shorthand notation", function() {
                 it("Single argument", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("selector");
@@ -127,8 +134,8 @@ define(["pat-parser"], function(ArgumentParser) {
                 });
             });
 
-            describe("Extended notation" , function() {
-                it("Named argument", function() {
+            describe("the extended notation" , function() {
+                it("parses named arguments", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("selector");
                     parser.add_argument("attr");
@@ -137,28 +144,28 @@ define(["pat-parser"], function(ArgumentParser) {
                     expect(opts.attr).toBe("class");
                 });
 
-                it("Colons in value", function() {
+                it("can handle colons in an argument's value", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("selector");
                     var opts = parser._parse("selector: nav:first");
                     expect(opts.selector).toBe("nav:first");
                 });
 
-                it("Value with whitespace", function() {
+                it("can handle values with whitespace", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("selector");
                     var opts = parser._parse("selector: #root .MyClass");
                     expect(opts.selector).toBe("#root .MyClass");
                 });
 
-                it("Preserve quotes", function() {
+                it("preserves quotes", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("selector");
                     var opts = parser._parse("selector: \"#root .MyClass\"");
                     expect(opts.selector).toBe("\"#root .MyClass\"");
                 });
 
-                it("Multiple arguments", function() {
+                it("can handle multiple arguments", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("foo");
                     parser.add_argument("bar");
@@ -166,14 +173,14 @@ define(["pat-parser"], function(ArgumentParser) {
                     expect(opts).toEqual({foo: "one", bar: "two"});
                 });
 
-                it("Trailing semicolon", function() {
+                it("can handle a trailing semicolon", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("foo");
                     var opts = parser._parse("foo: bar;");
                     expect(opts).toEqual({foo: "bar"});
                 });
 
-                it("Escaping a semicolon by duplication", function() {
+                it("treats semicolons as escaped when duplicated", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("foo");
                     parser.add_argument("bar");
@@ -183,14 +190,22 @@ define(["pat-parser"], function(ArgumentParser) {
                                           baz: "three"});
                 });
 
-                it("Ignore unknown named parameter", function() {
+                it("ignores unknown named parameters", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("selector");
                     var opts = parser._parse("attr: class");
                     expect(opts.attr).toBeUndefined();
                 });
 
-                it("Grouped options", function() {
+                it("can parse aliases", function () {
+                    var parser=new ArgumentParser();
+                    parser.addArgument("color", "red", ["red", "blue"]);
+                    parser.addAlias("colour", "color");
+                    var opts = parser._parse("colour: blue");
+                    expect(opts).toEqual({"color": "blue"});
+                });
+
+                it("can group options", function() {
                     var parser=new ArgumentParser();
                     parser.add_argument("group-foo", false);
                     parser.add_argument("group-bar", true);
