@@ -43,7 +43,6 @@ require([
             "../tests/specs/pat/depends",
             "../tests/specs/pat/equaliser",
             "../tests/specs/pat/focus",
-            "../tests/specs/pat/gallery",
             "../tests/specs/pat/image-crop",
             "../tests/specs/pat/inject",
             "../tests/specs/pat/legend",

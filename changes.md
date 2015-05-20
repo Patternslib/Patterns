@@ -6,6 +6,8 @@
 - Added Sass files for all patterns.
 - New layout. All files relevant to individual patterns (except for tests) are now in ./src/pat
 - Add new argument "hooks" to pat-inject.
+- pat-gallery now uses Photoswipe 4.0.7 and is based on pat-base.
+- Fixed a bug where the page reloads when the image viewer from pat-gallery is closed.
 
 ## 2.0.9 - Mar 30, 2015
 

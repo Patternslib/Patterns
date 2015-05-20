@@ -11,6 +11,8 @@
     "jquery": "1.11.1",
     "modernizr": "2.8.3",
     "requirejs": "",
+    "requirejs-tpl-jcbrand": "*",
+    "requirejs-text": "~2.0.12",
     "klass": "",
     "jcrop": "0.9.12",
     "AnythingSlider": "1.8.17",
@@ -33,7 +35,8 @@
     "jquery.browser": "~0.0.7",
     "underscore": "~1.8.2",
     "showdown": "~0.5.0",
-    "google-code-prettify": "~1.0.4"
+    "google-code-prettify": "~1.0.4",
+    "photoswipe": "~4.0.7"
   },
   "resolutions": {
     "jquery": "1.11.1"
