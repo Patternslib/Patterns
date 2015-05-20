@@ -20,25 +20,25 @@ define([
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
 
-    parser.add_argument("calendar-controls", ""); // Calendar controls must have "id" attr set
-    parser.add_argument("category-controls", "");
-    parser.add_argument("column-day", "dddd M/d");
-    parser.add_argument("column-month", "ddd");
-    parser.add_argument("column-week", "ddd M/d");
-    parser.add_argument("default-view", "month", ["month", "basicWeek", "basicDay", "agendaWeek", "agendaDay"]);
-    parser.add_argument("drag-and-drop", true, [true, false]);
-    parser.add_argument("drop-external-events", true, [true, false]);
-    parser.add_argument("external-event-selector", "");
-    parser.add_argument("first-day", "0");
-    parser.add_argument("first-hour", "6");
-    parser.add_argument("height", "auto");
-    parser.add_argument("ignore-url", false);
-    parser.add_argument("start-date");
-    parser.add_argument("store", "none", ["none", "session", "local"]);
-    parser.add_argument("time-format", "h(:mm)t");
-    parser.add_argument("title-day", "dddd, MMM d, YYYY");
-    parser.add_argument("title-month", "MMMM YYYY");
-    parser.add_argument("title-week", "MMM D YYYY");
+    parser.addArgument("calendar-controls", ""); // Calendar controls must have "id" attr set
+    parser.addArgument("category-controls", "");
+    parser.addArgument("column-day", "dddd M/d");
+    parser.addArgument("column-month", "ddd");
+    parser.addArgument("column-week", "ddd M/d");
+    parser.addArgument("default-view", "month", ["month", "basicWeek", "basicDay", "agendaWeek", "agendaDay"]);
+    parser.addArgument("drag-and-drop", true, [true, false]);
+    parser.addArgument("drop-external-events", true, [true, false]);
+    parser.addArgument("external-event-selector", "");
+    parser.addArgument("first-day", "0");
+    parser.addArgument("first-hour", "6");
+    parser.addArgument("height", "auto");
+    parser.addArgument("ignore-url", false);
+    parser.addArgument("start-date");
+    parser.addArgument("store", "none", ["none", "session", "local"]);
+    parser.addArgument("time-format", "h(:mm)t");
+    parser.addArgument("title-day", "dddd, MMM d, YYYY");
+    parser.addArgument("title-month", "MMMM YYYY");
+    parser.addArgument("title-week", "MMM D YYYY");
 
     var calendar = {
         name: "calendar",

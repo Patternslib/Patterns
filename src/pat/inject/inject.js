@@ -18,22 +18,22 @@ define([
         parser = new Parser("inject"),
         TEXT_NODE = 3;
 
-    parser.add_argument("selector");
-    parser.add_argument("target");
-    parser.add_argument("data-type", "html");
-    parser.add_argument("next-href");
-    parser.add_argument("source");
-    parser.add_argument("trigger", "default", ["default", "autoload", "autoload-visible"]);
+    parser.addArgument("selector");
+    parser.addArgument("target");
+    parser.addArgument("data-type", "html");
+    parser.addArgument("next-href");
+    parser.addArgument("source");
+    parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible"]);
     /* Once injection has completed successfully, pat-inject will trigger
      * an event for each hook: pat-inject-hook-$(hook)
      */
-    parser.add_argument("hooks", [], ["raptor"], true);
+    parser.addArgument("hooks", [], ["raptor"], true);
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
-    parser.add_argument("url");
-    parser.add_argument("class");
-    parser.add_argument("history");
+    parser.addArgument("url");
+    parser.addArgument("class");
+    parser.addArgument("history");
 
     var _ = {
         name: "inject",

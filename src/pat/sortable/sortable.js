@@ -6,7 +6,7 @@ define([
 ], function($, patterns, logger, Parser) {
     var parser = new Parser("sortable");
 
-    parser.add_argument("selector", "li");
+    parser.addArgument("selector", "li");
 
     var _ = {
         name: "sortable",

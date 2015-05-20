@@ -21,17 +21,17 @@
 }(this, function($, registry, Parser, Base, Masonry, imagesLoaded) {
     "use strict";
     var parser = new Parser("masonry");
-    parser.add_argument("column-width");
-    parser.add_argument("container-style", "{ position: 'relative' }");
-    parser.add_argument("gutter");
-    parser.add_argument("hidden-style", "{ opacity: 0, transform: 'scale(0.001)' }");
-    parser.add_argument("is-fit-width", false);
-    parser.add_argument("is-origin-left", true);
-    parser.add_argument("is-origin-top", true);
-    parser.add_argument("item-selector", ".item");
-    parser.add_argument("stamp", "");
-    parser.add_argument("transition-duration", "0.4s");
-    parser.add_argument("visible-style", "{ opacity: 1, transform: 'scale(1)' }");
+    parser.addArgument("column-width");
+    parser.addArgument("container-style", "{ position: 'relative' }");
+    parser.addArgument("gutter");
+    parser.addArgument("hidden-style", "{ opacity: 0, transform: 'scale(0.001)' }");
+    parser.addArgument("is-fit-width", false);
+    parser.addArgument("is-origin-left", true);
+    parser.addArgument("is-origin-top", true);
+    parser.addArgument("item-selector", ".item");
+    parser.addArgument("stamp", "");
+    parser.addArgument("transition-duration", "0.4s");
+    parser.addArgument("visible-style", "{ opacity: 1, transform: 'scale(1)' }");
 
     return Base.extend({
         name: "masonry",

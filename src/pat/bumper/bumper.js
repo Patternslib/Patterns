@@ -16,12 +16,12 @@ define([
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
 
-    parser.add_argument("margin", 0);
-    parser.add_argument("selector");
-    parser.add_argument("bump-add", "bumped");
-    parser.add_argument("bump-remove");
-    parser.add_argument("unbump-add");
-    parser.add_argument("unbump-remove", "bumped");
+    parser.addArgument("margin", 0);
+    parser.addArgument("selector");
+    parser.addArgument("bump-add", "bumped");
+    parser.addArgument("bump-remove");
+    parser.addArgument("unbump-add");
+    parser.addArgument("unbump-remove", "bumped");
 
     // XXX Handle resize
     var bumper = {

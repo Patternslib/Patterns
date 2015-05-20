@@ -14,7 +14,7 @@ define([
     var log = logger.getLogger("pat.ajax"),
         parser = new Parser("ajax");
 
-    parser.add_argument("url", function($el) {
+    parser.addArgument("url", function($el) {
         return ($el.is("a") ? $el.attr("href") :
                 ($el.is("form") ? $el.attr("action") : "")).split("#")[0];
     });

@@ -21,16 +21,16 @@ define([
                          "rt", "rm", "rb",
                          "br", "bm", "bl",
                          "lb", "lm", "lt"];
-    parser.add_argument("position-list", [], all_positions, true);
-    parser.add_argument("position-policy", "auto", ["auto", "force"]);
-    parser.add_argument("height", "auto", ["auto", "max"]);
-    parser.add_argument("trigger", "click", ["click", "hover"]);
-    parser.add_argument("closing", "auto", ["auto", "sticky", "close-button"]);
-    parser.add_argument("source", "title", ["auto", "ajax", "content", "title"]);
-    parser.add_argument("ajax-data-type", "html", ["html", "markdown"]);
-    parser.add_argument("delay", 0);
-    parser.add_argument("class");
-    parser.add_argument("target", "body");
+    parser.addArgument("position-list", [], all_positions, true);
+    parser.addArgument("position-policy", "auto", ["auto", "force"]);
+    parser.addArgument("height", "auto", ["auto", "max"]);
+    parser.addArgument("trigger", "click", ["click", "hover"]);
+    parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
+    parser.addArgument("source", "title", ["auto", "ajax", "content", "title"]);
+    parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
+    parser.addArgument("delay", 0);
+    parser.addArgument("class");
+    parser.addArgument("target", "body");
 
     var tooltip = {
         name: "tooltip",

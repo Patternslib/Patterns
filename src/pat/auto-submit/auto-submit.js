@@ -19,7 +19,7 @@ define([
     // - 400ms -> 400
     // - 400 -> 400
     // - defocus
-    parser.add_argument("delay", "400ms");
+    parser.addArgument("delay", "400ms");
 
     var _ = {
         name: "autosubmit",

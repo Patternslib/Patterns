@@ -13,10 +13,10 @@ define([
     var log = logger.getLogger("notification"),
         parser = new Parser("notification");
 
-    parser.add_argument("type", "static", ["static", "banner"]);
-    parser.add_argument("healing", "5s");
-    parser.add_argument("controls", "icons", ["icons", "buttons", "none"]);
-    parser.add_argument("class");
+    parser.addArgument("type", "static", ["static", "banner"]);
+    parser.addArgument("healing", "5s");
+    parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
+    parser.addArgument("class");
 
     var _ = {
         name: "notification",

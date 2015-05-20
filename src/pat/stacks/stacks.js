@@ -13,10 +13,10 @@ define([
     var log = logging.getLogger("stacks"),
         parser = new Parser("stacks");
 
-    parser.add_argument("selector", "> *[id]");
-    parser.add_argument("transition", "none", ["none", "css", "fade", "slide"]);
-    parser.add_argument("effect-duration", "fast");
-    parser.add_argument("effect-easing", "swing");
+    parser.addArgument("selector", "> *[id]");
+    parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
+    parser.addArgument("effect-duration", "fast");
+    parser.addArgument("effect-easing", "swing");
 
     var stacks = {
         name: "stacks",

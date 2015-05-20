@@ -15,22 +15,22 @@ define([
     "use strict";
     var log = logger.getLogger("calendar");
     var parser = new Parser("autosuggest");
-    parser.add_argument("words", "");
-    parser.add_argument("words-json");
-    parser.add_argument("ajax-url", "");
-    parser.add_argument("ajax-data-type", "");
-    parser.add_argument("ajax-search-index", "");
+    parser.addArgument("words", "");
+    parser.addArgument("words-json");
+    parser.addArgument("ajax-url", "");
+    parser.addArgument("ajax-data-type", "");
+    parser.addArgument("ajax-search-index", "");
     // "selection-classes" allows you to add custom CSS classes to currently
     // selected elements.
     // The value passed in must be an object with each id being the text inside
     // a selection and value being a list of classes to be added to the
     // selection.
     // e.g. {'BMW': ['selected', 'car'], 'BMX': ['selected', 'bicycle']}
-    parser.add_argument("selection-classes", "");
-    parser.add_argument("pre-fill", function($el) { return $el.val(); });
-    parser.add_argument("data", "");
-    parser.add_argument("maximum-selection-size", 0);
-    parser.add_argument("placeholder", function($el) {
+    parser.addArgument("selection-classes", "");
+    parser.addArgument("pre-fill", function($el) { return $el.val(); });
+    parser.addArgument("data", "");
+    parser.addArgument("maximum-selection-size", 0);
+    parser.addArgument("placeholder", function($el) {
         return $el.attr("placeholder") || "Enter text";
     });
 

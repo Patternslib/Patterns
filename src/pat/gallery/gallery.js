@@ -14,10 +14,10 @@ define("pat-gallery", [
     "underscore"
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser("gallery");
-    parser.add_argument("loop", true);
-    parser.add_argument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
-    parser.add_argument("delay", 30000);
-    parser.add_argument("effect-duration", 250);
+    parser.addArgument("loop", true);
+    parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
+    parser.addArgument("delay", 30000);
+    parser.addArgument("effect-duration", 250);
 
     return Base.extend({
         name: "gallery",

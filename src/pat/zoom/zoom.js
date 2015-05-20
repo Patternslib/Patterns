@@ -5,8 +5,8 @@ define([
 ], function($, patterns, Parser) {
     var parser = new Parser("zoom");
 
-    parser.add_argument("min", 0);
-    parser.add_argument("max", 2);
+    parser.addArgument("min", 0);
+    parser.addArgument("max", 2);
 
     var zoom = {
         name: "zoom",

@@ -6,8 +6,8 @@ define([
     "pat-inject"
 ], function($, Parser, registry, utils, inject) {
     var parser = new Parser("modal");
-    parser.add_argument("class");
-    parser.add_argument("closing", ["close-button"], ["close-button", "outside"], true);
+    parser.addArgument("class");
+    parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
 
     var modal = {
         name: "modal",

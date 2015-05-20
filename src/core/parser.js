@@ -83,13 +83,13 @@ define([
                     first_spec.group=group;
                     first_spec.dest=first_name;
                     this.groups[group]=new ArgumentParser();
-                    this.groups[group].add_argument(
+                    this.groups[group].addArgument(
                             first_name,
                             spec.value, spec.choices, spec.multiple);
                     delete this.possible_groups[group];
                 }
                 if (group in this.groups) {
-                    this.groups[group].add_argument(field, default_value, choices, multiple);
+                    this.groups[group].addArgument(field, default_value, choices, multiple);
                     spec.group=group;
                     spec.dest=field;
                 } else {

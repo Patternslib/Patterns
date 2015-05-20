@@ -16,10 +16,10 @@ define([
     var log = logger.getLogger("pat.switch"),
         parser = new Parser("switch");
 
-    parser.add_argument("selector");
-    parser.add_argument("remove");
-    parser.add_argument("add");
-    parser.add_argument("store", "none", ["none", "session", "local"]);
+    parser.addArgument("selector");
+    parser.addArgument("remove");
+    parser.addArgument("add");
+    parser.addArgument("store", "none", ["none", "session", "local"]);
 
     var switcher = {
         name: "switch",

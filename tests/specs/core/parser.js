@@ -23,30 +23,30 @@ define(["pat-parser"], function(ArgumentParser) {
         describe("When adding an argument", function() {
             it("preserves the argument order", function() {
                 var parser = new ArgumentParser();
-                parser.add_argument("dummy-one");
-                parser.add_argument("dummy-two");
+                parser.addArgument("dummy-one");
+                parser.addArgument("dummy-two");
                 expect(parser.groups.dummy.order).toEqual(["one", "two"]);
             });
 
             it("won't group a prefixed argument if the prefix is used only once", function() {
                 var parser = new ArgumentParser();
-                parser.add_argument("dummy-field", "default");
+                parser.addArgument("dummy-field", "default");
                 expect("dummy" in parser.groups).toBeFalsy();
                 expect(parser.parameters["dummy-field"].dest).toBe("dummyField");
             });
 
             it("will create a group out of multiple arguments with the same prefix", function() {
                 var parser = new ArgumentParser();
-                parser.add_argument("dummy-field", "default");
-                parser.add_argument("dummy-field-two", "default");
+                parser.addArgument("dummy-field", "default");
+                parser.addArgument("dummy-field-two", "default");
                 expect("dummy" in parser.groups).toBeTruthy();
                 expect(parser.groups.dummy.order).toEqual(["field", "field-two"]);
             });
 
             it("will assign to each argument in a group its own parameters config", function() {
                 var parser = new ArgumentParser();
-                parser.add_argument("dummy-foo");
-                parser.add_argument("dummy-field", "default", ["yes", "no"], false);
+                parser.addArgument("dummy-foo");
+                parser.addArgument("dummy-field", "default", ["yes", "no"], false);
                 expect(parser.groups.dummy.order).toEqual(["foo", "field"]);
                 var spec = parser.groups.dummy.parameters.field;
                 expect(spec.value).toBe("default");
@@ -66,43 +66,43 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("the shorthand notation", function() {
                 it("Single argument", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector");
+                    parser.addArgument("selector");
                     var opts = parser._parse(".MyClass");
                     expect(opts.selector).toBe(".MyClass");
                 });
 
                 it("Ignore extra positional parameters", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo");
+                    parser.addArgument("foo");
                     var opts = parser._parse("bar buz");
                     expect(opts.foo).toBe("bar");
                 });
 
                 it("String value with name of string argument", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo");
+                    parser.addArgument("foo");
                     var opts = parser._parse("foo");
                     expect(opts.foo).toBe("foo");
                 });
 
                 it("Positive boolean value", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo", true);
+                    parser.addArgument("foo", true);
                     var opts = parser._parse("foo");
                     expect(opts.foo).toBe(true);
                 });
 
                 it("Negative boolean value", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo", true);
+                    parser.addArgument("foo", true);
                     var opts = parser._parse("no-foo");
                     expect(opts.foo).toBe(false);
                 });
 
                 it("Multiple boolean values", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo", false);
-                    parser.add_argument("bar", true);
+                    parser.addArgument("foo", false);
+                    parser.addArgument("bar", true);
                     var opts = parser._parse("no-bar foo");
                     expect(opts.foo).toBe(true);
                     expect(opts.bar).toBe(false);
@@ -110,23 +110,23 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Enum value", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("flavour", "cheese", ["cheese", "bacon"]);
+                    parser.addArgument("flavour", "cheese", ["cheese", "bacon"]);
                     var opts = parser._parse("bacon");
                     expect(opts.flavour).toBe("bacon");
                 });
 
                 it("Double quoted argument", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector");
+                    parser.addArgument("selector");
                     var opts = parser._parse("\"#root .MyClass\"");
                     expect(opts.selector).toBe("\"#root .MyClass\"");
                 });
 
                 it("Mix it all up", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("delay");
-                    parser.add_argument("sticky", false);
-                    parser.add_argument("flavour", "cheese", ["cheese", "bacon"]);
+                    parser.addArgument("delay");
+                    parser.addArgument("sticky", false);
+                    parser.addArgument("flavour", "cheese", ["cheese", "bacon"]);
                     var opts = parser._parse("15 bacon sticky");
                     expect(opts.delay).toBe("15");
                     expect(opts.sticky).toBe(true);
@@ -137,8 +137,8 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("the extended notation" , function() {
                 it("parses named arguments", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector");
-                    parser.add_argument("attr");
+                    parser.addArgument("selector");
+                    parser.addArgument("attr");
                     var opts = parser._parse("attr: class");
                     expect(opts.selector).toBe(undefined);
                     expect(opts.attr).toBe("class");
@@ -146,45 +146,45 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("can handle colons in an argument's value", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector");
+                    parser.addArgument("selector");
                     var opts = parser._parse("selector: nav:first");
                     expect(opts.selector).toBe("nav:first");
                 });
 
                 it("can handle values with whitespace", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector");
+                    parser.addArgument("selector");
                     var opts = parser._parse("selector: #root .MyClass");
                     expect(opts.selector).toBe("#root .MyClass");
                 });
 
                 it("preserves quotes", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector");
+                    parser.addArgument("selector");
                     var opts = parser._parse("selector: \"#root .MyClass\"");
                     expect(opts.selector).toBe("\"#root .MyClass\"");
                 });
 
                 it("can handle multiple arguments", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo");
-                    parser.add_argument("bar");
+                    parser.addArgument("foo");
+                    parser.addArgument("bar");
                     var opts = parser._parse("foo: one; bar: two");
                     expect(opts).toEqual({foo: "one", bar: "two"});
                 });
 
                 it("can handle a trailing semicolon", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo");
+                    parser.addArgument("foo");
                     var opts = parser._parse("foo: bar;");
                     expect(opts).toEqual({foo: "bar"});
                 });
 
                 it("treats semicolons as escaped when duplicated", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo");
-                    parser.add_argument("bar");
-                    parser.add_argument("baz");
+                    parser.addArgument("foo");
+                    parser.addArgument("bar");
+                    parser.addArgument("baz");
                     var opts = parser._parse("foo: one;; bar: still one;baz: three");
                     expect(opts).toEqual({foo: "one; bar: still one",
                                           baz: "three"});
@@ -192,7 +192,7 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("ignores unknown named parameters", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector");
+                    parser.addArgument("selector");
                     var opts = parser._parse("attr: class");
                     expect(opts.attr).toBeUndefined();
                 });
@@ -207,8 +207,8 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("can group options", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("group-foo", false);
-                    parser.add_argument("group-bar", true);
+                    parser.addArgument("group-foo", false);
+                    parser.addArgument("group-bar", true);
                     var opts = parser._parse("group: foo no-bar");
                     expect(opts).toEqual({"group-foo": true, "group-bar": false});
                 });
@@ -217,10 +217,10 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Mixed notation", function() {
                 it("Basic usage", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("foo");
-                    parser.add_argument("bar");
-                    parser.add_argument("buz");
-                    parser.add_argument("boo");
+                    parser.addArgument("foo");
+                    parser.addArgument("bar");
+                    parser.addArgument("buz");
+                    parser.addArgument("boo");
                     var opts = parser._parse("foo bar; boo: blue");
                     expect(opts.foo).toBe("foo");
                     expect(opts.bar).toBe("bar");
@@ -233,14 +233,14 @@ define(["pat-parser"], function(ArgumentParser) {
         describe("_defaults", function() {
             it("No default value provided", function() {
                 var parser=new ArgumentParser();
-                parser.add_argument("selector");
+                parser.addArgument("selector");
                 var defaults = parser._defaults($());
                 expect(defaults.selector).toBe(undefined);
             });
 
             it("Default value provided", function() {
                 var parser=new ArgumentParser();
-                parser.add_argument("selector", "default");
+                parser.addArgument("selector", "default");
                 var defaults = parser._defaults($());
                 expect(defaults.selector).toBe("default");
             });
@@ -248,7 +248,7 @@ define(["pat-parser"], function(ArgumentParser) {
             it("Default value from function", function() {
                 var parser=new ArgumentParser(),
                     func=jasmine.createSpy("func").andReturn("default");
-                parser.add_argument("selector", func);
+                parser.addArgument("selector", func);
                 var defaults = parser._defaults("element");
                 expect(defaults.selector).toBe("default");
                 expect(func).toHaveBeenCalledWith("element", "selector");
@@ -259,21 +259,21 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Value bubbling", function() {
                 it("Use default from parser", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("selector", "default");
+                    parser.addArgument("selector", "default");
                     var opts = parser.parse($(), "");
                     expect(opts.selector).toBe("default");
                 });
 
                 it("Value from data attribute", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("selector", "default");
+                    parser.addArgument("selector", "default");
                     var opts = parser.parse($("<div data-pat-mypattern=\"element\"/>"));
                     expect(opts.selector).toBe("element");
                 });
 
                 it("Inherit value from parent data attribute", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("selector", "default");
+                    parser.addArgument("selector", "default");
                     var $content = $("<div data-pat-mypattern='parent'><span/></div>").find("span");
                     var opts = parser.parse($content);
                     expect(opts.selector).toBe("parent");
@@ -281,7 +281,7 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Prefer value from element data attribute", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("selector", "default");
+                    parser.addArgument("selector", "default");
                     var $content = $("<div data-pat-mypattern='parent'><span data-pat-mypattern='el'/></div>").find("span");
                     var opts = parser.parse($content);
                     expect(opts.selector).toBe("el");
@@ -289,7 +289,7 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Parameter trumps all", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("selector", "default");
+                    parser.addArgument("selector", "default");
                     var opts = parser.parse(
                         $("<div data-pat-mypattern=\"element\"/>"),
                         {selector: "parameter"});
@@ -306,7 +306,7 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Multiple argument handling", function() {
                 it("Ignore extra arguments when multiple not requested", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("value");
+                    parser.addArgument("value");
                     var $content = $("<div data-pat-mypattern='one && two'/>");
                     var opts = parser.parse($content);
                     expect(Array.isArray(opts)).toBe(false);
@@ -315,7 +315,7 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Return all arguments when multiple requested", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("value");
+                    parser.addArgument("value");
                     var $content = $("<div data-pat-mypattern='one && two'/>");
                     var opts = parser.parse($content, true);
                     expect(Array.isArray(opts)).toBe(true);
@@ -325,7 +325,7 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Provide multiple options to parse()", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("value");
+                    parser.addArgument("value");
                     var opts = parser.parse($(), [{value: "one"}, {value: "two"}], true);
                     expect(Array.isArray(opts)).toBe(true);
                     expect(opts.length).toBe(2);
@@ -336,8 +336,8 @@ define(["pat-parser"], function(ArgumentParser) {
 
             it("Resolve variable references", function() {
                 var parser=new ArgumentParser("mypattern");
-                parser.add_argument("value", 15);
-                parser.add_argument("other", "$value");
+                parser.addArgument("value", 15);
+                parser.addArgument("other", "$value");
                 var opts = parser.parse($());
                 expect(opts.other).toBe(15);
             });
@@ -345,8 +345,8 @@ define(["pat-parser"], function(ArgumentParser) {
             it("Grouped options", function() {
                 var parser=new ArgumentParser("mypattern"),
                     $content = $("<div data-pat-mypattern='group: y n'/>");
-                parser.add_argument("group-foo", false);
-                parser.add_argument("group-bar-baz", true);
+                parser.addArgument("group-foo", false);
+                parser.addArgument("group-bar-baz", true);
                 var opts = parser.parse($content);
                 // XXX: which one should it be? I feel the first, least
                 // confusion and I doubt we need the groups as objects to
@@ -359,8 +359,8 @@ define(["pat-parser"], function(ArgumentParser) {
             it("Jquery options for grouped options", function() {
                 var parser=new ArgumentParser("mypattern"),
                     $content = $("<div data-pat-mypattern='group: 1 2'/>");
-                parser.add_argument("group-foo", 0);
-                parser.add_argument("group-bar-baz", 0);
+                parser.addArgument("group-foo", 0);
+                parser.addArgument("group-bar-baz", 0);
                 var opts = parser.parse($content, {"group-foo": 10,
                                                    "group-bar-baz": 20});
                 // XXX: adjust depending on what we decide for "Grouped options"
@@ -373,7 +373,7 @@ define(["pat-parser"], function(ArgumentParser) {
                 var parser=new ArgumentParser("mypattern"),
                     func=jasmine.createSpy("func").andReturn(15),
                     $content = $("<div data-pat-mypattern='value: 32'/>");
-                parser.add_argument("value", func);
+                parser.addArgument("value", func);
                 var defaults = parser.parse($content);
                 expect(defaults.value).toBe(32);
             });
@@ -400,19 +400,19 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Enum handling", function() {
                 it("Valid value", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", "red",  ["red", "blue", "green"]);
+                    parser.addArgument("value", "red",  ["red", "blue", "green"]);
                     expect(parser._coerce("value", "red")).toBe("red");
                 });
 
                 it("Unknown value", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", "red",  ["red", "blue", "green"]);
+                    parser.addArgument("value", "red",  ["red", "blue", "green"]);
                     expect(parser._coerce("value", "pink")).toBe(null);
                 });
 
                 it("Coercion for enum values", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", 5, [1, 3, 5, 10]);
+                    parser.addArgument("value", 5, [1, 3, 5, 10]);
                     expect(parser._coerce("value", "3")).toBe(3);
                 });
             });
@@ -420,43 +420,43 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Convert to boolean", function() {
                 it("String with non-zero number", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", false);
+                    parser.addArgument("value", false);
                     expect(parser._coerce("value", "1")).toBe(true);
                 });
 
                 it("String with uppercase bool", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", false);
+                    parser.addArgument("value", false);
                     expect(parser._coerce("value", "TRUE")).toBe(true);
                 });
 
                 it("String with mixed-case yes", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", false);
+                    parser.addArgument("value", false);
                     expect(parser._coerce("value", "YeS")).toBe(true);
                 });
 
                 it("String with zero number", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", false);
+                    parser.addArgument("value", false);
                     expect(parser._coerce("value", "0")).toBe(false);
                 });
 
                 it("String with mixed-case false", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", false);
+                    parser.addArgument("value", false);
                     expect(parser._coerce("value", "False")).toBe(false);
                 });
 
                 it("String with n", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", false);
+                    parser.addArgument("value", false);
                     expect(parser._coerce("value", "n")).toBe(false);
                 });
 
                 it("String with unknown value", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", false);
+                    parser.addArgument("value", false);
                     expect(parser._coerce("value", "unknown")).toBe(false);
                 });
             });
@@ -464,37 +464,37 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Convert to number", function() {
                 it("False boolean", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", 15);
+                    parser.addArgument("value", 15);
                     expect(parser._coerce("value", false)).toBe(0);
                 });
 
                 it("True boolean", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", 15);
+                    parser.addArgument("value", 15);
                     expect(parser._coerce("value", true)).toBe(1);
                 });
 
                 it("String with positive number", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", 15);
+                    parser.addArgument("value", 15);
                     expect(parser._coerce("value", "1")).toBe(1);
                 });
 
                 it("String with zero number", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", 0);
+                    parser.addArgument("value", 0);
                     expect(parser._coerce("value", "0")).toBe(0);
                 });
 
                 it("Always use decimal notation for numbers", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", 0);
+                    parser.addArgument("value", 0);
                     expect(parser._coerce("value", "010")).toBe(10);
                 });
 
                 it("String with invalid", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", 0);
+                    parser.addArgument("value", 0);
                     expect(parser._coerce("value", "ZZ")).toBe(null);
                 });
             });
@@ -502,13 +502,13 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Convert to string", function() {
                 it("Boolean", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", "value");
+                    parser.addArgument("value", "value");
                     expect(parser._coerce("value", true)).toBe("true");
                 });
 
                 it("Number", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("value", "value");
+                    parser.addArgument("value", "value");
                     expect(parser._coerce("value", 15)).toBe("15");
                 });
             });
@@ -526,7 +526,7 @@ define(["pat-parser"], function(ArgumentParser) {
                 it("Do type coercion", function() {
                     var parser=new ArgumentParser(),
                         opts={};
-                    parser.add_argument("value", 1);
+                    parser.addArgument("value", 1);
                     spyOn(parser, "_coerce").andReturn("coerced!");
                     parser._set(opts, "value", "1");
                     expect(parser._coerce).toHaveBeenCalledWith("value", "1");
@@ -536,7 +536,7 @@ define(["pat-parser"], function(ArgumentParser) {
                 it("Abort if coercion fails", function() {
                     var parser=new ArgumentParser(),
                         opts={};
-                    parser.add_argument("value", 1);
+                    parser.addArgument("value", 1);
                     spyOn(parser, "_coerce").andReturn(null);
                     parser._set(opts, "value", "1");
                     expect(opts.value).toBe(undefined);
@@ -547,7 +547,7 @@ define(["pat-parser"], function(ArgumentParser) {
                 it("Split on comma", function() {
                     var parser=new ArgumentParser(),
                         opts={};
-                    parser.add_argument("value", [], null, true);
+                    parser.addArgument("value", [], null, true);
                     parser._set(opts, "value", "foo,bar,buz");
                     expect(opts.value).toEqual(["foo", "bar", "buz"]);
                 });
@@ -555,7 +555,7 @@ define(["pat-parser"], function(ArgumentParser) {
                 it("Do type coercion", function() {
                     var parser=new ArgumentParser(),
                         opts={};
-                    parser.add_argument("value", [1], null, true);
+                    parser.addArgument("value", [1], null, true);
                     spyOn(parser, "_coerce").andReturn("coerced!");
                     parser._set(opts, "value", "1");
                     expect(parser._coerce).toHaveBeenCalledWith("value", "1");
@@ -565,7 +565,7 @@ define(["pat-parser"], function(ArgumentParser) {
                 it("Ignored values that can not be coerced", function() {
                     var parser=new ArgumentParser(),
                         opts={};
-                    parser.add_argument("value", 1);
+                    parser.addArgument("value", 1);
                     spyOn(parser, "_coerce").andReturn(null);
                     parser._set(opts, "value", "1");
                     expect(opts.value).toBe(undefined);
@@ -605,8 +605,8 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Variable references", function() {
                 it("Basic reference", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("value", 15);
-                    parser.add_argument("other", "$value");
+                    parser.addArgument("value", 15);
+                    parser.addArgument("other", "$value");
                     var opts = {value: 20, other: "$value"};
                     parser._cleanupOptions(opts);
                     expect(opts.other).toBe(20);
@@ -614,8 +614,8 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Do not follow $ in value", function() {
                     var parser=new ArgumentParser("mypattern");
-                    parser.add_argument("value", 15);
-                    parser.add_argument("other");
+                    parser.addArgument("value", 15);
+                    parser.addArgument("other");
                     var opts = {value: 20, other: "$value"};
                     parser._cleanupOptions(opts);
                     expect(opts.other).toBe("$value");
@@ -625,8 +625,8 @@ define(["pat-parser"], function(ArgumentParser) {
             describe("Option grouping", function() {
                 it("Create new group", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("group-foo");
-                    parser.add_argument("group-bar");
+                    parser.addArgument("group-foo");
+                    parser.addArgument("group-bar");
                     var opts = {"group-foo": 15};
                     parser._cleanupOptions(opts);
                     expect(opts).toEqual({group: {foo: 15}});
@@ -634,8 +634,8 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Multiple values in group", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("group-foo");
-                    parser.add_argument("group-bar");
+                    parser.addArgument("group-foo");
+                    parser.addArgument("group-bar");
                     var opts = {"group-foo": 15, "group-bar": 20};
                     parser._cleanupOptions(opts);
                     expect(opts).toEqual({group: {foo: 15, bar:20}});
@@ -643,8 +643,8 @@ define(["pat-parser"], function(ArgumentParser) {
 
                 it("Extend existing group", function() {
                     var parser=new ArgumentParser();
-                    parser.add_argument("group-foo");
-                    parser.add_argument("group-buz");
+                    parser.addArgument("group-foo");
+                    parser.addArgument("group-buz");
                     var opts = {"group-foo": 15, group: {bar: 20}};
                     parser._cleanupOptions(opts);
                     expect(opts).toEqual({group: {foo: 15, bar:20}});

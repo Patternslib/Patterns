@@ -9,10 +9,10 @@ define("pat-clone",[
     "use strict";
     var log = logger.getLogger("pat-clone");
     var parser = new Parser("clone");
-    parser.add_argument("max");
-    parser.add_argument("template", ":first");
-    parser.add_argument("trigger-element", ".add-clone");
-    parser.add_argument("remove-element", ".remove-clone");
+    parser.addArgument("max");
+    parser.addArgument("template", ":first");
+    parser.addArgument("trigger-element", ".add-clone");
+    parser.addArgument("remove-element", ".remove-clone");
     var TEXT_NODE = 3;
 
     return Base.extend({

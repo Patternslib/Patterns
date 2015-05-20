@@ -10,7 +10,7 @@ define([
     var log = logger.getLogger("pat.editTinyMCE"),
         parser = new Parser("edit-tinymce");
 
-    parser.add_argument("tinymce-baseurl");
+    parser.addArgument("tinymce-baseurl");
 
     var _ = {
         name: "editTinyMCE",

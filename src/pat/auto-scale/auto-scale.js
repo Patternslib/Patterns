@@ -10,9 +10,9 @@ define([
     "pat-parser"
 ], function($, registry, Parser) {
     var parser = new Parser("auto-scale");
-    parser.add_argument("method", "scale", ["scale", "zoom"]);
-    parser.add_argument("min-width", 0);
-    parser.add_argument("max-width", 1000000);
+    parser.addArgument("method", "scale", ["scale", "zoom"]);
+    parser.addArgument("min-width", 0);
+    parser.addArgument("max-width", 1000000);
 
     var _ = {
         name: "autoscale",

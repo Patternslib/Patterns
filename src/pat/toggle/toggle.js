@@ -13,10 +13,10 @@ define([
     var log = logger.getLogger("pat.toggle"),
         parser = new Parser("toggle");
 
-    parser.add_argument("selector");
-    parser.add_argument("attr", "class");
-    parser.add_argument("value");
-    parser.add_argument("store", "none", ["none", "session", "local"]);
+    parser.addArgument("selector");
+    parser.addArgument("attr", "class");
+    parser.addArgument("value");
+    parser.addArgument("store", "none", ["none", "session", "local"]);
 
     function ClassToggler(values) {
         this.values=values.slice(0);
