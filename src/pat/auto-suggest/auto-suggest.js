@@ -28,13 +28,15 @@ define([
     // selection.
     // e.g. {'BMW': ['selected', 'car'], 'BMX': ['selected', 'bicycle']}
     parser.addArgument("selection-classes", "");
-    parser.addArgument("pre-fill", function($el) { return $el.val(); });
-    parser.addArgument("data", ""); // JSON format for pre-filling
+    parser.addArgument("prefill", function($el) { return $el.val(); });
+    parser.addArgument("prefill-json", ""); // JSON format for pre-filling
     parser.addArgument("max-selection-size", 0);
     parser.addArgument("placeholder", function($el) {
         return $el.attr("placeholder") || "Enter text";
     });
     parser.addAlias("maximum-selection-size", "max-selection-size");
+    parser.addAlias("data", "prefill-json");
+    parser.addAlias("pre-fill", "prefill");
 
     var _ = {
         name: "autosuggest",
@@ -125,8 +127,8 @@ define([
             }
             select2_config.tags = words;
 
-            if (pat_config.preFill && pat_config.preFill.length) {
-                prefill = pat_config.preFill.split(",");
+            if (pat_config.prefill && pat_config.prefill.length) {
+                prefill = pat_config.prefill.split(",");
                 $el.val(prefill);
                 select2_config.initSelection = function (element, callback) {
                     var i, data = [],
@@ -138,8 +140,8 @@ define([
                 };
             }
 
-            if (pat_config.data.length) {
-                /* We support two types of JSON data for preFill data:
+            if (pat_config.prefillJson.length) {
+                /* We support two types of JSON data for prefill data:
                  *   {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}
                  * or
                  *   {
@@ -148,7 +150,7 @@ define([
                  *   }
                  */
                 try {
-                    data = $.parseJSON(pat_config.data);
+                    data = $.parseJSON(pat_config.prefillJson);
                     for (d in data) {
                         if (typeof d === "object") {
                             ids.push(d.id);
