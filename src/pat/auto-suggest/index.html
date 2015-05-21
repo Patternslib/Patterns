@@ -14,22 +14,39 @@
 			<section class="description">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
 			</section>
-			<h2>Demo</h2>
-			<div id="demo">
 			<section class="demo">
-                <p>In this example the words 'Apples', 'Oranges', 'Pears' and 'Bananas' will be suggested, although you may also enter your own text.</p>
-                <input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas" type="text"></input>
+			<h2>Demo</h2>
+                <div id="demo">
+                <fieldset>
+                    <label>In this example the words 'Apples', 'Oranges', 'Pears' and 'Bananas' will be suggested, although you may also enter your own text.
+                        <input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas" type="text"></input>
+                    </label>
 
-                <p>In this example, you may only choose one of the suggested cars, and nothing else.</p>
-                <input class="pat-autosuggest" placeholder="Pick a car"
-                        data-pat-autosuggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
-                                              allow-new-words: false; max-selection-size: 1" type="text"></input>
+                    <label>Here you may only choose one of the suggested cars, and nothing else.
+                        <input class="pat-autosuggest" placeholder="Pick a car"
+                                data-pat-autosuggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
+                                                    allow-new-words: false; max-selection-size: 1" type="text"></input>
+                    </label>
+
+                    <label>An example with pre-filled words:
+                        <input class="pat-autosuggest" placeholder="Pick a car"
+                            data-pat-autosuggest="pre-fill: Toyota;
+                                                    words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
+                                                    allow-new-words: false;" type="text"></input>
+                    </label>
+
+                    <label>An example with pre-filled words in JSON format:
+                        <input class="pat-autosuggest" placeholder="Pick a character"
+                            data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}];
+                                                    prefill-json: {"john-snow":"John Snow"};
+                                                    allow-new-words: false;' type="text"></input>
+                    </label>
+                </fieldset>
+                </div>
 			</section>
-			</div>
 			<section class="documentation">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
 			</section>
 		</section>
-		<a href="/index.html" class="pat-inject" data-pat-inject="source: #global-navigation::element; target: self::element; trigger: autoload">Global navigation</a>
 	</body>
 </html>
