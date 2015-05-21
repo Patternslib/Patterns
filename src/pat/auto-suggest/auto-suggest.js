@@ -15,12 +15,17 @@ define([
     "use strict";
     var log = logger.getLogger("calendar");
     var parser = new Parser("autosuggest");
-    parser.addArgument("ajax-data-type", "");
+    parser.addArgument("ajax-data-type", "JSON");
     parser.addArgument("ajax-search-index", "");
     parser.addArgument("ajax-url", "");
     parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
+    parser.addArgument("max-selection-size", 0);
+    parser.addArgument("placeholder", function($el) { return $el.attr("placeholder") || "Enter text"; });
+    parser.addArgument("prefill", function($el) { return $el.val(); });
+    parser.addArgument("prefill-json", ""); // JSON format for pre-filling
     parser.addArgument("words", "");
     parser.addArgument("words-json");
+
     // "selection-classes" allows you to add custom CSS classes to currently
     // selected elements.
     // The value passed in must be an object with each id being the text inside
@@ -28,12 +33,7 @@ define([
     // selection.
     // e.g. {'BMW': ['selected', 'car'], 'BMX': ['selected', 'bicycle']}
     parser.addArgument("selection-classes", "");
-    parser.addArgument("prefill", function($el) { return $el.val(); });
-    parser.addArgument("prefill-json", ""); // JSON format for pre-filling
-    parser.addArgument("max-selection-size", 0);
-    parser.addArgument("placeholder", function($el) {
-        return $el.attr("placeholder") || "Enter text";
-    });
+
     parser.addAlias("maximum-selection-size", "max-selection-size");
     parser.addAlias("data", "prefill-json");
     parser.addAlias("pre-fill", "prefill");
