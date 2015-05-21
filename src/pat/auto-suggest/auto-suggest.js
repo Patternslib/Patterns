@@ -155,7 +155,7 @@ define([
                         if (typeof d === "object") {
                             ids.push(d.id);
                         } else {
-                            ids.push(data[d]);
+                            ids.push(d);
                         }
                     }
                     $el.val(ids);
