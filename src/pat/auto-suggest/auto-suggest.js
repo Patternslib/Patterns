@@ -144,10 +144,10 @@ define([
                 /* We support two types of JSON data for prefill data:
                  *   {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}
                  * or
-                 *   {
+                 *   [
                  *    {"id": "john-snow", "text": "John Snow"},
                  *    {"id": "tywin-lannister", "text":"Tywin Lannister"}
-                 *   }
+                 *   ]
                  */
                 try {
                     data = $.parseJSON(pat_config.prefillJson);
@@ -163,9 +163,9 @@ define([
                         var d, _data = [];
                         for (d in data) {
                             if (typeof d === "object") {
-                                _data.push(d);
+                                _data.push({id: d.id, text: d.text});
                             } else {
-                                _data.push({id: data[d], text: data[d]});
+                                _data.push({id: d, text: data[d]});
                             }
                         }
                         callback(_data);
