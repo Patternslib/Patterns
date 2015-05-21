@@ -15,11 +15,12 @@ define([
     "use strict";
     var log = logger.getLogger("calendar");
     var parser = new Parser("autosuggest");
-    parser.addArgument("words", "");
-    parser.addArgument("words-json");
-    parser.addArgument("ajax-url", "");
     parser.addArgument("ajax-data-type", "");
     parser.addArgument("ajax-search-index", "");
+    parser.addArgument("ajax-url", "");
+    parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
+    parser.addArgument("words", "");
+    parser.addArgument("words-json");
     // "selection-classes" allows you to add custom CSS classes to currently
     // selected elements.
     // The value passed in must be an object with each id being the text inside
@@ -28,11 +29,12 @@ define([
     // e.g. {'BMW': ['selected', 'car'], 'BMX': ['selected', 'bicycle']}
     parser.addArgument("selection-classes", "");
     parser.addArgument("pre-fill", function($el) { return $el.val(); });
-    parser.addArgument("data", "");
-    parser.addArgument("maximum-selection-size", 0);
+    parser.addArgument("data", ""); // JSON format for pre-filling
+    parser.addArgument("max-selection-size", 0);
     parser.addArgument("placeholder", function($el) {
         return $el.attr("placeholder") || "Enter text";
     });
+    parser.addAlias("maximum-selection-size", "max-selection-size");
 
     var _ = {
         name: "autosuggest",
@@ -46,7 +48,7 @@ define([
                 placeholder: $el.attr("readonly") ? "" : pat_config.placeholder,
                 tokenSeparators: [","],
                 openOnEnter: false,
-                maximumSelectionSize: pat_config.maximumSelectionSize
+                maximumSelectionSize: pat_config.maxSelectionSize
             };
 
             if (pat_config.selectionClasses) {
@@ -96,6 +98,17 @@ define([
 
         configureInput: function ($el, pat_config, select2_config) {
             var d, data, words, ids = [], prefill;
+
+            select2_config.createSearchChoice = function(term, data) {
+                if (pat_config.allowNewWords) {
+                    if ($(data).filter(function() { return this.text.localeCompare(term) === 0; }).length === 0) {
+                        return { id: term, text: term };
+                    }
+                }
+                else {
+                    return null;
+                }
+            };
 
             if (pat_config.wordsJson && pat_config.wordsJson.length) {
                 try {

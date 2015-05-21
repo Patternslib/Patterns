@@ -10,17 +10,20 @@
 	</head>
 	<body>
 		<section>
-			<h1>
-				Auto suggest
-			</h1>
+            <h1>Auto suggest</h1>
 			<section class="description">
 				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
 			</section>
 			<h2>Demo</h2>
 			<div id="demo">
 			<section class="demo">
-			<p>Try the auto suggest pattern below with the terms 'Apples', 'Oranges', 'Pears' and 'Bananas'.</p>
-			<input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas" type="text"></input>
+                <p>In this example the words 'Apples', 'Oranges', 'Pears' and 'Bananas' will be suggested, although you may also enter your own text.</p>
+                <input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas" type="text"></input>
+
+                <p>In this example, you may only choose one of the suggested cars, and nothing else.</p>
+                <input class="pat-autosuggest" placeholder="Pick a car"
+                        data-pat-autosuggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
+                                              allow-new-words: false; max-selection-size: 1" type="text"></input>
 			</section>
 			</div>
 			<section class="documentation">
