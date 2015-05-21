@@ -48,33 +48,37 @@ define([
 
         addArgument: function ArgumentParserAddArgument(name, default_value, choices, multiple) {
             var spec, m;
-
-            if (multiple && !Array.isArray(default_value))
-                default_value=[default_value];
-            spec={name: name,
-                  value: default_value,
-                  multiple: multiple,
-                  dest: name,
-                  group: null};
-
+            if (multiple && !Array.isArray(default_value)) {
+                default_value = [default_value];
+            }
+            spec = {
+                name: name,
+                value: default_value,
+                multiple: multiple,
+                dest: name,
+                group: null
+            };
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices=choices;
                 spec.type=this._typeof(choices[0]);
-                for (var i=0; i<choices.length; i++)
-                    if (this.enum_conflicts.indexOf(choices[i])!==-1)
+                for (var i=0; i<choices.length; i++) {
+                    if (this.enum_conflicts.indexOf(choices[i])!==-1) {
                         continue;
-                    else if (choices[i] in this.enum_values) {
+                    } else if (choices[i] in this.enum_values) {
                         this.enum_conflicts.push(choices[i]);
                         delete this.enum_values[choices[i]];
-                    } else
+                    } else {
                         this.enum_values[choices[i]]=name;
-            } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                    }
+                }
+            } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$") {
                 spec.type=this.parameters[spec.value.slice(1)].type;
-            else
+            } else {
                 // Note that this will get reset by _defaults if default_value is a function.
                 spec.type=this._typeof(multiple ? spec.value[0] : spec.value);
+            }
 
-            m=name.match(this.group_pattern);
+            m = name.match(this.group_pattern);
             if (m) {
                 var group=m[1], field=m[2];
                 if (group in this.possible_groups) {
@@ -101,14 +105,14 @@ define([
             this.parameters[name]=spec;
         },
 
-        _typeof: function ArgumentParser_typeof(obj) {
+        _typeof: function ArgumentParserTypeof(obj) {
             var type = typeof obj;
             if (obj===null)
                 return "null";
             return type;
         },
 
-        _coerce: function ArgumentParser_coerce(name, value) {
+        _coerce: function ArgumentParserCoerce(name, value) {
             var spec=this.parameters[name];
 
             if (typeof value !== spec.type)
@@ -164,28 +168,25 @@ define([
                 this.log.debug("Ignoring value for unknown argument " + name);
                 return;
             }
-
-            var spec=this.parameters[name];
+            var spec = this.parameters[name];
             if (spec.multiple) {
                 var parts=value.split(/,+/), i, v;
-                value=[];
+                value = [];
                 for (i=0; i<parts.length; i++) {
-                    v=this._coerce(name, parts[i].trim());
+                    v = this._coerce(name, parts[i].trim());
                     if (v!==null)
                         value.push(v);
                 }
             } else {
-                value=this._coerce(name, value);
+                value = this._coerce(name, value);
                 if (value===null)
                     return;
             }
-
-            opts[name]=value;
+            opts[name] = value;
         },
 
-        _split: function ArgumentParser_split(text) {
+        _split: function ArgumentParserSplit(text) {
             var tokens = [];
-
             text.replace(this.token_pattern, function(match, quoted, _, simple) {
                 if (quoted)
                     tokens.push(quoted);
@@ -195,21 +196,16 @@ define([
             return tokens;
         },
 
-        _parseExtendedNotation: function ArgumentParser_parseExtendedNotation(parameter) {
-            var opts = {}, i,
-                parts, matches;
-
-            parts = parameter.replace(";;", "\xff")
-                        .split(";")
+        _parseExtendedNotation: function ArgumentParserParseExtendedNotation(parameter) {
+            var opts = {};
+            var parts = parameter.replace(";;", "\xff").split(";")
                         .map(function(el) { return el.replace("\xff", ";"); });
-            for (i=0; i<parts.length; i++) {
-                if (!parts[i])
-                    continue;
-
-                matches = parts[i].match(this.named_param_pattern);
+            _.each(parts, function (part, i) {
+                if (!part) { return; }
+                var matches = part.match(this.named_param_pattern);
                 if (!matches) {
-                    this.log.warn("Invalid parameter: " + parts[i]);
-                    break;
+                    this.log.warn("Invalid parameter: " + part);
+                    return;
                 }
                 var name = matches[1],
                     value = matches[2].trim(),
@@ -227,13 +223,13 @@ define([
                     }
                 } else {
                     this.log.warn("Unknown named parameter " + matches[1]);
-                    continue;
+                    return;
                 }
-            }
+            }.bind(this));
             return opts;
         },
 
-        _parseShorthandNotation: function ArgumentParser_parseShorthandNotation(parameter) {
+        _parseShorthandNotation: function ArgumentParserParseShorthandNotation(parameter) {
             var parts = this._split(parameter),
                 opts = {},
                 positional = true,
@@ -294,7 +290,7 @@ define([
             return opts;
         },
 
-        _defaults: function ArgumentParser_defaults($el) {
+        _defaults: function ArgumentParserDefaults($el) {
             var result = {};
             for (var name in this.parameters)
                 if (typeof this.parameters[name].value==="function")
@@ -309,7 +305,7 @@ define([
             return result;
         },
 
-        _cleanupOptions: function ArgumentParser_cleanupOptions(options) {
+        _cleanupOptions: function ArgumentParserCleanupOptions(options) {
             var keys = Object.keys(options),
                 i, spec, name, target;
 
@@ -347,16 +343,13 @@ define([
             }
         },
 
-        parse: function ArgumentParser_parse($el, options, multiple, inherit) {
+        parse: function ArgumentParserParse($el, options, multiple, inherit) {
             if (typeof options==="boolean" && multiple===undefined) {
                 multiple=options;
                 options={};
             }
-
             inherit = (inherit!==false);
-
             var stack = inherit ? [[this._defaults($el)]] : [[{}]];
-
             var $possible_config_providers = inherit ? $el.parents().andSelf() : $el,
                 final_length = 1,
                 i, data, frame;
@@ -380,9 +373,9 @@ define([
                     stack.push([options]);
             }
 
-            if (!multiple)
+            if (!multiple) {
                 final_length=1;
-
+            }
             var results=[], frame_length, x, xf;
             for (i=0; i<final_length; i++)
                 results.push({});
@@ -396,7 +389,6 @@ define([
                     results[x]=$.extend(results[x], frame[xf]);
                 }
             }
-
             for (i=0; i<results.length; i++)
                 this._cleanupOptions(results[i]);
 
