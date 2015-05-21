@@ -49,6 +49,6 @@ You can customise the behaviour of a gallery through options in the `data-pat-au
 | max-selection-size  | Number   | 0              | How many values are allowed? Provide a positive number or 0 for unlimited.                                  |
 | placeholder         | String   | Enter text     | The placeholder text for the form input. The `placeholder` attribute of the form element can also be used.  |
 | prefill             | List     |                | A list of values with which the form element must be filled in with.                                        |
-| prefill-json        | JSON     |                | A JSON object containing prefill values. We support two types of JSON data for prefill data:`{"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}` or ```{ {"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"} }```  |
+| prefill-json        | JSON     |                | A JSON object containing prefill values. We support two types of JSON data for prefill data:`{"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}` or ```[{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}]```  |
 | words               | List     |                | A list of words which will be used as suggestions if they match with what's being typed by the user.        |
 | words-json          | JSON     |                | The suggested words in JSON format.                                                                         |
