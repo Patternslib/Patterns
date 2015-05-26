@@ -123,6 +123,8 @@ define([
 
             if (viewport.top > box.top)
                 sticker.style.top=(viewport.top - box.top) + "px";
+            else if (viewport.bottom < box.bottom)
+                sticker.style.top=(viewport.bottom - box.bottom) + "px";
             else
                 sticker.style.top="";
 
