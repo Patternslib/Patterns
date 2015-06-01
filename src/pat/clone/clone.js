@@ -71,7 +71,7 @@ define("pat-clone",[
             var callback = function (idx, attr) {
                 if (attr.name === "type" || !$el.attr(attr.name)) { return; }
                 try {
-                    $el.attr(attr.name, $el.attr(attr.name).replace("#{1}", this.num_clones+1));
+                    $el.attr(attr.name, $el.attr(attr.name).replace("#{1}", this.num_clones));
                 } catch (e) {
                     log.warn(e);
                 }
@@ -79,7 +79,7 @@ define("pat-clone",[
             if (el.nodeType !== TEXT_NODE) {
                 $.each(el.attributes, callback.bind(this));
             } else {
-                el.data = el.data.replace("#{1}", this.num_clones+1);
+                el.data = el.data.replace("#{1}", this.num_clones);
             }
         },
 
