@@ -76,3 +76,4 @@ The markup below would have exactly the same effect as the first example, but us
 | max  |Maximum number of clones that is allowed | | Integer |
 | trigger-element |Selector of the element that will remove the clone when clicked upon. | .add-clone | CSS Selector |
 | remove-element |Selector of the element that will remove the clone when clicked upon. | .remove-clone | CSS Selector|
+| clone-element |Selector of the individual clone element(s). | .clone | CSS Selector|

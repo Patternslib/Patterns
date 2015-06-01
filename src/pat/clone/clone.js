@@ -13,6 +13,7 @@ define("pat-clone",[
     parser.addArgument("template", ":first");
     parser.addArgument("trigger-element", ".add-clone");
     parser.addArgument("remove-element", ".remove-clone");
+    parser.addArgument("clone-element", ".clone");
     var TEXT_NODE = 3;
 
     return Base.extend({
@@ -20,7 +21,6 @@ define("pat-clone",[
         trigger: ".pat-clone",
 
         init: function patCloneInit($el, opts) {
-            this.num_clones = 0;
             this.options = parser.parse(this.$el, opts);
             if (this.options.template.lastIndexOf(":", 0) === 0) {
                 this.$template = this.$el.find(this.options.template);
@@ -28,7 +28,13 @@ define("pat-clone",[
                 this.$template = $(this.options.template);
             }
             $(document).on("click", this.options.triggerElement, this.clone.bind(this));
-            this.$el.find(this.options.removeElement).on("click", this.remove.bind(this, this.$el));
+
+            var $clones = this.$el.find(this.options.cloneElement);
+            this.num_clones = $clones.length;
+            $clones.each(function (idx, clone) {
+                var $clone = $(clone);
+                $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
+            }.bind(this));
         },
 
         clone: function clone() {
