@@ -10,7 +10,8 @@
 - Fixed a bug where the page reloads when the image viewer from pat-gallery is closed.
 - Add new parser method addAlias for adding aliases of parser arguments.
 - In pat-autosuggest, new option allow-new-words, for explicitly allowing or denying custom tags.
-- Make pat-bumper also bump against the bottom edge. [fulv]
+- Make pat-bumper also bump against the bottom edge.
+- Bugfixes and improvements to pat-clone.
 
 ## 2.0.9 - Mar 30, 2015
 
