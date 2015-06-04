@@ -63,3 +63,4 @@ The available options are:
 | `bump-remove` | *unset* | CSS class(es) to removed when an element is bumped. | String |
 | `unbump-add` | *unset* | CSS class(es) to add when an element is no longer bumped. | String |
 | `unbump-remove` | `bumped` | CSS class(es) to removed when an element is no longer bumped. | String |
+| `side` | `top` | The side which should bump.  A combination of `all top right bottom left`.  `all` is equivalent to `top right bottom left`. | String |
