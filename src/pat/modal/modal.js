@@ -101,14 +101,16 @@ define([
             var $tallest_child;
             var true_height = $el.outerHeight(); // the height of the highest element (after the function runs)
             $("*", $el).each(function () {
-                if ($(this).outerHeight(true) > true_height) {
+                if (typeof $tallest_child === "undefined") {
+                    $tallest_child = $(this);
+                } else if ($(this).outerHeight(true) > $tallest_child.outerHeight(true)) {
                     $tallest_child = $(this);
                     true_height = $tallest_child.outerHeight(true);
                 }
             });
-            if ($tallest_child) {
+            if ($tallest_child.outerHeight(true) !== true_height) {
                 // There is a child that's taller than $el. We need to make the
-                // height the height of this child plus it's offset from the top
+                // modal height the height of this child plus it's offset from the top
                 // of $el.
                 true_height += $tallest_child.offset().top - $el.offset().top;
             }
