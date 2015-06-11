@@ -57,6 +57,7 @@ define([
             // the focus was lost during the wrapping.
             activeElement.focus();
             this._init_handlers();
+            this.resize();
             this.setPosition();
         },
 
@@ -68,13 +69,13 @@ define([
                 $(document).on("click.pat-modal", this._onPossibleOutsideClick.bind(this));
 
             $(window).on("resize.pat-modal-position",
-                utils.debounce(this.setPosition.bind(this), 400));
+                utils.debounce(this.resize.bind(this), 400));
             $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
-                utils.debounce(this.setPosition.bind(this), 400));
+                utils.debounce(this.resize.bind(this), 400));
             $(document).on("patterns-injected.pat-modal-position", "#pat-modal,div.pat-modal",
-                utils.debounce(this.setPosition.bind(this), 400));
+                utils.debounce(this.resize.bind(this), 400));
             $(document).on("pat-update.pat-modal-position", "#pat-modal,div.pat-modal",
-                utils.debounce(this.setPosition.bind(this), 50));
+                utils.debounce(this.resize.bind(this), 50));
         },
 
         _onPossibleOutsideClick: function(ev) {
@@ -103,29 +104,28 @@ define([
         },
 
         setPosition: function() {
-            var true_height = this.$el.outerHeight(); // the height of the highest element (after the function runs)
-            var modalPadding = this.$el.outerHeight(true) - this.$el.outerHeight();
-            var maxHeight = $(window).innerHeight() - modalPadding;
-            var $tallest_child = this.getTallestChild();
+            this.$el.css("top", ($(window).innerHeight() - this.$el.height())/2);
+        },
 
-            if ($tallest_child.outerHeight(true) > true_height) {
-                // There is a child that's taller than $el. We need to make the
-                // modal height the height of this child plus it's offset from the top
-                // of $el.
-                true_height += ($tallest_child.offset().top - this.$el.offset().top);
-            } else if ($tallest_child.outerHeight(true) < true_height) {
-                // $el is taller than it needs to be.
-                true_height -= ($tallest_child.offset().top - this.$el.offset().top);
+        resize: function() {
+            var modal_height = this.$el.outerHeight(true);
+            var modal_padding = modal_height - this.$el.outerHeight();
+            var max_height = $(window).innerHeight() - modal_padding;
+            var $tallest_child = this.getTallestChild();
+            var tallest_child_height = $tallest_child.outerHeight(true);
+
+            if (tallest_child_height !== modal_height) {
+                modal_height = tallest_child_height + modal_padding;
             }
-            if (maxHeight - true_height < 0) {
-                this.$el.addClass("max-height").css("height", maxHeight);
-            } else if (true_height !== this.$el.height()) {
-                this.$el.removeClass("max-height").css("height", true_height);
+            if (max_height < modal_height) {
+                this.$el.addClass("max-height").css("height", max_height);
+                this.setPosition();
+            } else if (modal_height !== this.$el.height()) {
+                this.$el.removeClass("max-height").css("height", modal_height);
+                this.setPosition();
             } else {
                 return;
             }
-            this.$el.css("top", ($(window).innerHeight() - this.$el.outerHeight(true)) / 2);
-
             // XXX: This is a hack. When you have a modal inside a
             // modal.max-height, the CSS of the outermost modal affects the
             // innermost .panel-body. By redrawing here, it's fixed.
