@@ -56,25 +56,25 @@ define([
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
             activeElement.focus();
-            modal._init_handlers();
-            modal.setPosition();
+            this._init_handlers();
+            this.setPosition();
         },
 
         _init_handlers: function() {
             var $el = this.$el;
-            $(document).on("click.pat-modal", ".close-panel", modal.destroy.bind(this));
-            $(document).on("keyup.pat-modal", modal._onKeyUp.bind(this));
+            $(document).on("click.pat-modal", ".close-panel", this.destroy.bind(this));
+            $(document).on("keyup.pat-modal", this._onKeyUp.bind(this));
             if (this.options.closing.indexOf("outside")!==-1)
-                $(document).on("click.pat-modal", modal._onPossibleOutsideClick.bind(this));
+                $(document).on("click.pat-modal", this._onPossibleOutsideClick.bind(this));
 
             $(window).on("resize.pat-modal-position",
-                utils.debounce(modal.setPosition.bind(this), 400));
+                utils.debounce(this.setPosition.bind(this), 400));
             $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
-                utils.debounce(modal.setPosition.bind(this), 400));
+                utils.debounce(this.setPosition.bind(this), 400));
             $(document).on("patterns-injected.pat-modal-position", "#pat-modal,div.pat-modal",
-                utils.debounce(modal.setPosition.bind(this), 400));
+                utils.debounce(this.setPosition.bind(this), 400));
             $(document).on("pat-update.pat-modal-position", "#pat-modal,div.pat-modal",
-                utils.debounce(modal.setPosition.bind(this), 50));
+                utils.debounce(this.setPosition.bind(this), 50));
         },
 
         _onPossibleOutsideClick: function(ev) {
@@ -106,7 +106,7 @@ define([
             var true_height = this.$el.outerHeight(); // the height of the highest element (after the function runs)
             var modalPadding = this.$el.outerHeight(true) - this.$el.outerHeight();
             var maxHeight = $(window).innerHeight() - modalPadding;
-            var $tallest_child = modal.getTallestChild();
+            var $tallest_child = this.getTallestChild();
 
             if ($tallest_child.outerHeight(true) > true_height) {
                 // There is a child that's taller than $el. We need to make the
