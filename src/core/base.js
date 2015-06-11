@@ -35,10 +35,10 @@ define([
         return pattern;
     };
 
-    var Base = function($el, options) {
+    var Base = function($el, options, trigger) {
         this.$el = $el;
         this.options = $.extend(true, {}, this.defaults || {}, options || {});
-        this.init($el, options);
+        this.init($el, options, trigger);
         this.emit('init');
     };
 
