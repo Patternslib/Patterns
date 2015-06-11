@@ -10,13 +10,14 @@ BUNDLES		= bundles/patterns.js bundles/patterns.min.js
 
 GENERATED	= src/lib/depends_parse.js
 
+TESTSOURCES	= $(wildcard tests/specs/*/*.js) \
+			  $(wildcard src/pat/*/tests.js)
 JSHINTEXCEPTIONS = $(GENERATED) \
 		   src/lib/dependshandler.js \
 		   src/lib/htmlparser.js \
-		   src/pat/skeleton.js
+		   src/pat/skeleton.js \
+		   $(TESTSOURCES)
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
-TESTSOURCES	= $(wildcard tests/specs/*/*.js)
-
 
 all:: bundle.js css
 
