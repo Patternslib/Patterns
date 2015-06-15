@@ -77,6 +77,7 @@ all_css:: css
 	@$(SASS) src/pat/checklist/_checklist.scss src/pat/checklist/checklist.css
 	@$(SASS) src/pat/clone/_clone.scss src/pat/clone/clone.css
 	@$(SASS) src/pat/collapsible/_collapsible.scss src/pat/collapsible/collapsible.css
+	@$(SASS) src/pat/date-picker/_date-picker.scss src/pat/date-picker/date-picker.css
 	@$(SASS) src/pat/depends/_depends.scss src/pat/depends/depends.css
 	@$(SASS) src/pat/edit-tinymce/_edit-tinymce.scss src/pat/edit-tinymce/edit-tinymce.css
 	@$(SASS) src/pat/equaliser/_equaliser.scss src/pat/equaliser/equaliser.css

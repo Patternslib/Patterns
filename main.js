@@ -37,6 +37,7 @@ require.config({
         "photoswipe":                       "bower_components/photoswipe/dist/photoswipe",
         "photoswipe-ui":                    "bower_components/photoswipe/dist/photoswipe-ui-default",
         "photoswipe-template":              "pat/gallery/template",
+        "pikaday":                          "bower_components/pikaday/pikaday",
         "prefixfree":                       "bower_components/prefixfree/prefixfree.min",
         "select2":                          "bower_components/select2/select2.min",
         "showdown":                         "bower_components/showdown/src/showdown",
@@ -57,6 +58,7 @@ require.config({
         // Core
         "pat-compat":               "core/compat",
         "pat-base":                 "core/base",
+        "pat-date-picker":          "pat/date-picker/date-picker",
         "pat-depends_parse":        "lib/depends_parse",
         "pat-dependshandler":       "lib/dependshandler",
         "pat-htmlparser":           "lib/htmlparser",

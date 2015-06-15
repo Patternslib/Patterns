@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>pat-date-picker demo page</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css">
+    <link rel="stylesheet" href="date-picker.css" type="text/css">
+    <script src="/main.js" type="text/javascript" charset="utf-8"></script>
+    <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <section class="description">
+        <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+    </section>
+    <section class="demo">
+        <h2>Demo</h2>
+        <form class="vertical">
+            <label>Falling back to the browser's HTML5 picker if available.
+                <input class="pat-date-picker" type="date" data-pat-date-picker="native">
+            </label>
+            <label>Enforcing the styled non-HTML5 picker universally.
+                <input class="pat-date-picker" type="date">
+            </label>
+        </form>
+    </section>
+    <section class="documentation">
+        <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+    </section>
+  </body>
+</html>
+
