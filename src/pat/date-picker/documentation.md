@@ -1,6 +1,6 @@
 ## Description
 
-A pattern for creating a datepicker polyfill.
+A pattern for creating a custom date picker or polyfill.
 
 ## Documentation
 
