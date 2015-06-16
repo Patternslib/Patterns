@@ -33,7 +33,7 @@ define([
             });
         },
 
-        addAlias: function ArgumentParserAddAlias(alias, original) {
+        addAlias: function argParserAddAlias(alias, original) {
             /* Add an alias for a previously added parser argument.
              *
              * Useful when you want to support both US and UK english argument
@@ -42,11 +42,11 @@ define([
             if (this.parameters[original]) {
                 this.parameters[original].alias = alias;
             } else {
-                throw ("Attempted to add an alias for a non-existing parser argument.");
+                throw("Attempted to add an alias \""+alias+"\" for a non-existing parser argument \""+original+"\".");
             }
         },
 
-        addArgument: function ArgumentParserAddArgument(name, default_value, choices, multiple) {
+        addArgument: function ArgParserAddArgument(name, default_value, choices, multiple) {
             var spec, m;
             if (multiple && !Array.isArray(default_value)) {
                 default_value = [default_value];
@@ -59,8 +59,8 @@ define([
                 group: null
             };
             if (choices && Array.isArray(choices) && choices.length) {
-                spec.choices=choices;
-                spec.type=this._typeof(choices[0]);
+                spec.choices = choices;
+                spec.type = this._typeof(choices[0]);
                 for (var i=0; i<choices.length; i++) {
                     if (this.enum_conflicts.indexOf(choices[i])!==-1) {
                         continue;
@@ -72,10 +72,10 @@ define([
                     }
                 }
             } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$") {
-                spec.type=this.parameters[spec.value.slice(1)].type;
+                spec.type = this.parameters[spec.value.slice(1)].type;
             } else {
                 // Note that this will get reset by _defaults if default_value is a function.
-                spec.type=this._typeof(multiple ? spec.value[0] : spec.value);
+                spec.type = this._typeof(multiple ? spec.value[0] : spec.value);
             }
 
             m = name.match(this.group_pattern);
@@ -105,39 +105,38 @@ define([
             this.parameters[name]=spec;
         },
 
-        _typeof: function ArgumentParserTypeof(obj) {
+        _typeof: function argParserTypeof(obj) {
             var type = typeof obj;
             if (obj===null)
                 return "null";
             return type;
         },
 
-        _coerce: function ArgumentParserCoerce(name, value) {
-            var spec=this.parameters[name];
-
+        _coerce: function argParserCoerce(name, value) {
+            var spec = this.parameters[name];
             if (typeof value !== spec.type)
                 try {
                     switch (spec.type) {
                         case "boolean":
                             if (typeof value === "string") {
-                                value=value.toLowerCase();
+                                value = value.toLowerCase();
                                 var num = parseInt(value, 10);
                                 if (!isNaN(num))
-                                    value=!!num;
+                                    value = !!num;
                                 else
                                     value=(value==="true" || value==="y" || value==="yes" || value==="y");
                             } else if (typeof value === "number")
-                                value=!!value;
+                                value = !!value;
                             else
                                 throw ("Cannot convert value for " + name + " to boolean");
                             break;
                         case "number":
                             if (typeof value === "string") {
-                                value=parseInt(value, 10);
+                                value = parseInt(value, 10);
                                 if (isNaN(value))
                                     throw ("Cannot convert value for " + name + " to number");
                             } else if (typeof value === "boolean")
-                                value=value + 0;
+                                value = value + 0;
                             else
                                 throw ("Cannot convert value for " + name + " to number");
                             break;
@@ -159,11 +158,10 @@ define([
                 this.log.warn("Illegal value for " + name + ": " + value);
                 return null;
             }
-
             return value;
         },
 
-        _set: function ArgumentParserSet(opts, name, value) {
+        _set: function argParserSet(opts, name, value) {
             if (!(name in this.parameters)) {
                 this.log.debug("Ignoring value for unknown argument " + name);
                 return;
@@ -185,7 +183,7 @@ define([
             opts[name] = value;
         },
 
-        _split: function ArgumentParserSplit(text) {
+        _split: function argParserSplit(text) {
             var tokens = [];
             text.replace(this.token_pattern, function(match, quoted, _, simple) {
                 if (quoted)
@@ -196,9 +194,9 @@ define([
             return tokens;
         },
 
-        _parseExtendedNotation: function ArgumentParserParseExtendedNotation(parameter) {
+        _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
             var opts = {};
-            var parts = parameter.replace(";;", "\xff").split(";")
+            var parts = argstring.replace(";;", "\xff").split(";")
                         .map(function(el) { return el.replace("\xff", ";"); });
             _.each(parts, function (part, i) {
                 if (!part) { return; }
@@ -229,7 +227,7 @@ define([
             return opts;
         },
 
-        _parseShorthandNotation: function ArgumentParserParseShorthandNotation(parameter) {
+        _parseShorthandNotation: function argParserParseShorthandNotation(parameter) {
             var parts = this._split(parameter),
                 opts = {},
                 positional = true,
@@ -266,7 +264,7 @@ define([
             return opts;
         },
 
-        _parse: function ArgumentParser_parse(parameter) {
+        _parse: function argParser_parse(parameter) {
             var opts, extended, sep;
             if (!parameter) { return {}; }
             if (parameter.match(this.json_param_pattern)) {
@@ -290,7 +288,7 @@ define([
             return opts;
         },
 
-        _defaults: function ArgumentParserDefaults($el) {
+        _defaults: function argParserDefaults($el) {
             var result = {};
             for (var name in this.parameters)
                 if (typeof this.parameters[name].value==="function")
@@ -305,7 +303,7 @@ define([
             return result;
         },
 
-        _cleanupOptions: function ArgumentParserCleanupOptions(options) {
+        _cleanupOptions: function argParserCleanupOptions(options) {
             var keys = Object.keys(options),
                 i, spec, name, target;
 
@@ -343,7 +341,7 @@ define([
             }
         },
 
-        parse: function ArgumentParserParse($el, options, multiple, inherit) {
+        parse: function argParserParse($el, options, multiple, inherit) {
             if (typeof options==="boolean" && multiple===undefined) {
                 multiple=options;
                 options={};
