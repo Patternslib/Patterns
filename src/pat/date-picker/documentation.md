@@ -4,39 +4,55 @@ A pattern for creating a custom date picker or polyfill.
 
 ## Documentation
 
-This pattern provides a date picker fallback for browsers which don't yet
-support the HTML5 date input.
-
-It uses the [Pickaday](https://dbushell.github.io/Pikaday) library.
+This pattern provides a styleable date picker. It can be used as a fallback
+for browsers which don't yet support the HTML5 date input.
 
 ### Examples
 
-Falling back to the browser's HTML5 picker if available.
+####Falling back to the browser's HTML5 picker if available.
 
-    <input class="pat-date-picker" type="date" data-pat-date-picker="native">
+Set the `behavior` option to `native` to use the browser's HTML5 date input
+rendering when available.
 
-Enforcing the styled non-HTML5 picker universally.
+    <input class="pat-date-picker" type="date" data-pat-date-picker="behavior: native">
+
+####Enforcing the styled non-HTML5 picker universally.
+
+By default this pattern will NOT defer to the browser's HTML5 picker.
 
     <input class="pat-date-picker" type="date">
     
-Default value
+####Default value
 
     <input class="pat-date-picker" type="date" value="2015-01-01">
     
-Specifying the "min" and "max" attributes.
+####Specifying the "min" and "max" attributes.
 
     <input class="pat-date-picker" min="2015-01-01" max="2015-12-31" type="date">
     
-Show the week number.
+####Show the week number.
 
     <input class="pat-date-picker" data-pat-date-picker="week-numbers: show;" type="date">
     
-Multilingual support with German translations
+####Multilingual support with German translations
+
+The picker's UI can be translated by providing a URL to the `i18n` option. This
+URL must point to a JSON encoded resource containing the translations.
 
     <input class="pat-date-picker" data-pat-date-picker="i18n: /src/pat/date-picker/i18n.json;" type="date">
+
+Here are all the i18n values in JSON format:
+
+     {
+       "previousMonth": "Previous Month",
+       "nextMonth": "Next Month",
+       "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+       "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+       "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+     }
     
 
-### Why did we choose Pikaday?
+### Why did we base this library on Pikaday?
 
 When looking for the underlying library to use for this pattern, we compared
 pikaday and [pickadate](https://dbushell.github.io/Pikaday/).
@@ -74,13 +90,3 @@ In addition, the following options can be passed to `data-pat-date-picker`:
 |**behavior** (or behaviour) | string | styled        | native, styled    | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
 |**week-numbers**            | string | hide          | show, hide        | "show" will show the weeks' numbers in a leftmost column.     |
 |**i18n**                    | URL    |               |                   | Provide a URL to a JSON resource which gives the i18n values. |
-
-The i18n values in JSON:
-
-     {
-       "previousMonth": "Previous Month",
-       "nextMonth"    : "Next Month",
-       "months"       : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-       "weekdays"     : ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-       "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-     }
