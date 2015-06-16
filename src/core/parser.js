@@ -9,6 +9,8 @@ define([
     "underscore",
     "pat-logger"
 ], function($, _, logger) {
+    "use strict";
+
     function ArgumentParser(name, opts) {
         opts = opts || {};
         this.order = [];
@@ -24,7 +26,7 @@ define([
     ArgumentParser.prototype = {
         group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
         json_param_pattern: /^\s*{/i,
-        named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
+        named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:([^]*)$/i,
         token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
         _camelCase: function(str) {
@@ -46,14 +48,60 @@ define([
             }
         },
 
-        addArgument: function ArgParserAddArgument(name, default_value, choices, multiple) {
-            var spec, m;
-            if (multiple && !Array.isArray(default_value)) {
-                default_value = [default_value];
+        addGroupToSpec: function argParserAddGroupToSpec(spec) {
+            /* Determine wether an argument being parsed can be grouped and
+             * update its specifications object accordingly.
+             *
+             * Internal method used by addArgument and addJSONArgument
+             */
+            var m = spec.name.match(this.group_pattern);
+            if (m) {
+                var group = m[1],
+                    field = m[2];
+                if (group in this.possible_groups) {
+                    var first_spec = this.possible_groups[group],
+                        first_name = first_spec.name.match(this.group_pattern)[2];
+                    first_spec.group = group;
+                    first_spec.dest = first_name;
+                    this.groups[group] = new ArgumentParser();
+                    this.groups[group].addArgument(
+                            first_name, first_spec.value, first_spec.choices, first_spec.multiple);
+                    delete this.possible_groups[group];
+                }
+                if (group in this.groups) {
+                    this.groups[group].addArgument(field, spec.value, spec.choices, spec.multiple);
+                    spec.group = group;
+                    spec.dest = field;
+                } else {
+                    this.possible_groups[group] = spec;
+                    spec.dest = this._camelCase(spec.name);
+                }
             }
-            spec = {
+            return spec;
+        },
+
+        addJSONArgument: function argParserAddJSONArgument(name, default_value) {
+            /* Add an argument where the value is provided in JSON format.
+             *
+             * This is a different usecase than specifying all arguments to
+             * the data-pat-... attributes in JSON format, and instead is part
+             * of the normal notation except that a value is in JSON instead of
+             * for example a string.
+             */
+            this.order.push(name);
+            this.parameters[name] = this.addGroupToSpec({
                 name: name,
                 value: default_value,
+                dest: name,
+                group: null,
+                type: "json"
+            });
+        },
+
+        addArgument: function ArgParserAddArgument(name, default_value, choices, multiple) {
+            var spec = {
+                name: name,
+                value: (multiple && !Array.isArray(default_value)) ? [default_value] : default_value,
                 multiple: multiple,
                 dest: name,
                 group: null
@@ -77,32 +125,8 @@ define([
                 // Note that this will get reset by _defaults if default_value is a function.
                 spec.type = this._typeof(multiple ? spec.value[0] : spec.value);
             }
-
-            m = name.match(this.group_pattern);
-            if (m) {
-                var group=m[1], field=m[2];
-                if (group in this.possible_groups) {
-                    var first_spec = this.possible_groups[group],
-                        first_name = first_spec.name.match(this.group_pattern)[2];
-                    first_spec.group=group;
-                    first_spec.dest=first_name;
-                    this.groups[group]=new ArgumentParser();
-                    this.groups[group].addArgument(
-                            first_name,
-                            spec.value, spec.choices, spec.multiple);
-                    delete this.possible_groups[group];
-                }
-                if (group in this.groups) {
-                    this.groups[group].addArgument(field, default_value, choices, multiple);
-                    spec.group=group;
-                    spec.dest=field;
-                } else {
-                    this.possible_groups[group]=spec;
-                    spec.dest=this._camelCase(spec.name);
-                }
-            }
             this.order.push(name);
-            this.parameters[name]=spec;
+            this.parameters[name] = this.addGroupToSpec(spec);
         },
 
         _typeof: function argParserTypeof(obj) {
@@ -117,6 +141,9 @@ define([
             if (typeof value !== spec.type)
                 try {
                     switch (spec.type) {
+                        case "json":
+                            value = JSON.parse(value);
+                            break;
                         case "boolean":
                             if (typeof value === "string") {
                                 value = value.toLowerCase();

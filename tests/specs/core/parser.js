@@ -1,4 +1,4 @@
-define(["pat-parser"], function(ArgumentParser) {
+define(["underscore", "pat-parser"], function(_, ArgumentParser) {
 
     describe("trim", function() {
         it("No whitespace", function() {
@@ -21,11 +21,25 @@ define(["pat-parser"], function(ArgumentParser) {
 
     describe("The Patterns parser", function() {
         describe("When adding an argument", function() {
+
+            it("is possible to add a default value", function() {
+                var parser = new ArgumentParser();
+                parser.addArgument("color", "red");
+                expect(parser.parameters.color.value).toBe("red");
+
+                parser.addJSONArgument("color", {"color": "red"});
+                expect(_.isEqual(parser.parameters.color.value, {"color":"red"})).toBeTruthy();
+            });
+
             it("preserves the argument order", function() {
                 var parser = new ArgumentParser();
                 parser.addArgument("dummy-one");
                 parser.addArgument("dummy-two");
                 expect(parser.groups.dummy.order).toEqual(["one", "two"]);
+
+                parser.addJSONArgument("json-one");
+                parser.addJSONArgument("json-two");
+                expect(parser.groups.json.order).toEqual(["one", "two"]);
             });
 
             it("won't group a prefixed argument if the prefix is used only once", function() {
@@ -33,6 +47,10 @@ define(["pat-parser"], function(ArgumentParser) {
                 parser.addArgument("dummy-field", "default");
                 expect("dummy" in parser.groups).toBeFalsy();
                 expect(parser.parameters["dummy-field"].dest).toBe("dummyField");
+
+                parser.addJSONArgument("json-field", "default");
+                expect("json" in parser.groups).toBeFalsy();
+                expect(parser.parameters["json-field"].dest).toBe("jsonField");
             });
 
             it("will create a group out of multiple arguments with the same prefix", function() {
@@ -41,6 +59,11 @@ define(["pat-parser"], function(ArgumentParser) {
                 parser.addArgument("dummy-field-two", "default");
                 expect("dummy" in parser.groups).toBeTruthy();
                 expect(parser.groups.dummy.order).toEqual(["field", "field-two"]);
+
+                parser.addArgument("json-field", "default");
+                parser.addArgument("json-field-two", "default");
+                expect("json" in parser.groups).toBeTruthy();
+                expect(parser.groups.json.order).toEqual(["field", "field-two"]);
             });
 
             it("will assign to each argument in a group its own parameters config", function() {
@@ -52,6 +75,14 @@ define(["pat-parser"], function(ArgumentParser) {
                 expect(spec.value).toBe("default");
                 expect(spec.choices).toEqual(["yes", "no"]);
                 expect(spec.multiple).toBe(false);
+
+                parser.addArgument("json-foo");
+                parser.addArgument("json-field", "default", ["yes", "no"], false);
+                expect(parser.groups.json.order).toEqual(["foo", "field"]);
+                spec = parser.groups.json.parameters.field;
+                expect(spec.value).toBe("default");
+                expect(spec.choices).toEqual(["yes", "no"]);
+                expect(spec.multiple).toBe(false);
             });
 
             it("is also possible to add an alias for that argument", function () {
@@ -59,10 +90,33 @@ define(["pat-parser"], function(ArgumentParser) {
                 parser.addArgument("color", "red", ["red", "blue"]);
                 parser.addAlias("colour", "color");
                 expect(parser.parameters.color.alias).toBe("colour");
+
+                parser.addJSONArgument("color", {"color": "red"});
+                parser.addAlias("colour", "color");
+                expect(parser.parameters.color.alias).toBe("colour");
             });
         });
 
         describe("When parsing", function() {
+
+            it("only the allowed values for an argument are parsed", function() {
+                var parser = new ArgumentParser();
+                parser.addArgument("color", "red", ["red", "blue"]);
+                var opts = parser._parse("color: pink");
+                expect(opts.color).toBe(undefined);
+                opts = parser._parse("color: red");
+                expect(opts.color).toBe("red");
+                opts = parser._parse("color: blue");
+                expect(opts.color).toBe("blue");
+            });
+
+            it("JSON values are parsed properly", function() {
+                var parser = new ArgumentParser();
+                parser.addJSONArgument("json-color", {"color": "red"});
+                var opts = parser._parse('json-color: {"color": "pink"}');
+                expect(_.isEqual(opts["json-color"], {"color":"pink"})).toBeTruthy();
+            });
+
             describe("the shorthand notation", function() {
                 it("Single argument", function() {
                     var parser=new ArgumentParser();

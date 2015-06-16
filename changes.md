@@ -2,16 +2,17 @@
 
 ## 2.0.10 - Unreleased
 
-- Bugfix in pat-masonry. Wait until images are loaded.
-- Added Sass files for all patterns.
-- New layout. All files relevant to individual patterns (except for tests) are now in ./src/pat
 - Add new argument "hooks" to pat-inject.
-- pat-gallery now uses Photoswipe 4.0.7 and is based on pat-base.
-- Fixed a bug where the page reloads when the image viewer from pat-gallery is closed.
 - Add new parser method addAlias for adding aliases of parser arguments.
+- Add the addJSONArgument method to the argument parser, which provides support for JSON as argument values.
+- Added Sass files for all patterns.
+- Bugfix in pat-masonry. Wait until images are loaded.
+- Bugfixes and improvements to pat-clone.
+- Fixed a bug where the page reloads when the image viewer from pat-gallery is closed.
 - In pat-autosuggest, new option allow-new-words, for explicitly allowing or denying custom tags.
 - Make pat-bumper also bump against the bottom edge.
-- Bugfixes and improvements to pat-clone.
+- New layout. All files relevant to individual patterns (except for tests) are now in ./src/pat
+- pat-gallery now uses Photoswipe 4.0.7 and is based on pat-base.
 
 ## 2.0.9 - Mar 30, 2015
 
