@@ -29,7 +29,7 @@ Specifying the "min" and "max" attributes.
     
 Show the week number.
 
-    <input class="pat-date-picker" data-pat-date-picker="week-number: show;" type="date">
+    <input class="pat-date-picker" data-pat-date-picker="week-numbers: show;" type="date">
     
 Multilingual support with German translations
 
@@ -69,11 +69,11 @@ The HTML5 attributes `min` and `max` will be honoured.
 
 In addition, the following options can be passed to `data-pat-date-picker`:
 
-|Property                    | Type   | Default Value | Available values              | Description                                       |
-|----------------------------|--------|---------------|-------------------------------|---------------------------------------------------|
-|**behavior** (or behaviour) | string | styled        | native, styled                | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
-|**show**                    | list   |               | week-number, month-after-year | "week-number" will show the weeks' numbers in a leftmost column and "month-after-year" will display the month after the year (default is the other way around). |
-|**i81n**                    | URL    |               |                               | Provide a URL to a JSON resource which gives the i18n values. |
+|Property                    | Type   | Default Value | Available values  | Description                                                   |
+|----------------------------|--------|---------------|-------------------|---------------------------------------------------------------|
+|**behavior** (or behaviour) | string | styled        | native, styled    | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
+|**week-numbers**            | string | hide          | show, hide        | "show" will show the weeks' numbers in a leftmost column.     |
+|**i18n**                    | URL    |               |                   | Provide a URL to a JSON resource which gives the i18n values. |
 
 The i18n values in JSON:
 

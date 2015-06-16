@@ -12,7 +12,7 @@ define([
     "use strict";
     var parser = new Parser("date-picker");
     parser.addArgument("behavior", "styled", ["native", "styled"]);
-    parser.addArgument("week-number", [], ["show", "hide"]);
+    parser.addArgument("week-numbers", [], ["show", "hide"]);
     parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
     /* JSON format for i18n
      * { "previousMonth": "Previous Month",
@@ -39,7 +39,7 @@ define([
                 "field": this.$el[0],
                 "minDate": this.$el.attr("min") ? moment(this.$el.attr("min")).toDate() : undefined,
                 "maxDate": this.$el.attr("max") ? moment(this.$el.attr("max")).toDate() : undefined,
-                "showWeekNumber": this.options.weekNumber === "show"
+                "showWeekNumber": this.options.weekNumbers === "show"
             };
             if (this.options.i18n) {
                 $.getJSON(this.options.i18n, 
