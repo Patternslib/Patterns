@@ -12,7 +12,8 @@ define([
     "use strict";
     var parser = new Parser("date-picker");
     parser.addArgument("behavior", "styled", ["native", "styled"]);
-    parser.addArgument("show", [], ["week-number", "month-after-year"], true);
+    parser.addArgument("week-number", [], ["show", "hide"]);
+    parser.addArgument("i18n"); // URL pointing to JSON resource with i18n values
     /* JSON format for i18n
      * { "previousMonth": "Previous Month",
      *   "nextMonth"    : "Next Month",
@@ -20,8 +21,6 @@ define([
      *   "weekdays"     : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
      *   "weekdaysShort": ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
      * } */
-    parser.addJSONArgument("i18n");
-
     parser.addAlias("behaviour", "behavior");
 
     return Base.extend({
@@ -40,13 +39,18 @@ define([
                 "field": this.$el[0],
                 "minDate": this.$el.attr("min") ? moment(this.$el.attr("min")).toDate() : undefined,
                 "maxDate": this.$el.attr("max") ? moment(this.$el.attr("max")).toDate() : undefined,
-                "showWeekNumber": this.options.show.indexOf("week-number") !== -1,
-                "showMonthAfterYear": this.options.show.indexOf("month-after-year") !== -1,
+                "showWeekNumber": this.options.weekNumber === "show"
             };
-            if (!$.isEmptyObject(this.options.i18n)) {
-                config.i18n = this.options.i18n;
+            if (this.options.i18n) {
+                $.getJSON(this.options.i18n, 
+                    function (data) {
+                        config.i18n = data;
+                        new Pikaday(config);
+                    }
+                );
+            } else {
+                new Pikaday(config);
             }
-            new Pikaday(config);
             return this.$el;
         }
     });

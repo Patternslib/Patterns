@@ -9,6 +9,33 @@ support the HTML5 date input.
 
 It uses the [Pickaday](https://dbushell.github.io/Pikaday) library.
 
+### Examples
+
+Falling back to the browser's HTML5 picker if available.
+
+    <input class="pat-date-picker" type="date" data-pat-date-picker="native">
+
+Enforcing the styled non-HTML5 picker universally.
+
+    <input class="pat-date-picker" type="date">
+    
+Default value
+
+    <input class="pat-date-picker" type="date" value="2015-01-01">
+    
+Specifying the "min" and "max" attributes.
+
+    <input class="pat-date-picker" min="2015-01-01" max="2015-12-31" type="date">
+    
+Show the week number.
+
+    <input class="pat-date-picker" data-pat-date-picker="week-number: show;" type="date">
+    
+Multilingual support with German translations
+
+    <input class="pat-date-picker" data-pat-date-picker="i18n: /src/pat/date-picker/i18n.json;" type="date">
+    
+
 ### Why did we choose Pikaday?
 
 When looking for the underlying library to use for this pattern, we compared
@@ -46,5 +73,14 @@ In addition, the following options can be passed to `data-pat-date-picker`:
 |----------------------------|--------|---------------|-------------------------------|---------------------------------------------------|
 |**behavior** (or behaviour) | string | styled        | native, styled                | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
 |**show**                    | list   |               | week-number, month-after-year | "week-number" will show the weeks' numbers in a leftmost column and "month-after-year" will display the month after the year (default is the other way around). |
-|**i81n**                    | JSON   |               | {"previousMonth": "Previous Month", "nextMonth": "Next Month", "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] } | Provide the translations for the strings in the JSON format shown in the preceding column. |
+|**i81n**                    | URL    |               |                               | Provide a URL to a JSON resource which gives the i18n values. |
 
+The i18n values in JSON:
+
+     {
+       "previousMonth": "Previous Month",
+       "nextMonth"    : "Next Month",
+       "months"       : ["January","February","March","April","May","June","July","August","September","October","November","December"],
+       "weekdays"     : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+       "weekdaysShort": ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+     }
