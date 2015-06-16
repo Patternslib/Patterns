@@ -12,7 +12,7 @@
     <section class="description">
         <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
     </section>
-    <section id="demo">
+    <section id="demo" class="demo">
         <h2>Demo</h2>
         <form class="vertical">
             <label>Falling back to the browser's HTML5 picker if available.
@@ -20,6 +20,23 @@
             </label>
             <label>Enforcing the styled non-HTML5 picker universally.
                 <input class="pat-date-picker" type="date">
+            </label>
+            <label>Specifying the "min" and "max" attributes.
+                <input class="pat-date-picker" min="2015-01-01" max="2015-12-31" type="date">
+            </label>
+            <label>Show the week number and show the shown after the year.
+                <input class="pat-date-picker"
+                    data-pat-date-picker="show: week-number, month-after-year;" type="date">
+            </label>
+            <label>Multilingual support with German translations
+                <input class="pat-date-picker"
+                    data-pat-date-picker='i18n: {
+                       "previousMonth": "Letzer Monat",
+                       "nextMonth"    : "Nächster Monat",
+                       "months"       : ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+                       "weekdays"     : ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"],
+                       "weekdaysShort": ["So","Mo","Di","Mi","Do","Fr","Sa"]
+                    };' type="date">
             </label>
         </form>
     </section>

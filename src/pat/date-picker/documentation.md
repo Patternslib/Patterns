@@ -38,6 +38,13 @@ understand.
 
 ### Option reference
 
-|Property                    | Type   | Default Value  | Available values  | Description                                       |
-|----------------------------|--------|----------------|-------------------|---------------------------------------------------|
-|**behavior** (or behaviour) | string | styled         | native, styled    | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
+The HTML5 attributes `min` and `max` will be honoured.
+
+In addition, the following options can be passed to `data-pat-date-picker`:
+
+|Property                    | Type   | Default Value | Available values              | Description                                       |
+|----------------------------|--------|---------------|-------------------------------|---------------------------------------------------|
+|**behavior** (or behaviour) | string | styled        | native, styled                | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
+|**show**                    | list   |               | week-number, month-after-year | "week-number" will show the weeks' numbers in a leftmost column and "month-after-year" will display the month after the year (default is the other way around). |
+|**i81n**                    | JSON   |               | {"previousMonth": "Previous Month", "nextMonth": "Next Month", "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] } | Provide the translations for the strings in the JSON format shown in the preceding column. |
+
