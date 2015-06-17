@@ -193,9 +193,14 @@ define([
                 this.log.debug("Ignoring value for unknown argument " + name);
                 return;
             }
-            var spec = this.parameters[name];
+            var spec = this.parameters[name],
+                parts, i, v;
             if (spec.multiple) {
-                var parts=value.split(/,+/), i, v;
+                if (typeof value === "string") {
+                    parts = value.split(/,+/);
+                } else {
+                    parts = value;
+                }
                 value = [];
                 for (i=0; i<parts.length; i++) {
                     v = this._coerce(name, parts[i].trim());
