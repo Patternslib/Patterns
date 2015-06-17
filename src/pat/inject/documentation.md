@@ -129,7 +129,8 @@ This can be done by using the special *self* target:
 
 ### Modifiers
 
-So far you can replace target element content with source element content. In order to work on the elements instead of their content, and to put things relative to selected elements, we introduce three modifiers:
+So far you can replace the target element's content with the source element's content.
+In order to work on the actual elements, or to place things relative to theselected elements, we have three modifiers:
 
 `::element`
 Select the element, instead of the content.
@@ -142,9 +143,7 @@ Like in CSS, the pseudo-element (a position) right before the content of the tar
 Can be used for `target` and combined with `:element`.
 
 `::after`
-Like in CSS, the pseudo-element (a position) right before the content of the selected element.
-
-Can be used for `target` and combined with `:element`.
+Like in CSS, the pseudo-element (a position) right before the content of the selected element. It can be used for the `target` and combined with `:element`.
 
 Let's see these in action and combination:
 
