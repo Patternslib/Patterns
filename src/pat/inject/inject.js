@@ -28,12 +28,12 @@ define([
      * an event for each hook: pat-inject-hook-$(hook)
      */
     parser.addArgument("hooks", [], ["raptor"], true);
+    parser.addArgument("class"); // Add a class to the injected content.
+    parser.addArgument("history");
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
     parser.addArgument("url");
-    parser.addArgument("class");
-    parser.addArgument("history");
 
     var _ = {
         name: "inject",
@@ -247,9 +247,85 @@ define([
             return $target;
         },
 
+        stopBubblingFromRemovedElement: function ($el, cfgs, ev) {
+            /* IE8 fix. Stop event from propagating IF $el will be removed
+            * from the DOM. With pat-inject, often $el is the target that
+            * will itself be replaced with injected content.
+            *
+            * IE8 cannot handle events bubbling up from an element removed
+            * from the DOM.
+            *
+            * See: http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
+            */
+            var s; // jquery selector
+            for (var i=0; i<cfgs.length; i++) {
+                s = cfgs[i].target;
+                if ($el.parents(s).addBack(s) && !ev.isPropagationStopped()) {
+                    ev.stopPropagation();
+                    return;
+                }
+            }
+        },
+
+        _performInjection: function ($el, $source, cfg, trigger) {
+            /* Called after the XHR has succeeded and we have a new $source
+             * element to inject.
+             */
+            if (cfg.sourceMod === "content") {
+                $source = $source.contents();
+            }
+            var $src;
+            // $source.clone() does not work with shived elements in IE8
+            if (document.all && document.querySelector &&
+                !document.addEventListener) {
+                $src = $source.map(function() {
+                    return $(this.outerHTML)[0];
+                });
+            } else {
+                $src = $source.clone();
+            }
+            var $target = $(this),
+                $injected = cfg.$injected || $src;
+
+            $src.findInclusive("img").on("load", function() {
+                $(this).trigger("pat-inject-content-loaded");
+            });
+            // Now the injection actually happens.
+            if (_._inject(trigger, $src, $target, cfg)) { _._afterInjection($el, $injected, cfg); }
+            // History support.
+            if ((cfg.history === "record") && ("pushState" in history)) {
+                history.pushState({'url': cfg.url}, "", cfg.url);
+            }
+        },
+
+        _afterInjection: function ($el, $injected, cfg) {
+            /* Set a class on the injected elements and fire the
+             * patterns-injected event.
+             */
+            $injected.filter(function() {
+                // setting data on textnode fails in IE8
+                return this.nodeType !== TEXT_NODE;
+            }).data("pat-injected", {origin: cfg.url});
+
+            if ($injected.length === 1 && $injected[0].nodeType == TEXT_NODE) {
+                // Only one element injected, and it was a text node.
+                // So we trigger "patterns-injected" on the parent.
+                // The event handler should check whether the
+                // injected element and the triggered element are
+                // the same.
+                $injected.parent().trigger("patterns-injected", [cfg, $el[0], $injected[0]]);
+            } else {
+                $injected.each(function () {
+                    // patterns-injected event will be triggered for each injected (non-text) element.
+                    if (this.nodeType !== TEXT_NODE) {
+                        $(this).addClass(cfg["class"]).trigger("patterns-injected", [cfg, $el[0], this]);
+                    }
+                });
+            }
+        },
+
         _onInjectSuccess: function ($el, cfgs, ev) {
-            var trigger = ev.target,
-                sources$,
+            var sources$,
                 data = ev && ev.jqxhr && ev.jqxhr.responseText;
             if (!data) {
                 log.warn("No response content, aborting", ev);
@@ -258,73 +334,13 @@ define([
             $.each(cfgs[0].hooks || [], function (idx, hook) {
                 $el.trigger("pat-inject-hook-"+hook);
             });
-
-            function stopBubblingFromRemovedElement (ev) {
-               /* IE8 fix. Stop event from propagating IF $el will be removed
-                * from the DOM. With pat-inject, often $el is the target that
-                * will itself be replaced with injected content.
-                *
-                * IE8 cannot handle events bubbling up from an element removed
-                * from the DOM.
-                *
-                * See: http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
-                */
-                var s; // jquery selector
-                for (var i=0; i<cfgs.length; i++) {
-                    s = cfgs[i].target;
-                    if ($el.parents(s).addBack(s) && !ev.isPropagationStopped()) {
-                        ev.stopPropagation();
-                        return;
-                    }
-                }
-            }
-            stopBubblingFromRemovedElement(ev);
+            _.stopBubblingFromRemovedElement($el, cfgs, ev);
             sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
             cfgs.forEach(function(cfg, idx) {
-                var $source = sources$[idx];
-                if (cfg.sourceMod === "content") {
-                    $source = $source.contents();
-                }
-
-                // perform injection
-                cfg.$target.each(function inject_onSuccess_perform() {
-                    var $src;
-                    // $source.clone() does not work with shived elements in IE8
-                    if (document.all && document.querySelector &&
-                        !document.addEventListener) {
-                        $src = $source.map(function() {
-                            return $(this.outerHTML)[0];
-                        });
-                    } else {
-                        $src = $source.clone();
-                    }
-
-                    var $target = $(this),
-                        $injected = cfg.$injected || $src;
-
-                    $src.findInclusive("img").on("load", function() {
-                        $(this).trigger("pat-inject-content-loaded");
-                    });
-
-                    if (_._inject(trigger, $src, $target, cfg)) {
-                        $injected.filter(function() {
-                            // setting data on textnode fails in IE8
-                            return this.nodeType !== 3; //Node.TEXT_NODE
-                        }).data("pat-injected", {origin: cfg.url});
-
-                        if ($injected[0].nodeType !== TEXT_NODE) {
-                            $injected.addClass(cfg["class"])
-                                .trigger("patterns-injected", [cfg, $el[0]]);
-                        } else { // Makes no sense adding a class to a text node.
-                            $injected.parent().trigger("patterns-injected", [cfg, $el[0]]);
-                        }
-                    }
-                    if ((cfg.history === "record") &&
-                        ("pushState" in history))
-                        history.pushState({url: cfg.url}, "", cfg.url);
+                cfg.$target.each(function() {
+                    _._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
                 });
             });
-
             if (cfgs[0].nextHref) {
                 $el.attr({href: (window.location.href.split("#")[0] || "") +
                             cfgs[0].nextHref});
