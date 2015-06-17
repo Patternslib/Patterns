@@ -51,6 +51,7 @@ require([
             "pat/modal/tests",
             "pat/slides/tests",
             "pat/slideshow-builder/tests",
+            "pat/sortable/tests",
             "pat/stacks/tests",
             "pat/switch/tests",
             "pat/toggle/tests",
