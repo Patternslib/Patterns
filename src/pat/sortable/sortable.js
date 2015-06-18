@@ -11,11 +11,19 @@ define([
         trigger: ".pat-sortable",
 
         init: function ($el) {
+            this.$form = this.$el.closest('form');
             this.options = parser.parse(this.$el, true);
-            $el.data("patterns.sortable", this.options); // XXX: Necessary?
+            this.$el.data("patterns.sortable", this.options); // XXX: Necessary?
+            this.recordPositions().addHandles().initScrolling();
+        },
+
+        recordPositions: function () {
             // use only direct descendants to support nested lists
-            this.$sortables = $el.children().filter(this.options[0].selector);
-            this.addHandles().initScrolling();
+            this.$sortables = this.$el.children().filter(this.options[0].selector);
+            this.$sortables.each(function (idx, $el) {
+                $(this).data('patterns.sortable', {'position': idx});
+            });
+            return this;
         },
 
         addHandles: function () {
@@ -55,11 +63,31 @@ define([
             return this;
         },
 
-        onDragEnd: function (event) {
+        onDragEnd: function (ev) {
             $(".dragged").removeClass("dragged");
             this.$sortables.unbind(".pat-sortable");
             this.$el.unbind(".pat-sortable");
             $("#pat-scroll-up, #pat-scroll-dn").detach();
+            this.submitChangedAmount($(ev.target).closest('.sortable'));
+        },
+
+        submitChangedAmount: function ($dragged) {
+            /* If we are in a form, then submit the form with the right amount
+             * that the sortable element was moved up or down.
+             */
+            var old_position = $dragged.data('patterns.sortable').position;
+            this.recordPositions();
+            var new_position = $dragged.data('patterns.sortable').position;
+            var change = Math.abs(new_position - old_position);
+            var direction = new_position > old_position && 'down' || 'up';
+            if (this.$form.length > 0) {
+                this.$form.find('.sortable-amount').val(change);
+                if (direction == 'up') {
+                    this.$el.find('.sortable-button-up').click();
+                } else {
+                    this.$el.find('.sortable-button-down').click();
+                }
+            }
         },
 
         onDragStart: function (event) {
