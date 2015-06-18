@@ -30,16 +30,16 @@ define([
             /* Add handles and make them draggable for HTML5 and IE8/9
              * it has to be an "a" tag (or img) to make it draggable in IE8/9
              */
-            var $handles = $("<a href=\"#\" class=\"handle\"></a>").appendTo(this.$sortables);
+            var $handles = $("<a href=\"#\" class=\"handle\">⇕</a>").appendTo(this.$sortables);
             if("draggable" in document.createElement("span")) {
                 $handles.attr("draggable", true);
             } else {
-                $handles.bind("selectstart", function(event) {
+                $handles.on("selectstart", function(event) {
                     event.preventDefault();
                 });
             }
-            $handles.bind("dragstart", this.onDragStart.bind(this));
-            $handles.bind("dragend", this.onDragEnd.bind(this));
+            $handles.on("dragstart", this.onDragStart.bind(this));
+            $handles.on("dragend", this.onDragEnd.bind(this));
             return this;
         },
 
@@ -54,7 +54,7 @@ define([
                 position: "fixed", zIndex: 999999,
                 height: 32, left: 0, right: 0
             });
-            scroll.bind("dragover", function(event) {
+            scroll.on("dragover", function(event) {
                 event.preventDefault();
                 if ($("html,body").is(":animated")) { return; }
                 var newpos = $(window).scrollTop() + ($(this).attr("id")==="pat-scroll-up" ? -32 : 32);
@@ -75,13 +75,15 @@ define([
             /* If we are in a form, then submit the form with the right amount
              * that the sortable element was moved up or down.
              */
+            var $amount_input = this.$form.find('.sortable-amount');
+            if ($amount_input.length === 0) { return; }
             var old_position = $dragged.data('patterns.sortable').position;
             this.recordPositions();
             var new_position = $dragged.data('patterns.sortable').position;
             var change = Math.abs(new_position - old_position);
             var direction = new_position > old_position && 'down' || 'up';
             if (this.$form.length > 0) {
-                this.$form.find('.sortable-amount').val(change);
+                $amount_input.val(change);
                 if (direction == 'up') {
                     this.$el.find('.sortable-button-up').click();
                 } else {
@@ -103,7 +105,7 @@ define([
             $draggable.addClass("dragged");
 
             // Scroll the list if near the borders
-            this.$el.bind("dragover.pat-sortable", function(event) {
+            this.$el.on("dragover.pat-sortable", function(event) {
                 event.preventDefault();
                 if (this.$el.is(":animated")) return;
 
@@ -117,7 +119,7 @@ define([
 
             // list elements are only drop targets when one element of the
             // list is being dragged. avoids dragging between lists.
-            this.$sortables.bind("dragover.pat-sortable", function(event) {
+            this.$sortables.on("dragover.pat-sortable", function(event) {
                 var $this = $(this),
                     midlineY = $this.offset().top - $(document).scrollTop() + $this.height()/2;
 
@@ -133,11 +135,11 @@ define([
                 event.preventDefault();
             });
 
-            this.$sortables.bind("dragleave.pat-sortable", function() {
+            this.$sortables.on("dragleave.pat-sortable", function() {
                 this.$sortables.removeClass("drop-target-above drop-target-below");
             }.bind(this));
 
-            this.$sortables.bind("drop.pat-sortable", function(event) {
+            this.$sortables.on("drop.pat-sortable", function(event) {
                 var $sortable = $(this);
                 if ($sortable.hasClass("dragged"))
                     return;
