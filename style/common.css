@@ -1,6 +1,6 @@
 /* @override http://patternslib.com/style/common.css */
 @import url("fontello/css/fontello.css");
-@import url("patterns.min.css");
+@import url("patterns.css");
 
 @font-face { 
 	font-family: "Patticons"; 
@@ -1530,4 +1530,15 @@ button:disabled {
 	filter: alpha(opacity = 40);
 }
 
+pre.prettyprint,
+code.prettyprint {
+  background-color: darkslategrey;
+}
+
+li code.prettyprint {
+  padding: 0.3em;
+}
+p code {
+    text-shadow: none;
+}
 /* @end */
