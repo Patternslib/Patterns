@@ -15,7 +15,7 @@ Here is a simple example:
 
 The sortable pattern automatically adds a drag handle
 
-    <a href="#" class="handle"></a>
+    <a href="#" class="sortable-handle"></a>
 
 to each list element. The handle is the element that can be grabbed with
 the pointer to initiate a drag and drop operation.

@@ -30,7 +30,7 @@ define([
             /* Add handles and make them draggable for HTML5 and IE8/9
              * it has to be an "a" tag (or img) to make it draggable in IE8/9
              */
-            var $handles = $("<a href=\"#\" class=\"handle\">⇕</a>").appendTo(this.$sortables);
+            var $handles = $("<a href=\"#\" class=\"sortable-handle\">⇕</a>").appendTo(this.$sortables);
             if("draggable" in document.createElement("span")) {
                 $handles.attr("draggable", true);
             } else {

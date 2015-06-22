@@ -19,7 +19,7 @@ define(["pat-registry", "pat-sortable"], function(registry) {
                 '    <li>4</li>'+
                 '</ul>');
             registry.scan($lab);
-            var $handles = $('li a.handle');
+            var $handles = $('li a.sortable-handle');
             expect($handles.length).toBe(4);
             if ("draggable" in document.createElement("span")) {
                 expect($handles.attr("draggable"), "true");
@@ -56,14 +56,14 @@ define(["pat-registry", "pat-sortable"], function(registry) {
                '    <input type="hidden" name="amount" class="sortable-amount" value="1"/>'+
                '</form>');
             registry.scan($lab);
-            var $handles = $('li a.handle');
+            var $handles = $('li a.sortable-handle');
             expect($handles.length).toBe(3);
             var $form = $('form');
 
             $("#item3").prependTo($("ol")); // Simulate dragging it to the top.
             var submitCallback = jasmine.createSpy().andReturn(false);
             $form.submit(submitCallback);
-            $("#item3 a.handle").trigger("dragend");
+            $("#item3 a.sortable-handle").trigger("dragend");
             expect($('.sortable-amount').attr('value')).toEqual('2');
             expect(submitCallback).toHaveBeenCalled();
         });
