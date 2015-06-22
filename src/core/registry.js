@@ -24,6 +24,7 @@ define([
     "pat-jquery-ext"
 ], function($, logger, utils) {
     var TEXT_NODE = 3;
+    var COMMENT_NODE = 8;
     var log = logger.getLogger("registry");
 
     var disable_re = /patterns-disable=([^&]+)/g,
@@ -154,7 +155,7 @@ define([
 
     $(document).on("patterns-injected.patterns",
         function registry_onInject(ev, config, trigger_el, injected_el) {
-            if (injected_el.nodeType !== TEXT_NODE) {
+            if (injected_el.nodeType !== TEXT_NODE && injected_el !== COMMENT_NODE) {
                 registry.scan(injected_el, null, {type: "injection", element: trigger_el});
                 $(injected_el).trigger("patterns-injected-scanned");
             }
