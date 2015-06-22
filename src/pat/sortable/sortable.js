@@ -13,7 +13,6 @@ define([
         init: function ($el) {
             this.$form = this.$el.closest('form');
             this.options = parser.parse(this.$el, true);
-            this.$el.data("patterns.sortable", this.options); // XXX: Necessary?
             this.recordPositions().addHandles().initScrolling();
         },
 
@@ -85,9 +84,9 @@ define([
             if (this.$form.length > 0) {
                 $amount_input.val(change);
                 if (direction == 'up') {
-                    this.$el.find('.sortable-button-up').click();
+                    $dragged.find('.sortable-button-up').click();
                 } else {
-                    this.$el.find('.sortable-button-down').click();
+                    $dragged.find('.sortable-button-down').click();
                 }
             }
         },
