@@ -60,6 +60,7 @@ define("pat-clone",[
             $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
             $clone.removeAttr("hidden");
             registry.scan($clone);
+            $clone.trigger("pat-update", {'pattern':"clone", '$el': $clone});
             if (this.num_clones >= this.options.max) {
                 $(this.options.triggerElement).hide();
             }
