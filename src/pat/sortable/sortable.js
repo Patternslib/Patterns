@@ -14,6 +14,19 @@ define([
             this.$form = this.$el.closest('form');
             this.options = parser.parse(this.$el, true);
             this.recordPositions().addHandles().initScrolling();
+            this.$el.on('pat-update', this.onPatternUpdate.bind(this));
+        },
+
+        onPatternUpdate: function (ev, data) {
+            /* Handler which gets called when pat-update is triggered within
+             * the .pat-sortable element.
+             */
+            if (data.pattern == "clone") {
+                this.recordPositions();
+                data.$el.on("dragstart", this.onDragStart.bind(this));
+                data.$el.on("dragend", this.onDragEnd.bind(this));
+            }
+            return true;
         },
 
         recordPositions: function () {
@@ -29,13 +42,14 @@ define([
             /* Add handles and make them draggable for HTML5 and IE8/9
              * it has to be an "a" tag (or img) to make it draggable in IE8/9
              */
-            var $handles = $("<a href=\"#\" class=\"sortable-handle\">⇕</a>").appendTo(this.$sortables);
+            var $sortables_without_handles = this.$sortables.filter(function() {
+                return $(this).find('.sortable-handle').length === 0;
+            });
+            var $handles = $("<a href=\"#\" class=\"sortable-handle\">⇕</a>").appendTo($sortables_without_handles);
             if("draggable" in document.createElement("span")) {
                 $handles.attr("draggable", true);
             } else {
-                $handles.on("selectstart", function(event) {
-                    event.preventDefault();
-                });
+                $handles.on("selectstart", function(event) { event.preventDefault(); });
             }
             $handles.on("dragstart", this.onDragStart.bind(this));
             $handles.on("dragend", this.onDragEnd.bind(this));
