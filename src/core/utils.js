@@ -125,20 +125,23 @@ define([
     }
 
     function findLabel(input) {
-        for (var label=input.parentNode; label && label.nodeType!==11; label=label.parentNode)
-            if (label.tagName==="LABEL")
-                return label;
-
         var $label;
-
-        if (input.id)
-            $label = $("label[for="+input.id+"]");
-        if ($label && $label.length===0 && input.form)
-            $label = $("label[for="+input.name+"]", input.form);
-        if ($label && $label.length)
+        for (var label=input.parentNode; label && label.nodeType!==11; label=label.parentNode) {
+            if (label.tagName==="LABEL") {
+                return label;
+            }
+        }
+        if (input.id) {
+            $label = $("label[for=\""+input.id+"\"]");
+        }
+        if ($label && $label.length===0 && input.form) {
+            $label = $("label[for=\""+input.name+"\"]", input.form);
+        }
+        if ($label && $label.length) {
             return $label[0];
-        else
+        } else {
             return null;
+        }
     }
 
     // Taken from http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
