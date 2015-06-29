@@ -1,4 +1,4 @@
-define(["pat-validate"], function(pattern) {
+define(["pat-registry", "pat-validate"], function(registry, pattern) {
 
     describe("pat-validate", function() {
         beforeEach(function() {
@@ -10,10 +10,12 @@ define(["pat-validate"], function(pattern) {
         });
 
         describe("init", function() {
-            it("Return jQuery wrapper", function() {
-                var jq = jasmine.createSpyObj("jQuery", ["each"]);
-                jq.each.andReturn(jq);
-                expect(pattern.init(jq)).toBe(jq);
+
+            it("enables parsley on the pattern element", function() {
+                var $el = $("<form class=\"pat-validate\"></form>");
+                expect($el.parsley).toBeDefined();
+                var pat = pattern.init($el);
+                expect($el.parsley).toBeDefined();
             });
         });
     });
