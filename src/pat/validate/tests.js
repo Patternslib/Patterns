@@ -14,7 +14,7 @@ define(["pat-registry", "pat-validate"], function(registry, pattern) {
             it("enables parsley on the pattern element", function() {
                 var $el = $("<form class=\"pat-validate\"></form>");
                 expect($el.parsley).toBeDefined();
-                var pat = pattern.init($el);
+                pattern.init($el);
                 expect($el.parsley).toBeDefined();
             });
         });
