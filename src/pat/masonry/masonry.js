@@ -10,6 +10,7 @@
             "pat-registry",
             "pat-parser",
             "pat-base",
+            "pat-utils",
             "masonry",
             "imagesloaded"
             ], function() {
@@ -18,7 +19,7 @@
     } else {
         factory(root.$, root.patterns, root.patterns.Parser, root.Base, root.Masonry, root.imagesLoaded);
     }
-}(this, function($, registry, Parser, Base, Masonry, imagesLoaded) {
+}(this, function($, registry, Parser, Base, utils, Masonry, imagesLoaded) {
     "use strict";
     var parser = new Parser("masonry");
     parser.addArgument("column-width");
@@ -38,23 +39,37 @@
         trigger: ".pat-masonry",
 
         init: function masonryInit($el, opts) {
-            var options = parser.parse(this.$el, opts);
+            this.options = parser.parse(this.$el, opts);
             $(document).trigger("clear-imagesloaded-cache");
-            this.msnry = new Masonry(this.$el[0], {
-                columnWidth:         this.getTypeCastedValue(options.columnWidth),
-                containerStyle:      options.containerStyle,
-                gutter:              this.getTypeCastedValue(options.gutter),
-                hiddenStyle:         options.hiddenStyle,
-                isFitWidth:          options.is["fit-width"],
-                isInitLayout:        false,
-                isOriginLeft:        options.is["origin-left"],
-                isOriginTOp:         options.is["origin-top"],
-                itemSelector:        options.itemSelector,
-                stamp:               options.stamp,
-                transitionDuration:  options.transitionDuration,
-                visibleStyle:        options.visibleStyle
-            });
+            this.initMasonry();
             this.$el.imagesLoaded(this.layout.bind(this));
+            // Update if something gets injected inside the pat-masonry
+            // element.
+            this.$el.on("patterns-injected.pat-masonry",
+                    utils.debounce(this.update.bind(this), 100));
+        },
+
+        initMasonry: function () {
+            this.msnry = new Masonry(this.$el[0], {
+                columnWidth:         this.getTypeCastedValue(this.options.columnWidth),
+                containerStyle:      this.options.containerStyle,
+                gutter:              this.getTypeCastedValue(this.options.gutter),
+                hiddenStyle:         this.options.hiddenStyle,
+                isFitWidth:          this.options.is["fit-width"],
+                isInitLayout:        false,
+                isOriginLeft:        this.options.is["origin-left"],
+                isOriginTOp:         this.options.is["origin-top"],
+                itemSelector:        this.options.itemSelector,
+                stamp:               this.options.stamp,
+                transitionDuration:  this.options.transitionDuration,
+                visibleStyle:        this.options.visibleStyle
+            });
+        },
+
+        update: function () {
+            this.msnry.remove();
+            this.initMasonry();
+            this.layout();
         },
 
         layout: function () {
