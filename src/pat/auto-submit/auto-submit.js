@@ -50,7 +50,7 @@ define([
                     $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
                 }.bind(this));
             } else {
-                $el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
+                this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
             }
         },
 
