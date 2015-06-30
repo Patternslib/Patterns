@@ -36,39 +36,54 @@ define([
             }
         },
 
-        init: function($el, opts) {
-            input_change_events.setup($el, "autosubmit");
-            this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
-            this.options = this.parser.parse(this.$el, opts);
-            this.registerHandlers();
+        init: function() {
+            this.options = this.parser.parse(this.$el, arguments[1]);
+            input_change_events.setup(this.$el, "autosubmit");
+            this.registerListeners();
+            this.registerTriggers();
             return this.$el;
         },
 
-        registerHandlers: function() {
+        registerListeners: function($el) {
+            if (this.$el.is("form")) {
+                this.$el.find(".pat-subform").addBack(this.$el).each(function (idx, el) {
+                    $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
+                }.bind(this));
+            } else {
+                $el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
+            }
+        },
+
+        registerTriggers: function() {
             var isText = this.$el.is("input:text, input[type=search], textarea");
             if (this.options.delay === "defocus" && !isText) {
                 log.error("The defocus delay value makes only sense on text input elements.");
                 return this.$el;
             }
             if (this.options.delay === "defocus") {
-                this.$el.on("input-defocus.pat-autosubmit", function() {
-                    $(this).trigger("input-change-delayed");
+                this.$el.on("input-defocus.pat-autosubmit", function(ev) {
+                    $(ev.target).trigger("input-change-delayed");
                 });
             } else if (this.options.delay > 0) {
-                this.$el.on("input-change.pat-autosubmit", utils.debounce(function() {
-                    $(this).trigger("input-change-delayed");
+                this.$el.on("input-change.pat-autosubmit", utils.debounce(function(ev) {
+                    $(ev.target).trigger("input-change-delayed");
                 }, this.options.delay));
             } else {
-                this.$el.on("input-change.pat-autosubmit", function() {
-                    $(this).trigger("input-change-delayed");
+                this.$el.on("input-change.pat-autosubmit", function(ev) {
+                    $(ev.target).trigger("input-change-delayed");
                 });
             }
         },
 
         destroy: function($el) {
             input_change_events.remove($el, "autosubmit");
-            $el.removeData("pat-autosubmit-initialized");
-            $el.off(".pat-autosubmit").find(":input").off(".pat-autosubmit");
+            if (this.$el.is("form")) {
+                this.$el.find(".pat-subform").addBack(this.$el).each(function (idx, el) {
+                    $(el).off(".pat-autosubmit");
+                });
+            } else {
+                $el.off(".pat-autosubmit");
+            }
         },
 
         onInputChange: function(ev) {

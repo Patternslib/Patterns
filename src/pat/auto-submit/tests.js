@@ -48,7 +48,7 @@ define(["pat-registry", "pat-autosubmit"], function(registry, pattern) {
             it("can be done in shorthand notation", function() {
                 pattern.$el = $('<form></form>');
                 var pat = pattern.init(pattern.$el);
-                options = pat.parser.parse($("<input data-pat-autosubmit='500ms'/>"));
+                var options = pat.parser.parse($("<input data-pat-autosubmit='500ms'/>"));
                 expect(options.delay).toBe(500);
                 options = pat.parser.parse($("<input data-pat-autosubmit='500ms'/>"));
                 expect(options.delay).toBe(500);
@@ -59,11 +59,11 @@ define(["pat-registry", "pat-autosubmit"], function(registry, pattern) {
             it("can be done in longhand notation", function() {
                 pattern.$el = $('<form></form>');
                 var pat = pattern.init(pattern.$el);
-                options = pat.parser.parse($("<input class=\pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>"));
+                var options = pat.parser.parse($("<input class=\"pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>"));
                 expect(options.delay).toBe(500);
-                options = pat.parser.parse($("<input class=\pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>"));
+                options = pat.parser.parse($("<input class=\"pat-autosubmit\" data-pat-autosubmit='delay: 500ms'/>"));
                 expect(options.delay).toBe(500);
-                options = pat.parser.parse($("<input class=\pat-autosubmit\" data-pat-autosubmit='defocus'/>"));
+                options = pat.parser.parse($("<input class=\"pat-autosubmit\" data-pat-autosubmit='defocus'/>"));
                 expect(options.delay).toBe("defocus");
             });
         });
