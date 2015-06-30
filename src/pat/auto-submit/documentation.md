@@ -1,13 +1,18 @@
 ## Description
-Auto submit will submit what the user fills out on a form without the need for the user to press the submit button. It can be used to incrementally send form input data to a server. 
-
-For instance to create a live search pattern where the search results update on every keypress. 
+Auto submit will submit what the user fills out on a form without the need for the user to press the submit button.
+It can be used to incrementally send form input data to a server. For instance to create a live search pattern where
+the search results update on every keypress. 
 
 ## Documentation
 The autosubmit pattern submits a form if a form element changes. It is
 enabled by class "pat-autosubmit" for individual form elements, on
-grouping elements for all elements in the group, and on forms for all
+grouping elements (such as a `fieldset`) for all elements in the group, and on forms for all
 elements of the form.
+
+It also plays nicely with `pat-subform`, which means that if an element changes
+inside a subform, only that subform will be submitted.
+
+## Examples
 
 Only one element:
 
@@ -33,7 +38,8 @@ And on the form:
      </fieldset>
     </form>
 
-### What constitutes a change
+
+### What constitutes a change?
 
 While for a checkbox a change is clearly defined as uncheck/check, for
 input fields there are more options.
@@ -81,3 +87,9 @@ As soon as the user starts entering text in the search field or changes
 the local-search toggle search requests will send to the server and the
 results will be inserted into the existing page by replacing the content
 of the *results* section.
+
+### Option reference
+
+|Property   | Type             | Default Value | Available values                  | Description                                                   |
+|-----------|------------------|---------------|-----------------------------------|---------------------------------------------------------------|
+|**delay**  | string or number | 400           | A milliseconds value or "defocus" | The amount of milliseconds to wait until submitting the form. "Defocus" only applies when pat-autosubmit is applied to input elements and means that the form will be submitted when the element loses focus. |
