@@ -44,14 +44,21 @@ define([
             return this.$el;
         },
 
-        registerListeners: function($el) {
-            if (this.$el.is("form")) {
-                this.$el.find(".pat-subform").addBack(this.$el).each(function (idx, el) {
-                    $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
-                }.bind(this));
-            } else {
-                this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
-            }
+        registerListeners: function() {
+            this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
+            this.registerSubformListeners();
+            this.$el.on('patterns-injected', this.registerSubformListeners.bind(this));
+        },
+
+        registerSubformListeners: function(ev) {
+            /* If there are subforms, we need to listen on them as well, so
+             * that only the subform gets submitted if an element inside it
+             * changes.
+             */
+            var $el = typeof ev !== "undefined" ? $(ev.target) : this.$el;
+            $el.find(".pat-subform").each(function (idx, el) {
+                $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
+            }.bind(this));
         },
 
         registerTriggers: function() {
