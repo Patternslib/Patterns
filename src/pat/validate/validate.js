@@ -22,9 +22,15 @@ define([
             this.errors = 0;
             this.options = parser.parse(this.$el, opts);
             this.$el.noValidate = true;
-            this.initParsley();
+            var parsley_form = this.initParsley();
             this.$el.on("pat-ajax-before.pat-validate", this.onPreSubmit);
             this.$el.on('pat-update', this.onPatternUpdate.bind(this));
+            this.$el.on("click.pat-validate", ".close-panel", function (ev) {
+                if (!parsley_form.validate()) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
+            }.bind(this));
         },
 
         initParsley: function() {
@@ -64,6 +70,7 @@ define([
                     field.removeError = _removeFieldError;
                 }
             }
+            return parsley_form;
         },
 
         onPatternUpdate: function (ev, data) {
