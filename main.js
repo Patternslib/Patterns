@@ -19,7 +19,6 @@ require.config({
         "jquery":                           "bower_components/jquery/dist/jquery",
         "jquery.browser":                   "bower_components/jquery.browser/dist/jquery.browser",
         "jquery.anythingslider":            "bower_components/AnythingSlider/js/jquery.anythingslider",
-        "jquery.smoothscroll":              "bower_components/jquery-smooth-scroll/jquery.smooth-scroll",
         "jquery.chosen":                    "bower_components/chosen/chosen/chosen.jquery",
         "jquery.form":                      "bower_components/jquery-form/jquery.form",
         "jquery.fullcalendar":              "bower_components/fullcalendar/fullcalendar.min",
