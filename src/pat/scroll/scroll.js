@@ -22,10 +22,20 @@ define([
         jquery_plugin: true,
 
         init: function($el, opts) {
-            var options = parser.parse(this.$el, opts);
-            this.$el.smoothScroll(_.pick(options, 'direction'));
-            if (options.trigger == "auto") {
-                this.$el.click();
+            this.options = parser.parse(this.$el, opts);
+            if (this.options.trigger == "auto") {
+                this.smoothScroll();
+                this.$el.on('patterns-injected', this.smoothScroll.bind(this));
+            } else if (this.options.trigger == "click") {
+                this.$el.click(this.smoothScroll.bind(this));
+            }
+        },
+
+        smoothScroll: function() {
+            if (this.options.direction == "top") {
+                this.$el.animate({scrollTop: 0}, 500);
+            } else if (this.options.direction == "left") {
+                this.$el.animate({scrollLeft: 0}, 500);
             }
         }
     });
