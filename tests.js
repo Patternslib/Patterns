@@ -49,6 +49,7 @@ require([
             "pat/markdown/tests",
             "pat/masonry/tests",
             "pat/modal/tests",
+            "pat/scroll/tests",
             "pat/slides/tests",
             "pat/slideshow-builder/tests",
             "pat/sortable/tests",
