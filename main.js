@@ -49,6 +49,7 @@ require.config({
         "tpl":                              "bower_components/requirejs-tpl-jcbrand/tpl",
         "tinymce":                          "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "underscore":                       "bower_components/underscore/underscore",
+        "validate":                         "bower_components/validate/validate",
 
         // Calendar pattern
         "moment": "bower_components/moment/moment",

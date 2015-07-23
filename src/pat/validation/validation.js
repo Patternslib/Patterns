@@ -2,15 +2,16 @@
  * Patterns validate - Form vlidation
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ * Copyright 2014-2015 Syslab.com GmBH  - JC Brand
  */
 define([
     "jquery",
     "pat-parser",
     "pat-base",
     "pat-utils",
-    "parsley",
-    "parsley.extend"
-], function($, Parser, Base, utils) {
+    "moment",
+    "validate"
+], function($, Parser, Base, utils, moment, validate) {
     var parser = new Parser("validate");
     parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
 
@@ -19,90 +20,79 @@ define([
         trigger: "form.pat-validate",
 
         init: function($el, opts) {
-            this.errors = 0;
             this.options = parser.parse(this.$el, opts);
-            this.$el.noValidate = true;
-            var parsley_form = this.initParsley();
-            this.$el.on("pat-ajax-before.pat-validate", this.onPreSubmit);
-            this.$el.on('pat-update', this.onPatternUpdate.bind(this));
-            this.$el.on("click.pat-validate", ".close-panel", function (ev) {
-                if (!parsley_form.validate()) {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                }
-            }.bind(this));
+            this.constraints = {};
+            this.$inputs = this.$el.find(':input[name]');
+            this.$inputs.each(this.addConstraint.bind(this));
+            this.$inputs.on('change.pat-validate', this.validateElement.bind(this));
+            this.$el.on('submit.pat-validate', this.validateForm.bind(this));
+            this.$el.on('pat-update.pat-validate', this.onPatternUpdate.bind(this));
         },
 
-        initParsley: function() {
-            var field, i;
-            var parsley_form = this.$el.parsley({
-                trigger: "change keyup",
-                successClass: "valid",
-                errorClass: "warning",
-                errors: {
-                    classHandler: this._classHandler,
-                    container: this._container
-                },
-                messages: {
-                    beforedate:     "This date should be before another date.",
-                    onorbeforedate: "This date should be on or before another date.",
-                    afterdate:      "This date should be after another date.",
-                    onorafterdate:  "This date should be on or after another date."
-                }
-            });
-            var that = this;
-            function _addFieldError(error) {
-                that._addFieldError.call(that, this, error);
+        addConstraint: function (idx, input) {
+            /* Add extra validation constraints by parsing the input element
+             * for hints.
+             */
+            var name = input.getAttribute('name');
+            if (!name) { return; }
+            this.constraints[name] = {
+                'presence': input.getAttribute('required') ? true : false,
+                'email': input.getAttribute('type') == 'email' ? true : false,
+                'numericality': input.getAttribute('type') == 'number' ? true : false,
+                'datetime': input.getAttribute('type') == 'datetime' ? true : false,
+                'date': input.getAttribute('type') == 'date' ? true : false
+            };
+        },
+
+        validateForm: function (ev) {
+            /* Handler which gets called when the entire form needs to be
+             * validated. Will prevent the event's default action if validation fails.
+             */
+            var errors = _.compose(_.partial(validate, _, this.constraints), validate.collectFormValues)(ev.target);
+            if (errors) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                _.each(Object.keys(errors), _.partial(this.showError.bind(this), errors)); 
             }
-            function _removeFieldError(constraintName) {
-                that._removeFieldError.call(that, this, constraintName);
+        },
+
+        validateElement: function (ev) {
+            /* Handler which gets called when a single form :input element
+             * needs to be validated. Will prevent the event's default action
+             * if validation fails.
+             */
+            var value_dict = {};
+            var name = ev.target.getAttribute('name');
+            value_dict[name] = ev.target.value;
+            var errors = _.partial(validate, _, _.pick(this.constraints, name))(value_dict);
+            if (!errors) {
+                this.findErrorMessages($(ev.target)).remove();
+            } else {
+                ev.preventDefault();
+                ev.stopPropagation();
+                _.each(Object.keys(errors), _.partial(this.showError.bind(this), errors)); 
             }
-            for (i=0; i<parsley_form.items.length; i++) {
-                field = parsley_form.items[i];
-                if (typeof field.UI !== "undefined") {
-                    // Parsley 1.2.x
-                    field.UI.addError = _addFieldError;
-                    field.UI.removeError = _removeFieldError;
-                    this.parsley12 = true;
-                } else {
-                    // Parsley 1.1.x
-                    field.addError = _addFieldError;
-                    field.removeError = _removeFieldError;
-                }
-            }
-            return parsley_form;
         },
 
         onPatternUpdate: function (ev, data) {
             /* Handler which gets called when pat-update is triggered within
              * the .pat-validate element.
+             *
+             * Currently we handle the case where new content appears in the
+             * form. In that case we need to remove and then reassign event
+             * handlers.
              */
-            // XXX: We should also handle here general pat-inject updates.
-            if (data.pattern == "clone") {
-                this.$el.data("parsleyForm", null); // XXX: Hack. Remove old data, so that parsley rescans.
-                this.initParsley(data.$el);
+            if (data.pattern == "clone" || data.pattern == "inject") {
+                this.$inputs.off('change.pat-validate');
+                this.$el.off('submit.pat-validate');
+                this.$el.off('pat-update.pat-validate');
+                this.init();
             }
             return true;
         },
 
-        // Parsley error class handler, used to determine which element will
-        // receive the status class.
-        _classHandler: function(elem/*, isRadioOrCheckbox */) {
-            var $result = elem;
-            for (var i=0; i<elem.length; i++) {
-                $result=$result.add(utils.findLabel(elem[i]));
-                $result=$result.add(elem.eq(i).closest("fieldset"));
-            }
-            return $result;
-        },
-
-        // Parsley hook to determine where error messages are inserted.
-        _container: function(/* element, isRadioOrCheckbox */) {
-            return $();
-        },
-
-        _findErrorMessages: function($el, constraintName) {
-            var selector = "em.validation.message[data-validate-constraint="+constraintName+"]",
+        findErrorMessages: function($el) {
+            var selector = "em.validation.message",
                 $messages = $el.siblings(selector);
             if ($el.is("[type=radio],[type=checkbox]")) {
                 var $fieldset = $el.closest("fieldset.checklist");
@@ -112,17 +102,9 @@ define([
             return $messages;
         },
 
-        // Parsley method to add an error to a field
-        _addFieldError: function(parsley, error) {
-            var $el;
-            if (this.parsley12) {
-                $el = parsley.ParsleyInstance.element;
-            } else {
-                $el = parsley.element;
-            }
-            var $position = $el,
-                strategy="after";
-
+        showError: function(errors, name) {
+            var $el = this.$el.find('[name="'+name+'"]'),
+                $position = $el, strategy="after", $message;
             if ($el.is("[type=radio],[type=checkbox]")) {
                 var $fieldset = $el.closest("fieldset.checklist");
                 if ($fieldset.length) {
@@ -130,51 +112,19 @@ define([
                     strategy="append";
                 }
             }
-
-            for (var constraintName in error) {
-                if (this._findErrorMessages($el, constraintName).length) {
-                    return;
-                }
-                var $message = $("<em/>", {"class": "validation warning message"});
-                $message.attr("data-validate-constraint", constraintName);
-                $message.text(error[constraintName]);
-                switch (strategy) {
-                    case "append":
-                        $message.appendTo($position);
-                        break;
-                    case "after":
-                        $message.insertAfter($position);
-                        break;
-                }
+            this.findErrorMessages($el).remove();
+            $message = $("<em/>", {"class": "validation warning message"});
+            $message.text(errors[name]);
+            switch (strategy) {
+                case "append":
+                    $message.appendTo($position);
+                    break;
+                case "after":
+                    $message.insertAfter($position);
+                    break;
             }
-            this.errors += 1;
             $(this.options.disableSelector).prop('disabled', true).addClass('disabled');
             $position.trigger("pat-update", {pattern: "validate"});
-        },
-
-        // Parsley method to remove all error messages for a field
-        _removeFieldError: function(parsley, constraintName) {
-            var $el;
-            if (this.parsley12) {
-                $el = parsley.ParsleyInstance.element;
-            } else {
-                $el = parsley.element;
-            }
-            var $messages = this._findErrorMessages($el, constraintName);
-            $messages.parent().trigger("pat-update", {pattern: "validate"});
-            $messages.remove();
-            if (this.errors <= 1) {
-                $(this.options.disableSelector).prop('disabled', false).removeClass('disabled');
-                this.errors = 0;
-            } else {
-                this.errors -= 1;
-            }
-        },
-
-        onPreSubmit: function(event, veto) {
-            veto.veto |= !$(event.target).parsley("isValid");
-            $(event.target).parsley("validate");
         }
     });
-
 });
