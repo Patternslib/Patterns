@@ -21,38 +21,56 @@ define([
 
         init: function($el, opts) {
             this.options = parser.parse(this.$el, opts);
-            this.constraints = {};
             this.$inputs = this.$el.find(':input[name]');
-            this.$inputs.each(this.addConstraint.bind(this));
             this.$inputs.on('change.pat-validate', this.validateElement.bind(this));
             this.$el.on('submit.pat-validate', this.validateForm.bind(this));
             this.$el.on('pat-update.pat-validate', this.onPatternUpdate.bind(this));
         },
 
-        addConstraint: function (idx, input) {
-            /* Add extra validation constraints by parsing the input element
-             * for hints.
+        getConstraints: function (input) {
+            /* Get validation constraints by parsing the input element for hints.
              */
-            var name = input.getAttribute('name');
+            var name = input.getAttribute('name'),
+                constraints = {};
             if (!name) { return; }
-            this.constraints[name] = {
+            constraints[name.replace(/\./g, '\\.')] = {
                 'presence': input.getAttribute('required') ? true : false,
                 'email': input.getAttribute('type') == 'email' ? true : false,
                 'numericality': input.getAttribute('type') == 'number' ? true : false,
                 'datetime': input.getAttribute('type') == 'datetime' ? true : false,
                 'date': input.getAttribute('type') == 'date' ? true : false
             };
+            return constraints;
+        },
+
+        getValueDict: function (input) {
+            /* Return a dict {name: value} derived from a DOM input element.
+             * Used by validate.js's validate method.
+             */
+            var value_dict = {};
+            var name = input.getAttribute('name');
+            value_dict[name] = input.value;
+            return value_dict;
         },
 
         validateForm: function (ev) {
             /* Handler which gets called when the entire form needs to be
              * validated. Will prevent the event's default action if validation fails.
              */
-            var errors = _.compose(_.partial(validate, _, this.constraints), validate.collectFormValues)(ev.target);
-            if (errors) {
+            var has_errors = false;
+            var $not_disabled = this.$inputs.filter(function (idx, input) {
+                return !input.hasAttribute('disabled');
+            });
+            $not_disabled.each(function (idx, input) {
+                var error = validate(this.getValueDict(input), this.getConstraints(input));
+                if (typeof error != "undefined") {
+                    this.showError(error, input);
+                    has_errors = true;
+                }
+            }.bind(this));
+            if (has_errors) {
                 ev.preventDefault();
                 ev.stopPropagation();
-                _.each(Object.keys(errors), _.partial(this.showError.bind(this), errors)); 
             }
         },
 
@@ -61,16 +79,11 @@ define([
              * needs to be validated. Will prevent the event's default action
              * if validation fails.
              */
-            var value_dict = {};
-            var name = ev.target.getAttribute('name');
-            value_dict[name] = ev.target.value;
-            var errors = _.partial(validate, _, _.pick(this.constraints, name))(value_dict);
-            if (!errors) {
+            var error = validate(this.getValueDict(ev.target), this.getConstraints(ev.target));
+            if (!error) {
                 this.findErrorMessages($(ev.target)).remove();
             } else {
-                ev.preventDefault();
-                ev.stopPropagation();
-                _.each(Object.keys(errors), _.partial(this.showError.bind(this), errors)); 
+                this.showError(error, ev.target);
             }
         },
 
@@ -102,19 +115,23 @@ define([
             return $messages;
         },
 
-        showError: function(errors, name) {
-            var $el = this.$el.find('[name="'+name+'"]'),
-                $position = $el, strategy="after", $message;
+        showError: function(error, input) {
+            var $el = $(input),
+                $position = $el,
+                strategy="after",
+                $message = $("<em/>", {"class": "validation warning message"}),
+                $fieldset;
             if ($el.is("[type=radio],[type=checkbox]")) {
-                var $fieldset = $el.closest("fieldset.checklist");
+                $fieldset = $el.closest("fieldset.checklist");
                 if ($fieldset.length) {
-                    $position=$fieldset;
+                    $position = $fieldset;
                     strategy="append";
                 }
             }
             this.findErrorMessages($el).remove();
-            $message = $("<em/>", {"class": "validation warning message"});
-            $message.text(errors[name]);
+            _.each(Object.keys(error), function (key) {
+                $message.text(error[key]);
+            });
             switch (strategy) {
                 case "append":
                     $message.appendTo($position);
