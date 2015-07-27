@@ -14,6 +14,11 @@ define([
 ], function($, Parser, Base, utils, moment, validate) {
     var parser = new Parser("validate");
     parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
+    parser.addArgument("message-required", "This field is required");
+    parser.addArgument("message-email", "This value must be a valid email address");
+    parser.addArgument("message-number", "This value must be a number");
+    parser.addArgument("message-datetime", "This value must be a valid date and time");
+    parser.addArgument("message-date", "This value must be a valid date");
 
     return Base.extend({
         name: "validate",
@@ -28,17 +33,16 @@ define([
         },
 
         getConstraints: function (input) {
-            /* Get validation constraints by parsing the input element for hints.
-             */
+            // Get validation constraints by parsing the input element for hints
             var name = input.getAttribute('name'),
                 constraints = {};
             if (!name) { return; }
             constraints[name.replace(/\./g, '\\.')] = {
-                'presence': input.getAttribute('required') ? true : false,
-                'email': input.getAttribute('type') == 'email' ? true : false,
-                'numericality': input.getAttribute('type') == 'number' ? true : false,
-                'datetime': input.getAttribute('type') == 'datetime' ? true : false,
-                'date': input.getAttribute('type') == 'date' ? true : false
+                'presence': input.getAttribute('required') ? { 'message': '^'+this.options.message.required } : false,
+                'email': input.getAttribute('type') == 'email' ? { 'message': '^'+this.options.message.email } : false,
+                'numericality': input.getAttribute('type') == 'number' ? { 'message': '^'+this.options.message.number } : false,
+                'datetime': input.getAttribute('type') == 'datetime' ? { 'message': '^'+this.options.message.datetime } : false,
+                'date': input.getAttribute('type') == 'date' ? { 'message': '^'+this.options.message.date } : false
             };
             return constraints;
         },
