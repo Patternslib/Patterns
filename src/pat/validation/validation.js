@@ -15,11 +15,11 @@ define([
     validate.moment = moment;
     var parser = new Parser("validate");
     parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
-    parser.addArgument("message-required", "This field is required");
+    parser.addArgument("message-date", "This value must be a valid date");
+    parser.addArgument("message-datetime", "This value must be a valid date and time");
     parser.addArgument("message-email", "This value must be a valid email address");
     parser.addArgument("message-number", "This value must be a number");
-    parser.addArgument("message-datetime", "This value must be a valid date and time");
-    parser.addArgument("message-date", "This value must be a valid date");
+    parser.addArgument("message-required", "This field is required");
 
     return Base.extend({
         name: "validate",
