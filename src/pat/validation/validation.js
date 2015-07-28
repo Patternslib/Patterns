@@ -63,20 +63,22 @@ define([
             /* Handler which gets called when the entire form needs to be
              * validated. Will prevent the event's default action if validation fails.
              */
-            var has_errors = false;
+            var has_errors = false, input, error;
             var $not_disabled = this.$inputs.filter(function (idx, input) {
                 return !input.hasAttribute('disabled');
             });
-            $not_disabled.each(function (idx, input) {
-                var error = validate(this.getValueDict(input), this.getConstraints(input));
+            for (var i=0; i<$not_disabled.length; i++) {
+                input = $not_disabled[i];
+                error = validate(this.getValueDict(input), this.getConstraints(input));
                 if (typeof error != "undefined") {
                     this.showError(error, input);
+                    if (!has_errors) {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        ev.stopImmediatePropagation();
+                    }
                     has_errors = true;
                 }
-            }.bind(this));
-            if (has_errors) {
-                ev.stopImmediatePropagation();
-                return false;
             }
         },
 
