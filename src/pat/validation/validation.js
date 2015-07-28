@@ -12,6 +12,7 @@ define([
     "moment",
     "validate"
 ], function($, Parser, Base, utils, moment, validate) {
+    validate.moment = moment;
     var parser = new Parser("validate");
     parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
     parser.addArgument("message-required", "This field is required");
@@ -25,6 +26,7 @@ define([
         trigger: "form.pat-validate",
 
         init: function($el, opts) {
+            this.errors = 0;
             this.options = parser.parse(this.$el, opts);
             this.$inputs = this.$el.find(':input[name]');
             this.$inputs.on('change.pat-validate', this.validateElement.bind(this));
@@ -73,8 +75,8 @@ define([
                 }
             }.bind(this));
             if (has_errors) {
-                ev.preventDefault();
-                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                return false;
             }
         },
 
@@ -85,7 +87,7 @@ define([
              */
             var error = validate(this.getValueDict(ev.target), this.getConstraints(ev.target));
             if (!error) {
-                this.findErrorMessages($(ev.target)).remove();
+                this.removeError(ev.target);
             } else {
                 this.showError(error, ev.target);
             }
@@ -108,8 +110,9 @@ define([
             return true;
         },
 
-        findErrorMessages: function($el) {
-            var selector = "em.validation.message",
+        findErrorMessages: function(el) {
+            var $el = $(el),
+                selector = "em.validation.message",
                 $messages = $el.siblings(selector);
             if ($el.is("[type=radio],[type=checkbox]")) {
                 var $fieldset = $el.closest("fieldset.checklist");
@@ -117,6 +120,15 @@ define([
                     $messages=$fieldset.find(selector);
             }
             return $messages;
+        },
+
+        removeError: function(input) {
+            var $errors = this.findErrorMessages(input);
+            $errors.remove();
+            this.errors = this.errors - $errors.length;
+            if (this.errors < 1 && this.options.disableSelector) {
+                $(this.options.disableSelector).removeProp('disabled').removeClass('disabled');
+            }
         },
 
         showError: function(error, input) {
@@ -132,7 +144,7 @@ define([
                     strategy="append";
                 }
             }
-            this.findErrorMessages($el).remove();
+            this.findErrorMessages(input).remove();
             _.each(Object.keys(error), function (key) {
                 $message.text(error[key]);
             });
@@ -144,7 +156,10 @@ define([
                     $message.insertAfter($position);
                     break;
             }
-            $(this.options.disableSelector).prop('disabled', true).addClass('disabled');
+            this.errors += 1;
+            if (this.options.disableSelector) {
+                $(this.options.disableSelector).prop('disabled', true).addClass('disabled');
+            }
             $position.trigger("pat-update", {pattern: "validate"});
         }
     });
