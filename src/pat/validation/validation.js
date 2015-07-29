@@ -6,12 +6,13 @@
  */
 define([
     "jquery",
+    "underscore",
     "pat-parser",
     "pat-base",
     "pat-utils",
     "moment",
     "validate"
-], function($, Parser, Base, utils, moment, validate) {
+], function($, _, Parser, Base, utils, moment, validate) {
     "use strict";
     validate.moment = moment;
     var parser = new Parser("validation");
@@ -21,12 +22,13 @@ define([
     parser.addArgument("message-email", "This value must be a valid email address");
     parser.addArgument("message-number", "This value must be a number");
     parser.addArgument("message-required", "This field is required");
+    parser.addArgument("message-min", "This value must be greater than or equal to %{count}");
+    parser.addArgument("message-max", "This value must be less than or equal to %{count}");
     parser.addArgument("not-after");
     parser.addArgument("not-before");
     var VALIDATION_TYPE_MAP = {
         'required': 'presence',
         'email': 'email',
-        'number': 'numericality',
         'datetime': 'datetime',
         'date': 'date'
     };
@@ -39,6 +41,9 @@ define([
             this.errors = 0;
             this.options = parser.parse(this.$el, opts);
             this.$inputs = this.$el.find(':input[name]');
+            this.$el.find(":input[type=number]").bind('keyup mouseup', _.debounce(function (ev) {
+                this.validateElement(ev.target);
+            }.bind(this), 500));
             this.$inputs.on('change.pat-validation', function (ev) { this.validateElement(ev.target); }.bind(this));
             this.$el.on('submit.pat-validation', this.validateForm.bind(this));
             this.$el.on('pat-update.pat-validation', this.onPatternUpdate.bind(this));
@@ -86,15 +91,27 @@ define([
              *
              * We parse them and add them to the passed in constraints obj.
              */
-            if (!input.dataset.patValidation) {
-                return constraints;
-            }
-            var opts = parser.parse($(input));
-            if (_.contains(['datetime', 'date'], input.getAttribute('type'))) {
+            var name = input.getAttribute('name').replace(/\./g, '\\.'),
+                type = input.getAttribute('type'),
+                opts = parser.parse($(input));
+            if (_.contains(['datetime', 'date'], type)) {
                 this.setLocalDateConstraints(input, opts, constraints);
+            } else if (type == 'number') {
+                _.each(['min', 'max'], function (limit) {
+                    // TODO: need to figure out how to add local validation
+                    // messages for numericality operators
+                    if (input.getAttribute(limit)) {
+                        var constraint = constraints[name],
+                            key = limit == 'min' ? 'greaterThanOrEqualTo' : 'lessThanOrEqualTo',
+                            value = Number(input.getAttribute(limit));
+                        if (typeof constraint.numericality === "boolean") {
+                            constraint.numericality = {};
+                        }
+                        constraint.numericality[key] = value;
+                    }
+                });
             }
             // Set local validation messages.
-            var name = input.getAttribute('name').replace(/\./g, '\\.');
             _.each(Object.keys(VALIDATION_TYPE_MAP), function (type) {
                 var c = constraints[name][VALIDATION_TYPE_MAP[type]];
                 if (c === false) {
@@ -115,7 +132,7 @@ define([
             constraints[name.replace(/\./g, '\\.')] = {
                 'presence': input.getAttribute('required') ? { 'message': '^'+this.options.message.required } : false,
                 'email': type == 'email' ? { 'message': '^'+this.options.message.email } : false,
-                'numericality': type == 'number' ? { 'message': '^'+this.options.message.number } : false,
+                'numericality': type == 'number' ? true : false,
                 'datetime': type == 'datetime' ? { 'message': '^'+this.options.message.datetime } : false,
                 'date': type == 'date' ? { 'message': '^'+this.options.message.date } : false
             };
@@ -128,7 +145,15 @@ define([
              */
             var value_dict = {};
             var name = input.getAttribute('name');
-            value_dict[name] = input.value;
+            var value = input.value;
+            if (input.getAttribute('type') == "number") {
+                try {
+                    value = Number(input.value);
+                } catch (e) {
+                    value = input.value;
+                }
+            }
+            value_dict[name] = value;
             return value_dict;
         },
 
@@ -153,6 +178,26 @@ define([
             }
         },
 
+        customizeMessage: function (msg, input) {
+            /* Due to a limitation in validate.js, whereby we cannot have more
+             * fine-grained error messages for sub-validations (e.g. is a
+             * number and is bigger than 5), we need to customize the messages
+             * after validation. We do that here.
+             */
+            if (msg.indexOf("must be greater than or equal to") != -1) {
+                return validate.format(this.options.message.min, {
+                    count: input.getAttribute('min')
+                });
+            } else if (msg.indexOf("must be less than or equal to") != -1) {
+                return validate.format(this.options.message.max, {
+                    count: input.getAttribute('max')
+                });
+            } else if (msg.indexOf("is not a number") != -1) {
+                return this.options.message.number;
+            }
+            return msg;
+        },
+
         validateElement: function (input, no_recurse) {
             /* Handler which gets called when a single form :input element
              * needs to be validated. Will prevent the event's default action
@@ -162,7 +207,10 @@ define([
             if (!error) {
                 this.removeError(input);
             } else {
-                this.showError(error, input);
+                var name = input.getAttribute('name').replace(/\./g, '\\.');
+                _.each(error[name], function (msg) {
+                    this.showError(this.customizeMessage(msg, input), input);
+                }.bind(this));
             }
             if (!no_recurse) {
                 _.each($(input).data('pat-validation-refs') || [], _.partial(this.validateElement.bind(this), _, true));
@@ -222,9 +270,7 @@ define([
                 }
             }
             this.findErrorMessages(input).remove();
-            _.each(Object.keys(error), function (key) {
-                $message.text(error[key]);
-            });
+            $message.text(error);
             switch (strategy) {
                 case "append":
                     $message.appendTo($position);

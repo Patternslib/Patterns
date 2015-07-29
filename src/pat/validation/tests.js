@@ -62,7 +62,6 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             $input.trigger('change');
             expect($el.find('em.warning').length).toBe(1);
             expect($el.find('em.warning').text()).toBe("This value must be a valid email address");
-
             $el = $(
                 '<form class="pat-validation">'+
                     '<input type="email" name="email">'+
@@ -72,6 +71,35 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             pattern.init($el);
             $input.trigger('change');
             expect($el.find('em.warning').length).toBe(0);
+        });
+
+        it("validates number values", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="number" min="5" name="number">'+
+                '</form>');
+            var $input = $el.find(':input');
+            $input.val(4);
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This value must be greater than or equal to 5");
+
+            $input.val(6);
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+
+            $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="number" max="5" name="number">'+
+                '</form>');
+            $input = $el.find(':input');
+            $input.val(6);
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This value must be less than or equal to 5");
         });
     });
 });
