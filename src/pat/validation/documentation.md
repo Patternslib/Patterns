@@ -3,7 +3,7 @@ This pattern provides a simple but powerful form validation beyond what HTML5 of
 
 ## Documentation
 
-The validation pattern is triggered by a single class `pat-validate` on the form tag. The rest is handled mostly with standard HTML5 validation attributes.
+The validation pattern is triggered by a single class `pat-validation` on the form tag. The rest is handled mostly with standard HTML5 validation attributes.
 
 This pattern has several advantages over standard HTML 5 form validation:
 
@@ -29,9 +29,6 @@ This pattern has several advantages over standard HTML 5 form validation:
       <label>Postal code <input type="text" required="required" pattern="[0-9]{4}\s*[A-Za-z]{2}"/></label>
       <label>City <input type="text" required="required"/></label>
     </fieldset>
-
-In addition the extra validators from Parsley are support. You can find a complete list of supported
-validators at the [Parseley validators documentation](http://parsleyjs.org/documentation.html#validators).
 
 ### Error messages
 

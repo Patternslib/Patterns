@@ -57,7 +57,7 @@ require([
             "pat/switch/tests",
             "pat/toggle/tests",
             "pat/tooltip/tests",
-            "pat/validate/tests",
+            "pat/validation/tests",
             "pat/zoom/tests"
         ], function() {
             var jasmineEnv = jasmine.getEnv();

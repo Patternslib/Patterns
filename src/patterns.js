@@ -59,7 +59,7 @@ define([
     "pat-toggle",
     "pat-tooltip",
     "pat-url",
-    "pat-validate",
+    "pat-validation",
     "pat-zoom"
 ], function($, registry) {
     // Since we are in a non-AMD env, register a few useful utilites

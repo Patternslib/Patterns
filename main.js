@@ -119,7 +119,7 @@ require.config({
         "pat-scroll":                  "pat/scroll/scroll",
         "pat-toggle":                  "pat/toggle/toggle",
         "pat-tooltip":                 "pat/tooltip/tooltip",
-        "pat-validate":                "pat/validate/validate",
+        "pat-validation":              "pat/validation/validation",
         "pat-zoom":                    "pat/zoom/zoom",
         "patterns":                    "patterns"
     },
