@@ -73,7 +73,7 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($el.find('em.warning').length).toBe(0);
         });
 
-        it("validates number values", function() {
+        it("validates number limits", function() {
             var $el = $(
                 '<form class="pat-validation">'+
                     '<input type="number" min="5" name="number">'+
@@ -100,6 +100,19 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             $input.trigger('change');
             expect($el.find('em.warning').length).toBe(1);
             expect($el.find('em.warning').text()).toBe("This value must be less than or equal to 5");
+        });
+
+        it("validates integers", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="number" name="integer" data-pat-validation="type: integer;">'+
+                '</form>');
+            var $input = $el.find(':input');
+            $input.val(4.5);
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This value must be an integer");
         });
     });
 });

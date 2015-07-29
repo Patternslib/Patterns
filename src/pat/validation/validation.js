@@ -20,12 +20,14 @@ define([
     parser.addArgument("message-date", "This value must be a valid date");
     parser.addArgument("message-datetime", "This value must be a valid date and time");
     parser.addArgument("message-email", "This value must be a valid email address");
+    parser.addArgument("message-integer", "This value must be an integer");
+    parser.addArgument("message-max", "This value must be less than or equal to %{count}");
+    parser.addArgument("message-min", "This value must be greater than or equal to %{count}");
     parser.addArgument("message-number", "This value must be a number");
     parser.addArgument("message-required", "This field is required");
-    parser.addArgument("message-min", "This value must be greater than or equal to %{count}");
-    parser.addArgument("message-max", "This value must be less than or equal to %{count}");
     parser.addArgument("not-after");
     parser.addArgument("not-before");
+    parser.addArgument("type", undefined, ["integer"]); // Currently only used for number types.
     var VALIDATION_TYPE_MAP = {
         'required': 'presence',
         'email': 'email',
@@ -93,7 +95,8 @@ define([
              */
             var name = input.getAttribute('name').replace(/\./g, '\\.'),
                 type = input.getAttribute('type'),
-                opts = parser.parse($(input));
+                opts = parser.parse($(input)),
+                constraint = constraints[name];
             if (_.contains(['datetime', 'date'], type)) {
                 this.setLocalDateConstraints(input, opts, constraints);
             } else if (type == 'number') {
@@ -110,6 +113,12 @@ define([
                         constraint.numericality[key] = value;
                     }
                 });
+                if (opts.type == "integer") {
+                    if (typeof constraint.numericality === "boolean") {
+                        constraint.numericality = {};
+                    }
+                    constraint.numericality.onlyInteger = true;
+                }
             }
             // Set local validation messages.
             _.each(Object.keys(VALIDATION_TYPE_MAP), function (type) {
@@ -194,6 +203,8 @@ define([
                 });
             } else if (msg.indexOf("is not a number") != -1) {
                 return this.options.message.number;
+            } else if (msg.indexOf("must be an integer") != -1) {
+                return this.options.message.integer;
             }
             return msg;
         },
