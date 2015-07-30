@@ -113,6 +113,18 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             $input.trigger('change');
             expect($el.find('em.warning').length).toBe(1);
             expect($el.find('em.warning').text()).toBe("This value must be an integer");
+
+            $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="number" name="integer"'+
+                     'data-pat-validation="type: integer; message-integer: Slegs heelgetalle">'+
+                '</form>');
+            $input = $el.find(':input');
+            $input.val(4.5);
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("Slegs heelgetalle");
         });
     });
 });

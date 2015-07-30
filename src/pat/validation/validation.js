@@ -193,18 +193,19 @@ define([
              * number and is bigger than 5), we need to customize the messages
              * after validation. We do that here.
              */
+            var opts = parser.parse($(input));
             if (msg.indexOf("must be greater than or equal to") != -1) {
-                return validate.format(this.options.message.min, {
+                return validate.format(opts.message.min, {
                     count: input.getAttribute('min')
                 });
             } else if (msg.indexOf("must be less than or equal to") != -1) {
-                return validate.format(this.options.message.max, {
+                return validate.format(opts.message.max, {
                     count: input.getAttribute('max')
                 });
             } else if (msg.indexOf("is not a number") != -1) {
-                return this.options.message.number;
+                return opts.message.number;
             } else if (msg.indexOf("must be an integer") != -1) {
-                return this.options.message.integer;
+                return opts.message.integer;
             }
             return msg;
         },
