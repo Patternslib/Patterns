@@ -170,12 +170,12 @@ define([
             /* Handler which gets called when the entire form needs to be
              * validated. Will prevent the event's default action if validation fails.
              */
-            var has_errors = false, input, error;
-            var $not_disabled = this.$inputs.filter(function (idx, input) {
-                return !input.hasAttribute('disabled');
-            });
-            for (var i=0; i<$not_disabled.length; i++) {
-                error = this.validateElement($not_disabled[i]);
+            var has_errors = false, input, error, i;
+            var $single = this.$inputs.filter(':enabled:not(:checkbox):not(:radio)');
+            var group_names = this.$inputs
+                    .filter(':enabled:checkbox, :enabled:radio')
+                    .map(function () { return this.getAttribute('name'); });
+            var handleError = function (error) {
                 if (typeof error != "undefined") {
                     if (!has_errors) {
                         ev.preventDefault();
@@ -184,6 +184,15 @@ define([
                     }
                     has_errors = true;
                 }
+            };
+            // We use for loops, to keep things synchronous, otherwise other
+            // pattern's event handlers (like pat-inject) start getting called,
+            // which we need to avoid.
+            for (i=0; i<$single.length; i++) {
+                handleError(this.validateElement($single[i]));
+            }
+            for (i=0; i<group_names.length; i++) {
+                handleError(this.validateGroupedElement(group_names[i]));
             }
         },
 
@@ -210,11 +219,26 @@ define([
             return msg;
         },
 
+        validateGroupedElement: function (name) {
+            /* Handler which gets called for :checkbox and :radio elments. */
+            var input = this.$el.find('[name="'+name+'"]')[0];
+            var error = validate(_.pick(validate.collectFormValues(this.$el), name), this.getConstraints(input));
+            if (!error) {
+                this.removeError(input);
+            } else {
+                _.each(error[name.replace(/\./g, '\\.')], function (msg) {
+                    this.showError(this.customizeMessage(msg, input), input);
+                }.bind(this));
+            }
+            return error;
+        },
+
         validateElement: function (input, no_recurse) {
             /* Handler which gets called when a single form :input element
              * needs to be validated. Will prevent the event's default action
              * if validation fails.
              */
+            if (input.disabled) { return; }
             var error = validate(this.getValueDict(input), this.getConstraints(input));
             if (!error) {
                 this.removeError(input);

@@ -126,5 +126,37 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($el.find('em.warning').length).toBe(1);
             expect($el.find('em.warning').text()).toBe("Slegs heelgetalle");
         });
+
+        it("doesn't validate disabled elements", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                '<input type="text" name="disabled" required="required" disabled="disabled">'+
+                '</form>');
+            pattern.init($el);
+            $el.find(':input').trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+        });
+
+        it("validates radio buttons", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<label><input name="colour" required="required" type="radio" value="blue"/> Blue</label>'+
+                    '<label><input name="colour" required="required" type="radio" value="pink"/> Pink</label>'+
+                    '<label><input name="colour" required="required" type="radio" value="red"/> Red</label>'+
+                    '<label><input name="colour" required="required" type="radio" value="yellow"/> yellow</label>'+
+                '</form>');
+            pattern.init($el);
+            $el.submit();
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This field is required");
+
+            $el.find('input')[0].checked = true;
+            $el.on('submit', function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+            });
+            $el.submit();
+            expect($el.find('em.warning').length).toBe(0);
+        });
     });
 });
