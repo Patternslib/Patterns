@@ -285,8 +285,8 @@ define([
 
         removeError: function(input) {
             var $errors = this.findErrorMessages(input);
-            $errors.remove();
             this.errors = this.errors - $errors.length;
+            $errors.remove();
             if (this.errors < 1 && this.options.disableSelector) {
                 $(this.options.disableSelector).removeProp('disabled').removeClass('disabled');
             }
@@ -305,7 +305,7 @@ define([
                     strategy="append";
                 }
             }
-            this.findErrorMessages(input).remove();
+            this.removeError(input);
             $message.text(error);
             switch (strategy) {
                 case "append":
