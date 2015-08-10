@@ -39,7 +39,10 @@ define([
                 "field": this.$el[0],
                 "minDate": this.$el.attr("min") ? moment(this.$el.attr("min")).toDate() : undefined,
                 "maxDate": this.$el.attr("max") ? moment(this.$el.attr("max")).toDate() : undefined,
-                "showWeekNumber": this.options.weekNumbers === "show"
+                "showWeekNumber": this.options.weekNumbers === "show",
+                "onSelect": function () {
+                    $(this._o.field).closest("form").trigger("input-change");
+                }
             };
             if (this.options.i18n) {
                 $.getJSON(this.options.i18n, 
