@@ -37,6 +37,11 @@ define([
             if (!this.$el.closest("#pat-modal")) {
                 $("#pat-modal").detach();
             }
+
+            this.$el.on("pat-inject-missingSource pat-inject-missingTarget", function() {
+                $("#pat-modal").detach();
+            });
+
             inject.init(this.$el, opts);
         },
 
