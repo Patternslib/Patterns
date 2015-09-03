@@ -80,7 +80,7 @@ Put this code into `./src/pat-colorchanger.js`
         // so that it can be used with Require.js or other module loaders.
         define([
             "pat-registry",
-            "pat-parser"
+            "pat-parser",
             "pat-base"
             ], function() {
                 return factory.apply(this, arguments);
