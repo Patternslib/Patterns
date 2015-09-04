@@ -110,8 +110,8 @@ Put this code into `./src/pat-colorchanger.js`
      * For example:
      *      <p class="pat-colorchanger" data-pat-colorchanger="color: blue">Hello World</p>
      */
-    var parser = new Parser("example");
-    parser.add_argument("color", "red"); // A configuration parameter and its default value.
+    var parser = new Parser("colorchanger");
+    parser.addArgument("color", "red"); // A configuration parameter and its default value.
 
     // We now create and return our custom pattern.
     // We extend the Base pattern so our custom pattern will be automatically registered.
