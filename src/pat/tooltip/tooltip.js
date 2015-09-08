@@ -26,7 +26,7 @@ define([
     parser.addArgument("height", "auto", ["auto", "max"]);
     parser.addArgument("trigger", "click", ["click", "hover"]);
     parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
-    parser.addArgument("source", "title", ["auto", "ajax", "content", "title"]);
+    parser.addArgument("source", "title", ["auto", "ajax", "content", "content-html", "title"]);
     parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
     parser.addArgument("delay", 0);
     parser.addArgument("class");
@@ -35,6 +35,7 @@ define([
     var tooltip = {
         name: "tooltip",
         trigger: ".pat-tooltip",
+        jquery_plugin: true,
 
         count: 0,
 
@@ -262,6 +263,9 @@ define([
                 break;
             case "title":
                 $content=$("<p/>").text(options.title);
+                break;
+            case "content-html":
+                $content = $("<div/>").html(options.content);
                 break;
             case "content":
                 href = $trigger.attr("href");
