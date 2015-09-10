@@ -59,6 +59,7 @@ define([
                 "data-option",
                 $select.find("option:selected").text()
             );
+            $select.parent().attr("data-option-value", $select.val());
         }
     };
 
