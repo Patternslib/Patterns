@@ -197,6 +197,15 @@ define([
                     cfg.$target = _._createTarget(cfg.target);
                     cfg.$injected = cfg.$target;
                 }
+
+                // check if target is "dirty"
+                if (cfg.$target.hasClass('is-dirty')) {
+                    if (!confirm('Are you sure you want to leave this page?')) {
+                      return false;
+                    }
+                    cfg.$target.removeClass('is-dirty');
+                }
+
                 return true;
             });
         },
