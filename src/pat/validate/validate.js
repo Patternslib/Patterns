@@ -26,7 +26,7 @@ define([
             this.$el.on("pat-ajax-before.pat-validate", this.onPreSubmit);
             this.$el.on('pat-update', this.onPatternUpdate.bind(this));
             this.$el.on("click.pat-validate", ".close-panel", function (ev) {
-                if (!parsley_form.validate()) {
+                if (!$(ev.target).hasClass('validate-ignore') && !parsley_form.validate()) {
                     ev.preventDefault();
                     ev.stopPropagation();
                 }
