@@ -21,15 +21,14 @@ define("pat-gallery", [
 
     return Base.extend({
         name: "gallery",
-        trigger: ".pat-gallery:has(a img)",
+        trigger: ".pat-gallery",
 
         init: function patGalleryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
             if ($('#photoswipe-template').length === 0) {
                 $('body').append(template());
             }
-            var $image_anchors = $("a:has(img)", this.$el);
-            var images = $image_anchors.map(function () {
+            var images = $("a", this.$el).map(function () {
                 return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
@@ -41,7 +40,7 @@ define("pat-gallery", [
                 hideAnimationDuration: this.options.effectDuration,
                 showAnimationDuration: this.options.effectDuration
             };
-            $image_anchors.click(function (ev) {
+            $("a", this.$el).click(function (ev) {
                 ev.preventDefault();
                 if (this.href) {
                     options.index = _.indexOf(_.pluck(images, 'src'), this.href);
