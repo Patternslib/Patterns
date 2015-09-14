@@ -82,7 +82,7 @@ define("pat-clone",[
             };
             if (el.nodeType !== TEXT_NODE) {
                 $.each(el.attributes, callback.bind(this));
-            } else {
+            } else if (el.data.length) {
                 el.data = el.data.replace("#{1}", this.num_clones);
             }
         },
