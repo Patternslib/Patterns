@@ -291,7 +291,7 @@ define([
                     return $(this.outerHTML)[0];
                 });
             } else {
-                $src = $source.clone();
+                $src = $source.safeClone();
             }
             var $target = $(this),
                 $injected = cfg.$injected || $src;

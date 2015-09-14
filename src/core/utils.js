@@ -2,6 +2,21 @@ define([
     "jquery"
 ], function($) {
 
+    $.fn.safeClone = function () {
+        var $clone = this.clone();
+        // IE BUG : Placeholder text becomes actual value after deep clone on textarea
+        // https://connect.microsoft.com/IE/feedback/details/781612/placeholder-text-becomes-actual-value-after-deep-clone-on-textarea
+        if ($.browser.msie !== undefined && true) {
+            $clone.findInclusive(':input[placeholder]').each(function(i, item) {
+                var $item = $(item);
+                if ($item.attr('placeholder') === $item.val()) {
+                    $item.val('');
+                }
+            });
+        }
+        return $clone;
+    };
+
     // Production steps of ECMA-262, Edition 5, 15.4.4.18
     // Reference: http://es5.github.io/#x15.4.4.18
     if (!Array.prototype.forEach) {

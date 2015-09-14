@@ -43,7 +43,7 @@ define("pat-clone",[
                 return;
             }
             this.num_clones += 1;
-            var $clone = this.$template.clone();
+            var $clone = this.$template.safeClone();
             var ids = ($clone.attr("id") || "").split(" ");
             $clone.removeAttr("id").removeClass("cant-touch-this");
             $.each(ids, function (idx, id) {
@@ -55,20 +55,10 @@ define("pat-clone",[
                             id.replace("#{1}", this.num_clones));
                 }
             }.bind(this));
+
             $clone.appendTo(this.$el);
             $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
             $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
-
-            // IE BUG : Placeholder text becomes actual value after deep clone on textarea
-            // https://connect.microsoft.com/IE/feedback/details/781612/placeholder-text-becomes-actual-value-after-deep-clone-on-textarea
-            if ($.browser.msie !== undefined) {
-              $(':input[placeholder]', $clone).each(function(i, item) {
-                  var $item = $(item);
-                  if ($item.attr('placeholder') === $item.val()) {
-                    $item.val('');
-                  }
-              });
-            }
 
             $clone.removeAttr("hidden");
             registry.scan($clone);
