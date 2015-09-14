@@ -48,6 +48,30 @@
               <button>Test</button>
             </fieldset>
           </form>
+
+          <h3>Date fields</h3>
+          <form class="pat-validation" method="get" action="#" novalidate>
+            <label>Planning start
+                <input
+                    type="date" class="pat-date-picker"
+                    name="measure.planning_start:records"
+                    data-pat-date-picker="behavior: native"
+                    data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+                    id="planning-start"
+                    value="2015-10-10"/>
+            </label>
+            <label>Planning end
+                <input
+                    type="date" class="pat-date-picker" name="measure.planning_end:records"
+                    data-pat-date-picker="behavior: native"
+                    data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
+                    id="planning-end"
+                    value="2015-09-10"/>
+            </label>
+            <fieldset class="buttons">
+              <button>Test</button>
+            </fieldset>
+          </form>
         </div>
       </section>
       <section class="documentation">

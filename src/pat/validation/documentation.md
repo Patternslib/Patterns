@@ -61,7 +61,7 @@ Error messages are unique per type of validation (e.g. `required`, `email` or `n
 Error messages can also be overridden on a per-field basis, for example:
 
 
-    <input type="date" name="date" data-pat-validation="not-after: #planning-end-${number}; message-date: This date must be on or before the end date."/>
+    <input type="date" name="date" data-pat-validation="type: date; not-after: #planning-end-${number}; message-date: This date must be on or before the end date."/>
 
 ### Options reference
 
@@ -78,4 +78,4 @@ Error messages can also be overridden on a per-field basis, for example:
 | message-required  | The error message for required fields.    | This field is required. | String |
 | not-after         | Field-specific. A lower time limit restriction for date and datetime fields. | | CSS Selector or a ISO8601 date string. |
 | not-before        | Field-specific. An upper time limit restriction for date and datetime fields. | | CSS Selector or a ISO8601 date string. |
-| type              | Field-specific. Currently only used for numbers, denotes the type of number. | integer | String |
+| type              | Field-specific. Denotes a special field type not supported by default in (all) browsers. Can be integer, date or datetime. |  | String |

@@ -27,7 +27,7 @@ define([
     parser.addArgument("message-required", "This field is required");
     parser.addArgument("not-after");
     parser.addArgument("not-before");
-    parser.addArgument("type", undefined, ["integer"]); // Currently only used for number types.
+    parser.addArgument("type", undefined, ["integer", "date", "datetime"]);
     var VALIDATION_TYPE_MAP = {
         'required': 'presence',
         'email': 'email',
@@ -51,11 +51,20 @@ define([
             this.$el.on('pat-update.pat-validation', this.onPatternUpdate.bind(this));
         },
 
+        getFieldType: function (input) {
+            var opts = parser.parse($(input));
+            var type = input.getAttribute('type');
+            if (_.contains(['datetime', 'date'], opts.type)) {
+                type = opts.type;
+            }
+            return type;
+        },
+
         setLocalDateConstraints: function (input, opts, constraints) {
             /* Set the relative date constraints, i.e. not-after and not-before, as well as custom messages.
              */
             var name = input.getAttribute('name').replace(/\./g, '\\.'),
-                type = input.getAttribute('type'),
+                type = this.getFieldType(input),
                 c = constraints[name][type];
 
             if (typeof opts == "undefined") {
@@ -94,7 +103,7 @@ define([
              * We parse them and add them to the passed in constraints obj.
              */
             var name = input.getAttribute('name').replace(/\./g, '\\.'),
-                type = input.getAttribute('type'),
+                type = this.getFieldType(input),
                 opts = parser.parse($(input)),
                 constraint = constraints[name];
             if (_.contains(['datetime', 'date'], type)) {
@@ -135,7 +144,7 @@ define([
         getConstraints: function (input) {
             // Get validation constraints by parsing the input element for hints
             var name = input.getAttribute('name'),
-                type = input.getAttribute('type'),
+                type = this.getFieldType(input),
                 constraints = {};
             if (!name) { return; }
             constraints[name.replace(/\./g, '\\.')] = {
