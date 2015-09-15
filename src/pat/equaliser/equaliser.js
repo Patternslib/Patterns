@@ -11,9 +11,9 @@ define([
     "imagesloaded"
 ], function($, patterns, Parser, utils, imagesLoaded) {
     var parser = new Parser("equaliser");
-    parser.add_argument("transition", "none", ["none", "grow"]);
-    parser.add_argument("effect-duration", "fast");
-    parser.add_argument("effect-easing", "swing");
+    parser.addArgument("transition", "none", ["none", "grow"]);
+    parser.addArgument("effect-duration", "fast");
+    parser.addArgument("effect-easing", "swing");
 
     var equaliser = {
         name: "equaliser",

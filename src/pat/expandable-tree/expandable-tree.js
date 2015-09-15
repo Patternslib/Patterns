@@ -6,7 +6,7 @@ define([
 ], function($, inject, Parser, registry) {
     var parser = new Parser("expandable");
 
-    parser.add_argument("load-content");
+    parser.addArgument("load-content");
 
     var _ = {
         name: "expandable",

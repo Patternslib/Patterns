@@ -6,6 +6,21 @@
 	<link rel="stylesheet" href="/style/common.css" type="text/css">
     <script src="/main.js" type="text/javascript" charset="utf-8"></script>
 	<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        .button {
+            height: 20px;
+        }
+        .sortable p.legend {
+            font-weight: bold;
+            color: darkred;
+        }
+        .pat-sortable .button-cluster {
+            display: none;
+        }
+        .nojs .pat-sortable .button-cluster {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 	<section class="description">
@@ -14,7 +29,7 @@
 	<section class="demo">
 		<h2>Demo</h2>
         <div id="demo">
-            <h1>Sortable demo</h1>
+            <p>Using pat-sortable on a form element:</p>
             <ul class="pat-sortable">
                 <li>3</li>
                 <li>5</li>
@@ -22,20 +37,6 @@
                 <li>1</li>
                 <li>6</li>
                 <li>2</li>
-            </ul>
-        
-            <h1>Another sortable demo</h1>
-            <ul class="pat-sortable scrolling">
-                <li>One</li>
-                <li>Two</li>
-                <li>Three</li>
-                <li>Four</li>
-                <li>Five</li>
-                <li>Six</li>
-                <li>Seven</li>
-                <li>Eight</li>
-                <li>Nine</li>
-                <li>Ten</li>
             </ul>
         </div>
 	</section>

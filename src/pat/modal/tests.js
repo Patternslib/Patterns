@@ -91,32 +91,7 @@ define(["pat-modal"], function(pattern) {
                 expect($modal.length).toBeGreaterThan(0);
             });
         });
-
-        describe("Multiple Modals", function () {
-            it("can be initialized all at once", function () {
-                $("#lab").html([
-                    "<div class=\"pat-modal foo\">",
-                    "  <p>Modal 1 content</p>",
-                    "</div>\n",
-                    "<div class=\"pat-modal foo\">",
-                    "  <p>Modal 2 content</p>",
-                    "</div>"
-                ].join("\n"));
-
-                var $modals = $(".foo");
-                pattern.init($modals);
-                $modals.each(function (idx, modal) {
-                    var $modal = $(modal);
-                    expect($modal.find(".header").length).toBeTruthy();
-                    expect($modal.find(".header").text()).toBe("Close");
-                    expect($modal.find(".header .close-panel").length).toBeTruthy();
-                    expect($modal.find(".panel-content").length).toBeTruthy();
-                    expect($modal.find(".panel-content").text()).toBe("Modal "+(idx+1)+" content");
-                });
-            });
-        });
     });
-
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

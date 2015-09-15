@@ -10,7 +10,7 @@ define([
 ], function($, Parser, registry) {
     var parser = new Parser("forward");
 
-    parser.add_argument("selector");
+    parser.addArgument("selector");
 
     var _ = {
         name: "forward",

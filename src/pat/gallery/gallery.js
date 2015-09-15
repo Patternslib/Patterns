@@ -3,54 +3,67 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define([
+define("pat-gallery", [
     "jquery",
     "pat-registry",
+    "pat-base",
     "pat-parser",
-    "photoswipe"
-], function($, patterns, Parser) {
+    "photoswipe",
+    "photoswipe-ui",
+    "tpl!photoswipe-template",
+    "underscore"
+], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser("gallery");
+    parser.addArgument("loop", true);
+    parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
+    parser.addArgument("delay", 30000);
+    parser.addArgument("effect-duration", 250);
 
-    parser.add_argument("slideshow", "manual", ["auto", "manual", "none"]);
-    parser.add_argument("loop", true);
-    parser.add_argument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
-    parser.add_argument("delay", 30000);
-    parser.add_argument("effect-duration", 250);
-    parser.add_argument("effect-easing", "ease-out");
-    parser.add_argument("hide-overlay", 5000);
-
-    var gallery = {
+    return Base.extend({
         name: "gallery",
-        trigger: ".pat-gallery:has(a img)",
+        trigger: ".pat-gallery",
 
-        init: function($el, opts) {
-            return $el.each(function() {
-                var options = parser.parse($(this), opts);
-                $("a:has(img)", this).photoSwipe({
-                    autoStartSlideshow: options.slideshow==="auto",
-                    imageScaleMethod: options.scaleMethod,
-                    loop: options.loop,
-                    slideshowDelay: options.delay,
-                    slideSpeed: options.effect.duration,
-                    slideTimingFunction: options.effect.easing,
-                    captionAndToolbarAutoHideDelay: options.hideOverlay,
-
-                    zIndex: 10000,
-                    getImageCaption: gallery._getImageCaption
+        init: function patGalleryInit($el, opts) {
+            this.options = parser.parse(this.$el, opts);
+            if ($('#photoswipe-template').length === 0) {
+                $('body').append(template());
+            }
+            var images = $("a", this.$el).map(function () {
+                return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
+            });
+            var pswpElement = document.querySelectorAll('.pswp')[0];
+            var options = {
+                index: 0,
+                scaleMode: this.options.scaleMethod,
+                loop: this.options.loop,
+                slideshowDelay: this.options.delay,
+                hideAnimationDuration: this.options.effectDuration,
+                showAnimationDuration: this.options.effectDuration
+            };
+            $("a", this.$el).click(function (ev) {
+                ev.preventDefault();
+                if (this.href) {
+                    options.index = _.indexOf(_.pluck(images, 'src'), this.href);
+                } else {
+                    options.index = 0;
+                }
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, images, options);
+                gallery.listen('gettingData', function(index, item) {
+                    // Workaround for the fact that we don't know the image sizes.
+                    // https://github.com/dimsemenov/PhotoSwipe/issues/796
+                    if (item.w < 1 || item.h < 1) { // unknown size
+                        var img = new Image();
+                        img.onload = function() { // will get size after load
+                            item.w = this.width; // set image width
+                            item.h = this.height; // set image height
+                            gallery.invalidateCurrItems(); // reinit Items
+                            gallery.updateSize(true); // reinit Items
+                        };
+                        img.src = item.src; // let's download image
+                    }
                 });
+                gallery.init();
             });
         },
-
-        _getImageCaption: function(el) {
-            if (el.nodeName==="IMG")
-                return el.title;
-            var $children = $("img[title]:first", el);
-            if ($children.length)
-                return $children.attr("title");
-        }
-    };
-
-
-    patterns.register(gallery);
-    return gallery;
+    });
 });

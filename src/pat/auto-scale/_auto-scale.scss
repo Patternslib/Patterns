@@ -1,39 +1,13 @@
-/* @group Example CSS */
-
-.narrow {
-    position: relative;
-    width: 50%;
-    margin: 0 auto;
-    border-width: 1px;
-    border-color: #ccc;
-    border-style: dotted;
-    padding: 1em;
-}
-
-.smallbox {
-    width: 12em;
-    height: 12em;
-    border-width: 2px;
-    border-color: #CCC;
-    border-style: dashed;
-    padding: 1em;
-    margin: 0 auto;
-}
-
-
-
-/* @end */
-
-/* @group Pattern CSS */
-
-.pat-auto-scale {	
-	transform-origin: left top;
-	opacity: 0;
-	transition: opacity 0.2s;
+.pat-auto-scale {   
+    -moz-transform-origin: left top;
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+    opacity: 0;
+    -moz-transition: opacity 0.2s;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
 }
 
 .pat-auto-scale.scaled {
-	opacity: 1;
+    opacity: 1;
 }
-
-/* @end */

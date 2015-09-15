@@ -15,7 +15,7 @@ define(["pat-bumper"], function(pattern) {
         });
 
         describe("Check if _findScrollContainer", function() {
-            it("handles an normal object", function() {
+            it("handles a normal object", function() {
                 $("#lab").append("<div id='sticker'/>");
                 var el = document.getElementById("sticker");
                 expect(pattern._findScrollContainer(el)).toBeNull();
@@ -64,8 +64,8 @@ define(["pat-bumper"], function(pattern) {
             });
         });
 
-        describe("Check if _updateContainedStatus", function() {
-            it("correctly transitions an element to bumped", function() {
+        describe("Check if in a scrolling container _updateStatus", function() {
+            it("correctly transitions an element to bumped at the top", function() {
                 var lab = document.getElementById("lab"),
                     container = document.createElement("div"),
                     padding = document.createElement("div"),
@@ -83,7 +83,8 @@ define(["pat-bumper"], function(pattern) {
                 container.appendChild(padding);
                 container.scrollTop=5;
                 spyOn(pattern, "_markBumped");
-                pattern._updateContainedStatus(container, sticker);
+                $(sticker).data("pat-bumper:config", {margin: 0, bumptop: true});
+                pattern._updateStatus(sticker, container);
                 expect(pattern._markBumped).toHaveBeenCalled();
                 expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy();
                 expect(sticker.style.top).toBe("5px");
@@ -107,7 +108,7 @@ define(["pat-bumper"], function(pattern) {
                 container.appendChild(padding);
                 container.scrollTop=0;
                 spyOn(pattern, "_markBumped");
-                pattern._updateContainedStatus(container, sticker);
+                pattern._updateStatus(sticker, container);
                 expect(pattern._markBumped).toHaveBeenCalled();
                 expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy();
                 expect(sticker.style.top).toBe("");
@@ -115,7 +116,7 @@ define(["pat-bumper"], function(pattern) {
         });
 
         describe("Check if _updateStatus", function() {
-            it("correctly transitions to bumped", function() {
+            it("correctly transitions to bumped at the top", function() {
                 var lab = document.getElementById("lab"),
                     padding = document.createElement("div"),
                     sticker = document.createElement("p");
@@ -123,7 +124,7 @@ define(["pat-bumper"], function(pattern) {
                 sticker.style.height="5px";
                 sticker.style.position="relative";
                 lab.appendChild(sticker);
-                $(sticker).data("pat-bumper:config", {margin: 0});
+                $(sticker).data("pat-bumper:config", {margin: 0, bumptop: true});
                 padding.style.clear="both";
                 padding.style.height="3000px";
                 lab.appendChild(padding);
@@ -135,7 +136,7 @@ define(["pat-bumper"], function(pattern) {
                 expect(Math.floor(sticker.style.top.replace("px", ""))).toBe(5);
             });
 
-            it("correctly transitions to unbumped", function() {
+            it("correctly transitions to unbumped at the top", function() {
                 var lab = document.getElementById("lab"),
                     padding = document.createElement("div"),
                     sticker = document.createElement("p");

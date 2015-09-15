@@ -20,15 +20,15 @@ define([
     var log = logger.getLogger("pat.collapsible"),
         parser = new Parser("collapsible");
 
-    parser.add_argument("load-content");
-    parser.add_argument("store", "none", ["none", "session", "local"]);
-    parser.add_argument("transition", "slide", ["none", "css", "fade", "slide", "slide-horizontal"]);
-    parser.add_argument("effect-duration", "fast");
-    parser.add_argument("effect-easing", "swing");
-    parser.add_argument("closed", false);
-    parser.add_argument("trigger", "::first");
-    parser.add_argument("close-trigger");
-    parser.add_argument("open-trigger");
+    parser.addArgument("load-content");
+    parser.addArgument("store", "none", ["none", "session", "local"]);
+    parser.addArgument("transition", "slide", ["none", "css", "fade", "slide", "slide-horizontal"]);
+    parser.addArgument("effect-duration", "fast");
+    parser.addArgument("effect-easing", "swing");
+    parser.addArgument("closed", false);
+    parser.addArgument("trigger", "::first");
+    parser.addArgument("close-trigger");
+    parser.addArgument("open-trigger");
 
     return Base.extend({
         name: "collapsible",

@@ -16,12 +16,13 @@ define([
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
 
-    parser.add_argument("margin", 0);
-    parser.add_argument("selector");
-    parser.add_argument("bump-add", "bumped");
-    parser.add_argument("bump-remove");
-    parser.add_argument("unbump-add");
-    parser.add_argument("unbump-remove", "bumped");
+    parser.addArgument("margin", 0);
+    parser.addArgument("selector");
+    parser.addArgument("bump-add", "bumped");
+    parser.addArgument("bump-remove");
+    parser.addArgument("unbump-add");
+    parser.addArgument("unbump-remove", "bumped");
+    parser.addArgument("side", "top");
 
     // XXX Handle resize
     var bumper = {
@@ -56,8 +57,14 @@ define([
                         }
                     }
                     $(container).on("scroll.bumper", null, this, bumper._onScrollContainer);
-                    bumper._updateContainedStatus(container, this);
+                    bumper._updateStatus(this, container);
                 }
+
+                var bumpall = (options.side.indexOf("all") > -1);
+                options.bumptop =    bumpall || (options.side.indexOf("top") > -1);
+                options.bumpright =  bumpall || (options.side.indexOf("right") > -1);
+                options.bumpbottom = bumpall || (options.side.indexOf("bottom") > -1);
+                options.bumpleft =   bumpall || (options.side.indexOf("left") > -1);
             });
         },
 
@@ -85,34 +92,26 @@ define([
         _onScrollContainer: function bumper_onScrollContainer(e) {
             var container = e.currentTarget,
                 sticker = e.data;
-            bumper._updateContainedStatus(container, sticker);
+            bumper._updateStatus(sticker, container);
         },
 
         _onScrollWindow: function bumper_onScrollWindow(e) {
             bumper._updateStatus(e.data);
         },
 
-        _updateContainedStatus: function bumper_updateContainerSstatus(container, sticker) {
-            var $sticker = $(sticker),
-                options = $sticker.data("pat-bumper:config"),
-                top = sticker.style.top ? parseInt(sticker.style.top, 10) : 0,
-                delta = sticker.offsetTop - container.scrollTop - top;
-
-            if (delta<0) {
-                bumper._markBumped($sticker, options, true);
-                sticker.style.top=(-delta)+"px";
-            } else {
-                bumper._markBumped($sticker, options, false);
-                sticker.style.top="";
-            }
-        },
-
         _updateStatus: function(sticker) {
             var $sticker = $(sticker),
                 options = $sticker.data("pat-bumper:config"),
-                viewport = bumper._getViewport(),
-                box = bumper._getBoundingBox($sticker, options.margin),
+                margin = options ? options.margin : 0,
+                frame,
+                box = bumper._getBoundingBox($sticker, margin),
                 delta = {};
+
+            if (arguments.length == 1)
+              frame = bumper._getViewport();
+            else if (arguments.length == 2)
+              frame = bumper._getBoundingBox($(arguments[1]), margin);
+
             delta.top=sticker.style.top ? parseFloat($sticker.css("top")) : 0;
             delta.left=sticker.style.left ? parseFloat($sticker.css("left")) : 0;
 
@@ -121,15 +120,17 @@ define([
             box.left-=delta.left;
             box.right-=delta.left;
 
-            if (viewport.top > box.top)
-                sticker.style.top=(viewport.top - box.top) + "px";
+            if ((frame.top > box.top) && options.bumptop)
+                sticker.style.top=(frame.top - box.top) + "px";
+            else if ((frame.bottom < box.bottom) && options.bumpbottom)
+                sticker.style.top=(frame.bottom - box.bottom) + "px";
             else
                 sticker.style.top="";
 
-            if (viewport.left > box.left)
-                sticker.style.left=(viewport.left - box.left) + "px";
-            else if (viewport.right < box.right)
-                sticker.style.left=(viewport.right - box.right) + "px";
+            if ((frame.left > box.left) && options.bumpleft)
+                sticker.style.left=(frame.left - box.left) + "px";
+            else if ((frame.right < box.right) && options.bumpright)
+                sticker.style.left=(frame.right - box.right) + "px";
             else
                 sticker.style.left="";
 

@@ -7,21 +7,22 @@
 define([
     "jquery",
     "pat-registry",
+    "pat-base",
     "pat-utils",
     "pat-logger",
     "pat-dependshandler",
     "pat-parser"
-], function($, patterns, utils, logging, DependsHandler, Parser) {
+], function($, patterns, Base, utils, logging, DependsHandler, Parser) {
     var log = logging.getLogger("depends"),
         parser = new Parser("depends");
 
-    parser.add_argument("condition");
-    parser.add_argument("action", "show", ["show", "enable", "both"]);
-    parser.add_argument("transition", "none", ["none", "css", "fade", "slide"]);
-    parser.add_argument("effect-duration", "fast");
-    parser.add_argument("effect-easing", "swing");
+    parser.addArgument("condition");
+    parser.addArgument("action", "show", ["show", "enable", "both"]);
+    parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
+    parser.addArgument("effect-duration", "fast");
+    parser.addArgument("effect-easing", "swing");
 
-    var depends = {
+    return Base.extend({
         name: "depends",
         trigger: ".pat-depends",
         jquery_plugin: true,
@@ -33,103 +34,120 @@ define([
         },
 
         init: function($el, opts) {
-            return $el.each(function() {
-                var slave = this,
-                    $slave = $(this),
-                    options = parser.parse($slave, opts),
-                    handler, state;
+            var slave = this.$el[0],
+                options = parser.parse(this.$el, opts),
+                handler, state;
+            this.$modal = this.$el.parents(".pat-modal");
 
-                try {
-                    handler=new DependsHandler($slave, options.condition);
-                } catch (e) {
-                    log.error("Invalid condition: " + e.message, slave);
-                    return;
-                }
+            try {
+                handler=new DependsHandler(this.$el, options.condition);
+            } catch (e) {
+                log.error("Invalid condition: " + e.message, slave);
+                return;
+            }
 
-                state=handler.evaluate();
-                switch (options.action) {
-                    case "show":
-                        if (state)
-                            $slave.show();
-                        else
-                            $slave.hide();
-                        break;
-                    case "enable":
-                        if (state)
-                            depends._enable($slave);
-                        else
-                            depends._disable($slave);
-                        break;
-                    case "both":
-                        if (state) {
-                            $slave.show();
-                            depends._enable($slave);
-                        } else {
-                            $slave.hide();
-                            depends._disable($slave);
-                        }
-                        break;
-                }
-
-                var data = {handler: handler,
-                            options: options,
-                            slave: slave};
-
-                handler.getAllInputs().each(function() {
-                    if (this.form) {
-                        var $form = $(this.form),
-                            slaves = $form.data("patDepends.slaves");
-                        if (!slaves) {
-                            slaves=[data];
-                            $form.on("reset.pat-depends", depends.onReset);
-                        } else if (slaves.indexOf(data)===-1)
-                            slaves.push(data);
-                        $form.data("patDepends.slaves", slaves);
+            state=handler.evaluate();
+            switch (options.action) {
+                case "show":
+                    if (state)
+                        this.show();
+                    else
+                        this.hide();
+                    break;
+                case "enable":
+                    if (state)
+                        this.enable();
+                    else
+                        this.disable();
+                    break;
+                case "both":
+                    if (state) {
+                        this.show();
+                        this.enable();
+                    } else {
+                        this.hide();
+                        this.disable();
                     }
-                    $(this).on("change.pat-depends", null, data, depends.onChange);
-                    $(this).on("keyup.pat-depends", null, data, depends.onChange);
-                });
-            });
+                    break;
+            }
+
+            var data = {handler: handler,
+                        options: options,
+                        slave: slave};
+
+            var that = this;
+            handler.getAllInputs().each(function(idx, input) {
+                if (input.form) {
+                    var $form = $(input.form);
+                    var slaves = $form.data("patDepends.slaves");
+                    if (!slaves) {
+                        slaves=[data];
+                        $form.on("reset.pat-depends", that.onReset);
+                    } else if (slaves.indexOf(data)===-1)
+                        slaves.push(data);
+                    $form.data("patDepends.slaves", slaves);
+                }
+                $(input).on("change.pat-depends", null, data, this.onChange.bind(this));
+                $(input).on("keyup.pat-depends", null, data, this.onChange.bind(this));
+            }.bind(this));
         },
 
         onReset: function(event) {
-            var slaves = $(this).data("patDepends.slaves"),
+            var slaves = $(event.target).data("patDepends.slaves"),
                 i;
 
             setTimeout(function() {
                 for (i=0; i<slaves.length; i++) {
                     event.data=slaves[i];
-                    depends.onChange(event);
+                    this.onChange(event);
                 }
-            }, 50);
+            }.bind(this), 50);
         },
 
-        _enable: function($slave) {
-            if ($slave.is(":input"))
-                $slave[0].disabled=null;
-            else if ($slave.is("a"))
-                $slave.off("click.patternDepends");
-            else if ($slave.hasClass("pat-autosuggest")) {
-                $slave.findInclusive("input.pat-autosuggest").trigger("pat-update", {
+        updateModal: function () {
+            /* If we're in a modal, make sure that it gets resized.
+             */
+            if (this.$modal.length) {
+                $(document).trigger("pat-update", {pattern: "depends"});
+            }
+        },
+
+        show: function () {
+            this.$el.show();
+            this.updateModal();
+        },
+
+        hide: function () {
+            this.$el.hide();
+            this.updateModal();
+        },
+
+        enable: function() {
+            if (this.$el.is(":input"))
+                this.$el[0].disabled=null;
+            else if (this.$el.is("a"))
+                this.$el.off("click.patternDepends");
+            else if (this.$el.hasClass("pat-autosuggest")) {
+                this.$el.findInclusive("input.pat-autosuggest").trigger("pat-update", {
                     pattern: "depends",
                     enabled: true
                 });
             }
-            $slave.removeClass("disabled");
+            this.$el.removeClass("disabled");
         },
 
-        _disable: function($slave) {
-            if ($slave.is(":input"))
-                $slave[0].disabled="disabled";
-            else if ($slave.is("a"))
-                $slave.on("click.patternDepends", depends.blockDefault);
-            else if ($slave.hasClass("pat-autosuggest")) {
-                $slave.findInclusive("input.pat-autosuggest").trigger("pat-update", {
+        disable: function() {
+            if (this.$el.is(":input"))
+                this.$el[0].disabled="disabled";
+            else if (this.$el.is("a"))
+                this.$el.on("click.patternDepends", this.blockDefault);
+            else if (this.$el.hasClass("pat-autosuggest")) {
+                this.$el.findInclusive("input.pat-autosuggest").trigger("pat-update", {
                     pattern: "depends",
                     enabled: false
                 });
             }
-            $slave.addClass("disabled");
+            this.$el.addClass("disabled");
         },
 
         onChange: function(event) {
@@ -141,20 +159,22 @@ define([
 
             switch (options.action) {
                 case "show":
-                    utils.hideOrShow($slave, state, options, depends.name);
+                    utils.hideOrShow($slave, state, options, this.name);
+                    this.updateModal();
                     break;
                 case "enable":
                     if (state)
-                        depends._enable($slave);
+                        this.enable();
                     else
-                        depends._disable($slave);
+                        this.disable();
                     break;
                 case "both":
-                    utils.hideOrShow($slave, state, options, depends.name);
+                    utils.hideOrShow($slave, state, options, this.name);
+                    this.updateModal();
                     if (state)
-                        depends._enable($slave);
+                        this.enable();
                     else
-                        depends._disable($slave);
+                        this.disable();
                     break;
             }
         },
@@ -162,10 +182,7 @@ define([
         blockDefault: function(event) {
             event.preventDefault();
         }
-    };
-
-    patterns.register(depends);
-    return depends; // XXX for tests only
+    });
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

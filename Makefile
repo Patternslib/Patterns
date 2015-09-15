@@ -10,13 +10,14 @@ BUNDLES		= bundles/patterns.js bundles/patterns.min.js
 
 GENERATED	= src/lib/depends_parse.js
 
+TESTSOURCES	= $(wildcard tests/specs/*/*.js) \
+			  $(wildcard src/pat/*/tests.js)
 JSHINTEXCEPTIONS = $(GENERATED) \
 		   src/lib/dependshandler.js \
 		   src/lib/htmlparser.js \
-		   src/pat/skeleton.js
+		   src/pat/skeleton.js \
+		   $(TESTSOURCES)
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
-TESTSOURCES	= $(wildcard tests/specs/*/*.js)
-
 
 all:: bundle.js css
 
@@ -76,6 +77,7 @@ all_css:: css
 	@$(SASS) src/pat/checklist/_checklist.scss src/pat/checklist/checklist.css
 	@$(SASS) src/pat/clone/_clone.scss src/pat/clone/clone.css
 	@$(SASS) src/pat/collapsible/_collapsible.scss src/pat/collapsible/collapsible.css
+	@$(SASS) src/pat/date-picker/_date-picker.scss src/pat/date-picker/date-picker.css
 	@$(SASS) src/pat/depends/_depends.scss src/pat/depends/depends.css
 	@$(SASS) src/pat/edit-tinymce/_edit-tinymce.scss src/pat/edit-tinymce/edit-tinymce.css
 	@$(SASS) src/pat/equaliser/_equaliser.scss src/pat/equaliser/equaliser.css
@@ -104,10 +106,10 @@ all_css:: css
 	@echo "Done. Each pattern now has a CSS file."
 
 css::
-	@$(SASS) -I style -I . -t compressed _sass/_patterns.scss style/patterns.min.css
+	@$(SASS) -I style -I . _sass/_patterns.scss style/patterns.css
 
 watch:: 
-	$(SASS) --watch -I style -I . t compressed _sass/_patterns.scss style/patterns.min.css
+	$(SASS) --watch -I style -I . _sass/_patterns.scss:style/patterns.css
 
 ########################################################################
 

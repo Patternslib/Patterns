@@ -15,24 +15,28 @@ define([
     "use strict";
     var log = logger.getLogger("calendar");
     var parser = new Parser("autosuggest");
-    parser.add_argument("words", "");
-    parser.add_argument("words-json");
-    parser.add_argument("ajax-url", "");
-    parser.add_argument("ajax-data-type", "");
-    parser.add_argument("ajax-search-index", "");
+    parser.addArgument("ajax-data-type", "JSON");
+    parser.addArgument("ajax-search-index", "");
+    parser.addArgument("ajax-url", "");
+    parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
+    parser.addArgument("max-selection-size", 0);
+    parser.addArgument("placeholder", function($el) { return $el.attr("placeholder") || "Enter text"; });
+    parser.addArgument("prefill", function($el) { return $el.val(); });
+    parser.addArgument("prefill-json", ""); // JSON format for pre-filling
+    parser.addArgument("words", "");
+    parser.addArgument("words-json");
+
     // "selection-classes" allows you to add custom CSS classes to currently
     // selected elements.
     // The value passed in must be an object with each id being the text inside
     // a selection and value being a list of classes to be added to the
     // selection.
     // e.g. {'BMW': ['selected', 'car'], 'BMX': ['selected', 'bicycle']}
-    parser.add_argument("selection-classes", "");
-    parser.add_argument("pre-fill", function($el) { return $el.val(); });
-    parser.add_argument("data", "");
-    parser.add_argument("maximum-selection-size", 0);
-    parser.add_argument("placeholder", function($el) {
-        return $el.attr("placeholder") || "Enter text";
-    });
+    parser.addArgument("selection-classes", "");
+
+    parser.addAlias("maximum-selection-size", "max-selection-size");
+    parser.addAlias("data", "prefill-json");
+    parser.addAlias("pre-fill", "prefill");
 
     var _ = {
         name: "autosuggest",
@@ -46,7 +50,7 @@ define([
                 placeholder: $el.attr("readonly") ? "" : pat_config.placeholder,
                 tokenSeparators: [","],
                 openOnEnter: false,
-                maximumSelectionSize: pat_config.maximumSelectionSize
+                maximumSelectionSize: pat_config.maxSelectionSize
             };
 
             if (pat_config.selectionClasses) {
@@ -97,6 +101,17 @@ define([
         configureInput: function ($el, pat_config, select2_config) {
             var d, data, words, ids = [], prefill;
 
+            select2_config.createSearchChoice = function(term, data) {
+                if (pat_config.allowNewWords) {
+                    if ($(data).filter(function() { return this.text.localeCompare(term) === 0; }).length === 0) {
+                        return { id: term, text: term };
+                    }
+                }
+                else {
+                    return null;
+                }
+            };
+
             if (pat_config.wordsJson && pat_config.wordsJson.length) {
                 try {
                     words = $.parseJSON(pat_config.wordsJson);
@@ -112,8 +127,8 @@ define([
             }
             select2_config.tags = words;
 
-            if (pat_config.preFill && pat_config.preFill.length) {
-                prefill = pat_config.preFill.split(",");
+            if (pat_config.prefill && pat_config.prefill.length) {
+                prefill = pat_config.prefill.split(",");
                 $el.val(prefill);
                 select2_config.initSelection = function (element, callback) {
                     var i, data = [],
@@ -125,22 +140,22 @@ define([
                 };
             }
 
-            if (pat_config.data.length) {
-                /* We support two types of JSON data for preFill data:
+            if (pat_config.prefillJson.length) {
+                /* We support two types of JSON data for prefill data:
                  *   {"john-snow": "John Snow", "tywin-lannister": "Tywin Lannister"}
                  * or
-                 *   {
+                 *   [
                  *    {"id": "john-snow", "text": "John Snow"},
                  *    {"id": "tywin-lannister", "text":"Tywin Lannister"}
-                 *   }
+                 *   ]
                  */
                 try {
-                    data = $.parseJSON(pat_config.data);
+                    data = $.parseJSON(pat_config.prefillJson);
                     for (d in data) {
                         if (typeof d === "object") {
                             ids.push(d.id);
                         } else {
-                            ids.push(data[d]);
+                            ids.push(d);
                         }
                     }
                     $el.val(ids);
@@ -148,9 +163,9 @@ define([
                         var d, _data = [];
                         for (d in data) {
                             if (typeof d === "object") {
-                                _data.push(d);
+                                _data.push({id: d.id, text: d.text});
                             } else {
-                                _data.push({id: data[d], text: data[d]});
+                                _data.push({id: d, text: data[d]});
                             }
                         }
                         callback(_data);

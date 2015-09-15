@@ -9,8 +9,6 @@
 define([
     "jquery",
     "pat-registry",
-    "jquery.browser",
-    "modernizr",
     "prefixfree",
     "pat-ajax",
     "pat-autofocus",
@@ -27,6 +25,7 @@ define([
     "pat-clone",
     "pat-collapsible",
     "pat-colour-picker",
+    "pat-date-picker",
     "pat-depends",
     "pat-edit-tinymce",
     "pat-equaliser",
@@ -35,7 +34,6 @@ define([
     "pat-form-state",
     "pat-forward",
     "pat-gallery",
-    "pat-syntax-highlight",
     "pat-image-crop",
     "pat-inject",
     "pat-input-change-events",
@@ -47,6 +45,7 @@ define([
     "pat-notification",
     "pat-masonry",
     "pat-placeholder",
+    "pat-scroll",
     "pat-selectbox",
     "pat-slides",
     "pat-slideshow-builder",
@@ -54,10 +53,11 @@ define([
     "pat-stacks",
     "pat-subform",
     "pat-switch",
+    "pat-syntax-highlight",
     "pat-toggle",
     "pat-tooltip",
     "pat-url",
-    "pat-validate",
+    "pat-validation",
     "pat-zoom"
 ], function($, registry) {
     // Since we are in a non-AMD env, register a few useful utilites

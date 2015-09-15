@@ -75,29 +75,29 @@ define(["pat-registry", "pat-clone"], function(registry) {
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone">' +
-                '    <p class="legend clone#{1}" name="item-#{1}">Family member #{1}</p>' +
+                '    <p class="legend clone clone#{1}" hidden name="item-#{1}">Family member #{1}</p>' +
                 '</div>' +
                 '<button class="add-clone">Clone!</button>');
             registry.scan($lab);
             expect($('p.legend').length).toBe(1);
-            expect($('p.legend:last').attr('class')).toBe('legend clone#{1}');
+            expect($('p.legend:last').attr('class')).toBe('legend clone clone#{1}');
 
             $lab.find('.add-clone').click();
             expect($('p.legend').length).toBe(2);
             expect($('p.legend:last').attr('name')).toBe('item-2');
-            expect($('p.legend:last').attr('class')).toBe('legend clone2');
+            expect($('p.legend:last').attr('class')).toBe('legend clone clone2');
 
             $lab.find('.add-clone').click();
             expect($('p.legend').length).toBe(3);
             expect($('p.legend:last').attr('name')).toBe('item-3');
-            expect($('p.legend:last').attr('class')).toBe('legend clone3');
+            expect($('p.legend:last').attr('class')).toBe('legend clone clone3');
         });
 
         it("will replace #{1} in the element id with the number of the clone and remove ids without the substring #{1}", function() {
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone">' +
-                '    <p id="hello world#{1}" class="legend clone#{1}" name="item-#{1}">Family member #{1}</p>' +
+                '    <p id="hello world#{1}" class="clone legend clone#{1}" name="item-#{1}">Family member #{1}</p>' +
                 '</div>' +
                 '<button class="add-clone">Clone!</button>');
             registry.scan($lab);
@@ -113,10 +113,38 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('p.legend:last').attr('id')).toBe('world3');
         });
 
+        it("has a \"clone-element\" argument which is necessary when starting with pre-existing clones", function() {
+            var $lab = $('#lab');
+            $lab.html(
+                '<div class="pat-clone" data-pat-clone="clone-element: .item">' +
+                '    <div class="item"><button type="button" class="remove-clone">Remove</button></div>' +
+                '    <div class="item"><button type="button" class="remove-clone">Remove</button></div>' +
+                '    <div class="item"><button type="button" class="remove-clone">Remove</button></div>' +
+                '</div>' +
+                '<button class="add-clone">Clone!</button>');
+            registry.scan($lab);
+            expect($('div.item').length).toBe(3);
+
+            $lab.find('.add-clone').click();
+            expect($('div.item').length).toBe(4);
+
+            $lab.find('.remove-clone:last').click();
+            expect($('div.item').length).toBe(3);
+
+            $lab.find('.remove-clone:last').click();
+            expect($('div.item').length).toBe(2);
+
+            $lab.find('.remove-clone:last').click();
+            expect($('div.item').length).toBe(1);
+
+            $lab.find('.remove-clone:last').click();
+            expect($('div.item').length).toBe(0);
+        });
+
         it("will remove a clone when .remove-clone inside the clone is clicked.", function() {
             var $lab = $('#lab');
             $lab.html(
-                '<div class="pat-clone">' +
+                '<div class="pat-clone" data-pat-clone="clone-element: .item">' +
                 '    <div class="item"><button type="button" class="remove-clone">Remove</button></div>' +
                 '</div>' +
                 '<button class="add-clone">Clone!</button>');
@@ -136,7 +164,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
         it("allows the remove element to be configured", function() {
             var $lab = $('#lab');
             $lab.html(
-                '<div class="pat-clone" data-pat-clone="remove-element: .custom-remove-class;">' +
+                '<div class="pat-clone" data-pat-clone="clone-element: .item; remove-element: .custom-remove-class;">' +
                 '    <div class="item"><button type="button" class="custom-remove-class">Remove</button></div>' +
                 '</div>' +
                 '<button class="add-clone">Clone!</button>');

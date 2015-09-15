@@ -14,15 +14,15 @@ define([
     var log = logger.getLogger("pat.carousel"),
         parser = new Parser("carousel");
 
-    parser.add_argument("auto-play", false);
-    parser.add_argument("loop", true);
-    parser.add_argument("resize", false);
-    parser.add_argument("expand", false);
-    parser.add_argument("control-arrows", true);
-    parser.add_argument("control-navigation", false);
-    parser.add_argument("control-startstop", false);
-    parser.add_argument("time-delay", 3000);
-    parser.add_argument("time-animation", 600);
+    parser.addArgument("auto-play", false);
+    parser.addArgument("loop", true);
+    parser.addArgument("resize", false);
+    parser.addArgument("expand", false);
+    parser.addArgument("control-arrows", true);
+    parser.addArgument("control-navigation", false);
+    parser.addArgument("control-startstop", false);
+    parser.addArgument("time-delay", 3000);
+    parser.addArgument("time-animation", 600);
 
     var carousel = {
         name: "carousel",

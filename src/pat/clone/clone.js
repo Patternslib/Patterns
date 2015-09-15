@@ -9,10 +9,11 @@ define("pat-clone",[
     "use strict";
     var log = logger.getLogger("pat-clone");
     var parser = new Parser("clone");
-    parser.add_argument("max");
-    parser.add_argument("template", ":first");
-    parser.add_argument("trigger-element", ".add-clone");
-    parser.add_argument("remove-element", ".remove-clone");
+    parser.addArgument("max");
+    parser.addArgument("template", ":first");
+    parser.addArgument("trigger-element", ".add-clone");
+    parser.addArgument("remove-element", ".remove-clone");
+    parser.addArgument("clone-element", ".clone");
     var TEXT_NODE = 3;
 
     return Base.extend({
@@ -20,7 +21,6 @@ define("pat-clone",[
         trigger: ".pat-clone",
 
         init: function patCloneInit($el, opts) {
-            this.num_clones = 0;
             this.options = parser.parse(this.$el, opts);
             if (this.options.template.lastIndexOf(":", 0) === 0) {
                 this.$template = this.$el.find(this.options.template);
@@ -28,7 +28,13 @@ define("pat-clone",[
                 this.$template = $(this.options.template);
             }
             $(document).on("click", this.options.triggerElement, this.clone.bind(this));
-            this.$el.find(this.options.removeElement).on("click", this.remove.bind(this, this.$el));
+
+            var $clones = this.$el.find(this.options.cloneElement);
+            this.num_clones = $clones.length;
+            $clones.each(function (idx, clone) {
+                var $clone = $(clone);
+                $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
+            }.bind(this));
         },
 
         clone: function clone() {
@@ -37,7 +43,7 @@ define("pat-clone",[
                 return;
             }
             this.num_clones += 1;
-            var $clone = this.$template.clone();
+            var $clone = this.$template.safeClone();
             var ids = ($clone.attr("id") || "").split(" ");
             $clone.removeAttr("id").removeClass("cant-touch-this");
             $.each(ids, function (idx, id) {
@@ -46,14 +52,18 @@ define("pat-clone",[
                 if (id.indexOf("#{1}") !== -1) {
                     $clone.attr("id",
                         $clone.attr("id") ? $clone.attr("id") + " " : "" +
-                            id.replace("#{1}", this.num_clones+1));
+                            id.replace("#{1}", this.num_clones));
                 }
             }.bind(this));
+
             $clone.appendTo(this.$el);
             $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
             $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
+
             $clone.removeAttr("hidden");
             registry.scan($clone);
+
+            $clone.trigger("pat-update", {'pattern':"clone", '$el': $clone});
             if (this.num_clones >= this.options.max) {
                 $(this.options.triggerElement).hide();
             }
@@ -65,15 +75,15 @@ define("pat-clone",[
             var callback = function (idx, attr) {
                 if (attr.name === "type" || !$el.attr(attr.name)) { return; }
                 try {
-                    $el.attr(attr.name, $el.attr(attr.name).replace("#{1}", this.num_clones+1));
+                    $el.attr(attr.name, $el.attr(attr.name).replace("#{1}", this.num_clones));
                 } catch (e) {
                     log.warn(e);
                 }
             };
             if (el.nodeType !== TEXT_NODE) {
                 $.each(el.attributes, callback.bind(this));
-            } else {
-                el.data = el.data.replace("#{1}", this.num_clones+1);
+            } else if (el.data.length) {
+                el.data = el.data.replace("#{1}", this.num_clones);
             }
         },
 

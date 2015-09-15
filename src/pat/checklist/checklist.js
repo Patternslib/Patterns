@@ -11,8 +11,8 @@ define([
     "pat-registry"
 ], function($, dummy, Parser, registry) {
     var parser = new Parser("checklist");
-    parser.add_argument("select", ".select-all");
-    parser.add_argument("deselect", ".deselect-all");
+    parser.addArgument("select", ".select-all");
+    parser.addArgument("deselect", ".deselect-all");
 
     var _ = {
         name: "checklist",

@@ -4,26 +4,28 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012 Simplon B.V. - Wichert Akkerman
  * Copyright 2013 Marko Durkovic
+ * Copyright 2014-2015 Syslab.com GmbH - JC Brand 
  */
 define([
     "jquery",
     "pat-registry",
+    "pat-base",
     "pat-logger",
     "pat-parser",
     "pat-input-change-events",
     "pat-utils"
-], function($, registry, logging, Parser, input_change_events, utils) {
+], function($, registry, Base, logging, Parser, input_change_events, utils) {
     var log = logging.getLogger("autosubmit"),
         parser = new Parser("autosubmit");
 
     // - 400ms -> 400
     // - 400 -> 400
     // - defocus
-    parser.add_argument("delay", "400ms");
+    parser.addArgument("delay", "400ms");
 
-    var _ = {
+    return Base.extend({
         name: "autosubmit",
-        trigger: ".pat-autosubmit :input",
+        trigger: ".pat-autosubmit",
         parser: {
             parse: function($el, opts) {
                 var cfg = parser.parse($el, opts);
@@ -34,69 +36,69 @@ define([
             }
         },
 
-        init: function($el, opts) {
-            if ($el.length > 1)
-                return $el.each(function() { _.init($(this), opts); });
+        init: function() {
+            this.options = this.parser.parse(this.$el, arguments[1]);
+            input_change_events.setup(this.$el, "autosubmit");
+            this.registerListeners();
+            this.registerTriggers();
+            return this.$el;
+        },
 
-            // handle the form itself
-            if ($el.is("form,.pat-subform")) {
-                if ($el.data("pat-autosubmit-initialized")) {
-                    return $el;
-                }
-                input_change_events.setup($el, "autosubmit");
-                $el.on("input-change-delayed.pat-autosubmit", _.onInputChange)
-                    .data("pat-autosubmit-initialized", true);
-                return $el;
-            }
+        registerListeners: function() {
+            this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
+            this.registerSubformListeners();
+            this.$el.on('patterns-injected', this.registerSubformListeners.bind(this));
+        },
 
-            // make sure the form is initialized if it does not have the pat-autosubmit class
-            var $form = $el.parents("form,.pat-subform").first();
-            if (!$form.data("pat-autosubmit-initialized")) {
-                _.init($form);
-            }
+        registerSubformListeners: function(ev) {
+            /* If there are subforms, we need to listen on them as well, so
+             * that only the subform gets submitted if an element inside it
+             * changes.
+             */
+            var $el = typeof ev !== "undefined" ? $(ev.target) : this.$el;
+            $el.find(".pat-subform").each(function (idx, el) {
+                $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
+            }.bind(this));
+        },
 
-            var cfg = _.parser.parse($el, opts),
-                isText = $el.is("input:text, input[type=search], textarea");
-
-            if (cfg.delay === "defocus" && !isText) {
+        registerTriggers: function() {
+            var isText = this.$el.is("input:text, input[type=search], textarea");
+            if (this.options.delay === "defocus" && !isText) {
                 log.error("The defocus delay value makes only sense on text input elements.");
-                return $el;
+                return this.$el;
             }
-
-            if (cfg.delay === "defocus") {
-                $el.on("input-defocus.pat-autosubmit", function() {
-                    $el.trigger("input-change-delayed");
+            if (this.options.delay === "defocus") {
+                this.$el.on("input-defocus.pat-autosubmit", function(ev) {
+                    $(ev.target).trigger("input-change-delayed");
                 });
-            } else if (cfg.delay > 0) {
-                $el.on("input-change.pat-autosubmit", utils.debounce(function() {
-                    $el.trigger("input-change-delayed");
-                }, cfg.delay));
+            } else if (this.options.delay > 0) {
+                this.$el.on("input-change.pat-autosubmit", utils.debounce(function(ev) {
+                    $(ev.target).trigger("input-change-delayed");
+                }, this.options.delay));
             } else {
-                $el.on("input-change.pat-autosubmit", function() {
-                    $el.trigger("input-change-delayed");
+                this.$el.on("input-change.pat-autosubmit", function(ev) {
+                    $(ev.target).trigger("input-change-delayed");
                 });
             }
-            return $el;
         },
 
         destroy: function($el) {
             input_change_events.remove($el, "autosubmit");
-            $el.removeData("pat-autosubmit-initialized");
-            $el.off(".pat-autosubmit")
-                .find(":input").off(".pat-autosubmit");
+            if (this.$el.is("form")) {
+                this.$el.find(".pat-subform").addBack(this.$el).each(function (idx, el) {
+                    $(el).off(".pat-autosubmit");
+                });
+            } else {
+                $el.off(".pat-autosubmit");
+            }
         },
 
         onInputChange: function(ev) {
             ev.stopPropagation();
-
             $(this).submit();
-
             log.debug("triggered by " + ev.type);
         }
-    };
-
-    registry.register(_);
-    return _;
+    });
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

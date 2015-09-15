@@ -8,15 +8,15 @@ define([
     var log = logger.getLogger("pat.image-crop"),
         parser = new Parser("image-crop");
 
-    parser.add_argument("preview-id", "");
-    parser.add_argument("preview-height", 0);
-    parser.add_argument("preview-width", 0);
-    parser.add_argument("aspect-ratio", 1);
-    parser.add_argument("form-id", "");
-    parser.add_argument("initial-sel", "0 0 0 0");
-    parser.add_argument("min-size", "0 0");
-    parser.add_argument("max-size", "0 0");
-    parser.add_argument("input-prefix", "");
+    parser.addArgument("preview-id", "");
+    parser.addArgument("preview-height", 0);
+    parser.addArgument("preview-width", 0);
+    parser.addArgument("aspect-ratio", 1);
+    parser.addArgument("form-id", "");
+    parser.addArgument("initial-sel", "0 0 0 0");
+    parser.addArgument("min-size", "0 0");
+    parser.addArgument("max-size", "0 0");
+    parser.addArgument("input-prefix", "");
 
     var _ = {
         name: "image-crop",
