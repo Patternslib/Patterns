@@ -49,6 +49,11 @@ define([
             this.$inputs.on('change.pat-validation', function (ev) { this.validateElement(ev.target); }.bind(this));
             this.$el.on('submit.pat-validation', this.validateForm.bind(this));
             this.$el.on('pat-update.pat-validation', this.onPatternUpdate.bind(this));
+            this.$el.on("click.pat-validation", ".close-panel", function (ev) {
+                if (!$(ev.target).hasClass('validate-ignore')) {
+                    this.validateForm(ev);
+                }
+            }.bind(this));
         },
 
         getFieldType: function (input) {
