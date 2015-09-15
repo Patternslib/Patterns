@@ -158,5 +158,36 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             $el.submit();
             expect($el.find('em.warning').length).toBe(0);
         });
+
+        it("removes a field's error message if it becomes valid", function() {
+            /* Check that an error message appears after the field with invalid data.
+             * Also check that the message gets removed if the field's data
+             * becomes valid, but that other messages are *not* removed.
+             */
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="number" name="integer1" data-pat-validation="type: integer;">'+
+                    '<input type="number" name="integer2" data-pat-validation="type: integer;">'+
+                '</form>');
+            var $input1 = $el.find(':input[name="integer1"]');
+            $input1.val(4.5);
+            pattern.init($el);
+            $input1.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This value must be an integer");
+
+            var $input2 = $el.find(':input[name="integer2"]');
+            $input2.val(5.1);
+            $input2.trigger('change');
+            expect($el.find('em.warning').length).toBe(2);
+            expect($input2.next('em.warning').length).toBe(1);
+            expect($input2.next('em.warning').text()).toBe("This value must be an integer");
+
+            $input2.val(5);
+            $input2.trigger('change');
+            expect($input2.next('em.warning').length).toBe(0);
+            expect($input1.next('em.warning').length).toBe(1);
+            expect($el.find('em.warning').length).toBe(1);
+        });
     });
 });

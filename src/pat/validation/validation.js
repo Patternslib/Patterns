@@ -288,7 +288,7 @@ define([
         findErrorMessages: function(el) {
             var $el = $(el),
                 selector = "em.validation.message",
-                $messages = $el.siblings(selector);
+                $messages = $el.next(selector);
             if ($el.is("[type=radio],[type=checkbox]")) {
                 var $fieldset = $el.closest("fieldset.checklist");
                 if ($fieldset.length)
