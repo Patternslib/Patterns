@@ -302,7 +302,7 @@ define([
             this.errors = this.errors - $errors.length;
             $errors.remove();
             if (this.errors < 1 && this.options.disableSelector) {
-                $(this.options.disableSelector).removeProp('disabled').removeClass('disabled');
+                $(this.options.disableSelector).prop('disabled', false).removeClass('disabled');
             }
         },
 

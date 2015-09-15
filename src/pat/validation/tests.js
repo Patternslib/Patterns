@@ -189,5 +189,27 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($input1.next('em.warning').length).toBe(1);
             expect($el.find('em.warning').length).toBe(1);
         });
+
+        it("can disable certain form elements when validation fails", function() {
+            /* Tests the disable-selector argument */
+            var $el = $(
+                '<form class="pat-validation" data-pat-validation="disable-selector:#form-buttons-create">'+
+                    '<input type="number" name="integer" data-pat-validation="type: integer;">'+
+                    '<button id="form-buttons-create" type="submit">Submit</button>'+
+                '</form>');
+            $('#lab').append($el);
+            var $input = $el.find(':input');
+            $input.val(4.5);
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This value must be an integer");
+            expect($el.find('#form-buttons-create')[0].disabled).toBe(true);
+
+            $input.val(5);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+            expect($el.find('#form-buttons-create')[0].disabled).toBe(false);
+        });
     });
 });
