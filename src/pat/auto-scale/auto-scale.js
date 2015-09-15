@@ -6,9 +6,10 @@
  */
 define([
     "jquery",
+    "jquery.browser",
     "pat-registry",
     "pat-parser"
-], function($, registry, Parser) {
+], function($, dummy, registry, Parser) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
     parser.addArgument("min-width", 0);

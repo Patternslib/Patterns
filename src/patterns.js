@@ -9,8 +9,6 @@
 define([
     "jquery",
     "pat-registry",
-    "jquery.browser",
-    "modernizr",
     "prefixfree",
     "pat-ajax",
     "pat-autofocus",

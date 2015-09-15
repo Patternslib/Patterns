@@ -1,7 +1,8 @@
 define([
     "jquery",
+    "jquery.browser",
     "pat-registry"
-], function($, registry) {
+], function($, dummy, registry) {
     var legend = {
         name: "legend",
         trigger: "legend",
