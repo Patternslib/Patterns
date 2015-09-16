@@ -1,20 +1,11 @@
 Font license info
 
 
-## Iconic
-
-   Copyright (C) 2012 by P.J. Onori
-
-   Author:    P.J. Onori
-   License:   SIL (http://scripts.sil.org/OFL)
-   Homepage:  http://somerandomdude.com/work/iconic/
-
-
 ## Entypo
 
    Copyright (C) 2012 by Daniel Bruce
 
-   Author:    Daniel Bruce
+   Author:    Daniel Buce
    License:   SIL (http://scripts.sil.org/OFL)
    Homepage:  http://www.entypo.com
 
@@ -24,16 +15,25 @@ Font license info
    Copyright (C) 2012 by Dave Gandy
 
    Author:    Dave Gandy
-   License:   SIL ()
+   License:   CC BY 3.0 (http://creativecommons.org/licenses/by/3.0/)
    Homepage:  http://fortawesome.github.com/Font-Awesome/
 
 
-## Elusive
+## Typicons
 
-   Copyright (C) 2013 by Aristeides Stathopoulos
+   (c) Stephen Hutchings 2012
 
-   Author:    Aristeides Stathopoulos
+   Author:    Stephen Hutchings
+   License:   CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0/)
+   Homepage:  http://typicons.com/
+
+
+## Web Symbols
+
+   Copyright (c) 2011 by Just Be Nice studio. All rights reserved.
+
+   Author:    Just Be Nice studio
    License:   SIL (http://scripts.sil.org/OFL)
-   Homepage:  http://aristeides.com/
+   Homepage:  http://www.justbenicestudio.com/studio/websymbols/
 
 
