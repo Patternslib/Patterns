@@ -20,8 +20,7 @@ again. You can also use shorthand notation for this pattern:
       Working…
     </div>
 
-The default attribute is *class*, so you do not need to specify that
-manually.
+The default attribute is *class*, so you do not need to specify that manually.
 
 When updating attributes the value is set if the attribute does not
 exist or has a different value, or removed if the attribute already has
