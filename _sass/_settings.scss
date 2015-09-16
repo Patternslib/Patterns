@@ -2,7 +2,7 @@
 // with Fontello.com Make sure the fontello folder is placed in your
 // style folder
 
-@import "/style/fontello/css/fontello.css";
+@import "/patternslib/style/fontello/css/fontello.css";
 
 // Assets
 //@import url(http://fonts.googleapis.com/css?family=Sorts+Mill+Goudy:400,400italic);
@@ -32,7 +32,7 @@ $glyph-checkbox: "\e808";
 $glyph-checkbox-active: "\e809";
 $glyph-radio-button: "\e807";
 $glyph-radio-button-active: "\e806";
-$glyph-close: "\e805";
+$glyph-close: "\e703";
 
 // We use these to control various global styles
 $body-font-family: 'Source Sans Pro', sans-serif;
@@ -49,3 +49,5 @@ $cat-layout: #a1ced2;
 
 $break-small: 768px !default;
 $break-large: 769px !default;
+
+
