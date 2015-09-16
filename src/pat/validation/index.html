@@ -8,11 +8,12 @@
     <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
-      <h3>Vertical form</h3>
       <form class="pat-validation vertical" method="get" action="#" novalidate>
           <fieldset class="vertical">
             <label>Full name <input type="text" name="name" required="required"/></label>
+            
             <label>Age <input type="number" name="age" min="16" max="65" required="required"/></label>
+
             <fieldset class="pat-checklist radio">
               <legend>Favourite colour</legend>
               <label><input name="colour" required="required" type="radio" value="blue"/> Blue</label>
@@ -20,54 +21,30 @@
               <label><input name="colour" required="required" type="radio" value="red"/> Red</label>
               <label><input name="colour" required="required" type="radio" value="yellow"/> yellow</label>
             </fieldset>
+
+            <label>Planning start
+                <input
+                    type="date" class="pat-date-picker"
+                    name="measure.planning_start:records"
+                    data-pat-date-picker="behavior: native"
+                    data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+                    id="planning-start"
+                    value="2015-10-10"/>
+            </label>
+
+            <label>Planning end
+                <input
+                    type="date" class="pat-date-picker" name="measure.planning_end:records"
+                    data-pat-date-picker="behavior: native"
+                    data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
+                    id="planning-end"
+                    value="2015-09-10"/>
+            </label>
+            
             <fieldset class="buttons">
               <button class="pat-button">Test</button>
             </fieldset>
           </fieldset>
       </form>
-
-      <h3>Horizontal form</h3>
-      <form class="pat-validation horizontal" method="get" action="#" novalidate>
-        <fieldset class="horizontal">
-          <label>Full name <input type="text" name="name" required="required"/></label>
-          <label>Age <input type="number" name="age" min="16" max="65" required="required"/></label>
-          <fieldset class="group pat-checklist radio">
-            <legend>Favourite colour</legend>
-            <label><input name="colour" required="required" type="radio" value="blue"/> Blue</label>
-            <label><input name="colour" required="required" type="radio" value="pink"/> Pink</label>
-            <label><input name="colour" required="required" type="radio" value="red"/> Red</label>
-            <label><input name="colour" required="required" type="radio" value="yellow"/> yellow</label>
-          </fieldset>
-          <fieldset class="buttons">
-            <button class="pat-button">Test</button>
-          </fieldset>
-        </fieldset>
-      </form>
-
-        <h3>Date fields</h3>
-          <form class="pat-validation" method="get" action="#" novalidate>
-            <fieldset class="horizontal">
-              <label>Planning start
-                  <input
-                      type="date" class="pat-date-picker"
-                      name="measure.planning_start:records"
-                      data-pat-date-picker="behavior: native"
-                      data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
-                      id="planning-start"
-                      value="2015-10-10"/>
-              </label>
-              <label>Planning end
-                  <input
-                      type="date" class="pat-date-picker" name="measure.planning_end:records"
-                      data-pat-date-picker="behavior: native"
-                      data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
-                      id="planning-end"
-                      value="2015-09-10"/>
-              </label>
-              <fieldset class="buttons">
-                <button class="pat-button">Test</button>
-              </fieldset>
-            </fieldset>
-        </form>
   </body>
 </html>
