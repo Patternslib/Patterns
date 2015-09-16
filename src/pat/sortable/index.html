@@ -6,32 +6,25 @@
 	<link rel="stylesheet" href="/style/common.css" type="text/css">
     <script src="/main.js" type="text/javascript" charset="utf-8"></script>
 	<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
-    <!-- XXX: Can these styles be removed? -->
-    <style>
-        .button {
-            height: 20px;
-        }
-        .sortable p.legend {
-            font-weight: bold;
-            color: darkred;
-        }
-        .pat-sortable .button-cluster {
-            display: none;
-        }
-        .nojs .pat-sortable .button-cluster {
-            display: block;
-        }
-    </style>
 </head>
 <body>
-    <p>Using pat-sortable on a form element:</p>
     <ul class="pat-sortable">
-        <li>3</li>
-        <li>5</li>
-        <li>4</li>
-        <li>1</li>
-        <li>6</li>
-        <li>2</li>
+        <li class="sortable-item">3</li>
+        <li class="sortable-item">5</li>
+        <li class="sortable-item">4</li>
+        <li class="sortable-item">1</li>
+        <li class="sortable-item">6</li>
+        <li class="sortable-item">2</li>
     </ul>
+
+    <style>
+        .sortable-item {
+            margin-bottom: -3px;
+            padding: 0.2em 0.8em;
+            /*border-radius: 0.2em;*/
+            background-color: #efefef;
+            border: 3px solid silver;
+        }
+    </style>
 </body>
 </html>

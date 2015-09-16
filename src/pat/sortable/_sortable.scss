@@ -1,58 +1,42 @@
 .pat-sortable {
 	
-	ul {
-		list-style: none;
-		padding: 0;
-		margin-bottom: 24px;
+	.sortable-item {
+		&.dragged {
+			color: #dedede;
+		}
+
+		&.drop-target-above {
+			border-top: 3px solid #ff0000;
+		}
+
+		&.drop-target-below {
+			border-bottom: 3px solid #ff0000;
+		}
+
+		.handle {
+			background-color: #808080;
+			display: none;
+			float: right;
+			height: 1.5em;
+			// width: 1.5em;
+			margin: 0.1em;
+			cursor: move;
+			line-height: 1.5em;
+			text-decoration: none;
+			border-radius: 0.8em;
+
+			&:before {
+				content: "Drag";
+				// width: 100%;
+				text-align: center;
+				padding: 0 0.8em;
+				color: white;
+				display: inline-block;
+			}
+		}
+
+		&:hover .handle {
+			display: inline-block;
+		}
 	}
-
-	ul.scrolling {
-	        height: 100px;
-	        width: 265px;
-	        overflow-y: scroll;
-	}
-
-	li {
-		border: 1px solid #dedede;
-		width: 250px;
-		-webkit-transition: all 0.7s;
-		-moz-transition: all 0.7s;
-		-ms-transition: all 0.7s;
-		-o-transition: all 0.7s;
-		transition: all 0.7s;
-		-webkit-box-shadow: 0 0 0 rgba(0,0,0,0.4);
-		-moz-box-shadow: 0 0 0 rgba(0,0,0,0.4);
-		box-shadow: 0 0 0 rgba(0,0,0,0.4);
-		-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
-		-moz-box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
-		box-shadow: inset 0 0 5px rgba(0,0,0,0.15);
-	}
-
-	li.dragged {
-		color: #dedede;
-	}
-
-	li.drop-target-above {
-		border-top: 1px solid #ff0000;
-	}
-
-	li.drop-target-below {
-		border-bottom: 1px solid #ff0000;
-	}
-
-	.handle {
-		background-color: #808080;
-		display: none;
-		float: right;
-		height: 24px;
-		width: 20px;
-		cursor: move;
-	}
-
-	li:hover .handle {
-		display: inline-block;
-	}
-
-
-
 }
