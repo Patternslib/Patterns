@@ -8,117 +8,108 @@
         <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js"></script>
 	</head>
 	<body>
-		<section>
-			<h1>Injection</h1>
-			<section class="description">
-				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
-			</section>
-			<section class="demo">
-			<h2>Demo</h2>
-                <div id="demo">
-				<p><a href="pattern-test-response.html#demo-content"
-				      class="pat-inject">
-					Minimal inject into demo-content div</a></p>
-		
-				<div id="demo-content">
-					<p>Content will appear in this div</p>
-				</div>
-				<hr />
-				<ul>
-					<li data-pat-inject="source: #notes > .note1::element">
-						Add note1 to the
-						<a href="pattern-test-response.html"
-						   class="pat-inject"
-						   data-pat-inject="target: #list::before">top</a>
-						or
-						<a href="pattern-test-response.html"
-						   class="pat-inject"
-						   data-pat-inject="target: #list::after">bottom</a>
-						of the list.
-					</li>
-					<li data-pat-inject="source: #notes > .note2::element">
-						Add note2 to the
-						<a href="pattern-test-response.html"
-						   class="pat-inject"
-						   data-pat-inject="target:#list::before">top</a>
-						or
-						<a href="pattern-test-response.html"
-						   class="pat-inject"
-						   data-pat-inject="target: #list::after">bottom</a>
-						or
-						<a href="pattern-test-response.html"
-						   class="pat-inject"
-						   data-pat-inject="target: #list > .marker::element::after">after each marker</a>
-						of the list.
-					</li>
-					<li data-pat-inject="source: #notes > .marker::element">
-						Add new marker to the
-						<a href="pattern-test-response.html"
-						   class="pat-inject" data-pat-inject="target: #list::after">bottom</a>
-						of the list.
-					</li>
-				</ul>
-		
-				<ul id="list">
-					<li class="marker">Will be build up to the top and bottom (marker)</li>
-				</ul>
-		
-				<p>
+		<article class="pat-rich">
+			<p>
+				<a href="pattern-test-response.html#demo-content"
+			      class="pat-inject">
+				Minimal inject into demo-content div</a>
+			</p>
+
+			<div id="demo-content">
+				<p>Content will appear in this div</p>
+			</div>
+			<hr />
+			<ul>
+				<li data-pat-inject="source: #notes > .note1::element">
+					Add note1 to the
 					<a href="pattern-test-response.html"
 					   class="pat-inject"
-					   data-pat-inject="#empty-list #list::element
-							    && #empty-content #demo-content">
-						Empty notices and content</a>
-				</p>
+					   data-pat-inject="target: #list::before">top</a>
+					or
+					<a href="pattern-test-response.html"
+					   class="pat-inject"
+					   data-pat-inject="target: #list::after">bottom</a>
+					of the list.
+				</li>
+				<li data-pat-inject="source: #notes > .note2::element">
+					Add note2 to the
+					<a href="pattern-test-response.html"
+					   class="pat-inject"
+					   data-pat-inject="target:#list::before">top</a>
+					or
+					<a href="pattern-test-response.html"
+					   class="pat-inject"
+					   data-pat-inject="target: #list::after">bottom</a>
+					or
+					<a href="pattern-test-response.html"
+					   class="pat-inject"
+					   data-pat-inject="target: #list > .marker::element::after">after each marker</a>
+					of the list.
+				</li>
+				<li data-pat-inject="source: #notes > .marker::element">
+					Add new marker to the
+					<a href="pattern-test-response.html"
+					   class="pat-inject" data-pat-inject="target: #list::after">bottom</a>
+					of the list.
+				</li>
+			</ul>
 
-				<p>
-                    <a href="#local-content" class="pat-inject" data-pat-inject="target: self::element">Inject an element from the same page</a>
-				</p>
-                <p id="local-content" style="display: none">
-                    This is local content
-                </p>
-		
-				<hr />
-		
-				<div id="panel1">
-					<ul data-pat-inject="target: #panel2">
-						<li><a href="pattern-test-response.html#cata-panel2"
-						       class="pat-inject">
-							Cat A</a></li>
-						<li><a href="pattern-test-response.html#catb-panel2"
-						       class="pat-inject">
-							Cat B</a></li>
-						<li>etc...</li>
-					</ul>
-				</div>
-				<div id="panel2"></div>
-				<div id="panel3"></div>
-				<div id="panel4"></div>
-                </div>
+			<ul id="list">
+				<li class="marker">Will be build up to the top and bottom (marker)</li>
+			</ul>
 
-				<hr />
+			<p>
+				<a href="pattern-test-response.html"
+				   class="pat-inject"
+				   data-pat-inject="#empty-list #list::element
+						    && #empty-content #demo-content">
+					Empty notices and content</a>
+			</p>
 
-				<section id="notes">
-					A form with multiple buttons, and different <code>formaction</code>
-					attributes.  All three buttons inject their content into the left colum
-					and underneath this section.
-					<ul>
-						<li>The default button injects Channel 1</li>
-						<li>The cut button injects from the inject-sources.html file</li>
-						<li>The copy button injects fin!</li>
-					</ul>
-					<form action="pattern-test-response.html#ch1-panel4" class="pat-inject"
-					 data-pat-inject="target: section.description && target: #notes::after">
-						<input type="submit" value="default" />
-						<button title="Cut" formaction="inject-sources.html#srctgt" value="cut" name="batch-function" type="submit">Cut</button>
-						<button title="Copy" formaction="pattern-test-response.html#listToUpdate3" value="copy" name="batch-function" type="submit">Copy</button>
-					</form>
-				</section>
+			<p>
+	            <a href="#local-content" class="pat-inject" data-pat-inject="target: self::element">Inject an element from the same page</a>
+			</p>
+	        <p id="local-content" style="display: none">
+	            This is local content
+	        </p>
 
-			</section>
-			<section class="documentation">
-				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
-			</section>
+        </article>
+
+		<hr />
+
+		<div id="panel1">
+			<ul data-pat-inject="target: #panel2">
+				<li><a href="pattern-test-response.html#cata-panel2"
+				       class="pat-inject">
+					Cat A</a></li>
+				<li><a href="pattern-test-response.html#catb-panel2"
+				       class="pat-inject">
+					Cat B</a></li>
+				<li>etc...</li>
+			</ul>
+		</div>
+		<div id="panel2"></div>
+		<div id="panel3"></div>
+		<div id="panel4"></div>
+        </div>
+
+		<hr />
+
+		<section id="notes">
+			A form with multiple buttons, and different <code>formaction</code>
+			attributes.  All three buttons inject their content into the left colum
+			and underneath this section.
+			<ul>
+				<li>The default button injects Channel 1</li>
+				<li>The cut button injects from the inject-sources.html file</li>
+				<li>The copy button injects fin!</li>
+			</ul>
+			<form action="pattern-test-response.html#ch1-panel4" class="pat-inject"
+			 data-pat-inject="target: section.description && target: #notes::after">
+				<input type="submit" value="default" />
+				<button title="Cut" formaction="inject-sources.html#srctgt" value="cut" name="batch-function" type="submit">Cut</button>
+				<button title="Copy" formaction="pattern-test-response.html#listToUpdate3" value="copy" name="batch-function" type="submit">Copy</button>
+			</form>
 		</section>
 	</body>
 </html>
