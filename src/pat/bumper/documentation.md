@@ -9,7 +9,7 @@ Below is a simple example of a bumper.
        Bumper content
     </div>
 
-When the user starts scrolling the page and an edge of the above div reaches an
+When the user starts scrolling the page and the top edge of the above div reaches the top
 edge of the viewport, a `bumped` class will be added. For this to work the pattern
 will automatically set the ``position`` of the div to ``relative``.
 
