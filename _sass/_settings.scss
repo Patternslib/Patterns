@@ -20,6 +20,8 @@ $colour-alert: red !default;
 $colour-success: green !default;
 $colour-notice: #FFFFD6 !default;
 $colour-warning: orange !default;
+$colour-error: red !default;
+$colour-info: $colour-notice !default;
 
 // Font treatment
 $base-font-size: 18px;
