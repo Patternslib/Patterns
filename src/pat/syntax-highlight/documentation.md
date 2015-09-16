@@ -9,7 +9,6 @@ to be included in a page.
 
 This pattern will add automatic syntax highlighting to these snippets of code.
 
-
 Simply add the `pat-syntax-highlight` class to a DOM element surrounding the code
 snippet. Usually you'll want to use the `<pre>` (Preformatted Text) element for
 this.
@@ -29,3 +28,10 @@ For example:
         }
     </pre>
 ```
+
+### HTML Markup
+
+Note that HTML markup inside a `<pre class="pat-syntax-highlight">` element still needs to be escaped.
+This means that `<` needs to be escaped to `&lt;` and `>` to `&gt;`. Otherwise the
+browser will attempt to render the markup instead of displaying the literal
+text.

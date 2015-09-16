@@ -15,7 +15,7 @@ pre .atn, code .atn { color: #bdb76b; } /* html/xml attribute name  - khaki */
 pre .atv, code .atv { color: #65B042; } /* html/xml attribute value - green */
 pre .dec, code .dec { color: #3387CC; } /* decimal - blue */
 
-pre.prettyprint, 
+pre.prettyprint,
 code.prettyprint {
 	background-color: rgba(0,0,0,0.2);
 	-moz-border-radius: 0.3em;
@@ -24,6 +24,11 @@ code.prettyprint {
 	-ms-border-radius: 0.3em;
 	-khtml-border-radius: 0.3em;
 	border-radius: 0.3em;
+}
+
+pre.prettyprint.light-bg,
+code.prettyprint.light-bg {
+	background-color: rgba(0,0,0,0.9);
 }
 
 pre.prettyprint {

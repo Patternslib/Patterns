@@ -8,15 +8,8 @@
     <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-	<section>
-		<h1>Syntax Highlighting</h1>
-        <section class="description">
-            <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
-        </section>
-        <section class="demo">
-            <h2>Demo</h2>
-            <div id="demo">
-                <pre class="pat-syntax-highlight">
+    <h2>Sample output:</h2>
+    <pre class="pat-syntax-highlight light-bg">
 var pattern = registry.patterns[name];
 if (pattern.transform) {
     try {
@@ -25,12 +18,6 @@ if (pattern.transform) {
         if (dont_catch) { throw(e); }
         log.error("Transform error for pattern" + name, e);
     }
-}
-            </pre>
-        </section>
-        <section class="documentation">
-            <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
-        </section>
-	<section>
+    </pre>
 </body>
 </html>
