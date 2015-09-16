@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="/style/common.css" type="text/css">
     <script src="/main.js" type="text/javascript" charset="utf-8"></script>
 	<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+    <!-- XXX: Can these styles be removed? -->
     <style>
         .button {
             height: 20px;
@@ -23,25 +24,14 @@
     </style>
 </head>
 <body>
-	<section class="description">
-		<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-	</section>
-	<section class="demo">
-		<h2>Demo</h2>
-        <div id="demo">
-            <p>Using pat-sortable on a form element:</p>
-            <ul class="pat-sortable">
-                <li>3</li>
-                <li>5</li>
-                <li>4</li>
-                <li>1</li>
-                <li>6</li>
-                <li>2</li>
-            </ul>
-        </div>
-	</section>
-	<section class="documentation">
-		<a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
-	</section>
+    <p>Using pat-sortable on a form element:</p>
+    <ul class="pat-sortable">
+        <li>3</li>
+        <li>5</li>
+        <li>4</li>
+        <li>1</li>
+        <li>6</li>
+        <li>2</li>
+    </ul>
 </body>
 </html>
