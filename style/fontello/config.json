@@ -49,6 +49,12 @@
       ]
     },
     {
+      "uid": "e82cedfa1d5f15b00c5a81c9bd731ea2",
+      "css": "info-circle",
+      "code": 925700,
+      "src": "fontawesome"
+    },
+    {
       "uid": "422e07e5afb80258a9c4ed1706498f8a",
       "css": "circle-empty",
       "code": 925696,

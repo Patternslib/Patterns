@@ -1,13 +1,181 @@
-/* @group Tooltip */
+.tooltip-container {
+  position: absolute;
+  z-index: 9998;
+  border: none;
+  min-height: 50px;
+  overflow: visible;
+  overflow-x: visible;
+  margin: 0;
+  @include screen-size(large) {
+    border: 1px solid silver;
+    -webkit-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+    font-size: 0.8em;
+    line-height: 1.5em;
+    border-radius: 4px;
+    width: 300px;
+  }
 
-.tooltip-container .close-panel{
+  > div {
+    padding: 1em;
+    z-index: 1;
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    min-height: 60px;
+    background-color: white;
+    overflow: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    &:after {
+      content: " ";
+      display: block;
+      clear: both;
+    }
+  }
+
+  &.bl .pointer, &.bm .pointer, &.br .pointer {
+    margin-top: -12px;
+  }
+  &.lt .pointer, &.lm .pointer, &.lb .pointer {
+    margin-left: 12px;
+  }
+  &.tl .pointer, &.tm .pointer, &.tr .pointer {
+    margin-top: 12px;
+  }
+  &.rt .pointer, &.rm .pointer, &.rb .pointer {
+    margin-left: -12px;
+  }
+  &.lt .pointer, &.rt .pointer {
+    margin-top: 20px;
+  }
+  &.lb .pointer, &.rb .pointer {
+    margin-top: -20px;
+  }
+  &.tl .pointer, &.bl .pointer {
+    margin-left: 20px;
+  }
+  &.tr .pointer, &.br .pointer {
+    margin-left: -20px;
+  }
+  
+  // Variations
+
+  &.info {
+    > div {
+      background-color: $colour-notice;
+    }
+
+    .pointer {
+      background-color: $colour-notice;
+    }
+  }
+
+  &.rich {
+    > div {
+      @include pat-rich();
+    }
+  }
+
+  &.code {
+    > div {
+      background-color: black;
+    }
+
+    .pointer {
+      background-color: black;
+    }
+  }
+
+  &.large {
+    @include screen-size(large) {
+      width: 50%;
+    }
+  }
+
+  // Controls and other elements
+  
+  h4 {
+    color: #3b3b3b;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  @include screen-size(large) {
+
+    .close-panel-mobile {
+      display: none;
+    }
+
+  }
+
+  .close-panel-mobile {
     position: absolute;
-    right: 5px;
-    top: 5px;
+    color: gray;
+    top: 9px;
+    right: 9px;
+    line-height: 22px;
+    height: 22px;
+    width: 22px;
+    padding: 0;
+    text-indent: -1000px;
+    overflow: hidden;
+    margin: 0;
+    filter: none;
+    border-style: none;
+    border-radius: 50%;
+    background-image: none;
+    outline: none;
+
+    &:before {
+      content: "#{$glyph-close}";
+      text-indent: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 22px;
+      font: normal 20px/23px fontello;
+    }
+  }
+
+  .item-selector {
+    position: static;
+  }
+
+  .button-bar.bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  .pointer {
+    height: 20px;
+    width: 20px;
+    display: block;
+    background-color: white;
+    border: 1px solid silver;
+    z-index: 0;
+    position: absolute;
+    -webkit-transform: rotate(45deg);
+    -webkit-box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
+    -moz-transform: rotate(45deg);
+    -moz-box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
+    transform: rotate(45deg);
+    box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
+  }
+
+  .closePanel {
+    position: absolute;
+    right: 0px;
+    top: 0px;
     text-indent: 100px;
     overflow: hidden;
     padding: 0px;
-    background: #b3ac9b;
+    background: gray url(close.png) no-repeat 2px;
     -webkit-border-radius: 3px;
     display: block;
     height: 15px;
@@ -16,121 +184,144 @@
     border: none;
   }
 
-.tooltip-container .close-panel:hover {
-	background-color: #7f7c71;
-}
-  
-  .tooltip-container .close-panel:before {
-    content: "×";
-	color: white;
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 0;
-	text-indent: 0;
-	font-size: 13px;
-	line-height: 12px;
-	text-align: center;
-	width: 15px;
-	height: 15px;
-	font-weight: bold;
 }
 
+@include screen-size(small) {
   .tooltip-container {
-    color: #333;
-    position: absolute;
-    z-index: 1001;
-    border: none;
-    min-height: 50px;
-    overflow: visible;
-    overflow-x: visible;
-    margin: 0;
-    border: 1px solid silver;
--webkit-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
--moz-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-	width: 300px;
+    width: 100% !important;
+    z-index: 10000;
+    position: fixed;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    font-size: 20px;
+    max-width: inherit !important;
+    max-height: inherit !important;
+
+    > div {
+      border-radius: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-width: inherit !important;
+      max-height: inherit !important;
+      border: none;
+      padding: 5% !important;
+      overflow: auto;
+    }
+
+    h1:after {
+      font-family: fontello;
+      content: '\e819';
+      float: right;
+    }
+  }
 }
 
-  .tooltip-container .pointer{
-    height: 20px;
-    width: 20px;
-    display: block;
-    background-color: #fdfdc8;
-    border: 1px solid #e9df63;
-    z-index: 0;
-    position: absolute;
-    -webkit-transform: rotate(45deg);
-    -webkit-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
-    -moz-transform: rotate(45deg);
-    -moz-box-shadow: rgba(0, 0, 0, 0.199219) 0px 0px 10px;
+.tooltip-container ul.menu {
+  margin: 0;
+  list-style-type: none;
+  li {
+    line-height: 24px;
+    a {
+      display: block;
+      margin-left: -10px;
+      margin-right: -10px;
+      padding-left: 32px;
+      padding-right: 15px;
+      color: black;
+      line-height: 20px;
+      cursor: default;
+    }
+    button {
+      display: block;
+      margin-left: -10px;
+      margin-right: -10px;
+      padding-left: 32px;
+      padding-right: 15px;
+      color: black;
+      line-height: 20px;
+      cursor: default;
+      &:active {
+        box-shadow: none;
+      }
+    }
+    a:before, button:before {
+      margin-left: -15px;
+      float: left;
+      margin-top: 5px;
+    }
   }
+}
 
-  .tooltip-container > div{
-    padding: 10px!important;
-    z-index: 1;
+.tooltip-container ul.menu li {
+  &.current a {
+    &:before {
+      content: "✓";
+      float: left;
+      margin-left: -19px;
+      font: 12px fontello;
+      position: relative;
+      top: 7px;
+    }
+    color: black;
+  }
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  a:hover {
+    text-decoration: none;
+  }
+  .checklist {
+    &.radio {
+      border-top: 1px solid silver;
+      border-bottom: 1px solid silver;
+      padding-left: 22px;
+      line-height: 18px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    .legend {
+      margin-bottom: 0;
+    }
+  }
+  &.file-upload {
     position: relative;
-    padding: 0;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-    min-height: 50px;
-    background-color: #FDFDC8;
-    overflow-y: auto;
+    text-indent: 20px;
+    height: 25px;
+    overflow: hidden;
+    &:before {
+      content: "\e808";
+      font-family: fontello;
+      position: absolute;
+      left: -13px;
+    }
+    form {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      label {
+        position: absolute;
+        margin-left: 0;
+        left: 0;
+        overflow: hidden;
+        display: block;
+        right: 0;
+        cursor: pointer;
+        padding-left: 2px;
+      }
+      input {
+        opacity: 0;
+        filter: alpha(opacity = 0);
+        width: 100%;
+        cursor: pointer;
+        position: absolute;
+        top: 3px;
+        left: 0;
+      }
+    }
   }
-
-.tooltip-container > div:after {
-	content: "";
-	display: block;
-	clear: both;
 }
-
-  .tooltip-container.bl .pointer,
-  .tooltip-container.bm .pointer,
-  .tooltip-container.br .pointer{
-    margin-top: -12px;
-  }
-  .tooltip-container.lt .pointer,
-  .tooltip-container.lm .pointer,
-  .tooltip-container.lb .pointer{
-    margin-left: 12px;
-
-  }
-  .tooltip-container.tl .pointer,
-  .tooltip-container.tm .pointer,
-  .tooltip-container.tr .pointer{
-    margin-top: 12px;
-  }
-  .tooltip-container.rt .pointer,
-  .tooltip-container.rm .pointer,
-  .tooltip-container.rb .pointer{
-    margin-left: -12px;
-  }
-
-  .tooltip-container.lt .pointer,
-  .tooltip-container.rt .pointer{
-    margin-top: 20px;
-  }
-  .tooltip-container.lb .pointer,
-  .tooltip-container.rb .pointer{
-    margin-top: -20px;
-  }
-  .tooltip-container.tl .pointer,
-  .tooltip-container.bl .pointer{
-    margin-left: 20px;
-  }
-  .tooltip-container.tr .pointer,
-  .tooltip-container.br .pointer{
-    margin-left: -20px;
-  }
-
-  .tooltip-container h4{
-    color: #fff;
-  }
-
-
-
-/* @end */
-

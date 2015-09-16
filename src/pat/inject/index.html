@@ -10,106 +10,114 @@
 	<body>
 		<article class="pat-rich">
 			<p>
-				<a href="pattern-test-response.html#demo-content"
-			      class="pat-inject">
-				Minimal inject into demo-content div</a>
+				In this example, a <a href="inject-sources.html" target="new">Single HTML source</a> is used for various injections.
 			</p>
-
-			<div id="demo-content">
-				<p>Content will appear in this div</p>
+			<ul>
+				<li>
+					<a href="inject-sources.html#pos-1" class="pat-inject">Place "Rilke" in column 1</a> 
+					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-1&quot; class=&quot;pat-inject&quot;&gt;</code></em>
+				</li>
+				<li>
+					<a href="inject-sources.html#pos-2" class="pat-inject">Place "Wilde" in column 2</a>
+					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; class=&quot;pat-inject&quot;&gt;</code></em>
+				</li>
+				<li>
+					<a href="inject-sources.html#pos-3" class="pat-inject">Place "Cocteau" in column 3</a>
+					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-3&quot; class=&quot;pat-inject&quot;&gt;</code></em>
+				</li>
+				<li>
+					<a href="inject-sources.html" data-pat-inject="#pos-3 #pos-1 &&#pos-1 #pos-2 &&#pos-2 #pos-3" class="pat-inject">Place "Cocteau" in column 1, "Rilke" in column 2 and "Wilde" in column 3</a>
+					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html&quot; data-pat-inject=&quot;#pos-3 #pos-1 &amp;&amp;#pos-1 #pos-2 &amp;&amp;#pos-2 #pos-3&quot; class=&quot;pat-inject&quot;&gt;</code></em>
+				</li>
+				<li>
+					<a href="inject-sources.html#pos-3" data-pat-inject="source: #pos-3; target: .item article" class="pat-inject">Place "Cocteau" in all columns</a>
+					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-3&quot; data-pat-inject=&quot;source: #pos-3; target: .item article&quot; class=&quot;pat-inject&quot;&gt;Place &quot;Cocteau&quot; in all columns&lt;/a&gt;</code></em>
+				</li>
+			</ul>
+		</article>
+		<div id="poems" class="row pat-equaliser">
+			<div class="item poem four columns">
+				<article class="pat-rich" id="pos-1">
+					<p>
+						<strong class="placeholder">?</strong>
+					</p>
+				</article>
 			</div>
-			<hr />
-			<ul>
-				<li data-pat-inject="source: #notes > .note1::element">
-					Add note1 to the
-					<a href="pattern-test-response.html"
-					   class="pat-inject"
-					   data-pat-inject="target: #list::before">top</a>
-					or
-					<a href="pattern-test-response.html"
-					   class="pat-inject"
-					   data-pat-inject="target: #list::after">bottom</a>
-					of the list.
-				</li>
-				<li data-pat-inject="source: #notes > .note2::element">
-					Add note2 to the
-					<a href="pattern-test-response.html"
-					   class="pat-inject"
-					   data-pat-inject="target:#list::before">top</a>
-					or
-					<a href="pattern-test-response.html"
-					   class="pat-inject"
-					   data-pat-inject="target: #list::after">bottom</a>
-					or
-					<a href="pattern-test-response.html"
-					   class="pat-inject"
-					   data-pat-inject="target: #list > .marker::element::after">after each marker</a>
-					of the list.
-				</li>
-				<li data-pat-inject="source: #notes > .marker::element">
-					Add new marker to the
-					<a href="pattern-test-response.html"
-					   class="pat-inject" data-pat-inject="target: #list::after">bottom</a>
-					of the list.
-				</li>
-			</ul>
-
-			<ul id="list">
-				<li class="marker">Will be build up to the top and bottom (marker)</li>
-			</ul>
-
-			<p>
-				<a href="pattern-test-response.html"
-				   class="pat-inject"
-				   data-pat-inject="#empty-list #list::element
-						    && #empty-content #demo-content">
-					Empty notices and content</a>
-			</p>
-
-			<p>
-	            <a href="#local-content" class="pat-inject" data-pat-inject="target: self::element">Inject an element from the same page</a>
-			</p>
-	        <p id="local-content" style="display: none">
-	            This is local content
-	        </p>
-
-        </article>
-
-		<hr />
-
-		<div id="panel1">
-			<ul data-pat-inject="target: #panel2">
-				<li><a href="pattern-test-response.html#cata-panel2"
-				       class="pat-inject">
-					Cat A</a></li>
-				<li><a href="pattern-test-response.html#catb-panel2"
-				       class="pat-inject">
-					Cat B</a></li>
-				<li>etc...</li>
-			</ul>
+			<div class="item poem four columns">
+				<article class="pat-rich" id="pos-2">
+					<p>
+						<strong class="placeholder">?</strong>
+					</p>
+				</article>
+			</div>
+			<div class="item poem four columns">
+				<article class="pat-rich" id="pos-3">
+					<p>
+						<strong class="placeholder">?</strong>
+					</p>
+				</article>
+			</div>
 		</div>
-		<div id="panel2"></div>
-		<div id="panel3"></div>
-		<div id="panel4"></div>
-        </div>
+		<style>
+			#poems {
+				font-family: georgia;
+			}
 
-		<hr />
+			#poems .poem {
+				
+			}
 
-		<section id="notes">
-			A form with multiple buttons, and different <code>formaction</code>
-			attributes.  All three buttons inject their content into the left colum
-			and underneath this section.
-			<ul>
-				<li>The default button injects Channel 1</li>
-				<li>The cut button injects from the inject-sources.html file</li>
-				<li>The copy button injects fin!</li>
-			</ul>
-			<form action="pattern-test-response.html#ch1-panel4" class="pat-inject"
-			 data-pat-inject="target: section.description && target: #notes::after">
-				<input type="submit" value="default" />
-				<button title="Cut" formaction="inject-sources.html#srctgt" value="cut" name="batch-function" type="submit">Cut</button>
-				<button title="Copy" formaction="pattern-test-response.html#listToUpdate3" value="copy" name="batch-function" type="submit">Copy</button>
-			</form>
-		</section>
+			#poems figure {
+				/*width: 100%;*/
+				text-align: center;
+				margin: 0 auto;
+				display: block;
+				margin-bottom: 4em;
+			}
+
+			#poems img,
+			#poems .placeholder {
+				box-shadow: 0px 0px 0px 4px white,
+							0px 0px 0px 7px #000;
+				width: 6rem;
+				height: 9rem;
+				background-color: white;
+				border-radius: 50%;
+				display: block;
+				margin: 0 auto;
+			}
+
+			#poems .placeholder {
+				line-height: 9rem;
+				font-size: 4em;
+				text-align: center;
+			}
+
+			#poems figcaption {
+
+				text-align: center;
+			}
+
+			#poems article {
+				background-color: #efefef;
+				box-shadow: inset 0 0 4em rgba(0,0,0,0.5);
+				padding: 6em 2em 2em;
+				font-size: 0.6em;
+				line-height: 180%;
+				text-align: center;
+				height: 100%;
+
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+
+			}
+
+			#poems article h3 {
+				font-size: 1.5em;
+				font-weight: bold;
+				margin-bottom: 1em;
+			}	
+		</style>
 	</body>
 </html>
