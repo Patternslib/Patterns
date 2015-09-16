@@ -8,31 +8,17 @@
         <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<section>
-			<h1>Toggle</h1>
-			<section class="description">
-				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
-			</section>
-			<section class="demo">
-				<h2>Demo</h2>
-                <div id="demo">
-                <form>
-                    <fieldset class="vertical">
-                        <fieldset class="pat-checklist">
-                            <label>
-                                <input id="checkbox" type="checkbox"/> I may be ticked through the button too!
-                            </label>
-                        </fieldset>
-                        <fieldset class="pat-button-bar">
-                            <button type="button" class="pat-button pat-forward" data-pat-forward="#checkbox">Click me…</button>
-                        </fieldset>
-                    </fieldset>
-                </form>
-                </div>
-			</section>
-			<section class="documentation">
-				<a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
-			</section>
-        </section>
+        <form>
+            <fieldset class="vertical">
+                <fieldset class="pat-checklist">
+                    <label>
+                        <input id="checkbox" type="checkbox"/> I may be ticked through the button too!
+                    </label>
+                </fieldset>
+                <fieldset class="pat-button-bar">
+                    <button type="button" class="pat-button pat-forward" data-pat-forward="#checkbox">Click me…</button>
+                </fieldset>
+            </fieldset>
+        </form>
 	</body>
 </html>
