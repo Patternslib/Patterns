@@ -41,14 +41,19 @@ define([
             options=parser.parse($container, options);
             $container.data("pat-stacks", options);
             $sheets=$container.find(options.selector);
-            if ($sheets.length<2) {
+
+            if ($sheets.length < 2) {
                 log.warn("Stacks pattern: must have more than one sheet.", $container[0]);
                 return;
             }
-
-            $visible=[];
-            if (selected)
-                $visible=$sheets.filter("#"+selected);
+            $visible = [];
+            if (selected) {
+                try {
+                    $visible = $sheets.filter("#"+selected);
+                } catch (e) {
+                    selected = undefined;
+                }
+            }
             if (!$visible.length) {
                 $visible=$sheets.first();
                 selected=$visible[0].id;
