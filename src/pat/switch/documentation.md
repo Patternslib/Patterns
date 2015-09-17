@@ -16,7 +16,7 @@ removed and the `on` class will be added. Note that this is similar to
 the toggle pattern. This pattern only triggers once though, while the
 toggle pattern toggles between two states.
 
-This pattern takes three arguments:
+This pattern takes three properties:
 
 -   `selector`: the CSS selector identifying the elements that must be
     updated

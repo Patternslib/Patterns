@@ -6,7 +6,7 @@ These attributes can be written either using the *extended notation* or a *short
 ## Extended notation
 
 The simplest notation you can use for parameters is the *extended notation*.
-When using this notation you always specify the argument name and its value,
+When using this notation you always specify the property name and its value,
 separated by a colon.
 
 ```
@@ -14,7 +14,7 @@ separated by a colon.
 <ul class="pat-carousel" data-pat-carousel="loop: false">...</ul>
 ```
 
-Multiple arguments can be provided by separating them with a semicolon:
+Multiple properties can be provided by separating them with a semicolon:
 
 ```
 <ul class="pat-carousel" data-pat-carousel="store: session; loop: false">...</ul>
@@ -25,8 +25,8 @@ Multiple arguments can be provided by separating them with a semicolon:
 
 The extended syntax can be a bit verbose. In order to keep your markup short
 you can also use a simpler short notation. In this notation you specify all
-arguments using a pre-defined order. For example the toggle pattern takes
-three arguments: the selector, an attribute and a value. Using shorthand
+properties using a pre-defined order. For example the toggle pattern takes
+three properties: the selector, an attribute and a value. Using shorthand
 notation you can specify all three values directly separated by a space. For
 example we can rewrite this extended notation:
 
@@ -66,7 +66,7 @@ can be written like this:
 </ul>
 ```
 
-If you prefix the name with ``no-`` the argument will be set to false. If we
+If you prefix the name with ``no-`` the property will be set to false. If we
 want to use the same carousel as above but without expand we can write this:
 
 ```
@@ -76,7 +76,7 @@ want to use the same carousel as above but without expand we can write this:
 ```
 
 Enum values can also be used directly. For example the toggle pattern has a
-``store`` argument which can the take three values ``none``, ``local`` and
+``store`` property which can the take three values ``none``, ``local`` and
 ``session``. You can mention those directly:
 
 
@@ -86,8 +86,8 @@ Enum values can also be used directly. For example the toggle pattern has a
 </button>
 ```
 
-In very rare situations it might happen that a a known boolean argument
-has the exact same name as an enum value for another argument. In that case it
+In very rare situations it might happen that a known boolean property
+has the exact same name as an enum value for another property. In that case it
 will be treated as a boolean option.
 
 ## Cascading configuration

@@ -27,7 +27,7 @@ Clone is triggered by the class `pat-clone` on a container element that contains
 
 Each time the user clicks on the button saying 'Add an extra family member', the
 pattern will make a copy of the first element inside the
-``.pat-clone`` element, unless the ``template`` argument is used (with a CSS
+``.pat-clone`` element, unless the ``template`` property is used (with a CSS
 selector for the element to be cloned).
 
 Typically when using a template element, such an element would be hidden from view. 
@@ -37,7 +37,7 @@ The new clone is always appended at the end, inside the `.pat-clone` element.
 When creating a ``.pat-clone`` element containing existing clones, it's
 important that each existing clone either gets the ``clone`` CSS class or that you
 pass in a unique CSS selector for each clone via the ``clone-element``
-argument. This allows the pattern to properly determine how many existing
+property. This allows the pattern to properly determine how many existing
 clones there are to start with.
 
 #### Incrementation of values in clones

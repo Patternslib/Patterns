@@ -31,7 +31,7 @@ tooltip, it naturally follows that the tooltip itself will be placed to
 the left of the triggering element.
 
 The position of the tip within the tooltip can be specified with a
-*position* argument which specifies the preferred positions. This is
+*position* property which specifies the preferred positions. This is
 formatted as `<preference>[,preference]*`. The possible preferences are:
 
 - `tl`: tip placed at the leftmost corner of the top side of the tooltip
@@ -55,7 +55,7 @@ An example:
 
 This specifies that the preferred position of the tip is at the top left
 side of the tooltip (placing the tooltip itself on the right side of the
-link). Notice that the position is the first defined argument so you can use
+link). Notice that the position is the first defined property so you can use
 shorthand syntax directly. If the tooltip does not fit at that position
 then the left-middle position is tried, and then the the right-top or if all
 previous options failed the middle of the right side is tried. If the tooltip
