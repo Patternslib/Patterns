@@ -6,6 +6,7 @@ if (typeof(require) === 'undefined') {
      */
     require = { config: function (c) { config = c; } };
 }
+
 require.config({
     baseUrl: 'src',
     paths: {
@@ -77,13 +78,17 @@ require.config({
         "pat-ajax":                    "pat/ajax/ajax",
         "pat-autofocus":               "pat/autofocus/autofocus",
         "pat-autoscale":               "pat/auto-scale/auto-scale",
+        "pat-auto-scale":               "pat/auto-scale/auto-scale",
         "pat-autosubmit":              "pat/auto-submit/auto-submit",
+        "pat-auto-submit":              "pat/auto-submit/auto-submit",
         "pat-autosuggest":             "pat/auto-suggest/auto-suggest",
+        "pat-auto-suggest":             "pat/auto-suggest/auto-suggest",
         "pat-breadcrumbs":             "pat/breadcrumbs/breadcrumbs",
         "pat-bumper":                  "pat/bumper/bumper",
         "pat-calendar":                "pat/calendar/calendar",
         "pat-carousel":                "pat/carousel/carousel",
         "pat-checkedflag":             "pat/checked-flag/checked-flag",
+        "pat-checked-flag":             "pat/checked-flag/checked-flag",
         "pat-checklist":               "pat/checklist/checklist",
         "pat-chosen":                  "pat/chosen/chosen",
         "pat-clone":                   "pat/clone/clone",
@@ -93,10 +98,12 @@ require.config({
         "pat-edit-tinymce":            "pat/edit-tinymce/edit-tinymce",
         "pat-equaliser":               "pat/equaliser/equaliser",
         "pat-expandable":              "pat/expandable-tree/expandable-tree",
+        "pat-expandable-tree":         "pat/expandable-tree/expandable-tree",
         "pat-focus":                   "pat/focus/focus",
         "pat-form-state":              "pat/form-state/form-state",
         "pat-forward":                 "pat/forward/forward",
         "pat-gallery":                 "pat/gallery/gallery",
+        "pat-grid":                    "pat/grid/grid",  // Hack, there's no grid jS, but we need for website bundler
         "pat-syntax-highlight":        "pat/syntax-highlight/syntax-highlight",
         "pat-image-crop":              "pat/image-crop/image-crop",
         "pat-inject":                  "pat/inject/inject",
