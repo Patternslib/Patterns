@@ -17,7 +17,7 @@ define([
 
     var equaliser = {
         name: "equaliser",
-        trigger: ".pat-equaliser",
+        trigger: ".pat-equaliser, .pat-equalizer",
 
         init: function($el, opts) {
             return $el.each(function() {
@@ -25,6 +25,7 @@ define([
                     options = parser.parse($container, opts);
                 $container.data("pat-equaliser", options);
                 $container.on("pat-update.pat-equaliser", null, this, equaliser._onEvent);
+                $container.on("patterns-injected.pat-equaliser", null, this, equaliser._onEvent);
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
                 imagesLoaded(this, $.proxy(function() {
                     equaliser._update(this);
