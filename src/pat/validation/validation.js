@@ -290,7 +290,7 @@ define([
                 selector = "em.validation.message",
                 $messages = $el.next(selector);
             if ($el.is("[type=radio],[type=checkbox]")) {
-                var $fieldset = $el.closest("fieldset.checklist");
+                var $fieldset = $el.closest("fieldset.pat-checklist");
                 if ($fieldset.length)
                     $messages=$fieldset.find(selector);
             }
@@ -313,7 +313,7 @@ define([
                 $message = $("<em/>", {"class": "validation warning message"}),
                 $fieldset;
             if ($el.is("[type=radio],[type=checkbox]")) {
-                $fieldset = $el.closest("fieldset.checklist");
+                $fieldset = $el.closest("fieldset.pat-checklist");
                 if ($fieldset.length) {
                     $position = $fieldset;
                     strategy="append";
