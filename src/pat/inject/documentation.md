@@ -261,12 +261,14 @@ to build infinite lists, where the injection element replaces itself with the ne
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload-visible">Autoloads as soon as visible</a>
 
+<!--
 XXX: example infinite list
+-->
 
 
 ### Change href after injection
 
-THIS FEATURE IS EXPERIMENTAL
+*Note: This feature is experimental*
 
 For anchors, you can specify an href to point to, after the injection was triggered. If that element exists already during initialisation, the injection is not initialised and the href changed to next-href.
 
@@ -328,12 +330,12 @@ You can customise the behaviour of injection through options in the `data-pat-in
 
 | Property | Default value | Values | Description | Type |
 | ----- | --------| -------- | ------- | ----------- |
-| `selector` | `body` | | Selector identifying which section of the loaded document to inject. | |
-| `target` | `body` | | Selector identifying where to inject the loaded content. | |
-| `data-type` | `html` | `html` `markdown`| The type of content that is loaded. This is normally detected automatically. | Mutually exclusive. |
-| `next-href` | | | ? | |
-| `trigger` | `default` | `default` `autoload` `autoload-visible` | Determines when injection happens: on manual click (`default`), directly on page load (`autoload`) or when the trigger becomes visible (`autoload-visible`) | Mutually exclusive. |
-| `url` | | *href attribute* | URL to load content from. | |
-| `class` | | | A class which will be added to the injected content. | |
-| `history` | `none` | `none` `record` | If set to `record` injection will update the URL history. | Mutually exclusive. |
-| `hooks` | `[]` | `["raptor"]` | Once injection has completed successfully, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook). Useful for other patterns which need to know whether injection relevant to them has finished, for example `pat-raptor`. | |
+| `selector` | `body` | | Selector identifying which section of the loaded document to inject. | Selector string|
+| `target` | `body` | | Selector identifying where to inject the loaded content. | Selector string |
+| `data-type` | `html` | `html` `markdown`| The type of content that is loaded. This is normally detected automatically. | One of the mutually exclusive string values. |
+| `next-href` | | | For anchors, you can specify an href to point to after injection was triggered. If that element exists already during initialisation, the injection is not initialised and the href changed to next-href. | |
+| `trigger` | `default` | `default` `autoload` `autoload-visible` | Determines when injection happens: on manual click (`default`), directly on page load (`autoload`) or when the trigger becomes visible (`autoload-visible`) | One of the mutually exclusive values. |
+| `url` | | *href attribute* | URL to load content from. | URI string. |
+| `class` | | | A class which will be added to the injected content. | String |
+| `history` | `none` | `none` `record` | If set to `record` injection will update the URL history. | One of the mutually exclusive string values. |
+| `hooks` | `[]` | `["raptor"]` | Once injection has completed successfully, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook). Useful for other patterns which need to know whether injection relevant to them has finished, for example `pat-raptor`. | String. |
