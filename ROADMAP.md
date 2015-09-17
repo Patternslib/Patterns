@@ -10,6 +10,5 @@ It doesn't represent a promise or commitment of any kind.
 
 Demos that need to be updated:
 
-* Gallery
 * Slides
 * Validation for checklists (error should be injected as last child of .pat-checklist)
