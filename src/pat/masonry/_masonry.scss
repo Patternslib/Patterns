@@ -1,2 +1,17 @@
-.item { width: 25%; }
-.item.w2 { width: 50%; }
+.pat-masonry {
+	position: relative;
+
+	.item {
+        opacity: 0;
+
+        -moz-transition: opacity 0.5s;
+        -webkit-transition: opacity 0.5s;
+        transition: opacity 0.5s;
+	}
+
+	&.masonry-ready {
+		.item {
+			opacity: 1;
+		}
+	}
+}
