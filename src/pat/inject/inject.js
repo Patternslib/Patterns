@@ -661,8 +661,12 @@ define([
 
     $(window).bind("popstate", function (event) {
         // popstate also triggers on traditional anchors
-        if (!event.originalEvent.state) {
-            history.replaceState("anchor", "", document.location.href);
+        if (!event.originalEvent.state && ("replaceState" in history)) {
+            try {
+                history.replaceState("anchor", "", document.location.href);
+            } catch (e) {
+                log.debug(e);
+            }
             return;
         }
         // popstate event can be fired when history.back() is called. If
@@ -676,7 +680,11 @@ define([
     // this entry ensures that the initally loaded page can be reached with
     // the back button
     if ("replaceState" in history) {
-        history.replaceState("pageload", "", document.location.href);
+        try {
+            history.replaceState("pageload", "", document.location.href);
+        } catch (e) {
+            log.debug(e);
+        }
     }
 
     registry.register(_);
