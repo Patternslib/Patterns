@@ -11,4 +11,4 @@ It doesn't represent a promise or commitment of any kind.
 Demos that need to be updated:
 
 * Slides
-* Validation for checklists (error should be injected as last child of .pat-checklist)
+* Slideshow-builder

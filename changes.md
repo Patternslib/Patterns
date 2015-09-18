@@ -12,7 +12,8 @@
 - In pat-autosuggest, new option allow-new-words, for explicitly allowing or denying custom tags.
 - Make pat-bumper also bump against the bottom edge.
 - New layout. All files relevant to individual patterns (except for tests) are now in ./src/pat
-- pat-gallery now uses Photoswipe 4.0.7 and is based on pat-base.
+- pat-gallery now uses Photoswipe 4.1.0 and is based on pat-base.
+- New pattern pat-validation which replaces pat-validate.
 
 ## 2.0.9 - Mar 30, 2015
 
