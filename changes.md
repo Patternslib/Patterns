@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.10 - Unreleased
+## 2.0.10 - Sept. 18, 2015
 
 - Add new argument "hooks" to pat-inject.
 - Add new parser method addAlias for adding aliases of parser arguments.
