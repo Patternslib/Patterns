@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "2.0.9",
+  "version": "2.10.0",
   "main": "bundle.js",
   "devDependencies": {
     "jasmine": "https://github.com/jcbrand/jasmine.git#1_3_x"

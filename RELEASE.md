@@ -1,5 +1,7 @@
 # Making a release
 
+Firstly, update the version number in bower.json, package.json and add the date to changes.md
+
 ## Merge master into the "release" branch
 
     git checkout --track origin/release
