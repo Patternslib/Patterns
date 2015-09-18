@@ -8,6 +8,8 @@ fitting stones in a wall. You’ve probably seen it in use all over the Internet
 
 ## Documentation
 
+### Options reference
+
 | Property            | Default Value                               | Description           |
 |---------------------|---------------------------------------------|---------------------- |
 | column-width		  | `240`                                         | The width of a column of a horizontal grid  |
