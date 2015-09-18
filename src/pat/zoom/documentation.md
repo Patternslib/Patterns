@@ -1,3 +1,7 @@
+# Description
+
+This pattern provides a simple way to enlarge an item in your page.
+
 # Documentation
 
 Patterns provides a very simple way to make an item zoomable: just add a

@@ -1,3 +1,7 @@
+## Description
+
+This pattern provides a very simple way to create carousels.
+
 ## Documentation
 
 Patterns builds on the excellent

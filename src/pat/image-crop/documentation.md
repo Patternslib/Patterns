@@ -1,3 +1,7 @@
+## Description
+
+This pattern can be used to allow users to crop images in your web application.
+
 ## Documentation
 
 For a very basic usage of this pattern:
