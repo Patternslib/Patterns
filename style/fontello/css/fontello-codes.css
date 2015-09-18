@@ -12,3 +12,4 @@
 .icon-check-empty:before { content: '󢀂'; } /* '\e2002' */
 .icon-check:before { content: '󢀃'; } /* '\e2003' */
 .icon-info-circle:before { content: '󢀄'; } /* '\e2004' */
+.icon-cancel:before { content: '󢀅'; } /* '\e2005' */
