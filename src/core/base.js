@@ -15,8 +15,9 @@
 define([
   'jquery',
   'pat-registry',
+  'mockup-parser',
   "pat-logger"
-], function($, Registry, logger) {
+], function($, Registry, mockupParser, logger) {
     'use strict';
     var log = logger.getLogger("Patternslib Base");
 
@@ -26,6 +27,7 @@ define([
         var pattern = $el.data('pattern-' + name);
         if (pattern === undefined && Registry.patterns[name]) {
             try {
+                options = this.prototype.parser  === "mockup" ? mockupParser.getOptions($el, name, options) : options;
                 pattern = new Registry.patterns[name]($el, options, trigger);
             } catch (e) {
                 log.error('Failed while initializing "' + name + '" pattern.');
