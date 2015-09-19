@@ -1,5 +1,5 @@
 /**
- * A Base pattern for creating scoped patterns. It'ssSimilar to Backbone's
+ * A Base pattern for creating scoped patterns. It's similar to Backbone's
  * Model class. The advantage of this approach is that each instance of a
  * pattern has its own local scope (closure).
  *
@@ -13,48 +13,73 @@
  */
 
 define([
-  'jquery',
-  'pat-registry',
-  'mockup-parser',
+  "jquery",
+  "pat-registry",
+  "pat-mockup-parser",
   "pat-logger"
 ], function($, Registry, mockupParser, logger) {
-    'use strict';
+    "use strict";
     var log = logger.getLogger("Patternslib Base");
 
     var initBasePattern = function initBasePattern($el, options, trigger) {
         var name = this.prototype.name;
         var log = logger.getLogger("pat." + name);
-        var pattern = $el.data('pattern-' + name);
+        var pattern = $el.data("pattern-" + name);
         if (pattern === undefined && Registry.patterns[name]) {
             try {
                 options = this.prototype.parser  === "mockup" ? mockupParser.getOptions($el, name, options) : options;
                 pattern = new Registry.patterns[name]($el, options, trigger);
             } catch (e) {
-                log.error('Failed while initializing "' + name + '" pattern.');
+                log.error("Failed while initializing '" + name + "' pattern.");
             }
-            $el.data('pattern-' + name, pattern);
+            $el.data("pattern-" + name, pattern);
         }
         return pattern;
     };
 
+    var override = function override(target, source) {
+        /* Recursively merge source into target.
+         *
+         * However, as opposed to curry($.extend, true) don't merge values
+         * that are arrays or objects, instead, override them completely.
+         */
+        if (typeof source === "object" && source !== null){
+            for (var p in source) {
+                if ($.isArray(source[p])) {
+                    target[p] = source[p];
+                } else if (typeof source[p] === "object" && source[p] !== null && $.isPlainObject(source[p])) { 
+                    // This is another dict, so will recurse
+                    if (!target.hasOwnProperty(p) || typeof target[p] !== "object" || target[p] === null){
+                        // Create if not there, or if it is something else
+                        target[p] = {};
+                    }
+                    override(target[p], source[p]);
+                } else {
+                    target[p] = source[p];
+                }
+            }
+        }
+        return target;
+    };
+
     var Base = function($el, options, trigger) {
         this.$el = $el;
-        this.options = $.extend(true, {}, this.defaults || {}, options || {});
+        this.options = override($.extend({}, this.defaults), options || {});
         this.init($el, options, trigger);
-        this.emit('init');
+        this.emit("init");
     };
 
     Base.prototype = {
         constructor: Base,
         on: function(eventName, eventCallback) {
-            this.$el.on(eventName + '.' + this.name + '.patterns', eventCallback);
+            this.$el.on(eventName + "." + this.name + ".patterns", eventCallback);
         },
         emit: function(eventName, args) {
             // args should be a list
             if (args === undefined) {
                 args = [];
             }
-            this.$el.trigger(eventName + '.' + this.name + '.patterns', args);
+            this.$el.trigger(eventName + "." + this.name + ".patterns", args);
         }
     };
 
@@ -72,7 +97,7 @@ define([
         // The constructor function for the new subclass is either defined by you
         // (the "constructor" property in your `extend` definition), or defaulted
         // by us to simply call the parent's constructor.
-        if (patternProps.hasOwnProperty('constructor')) {
+        if (patternProps.hasOwnProperty("constructor")) {
             child = patternProps.constructor;
         } else {
             child = function() { parent.apply(this, arguments); };
