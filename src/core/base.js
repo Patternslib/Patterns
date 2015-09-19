@@ -30,41 +30,16 @@ define([
                 options = this.prototype.parser  === "mockup" ? mockupParser.getOptions($el, name, options) : options;
                 pattern = new Registry.patterns[name]($el, options, trigger);
             } catch (e) {
-                log.error("Failed while initializing '" + name + "' pattern.");
+                log.error("Failed while initializing '" + name + "' pattern.", e);
             }
             $el.data("pattern-" + name, pattern);
         }
         return pattern;
     };
 
-    var override = function override(target, source) {
-        /* Recursively merge source into target.
-         *
-         * However, as opposed to curry($.extend, true) don't merge values
-         * that are arrays or objects, instead, override them completely.
-         */
-        if (typeof source === "object" && source !== null){
-            for (var p in source) {
-                if ($.isArray(source[p])) {
-                    target[p] = source[p];
-                } else if (typeof source[p] === "object" && source[p] !== null && $.isPlainObject(source[p])) { 
-                    // This is another dict, so will recurse
-                    if (!target.hasOwnProperty(p) || typeof target[p] !== "object" || target[p] === null){
-                        // Create if not there, or if it is something else
-                        target[p] = {};
-                    }
-                    override(target[p], source[p]);
-                } else {
-                    target[p] = source[p];
-                }
-            }
-        }
-        return target;
-    };
-
     var Base = function($el, options, trigger) {
         this.$el = $el;
-        this.options = override($.extend({}, this.defaults), options || {});
+        this.options = $.extend(true, {}, this.defaults || {}, options || {});
         this.init($el, options, trigger);
         this.emit("init");
     };
