@@ -37,7 +37,7 @@ define([
 
     var _ = {
         name: "inject",
-        trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+        trigger: ".ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function inject_init($el, opts) {
             if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });
@@ -70,7 +70,7 @@ define([
             switch (cfgs[0].trigger) {
                 case "default":
                     // setup event handlers
-                    if ($el.is("a")) {
+                    if ($el.is("a") || $el.hasClass('ui-button')) {
                         $el.on("click.pat-inject", _.onClick);
                     } else if ($el.is("form")) {
                         $el.on("submit.pat-inject", _.onSubmit)
@@ -305,6 +305,7 @@ define([
             if ((cfg.history === "record") && ("pushState" in history)) {
                 history.pushState({'url': cfg.url}, "", cfg.url);
             }
+            $target.trigger("pat-inject-content-loaded-final");
         },
 
         _afterInjection: function ($el, $injected, cfg) {
