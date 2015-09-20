@@ -39,7 +39,7 @@ define([
 
     var _ = {
         name: "inject",
-        trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+        trigger: ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function inject_init($el, opts) {
             var cfgs = _.extractConfig($el, opts);
             // if the injection shall add a history entry and HTML5 pushState
@@ -318,6 +318,7 @@ define([
             if ((cfg.history === "record") && ("pushState" in history)) {
                 history.pushState({'url': cfg.url}, "", cfg.url);
             }
+            $target.trigger("pat-inject-content-loaded-final");
         },
 
         _afterInjection: function ($el, $injected, cfg) {
