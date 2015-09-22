@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "bower": "latest",
-    "generator-patternslib": "0.2.0",
+    "generator-patternslib": "0.2.1",
     "jshint": "~0.9.1",
     "pegjs": "0.7.0",
     "phantom-jasmine": "0.1.8",
