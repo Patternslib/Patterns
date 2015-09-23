@@ -878,7 +878,7 @@ disabled look for disabled choices in the results dropdown
   font-size: 1em;
   outline: none; }
   .select2-search-choice-close:before {
-    content: "";
+    content: "󢀅";
     color: white;
     font: 1em fontello; }
 
@@ -3849,7 +3849,7 @@ div.pat-modal {
       background-image: none;
       outline: none; }
       div.pat-modal .header .close-panel:before {
-        content: "";
+        content: "󢀅";
         text-indent: 0;
         position: absolute;
         top: 0;
@@ -4285,7 +4285,7 @@ li.mode-Blue {
     background-image: none;
     outline: none; }
     .tooltip-container .close-panel-mobile:before {
-      content: "";
+      content: "󢀅";
       text-indent: 0;
       position: absolute;
       top: 0;
