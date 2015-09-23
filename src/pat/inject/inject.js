@@ -86,6 +86,7 @@ define([
                     _._initAutoloadVisible($el);
                     break;
             }
+
             log.debug("initialised:", $el);
             return $el;
         },
@@ -219,6 +220,18 @@ define([
                     // ideally go there.
                     cfg.$target.removeClass('is-dirty');
                 }
+
+                // pat-inject is used to populate target in some form and when
+                // Cancel button is presed (this triggers reset event on the
+                // form) you would expect to populate with initial placeholder 
+                var $form = cfg.$target.parents('form')
+                if ($form.size() !== 0 && cfg.$target.data('initial-value') === undefined) {
+                    cfg.$target.data('initial-value', cfg.$target.html());
+                    $form.on('reset', function() {
+                        cfg.$target.html(cfg.$target.data('initial-value'))
+                    })
+                }
+
                 return true;
             });
         },
@@ -318,7 +331,6 @@ define([
             if ((cfg.history === "record") && ("pushState" in history)) {
                 history.pushState({'url': cfg.url}, "", cfg.url);
             }
-            $target.trigger("pat-inject-content-loaded-final");
         },
 
         _afterInjection: function ($el, $injected, cfg) {
