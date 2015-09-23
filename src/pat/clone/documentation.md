@@ -79,10 +79,11 @@ The markup below would have exactly the same effect as the first example, but us
 
 ### Option reference
 
-| Property | Description | Default | Type |
+| Property | Description | Default | Allowed Values | Type |
 |------|------|-----|------|
-| template |Selects the element that will be cloned each time. You might often want to refer to a piece of template markup for this that is hidden with though the CSS. |:first | CSS Selector |
-| max  |Maximum number of clones that is allowed | | Integer |
-| trigger-element |Selector of the element that will remove the clone when clicked upon. | .add-clone | CSS Selector |
-| remove-element |Selector of the element that will remove the clone when clicked upon. | .remove-clone | CSS Selector|
-| clone-element |Selector of the individual clone element(s). | .clone | CSS Selector|
+| template |Selects the element that will be cloned each time. You might often want to refer to a piece of template markup for this that is hidden with though the CSS. |:first | | CSS Selector |
+| max  |Maximum number of clones that is allowed | | | Integer |
+| trigger-element |Selector of the element that will remove the clone when clicked upon. | .add-clone | | CSS Selector |
+| remove-element |Selector of the element that will remove the clone when clicked upon. | .remove-clone | | CSS Selector|
+| remove-behaviour or remove-behavior | What should happen when the user clicks on the element to remove a clone? Two choices exist currently. Show a confirmation dialog, or simply remove the clone immediately. | "confirm" | "confirm", "none" | One of the allowed string values. |
+| clone-element |Selector of the individual clone element(s). | .clone | | CSS Selector|

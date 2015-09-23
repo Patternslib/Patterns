@@ -13,7 +13,10 @@ define("pat-clone",[
     parser.addArgument("template", ":first");
     parser.addArgument("trigger-element", ".add-clone");
     parser.addArgument("remove-element", ".remove-clone");
+    parser.addArgument("remove-behaviour", "confirm", ["confirm", "none"]);
+    parser.addArgument("remove-confirmation", "Are you sure you want to remove this element?");
     parser.addArgument("clone-element", ".clone");
+    parser.addAlias("remove-behavior", "remove-behaviour");
     var TEXT_NODE = 3;
 
     return Base.extend({
@@ -33,7 +36,7 @@ define("pat-clone",[
             this.num_clones = $clones.length;
             $clones.each(function (idx, clone) {
                 var $clone = $(clone);
-                $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
+                $clone.find(this.options.remove.element).on("click", this.confirmRemoval.bind(this, $clone));
             }.bind(this));
         },
 
@@ -58,7 +61,7 @@ define("pat-clone",[
 
             $clone.appendTo(this.$el);
             $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
-            $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
+            $clone.find(this.options.remove.element).on("click", this.confirmRemoval.bind(this, $clone));
 
             $clone.removeAttr("hidden");
             registry.scan($clone);
@@ -84,6 +87,16 @@ define("pat-clone",[
                 $.each(el.attributes, callback.bind(this));
             } else if (el.data.length) {
                 el.data = el.data.replace("#{1}", this.num_clones);
+            }
+        },
+
+        confirmRemoval: function confirmRemoval($el, callback) {
+            if (this.options.remove.behaviour === "confirm") {
+                if (window.confirm(this.options.remove.confirmation) === true) {
+                    this.remove($el);
+                }
+            } else {
+                this.remove($el);
             }
         },
 

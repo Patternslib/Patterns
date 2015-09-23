@@ -114,6 +114,9 @@ define(["pat-registry", "pat-clone"], function(registry) {
         });
 
         it("has a \"clone-element\" argument which is necessary when starting with pre-existing clones", function() {
+            spyOn(window, 'confirm').andCallFake(function () {
+                return true;
+            });
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone" data-pat-clone="clone-element: .item">' +
@@ -142,6 +145,9 @@ define(["pat-registry", "pat-clone"], function(registry) {
         });
 
         it("will remove a clone when .remove-clone inside the clone is clicked.", function() {
+            spyOn(window, 'confirm').andCallFake(function () {
+                return true;
+            });
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone" data-pat-clone="clone-element: .item">' +
@@ -155,13 +161,18 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('div.item').length).toBe(2);
 
             $lab.find('.remove-clone:last').click();
+            expect(window.confirm).toHaveBeenCalled();
             expect($('div.item').length).toBe(1);
 
             $lab.find('.remove-clone').click();
+            expect(window.confirm).toHaveBeenCalled();
             expect($('div.item').length).toBe(0);
         });
 
         it("allows the remove element to be configured", function() {
+            spyOn(window, 'confirm').andCallFake(function () {
+                return true;
+            });
             var $lab = $('#lab');
             $lab.html(
                 '<div class="pat-clone" data-pat-clone="clone-element: .item; remove-element: .custom-remove-class;">' +
@@ -175,10 +186,50 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('div.item').length).toBe(2);
 
             $lab.find('.custom-remove-class:last').click();
+            expect(window.confirm).toHaveBeenCalled();
             expect($('div.item').length).toBe(1);
 
             $lab.find('.custom-remove-class').click();
+            expect(window.confirm).toHaveBeenCalled();
             expect($('div.item').length).toBe(0);
+        });
+
+        it("will by default ask for confirmation before removing elements, but can be configured otherwise", function() {
+            spyOn(window, 'confirm').andCallFake(function () {
+                return true;
+            });
+            var $lab = $('#lab');
+            $lab.html(
+                '<div class="pat-clone" data-pat-clone="clone-element: .item; remove-behaviour: confirm">' +
+                '    <div class="item"><button type="button" class="remove-clone">Remove</button></div>' +
+                '</div>' +
+                '<button class="add-clone">Clone!</button>');
+            registry.scan($lab);
+            expect($('div.item').length).toBe(1);
+
+            $lab.find('.add-clone').click();
+            expect($('div.item').length).toBe(2);
+
+            $lab.find('.remove-clone:last').click();
+            expect(window.confirm).toHaveBeenCalled();
+            expect(window.confirm.callCount).toBe(1);
+            expect($('div.item').length).toBe(1);
+
+            $lab.empty();
+            $lab.html(
+                '<div class="pat-clone" data-pat-clone="clone-element: .item; remove-behaviour: none">' +
+                '    <div class="item"><button type="button" class="remove-clone">Remove</button></div>' +
+                '</div>' +
+                '<button class="add-clone">Clone!</button>');
+            registry.scan($lab);
+            expect($('div.item').length).toBe(1);
+
+            $lab.find('.add-clone').click();
+            expect($('div.item').length).toBe(2);
+
+            $lab.find('.remove-clone:last').click();
+            expect(window.confirm.callCount).toBe(1);
+            expect($('div.item').length).toBe(1);
         });
     });
 });
