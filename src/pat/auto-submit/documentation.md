@@ -1,37 +1,37 @@
 ## Description
-Auto submit will submit what the user fills out on a form without the need for the user to press the submit button.
-It can be used to incrementally send form input data to a server. For instance to create a live search pattern where
-the search results update on every keypress. 
+The auto-submit pattern will automatically submit a form whenever the user changes a value of any input inside of it.
+It can be used to incrementally send form input data to a server, for instance to create a live search pattern where the search results update on every keypress. 
 
 ## Documentation
-The autosubmit pattern submits a form if a form element changes. It is
-enabled by class "pat-autosubmit" for individual form elements, on
-grouping elements (such as a `fieldset`) for all elements in the group, and on forms for all
-elements of the form.
+The auto-submit pattern submits a form whenever a value inside that form changes.
 
-It also plays nicely with `pat-subform`, which means that if an element changes
-inside a subform, only that subform will be submitted.
+It is enabled by adding the `pat-auto-submit` CSS class to the form element.
+
+Alternatively, you can also add `pat-auto-submit` to inputs or containers of inputs inside the form,
+to only let changes to those particular inputs automatically submit the form.
+
+This pattern plays nicely with `pat-subform`, which means that if an element changes inside a subform, only that subform will be submitted.
 
 ## Examples
 
-Only one element:
+On only one element:
 
     <form>
-      <input class="pat-autosubmit" type="text" name="q" placeholder="Search query"/>
+      <input class="pat-auto-submit" type="text" name="q" placeholder="Search query"/>
     </form>
 
 On a fieldset:
 
     <form>
-      <fieldset class="pat-autosubmit">
+      <fieldset class="pat-auto-submit">
        <input type="text" name="q" placeholder="Search query"/>
        <label><input type="checkbox" name="local"/> Only search in this section</label>
      </fieldset>
     </form>
 
-And on the form:
+And on the whole form:
 
-    <form class="pat-autosubmit">
+    <form class="pat-auto-submit">
       <fieldset>
        <input type="text" name="q" placeholder="Search query"/>
        <label><input type="checkbox" name="local"/> Only search in this section</label>
@@ -53,28 +53,28 @@ You can configure this behaviour with the delay option.
 no delay:
 
     <form>
-      <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 0ms"/>
+      <input name="q" class="pat-auto-submit" data-pat-auto-submit="delay: 0ms"/>
     </form>
 
 longer delay:
 
     <form>
-      <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: 1000ms"/>
+      <input name="q" class="pat-auto-submit" data-pat-auto-submit="delay: 1000ms"/>
     </form>
 
 delay until element loses focus:
 
     <form>
-      <input name="q" class="pat-autosubmit" data-pat-autosubmit="delay: defocus"/>
+      <input name="q" class="pat-auto-submit" data-pat-auto-submit="delay: defocus"/>
     </form>
 
 ### Combining with injection
 
-Autosubmit is most useful when combined with injection. This makes it
+The auto-submit pattern is most useful when combined with injection. This makes it
 trivial to create a form that automatically loads content and displays
 it on the page. Here is a minimal search page:
 
-    <form class="pat-inject pat-autosubmit" action="/search" data-pat-inject="target: #results">
+    <form class="pat-inject pat-auto-submit" action="/search" data-pat-inject="target: #results">
       <input type="text" name="q" placeholder="Search query"/>
       <label><input type="checkbox" name="local"/> Only search in this section</label>
     </form>
@@ -92,4 +92,4 @@ of the *results* section.
 
 |Property   | Type             | Default Value | Available values                  | Description                                                   |
 |-----------|------------------|---------------|-----------------------------------|---------------------------------------------------------------|
-|**delay**  | string or number | 400           | A milliseconds value or "defocus" | The amount of milliseconds to wait until submitting the form. "Defocus" only applies when pat-autosubmit is applied to input elements and means that the form will be submitted when the element loses focus. |
+|**delay**  | string or number | 400           | A milliseconds value or "defocus" | The amount of milliseconds to wait until submitting the form. "Defocus" only applies when pat-auto-submit is applied to input elements and means that the form will be submitted when the element loses focus. |

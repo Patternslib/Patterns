@@ -1,6 +1,6 @@
 ## Description
 
-Pat clone is used to offer users a control to clone (groups of) (form) elements on a page.
+The clone pattern lets the website user clone elements in the page.
 
 ## Documentation
 
@@ -9,28 +9,36 @@ For instance if you want to ask the user to fill out the name and birthdate of e
 
 ### Usage
 
-Clone is triggered by the class `pat-clone` on a container element that contains the clones. Consider the following markup:
+This pattern is enabled by adding the `pat-clone` class on a container element which contains the original element and any clones of it that may have beeen added.
+The first element inside the .pat-clone container is by default assumed to be the original element may be cloned by the user.
+
+Consider the following markup:
 
     <h3>List of family members</h3>
     
     <div class="pat-clone">
-      <!-- First visible instance and also template -->
+      <!-- The first element inside the .pat-clone container is by default
+           assumed to be the original element which will be cloned.
+        -->
       <fieldset class="clone"> <!-- By default, pat-clone will consider elements with the "clone" class to be clones. -->
         <legend>Family member 1</legend>
         <input name="name-1" type="text" placeholder="Name" />
         <input name="date-1" type="date" placeholder="birthdate" /><br/>
         <button type="button" class="remove-clone">Remove</button>
       </fieldset>
-      <!-- Clone trigger -->
+      <!-- Now comes the clone trigger, a button which when clicked will cause
+           a new clone of the above fieldset to be created.
+        -->
       <button type="button" class="add-clone">Add an extra family member</button>
     </div>
 
 Each time the user clicks on the button saying 'Add an extra family member', the
 pattern will make a copy of the first element inside the
-``.pat-clone`` element, unless the ``template`` property is used (with a CSS
-selector for the element to be cloned).
+``.pat-clone`` element, unless the ``template`` property is used to configure a
+different clone template. The ``template`` property takes a CSS selector as
+value.
 
-Typically when using a template element, such an element would be hidden from view. 
+Typically when using a template element, such an element would be hidden from view.
 
 The new clone is always appended at the end, inside the `.pat-clone` element.
 

@@ -1,43 +1,49 @@
 ## Description
-Auto scale scales up any element to the size of it's parent element. A typical use case is to let an entire webpage scale up to the width of the browser window, as an advanced kind of responsive design.
+The auto-scale pattern scales up any element to the size of its parent element.
+A typical use case is to let an entire webpage scale up to the width of the browser window, as an advanced kind of responsive design.
 
 ## Documentation
 
-The script scales an element with the .pat-auto-scale class by the ratio
-of its parent width and its own. If the pattern is applied to the body,
-the element is scaled with respect to the viewport''s width. The scaling
-factor is automatically updated on window resize.
+This pattern scales any element with the `.pat-auto-scale` CSS class by the ratio
+of its parent width and its own. If this pattern is applied to the `<body>` tag,
+then the element is scaled with respect to the viewport's width.
+
+The scaling factor is automatically updated on window resize.
+
+Let's look at a simple example:
 
     <div class="column">
       <img class="pat-auto-scale" src="header.png" alt=""/>
       <p>Lorem ipsum</p>
     </div>
 
-
-After an element has been scaled a new scaled class is be added.
+After `<img>` element has been scaled, a new `scaled` CSS class is added to it.
 
     <div class="column">
       <img class="pat-auto-scale scaled" src="header.png" alt="" style="transform: scale(2.1);"/>
       <p>Lorem ipsum</p>
     </div>
 
-The default scaling method can be changed via an `data-pat-auto-scale`
-attribute.
+The default scaling method can be changed with the `method` property, which is
+set with the `data-pat-auto-scale` HTML5 attribute.
+
+The default setting for the `method` property is `scale`, which means that the element will be
+scaled by means of a [scale transform](http://www.w3.org/TR/css3-2d-transforms/#two-d-transform-functions).
+
+Alternatively, you can set the method to `zoom`, which means that the [zoom](http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx)
+CSS property will be used for scaling.
+
+Here is an example where the scale method is set to `zoom`.
 
     <div class="column">
       <img class="pat-auto-scale" data-pat-auto-scale="method: zoom" src="header.png" alt=""/>
       <p>Lorem ipsum</p>
     </div>
 
-The available methods are:
-
-* `scale`: Use a [scale transform](http://www.w3.org/TR/css3-2d-transforms/#two-d-transform-functions). (default)
-* `[zoom](http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx)1
-
 ### Browser support
 
 Patterns will check if the browser supports the requested method; if the requested
-method is known to be broken another method will be used. The current overrides
+method is known to not be supported then another method will be used. The current overrides
 are:
 
 * Firefox zoom does not support zoom ([mozilla bug
@@ -51,9 +57,9 @@ are:
 The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:
 
-| Property | Default value | Values | Description | Type |
+| Property | Default value | Available values | Description | Type |
 | -------- | ------------- | ------ | ----------- | ---- |
 | `method` | `scale` | `scale` `zoom` | The scaling method to use. One of `scale` or `zoom` | Mutually exclusive |
-| `min-width` | *unset* | | The minimum width in pixels to scale to. | Number |
-| `max-width` | *unset* | | The maximum width in pixels to scale to. | Number |
+| `min-width` | | | The minimum width in pixels to scale to. | Number |
+| `max-width` | | | The maximum width in pixels to scale to. | Number |
 
