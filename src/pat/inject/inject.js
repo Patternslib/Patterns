@@ -421,7 +421,6 @@ define([
                         {selector: cfg.target});
                 return false;
             }
-
             if (cfg.action === "content")
                 $target.empty().append($source);
             else if (cfg.action === "element")

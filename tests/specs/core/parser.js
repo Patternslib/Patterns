@@ -403,6 +403,19 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
                     expect(opts[1].target).toBe("#global-statusmessage");
                 });
 
+                it("Properly parses a combined arguments list which contains newlines", function() {
+                    var parser = new ArgumentParser("inject");
+                    parser.addArgument("source");
+                    parser.addArgument("target");
+                    var $content = $('<div class="pat-inject" data-pat-inject="source: #workspace-events; target: #workspace-events; && source: #global-statusmessage; target: #global-statusmessage;\n"></div>');
+                    var opts = parser.parse($content, true);
+                    expect(Array.isArray(opts)).toBe(true);
+                    expect(opts[0].source).toBe("#workspace-events");
+                    expect(opts[0].target).toBe("#workspace-events");
+                    expect(opts[1].source).toBe("#global-statusmessage");
+                    expect(opts[1].target).toBe("#global-statusmessage");
+                });
+
                 it("Provide multiple options to parse()", function() {
                     var parser=new ArgumentParser("mypattern");
                     parser.addArgument("value");
