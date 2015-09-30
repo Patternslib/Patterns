@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.11 - Sept. 30, 2015
+
+- Bugfix. Specifying combined pattern properties (with &&) not working on IE10.
+- Add an alternative parser, from the Mockup project.
+- Updated documentation.
+- Clone pattern has a new argument: remove-behaviour.
+
 ## 2.0.10 - Sept. 18, 2015
 
 - Add new argument "hooks" to pat-inject.
