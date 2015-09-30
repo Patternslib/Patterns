@@ -1,20 +1,24 @@
 ## Description
 
-This pattern provides a simple way to enlarge an item in your page.
+The zoom pattern provides a simple way to enlarge an item in your page.
 
 ## Documentation
 
-Patterns provides a very simple way to make an item zoomable: just add a
-`pat-zoom` class. Here is a simple example:
+It's easy to make an element zoomable with Patternslib. Just add a `pat-zoom` class to it.
+
+Here is a simple example:
 
     <img class="pat-zoom" src="image.jpg"/>
 
-Upon seeing this, Patterns will prepend a range input. Modifying this
-will update the *zoom* style for the element.
+Upon seeing the `pat-zoom` class, Patternslib will prepend an input element with type `"range"`.
+
+The user can use this range input to change the *zoom* CSS property for the zoomable element.
+
+For example:
 
     <input type="range" min="0" max="2" value="1" step="any"/>
     <img class="pat-zoom" src="image.jpg" style="zoom: 1"/>
     
 * * *
 
-Please note that due to the lack of support for the CSS `zoom: x` property in the Gecko render engine, Firefox is not supported for this pattern. 
+Please be aware that not all browsers support the `zoom: x` CSS property.

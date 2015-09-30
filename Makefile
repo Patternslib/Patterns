@@ -3,7 +3,8 @@ JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
 HTTPSERVE   ?= node_modules/.bin/http-server
-SASS        ?= sass 
+BUNDLE      ?= ./.bundle/bin/bundle
+SASS        ?= ./.bundle/bin/sass
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/pat/calendar/*.js) $(wildcard src/lib/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
@@ -31,6 +32,12 @@ stamp-npm: package.json
 stamp-bower: stamp-npm bower.json
 	$(BOWER) install
 	touch stamp-bower
+
+stamp-bundler:
+	mkdir -p .bundle
+	gem install --user bundler --bindir .bundle/bin
+	$(BUNDLE) install --path .bundle --binstubs .bundle/bin
+	touch stamp-bundler
 
 clean::
 	rm -f stamp-npm stamp-bower

@@ -1,5 +1,5 @@
 ## Description
-Auto suggest completes a user's input as he types, providing hints of possible input values in a dropdown list underneath the input field.
+The auto-suggest pattern completes a user's input as he types, providing hints of possible input values in a dropdown list underneath the input field.
 
 ## Documentation
 
@@ -12,32 +12,32 @@ The values inside the input can be cleared by means of a button of type reset in
 ### Examples
 
 
-    <input type="text" class="pat-autosuggest" data-pat-autosuggest="words: Apple, Pear, Banana; pre-fill: Apple; placeholder: Search by tag…" />
+    <input type="text" class="pat-auto-suggest" data-pat-auto-suggest="words: Apple, Pear, Banana; pre-fill: Apple; placeholder: Search by tag…" />
 
 
 Restricting the input to only one selected value:
 
-        <input class="pat-autosuggest" placeholder="Pick a car"
-                data-pat-autosuggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
+        <input class="pat-auto-suggest" placeholder="Pick a car"
+                data-pat-auto-suggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
                                     allow-new-words: false; max-selection-size: 1" type="text"></input>
 
 Pre-fill the input element with a list of words:
 
-        <input class="pat-autosuggest" placeholder="Pick a car"
-            data-pat-autosuggest="pre-fill: Toyota;
+        <input class="pat-auto-suggest" placeholder="Pick a car"
+            data-pat-auto-suggest="pre-fill: Toyota;
                                     words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
                                     allow-new-words: false;" type="text"></input>
 
 Pre-fill the input element with words in JSON format and don't allow the user to enter their own words.
 
-        <input class="pat-autosuggest" placeholder="Pick a character"
-               data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}];
+        <input class="pat-auto-suggest" placeholder="Pick a character"
+               data-pat-auto-suggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}];
                                      prefill-json: {"john-snow":"John Snow"};
                                      allow-new-words: false;' type="text"></input>
 
 ### Option reference
 
-You can customise the behaviour of a gallery through options in the `data-pat-autosuggest` attribute.
+You can customise the behaviour of a gallery through options in the `data-pat-auto-suggest` attribute.
 
 
 | Property            | Type     | Default Value  | Description                                                                                                 |

@@ -68,6 +68,7 @@ require.config({
         "pat-jquery-ext":           "core/jquery-ext",
         "pat-logger":               "core/logger",
         "pat-parser":               "core/parser",
+        "pat-mockup-parser":        "core/mockup-parser",
         "pat-registry":             "core/registry",
         "pat-remove":               "core/remove",
         "pat-store":                "core/store",

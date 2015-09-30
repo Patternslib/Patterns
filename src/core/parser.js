@@ -26,7 +26,7 @@ define([
     ArgumentParser.prototype = {
         group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
         json_param_pattern: /^\s*{/i,
-        named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:([^]*)$/i,
+        named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
         token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
         _camelCase: function(str) {

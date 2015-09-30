@@ -2,6 +2,7 @@ bundle.js
 /stamp-bower
 /stamp-npm
 /stamp-tinymce
+/stamp-bundler
 /node_modules
 /src/bower_components
 *.css.map
