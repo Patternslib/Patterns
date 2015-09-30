@@ -13860,7 +13860,7 @@ define('pat-parser',[
     ArgumentParser.prototype = {
         group_pattern: /([a-z][a-z0-9]*)-([A-Z][a-z0-0\-]*)/i,
         json_param_pattern: /^\s*{/i,
-        named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:([^]*)$/i,
+        named_param_pattern: /^\s*([a-z][a-z0-9\-]*)\s*:(.*)/i,
         token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
         _camelCase: function(str) {
@@ -15921,8 +15921,58 @@ define('pat-autoscale',[
     return _;
 });
 
+define('pat-mockup-parser',[
+    'jquery'
+], function($) {
+    'use strict';
+
+    var parser = {
+        getOptions: function getOptions($el, patternName, options) {
+            /* This is the Mockup parser. An alternative parser for Patternslib
+             * patterns.
+             *
+             * NOTE: Use of the Mockup parser is discouraged and is added here for
+             * legacy support for the Plone Mockup project.
+             *
+             * It parses a DOM element for pattern configuration options.
+             */
+            options = options || {};
+            // get options from parent element first, stop if element tag name is 'body'
+            if ($el.length !== 0 && !$.nodeName($el[0], 'body')) {
+                options = getOptions($el.parent(), patternName, options);
+            }
+            // collect all options from element
+            var elOptions = {};
+            if ($el.length !== 0) {
+                elOptions = $el.data('pat-' + patternName);
+                if (elOptions) {
+                    // parse options if string
+                    if (typeof(elOptions) === 'string') {
+                        var tmpOptions = {};
+                        $.each(elOptions.split(';'),
+                            function(i, item) {
+                                item = item.split(':');
+                                item.reverse();
+                                var key = item.pop();
+                                key = key.replace(/^\s+|\s+$/g, '');    // trim
+                                item.reverse();
+                                var value = item.join(':');
+                                value = value.replace(/^\s+|\s+$/g, '');    // trim
+                                tmpOptions[key] = value;
+                            }
+                        );
+                        elOptions = tmpOptions;
+                    }
+                }
+            }
+            return $.extend(true, {}, options, elOptions);
+        }
+    };
+    return parser;
+});
+
 /**
- * A Base pattern for creating scoped patterns. It'ssSimilar to Backbone's
+ * A Base pattern for creating scoped patterns. It's similar to Backbone's
  * Model class. The advantage of this approach is that each instance of a
  * pattern has its own local scope (closure).
  *
@@ -15936,24 +15986,26 @@ define('pat-autoscale',[
  */
 
 define('pat-base',[
-  'jquery',
-  'pat-registry',
+  "jquery",
+  "pat-registry",
+  "pat-mockup-parser",
   "pat-logger"
-], function($, Registry, logger) {
-    'use strict';
+], function($, Registry, mockupParser, logger) {
+    "use strict";
     var log = logger.getLogger("Patternslib Base");
 
     var initBasePattern = function initBasePattern($el, options, trigger) {
         var name = this.prototype.name;
         var log = logger.getLogger("pat." + name);
-        var pattern = $el.data('pattern-' + name);
+        var pattern = $el.data("pattern-" + name);
         if (pattern === undefined && Registry.patterns[name]) {
             try {
+                options = this.prototype.parser  === "mockup" ? mockupParser.getOptions($el, name, options) : options;
                 pattern = new Registry.patterns[name]($el, options, trigger);
             } catch (e) {
-                log.error('Failed while initializing "' + name + '" pattern.');
+                log.error("Failed while initializing '" + name + "' pattern.", e);
             }
-            $el.data('pattern-' + name, pattern);
+            $el.data("pattern-" + name, pattern);
         }
         return pattern;
     };
@@ -15962,20 +16014,20 @@ define('pat-base',[
         this.$el = $el;
         this.options = $.extend(true, {}, this.defaults || {}, options || {});
         this.init($el, options, trigger);
-        this.emit('init');
+        this.emit("init");
     };
 
     Base.prototype = {
         constructor: Base,
         on: function(eventName, eventCallback) {
-            this.$el.on(eventName + '.' + this.name + '.patterns', eventCallback);
+            this.$el.on(eventName + "." + this.name + ".patterns", eventCallback);
         },
         emit: function(eventName, args) {
             // args should be a list
             if (args === undefined) {
                 args = [];
             }
-            this.$el.trigger(eventName + '.' + this.name + '.patterns', args);
+            this.$el.trigger(eventName + "." + this.name + ".patterns", args);
         }
     };
 
@@ -15993,7 +16045,7 @@ define('pat-base',[
         // The constructor function for the new subclass is either defined by you
         // (the "constructor" property in your `extend` definition), or defaulted
         // by us to simply call the parent's constructor.
-        if (patternProps.hasOwnProperty('constructor')) {
+        if (patternProps.hasOwnProperty("constructor")) {
             child = patternProps.constructor;
         } else {
             child = function() { parent.apply(this, arguments); };
@@ -18336,7 +18388,7 @@ define('pat-store',[],function() {
 // vim: sw=4 expandtab
 ;
 //! moment.js
-//! version : 2.10.6
+//! version : 2.10.3
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -18431,7 +18483,6 @@ define('pat-store',[],function() {
                 flags.overflow < 0 &&
                 !flags.empty &&
                 !flags.invalidMonth &&
-                !flags.invalidWeekday &&
                 !flags.nullInput &&
                 !flags.invalidFormat &&
                 !flags.userInvalidated;
@@ -18512,7 +18563,7 @@ define('pat-store',[],function() {
     // Moment prototype object
     function Moment(config) {
         copyConfig(this, config);
-        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+        this._d = new Date(+config._d);
         // Prevent infinite loop in case updateOffset creates new moment
         // objects.
         if (updateInProgress === false) {
@@ -18526,20 +18577,16 @@ define('pat-store',[],function() {
         return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
     }
 
-    function absFloor (number) {
-        if (number < 0) {
-            return Math.ceil(number);
-        } else {
-            return Math.floor(number);
-        }
-    }
-
     function toInt(argumentForCoercion) {
         var coercedNumber = +argumentForCoercion,
             value = 0;
 
         if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-            value = absFloor(coercedNumber);
+            if (coercedNumber >= 0) {
+                value = Math.floor(coercedNumber);
+            } else {
+                value = Math.ceil(coercedNumber);
+            }
         }
 
         return value;
@@ -18637,7 +18684,9 @@ define('pat-store',[],function() {
     function defineLocale (name, values) {
         if (values !== null) {
             values.abbr = name;
-            locales[name] = locales[name] || new Locale();
+            if (!locales[name]) {
+                locales[name] = new Locale();
+            }
             locales[name].set(values);
 
             // backwards compat for now: also set the locale
@@ -18741,14 +18790,16 @@ define('pat-store',[],function() {
     }
 
     function zeroFill(number, targetLength, forceSign) {
-        var absNumber = '' + Math.abs(number),
-            zerosToFill = targetLength - absNumber.length,
+        var output = '' + Math.abs(number),
             sign = number >= 0;
-        return (sign ? (forceSign ? '+' : '') : '-') +
-            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
+
+        while (output.length < targetLength) {
+            output = '0' + output;
+        }
+        return (sign ? (forceSign ? '+' : '') : '-') + output;
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|x|X|zz?|ZZ?|.)/g;
 
     var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
 
@@ -18816,7 +18867,10 @@ define('pat-store',[],function() {
         }
 
         format = expandFormat(format, m.localeData());
-        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
+
+        if (!formatFunctions[format]) {
+            formatFunctions[format] = makeFormatFunction(format);
+        }
 
         return formatFunctions[format](m);
     }
@@ -18860,15 +18914,8 @@ define('pat-store',[],function() {
 
     var regexes = {};
 
-    function isFunction (sth) {
-        // https://github.com/moment/moment/issues/2325
-        return typeof sth === 'function' &&
-            Object.prototype.toString.call(sth) === '[object Function]';
-    }
-
-
     function addRegexToken (token, regex, strictRegex) {
-        regexes[token] = isFunction(regex) ? regex : function (isStrict) {
+        regexes[token] = typeof regex === 'function' ? regex : function (isStrict) {
             return (isStrict && strictRegex) ? strictRegex : regex;
         };
     }
@@ -19076,11 +19123,12 @@ define('pat-store',[],function() {
     }
 
     function deprecate(msg, fn) {
-        var firstTime = true;
+        var firstTime = true,
+            msgWithStack = msg + '\n' + (new Error()).stack;
 
         return extend(function () {
             if (firstTime) {
-                warn(msg + '\n' + (new Error()).stack);
+                warn(msgWithStack);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -19128,14 +19176,14 @@ define('pat-store',[],function() {
             getParsingFlags(config).iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
-                    config._f = isoDates[i][0];
+                    // match[5] should be 'T' or undefined
+                    config._f = isoDates[i][0] + (match[6] || ' ');
                     break;
                 }
             }
             for (i = 0, l = isoTimes.length; i < l; i++) {
                 if (isoTimes[i][1].exec(string)) {
-                    // match[6] should be 'T' or space
-                    config._f += (match[6] || ' ') + isoTimes[i][0];
+                    config._f += isoTimes[i][0];
                     break;
                 }
             }
@@ -19214,10 +19262,7 @@ define('pat-store',[],function() {
     addRegexToken('YYYYY',  match1to6, match6);
     addRegexToken('YYYYYY', match1to6, match6);
 
-    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
-    addParseToken('YYYY', function (input, array) {
-        array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
-    });
+    addParseToken(['YYYY', 'YYYYY', 'YYYYYY'], YEAR);
     addParseToken('YY', function (input, array) {
         array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
     });
@@ -19344,18 +19389,18 @@ define('pat-store',[],function() {
 
     //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
     function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
-        var week1Jan = 6 + firstDayOfWeek - firstDayOfWeekOfYear, janX = createUTCDate(year, 0, 1 + week1Jan), d = janX.getUTCDay(), dayOfYear;
-        if (d < firstDayOfWeek) {
-            d += 7;
-        }
+        var d = createUTCDate(year, 0, 1).getUTCDay();
+        var daysToAdd;
+        var dayOfYear;
 
-        weekday = weekday != null ? 1 * weekday : firstDayOfWeek;
-
-        dayOfYear = 1 + week1Jan + 7 * (week - 1) - d + weekday;
+        d = d === 0 ? 7 : d;
+        weekday = weekday != null ? weekday : firstDayOfWeek;
+        daysToAdd = firstDayOfWeek - d + (d > firstDayOfWeekOfYear ? 7 : 0) - (d < firstDayOfWeek ? 7 : 0);
+        dayOfYear = 7 * (week - 1) + (weekday - firstDayOfWeek) + daysToAdd + 1;
 
         return {
-            year: dayOfYear > 0 ? year : year - 1,
-            dayOfYear: dayOfYear > 0 ?  dayOfYear : daysInYear(year - 1) + dayOfYear
+            year      : dayOfYear > 0 ? year      : year - 1,
+            dayOfYear : dayOfYear > 0 ? dayOfYear : daysInYear(year - 1) + dayOfYear
         };
     }
 
@@ -19641,19 +19686,9 @@ define('pat-store',[],function() {
     }
 
     function createFromConfig (config) {
-        var res = new Moment(checkOverflow(prepareConfig(config)));
-        if (res._nextDay) {
-            // Adding is smart enough around DST
-            res.add(1, 'd');
-            res._nextDay = undefined;
-        }
-
-        return res;
-    }
-
-    function prepareConfig (config) {
         var input = config._i,
-            format = config._f;
+            format = config._f,
+            res;
 
         config._locale = config._locale || locale_locales__getLocale(config._l);
 
@@ -19677,7 +19712,14 @@ define('pat-store',[],function() {
             configFromInput(config);
         }
 
-        return config;
+        res = new Moment(checkOverflow(config));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
     }
 
     function configFromInput(config) {
@@ -19757,7 +19799,7 @@ define('pat-store',[],function() {
         }
         res = moments[0];
         for (i = 1; i < moments.length; ++i) {
-            if (!moments[i].isValid() || moments[i][fn](res)) {
+            if (moments[i][fn](res)) {
                 res = moments[i];
             }
         }
@@ -19869,6 +19911,7 @@ define('pat-store',[],function() {
         } else {
             return local__createLocal(input).local();
         }
+        return model._isUTC ? local__createLocal(input).zone(model._offset || 0) : local__createLocal(input).local();
     }
 
     function getDateOffset (m) {
@@ -19968,7 +20011,12 @@ define('pat-store',[],function() {
     }
 
     function hasAlignedHourOffset (input) {
-        input = input ? local__createLocal(input).utcOffset() : 0;
+        if (!input) {
+            input = 0;
+        }
+        else {
+            input = local__createLocal(input).utcOffset();
+        }
 
         return (this.utcOffset() - input) % 60 === 0;
     }
@@ -19981,24 +20029,12 @@ define('pat-store',[],function() {
     }
 
     function isDaylightSavingTimeShifted () {
-        if (typeof this._isDSTShifted !== 'undefined') {
-            return this._isDSTShifted;
+        if (this._a) {
+            var other = this._isUTC ? create_utc__createUTC(this._a) : local__createLocal(this._a);
+            return this.isValid() && compareArrays(this._a, other.toArray()) > 0;
         }
 
-        var c = {};
-
-        copyConfig(c, this);
-        c = prepareConfig(c);
-
-        if (c._a) {
-            var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
-            this._isDSTShifted = this.isValid() &&
-                compareArrays(c._a, other.toArray()) > 0;
-        } else {
-            this._isDSTShifted = false;
-        }
-
-        return this._isDSTShifted;
+        return false;
     }
 
     function isLocal () {
@@ -20158,7 +20194,7 @@ define('pat-store',[],function() {
     var add_subtract__add      = createAdder(1, 'add');
     var add_subtract__subtract = createAdder(-1, 'subtract');
 
-    function moment_calendar__calendar (time, formats) {
+    function moment_calendar__calendar (time) {
         // We want to compare the start of today, vs this.
         // Getting start-of-today depends on whether we're local/utc/offset or not.
         var now = time || local__createLocal(),
@@ -20170,7 +20206,7 @@ define('pat-store',[],function() {
                 diff < 1 ? 'sameDay' :
                 diff < 2 ? 'nextDay' :
                 diff < 7 ? 'nextWeek' : 'sameElse';
-        return this.format(formats && formats[format] || this.localeData().calendar(format, this, local__createLocal(now)));
+        return this.format(this.localeData().calendar(format, this, local__createLocal(now)));
     }
 
     function clone () {
@@ -20214,6 +20250,14 @@ define('pat-store',[],function() {
         } else {
             inputMs = +local__createLocal(input);
             return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
+        }
+    }
+
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
         }
     }
 
@@ -20407,19 +20451,6 @@ define('pat-store',[],function() {
         return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
     }
 
-    function toObject () {
-        var m = this;
-        return {
-            years: m.year(),
-            months: m.month(),
-            date: m.date(),
-            hours: m.hours(),
-            minutes: m.minutes(),
-            seconds: m.seconds(),
-            milliseconds: m.milliseconds()
-        };
-    }
-
     function moment_valid__isValid () {
         return valid__isValid(this);
     }
@@ -20591,20 +20622,18 @@ define('pat-store',[],function() {
     // HELPERS
 
     function parseWeekday(input, locale) {
-        if (typeof input !== 'string') {
-            return input;
+        if (typeof input === 'string') {
+            if (!isNaN(input)) {
+                input = parseInt(input, 10);
+            }
+            else {
+                input = locale.weekdaysParse(input);
+                if (typeof input !== 'number') {
+                    return null;
+                }
+            }
         }
-
-        if (!isNaN(input)) {
-            return parseInt(input, 10);
-        }
-
-        input = locale.weekdaysParse(input);
-        if (typeof input === 'number') {
-            return input;
-        }
-
-        return null;
+        return input;
     }
 
     // LOCALES
@@ -20627,7 +20656,9 @@ define('pat-store',[],function() {
     function localeWeekdaysParse (weekdayName) {
         var i, mom, regex;
 
-        this._weekdaysParse = this._weekdaysParse || [];
+        if (!this._weekdaysParse) {
+            this._weekdaysParse = [];
+        }
 
         for (i = 0; i < 7; i++) {
             // make the regex if we don't have it already
@@ -20774,26 +20805,12 @@ define('pat-store',[],function() {
         return ~~(this.millisecond() / 10);
     });
 
-    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
-    addFormatToken(0, ['SSSS', 4], 0, function () {
-        return this.millisecond() * 10;
-    });
-    addFormatToken(0, ['SSSSS', 5], 0, function () {
-        return this.millisecond() * 100;
-    });
-    addFormatToken(0, ['SSSSSS', 6], 0, function () {
-        return this.millisecond() * 1000;
-    });
-    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
-        return this.millisecond() * 10000;
-    });
-    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
-        return this.millisecond() * 100000;
-    });
-    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
-        return this.millisecond() * 1000000;
-    });
+    function millisecond__milliseconds (token) {
+        addFormatToken(0, [token, 3], 0, 'millisecond');
+    }
 
+    millisecond__milliseconds('SSS');
+    millisecond__milliseconds('SSSS');
 
     // ALIASES
 
@@ -20804,19 +20821,11 @@ define('pat-store',[],function() {
     addRegexToken('S',    match1to3, match1);
     addRegexToken('SS',   match1to3, match2);
     addRegexToken('SSS',  match1to3, match3);
-
-    var token;
-    for (token = 'SSSS'; token.length <= 9; token += 'S') {
-        addRegexToken(token, matchUnsigned);
-    }
-
-    function parseMs(input, array) {
+    addRegexToken('SSSS', matchUnsigned);
+    addParseToken(['S', 'SS', 'SSS', 'SSSS'], function (input, array) {
         array[MILLISECOND] = toInt(('0.' + input) * 1000);
-    }
+    });
 
-    for (token = 'S'; token.length <= 9; token += 'S') {
-        addParseToken(token, parseMs);
-    }
     // MOMENTS
 
     var getSetMillisecond = makeGetSet('Milliseconds', false);
@@ -20863,7 +20872,6 @@ define('pat-store',[],function() {
     momentPrototype__proto.startOf      = startOf;
     momentPrototype__proto.subtract     = add_subtract__subtract;
     momentPrototype__proto.toArray      = toArray;
-    momentPrototype__proto.toObject     = toObject;
     momentPrototype__proto.toDate       = toDate;
     momentPrototype__proto.toISOString  = moment_format__toISOString;
     momentPrototype__proto.toJSON       = moment_format__toISOString;
@@ -20963,23 +20971,19 @@ define('pat-store',[],function() {
         LT   : 'h:mm A',
         L    : 'MM/DD/YYYY',
         LL   : 'MMMM D, YYYY',
-        LLL  : 'MMMM D, YYYY h:mm A',
-        LLLL : 'dddd, MMMM D, YYYY h:mm A'
+        LLL  : 'MMMM D, YYYY LT',
+        LLLL : 'dddd, MMMM D, YYYY LT'
     };
 
     function longDateFormat (key) {
-        var format = this._longDateFormat[key],
-            formatUpper = this._longDateFormat[key.toUpperCase()];
-
-        if (format || !formatUpper) {
-            return format;
+        var output = this._longDateFormat[key];
+        if (!output && this._longDateFormat[key.toUpperCase()]) {
+            output = this._longDateFormat[key.toUpperCase()].replace(/MMMM|MM|DD|dddd/g, function (val) {
+                return val.slice(1);
+            });
+            this._longDateFormat[key] = output;
         }
-
-        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
-            return val.slice(1);
-        });
-
-        return this._longDateFormat[key];
+        return output;
     }
 
     var defaultInvalidDate = 'Invalid date';
@@ -21188,29 +21192,12 @@ define('pat-store',[],function() {
         return duration_add_subtract__addSubtract(this, input, value, -1);
     }
 
-    function absCeil (number) {
-        if (number < 0) {
-            return Math.floor(number);
-        } else {
-            return Math.ceil(number);
-        }
-    }
-
     function bubble () {
         var milliseconds = this._milliseconds;
         var days         = this._days;
         var months       = this._months;
         var data         = this._data;
-        var seconds, minutes, hours, years, monthsFromDays;
-
-        // if we have a mix of positive and negative values, bubble down first
-        // check: https://github.com/moment/moment/issues/2166
-        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
-                (milliseconds <= 0 && days <= 0 && months <= 0))) {
-            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
-            days = 0;
-            months = 0;
-        }
+        var seconds, minutes, hours, years = 0;
 
         // The following code bubbles up values, see the tests for
         // examples of what that means.
@@ -21227,13 +21214,17 @@ define('pat-store',[],function() {
 
         days += absFloor(hours / 24);
 
-        // convert days to months
-        monthsFromDays = absFloor(daysToMonths(days));
-        months += monthsFromDays;
-        days -= absCeil(monthsToDays(monthsFromDays));
+        // Accurately convert days to years, assume start from year 0.
+        years = absFloor(daysToYears(days));
+        days -= absFloor(yearsToDays(years));
+
+        // 30 days to a month
+        // TODO (iskren): Use anchor date (like 1st Jan) to compute this.
+        months += absFloor(days / 30);
+        days   %= 30;
 
         // 12 months -> 1 year
-        years = absFloor(months / 12);
+        years  += absFloor(months / 12);
         months %= 12;
 
         data.days   = days;
@@ -21243,15 +21234,15 @@ define('pat-store',[],function() {
         return this;
     }
 
-    function daysToMonths (days) {
+    function daysToYears (days) {
         // 400 years have 146097 days (taking into account leap year rules)
-        // 400 years have 12 months === 4800
-        return days * 4800 / 146097;
+        return days * 400 / 146097;
     }
 
-    function monthsToDays (months) {
-        // the reverse of daysToMonths
-        return months * 146097 / 4800;
+    function yearsToDays (years) {
+        // years * 365 + absFloor(years / 4) -
+        //     absFloor(years / 100) + absFloor(years / 400);
+        return years * 146097 / 400;
     }
 
     function as (units) {
@@ -21263,11 +21254,11 @@ define('pat-store',[],function() {
 
         if (units === 'month' || units === 'year') {
             days   = this._days   + milliseconds / 864e5;
-            months = this._months + daysToMonths(days);
+            months = this._months + daysToYears(days) * 12;
             return units === 'month' ? months : months / 12;
         } else {
             // handle milliseconds separately because of floating point math errors (issue #1867)
-            days = this._days + Math.round(monthsToDays(this._months));
+            days = this._days + Math.round(yearsToDays(this._months / 12));
             switch (units) {
                 case 'week'   : return days / 7     + milliseconds / 6048e5;
                 case 'day'    : return days         + milliseconds / 864e5;
@@ -21317,7 +21308,7 @@ define('pat-store',[],function() {
         };
     }
 
-    var milliseconds = makeGetter('milliseconds');
+    var duration_get__milliseconds = makeGetter('milliseconds');
     var seconds      = makeGetter('seconds');
     var minutes      = makeGetter('minutes');
     var hours        = makeGetter('hours');
@@ -21395,36 +21386,13 @@ define('pat-store',[],function() {
     var iso_string__abs = Math.abs;
 
     function iso_string__toISOString() {
-        // for ISO strings we do not use the normal bubbling rules:
-        //  * milliseconds bubble up until they become hours
-        //  * days do not bubble at all
-        //  * months bubble up until they become years
-        // This is because there is no context-free conversion between hours and days
-        // (think of clock changes)
-        // and also not between days and months (28-31 days per month)
-        var seconds = iso_string__abs(this._milliseconds) / 1000;
-        var days         = iso_string__abs(this._days);
-        var months       = iso_string__abs(this._months);
-        var minutes, hours, years;
-
-        // 3600 seconds -> 60 minutes -> 1 hour
-        minutes           = absFloor(seconds / 60);
-        hours             = absFloor(minutes / 60);
-        seconds %= 60;
-        minutes %= 60;
-
-        // 12 months -> 1 year
-        years  = absFloor(months / 12);
-        months %= 12;
-
-
         // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
-        var Y = years;
-        var M = months;
-        var D = days;
-        var h = hours;
-        var m = minutes;
-        var s = seconds;
+        var Y = iso_string__abs(this.years());
+        var M = iso_string__abs(this.months());
+        var D = iso_string__abs(this.days());
+        var h = iso_string__abs(this.hours());
+        var m = iso_string__abs(this.minutes());
+        var s = iso_string__abs(this.seconds() + this.milliseconds() / 1000);
         var total = this.asSeconds();
 
         if (!total) {
@@ -21461,7 +21429,7 @@ define('pat-store',[],function() {
     duration_prototype__proto.valueOf        = duration_as__valueOf;
     duration_prototype__proto._bubble        = bubble;
     duration_prototype__proto.get            = duration_get__get;
-    duration_prototype__proto.milliseconds   = milliseconds;
+    duration_prototype__proto.milliseconds   = duration_get__milliseconds;
     duration_prototype__proto.seconds        = seconds;
     duration_prototype__proto.minutes        = minutes;
     duration_prototype__proto.hours          = hours;
@@ -21499,7 +21467,7 @@ define('pat-store',[],function() {
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.10.6';
+    utils_hooks__hooks.version = '2.10.3';
 
     setHookCallback(local__createLocal);
 
@@ -30174,7 +30142,10 @@ define("pat-clone",[
     parser.addArgument("template", ":first");
     parser.addArgument("trigger-element", ".add-clone");
     parser.addArgument("remove-element", ".remove-clone");
+    parser.addArgument("remove-behaviour", "confirm", ["confirm", "none"]);
+    parser.addArgument("remove-confirmation", "Are you sure you want to remove this element?");
     parser.addArgument("clone-element", ".clone");
+    parser.addAlias("remove-behavior", "remove-behaviour");
     var TEXT_NODE = 3;
 
     return Base.extend({
@@ -30194,7 +30165,7 @@ define("pat-clone",[
             this.num_clones = $clones.length;
             $clones.each(function (idx, clone) {
                 var $clone = $(clone);
-                $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
+                $clone.find(this.options.remove.element).on("click", this.confirmRemoval.bind(this, $clone));
             }.bind(this));
         },
 
@@ -30219,7 +30190,7 @@ define("pat-clone",[
 
             $clone.appendTo(this.$el);
             $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
-            $clone.find(this.options.removeElement).on("click", this.remove.bind(this, $clone));
+            $clone.find(this.options.remove.element).on("click", this.confirmRemoval.bind(this, $clone));
 
             $clone.removeAttr("hidden");
             registry.scan($clone);
@@ -30245,6 +30216,16 @@ define("pat-clone",[
                 $.each(el.attributes, callback.bind(this));
             } else if (el.data.length) {
                 el.data = el.data.replace("#{1}", this.num_clones);
+            }
+        },
+
+        confirmRemoval: function confirmRemoval($el, callback) {
+            if (this.options.remove.behaviour === "confirm") {
+                if (window.confirm(this.options.remove.confirmation) === true) {
+                    this.remove($el);
+                }
+            } else {
+                this.remove($el);
             }
         },
 
@@ -31015,7 +30996,6 @@ define('pat-inject',[
                         {selector: cfg.target});
                 return false;
             }
-
             if (cfg.action === "content")
                 $target.empty().append($source);
             else if (cfg.action === "element")
@@ -31485,7 +31465,7 @@ define('pat-collapsible',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-// Spectrum Colorpicker v1.7.1
+// Spectrum Colorpicker v1.7.0
 // https://github.com/bgrins/spectrum
 // Author: Brian Grinstead
 // License: MIT
@@ -32671,8 +32651,8 @@ define('pat-collapsible',[
     $.fn.spectrum.defaults = defaultOpts;
     $.fn.spectrum.inputTypeColorSupport = function inputTypeColorSupport() {
         if (typeof inputTypeColorSupport._cachedResult === "undefined") {
-            var colorInput = $("<input type='color'/>")[0]; // if color element is supported, value will default to not null
-            inputTypeColorSupport._cachedResult = colorInput.type === "color" && colorInput.value !== "";
+            var colorInput = $("<input type='color' value='!' />")[0];
+            inputTypeColorSupport._cachedResult = colorInput.type === "color" && colorInput.value !== "!";
         }
         return inputTypeColorSupport._cachedResult;
     };
