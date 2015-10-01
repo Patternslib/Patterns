@@ -1,15 +1,15 @@
 # The argument parser's API
 
-Many patterns can be configured to change their behaviour. This is done
+Patterns can usually be configured to change their behaviour. This is done
 by passing arguments to the parser in data-pat-\* attributes or by using
 an internal javascript API. All processing of arguments is done by the
 argument parser. Using the parser is easy:
 
 ```
 var parser = new ArgumentParser("tooltip");
-parser.add_argument("delay", 150);
-parser.add_argument("loop", false);
-parser.add_argument("next-label", "Next");
+parser.addArgument("delay", 150);
+parser.addArgument("loop", false);
+parser.addArgument("next-label", "Next");
 
 $("[data-pat-tooltip]").each(function() {
     var options = parser.parse($(this));
@@ -41,7 +41,7 @@ they are:
    right attribute to parse for elements.
 
 
-- **ArgumentParser.add_argument(name[, default[, choices[, multiple]]])**
+- **ArgumentParser.addArgument(name[, default[, choices[, multiple]]])**
 
     Parameters:
     - **name** *(String)*: argument name
@@ -61,7 +61,7 @@ they are:
     The default value can also be a function taking a jQuery wrapped element
     and the parameter name as arguments and which returns a default value.
 
-        parser.add_argument("delay", function($el, name) {
+        parser.addArgument("delay", function($el, name) {
             return 500;
         });
 
@@ -80,10 +80,10 @@ they are:
     options will be returned as a sub-object. For example a parser with
     these arguments:
 
-        parser.add_argument("selector", ".pattern");
-        parser.add_argument("control-arrows", false);
-        parser.add_argument("control-links", true);
-        parser.add_argument("control-index", false);
+        parser.addArgument("selector", ".pattern");
+        parser.addArgument("control-arrows", false);
+        parser.addArgument("control-links", true);
+        parser.addArgument("control-index", false);
 
     will return an object like this:
 
