@@ -1,6 +1,9 @@
 ## Description
 
-The zoom pattern provides a simple way to enlarge an item in your page.
+The Zoom pattern creates a zoom slider for any (group of) object the user should be able to change size of.
+A very typical application of this pattern is a group of thumbnails that the user may change in size.
+Note, that some browsers (for example Firefox) don't support the `zoom: x` CSS property required for this
+pattern to work.
 
 ## Documentation
 
@@ -18,7 +21,3 @@ For example:
 
     <input type="range" min="0" max="2" value="1" step="any"/>
     <img class="pat-zoom" src="image.jpg" style="zoom: 1"/>
-    
-* * *
-
-Please be aware that not all browsers support the `zoom: x` CSS property.
