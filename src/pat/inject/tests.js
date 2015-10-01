@@ -95,6 +95,30 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 expect(window.confirm.callCount).toBe(1);
                 expect(pattern.onTrigger).toHaveBeenCalled();
             });
+
+            describe("The confirm-message argument", function() {
+                afterEach(function() {
+                    $("#lab").empty();
+                });
+
+                it("can be used to provide a custom confirmation prompt message", function() {
+                    var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: always; confirm-message: Hello world\">link</a>");
+                    var $div = $("<div id=\"someid\" />");
+                    $("#lab").empty().append($a).append($div);
+                    spyOn(pattern, "onTrigger").andCallThrough();
+                    spyOn(window, 'confirm').andReturn(false);
+
+                    // Test default value for parser argument
+                    var cfgs = pattern.extractConfig($a, {});
+                    expect(cfgs[0].confirm).toBe('always');
+
+                    // Test that confirm doesn't get called
+                    pattern.init($a);
+                    $a.trigger("click");
+                    expect(window.confirm).toHaveBeenCalled();
+                    expect(window.confirm).toHaveBeenCalledWith('Hello world');
+                });
+            });
         });
 
         describe("rebaseHTML", function() {

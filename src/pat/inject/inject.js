@@ -25,6 +25,7 @@ define([
     parser.addArgument("source");
     parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible"]);
     parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
+    parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
     /* Once injection has completed successfully, pat-inject will trigger
      * an event for each hook: pat-inject-hook-$(hook)
      */
@@ -208,7 +209,7 @@ define([
                 }
                 // check if target is "dirty"
                 if (confirm) {
-                    if (!window.confirm('Are you sure you want to leave this page?')) {
+                    if (!window.confirm(cfg.confirmMessage)) {
                         return false;
                     }
                 }

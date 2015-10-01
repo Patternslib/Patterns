@@ -331,6 +331,7 @@ You can customise the behaviour of injection through options in the `data-pat-in
 | Property | Default value | Values | Description | Type |
 | ----- | --------| -------- | ------- | ----------- |
 | `confirm` | `class` | class, always, never, form-data | Should a confirmation prompt be shown to the user before injection happens? Setting this to `form-data` means a prompt will be shown if there are form fields with values that will be replaced with the injected content. A value of `class` means that the pattern will check for the `is-dirty` CSS class on the target element. If the class is there, a confirmation prompt will be shown. | One of the allowable values. |
+| `confirm-message` | `Are you sure you want to leave this page?` | | What message should be shown to the user in the confirmation prompt? | |
 | `selector` | `body` | | Selector identifying which section of the loaded document to inject. | Selector string|
 | `target` | `body` | | Selector identifying where to inject the loaded content. | Selector string |
 | `data-type` | `html` | `html` `markdown`| The type of content that is loaded. This is normally detected automatically. | One of the mutually exclusive string values. |
