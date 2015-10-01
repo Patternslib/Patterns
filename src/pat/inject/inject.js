@@ -18,13 +18,13 @@ define([
         parser = new Parser("inject"),
         TEXT_NODE = 3;
 
-    parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
     parser.addArgument("selector");
     parser.addArgument("target");
     parser.addArgument("data-type", "html");
     parser.addArgument("next-href");
     parser.addArgument("source");
     parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible"]);
+    parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
     /* Once injection has completed successfully, pat-inject will trigger
      * an event for each hook: pat-inject-hook-$(hook)
      */
