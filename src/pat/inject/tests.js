@@ -1,6 +1,6 @@
 define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
-    describe("inject-pattern", function() {
+    describe("pat-inject", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
@@ -8,6 +8,93 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
         afterEach(function() {
             $("#lab").remove();
+        });
+
+        describe("The confirm argument", function() {
+            afterEach(function() {
+                $("#lab").empty();
+            });
+
+            it("is by default set to 'class', which means it asks for confirmation based on a class on the target", function() {
+                var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
+                var $div = $("<div id=\"someid\" />");
+                $("#lab").empty().append($a).append($div);
+                spyOn(pattern, "onTrigger").andCallThrough();
+                spyOn(window, 'confirm').andReturn(false);
+
+                // Test default value for parser argument
+                var cfgs = pattern.extractConfig($a, {});
+                expect(cfgs[0].confirm).toBe('class');
+
+                // Test that confirm doesn't get called
+                pattern.init($a);
+                $a.trigger("click");
+                expect(window.confirm).not.toHaveBeenCalled();
+
+                $div.addClass('is-dirty');
+                $a.trigger("click");
+                expect(window.confirm).toHaveBeenCalled();
+            });
+
+            it("can be set to 'never' to never ask for confirmation", function() {
+                var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: never\">link</a>");
+                var $div = $("<div id=\"someid\" />");
+                $("#lab").empty().append($a).append($div);
+                spyOn(pattern, "onTrigger").andCallThrough();
+                spyOn(window, 'confirm').andReturn(false);
+
+                // Test default value for parser argument
+                var cfgs = pattern.extractConfig($a, {});
+                expect(cfgs[0].confirm).toBe('never');
+
+                // Test that confirm doesn't get called
+                pattern.init($a);
+                $a.trigger("click");
+                expect(window.confirm).not.toHaveBeenCalled();
+                expect(pattern.onTrigger).toHaveBeenCalled();
+            });
+
+            it("can be set to 'always' to always ask for confirmation before injecting", function() {
+                var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: always\">link</a>");
+                var $div = $("<div id=\"someid\" />");
+                $("#lab").empty().append($a).append($div);
+                spyOn(pattern, "onTrigger").andCallThrough();
+                spyOn(window, 'confirm').andReturn(true);
+
+                // Test default value for parser argument
+                var cfgs = pattern.extractConfig($a, {});
+                expect(cfgs[0].confirm).toBe('always');
+
+                // Test that confirm does get called
+                pattern.init($a);
+                $a.trigger("click");
+                expect(pattern.onTrigger).toHaveBeenCalled();
+                expect(window.confirm).toHaveBeenCalled();
+            });
+
+            it("can be set to 'form-data' to ask for confirmation before injecting over form fields changed by the user", function() {
+                var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: form-data\">link</a>");
+                var $div = $("<form id=\"someid\"><input type=\"text\" name=\"name\"/></form>");
+                $("#lab").empty().append($a).append($div);
+                spyOn(pattern, "onTrigger").andCallThrough();
+                spyOn(window, 'confirm').andReturn(true);
+
+                // Test default value for parser argument
+                var cfgs = pattern.extractConfig($a, {});
+                expect(cfgs[0].confirm).toBe('form-data');
+
+                $('[name="name"]').val('hello world');
+
+                // Test that confirm does get called
+                pattern.init($a);
+                $a.trigger("click");
+                expect(window.confirm).toHaveBeenCalled();
+
+                $('[name="name"]').val('');
+                $a.trigger("click");
+                expect(window.confirm.callCount).toBe(1);
+                expect(pattern.onTrigger).toHaveBeenCalled();
+            });
         });
 
         describe("rebaseHTML", function() {
@@ -106,7 +193,6 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                 it("take first positional option as source and target", function() {
                     var cfgs;
-
                     $a.attr("data-pat-inject", "#otherid");
                     $target.attr("id", "otherid");
                     cfgs = pattern.extractConfig($a);
@@ -173,9 +259,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                 it("fetches url on click", function() {
                     pattern.init($a);
-
                     $a.trigger("click");
-
                     expect($.ajax).toHaveBeenCalled();
                     expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
                 });
