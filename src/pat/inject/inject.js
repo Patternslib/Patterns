@@ -214,12 +214,6 @@ define([
                         return false;
                     }
                 }
-                if (cfg.confirm == 'class') {
-                    // XXX: this assumes too much, causes technical debt and shouldn't be here :(
-                    // Work was done for pat-raptor and this line should
-                    // ideally go there.
-                    cfg.$target.removeClass('is-dirty');
-                }
 
                 // pat-inject is used to populate target in some form and when
                 // Cancel button is presed (this triggers reset event on the
