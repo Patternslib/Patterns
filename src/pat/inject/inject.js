@@ -39,7 +39,7 @@ define([
 
     var _ = {
         name: "inject",
-        trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+        trigger: ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function inject_init($el, opts) {
             var cfgs = _.extractConfig($el, opts);
             // if the injection shall add a history entry and HTML5 pushState
@@ -86,6 +86,7 @@ define([
                     _._initAutoloadVisible($el);
                     break;
             }
+
             log.debug("initialised:", $el);
             return $el;
         },
@@ -213,12 +214,18 @@ define([
                         return false;
                     }
                 }
-                if (cfg.confirm == 'class') {
-                    // XXX: this assumes too much, causes technical debt and shouldn't be here :(
-                    // Work was done for pat-raptor and this line should
-                    // ideally go there.
-                    cfg.$target.removeClass('is-dirty');
+
+                // pat-inject is used to populate target in some form and when
+                // Cancel button is presed (this triggers reset event on the
+                // form) you would expect to populate with initial placeholder 
+                var $form = cfg.$target.parents('form')
+                if ($form.size() !== 0 && cfg.$target.data('initial-value') === undefined) {
+                    cfg.$target.data('initial-value', cfg.$target.html());
+                    $form.on('reset', function() {
+                        cfg.$target.html(cfg.$target.data('initial-value'))
+                    })
                 }
+
                 return true;
             });
         },
