@@ -69,14 +69,14 @@ define([
             switch (cfgs[0].trigger) {
                 case "default":
                     // setup event handlers
-                    if ($el.is("a")) {
-                        $el.on("click.pat-inject", _.onTrigger);
-                    } else if ($el.is("form")) {
+                    if ($el.is("form")) {
                         $el.on("submit.pat-inject", _.onTrigger)
                         .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
                         .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", _.onFormActionSubmit);
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
+                    } else {
+                        $el.on("click.pat-inject", _.onTrigger);
                     }
                     break;
                 case "autoload":
