@@ -260,7 +260,7 @@ define([
                 $content, $container, href;
 
             $trigger.data("patterns.tooltip.number", count);
-            $container = $("<div/>", {"class": "tooltip-container",
+            $container = $("<div/>", {"class": "tooltip-container type-"+options.closing,
                                      "id": "tooltip" + count});
             if (options["class"])
                 $container.addClass(options["class"]);
@@ -291,11 +291,9 @@ define([
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.closing==="close-button") {
-                $("<button/>", {"class": "close-panel"})
-                    .text("Close")
-                    .insertBefore($container.find("*:first"));
-            }
+            $("<button/>", {"class": "close-panel"})
+                .text("Close")
+                .insertBefore($container.find("*:first"));
             $(options.target).append($container);
             return $container;
         },
