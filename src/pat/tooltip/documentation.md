@@ -78,10 +78,15 @@ It is possible to force a specific tooltip position by adding the
 
 By default, the tooltip disappears when the cursor is moved off the element or
 the triggering element is clicked. If this is not desired behaviour, there is
-the option to change the closing behaviour to `sticky`. When you do this the
-tooltip only disappears when a close button on the tooltip is clicked. When the
-sticky option is chosen, the close button will be inserted for you
-automatically:
+the option to change the closing behaviour to `sticky` or to `close-button`.
+
+With `sticky`, the tooltip will remain until the user clicks outside of the
+tooltip, or on mobile, if the user clicks on the close button.
+
+With the `close-button` option, the tooltip will only be closed if the close
+button is clicked.
+
+For example, setting closing to `sticky`:
 
     <a href="#" class="pat-tooltip" data-pat-tooltip="closing: sticky">
      …
