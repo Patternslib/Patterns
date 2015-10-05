@@ -158,5 +158,5 @@ The available options are:
 | `mark-inactive` | `true` | `true` `false` | Should we add inactive class to the tooltip trigger? | Bool |
 | `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
 | `class` | *none* | *class value* | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour | |
-| `ajax-data-type| `html` | `html` `markdown` | Data type of content to be loaded when AJAX is used as source. | Mutually exclusive |
+| `ajax-data-type`| `html` | `html` `markdown` | Data type of content to be loaded when AJAX is used as source. | Mutually exclusive |
 | `target` | `body` | *selector* | Selects where the tooltip container is appended in the DOM | |
