@@ -7,7 +7,7 @@
   overflow: visible;
   overflow-x: visible;
   margin: 0;
-  @include screen-size(large) {
+  @include screen-size(medium-large) {
     border: 1px solid silver;
     -webkit-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
