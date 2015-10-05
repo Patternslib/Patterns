@@ -112,24 +112,35 @@
   &.tr .pointer, &.br .pointer {
     margin-left: -20px;
   }
+
+  // Variations
+
+  &.info {
+    > div {
+      background-color: $colour-notice;
+    }
+
+    .pointer {
+      background-color: $colour-notice;
+    }
+  }
+
+  &.rich {
+    > div {
+      @include pat-rich();
+    }
+  }
+
+  &.large {
+    @include screen-size(large) {
+      width: 50%;
+    }
+  }
+
   h4 {
     color: #3b3b3b;
     font-size: 12px;
     line-height: 18px;
-  }
-  
-  &.event {
-    width: 550px;
-    .panel-body fieldset {
-      &.vertical {
-        width: 530px;
-        display: block;
-        overflow: hidden;
-      }
-      &.row {
-        width: 510px;
-      }
-    }
   }
 
   .item-selector {
@@ -156,6 +167,99 @@
     -moz-box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
     transform: rotate(45deg);
     box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
+  }
+
+  ul.menu {
+    margin: 0;
+    list-style-type: none;
+    
+    li {
+      line-height: 1.5em;
+
+      > button,
+      > a {
+        background: none;
+        display: block;
+        color: black;
+        line-height: 1.5em;
+        cursor: default;
+        padding: 0.2em 0 0.1em 1.6em;
+
+        &:active {
+          box-shadow: none;
+        }
+      }
+
+      a:before, 
+      button:before {
+        margin-left: -1.6em;
+        float: left;
+        line-height: 1.5em;
+      }
+    }
+
+    li {
+
+      &.current a {
+        &:before {
+          content: "✓";
+          float: left;
+          margin-left: -1.5em;
+          font: 1em fontello;
+        }
+        color: black;
+      }
+
+      &:hover {
+        text-decoration: none;
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+
+      a:hover {
+        text-decoration: none;
+      }
+
+      &.file-upload {
+        position: relative;
+        text-indent: 20px;
+        height: 25px;
+        overflow: hidden;
+        
+        &:before {
+          content: "\e808";
+          font-family: fontello;
+          position: absolute;
+          left: -13px;
+        }
+        
+        form {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          label {
+            position: absolute;
+            margin-left: 0;
+            left: 0;
+            overflow: hidden;
+            display: block;
+            right: 0;
+            cursor: pointer;
+            padding-left: 2px;
+          }
+          input {
+            opacity: 0;
+            filter: alpha(opacity = 0);
+            width: 100%;
+            cursor: pointer;
+            position: absolute;
+            top: 3px;
+            left: 0;
+          }
+        }
+      }
+    }
   }
 }
 
