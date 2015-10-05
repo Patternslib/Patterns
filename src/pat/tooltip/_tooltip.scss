@@ -18,6 +18,59 @@
     width: 300px;
   }
 
+  > div {
+    padding: 1em;
+    z-index: 1;
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    min-height: 60px;
+    background-color: white;
+    overflow: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+
+    *:last-child {
+      margin-bottom: 0;
+    }
+
+    &:after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+  }
+
+  > .close-panel {
+    font-size: 1em;
+    margin: 0;
+    display: block;
+    z-index: 9999;
+    padding: 5% 5% 0 0;
+    width: 100%;
+
+    text-indent: -1000em;
+
+    @include screen-size(large) {
+      // position: absolute;
+      padding: 0.2em 0.3em 0;
+      background-color: #efefef;
+    }
+
+    &:after {
+      color: black;
+      font-family: fontello;
+      content: $glyph-close;
+      z-index: 9999;
+      float: right;
+      padding: 0.3em;
+      text-indent: 0;
+    }
+  }
+
   &.type-auto {
     > .close-panel {
       display: none;
@@ -30,24 +83,8 @@
   }
 
   &.type-close-button {
-    .close-panel {
-      position: absolute;
-      top: 2%;
-      right: 2%;
-      font-size: 1em;
-      margin: 0;
-      display: inline;
-      z-index: 9999;
-      color: white;
-
-      &:after {
-        color: black;
-        font-family: fontello;
-        content: $glyph-close;
-        z-index: 9999;
-        float: right;
-        padding: 0.3em;
-      }
+    > .close-panel {
+      display: block;
     }
   }
 
@@ -149,45 +186,9 @@
     &.type-auto,
     &.type-sticky,
     &.type-close-button {
-      .close-panel {
-        display: inline-block;
-        position: relative;
-        top: 2%;
-        margin: 0;
-        width: 100%;
-        color: white;
-        font-size: 1em;
-        z-index: 9999;
-
-        &:after {
-          color: black;
-          font-family: fontello;
-          content: $glyph-close;
-          float: right;
-          padding: 0.3em;
-        }
+      > .close-panel {
+        display: block;
       }
     }
-  }
-}
-
-.tooltip-container > div {
-  padding: 10px;
-  z-index: 1;
-  position: relative;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0;
-  min-height: 60px;
-  background-color: white;
-  overflow: auto;
-  overflow-x: hidden;
-  box-sizing: border-box;
-  &:after {
-    content: "";
-    display: block;
-    clear: both;
   }
 }
