@@ -1,4 +1,5 @@
 .tooltip-container {
+  background-color: white;
   position: absolute;
   z-index: 9998;
   border: none;
@@ -17,24 +18,36 @@
     width: 300px;
   }
 
-  > div {
-    padding: 1em;
-    z-index: 1;
-    position: relative;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-    min-height: 60px;
-    background-color: white;
-    overflow: auto;
-    overflow-x: hidden;
-    box-sizing: border-box;
-    &:after {
-      content: " ";
-      display: block;
-      clear: both;
+  &.type-auto {
+    > .close-panel {
+      display: none;
+    }
+  }
+  &.type-sticky {
+    > .close-panel {
+      display: none;
+    }
+  }
+
+  &.type-close-button {
+    .close-panel {
+      position: absolute;
+      top: 2%;
+      right: 2%;
+      font-size: 1em;
+      margin: 0;
+      display: inline;
+      z-index: 9999;
+      color: white;
+
+      &:after {
+        color: black;
+        font-family: fontello;
+        content: $glyph-close;
+        z-index: 9999;
+        float: right;
+        padding: 0.3em;
+      }
     }
   }
 
@@ -62,83 +75,23 @@
   &.tr .pointer, &.br .pointer {
     margin-left: -20px;
   }
-  
-  // Variations
-
-  &.info {
-    > div {
-      background-color: $colour-notice;
-    }
-
-    .pointer {
-      background-color: $colour-notice;
-    }
-  }
-
-  &.rich {
-    > div {
-      @include pat-rich();
-    }
-  }
-
-  &.code {
-    > div {
-      background-color: black;
-    }
-
-    .pointer {
-      background-color: black;
-    }
-  }
-
-  &.large {
-    @include screen-size(large) {
-      width: 50%;
-    }
-  }
-
-  // Controls and other elements
-  
   h4 {
     color: #3b3b3b;
     font-size: 12px;
     line-height: 18px;
   }
-
-  @include screen-size(large) {
-
-    .close-panel-mobile {
-      display: none;
-    }
-
-  }
-
-  .close-panel-mobile {
-    position: absolute;
-    color: gray;
-    top: 9px;
-    right: 9px;
-    line-height: 22px;
-    height: 22px;
-    width: 22px;
-    padding: 0;
-    text-indent: -1000px;
-    overflow: hidden;
-    margin: 0;
-    filter: none;
-    border-style: none;
-    border-radius: 50%;
-    background-image: none;
-    outline: none;
-
-    &:before {
-      content: "#{$glyph-close}";
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 22px;
-      font: normal 20px/23px fontello;
+  
+  &.event {
+    width: 550px;
+    .panel-body fieldset {
+      &.vertical {
+        width: 530px;
+        display: block;
+        overflow: hidden;
+      }
+      &.row {
+        width: 510px;
+      }
     }
   }
 
@@ -167,23 +120,6 @@
     transform: rotate(45deg);
     box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
   }
-
-  .closePanel {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    text-indent: 100px;
-    overflow: hidden;
-    padding: 0px;
-    background: gray url(close.png) no-repeat 2px;
-    -webkit-border-radius: 3px;
-    display: block;
-    height: 15px;
-    width: 15px;
-    z-index: 3;
-    border: none;
-  }
-
 }
 
 @include screen-size(small) {
@@ -210,118 +146,48 @@
       overflow: auto;
     }
 
-    h1:after {
-      font-family: fontello;
-      content: '\e819';
-      float: right;
-    }
-  }
-}
-
-.tooltip-container ul.menu {
-  margin: 0;
-  list-style-type: none;
-  li {
-    line-height: 24px;
-    a {
-      display: block;
-      margin-left: -10px;
-      margin-right: -10px;
-      padding-left: 32px;
-      padding-right: 15px;
-      color: black;
-      line-height: 20px;
-      cursor: default;
-    }
-    button {
-      display: block;
-      margin-left: -10px;
-      margin-right: -10px;
-      padding-left: 32px;
-      padding-right: 15px;
-      color: black;
-      line-height: 20px;
-      cursor: default;
-      &:active {
-        box-shadow: none;
-      }
-    }
-    a:before, button:before {
-      margin-left: -15px;
-      float: left;
-      margin-top: 5px;
-    }
-  }
-}
-
-.tooltip-container ul.menu li {
-  &.current a {
-    &:before {
-      content: "✓";
-      float: left;
-      margin-left: -19px;
-      font: 12px fontello;
-      position: relative;
-      top: 7px;
-    }
-    color: black;
-  }
-  &:hover {
-    text-decoration: none;
-    background-color: rgba(0, 0, 0, 0.03);
-  }
-  a:hover {
-    text-decoration: none;
-  }
-  .checklist {
-    &.radio {
-      border-top: 1px solid silver;
-      border-bottom: 1px solid silver;
-      padding-left: 22px;
-      line-height: 18px;
-      padding-top: 4px;
-      padding-bottom: 4px;
-    }
-    .legend {
-      margin-bottom: 0;
-    }
-  }
-  &.file-upload {
-    position: relative;
-    text-indent: 20px;
-    height: 25px;
-    overflow: hidden;
-    &:before {
-      content: "\e808";
-      font-family: fontello;
-      position: absolute;
-      left: -13px;
-    }
-    form {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      label {
-        position: absolute;
-        margin-left: 0;
-        left: 0;
-        overflow: hidden;
-        display: block;
-        right: 0;
-        cursor: pointer;
-        padding-left: 2px;
-      }
-      input {
-        opacity: 0;
-        filter: alpha(opacity = 0);
+    &.type-auto,
+    &.type-sticky,
+    &.type-close-button {
+      .close-panel {
+        display: inline-block;
+        position: relative;
+        top: 2%;
+        margin: 0;
         width: 100%;
-        cursor: pointer;
-        position: absolute;
-        top: 3px;
-        left: 0;
+        color: white;
+        font-size: 1em;
+        z-index: 9999;
+
+        &:after {
+          color: black;
+          font-family: fontello;
+          content: $glyph-close;
+          float: right;
+          padding: 0.3em;
+        }
       }
     }
+  }
+}
+
+.tooltip-container > div {
+  padding: 10px;
+  z-index: 1;
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  min-height: 60px;
+  background-color: white;
+  overflow: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
   }
 }
