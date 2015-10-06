@@ -602,7 +602,7 @@ define([
             // function to trigger the autoload and mark as triggered
             function trigger() {
                 $el.data("pat-inject-autoloaded", true);
-                _.onClick.apply($el[0], []);
+                _.onTrigger.apply($el[0], []);
                 return true;
             }
 
