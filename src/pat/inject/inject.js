@@ -30,6 +30,7 @@ define([
      * an event for each hook: pat-inject-hook-$(hook)
      */
     parser.addArgument("hooks", [], ["raptor"], true);
+    parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
     parser.addArgument("class"); // Add a class to the injected content.
     parser.addArgument("history");
     // XXX: this should not be here but the parser would bail on
@@ -214,20 +215,23 @@ define([
                         return false;
                     }
                 }
-
-                // pat-inject is used to populate target in some form and when
-                // Cancel button is presed (this triggers reset event on the
-                // form) you would expect to populate with initial placeholder 
-                var $form = cfg.$target.parents('form')
-                if ($form.size() !== 0 && cfg.$target.data('initial-value') === undefined) {
-                    cfg.$target.data('initial-value', cfg.$target.html());
-                    $form.on('reset', function() {
-                        cfg.$target.html(cfg.$target.data('initial-value'))
-                    })
-                }
-
+                _._resetFormOnCancel(cfg);
                 return true;
             });
+        },
+
+        _resetFormOnCancel: function (cfg) {
+            /* if pat-inject is used to populate target in some form and when
+             * Cancel button is pressed (this triggers reset event on the
+             * form) you would expect to populate with initial placeholder
+             */
+            var $form = cfg.$target.parents('form');
+            if ($form.size() !== 0 && cfg.$target.data('initial-value') === undefined) {
+                cfg.$target.data('initial-value', cfg.$target.html());
+                $form.on('reset', function() {
+                    cfg.$target.html(cfg.$target.data('initial-value'));
+                });
+            }
         },
 
         _extractModifiers: function inject_extractModifiers(cfg) {
@@ -241,20 +245,18 @@ define([
             cfg.source = source_match[1];
             // XXX: turn into source processor
             cfg.sourceMod = source_match[2] ? "element" : "content";
-
-            // will be added while the ajax request is in progress
-            cfg.targetLoadClasses = "injecting";
-
-            // target content or element?
             targetMod = target_match[2] ? "element" : "content";
-            cfg.target = target_match[1];
-            cfg.targetLoadClasses += " injecting-" + targetMod;
-
             // position relative to target
             targetPosition = (target_match[3] || "::").slice(2);
-            if (targetPosition)
-                cfg.targetLoadClasses += " injecting-" + targetPosition;
 
+            if (cfg.loadingClass) {
+                // target content or element?
+                cfg.target = target_match[1];
+                cfg.loadingClasses += " "+ cfg.loadingClass + "-" + targetMod;
+                if (targetPosition && cfg.loadingClass) {
+                    cfg.loadingClasses += " " + cfg.loadingClass + "-" + targetPosition;
+                }
+            }
             cfg.action = targetMod + targetPosition;
             // Once we start detecting illegal combinations, we'll
             // return false in case of error
@@ -397,7 +399,7 @@ define([
                 return;
             }
             // possibility for spinners on targets
-            cfgs.forEach(function(cfg) { cfg.$target.addClass(cfg.targetLoadClasses); });
+            cfgs.forEach(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
 
             $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
             $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
@@ -675,7 +677,7 @@ define([
     };
 
     $(document).on("patterns-injected", function(ev, cfg) {
-        cfg.$target.removeClass(cfg.targetLoadClasses);
+        cfg.$target.removeClass(cfg.loadingClass);
     });
 
     $(window).bind("popstate", function (event) {
