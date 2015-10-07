@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.12 - Unreleased
+
+- New argument for the inject pattern: `loading-class`.
+  Specifies a class to appear on the injection target while the injected content is still loading.
+  Previously this was hardcoded to `injecting`, this is still set to the default value.
+
 ## 2.0.11 - Sept. 30, 2015
 
 - Bugfix. Specifying combined pattern properties (with &&) not working on IE10.
