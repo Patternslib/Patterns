@@ -18,8 +18,9 @@ define([
         trigger: "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
         init: function ($el, opts, trigger) {
             this.options = parser.parse(this.$el, opts);
-            if (trigger && trigger.type === "injection")
+            if (trigger && trigger.type === "injection") {
                 $.extend(this.options, parser.parse($(trigger.element), {}, false, false));
+            }
             if (this.$el.is("div")) {
                 this._init_div1();
             } else {
@@ -53,8 +54,12 @@ define([
                 $("<button type='button' class='close-panel'>Close</button>").appendTo($header);
 
             // We cannot handle text nodes here
-            this.$el.children(":last, :not(:first)")
-                .wrapAll("<div class='panel-content' />");
+            var $children = this.$el.children(":last, :not(:first)");
+            if ($children.length) {
+                $children.wrapAll("<div class='panel-content' />");
+            } else {
+                this.$el.append("<div class='panel-content' />");
+            }
             $(".panel-content", this.$el).before($header);
             this.$el.children(":first:not(.header)").prependTo($header);
 
