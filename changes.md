@@ -5,6 +5,14 @@
 - New argument for the inject pattern: `loading-class`.
   Specifies a class to appear on the injection target while the injected content is still loading.
   Previously this was hardcoded to `injecting`, this is still set to the default value.
+- New arguments for the inject pattern: `confirm` and `confirm-message`.
+  Allows you to specify whether a confirmation message should be shown before
+  injecting, as well as the text of that message.
+- New argument for tooltip pattern: `mark-inactive`.
+  A boolean value, used to specify whether the class 'inactive' should be added
+  to the tooltip trigger. Previously this behavior was hardcoded, now it's
+  optional with a default of `true`.
+- Fix: tooltips with `closing` set to `sticky` or `auto` couldn't be closed on mobile.
 
 ## 2.0.11 - Sept. 30, 2015
 
