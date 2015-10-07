@@ -2,12 +2,80 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
     describe("pat-inject", function() {
 
+        var answer = function(html) {
+            expect($.ajax).toHaveBeenCalled();
+            $.ajax.mostRecentCall.args[0].success(html, "ok", { responseText: html });
+        };
+
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
         });
 
         afterEach(function() {
             $("#lab").remove();
+        });
+
+        describe("The loading-class argument", function() {
+
+            afterEach(function() {
+                $("#lab").empty();
+            });
+
+            it("has a default value of 'injecting' and gets added to the target while content is still loading'", function() {
+                spyOn($, "ajax");
+                var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
+                var $div = $("<div id=\"someid\" />");
+                $("#lab").empty().append($a).append($div);
+
+                var callback = jasmine.createSpy("patterns-injected");
+                $(document).on("patterns-injected", callback);
+
+                pattern.init($a);
+                $a.trigger("click");
+
+                var cfgs = pattern.extractConfig($a, {});
+                expect(cfgs[0].loadingClass).toBe('injecting');
+
+                expect($div.hasClass("injecting")).toBeTruthy();
+
+                answer("<html><body>" +
+                        "<div id=\"someid\">repl</div>" +
+                        "</body></html>");
+                expect($div.hasClass("injecting")).toBeFalsy();
+                expect(callback).toHaveBeenCalled();
+            });
+
+            it("can be set to another string value which then gets added to the target while content is still loading'", function() {
+                spyOn($, "ajax");
+                var $a = $("<a class=\"pat-inject\" data-pat-inject=\"loading-class: other-class;\" href=\"test.html#someid\">link</a>");
+                var $div = $("<div id=\"someid\" />");
+                $("#lab").empty().append($a).append($div);
+
+                pattern.init($a);
+                $a.trigger("click");
+
+                var cfgs = pattern.extractConfig($a, {});
+                expect(cfgs[0].loadingClass).toBe('other-class');
+
+                expect($div.hasClass("other-class")).toBeTruthy();
+
+                answer("<html><body>" +
+                        "<div id=\"someid\">repl</div>" +
+                        "</body></html>");
+                expect($div.hasClass("other-class")).toBeFalsy();
+            });
+
+            it("can be set to an empty string value so that nothing gets added to the target while content is still loading'", function() {
+                spyOn($, "ajax");
+                var $a = $("<a class=\"pat-inject\" data-pat-inject=\"loading-class: ;\" href=\"test.html#someid\">link</a>");
+                var $div = $("<div id=\"someid\" />");
+                $("#lab").empty().append($a).append($div);
+                pattern.init($a);
+                $a.trigger("click");
+                var cfgs = pattern.extractConfig($a, {});
+                expect(cfgs[0].loadingClass).toBe('');
+                expect($div[0].className).toBe('');
+            });
         });
 
         describe("The confirm argument", function() {
@@ -261,17 +329,27 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
         });
 
         describe("DOM tests", function() {
-            var answer = function(html) {
-                expect($.ajax).toHaveBeenCalled();
-                $.ajax.mostRecentCall.args[0].success(html, "ok", { responseText: html });
-            };
-
             beforeEach(function() {
                 spyOn($, "ajax");
             });
 
+            describe("The patterns-injected event", function() {
+                it("gets triggered after injection has finished'", function() {
+                    var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
+                    var $div = $("<div id=\"someid\" />");
+                    $("#lab").empty().append($a).append($div);
+                    var callback = jasmine.createSpy("patterns-injected");
+                    $(document).on("patterns-injected", callback);
+                    pattern.init($a);
+                    $a.trigger("click");
+                    answer("<html><body>" +
+                            "<div id=\"someid\">repl</div>" +
+                            "</body></html>");
+                    expect(callback).toHaveBeenCalled();
+                });
+            });
 
-            describe("inject on anchor", function() {
+            describe("Injection on an anchor element", function() {
                 var $a, $div;
 
                 beforeEach(function() {
@@ -338,27 +416,6 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     expect($target1.html()).toBe("repl");
                     expect($target2.html()).toBe("repl");
-                });
-
-                it("sets/unsets load class 'injecting'", function() {
-                    var callback = jasmine.createSpy("patterns-injected");
-                    $(document).on("patterns-injected", callback);
-
-                    pattern.init($a);
-                    $a.trigger("click");
-
-                    expect($div.hasClass("injecting")).toBeTruthy();
-
-                    answer("<html><body>" +
-                           "<div id=\"someid\">repl</div>" +
-                           "</body></html>");
-
-                    // XXX: fails, probably due to misuse of jasmine (on
-                    // patterns demo page the injecting classes are
-                    // removed after a successful inject
-
-                    // expect($div.hasClass("injecting")).toBeFalsy();
-                    // expect(callback).toHaveBeenCalled();
                 });
 
                 it("copies into target if source has ::element", function() {
