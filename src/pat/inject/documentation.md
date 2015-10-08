@@ -140,10 +140,10 @@ Can be used for `source` and `target`, and in case of the latter be combined wit
 `::before`
 Like in CSS, the pseudo-element (a position) right before the content of the target element. The so far non-existing, but soon-to-be first child of the target element.
 
-Can be used for `target` and combined with `:element`.
+Can be used for `target` and combined with `::element`.
 
 `::after`
-Like in CSS, the pseudo-element (a position) right before the content of the selected element. It can be used for the `target` and combined with `:element`.
+Like in CSS, the pseudo-element (a position) right before the content of the selected element. It can be used for the `target` and combined with `::element`.
 
 Let's see these in action and combination:
 
