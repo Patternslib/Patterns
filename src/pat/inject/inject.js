@@ -235,26 +235,26 @@ define([
         },
 
         _extractModifiers: function inject_extractModifiers(cfg) {
+            /* The user can add modifiers to the source and target arguments.
+             * Modifiers such as ::element, ::before and ::after.
+             * We identifiy and extract these modifiers here.
+             */
             var source_re = /^(.*?)(::element)?$/,
                 target_re = /^(.*?)(::element)?(::after|::before)?$/,
                 source_match = source_re.exec(cfg.source),
                 target_match = target_re.exec(cfg.target),
                 targetMod, targetPosition;
 
-            // source content or element?
             cfg.source = source_match[1];
-            // XXX: turn into source processor
             cfg.sourceMod = source_match[2] ? "element" : "content";
+            cfg.target = target_match[1];
             targetMod = target_match[2] ? "element" : "content";
-            // position relative to target
-            targetPosition = (target_match[3] || "::").slice(2);
+            targetPosition = (target_match[3] || "::").slice(2); // position relative to target
 
             if (cfg.loadingClass) {
-                // target content or element?
-                cfg.target = target_match[1];
-                cfg.loadingClasses += " "+ cfg.loadingClass + "-" + targetMod;
+                cfg.loadingClass += " "+ cfg.loadingClass + "-" + targetMod;
                 if (targetPosition && cfg.loadingClass) {
-                    cfg.loadingClasses += " " + cfg.loadingClass + "-" + targetPosition;
+                    cfg.loadingClass += " " + cfg.loadingClass + "-" + targetPosition;
                 }
             }
             cfg.action = targetMod + targetPosition;
