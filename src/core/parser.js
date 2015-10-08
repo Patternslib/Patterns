@@ -342,7 +342,7 @@ define([
             // Resolve references
             for (i=0; i<keys.length; i++) {
                 name=keys[i];
-                spec=this.parameters[name];
+                spec = this.parameters[name];
                 if (spec===undefined)
                     continue;
 
@@ -350,7 +350,6 @@ define([
                         typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
                     options[name]=options[spec.value.slice(1)];
             }
-
             // Move options into groups and do renames
             keys=Object.keys(options);
             for (i=0; i<keys.length; i++) {
@@ -381,47 +380,40 @@ define([
             inherit = (inherit!==false);
             var stack = inherit ? [[this._defaults($el)]] : [[{}]];
             var $possible_config_providers = inherit ? $el.parents().andSelf() : $el,
-                final_length = 1,
-                i, data, frame;
-            for (i=0; i<$possible_config_providers.length; i++) {
-                data = $possible_config_providers.eq(i).attr(this.attribute);
+                final_length = 1;
+
+            _.each($possible_config_providers, function (provider) {
+                var data = $(provider).attr(this.attribute), frame, _parse;
                 if (data) {
-                    var _parse = this._parse.bind(this); // Needed to fix binding in map call
+                    _parse = this._parse.bind(this);
                     if (data.match(/&&/))
-                        frame=data.split(/\s*&&\s*/).map(_parse);
+                        frame = data.split(/\s*&&\s*/).map(_parse);
                     else
-                        frame=[_parse(data)];
+                        frame = [_parse(data)];
                     final_length = Math.max(frame.length, final_length);
                     stack.push(frame);
                 }
-            }
+            }.bind(this));
             if (typeof options==="object") {
                 if (Array.isArray(options)) {
                     stack.push(options);
-                    final_length=Math.max(options.length, final_length);
+                    final_length = Math.max(options.length, final_length);
                 } else
                     stack.push([options]);
             }
+            if (!multiple) { final_length = 1; }
 
-            if (!multiple) {
-                final_length=1;
-            }
-            var results=[], frame_length, x, xf;
-            for (i=0; i<final_length; i++)
+            var results = [];
+            for (var i=0; i<final_length; i++) {
                 results.push({});
-
-            for (i=0; i<stack.length; i++) {
-                frame=stack[i];
-                frame_length=frame.length-1;
-
-                for (x=0; x<final_length; x++) {
-                    xf=(x>frame_length) ? frame_length : x;
-                    results[x]=$.extend(results[x], frame[xf]);
-                }
             }
-            for (i=0; i<results.length; i++)
-                this._cleanupOptions(results[i]);
-
+            _.each(stack, function(frame) {
+                var frame_length = frame.length-1;
+                for (var x=0; x<final_length; x++) {
+                    results[x] = $.extend(results[x], frame[(x>frame_length) ? frame_length : x]);
+                }
+            });
+            _.each(results, this._cleanupOptions.bind(this));
             return multiple ? results : results[0];
         }
     };
