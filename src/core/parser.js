@@ -7,8 +7,9 @@
 define([
     "jquery",
     "underscore",
+    "pat-utils",
     "pat-logger"
-], function($, _, logger) {
+], function($, _, utils, logger) {
     "use strict";
 
     function ArgumentParser(name, opts) {
@@ -371,7 +372,9 @@ define([
                     delete options[name];
                 }
             }
+            return options;
         },
+
 
         parse: function argParserParse($el, options, multiple, inherit) {
             if (typeof options==="boolean" && multiple===undefined) {
@@ -403,18 +406,10 @@ define([
                     stack.push([options]);
             }
             if (!multiple) { final_length = 1; }
-
-            var results = [];
-            for (var i=0; i<final_length; i++) {
-                results.push({});
-            }
-            _.each(stack, function(frame) {
-                var frame_length = frame.length-1;
-                for (var x=0; x<final_length; x++) {
-                    results[x] = $.extend(results[x], frame[(x>frame_length) ? frame_length : x]);
-                }
-            });
-            _.each(results, this._cleanupOptions.bind(this));
+            var results = _.map(
+                _.compose(utils.removeDuplicateObjects, _.partial(utils.mergeStack, _, final_length))(stack),
+                this._cleanupOptions.bind(this)
+            );
             return multiple ? results : results[0];
         }
     };
