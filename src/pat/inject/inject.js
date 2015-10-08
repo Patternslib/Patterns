@@ -38,11 +38,11 @@ define([
     // to us
     parser.addArgument("url");
 
-    var _ = {
+    var inject = {
         name: "inject",
         trigger: ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function inject_init($el, opts) {
-            var cfgs = _.extractConfig($el, opts);
+            var cfgs = inject.extractConfig($el, opts);
             // if the injection shall add a history entry and HTML5 pushState
             // is missing, then don't initialize the injection.
             if (cfgs.some(function(e){return e.history === "record";}) &&
@@ -71,20 +71,20 @@ define([
                 case "default":
                     // setup event handlers
                     if ($el.is("form")) {
-                        $el.on("submit.pat-inject", _.onTrigger)
+                        $el.on("submit.pat-inject", inject.onTrigger)
                         .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
-                        .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", _.onFormActionSubmit);
+                        .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", inject.onFormActionSubmit);
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
                     } else {
-                        $el.on("click.pat-inject", _.onTrigger);
+                        $el.on("click.pat-inject", inject.onTrigger);
                     }
                     break;
                 case "autoload":
-                    _.onTrigger.apply($el[0], []);
+                    inject.onTrigger.apply($el[0], []);
                     break;
                 case "autoload-visible":
-                    _._initAutoloadVisible($el);
+                    inject._initAutoloadVisible($el);
                     break;
             }
 
@@ -104,7 +104,7 @@ define([
             if (ev)
                 ev.preventDefault();
             $el.trigger("patterns-inject-triggered");
-            _.execute(cfgs, $el);
+            inject.execute(cfgs, $el);
         },
 
         onFormActionSubmit: function inject_onFormActionSubmit(ev) {
@@ -114,11 +114,11 @@ define([
                 formaction = $button.attr("formaction"),
                 $form = $button.parents(".pat-inject").first(),
                 opts = {url: formaction},
-                cfgs = _.extractConfig($form, opts);
+                cfgs = inject.extractConfig($form, opts);
 
             ev.preventDefault();
             $form.trigger("patterns-inject-triggered");
-            _.execute(cfgs, $form);
+            inject.execute(cfgs, $form);
         },
 
         submitSubform: function inject_submitSubform($sub) {
@@ -129,7 +129,7 @@ define([
             } catch (e) {
                 log.error("patterns-inject-triggered", e);
             }
-            _.execute(cfgs, $el);
+            inject.execute(cfgs, $el);
         },
 
         extractConfig: function inject_extractConfig($el, opts) {
@@ -186,7 +186,7 @@ define([
                 cfg.source = cfg.source || cfg.selector;
                 cfg.target = cfg.target || cfg.selector;
 
-                if (!_._extractModifiers(cfg))
+                if (!inject._extractModifiers(cfg))
                     return false;
 
                 // make sure target exist
@@ -196,7 +196,7 @@ define([
                         log.error("Need target selector", cfg);
                         return false;
                     }
-                    cfg.$target = _._createTarget(cfg.target);
+                    cfg.$target = inject._createTarget(cfg.target);
                     cfg.$injected = cfg.$target;
                 }
                 var confirm = false;
@@ -204,7 +204,7 @@ define([
                     confirm = true;
                 } else if (cfg.confirm === 'form-data') {
                     $.each(cfgs, function(idx, cfg) {
-                        confirm = _.elementIsDirty(cfg.$target) ? true : confirm;
+                        confirm = inject.elementIsDirty(cfg.$target) ? true : confirm;
                     });
                 } else if (cfg.confirm === 'class') {
                     confirm = cfg.$target.hasClass('is-dirty');
@@ -215,7 +215,7 @@ define([
                         return false;
                     }
                 }
-                _._resetFormOnCancel(cfg);
+                inject._resetFormOnCancel(cfg);
                 return true;
             });
         },
@@ -322,7 +322,7 @@ define([
                 $(this).trigger("pat-inject-content-loaded");
             });
             // Now the injection actually happens.
-            if (_._inject(trigger, $src, $target, cfg)) { _._afterInjection($el, $injected, cfg); }
+            if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
             // History support.
             if ((cfg.history === "record") && ("pushState" in history)) {
                 history.pushState({'url': cfg.url}, "", cfg.url);
@@ -365,17 +365,17 @@ define([
             $.each(cfgs[0].hooks || [], function (idx, hook) {
                 $el.trigger("pat-inject-hook-"+hook);
             });
-            _.stopBubblingFromRemovedElement($el, cfgs, ev);
-            sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
+            inject.stopBubblingFromRemovedElement($el, cfgs, ev);
+            sources$ = inject.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
             cfgs.forEach(function(cfg, idx) {
                 cfg.$target.each(function() {
-                    _._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
+                    inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
                 });
             });
             if (cfgs[0].nextHref) {
                 $el.attr({href: (window.location.href.split("#")[0] || "") +
                             cfgs[0].nextHref});
-                _.destroy($el);
+                inject.destroy($el);
             }
             $el.off("pat-ajax-success.pat-inject");
             $el.off("pat-ajax-error.pat-inject");
@@ -395,7 +395,7 @@ define([
             cfgs = cfgs.map(function(cfg) {
                 return $.extend({}, cfg);
             });
-            if (!_.verifyConfig(cfgs, $el)) {
+            if (!inject.verifyConfig(cfgs, $el)) {
                 return;
             }
             // possibility for spinners on targets
@@ -454,7 +454,7 @@ define([
         },
 
         _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
-            var $html = _._parseRawHtml(html, url);
+            var $html = inject._parseRawHtml(html, url);
             return sources.map(function inject_sourcesFromHtml_map(source) {
                 if (source === "body")
                     source = "#__original_body";
@@ -499,7 +499,7 @@ define([
             htmlparser.HTMLParser(html, {
                 start: function(tag, attrs, unary) {
                     output.push("<"+tag);
-                    link_attribute = _._link_attributes[tag.toUpperCase()];
+                    link_attribute = inject._link_attributes[tag.toUpperCase()];
                     for (i=0; i<attrs.length; i++) {
                         if (attrs[i].name.toLowerCase() === link_attribute) {
                             value = attrs[i].value;
@@ -546,9 +546,9 @@ define([
                 "$1src=\"\" data-pat-inject-rebase-$2="
             ).trim()).wrapAll("<div>").parent();
 
-            $page.find(Object.keys(_._rebaseAttrs).join(",")).each(function() {
+            $page.find(Object.keys(inject._rebaseAttrs).join(",")).each(function() {
                 var $this = $(this),
-                    attrName = _._rebaseAttrs[this.tagName],
+                    attrName = inject._rebaseAttrs[this.tagName],
                     value = $this.attr(attrName);
 
                 if (value && value.slice(0, 2) !== "@@" && value[0] !== "#" &&
@@ -580,7 +580,7 @@ define([
                     .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
                     .replace(/<\/body([^>]*?)>/gi, "</div>");
             try {
-                clean_html = _._rebaseHTML(url, clean_html);
+                clean_html = inject._rebaseHTML(url, clean_html);
             } catch (e) {
                 log.error("Error rebasing urls", e);
             }
@@ -604,7 +604,7 @@ define([
             // function to trigger the autoload and mark as triggered
             function trigger() {
                 $el.data("pat-inject-autoloaded", true);
-                _.onTrigger.apply($el[0], []);
+                inject.onTrigger.apply($el[0], []);
                 return true;
             }
 
@@ -653,14 +653,14 @@ define([
 
         // XXX: simple so far to see what the team thinks of the idea
         registerTypeHandler: function inject_registerTypeHandler(type, handler) {
-            _.handlers[type] = handler;
+            inject.handlers[type] = handler;
         },
 
         callTypeHandler: function inject_callTypeHandler(type, fn, context, params) {
             type = type || "html";
 
-            if (_.handlers[type] && $.isFunction(_.handlers[type][fn])) {
-                return _.handlers[type][fn].apply(context, params);
+            if (inject.handlers[type] && $.isFunction(inject.handlers[type][fn])) {
+                return inject.handlers[type][fn].apply(context, params);
             } else {
                 return null;
             }
@@ -670,7 +670,7 @@ define([
             "html": {
                 sources: function(cfgs, data) {
                     var sources = cfgs.map(function(cfg) { return cfg.source; });
-                    return _._sourcesFromHtml(data, cfgs[0].url, sources);
+                    return inject._sourcesFromHtml(data, cfgs[0].url, sources);
                 }
             }
         }
@@ -708,8 +708,8 @@ define([
         }
     }
 
-    registry.register(_);
-    return _;
+    registry.register(inject);
+    return inject;
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
