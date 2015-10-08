@@ -11,7 +11,8 @@ define([
 ], function($, _, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject"),
-        TEXT_NODE = 3;
+        TEXT_NODE = 3,
+        COMMENT_NODE = 8;
 
     parser.addArgument("selector");
     parser.addArgument("target");
@@ -708,8 +709,17 @@ define([
         }
     };
 
-    $(document).on("patterns-injected", function(ev, cfg) {
+    $(document).on("patterns-injected.inject", function onInjected(ev, cfg, trigger, injected) {
+        /* Listen for the patterns-injected event.
+         *
+         * Remove the "loading-class" classes from all injection targets and
+         * then scan the injected content for new patterns.
+         */
         cfg.$target.removeClass(cfg.loadingClass);
+        if (injected.nodeType !== TEXT_NODE && injected !== COMMENT_NODE) {
+            registry.scan(injected, null, {type: "injection", element: trigger});
+            $(injected).trigger("patterns-injected-scanned");
+        }
     });
 
     $(window).bind("popstate", function (event) {
