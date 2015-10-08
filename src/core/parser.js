@@ -263,23 +263,22 @@ define([
             var parts = this._split(parameter),
                 opts = {},
                 positional = true,
-                i, part, flag, sense;
+                i=0, part, flag, sense;
 
-            i=0;
             while (parts.length) {
                 part=parts.shift().trim();
                 if (part.slice(0, 3)==="no-") {
-                    sense=false;
+                    sense = false;
                     flag=part.slice(3);
                 } else {
-                    sense=true;
-                    flag=part;
+                    sense = true;
+                    flag = part;
                 }
                 if (flag in this.parameters && this.parameters[flag].type==="boolean") {
-                    positional=false;
+                    positional = false;
                     this._set(opts, flag, sense);
                 } else if (flag in this.enum_values) {
-                    positional=false;
+                    positional = false;
                     this._set(opts, this.enum_values[flag], flag);
                 } else if (positional)
                     this._set(opts, this.order[i], part);
@@ -288,8 +287,9 @@ define([
                     break;
                 }
                 i++;
-                if (i>=this.order.length)
+                if (i >= this.order.length) {
                     break;
+                }
             }
             if (parts.length)
                 this.log.warn("Ignore extra arguments: " + parts.join(" "));
@@ -310,7 +310,7 @@ define([
                 return this._parseExtendedNotation(parameter);
             }
             sep = parameter.indexOf(";");
-            if (sep===-1) {
+            if (sep === -1) {
                 return this._parseShorthandNotation(parameter);
             }
             opts = this._parseShorthandNotation(parameter.slice(0, sep));
@@ -323,15 +323,15 @@ define([
         _defaults: function argParserDefaults($el) {
             var result = {};
             for (var name in this.parameters)
-                if (typeof this.parameters[name].value==="function")
+                if (typeof this.parameters[name].value === "function")
                     try {
-                        result[name]=this.parameters[name].value($el, name);
+                        result[name] = this.parameters[name].value($el, name);
                         this.parameters[name].type=typeof result[name];
                     } catch(e) {
                         this.log.error("Default function for " + name + " failed.");
                     }
                 else
-                    result[name]=this.parameters[name].value;
+                    result[name] = this.parameters[name].value;
             return result;
         },
 
@@ -341,32 +341,33 @@ define([
 
             // Resolve references
             for (i=0; i<keys.length; i++) {
-                name=keys[i];
+                name = keys[i];
                 spec = this.parameters[name];
-                if (spec===undefined)
+                if (spec === undefined)
                     continue;
 
-                if (options[name]===spec.value &&
+                if (options[name] === spec.value &&
                         typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
-                    options[name]=options[spec.value.slice(1)];
+                    options[name] = options[spec.value.slice(1)];
             }
             // Move options into groups and do renames
-            keys=Object.keys(options);
+            keys = Object.keys(options);
             for (i=0; i<keys.length; i++) {
-                name=keys[i];
-                spec=this.parameters[name];
-                if (spec===undefined)
+                name = keys[i];
+                spec = this.parameters[name];
+                if (spec === undefined)
                     continue;
 
                 if (spec.group)  {
                     if (typeof options[spec.group]!=="object")
-                        options[spec.group]={};
-                    target=options[spec.group];
-                } else
-                    target=options;
+                        options[spec.group] = {};
+                    target = options[spec.group];
+                } else {
+                    target = options;
+                }
 
-                if (spec.dest!==name) {
-                    target[spec.dest]=options[name];
+                if (spec.dest !== name) {
+                    target[spec.dest] = options[name];
                     delete options[name];
                 }
             }
