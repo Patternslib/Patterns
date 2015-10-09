@@ -5,12 +5,13 @@ The *forward* pattern forwards click events to another element(s).
 
 This pattern can be used to redirect a click on an element to one or more other elements.
 
-    <a href="#" class="pat-forward" data-pat-forward="#submit">Submit form</a>
+    <a href="#" class="pat-forward" data-pat-forward="selector: #submit">Submit form</a>
     <form>
       <submit id="submit">Submit</submit>
     </form>
 
 ### Option reference
 
-This pattern has no configurable properties.
-
+| Property | Description | Default | Allowed Values | Type |
+|------|------|-----|------|
+| selector | The element to which the click event should be forwarded. | | | CSS Selector |
