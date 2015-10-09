@@ -46,13 +46,13 @@ clean::
 ########################################################################
 ## Tests
 
-check:: jshint
 jshint: stamp-npm
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	$(JSHINT) --config jshintrc-tests $(TESTSOURCES)
 
 
-check:: stamp-npm
+.PHONY: check
+check:: stamp-bower jshint
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests.html
 
 
@@ -126,4 +126,4 @@ serve:: all
 
 designerhappy:: serve
 
-.PHONY: all bundle clean check jshint tests
+.PHONY: all bundle clean jshint tests
