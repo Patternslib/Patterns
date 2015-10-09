@@ -1,5 +1,6 @@
 define([
-    "jquery"
+    "jquery",
+    "jquery.browser"
 ], function($) {
 
     $.fn.safeClone = function () {

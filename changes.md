@@ -13,6 +13,8 @@
   to the tooltip trigger. Previously this behavior was hardcoded, now it's
   optional with a default of `true`.
 - Fix: tooltips with `closing` set to `sticky` or `auto` couldn't be closed on mobile.
+- Parser fix. Remove duplicate configurations.
+- Bugfix: TypeError: Cannot read property 'msie' of undefined.
 
 ## 2.0.11 - Sept. 30, 2015
 
