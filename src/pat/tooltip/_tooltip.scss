@@ -1,4 +1,5 @@
 .tooltip-container {
+  background-color: white;
   position: absolute;
   z-index: 9998;
   border: none;
@@ -6,7 +7,7 @@
   overflow: visible;
   overflow-x: visible;
   margin: 0;
-  @include screen-size(large) {
+  @include screen-size(medium-large) {
     border: 1px solid silver;
     -webkit-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
@@ -31,10 +32,59 @@
     overflow: auto;
     overflow-x: hidden;
     box-sizing: border-box;
+
+    *:last-child {
+      margin-bottom: 0;
+    }
+
     &:after {
-      content: " ";
+      content: "";
       display: block;
       clear: both;
+    }
+  }
+
+  > .close-panel {
+    font-size: 1em;
+    margin: 0;
+    display: block;
+    z-index: 9999;
+    padding: 5% 5% 0 0;
+    width: 100%;
+
+    text-indent: -1000em;
+
+    @include screen-size(large) {
+      // position: absolute;
+      padding: 0.2em 0.3em 0;
+      background-color: #efefef;
+    }
+
+    &:after {
+      color: black;
+      font-family: fontello;
+      content: $glyph-close;
+      z-index: 9999;
+      float: right;
+      padding: 0.3em;
+      text-indent: 0;
+    }
+  }
+
+  &.type-auto {
+    > .close-panel {
+      display: none;
+    }
+  }
+  &.type-sticky {
+    > .close-panel {
+      display: none;
+    }
+  }
+
+  &.type-close-button {
+    > .close-panel {
+      display: block;
     }
   }
 
@@ -62,7 +112,7 @@
   &.tr .pointer, &.br .pointer {
     margin-left: -20px;
   }
-  
+
   // Variations
 
   &.info {
@@ -81,65 +131,16 @@
     }
   }
 
-  &.code {
-    > div {
-      background-color: black;
-    }
-
-    .pointer {
-      background-color: black;
-    }
-  }
-
   &.large {
     @include screen-size(large) {
       width: 50%;
     }
   }
 
-  // Controls and other elements
-  
   h4 {
     color: #3b3b3b;
     font-size: 12px;
     line-height: 18px;
-  }
-
-  @include screen-size(large) {
-
-    .close-panel-mobile {
-      display: none;
-    }
-
-  }
-
-  .close-panel-mobile {
-    position: absolute;
-    color: gray;
-    top: 9px;
-    right: 9px;
-    line-height: 22px;
-    height: 22px;
-    width: 22px;
-    padding: 0;
-    text-indent: -1000px;
-    overflow: hidden;
-    margin: 0;
-    filter: none;
-    border-style: none;
-    border-radius: 50%;
-    background-image: none;
-    outline: none;
-
-    &:before {
-      content: "#{$glyph-close}";
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 22px;
-      font: normal 20px/23px fontello;
-    }
   }
 
   .item-selector {
@@ -168,22 +169,98 @@
     box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
   }
 
-  .closePanel {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    text-indent: 100px;
-    overflow: hidden;
-    padding: 0px;
-    background: gray url(close.png) no-repeat 2px;
-    -webkit-border-radius: 3px;
-    display: block;
-    height: 15px;
-    width: 15px;
-    z-index: 3;
-    border: none;
-  }
+  ul.menu {
+    margin: 0;
+    list-style-type: none;
+    
+    li {
+      line-height: 1.5em;
 
+      > button,
+      > a {
+        background: none;
+        display: block;
+        color: black;
+        line-height: 1.5em;
+        cursor: default;
+        padding: 0.2em 0 0.1em 1.6em;
+
+        &:active {
+          box-shadow: none;
+        }
+      }
+
+      a:before, 
+      button:before {
+        margin-left: -1.6em;
+        float: left;
+        line-height: 1.5em;
+      }
+    }
+
+    li {
+
+      &.current a {
+        &:before {
+          content: "✓";
+          float: left;
+          margin-left: -1.5em;
+          font: 1em fontello;
+        }
+        color: black;
+      }
+
+      &:hover {
+        text-decoration: none;
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+
+      a:hover {
+        text-decoration: none;
+      }
+
+      &.file-upload {
+        position: relative;
+        text-indent: 20px;
+        height: 25px;
+        overflow: hidden;
+        
+        &:before {
+          content: "\e808";
+          font-family: fontello;
+          position: absolute;
+          left: -13px;
+        }
+        
+        form {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          label {
+            position: absolute;
+            margin-left: 0;
+            left: 0;
+            overflow: hidden;
+            display: block;
+            right: 0;
+            cursor: pointer;
+            padding-left: 2px;
+          }
+          input {
+            opacity: 0;
+            filter: alpha(opacity = 0);
+            width: 100%;
+            cursor: pointer;
+            position: absolute;
+            top: 3px;
+            left: 0;
+          }
+        }
+      }
+    }
+  }
 }
 
 @include screen-size(small) {
@@ -210,117 +287,11 @@
       overflow: auto;
     }
 
-    h1:after {
-      font-family: fontello;
-      content: '\e819';
-      float: right;
-    }
-  }
-}
-
-.tooltip-container ul.menu {
-  margin: 0;
-  list-style-type: none;
-  li {
-    line-height: 24px;
-    a {
-      display: block;
-      margin-left: -10px;
-      margin-right: -10px;
-      padding-left: 32px;
-      padding-right: 15px;
-      color: black;
-      line-height: 20px;
-      cursor: default;
-    }
-    button {
-      display: block;
-      margin-left: -10px;
-      margin-right: -10px;
-      padding-left: 32px;
-      padding-right: 15px;
-      color: black;
-      line-height: 20px;
-      cursor: default;
-      &:active {
-        box-shadow: none;
-      }
-    }
-    a:before, button:before {
-      margin-left: -15px;
-      float: left;
-      margin-top: 5px;
-    }
-  }
-}
-
-.tooltip-container ul.menu li {
-  &.current a {
-    &:before {
-      content: "✓";
-      float: left;
-      margin-left: -19px;
-      font: 12px fontello;
-      position: relative;
-      top: 7px;
-    }
-    color: black;
-  }
-  &:hover {
-    text-decoration: none;
-    background-color: rgba(0, 0, 0, 0.03);
-  }
-  a:hover {
-    text-decoration: none;
-  }
-  .checklist {
-    &.radio {
-      border-top: 1px solid silver;
-      border-bottom: 1px solid silver;
-      padding-left: 22px;
-      line-height: 18px;
-      padding-top: 4px;
-      padding-bottom: 4px;
-    }
-    .legend {
-      margin-bottom: 0;
-    }
-  }
-  &.file-upload {
-    position: relative;
-    text-indent: 20px;
-    height: 25px;
-    overflow: hidden;
-    &:before {
-      content: "\e808";
-      font-family: fontello;
-      position: absolute;
-      left: -13px;
-    }
-    form {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      label {
-        position: absolute;
-        margin-left: 0;
-        left: 0;
-        overflow: hidden;
+    &.type-auto,
+    &.type-sticky,
+    &.type-close-button {
+      > .close-panel {
         display: block;
-        right: 0;
-        cursor: pointer;
-        padding-left: 2px;
-      }
-      input {
-        opacity: 0;
-        filter: alpha(opacity = 0);
-        width: 100%;
-        cursor: pointer;
-        position: absolute;
-        top: 3px;
-        left: 0;
       }
     }
   }

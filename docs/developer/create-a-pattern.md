@@ -1,12 +1,14 @@
 # How to create a new pattern
 
-This section provides a quick tutorial on how to create a new Patternslib pattern.
+This document provides a quick tutorial on how to create a new Patternslib pattern.
 Patterns are implemented as javascript objects that are registered with the Patternslib library.
 
-We create a new pattern called pat-colorchanger, which will change
-the text-color of an element after waiting for 3 seconds.
+## Creating a colorchanger pattern
 
-## Creating the pattern directory
+In this tutorial we will create a new pattern called pat-colorchanger.
+This pattern changes the text-color of an element after waiting for 3 seconds.
+
+### Creating the pattern directory
 
 To start off, lets create a new directory in which we'll put our pattern's
 files, and then lets navigate into it.
@@ -15,6 +17,17 @@ files, and then lets navigate into it.
 mkdir pat-colorchanger
 cd pat-colorchanger
 ```
+
+### Using the Yeoman generator
+
+Instead of manually typing out the code shown in this tutorial, you can simply
+use the [Yeoman Patternslib generator](https://www.npmjs.com/package/generator-patternslib) to generate the appropriate skeleton for you.
+
+To do so, simply run the following commands in side the `pat-colorchanger`
+directory you created in the previous section.
+
+    sudo npm install -g generator-patternslib
+    yo patternslib pat-colorchanger
 
 In our example we're creating for demonstration purposes the pattern
 pat-colorchanger, but you'll of course choose a more appropriate
@@ -26,11 +39,10 @@ Each pattern should have a certain layout. Look for example at [pat-pickadate](h
 There is one subdirectory, called *src*, inside the *pat-pickadate* repository.
 It contains the pattern's actual Javascript source file(s).
 
-Let's create this directory now::
+The Yeoman generator will create the correct layout and all the necessary
+files.
 
-    mkdir src
-
-And let's also create the files required::
+However, if you're doing this manually instead of using Yeoman, then create this directory as well as the files required:
 
     touch README.md index.html src/pat-colorchanger.js
 
@@ -39,7 +51,7 @@ And let's also create the files required::
 
 Patterns are configured via a declarative HTML syntax.
 
-A particular pattern is usually invoked by specifying its name as an HTML class on a DOM object.
+Usually a particular pattern is invoked by specifying its name as an HTML class on a DOM object.
 The invoked pattern then acts upon that specifc DOM element. In our example case, the pattern
 changes the text color after 3 seconds. This color change is applied to the DOM
 element on which the pattern is declared.
@@ -51,11 +63,9 @@ So in our case, that's `data-pat-colorchanger`.
 
 For example:
 
-```
-<p class="pat-colorchanger" data-pat-colorchanger="color: blue" style="color: red">
-    This text will turn from red into blue after 3 seconds.
-</p>
-```
+    <p class="pat-colorchanger" data-pat-colorchanger="color: blue" style="color: red">
+        This text will turn from red into blue after 3 seconds.
+    </p>
 
 HTML markup as shown above, which illustrates how your pattern functions, should be put
 inside the `index.html` file. This file can then be used by designers and integrators
@@ -144,8 +154,7 @@ Put this code into `./src/pat-colorchanger.js`
 }));
 ```
 
-This pattern can be loaded directly in your browser after a standard Patterns
-bundle has been loaded.
+This pattern can be loaded directly in your browser after a standard Patterns bundle has been loaded.
 
 ```
 <html>

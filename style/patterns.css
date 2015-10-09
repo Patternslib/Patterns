@@ -4134,6 +4134,7 @@ li.mode-Blue {
   color: white; }
 
 .tooltip-container {
+  background-color: white;
   position: absolute;
   z-index: 9998;
   border: none;
@@ -4165,10 +4166,38 @@ li.mode-Blue {
     overflow: auto;
     overflow-x: hidden;
     box-sizing: border-box; }
+    .tooltip-container > div *:last-child {
+      margin-bottom: 0; }
     .tooltip-container > div:after {
-      content: " ";
+      content: "";
       display: block;
       clear: both; }
+  .tooltip-container > .close-panel {
+    font-size: 1em;
+    margin: 0;
+    display: block;
+    z-index: 9999;
+    padding: 5% 5% 0 0;
+    width: 100%;
+    text-indent: -1000em; }
+    @media only screen and (min-width: 769px) {
+      .tooltip-container > .close-panel {
+        padding: 0.2em 0.3em 0;
+        background-color: #efefef; } }
+    .tooltip-container > .close-panel:after {
+      color: black;
+      font-family: fontello;
+      content: "󢀅";
+      z-index: 9999;
+      float: right;
+      padding: 0.3em;
+      text-indent: 0; }
+  .tooltip-container.type-auto > .close-panel {
+    display: none; }
+  .tooltip-container.type-sticky > .close-panel {
+    display: none; }
+  .tooltip-container.type-close-button > .close-panel {
+    display: block; }
   .tooltip-container.bl .pointer, .tooltip-container.bm .pointer, .tooltip-container.br .pointer {
     margin-top: -12px; }
   .tooltip-container.lt .pointer, .tooltip-container.lm .pointer, .tooltip-container.lb .pointer {
@@ -4253,10 +4282,6 @@ li.mode-Blue {
       color: rgba(0, 0, 0, 0.3);
       border-bottom: 1px dotted rgba(0, 0, 0, 0.3);
       padding: 0.4em 0.7em 0.4em; }
-  .tooltip-container.code > div {
-    background-color: black; }
-  .tooltip-container.code .pointer {
-    background-color: black; }
   @media only screen and (min-width: 769px) {
     .tooltip-container.large {
       width: 50%; } }
@@ -4264,34 +4289,6 @@ li.mode-Blue {
     color: #3b3b3b;
     font-size: 12px;
     line-height: 18px; }
-  @media only screen and (min-width: 769px) {
-    .tooltip-container .close-panel-mobile {
-      display: none; } }
-  .tooltip-container .close-panel-mobile {
-    position: absolute;
-    color: gray;
-    top: 9px;
-    right: 9px;
-    line-height: 22px;
-    height: 22px;
-    width: 22px;
-    padding: 0;
-    text-indent: -1000px;
-    overflow: hidden;
-    margin: 0;
-    filter: none;
-    border-style: none;
-    border-radius: 50%;
-    background-image: none;
-    outline: none; }
-    .tooltip-container .close-panel-mobile:before {
-      content: "󢀅";
-      text-indent: 0;
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 22px;
-      font: normal 20px/23px fontello; }
   .tooltip-container .item-selector {
     position: static; }
   .tooltip-container .button-bar.bottom {
@@ -4312,20 +4309,72 @@ li.mode-Blue {
     -moz-box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px;
     transform: rotate(45deg);
     box-shadow: rgba(0, 0, 0, 0.19922) 0px 0px 10px; }
-  .tooltip-container .closePanel {
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    text-indent: 100px;
-    overflow: hidden;
-    padding: 0px;
-    background: gray url(close.png) no-repeat 2px;
-    -webkit-border-radius: 3px;
-    display: block;
-    height: 15px;
-    width: 15px;
-    z-index: 3;
-    border: none; }
+  .tooltip-container ul.menu {
+    margin: 0;
+    list-style-type: none; }
+    .tooltip-container ul.menu li {
+      line-height: 1.5em; }
+      .tooltip-container ul.menu li > button,
+      .tooltip-container ul.menu li > a {
+        background: none;
+        display: block;
+        color: black;
+        line-height: 1.5em;
+        cursor: default;
+        padding: 0.2em 0 0.1em 1.6em; }
+        .tooltip-container ul.menu li > button:active,
+        .tooltip-container ul.menu li > a:active {
+          box-shadow: none; }
+      .tooltip-container ul.menu li a:before,
+      .tooltip-container ul.menu li button:before {
+        margin-left: -1.6em;
+        float: left;
+        line-height: 1.5em; }
+    .tooltip-container ul.menu li.current a {
+      color: black; }
+      .tooltip-container ul.menu li.current a:before {
+        content: "✓";
+        float: left;
+        margin-left: -1.5em;
+        font: 1em fontello; }
+    .tooltip-container ul.menu li:hover {
+      text-decoration: none;
+      background-color: rgba(0, 0, 0, 0.03); }
+    .tooltip-container ul.menu li a:hover {
+      text-decoration: none; }
+    .tooltip-container ul.menu li.file-upload {
+      position: relative;
+      text-indent: 20px;
+      height: 25px;
+      overflow: hidden; }
+      .tooltip-container ul.menu li.file-upload:before {
+        content: "\e808";
+        font-family: fontello;
+        position: absolute;
+        left: -13px; }
+      .tooltip-container ul.menu li.file-upload form {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0; }
+        .tooltip-container ul.menu li.file-upload form label {
+          position: absolute;
+          margin-left: 0;
+          left: 0;
+          overflow: hidden;
+          display: block;
+          right: 0;
+          cursor: pointer;
+          padding-left: 2px; }
+        .tooltip-container ul.menu li.file-upload form input {
+          opacity: 0;
+          filter: alpha(opacity=0);
+          width: 100%;
+          cursor: pointer;
+          position: absolute;
+          top: 3px;
+          left: 0; }
 
 @media only screen and (max-width: 768px) {
   .tooltip-container {
@@ -4348,97 +4397,8 @@ li.mode-Blue {
       border: none;
       padding: 5% !important;
       overflow: auto; }
-    .tooltip-container h1:after {
-      font-family: fontello;
-      content: '\e819';
-      float: right; } }
-.tooltip-container ul.menu {
-  margin: 0;
-  list-style-type: none; }
-  .tooltip-container ul.menu li {
-    line-height: 24px; }
-    .tooltip-container ul.menu li a {
-      display: block;
-      margin-left: -10px;
-      margin-right: -10px;
-      padding-left: 32px;
-      padding-right: 15px;
-      color: black;
-      line-height: 20px;
-      cursor: default; }
-    .tooltip-container ul.menu li button {
-      display: block;
-      margin-left: -10px;
-      margin-right: -10px;
-      padding-left: 32px;
-      padding-right: 15px;
-      color: black;
-      line-height: 20px;
-      cursor: default; }
-      .tooltip-container ul.menu li button:active {
-        box-shadow: none; }
-    .tooltip-container ul.menu li a:before, .tooltip-container ul.menu li button:before {
-      margin-left: -15px;
-      float: left;
-      margin-top: 5px; }
-
-.tooltip-container ul.menu li.current a {
-  color: black; }
-  .tooltip-container ul.menu li.current a:before {
-    content: "✓";
-    float: left;
-    margin-left: -19px;
-    font: 12px fontello;
-    position: relative;
-    top: 7px; }
-.tooltip-container ul.menu li:hover {
-  text-decoration: none;
-  background-color: rgba(0, 0, 0, 0.03); }
-.tooltip-container ul.menu li a:hover {
-  text-decoration: none; }
-.tooltip-container ul.menu li .checklist.radio {
-  border-top: 1px solid silver;
-  border-bottom: 1px solid silver;
-  padding-left: 22px;
-  line-height: 18px;
-  padding-top: 4px;
-  padding-bottom: 4px; }
-.tooltip-container ul.menu li .checklist .legend {
-  margin-bottom: 0; }
-.tooltip-container ul.menu li.file-upload {
-  position: relative;
-  text-indent: 20px;
-  height: 25px;
-  overflow: hidden; }
-  .tooltip-container ul.menu li.file-upload:before {
-    content: "\e808";
-    font-family: fontello;
-    position: absolute;
-    left: -13px; }
-  .tooltip-container ul.menu li.file-upload form {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0; }
-    .tooltip-container ul.menu li.file-upload form label {
-      position: absolute;
-      margin-left: 0;
-      left: 0;
-      overflow: hidden;
-      display: block;
-      right: 0;
-      cursor: pointer;
-      padding-left: 2px; }
-    .tooltip-container ul.menu li.file-upload form input {
-      opacity: 0;
-      filter: alpha(opacity=0);
-      width: 100%;
-      cursor: pointer;
-      position: absolute;
-      top: 3px;
-      left: 0; }
-
+    .tooltip-container.type-auto > .close-panel, .tooltip-container.type-sticky > .close-panel, .tooltip-container.type-close-button > .close-panel {
+      display: block; } }
 .pat-checklist > br {
   display: none; }
 .pat-checklist label {

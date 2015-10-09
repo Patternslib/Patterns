@@ -78,10 +78,15 @@ It is possible to force a specific tooltip position by adding the
 
 By default, the tooltip disappears when the cursor is moved off the element or
 the triggering element is clicked. If this is not desired behaviour, there is
-the option to change the closing behaviour to `sticky`. When you do this the
-tooltip only disappears when a close button on the tooltip is clicked. When the
-sticky option is chosen, the close button will be inserted for you
-automatically:
+the option to change the closing behaviour to `sticky` or to `close-button`.
+
+With `sticky`, the tooltip will remain until the user clicks outside of the
+tooltip, or on mobile, if the user clicks on the close button.
+
+With the `close-button` option, the tooltip will only be closed if the close
+button is clicked.
+
+For example, setting closing to `sticky`:
 
     <a href="#" class="pat-tooltip" data-pat-tooltip="closing: sticky">
      …
@@ -155,7 +160,8 @@ The available options are:
 | `trigger` | `click` | `click` `hover` | Sets on which user action the tooltip should appear. | Mutually exclusive |
 | `source` | `title` | `ajax` `content` `title` | Select where the contents of the tooltip is taken from: AJAX loading of the link target, the contents of element or its title attribute. | Mutually exclusive |
 | `delay` | `0` | *time* | `The delay for the tooltip to appear, expressed in milliseconds | Time |
+| `mark-inactive` | `true` | `true` `false` | Should we add inactive class to the tooltip trigger? | Bool |
 | `closing` | `auto` | `auto` `sticky` `close-button` | Auto means that the tooltip will disappear when the user clicks out of the tooltip, or — in case of hover triggered tooltips — hovers away from the trigger element. `close-button` will add a close button to the tooltip which must be used to close the tooltip. | Mutually exclusive |
 | `class` | *none* | *class value* | Assigns a class to the tooltip. For instance to give a specific tooltip a different colour | |
-| `ajax-data-type| `html` | `html` `markdown` | Data type of content to be loaded when AJAX is used as source. | Mutually exclusive |
+| `ajax-data-type`| `html` | `html` `markdown` | Data type of content to be loaded when AJAX is used as source. | Mutually exclusive |
 | `target` | `body` | *selector* | Selects where the tooltip container is appended in the DOM | |

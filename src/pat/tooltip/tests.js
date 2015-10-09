@@ -18,7 +18,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
 
         createTooltipSource: function() {
             return $("<span style='display: none' id='tooltip-source'>"+
-                    "<stong>Local content</strong></span>")
+                    "<strong>Local content</strong></span>")
                 .appendTo($("div#lab"));
         },
 
@@ -184,7 +184,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     $el.trigger(utils.click);
                     expect(pattern.show).toHaveBeenCalled();
                     var $container = $el.data("patterns.tooltip.container");
-                    expect($container.text()).toBe(title);
+                    expect($container.find('p').text()).toBe(title);
                 });
             });
 
@@ -230,7 +230,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     $el.trigger(utils.click);
                     expect(pattern.show).toHaveBeenCalled();
                     var $container = $el.data("patterns.tooltip.container");
-                    expect($container.text()).toBe("Local content");
+                    expect($container.find('strong').text()).toBe("Local content");
                 });
             });
 

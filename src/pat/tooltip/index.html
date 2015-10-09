@@ -9,41 +9,37 @@
 </head>
 <body>
     <section class="demo">
+        <h3>Defaults</h3>
         <p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        <a href="#" title="This is just the title" class="pat-tooltip" data-pat-tooltip="trigger: click; source: content">Tooltip contents</a>. And more text.
-		Ut <a href="#" title="This tooltip prefers to be in the top-middle position, but doesn't have enough space there. Poor fellow." class="pat-tooltip" data-pat-tooltip="class: unicorn; position: tm,rt,rm,rb,lt; trigger: hover">tooltip top middle, show on hover</a> gravida ligula quis feugiat. Mauris tellus purus, venenatis non faucibus dignissim,
-		imperdiet eget purus. Sed imperdiet, libero eu dignissim sollicitudin, dui augue porta orci,
-		commodo malesuada diam diam eu ligula.
-		Donec <a href="#" title="This is one sticky tooltip" class="pat-tooltip" data-pat-tooltip="position: rm; closing: sticky">tooltip right middle</a>, neque eu congue commodo, magna elit luctus elit, ut semper quam elit nec nisi.
-		Aenean accumsan ultrices porta. Etiam at tristique mi.
+        Click <a href="#" title="Normally, tooltips will use the title attribute as text source." class="pat-tooltip">here</a> to see a minimally configured tooltip.
+        By default tooltips are triggered by clicking and they will show the contents
+        of the title attribute of the element being clicked.
         </p>
         <p>
-		<img src="http://farm8.staticflickr.com/7123/7591044464_e593c023df_z_d.jpg" class="float-before pat-tooltip" width="300" data-pat-tooltip="closing: sticky" title="this is a sticky tooltip" alt="starwars meeting"/>
-		Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
-		Aenean malesuada laoreet magna, et <a href="#" title="This tooltip prefers to be in the top-middle" class="pat-tooltip" data-pat-tooltip="position: tm,rt,rm,rb,lt; trigger: hover">top middle on hover</a> magna tempus eleifend.
-		In posuere nunc eros. Curabitur odio enim, rutrum id cursus ut, dapibus feugiat mi. <a href="documentation.md#Display" class="pat-tooltip" data-pat-tooltip="ajax hover; ajax-data-type: markdown" title="Tittle attribute content">this content is loaded by Ajax on hover</a> and <a href="pattern-test-response.html#myTip" class="pat-tooltip" data-pat-tooltip="ajax; trigger: click" title="Tittle attribute content">this on by Ajax too, but on click</a>.  Interdum sit amet fringilla sit amet, pellentesque non nisl. Quisque egestas aliquam scelerisque. Phasellus ligula lectus, rutrum in gravida hendrerit,
-		rutrum sit amet felis.
+        <h3>Configurations</h3>
+        Tooltips can be configured. Click the following link to show <a href="#" title="This is just the title" class="pat-tooltip" data-pat-tooltip="trigger: click; source: content">the same content in the link</a> inside the tooltip.
         </p>
         <p>
-		Nam aliquet sodales risus, sed vulputate ligula ullamcorper et.
-		Pellentesque egestas imperdiet erat viverra lacinia. Aliquam magna orci, lobortis eu aliquam quis,
-		tempor at tortor. <a href="#" title="Tittle attribute content" class="pat-tooltip">tooltip default</a> vel mauris pharetra a tempor turpis rhoncus.
-		Vivamus rutrum blandit leo, a vehicula leo condimentum accumsan.
-		Vestibulum sodales accumsan est, a luctus turpis auctor sit amet.
-		Etiam vehicula ligula ac libero pulvinar nec ultrices dolor rutrum.
-		Aenean at ultrices erat. Fusce sollicitudin euismod congue. Cras eu elit augue.
-		<img src="http://farm3.staticflickr.com/2581/3881246563_187586ddc5_z_d.jpg" width="400" class="float-after pat-tooltip" data-pat-tooltip="trigger: hover; delay: 500" title="Tittle attribute content shown after half second delay." alt="starwars"/> Nunc a ante non justo pretium imperdiet. Praesent diam nunc, sodales in pretium sit amet,
-		auctor nec orci. Ut commodo magna at diam tempor nec sodales augue sagittis. Suspendisse potenti.
+        You can configure tooltips to set their preferred positions as well when they will appear.
+        This <a href="#" title="This tooltip prefers to be in the top-middle position, but doesn't have enough space there. Poor fellow." class="pat-tooltip" data-pat-tooltip="class: unicorn; position: tm,rt,rm,rb,lt; trigger: hover">tooltip</a>is configured to preferably appear in the top middle, but won't appear there if there isn't enough space.
         </p>
         <p>
-		Proin eu metus ante, quis sagittis justo. Aenean magna mi, ultrices at tincidunt id, volutpat non eros.
-		<a href="#" class="pat-tooltip" data-pat-tooltip="click; position: tl" title="tooltip left top, show on click">Nunc interdum venenatis eros, et lacinia turpis ornare non.
-		Suspendisse quis sem varius felis convallis feugiat non id lorem.</a>
-		Aliquam lobortis porta sapien, vel vehicula augue dapibus at.
-		Nam turpis nibh, mollis quis mollis a, dictum quis elit. Fusce feugiat dapibus lacus,
-		non condimentum ante varius at. Cras at nunc elit, quis tempor quam
+        <h4>How tooltips are closed</h4>
+        The way tooltips close, can be configured configured in different ways.
+        <ul>
+            <li>This following tooltip is configured to be <a href="#" title="This is one sticky tooltip" class="pat-tooltip" data-pat-tooltip="position: rm; closing: sticky">sticky</a>. It will only be closed when you click outside of it.</li>
+            <li>This tooltip is configured to have a <a href="#" title="This is a tooltip with a close button" class="pat-tooltip" data-pat-tooltip="position: lm; closing: close-button">close button</a> which must be clicked to close it.</li>
+        </ul>
         </p>
+        <h3>Ajax loading</h3>
+        <p>
+        <a href="documentation.md#Display" class="pat-tooltip" data-pat-tooltip="ajax hover; ajax-data-type: markdown" title="Tittle attribute content">This tooltip's content is loaded by Ajax on hover</a> and <a href="pattern-test-response.html#myTip" class="pat-tooltip" data-pat-tooltip="ajax; trigger: click" title="Tittle attribute content">this one's loaded by Ajax too, but on click</a>.
+        </p>
+        <h3>Images</h3>
+        <p>
+        Even images can have tooltips. Click on the image below to show a tooltip.
+        </p>
+		<img src="http://farm8.staticflickr.com/7123/7591044464_e593c023df_z_d.jpg" class="float-before pat-tooltip" width="200" data-pat-tooltip="closing: sticky" title="This is a sticky tooltip for an image." alt="starwars meeting"/>
     </section>
 </body>
 </html>

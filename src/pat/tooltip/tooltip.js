@@ -29,6 +29,7 @@ define([
     parser.addArgument("source", "title", ["auto", "ajax", "content", "content-html", "title"]);
     parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
     parser.addArgument("delay", 0);
+    parser.addArgument("mark-inactive", true);
     parser.addArgument("class");
     parser.addArgument("target", "body");
 
@@ -68,7 +69,9 @@ define([
                     .data("patterns.tooltip", options)
                     .on("destroy", $trigger, tooltip.onDestroy);
                 tooltip.setupShowEvents($trigger);
-                $trigger.addClass("inactive");
+                if (options.markInactive) {
+                    $trigger.addClass("inactive");
+                }
             });
         },
 
@@ -113,8 +116,7 @@ define([
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
                 options = $trigger.data("patterns.tooltip");
-            $container
-                .on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
+            $container.on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
 
             if (options.closing==="close-button") {
                 // Make sure click on the trigger element becomes a NOP
@@ -207,20 +209,26 @@ define([
                  tooltip.positionContainer($trigger, $container);
             });
 
-            $trigger.removeClass("inactive").addClass("active");
+            if (options.markInactive) {
+                $trigger.removeClass("inactive").addClass("active");
+            }
         },
 
         hide: function(event) {
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
+                options = $trigger.data("patterns.tooltip"),
                 namespace = $container.attr("id");
+
             // when another tooltip trigger is clicked, only close the previous tooltip if it does not contain the trigger
             if (event.type !== "pat-tooltip-click" || $container.has(event.target).length <= 0) {
                 $container.css("visibility", "hidden");
                 $container.parents().add(window).off("." + namespace);
                 tooltip.removeHideEvents($trigger);
                 tooltip.setupShowEvents($trigger);
-                $trigger.removeClass("active").addClass("inactive");
+                if (options.markInactive) {
+                    $trigger.removeClass("active").addClass("inactive");
+                }
                 $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
             }
         },
@@ -252,7 +260,7 @@ define([
                 $content, $container, href;
 
             $trigger.data("patterns.tooltip.number", count);
-            $container = $("<div/>", {"class": "tooltip-container",
+            $container = $("<div/>", {"class": "tooltip-container type-"+options.closing,
                                      "id": "tooltip" + count});
             if (options["class"])
                 $container.addClass(options["class"]);
@@ -283,11 +291,9 @@ define([
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.closing==="close-button") {
-                $("<button/>", {"class": "close-panel"})
-                    .text("Close")
-                    .insertBefore($container.find("*:first"));
-            }
+            $("<button/>", {"class": "close-panel"})
+                .text("Close")
+                .insertBefore($container.find("*:first"));
             $(options.target).append($container);
             return $container;
         },
