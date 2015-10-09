@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.12 - Unreleased
+## 2.0.12 - Oct. 9, 2015
 
 - New argument for the inject pattern: `loading-class`.
   Specifies a class to appear on the injection target while the injected content is still loading.
