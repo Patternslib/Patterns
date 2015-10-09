@@ -12543,8 +12543,194 @@ define('pat-logger',[
     return log;
 });
 
+/*!
+ * jQuery Browser Plugin 0.0.8
+ * https://github.com/gabceb/jquery-browser-plugin
+ *
+ * Original jquery-browser code Copyright 2005, 2015 jQuery Foundation, Inc. and other contributors
+ * http://jquery.org/license
+ *
+ * Modifications Copyright 2015 Gabriel Cebrian
+ * https://github.com/gabceb
+ *
+ * Released under the MIT license
+ *
+ * Date: 05-07-2015
+ */
+/*global window: false */
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define('jquery.browser',['jquery'], function ($) {
+      return factory($);
+    });
+  } else if (typeof module === 'object' && typeof module.exports === 'object') {
+    // Node-like environment
+    module.exports = factory(require('jquery'));
+  } else {
+    // Browser globals
+    factory(window.jQuery);
+  }
+}(function(jQuery) {
+  "use strict";
+
+  function uaMatch( ua ) {
+    // If an UA is not provided, default to the current browser UA.
+    if ( ua === undefined ) {
+      ua = window.navigator.userAgent;
+    }
+    ua = ua.toLowerCase();
+
+    var match = /(edge)\/([\w.]+)/.exec( ua ) ||
+        /(opr)[\/]([\w.]+)/.exec( ua ) ||
+        /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+        /(version)(applewebkit)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec( ua ) ||
+        /(webkit)[ \/]([\w.]+).*(version)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec( ua ) ||
+        /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+        /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+        /(msie) ([\w.]+)/.exec( ua ) ||
+        ua.indexOf("trident") >= 0 && /(rv)(?::| )([\w.]+)/.exec( ua ) ||
+        ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+        [];
+
+    var platform_match = /(ipad)/.exec( ua ) ||
+        /(ipod)/.exec( ua ) ||
+        /(iphone)/.exec( ua ) ||
+        /(kindle)/.exec( ua ) ||
+        /(silk)/.exec( ua ) ||
+        /(android)/.exec( ua ) ||
+        /(windows phone)/.exec( ua ) ||
+        /(win)/.exec( ua ) ||
+        /(mac)/.exec( ua ) ||
+        /(linux)/.exec( ua ) ||
+        /(cros)/.exec( ua ) ||
+        /(playbook)/.exec( ua ) ||
+        /(bb)/.exec( ua ) ||
+        /(blackberry)/.exec( ua ) ||
+        [];
+
+    var browser = {},
+        matched = {
+          browser: match[ 5 ] || match[ 3 ] || match[ 1 ] || "",
+          version: match[ 2 ] || match[ 4 ] || "0",
+          versionNumber: match[ 4 ] || match[ 2 ] || "0",
+          platform: platform_match[ 0 ] || ""
+        };
+
+    if ( matched.browser ) {
+      browser[ matched.browser ] = true;
+      browser.version = matched.version;
+      browser.versionNumber = parseInt(matched.versionNumber, 10);
+    }
+
+    if ( matched.platform ) {
+      browser[ matched.platform ] = true;
+    }
+
+    // These are all considered mobile platforms, meaning they run a mobile browser
+    if ( browser.android || browser.bb || browser.blackberry || browser.ipad || browser.iphone ||
+      browser.ipod || browser.kindle || browser.playbook || browser.silk || browser[ "windows phone" ]) {
+      browser.mobile = true;
+    }
+
+    // These are all considered desktop platforms, meaning they run a desktop browser
+    if ( browser.cros || browser.mac || browser.linux || browser.win ) {
+      browser.desktop = true;
+    }
+
+    // Chrome, Opera 15+ and Safari are webkit based browsers
+    if ( browser.chrome || browser.opr || browser.safari ) {
+      browser.webkit = true;
+    }
+
+    // IE11 has a new token so we will assign it msie to avoid breaking changes
+    // IE12 disguises itself as Chrome, but adds a new Edge token.
+    if ( browser.rv || browser.edge ) {
+      var ie = "msie";
+
+      matched.browser = ie;
+      browser[ie] = true;
+    }
+
+    // Blackberry browsers are marked as Safari on BlackBerry
+    if ( browser.safari && browser.blackberry ) {
+      var blackberry = "blackberry";
+
+      matched.browser = blackberry;
+      browser[blackberry] = true;
+    }
+
+    // Playbook browsers are marked as Safari on Playbook
+    if ( browser.safari && browser.playbook ) {
+      var playbook = "playbook";
+
+      matched.browser = playbook;
+      browser[playbook] = true;
+    }
+
+    // BB10 is a newer OS version of BlackBerry
+    if ( browser.bb ) {
+      var bb = "blackberry";
+
+      matched.browser = bb;
+      browser[bb] = true;
+    }
+
+    // Opera 15+ are identified as opr
+    if ( browser.opr ) {
+      var opera = "opera";
+
+      matched.browser = opera;
+      browser[opera] = true;
+    }
+
+    // Stock Android browsers are marked as Safari on Android.
+    if ( browser.safari && browser.android ) {
+      var android = "android";
+
+      matched.browser = android;
+      browser[android] = true;
+    }
+
+    // Kindle browsers are marked as Safari on Kindle
+    if ( browser.safari && browser.kindle ) {
+      var kindle = "kindle";
+
+      matched.browser = kindle;
+      browser[kindle] = true;
+    }
+
+     // Kindle Silk browsers are marked as Safari on Kindle
+    if ( browser.safari && browser.silk ) {
+      var silk = "silk";
+
+      matched.browser = silk;
+      browser[silk] = true;
+    }
+
+    // Assign the name and platform variable
+    browser.name = matched.browser;
+    browser.platform = matched.platform;
+    return browser;
+  }
+
+  // Run the matching process, also assign the function to the returned object
+  // for manual, jQuery-free use if desired
+  window.jQBrowser = uaMatch( window.navigator.userAgent );
+  window.jQBrowser.uaMatch = uaMatch;
+
+  // Only assign to jQuery.browser if jQuery is loaded
+  if ( jQuery ) {
+    jQuery.browser = window.jQBrowser;
+  }
+
+  return window.jQBrowser;
+}));
+
 define('pat-utils',[
-    "jquery"
+    "jquery",
+    "jquery.browser"
 ], function($) {
 
     $.fn.safeClone = function () {
@@ -12857,6 +13043,49 @@ define('pat-utils',[
         return newURL;
     }
 
+    function removeDuplicateObjects(objs) {
+        /* Given an array of objects, remove any duplicate objects which might
+         * be present.
+         */
+        var comparator = function(v, k) {
+            return this[k] === v;
+        };
+        return _.reduce(objs, function(list, next_obj) {
+            var is_duplicate = false;
+            _.each(list, function(obj) {
+                is_duplicate = (
+                    (_.keys(obj).length === _.keys(next_obj).length) &&
+                    (!_.chain(obj).omit(comparator.bind(next_obj)).keys().value().length)
+                );
+            });
+            if (!is_duplicate) {
+                list.push(next_obj);
+            }
+            return list;
+        }, []);
+    }
+
+    function mergeStack(stack, length) {
+        /* Given a list of lists of objects (which for brevity we call a stack),
+         * return a list of objects where each object is the merge of all the
+         * corresponding original objects at that particular index.
+         *
+         * If a certain sub-list doesn't have an object at that particular
+         * index, the last object in that list is merged.
+         */
+        var results = [];
+        for (var i=0; i<length; i++) {
+            results.push({});
+        }
+        _.each(stack, function(frame) {
+            var frame_length = frame.length-1;
+            for (var x=0; x<length; x++) {
+                results[x] = $.extend(results[x] || {}, frame[(x>frame_length) ? frame_length : x]);
+            }
+        });
+        return results;
+    }
+
     var utils = {
         // pattern pimping - own module?
         jqueryPlugin: jqueryPlugin,
@@ -12869,7 +13098,9 @@ define('pat-utils',[
         elementInViewport: elementInViewport,
         removeWildcardClass: removeWildcardClass,
         hideOrShow: hideOrShow,
-        addURLQueryParameter: addURLQueryParameter
+        addURLQueryParameter: addURLQueryParameter,
+        removeDuplicateObjects: removeDuplicateObjects,
+        mergeStack: mergeStack
     };
     return utils;
 });
@@ -13664,11 +13895,8 @@ define('pat-registry',[
     "pat-compat",
     "pat-jquery-ext"
 ], function($, _, logger, utils) {
-    var TEXT_NODE = 3;
-    var COMMENT_NODE = 8;
-    var log = logger.getLogger("registry");
-
-    var disable_re = /patterns-disable=([^&]+)/g,
+    var log = logger.getLogger("registry"),
+        disable_re = /patterns-disable=([^&]+)/g,
         dont_catch_re = /patterns-dont-catch/g,
         dont_catch = false,
         disabled = {}, match;
@@ -13811,15 +14039,6 @@ define('pat-registry',[
             return true;
         }
     };
-
-    $(document).on("patterns-injected.patterns",
-        function registry_onInject(ev, config, trigger_el, injected_el) {
-            if (injected_el.nodeType !== TEXT_NODE && injected_el !== COMMENT_NODE) {
-                registry.scan(injected_el, null, {type: "injection", element: trigger_el});
-                $(injected_el).trigger("patterns-injected-scanned");
-            }
-        }
-    );
     return registry;
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
@@ -13841,8 +14060,9 @@ define("prefixfree", function(){});
 define('pat-parser',[
     "jquery",
     "underscore",
+    "pat-utils",
     "pat-logger"
-], function($, _, logger) {
+], function($, _, utils, logger) {
     "use strict";
 
     function ArgumentParser(name, opts) {
@@ -14097,23 +14317,22 @@ define('pat-parser',[
             var parts = this._split(parameter),
                 opts = {},
                 positional = true,
-                i, part, flag, sense;
+                i=0, part, flag, sense;
 
-            i=0;
             while (parts.length) {
                 part=parts.shift().trim();
                 if (part.slice(0, 3)==="no-") {
-                    sense=false;
+                    sense = false;
                     flag=part.slice(3);
                 } else {
-                    sense=true;
-                    flag=part;
+                    sense = true;
+                    flag = part;
                 }
                 if (flag in this.parameters && this.parameters[flag].type==="boolean") {
-                    positional=false;
+                    positional = false;
                     this._set(opts, flag, sense);
                 } else if (flag in this.enum_values) {
-                    positional=false;
+                    positional = false;
                     this._set(opts, this.enum_values[flag], flag);
                 } else if (positional)
                     this._set(opts, this.order[i], part);
@@ -14122,8 +14341,9 @@ define('pat-parser',[
                     break;
                 }
                 i++;
-                if (i>=this.order.length)
+                if (i >= this.order.length) {
                     break;
+                }
             }
             if (parts.length)
                 this.log.warn("Ignore extra arguments: " + parts.join(" "));
@@ -14144,7 +14364,7 @@ define('pat-parser',[
                 return this._parseExtendedNotation(parameter);
             }
             sep = parameter.indexOf(";");
-            if (sep===-1) {
+            if (sep === -1) {
                 return this._parseShorthandNotation(parameter);
             }
             opts = this._parseShorthandNotation(parameter.slice(0, sep));
@@ -14157,15 +14377,15 @@ define('pat-parser',[
         _defaults: function argParserDefaults($el) {
             var result = {};
             for (var name in this.parameters)
-                if (typeof this.parameters[name].value==="function")
+                if (typeof this.parameters[name].value === "function")
                     try {
-                        result[name]=this.parameters[name].value($el, name);
+                        result[name] = this.parameters[name].value($el, name);
                         this.parameters[name].type=typeof result[name];
                     } catch(e) {
                         this.log.error("Default function for " + name + " failed.");
                     }
                 else
-                    result[name]=this.parameters[name].value;
+                    result[name] = this.parameters[name].value;
             return result;
         },
 
@@ -14175,37 +14395,39 @@ define('pat-parser',[
 
             // Resolve references
             for (i=0; i<keys.length; i++) {
-                name=keys[i];
-                spec=this.parameters[name];
-                if (spec===undefined)
+                name = keys[i];
+                spec = this.parameters[name];
+                if (spec === undefined)
                     continue;
 
-                if (options[name]===spec.value &&
+                if (options[name] === spec.value &&
                         typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
-                    options[name]=options[spec.value.slice(1)];
+                    options[name] = options[spec.value.slice(1)];
             }
-
             // Move options into groups and do renames
-            keys=Object.keys(options);
+            keys = Object.keys(options);
             for (i=0; i<keys.length; i++) {
-                name=keys[i];
-                spec=this.parameters[name];
-                if (spec===undefined)
+                name = keys[i];
+                spec = this.parameters[name];
+                if (spec === undefined)
                     continue;
 
                 if (spec.group)  {
                     if (typeof options[spec.group]!=="object")
-                        options[spec.group]={};
-                    target=options[spec.group];
-                } else
-                    target=options;
+                        options[spec.group] = {};
+                    target = options[spec.group];
+                } else {
+                    target = options;
+                }
 
-                if (spec.dest!==name) {
-                    target[spec.dest]=options[name];
+                if (spec.dest !== name) {
+                    target[spec.dest] = options[name];
                     delete options[name];
                 }
             }
+            return options;
         },
+
 
         parse: function argParserParse($el, options, multiple, inherit) {
             if (typeof options==="boolean" && multiple===undefined) {
@@ -14215,47 +14437,32 @@ define('pat-parser',[
             inherit = (inherit!==false);
             var stack = inherit ? [[this._defaults($el)]] : [[{}]];
             var $possible_config_providers = inherit ? $el.parents().andSelf() : $el,
-                final_length = 1,
-                i, data, frame;
-            for (i=0; i<$possible_config_providers.length; i++) {
-                data = $possible_config_providers.eq(i).attr(this.attribute);
+                final_length = 1;
+
+            _.each($possible_config_providers, function (provider) {
+                var data = $(provider).attr(this.attribute), frame, _parse;
                 if (data) {
-                    var _parse = this._parse.bind(this); // Needed to fix binding in map call
+                    _parse = this._parse.bind(this);
                     if (data.match(/&&/))
-                        frame=data.split(/\s*&&\s*/).map(_parse);
+                        frame = data.split(/\s*&&\s*/).map(_parse);
                     else
-                        frame=[_parse(data)];
+                        frame = [_parse(data)];
                     final_length = Math.max(frame.length, final_length);
                     stack.push(frame);
                 }
-            }
+            }.bind(this));
             if (typeof options==="object") {
                 if (Array.isArray(options)) {
                     stack.push(options);
-                    final_length=Math.max(options.length, final_length);
+                    final_length = Math.max(options.length, final_length);
                 } else
                     stack.push([options]);
             }
-
-            if (!multiple) {
-                final_length=1;
-            }
-            var results=[], frame_length, x, xf;
-            for (i=0; i<final_length; i++)
-                results.push({});
-
-            for (i=0; i<stack.length; i++) {
-                frame=stack[i];
-                frame_length=frame.length-1;
-
-                for (x=0; x<final_length; x++) {
-                    xf=(x>frame_length) ? frame_length : x;
-                    results[x]=$.extend(results[x], frame[xf]);
-                }
-            }
-            for (i=0; i<results.length; i++)
-                this._cleanupOptions(results[i]);
-
+            if (!multiple) { final_length = 1; }
+            var results = _.map(
+                _.compose(utils.removeDuplicateObjects, _.partial(utils.mergeStack, _, final_length))(stack),
+                this._cleanupOptions.bind(this)
+            );
             return multiple ? results : results[0];
         }
     };
@@ -15650,191 +15857,6 @@ define('pat-autofocus',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-/*!
- * jQuery Browser Plugin 0.0.8
- * https://github.com/gabceb/jquery-browser-plugin
- *
- * Original jquery-browser code Copyright 2005, 2015 jQuery Foundation, Inc. and other contributors
- * http://jquery.org/license
- *
- * Modifications Copyright 2015 Gabriel Cebrian
- * https://github.com/gabceb
- *
- * Released under the MIT license
- *
- * Date: 05-07-2015
- */
-/*global window: false */
-
-(function (factory) {
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define('jquery.browser',['jquery'], function ($) {
-      return factory($);
-    });
-  } else if (typeof module === 'object' && typeof module.exports === 'object') {
-    // Node-like environment
-    module.exports = factory(require('jquery'));
-  } else {
-    // Browser globals
-    factory(window.jQuery);
-  }
-}(function(jQuery) {
-  "use strict";
-
-  function uaMatch( ua ) {
-    // If an UA is not provided, default to the current browser UA.
-    if ( ua === undefined ) {
-      ua = window.navigator.userAgent;
-    }
-    ua = ua.toLowerCase();
-
-    var match = /(edge)\/([\w.]+)/.exec( ua ) ||
-        /(opr)[\/]([\w.]+)/.exec( ua ) ||
-        /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
-        /(version)(applewebkit)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec( ua ) ||
-        /(webkit)[ \/]([\w.]+).*(version)[ \/]([\w.]+).*(safari)[ \/]([\w.]+)/.exec( ua ) ||
-        /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-        /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
-        /(msie) ([\w.]+)/.exec( ua ) ||
-        ua.indexOf("trident") >= 0 && /(rv)(?::| )([\w.]+)/.exec( ua ) ||
-        ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
-        [];
-
-    var platform_match = /(ipad)/.exec( ua ) ||
-        /(ipod)/.exec( ua ) ||
-        /(iphone)/.exec( ua ) ||
-        /(kindle)/.exec( ua ) ||
-        /(silk)/.exec( ua ) ||
-        /(android)/.exec( ua ) ||
-        /(windows phone)/.exec( ua ) ||
-        /(win)/.exec( ua ) ||
-        /(mac)/.exec( ua ) ||
-        /(linux)/.exec( ua ) ||
-        /(cros)/.exec( ua ) ||
-        /(playbook)/.exec( ua ) ||
-        /(bb)/.exec( ua ) ||
-        /(blackberry)/.exec( ua ) ||
-        [];
-
-    var browser = {},
-        matched = {
-          browser: match[ 5 ] || match[ 3 ] || match[ 1 ] || "",
-          version: match[ 2 ] || match[ 4 ] || "0",
-          versionNumber: match[ 4 ] || match[ 2 ] || "0",
-          platform: platform_match[ 0 ] || ""
-        };
-
-    if ( matched.browser ) {
-      browser[ matched.browser ] = true;
-      browser.version = matched.version;
-      browser.versionNumber = parseInt(matched.versionNumber, 10);
-    }
-
-    if ( matched.platform ) {
-      browser[ matched.platform ] = true;
-    }
-
-    // These are all considered mobile platforms, meaning they run a mobile browser
-    if ( browser.android || browser.bb || browser.blackberry || browser.ipad || browser.iphone ||
-      browser.ipod || browser.kindle || browser.playbook || browser.silk || browser[ "windows phone" ]) {
-      browser.mobile = true;
-    }
-
-    // These are all considered desktop platforms, meaning they run a desktop browser
-    if ( browser.cros || browser.mac || browser.linux || browser.win ) {
-      browser.desktop = true;
-    }
-
-    // Chrome, Opera 15+ and Safari are webkit based browsers
-    if ( browser.chrome || browser.opr || browser.safari ) {
-      browser.webkit = true;
-    }
-
-    // IE11 has a new token so we will assign it msie to avoid breaking changes
-    // IE12 disguises itself as Chrome, but adds a new Edge token.
-    if ( browser.rv || browser.edge ) {
-      var ie = "msie";
-
-      matched.browser = ie;
-      browser[ie] = true;
-    }
-
-    // Blackberry browsers are marked as Safari on BlackBerry
-    if ( browser.safari && browser.blackberry ) {
-      var blackberry = "blackberry";
-
-      matched.browser = blackberry;
-      browser[blackberry] = true;
-    }
-
-    // Playbook browsers are marked as Safari on Playbook
-    if ( browser.safari && browser.playbook ) {
-      var playbook = "playbook";
-
-      matched.browser = playbook;
-      browser[playbook] = true;
-    }
-
-    // BB10 is a newer OS version of BlackBerry
-    if ( browser.bb ) {
-      var bb = "blackberry";
-
-      matched.browser = bb;
-      browser[bb] = true;
-    }
-
-    // Opera 15+ are identified as opr
-    if ( browser.opr ) {
-      var opera = "opera";
-
-      matched.browser = opera;
-      browser[opera] = true;
-    }
-
-    // Stock Android browsers are marked as Safari on Android.
-    if ( browser.safari && browser.android ) {
-      var android = "android";
-
-      matched.browser = android;
-      browser[android] = true;
-    }
-
-    // Kindle browsers are marked as Safari on Kindle
-    if ( browser.safari && browser.kindle ) {
-      var kindle = "kindle";
-
-      matched.browser = kindle;
-      browser[kindle] = true;
-    }
-
-     // Kindle Silk browsers are marked as Safari on Kindle
-    if ( browser.safari && browser.silk ) {
-      var silk = "silk";
-
-      matched.browser = silk;
-      browser[silk] = true;
-    }
-
-    // Assign the name and platform variable
-    browser.name = matched.browser;
-    browser.platform = matched.platform;
-    return browser;
-  }
-
-  // Run the matching process, also assign the function to the returned object
-  // for manual, jQuery-free use if desired
-  window.jQBrowser = uaMatch( window.navigator.userAgent );
-  window.jQBrowser.uaMatch = uaMatch;
-
-  // Only assign to jQuery.browser if jQuery is loaded
-  if ( jQuery ) {
-    jQuery.browser = window.jQBrowser;
-  }
-
-  return window.jQBrowser;
-}));
-
 /**
  * Patterns autoscale - scale elements to fit available space
  *
@@ -18388,7 +18410,7 @@ define('pat-store',[],function() {
 // vim: sw=4 expandtab
 ;
 //! moment.js
-//! version : 2.10.3
+//! version : 2.10.6
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
 //! license : MIT
 //! momentjs.com
@@ -18483,6 +18505,7 @@ define('pat-store',[],function() {
                 flags.overflow < 0 &&
                 !flags.empty &&
                 !flags.invalidMonth &&
+                !flags.invalidWeekday &&
                 !flags.nullInput &&
                 !flags.invalidFormat &&
                 !flags.userInvalidated;
@@ -18563,7 +18586,7 @@ define('pat-store',[],function() {
     // Moment prototype object
     function Moment(config) {
         copyConfig(this, config);
-        this._d = new Date(+config._d);
+        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
         // Prevent infinite loop in case updateOffset creates new moment
         // objects.
         if (updateInProgress === false) {
@@ -18577,16 +18600,20 @@ define('pat-store',[],function() {
         return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
     }
 
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
+        }
+    }
+
     function toInt(argumentForCoercion) {
         var coercedNumber = +argumentForCoercion,
             value = 0;
 
         if (coercedNumber !== 0 && isFinite(coercedNumber)) {
-            if (coercedNumber >= 0) {
-                value = Math.floor(coercedNumber);
-            } else {
-                value = Math.ceil(coercedNumber);
-            }
+            value = absFloor(coercedNumber);
         }
 
         return value;
@@ -18684,9 +18711,7 @@ define('pat-store',[],function() {
     function defineLocale (name, values) {
         if (values !== null) {
             values.abbr = name;
-            if (!locales[name]) {
-                locales[name] = new Locale();
-            }
+            locales[name] = locales[name] || new Locale();
             locales[name].set(values);
 
             // backwards compat for now: also set the locale
@@ -18790,16 +18815,14 @@ define('pat-store',[],function() {
     }
 
     function zeroFill(number, targetLength, forceSign) {
-        var output = '' + Math.abs(number),
+        var absNumber = '' + Math.abs(number),
+            zerosToFill = targetLength - absNumber.length,
             sign = number >= 0;
-
-        while (output.length < targetLength) {
-            output = '0' + output;
-        }
-        return (sign ? (forceSign ? '+' : '') : '-') + output;
+        return (sign ? (forceSign ? '+' : '') : '-') +
+            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
     }
 
-    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,4}|x|X|zz?|ZZ?|.)/g;
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
 
     var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
 
@@ -18867,10 +18890,7 @@ define('pat-store',[],function() {
         }
 
         format = expandFormat(format, m.localeData());
-
-        if (!formatFunctions[format]) {
-            formatFunctions[format] = makeFormatFunction(format);
-        }
+        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
 
         return formatFunctions[format](m);
     }
@@ -18914,8 +18934,15 @@ define('pat-store',[],function() {
 
     var regexes = {};
 
+    function isFunction (sth) {
+        // https://github.com/moment/moment/issues/2325
+        return typeof sth === 'function' &&
+            Object.prototype.toString.call(sth) === '[object Function]';
+    }
+
+
     function addRegexToken (token, regex, strictRegex) {
-        regexes[token] = typeof regex === 'function' ? regex : function (isStrict) {
+        regexes[token] = isFunction(regex) ? regex : function (isStrict) {
             return (isStrict && strictRegex) ? strictRegex : regex;
         };
     }
@@ -19123,12 +19150,11 @@ define('pat-store',[],function() {
     }
 
     function deprecate(msg, fn) {
-        var firstTime = true,
-            msgWithStack = msg + '\n' + (new Error()).stack;
+        var firstTime = true;
 
         return extend(function () {
             if (firstTime) {
-                warn(msgWithStack);
+                warn(msg + '\n' + (new Error()).stack);
                 firstTime = false;
             }
             return fn.apply(this, arguments);
@@ -19176,14 +19202,14 @@ define('pat-store',[],function() {
             getParsingFlags(config).iso = true;
             for (i = 0, l = isoDates.length; i < l; i++) {
                 if (isoDates[i][1].exec(string)) {
-                    // match[5] should be 'T' or undefined
-                    config._f = isoDates[i][0] + (match[6] || ' ');
+                    config._f = isoDates[i][0];
                     break;
                 }
             }
             for (i = 0, l = isoTimes.length; i < l; i++) {
                 if (isoTimes[i][1].exec(string)) {
-                    config._f += isoTimes[i][0];
+                    // match[6] should be 'T' or space
+                    config._f += (match[6] || ' ') + isoTimes[i][0];
                     break;
                 }
             }
@@ -19262,7 +19288,10 @@ define('pat-store',[],function() {
     addRegexToken('YYYYY',  match1to6, match6);
     addRegexToken('YYYYYY', match1to6, match6);
 
-    addParseToken(['YYYY', 'YYYYY', 'YYYYYY'], YEAR);
+    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YYYY', function (input, array) {
+        array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
+    });
     addParseToken('YY', function (input, array) {
         array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
     });
@@ -19389,18 +19418,18 @@ define('pat-store',[],function() {
 
     //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
     function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
-        var d = createUTCDate(year, 0, 1).getUTCDay();
-        var daysToAdd;
-        var dayOfYear;
+        var week1Jan = 6 + firstDayOfWeek - firstDayOfWeekOfYear, janX = createUTCDate(year, 0, 1 + week1Jan), d = janX.getUTCDay(), dayOfYear;
+        if (d < firstDayOfWeek) {
+            d += 7;
+        }
 
-        d = d === 0 ? 7 : d;
-        weekday = weekday != null ? weekday : firstDayOfWeek;
-        daysToAdd = firstDayOfWeek - d + (d > firstDayOfWeekOfYear ? 7 : 0) - (d < firstDayOfWeek ? 7 : 0);
-        dayOfYear = 7 * (week - 1) + (weekday - firstDayOfWeek) + daysToAdd + 1;
+        weekday = weekday != null ? 1 * weekday : firstDayOfWeek;
+
+        dayOfYear = 1 + week1Jan + 7 * (week - 1) - d + weekday;
 
         return {
-            year      : dayOfYear > 0 ? year      : year - 1,
-            dayOfYear : dayOfYear > 0 ? dayOfYear : daysInYear(year - 1) + dayOfYear
+            year: dayOfYear > 0 ? year : year - 1,
+            dayOfYear: dayOfYear > 0 ?  dayOfYear : daysInYear(year - 1) + dayOfYear
         };
     }
 
@@ -19686,9 +19715,19 @@ define('pat-store',[],function() {
     }
 
     function createFromConfig (config) {
+        var res = new Moment(checkOverflow(prepareConfig(config)));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
+    }
+
+    function prepareConfig (config) {
         var input = config._i,
-            format = config._f,
-            res;
+            format = config._f;
 
         config._locale = config._locale || locale_locales__getLocale(config._l);
 
@@ -19712,14 +19751,7 @@ define('pat-store',[],function() {
             configFromInput(config);
         }
 
-        res = new Moment(checkOverflow(config));
-        if (res._nextDay) {
-            // Adding is smart enough around DST
-            res.add(1, 'd');
-            res._nextDay = undefined;
-        }
-
-        return res;
+        return config;
     }
 
     function configFromInput(config) {
@@ -19799,7 +19831,7 @@ define('pat-store',[],function() {
         }
         res = moments[0];
         for (i = 1; i < moments.length; ++i) {
-            if (moments[i][fn](res)) {
+            if (!moments[i].isValid() || moments[i][fn](res)) {
                 res = moments[i];
             }
         }
@@ -19911,7 +19943,6 @@ define('pat-store',[],function() {
         } else {
             return local__createLocal(input).local();
         }
-        return model._isUTC ? local__createLocal(input).zone(model._offset || 0) : local__createLocal(input).local();
     }
 
     function getDateOffset (m) {
@@ -20011,12 +20042,7 @@ define('pat-store',[],function() {
     }
 
     function hasAlignedHourOffset (input) {
-        if (!input) {
-            input = 0;
-        }
-        else {
-            input = local__createLocal(input).utcOffset();
-        }
+        input = input ? local__createLocal(input).utcOffset() : 0;
 
         return (this.utcOffset() - input) % 60 === 0;
     }
@@ -20029,12 +20055,24 @@ define('pat-store',[],function() {
     }
 
     function isDaylightSavingTimeShifted () {
-        if (this._a) {
-            var other = this._isUTC ? create_utc__createUTC(this._a) : local__createLocal(this._a);
-            return this.isValid() && compareArrays(this._a, other.toArray()) > 0;
+        if (typeof this._isDSTShifted !== 'undefined') {
+            return this._isDSTShifted;
         }
 
-        return false;
+        var c = {};
+
+        copyConfig(c, this);
+        c = prepareConfig(c);
+
+        if (c._a) {
+            var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
+            this._isDSTShifted = this.isValid() &&
+                compareArrays(c._a, other.toArray()) > 0;
+        } else {
+            this._isDSTShifted = false;
+        }
+
+        return this._isDSTShifted;
     }
 
     function isLocal () {
@@ -20194,7 +20232,7 @@ define('pat-store',[],function() {
     var add_subtract__add      = createAdder(1, 'add');
     var add_subtract__subtract = createAdder(-1, 'subtract');
 
-    function moment_calendar__calendar (time) {
+    function moment_calendar__calendar (time, formats) {
         // We want to compare the start of today, vs this.
         // Getting start-of-today depends on whether we're local/utc/offset or not.
         var now = time || local__createLocal(),
@@ -20206,7 +20244,7 @@ define('pat-store',[],function() {
                 diff < 1 ? 'sameDay' :
                 diff < 2 ? 'nextDay' :
                 diff < 7 ? 'nextWeek' : 'sameElse';
-        return this.format(this.localeData().calendar(format, this, local__createLocal(now)));
+        return this.format(formats && formats[format] || this.localeData().calendar(format, this, local__createLocal(now)));
     }
 
     function clone () {
@@ -20250,14 +20288,6 @@ define('pat-store',[],function() {
         } else {
             inputMs = +local__createLocal(input);
             return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
-        }
-    }
-
-    function absFloor (number) {
-        if (number < 0) {
-            return Math.ceil(number);
-        } else {
-            return Math.floor(number);
         }
     }
 
@@ -20451,6 +20481,19 @@ define('pat-store',[],function() {
         return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
     }
 
+    function toObject () {
+        var m = this;
+        return {
+            years: m.year(),
+            months: m.month(),
+            date: m.date(),
+            hours: m.hours(),
+            minutes: m.minutes(),
+            seconds: m.seconds(),
+            milliseconds: m.milliseconds()
+        };
+    }
+
     function moment_valid__isValid () {
         return valid__isValid(this);
     }
@@ -20622,18 +20665,20 @@ define('pat-store',[],function() {
     // HELPERS
 
     function parseWeekday(input, locale) {
-        if (typeof input === 'string') {
-            if (!isNaN(input)) {
-                input = parseInt(input, 10);
-            }
-            else {
-                input = locale.weekdaysParse(input);
-                if (typeof input !== 'number') {
-                    return null;
-                }
-            }
+        if (typeof input !== 'string') {
+            return input;
         }
-        return input;
+
+        if (!isNaN(input)) {
+            return parseInt(input, 10);
+        }
+
+        input = locale.weekdaysParse(input);
+        if (typeof input === 'number') {
+            return input;
+        }
+
+        return null;
     }
 
     // LOCALES
@@ -20656,9 +20701,7 @@ define('pat-store',[],function() {
     function localeWeekdaysParse (weekdayName) {
         var i, mom, regex;
 
-        if (!this._weekdaysParse) {
-            this._weekdaysParse = [];
-        }
+        this._weekdaysParse = this._weekdaysParse || [];
 
         for (i = 0; i < 7; i++) {
             // make the regex if we don't have it already
@@ -20805,12 +20848,26 @@ define('pat-store',[],function() {
         return ~~(this.millisecond() / 10);
     });
 
-    function millisecond__milliseconds (token) {
-        addFormatToken(0, [token, 3], 0, 'millisecond');
-    }
+    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+    addFormatToken(0, ['SSSS', 4], 0, function () {
+        return this.millisecond() * 10;
+    });
+    addFormatToken(0, ['SSSSS', 5], 0, function () {
+        return this.millisecond() * 100;
+    });
+    addFormatToken(0, ['SSSSSS', 6], 0, function () {
+        return this.millisecond() * 1000;
+    });
+    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
+        return this.millisecond() * 10000;
+    });
+    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
+        return this.millisecond() * 100000;
+    });
+    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
+        return this.millisecond() * 1000000;
+    });
 
-    millisecond__milliseconds('SSS');
-    millisecond__milliseconds('SSSS');
 
     // ALIASES
 
@@ -20821,11 +20878,19 @@ define('pat-store',[],function() {
     addRegexToken('S',    match1to3, match1);
     addRegexToken('SS',   match1to3, match2);
     addRegexToken('SSS',  match1to3, match3);
-    addRegexToken('SSSS', matchUnsigned);
-    addParseToken(['S', 'SS', 'SSS', 'SSSS'], function (input, array) {
-        array[MILLISECOND] = toInt(('0.' + input) * 1000);
-    });
 
+    var token;
+    for (token = 'SSSS'; token.length <= 9; token += 'S') {
+        addRegexToken(token, matchUnsigned);
+    }
+
+    function parseMs(input, array) {
+        array[MILLISECOND] = toInt(('0.' + input) * 1000);
+    }
+
+    for (token = 'S'; token.length <= 9; token += 'S') {
+        addParseToken(token, parseMs);
+    }
     // MOMENTS
 
     var getSetMillisecond = makeGetSet('Milliseconds', false);
@@ -20872,6 +20937,7 @@ define('pat-store',[],function() {
     momentPrototype__proto.startOf      = startOf;
     momentPrototype__proto.subtract     = add_subtract__subtract;
     momentPrototype__proto.toArray      = toArray;
+    momentPrototype__proto.toObject     = toObject;
     momentPrototype__proto.toDate       = toDate;
     momentPrototype__proto.toISOString  = moment_format__toISOString;
     momentPrototype__proto.toJSON       = moment_format__toISOString;
@@ -20971,19 +21037,23 @@ define('pat-store',[],function() {
         LT   : 'h:mm A',
         L    : 'MM/DD/YYYY',
         LL   : 'MMMM D, YYYY',
-        LLL  : 'MMMM D, YYYY LT',
-        LLLL : 'dddd, MMMM D, YYYY LT'
+        LLL  : 'MMMM D, YYYY h:mm A',
+        LLLL : 'dddd, MMMM D, YYYY h:mm A'
     };
 
     function longDateFormat (key) {
-        var output = this._longDateFormat[key];
-        if (!output && this._longDateFormat[key.toUpperCase()]) {
-            output = this._longDateFormat[key.toUpperCase()].replace(/MMMM|MM|DD|dddd/g, function (val) {
-                return val.slice(1);
-            });
-            this._longDateFormat[key] = output;
+        var format = this._longDateFormat[key],
+            formatUpper = this._longDateFormat[key.toUpperCase()];
+
+        if (format || !formatUpper) {
+            return format;
         }
-        return output;
+
+        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
+            return val.slice(1);
+        });
+
+        return this._longDateFormat[key];
     }
 
     var defaultInvalidDate = 'Invalid date';
@@ -21192,12 +21262,29 @@ define('pat-store',[],function() {
         return duration_add_subtract__addSubtract(this, input, value, -1);
     }
 
+    function absCeil (number) {
+        if (number < 0) {
+            return Math.floor(number);
+        } else {
+            return Math.ceil(number);
+        }
+    }
+
     function bubble () {
         var milliseconds = this._milliseconds;
         var days         = this._days;
         var months       = this._months;
         var data         = this._data;
-        var seconds, minutes, hours, years = 0;
+        var seconds, minutes, hours, years, monthsFromDays;
+
+        // if we have a mix of positive and negative values, bubble down first
+        // check: https://github.com/moment/moment/issues/2166
+        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
+                (milliseconds <= 0 && days <= 0 && months <= 0))) {
+            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+            days = 0;
+            months = 0;
+        }
 
         // The following code bubbles up values, see the tests for
         // examples of what that means.
@@ -21214,17 +21301,13 @@ define('pat-store',[],function() {
 
         days += absFloor(hours / 24);
 
-        // Accurately convert days to years, assume start from year 0.
-        years = absFloor(daysToYears(days));
-        days -= absFloor(yearsToDays(years));
-
-        // 30 days to a month
-        // TODO (iskren): Use anchor date (like 1st Jan) to compute this.
-        months += absFloor(days / 30);
-        days   %= 30;
+        // convert days to months
+        monthsFromDays = absFloor(daysToMonths(days));
+        months += monthsFromDays;
+        days -= absCeil(monthsToDays(monthsFromDays));
 
         // 12 months -> 1 year
-        years  += absFloor(months / 12);
+        years = absFloor(months / 12);
         months %= 12;
 
         data.days   = days;
@@ -21234,15 +21317,15 @@ define('pat-store',[],function() {
         return this;
     }
 
-    function daysToYears (days) {
+    function daysToMonths (days) {
         // 400 years have 146097 days (taking into account leap year rules)
-        return days * 400 / 146097;
+        // 400 years have 12 months === 4800
+        return days * 4800 / 146097;
     }
 
-    function yearsToDays (years) {
-        // years * 365 + absFloor(years / 4) -
-        //     absFloor(years / 100) + absFloor(years / 400);
-        return years * 146097 / 400;
+    function monthsToDays (months) {
+        // the reverse of daysToMonths
+        return months * 146097 / 4800;
     }
 
     function as (units) {
@@ -21254,11 +21337,11 @@ define('pat-store',[],function() {
 
         if (units === 'month' || units === 'year') {
             days   = this._days   + milliseconds / 864e5;
-            months = this._months + daysToYears(days) * 12;
+            months = this._months + daysToMonths(days);
             return units === 'month' ? months : months / 12;
         } else {
             // handle milliseconds separately because of floating point math errors (issue #1867)
-            days = this._days + Math.round(yearsToDays(this._months / 12));
+            days = this._days + Math.round(monthsToDays(this._months));
             switch (units) {
                 case 'week'   : return days / 7     + milliseconds / 6048e5;
                 case 'day'    : return days         + milliseconds / 864e5;
@@ -21308,7 +21391,7 @@ define('pat-store',[],function() {
         };
     }
 
-    var duration_get__milliseconds = makeGetter('milliseconds');
+    var milliseconds = makeGetter('milliseconds');
     var seconds      = makeGetter('seconds');
     var minutes      = makeGetter('minutes');
     var hours        = makeGetter('hours');
@@ -21386,13 +21469,36 @@ define('pat-store',[],function() {
     var iso_string__abs = Math.abs;
 
     function iso_string__toISOString() {
+        // for ISO strings we do not use the normal bubbling rules:
+        //  * milliseconds bubble up until they become hours
+        //  * days do not bubble at all
+        //  * months bubble up until they become years
+        // This is because there is no context-free conversion between hours and days
+        // (think of clock changes)
+        // and also not between days and months (28-31 days per month)
+        var seconds = iso_string__abs(this._milliseconds) / 1000;
+        var days         = iso_string__abs(this._days);
+        var months       = iso_string__abs(this._months);
+        var minutes, hours, years;
+
+        // 3600 seconds -> 60 minutes -> 1 hour
+        minutes           = absFloor(seconds / 60);
+        hours             = absFloor(minutes / 60);
+        seconds %= 60;
+        minutes %= 60;
+
+        // 12 months -> 1 year
+        years  = absFloor(months / 12);
+        months %= 12;
+
+
         // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
-        var Y = iso_string__abs(this.years());
-        var M = iso_string__abs(this.months());
-        var D = iso_string__abs(this.days());
-        var h = iso_string__abs(this.hours());
-        var m = iso_string__abs(this.minutes());
-        var s = iso_string__abs(this.seconds() + this.milliseconds() / 1000);
+        var Y = years;
+        var M = months;
+        var D = days;
+        var h = hours;
+        var m = minutes;
+        var s = seconds;
         var total = this.asSeconds();
 
         if (!total) {
@@ -21429,7 +21535,7 @@ define('pat-store',[],function() {
     duration_prototype__proto.valueOf        = duration_as__valueOf;
     duration_prototype__proto._bubble        = bubble;
     duration_prototype__proto.get            = duration_get__get;
-    duration_prototype__proto.milliseconds   = duration_get__milliseconds;
+    duration_prototype__proto.milliseconds   = milliseconds;
     duration_prototype__proto.seconds        = seconds;
     duration_prototype__proto.minutes        = minutes;
     duration_prototype__proto.hours          = hours;
@@ -21467,7 +21573,7 @@ define('pat-store',[],function() {
     // Side effect imports
 
 
-    utils_hooks__hooks.version = '2.10.3';
+    utils_hooks__hooks.version = '2.10.6';
 
     setHookCallback(local__createLocal);
 
@@ -30573,14 +30679,9 @@ define('pat-htmlparser',[],function(){
 	};
 });
 
-/*
- * changes to previous injection implementations
- * - no support for data-injection anymore, switch to new data-inject
- * - no support for data-href-next anymore, switch to data-inject: next-href
- * - XXX: add support for forms, see remnants in inject1 and ajaxify
- */
 define('pat-inject',[
     "jquery",
+    "underscore",
     "pat-ajax",
     "pat-parser",
     "pat-logger",
@@ -30588,10 +30689,11 @@ define('pat-inject',[
     "pat-utils",
     "pat-htmlparser",
     "pat-jquery-ext"  // for :scrollable for autoLoading-visible
-], function($, ajax, Parser, logger, registry, utils, htmlparser) {
+], function($, _, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject"),
-        TEXT_NODE = 3;
+        TEXT_NODE = 3,
+        COMMENT_NODE = 8;
 
     parser.addArgument("selector");
     parser.addArgument("target");
@@ -30599,10 +30701,10 @@ define('pat-inject',[
     parser.addArgument("next-href");
     parser.addArgument("source");
     parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible"]);
-    /* Once injection has completed successfully, pat-inject will trigger
-     * an event for each hook: pat-inject-hook-$(hook)
-     */
-    parser.addArgument("hooks", [], ["raptor"], true);
+    parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
+    parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
+    parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
+    parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
     parser.addArgument("class"); // Add a class to the injected content.
     parser.addArgument("history");
     // XXX: this should not be here but the parser would bail on
@@ -30610,58 +30712,50 @@ define('pat-inject',[
     // to us
     parser.addArgument("url");
 
-    var _ = {
+    var inject = {
         name: "inject",
-        trigger: "a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+        trigger: ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function inject_init($el, opts) {
-            if ($el.length > 1) {
-                return $el.each(function() { _.init($(this), opts); });
-            }
-            var cfgs = _.extractConfig($el, opts);
-            // if the injection shall add a history entry and HTML5 pushState
-            // is missing, then don't initialize the injection.
-            if (cfgs.some(function(e){return e.history === "record";}) &&
-                    !("pushState" in history))
+            var cfgs = inject.extractConfig($el, opts);
+            if (cfgs.some(function(e){return e.history === "record";}) && !("pushState" in history)) {
+                // if the injection shall add a history entry and HTML5 pushState
+                // is missing, then don't initialize the injection.
                 return $el;
+            }
             $el.data("pat-inject", cfgs);
 
             // In case next-href is specified the anchor's href will
             // be set to it after the injection is triggered. In case
             // the next href already exists, we do not activate the
             // injection but instead just change the anchors href.
-            //
-            // XXX: This is used in only one project for linked
-            // fullcalendars, it's sanity is wonky and we should
-            // probably solve it differently. -- Maybe it's cool
-            // after all.
             var $nexthref = $(cfgs[0].nextHref);
             if ($el.is("a") && $nexthref.length > 0) {
                 log.debug("Skipping as next href already exists", $nexthref);
                 // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({href: (window.location.href.split("#")[0] || "") +
-                                 cfgs[0].nextHref});
+                return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
             }
 
             switch (cfgs[0].trigger) {
                 case "default":
                     // setup event handlers
-                    if ($el.is("a")) {
-                        $el.on("click.pat-inject", _.onClick);
-                    } else if ($el.is("form")) {
-                        $el.on("submit.pat-inject", _.onSubmit)
+                    if ($el.is("form")) {
+                        $el.on("submit.pat-inject", inject.onTrigger)
                         .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
-                        .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", _.onFormActionSubmit);
+                        .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", inject.onFormActionSubmit);
                     } else if ($el.is(".pat-subform")) {
                         log.debug("Initializing subform with injection");
+                    } else {
+                        $el.on("click.pat-inject", inject.onTrigger);
                     }
                     break;
                 case "autoload":
-                    _.onClick.apply($el[0], []);
+                    inject.onTrigger.apply($el[0], []);
                     break;
                 case "autoload-visible":
-                    _._initAutoloadVisible($el);
+                    inject._initAutoloadVisible($el);
                     break;
             }
+
             log.debug("initialised:", $el);
             return $el;
         },
@@ -30672,22 +30766,16 @@ define('pat-inject',[
             return $el;
         },
 
-        onClick: function inject_onClick(ev) {
+        onTrigger: function inject_onTrigger(ev) {
+            /* Injection has been triggered, either via form submission or a
+             * link has been clicked.
+             */
             var cfgs = $(this).data("pat-inject"),
                 $el = $(this);
             if (ev)
                 ev.preventDefault();
             $el.trigger("patterns-inject-triggered");
-            _.execute(cfgs, $el);
-        },
-
-        onSubmit: function inject_onSubmit(ev) {
-            var cfgs = $(this).data("pat-inject"),
-                $el = $(this);
-            if (ev)
-                ev.preventDefault();
-            $el.trigger("patterns-inject-triggered");
-            _.execute(cfgs, $el);
+            inject.execute(cfgs, $el);
         },
 
         onFormActionSubmit: function inject_onFormActionSubmit(ev) {
@@ -30697,14 +30785,16 @@ define('pat-inject',[
                 formaction = $button.attr("formaction"),
                 $form = $button.parents(".pat-inject").first(),
                 opts = {url: formaction},
-                cfgs = _.extractConfig($form, opts);
+                cfgs = inject.extractConfig($form, opts);
 
             ev.preventDefault();
             $form.trigger("patterns-inject-triggered");
-            _.execute(cfgs, $form);
+            inject.execute(cfgs, $form);
         },
 
         submitSubform: function inject_submitSubform($sub) {
+            /* This method is called from pat-subform
+             */
             var $el = $sub.parents("form"),
                 cfgs = $sub.data("pat-inject");
             try {
@@ -30712,7 +30802,7 @@ define('pat-inject',[
             } catch (e) {
                 log.error("patterns-inject-triggered", e);
             }
-            _.execute(cfgs, $el);
+            inject.execute(cfgs, $el);
         },
 
         extractConfig: function inject_extractConfig($el, opts) {
@@ -30741,86 +30831,151 @@ define('pat-inject',[
             });
             return cfgs;
         },
-        // verify and post-process config
-        // XXX: this should return a command instead of messing around on the config
-        verifyConfig: function inject_verifyConfig(cfgs, $el) {
-            var url = cfgs[0].url;
 
-            // verification for each cfg in the array needs to succeed
-            return cfgs.every(function inject_verifyConfig_each(cfg) {
-                // in case of multi-injection, all injections need to use
-                // the same url
-                if (cfg.url !== url) {
-                    log.error("Unsupported different urls for multi-inject");
-                    return false;
-                }
-
-                // defaults
-                cfg.source = cfg.source || cfg.selector;
-                cfg.target = cfg.target || cfg.selector;
-
-                if (!_._extractModifiers(cfg))
-                    return false;
-
-                // make sure target exist
-                cfg.$target = cfg.$target || (cfg.target==="self" ? $el : $(cfg.target));
-                if (cfg.$target.length === 0) {
-                    if (!cfg.target) {
-                        log.error("Need target selector", cfg);
-                        return false;
-                    }
-                    cfg.$target = _._createTarget(cfg.target);
-                    cfg.$injected = cfg.$target;
-                }
-
-                // check if target is "dirty"
-                if (cfg.$target.hasClass('is-dirty')) {
-                    if (!confirm('Are you sure you want to leave this page?')) {
-                      return false;
-                    }
-                    cfg.$target.removeClass('is-dirty');
-                }
-
-                return true;
-            });
+        elementIsDirty: function(m) {
+            /* Check whether the passed in form element contains a value.
+             */
+            var data = $.map(m.find(":input:not(select)"),
+                function(i) {
+                    var val = $(i).val();
+                    return (Boolean(val) && val !== $(i).attr('placeholder'));
+                });
+            return $.inArray(true, data)!==-1;
         },
 
-        _extractModifiers: function inject_extractModifiers(cfg) {
+        askForConfirmation: function inject_askForConfirmation(cfgs) {
+            /* If configured to do so, show a confirmation dialog to the user.
+             * This is done before attempting to perform injection.
+             */
+            var should_confirm = false, message;
+
+            _.each(cfgs, function(cfg) {
+                var _confirm = false;
+                if (cfg.confirm == 'always') {
+                    _confirm = true;
+                } else if (cfg.confirm === 'form-data') {
+                    _confirm = inject.elementIsDirty(cfg.$target);
+                } else if (cfg.confirm === 'class') {
+                    _confirm = cfg.$target.hasClass('is-dirty');
+                }
+                if (_confirm) {
+                    should_confirm = true;
+                    message = cfg.confirmMessage;
+                }
+            });
+            if (should_confirm) {
+                if (!window.confirm(message)) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        ensureTarget: function inject_ensureTarget(cfg, $el) {
+            /* Make sure that a target element exists and that it's assigned to
+             * cfg.$target.
+             */
+            // make sure target exist
+            cfg.$target = cfg.$target || (cfg.target==="self" ? $el : $(cfg.target));
+            if (cfg.$target.length === 0) {
+                if (!cfg.target) {
+                    log.error("Need target selector", cfg);
+                    return false;
+                }
+                cfg.$target = inject.createTarget(cfg.target);
+                cfg.$injected = cfg.$target;
+            }
+            return true;
+        },
+
+        verifySingleConfig: function inject_verifySingleonfig($el, url, cfg) {
+            /* Verify one of potentially multiple configs (i.e. argument lists).
+             *
+             * Extract modifiers such as ::element or ::after.
+             * Ensure that a target element exists.
+             */
+            if (cfg.url !== url) {
+                // in case of multi-injection, all injections need to use
+                // the same url
+                log.error("Unsupported different urls for multi-inject");
+                return false;
+            }
+            // defaults
+            cfg.source = cfg.source || cfg.selector;
+            cfg.target = cfg.target || cfg.selector;
+
+            if (!inject.extractModifiers(cfg)) {
+                return false;
+            }
+            if (!inject.ensureTarget(cfg, $el)) {
+                return false;
+            }
+            inject.listenForFormReset(cfg);
+            return true;
+        },
+
+        verifyConfig: function inject_verifyConfig(cfgs, $el) {
+            /* Verify and post-process all the configurations.
+             * Each "config" is an arguments list separated by the &&
+             * combination operator.
+             *
+             * In case of multi-injection, only one URL is allowed, which
+             * should be specified in the first config (i.e. arguments list).
+             *
+             * Verification for each cfg in the array needs to succeed.
+             */
+            return cfgs.every(_.partial(inject.verifySingleConfig, $el, cfgs[0].url));
+        },
+
+        listenForFormReset: function (cfg) {
+            /* if pat-inject is used to populate target in some form and when
+             * Cancel button is pressed (this triggers reset event on the
+             * form) you would expect to populate with initial placeholder
+             */
+            var $form = cfg.$target.parents('form');
+            if ($form.size() !== 0 && cfg.$target.data('initial-value') === undefined) {
+                cfg.$target.data('initial-value', cfg.$target.html());
+                $form.on('reset', function() {
+                    cfg.$target.html(cfg.$target.data('initial-value'));
+                });
+            }
+        },
+
+        extractModifiers: function inject_extractModifiers(cfg) {
+            /* The user can add modifiers to the source and target arguments.
+             * Modifiers such as ::element, ::before and ::after.
+             * We identifiy and extract these modifiers here.
+             */
             var source_re = /^(.*?)(::element)?$/,
                 target_re = /^(.*?)(::element)?(::after|::before)?$/,
                 source_match = source_re.exec(cfg.source),
                 target_match = target_re.exec(cfg.target),
                 targetMod, targetPosition;
 
-            // source content or element?
             cfg.source = source_match[1];
-            // XXX: turn into source processor
             cfg.sourceMod = source_match[2] ? "element" : "content";
-
-            // will be added while the ajax request is in progress
-            cfg.targetLoadClasses = "injecting";
-
-            // target content or element?
-            targetMod = target_match[2] ? "element" : "content";
             cfg.target = target_match[1];
-            cfg.targetLoadClasses += " injecting-" + targetMod;
+            targetMod = target_match[2] ? "element" : "content";
+            targetPosition = (target_match[3] || "::").slice(2); // position relative to target
 
-            // position relative to target
-            targetPosition = (target_match[3] || "::").slice(2);
-            if (targetPosition)
-                cfg.targetLoadClasses += " injecting-" + targetPosition;
-
+            if (cfg.loadingClass) {
+                cfg.loadingClass += " "+ cfg.loadingClass + "-" + targetMod;
+                if (targetPosition && cfg.loadingClass) {
+                    cfg.loadingClass += " " + cfg.loadingClass + "-" + targetPosition;
+                }
+            }
             cfg.action = targetMod + targetPosition;
             // Once we start detecting illegal combinations, we'll
             // return false in case of error
             return true;
         },
 
-        // create a target that matches the selector
-        //
-        // XXX: so far we only support #target and create a div with
-        // that id appended to the body.
-        _createTarget: function inject_createTarget (selector) {
+        createTarget: function inject_createTarget (selector) {
+            /* create a target that matches the selector
+             *
+             * XXX: so far we only support #target and create a div with
+             * that id appended to the body.
+             */
             var $target;
             if (selector.slice(0,1) !== "#") {
                 log.error("only id supported for non-existing target");
@@ -30875,7 +31030,7 @@ define('pat-inject',[
                 $(this).trigger("pat-inject-content-loaded");
             });
             // Now the injection actually happens.
-            if (_._inject(trigger, $src, $target, cfg)) { _._afterInjection($el, $injected, cfg); }
+            if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
             // History support.
             if ((cfg.history === "record") && ("pushState" in history)) {
                 history.pushState({'url': cfg.url}, "", cfg.url);
@@ -30918,17 +31073,17 @@ define('pat-inject',[
             $.each(cfgs[0].hooks || [], function (idx, hook) {
                 $el.trigger("pat-inject-hook-"+hook);
             });
-            _.stopBubblingFromRemovedElement($el, cfgs, ev);
-            sources$ = _.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
+            inject.stopBubblingFromRemovedElement($el, cfgs, ev);
+            sources$ = inject.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
             cfgs.forEach(function(cfg, idx) {
                 cfg.$target.each(function() {
-                    _._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
+                    inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
                 });
             });
             if (cfgs[0].nextHref) {
                 $el.attr({href: (window.location.href.split("#")[0] || "") +
                             cfgs[0].nextHref});
-                _.destroy($el);
+                inject.destroy($el);
             }
             $el.off("pat-ajax-success.pat-inject");
             $el.off("pat-ajax-error.pat-inject");
@@ -30944,15 +31099,21 @@ define('pat-inject',[
         },
 
         execute: function inject_execute(cfgs, $el) {
+            /* Actually execute the injection.
+             *
+             * Either by making an ajax request or by spoofing an ajax
+             * request when the content is readily available in the current page.
+             */
             // get a kinda deep copy, we scribble on it
-            cfgs = cfgs.map(function(cfg) {
-                return $.extend({}, cfg);
-            });
-            if (!_.verifyConfig(cfgs, $el)) {
+            cfgs = cfgs.map(function(cfg) { return $.extend({}, cfg); });
+            if (!inject.verifyConfig(cfgs, $el)) {
+                return;
+            }
+            if (!inject.askForConfirmation(cfgs)) {
                 return;
             }
             // possibility for spinners on targets
-            cfgs.forEach(function(cfg) { cfg.$target.addClass(cfg.targetLoadClasses); });
+            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
 
             $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
             $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
@@ -31007,7 +31168,7 @@ define('pat-inject',[
         },
 
         _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
-            var $html = _._parseRawHtml(html, url);
+            var $html = inject._parseRawHtml(html, url);
             return sources.map(function inject_sourcesFromHtml_map(source) {
                 if (source === "body")
                     source = "#__original_body";
@@ -31052,7 +31213,7 @@ define('pat-inject',[
             htmlparser.HTMLParser(html, {
                 start: function(tag, attrs, unary) {
                     output.push("<"+tag);
-                    link_attribute = _._link_attributes[tag.toUpperCase()];
+                    link_attribute = inject._link_attributes[tag.toUpperCase()];
                     for (i=0; i<attrs.length; i++) {
                         if (attrs[i].name.toLowerCase() === link_attribute) {
                             value = attrs[i].value;
@@ -31099,9 +31260,9 @@ define('pat-inject',[
                 "$1src=\"\" data-pat-inject-rebase-$2="
             ).trim()).wrapAll("<div>").parent();
 
-            $page.find(Object.keys(_._rebaseAttrs).join(",")).each(function() {
+            $page.find(Object.keys(inject._rebaseAttrs).join(",")).each(function() {
                 var $this = $(this),
-                    attrName = _._rebaseAttrs[this.tagName],
+                    attrName = inject._rebaseAttrs[this.tagName],
                     value = $this.attr(attrName);
 
                 if (value && value.slice(0, 2) !== "@@" && value[0] !== "#" &&
@@ -31133,7 +31294,7 @@ define('pat-inject',[
                     .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
                     .replace(/<\/body([^>]*?)>/gi, "</div>");
             try {
-                clean_html = _._rebaseHTML(url, clean_html);
+                clean_html = inject._rebaseHTML(url, clean_html);
             } catch (e) {
                 log.error("Error rebasing urls", e);
             }
@@ -31157,7 +31318,7 @@ define('pat-inject',[
             // function to trigger the autoload and mark as triggered
             function trigger() {
                 $el.data("pat-inject-autoloaded", true);
-                _.onClick.apply($el[0], []);
+                inject.onTrigger.apply($el[0], []);
                 return true;
             }
 
@@ -31206,14 +31367,14 @@ define('pat-inject',[
 
         // XXX: simple so far to see what the team thinks of the idea
         registerTypeHandler: function inject_registerTypeHandler(type, handler) {
-            _.handlers[type] = handler;
+            inject.handlers[type] = handler;
         },
 
         callTypeHandler: function inject_callTypeHandler(type, fn, context, params) {
             type = type || "html";
 
-            if (_.handlers[type] && $.isFunction(_.handlers[type][fn])) {
-                return _.handlers[type][fn].apply(context, params);
+            if (inject.handlers[type] && $.isFunction(inject.handlers[type][fn])) {
+                return inject.handlers[type][fn].apply(context, params);
             } else {
                 return null;
             }
@@ -31223,14 +31384,23 @@ define('pat-inject',[
             "html": {
                 sources: function(cfgs, data) {
                     var sources = cfgs.map(function(cfg) { return cfg.source; });
-                    return _._sourcesFromHtml(data, cfgs[0].url, sources);
+                    return inject._sourcesFromHtml(data, cfgs[0].url, sources);
                 }
             }
         }
     };
 
-    $(document).on("patterns-injected", function(ev, cfg) {
-        cfg.$target.removeClass(cfg.targetLoadClasses);
+    $(document).on("patterns-injected.inject", function onInjected(ev, cfg, trigger, injected) {
+        /* Listen for the patterns-injected event.
+         *
+         * Remove the "loading-class" classes from all injection targets and
+         * then scan the injected content for new patterns.
+         */
+        cfg.$target.removeClass(cfg.loadingClass);
+        if (injected.nodeType !== TEXT_NODE && injected !== COMMENT_NODE) {
+            registry.scan(injected, null, {type: "injection", element: trigger});
+            $(injected).trigger("patterns-injected-scanned");
+        }
     });
 
     $(window).bind("popstate", function (event) {
@@ -31261,8 +31431,8 @@ define('pat-inject',[
         }
     }
 
-    registry.register(_);
-    return _;
+    registry.register(inject);
+    return inject;
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
@@ -31465,7 +31635,7 @@ define('pat-collapsible',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-// Spectrum Colorpicker v1.7.0
+// Spectrum Colorpicker v1.7.1
 // https://github.com/bgrins/spectrum
 // Author: Brian Grinstead
 // License: MIT
@@ -32651,8 +32821,8 @@ define('pat-collapsible',[
     $.fn.spectrum.defaults = defaultOpts;
     $.fn.spectrum.inputTypeColorSupport = function inputTypeColorSupport() {
         if (typeof inputTypeColorSupport._cachedResult === "undefined") {
-            var colorInput = $("<input type='color' value='!' />")[0];
-            inputTypeColorSupport._cachedResult = colorInput.type === "color" && colorInput.value !== "!";
+            var colorInput = $("<input type='color'/>")[0]; // if color element is supported, value will default to not null
+            inputTypeColorSupport._cachedResult = colorInput.type === "color" && colorInput.value !== "";
         }
         return inputTypeColorSupport._cachedResult;
     };
@@ -38270,8 +38440,9 @@ define('pat-modal',[
         trigger: "div.pat-modal, a.pat-modal, form.pat-modal, .pat-modal.pat-subform",
         init: function ($el, opts, trigger) {
             this.options = parser.parse(this.$el, opts);
-            if (trigger && trigger.type === "injection")
+            if (trigger && trigger.type === "injection") {
                 $.extend(this.options, parser.parse($(trigger.element), {}, false, false));
+            }
             if (this.$el.is("div")) {
                 this._init_div1();
             } else {
@@ -38305,8 +38476,12 @@ define('pat-modal',[
                 $("<button type='button' class='close-panel'>Close</button>").appendTo($header);
 
             // We cannot handle text nodes here
-            this.$el.children(":last, :not(:first)")
-                .wrapAll("<div class='panel-content' />");
+            var $children = this.$el.children(":last, :not(:first)");
+            if ($children.length) {
+                $children.wrapAll("<div class='panel-content' />");
+            } else {
+                this.$el.append("<div class='panel-content' />");
+            }
             $(".panel-content", this.$el).before($header);
             this.$el.children(":first:not(.header)").prependTo($header);
 
@@ -54225,6 +54400,7 @@ define('pat-tooltip',[
     parser.addArgument("source", "title", ["auto", "ajax", "content", "content-html", "title"]);
     parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
     parser.addArgument("delay", 0);
+    parser.addArgument("mark-inactive", true);
     parser.addArgument("class");
     parser.addArgument("target", "body");
 
@@ -54264,7 +54440,9 @@ define('pat-tooltip',[
                     .data("patterns.tooltip", options)
                     .on("destroy", $trigger, tooltip.onDestroy);
                 tooltip.setupShowEvents($trigger);
-                $trigger.addClass("inactive");
+                if (options.markInactive) {
+                    $trigger.addClass("inactive");
+                }
             });
         },
 
@@ -54309,8 +54487,7 @@ define('pat-tooltip',[
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
                 options = $trigger.data("patterns.tooltip");
-            $container
-                .on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
+            $container.on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
 
             if (options.closing==="close-button") {
                 // Make sure click on the trigger element becomes a NOP
@@ -54403,20 +54580,26 @@ define('pat-tooltip',[
                  tooltip.positionContainer($trigger, $container);
             });
 
-            $trigger.removeClass("inactive").addClass("active");
+            if (options.markInactive) {
+                $trigger.removeClass("inactive").addClass("active");
+            }
         },
 
         hide: function(event) {
             var $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
+                options = $trigger.data("patterns.tooltip"),
                 namespace = $container.attr("id");
+
             // when another tooltip trigger is clicked, only close the previous tooltip if it does not contain the trigger
             if (event.type !== "pat-tooltip-click" || $container.has(event.target).length <= 0) {
                 $container.css("visibility", "hidden");
                 $container.parents().add(window).off("." + namespace);
                 tooltip.removeHideEvents($trigger);
                 tooltip.setupShowEvents($trigger);
-                $trigger.removeClass("active").addClass("inactive");
+                if (options.markInactive) {
+                    $trigger.removeClass("active").addClass("inactive");
+                }
                 $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
             }
         },
@@ -54448,7 +54631,7 @@ define('pat-tooltip',[
                 $content, $container, href;
 
             $trigger.data("patterns.tooltip.number", count);
-            $container = $("<div/>", {"class": "tooltip-container",
+            $container = $("<div/>", {"class": "tooltip-container type-"+options.closing,
                                      "id": "tooltip" + count});
             if (options["class"])
                 $container.addClass(options["class"]);
@@ -54479,11 +54662,9 @@ define('pat-tooltip',[
             $container.append(
                 $("<div/>").css("display", "block").append($content))
                 .append($("<span></span>", {"class": "pointer"}));
-            if (options.closing==="close-button") {
-                $("<button/>", {"class": "close-panel"})
-                    .text("Close")
-                    .insertBefore($container.find("*:first"));
-            }
+            $("<button/>", {"class": "close-panel"})
+                .text("Close")
+                .insertBefore($container.find("*:first"));
             $(options.target).append($container);
             return $container;
         },
