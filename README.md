@@ -1,5 +1,7 @@
 # Patterns
 
+[![Build Status](https://travis-ci.org/Patternslib/Patterns.png?branch=master)](https://travis-ci.org/Patternslib/Patterns)
+
 Patterns is a toolkit that enables designers to build rich
 interactive prototypes without the need for writing any JavaScript. All events
 are triggered by classes and other attributes in the HTML, without abusing the
