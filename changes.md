@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.13 - Unreleased
+
+- No changes yet
+
 ## 2.0.12 - Oct. 9, 2015
 
 - New argument for the inject pattern: `loading-class`.

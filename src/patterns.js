@@ -27,7 +27,6 @@ define([
     "pat-colour-picker",
     "pat-date-picker",
     "pat-depends",
-    "pat-edit-tinymce",
     "pat-equaliser",
     "pat-expandable",
     "pat-focus",
