@@ -1,11 +1,10 @@
 
 ## Description
 
-Panels, perhaps better (but incorrectly) known as dialogs or popups, can
-be created using standard links or buttons with the `pat-modal` class.
+Modal panels, also known as modal dialogs or popups, can be created using standard links or buttons with the `pat-modal` class.
+A modal panel is a panel that requires users to interact with it before they can return to the application behind it.
 
 ## Documentation
-
 
 A basic modal example:
 
