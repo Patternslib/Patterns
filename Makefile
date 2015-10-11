@@ -112,7 +112,7 @@ all_css:: css
 	@$(SASS) src/pat/zoom/_zoom.scss src/pat/zoom/zoom.css
 	@echo "Done. Each pattern now has a CSS file."
 
-css::
+css:: stamp-bundler
 	@$(SASS) -I style -I . _sass/_patterns.scss style/patterns.css
 
 watch:: 
