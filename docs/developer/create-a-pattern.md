@@ -75,7 +75,7 @@ When you're designing your pattern, you need to decide on a relevant name for it
 and how it should be configured.
 
 For a reference of all the ways a pattern could be configured, please read the
-[Parameters](/parameters) page.
+[Parameters](../parameter-syntax/#main-content) page.
 
 ## Writing the pattern's javascript
 
