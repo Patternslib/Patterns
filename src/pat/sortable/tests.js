@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-sortable"], function(registry) {
+define(["pat-registry", "pat-sortable"], function(registry, Sortable) {
 
     describe("pat-sortable", function() {
         beforeEach(function() {
@@ -7,6 +7,21 @@ define(["pat-registry", "pat-sortable"], function(registry) {
         });
         afterEach(function() {
             $("#lab").remove();
+        });
+
+        it('adds class on drag start', function() {
+            var $el = $('' +
+                '<ul class="pat-sortable">' +
+                '<li>One</li>' +
+                '<li>Two</li>' +
+                '<li>Three</li>' +
+                '</ul>'
+            ).appendTo('#lab');
+            var sortable = new Sortable($el);
+            var $dragged = $el.find('li').eq(0);
+            var $handle = $dragged.children('.sortable-handle');
+            $handle.trigger('dragstart');
+            expect($dragged.hasClass(sortable.options.dragClass)).toEqual(true);
         });
 
         it("adds a sortable handle to sortable elements", function() {
