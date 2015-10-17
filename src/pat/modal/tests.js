@@ -24,7 +24,7 @@ define(["pat-modal"], function(pattern) {
                 expect($modal.find(".header .close-panel").length).toBeTruthy();
                 expect($modal.find(".panel-content").length).toBeTruthy();
                 expect($modal.find(".panel-content").text()).toBe("Modal content");
-                expect($modal.hasClass("modal-active")).toBeTruthy();
+                expect($("body").hasClass("modal-active")).toBeTruthy();
             });
 
             it("Modal with header ", function() {
@@ -39,7 +39,7 @@ define(["pat-modal"], function(pattern) {
                 expect($modal.find(".header").text()).toBe("Modal headerClose");
                 expect($modal.find(".header .close-panel").length).toBeTruthy();
                 expect($modal.find(".panel-content").text()).toBe("Modal content");
-                expect($modal.hasClass("modal-active")).toBeTruthy();
+                expect($("body").hasClass("modal-active")).toBeTruthy();
             });
 
             it("Modal with multiple content items ", function() {
@@ -57,7 +57,7 @@ define(["pat-modal"], function(pattern) {
                 expect($modal.find(".header .close-panel").length).toBeTruthy();
                 expect($modal.find(".panel-content p").length).toBe(2);
                 expect($modal.find(".panel-content h4").length).toBe(1);
-                expect($modal.hasClass("modal-active")).toBeTruthy();
+                expect($("body").hasClass("modal-active")).toBeTruthy();
             });
 
             it("Modal with a form that has the pat-modal CSS class", function() {
