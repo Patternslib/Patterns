@@ -26,6 +26,7 @@ define([
             } else {
                 this._init_inject1();
             }
+            $('body').addClass("modal-active");
         },
 
         _init_inject1: function () {
@@ -150,6 +151,7 @@ define([
         destroy: function() {
             $(document).off(".pat-modal");
             this.$el.remove();
+            $('body').removeClass("modal-active");
         }
     });
 });
