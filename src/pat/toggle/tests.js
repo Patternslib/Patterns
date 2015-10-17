@@ -1,4 +1,4 @@
-define(["pat-toggle"], function(pattern) {
+define(["pat-toggle", "pat-registry"], function(pattern, registry) {
 
     describe("pat-toggle", function() {
         describe("ClassToggler", function() {
@@ -215,6 +215,63 @@ define(["pat-toggle"], function(pattern) {
                 $trigger.click();
                 expect(victims[0].disabled).toBe(false);
             });
+        });
+
+        describe('Toggle default event', function() {
+            beforeEach(function() {
+                this.$el = $('' +
+                  '<div id="lab">' +
+                  ' <a class="pat-toggle"' +
+                  '    data-pat-toggle="selector: #target;' +
+                  '                     value: toggled">Button</a>' +
+                  ' <div id="target">' +
+                  '   <a href="patterns.html">Click here to go somewhere else</a>' +
+                  ' </div>' +
+                  '</div>').appendTo(document.body);
+            });
+
+            afterEach(function() {
+                this.$el.remove();
+            });
+
+            it('by default toggles on click event', function() {
+                expect($('.toggled', this.$el).size()).toEqual(0);
+
+                // scan dom for patterns
+                registry.scan(this.$el);
+                expect($('.toggled', this.$el).size()).toEqual(0);
+                $('.pat-toggle', this.$el).trigger('click');
+                expect($('.toggled', this.$el).size()).toEqual(1);
+                $('.pat-toggle', this.$el).trigger('click');
+                expect($('.toggled', this.$el).size()).toEqual(0);
+            });
+        });
+
+        describe('Toggle custom event', function() {
+            beforeEach(function() {
+                this.$el = $('' +
+                  '<div id="lab">' +
+                  ' <a class="pat-toggle"' +
+                  '    data-pat-toggle="selector: #target;' +
+                  '                     value: toggled; event: hover">Button</a>' +
+                  ' <div id="target">' +
+                  '   <a href="patterns.html">Click here to go somewhere else</a>' +
+                  ' </div>' +
+                  '</div>').appendTo(document.body);
+            });
+
+            afterEach(function() {
+                this.$el.remove();
+            });
+
+            it('can also listen to custom event', function() {
+                expect($('.toggled', this.$el).size()).toEqual(0);
+                registry.scan(this.$el);
+                expect($('.toggled', this.$el).size()).toEqual(0);
+                $('.pat-toggle', this.$el).trigger('hover');
+                expect($('.toggled', this.$el).size()).toEqual(1);
+            });
+
         });
     });
 });
