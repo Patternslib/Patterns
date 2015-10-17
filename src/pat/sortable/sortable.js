@@ -5,6 +5,10 @@ define([
 ], function($, Base, Parser) {
     var parser = new Parser("sortable");
     parser.addArgument("selector", "li");
+    parser.addArgument('drag-class', 'dragged'); // Class to apply to item that is being dragged.
+    parser.addArgument('drop'); // Callback function for when item is dropped (null)
+    // BBB for the mockup sortable pattern.
+    parser.addAlias('dragClass', 'drag-class');
 
     return Base.extend({
         name: "sortable",
@@ -77,11 +81,16 @@ define([
         },
 
         onDragEnd: function (ev) {
-            $(".dragged").removeClass("dragged");
+            var $dragged = $(event.target).parent();
+            $dragged.removeClass(this.options.dragClass);
             this.$sortables.unbind(".pat-sortable");
             this.$el.unbind(".pat-sortable");
             $("#pat-scroll-up, #pat-scroll-dn").detach();
-            this.submitChangedAmount($(ev.target).closest('.sortable'));
+            var change = this.submitChangedAmount($(ev.target).closest('.sortable'));
+            // Call the optionally passed-in callback function
+            if (this.options.drop) {
+                this.options.drop($dragged, change);
+            }
         },
 
         submitChangedAmount: function ($dragged) {
@@ -103,6 +112,7 @@ define([
                     $dragged.find('.sortable-button-down').click();
                 }
             }
+            return change;
         },
 
         onDragStart: function (event) {
@@ -115,7 +125,7 @@ define([
             if ("setDragImage" in event.originalEvent.dataTransfer) {
                 event.originalEvent.dataTransfer.setDragImage($draggable[0], 0, 0);
             }
-            $draggable.addClass("dragged");
+            $draggable.addClass(this.options.dragClass);
 
             // Scroll the list if near the borders
             this.$el.on("dragover.pat-sortable", function(event) {
@@ -153,6 +163,7 @@ define([
             }.bind(this));
 
             this.$sortables.on("drop.pat-sortable", function(event) {
+                debugger;
                 var $sortable = $(this);
                 if ($sortable.hasClass("dragged"))
                     return;
