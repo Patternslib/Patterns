@@ -26,12 +26,13 @@ define([
             } else {
                 this._init_inject1();
             }
+            $('body').addClass("modal-active");
         },
 
         _init_inject1: function () {
             var opts = {
                 target: "#pat-modal",
-                "class": "pat-modal modal-active" + (this.options["class"] ? " " + this.options["class"] : "")
+                "class": "pat-modal" + (this.options["class"] ? " " + this.options["class"] : "")
             };
             // if $el is already inside a modal, do not detach #pat-modal,
             // because this would unnecessarily close the modal itself
@@ -47,7 +48,7 @@ define([
         },
 
         _init_div1: function () {
-            this.$el.addClass("modal-active");
+            
             var $header = $("<div class='header' />"),
                 activeElement = document.activeElement;
 
@@ -151,6 +152,7 @@ define([
         destroy: function() {
             $(document).off(".pat-modal");
             this.$el.remove();
+            $('body').removeClass("modal-active");
         }
     });
 });
