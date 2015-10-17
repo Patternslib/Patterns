@@ -2,7 +2,7 @@
 
 ## 2.0.13 - Unreleased
 
-- No changes yet
+- Define UTF-8 charset on all files
 
 ## 2.0.12 - Oct. 9, 2015
 
