@@ -10,10 +10,12 @@ define([
     "pat-parser",
     "pat-store"
 ], function($, patterns, logger, Parser, store) {
+    "use strict";
     var log = logger.getLogger("pat.toggle"),
         parser = new Parser("toggle");
 
     parser.addArgument("selector");
+    parser.addArgument("event");
     parser.addArgument("attr", "class");
     parser.addArgument("value");
     parser.addArgument("store", "none", ["none", "session", "local"]);
@@ -91,27 +93,39 @@ define([
         init: function toggle_init($el) {
             return $el.each(function toggle_init_el() {
                 var $trigger = $(this),
+                    event_name,
                     options = toggle._validateOptions(this, parser.parse($trigger, true));
 
-                if (!options.length)
+                if (!options.length) {
                     return;
+                }
 
-                for (var i=0; i<options.length; i++)
+                for (var i=0; i<options.length; i++){
                     if (options[i].value_storage) {
                         var victims, state, last_state;
                         victims = $(options[i].selector);
-                        if (!victims.length)
+                        if (!victims.length) {
                             continue;
+                        }
                         state=options[i].toggler.get(victims[0]);
                         last_state=options[i].value_storage.get();
-                        if (state!==last_state && last_state !== null)
-                            for (var j=0; j<victims.length; j++)
+                        if (state!==last_state && last_state !== null) {
+                            for (var j=0; j<victims.length; j++) {
                                 options[i].toggler.set(victims[j], last_state);
+                            }
+                        }
+                    }
+
+                    if (options[i].event) {
+                        event_name = options[i].event;
+                    }else{
+                        event_name = 'click';
+                    }
                 }
 
                 $trigger
                     .off(".toggle")
-                    .on("click.toggle", null, options, toggle._onClick)
+                    .on(event_name + ".toggle", null, options, toggle._onClick)
                     .on("keypress.toggle", null, options, toggle._onKeyPress);
             });
         },
