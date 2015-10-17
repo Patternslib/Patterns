@@ -1,3 +1,4 @@
+@charset="UTF-8";
 @mixin screen-size($media) {
   @if $media == small {
     @media only screen and (max-width: $break-small) { @content; }
