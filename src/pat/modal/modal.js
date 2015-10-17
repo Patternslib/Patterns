@@ -48,7 +48,6 @@ define([
         },
 
         _init_div1: function () {
-            
             var $header = $("<div class='header' />"),
                 activeElement = document.activeElement;
 
