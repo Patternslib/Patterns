@@ -1,6 +1,7 @@
 # Making a release
 
-Firstly, update the version number in bower.json, package.json and add the date to changes.md
+First, update the version number in bower.json, package.json, VERSION.txt and add the date to changes.md
+(remove the -dev from the version number in VERSION.txt)
 
 ## Merge master into the "release" branch
 
@@ -25,3 +26,5 @@ Firstly, update the version number in bower.json, package.json and add the date 
 
     git tag 2.0.0
     git push && git push --tags
+
+## update VERSION.txt to the next logical version number and append '-dev' to it.
