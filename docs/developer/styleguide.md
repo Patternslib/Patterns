@@ -39,7 +39,7 @@ var mypattern = {
 
 ## Use named functions
 
-Javascript has both named functions and unnamed function.
+Javascript has both named functions and unnamed functions.
 
 ```
 // This is a function named "foo"
@@ -54,12 +54,12 @@ profiles. This makes debugging and profiling code unnecessarily hard. To fix
 this always use named functions for non-trivial functions.
 
 ```
-$el.on("click", function button_click(event) {
+$el.on("click", function buttonClick(event) {
     ...
 });
 ```
 
-The only exception to this rule are trivial functions that do not call any
+An exception to this rule are trivial functions that do not call any
 other functions, such as functions passed to Array.filter or Array.forEach.
 
 Pattern methods must always be named, and the name should be prefixed with the
@@ -69,8 +69,8 @@ Pattern with the pattern name to make them easy to recognize.
 var mypattern = {
     name: "mypattern",
 
-    init: function mypattern_init($el) { },
-    _onClick: function mypattern_onClick(e) { }
+    init: function mypatternInit($el) { },
+    _onClick: function mypatternOnClick(e) { }
 };
 ```
 
