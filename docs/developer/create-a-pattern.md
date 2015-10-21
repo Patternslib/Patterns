@@ -10,7 +10,7 @@ This pattern changes the text-color of an element after waiting for 3 seconds.
 
 ### Creating the pattern directory
 
-To start off, lets create a new directory in which we'll put our pattern's
+To start off, lets create a new directory in which we will put our pattern's
 files, and then lets navigate into it.
 
 ```
@@ -23,14 +23,18 @@ cd pat-colorchanger
 Instead of manually typing out the code shown in this tutorial, you can simply
 use the [Yeoman Patternslib generator](https://www.npmjs.com/package/generator-patternslib) to generate the appropriate skeleton for you.
 
-To do so, simply run the following commands in side the `pat-colorchanger`
+If [Yeoman](http://yeoman.io/) is not installed, you can get it via npm:
+
+    sudo npm install -g yo
+
+Then, simply run the following commands inside the `pat-colorchanger`
 directory you created in the previous section.
 
     sudo npm install -g generator-patternslib
     yo patternslib pat-colorchanger
 
-In our example we're creating for demonstration purposes the pattern
-pat-colorchanger, but you'll of course choose a more appropriate
+In our example we are creating for demonstration purposes the pattern
+pat-colorchanger, but you will of course choose a more appropriate
 name for your own pattern.
 
 ### The directory layout
@@ -42,7 +46,7 @@ It contains the pattern's actual Javascript source file(s).
 The Yeoman generator will create the correct layout and all the necessary
 files.
 
-However, if you're doing this manually instead of using Yeoman, then create this directory as well as the files required:
+However, if you are doing this manually instead of using Yeoman, then create this directory as well as the files required:
 
     touch README.md index.html src/pat-colorchanger.js
 
@@ -51,15 +55,15 @@ However, if you're doing this manually instead of using Yeoman, then create this
 
 Patterns are configured via a declarative HTML syntax.
 
-Usually a particular pattern is invoked by specifying its name as an HTML class on a DOM object.
+Usually a particular pattern is invoked by specifying its name as a HTML class on a DOM object.
 The invoked pattern then acts upon that specifc DOM element. In our example case, the pattern
 changes the text color after 3 seconds. This color change is applied to the DOM
 element on which the pattern is declared.
 
-The pattern can be configured by specifying HTML5 data attributes, which start with
-`data-` and then the pattern's name.
+The pattern can be configured by specifying HTML5 data attributes, which start with the
+`data-` prefix, followed by the pattern's name.
 
-So in our case, that's `data-pat-colorchanger`.
+So in our case, that is `data-pat-colorchanger`.
 
 For example:
 
@@ -67,11 +71,11 @@ For example:
         This text will turn from red into blue after 3 seconds.
     </p>
 
-HTML markup as shown above, which illustrates how your pattern functions, should be put
+The HTML markup as shown above, which illustrates how your pattern functions, should be put
 inside the `index.html` file. This file can then be used by designers and integrators
 to demo the pattern's functionality.
 
-When you're designing your pattern, you need to decide on a relevant name for it,
+When you are designing your pattern, you need to decide on a relevant name for it,
 and how it should be configured.
 
 For a reference of all the ways a pattern could be configured, please read the
@@ -79,7 +83,7 @@ For a reference of all the ways a pattern could be configured, please read the
 
 ## Writing the pattern's javascript
 
-We're now ready to start writing the Javascript for our pattern.
+We are now ready to start writing the Javascript for our pattern.
 
 Put this code into `./src/pat-colorchanger.js`
 
