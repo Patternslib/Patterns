@@ -41,7 +41,7 @@ define([
                 $el = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
             } else {
-                $el = $('body');
+                $el = $('body, html');
                 options[scroll] = $(this.$el.attr('href')).offset().top;
             }
             $el.animate(options, 500);
