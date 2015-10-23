@@ -26,6 +26,7 @@ define([
         init: function($el, opts) {
             var fragment = this._currentFragment();
             stacks._setupStack($el, opts, fragment);
+            return $el;
         },
 
         _setup: function() {

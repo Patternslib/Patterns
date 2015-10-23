@@ -11,11 +11,10 @@ define(["pat-stacks"], function(pattern) {
             pattern.document=document;
         });
 
-        describe("init", function(){
-            it("Return jQuery object", function() {
-                var jq = jasmine.createSpyObj("jQuery", ["each"]);
-                jq.each.andReturn(jq);
-                expect(pattern.init(jq)).toBe(jq);
+        describe("The init method", function(){
+            it("Returns the jQuery-wrapped DOM node", function() {
+                var $el = $('<div class="pat-stacks"></div');
+                expect(pattern.init($el)).toBe($el);
             });
         });
 
