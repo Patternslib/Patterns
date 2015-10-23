@@ -31,6 +31,13 @@ define([
                     ev.preventDefault();
                     this.smoothScroll();
                 }.bind(this));
+                this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
+            }
+        },
+
+        onPatternsUpdate: function(ev, data) {
+            if (data.originalEvent && data.originalEvent.type === "click") {
+                this.smoothScroll();
             }
         },
 
