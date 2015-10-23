@@ -82,6 +82,10 @@ define([
             e.preventDefault();
             this._updateAnchors(href_parts[1]);
             this._switch(href_parts[1]);
+            $(e.target).trigger("pat-update", {
+                pattern: "stacks",
+                originalEvent: e
+            });
         },
 
         _updateAnchors: function(selected) {
