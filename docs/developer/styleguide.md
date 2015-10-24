@@ -1,20 +1,136 @@
-# The Patterns code styleguide
+# The Patternslib coding style guide
 
-## Run tests before any commit
+*NOTE: Patternslib doesn't yet use any of the new [ES2015](https://babeljs.io/docs/learn-es2015/) features.*
 
-Before you make a commit make sure to run all tests. The simplest way to do
-this is use the `check` make target. This will run jshint to make sure your
-code matches our style guide, and it runs all unittests.
+Many of the style guide recommendations here come from Douglas Crockford's
+seminal book [Javascript, the good parts](http://shop.oreilly.com/product/9780596517748.do).
+
+Please stick to these guidelines when contributing to Patternslib code.:
+
+## Please run the style checks before making a commit or pull request.
+
+Before making a pull request, please make sure to run the tests.
+
+The simplest way to do this is use the `check` make target.
 
 ```
 $ make check
 
 Finished
 -----------------
-364 specs, 0 failures in 0.338s.
+470 specs, 0 failures in 2.355s.
 
 ConsoleReporter finished
 ```
+
+This will run [JSHint](http://jshint.com/) to make sure your
+code matches our style guide, additionally it runs the
+[Jasmine](http://jasmine.github.io/) tests.
+
+
+## Indentation
+
+We indent 4 spaces. Proper indentation is very important for readability.
+Please don't use tabs.
+
+## Underscores or camelCase?
+
+We use `camelCase` for function names and `underscores_names` for variables names.
+
+For example:
+
+    function thisIsAFunction () {
+        var this_is_a_variable;
+        ...
+    }
+
+## Spaces around operators
+
+In general, spaces are put around operators, such as the equals `=` or plus `+` signs.
+
+For example:
+
+    if (sublocale != locale) {
+        // do something
+    }
+
+An exception is when they appear inside for-loop expressions, for example:
+
+    for (i=0; i<msgs_length; i++) {
+        // do something
+    }
+
+Generally though, rather err on the side of adding spaces, since they make the code much more readable.
+
+## Constants are written in ALL_CAPS
+
+Identifiers that denote constant values should be written in all capital letters, with underscores between words.
+
+For example:
+
+    var SECONDS_IN_HOUR = 3600; // contant
+    var seconds_since_click = 0; // variable
+
+## Function declaration and invocation
+
+In his book, *Javascript, the good parts*, Douglas Crockford suggests that
+function names and the brackets that come afterwards should be separated with a space,
+to indicate that it's a declaration and not a function call or instantiation.
+
+    function update (model) { // function declaration
+        model.foo = 'bar';
+    }
+
+    update(model); // function call
+
+This practice however doesn't appear to be very common and is also not used
+consistently throughout the Patternslib codebase. It might be useful sometimes however,
+to reduce confusion.
+
+## Checking for equality
+
+Javascript has a strict `===` and less strict `==` equality operator. The
+stricter operator also does type checking. To avoid subtle bugs when doing comparisons,
+always use the strict equality check.
+
+## Curly brackets
+
+Curly brackets must appear on the same lines as the `if` and `else` keywords.
+The closing curly bracket appears on its own line.
+
+For example:
+
+    if (locale]) {
+        return locales[locale];
+    } else {
+        sublocale = locale.split("-")[0];
+        if (sublocale != locale && locales[sublocale]) {
+            return locales[sublocale];
+        }
+    }
+
+## Always enclose blocks in curly brackets
+
+When writing an a block such as an `if` or `while` statement, always use
+curly brackets around that block of code. Even when not strictly required by
+the compiler (for example if its only one line inside the `if` statement).
+
+For example, like this:
+
+    if (condition === true) {
+        this.updateRoomsList();
+    }
+    somethingElse();
+
+and **NOT** like this:
+
+    if (condition === true)
+        this.updateRoomsList();
+    somethingElse();
+
+This is to aid in readability and to avoid subtle bugs where certain lines are
+wrongly assumed to be executed within a block.
+
 
 ## Use private functions in patterns
 
