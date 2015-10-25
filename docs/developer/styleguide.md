@@ -14,13 +14,13 @@ Before making a pull request, please make sure to run the tests.
 The simplest way to do this is use the `check` make target.
 
 ```
-$ make check
+    $ make check
 
-Finished
------------------
-470 specs, 0 failures in 2.355s.
+    Finished
+    -----------------
+    470 specs, 0 failures in 2.355s.
 
-ConsoleReporter finished
+    ConsoleReporter finished
 ```
 
 This will run [JSHint](http://jshint.com/) to make sure your
@@ -131,6 +131,54 @@ and **NOT** like this:
 This is to aid in readability and to avoid subtle bugs where certain lines are
 wrongly assumed to be executed within a block.
 
+## Bind the "this" variable instead of assigning to "self"
+
+One of the deficiencies in Javascript is that callback functions are not bound
+to the correct or expected context (as referenced with the `this` variable). In
+[ES2015](https://babeljs.io/docs/learn-es2015/), this problem is solved
+by using so-called arrow functions for callbacks.
+
+However, while we're still writing ES5 code, please use the `.bind` method to
+bind the correct `this` context to the callback method.
+
+For example:
+
+    this.$el = $("#some-element");
+    setTimeout(function () {
+        // Without using .bind, "this" will refer to the window object.
+        this.$el.hide();
+    }.bind(this), 1000);
+
+### What about assigning the outer "this" to "self"?
+
+A different way of solving the above problem is to assign the outer `this`
+variable to `self` and then using `self` in the callback.
+
+For example:
+
+    var self = this;
+    self.$el = $("#some-element");
+    setTimeout(function () {
+        self.$el.hide();
+    }, 1000);
+
+This approach is generally discouraged in Patternslib because it results in
+much longer functions due to the fact that callback functions can't be moved
+out of the containing function where `self` is defined.
+
+Additionally, `self` is by default an alias for `window`. If you forget to use
+`var self`, there's the potential for bugs that can be difficult to track down.
+
+Douglas Crockford and others suggest that the variable `that` be used instead,
+which is also the convention we follow in Patternslib.
+
+For example:
+
+    var that = this;
+    that.$el = $("#some-element");
+    setTimeout(function () {
+        that.$el.hide();
+    }, 1000);
 
 ## Use private functions in patterns
 
@@ -181,14 +229,12 @@ other functions, such as functions passed to Array.filter or Array.forEach.
 Pattern methods must always be named, and the name should be prefixed with the
 Pattern with the pattern name to make them easy to recognize.
 
-```
-var mypattern = {
-    name: "mypattern",
+    var mypattern = {
+        name: "mypattern",
 
-    init: function mypatternInit($el) { },
-    _onClick: function mypatternOnClick(e) { }
-};
-```
+        init: function mypatternInit($el) { },
+        _onClick: function mypatternOnClick(e) { }
+    };
 
 ## Custom events
 
@@ -199,9 +245,7 @@ send custom events using [jQuery's trigger
 function](http://api.jquery.com/trigger/). Event names must follow the
 `pat-<pattern name>-<event name>` pattern.
 
-```
-$(el).trigger("pat-tooltip-open");
-```
+    $(el).trigger("pat-tooltip-open");
 
 The element must be dispatched from the element that caused something to
 happen, *not* from the elements that are changed as a result of an action.
@@ -209,29 +253,23 @@ happen, *not* from the elements that are changed as a result of an action.
 All extra data must be passed via a single object. In a future Patterns release
 this will be moved to the `detail` property of a CustomEvent instance.
 
-```
-$(el).trigger("pat-toggle-toggled", {value: new_value});
-```
+    $(el).trigger("pat-toggle-toggled", {value: new_value});
 
 Event listeners can access the provided data as an extra parameter passed to
 the event handler.
 
-```
-function onToggled(event, detail) {
-}
-$(".myclass").on("pat-toggle-toggled", onToggled);
-```
+    function onToggled(event, detail) {
+    }
+    $(".myclass").on("pat-toggle-toggled", onToggled);
 
 ## Event listeners
 
 All event listeners registered using [jQuery.fn.on](http://api.jquery.com/on/)
 must be namespaced with `pat-<pattern name>`.
 
-```
-function mypattern_init($el) {
-    $el.on("click.pat-mypattern", mypattern._onClick);
-}
-```
+    function mypattern_init($el) {
+        $el.on("click.pat-mypattern", mypattern._onClick);
+    }
 
 ## Storing arbitrary data
 
@@ -240,7 +278,5 @@ must either be `pat-<pattern name>` if a single value is stored, or
 `pat-<pattern name>-<name>` if multiple values are stored. This prevents
 conflicts with other code.
 
-```
-// Store parsed options
-$(el).data("pat-mypattern", options);
-```
+    // Store parsed options
+    $(el).data("pat-mypattern", options);
