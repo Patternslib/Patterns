@@ -33,6 +33,14 @@ define([
                 }.bind(this));
                 this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             }
+
+            $(window).scroll(_.debounce(function(){
+                if (utils.isElementInViewport($el)) {   
+                    $el.addClass("current");
+                } else {
+                    $el.removeClass("current");
+                }
+            }, 150));
         },
 
         onPatternsUpdate: function(ev, data) {
@@ -52,6 +60,7 @@ define([
                 options[scroll] = $(this.$el.attr('href')).offset().top;
             }
             $el.animate(options, 500);
+            console.log(utils.isElementInViewport($el));
         }
     });
 });
