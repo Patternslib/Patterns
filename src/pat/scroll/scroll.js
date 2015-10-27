@@ -3,6 +3,7 @@
  */
 define([
     "jquery",
+    //"jquery.visible",
     "pat-registry",
     "pat-base",
     "pat-utils",
@@ -33,12 +34,27 @@ define([
                 }.bind(this));
                 this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             }
-
-            $(window).scroll(_.debounce(function(){
-                if (utils.isElementInViewport($el)) {   
-                    $el.addClass("current");
+            
+            // upon page load, check if any anchor elements in the page point to targets
+            // that are visible to the user. if so, make them 'current'.
+            if ($el[0].nodeName === "A") {
+                var target = $($el[0].href.split('/').pop())[0];
+                if (utils.isElementInViewport(target, true)) {
+                    $el.addClass("current");      
                 } else {
                     $el.removeClass("current");
+                }
+            }
+
+            // when the scroll action completes
+            $(window).scroll(_.debounce(function() {
+                if ($el[0].nodeName === "A") {
+                    var target = $($el[0].href.split('/').pop())[0];              
+                    if (utils.isElementInViewport(target, true)) {                        
+                        $el.addClass("current");
+                    } else {                                                
+                        $el.removeClass("current");
+                    }
                 }
             }, 150));
         },
@@ -59,8 +75,7 @@ define([
                 $el = $('body, html');
                 options[scroll] = $(this.$el.attr('href')).offset().top;
             }
-            $el.animate(options, 500);
-            console.log(utils.isElementInViewport($el));
+            $el.animate(options, 500);            
         }
     });
 });
