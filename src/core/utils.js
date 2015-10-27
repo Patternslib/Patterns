@@ -362,7 +362,7 @@ define([
     // additional resource:
     // http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
     // return true if element is visible to the user ie. is in the viewport. Setting partial parameter to
-    // true, only checks if a part of the element is visible in the viewport.
+    // true, only checks if a part of the element is visible in the viewport.   
     // XXX the partial functionality doesn't quite work yet.
     isElementInViewport = function (el, partial) {
         //check for using jQuery
@@ -371,19 +371,21 @@ define([
         }
         var rec = el.getBoundingClientRect();
         if ( _.every(_.values(rec), function zero(v) { if ( v == 0 ){ return true;}}) ) {
-            // if every property of rect is 0, the element is invisible;
+            // if every property of rec is 0, the element is invisible;
             return false;            
         } else {            
             var $w = $(window);
                 vpWidth   = $w.width(),
-                vpHeight  = $w.height(),                
+                vpHeight  = $w.height(),
                 tViz = rec.top    >= 0 && rec.top    <  vpHeight,
                 bViz = rec.bottom >  0 && rec.bottom <= vpHeight,
                 lViz = rec.left   >= 0 && rec.left   <  vpWidth,
                 rViz = rec.right  >  0 && rec.right  <= vpWidth,
-                vVisible = partial ? tViz || bViz : tViz && bViz,
-                hVisible = partial ? lViz || rViz : lViz && rViz;            
-            return vVisible;
+                //vVisible = partial ? tViz || bViz : tViz && bViz,
+                // for partial checks - only checks that the top of element is visible
+                vVisible = partial ? tViz : tViz && bViz, 
+                hVisible = partial ? lViz || rViz : lViz && rViz;  
+            return vVisible; 
         }
     }
 
