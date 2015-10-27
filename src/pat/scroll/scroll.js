@@ -31,6 +31,7 @@ define([
                 this.$el.click(function (ev) {
                     ev.preventDefault();
                     this.smoothScroll();
+                    history.pushState({}, '', $el.attr('href'));                    
                 }.bind(this));
                 this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             }
