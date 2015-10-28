@@ -366,12 +366,11 @@ define([
          * some code taken from:
          * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433         
          */
-        if (typeof jQuery === "function" && el instanceof jQuery) {
+        if (el instanceof $) {
             el = el[0];
         }        
         var rec = el.getBoundingClientRect();
-        
-        if ( _.every(_.values(rec), function zero(v) { if ( v == 0 ){ return true;}}) ) {
+        if ( _.every(_.values(rec), function zero(v) { if ( v === 0 ){ return true;}}) ) {
             // if every property of rec is 0, the element is invisible;
             return false;            
         } else if (partial) {
@@ -394,7 +393,7 @@ define([
                 rec.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
             );        
         }
-    }
+    };
 
     var utils = {
         // pattern pimping - own module?
