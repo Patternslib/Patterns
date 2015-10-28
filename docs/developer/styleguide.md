@@ -33,7 +33,9 @@ code matches our style guide, additionally it runs the
 We indent 4 spaces. Proper indentation is very important for readability.
 Please don't use tabs.
 
-## Underscores or camelCase?
+## Naming of variables, classes and functions
+
+### Underscores or camelCase?
 
 We use `camelCase` for function names and `underscores_names` for variables names.
 
@@ -43,6 +45,17 @@ For example:
         var this_is_a_variable;
         ...
     }
+
+### jQuery objects are prefixed with $
+
+We prefix jQuery objects with the $ sign, to distinguish them from normal DOM
+elements.
+
+For example:
+
+    var divs = document.getElementsByTagName('div'); // List of DOM elements
+    var $divs = $('div'); // jQuery object
+
 
 ## Spaces around operators
 
