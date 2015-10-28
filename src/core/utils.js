@@ -357,35 +357,42 @@ define([
         return results;
     }
 
-    // taken from:
-    // https://github.com/customd/jquery-visible
-    // additional resource:
-    // http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
-    // return true if element is visible to the user ie. is in the viewport. Setting partial parameter to
-    // true, only checks if a part of the element is visible in the viewport.   
-    // XXX the partial functionality doesn't quite work yet.
-    isElementInViewport = function (el, partial) {
-        //check for using jQuery
+    isElementInViewport = function (el, partial, offset) { 
+        /* returns true if element is visible to the user ie. is in the viewport. 
+         * Setting partial parameter to true, will only check if a part of the element is visible
+         * in the viewport, specifically that some part of that element is touching the top part 
+         * of the viewport. This only applies to the vertical direction, ie. doesnt check partial
+         * visibility for horizontal scrolling
+         * some code taken from:
+         * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433         
+         */
         if (typeof jQuery === "function" && el instanceof jQuery) {
             el = el[0];
-        }
+        }        
         var rec = el.getBoundingClientRect();
+        
         if ( _.every(_.values(rec), function zero(v) { if ( v == 0 ){ return true;}}) ) {
             // if every property of rec is 0, the element is invisible;
             return false;            
-        } else {            
-            var $w = $(window);
-                vpWidth   = $w.width(),
-                vpHeight  = $w.height(),
-                tViz = rec.top    >= 0 && rec.top    <  vpHeight,
-                bViz = rec.bottom >  0 && rec.bottom <= vpHeight,
-                lViz = rec.left   >= 0 && rec.left   <  vpWidth,
-                rViz = rec.right  >  0 && rec.right  <= vpWidth,
-                //vVisible = partial ? tViz || bViz : tViz && bViz,
-                // for partial checks - only checks that the top of element is visible
-                vVisible = partial ? tViz : tViz && bViz, 
-                hVisible = partial ? lViz || rViz : lViz && rViz;  
-            return vVisible; 
+        } else if (partial) {
+            // when using getBoundingClientRect() (in the vertical case)
+            // negative means above top of viewport, positive means below top of viewport
+            // therefore for part of the element to be touching or crossing the top of the viewport
+            // rec.top must <= 0 and rec.bottom must >= 0 
+            // an optional tolerance offset can be added for when the desired element is not exactly 
+            // toucing the top of the viewport but needs to be considered as touching.            
+            return (
+                rec.top <= 0+offset && 
+                rec.bottom >= 0+offset
+            );
+        } else {           
+            // this will return true if the entire element is completely in the viewport 
+            return ( 
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+            );        
         }
     }
 

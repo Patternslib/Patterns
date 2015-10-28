@@ -40,7 +40,7 @@ define([
             // that are visible to the user. if so, make them 'current'.
             if ($el[0].nodeName === "A") {
                 var target = $($el[0].href.split('/').pop())[0];
-                if (utils.isElementInViewport(target, true)) {
+                if (utils.isElementInViewport(target, true, 2)) {
                     $el.addClass("current");      
                 } else {
                     $el.removeClass("current");
@@ -51,7 +51,7 @@ define([
             $(window).scroll(_.debounce(function() {
                 if ($el[0].nodeName === "A") {
                     var target = $($el[0].href.split('/').pop())[0];              
-                    if (utils.isElementInViewport(target, true)) {                        
+                    if (utils.isElementInViewport(target, true, 2)) {                        
                         $el.addClass("current");
                     } else {                                                
                         $el.removeClass("current");
