@@ -3,7 +3,6 @@
  */
 define([
     "jquery",
-    //"jquery.visible",
     "pat-registry",
     "pat-base",
     "pat-utils",
@@ -28,36 +27,39 @@ define([
             if (this.options.trigger == "auto") {
                this.smoothScroll();
             } else if (this.options.trigger == "click") {
-                this.$el.click(function (ev) {
-                    ev.preventDefault();
-                    this.smoothScroll();
-                    history.pushState({}, '', $el.attr('href'));                    
-                }.bind(this));
+                this.$el.click(this.onClick.bind(this));
                 this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             }
-            
-            // upon page load, check if any anchor elements in the page point to targets
-            // that are visible to the user. if so, make them 'current'.
-            if ($el[0].nodeName === "A") {
-                var target = $($el[0].href.split('/').pop())[0];
-                if (utils.isElementInViewport(target, true, 2)) {
-                    $el.addClass("current");      
-                } else {
-                    $el.removeClass("current");
+            this.markBasedOnFragment();
+            $(window).scroll(_.debounce(this.markIfVisible.bind(this), 150));
+        },
+
+        onClick: function(ev) {
+            ev.preventDefault();
+            this.smoothScroll();
+            history.pushState({}, null, $el.attr('href'));
+            this.markBasedOnFragment();
+        },
+
+        markBasedOnFragment: function(ev) {
+            // Get the fragment from the URL and determine whether this.$el
+            // needs to be marked .current
+            // TODO
+        },
+
+        markIfVisible: function(ev) {
+            // Check if the element is an anchor tag, and if so, find the
+            // target it points to.
+            // Adds current class based on whether target is visible in
+            // viewport.
+            if (this.$el[0].nodeName === "A") {
+                var $target = $(this.$el[0].href.split('/').pop())[0];              
+                if (utils.isElementInViewport($target, true, this.options.offset)) {                        
+                    this.$el.addClass("current");
+                } else {                                                
+                    this.$el.removeClass("current");
                 }
             }
-
-            // when the scroll action completes
-            $(window).scroll(_.debounce(function() {
-                if ($el[0].nodeName === "A") {
-                    var target = $($el[0].href.split('/').pop())[0];              
-                    if (utils.isElementInViewport(target, true, 2)) {                        
-                        $el.addClass("current");
-                    } else {                                                
-                        $el.removeClass("current");
-                    }
-                }
-            }, 150));
         },
 
         onPatternsUpdate: function(ev, data) {
