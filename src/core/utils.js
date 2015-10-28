@@ -388,10 +388,10 @@ define([
         } else {           
             // this will return true if the entire element is completely in the viewport 
             return ( 
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+                rec.top >= 0 &&
+                rec.left >= 0 &&
+                rec.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                rec.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
             );        
         }
     }
