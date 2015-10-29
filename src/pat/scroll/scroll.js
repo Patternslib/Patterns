@@ -37,24 +37,40 @@ define([
         onClick: function(ev) {
             ev.preventDefault();
             this.smoothScroll();
-            history.pushState({}, null, $el.attr('href'));
+            this.clearBasedOnPreviousFragment();          
+            history.pushState({}, null, this.$el.attr('href'));
             this.markBasedOnFragment();
         },
 
+        clearBasedOnPreviousFragment: function(ev) {
+            // Get the fragment from the URL, find what anchor is pointing to this url
+            // and clear the current class from it
+            // XXX This is not done
+            var id = '#' + window.location.hash.substr(1),
+                $target = $(id),
+                $anchor = $('a[href="' + id + '"]');
+            if ($target.length > 0) {
+                $anchor.removeClass("current");
+            }
+        },        
+
         markBasedOnFragment: function(ev) {
-            // Get the fragment from the URL and determine whether this.$el
-            // needs to be marked .current
-            // TODO
+            // Get the fragment from the URL and set the corresponding this.$el as current
+            // this.$el is the element the user clicked on.
+            var $target = $('#' + window.location.hash.substr(1));
+            if ($target.length > 0) {
+                this.$el.addClass("current");         
+            }
         },
 
         markIfVisible: function(ev) {
             // Check if the element is an anchor tag, and if so, find the
             // target it points to.
             // Adds current class based on whether target is visible in
-            // viewport.
+            // viewport.            
             if (this.$el[0].nodeName === "A") {
-                var $target = $(this.$el[0].href.split('/').pop())[0];              
-                if (utils.isElementInViewport($target, true, this.options.offset)) {                        
+                var $target = $(this.$el[0].href.split('/').pop())[0];
+                if (utils.isElementInViewport($target, true, this.options.offset)) {                   
                     this.$el.addClass("current");
                 } else {                                                
                     this.$el.removeClass("current");
