@@ -45,11 +45,11 @@ define([
                     $(window).on("scroll.bumper", null, this, bumper._onScrollWindow);
                     bumper._updateStatus(this);
                 } else {
-                    if (this.offsetParent!==container) {
+                    if (this.offsetParent !== container) {
                         var old_style = container.style.position;
-                        container.style.position="relative";
-                        if (this.offsetParent!==container) {
-                            container.style.position=old_style;
+                        container.style.position = "relative";
+                        if (this.offsetParent !== container) {
+                            container.style.position = old_style;
                             log.error("The offset parent for ", this,
                                       " must be its scrolling container ", container,
                                       "but it is ", this.offsetParent);
@@ -82,7 +82,7 @@ define([
 
         _markBumped: function bumper_markBumper($sticker, options, is_bumped) {
             var $target = options.selector ? $(options.selector) : $sticker,
-                todo = is_bumped ? options.bump : options.unbump; 
+                todo = is_bumped ? options.bump : options.unbump;    
             if (todo.add) {
                 $target.addClass(todo.add);
             } 
@@ -118,10 +118,10 @@ define([
             delta.top = sticker.style.top ? parseFloat($sticker.css("top")) : 0;
             delta.left = sticker.style.left ? parseFloat($sticker.css("left")) : 0;
 
-            box.top-=delta.top;
-            box.bottom-=delta.top;
-            box.left-=delta.left;
-            box.right-=delta.left;
+            box.top -= delta.top;
+            box.bottom -= delta.top;
+            box.left -= delta.left;
+            box.right -= delta.left;
 
             if ((frame.top > box.top) && options.bumptop) {
                 sticker.style.top = (frame.top - box.top) + "px";
@@ -166,7 +166,6 @@ define([
             box.left -= (parseFloat($sticker.css("margin-left")) || 0) + margin;
             box.right = box.left + $sticker.outerWidth(true) + (2 * margin);
             box.bottom = box.top + $sticker.outerHeight(true) + (2 * margin);
-            debugger;
             return box;
         }
     };
