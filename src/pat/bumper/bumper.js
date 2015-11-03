@@ -40,16 +40,16 @@ define([
                 }
                 $sticker.data("pat-bumper:config", options);
 
-                this.style.position="relative";
-                if (container===null) {
+                this.style.position = "relative";
+                if (container === null) {
                     $(window).on("scroll.bumper", null, this, bumper._onScrollWindow);
                     bumper._updateStatus(this);
                 } else {
-                    if (this.offsetParent!==container) {
+                    if (this.offsetParent !== container) {
                         var old_style = container.style.position;
-                        container.style.position="relative";
-                        if (this.offsetParent!==container) {
-                            container.style.position=old_style;
+                        container.style.position = "relative";
+                        if (this.offsetParent !== container) {
+                            container.style.position = old_style;
                             log.error("The offset parent for ", this,
                                       " must be its scrolling container ", container,
                                       "but it is ", this.offsetParent);
@@ -70,23 +70,25 @@ define([
 
         _findScrollContainer: function bumper_findScrollContainer(el) {
             var parent = el.parentElement;
-            while (parent!==document.body && parent!==null) {
+            while (parent !== document.body && parent !== null) {
                 var overflowY = $(parent).css("overflow-y");
-                if ((overflowY==="auto" || overflowY==="scroll"))
+                if ((overflowY === "auto" || overflowY === "scroll")) {
                     return parent;
-                parent=parent.parentElement;
+                }
+                parent = parent.parentElement;
             }
             return null;
         },
 
         _markBumped: function bumper_markBumper($sticker, options, is_bumped) {
             var $target = options.selector ? $(options.selector) : $sticker,
-                todo = is_bumped ? options.bump : options.unbump;
-
-            if (todo.add)
+                todo = is_bumped ? options.bump : options.unbump;    
+            if (todo.add) {
                 $target.addClass(todo.add);
-            if (todo.remove)
+            } 
+            if (todo.remove) {
                 $target.removeClass(todo.remove);
+            }
         },
 
         _onScrollContainer: function bumper_onScrollContainer(e) {
@@ -107,32 +109,38 @@ define([
                 box = bumper._getBoundingBox($sticker, margin),
                 delta = {};
 
-            if (arguments.length == 1)
-              frame = bumper._getViewport();
-            else if (arguments.length == 2)
-              frame = bumper._getBoundingBox($(arguments[1]), margin);
+            // when called from onScrollWindow
+            if (arguments.length == 1) {
+                frame = bumper._getViewport();
+            // when called from onScrollContainer
+            } else if (arguments.length == 2) {
+                var $container = $(arguments[1]);
+                frame = bumper._getBoundingBox($container, 0);
+            }
 
-            delta.top=sticker.style.top ? parseFloat($sticker.css("top")) : 0;
-            delta.left=sticker.style.left ? parseFloat($sticker.css("left")) : 0;
+            delta.top = sticker.style.top ? parseFloat($sticker.css("top")) : 0;
+            delta.left = sticker.style.left ? parseFloat($sticker.css("left")) : 0;
 
-            box.top-=delta.top;
-            box.bottom-=delta.top;
-            box.left-=delta.left;
-            box.right-=delta.left;
+            box.top -= delta.top;
+            box.bottom -= delta.top;
+            box.left -= delta.left;
+            box.right -= delta.left;
 
-            if ((frame.top > box.top) && options.bumptop)
-                sticker.style.top=(frame.top - box.top) + "px";
-            else if ((frame.bottom < box.bottom) && options.bumpbottom)
-                sticker.style.top=(frame.bottom - box.bottom) + "px";
-            else
-                sticker.style.top="";
+            if ((frame.top > box.top) && options.bumptop) {
+                sticker.style.top = (frame.top - box.top) + "px";
+            } else if ((frame.bottom < box.bottom) && options.bumpbottom) {
+                sticker.style.top = (frame.bottom - box.bottom) + "px";
+            } else {
+                sticker.style.top = "";
+            }
 
-            if ((frame.left > box.left) && options.bumpleft)
-                sticker.style.left=(frame.left - box.left) + "px";
-            else if ((frame.right < box.right) && options.bumpright)
-                sticker.style.left=(frame.right - box.right) + "px";
-            else
-                sticker.style.left="";
+            if ((frame.left > box.left) && options.bumpleft) {
+                sticker.style.left = (frame.left - box.left) + "px";
+            } else if ((frame.right < box.right) && options.bumpright) {
+                sticker.style.left = (frame.right - box.right) + "px";
+            } else {
+                sticker.style.left = "";
+            }
 
             bumper._markBumped($sticker, options, !!(sticker.style.top || sticker.style.left));
         },
@@ -145,8 +153,8 @@ define([
                     left: $win.scrollLeft()
                 };
 
-            view.right=view.left + $win.width();
-            view.bottom=view.top + $win.height();
+            view.right = view.left + $win.width();
+            view.bottom = view.top + $win.height();
             return view;
         },
 
