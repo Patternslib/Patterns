@@ -109,10 +109,13 @@ define([
                 box = bumper._getBoundingBox($sticker, margin),
                 delta = {};
 
+            // when called from onScrollWindow
             if (arguments.length == 1) {
                 frame = bumper._getViewport();
+            // when called from onScrollContainer
             } else if (arguments.length == 2) {
-                frame = bumper._getBoundingBox($(arguments[1]), margin);
+                var $container = $(arguments[1]);
+                frame = bumper._getBoundingBox($container, 0);
             }
 
             delta.top = sticker.style.top ? parseFloat($sticker.css("top")) : 0;
