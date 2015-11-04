@@ -383,13 +383,16 @@ define([
             // therefore for part of the element to be touching or crossing the top of the viewport
             // rec.top must <= 0 and rec.bottom must >= 0 
             // an optional tolerance offset can be added for when the desired element is not exactly 
-            // toucing the top of the viewport but needs to be considered as touching.  
+            // toucing the top of the viewport but needs to be considered as touching. 
             if (offset === undefined) {
                 offset = 0;
             }
             return (
-                rec.top <= 0+offset && 
-                rec.bottom >= 0+offset
+                (rec.top <= 0+offset && rec.bottom >= 0+offset) ||
+                (rec.top >= 0+offset && rec.top <= window.innerHeight) // this checks if the element
+                                                                       // touches bottom part of viewport
+                // XXX do we want to include a check for the padding of an element?
+                // using window.getComputedStyle(target).paddingTop
             );
         } else {           
             // this will return true if the entire element is completely in the viewport 
