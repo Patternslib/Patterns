@@ -75,12 +75,10 @@ define([
                 // ie. automatic scrolling as opposed to the user manually scrolling
                 this.$el.removeClass('pat-scroll-animated');
             } else if (this.$el[0].nodeName === "A") {
-                // check that the anchor or the element that its points to is visible on the screen
+                // check that the anchor's target is visible
                 // if so, mark both the anchor and the target element
-                //debugger;
                 var target = $(this.$el[0].href.split('/').pop())[0];
-                if (utils.isElementInViewport(target, true, this.options.offset) ||
-                    utils.isElementInViewport(this.$el, true, this.options.offset)) {
+                if (utils.isElementInViewport(target, true, this.options.offset)) {
                     $(target).addClass("current");
                     this.$el.addClass("current");
                     $(this.$el).trigger("pat-update", {
@@ -98,9 +96,9 @@ define([
                 }
             } else if (data.pattern === 'scroll') {
                 var target = $(this.$el[0].href.split('/').pop())[0];
-                if ((utils.isElementInViewport(target, true, this.options.offset)) === false) {
-                    // check the instance of the pattern for the invisibility of its target 
-                    // and remove current class if it is invisible. 
+                if (utils.isElementInViewport(target, true, this.options.offset) === false) {
+                    debugger;
+                    // if the anchor's target is invisible, remove current class from anchor and target. 
                     $(target).removeClass("current");                                          
                     $(this.$el).removeClass("current");
                 }
