@@ -27,60 +27,83 @@ define([
             if (this.options.trigger == "auto") {
                this.smoothScroll();
             } else if (this.options.trigger == "click") {
-                this.$el.click(this.onClick.bind(this));
-                this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
+                this.$el.click(this.onClick.bind(this));                
             }
+            this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             this.markBasedOnFragment();
-            $(window).scroll(_.debounce(this.markIfVisible.bind(this), 150));
+            this.on('hashchange', this.clearIfHidden.bind(this));
+            $(window).scroll(_.debounce(this.markIfVisible.bind(this), 600));
         },
 
         onClick: function(ev) {
             ev.preventDefault();
-            this.smoothScroll();
-            this.clearBasedOnPreviousFragment();          
-            history.pushState({}, null, this.$el.attr('href'));
-            this.markBasedOnFragment();
+            history.pushState({}, null, this.$el.attr('href'));            
+            this.smoothScroll();            
+            this.markBasedOnFragment();            
+            // manually trigger the hashchange event on all instances of pat-scroll
+            $('a.pat-scroll').trigger("hashchange");
         },
-
-        clearBasedOnPreviousFragment: function(ev) {
-            // Get the fragment from the URL, find what anchor is pointing to this url
-            // and clear the current class from it
-            // XXX This is not done
-            var id = '#' + window.location.hash.substr(1),
-                $target = $(id),
-                $anchor = $('a[href="' + id + '"]');
-            if ($target.length > 0) {
-                $anchor.removeClass("current");
-            }
-        },        
 
         markBasedOnFragment: function(ev) {
             // Get the fragment from the URL and set the corresponding this.$el as current
-            // this.$el is the element the user clicked on.
             var $target = $('#' + window.location.hash.substr(1));
             if ($target.length > 0) {
-                this.$el.addClass("current");         
+                this.$el.addClass("current"); // the element that was clicked on
+                $target.addClass("current");
             }
         },
 
-        markIfVisible: function(ev) {
-            // Check if the element is an anchor tag, and if so, find the
-            // target it points to.
-            // Adds current class based on whether target is visible in
-            // viewport.            
-            if (this.$el[0].nodeName === "A") {
-                var $target = $(this.$el[0].href.split('/').pop())[0];
-                if (utils.isElementInViewport($target, true, this.options.offset)) {                   
-                    this.$el.addClass("current");
-                } else {                                                
+        clearIfHidden: function(ev) {
+            var active_target = '#' + window.location.hash.substr(1),
+                $active_target = $(active_target),
+                target = this.$el[0].href.split('/').pop();
+            if ($active_target.length > 0) {
+                if (active_target != target) {
+                    // if the element does not match the one listed in the url #,
+                    // clear the current class from it.
+                    var $target = $(this.$el[0].href.split('/').pop());
+                    $target.removeClass("current");
                     this.$el.removeClass("current");
+                }
+            }
+        },                
+
+        markIfVisible: function(ev) {
+            //console.log("MARK IF VISIBLE");
+            if (this.$el.hasClass('pat-scroll-animated')) {
+                // this section is triggered when the scrolling is a result of the animate function
+                // ie. automatic scrolling as opposed to the user manually scrolling
+                this.$el.removeClass('pat-scroll-animated');
+            } else if (this.$el[0].nodeName === "A") {
+                // check that the anchor or the element that its points to is visible on the screen
+                // if so, mark both the anchor and the target element
+                //debugger;
+                var target = $(this.$el[0].href.split('/').pop())[0];
+                if (utils.isElementInViewport(target, true, this.options.offset) ||
+                    utils.isElementInViewport(this.$el, true, this.options.offset)) {
+                    $(target).addClass("current");
+                    this.$el.addClass("current");
+                    $(this.$el).trigger("pat-update", {
+                        pattern: "scroll",
+                    });
                 }
             }
         },
 
         onPatternsUpdate: function(ev, data) {
-            if (data.originalEvent && data.originalEvent.type === "click") {
-                this.smoothScroll();
+            //console.log("ON PATTERNS UPDATE");
+            if (data.pattern === 'stacks') {
+                if (data.originalEvent && data.originalEvent.type === "click") {
+                    this.smoothScroll();
+                }
+            } else if (data.pattern === 'scroll') {
+                var target = $(this.$el[0].href.split('/').pop())[0];
+                if ((utils.isElementInViewport(target, true, this.options.offset)) === false) {
+                    // check the instance of the pattern for the invisibility of its target 
+                    // and remove current class if it is invisible. 
+                    $(target).removeClass("current");                                          
+                    $(this.$el).removeClass("current");
+                }
             }
         },
 
@@ -94,7 +117,13 @@ define([
                 $el = $('body, html');
                 options[scroll] = $(this.$el.attr('href')).offset().top;
             }
-            $el.animate(options, 500);            
+            //console.log("RUNNING & ANIMATING!");
+            $el.animate(options, {
+                duration: 500,
+                start: function() { 
+                    $('.pat-scroll').addClass('pat-scroll-animated');
+                }
+            });            
         }
     });
 });
