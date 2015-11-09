@@ -46,9 +46,11 @@ define([
             var classes = el.className.split(/\s+/),
                 values = this.values;
             classes=classes.filter(function(v) { return v.length && values.indexOf(v)===-1;});
-            if (value)
+            if (value) {
                 classes.push(value);
+            }
             el.className=classes.join(" ");
+            $(el).trigger("pat-update", {pattern: "toggle"});
         },
 
         next: function Toggler_next(current) {
@@ -160,12 +162,10 @@ define([
                     log.error("Toggle pattern needs values for class attributes.");
                     continue;
                 }
-
                 if (i && option.store!=="none") {
                     log.warn("store option can only be set on first argument");
                     option.store="none";
                 }
-
                 if (option.store!=="none") {
                     if (!trigger.id) {
                         log.warn("state persistance requested, but element has no id");
@@ -182,7 +182,6 @@ define([
                 option.toggler=this._makeToggler(option);
                 correct.push(option);
             }
-
             return correct;
         },
 
@@ -194,17 +193,22 @@ define([
             for (var i=0; i<options.length; i++) {
                 option=options[i];
                 victims = $(option.selector);
-                if (!victims.length)
+                if (!victims.length) {
                     continue;
+                }
                 toggler=option.toggler;
                 next_state=toggler.toggle(victims[0]);
-                for (j=1; j<victims.length; j++)
+                for (j=1; j<victims.length; j++) {
                     toggler.set(victims[j], next_state);
-                if (option.value_storage)
+                }
+                if (option.value_storage) {
                     option.value_storage.set(next_state);
+                }
                 updated = true;
             }
             if (updated) {
+                // XXX: Is this necessary? pat-update gets called on changed
+                // element above.
                 $(this).trigger("pat-update", {pattern: "toggle"});
             }
             event.preventDefault();
@@ -212,8 +216,9 @@ define([
 
         _onKeyPress : function toggle_onKeyPress(event) {
             var keycode = event.keyCode ? event.keyCode : event.which;
-            if (keycode==="13")
+            if (keycode === "13") {
                 $(this).trigger("click", event);
+            }
         }
     };
 

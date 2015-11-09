@@ -7,79 +7,65 @@
 define([
     "jquery",
     "jquery.browser",
+    "pat-base",
     "pat-registry",
     "pat-parser"
-], function($, dummy, registry, Parser) {
+], function($, dummy, Base, registry, Parser) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
     parser.addArgument("min-width", 0);
     parser.addArgument("max-width", 1000000);
 
-    var _ = {
+    return Base.extend({
         name: "autoscale",
         trigger: ".pat-auto-scale",
         force_method: null,
 
-        _setup: function() {
-            if ($.browser.mozilla)
-                // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
-                _.force_method="scale";
-            else if ($.browser.msie && parseInt($.browser.version, 10)<9)
-                _.force_method="zoom";
-            $(document).ready(function() {
-                $(window).one("resize.autoscale", _.onResize);
-            });
+        init: function($el, opts) {
+            this.options = parser.parse(this.$el, opts);
+            if (this.force_method !== null) {
+                this.options.method = this.force_method;
+            }
+            this._setup().scale();
+            return this.$el;
         },
 
-        init: function($el, opts) {
-            return $el.each(function() {
-                var $el = $(this),
-                    options = parser.parse($el, opts);
-
-                if (_.force_method!==null)
-                    options.method=_.force_method;
-
-                $el.data("patterns.auto-scale", options);
-                _.scale.apply(this, []);
-            });
+        _setup: function() {
+            if ($.browser.mozilla) {
+                // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
+                this.force_method = "scale";
+            } else if ($.browser.msie && parseInt($.browser.version, 10) < 9) {
+                this.force_method = "zoom";
+            }
+            $(window).on("resize.autoscale",
+                _.debounce(this.scale.bind(this), 250, true)
+            );
+            $(document).on("pat-update.autoscale", _.debounce(this.scale.bind(this), 250));
+            return this;
         },
 
         scale: function() {
-            var $el = $(this),
-                options = $el.data("patterns.auto-scale"),
-                available_space, scale;
+            var available_space, scale;
 
-            if ($el[0].tagName.toLowerCase()==="body")
-                available_space=$(window).width();
-            else
-                available_space=$el.parent().outerWidth();
-
-            available_space=Math.min(available_space, options.maxWidth);
-            available_space=Math.max(available_space, options.minWidth);
-            scale=available_space/$el.outerWidth();
-
-            switch (options.method) {
-            case "scale":
-                $el.css("transform", "scale(" + scale + ")");
-                break;
-            case "zoom":
-                $el.css("zoom", scale);
-                break;
+            if (this.$el[0].tagName.toLowerCase() === "body") {
+                available_space = $(window).width();
+            } else {
+                available_space = this.$el.parent().outerWidth();
             }
-            $el.addClass("scaled");
-        },
+            available_space = Math.min(available_space, this.options.maxWidth);
+            available_space = Math.max(available_space, this.options.minWidth);
+            scale = available_space/this.$el.outerWidth();
 
-        onResize: function() {
-            $(_.trigger).each(_.scale);
-
-            // necassary at least for IE8
-            setTimeout(function() {
-                $(window).one("resize.autoscale", _.onResize);
-            }, 100);
+            switch (this.options.method) {
+                case "scale":
+                    this.$el.css("transform", "scale(" + scale + ")");
+                    break;
+                case "zoom":
+                    this.$el.css("zoom", scale);
+                    break;
+            }
+            this.$el.addClass("scaled");
+            return this;
         }
-    };
-
-    _._setup();
-    registry.register(_);
-    return _;
+    });
 });
