@@ -81,7 +81,7 @@ Identifiers that denote constant values should be written in all capital letters
 
 For example:
 
-    var SECONDS_IN_HOUR = 3600; // contant
+    var SECONDS_IN_HOUR = 3600; // constant
     var seconds_since_click = 0; // variable
 
 ## Function declaration and invocation
@@ -207,7 +207,7 @@ var mypattern = {
     init: function init($el) { },
 
     // Standard pattern API function
-    destory: function() { },
+    destroy: function() { },
 
     // Internal method to handle click events
     _onClick: function mypattern_onClick(e) { }
@@ -239,8 +239,8 @@ $el.on("click", function buttonClick(event) {
 An exception to this rule are trivial functions that do not call any
 other functions, such as functions passed to Array.filter or Array.forEach.
 
-Pattern methods must always be named, and the name should be prefixed with the
-Pattern with the pattern name to make them easy to recognize.
+Pattern methods must always be named, and the name should be prefixed 
+with the pattern name to make them easy to recognize.
 
     var mypattern = {
         name: "mypattern",
@@ -252,7 +252,7 @@ Pattern with the pattern name to make them easy to recognize.
 ## Custom events
 
 A pattern can send custom events for either internal purposes, or as a hook for
-third party javascript. Since IE8 is still supported use
+third party javascript. Since IE8 is still supported 
 [CustomEvent](http://dochub.io/#dom/customevent) can not be used. Instead you must
 send custom events using [jQuery's trigger
 function](http://api.jquery.com/trigger/). Event names must follow the
