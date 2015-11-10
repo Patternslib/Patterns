@@ -49,12 +49,10 @@ define([
         },
 
         _init_div1: function () {
-            var $header = $("<div class='header' />"),
-                activeElement = document.activeElement;
+            var $header = $("<div class='header' />");
 
             if (this.options.closing.indexOf("close-button")!==-1) {
-                var closetext = this.options.closeText
-                $("<button type='button' class='close-panel'>" + closetext + "</button>").appendTo($header);
+                $("<button type='button' class='close-panel'>" + this.options.closeText + "</button>").appendTo($header);
             }
 
             // We cannot handle text nodes here
@@ -69,7 +67,7 @@ define([
 
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
-            activeElement.focus();
+            document.activeElement.focus();
             this._init_handlers();
             this.resize();
             this.setPosition();
