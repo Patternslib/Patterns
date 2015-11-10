@@ -371,10 +371,10 @@ define([
         }
         if (el instanceof $) {
             el = el[0];
-            //console.log("isinstance of $");
         }
-        var rec = el.getBoundingClientRect();
-        if ( _.every(_.values(rec), function zero(v) { if ( v === 0 ){ return true;}}) ) {
+        var rec = el.getBoundingClientRect(),
+            rec_values = [rec.top, rec.bottom, rec.left, rec.right];
+        if ( _.every(rec_values, function zero(v) { if ( v === 0 ){ return true;}}) ) {
             // if every property of rec is 0, the element is invisible;
             return false;            
         } else if (partial) {
@@ -388,8 +388,8 @@ define([
                 offset = 0;
             }
             return (
-                (rec.top <= 0+offset && rec.bottom >= 0+offset) ||
-                (rec.top >= 0+offset && rec.top <= window.innerHeight) // this checks if the element
+                (rec.top <= 0+offset && rec.bottom >= 0+offset)
+                //(rec.top >= 0+offset && rec.top <= window.innerHeight) // this checks if the element
                                                                        // touches bottom part of viewport
                 // XXX do we want to include a check for the padding of an element?
                 // using window.getComputedStyle(target).paddingTop
