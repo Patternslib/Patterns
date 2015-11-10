@@ -21,3 +21,4 @@ You can customise the behaviour of modals through options in the `data-pat-modal
 | ----- | --------| -------- | ------- | ----------- |
 | `class` | | | A class name to be applied to the modal. | String. |
 | `closing` | "close-button" | ["close-button", "outside"] | Show a "close" button for closing the modal, or let it be closed by clicking outside of the modal area. | One of the mutually exclusive available string values. |
+| `close-text` | "Close" | | Specify a custom string for the close button. | String. |

@@ -93,6 +93,20 @@ define(["pat-modal"], function(pattern) {
                 $modal = $("div#pat-modal");
                 expect($modal.length).toBeGreaterThan(0);
             });
+
+            it("Modal with single element that specifies a custom close button string", function() {
+                $("#lab").html([
+                    "<div class=\"pat-modal\" id=\"modal\" data-pat-modal=\"close-text: Shutdown\">",
+                    "  <p>Modal content</p>",
+                    "</div>"
+                ].join("\n"));
+                var $modal = $("#modal");
+                pattern.init($modal);
+                expect($modal.find(".header").length).toBeTruthy();
+                expect($modal.find(".header").text()).toBe("Shutdown");
+                expect($modal.find(".header .close-panel").length).toBeTruthy();
+                expect($("body").hasClass("modal-active")).toBeTruthy();
+            });
         });
     });
 });
