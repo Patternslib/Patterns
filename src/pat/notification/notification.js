@@ -17,6 +17,7 @@ define([
     parser.addArgument("healing", "5s");
     parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
     parser.addArgument("class");
+    parser.addArgument("close-text", 'Close');
 
     var _ = {
         name: "notification",
@@ -76,6 +77,7 @@ define([
             _.count++;
 
             var options = parser.parse($el, opts);
+            var closetext = options.closeText;
 
             $el = $el.wrap("<div/>").parent()
                 .attr("id", "pat-notification-" + _.count)
@@ -91,14 +93,14 @@ define([
                 options.controls = [ options.controls ];
             }
 
-            // add close icon if requsted
+            // add close icon if requested
             if (options.controls.indexOf("icons") >= 0) {
-                $el.append("<button type='button' class=.close-panel'>Close</button>");
+                $el.append("<button type='button' class=.close-panel'>" + closetext + "</button>");
             }
 
             // add close button if requested
             if (options.controls.indexOf("buttons") >= 0) {
-                $el.append("<div class='button-bar'><button type='button' class='close-panel'>Close</button></div>");
+                $el.append("<div class='button-bar'><button type='button' class='close-panel'>" + closetext + "</button></div>");
             }
 
             if ($el.find(".close-panel").length) {
