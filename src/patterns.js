@@ -53,6 +53,7 @@ define([
     "pat-subform",
     "pat-switch",
     "pat-syntax-highlight",
+    "pat-tabs",
     "pat-toggle",
     "pat-tooltip",
     "pat-url",

@@ -125,6 +125,7 @@ require.config({
         "pat-subform":                 "pat/subform/subform",
         "pat-switch":                  "pat/switch/switch",
         "pat-scroll":                  "pat/scroll/scroll",
+        "pat-tabs":                    "pat/tabs/tabs",
         "pat-toggle":                  "pat/toggle/toggle",
         "pat-tooltip":                 "pat/tooltip/tooltip",
         "pat-validation":              "pat/validation/validation",

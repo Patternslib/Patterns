@@ -55,6 +55,7 @@ require([
             "pat/sortable/tests",
             "pat/stacks/tests",
             "pat/switch/tests",
+            "pat/tabs/tests",
             "pat/toggle/tests",
             "pat/tooltip/tests",
             "pat/validation/tests",
