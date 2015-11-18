@@ -25,23 +25,49 @@ define([
         },
 
         adjustTabs: function(ev, data) {
-            var window_width = $('body')[0].clientWidth; // width of window excluding scrollbar
+            var window_width = $('body')[0].clientWidth, // width of window excluding scrollbar (allegedly - must test properly still)
             // alternatively one can use window.innerWidth but that does include the scrollbar.
+                children = this.$el.children(),
+                total_width = 0,
+                idx = 0,
+                tab_width,
+                extra_tabs,
+                obscured_tabs;
+
             if ( this.$el.width() >= window_width ) {
-                var children = this.$el.children(),
-                    total_width = 0,
-                    idx = 0,
+                if ( children.length != 0 ) {
+                    // assumption!! the tab that contains extra tabs will always exist as the last tab
+                    // here we want to gather all tabs including those that maybe in a special 'extra-tabs'
+                    // span and place them all as equal children, before we recalculate which tabs are 
+                    // visible and which are potentially fully or partially obscured.
+                    if ( $(children[children.length-1]).hasClass('extra-tabs') ) {
+                        extra_tabs = $(children[children.length-1]).children();
+                        if (extra_tabs.length != 0 ) {
+                            extra_tabs.appendTo(this.$el); // move previously obscured tabs out of 'extra-tabs' span
+                        }
+                        children.filter(".extra-tabs").remove(); // remove 'extra-tabs' span
+                    }
+
                     tab_width = $(this.$el.children()[idx]).outerWidth(true);
-                this.$el.children().removeClass("TOGGLED"); // temporary marking mechanism
-                while ( (total_width+tab_width) < window_width ) {                    
-                    total_width += tab_width;
-                    idx++;
-                    tab_width = $(this.$el.children()[idx]).outerWidth(true);
-                }
-                // put all invisible or partialy invisible tabs in a special span with class 'extra-tabs'
-                while (idx < $(this.$el.children()).length) {
-                    $(this.$el.children()[idx]).addClass("TOGGLED"); // temporary marking mechanism
-                    idx++;
+                    // iterate through all visible tabs until we find an obscured tab or until we finish
+                    while ( (total_width+tab_width) < window_width ) {
+                        total_width += tab_width;
+                        idx++;
+                        tab_width = $(this.$el.children()[idx]).outerWidth(true);
+                    }
+                    // find some partially or fully obscured tabs - if any - and mark them
+                    while (idx < $(this.$el.children()).length) {
+                        $(this.$el.children()[idx]).addClass("obscured_tab"); // temporary marking mechanism
+                        idx++;
+                    }
+
+                    obscured_tabs = this.$el.children().filter(".obscured_tab");
+                    // if obscured tabs were found, move them to a special 'extra-tabs' span
+                    if ( obscured_tabs.length != 0 ) {
+                        this.$el.append('<span class="extra-tabs"></span>'); // create extra-tabs span
+                        this.$el.children().filter(".extra-tabs").append(obscured_tabs); // move tabs into it
+                        obscured_tabs.removeClass("obscured_tab"); // remove marking mechanism
+                    }
                 }
             }
         }
