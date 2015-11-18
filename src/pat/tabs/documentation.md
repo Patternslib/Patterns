@@ -29,7 +29,7 @@ TODO
 
 ### Option reference
 
-Scrolling can be configured through a `data-pat-tabs` attribute.
+Tabs can be configured through a `data-pat-tabs` attribute.
 The available options are:
 
 | Field | Default | Options | Description |
