@@ -33,20 +33,27 @@ define([
                 extra_tabs,
                 obscured_tabs;
 
-            if ( this.$el.width() >= container_width ) {
-                if ( children.length != 0 ) {
-                    // assumption!! the tab that contains extra tabs will always exist as the last tab
-                    // here we want to gather all tabs including those that maybe in a special 'extra-tabs'
-                    // span and place them all as equal children, before we recalculate which tabs are 
-                    // visible and which are potentially fully or partially obscured.
-                    if ( $(children[children.length-1]).hasClass('extra-tabs') ) {
-                        extra_tabs = $(children[children.length-1]).children();
-                        if (extra_tabs.length != 0 ) {
-                            extra_tabs.appendTo(this.$el); // move previously obscured tabs out of 'extra-tabs' span
-                        }
-                        children.filter(".extra-tabs").remove(); // remove 'extra-tabs' span
+            if ( children.length != 0 ) {
+                // assumption!! the tab that contains extra tabs will always exist as the last tab
+                // here we want to gather all tabs including those that maybe in a special 'extra-tabs'
+                // span and place them all as equal children, before we recalculate which tabs are 
+                // visible and which are potentially fully or partially obscured.
+                if ( $(children[children.length-1]).hasClass('extra-tabs') ) {
+                    extra_tabs = $(children[children.length-1]).children();
+                    if (extra_tabs.length != 0 ) {
+                        extra_tabs.appendTo(this.$el); // move previously obscured tabs out of 'extra-tabs' span
                     }
+                    children.filter(".extra-tabs").remove(); // remove 'extra-tabs' span
+                }
 
+                // precalculate the collective size of all the tabs 
+                $.each(this.$el.children(), function() {
+                    total_width += $(this).outerWidth(true);
+                });     
+
+                // only execute if all tabs cannot fit comfortably in the container
+                if ( total_width >= container_width ) {
+                    total_width = 0;
                     tab_width = $(this.$el.children()[idx]).outerWidth(true);
                     // iterate through all visible tabs until we find an obscured tab or until we finish
                     while ( (total_width+tab_width) < container_width ) {

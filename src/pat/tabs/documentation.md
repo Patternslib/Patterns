@@ -27,10 +27,12 @@ TODO
         </span>
     </nav>
 
-### Option reference
+<!-- ### Option reference
 
 Tabs can be configured through a `data-pat-tabs` attribute.
 The available options are:
 
 | Field | Default | Options | Description |
 | ----- | ------- | ----------- | ----------- |
+
+-->
