@@ -25,8 +25,7 @@ define([
         },
 
         adjustTabs: function(ev, data) {
-            var window_width = $('body')[0].clientWidth, // width of window excluding scrollbar (allegedly - must test properly still)
-            // alternatively one can use window.innerWidth but that does include the scrollbar.
+            var container_width = this.$el.outerWidth(true),
                 children = this.$el.children(),
                 total_width = 0,
                 idx = 0,
@@ -34,7 +33,7 @@ define([
                 extra_tabs,
                 obscured_tabs;
 
-            if ( this.$el.width() >= window_width ) {
+            if ( this.$el.width() >= container_width ) {
                 if ( children.length != 0 ) {
                     // assumption!! the tab that contains extra tabs will always exist as the last tab
                     // here we want to gather all tabs including those that maybe in a special 'extra-tabs'
@@ -50,7 +49,7 @@ define([
 
                     tab_width = $(this.$el.children()[idx]).outerWidth(true);
                     // iterate through all visible tabs until we find an obscured tab or until we finish
-                    while ( (total_width+tab_width) < window_width ) {
+                    while ( (total_width+tab_width) < container_width ) {
                         total_width += tab_width;
                         idx++;
                         tab_width = $(this.$el.children()[idx]).outerWidth(true);
