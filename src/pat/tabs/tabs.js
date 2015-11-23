@@ -25,7 +25,7 @@ define([
         },
 
         adjustTabs: function(ev, data) {
-            var container_width = this.$el.outerWidth(true),
+            var container_width = this.$el.width(),
                 children = this.$el.children(),
                 total_width = 0,
                 idx = 0,
@@ -55,25 +55,22 @@ define([
                 if ( total_width >= container_width ) {
                     total_width = 0;
                     tab_width = $(this.$el.children()[idx]).outerWidth(true);
-                    // iterate through all visible tabs until we find an obscured tab or until we finish
+                    // iterate through all visible tabs until we find the first obscured tab
                     while ( (total_width+tab_width) < container_width ) {
                         total_width += tab_width;
                         idx++;
                         tab_width = $(this.$el.children()[idx]).outerWidth(true);
                     }
-                    // find some partially or fully obscured tabs - if any - and mark them
+                    // find the partially/fully obscured tabs and mark them as such
                     while (idx < $(this.$el.children()).length) {
                         $(this.$el.children()[idx]).addClass("obscured_tab"); // temporary marking mechanism
                         idx++;
                     }
-
                     obscured_tabs = this.$el.children().filter(".obscured_tab");
-                    // if obscured tabs were found, move them to a special 'extra-tabs' span
-                    if ( obscured_tabs.length != 0 ) {
-                        this.$el.append('<span class="extra-tabs"></span>'); // create extra-tabs span
-                        this.$el.children().filter(".extra-tabs").append(obscured_tabs); // move tabs into it
-                        obscured_tabs.removeClass("obscured_tab"); // remove marking mechanism
-                    }
+                    // move obscured tabs to a special 'extra-tabs' span
+                    this.$el.append('<span class="extra-tabs"></span>'); // create extra-tabs span
+                    this.$el.children().filter(".extra-tabs").append(obscured_tabs); // move tabs into it
+                    obscured_tabs.removeClass("obscured_tab"); // remove marking mechanism
                 }
             }
         }
