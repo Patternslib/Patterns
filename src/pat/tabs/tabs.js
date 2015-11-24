@@ -20,8 +20,17 @@ define([
 
         init: function($el, opts) {
             this.options = parser.parse(this.$el, opts); // redundant - at the moment we have no parameter options
-            $(window).resize(_.debounce(this.adjustTabs.bind(this), 200));            
+            $(window).resize(_.debounce(this.adjustTabs.bind(this), 200));
+            $('body').on("pat-update", this.filterByPatternsUpdate.bind(this));
             this.adjustTabs();
+        },
+
+        filterByPatternsUpdate: function(ev, data) {
+            // determine when to call adjustTabs depending as to which pattern triggered pat-update
+            allowed_patterns: ["switch", "pattern", "pattern2"]; // XXX add other layout modifying patterns
+            if ( $.inArray(data.pattern, allowed_patterns) > -1 ) {
+                this.adjustTabs.bind(this);
+            }
         },
 
         adjustTabs: function(ev, data) {
