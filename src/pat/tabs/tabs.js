@@ -27,9 +27,10 @@ define([
 
         filterByPatternsUpdate: function(ev, data) {
             // determine when to call adjustTabs depending as to which pattern triggered pat-update
-            allowed_patterns: ["switch", "pattern", "pattern2"]; // XXX add other layout modifying patterns
+            var allowed_patterns = ["stacks", "switch", "auto-scale", "grid", "equaliser", "masonry", "zoom"];
+            // XXX TODO add other (or remove redundant) layout modifying patterns    
             if ( $.inArray(data.pattern, allowed_patterns) > -1 ) {
-                this.adjustTabs.bind(this);
+                this.adjustTabs();
             }
         },
 
