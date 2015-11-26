@@ -47,7 +47,7 @@ define([
         registerListeners: function() {
             this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
             this.registerSubformListeners();
-            this.$el.on('patterns-injected', this.registerSubformListeners.bind(this));
+            this.$el.on('patterns-injected', this.refreshListeners.bind(this));
         },
 
         registerSubformListeners: function(ev) {
@@ -59,6 +59,12 @@ define([
             $el.find(".pat-subform").each(function (idx, el) {
                 $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
             }.bind(this));
+        },
+
+        refreshListeners: function(ev, cfg, el, injected) {
+            this.registerSubformListeners();
+            // Register change event handlers for new inputs injected into this form
+            input_change_events.setup($(injected), "autosubmit");
         },
 
         registerTriggers: function() {
