@@ -8,6 +8,7 @@ define(["pat-modal"], function(pattern) {
 
         afterEach(function() {
             $("#lab").remove();
+            $('body').removeClass("modal-active");
         });
 
         describe("init", function() {
@@ -17,6 +18,7 @@ define(["pat-modal"], function(pattern) {
                     "  <p>Modal content</p>",
                     "</div>"
                 ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
                 var $modal = $("#modal");
                 pattern.init($modal);
                 expect($modal.find(".header").length).toBeTruthy();
@@ -34,6 +36,7 @@ define(["pat-modal"], function(pattern) {
                     "  <p>Modal content</p>",
                     "</div>"
                 ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
                 var $modal = $("#modal");
                 pattern.init($modal);
                 expect($modal.find(".header").text()).toBe("Modal headerClose");
@@ -51,6 +54,7 @@ define(["pat-modal"], function(pattern) {
                     "  <p>More content</p>",
                     "</div>"
                 ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
                 var $modal = $("#modal");
                 pattern.init($modal);
                 expect($modal.find(".header").text()).toBe("Modal headerClose");
@@ -100,6 +104,7 @@ define(["pat-modal"], function(pattern) {
                     "  <p>Modal content</p>",
                     "</div>"
                 ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
                 var $modal = $("#modal");
                 pattern.init($modal);
                 expect($modal.find(".header").length).toBeTruthy();
