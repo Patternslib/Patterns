@@ -37,3 +37,7 @@ The resulting markup:
 CSS will turn this span into a drop down that works on touch and non-touch screens.
 
 The script runs at page load when the dom is ready, it runs again when the browser window is being resized and when a parent layout modifying Pattern — such as pat-switch — is triggered.
+
+### Option reference
+
+This pattern does not have an special configuration properties.
