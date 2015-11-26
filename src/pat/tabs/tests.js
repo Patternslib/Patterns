@@ -57,8 +57,12 @@ define(["pat-tabs"], function(pattern) {
             });
 
             it("the extra-tabs span will not exist as a child of the pat-tabs element", function() {
+                // XXX: Somehow the browsers doesn't behave so nicely, elements
+                // wrap around even though according to our calculations they
+                // don't have to. So we now check for 5% less than the
+                // container width. That means, 401px must become 1.05*401 =422
                 $("#lab").html([
-                    '<nav class="navigation tabs pat-tabs" style="width:401px;">',
+                    '<nav class="navigation tabs pat-tabs" style="width:422px;">',
                     '<a href="" style="width:100px; display:block;">General</a>',
                     '<a href="" style="width:100px; display:block;">Members</a>',
                     '<a href="" style="width:100px; display:block;">Security</a>',
@@ -80,8 +84,12 @@ define(["pat-tabs"], function(pattern) {
             });
 
             it("the extra-tabs span will not exist as a child of the pat-tabs element", function() {
+                // XXX: Somehow the browsers doesn't behave so nicely, elements
+                // wrap around even though according to our calculations they
+                // don't have to. So we now check for 5% less than the
+                // container width. That means, 441px must become 1.05*441 =422
                 $("#lab").html([
-                    '<nav class="navigation tabs pat-tabs" style="width:441px;">',
+                    '<nav class="navigation tabs pat-tabs" style="width:464px;">',
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">General</a>',
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Members</a>',
                     '<a href="" style="width:100px; padding: 0px 5px 0px 5px; display:block;">Security</a>',

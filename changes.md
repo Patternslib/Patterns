@@ -2,13 +2,12 @@
 
 ## 2.0.13 - Unreleased
 
-- New property for sortable pattern, `drag-class`, the CSS class to apply to
-  item being dragged. Is `"dragged"` by default.
-- New property for sortable pattern, `drop`, a Javascript callback function to
-  be called when an item is dropped.
+- New property for sortable pattern, `drag-class`, the CSS class to apply to item being dragged. Is `"dragged"` by default.
+- New property for sortable pattern, `drop`, a Javascript callback function to be called when an item is dropped.
 - Form with pat-autosubmit doesn't get notified when injected inputs change.
 - Inject pattern with `autoload-visible` injected erroneously based upon old autoload element no longer in DOM.
 - Add the class `modal-active` to the `body` element whenever a modal is in the DOM.
+- New pattern: `pat-tabs`. See the relevant documentation.
 
 ## 2.0.12 - Oct. 9, 2015
 
