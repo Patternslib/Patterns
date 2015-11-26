@@ -4,9 +4,13 @@ The *tabs* pattern allows you to collect tabs that do not fit in the width of th
 
 ## Documentation
 
-TODO
+The collapsing tabs pattern is used to to solve the problem where the tabs on certain screen sizes or in certain languages don't all fit in the horizontal space.
 
-### Examples
+![schermafdruk 2015-10-04 19 35 29](https://cloud.githubusercontent.com/assets/738601/10269231/fa382cd8-6ad0-11e5-87cc-39d81637b3cf.png)
+
+![schermafdruk 2015-10-04 19 35 35](https://cloud.githubusercontent.com/assets/738601/10269232/fa3c8f30-6ad0-11e5-8120-607dc0fbdabd.png)
+
+The pattern is applied on markup similar to:
 
     <nav class="navigation tabs pat-tabs">
         <a href="" class="pat-inject current">General</a>
@@ -15,9 +19,12 @@ TODO
         <a href="" class="pat-inject">Advanced</a>
     </nav>
 
-    will result in tabs that are too wide to fit in the window to be be placed in 
-    an 'extra-tabs' container.
-    
+1. The script measures the size of the container element with 'pat-tabs' on it.
+2. The script measures the width (including padding and border) of link in the container and adds the sizes up.
+3. The tabs that together in width exceed the width of the container are enclosed in a span tag `<span class="extra-tabs">`.
+
+The resulting markup:
+
     <nav class="navigation tabs pat-tabs">
         <a href="" class="pat-inject current">General</a>
         <a href="" class="pat-inject">Members</a>
@@ -27,12 +34,6 @@ TODO
         </span>
     </nav>
 
-<!-- ### Option reference
+CSS will turn this span into a drop down that works on touch and non-touch screens.
 
-Tabs can be configured through a `data-pat-tabs` attribute.
-The available options are:
-
-| Field | Default | Options | Description |
-| ----- | ------- | ----------- | ----------- |
-
--->
+The script runs at page load when the dom is ready, it runs again when the browser window is being resized and when a parent layout modifying Pattern — such as pat-switch — is triggered.
