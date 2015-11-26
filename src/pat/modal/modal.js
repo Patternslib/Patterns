@@ -27,7 +27,6 @@ define([
             } else {
                 this._init_inject1();
             }
-            $('body').addClass("modal-active");
         },
 
         _init_inject1: function () {
@@ -40,21 +39,17 @@ define([
             if (!this.$el.closest("#pat-modal")) {
                 $("#pat-modal").detach();
             }
-
             this.$el.on("pat-inject-missingSource pat-inject-missingTarget", function() {
                 $("#pat-modal").detach();
             });
-
             inject.init(this.$el, opts);
         },
 
         _init_div1: function () {
             var $header = $("<div class='header' />");
-
             if (this.options.closing.indexOf("close-button")!==-1) {
                 $("<button type='button' class='close-panel'>" + this.options.closeText + "</button>").appendTo($header);
             }
-
             // We cannot handle text nodes here
             var $children = this.$el.children(":last, :not(:first)");
             if ($children.length) {
@@ -71,6 +66,7 @@ define([
             this._init_handlers();
             this.resize();
             this.setPosition();
+            $('body').addClass("modal-active");
         },
 
         _init_handlers: function() {
