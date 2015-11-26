@@ -645,8 +645,9 @@ define([
                 // if scrollable parent and visible -> trigger it
                 // we only look at the closest scrollable parent, no nesting
                 checkVisibility = utils.debounce(function inject_checkVisibility_scrollable() {
-                    if ($el.data("patterns.autoload"))
+                    if ($el.data("patterns.autoload") || !$.contains(document, $el[0])) {
                         return false;
+                    }
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -658,27 +659,28 @@ define([
                     }
                     return false;
                 }, 100);
-                if (checkVisibility())
+                if (checkVisibility()) {
                     return true;
-
+                }
                 // wait to become visible - again only immediate scrollable parent
                 $($scrollable[0]).on("scroll", checkVisibility);
                 $(window).on("resize.pat-autoload", checkVisibility);
             } else {
                 // Use case 2: scrolling the entire page
                 checkVisibility = utils.debounce(function inject_checkVisibility_not_scrollable() {
-                    if ($el.data("patterns.autoload"))
+                    if ($el.data("patterns.autoload")) {
                         return false;
-                    if (!utils.elementInViewport($el[0]))
+                    }
+                    if (!utils.elementInViewport($el[0])) {
                         return false;
-
+                    }
                     $(window).off(".pat-autoload", checkVisibility);
                     return trigger();
                 }, 100);
-                if (checkVisibility())
+                if (checkVisibility()) {
                     return true;
-                $(window).on("resize.pat-autoload scroll.pat-autoload",
-                        checkVisibility);
+                }
+                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
             }
             return false;
         },

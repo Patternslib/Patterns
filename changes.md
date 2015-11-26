@@ -7,6 +7,7 @@
 - New property for sortable pattern, `drop`, a Javascript callback function to
   be called when an item is dropped.
 - Form with pat-autosubmit doesn't get notified when injected inputs change.
+- Inject pattern with `autoload-visible` injected erroneously based upon old autoload element no longer in DOM.
 
 ## 2.0.12 - Oct. 9, 2015
 
