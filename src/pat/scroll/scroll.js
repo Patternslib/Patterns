@@ -27,7 +27,7 @@ define([
             if (this.options.trigger == "auto") {
                this.smoothScroll();
             } else if (this.options.trigger == "click") {
-                this.$el.click(this.onClick.bind(this));                
+                this.$el.click(this.onClick.bind(this));
             }
             this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             this.markBasedOnFragment();
@@ -37,9 +37,9 @@ define([
 
         onClick: function(ev) {
             ev.preventDefault();
-            history.pushState({}, null, this.$el.attr('href'));            
-            this.smoothScroll();            
-            this.markBasedOnFragment();            
+            history.pushState({}, null, this.$el.attr('href'));
+            this.smoothScroll();
+            this.markBasedOnFragment();
             // manually trigger the hashchange event on all instances of pat-scroll
             $('a.pat-scroll').trigger("hashchange");
         },
@@ -66,20 +66,20 @@ define([
                     this.$el.removeClass("current");
                 }
             }
-        },                
+        },
 
         markIfVisible: function(ev) {
             if (this.$el.hasClass('pat-scroll-animated')) {
                 // this section is triggered when the scrolling is a result of the animate function
                 // ie. automatic scrolling as opposed to the user manually scrolling
                 this.$el.removeClass('pat-scroll-animated');
-            } else if (this.$el[0].nodeName === "A") {                
+            } else if (this.$el[0].nodeName === "A") {
                 var target = $(this.$el[0].href.split('/').pop())[0];
                 if (utils.isElementInViewport(target, true, this.options.offset)) {
                     // check that the anchor's target is visible
                     // if so, mark both the anchor and the target element
                     $(target).addClass("current");
-                    this.$el.addClass("current");                                     
+                    this.$el.addClass("current");
                 }
                 $(this.$el).trigger("pat-update", {
                         pattern: "scroll",
@@ -94,9 +94,9 @@ define([
                 }
             } else if (data.pattern === 'scroll') {
                 var target = $(this.$el[0].href.split('/').pop())[0];
-                if (utils.isElementInViewport(target, true, this.options.offset) === false) {                    
+                if (utils.isElementInViewport(target, true, this.options.offset) === false) {
                     // if the anchor's target is invisible, remove current class from anchor and target.
-                    $(target).removeClass("current");                                          
+                    $(target).removeClass("current");
                     $(this.$el).removeClass("current");
                 }
             }
@@ -114,10 +114,10 @@ define([
             }
             $el.animate(options, {
                 duration: 500,
-                start: function() { 
+                start: function() {
                     $('.pat-scroll').addClass('pat-scroll-animated');
                 }
-            });            
+            });
         }
     });
 });
