@@ -8,6 +8,7 @@
 - Inject pattern with `autoload-visible` injected erroneously based upon old autoload element no longer in DOM.
 - Add the class `modal-active` to the `body` element whenever a modal is in the DOM.
 - New pattern: `pat-tabs`. See the relevant documentation.
+- Bugfix: `pat-validation` still validates removed clones from `pat-clone`.
 
 ## 2.0.12 - Oct. 9, 2015
 
