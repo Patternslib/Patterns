@@ -77,7 +77,8 @@ define([
             }
             _.each(['before', 'after'], function (relation) {
                 var isDate = validate.moment.isDate,
-                    relative = opts.not[relation], arr, constraint, $ref;
+                    relative = opts.not && opts.not[relation] || undefined,
+                    arr, constraint, $ref;
                 if (typeof relative == "undefined") {
                     return;
                 }
