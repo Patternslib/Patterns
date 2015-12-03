@@ -66,7 +66,7 @@ define("pat-clone",[
             $clone.removeAttr("hidden");
             registry.scan($clone);
 
-            $clone.trigger("pat-update", {'pattern':"clone", '$el': $clone});
+            $clone.trigger("pat-update", {'pattern':"clone", 'action': 'clone', '$el': $clone});
             if (this.num_clones >= this.options.max) {
                 $(this.options.triggerElement).hide();
             }
@@ -106,6 +106,7 @@ define("pat-clone",[
             if (this.num_clones < this.options.max) {
                 $(this.options.triggerElement).show();
             }
+            this.$el.trigger("pat-update", {'pattern':"clone", 'action': 'remove', '$el': $el});
         }
     });
 });
