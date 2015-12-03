@@ -192,7 +192,7 @@ define([
                     .map(function () { return this.getAttribute('name'); });
             var handleError = function (error) {
                 if (typeof error != "undefined") {
-                    if (!has_errors) {
+                    if (!has_errors && ev) {
                         ev.preventDefault();
                         ev.stopPropagation();
                         ev.stopImmediatePropagation();
@@ -282,6 +282,9 @@ define([
                 this.$el.off('submit.pat-validation');
                 this.$el.off('pat-update.pat-validation');
                 this.init();
+                if (data.pattern == "clone" && data.action == "remove") {
+                    this.validateForm(ev);
+                }
             }
             return true;
         },
