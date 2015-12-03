@@ -32,7 +32,7 @@ define([
             this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             this.markBasedOnFragment();
             this.on('hashchange', this.clearIfHidden.bind(this));
-            $(window).scroll(_.debounce(this.markIfVisible.bind(this), 200));
+            $(window).scroll(_.debounce(this.markIfVisible.bind(this), 50));
         },
 
         onClick: function(ev) {
@@ -69,35 +69,47 @@ define([
         },
 
         markIfVisible: function(ev) {
+            var fragment, $target, href;
             if (this.$el.hasClass('pat-scroll-animated')) {
                 // this section is triggered when the scrolling is a result of the animate function
                 // ie. automatic scrolling as opposed to the user manually scrolling
                 this.$el.removeClass('pat-scroll-animated');
             } else if (this.$el[0].nodeName === "A") {
-                var target = $(this.$el[0].href.split('/').pop())[0];
-                if (utils.isElementInViewport(target, true, this.options.offset)) {
-                    // check that the anchor's target is visible
-                    // if so, mark both the anchor and the target element
-                    $(target).addClass("current");
-                    this.$el.addClass("current");
+                href = this.$el[0].href;
+                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
+                if (fragment) {
+                    $target = $('#'+fragment);
+                    if ($target.length) {
+                        if (utils.isElementInViewport($target[0], true, this.options.offset)) {
+                            // check that the anchor's target is visible
+                            // if so, mark both the anchor and the target element
+                            $target.addClass("current");
+                            this.$el.addClass("current");
+                        }
+                        $(this.$el).trigger("pat-update", {pattern: "scroll"});
+                    }
                 }
-                $(this.$el).trigger("pat-update", {
-                        pattern: "scroll",
-                });
             }
         },
 
         onPatternsUpdate: function(ev, data) {
+            var fragment, $target, href;
             if (data.pattern === 'stacks') {
                 if (data.originalEvent && data.originalEvent.type === "click") {
                     this.smoothScroll();
                 }
             } else if (data.pattern === 'scroll') {
-                var target = $(this.$el[0].href.split('/').pop())[0];
-                if (utils.isElementInViewport(target, true, this.options.offset) === false) {
-                    // if the anchor's target is invisible, remove current class from anchor and target.
-                    $(target).removeClass("current");
-                    $(this.$el).removeClass("current");
+                href = this.$el[0].href;
+                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
+                if (fragment) {
+                    $target = $('#'+fragment);
+                    if ($target.length) {
+                        if (utils.isElementInViewport($target[0], true, this.options.offset) === false) {
+                            // if the anchor's target is invisible, remove current class from anchor and target.
+                            $target.removeClass("current");
+                            $(this.$el).removeClass("current");
+                        }
+                    }
                 }
             }
         },
