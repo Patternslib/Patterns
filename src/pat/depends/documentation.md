@@ -26,14 +26,14 @@ shown when the user indicates he wants to add extra toppings.
 
 Another common use case is filtering a list based on some options:
 
-    <label><input type="checkbox" name="paid"/> Show paid invoiceslabel>
+    <label><input type="checkbox" name="paid"/> Show paid invoices</label>
     <label><input type="checkbox" name="draft"/> Show draft invoices</label>
     <label><input type="checkbox" name="overdue" checked="checked"/> Show overdue invoices</label>
 
     <ul>
       <li class="pat-depends" data-pat-depends="paid">A paid invoice</li>
-      <li class="pat-depends" data-pat-depends="paid">Another paid invoiceli>
-      <li class="pat-depends" data-pat-depends="overdue">An overdue invoiceli>
+      <li class="pat-depends" data-pat-depends="paid">Another paid invoice</li>
+      <li class="pat-depends" data-pat-depends="overdue">An overdue invoice</li>
       <li class="pat-depends" data-pat-depends="draft">A draft invoice</li>
       …
     </ul>
@@ -48,10 +48,10 @@ indicates that an input element with the given name (or id) must have a
 value (if it is a checkbox must be checked). You can also test for a
 specific value:
 
--   `<input name>=<value>`: indicates that an input element must have a
+-   `<input name> = <value>`: indicates that an input element must have a
     specific value. This is most useful when used to check which radio
     button is checked.
--   `<input name>!=<value>`: indicates that an input element must not
+-   `<input name> != <value>`: indicates that an input element must not
     have a specific value. This is most useful when used to check if a
     specific radio button is not checked.
 -   `<input name> <= <value>`: indicates that an input element must have
@@ -73,7 +73,7 @@ You can also revert a test by putting the `not` keyword in front of it.
 Here are some examples:
 
     <input type="checkbox" name="hidden"/>
-    
+
     <p class="pat-depends" data-pat-depends="condition: hidden">
         Hidden items will be included.
     </p>
@@ -83,7 +83,7 @@ Here are some examples:
     </p>
 
     <input type="range" name="price" value="50"/>
-    
+
     <p class="pat-depends" data-pat-depends="price<100">
         Showing cheap options.
     </p>
@@ -107,8 +107,8 @@ complex example which demonstrates the use of `and`:
     </fieldset>
 
     <em class="warning pat-depends"
-        data-pata-depends="condition:flavour=veg and custom and bacon">
-      Adding bacon means your pizza is no longer vegetarian!</em> 
+        data-pat-depends="condition:flavour=veg and custom and bacon">
+      Adding bacon means your pizza is no longer vegetarian!</em>
 
 This pizza menu will show a warning if the user selects a vegetarian
 pizza but then also adds extra bacon to it.
@@ -177,9 +177,9 @@ The depends can be configured through a `data-pat-depends` attribute.
 The available options are:
 
 | Field | Default | Description |
-| ----- | ------- | ----------- | 
+| ----- | ------- | ----------- |
 | `condition` | | The dependency condition. |
 | `action` | `show` | Action to perform. One of `show`, `enable` or `both`. |
 | `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
-| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
+| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`.
 | `effect-easing`  | `swing` | Easing to use for the transition. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
