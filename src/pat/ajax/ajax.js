@@ -19,6 +19,11 @@ define([
                 ($el.is("form") ? $el.attr("action") : "")).split("#")[0];
     });
 
+    $.ajaxSetup ({
+        // Disable caching of AJAX responses
+        cache: false
+    });
+
     var _ = {
         name: "ajax",
         trigger: ".pat-ajax",
