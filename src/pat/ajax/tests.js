@@ -1,7 +1,7 @@
 define(["pat-ajax"], function(pattern) {
     var $lab;
 
-    // Monkey patch Date.now so that we dont get second mismatches while testing
+    // Monkey patch Date.now so that we dont get current time mismatches while testing
     var originalDatenow = Date.now;
     Date.now = function() {
         originalDatenow();
