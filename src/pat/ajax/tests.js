@@ -1,12 +1,18 @@
 define(["pat-ajax"], function(pattern) {
-    var $lab;
+    var $lab,
+        originalDateNow = Date.now;
 
-    // Monkey patch Date.now so that we dont get current time mismatches while testing
-    var originalDatenow = Date.now;
-    Date.now = function() {
-        originalDatenow();
-        return "123"; // dummy data instead of current time
-    };
+    beforeEach(function() {
+        // Monkey patch Date.now so that we dont get current time mismatches while testing
+        Date.now = function() {
+            return "123"; // dummy data instead of current time
+        };
+    });
+
+    afterEach(function() {
+        $("#lab").remove();
+        Date.now = originalDateNow;
+    });
 
     describe("pat-ajax", function() {
 
