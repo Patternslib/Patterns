@@ -22,7 +22,7 @@ define([
     parser.addArgument("bump-remove");
     parser.addArgument("unbump-add");
     parser.addArgument("unbump-remove", "bumped");
-    parser.addArgument("side", "top");
+    parser.addArgument("side", "top", ['all', 'top', 'right', 'bottom', 'left']);
 
     // XXX Handle resize
     var bumper = {
