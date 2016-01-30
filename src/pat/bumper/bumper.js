@@ -46,13 +46,12 @@ define([
             } else {
                 this.$container.on("scroll.bumper", this._updateStatus.bind(this));
             }
-            this._updateStatus();
-
             var bumpall = (this.options.side.indexOf("all") > -1);
             this.options.bumptop =    bumpall || (this.options.side.indexOf("top") > -1);
             this.options.bumpright =  bumpall || (this.options.side.indexOf("right") > -1);
             this.options.bumpbottom = bumpall || (this.options.side.indexOf("bottom") > -1);
             this.options.bumpleft =   bumpall || (this.options.side.indexOf("left") > -1);
+            this._updateStatus();
             return this.$el;
         },
 
