@@ -148,7 +148,8 @@ require.config({
         "tinymce":                      { deps: ["jquery"] },
         "showdown-github":              { deps: ["showdown"] },
         "showdown-prettify":            { deps: ["showdown", "google-code-prettify"] },
-        "showdown-table":               { deps: ["showdown"] }
+        "showdown-table":               { deps: ["showdown"] },
+        "modernizr-csspositionsticky":  { deps: ["modernizr"] }
     },
 });
 
