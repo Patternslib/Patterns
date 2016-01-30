@@ -9,6 +9,7 @@
 - Add the class `modal-active` to the `body` element whenever a modal is in the DOM.
 - New pattern: `pat-tabs`. See the relevant documentation.
 - Bugfix: `pat-validation` still validates removed clones from `pat-clone`.
+- #436 Remove `pat-bumper` restriction that scroll container must be the direct parent.
 
 ## 2.0.12 - Oct. 9, 2015
 

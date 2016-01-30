@@ -1,4 +1,4 @@
-define(["pat-bumper"], function(pattern) {
+define(["jquery", "pat-bumper"], function($, Bumper) {
 
     describe("pat-bumper", function() {
         beforeEach(function() {
@@ -6,155 +6,159 @@ define(["pat-bumper"], function(pattern) {
             $("<div/>", {id: "lab"}).appendTo(document.body);
         });
 
-        describe("init", function(){
-            it("Return jQuery object", function() {
-                var jq = jasmine.createSpyObj("jQuery", ["each"]);
-                jq.each.andReturn(jq);
-                expect(pattern.init(jq)).toBe(jq);
-            });
+        afterEach(function() {
+            $("#lab").remove();
         });
 
-        describe("Check if _findScrollContainer", function() {
-            it("handles a normal object", function() {
-                $("#lab").append("<div id='sticker'/>");
-                var el = document.getElementById("sticker");
-                expect(pattern._findScrollContainer(el)).toBeNull();
-            });
+        it("handles an object in an overflow-auto container", function() {
+            // Check with vertical scroll
+            $("#lab").html([
+                '<div class="parent" style="overflow-y: auto; height: 50px">',
+                '<p class="pat-bumper">I\'m sticky!</p>',
+                '</div>'
+                ].join("\n"));
+            var $el = $(".pat-bumper");
+            var pattern = new Bumper($el);
+            pattern.init();
+            expect(pattern.$container.is($('.parent'))).toBeTruthy();
 
-            it("handles an object in an overflow-auto container", function() {
-                var lab = document.getElementById("lab"),
-                    container = document.createElement("div"),
-                    sticker = document.createElement("p");
-                container.style.overflowY="auto";
-                sticker.style.margin="0";
-                sticker.style.height="50px";
-                container.appendChild(sticker);
-                lab.appendChild(container);
-                expect(pattern._findScrollContainer(sticker)).toBe(container);
-            });
-
-            it("handles an object in an overflow-scroll container", function() {
-                var lab = document.getElementById("lab"),
-                    container = document.createElement("div"),
-                    sticker = document.createElement("p");
-                container.style.overflowY="scroll";
-                sticker.style.margin="0";
-                sticker.style.height="50px";
-                container.appendChild(sticker);
-                lab.appendChild(container);
-                expect(pattern._findScrollContainer(sticker)).toBe(container);
-            });
+            // Check with horizontal scroll
+            $("#lab").html([
+                '<div class="parent" style="overflow-x: auto; height: 50px">',
+                '<p class="pat-bumper" data-pat-bumper="side: left">I\'m sticky!</p>',
+                '</div>'
+                ].join("\n"));
+            $el = $(".pat-bumper");
+            pattern = new Bumper($el);
+            pattern.init();
+            expect(pattern.$container.is($('.parent'))).toBeTruthy();
         });
 
-        describe("Check if _markBumped", function() {
-            it("updates classes for bumped item", function() {
-                var sticker = document.createElement("p"),
-                    $sticker = $(sticker);
-                $sticker.addClass("plain");
-                pattern._markBumped($sticker, {bump: {add: "bumped", remove: "plain"}}, true);
-                expect(sticker.className).toBe("bumped");
-            });
+        it("handles an object in an overflow-scroll container", function() {
+            // Check with vertical scroll
+            $("#lab").html([
+                '<div class="parent" style="overflow-y: scroll; height: 50px">',
+                '<p class="pat-bumper">I\'m sticky!</p>',
+                '</div>'
+                ].join("\n"));
+            var $el = $(".pat-bumper");
+            var pattern = new Bumper($el);
+            pattern.init();
+            expect(pattern.$container.is($('.parent'))).toBeTruthy();
 
-            it("updates classes for unbumped item", function() {
-                var sticker = document.createElement("p"),
-                    $sticker = $(sticker);
-                $sticker.addClass("bumped");
-                pattern._markBumped($sticker, {unbump: {add: "plain", remove: "bumped"}}, false);
-                expect(sticker.className).toBe("plain");
-            });
+            // Check with horizontal scroll
+            $("#lab").html([
+                '<div class="parent" style="overflow-x: scroll; height: 50px">',
+                '<p class="pat-bumper" data-pat-bumper="side: left">I\'m sticky!</p>',
+                '</div>'
+                ].join("\n"));
+            $el = $(".pat-bumper");
+            pattern = new Bumper($el);
+            pattern.init();
+            expect(pattern.$container.is($('.parent'))).toBeTruthy();
         });
 
-        describe("Check if in a scrolling container _updateStatus", function() {
-            it("correctly transitions an element to bumped at the top", function() {
-                var lab = document.getElementById("lab"),
-                    container = document.createElement("div"),
-                    padding = document.createElement("div"),
-                    sticker = document.createElement("p");
-                container.style.overflowY="scroll";
-                container.style.height="15px";
-                container.style.position="relative";
-                lab.appendChild(container);
-                sticker.style.margin="0";
-                sticker.style.height="5px";
-                sticker.style.position="relative";
-                container.appendChild(sticker);
-                padding.style.clear="both";
-                padding.style.height="30px";
-                container.appendChild(padding);
-                container.scrollTop=5;
-                spyOn(pattern, "_markBumped");
-                $(sticker).data("pat-bumper:config", {margin: 0, bumptop: true});
-                pattern._updateStatus(sticker, container);
-                expect(pattern._markBumped).toHaveBeenCalled();
-                expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy();
-                expect(sticker.style.top).toBe("5px");
-            });
-
-            it("correctly transitions an element to unbumped", function() {
-                var lab = document.getElementById("lab"),
-                    container = document.createElement("div"),
-                    padding = document.createElement("div"),
-                    sticker = document.createElement("p");
-                container.style.overflowY="scroll";
-                container.style.height="15px";
-                container.style.position="relative";
-                lab.appendChild(container);
-                sticker.style.margin="0";
-                sticker.style.height="5px";
-                sticker.style.position="relative";
-                container.appendChild(sticker);
-                padding.style.clear="both";
-                padding.style.height="30px";
-                container.appendChild(padding);
-                container.scrollTop=0;
-                spyOn(pattern, "_markBumped");
-                pattern._updateStatus(sticker, container);
-                expect(pattern._markBumped).toHaveBeenCalled();
-                expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy();
-                expect(sticker.style.top).toBe("");
-            });
+        it("updates classes for a bumped element", function() {
+            $("#lab").html([
+                '<div class="parent" style="overflow-y: auto; height: 50px">',
+                '<p class="pat-bumper plain" '+
+                '   data-pat-bumper="bump-add: bumped; unbump-remove: plain"'+
+                '   >I\'m sticky!</p>',
+                '</div>'
+                ].join("\n"));
+            var $el = $(".pat-bumper");
+            var pattern = new Bumper($el);
+            pattern.init();
+            pattern._markBumped(true);
+            expect(pattern.$el.attr('class')).toBe("pat-bumper bumped");
         });
 
-        describe("Check if _updateStatus", function() {
-            it("correctly transitions to bumped at the top", function() {
-                var lab = document.getElementById("lab"),
-                    padding = document.createElement("div"),
-                    sticker = document.createElement("p");
-                sticker.style.margin="0";
-                sticker.style.height="5px";
-                sticker.style.position="relative";
-                lab.appendChild(sticker);
-                $(sticker).data("pat-bumper:config", {margin: 0, bumptop: true});
-                padding.style.clear="both";
-                padding.style.height="3000px";
-                lab.appendChild(padding);
-                window.scrollTo(0, sticker.offsetTop+5);
-                spyOn(pattern, "_markBumped");
-                pattern._updateStatus(sticker);
-                expect(pattern._markBumped).toHaveBeenCalled();
-                expect(pattern._markBumped.mostRecentCall.args[2]).toBeTruthy();
-                expect(Math.floor(sticker.style.top.replace("px", ""))).toBe(5);
-            });
+        it("updates classes for an unbumped element", function() {
+            $("#lab").html([
+                '<div class="parent" style="overflow-y: auto; height: 50px">',
+                '<p class="pat-bumper bumped" '+
+                '   data-pat-bumper="unbump-remove: bumped; unbump-add: plain"'+
+                '   >I\'m sticky!</p>',
+                '</div>'
+                ].join("\n"));
+            var $el = $(".pat-bumper");
+            var pattern = new Bumper($el);
+            pattern.init();
+            pattern._markBumped(false);
+            expect(pattern.$el.attr('class')).toBe("pat-bumper plain");
+        });
 
-            it("correctly transitions to unbumped at the top", function() {
-                var lab = document.getElementById("lab"),
-                    padding = document.createElement("div"),
-                    sticker = document.createElement("p");
-                sticker.style.margin="0";
-                sticker.style.height="5px";
-                sticker.style.position="relative";
-                sticker.style.top="5px";
-                lab.appendChild(sticker);
-                $(sticker).data("pat-bumper:config", {margin: 0});
-                padding.style.clear="both";
-                padding.style.height="3000px";
-                lab.appendChild(padding);
-                window.scrollTo(0, 0);
-                spyOn(pattern, "_markBumped");
-                pattern._updateStatus(sticker);
-                expect(pattern._markBumped).toHaveBeenCalled();
-                expect(pattern._markBumped.mostRecentCall.args[2]).toBeFalsy();
-                expect(sticker.style.top).toBe("");
+        it("listens on window scroll if no scrollable container is present", function() {
+            $("#lab").html([
+                '<p class="pat-bumper bumped" '+
+                '   style="margin: 0; height: 5px; position: relative"'+
+                '   >I\'m sticky!</p>'
+                ].join("\n"));
+            var $el = $(".pat-bumper");
+            var pattern = new Bumper($el);
+            spyOn(pattern, "_updateStatus");
+            pattern.init();
+            window.scrollTo(0, 0);
+            expect(pattern._updateStatus).toHaveBeenCalled();
+        });
+
+        it("correctly transitions an element to bumped at the top", function() {
+            $("#lab").html([
+                '<div class="parent" style="overflow-y: scroll; height: 15px">',
+                '<div style="clear: both; height: 30px">',
+                '<p class="pat-bumper bumped" '+
+                '   style="margin: 0; height: 5px; position: relative"'+
+                '   >I\'m sticky!</p>',
+                '</div>',
+                '</div>'
+                ].join("\n"));
+            var $el = $(".pat-bumper");
+            var pattern = new Bumper($el);
+            spyOn(pattern, "_markBumped");
+            pattern.init();
+            $(".parent")[0].scrollTop = 5;
+            pattern._updateStatus();
+            expect(pattern._markBumped).toHaveBeenCalled();
+            expect(pattern._markBumped.mostRecentCall.args[0]).toBeTruthy();
+            expect(pattern.$el[0].style.top).toBe("5px");
+
+            $(".parent")[0].scrollTop = 13;
+            pattern._updateStatus();
+            expect(pattern._markBumped).toHaveBeenCalled();
+            expect(pattern._markBumped.mostRecentCall.args[0]).toBeTruthy();
+            expect(pattern.$el[0].style.top).toBe("13px");
+        });
+
+        it("correctly transitions an element to bumped at the leftside", function() {
+            $("#lab").html([
+                '<div class="parent" style="overflow-x: scroll; width: 15px">',
+                '<p class="pat-bumper bumped" '+
+                '   data-pat-bumper="side: left"'+
+                '   style="margin: 0; width: 5px; position: relative"'+
+                '   >I\'m sticky!</p>',
+                '</div>'
+                ].join("\n"));
+            var $el = $(".pat-bumper");
+            var pattern = new Bumper($el);
+            spyOn(pattern, "_markBumped");
+            pattern.init();
+            $(".parent")[0].scrollLeft = 5;
+            pattern._updateStatus();
+            expect(pattern._markBumped).toHaveBeenCalled();
+            expect(pattern._markBumped.mostRecentCall.args[0]).toBeTruthy();
+            expect(pattern.$el[0].style.left).toBe("5px");
+            $(".parent")[0].scrollLeft = 12;
+            pattern._updateStatus();
+            expect(pattern._markBumped).toHaveBeenCalled();
+            expect(pattern._markBumped.mostRecentCall.args[0]).toBeTruthy();
+            expect(pattern.$el[0].style.left).toBe("12px");
+        });
+
+        describe("The init method", function(){
+            it("Returns the jQuery-wrapped DOM node", function() {
+                var $el = $('<div class="pat-scroll"></div');
+                var pattern = new Bumper($el);
+                expect(pattern.init($el)).toBe($el);
             });
         });
     });
