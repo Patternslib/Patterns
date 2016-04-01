@@ -116,6 +116,10 @@ define([
              */
             var $el = $sub.parents("form"),
                 cfgs = $sub.data("pat-inject");
+
+            // store the params of the subform in the config, to be used by history
+            $(cfgs).each(function(i, v) {v.params = $.param($sub.serializeArray())});
+
             try {
                 $el.trigger("patterns-inject-triggered");
             } catch (e) {
@@ -350,9 +354,13 @@ define([
             });
             // Now the injection actually happens.
             if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
-            // History support.
+            // History support. if subform is submitted, append form params
             if ((cfg.history === "record") && ("pushState" in history)) {
-                history.pushState({'url': cfg.url}, "", cfg.url);
+                if (cfg.params) {
+                    history.pushState({'url': cfg.url + '?' + cfg.params}, "", cfg.url + '?' + cfg.params);
+                } else {
+                    history.pushState({'url': cfg.url}, "", cfg.url);
+                }
             }
         },
 
