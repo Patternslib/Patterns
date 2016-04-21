@@ -43,15 +43,19 @@ define([
             }
             $el.data("pat-inject", cfgs);
 
-            // In case next-href is specified the anchor's href will
-            // be set to it after the injection is triggered. In case
-            // the next href already exists, we do not activate the
-            // injection but instead just change the anchors href.
-            var $nexthref = $(cfgs[0].nextHref);
-            if ($el.is("a") && $nexthref.length > 0) {
-                log.debug("Skipping as next href already exists", $nexthref);
-                // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
+            if (cfgs[0].nextHref && cfgs[0].nextHref.indexOf('#') === 0) {
+                // In case the next href is an anchor, and it already
+                // exists in the page, we do not activate the injection
+                // but instead just change the anchors href.
+
+                // XXX: This is used in only one project for linked
+                // fullcalendars, it's sanity is wonky and we should
+                // probably solve it differently.
+                if ($el.is("a") && $(cfgs[0].nextHref).length > 0) {
+                    log.debug("Skipping as next href is anchor, which already exists", cfgs[0].nextHref);
+                    // XXX: reconsider how the injection enters exhausted state
+                    return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
+                }
             }
 
             switch (cfgs[0].trigger) {
@@ -118,7 +122,7 @@ define([
                 cfgs = $sub.data("pat-inject");
 
             // store the params of the subform in the config, to be used by history
-            $(cfgs).each(function(i, v) {v.params = $.param($sub.serializeArray())});
+            $(cfgs).each(function(i, v) {v.params = $.param($sub.serializeArray());});
 
             try {
                 $el.trigger("patterns-inject-triggered");
@@ -407,9 +411,10 @@ define([
                     inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
                 });
             });
-            if (cfgs[0].nextHref) {
-                $el.attr({href: (window.location.href.split("#")[0] || "") +
-                            cfgs[0].nextHref});
+            if (cfgs[0].nextHref && $el.is("a")) {
+                // In case next-href is specified the anchor's href will
+                // be set to it after the injection is triggered.
+                $el.attr({href: cfgs[0].nextHref});
                 inject.destroy($el);
             }
             $el.off("pat-ajax-success.pat-inject");
