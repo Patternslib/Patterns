@@ -234,6 +234,16 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
                     expect(opts).toEqual({foo: "bar"});
                 });
 
+                it("doesn't treat an escaped ampersand as a semicolon", function() {
+                    var parser=new ArgumentParser();
+                    parser.addArgument("foo");
+                    parser.addArgument("bar");
+                    parser.addArgument("baz");
+                    var opts = parser._parse("foo: one&amp;bar: still one;baz: three");
+                    expect(opts).toEqual({foo: "one&amp;bar: still one",
+                                          baz: "three"});
+                });
+
                 it("treats semicolons as escaped when duplicated", function() {
                     var parser=new ArgumentParser();
                     parser.addArgument("foo");

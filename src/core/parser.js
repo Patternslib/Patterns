@@ -229,7 +229,7 @@ define([
 
         _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
             var opts = {};
-            var parts = argstring.replace(";;", "\xff").split(";")
+            var parts = argstring.replace(";;", "\xff").replace("&amp;", "&amp\xff").split(/;/)
                         .map(function(el) { return el.replace("\xff", ";"); });
             _.each(parts, function (part, i) {
                 if (!part) { return; }

@@ -10,6 +10,7 @@
 - New pattern: `pat-tabs`. See the relevant documentation.
 - Bugfix: `pat-validation` still validates removed clones from `pat-clone`.
 - Let the next-href option of pat-inject work as advertised.
+- Parser fix: don't treat `&amp;` as a separator
 - #436 Remove `pat-bumper` restriction that scroll container must be the direct parent.
 
 ## 2.0.12 - Oct. 9, 2015
