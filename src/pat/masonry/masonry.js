@@ -7,6 +7,7 @@
     if (typeof define === "function" && define.amd) {
         define([
             "jquery",
+            "pat-logger",
             "pat-registry",
             "pat-parser",
             "pat-base",
@@ -19,11 +20,12 @@
     } else {
         factory(root.$, root.patterns, root.patterns.Parser, root.Base, root.Masonry, root.imagesLoaded);
     }
-}(this, function($, registry, Parser, Base, utils, Masonry, imagesLoaded) {
+}(this, function($, logger, registry, Parser, Base, utils, Masonry, imagesLoaded) {
     "use strict";
+    var log = logger.getLogger("pat.masonry");
     var parser = new Parser("masonry");
     parser.addArgument("column-width");
-    parser.addArgument("container-style", "{ position: 'relative' }");
+    parser.addArgument("container-style", '{ "position": "relative" }');
     parser.addArgument("gutter");
     parser.addArgument("hidden-style", "{ opacity: 0, transform: 'scale(0.001)' }");
     parser.addArgument("is-fit-width", false);
@@ -50,9 +52,19 @@
         },
 
         initMasonry: function () {
+            var containerStyle;
+            try {
+                containerStyle = JSON.parse(this.options.containerStyle);
+            } catch (e) {
+                containerStyle = { "position": "relative" };
+                log.warn(
+                    "Invalid value passed in as containerStyle. Needs to "+
+                    "be valid JSON so that it can be converted to an object for Masonry."
+                );
+            }
             this.msnry = new Masonry(this.$el[0], {
                 columnWidth:         this.getTypeCastedValue(this.options.columnWidth),
-                containerStyle:      this.options.containerStyle,
+                containerStyle:      containerStyle,
                 gutter:              this.getTypeCastedValue(this.options.gutter),
                 hiddenStyle:         this.options.hiddenStyle,
                 isFitWidth:          this.options.is["fit-width"],
