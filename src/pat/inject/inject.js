@@ -414,7 +414,7 @@ define([
             if (cfgs[0].nextHref && $el.is("a")) {
                 // In case next-href is specified the anchor's href will
                 // be set to it after the injection is triggered.
-                $el.attr({href: cfgs[0].nextHref});
+                $el.attr({href: cfgs[0].nextHref.replace(/&amp;/g, '&')});
                 inject.destroy($el);
             }
             $el.off("pat-ajax-success.pat-inject");

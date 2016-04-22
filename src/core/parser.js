@@ -229,8 +229,10 @@ define([
 
         _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
             var opts = {};
-            var parts = argstring.replace(";;", "\xff").replace("&amp;", "&amp\xff").split(/;/)
-                        .map(function(el) { return el.replace("\xff", ";"); });
+            var parts = argstring.replace(/;;/g, "\0x1f").replace(/&amp;/g, "&amp\0x1f").split(/;/)
+                        .map(function(el) {
+                            return el.replace(new RegExp("\0x1f", 'g'), ";");
+                        });
             _.each(parts, function (part, i) {
                 if (!part) { return; }
                 var matches = part.match(this.named_param_pattern);
