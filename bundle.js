@@ -1,3 +1,5 @@
+// Patternslib 2.0.13
+
 /**
  * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -12730,7 +12732,8 @@ define('pat-logger',[
 
 define('pat-utils',[
     "jquery",
-    "jquery.browser"
+    "jquery.browser",
+    "underscore"
 ], function($) {
 
     $.fn.safeClone = function () {
@@ -13086,6 +13089,54 @@ define('pat-utils',[
         return results;
     }
 
+    isElementInViewport = function (el, partial, offset) { 
+        /* returns true if element is visible to the user ie. is in the viewport. 
+         * Setting partial parameter to true, will only check if a part of the element is visible
+         * in the viewport, specifically that some part of that element is touching the top part 
+         * of the viewport. This only applies to the vertical direction, ie. doesnt check partial
+         * visibility for horizontal scrolling
+         * some code taken from:
+         * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433         
+         */
+        if (el === []) {
+            return false;
+        }
+        if (el instanceof $) {
+            el = el[0];
+        }
+        var rec = el.getBoundingClientRect(),
+            rec_values = [rec.top, rec.bottom, rec.left, rec.right];
+        if ( _.every(rec_values, function zero(v) { if ( v === 0 ){ return true;}}) ) {
+            // if every property of rec is 0, the element is invisible;
+            return false;            
+        } else if (partial) {
+            // when using getBoundingClientRect() (in the vertical case)
+            // negative means above top of viewport, positive means below top of viewport
+            // therefore for part of the element to be touching or crossing the top of the viewport
+            // rec.top must <= 0 and rec.bottom must >= 0 
+            // an optional tolerance offset can be added for when the desired element is not exactly 
+            // toucing the top of the viewport but needs to be considered as touching. 
+            if (offset === undefined) {
+                offset = 0;
+            }
+            return (
+                (rec.top <= 0+offset && rec.bottom >= 0+offset)
+                //(rec.top >= 0+offset && rec.top <= window.innerHeight) // this checks if the element
+                                                                       // touches bottom part of viewport
+                // XXX do we want to include a check for the padding of an element?
+                // using window.getComputedStyle(target).paddingTop
+            );
+        } else {           
+            // this will return true if the entire element is completely in the viewport 
+            return ( 
+                rec.top >= 0 &&
+                rec.left >= 0 &&
+                rec.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                rec.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+            );        
+        }
+    };
+
     var utils = {
         // pattern pimping - own module?
         jqueryPlugin: jqueryPlugin,
@@ -13100,7 +13151,8 @@ define('pat-utils',[
         hideOrShow: hideOrShow,
         addURLQueryParameter: addURLQueryParameter,
         removeDuplicateObjects: removeDuplicateObjects,
-        mergeStack: mergeStack
+        mergeStack: mergeStack,
+        isElementInViewport: isElementInViewport
     };
     return utils;
 });
@@ -14282,8 +14334,10 @@ define('pat-parser',[
 
         _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
             var opts = {};
-            var parts = argstring.replace(";;", "\xff").split(";")
-                        .map(function(el) { return el.replace("\xff", ";"); });
+            var parts = argstring.replace(/;;/g, "\0x1f").replace(/&amp;/g, "&amp\0x1f").split(/;/)
+                        .map(function(el) {
+                            return el.replace(new RegExp("\0x1f", 'g'), ";");
+                        });
             _.each(parts, function (part, i) {
                 if (!part) { return; }
                 var matches = part.match(this.named_param_pattern);
@@ -15712,6 +15766,11 @@ define('pat-ajax',[
                 ($el.is("form") ? $el.attr("action") : "")).split("#")[0];
     });
 
+    $.ajaxSetup ({
+        // Disable caching of AJAX responses
+        cache: false
+    });
+
     var _ = {
         name: "ajax",
         trigger: ".pat-ajax",
@@ -15857,92 +15916,6 @@ define('pat-autofocus',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-/**
- * Patterns autoscale - scale elements to fit available space
- *
- * Copyright 2012 Humberto Sermeno
- * Copyright 2013 Simplon B.V. - Wichert Akkerman
- */
-define('pat-autoscale',[
-    "jquery",
-    "jquery.browser",
-    "pat-registry",
-    "pat-parser"
-], function($, dummy, registry, Parser) {
-    var parser = new Parser("auto-scale");
-    parser.addArgument("method", "scale", ["scale", "zoom"]);
-    parser.addArgument("min-width", 0);
-    parser.addArgument("max-width", 1000000);
-
-    var _ = {
-        name: "autoscale",
-        trigger: ".pat-auto-scale",
-        force_method: null,
-
-        _setup: function() {
-            if ($.browser.mozilla)
-                // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
-                _.force_method="scale";
-            else if ($.browser.msie && parseInt($.browser.version, 10)<9)
-                _.force_method="zoom";
-            $(document).ready(function() {
-                $(window).one("resize.autoscale", _.onResize);
-            });
-        },
-
-        init: function($el, opts) {
-            return $el.each(function() {
-                var $el = $(this),
-                    options = parser.parse($el, opts);
-
-                if (_.force_method!==null)
-                    options.method=_.force_method;
-
-                $el.data("patterns.auto-scale", options);
-                _.scale.apply(this, []);
-            });
-        },
-
-        scale: function() {
-            var $el = $(this),
-                options = $el.data("patterns.auto-scale"),
-                available_space, scale;
-
-            if ($el[0].tagName.toLowerCase()==="body")
-                available_space=$(window).width();
-            else
-                available_space=$el.parent().outerWidth();
-
-            available_space=Math.min(available_space, options.maxWidth);
-            available_space=Math.max(available_space, options.minWidth);
-            scale=available_space/$el.outerWidth();
-
-            switch (options.method) {
-            case "scale":
-                $el.css("transform", "scale(" + scale + ")");
-                break;
-            case "zoom":
-                $el.css("zoom", scale);
-                break;
-            }
-            $el.addClass("scaled");
-        },
-
-        onResize: function() {
-            $(_.trigger).each(_.scale);
-
-            // necassary at least for IE8
-            setTimeout(function() {
-                $(window).one("resize.autoscale", _.onResize);
-            }, 100);
-        }
-    };
-
-    _._setup();
-    registry.register(_);
-    return _;
-});
-
 define('pat-mockup-parser',[
     'jquery'
 ], function($) {
@@ -16108,6 +16081,82 @@ define('pat-base',[
     return Base;
 });
 
+/**
+ * Patterns autoscale - scale elements to fit available space
+ *
+ * Copyright 2012 Humberto Sermeno
+ * Copyright 2013 Simplon B.V. - Wichert Akkerman
+ */
+define('pat-autoscale',[
+    "jquery",
+    "jquery.browser",
+    "pat-base",
+    "pat-registry",
+    "pat-parser"
+], function($, dummy, Base, registry, Parser) {
+    var parser = new Parser("auto-scale");
+    parser.addArgument("method", "scale", ["scale", "zoom"]);
+    parser.addArgument("min-width", 0);
+    parser.addArgument("max-width", 1000000);
+
+    return Base.extend({
+        name: "autoscale",
+        trigger: ".pat-auto-scale",
+        force_method: null,
+
+        init: function($el, opts) {
+            this.options = parser.parse(this.$el, opts);
+            if (this.force_method !== null) {
+                this.options.method = this.force_method;
+            }
+            this._setup().scale();
+            return this.$el;
+        },
+
+        _setup: function() {
+            if ($.browser.mozilla) {
+                // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
+                this.force_method = "scale";
+            } else if ($.browser.msie && parseInt($.browser.version, 10) < 9) {
+                this.force_method = "zoom";
+            }
+            $(window).on("resize.autoscale",
+                _.debounce(this.scale.bind(this), 250, true)
+            );
+            $(document).on("pat-update.autoscale", _.debounce(this.scale.bind(this), 250));
+            return this;
+        },
+
+        scale: function() {
+            var available_space, scale, scaled_height, scaled_width;
+
+            if (this.$el[0].tagName.toLowerCase() === "body") {
+                available_space = $(window).width();
+            } else {
+                available_space = this.$el.parent().outerWidth();
+            }
+            available_space = Math.min(available_space, this.options.maxWidth);
+            available_space = Math.max(available_space, this.options.minWidth);
+            scale = available_space/this.$el.outerWidth();
+            scaled_height = this.$el.outerHeight() * scale;
+            scaled_width = this.$el.outerWidth() * scale;
+
+            switch (this.options.method) {
+                case "scale":
+                    this.$el.css("transform", "scale(" + scale + ")");
+                    this.$el.wrap("<div class='auto-scale-wrapper'></div>");
+                    this.$el.parent().height(scaled_height).width(scaled_width);
+                    break;
+                case "zoom":
+                    this.$el.css("zoom", scale);
+                    break;
+            }
+            this.$el.addClass("scaled");
+            return this;
+        }
+    });
+});
+
 // helper functions to make all input elements
 define('pat-input-change-events',[
     "jquery",
@@ -16149,7 +16198,7 @@ define('pat-input-change-events',[
             } else {
                 // The element itself is an input, se we simply register a
                 // handler fot it.
-                _.registerHandlersForElement($el);
+                _.registerHandlersForElement.bind($el)();
             }
         },
 
@@ -16264,7 +16313,7 @@ define('pat-autosubmit',[
         registerListeners: function() {
             this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
             this.registerSubformListeners();
-            this.$el.on('patterns-injected', this.registerSubformListeners.bind(this));
+            this.$el.on('patterns-injected', this.refreshListeners.bind(this));
         },
 
         registerSubformListeners: function(ev) {
@@ -16276,6 +16325,12 @@ define('pat-autosubmit',[
             $el.find(".pat-subform").each(function (idx, el) {
                 $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
             }.bind(this));
+        },
+
+        refreshListeners: function(ev, cfg, el, injected) {
+            this.registerSubformListeners();
+            // Register change event handlers for new inputs injected into this form
+            input_change_events.setup($(injected), "autosubmit");
         },
 
         registerTriggers: function() {
@@ -18109,7 +18164,7 @@ Modernizr.addTest('csspositionsticky', function () {
     return mStyle.position.indexOf(value) !== -1;
 });
 
-define("modernizr-csspositionsticky", function(){});
+define("modernizr-csspositionsticky", ["modernizr"], function(){});
 
 /**
  * Patterns bumper - `bumper' handling for elements
@@ -18120,12 +18175,14 @@ define("modernizr-csspositionsticky", function(){});
  */
 define('pat-bumper',[
     "jquery",
+    "underscore",
     "pat-logger",
     "pat-parser",
+    "pat-base",
     "pat-registry",
     "modernizr",
     "modernizr-csspositionsticky"
-], function($, logger, Parser, registry) {
+], function($, _, logger, Parser, Base, registry) {
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
 
@@ -18135,139 +18192,125 @@ define('pat-bumper',[
     parser.addArgument("bump-remove");
     parser.addArgument("unbump-add");
     parser.addArgument("unbump-remove", "bumped");
-    parser.addArgument("side", "top");
+    parser.addArgument("side", "top", ['all', 'top', 'right', 'bottom', 'left']);
 
     // XXX Handle resize
-    var bumper = {
+    return Base.extend({
         name: "bumper",
         trigger: ".pat-bumper",
 
-        init: function bumper_init($el, opts) {
-            return $el.each(function bumper_initElement() {
-                var container = bumper._findScrollContainer(this),
-                    $sticker = $(this),
-                    options = parser.parse($sticker, opts);
+        init: function initBumper($el, opts) {
+            this.options = parser.parse(this.$el, opts);
+            this.$container = this._findScrollContainer();
+            var container = this.$container[0];
 
-                if (Modernizr.csspositionsticky) {
-                    $sticker.addClass("sticky-supported");
-                }
-                $sticker.data("pat-bumper:config", options);
-
-                this.style.position="relative";
-                if (container===null) {
-                    $(window).on("scroll.bumper", null, this, bumper._onScrollWindow);
-                    bumper._updateStatus(this);
-                } else {
-                    if (this.offsetParent!==container) {
-                        var old_style = container.style.position;
-                        container.style.position="relative";
-                        if (this.offsetParent!==container) {
-                            container.style.position=old_style;
-                            log.error("The offset parent for ", this,
-                                      " must be its scrolling container ", container,
-                                      "but it is ", this.offsetParent);
-                            return;
-                        }
-                    }
-                    $(container).on("scroll.bumper", null, this, bumper._onScrollContainer);
-                    bumper._updateStatus(this, container);
-                }
-
-                var bumpall = (options.side.indexOf("all") > -1);
-                options.bumptop =    bumpall || (options.side.indexOf("top") > -1);
-                options.bumpright =  bumpall || (options.side.indexOf("right") > -1);
-                options.bumpbottom = bumpall || (options.side.indexOf("bottom") > -1);
-                options.bumpleft =   bumpall || (options.side.indexOf("left") > -1);
-            });
-        },
-
-        _findScrollContainer: function bumper_findScrollContainer(el) {
-            var parent = el.parentElement;
-            while (parent!==document.body && parent!==null) {
-                var overflowY = $(parent).css("overflow-y");
-                if ((overflowY==="auto" || overflowY==="scroll"))
-                    return parent;
-                parent=parent.parentElement;
+            if (Modernizr.csspositionsticky) {
+                this.$el.addClass("sticky-supported");
             }
-            return null;
+
+            this.$el[0].style.position = "relative";
+            if (!this.$container.length) {
+                $(window).on("scroll.bumper", this._updateStatus.bind(this));
+            } else {
+                this.$container.on("scroll.bumper", this._updateStatus.bind(this));
+            }
+            var bumpall = (this.options.side.indexOf("all") > -1);
+            this.options.bumptop =    bumpall || (this.options.side.indexOf("top") > -1);
+            this.options.bumpright =  bumpall || (this.options.side.indexOf("right") > -1);
+            this.options.bumpbottom = bumpall || (this.options.side.indexOf("bottom") > -1);
+            this.options.bumpleft =   bumpall || (this.options.side.indexOf("left") > -1);
+            this._updateStatus();
+            return this.$el;
         },
 
-        _markBumped: function bumper_markBumper($sticker, options, is_bumped) {
-            var $target = options.selector ? $(options.selector) : $sticker,
-                todo = is_bumped ? options.bump : options.unbump;
+        _findScrollContainer: function findScrollContainer() {
+            var $parent = this.$el.parent(),
+                overflow;
+            while (!$parent.is($(document.body)) && $parent.length) {
+                if (_.contains(['all', 'top', 'bottom'], this.options.side)) {
+                    overflow = $parent.css("overflow-y");
+                    if ((overflow === "auto" || overflow === "scroll")) {
+                        return $parent;
+                    }
+                } 
+                if (_.contains(['all', 'left', 'right'], this.options.side)) {
+                    overflow = $parent.css("overflow-x");
+                    if ((overflow === "auto" || overflow === "scroll")) {
+                        return $parent;
+                    }
+                }
+                $parent = $parent.parent();
+            }
+            return $();
+        },
 
-            if (todo.add)
+        _markBumped: function markBumper(is_bumped) {
+            var $target = this.options.selector ? $(this.options.selector) : this.$el,
+                todo = is_bumped ? this.options.bump : this.options.unbump;    
+            if (todo.add) {
                 $target.addClass(todo.add);
-            if (todo.remove)
+            } 
+            if (todo.remove) {
                 $target.removeClass(todo.remove);
+            }
         },
 
-        _onScrollContainer: function bumper_onScrollContainer(e) {
-            var container = e.currentTarget,
-                sticker = e.data;
-            bumper._updateStatus(sticker, container);
-        },
-
-        _onScrollWindow: function bumper_onScrollWindow(e) {
-            bumper._updateStatus(e.data);
-        },
-
-        _updateStatus: function(sticker) {
-            var $sticker = $(sticker),
-                options = $sticker.data("pat-bumper:config"),
-                margin = options ? options.margin : 0,
+        _updateStatus: function() {
+            var sticker = this.$el[0],
+                margin = this.options ? this.options.margin : 0,
                 frame,
-                box = bumper._getBoundingBox($sticker, margin),
+                box = this._getBoundingBox(this.$el, margin),
                 delta = {};
 
-            if (arguments.length == 1)
-              frame = bumper._getViewport();
-            else if (arguments.length == 2)
-              frame = bumper._getBoundingBox($(arguments[1]), margin);
+            if (this.$container.length) {
+                frame = this._getBoundingBox(this.$container, 0); // Scrolling on a container
+            } else {
+                frame = this._getViewport(); // Scrolling on the window
+            }
 
-            delta.top=sticker.style.top ? parseFloat($sticker.css("top")) : 0;
-            delta.left=sticker.style.left ? parseFloat($sticker.css("left")) : 0;
+            delta.top = sticker.style.top ? parseFloat(this.$el.css("top")) : 0;
+            delta.left = sticker.style.left ? parseFloat(this.$el.css("left")) : 0;
 
-            box.top-=delta.top;
-            box.bottom-=delta.top;
-            box.left-=delta.left;
-            box.right-=delta.left;
+            box.top -= delta.top;
+            box.bottom -= delta.top;
+            box.left -= delta.left;
+            box.right -= delta.left;
 
-            if ((frame.top > box.top) && options.bumptop)
-                sticker.style.top=(frame.top - box.top) + "px";
-            else if ((frame.bottom < box.bottom) && options.bumpbottom)
-                sticker.style.top=(frame.bottom - box.bottom) + "px";
-            else
-                sticker.style.top="";
+            if ((frame.top > box.top) && this.options.bumptop) {
+                sticker.style.top = (frame.top - box.top) + "px";
+            } else if ((frame.bottom < box.bottom) && this.options.bumpbottom) {
+                sticker.style.top = (frame.bottom - box.bottom) + "px";
+            } else {
+                sticker.style.top = "";
+            }
 
-            if ((frame.left > box.left) && options.bumpleft)
-                sticker.style.left=(frame.left - box.left) + "px";
-            else if ((frame.right < box.right) && options.bumpright)
-                sticker.style.left=(frame.right - box.right) + "px";
-            else
-                sticker.style.left="";
-
-            bumper._markBumped($sticker, options, !!(sticker.style.top || sticker.style.left));
+            if ((frame.left > box.left) && this.options.bumpleft) {
+                sticker.style.left = (frame.left - box.left) + "px";
+            } else if ((frame.right < box.right) && this.options.bumpright) {
+                sticker.style.left = (frame.right - box.right) + "px";
+            } else {
+                sticker.style.left = "";
+            }
+            this._markBumped(!!(sticker.style.top || sticker.style.left));
         },
 
-        // Calculates the bounding box for the current viewport
-        _getViewport: function bumper_getViewport() {
+        _getViewport: function getViewport() {
+            /* Calculates the bounding box for the current viewport
+             */
             var $win = $(window),
                 view = {
                     top: $win.scrollTop(),
                     left: $win.scrollLeft()
                 };
-
-            view.right=view.left + $win.width();
-            view.bottom=view.top + $win.height();
+            view.right = view.left + $win.width();
+            view.bottom = view.top + $win.height();
             return view;
         },
 
-        /**
-         * Calculates the bounding box for a given element, taking margins
-         * into consideration
-         */
-        _getBoundingBox: function bumper_getBoundingBox($sticker, margin) {
+        _getBoundingBox: function getBoundingBox($sticker, margin) {
+            /* Calculates the bounding box for a given element, taking margins
+             * into consideration
+             */
             var box = $sticker.offset();
             margin = margin ? margin : 0;
             box.top -= (parseFloat($sticker.css("margin-top")) || 0) + margin;
@@ -18276,11 +18319,8 @@ define('pat-bumper',[
             box.bottom = box.top + $sticker.outerHeight(true) + (2 * margin);
             return box;
         }
-    };
-    registry.register(bumper);
-    return bumper;
+    });
 });
-
 // vim: sw=4 expandtab
 ;
 /**
@@ -30233,7 +30273,7 @@ define('pat-chosen',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-/* pat-clone */
+/* Clone pattern */
 define("pat-clone",[
     "jquery",
     "pat-parser",
@@ -30301,7 +30341,7 @@ define("pat-clone",[
             $clone.removeAttr("hidden");
             registry.scan($clone);
 
-            $clone.trigger("pat-update", {'pattern':"clone", '$el': $clone});
+            $clone.trigger("pat-update", {'pattern':"clone", 'action': 'clone', '$el': $clone});
             if (this.num_clones >= this.options.max) {
                 $(this.options.triggerElement).hide();
             }
@@ -30341,6 +30381,7 @@ define("pat-clone",[
             if (this.num_clones < this.options.max) {
                 $(this.options.triggerElement).show();
             }
+            this.$el.trigger("pat-update", {'pattern':"clone", 'action': 'remove', '$el': $el});
         }
     });
 });
@@ -30724,15 +30765,19 @@ define('pat-inject',[
             }
             $el.data("pat-inject", cfgs);
 
-            // In case next-href is specified the anchor's href will
-            // be set to it after the injection is triggered. In case
-            // the next href already exists, we do not activate the
-            // injection but instead just change the anchors href.
-            var $nexthref = $(cfgs[0].nextHref);
-            if ($el.is("a") && $nexthref.length > 0) {
-                log.debug("Skipping as next href already exists", $nexthref);
-                // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
+            if (cfgs[0].nextHref && cfgs[0].nextHref.indexOf('#') === 0) {
+                // In case the next href is an anchor, and it already
+                // exists in the page, we do not activate the injection
+                // but instead just change the anchors href.
+
+                // XXX: This is used in only one project for linked
+                // fullcalendars, it's sanity is wonky and we should
+                // probably solve it differently.
+                if ($el.is("a") && $(cfgs[0].nextHref).length > 0) {
+                    log.debug("Skipping as next href is anchor, which already exists", cfgs[0].nextHref);
+                    // XXX: reconsider how the injection enters exhausted state
+                    return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
+                }
             }
 
             switch (cfgs[0].trigger) {
@@ -30797,6 +30842,10 @@ define('pat-inject',[
              */
             var $el = $sub.parents("form"),
                 cfgs = $sub.data("pat-inject");
+
+            // store the params of the subform in the config, to be used by history
+            $(cfgs).each(function(i, v) {v.params = $.param($sub.serializeArray());});
+
             try {
                 $el.trigger("patterns-inject-triggered");
             } catch (e) {
@@ -31031,9 +31080,13 @@ define('pat-inject',[
             });
             // Now the injection actually happens.
             if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
-            // History support.
+            // History support. if subform is submitted, append form params
             if ((cfg.history === "record") && ("pushState" in history)) {
-                history.pushState({'url': cfg.url}, "", cfg.url);
+                if (cfg.params) {
+                    history.pushState({'url': cfg.url + '?' + cfg.params}, "", cfg.url + '?' + cfg.params);
+                } else {
+                    history.pushState({'url': cfg.url}, "", cfg.url);
+                }
             }
         },
 
@@ -31061,6 +31114,7 @@ define('pat-inject',[
                     }
                 });
             }
+            $el.trigger("pat-inject-success");
         },
 
         _onInjectSuccess: function ($el, cfgs, ev) {
@@ -31080,9 +31134,10 @@ define('pat-inject',[
                     inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
                 });
             });
-            if (cfgs[0].nextHref) {
-                $el.attr({href: (window.location.href.split("#")[0] || "") +
-                            cfgs[0].nextHref});
+            if (cfgs[0].nextHref && $el.is("a")) {
+                // In case next-href is specified the anchor's href will
+                // be set to it after the injection is triggered.
+                $el.attr({href: cfgs[0].nextHref.replace(/&amp;/g, '&')});
                 inject.destroy($el);
             }
             $el.off("pat-ajax-success.pat-inject");
@@ -31157,26 +31212,27 @@ define('pat-inject',[
                         {selector: cfg.target});
                 return false;
             }
-            if (cfg.action === "content")
+            if (cfg.action === "content") {
                 $target.empty().append($source);
-            else if (cfg.action === "element")
+            } else if (cfg.action === "element") {
                 $target.replaceWith($source);
-            else
+            } else {
                 $target[method]($source);
-
+            }
             return true;
         },
 
         _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
             var $html = inject._parseRawHtml(html, url);
             return sources.map(function inject_sourcesFromHtml_map(source) {
-                if (source === "body")
+                if (source === "body") {
                     source = "#__original_body";
-
+                }
                 var $source = $html.find(source);
 
-                if ($source.length === 0)
+                if ($source.length === 0) {
                     log.warn("No source elements for selector:", source, $html);
+                }
 
                 $source.find("a[href^=\"#\"]").each(function () {
                     var href = this.getAttribute("href");
@@ -31188,12 +31244,12 @@ define('pat-inject',[
                     }
                     // Skip in-document links pointing to an id that is inside
                     // this fragment.
-                    if (href.length === 1)  // Special case for top-of-page links
+                    if (href.length === 1) { // Special case for top-of-page links
                         this.href=url;
-                    else if (!$source.find(href).length)
+                    } else if (!$source.find(href).length) {
                         this.href=url+href;
+                    }
                 });
-
                 return $source;
             });
         },
@@ -31299,21 +31355,19 @@ define('pat-inject',[
                 log.error("Error rebasing urls", e);
             }
             var $html = $("<div/>").html(clean_html);
-
-            if ($html.children().length === 0)
+            if ($html.children().length === 0) {
                 log.warn("Parsing html resulted in empty jquery object:", clean_html);
-
+            }
             return $html;
         },
 
         // XXX: hack
         _initAutoloadVisible: function inject_initAutoloadVisible($el) {
-            // ignore executed autoloads
-            if ($el.data("pat-inject-autoloaded"))
+            if ($el.data("pat-inject-autoloaded")) {
+                // ignore executed autoloads
                 return false;
-
-            var $scrollable = $el.parents(":scrollable"),
-                checkVisibility;
+            }
+            var $scrollable = $el.parents(":scrollable"), checkVisibility;
 
             // function to trigger the autoload and mark as triggered
             function trigger() {
@@ -31327,8 +31381,9 @@ define('pat-inject',[
                 // if scrollable parent and visible -> trigger it
                 // we only look at the closest scrollable parent, no nesting
                 checkVisibility = utils.debounce(function inject_checkVisibility_scrollable() {
-                    if ($el.data("patterns.autoload"))
+                    if ($el.data("patterns.autoload") || !$.contains(document, $el[0])) {
                         return false;
+                    }
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -31340,27 +31395,28 @@ define('pat-inject',[
                     }
                     return false;
                 }, 100);
-                if (checkVisibility())
+                if (checkVisibility()) {
                     return true;
-
+                }
                 // wait to become visible - again only immediate scrollable parent
                 $($scrollable[0]).on("scroll", checkVisibility);
                 $(window).on("resize.pat-autoload", checkVisibility);
             } else {
                 // Use case 2: scrolling the entire page
                 checkVisibility = utils.debounce(function inject_checkVisibility_not_scrollable() {
-                    if ($el.data("patterns.autoload"))
+                    if ($el.data("patterns.autoload")) {
                         return false;
-                    if (!utils.elementInViewport($el[0]))
+                    }
+                    if (!utils.elementInViewport($el[0])) {
                         return false;
-
+                    }
                     $(window).off(".pat-autoload", checkVisibility);
                     return trigger();
                 }, 100);
-                if (checkVisibility())
+                if (checkVisibility()) {
                     return true;
-                $(window).on("resize.pat-autoload scroll.pat-autoload",
-                        checkVisibility);
+                }
+                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
             }
             return false;
         },
@@ -31372,7 +31428,6 @@ define('pat-inject',[
 
         callTypeHandler: function inject_callTypeHandler(type, fn, context, params) {
             type = type || "html";
-
             if (inject.handlers[type] && $.isFunction(inject.handlers[type][fn])) {
                 return inject.handlers[type][fn].apply(context, params);
             } else {
@@ -31430,7 +31485,6 @@ define('pat-inject',[
             log.debug(e);
         }
     }
-
     registry.register(inject);
     return inject;
 });
@@ -35051,6 +35105,8 @@ define('pat-date-picker',[
                 "showWeekNumber": this.options.weekNumbers === "show",
                 "onSelect": function () {
                     $(this._o.field).closest("form").trigger("input-change");
+                    /* Also trigger input change on date field to support pat-autosubmit. */
+                    $(this._o.field).trigger("input-change");
                 }
             };
             if (this.options.i18n) {
@@ -37108,216 +37164,6 @@ define('pat-depends',[
 // vim: sw=4 expandtab
 ;
 /*!
- * jQuery TextChange Plugin
- * http://www.zurb.com/playground/jquery-text-change-custom-event
- *
- * Copyright 2010, ZURB
- * Released under the MIT License
- */
-(function ($) {
-	
-	$.event.special.textchange = {
-		
-		setup: function (data, namespaces) {
-		  $(this).data('lastValue', this.contentEditable === 'true' ? $(this).html() : $(this).val());
-			$(this).bind('keyup.textchange', $.event.special.textchange.handler);
-			$(this).bind('cut.textchange paste.textchange input.textchange', $.event.special.textchange.delayedHandler);
-		},
-		
-		teardown: function (namespaces) {
-			$(this).unbind('.textchange');
-		},
-		
-		handler: function (event) {
-			$.event.special.textchange.triggerIfChanged($(this));
-		},
-		
-		delayedHandler: function (event) {
-			var element = $(this);
-			setTimeout(function () {
-				$.event.special.textchange.triggerIfChanged(element);
-			}, 25);
-		},
-		
-		triggerIfChanged: function (element) {
-		  var current = element[0].contentEditable === 'true' ? element.html() : element.val();
-			if (current !== element.data('lastValue')) {
-				element.trigger('textchange',  [element.data('lastValue')]);
-				element.data('lastValue', current);
-			}
-		}
-	};
-	
-	$.event.special.hastext = {
-		
-		setup: function (data, namespaces) {
-			$(this).bind('textchange', $.event.special.hastext.handler);
-		},
-		
-		teardown: function (namespaces) {
-			$(this).unbind('textchange', $.event.special.hastext.handler);
-		},
-		
-		handler: function (event, lastValue) {
-			if ((lastValue === '') && lastValue !== $(this).val()) {
-				$(this).trigger('hastext');
-			}
-		}
-	};
-	
-	$.event.special.notext = {
-		
-		setup: function (data, namespaces) {
-			$(this).bind('textchange', $.event.special.notext.handler);
-		},
-		
-		teardown: function (namespaces) {
-			$(this).unbind('textchange', $.event.special.notext.handler);
-		},
-		
-		handler: function (event, lastValue) {
-			if ($(this).val() === '' && $(this).val() !== lastValue) {
-				$(this).trigger('notext');
-			}
-		}
-	};	
-
-})(jQuery);
-define("jquery.textchange", ["jquery"], function(){});
-
-(function(c){var b,e,a=[],d=window;c.fn.tinymce=function(j){var p=this,g,k,h,m,i,l="",n="";if(!p.length){return p}if(!j){return tinyMCE.get(p[0].id)}p.css("visibility","hidden");function o(){var r=[],q=0;if(f){f();f=null}p.each(function(t,u){var s,w=u.id,v=j.oninit;if(!w){u.id=w=tinymce.DOM.uniqueId()}s=new tinymce.Editor(w,j);r.push(s);s.onInit.add(function(){var x,y=v;p.css("visibility","");if(v){if(++q==r.length){if(tinymce.is(y,"string")){x=(y.indexOf(".")===-1)?null:tinymce.resolve(y.replace(/\.\w+$/,""));y=tinymce.resolve(y)}y.apply(x||tinymce,r)}}})});c.each(r,function(t,s){s.render()})}if(!d.tinymce&&!e&&(g=j.script_url)){e=1;h=g.substring(0,g.lastIndexOf("/"));if(/_(src|dev)\.js/g.test(g)){n="_src"}m=g.lastIndexOf("?");if(m!=-1){l=g.substring(m+1)}d.tinyMCEPreInit=d.tinyMCEPreInit||{base:h,suffix:n,query:l};if(g.indexOf("gzip")!=-1){i=j.language||"en";g=g+(/\?/.test(g)?"&":"?")+"js=true&core=true&suffix="+escape(n)+"&themes="+escape(j.theme)+"&plugins="+escape(j.plugins)+"&languages="+i;if(!d.tinyMCE_GZ){tinyMCE_GZ={start:function(){tinymce.suffix=n;function q(r){tinymce.ScriptLoader.markDone(tinyMCE.baseURI.toAbsolute(r))}q("langs/"+i+".js");q("themes/"+j.theme+"/editor_template"+n+".js");q("themes/"+j.theme+"/langs/"+i+".js");c.each(j.plugins.split(","),function(s,r){if(r){q("plugins/"+r+"/editor_plugin"+n+".js");q("plugins/"+r+"/langs/"+i+".js")}})},end:function(){}}}}c.ajax({type:"GET",url:g,dataType:"script",cache:true,success:function(){tinymce.dom.Event.domLoaded=1;e=2;if(j.script_loaded){j.script_loaded()}o();c.each(a,function(q,r){r()})}})}else{if(e===1){a.push(o)}else{o()}}return p};c.extend(c.expr[":"],{tinymce:function(g){return !!(g.id&&"tinyMCE" in window&&tinyMCE.get(g.id))}});function f(){function i(l){if(l==="remove"){this.each(function(n,o){var m=h(o);if(m){m.remove()}})}this.find("span.mceEditor,div.mceEditor").each(function(n,o){var m=tinyMCE.get(o.id.replace(/_parent$/,""));if(m){m.remove()}})}function k(n){var m=this,l;if(n!==b){i.call(m);m.each(function(p,q){var o;if(o=tinyMCE.get(q.id)){o.setContent(n)}})}else{if(m.length>0){if(l=tinyMCE.get(m[0].id)){return l.getContent()}}}}function h(m){var l=null;(m)&&(m.id)&&(d.tinymce)&&(l=tinyMCE.get(m.id));return l}function g(l){return !!((l)&&(l.length)&&(d.tinymce)&&(l.is(":tinymce")))}var j={};c.each(["text","html","val"],function(n,l){var o=j[l]=c.fn[l],m=(l==="text");c.fn[l]=function(s){var p=this;if(!g(p)){return o.apply(p,arguments)}if(s!==b){k.call(p.filter(":tinymce"),s);o.apply(p.not(":tinymce"),arguments);return p}else{var r="";var q=arguments;(m?p:p.eq(0)).each(function(u,v){var t=h(v);r+=t?(m?t.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g,""):t.getContent({save:true})):o.apply(c(v),q)});return r}}});c.each(["append","prepend"],function(n,m){var o=j[m]=c.fn[m],l=(m==="prepend");c.fn[m]=function(q){var p=this;if(!g(p)){return o.apply(p,arguments)}if(q!==b){p.filter(":tinymce").each(function(s,t){var r=h(t);r&&r.setContent(l?q+r.getContent():r.getContent()+q)});o.apply(p.not(":tinymce"),arguments);return p}}});c.each(["remove","replaceWith","replaceAll","empty"],function(m,l){var n=j[l]=c.fn[l];c.fn[l]=function(){i.call(this,l);return n.apply(this,arguments)}});j.attr=c.fn.attr;c.fn.attr=function(o,q){var m=this,n=arguments;if((!o)||(o!=="value")||(!g(m))){if(q!==b){return j.attr.apply(m,n)}else{return j.attr.apply(m,n)}}if(q!==b){k.call(m.filter(":tinymce"),q);j.attr.apply(m.not(":tinymce"),n);return m}else{var p=m[0],l=h(p);return l?l.getContent({save:true}):j.attr.apply(c(p),n)}}}})(jQuery);
-define("tinymce", ["jquery"], function(){});
-
-define('pat-edit-tinymce',[
-    "jquery",
-    "pat-parser",
-    "pat-logger",
-    "pat-registry",
-    "pat-utils",
-    "jquery.textchange",
-    "tinymce"
-], function($, Parser, logger, registry, utils) {
-    var log = logger.getLogger("pat.editTinyMCE"),
-        parser = new Parser("edit-tinymce");
-
-    parser.addArgument("tinymce-baseurl");
-
-    var _ = {
-        name: "editTinyMCE",
-        trigger: "form textarea.pat-edit-tinymce",
-        init: function($el, opts) {
-            var $form = $el.parents("form"),
-                id = $el.attr("id");
-
-            // make sure the textarea has an id
-            if (!id) {
-                var formid = $form.attr("id"),
-                    name = $el.attr("name");
-                if (!formid) {
-                    log.error("Textarea or parent form needs an id", $el, $form);
-                    return false;
-                }
-                if (!name) {
-                    log.error("Textarea needs a name", $el);
-                    return false;
-                }
-                id = formid + "_" + name;
-                if ($("#"+id).length > 0) {
-                    log.error("Textarea needs an id", $el);
-                    return false;
-                }
-                $el.attr({id: id});
-            }
-
-            // read configuration
-            var cfg = $el.data("tinymce-json");
-            if (!cfg) {
-                log.info("data-tinymce-json empty, using default config", $el);
-                cfg = {};
-            }
-            cfg.elements = id;
-            cfg.mode = "exact";
-            cfg.readonly = Boolean($el.attr("readonly"));
-
-            // get arguments
-            var args = parser.parse($el, opts);
-
-            if (!args.tinymceBaseurl) {
-                log.error("tinymce-baseurl has to point to TinyMCE resources");
-                return false;
-            }
-
-            var base_url = window.location.toString(), idx;
-            if ((idx=base_url.indexOf("?"))!==-1)
-                base_url=base_url.slice(0, idx);
-
-            // handle rebasing of own urls if we were injected
-            var parents = $el.parents().filter(function() {
-                return $(this).data("pat-injected");
-            });
-            if (parents.length)
-                base_url = utils.rebaseURL(base_url, parents.first().data("pat-injected").origin);
-            if (cfg.content_css)
-                cfg.content_css = utils.rebaseURL(base_url, cfg.content_css);
-
-            if (args.tinymceBaseurl.indexOf("://")!==-1 || args.tinymceBaseurl[0]==="/") {
-                // tinyMCE.baseURL must be absolute
-                tinyMCE.baseURL = window.location.protocol + "//" +
-                    window.location.host+"/" + args.tinymceBaseurl;
-            } else {
-                tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
-            }
-            tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
-
-            cfg.oninit = function() {
-                var editors = tinyMCE.editors.filter(function(e) {
-                        return e.id === id;
-                    }),
-                    ed = editors[editors.length-1];
-
-                var handler = function() {
-                    tinyMCE.editors[id].save();
-                    $el.trigger("input-change");
-                };
-
-                var setAttribHandler = function(ed, el) {
-                    // handle image resize
-                    if (el.tagName === "IMG") {
-                        handler();
-                    }
-                };
-
-                var clickHandler = function() {
-                    $el.trigger("click");
-                };
-
-                ed.onKeyUp.add(handler);
-                ed.onChange.add(handler);
-                ed.onUndo.add(handler);
-                ed.onRedo.add(handler);
-                ed.onSetAttrib.add(setAttribHandler);
-                ed.onClick.add(clickHandler);
-            };
-
-            // initialize editor
-            tinyMCE.init(cfg);
-
-            return $el;
-        },
-
-        destroy: function() {
-            // XXX
-        }
-    };
-
-    registry.register(_);
-    return _;
-});
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
-;
-/*!
  * EventEmitter v4.2.11 - git.io/ee
  * Unlicense - http://unlicense.org/
  * Oliver Caldwell - http://oli.me.uk/
@@ -37677,20 +37523,22 @@ define('pat-edit-tinymce',[
      * @return {Object} Current instance of EventEmitter for chaining.
      */
     proto.emitEvent = function emitEvent(evt, args) {
-        var listeners = this.getListenersAsObject(evt);
+        var listenersMap = this.getListenersAsObject(evt);
+        var listeners;
         var listener;
         var i;
         var key;
         var response;
 
-        for (key in listeners) {
-            if (listeners.hasOwnProperty(key)) {
-                i = listeners[key].length;
+        for (key in listenersMap) {
+            if (listenersMap.hasOwnProperty(key)) {
+                listeners = listenersMap[key].slice(0);
+                i = listeners.length;
 
                 while (i--) {
                     // If the listener returns true then it shall be removed from the event
                     // The function is executed either with a basic call or an apply if there is an args array
-                    listener = listeners[key][i];
+                    listener = listeners[i];
 
                     if (listener.once === true) {
                         this.removeListener(evt, listener.listener);
@@ -38238,6 +38086,7 @@ define('pat-equaliser',[
                 $container.on("pat-update.pat-equaliser", null, this, equaliser._onEvent);
                 $container.on("patterns-injected.pat-equaliser", null, this, equaliser._onEvent);
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
+                $container.parents('.pat-stacks').on("pat-update", null, this, utils.debounce(equaliser._onEvent, 100));
                 imagesLoaded(this, $.proxy(function() {
                     equaliser._update(this);
                 }, this));
@@ -38431,6 +38280,7 @@ define('pat-modal',[
     var parser = new Parser("modal");
     parser.addArgument("class");
     parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
+    parser.addArgument("close-text", 'Close');
 
     return Base.extend({
         name: "modal",
@@ -38460,21 +38310,17 @@ define('pat-modal',[
             if (!this.$el.closest("#pat-modal")) {
                 $("#pat-modal").detach();
             }
-
             this.$el.on("pat-inject-missingSource pat-inject-missingTarget", function() {
                 $("#pat-modal").detach();
             });
-
             inject.init(this.$el, opts);
         },
 
         _init_div1: function () {
-            var $header = $("<div class='header' />"),
-                activeElement = document.activeElement;
-
-            if (this.options.closing.indexOf("close-button")!==-1)
-                $("<button type='button' class='close-panel'>Close</button>").appendTo($header);
-
+            var $header = $("<div class='header' />");
+            if (this.options.closing.indexOf("close-button")!==-1) {
+                $("<button type='button' class='close-panel'>" + this.options.closeText + "</button>").appendTo($header);
+            }
             // We cannot handle text nodes here
             var $children = this.$el.children(":last, :not(:first)");
             if ($children.length) {
@@ -38487,19 +38333,20 @@ define('pat-modal',[
 
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
-            activeElement.focus();
+            document.activeElement.focus();
             this._init_handlers();
             this.resize();
             this.setPosition();
+            $('body').addClass("modal-active");
         },
 
         _init_handlers: function() {
             var $el = this.$el;
             $(document).on("click.pat-modal", ".close-panel", this.destroy.bind(this));
             $(document).on("keyup.pat-modal", this._onKeyUp.bind(this));
-            if (this.options.closing.indexOf("outside")!==-1)
+            if (this.options.closing.indexOf("outside")!==-1) {
                 $(document).on("click.pat-modal", this._onPossibleOutsideClick.bind(this));
-
+            }
             $(window).on("resize.pat-modal-position",
                 utils.debounce(this.resize.bind(this), 400));
             $(document).on("pat-inject-content-loaded.pat-modal-position", "#pat-modal",
@@ -38572,6 +38419,7 @@ define('pat-modal',[
         destroy: function() {
             $(document).off(".pat-modal");
             this.$el.remove();
+            $('body').removeClass("modal-active");
         }
     });
 });
@@ -38722,8 +38570,6 @@ define('pat-forward',[
             event.stopPropagation();
         }
     };
-
-
     registry.register(_);
     return _;
 });
@@ -47640,6 +47486,7 @@ define('pat-notification',[
     parser.addArgument("healing", "5s");
     parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
     parser.addArgument("class");
+    parser.addArgument("close-text", 'Close');
 
     var _ = {
         name: "notification",
@@ -47699,6 +47546,7 @@ define('pat-notification',[
             _.count++;
 
             var options = parser.parse($el, opts);
+            var closetext = options.closeText;
 
             $el = $el.wrap("<div/>").parent()
                 .attr("id", "pat-notification-" + _.count)
@@ -47714,14 +47562,14 @@ define('pat-notification',[
                 options.controls = [ options.controls ];
             }
 
-            // add close icon if requsted
+            // add close icon if requested
             if (options.controls.indexOf("icons") >= 0) {
-                $el.append("<button type='button' class=.close-panel'>Close</button>");
+                $el.append("<button type='button' class=.close-panel'>" + closetext + "</button>");
             }
 
             // add close button if requested
             if (options.controls.indexOf("buttons") >= 0) {
-                $el.append("<div class='button-bar'><button type='button' class='close-panel'>Close</button></div>");
+                $el.append("<div class='button-bar'><button type='button' class='close-panel'>" + closetext + "</button></div>");
             }
 
             if ($el.find(".close-panel").length) {
@@ -50819,6 +50667,7 @@ var indexOf = Array.prototype.indexOf ?
     if (typeof define === "function" && define.amd) {
         define('pat-masonry',[
             "jquery",
+            "pat-logger",
             "pat-registry",
             "pat-parser",
             "pat-base",
@@ -50831,11 +50680,12 @@ var indexOf = Array.prototype.indexOf ?
     } else {
         factory(root.$, root.patterns, root.patterns.Parser, root.Base, root.Masonry, root.imagesLoaded);
     }
-}(this, function($, registry, Parser, Base, utils, Masonry, imagesLoaded) {
+}(this, function($, logger, registry, Parser, Base, utils, Masonry, imagesLoaded) {
     "use strict";
+    var log = logger.getLogger("pat.masonry");
     var parser = new Parser("masonry");
     parser.addArgument("column-width");
-    parser.addArgument("container-style", "{ position: 'relative' }");
+    parser.addArgument("container-style", '{ "position": "relative" }');
     parser.addArgument("gutter");
     parser.addArgument("hidden-style", "{ opacity: 0, transform: 'scale(0.001)' }");
     parser.addArgument("is-fit-width", false);
@@ -50862,9 +50712,19 @@ var indexOf = Array.prototype.indexOf ?
         },
 
         initMasonry: function () {
+            var containerStyle;
+            try {
+                containerStyle = JSON.parse(this.options.containerStyle);
+            } catch (e) {
+                containerStyle = { "position": "relative" };
+                log.warn(
+                    "Invalid value passed in as containerStyle. Needs to "+
+                    "be valid JSON so that it can be converted to an object for Masonry."
+                );
+            }
             this.msnry = new Masonry(this.$el[0], {
                 columnWidth:         this.getTypeCastedValue(this.options.columnWidth),
-                containerStyle:      this.options.containerStyle,
+                containerStyle:      containerStyle,
                 gutter:              this.getTypeCastedValue(this.options.gutter),
                 hiddenStyle:         this.options.hiddenStyle,
                 isFitWidth:          this.options.is["fit-width"],
@@ -50955,10 +50815,90 @@ define('pat-scroll',[
             if (this.options.trigger == "auto") {
                this.smoothScroll();
             } else if (this.options.trigger == "click") {
-                this.$el.click(function (ev) {
-                    ev.preventDefault();
+                this.$el.click(this.onClick.bind(this));
+            }
+            this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
+            this.markBasedOnFragment();
+            this.on('hashchange', this.clearIfHidden.bind(this));
+            $(window).scroll(_.debounce(this.markIfVisible.bind(this), 50));
+        },
+
+        onClick: function(ev) {
+            ev.preventDefault();
+            history.pushState({}, null, this.$el.attr('href'));
+            this.smoothScroll();
+            this.markBasedOnFragment();
+            // manually trigger the hashchange event on all instances of pat-scroll
+            $('a.pat-scroll').trigger("hashchange");
+        },
+
+        markBasedOnFragment: function(ev) {
+            // Get the fragment from the URL and set the corresponding this.$el as current
+            var $target = $('#' + window.location.hash.substr(1));
+            if ($target.length > 0) {
+                this.$el.addClass("current"); // the element that was clicked on
+                $target.addClass("current");
+            }
+        },
+
+        clearIfHidden: function(ev) {
+            var active_target = '#' + window.location.hash.substr(1),
+                $active_target = $(active_target),
+                target = this.$el[0].href.split('/').pop();
+            if ($active_target.length > 0) {
+                if (active_target != target) {
+                    // if the element does not match the one listed in the url #,
+                    // clear the current class from it.
+                    var $target = $(this.$el[0].href.split('/').pop());
+                    $target.removeClass("current");
+                    this.$el.removeClass("current");
+                }
+            }
+        },
+
+        markIfVisible: function(ev) {
+            var fragment, $target, href;
+            if (this.$el.hasClass('pat-scroll-animated')) {
+                // this section is triggered when the scrolling is a result of the animate function
+                // ie. automatic scrolling as opposed to the user manually scrolling
+                this.$el.removeClass('pat-scroll-animated');
+            } else if (this.$el[0].nodeName === "A") {
+                href = this.$el[0].href;
+                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
+                if (fragment) {
+                    $target = $('#'+fragment);
+                    if ($target.length) {
+                        if (utils.isElementInViewport($target[0], true, this.options.offset)) {
+                            // check that the anchor's target is visible
+                            // if so, mark both the anchor and the target element
+                            $target.addClass("current");
+                            this.$el.addClass("current");
+                        }
+                        $(this.$el).trigger("pat-update", {pattern: "scroll"});
+                    }
+                }
+            }
+        },
+
+        onPatternsUpdate: function(ev, data) {
+            var fragment, $target, href;
+            if (data.pattern === 'stacks') {
+                if (data.originalEvent && data.originalEvent.type === "click") {
                     this.smoothScroll();
-                }.bind(this));
+                }
+            } else if (data.pattern === 'scroll') {
+                href = this.$el[0].href;
+                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
+                if (fragment) {
+                    $target = $('#'+fragment);
+                    if ($target.length) {
+                        if (utils.isElementInViewport($target[0], true, this.options.offset) === false) {
+                            // if the anchor's target is invisible, remove current class from anchor and target.
+                            $target.removeClass("current");
+                            $(this.$el).removeClass("current");
+                        }
+                    }
+                }
             }
         },
 
@@ -50969,10 +50909,15 @@ define('pat-scroll',[
                 $el = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
             } else {
-                $el = $('body');
+                $el = $('body, html');
                 options[scroll] = $(this.$el.attr('href')).offset().top;
             }
-            $el.animate(options, 500);
+            $el.animate(options, {
+                duration: 500,
+                start: function() {
+                    $('.pat-scroll').addClass('pat-scroll-animated');
+                }
+            });
         }
     });
 });
@@ -51956,6 +51901,11 @@ define('pat-sortable',[
 ], function($, Base, Parser) {
     var parser = new Parser("sortable");
     parser.addArgument("selector", "li");
+    parser.addArgument('drag-class', 'dragged'); // Class to apply to item that is being dragged.
+    parser.addArgument('drop'); // Callback function for when item is dropped (null)
+
+    // BBB for the mockup sortable pattern.
+    parser.addAlias('dragClass', 'drag-class');
 
     return Base.extend({
         name: "sortable",
@@ -51963,7 +51913,7 @@ define('pat-sortable',[
 
         init: function ($el) {
             this.$form = this.$el.closest('form');
-            this.options = parser.parse(this.$el, true);
+            this.options = parser.parse(this.$el, false);
             this.recordPositions().addHandles().initScrolling();
             this.$el.on('pat-update', this.onPatternUpdate.bind(this));
         },
@@ -51982,7 +51932,7 @@ define('pat-sortable',[
 
         recordPositions: function () {
             // use only direct descendants to support nested lists
-            this.$sortables = this.$el.children().filter(this.options[0].selector);
+            this.$sortables = this.$el.children().filter(this.options.selector);
             this.$sortables.each(function (idx, $el) {
                 $(this).data('patterns.sortable', {'position': idx});
             });
@@ -52000,7 +51950,7 @@ define('pat-sortable',[
             if("draggable" in document.createElement("span")) {
                 $handles.attr("draggable", true);
             } else {
-                $handles.on("selectstart", function(event) { event.preventDefault(); });
+                $handles.on("selectstart", function(ev) { ev.preventDefault(); });
             }
             $handles.on("dragstart", this.onDragStart.bind(this));
             $handles.on("dragend", this.onDragEnd.bind(this));
@@ -52018,8 +51968,8 @@ define('pat-sortable',[
                 position: "fixed", zIndex: 999999,
                 height: 32, left: 0, right: 0
             });
-            scroll.on("dragover", function(event) {
-                event.preventDefault();
+            scroll.on("dragover", function(ev) {
+                ev.preventDefault();
                 if ($("html,body").is(":animated")) { return; }
                 var newpos = $(window).scrollTop() + ($(this).attr("id")==="pat-scroll-up" ? -32 : 32);
                 $("html,body").animate({scrollTop: newpos}, 50, "linear");
@@ -52028,11 +51978,16 @@ define('pat-sortable',[
         },
 
         onDragEnd: function (ev) {
-            $(".dragged").removeClass("dragged");
+            var $dragged = $(ev.target).parent();
+            $dragged.removeClass(this.options.dragClass);
             this.$sortables.unbind(".pat-sortable");
             this.$el.unbind(".pat-sortable");
             $("#pat-scroll-up, #pat-scroll-dn").detach();
-            this.submitChangedAmount($(ev.target).closest('.sortable'));
+            var change = this.submitChangedAmount($(ev.target).closest('.sortable'));
+            // Call the optionally passed-in callback function
+            if (this.options.drop) {
+                this.options.drop($dragged, change);
+            }
         },
 
         submitChangedAmount: function ($dragged) {
@@ -52054,66 +52009,67 @@ define('pat-sortable',[
                     $dragged.find('.sortable-button-down').click();
                 }
             }
+            return change;
         },
 
-        onDragStart: function (event) {
-            var $handle = $(event.target),
-                $draggable = $handle.parent();
-
-            // Firefox seems to need this set to any value
-            event.originalEvent.dataTransfer.setData("Text", "");
-            event.originalEvent.dataTransfer.effectAllowed = ["move"];
-            if ("setDragImage" in event.originalEvent.dataTransfer) {
-                event.originalEvent.dataTransfer.setDragImage($draggable[0], 0, 0);
+        onDragStart: function (ev) {
+            var $handle = $(ev.target),
+                $dragged = $handle.parent();
+            if (typeof ev.originalEvent !== "undefined") {
+                // Firefox seems to need this set to any value
+                ev.originalEvent.dataTransfer.setData("Text", "");
+                ev.originalEvent.dataTransfer.effectAllowed = ["move"];
+                if ("setDragImage" in ev.originalEvent.dataTransfer) {
+                    ev.originalEvent.dataTransfer.setDragImage($dragged[0], 0, 0);
+                }
             }
-            $draggable.addClass("dragged");
+            $dragged.addClass(this.options.dragClass);
 
             // Scroll the list if near the borders
-            this.$el.on("dragover.pat-sortable", function(event) {
-                event.preventDefault();
+            this.$el.on("dragover.pat-sortable", function(ev) {
+                ev.preventDefault();
                 if (this.$el.is(":animated")) return;
 
-                var pos = event.originalEvent.clientY + $("body").scrollTop();
-
+                var pos = ev.originalEvent.clientY + $("body").scrollTop();
                 if (pos - this.$el.offset().top < 32)
                     this.$el.animate({scrollTop: this.$el.scrollTop()-32}, 50, "linear");
                 else if (this.$el.offset().top+this.$el.height() - pos < 32)
                     this.$el.animate({scrollTop: this.$el.scrollTop()+32}, 50, "linear");
             }.bind(this));
 
-            // list elements are only drop targets when one element of the
-            // list is being dragged. avoids dragging between lists.
-            this.$sortables.on("dragover.pat-sortable", function(event) {
-                var $this = $(this),
-                    midlineY = $this.offset().top - $(document).scrollTop() + $this.height()/2;
+            this.$sortables.on("dragover.pat-sortable", function(ev) {
+                // list elements are only drop targets when one element of the
+                // list is being dragged. avoids dragging between lists.
+                var $dropTarget = $(ev.target),
+                    midlineY = $dropTarget.offset().top - $(document).scrollTop() + $dropTarget.height()/2;
 
-                if ($(this).hasClass("dragged")) {
-                    // bail if dropping on self
+                if ($dropTarget.is($dragged)) {
                     return;
                 }
-                $this.removeClass("drop-target-above drop-target-below");
-                if (event.originalEvent.clientY > midlineY)
-                    $this.addClass("drop-target-below");
+                $dropTarget.removeClass("drop-target-above drop-target-below");
+                if (ev.originalEvent.clientY > midlineY)
+                    $dropTarget.addClass("drop-target-below");
                 else
-                    $this.addClass("drop-target-above");
-                event.preventDefault();
-            });
+                    $dropTarget.addClass("drop-target-above");
+                ev.preventDefault();
+            }.bind(this));
 
             this.$sortables.on("dragleave.pat-sortable", function() {
                 this.$sortables.removeClass("drop-target-above drop-target-below");
             }.bind(this));
 
-            this.$sortables.on("drop.pat-sortable", function(event) {
-                var $sortable = $(this);
-                if ($sortable.hasClass("dragged"))
+            this.$sortables.on("drop.pat-sortable", function(ev) {
+                var $dropTarget = $(ev.target);
+                if ($dropTarget.is($dragged)) {
                     return;
-
-                if ($sortable.hasClass("drop-target-below"))
-                    $sortable.after($(".dragged"));
-                else
-                    $sortable.before($(".dragged"));
-                $sortable.removeClass("drop-target-above drop-target-below");
-                event.preventDefault();
+                }
+                if ($dropTarget.hasClass("drop-target-below")) {
+                    $dropTarget.after($dragged);
+                } else {
+                    $dropTarget.before($dragged);
+                }
+                $dropTarget.removeClass("drop-target-above drop-target-below");
+                ev.prevDefault();
             });
         }
     });
@@ -52123,54 +52079,47 @@ define('pat-sortable',[
 // vim: sw=4 expandtab
 ;
 /**
- * Patterns stacks
+ * Stacks pattern
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define('pat-stacks',[
     "jquery",
     "pat-parser",
+    "pat-base",
     "pat-logger",
     "pat-utils",
     "pat-registry"
-], function($, Parser, logging, utils, registry) {
+], function($, Parser, Base, logging, utils, registry) {
+    "use strict";
     var log = logging.getLogger("stacks"),
         parser = new Parser("stacks");
-
     parser.addArgument("selector", "> *[id]");
     parser.addArgument("transition", "none", ["none", "css", "fade", "slide"]);
     parser.addArgument("effect-duration", "fast");
     parser.addArgument("effect-easing", "swing");
 
-    var stacks = {
+    return Base.extend({
         name: "stacks",
         trigger: ".pat-stacks",
         document: document,
 
         init: function($el, opts) {
-            var fragment = this._currentFragment();
-
-            return $el.each(function() {
-                stacks._setupStack(this, opts, fragment);
-            });
+            this.options = parser.parse(this.$el, opts);
+            this._setupStack();
+            $(this.document).on("click", "a", this._onClick.bind(this));
+            return $el;
         },
 
-        _setup: function() {
-            $(this.document).on("click", "a", this._onClick);
-        },
-
-        _setupStack: function(container, options, selected) {
-            var $container = $(container),
-                $sheets, $visible, $invisible;
-            options=parser.parse($container, options);
-            $container.data("pat-stacks", options);
-            $sheets=$container.find(options.selector);
-
+        _setupStack: function() {
+            var selected = this._currentFragment(),
+                $sheets = this.$el.find(this.options.selector),
+                $visible = [],
+                $invisible;
             if ($sheets.length < 2) {
-                log.warn("Stacks pattern: must have more than one sheet.", $container[0]);
+                log.warn("Stacks pattern: must have more than one sheet.", this.$el[0]);
                 return;
             }
-            $visible = [];
             if (selected) {
                 try {
                     $visible = $sheets.filter("#"+selected);
@@ -52179,13 +52128,13 @@ define('pat-stacks',[
                 }
             }
             if (!$visible.length) {
-                $visible=$sheets.first();
-                selected=$visible[0].id;
+                $visible = $sheets.first();
+                selected = $visible[0].id;
             }
-            $invisible=$sheets.not($visible);
-            utils.hideOrShow($visible, true, {transition: "none"}, stacks.name);
-            utils.hideOrShow($invisible, false, {transition: "none"}, stacks.name);
-            stacks._updateAnchors($container, selected);
+            $invisible = $sheets.not($visible);
+            utils.hideOrShow($visible, true, {transition: "none"}, this.name);
+            utils.hideOrShow($invisible, false, {transition: "none"}, this.name);
+            this._updateAnchors(selected);
         },
 
          _base_URL: function() {
@@ -52194,59 +52143,58 @@ define('pat-stacks',[
 
         _currentFragment: function() {
             var parts = this.document.URL.split("#");
-            if (parts.length===1)
+            if (parts.length === 1) {
                 return null;
+            }
             return parts[parts.length-1];
         },
 
         _onClick: function(e) {
-            var base_url = stacks._base_URL(),
-                href_parts = e.currentTarget.href.split("#"),
-                $stack;
+            var base_url = this._base_URL(),
+                href_parts = e.currentTarget.href.split("#");
             // Check if this is an in-document link and has a fragment
-            if (base_url!==href_parts[0] || !href_parts[1])
+            if (base_url !== href_parts[0] || !href_parts[1]) {
                 return;
-            $stack=$(stacks.trigger+":has(#"+href_parts[1]+")");
-            if (!$stack.length)
+            }
+            if (!this.$el.has("#"+href_parts[1]).length) {
                 return;
+            }
             e.preventDefault();
-            stacks._updateAnchors($stack, href_parts[1]);
-            stacks._switch($stack, href_parts[1]);
+            this._updateAnchors(href_parts[1]);
+            this._switch(href_parts[1]);
+            $(e.target).trigger("pat-update", {
+                pattern: "stacks",
+                originalEvent: e
+            });
         },
 
-        _updateAnchors: function($container, selected) {
-            var options = $container.data("pat-stacks"),
-                $sheets = $container.find(options.selector),
-                base_url = stacks._base_URL();
-            for (var i=0; i<$sheets.length; i++) {
+        _updateAnchors: function(selected) {
+            var $sheets = this.$el.find(this.options.selector),
+                base_url = this._base_URL();
+            $sheets.each(function (idx, sheet) {
                 // This may appear odd, but: when querying a browser uses the
                 // original href of an anchor as it appeared in the document
-                // source, but when you access the href property you always
+                // source, but when you access the href property you always get
                 // the fully qualified version.
-                var sheet = $sheets[i],
-                    $anchors = $("a[href=\""+base_url+"#"+sheet.id+"\"],a[href=\"#"+sheet.id+"\"]");
-                if (sheet.id===selected)
+                var $anchors = $("a[href=\""+base_url+"#"+sheet.id+"\"],a[href=\"#"+sheet.id+"\"]");
+                if (sheet.id === selected) {
                     $anchors.addClass("current");
-                else
+                } else {
                     $anchors.removeClass("current");
-            }
+                }
+            });
         },
 
-        _switch: function($container, sheet_id) {
-            var options = $container.data("pat-stacks"),
-                $sheet = $container.find("#"+sheet_id),
-                $invisible;
-            if (!$sheet.length || $sheet.hasClass("visible"))
+        _switch: function(sheet_id) {
+            var $sheet = this.$el.find("#"+sheet_id);
+            if (!$sheet.length || $sheet.hasClass("visible")) {
                 return;
-            $invisible=$container.find(options.selector).not($sheet);
-            utils.hideOrShow($invisible, false, options, stacks.name);
-            utils.hideOrShow($sheet, true, options, stacks.name);
+            }
+            var $invisible = this.$el.find(this.options.selector).not($sheet);
+            utils.hideOrShow($invisible, false, this.options, this.name);
+            utils.hideOrShow($sheet, true, this.options, this.name);
         }
-    };
-
-    stacks._setup();
-    registry.register(stacks);
-    return stacks;
+    });
 });
 
 /**
@@ -54161,6 +54109,87 @@ define('pat-syntax-highlight',[
 });
 
 /**
+ * Copyright 2015 Syslab.com GmbH - witekdev
+ */
+define('pat-tabs',[
+    "jquery",
+    "underscore",
+    "pat-registry",
+    "pat-base",
+    "pat-utils",
+    "pat-logger",
+    "pat-parser"
+], function($, _, patterns, Base, utils, logging, Parser) {
+    var log = logging.getLogger("tabs"),
+        parser = new Parser("tabs");
+
+    return Base.extend({
+        name: "tabs",
+        trigger: ".pat-tabs",
+        jquery_plugin: true,
+
+        init: function($el, opts) {
+            this.options = parser.parse(this.$el, opts); // redundant - at the moment we have no parameter options
+            $(window).resize(_.debounce(this.adjustTabs.bind(this), 100));
+            $('body').on("pat-update", this.filterByPatternsUpdate.bind(this));
+            this.adjustTabs();
+        },
+
+        filterByPatternsUpdate: function(ev, data) {
+            // determine when to call adjustTabs depending as to which pattern triggered pat-update
+            var allowed_patterns = ["stacks", "switch", "auto-scale", "grid", "equaliser", "masonry", "zoom"];
+            // XXX TODO add other (or remove redundant) layout modifying patterns    
+            if ( $.inArray(data.pattern, allowed_patterns) > -1 ) {
+                this.adjustTabs();
+            }
+        },
+
+        adjustTabs: function(ev, data) {
+            var container_width = this.$el.width()*0.95,
+                $children = this.$el.children(),
+                total_width = 0,
+                idx = 0,
+                tab_width,
+                $overflowing;
+
+            if ( $children.length !== 0 ) {
+                // here we want to gather all tabs including those that may be in a special 'extra-tabs'
+                // span and place them all as equal children, before we recalculate which tabs are 
+                // visible and which are potentially fully or partially obscured.
+                var $grouper = $children.filter('.extra-tabs');
+                $grouper.children().appendTo(this.$el);
+                $grouper.remove();
+                $children = this.$el.children();
+
+                // precalculate the collective size of all the tabs 
+                total_width = _.reduce($children, function(value, el) {
+                    return value + $(el).outerWidth(true);
+                }, 0);     
+
+                // only execute if all tabs cannot fit comfortably in the container
+                if ( total_width >= container_width ) {
+                    total_width = 0;
+                    tab_width = $($children[idx]).outerWidth(true);
+                    // iterate through all visible tabs until we find the first obscured tab
+                    while ( (total_width+tab_width) < container_width ) {
+                        total_width += tab_width;
+                        idx++;
+                        tab_width = $($children[idx]).outerWidth(true);
+                    }
+                    $overflowing = this.$el.children(':gt('+(idx-1)+')');
+                    // move obscured tabs to a special 'extra-tabs' span
+                    this.$el.append('<span class="extra-tabs"></span>'); // create extra-tabs span
+                    this.$el.children().filter(".extra-tabs").append($overflowing); // move tabs into it
+                }
+            }
+        }
+    });
+});
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
+/**
  * Patterns toggle - toggle class on click
  *
  * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
@@ -54172,10 +54201,12 @@ define('pat-toggle',[
     "pat-parser",
     "pat-store"
 ], function($, patterns, logger, Parser, store) {
+    "use strict";
     var log = logger.getLogger("pat.toggle"),
         parser = new Parser("toggle");
 
     parser.addArgument("selector");
+    parser.addArgument("event");
     parser.addArgument("attr", "class");
     parser.addArgument("value");
     parser.addArgument("store", "none", ["none", "session", "local"]);
@@ -54206,9 +54237,11 @@ define('pat-toggle',[
             var classes = el.className.split(/\s+/),
                 values = this.values;
             classes=classes.filter(function(v) { return v.length && values.indexOf(v)===-1;});
-            if (value)
+            if (value) {
                 classes.push(value);
+            }
             el.className=classes.join(" ");
+            $(el).trigger("pat-update", {pattern: "toggle"});
         },
 
         next: function Toggler_next(current) {
@@ -54253,27 +54286,39 @@ define('pat-toggle',[
         init: function toggle_init($el) {
             return $el.each(function toggle_init_el() {
                 var $trigger = $(this),
+                    event_name,
                     options = toggle._validateOptions(this, parser.parse($trigger, true));
 
-                if (!options.length)
+                if (!options.length) {
                     return;
+                }
 
-                for (var i=0; i<options.length; i++)
+                for (var i=0; i<options.length; i++){
                     if (options[i].value_storage) {
                         var victims, state, last_state;
                         victims = $(options[i].selector);
-                        if (!victims.length)
+                        if (!victims.length) {
                             continue;
+                        }
                         state=options[i].toggler.get(victims[0]);
                         last_state=options[i].value_storage.get();
-                        if (state!==last_state && last_state !== null)
-                            for (var j=0; j<victims.length; j++)
+                        if (state!==last_state && last_state !== null) {
+                            for (var j=0; j<victims.length; j++) {
                                 options[i].toggler.set(victims[j], last_state);
+                            }
+                        }
+                    }
+
+                    if (options[i].event) {
+                        event_name = options[i].event;
+                    }else{
+                        event_name = 'click';
+                    }
                 }
 
                 $trigger
                     .off(".toggle")
-                    .on("click.toggle", null, options, toggle._onClick)
+                    .on(event_name + ".toggle", null, options, toggle._onClick)
                     .on("keypress.toggle", null, options, toggle._onKeyPress);
             });
         },
@@ -54308,12 +54353,10 @@ define('pat-toggle',[
                     log.error("Toggle pattern needs values for class attributes.");
                     continue;
                 }
-
                 if (i && option.store!=="none") {
                     log.warn("store option can only be set on first argument");
                     option.store="none";
                 }
-
                 if (option.store!=="none") {
                     if (!trigger.id) {
                         log.warn("state persistance requested, but element has no id");
@@ -54330,7 +54373,6 @@ define('pat-toggle',[
                 option.toggler=this._makeToggler(option);
                 correct.push(option);
             }
-
             return correct;
         },
 
@@ -54342,17 +54384,22 @@ define('pat-toggle',[
             for (var i=0; i<options.length; i++) {
                 option=options[i];
                 victims = $(option.selector);
-                if (!victims.length)
+                if (!victims.length) {
                     continue;
+                }
                 toggler=option.toggler;
                 next_state=toggler.toggle(victims[0]);
-                for (j=1; j<victims.length; j++)
+                for (j=1; j<victims.length; j++) {
                     toggler.set(victims[j], next_state);
-                if (option.value_storage)
+                }
+                if (option.value_storage) {
                     option.value_storage.set(next_state);
+                }
                 updated = true;
             }
             if (updated) {
+                // XXX: Is this necessary? pat-update gets called on changed
+                // element above.
                 $(this).trigger("pat-update", {pattern: "toggle"});
             }
             event.preventDefault();
@@ -54360,8 +54407,9 @@ define('pat-toggle',[
 
         _onKeyPress : function toggle_onKeyPress(event) {
             var keycode = event.keyCode ? event.keyCode : event.which;
-            if (keycode==="13")
+            if (keycode === "13") {
                 $(this).trigger("click", event);
+            }
         }
     };
 
@@ -56099,7 +56147,8 @@ define('pat-validation',[
             }
             _.each(['before', 'after'], function (relation) {
                 var isDate = validate.moment.isDate,
-                    relative = opts.not[relation], arr, constraint, $ref;
+                    relative = opts.not && opts.not[relation] || undefined,
+                    arr, constraint, $ref;
                 if (typeof relative == "undefined") {
                     return;
                 }
@@ -56207,13 +56256,16 @@ define('pat-validation',[
              * validated. Will prevent the event's default action if validation fails.
              */
             var has_errors = false, input, error, i;
-            var $single = this.$inputs.filter(':enabled:not(:checkbox):not(:radio)');
+            // Ignore invisible elements (otherwise pat-clone template
+            // elements get validated). Not aware of other cases where this
+            // might cause problems.
+            var $single = this.$inputs.filter(':visible:enabled:not(:checkbox):not(:radio)');
             var group_names = this.$inputs
                     .filter(':enabled:checkbox, :enabled:radio')
                     .map(function () { return this.getAttribute('name'); });
             var handleError = function (error) {
                 if (typeof error != "undefined") {
-                    if (!has_errors) {
+                    if (!has_errors && ev) {
                         ev.preventDefault();
                         ev.stopPropagation();
                         ev.stopImmediatePropagation();
@@ -56303,6 +56355,9 @@ define('pat-validation',[
                 this.$el.off('submit.pat-validation');
                 this.$el.off('pat-update.pat-validation');
                 this.init();
+                if (data.pattern == "clone" && data.action == "remove") {
+                    this.validateForm(ev);
+                }
             }
             return true;
         },
@@ -56436,7 +56491,6 @@ define('patterns',[
     "pat-colour-picker",
     "pat-date-picker",
     "pat-depends",
-    "pat-edit-tinymce",
     "pat-equaliser",
     "pat-expandable",
     "pat-focus",
@@ -56463,6 +56517,7 @@ define('patterns',[
     "pat-subform",
     "pat-switch",
     "pat-syntax-highlight",
+    "pat-tabs",
     "pat-toggle",
     "pat-tooltip",
     "pat-url",
