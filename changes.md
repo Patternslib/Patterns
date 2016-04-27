@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.13 - Unreleased
+## 2.0.13 - Apr. 27, 2016
 
 - New property for sortable pattern, `drag-class`, the CSS class to apply to item being dragged. Is `"dragged"` by default.
 - New property for sortable pattern, `drop`, a Javascript callback function to be called when an item is dropped.
@@ -12,6 +12,7 @@
 - Let the next-href option of pat-inject work as advertised.
 - Parser fix: don't treat `&amp;` as a separator
 - #436 Remove `pat-bumper` restriction that scroll container must be the direct parent.
+- pat-masonry fix: the `containerStyle` value must be an object.
 
 ## 2.0.12 - Oct. 9, 2015
 
