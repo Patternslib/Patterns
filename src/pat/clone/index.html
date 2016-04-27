@@ -15,7 +15,7 @@
             <!-- First visible instance and also template -->
             <fieldset class="clone">
                 <legend>Family member 1</legend>
-                <input name="name-1" size="20" type="text" placeholder="Name"/>
+                <input name="name-1" size="20" type="text" placeholder="Name" required="required"/>
                 <input name="date-1" type="date" placeholder="birthdate" />
                 <button type="button" class="pat-button remove-clone icon-trash">Remove</button>
             </fieldset>
@@ -28,7 +28,7 @@
         </div>
         <!-- Clone trigger -->
         <button type="button" class="pat-button clone-trigger">Add an extra family member</button>
-        <button id="submit" type="submit">submit</button>
+        <button class="pat-button" id="submit" type="submit">submit</button>
     </form>
 </body>
 </html>
