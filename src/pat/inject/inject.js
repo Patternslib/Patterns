@@ -392,6 +392,7 @@ define([
                     }
                 });
             }
+            $el.trigger("pat-inject-success");
         },
 
         _onInjectSuccess: function ($el, cfgs, ev) {
