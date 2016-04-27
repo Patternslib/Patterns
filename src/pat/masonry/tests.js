@@ -24,7 +24,7 @@ define(["pat-masonry"], function(pattern) {
                 expect($msnry.hasClass("masonry-ready")).toBeFalsy();
                 pattern.init($msnry);
             });
-            waits(600);
+            waits(800);
             runs(function () {
                 expect($msnry.hasClass("masonry-ready")).toBeTruthy();
             });

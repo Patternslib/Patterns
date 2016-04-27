@@ -97,6 +97,8 @@ properly.
 ### Option reference
 
 
-|Property      | Type    | Default Value | Available values       | Description                                                                             |
-|--------------|---------|---------------|------------------------|-----------------------------------------------------------------------------------------|
-|**selector**  | string  | li            | Any valid CSS selector | This is the selector the pattern will use to determine which are the sortable elements. |
+|Property        | Type    | Default Value | Available values       | Description                                                                             |
+|----------------|---------|---------------|------------------------|-----------------------------------------------------------------------------------------|
+|**selector**    | string  | li            | Any valid CSS selector | This is the selector the pattern will use to determine which are the sortable elements. |
+|**drag-class**  | string  | dragged       | Any valid CSS class    | A class name applied to the item being dragged.                                         |
+|**drop**        | string  |               | A Javascript function  | A Javascript callback function, called when the item is dropped.                        |

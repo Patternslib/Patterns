@@ -27,6 +27,7 @@ define([
                 $container.on("pat-update.pat-equaliser", null, this, equaliser._onEvent);
                 $container.on("patterns-injected.pat-equaliser", null, this, equaliser._onEvent);
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
+                $container.parents('.pat-stacks').on("pat-update", null, this, utils.debounce(equaliser._onEvent, 100));
                 imagesLoaded(this, $.proxy(function() {
                     equaliser._update(this);
                 }, this));

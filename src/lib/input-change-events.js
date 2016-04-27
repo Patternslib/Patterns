@@ -39,7 +39,7 @@ define([
             } else {
                 // The element itself is an input, se we simply register a
                 // handler fot it.
-                _.registerHandlersForElement($el);
+                _.registerHandlersForElement.bind($el)();
             }
         },
 

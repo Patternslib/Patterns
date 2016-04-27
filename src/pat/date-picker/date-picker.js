@@ -42,6 +42,8 @@ define([
                 "showWeekNumber": this.options.weekNumbers === "show",
                 "onSelect": function () {
                     $(this._o.field).closest("form").trigger("input-change");
+                    /* Also trigger input change on date field to support pat-autosubmit. */
+                    $(this._o.field).trigger("input-change");
                 }
             };
             if (this.options.i18n) {

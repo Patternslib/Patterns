@@ -43,15 +43,19 @@ define([
             }
             $el.data("pat-inject", cfgs);
 
-            // In case next-href is specified the anchor's href will
-            // be set to it after the injection is triggered. In case
-            // the next href already exists, we do not activate the
-            // injection but instead just change the anchors href.
-            var $nexthref = $(cfgs[0].nextHref);
-            if ($el.is("a") && $nexthref.length > 0) {
-                log.debug("Skipping as next href already exists", $nexthref);
-                // XXX: reconsider how the injection enters exhausted state
-                return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
+            if (cfgs[0].nextHref && cfgs[0].nextHref.indexOf('#') === 0) {
+                // In case the next href is an anchor, and it already
+                // exists in the page, we do not activate the injection
+                // but instead just change the anchors href.
+
+                // XXX: This is used in only one project for linked
+                // fullcalendars, it's sanity is wonky and we should
+                // probably solve it differently.
+                if ($el.is("a") && $(cfgs[0].nextHref).length > 0) {
+                    log.debug("Skipping as next href is anchor, which already exists", cfgs[0].nextHref);
+                    // XXX: reconsider how the injection enters exhausted state
+                    return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
+                }
             }
 
             switch (cfgs[0].trigger) {
@@ -116,6 +120,10 @@ define([
              */
             var $el = $sub.parents("form"),
                 cfgs = $sub.data("pat-inject");
+
+            // store the params of the subform in the config, to be used by history
+            $(cfgs).each(function(i, v) {v.params = $.param($sub.serializeArray());});
+
             try {
                 $el.trigger("patterns-inject-triggered");
             } catch (e) {
@@ -350,9 +358,13 @@ define([
             });
             // Now the injection actually happens.
             if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
-            // History support.
+            // History support. if subform is submitted, append form params
             if ((cfg.history === "record") && ("pushState" in history)) {
-                history.pushState({'url': cfg.url}, "", cfg.url);
+                if (cfg.params) {
+                    history.pushState({'url': cfg.url + '?' + cfg.params}, "", cfg.url + '?' + cfg.params);
+                } else {
+                    history.pushState({'url': cfg.url}, "", cfg.url);
+                }
             }
         },
 
@@ -380,6 +392,7 @@ define([
                     }
                 });
             }
+            $el.trigger("pat-inject-success");
         },
 
         _onInjectSuccess: function ($el, cfgs, ev) {
@@ -399,9 +412,10 @@ define([
                     inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
                 });
             });
-            if (cfgs[0].nextHref) {
-                $el.attr({href: (window.location.href.split("#")[0] || "") +
-                            cfgs[0].nextHref});
+            if (cfgs[0].nextHref && $el.is("a")) {
+                // In case next-href is specified the anchor's href will
+                // be set to it after the injection is triggered.
+                $el.attr({href: cfgs[0].nextHref.replace(/&amp;/g, '&')});
                 inject.destroy($el);
             }
             $el.off("pat-ajax-success.pat-inject");
@@ -476,26 +490,27 @@ define([
                         {selector: cfg.target});
                 return false;
             }
-            if (cfg.action === "content")
+            if (cfg.action === "content") {
                 $target.empty().append($source);
-            else if (cfg.action === "element")
+            } else if (cfg.action === "element") {
                 $target.replaceWith($source);
-            else
+            } else {
                 $target[method]($source);
-
+            }
             return true;
         },
 
         _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
             var $html = inject._parseRawHtml(html, url);
             return sources.map(function inject_sourcesFromHtml_map(source) {
-                if (source === "body")
+                if (source === "body") {
                     source = "#__original_body";
-
+                }
                 var $source = $html.find(source);
 
-                if ($source.length === 0)
+                if ($source.length === 0) {
                     log.warn("No source elements for selector:", source, $html);
+                }
 
                 $source.find("a[href^=\"#\"]").each(function () {
                     var href = this.getAttribute("href");
@@ -507,12 +522,12 @@ define([
                     }
                     // Skip in-document links pointing to an id that is inside
                     // this fragment.
-                    if (href.length === 1)  // Special case for top-of-page links
+                    if (href.length === 1) { // Special case for top-of-page links
                         this.href=url;
-                    else if (!$source.find(href).length)
+                    } else if (!$source.find(href).length) {
                         this.href=url+href;
+                    }
                 });
-
                 return $source;
             });
         },
@@ -618,21 +633,19 @@ define([
                 log.error("Error rebasing urls", e);
             }
             var $html = $("<div/>").html(clean_html);
-
-            if ($html.children().length === 0)
+            if ($html.children().length === 0) {
                 log.warn("Parsing html resulted in empty jquery object:", clean_html);
-
+            }
             return $html;
         },
 
         // XXX: hack
         _initAutoloadVisible: function inject_initAutoloadVisible($el) {
-            // ignore executed autoloads
-            if ($el.data("pat-inject-autoloaded"))
+            if ($el.data("pat-inject-autoloaded")) {
+                // ignore executed autoloads
                 return false;
-
-            var $scrollable = $el.parents(":scrollable"),
-                checkVisibility;
+            }
+            var $scrollable = $el.parents(":scrollable"), checkVisibility;
 
             // function to trigger the autoload and mark as triggered
             function trigger() {
@@ -646,8 +659,9 @@ define([
                 // if scrollable parent and visible -> trigger it
                 // we only look at the closest scrollable parent, no nesting
                 checkVisibility = utils.debounce(function inject_checkVisibility_scrollable() {
-                    if ($el.data("patterns.autoload"))
+                    if ($el.data("patterns.autoload") || !$.contains(document, $el[0])) {
                         return false;
+                    }
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -659,27 +673,28 @@ define([
                     }
                     return false;
                 }, 100);
-                if (checkVisibility())
+                if (checkVisibility()) {
                     return true;
-
+                }
                 // wait to become visible - again only immediate scrollable parent
                 $($scrollable[0]).on("scroll", checkVisibility);
                 $(window).on("resize.pat-autoload", checkVisibility);
             } else {
                 // Use case 2: scrolling the entire page
                 checkVisibility = utils.debounce(function inject_checkVisibility_not_scrollable() {
-                    if ($el.data("patterns.autoload"))
+                    if ($el.data("patterns.autoload")) {
                         return false;
-                    if (!utils.elementInViewport($el[0]))
+                    }
+                    if (!utils.elementInViewport($el[0])) {
                         return false;
-
+                    }
                     $(window).off(".pat-autoload", checkVisibility);
                     return trigger();
                 }, 100);
-                if (checkVisibility())
+                if (checkVisibility()) {
                     return true;
-                $(window).on("resize.pat-autoload scroll.pat-autoload",
-                        checkVisibility);
+                }
+                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
             }
             return false;
         },
@@ -691,7 +706,6 @@ define([
 
         callTypeHandler: function inject_callTypeHandler(type, fn, context, params) {
             type = type || "html";
-
             if (inject.handlers[type] && $.isFunction(inject.handlers[type][fn])) {
                 return inject.handlers[type][fn].apply(context, params);
             } else {
@@ -749,7 +763,6 @@ define([
             log.debug(e);
         }
     }
-
     registry.register(inject);
     return inject;
 });

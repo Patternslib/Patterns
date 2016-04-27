@@ -3,33 +3,113 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Demo page</title>
-    <link rel="stylesheet" href="/src/pat/style/common.css" type="text/css">
+    <link rel="stylesheet" href="/style/common.css" type="text/css">
+    <link rel="stylesheet" href="/style/patterns.css" type="text/css">
     <script src="/main.js" type="text/javascript" charset="utf-8"></script>
     <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        .navigation.tabs {
+            background-color: white;
+        }
+    </style>
 </head>
 <body>
-		<nav class="tabs">
-		  <a href="#sheet-1" class="current">Sheet one</a> <a href="#sheet-2">Sheet two</a> <a href="#sheet-3">Sheet three</a>
-		</nav>
-		<article class="pat-stacks">
-		  <section id="sheet-1">
-		    <h2>Sheet one</h2>
-		    <p>
-		      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-		    </p>
-		  </section>
-		  <section id="sheet-2">
-		    <h2>Sheet two</h2>
-		    <p>
-		      Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. 
-		    </p>
-		  </section>
-		  <section id="sheet-3">
-		    <h2>Sheet three</h2>
-		    <p>
-		      Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. 
-		    </p>
-		  </section>
-		</article>
+<h3>The stacks pattern can be used to make tabs</h3>
+<nav class="tabs">
+    <a href="#sheet-1" class="current">Tab one</a> <a href="#sheet-2">Tab two</a> <a href="#sheet-3">Tab three</a>
+</nav>
+<article class="pat-stacks">
+    <section id="sheet-1">
+        <h4>Sheet one</h4>
+        <p>
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+        </p>
+    </section>
+    <section id="sheet-2">
+        <h4>Sheet two</h4>
+        <p>
+            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+        </p>
+    </section>
+    <section id="sheet-3">
+        <h4>Sheet three</h4>
+        <p>
+            Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+        </p>
+    </section>
+</article>
 </body>
 </html>
+
+<!--
+<br/>
+<h2>Demo 2</h2>
+<h3>Here the stacks pattern is used together with the scroll and bumper patterns.</h3>
+<p>
+<em>
+The stacks pattern enables the tab-like behaviour as seen above. The scroll
+pattern enables a smooth scroll towards the tabbed contend and the bumber
+pattern lets the tabs stick to the top of the page when you scroll down.
+</em>
+</p>
+<div class="pat-bumper">
+    <nav class="container navigation tabs">
+        <a href="#orange" class="pat-scroll">Orange</a>
+        <a href="#green" class="pat-scroll">Green</a>
+    </nav>
+</div>
+<div class="container topics">
+    <div class="pat-stacks">
+        <div class="item topic pat-scroll hidden" id="orange" style="display: none;">
+            <article class="pat-rich">
+                <h4 id="assessment">The council squatted upon the steps of the rostrum</h4>
+                <p>
+                The council squatted upon the steps of the rostrum, while
+                below them stood the prisoner and her two guards. I saw
+                that one of the women was Sarkoja, and thus understood how
+                she had been present at the hearing of the preceding day,
+                the results of which she had reported to the occupants of
+                our dormitory last night. Her attitude toward the captive
+                was most harsh and brutal. When she held her, she sunk her
+                rudimentary nails into the poor girl's flesh, or twisted
+                her arm in a most painful manner. 
+                </p>
+            </article>
+        </div>
+        <div class="item topic pat-scroll hidden" id="green" style="display: none;">
+            <article class="pat-rich">
+                <h4 id="few-people-really-love-their-intranet">We talked through the air in those days, thousands and thousands of miles.</h4>
+                <p>
+                Warmest climes but nurse the cruellest fangs: the tiger of Bengal crouches in spiced groves of ceaseless verdure.
+                Skies the most effulgent but basket the deadliest thunders: gorgeous Cuba knows tornadoes that never swept tame northern lands.
+                So, too, it is, that in these resplendent Japanese seas the mariner encounters the direst of all storms, the Typhoon.
+                It will sometimes burst from out that cloudless sky, like an exploding bomb upon a dazed and sleepy town.
+                </p>
+                <h4 id="intranets-are-complex-systems">"Do you know what's over there?"</h4>
+                <p>
+                I said, pointing at the pine tops that hid the Martians. "Eh?" said he, turning. "I
+                was explainin' these is vallyble." "Death!" I shouted.
+                "Death is coming! Death!" and leaving him to digest that if
+                he could, I hurried on after the artillery-man. At the
+                corner I looked back. The soldier had left him, and he was
+                still standing by his box, with the pots of orchids on the
+                lid of it, and staring vaguely over the trees. No one in
+                Weybridge could tell us where the headquarters were.
+                </p>
+                <h4 id="what-makes-a-great-intranet">So she swallowed one of the cakes</h4>
+                <p>
+                So she swallowed one of the cakes, and was delighted to
+                find that she began shrinking directly. As soon as she was
+                small enough to get through the door, she ran out of the
+                house, and found quite a crowd of little animals and birds
+                waiting outside. The poor little Lizard, Bill, was in the
+                middle, being held up by two guinea-pigs, who were giving
+                it something out of a bottle. They all made a rush at Alice
+                the moment she appeared; but she ran off as hard as she
+                could, and soon found
+                </p>
+            </article>
+        </div>
+    </div>
+</div>
+-->

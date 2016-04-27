@@ -1,14 +1,28 @@
 # Changelog
 
+## 2.0.13 - Apr. 27, 2016
+
+- New property for sortable pattern, `drag-class`, the CSS class to apply to item being dragged. Is `"dragged"` by default.
+- New property for sortable pattern, `drop`, a Javascript callback function to be called when an item is dropped.
+- Form with pat-autosubmit doesn't get notified when injected inputs change.
+- Inject pattern with `autoload-visible` injected erroneously based upon old autoload element no longer in DOM.
+- Add the class `modal-active` to the `body` element whenever a modal is in the DOM.
+- New pattern: `pat-tabs`. See the relevant documentation.
+- Bugfix: `pat-validation` still validates removed clones from `pat-clone`.
+- Let the next-href option of pat-inject work as advertised.
+- Parser fix: don't treat `&amp;` as a separator
+- #436 Remove `pat-bumper` restriction that scroll container must be the direct parent.
+- pat-masonry fix: the `containerStyle` value must be an object.
+
 ## 2.0.12 - Oct. 9, 2015
 
-- New argument for the inject pattern: `loading-class`.
+- New property for the inject pattern: `loading-class`.
   Specifies a class to appear on the injection target while the injected content is still loading.
   Previously this was hardcoded to `injecting`, this is still set to the default value.
-- New arguments for the inject pattern: `confirm` and `confirm-message`.
+- New propertys for the inject pattern: `confirm` and `confirm-message`.
   Allows you to specify whether a confirmation message should be shown before
   injecting, as well as the text of that message.
-- New argument for tooltip pattern: `mark-inactive`.
+- New property for tooltip pattern: `mark-inactive`.
   A boolean value, used to specify whether the class 'inactive' should be added
   to the tooltip trigger. Previously this behavior was hardcoded, now it's
   optional with a default of `true`.

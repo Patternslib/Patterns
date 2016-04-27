@@ -1,2 +1,0 @@
-# Description
-A modal panel is a panel that requires users to interact with it before they can return to operating the application laying behind, thus preventing the workflow on the application main window. Modal panels are also sometimes referred to as 'dialogue windows'.

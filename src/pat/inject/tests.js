@@ -15,6 +15,28 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             $("#lab").remove();
         });
 
+        describe("The next-href argument", function() {
+            afterEach(function() {
+                $("#lab").empty();
+            });
+
+            it("allows you to specify the href to be applied to the clicked element after injection", function () {
+                var $a = $("<a class=\"pat-inject\" data-pat-inject=\"next-href: http://patternslib.com\" href=\"/src/pat/inject/inject-sources.html#pos-1\">link</a>");
+                var $div = $("<div id=\"pos-1\" />");
+                $("#lab").append($a).append($div);
+                var dummy_event = {
+                    'jqxhr': {'responseText': 'foo'},
+                    'isPropagationStopped': function () { return true; }
+                };
+                var cfgs = pattern.extractConfig($a, {});
+                pattern.verifyConfig(cfgs, $a);
+                pattern._onInjectSuccess($a, cfgs, dummy_event);
+                expect(cfgs[0].nextHref).toBe('http://patternslib.com');
+                expect($a.attr("href")).toBe('http://patternslib.com');
+            });
+
+        });
+
         describe("The loading-class argument", function() {
 
             afterEach(function() {

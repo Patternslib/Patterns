@@ -77,7 +77,8 @@ define([
             }
             _.each(['before', 'after'], function (relation) {
                 var isDate = validate.moment.isDate,
-                    relative = opts.not[relation], arr, constraint, $ref;
+                    relative = opts.not && opts.not[relation] || undefined,
+                    arr, constraint, $ref;
                 if (typeof relative == "undefined") {
                     return;
                 }
@@ -185,13 +186,16 @@ define([
              * validated. Will prevent the event's default action if validation fails.
              */
             var has_errors = false, input, error, i;
-            var $single = this.$inputs.filter(':enabled:not(:checkbox):not(:radio)');
+            // Ignore invisible elements (otherwise pat-clone template
+            // elements get validated). Not aware of other cases where this
+            // might cause problems.
+            var $single = this.$inputs.filter(':visible:enabled:not(:checkbox):not(:radio)');
             var group_names = this.$inputs
                     .filter(':enabled:checkbox, :enabled:radio')
                     .map(function () { return this.getAttribute('name'); });
             var handleError = function (error) {
                 if (typeof error != "undefined") {
-                    if (!has_errors) {
+                    if (!has_errors && ev) {
                         ev.preventDefault();
                         ev.stopPropagation();
                         ev.stopImmediatePropagation();
@@ -281,6 +285,9 @@ define([
                 this.$el.off('submit.pat-validation');
                 this.$el.off('pat-update.pat-validation');
                 this.init();
+                if (data.pattern == "clone" && data.action == "remove") {
+                    this.validateForm(ev);
+                }
             }
             return true;
         },

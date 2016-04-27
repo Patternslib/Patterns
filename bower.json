@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "main": "bundle.js",
   "devDependencies": {
     "jasmine": "https://github.com/jcbrand/jasmine.git#1_3_x"
@@ -13,7 +13,6 @@
     "requirejs": "",
     "requirejs-tpl-jcbrand": "*",
     "requirejs-text": "~2.0.12",
-    "klass": "",
     "jcrop": "0.9.12",
     "AnythingSlider": "1.8.17",
     "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",

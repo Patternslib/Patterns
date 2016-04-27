@@ -11,6 +11,7 @@
     "white": false,
     "quotmark": false,
     "predef": [
+        "Event",
         "Markdown",
         "Modernizr",
         "define",

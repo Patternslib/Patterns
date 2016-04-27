@@ -10,10 +10,12 @@ define([
     "pat-parser",
     "pat-store"
 ], function($, patterns, logger, Parser, store) {
+    "use strict";
     var log = logger.getLogger("pat.toggle"),
         parser = new Parser("toggle");
 
     parser.addArgument("selector");
+    parser.addArgument("event");
     parser.addArgument("attr", "class");
     parser.addArgument("value");
     parser.addArgument("store", "none", ["none", "session", "local"]);
@@ -44,9 +46,11 @@ define([
             var classes = el.className.split(/\s+/),
                 values = this.values;
             classes=classes.filter(function(v) { return v.length && values.indexOf(v)===-1;});
-            if (value)
+            if (value) {
                 classes.push(value);
+            }
             el.className=classes.join(" ");
+            $(el).trigger("pat-update", {pattern: "toggle"});
         },
 
         next: function Toggler_next(current) {
@@ -91,27 +95,39 @@ define([
         init: function toggle_init($el) {
             return $el.each(function toggle_init_el() {
                 var $trigger = $(this),
+                    event_name,
                     options = toggle._validateOptions(this, parser.parse($trigger, true));
 
-                if (!options.length)
+                if (!options.length) {
                     return;
+                }
 
-                for (var i=0; i<options.length; i++)
+                for (var i=0; i<options.length; i++){
                     if (options[i].value_storage) {
                         var victims, state, last_state;
                         victims = $(options[i].selector);
-                        if (!victims.length)
+                        if (!victims.length) {
                             continue;
+                        }
                         state=options[i].toggler.get(victims[0]);
                         last_state=options[i].value_storage.get();
-                        if (state!==last_state && last_state !== null)
-                            for (var j=0; j<victims.length; j++)
+                        if (state!==last_state && last_state !== null) {
+                            for (var j=0; j<victims.length; j++) {
                                 options[i].toggler.set(victims[j], last_state);
+                            }
+                        }
+                    }
+
+                    if (options[i].event) {
+                        event_name = options[i].event;
+                    }else{
+                        event_name = 'click';
+                    }
                 }
 
                 $trigger
                     .off(".toggle")
-                    .on("click.toggle", null, options, toggle._onClick)
+                    .on(event_name + ".toggle", null, options, toggle._onClick)
                     .on("keypress.toggle", null, options, toggle._onKeyPress);
             });
         },
@@ -146,12 +162,10 @@ define([
                     log.error("Toggle pattern needs values for class attributes.");
                     continue;
                 }
-
                 if (i && option.store!=="none") {
                     log.warn("store option can only be set on first argument");
                     option.store="none";
                 }
-
                 if (option.store!=="none") {
                     if (!trigger.id) {
                         log.warn("state persistance requested, but element has no id");
@@ -168,7 +182,6 @@ define([
                 option.toggler=this._makeToggler(option);
                 correct.push(option);
             }
-
             return correct;
         },
 
@@ -180,17 +193,22 @@ define([
             for (var i=0; i<options.length; i++) {
                 option=options[i];
                 victims = $(option.selector);
-                if (!victims.length)
+                if (!victims.length) {
                     continue;
+                }
                 toggler=option.toggler;
                 next_state=toggler.toggle(victims[0]);
-                for (j=1; j<victims.length; j++)
+                for (j=1; j<victims.length; j++) {
                     toggler.set(victims[j], next_state);
-                if (option.value_storage)
+                }
+                if (option.value_storage) {
                     option.value_storage.set(next_state);
+                }
                 updated = true;
             }
             if (updated) {
+                // XXX: Is this necessary? pat-update gets called on changed
+                // element above.
                 $(this).trigger("pat-update", {pattern: "toggle"});
             }
             event.preventDefault();
@@ -198,8 +216,9 @@ define([
 
         _onKeyPress : function toggle_onKeyPress(event) {
             var keycode = event.keyCode ? event.keyCode : event.which;
-            if (keycode==="13")
+            if (keycode === "13") {
                 $(this).trigger("click", event);
+            }
         }
     };
 

@@ -8,6 +8,7 @@ define(["pat-modal"], function(pattern) {
 
         afterEach(function() {
             $("#lab").remove();
+            $('body').removeClass("modal-active");
         });
 
         describe("init", function() {
@@ -17,6 +18,7 @@ define(["pat-modal"], function(pattern) {
                     "  <p>Modal content</p>",
                     "</div>"
                 ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
                 var $modal = $("#modal");
                 pattern.init($modal);
                 expect($modal.find(".header").length).toBeTruthy();
@@ -24,6 +26,7 @@ define(["pat-modal"], function(pattern) {
                 expect($modal.find(".header .close-panel").length).toBeTruthy();
                 expect($modal.find(".panel-content").length).toBeTruthy();
                 expect($modal.find(".panel-content").text()).toBe("Modal content");
+                expect($("body").hasClass("modal-active")).toBeTruthy();
             });
 
             it("Modal with header ", function() {
@@ -33,11 +36,13 @@ define(["pat-modal"], function(pattern) {
                     "  <p>Modal content</p>",
                     "</div>"
                 ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
                 var $modal = $("#modal");
                 pattern.init($modal);
                 expect($modal.find(".header").text()).toBe("Modal headerClose");
                 expect($modal.find(".header .close-panel").length).toBeTruthy();
                 expect($modal.find(".panel-content").text()).toBe("Modal content");
+                expect($("body").hasClass("modal-active")).toBeTruthy();
             });
 
             it("Modal with multiple content items ", function() {
@@ -49,12 +54,14 @@ define(["pat-modal"], function(pattern) {
                     "  <p>More content</p>",
                     "</div>"
                 ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
                 var $modal = $("#modal");
                 pattern.init($modal);
                 expect($modal.find(".header").text()).toBe("Modal headerClose");
                 expect($modal.find(".header .close-panel").length).toBeTruthy();
                 expect($modal.find(".panel-content p").length).toBe(2);
                 expect($modal.find(".panel-content h4").length).toBe(1);
+                expect($("body").hasClass("modal-active")).toBeTruthy();
             });
 
             it("Modal with a form that has the pat-modal CSS class", function() {
@@ -89,6 +96,21 @@ define(["pat-modal"], function(pattern) {
                 // loaded and injected problematic HTML
                 $modal = $("div#pat-modal");
                 expect($modal.length).toBeGreaterThan(0);
+            });
+
+            it("Modal with single element that specifies a custom close button string", function() {
+                $("#lab").html([
+                    "<div class=\"pat-modal\" id=\"modal\" data-pat-modal=\"close-text: Shutdown\">",
+                    "  <p>Modal content</p>",
+                    "</div>"
+                ].join("\n"));
+                expect($("body").hasClass("modal-active")).toBeFalsy();
+                var $modal = $("#modal");
+                pattern.init($modal);
+                expect($modal.find(".header").length).toBeTruthy();
+                expect($modal.find(".header").text()).toBe("Shutdown");
+                expect($modal.find(".header .close-panel").length).toBeTruthy();
+                expect($("body").hasClass("modal-active")).toBeTruthy();
             });
         });
     });

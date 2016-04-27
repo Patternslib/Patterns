@@ -5,6 +5,11 @@ define([
 ], function($, Base, Parser) {
     var parser = new Parser("sortable");
     parser.addArgument("selector", "li");
+    parser.addArgument('drag-class', 'dragged'); // Class to apply to item that is being dragged.
+    parser.addArgument('drop'); // Callback function for when item is dropped (null)
+
+    // BBB for the mockup sortable pattern.
+    parser.addAlias('dragClass', 'drag-class');
 
     return Base.extend({
         name: "sortable",
@@ -12,7 +17,7 @@ define([
 
         init: function ($el) {
             this.$form = this.$el.closest('form');
-            this.options = parser.parse(this.$el, true);
+            this.options = parser.parse(this.$el, false);
             this.recordPositions().addHandles().initScrolling();
             this.$el.on('pat-update', this.onPatternUpdate.bind(this));
         },
@@ -31,7 +36,7 @@ define([
 
         recordPositions: function () {
             // use only direct descendants to support nested lists
-            this.$sortables = this.$el.children().filter(this.options[0].selector);
+            this.$sortables = this.$el.children().filter(this.options.selector);
             this.$sortables.each(function (idx, $el) {
                 $(this).data('patterns.sortable', {'position': idx});
             });
@@ -49,7 +54,7 @@ define([
             if("draggable" in document.createElement("span")) {
                 $handles.attr("draggable", true);
             } else {
-                $handles.on("selectstart", function(event) { event.preventDefault(); });
+                $handles.on("selectstart", function(ev) { ev.preventDefault(); });
             }
             $handles.on("dragstart", this.onDragStart.bind(this));
             $handles.on("dragend", this.onDragEnd.bind(this));
@@ -67,8 +72,8 @@ define([
                 position: "fixed", zIndex: 999999,
                 height: 32, left: 0, right: 0
             });
-            scroll.on("dragover", function(event) {
-                event.preventDefault();
+            scroll.on("dragover", function(ev) {
+                ev.preventDefault();
                 if ($("html,body").is(":animated")) { return; }
                 var newpos = $(window).scrollTop() + ($(this).attr("id")==="pat-scroll-up" ? -32 : 32);
                 $("html,body").animate({scrollTop: newpos}, 50, "linear");
@@ -77,11 +82,16 @@ define([
         },
 
         onDragEnd: function (ev) {
-            $(".dragged").removeClass("dragged");
+            var $dragged = $(ev.target).parent();
+            $dragged.removeClass(this.options.dragClass);
             this.$sortables.unbind(".pat-sortable");
             this.$el.unbind(".pat-sortable");
             $("#pat-scroll-up, #pat-scroll-dn").detach();
-            this.submitChangedAmount($(ev.target).closest('.sortable'));
+            var change = this.submitChangedAmount($(ev.target).closest('.sortable'));
+            // Call the optionally passed-in callback function
+            if (this.options.drop) {
+                this.options.drop($dragged, change);
+            }
         },
 
         submitChangedAmount: function ($dragged) {
@@ -103,66 +113,67 @@ define([
                     $dragged.find('.sortable-button-down').click();
                 }
             }
+            return change;
         },
 
-        onDragStart: function (event) {
-            var $handle = $(event.target),
-                $draggable = $handle.parent();
-
-            // Firefox seems to need this set to any value
-            event.originalEvent.dataTransfer.setData("Text", "");
-            event.originalEvent.dataTransfer.effectAllowed = ["move"];
-            if ("setDragImage" in event.originalEvent.dataTransfer) {
-                event.originalEvent.dataTransfer.setDragImage($draggable[0], 0, 0);
+        onDragStart: function (ev) {
+            var $handle = $(ev.target),
+                $dragged = $handle.parent();
+            if (typeof ev.originalEvent !== "undefined") {
+                // Firefox seems to need this set to any value
+                ev.originalEvent.dataTransfer.setData("Text", "");
+                ev.originalEvent.dataTransfer.effectAllowed = ["move"];
+                if ("setDragImage" in ev.originalEvent.dataTransfer) {
+                    ev.originalEvent.dataTransfer.setDragImage($dragged[0], 0, 0);
+                }
             }
-            $draggable.addClass("dragged");
+            $dragged.addClass(this.options.dragClass);
 
             // Scroll the list if near the borders
-            this.$el.on("dragover.pat-sortable", function(event) {
-                event.preventDefault();
+            this.$el.on("dragover.pat-sortable", function(ev) {
+                ev.preventDefault();
                 if (this.$el.is(":animated")) return;
 
-                var pos = event.originalEvent.clientY + $("body").scrollTop();
-
+                var pos = ev.originalEvent.clientY + $("body").scrollTop();
                 if (pos - this.$el.offset().top < 32)
                     this.$el.animate({scrollTop: this.$el.scrollTop()-32}, 50, "linear");
                 else if (this.$el.offset().top+this.$el.height() - pos < 32)
                     this.$el.animate({scrollTop: this.$el.scrollTop()+32}, 50, "linear");
             }.bind(this));
 
-            // list elements are only drop targets when one element of the
-            // list is being dragged. avoids dragging between lists.
-            this.$sortables.on("dragover.pat-sortable", function(event) {
-                var $this = $(this),
-                    midlineY = $this.offset().top - $(document).scrollTop() + $this.height()/2;
+            this.$sortables.on("dragover.pat-sortable", function(ev) {
+                // list elements are only drop targets when one element of the
+                // list is being dragged. avoids dragging between lists.
+                var $dropTarget = $(ev.target),
+                    midlineY = $dropTarget.offset().top - $(document).scrollTop() + $dropTarget.height()/2;
 
-                if ($(this).hasClass("dragged")) {
-                    // bail if dropping on self
+                if ($dropTarget.is($dragged)) {
                     return;
                 }
-                $this.removeClass("drop-target-above drop-target-below");
-                if (event.originalEvent.clientY > midlineY)
-                    $this.addClass("drop-target-below");
+                $dropTarget.removeClass("drop-target-above drop-target-below");
+                if (ev.originalEvent.clientY > midlineY)
+                    $dropTarget.addClass("drop-target-below");
                 else
-                    $this.addClass("drop-target-above");
-                event.preventDefault();
-            });
+                    $dropTarget.addClass("drop-target-above");
+                ev.preventDefault();
+            }.bind(this));
 
             this.$sortables.on("dragleave.pat-sortable", function() {
                 this.$sortables.removeClass("drop-target-above drop-target-below");
             }.bind(this));
 
-            this.$sortables.on("drop.pat-sortable", function(event) {
-                var $sortable = $(this);
-                if ($sortable.hasClass("dragged"))
+            this.$sortables.on("drop.pat-sortable", function(ev) {
+                var $dropTarget = $(ev.target);
+                if ($dropTarget.is($dragged)) {
                     return;
-
-                if ($sortable.hasClass("drop-target-below"))
-                    $sortable.after($(".dragged"));
-                else
-                    $sortable.before($(".dragged"));
-                $sortable.removeClass("drop-target-above drop-target-below");
-                event.preventDefault();
+                }
+                if ($dropTarget.hasClass("drop-target-below")) {
+                    $dropTarget.after($dragged);
+                } else {
+                    $dropTarget.before($dragged);
+                }
+                $dropTarget.removeClass("drop-target-above drop-target-below");
+                ev.prevDefault();
             });
         }
     });

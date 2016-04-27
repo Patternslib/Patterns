@@ -1,9 +1,10 @@
 ## Description
 
-Checked flag dynamically puts a class 'checked on the label of any checkbox or
-radio button that is checked for rich styling purposes.
+The checked flag pattern, puts a visual marker on the label or fieldset of checkboxes and radio buttons to make it extra clear to the user which selection they have made.
 
 ## Documentation
+
+Checked flag dynamically puts a class `checked` on the label or fieldset of any checkbox or radio button that is checked, to enable richer styling of these elements.
 
 You may want to form components differently depending on the state of
 their checkbox or radio button. Patterns supports this by automatically

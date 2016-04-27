@@ -4,7 +4,7 @@ A simple pattern that allows for quickly changing out chunks of content on a pag
 
 ## Documentation
 
-The stacks pattern provides a way to group a number of *sheets*, only one of which is vissible at a point
+The stacks pattern provides a way to group a number of *sheets*, only one of which is visible at a point
 in time. A common version of this pattern are tabs.
 
 The markup structure looks like this:
@@ -22,7 +22,7 @@ will get a class of `visible`, all other sheets will get a `hidden` class.
 
 Note that each sheet must have an ID so it can be selected.  Elements without an ID are ignored.
 
-Any anchor in the document that points to a sheet can be used to switch the stack to that sheet. The default action for the anchor will be blocked, but other events/patterns tied to the anchor will still work. The anchor of the currently visible sheet automatically receives a class `current`. 
+Any anchor in the document that points to a sheet can be used to switch the stack to that sheet. The default action for the anchor will be blocked, but other events/patterns tied to the anchor will still work. The anchor of the currently visible sheet automatically receives a `current` class. 
 
 The above example will look like this in the DOM after initialisation:
 

@@ -1,6 +1,6 @@
 ## Description
 
-This pattern can be used to allow users to crop images in your web application.
+The image crop pattern allows a user to interactively crop an image and optionally preview the result in real time.
 
 ## Documentation
 
