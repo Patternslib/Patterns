@@ -1,5 +1,6 @@
 ## Description
 This pattern provides a simple but powerful form validation beyond what HTML5 offers.
+This pattern is based on [Parsley](http://parsleyjs.org/).
 
 ## Documentation
 
@@ -30,7 +31,7 @@ This pattern has several advantages over standard HTML 5 form validation:
       <label>City <input type="text" required="required"/></label>
     </fieldset>
 
-In addition the extra validators from Parsley are support. You can find a complete list of supported
+In addition the extra validators from Parsley are supported. You can find a complete list of supported
 validators at the [Parseley validators documentation](http://parsleyjs.org/documentation.html#validators).
 
 ### Error messages

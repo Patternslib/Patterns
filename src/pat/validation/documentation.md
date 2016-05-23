@@ -1,5 +1,6 @@
 ## Description
 This pattern provides a simple but powerful form validation beyond what HTML5 offers.
+This pattern is based on [Validate.JS](http://validatejs.org/).
 
 ## Documentation
 
