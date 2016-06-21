@@ -1,8 +1,8 @@
 define([
     "jquery",
-    "jquery.browser",
-    "underscore"
-], function($) {
+    "underscore",
+    "jquery.browser"  // adds itself to the jquery object, no need to pass to the define callback.
+], function($, _) {
 
     $.fn.safeClone = function () {
         var $clone = this.clone();
