@@ -3,32 +3,32 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define("pat-gallery", [
-    "jquery",
-    "pat-registry",
-    "pat-base",
-    "pat-parser",
-    "photoswipe",
-    "photoswipe-ui",
-    "tpl!photoswipe-template",
-    "underscore"
+define('pat-gallery', [
+    'jquery',
+    'pat-registry',
+    'pat-base',
+    'pat-parser',
+    'photoswipe',
+    'photoswipe-ui',
+    'tpl!photoswipe-template',
+    'underscore'
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
-    var parser = new Parser("gallery");
-    parser.addArgument("loop", true);
-    parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
-    parser.addArgument("delay", 30000);
-    parser.addArgument("effect-duration", 250);
+    var parser = new Parser('gallery');
+    parser.addArgument('loop', true);
+    parser.addArgument('scale-method', 'fit', ['fit', 'fitNoUpscale', 'zoom']);
+    parser.addArgument('delay', 30000);
+    parser.addArgument('effect-duration', 250);
 
     return Base.extend({
-        name: "gallery",
-        trigger: ".pat-gallery",
+        name: 'gallery',
+        trigger: '.pat-gallery',
 
         init: function patGalleryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
             if ($('#photoswipe-template').length === 0) {
                 $('body').append(template());
             }
-            var images = $("a", this.$el).map(function () {
+            var images = $('a', this.$el).map(function () {
                 return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
@@ -40,7 +40,7 @@ define("pat-gallery", [
                 hideAnimationDuration: this.options.effectDuration,
                 showAnimationDuration: this.options.effectDuration
             };
-            $("a", this.$el).click(function (ev) {
+            $('a', this.$el).click(function (ev) {
                 ev.preventDefault();
                 if (this.href) {
                     options.index = _.indexOf(_.pluck(images, 'src'), this.href);
