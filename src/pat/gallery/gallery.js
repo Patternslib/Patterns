@@ -10,7 +10,7 @@ define('pat-gallery', [
     'pat-parser',
     'photoswipe',
     'photoswipe-ui',
-    'tpl!photoswipe-template',
+    'text!pat-gallery-url/template.html',
     'underscore'
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser('gallery');
@@ -26,7 +26,7 @@ define('pat-gallery', [
         init: function patGalleryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
             if ($('#photoswipe-template').length === 0) {
-                $('body').append(template());
+                $('body').append(_.template(template)());
             }
             var images = $('a', this.$el).map(function () {
                 return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };

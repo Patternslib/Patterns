@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "2.0.13",
+  "version": "2.1",
   "main": "bundle.js",
   "devDependencies": {
     "jasmine": "https://github.com/jcbrand/jasmine.git#1_3_x"
@@ -11,7 +11,6 @@
     "jquery": "1.11.1",
     "modernizr": "2.8.3",
     "requirejs": "",
-    "requirejs-tpl-jcbrand": "*",
     "requirejs-text": "~2.0.12",
     "jcrop": "0.9.12",
     "AnythingSlider": "1.8.17",
