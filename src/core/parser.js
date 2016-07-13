@@ -237,7 +237,7 @@ define([
                 if (!part) { return; }
                 var matches = part.match(this.named_param_pattern);
                 if (!matches) {
-                    this.log.warn("Invalid parameter: " + part);
+                    this.log.warn("Invalid parameter: " + part + ": " + argstring);
                     return;
                 }
                 var name = matches[1],
