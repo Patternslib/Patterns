@@ -132,7 +132,10 @@ define([
                 $el = $(this.$el.parents()
                     .filter(function() { 
                         return $(this).css('overflow') === 'auto'; })
-                    .first())
+                    .first());
+                if (typeof $el[0] === 'undefined') {
+                    $el = $('html, body');
+                }
                 options[scroll] = $(this.$el.attr('href')).offset().top - $el.offset().top;
             }
             $el.animate(options, {
