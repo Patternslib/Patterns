@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.14 - (unreleased)
+
+- A fix for pat-scroll to scroll up to current scroll container instead of body. 
+- A fix for pat-scroll to await loading of all images before determining the amount to scroll up.
+
 ## 2.0.13 - Apr. 27, 2016
 
 - New property for sortable pattern, `drag-class`, the CSS class to apply to item being dragged. Is `"dragged"` by default.
