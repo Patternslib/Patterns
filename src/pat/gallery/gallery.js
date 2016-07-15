@@ -64,6 +64,6 @@ define("pat-gallery", [
                 });
                 gallery.init();
             });
-        },
+        }
     });
 });
