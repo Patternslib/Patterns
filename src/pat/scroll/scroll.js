@@ -132,18 +132,34 @@ define([
                 $el = $(this.$el.parents()
                     .filter(function() { 
                         return $(this).css('overflow') === 'auto'; })
-                    .first());
+                    .first())
                 if (typeof $el[0] === 'undefined') {
                     $el = $('html, body');
                 }
-                options[scroll] = $(this.$el.attr('href')).offset().top - $el.offset().top;
-            }
-            $el.animate(options, {
-                duration: 500,
-                start: function() {
-                    $('.pat-scroll').addClass('pat-scroll-animated');
+
+                var scroll_container = Math.floor( $el.offset().top );
+                var target = Math.floor( $(this.$el.attr('href')).offset().top );
+
+                if (target == scroll_container) {
+                    options[scroll] = scroll_container;
+                } else if (target >= scroll_container) {
+                    options[scroll] = target - scroll_container;
+                    $el.animate(options, {
+                        duration: 500,
+                        start: function() {
+                            $('.pat-scroll').addClass('pat-scroll-animated');
+                        }
+                    });
+                } else {
+                    options[scroll] = target + scroll_container ;
+                    $el.animate(options, {
+                        duration: 500,
+                        start: function() {
+                            $('.pat-scroll').addClass('pat-scroll-animated');
+                        }
+                    });
                 }
-            });
+            }
         }
     });
 });
