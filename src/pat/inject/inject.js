@@ -108,7 +108,8 @@ define([
                 formaction = $button.attr("formaction"),
                 $form = $button.parents(".pat-inject").first(),
                 opts = {url: formaction},
-                cfgs = inject.extractConfig($form, opts);
+                $cfg_node = $button.closest("[data-pat-inject]"),
+                cfgs = inject.extractConfig($cfg_node, opts);
 
             ev.preventDefault();
             $form.trigger("patterns-inject-triggered");
