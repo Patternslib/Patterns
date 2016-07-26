@@ -37,7 +37,6 @@ require.config({
         "patternslib.slides":               "bower_components/slides/src/slides",
         "photoswipe":                       "bower_components/photoswipe/dist/photoswipe",
         "photoswipe-ui":                    "bower_components/photoswipe/dist/photoswipe-ui-default",
-        "photoswipe-template":              "pat/gallery/template",
         "pikaday":                          "bower_components/pikaday/pikaday",
         "prefixfree":                       "bower_components/prefixfree/prefixfree.min",
         "select2":                          "bower_components/select2/select2.min",
@@ -47,7 +46,6 @@ require.config({
         "showdown-table":                   "bower_components/showdown/src/extensions/table",
         "spectrum":                         "bower_components/spectrum/spectrum",
         "text":                             "bower_components/requirejs-text/text",
-        "tpl":                              "bower_components/requirejs-tpl-jcbrand/tpl",
         "tinymce":                          "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "underscore":                       "bower_components/underscore/underscore",
         "validate":                         "bower_components/validate/validate",
@@ -104,6 +102,7 @@ require.config({
         "pat-form-state":              "pat/form-state/form-state",
         "pat-forward":                 "pat/forward/forward",
         "pat-gallery":                 "pat/gallery/gallery",
+        "pat-gallery-url":             "pat/gallery",
         "pat-grid":                    "pat/grid/grid",  // Hack, there's no grid jS, but we need for website bundler
         "pat-syntax-highlight":        "pat/syntax-highlight/syntax-highlight",
         "pat-image-crop":              "pat/image-crop/image-crop",

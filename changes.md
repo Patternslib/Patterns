@@ -1,7 +1,10 @@
 # Changelog
 
-## 2.0.14 - (unreleased)
+## 2.1.0 - (unreleased)
 
+- Fix ``pat-gallery`` to work with ``requirejs-text`` instead ``requirejs-tpl-jcbrand``.
+  Fixes an obscure "window undefined" error.
+  Backwards incompatible change: The ``photoswipe-template`` RequireJS configuration variable is removed and a the ``pat-gallery-url`` variable is defined instead.
 - A fix for pat-scroll to scroll up to current scroll container instead of body. 
 - A fix for pat-scroll to await loading of all images before determining the amount to scroll up.
 - A fix for IE10/11 where the modal wouldn`t close anymore due to activeElement being undefined
