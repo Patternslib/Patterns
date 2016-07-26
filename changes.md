@@ -2,6 +2,7 @@
 
 ## 2.1.0 - (unreleased)
 
+- Change ``imagesloaded`` from usage of jQuery plugin to vanilla JavaScript to avoid timing errors, where the ``imagesloaded`` plugin wasn't available.
 - Update ``masonry`` and ``imagesloaded`` plugins.
 - Fix ``pat-gallery`` to work with ``requirejs-text`` instead ``requirejs-tpl-jcbrand``.
   Fixes an obscure "window undefined" error.

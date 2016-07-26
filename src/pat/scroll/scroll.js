@@ -28,7 +28,7 @@ define([
             if (this.options.trigger == "auto") {
                 // Only calculate the offset when all images are loaded
                 var that = this;
-                $('body').imagesLoaded( function() {
+                imagesLoaded($('body'), function() {
                    that.smoothScroll();
                 });
             } else if (this.options.trigger == "click") {

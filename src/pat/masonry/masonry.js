@@ -44,7 +44,7 @@
             this.options = parser.parse(this.$el, opts);
             $(document).trigger("clear-imagesloaded-cache");
             this.initMasonry();
-            this.$el.imagesLoaded(this.layout.bind(this));
+            imagesLoaded(this.$el, this.layout.bind(this));
             // Update if something gets injected inside the pat-masonry
             // element.
             this.$el.on("patterns-injected.pat-masonry",
