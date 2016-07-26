@@ -2,6 +2,7 @@
 
 ## 2.1.0 - (unreleased)
 
+- Update ``masonry`` and ``imagesloaded`` plugins.
 - Fix ``pat-gallery`` to work with ``requirejs-text`` instead ``requirejs-tpl-jcbrand``.
   Fixes an obscure "window undefined" error.
   Backwards incompatible change: The ``photoswipe-template`` RequireJS configuration variable is removed and a the ``pat-gallery-url`` variable is defined instead.

@@ -1,5 +1,5 @@
 var config;
-if (typeof(require) === 'undefined') {
+if (typeof(require) === "undefined") {
     /* XXX: Hack to work around r.js's stupid parsing.
      * We want to save the configuration in a variable so that we can reuse it in
      * tests/main.js.
@@ -8,9 +8,9 @@ if (typeof(require) === 'undefined') {
 }
 
 require.config({
-    baseUrl: 'src',
+    baseUrl: "src",
     paths: {
-        "eventEmitter":                     "bower_components/eventEmitter",
+        "ev-emitter":                       "bower_components/ev-emitter",
         "eventie":                          "bower_components/eventie",
         "get-size":                         "bower_components/get-size",
         "get-style-property":               "bower_components/get-style-property",
@@ -152,6 +152,6 @@ require.config({
     },
 });
 
-if (typeof(require) === 'function') {
+if (typeof(require) === "function") {
     require(["patterns"], function(patterns) {});
 }

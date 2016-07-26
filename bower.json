@@ -12,7 +12,7 @@
     "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",
     "fullcalendar": "https://github.com/arshaw/fullcalendar/releases/download/v2.0.0/fullcalendar-2.0.0.zip",
     "google-code-prettify": "~1.0.4",
-    "imagesloaded": "~3.1.8",
+    "imagesloaded": "~4.1.0",
     "jcrop": "0.9.12",
     "jquery": "1.11.1",
     "jquery-form": "3.46.0",
@@ -21,7 +21,7 @@
     "jquery.browser": "~0.0.7",
     "jquery.tinymce": "",
     "logging": "",
-    "masonry": "~3.2.2",
+    "masonry": "~4.1.0",
     "modernizr": "2.8.3",
     "moment": "2.10.6",
     "moment-timezone": "0.4.0",
@@ -39,6 +39,8 @@
     "validate": "~0.8.0"
   },
   "resolutions": {
-    "jquery": "1.11.1"
+    "jquery": "1.11.1",
+    "get-size": "^2.0.2",
+    "outlayer": "^2.1.0"
   }
 }
