@@ -2,12 +2,14 @@
 
 ## 2.1.0 - (unreleased)
 
+- Remove the ``clear-imagesloaded-cache`` trigger, as cache functionality was removed from imagesloaded from version 3.2.0.
+  See: https://github.com/desandro/imagesloaded/issues/103#issuecomment-152152568
 - Change ``imagesloaded`` from usage of jQuery plugin to vanilla JavaScript to avoid timing errors, where the ``imagesloaded`` plugin wasn't available.
 - Update ``masonry`` and ``imagesloaded`` plugins.
 - Fix ``pat-gallery`` to work with ``requirejs-text`` instead ``requirejs-tpl-jcbrand``.
   Fixes an obscure "window undefined" error.
   Backwards incompatible change: The ``photoswipe-template`` RequireJS configuration variable is removed and a the ``pat-gallery-url`` variable is defined instead.
-- A fix for pat-scroll to scroll up to current scroll container instead of body. 
+- A fix for pat-scroll to scroll up to current scroll container instead of body.
 - A fix for pat-scroll to await loading of all images before determining the amount to scroll up.
 - A fix for IE10/11 where the modal wouldn`t close anymore due to activeElement being undefined
 - Allow to configure different data-pat-inject per formaction, so that different targets can be configured per formaction
