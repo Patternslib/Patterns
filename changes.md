@@ -2,6 +2,7 @@
 
 ## 2.1.0 - (unreleased)
 
+- Update to jQuery 1.11.3.
 - While images are loading, already do masonry layouting.
 - Remove the ``clear-imagesloaded-cache`` trigger, as cache functionality was removed from imagesloaded from version 3.2.0.
   See: https://github.com/desandro/imagesloaded/issues/103#issuecomment-152152568
