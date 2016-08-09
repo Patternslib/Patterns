@@ -347,6 +347,22 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     expect($target.length).toBeGreaterThan(0);
                     expect($target.parent().prop("tagName")).toBe("BODY");
                 });
+
+                it("parse autload-delayed argument", function() {
+                    $a.attr("data-pat-inject", "trigger: autoload-delayed;");
+                    var cfgs = pattern.extractConfig($a);
+                    expect(pattern.verifyConfig(cfgs)).toBeTruthy();
+                    expect(cfgs[0].trigger).toBe("autoload-delayed");
+                    expect(cfgs[0].delay).toBe(0);
+                });
+
+                it("parse autload-delayed delay argument", function() {
+                    $a.attr("data-pat-inject", "trigger: autoload-delayed; delay: 1000;");
+                    var cfgs = pattern.extractConfig($a);
+                    expect(pattern.verifyConfig(cfgs)).toBeTruthy();
+                    expect(cfgs[0].trigger).toBe("autoload-delayed");
+                    expect(cfgs[0].delay).toBe(1000);
+                });
             });
         });
 
@@ -388,6 +404,21 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
                 });
 
+                it("fetches url on autoload", function() {
+                    $a.attr("data-pat-inject", "autoload");
+                    pattern.init($a);
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
+                });
+
+                it("fetches url on autoload-delayed", function() {
+                    $a.attr("data-pat-inject", "autoload-delayed");
+                    pattern.init($a);
+                    // this needs to be checked async - is beyond me
+                    // expect($.ajax).toHaveBeenCalled();
+                    // expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
+                });
+                
                 it("injects into existing div", function() {
                     pattern.init($a);
                     $a.trigger("click");
