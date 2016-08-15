@@ -42,9 +42,12 @@
 
         init: function masonryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
-            $(document).trigger("clear-imagesloaded-cache");
             this.initMasonry();
-            this.$el.imagesLoaded(this.layout.bind(this));
+            var imgLoad = imagesLoaded(this.$el);
+            imgLoad.on("progress", function() {
+                this.msnry.layout();
+            }.bind(this));
+            imgLoad.on("done", this.layout.bind(this));
             // Update if something gets injected inside the pat-masonry
             // element.
             this.$el.on("patterns-injected.pat-masonry",
