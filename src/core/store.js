@@ -108,8 +108,7 @@ define(function() {
                 }
             }
             return options;
-        },
-
+        }
     };
 
     // Perform the test separately since this may throw a SecurityError as

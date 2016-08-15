@@ -673,6 +673,30 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         expect($target1.html()).toBe("some");
                         expect($target2.html()).toBe("other");
                     });
+                    it("formaction works source and target on the button", function() {
+                        var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
+                            $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
+                            $target1 = $("<div id=\"target1\" />"),
+                            $target2 = $("<div id=\"target2\" />");
+
+                        $submit2.attr("data-pat-inject", "#someid #target1 && #otherid #target2");
+                        $submit2.attr("formaction", "other.html#otherid");
+                        $form.append($submit1).append($submit2);
+                        $div.append($target1).append($target2);
+
+                        pattern.init($form);
+                        $submit2.trigger("click");
+                        answer("<html><body>" +
+                               "<div id=\"someid\">some</div>" +
+                               "<div id=\"otherid\">other</div>" +
+                               "</body></html>");
+
+                        expect($.ajax).toHaveBeenCalled();
+                        expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
+                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($target1.html()).toBe("some");
+                        expect($target2.html()).toBe("other");
+                    });
                 });
             });
         });
