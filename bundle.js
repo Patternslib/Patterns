@@ -1,4 +1,4 @@
-// Patternslib 2.0.13
+// Patternslib 2.0.14
 
 /**
  * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
@@ -12732,9 +12732,9 @@ define('pat-logger',[
 
 define('pat-utils',[
     "jquery",
-    "jquery.browser",
-    "underscore"
-], function($) {
+    "underscore",
+    "jquery.browser"  // adds itself to the jquery object, no need to pass to the define callback.
+], function($, _) {
 
     $.fn.safeClone = function () {
         var $clone = this.clone();
@@ -14342,7 +14342,7 @@ define('pat-parser',[
                 if (!part) { return; }
                 var matches = part.match(this.named_param_pattern);
                 if (!matches) {
-                    this.log.warn("Invalid parameter: " + part);
+                    this.log.warn("Invalid parameter: " + part + ": " + argstring);
                     return;
                 }
                 var name = matches[1],
@@ -18433,8 +18433,7 @@ define('pat-store',[],function() {
                 }
             }
             return options;
-        },
-
+        }
     };
 
     // Perform the test separately since this may throw a SecurityError as
@@ -30830,7 +30829,8 @@ define('pat-inject',[
                 formaction = $button.attr("formaction"),
                 $form = $button.parents(".pat-inject").first(),
                 opts = {url: formaction},
-                cfgs = inject.extractConfig($form, opts);
+                $cfg_node = $button.closest("[data-pat-inject]"),
+                cfgs = inject.extractConfig($cfg_node, opts);
 
             ev.preventDefault();
             $form.trigger("patterns-inject-triggered");
@@ -38333,7 +38333,10 @@ define('pat-modal',[
 
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
-            document.activeElement.focus();
+            // Only if we have an activeElement, as IE10/11 can have undefined as activeElement
+            if (document.activeElement) {
+                document.activeElement.focus();
+            }
             this._init_handlers();
             this.resize();
             this.setPosition();
@@ -43698,7 +43701,7 @@ define("pat-gallery", [
                 });
                 gallery.init();
             });
-        },
+        }
     });
 });
 
@@ -50796,8 +50799,9 @@ define('pat-scroll',[
     "pat-utils",
     "pat-logger",
     "pat-parser",
-    "underscore"
-], function($, patterns, Base, utils, logging, Parser, _) {
+    "underscore",
+    "imagesloaded"
+], function($, patterns, Base, utils, logging, Parser, _, imagesLoaded) {
     var log = logging.getLogger("scroll"),
         parser = new Parser("scroll");
     parser.addArgument("trigger", "click", ["click", "auto"]);
@@ -50813,7 +50817,11 @@ define('pat-scroll',[
         init: function($el, opts) {
             this.options = parser.parse(this.$el, opts);
             if (this.options.trigger == "auto") {
-               this.smoothScroll();
+                // Only calculate the offset when all images are loaded
+                var that = this;
+                $('body').imagesLoaded( function() {
+                   that.smoothScroll();
+                });
             } else if (this.options.trigger == "click") {
                 this.$el.click(this.onClick.bind(this));
             }
@@ -50909,15 +50917,40 @@ define('pat-scroll',[
                 $el = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
             } else {
-                $el = $('body, html');
-                options[scroll] = $(this.$el.attr('href')).offset().top;
-            }
-            $el.animate(options, {
-                duration: 500,
-                start: function() {
-                    $('.pat-scroll').addClass('pat-scroll-animated');
+                // Get the first element with overflow auto starting from the trigger
+                // (the scroll container)
+                // Then calculate the offset relatively to that container
+                $el = $(this.$el.parents()
+                    .filter(function() { 
+                        return $(this).css('overflow') === 'auto'; })
+                    .first())
+                if (typeof $el[0] === 'undefined') {
+                    $el = $('html, body');
                 }
-            });
+
+                var scroll_container = Math.floor( $el.offset().top );
+                var target = Math.floor( $(this.$el.attr('href')).offset().top );
+
+                if (target == scroll_container) {
+                    options[scroll] = scroll_container;
+                } else if (target >= scroll_container) {
+                    options[scroll] = target - scroll_container;
+                    $el.animate(options, {
+                        duration: 500,
+                        start: function() {
+                            $('.pat-scroll').addClass('pat-scroll-animated');
+                        }
+                    });
+                } else {
+                    options[scroll] = target + scroll_container ;
+                    $el.animate(options, {
+                        duration: 500,
+                        start: function() {
+                            $('.pat-scroll').addClass('pat-scroll-animated');
+                        }
+                    });
+                }
+            }
         }
     });
 });
