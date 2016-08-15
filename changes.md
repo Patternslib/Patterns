@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.14 - (unreleased)
+## 2.0.14 - Aug. 15, 2016
 
 - A fix for pat-scroll to scroll up to current scroll container instead of body. 
 - A fix for pat-scroll to await loading of all images before determining the amount to scroll up.
