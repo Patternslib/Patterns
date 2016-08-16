@@ -11,14 +11,41 @@
         .current {
             background-color: beige;
         }
+        .defunct:after {
+           content: " [defunct]";
+           color: orange;
+        }
+        .weird {
+           font-weight: bold;
+           color: red;
+        }
+        .weird:after {
+           content: " [weird!]"
+        }
+        article {
+            width: 70%;
+            height: 25em;
+            overflow: auto;
+            position: absolute;
+            top: 2em;
+            right: 0;
+        }
+        aside {
+            width: 29%;
+            position: fixed;
+            top: 2em;
+            left: 1em;
+        }
     </style>
 	<body>
-        <article class="pat-rich">
-            <ol class="mainnav" id="demo-main-nav">
-                <li><a href="#p1" class="pat-scroll">Shakespeare's Sonnet 001</a></li>
-                <li><a href="#p2" class="pat-scroll">Shakespeare's Sonnet 002</a></li>
-                <li><a href="#p3" class="pat-scroll">Shakespeare's Sonnet 003</a></li>
-            </ol>
+          <article class="pat-rich">
+            <p id="top">
+              <a href="#top" class="pat-scroll">Top</a> |
+              <a href="#p1" class="pat-scroll">001</a> |
+              <a href="#p2" class="pat-scroll">002</a> |
+              <a href="#p3" class="pat-scroll">003</a> |              
+              <a href="#bottom" class="pat-scroll" data-pat-scroll="trigger:auto">Auto scroll to bottom</a>
+            </p>
             <section id="p1">
                 <h3>1</h3>
                 <p>
@@ -36,7 +63,15 @@
                     And tender churl mak'st waste in niggarding:<br>
                     Pity the world, or else this glutton be,<br>
                     To eat the world's due, by the grave and thee.
-                </p>      
+                </p>
+                <p>
+                  <a href="#top" class="pat-scroll">Back to top</a> |
+                  <a href="#p1" class="pat-scroll">001</a> | 
+                  <a href="#p2" class="pat-scroll">002</a> | 
+                  <a href="#p3" class="pat-scroll">003</a> |
+                  <a href="#bottom" class="pat-scroll">Bottom</a>
+                </p>
+                
             </section>
             <section id="p2">
                 <h3>2</h3>
@@ -76,9 +111,33 @@
                     Die single and thine image dies with thee.
                 </p>
             </section>
-            <p>
-                <a href="#demo-main-nav" class="pat-scroll" data-pat-scroll="trigger:auto">Back to top</a>
+            <p id="bottom">
+              <a href="#top" class="pat-scroll">Back to top</a> |
+              <a href="#p1" class="pat-scroll">001</a> | 
+              <a href="#p2" class="pat-scroll">002</a> | 
+              <a href="#p3" class="pat-scroll">003</a> |
+              <a href="#bottom" class="pat-scroll weird">Bottom</a>
             </p>
         </article>
+          <aside>
+            <h2>Scroll navigation</h2>
+            <ol class="mainnav" id="demo-main-nav">
+                <li><a href="#top" class="pat-scroll defunct">Top</a></li>
+                <li><a href="#p1" class="pat-scroll defunct">Shakespeare's Sonnet 001</a></li>
+                <li><a href="#p2" class="pat-scroll defunct">Shakespeare's Sonnet 002</a></li>
+                <li><a href="#p3" class="pat-scroll defunct">Shakespeare's Sonnet 003</a></li>
+                <li><a href="#bottom" class="pat-scroll defunct">Bottom</a></li>
+
+            </ol>
+            <h2>Fragment navigation</h2>
+            <ol class="fragnav" id="demo-frag-nav">
+                <li><a href="#top">Top</a></li>              
+                <li><a href="#p1">Shakespeare's Sonnet 001</a></li>
+                <li><a href="#p2">Shakespeare's Sonnet 002</a></li>
+                <li><a href="#p3">Shakespeare's Sonnet 003</a></li>
+                <li><a href="#bottom">Bottom</a></li>
+                
+            </ol>
+        </aside>
 	</body>
 </html>
