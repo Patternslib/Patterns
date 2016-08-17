@@ -120,8 +120,10 @@ watch::
 
 ########################################################################
 
-serve:: all
-	@printf "\nDesigner, you can be happy now.\n Go to http://localhost:4001 to see the demo \n\n"
+serve:: all _serve
+
+_serve:
+	@printf "\nDesigner, you can be happy now.\n Go to http://localhost:4001/ to see the demo \n\n"
 	@$(HTTPSERVE) -p 4001
 
 designerhappy:: serve
