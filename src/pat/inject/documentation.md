@@ -264,7 +264,7 @@ A `autoload` may be delayed, by providing a `delay` argument in `data-pat-inject
        data-pat-inject="trigger: autoload-visible">Autoloads as soon as visible</a>
 
     <a href="sources.html#id" class="pat-inject"
-       data-pat-inject="trigger: autoload; trigger: 2000">Autoloads 2 seconds after the page is initialised.</a>
+       data-pat-inject="trigger: autoload; delay: 2000">Autoloads 2 seconds after the page is initialised.</a>
 
 <!--
 XXX: example infinite list
