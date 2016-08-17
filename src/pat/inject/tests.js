@@ -348,19 +348,11 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     expect($target.parent().prop("tagName")).toBe("BODY");
                 });
 
-                it("parse autload-delayed argument", function() {
-                    $a.attr("data-pat-inject", "trigger: autoload-delayed;");
+                it("parse autload delay argument", function() {
+                    $a.attr("data-pat-inject", "trigger: autoload; delay: 1000;");
                     var cfgs = pattern.extractConfig($a);
                     expect(pattern.verifyConfig(cfgs)).toBeTruthy();
-                    expect(cfgs[0].trigger).toBe("autoload-delayed");
-                    expect(cfgs[0].delay).toBe(0);
-                });
-
-                it("parse autload-delayed delay argument", function() {
-                    $a.attr("data-pat-inject", "trigger: autoload-delayed; delay: 1000;");
-                    var cfgs = pattern.extractConfig($a);
-                    expect(pattern.verifyConfig(cfgs)).toBeTruthy();
-                    expect(cfgs[0].trigger).toBe("autoload-delayed");
+                    expect(cfgs[0].trigger).toBe("autoload");
                     expect(cfgs[0].delay).toBe(1000);
                 });
             });
