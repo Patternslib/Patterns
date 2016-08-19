@@ -140,7 +140,7 @@ define([
                 }
 
                 var scroll_container = Math.floor( $el.offset().top );
-                var target_top = Math.floor( target.offset().top );
+                var target_top = Math.floor( target.prop('offsetTop') );
 
                 if (target_top == scroll_container) {
                     options[scroll] = scroll_container;
