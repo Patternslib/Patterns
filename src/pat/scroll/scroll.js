@@ -126,10 +126,12 @@ define([
                 $el = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
             } else {
-                // Get the first element with overflow auto starting from the trigger
-                // (the scroll container)
+                // Get the first element with overflow auto (the scroll container)
+                // starting from the *target*
                 // Then calculate the offset relatively to that container
-                $el = $(this.$el.parents()
+                var target = $(this.$el.attr('href'));
+                
+                $el = $(target.parents()
                     .filter(function() { 
                         return $(this).css('overflow') === 'auto'; })
                     .first())
@@ -138,12 +140,12 @@ define([
                 }
 
                 var scroll_container = Math.floor( $el.offset().top );
-                var target = Math.floor( $(this.$el.attr('href')).offset().top );
+                var target_top = Math.floor( target.offset().top );
 
-                if (target == scroll_container) {
+                if (target_top == scroll_container) {
                     options[scroll] = scroll_container;
-                } else if (target >= scroll_container) {
-                    options[scroll] = target - scroll_container;
+                } else if (target_top >= scroll_container) {
+                    options[scroll] = target_top - scroll_container;
                     $el.animate(options, {
                         duration: 500,
                         start: function() {
@@ -151,7 +153,7 @@ define([
                         }
                     });
                 } else {
-                    options[scroll] = target + scroll_container ;
+                    options[scroll] = target_top + scroll_container ;
                     $el.animate(options, {
                         duration: 500,
                         start: function() {
