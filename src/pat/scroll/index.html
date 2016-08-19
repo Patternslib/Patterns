@@ -11,41 +11,14 @@
         .current {
             background-color: beige;
         }
-        .defunct:after {
-           content: " [defunct]";
-           color: orange;
-        }
-        .weird {
-           font-weight: bold;
-           color: red;
-        }
-        .weird:after {
-           content: " [weird!]"
-        }
-        article {
-            width: 70%;
-            height: 25em;
-            overflow: auto;
-            position: absolute;
-            top: 2em;
-            right: 0;
-        }
-        aside {
-            width: 29%;
-            position: fixed;
-            top: 2em;
-            left: 1em;
-        }
     </style>
 	<body>
-          <article class="pat-rich">
-            <p id="top">
-              <a href="#top" class="pat-scroll">Top</a> |
-              <a href="#p1" class="pat-scroll">001</a> |
-              <a href="#p2" class="pat-scroll">002</a> |
-              <a href="#p3" class="pat-scroll">003</a> |              
-              <a href="#bottom" class="pat-scroll">Bottom</a>
-            </p>
+        <article class="pat-rich">
+            <ol class="mainnav" id="demo-main-nav">
+                <li><a href="#p1" class="pat-scroll">Shakespeare's Sonnet 001</a></li>
+                <li><a href="#p2" class="pat-scroll">Shakespeare's Sonnet 002</a></li>
+                <li><a href="#p3" class="pat-scroll">Shakespeare's Sonnet 003</a></li>
+            </ol>
             <section id="p1">
                 <h3>1</h3>
                 <p>
@@ -63,14 +36,7 @@
                     And tender churl mak'st waste in niggarding:<br>
                     Pity the world, or else this glutton be,<br>
                     To eat the world's due, by the grave and thee.
-                </p>
-                <p id="p1-nav">
-                  <a href="#top" class="pat-scroll">Back to top</a> |
-                  <a href="#p1" class="pat-scroll">001</a> | 
-                  <a href="#p2" class="pat-scroll">002</a> | 
-                  <a href="#p3" class="pat-scroll">003</a> |
-                  <a href="#bottom" class="pat-scroll">Bottom</a>
-                </p>
+                </p>      
             </section>
             <section id="p2">
                 <h3>2</h3>
@@ -90,13 +56,6 @@
                     This were to be new made when thou art old,<br>
                     And see thy blood warm when thou feel'st it cold.
                 </p>
-                <p id="p2-nav">
-                  <a href="#top" class="pat-scroll">Back to top</a> |
-                  <a href="#p1" class="pat-scroll">001</a> | 
-                  <a href="#p2" class="pat-scroll">002</a> | 
-                  <a href="#p3" class="pat-scroll">003</a> |
-                  <a href="#bottom" class="pat-scroll">Bottom</a>
-                </p>                
             </section>
             <section id="p3">
                 <h3>3</h3>
@@ -116,43 +75,10 @@
                     But if thou live remembered not to be,<br>
                     Die single and thine image dies with thee.
                 </p>
-                <p id="p3-nav"></p>
             </section>
-            <p id="bottom">
-              <a href="#top" class="pat-scroll">Back to top</a> |
-              <a href="#p1" class="pat-scroll">001</a> | 
-              <a href="#p2" class="pat-scroll">002</a> | 
-              <a href="#p3" class="pat-scroll">003</a> |
-              <a href="#bottom" class="pat-scroll weird">Bottom</a> |
-              <a href="#bottom" class="pat-scroll" data-pat-scroll="trigger: auto">Bottom autoscroll</a>
+            <p>
+                <a href="#demo-main-nav" class="pat-scroll" data-pat-scroll="trigger:auto">Back to top</a>
             </p>
         </article>
-          <aside>
-            <h2>Scroll navigation</h2>
-            <ol class="mainnav" id="demo-main-nav">
-                <li><a href="#top" class="pat-scroll defunct">Top</a></li>
-                <li><a href="#p1" class="pat-scroll defunct">Shakespeare's Sonnet 001</a></li>
-                <li><a href="#p2" class="pat-scroll defunct">Shakespeare's Sonnet 002</a></li>
-                <li><a href="#p3" class="pat-scroll defunct">Shakespeare's Sonnet 003</a></li>
-                <li><a href="#bottom" class="pat-scroll defunct">Bottom</a></li>
-            </ol>
-            <h2>Fragment navigation</h2>
-            <ol class="fragnav" id="demo-frag-nav">
-                <li><a href="#top">Top</a></li>              
-                <li><a href="#p1">Shakespeare's Sonnet 001</a></li>
-                <li><a href="#p2">Shakespeare's Sonnet 002</a></li>
-                <li><a href="#p3">Shakespeare's Sonnet 003</a></li>
-                <li><a href="#bottom">Bottom</a></li>
-            </ol>
-            <h2>Injection</h2>
-            <ol class="fragnav" id="demo-frag-nav">
-                <li><a href="#p1" class="pat-inject weird" data-pat-inject="source: #p1; target: #p1-nav::element::after && source: #bottom; target: #bottom">Shakespeare's Sonnet 001</a></li>
-                <li><a href="#p2" class="pat-inject weird" data-pat-inject="source: #p2; target: #p2-nav::element::after && source: #bottom; target: #bottom">Shakespeare's Sonnet 002</a></li>
-                <li><a href="#p3" class="pat-inject weird" data-pat-inject="source: #p3; target: #p3-nav::element::after && source: #bottom; target: #bottom">Shakespeare's Sonnet 003</a></li>
-            </ol>
-            <p>The injection links duplicate the targeted section content, changing the length of the scrollable, then
-              also re-inject the bottom auto-scroll link, which should trigger a re-auto-scroll.
-              Clicking these links multiple times demonstrates the "see-saw" effect.</p>
-        </aside>
 	</body>
 </html>
