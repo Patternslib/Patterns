@@ -255,11 +255,16 @@ Trigger
 By default injection is triggered on click for anchors and on submit for forms. Further, it can be triggered upon initialisation (`autoload`) and when coming into view (`autoload-visible`). `autoload` injection is useful to deliver a page skeleton, where e.g. header, body, and sidebar load their content in parallel. `autoload-visible` injection is useful
 to build infinite lists, where the injection element replaces itself with the next 10 entries and a new `autoload-visible` injection link.
 
+A `autoload` may be delayed, by providing a `delay` argument in `data-pat-inject`. The delay is specified in milliseconds. This is useful to build a polling loop. Note that using this in combination with other injections may create race conditions with weird effects. This `delay` is only supported for `autoload`, not for `autoload-visible` or for click triggers).
+
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload">Autoloads as soon as initialised</a>
 
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload-visible">Autoloads as soon as visible</a>
+
+    <a href="sources.html#id" class="pat-inject"
+       data-pat-inject="trigger: autoload; delay: 2000">Autoloads 2 seconds after the page is initialised.</a>
 
 <!--
 XXX: example infinite list

@@ -20,6 +20,7 @@ define([
     parser.addArgument("next-href");
     parser.addArgument("source");
     parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible"]);
+    parser.addArgument("delay", 0);    // only used in autoload
     parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
     parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
     parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
@@ -59,24 +60,34 @@ define([
             }
 
             switch (cfgs[0].trigger) {
-                case "default":
-                    // setup event handlers
-                    if ($el.is("form")) {
-                        $el.on("submit.pat-inject", inject.onTrigger)
+            case "default":
+                // setup event handlers
+                if ($el.is("form")) {
+                    $el.on("submit.pat-inject", inject.onTrigger)
                         .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
                         .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", inject.onFormActionSubmit);
-                    } else if ($el.is(".pat-subform")) {
-                        log.debug("Initializing subform with injection");
-                    } else {
-                        $el.on("click.pat-inject", inject.onTrigger);
-                    }
-                    break;
-                case "autoload":
+                } else if ($el.is(".pat-subform")) {
+                    log.debug("Initializing subform with injection");
+                } else {
+                    $el.on("click.pat-inject", inject.onTrigger);
+                }
+                break;
+            case "autoload":
+                if (!cfgs[0].delay) {
                     inject.onTrigger.apply($el[0], []);
-                    break;
-                case "autoload-visible":
-                    inject._initAutoloadVisible($el);
-                    break;
+                } else {
+                    // function to trigger the autoload and mark as triggered
+                    function delayed_trigger() {
+                        $el.data("pat-inject-autoloaded", true);
+                        inject.onTrigger.apply($el[0], []);
+                        return true;
+                    }
+                    window.setTimeout(delayed_trigger, cfgs[0].delay);
+                }
+                break;
+            case "autoload-visible":
+                inject._initAutoloadVisible($el);
+                break;
             }
 
             log.debug("initialised:", $el);
