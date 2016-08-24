@@ -47,7 +47,7 @@
             imgLoad.on("progress", function() {
                 this.layout();
             }.bind(this));
-            imgLoad.on("done", this.layout.bind(this));
+            imgLoad.on("always", this.layout.bind(this));
             // Update if something gets injected inside the pat-masonry
             // element.
             this.$el.on("patterns-injected.pat-masonry",
