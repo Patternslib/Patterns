@@ -118,7 +118,8 @@ define([
 
         onDragStart: function (ev) {
             var $handle = $(ev.target),
-                $dragged = $handle.parent();
+                $dragged = $handle.parent(),
+                that = this;
             if (typeof ev.originalEvent !== "undefined") {
                 // Firefox seems to need this set to any value
                 ev.originalEvent.dataTransfer.setData("Text", "");
@@ -144,7 +145,7 @@ define([
             this.$sortables.on("dragover.pat-sortable", function(ev) {
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
-                var $dropTarget = $(ev.target),
+                var $dropTarget = $(ev.target).closest(that.options.selector),
                     midlineY = $dropTarget.offset().top - $(document).scrollTop() + $dropTarget.height()/2;
 
                 if ($dropTarget.is($dragged)) {
@@ -163,7 +164,7 @@ define([
             }.bind(this));
 
             this.$sortables.on("drop.pat-sortable", function(ev) {
-                var $dropTarget = $(ev.target);
+                var $dropTarget = $(ev.target).closest(that.options.selector);
                 if ($dropTarget.is($dragged)) {
                     return;
                 }
