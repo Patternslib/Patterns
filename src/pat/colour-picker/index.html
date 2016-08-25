@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>pat-colour-picker demo page</title>
+	<link rel="stylesheet" href="/style/common.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="colour-picker.css">
+	<script src="/main.js" type="text/javascript" charset="utf-8"></script>
+	<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+
+	<link rel="stylesheet" type="text/css" href="/src/bower_components/spectrum/spectrum.css">
+
+</head>
+<body>
+	<form>
+		<label>Colour picker of Pattern
+			<input type="color" class="pat-colour-picker">
+		</label>              
+	</form>
+	<button onclick="checkPattern()">Check</button>
+	<p>The colour you have selected is : <span class="checkPattern">No colour selected</span>
+	</p>
+
+	<form>
+		<label>Browser's HTML5 colour picker
+			<input type="color" id="native" value="#ff0000">
+		</label> 
+	</form>
+	<button onclick="checkNative()">Check</button>
+	<p>The colour you have selected is : <span class="checkNative">No colour selected</span>
+	</p>
+
+	<script type="text/javascript">
+		function checkPattern() {
+  		// body...
+  		$(".checkPattern").html($(".pat-colour-picker").val());
+  	}
+
+  	function checkNative() {
+  		
+  		$(".checkNative").html($("#native").val());
+  	}
+  </script>
+
+</body>
+</html>
+
