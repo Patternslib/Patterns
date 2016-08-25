@@ -47,7 +47,7 @@
             imgLoad.on("progress", function() {
                 this.quicklayout();
             }.bind(this));
-            imgLoad.on("done", this.layout.bind(this));
+            imgLoad.on("always", this.layout.bind(this));
             // Update if something gets injected inside the pat-masonry
             // element.
             this.$el
