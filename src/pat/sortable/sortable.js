@@ -173,7 +173,7 @@ define([
                     $dropTarget.before($dragged);
                 }
                 $dropTarget.removeClass("drop-target-above drop-target-below");
-                ev.prevDefault();
+                ev.preventDefault();
             });
         }
     });
