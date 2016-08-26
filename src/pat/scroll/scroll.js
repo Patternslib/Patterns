@@ -176,6 +176,7 @@ define([
                         break;
                     }
                 }
+                // calculate the  scroll by adding all the relative parent offsets
                 var scroll_to = 0;
                 if ( this.options.direction == "top") {
                     // this assumes the grandparent aligns with the top of the scrollable
@@ -189,7 +190,12 @@ define([
                     });
                 }
                 options[scroll] = Math.floor(scroll_to);
+
+                // now we can and should remove the .inner-scrollable
+                $(inner_scrollable).children().unwrap('.inner-scrollable');
+
             }
+            // execute the scroll
             scrollable.animate(options, {
                 duration: 500,
                 start: function() {
