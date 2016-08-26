@@ -142,7 +142,10 @@ define([
                 // Immediately *within* the scrollable, around all the scrollable content,
                 // we need a special wrapper div that provides a positioning context
                 // by being position:relative. Let's call this .inner-scrollable.
-                var inner_scrollable = $(scrollable).children()[0];
+                $(scrollable).wrapInner(function() {
+                    return "<div class='inner-scrollable' style='position:relative'></div>";
+                })
+                var inner_scrollable = $(scrollable).children('.inner-scrollable')[0]
                 // This enables us to measure the scrolling distance between the #target
                 // and the top of the scrollable, represented by .inner-scrollable.
                 // We cannot measure directly against the scrollable itself, because if
