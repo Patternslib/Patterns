@@ -6,7 +6,6 @@
     	<link rel="stylesheet" href="/style/common.css" type="text/css">
         <script src="/main.js" type="text/javascript" charset="utf-8"></script>
 		<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
-	</head>
     <style>
         .current {
             background-color: beige;
@@ -22,23 +21,42 @@
         .weird:after {
            content: " [weird!]"
         }
+        .high {
+          height: 100px;
+          background-color: #ddd;
+        }
         article {
             width: 70%;
             height: 25em;
             overflow: auto;
             position: absolute;
-            top: 2em;
-            right: 0;
+            top: 50px;
+           right: 0;
+        border: solid blue 1px;
+           padding: 5px;
         }
         aside {
             width: 29%;
             position: fixed;
-            top: 2em;
+            top: 5em;
             left: 1em;
         }
+        .wrapper {
+          position: relative;
+          border: dotted red 1px;
+          padding: 5px;
+        }
     </style>
+
+	</head>
 	<body>
-          <article class="pat-rich">
+          <article class="pat-rich" id="scrollable">
+            <div class="wrapper"><!-- inner scrollable with position:relative -->
+            <h1>Some more</h1>
+            <p class="high">A lot of stuff above top</p>
+            <h2>.. and more</h2>
+            <div class="wrapper">
+            <p class="high">A lot of stuff above top</p>
             <p id="top">
               <a href="#top" class="pat-scroll">Top</a> |
               <a href="#p1" class="pat-scroll">001</a> |
@@ -126,6 +144,12 @@
               <a href="#bottom" class="pat-scroll">Bottom</a> |
               <a href="#bottom" class="pat-scroll" data-pat-scroll="trigger: auto">Bottom autoscroll</a>
             </p>
+            <p class="high">some extra stuff</p>
+            <p class="high">some extra stuff</p>
+            <p class="high">some extra stuff</p>
+            </div><!-- /wrapper -->
+            </div><!-- /wrapper -->
+            
         </article>
           <aside>
             <h2>Scroll navigation</h2>

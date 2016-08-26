@@ -121,47 +121,78 @@ define([
 
         smoothScroll: function() {
             var scroll = this.options.direction == "top" ? 'scrollTop' : 'scrollLeft',
-                $el, options = {};
+                scrollable, options = {};
             if (typeof this.options.offset != "undefined") {
-                $el = this.options.selector ? $(this.options.selector) : this.$el;
+                scrollable = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
             } else {
                 // Get the first element with overflow auto (the scroll container)
                 // starting from the *target*
-                // Then calculate the offset relatively to that container
                 var target = $(this.$el.attr('href'));
                 
-                $el = $(target.parents()
+                scrollable = $(target.parents()
                     .filter(function() { 
                         return $(this).css('overflow') === 'auto'; })
                     .first())
-                if (typeof $el[0] === 'undefined') {
-                    $el = $('html, body');
+                if (typeof scrollable[0] === 'undefined') {
+                    scrollable = $('html, body');
                 }
 
-                var scroll_container = Math.floor( $el.offset().top );
-                var target_top = Math.floor( target.prop('offsetTop') );
-
-                if (target_top == scroll_container) {
-                    options[scroll] = scroll_container;
-                } else if (target_top >= scroll_container) {
-                    options[scroll] = target_top - scroll_container;
-                    $el.animate(options, {
-                        duration: 500,
-                        start: function() {
-                            $('.pat-scroll').addClass('pat-scroll-animated');
-                        }
+                // The actual calculation is difficult and requires special markup.
+                // Immediately *within* the scrollable, around all the scrollable content,
+                // we need a special wrapper div that provides a positioning context
+                // by being position:relative. Let's call this .inner-scrollable.
+                var inner_scrollable = $(scrollable).children()[0];
+                // This enables us to measure the scrolling distance between the #target
+                // and the top of the scrollable, represented by .inner-scrollable.
+                // We cannot measure directly against the scrollable itself, because if
+                // the scrollable is scrolled down, there's invisible (overflowed) content
+                // 'sticking out' *above* the top of the scrollable.
+                // Using the .inner-scrollable top enables us to measure this top overflow.
+                // It doesn't matter whether the scrollable itself provides a positioning
+                // context, since we cannot use that in our calculations anyway.
+                
+                var current = $(target);
+                var parents = new Array();
+                // Because we use .position() which measures the offset versus the positioning
+                // context, we need to walk up the dom across all nested positioning contexts
+                // until we reach the (logical) top of the scrollable: .inner-scrollable.
+                // We MUST ignore the offset of .inner-scrollable versus the scrollable itself!!!
+                while (! current.is($(inner_scrollable))) {
+                    parents.push(current);
+                    current = current.offsetParent();
+                    // detect missing inner-scrollable positioning context
+                    if ( current.is($(scrollable))) {
+                        // this will now fail to take into account any overflowed content
+                        // *above* the first position:relative element within the scrollable
+                        console.log('WARNING: Missing inner scrollable with positioning context');
+                        break;
+                    }
+                    // avoid infinite loop
+                    if (parents.length > 6) {
+                        break;
+                    }
+                }
+                var scroll_to = 0;
+                if ( this.options.direction == "top") {
+                    // this assumes the grandparent aligns with the top of the scrollable
+                    parents.forEach(function (item, index, array) {
+                        scroll_to += item.position().top;
                     });
                 } else {
-                    options[scroll] = target_top + scroll_container ;
-                    $el.animate(options, {
-                        duration: 500,
-                        start: function() {
-                            $('.pat-scroll').addClass('pat-scroll-animated');
-                        }
+                    // this assumes the grandparent aligns with the left of the scrollable
+                    parents.forEach(function (item, index, array) {
+                        scroll_to += item.position().left;
                     });
                 }
+                options[scroll] = Math.floor(scroll_to);
             }
+            scrollable.animate(options, {
+                duration: 500,
+                start: function() {
+                    $('.pat-scroll').addClass('pat-scroll-animated');
+                }
+            });
         }
     });
 });
