@@ -138,61 +138,57 @@ define([
                     scrollable = $('html, body');
                 }
 
-                // The actual calculation is difficult and requires special markup.
-                // Immediately *within* the scrollable, around all the scrollable content,
-                // we need a special wrapper div that provides a positioning context
-                // by being position:relative. Let's call this .inner-scrollable.
-                $(scrollable).wrapInner(function() {
-                    return "<div class='inner-scrollable' style='position:relative'></div>";
-                })
-                var inner_scrollable = $(scrollable).children('.inner-scrollable')[0]
-                // This enables us to measure the scrolling distance between the #target
-                // and the top of the scrollable, represented by .inner-scrollable.
-                // We cannot measure directly against the scrollable itself, because if
-                // the scrollable is scrolled down, there's invisible (overflowed) content
-                // 'sticking out' *above* the top of the scrollable.
-                // Using the .inner-scrollable top enables us to measure this top overflow.
-                // It doesn't matter whether the scrollable itself provides a positioning
-                // context, since we cannot use that in our calculations anyway.
-                
-                var current = $(target);
-                var parents = new Array();
-                // Because we use .position() which measures the offset versus the positioning
-                // context, we need to walk up the dom across all nested positioning contexts
-                // until we reach the (logical) top of the scrollable: .inner-scrollable.
-                // We MUST ignore the offset of .inner-scrollable versus the scrollable itself!!!
-                while (! current.is($(inner_scrollable))) {
-                    parents.push(current);
-                    current = current.offsetParent();
-                    // detect missing inner-scrollable positioning context
-                    if ( current.is($(scrollable))) {
-                        // this will now fail to take into account any overflowed content
-                        // *above* the first position:relative element within the scrollable
-                        console.log('WARNING: Missing inner scrollable with positioning context');
-                        break;
+                if ( scrollable.is($('html, body')) || target.offsetParent().is($('html, body')) ) {
+                    // positioning context is document
+                    if ( this.options.direction == "top" ) {
+                        options[scroll] = Math.floor(target.offset().top);
+                    } else {
+                        options[scroll] = Math.floor(target.offset().left);
                     }
-                    // avoid infinite loop
-                    if (parents.length > 6) {
-                        break;
-                    }
-                }
-                // calculate the  scroll by adding all the relative parent offsets
-                var scroll_to = 0;
-                if ( this.options.direction == "top") {
-                    // this assumes the grandparent aligns with the top of the scrollable
-                    parents.forEach(function (item, index, array) {
-                        scroll_to += item.position().top;
-                    });
                 } else {
-                    // this assumes the grandparent aligns with the left of the scrollable
-                    parents.forEach(function (item, index, array) {
-                        scroll_to += item.position().left;
-                    });
+                    // The scrollable here is *not* the document body,
+                    // and now we need to calculate the scrolling distance
+                    // from target to -possibly overflowed- scrollable.
+                    //
+                    // We cannot use the `scrollable` .position() or .offset()
+                    // since these measure the *visible* top (or left) of the
+                    // scollable and ignore any hidden overflowed content.
+                    // Instead, we create a new positioning context directly within
+                    // the scrollable whose top/left measures the logical top/left
+                    // of the scrolled content within the scrollable.
+                    $(scrollable).wrapInner(function() {
+                        return "<div class='inner-scrollable' style='position:relative'></div>";
+                    })
+                    var inner_scrollable = $(scrollable).children('.inner-scrollable').first();
+                    var current = $(target);
+                    var parents = new Array();
+                    // Because we're measuring relative .position() offsets to
+                    // a parent context, we need to walk up the dom across all
+                    // nested positioning contexts until we reach the (logical)
+                    // top/left of the scrollable: .inner-scrollable.
+                    // We MUST ignore the offset of .inner-scrollable itself,
+                    // because that measures the offset from logical top/left
+                    // to the visible top/left of the scrollable, and this
+                    // offset can be negative when overflowed.
+                    while (! current.is(inner_scrollable) ) {
+                        parents.push(current);
+                        current = current.offsetParent();
+                    }
+                    // total offset is sum of all relative parent offsets
+                    var scroll_to = 0;
+                    if ( this.options.direction == "top" ) {
+                        parents.forEach(function (item, index, array) {
+                            scroll_to += item.position().top;
+                        });
+                    } else {
+                        parents.forEach(function (item, index, array) {
+                            scroll_to += item.position().left;
+                        });
+                    }
+                    options[scroll] = Math.floor(scroll_to);
+                    // now we can and should remove the injected helper div
+                    $(inner_scrollable).children().unwrap('.inner-scrollable');
                 }
-                options[scroll] = Math.floor(scroll_to);
-
-                // now we can and should remove the .inner-scrollable
-                $(inner_scrollable).children().unwrap('.inner-scrollable');
 
             }
             // execute the scroll
@@ -203,6 +199,8 @@ define([
                 }
             });
         }
+
+
     });
 });
 
