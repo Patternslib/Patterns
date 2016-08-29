@@ -17,9 +17,16 @@
         #debug a {
             color: #999;
         }
+        #scrollable {
+            overflow: auto;
+            // max-height: 500px;
+        }
     </style>
 	<body>
-          <article class="pat-rich">
+          <article style="height:100px">
+            <p>Some filler</p>
+          </article>
+          <article class="pat-rich" id="scrollable">
             <p id="debug"><a href="debug.html">(debug page)</a></p>
             <ol class="mainnav" id="demo-main-nav">
                 <li><a href="#p1" class="pat-scroll">Shakespeare's Sonnet 001</a></li>
