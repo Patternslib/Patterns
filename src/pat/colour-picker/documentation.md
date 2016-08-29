@@ -22,10 +22,7 @@ Be sure to include the spectrum.css file, by placing this line in the head of yo
 By default this pattern will NOT defer to the browser's HTML5 picker.
 
   <input class="pat-colour-picker" type="color">
-   
 
-
-### Why did we base this library on Spectrum?
 
 
 
