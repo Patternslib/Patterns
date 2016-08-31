@@ -129,85 +129,32 @@ define([
             } else {
                 // Get the first element with overflow (the scroll container)
                 // starting from the *target*
+                // The intent is to move target into view within scrollable
+                // if the scrollable has no scrollbar, do not scroll body
                 var target = $(this.$el.attr('href'));
-                
                 scrollable = $(target.parents().filter(function() {
-                    var match = ( $(this).css('overflow') === 'auto' ||
-                                  $(this).css('overflow') === 'scroll' );
-                    // without clipped content there's no scroll bar
-                    if ( scroll === "scrollTop" &&
-                         $(this)[0].offsetHeight == $(this)[0].scrollHeight
-                       ) {
-                        match = false;
-                    } else if ( scroll === 'scrollLeft' &&
-                                $(this)[0].offsetWidth == $(this)[0].scrollWidth
-                              ) {
-                        match = false;
-                    }
-                    return  match;
+                    return ( $(this).css('overflow') === 'auto' ||
+                             $(this).css('overflow') === 'scroll' );
                 }).first())
 
-                var use_document = false;
                 if ( typeof scrollable[0] === 'undefined' ) {
                     scrollable = $('html, body');
-                    use_document = true;
-                }  else if ( scrollable.is($('body')) ) {
-                    use_document = true;
-                }
-
-                if ( use_document ) {
-                    // positioning context is document, no trickery required
+                    // positioning context is document
                     if ( scroll === "scrollTop" ) {
                         options[scroll] = Math.floor(target.offset().top);
                     } else {
                         options[scroll] = Math.floor(target.offset().left);
                     }
+                } else if ( scroll === "scrollTop" ) {
+                    // difference between target top and scrollable top becomes 0
+                    options[scroll] = Math.floor(scrollable.scrollTop()
+                                                 + target.offset().top
+                                                 - scrollable.offset().top);
                 } else {
-                    // The scrollable here is *not* the document body,
-                    // and now we need to calculate the scrolling distance
-                    // from target to -possibly overflowed- scrollable.
-                    //
-                    // We cannot use the `scrollable` .position() or .offset()
-                    // since these measure the *visible* top (or left) of the
-                    // scollable and ignore any hidden overflowed content.
-                    // Instead, we create a new positioning context directly within
-                    // the scrollable whose top/left measures the logical top/left
-                    // of the (overflowed) scrolled content within the scrollable.
-                    $(scrollable).wrapInner(function() {
-                        return "<div class='inner-scrollable' style='position:relative'></div>";
-                    })
-                    var inner_scrollable = $(scrollable).children('.inner-scrollable').first();
-                    var current = $(target);
-                    var parents = new Array();
-                    // Because we're measuring relative .position() offsets to
-                    // a parent context, we need to walk up the dom across all
-                    // nested positioning contexts until we reach the (logical)
-                    // top/left of the scrollable: .inner-scrollable.
-                    // We MUST ignore the offset of .inner-scrollable itself,
-                    // because that measures the offset from logical top/left
-                    // to the visible top/left of the scrollable, and this
-                    // offset can be negative when overflowed.
-                    while (! current.is(inner_scrollable) ) {
-                        parents.push(current);
-                        current = current.offsetParent();
-                    }
-                    // total offset is sum of all relative parent offsets
-                    // from target to top/left of .inner-scrollable
-                    var scroll_to = 0;
-                    if ( scroll === 'scrollTop' ) {
-                        parents.forEach(function (item, index, array) {
-                            scroll_to += item.position().top;
-                        });
-                    } else {
-                        parents.forEach(function (item, index, array) {
-                            scroll_to += item.position().left;
-                        });
-                    }
-                    options[scroll] = Math.floor(scroll_to);
-                    // now we can and should remove the injected helper div
-                    $(inner_scrollable).children().unwrap('.inner-scrollable');
+                    options[scroll] = Math.floor(scrollable.scrollLeft()
+                                                 + target.offset().left
+                                                 - scrollable.offset().left);
                 }
-
             }
 
             // execute the scroll
