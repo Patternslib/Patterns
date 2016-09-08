@@ -14,6 +14,7 @@ define('pat-gallery', [
     'underscore'
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser('gallery');
+    parser.addArgument('item-selector', 'a');  // selector for anchor element, which is added to the gallery.
     parser.addArgument('loop', true);
     parser.addArgument('scale-method', 'fit', ['fit', 'fitNoUpscale', 'zoom']);
     parser.addArgument('delay', 30000);
@@ -28,7 +29,7 @@ define('pat-gallery', [
             if ($('#photoswipe-template').length === 0) {
                 $('body').append(_.template(template)());
             }
-            var images = $('a', this.$el).map(function () {
+            var images = $(this.options.itemSelector, this.$el).map(function () {
                 return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
@@ -40,7 +41,7 @@ define('pat-gallery', [
                 hideAnimationDuration: this.options.effectDuration,
                 showAnimationDuration: this.options.effectDuration
             };
-            $('a', this.$el).click(function (ev) {
+            $(this.options.itemSelector, this.$el).click(function (ev) {
                 ev.preventDefault();
                 if (this.href) {
                     options.index = _.indexOf(_.pluck(images, 'src'), this.href);

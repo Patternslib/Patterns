@@ -2,6 +2,9 @@
 
 ## 2.1.0 - (unreleased)
 
+- pat-gallery: add option ``item-selector`` for gallery items, which are added to the gallery.
+  Defaults to ``a``.
+  Fixes situations, when gallery items and normal links are mixed within the same container and normal links would open within the gallery lightbox.
 - Update to jQuery 1.11.3.
 - While images are loading, already do masonry layouting.
 - Remove the ``clear-imagesloaded-cache`` trigger, as cache functionality was removed from imagesloaded from version 3.2.0.
