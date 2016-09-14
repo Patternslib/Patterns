@@ -1,5 +1,5 @@
-/* jshint undef: true, unused: true:, noarg: true, latedef: true */
-/*global config require */
+/* jshint undef: false, unused: false:, noarg: true, latedef: true */
+/* global config require */
 
 config.baseUrl = '/src';
 require.config(config);

@@ -324,7 +324,7 @@
 
 		// use Intl API when available and returning valid time zone
 		try {
-			var intlName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+			var intlName = Intl.DateTimeFormat().resolvedOptions().timeZone;  // jshint ignore:line
 			if (intlName){
 				var name = names[normalizeName(intlName)];
 				if (name) {
@@ -335,7 +335,6 @@
 		} catch (e) {
 			// Intl unavailable, fall back to manual guessing.
 		}
-
 		var offsets = userOffsets(),
 			offsetsLength = offsets.length,
 			guesses = guessesForUserOffsets(offsets),
