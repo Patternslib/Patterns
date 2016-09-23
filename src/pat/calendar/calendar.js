@@ -12,7 +12,7 @@ define([
     "pat-store",
     "pat-utils",
     "pat-registry",
-    "pat-calendar-moment-timezone-data",
+    "moment-timezone-data",
     "jquery.fullcalendar.dnd",
     "jquery.fullcalendar"
 ], function($, logger, Parser, store, utils, registry) {

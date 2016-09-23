@@ -53,7 +53,7 @@ require.config({
         // Calendar pattern
         "moment": "bower_components/moment/moment",
         "moment-timezone": "bower_components/moment-timezone/moment-timezone",
-        "pat-calendar-moment-timezone-data": "pat/calendar/moment-timezone-data",
+        "moment-timezone-data": "pat/calendar/moment-timezone-with-data-2010-2020",
 
         // Core
         "pat-compat":               "core/compat",
