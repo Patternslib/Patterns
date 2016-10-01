@@ -61,12 +61,14 @@ define([
         clearIfHidden: function(ev) {
             var active_target = '#' + window.location.hash.substr(1),
                 $active_target = $(active_target),
-                target = this.$el[0].href.split('/').pop();
+                target = '#' + this.$el[0].href.split('#').pop();
+                log.warn($active_target);
+                log.warn(target);
             if ($active_target.length > 0) {
                 if (active_target != target) {
                     // if the element does not match the one listed in the url #,
                     // clear the current class from it.
-                    var $target = $(this.$el[0].href.split('/').pop());
+                    var $target = $('#' + this.$el[0].href.split('#').pop());
                     $target.removeClass("current");
                     this.$el.removeClass("current");
                 }
