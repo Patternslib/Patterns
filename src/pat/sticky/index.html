@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>pat-sticky demo page</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css">
+    <link rel="stylesheet" href="styles.css" type="text/css">
+<!--     <link rel="stylesheet" href="sticky.css" type="text/css">
+ -->    <script src="/main.js" type="text/javascript" charset="utf-8"></script>
+    <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+
+
+  </head>
+  <body class="post" style="">
+
+    
+    <header>
+        <ul class="lang-switcher">
+            
+            <li><a href="/">RU</a></li>
+            <li><span>EN</span></li>
+            
+        </ul>
+
+        
+        <h1 class="title"><a href="/en/">Will finish in the morning</a></h1>
+        
+    </header>
+
+    
+    <article class="content">
+        
+
+<style>
+body.post .content,
+body.post .content *,
+body.post .content *:before {
+  color: white;
+  background: transparent;
+  border-color: white;
+}
+
+body.post .content {
+  background: crimson;
+  background: -webkit-linear-gradient(crimson, darkslategray 87%, #26403A);
+  background: -moz-linear-gradient(crimson, darkslategray 87%, #26403A);
+  background: -o-linear-gradient(crimson, darkslategray 87%, #26403A);
+  background: linear-gradient(crimson, darkslategray 87%, #26403A);
+}
+
+@media all and (min-width: 60em) {
+  body.post .content {
+    font-size: 1.2em;
+  }
+}
+
+body.post .content figure.info {
+  border: 1px solid white;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+body.post .content a,
+body.post .content a:hover,
+body.post .content a *,
+body.post .content a:hover * {
+  text-decoration: none;
+}
+
+body.post .content a {
+  border-bottom: 1px solid white;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+body.post .content a:hover {
+  border-bottom: 1px solid rgba(255,255,255,1);
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+body.post .content h1,
+body.post .content h2,
+body.post .content h3,
+body.post .content h4 {
+  text-align: center;
+}
+
+body.post .content .article-title {
+  font-size: 4em;
+  margin-bottom: 0.2em;
+}
+
+body.post .content .article-title a {
+  border-bottom-width: 2px;
+}
+
+body.post .content .tagline {
+  font-size: 1.5em;
+}
+
+body.post .content .scroll-me {
+  font-size: 4em;
+  opacity: 0.4;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-name: heartbeat;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: ease-in;
+  animation-duration: 1.5s;
+  animation-name: heartbeat;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in;
+}
+
+body.post .content a.big-fucking-button {
+  display: inline-block;
+  font-size: 1.2em;
+  text-decoration: none;
+  padding: 0.5em 0.7em;
+  border: 1px solid white;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 0.3em;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+body.post .content a.big-fucking-button:hover {
+  text-decoration: none;
+  border-color: deepskyblue;
+  background: deepskyblue;
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+ @media all and (min-width: 60em) {
+  body.post .content a.big-fucking-button {
+    font-size: 1.5em;
+  }
+}
+
+body.post .content section:before,
+body.post .content section:after {
+  content: '';
+  display: table;
+}
+
+</style>
+
+
+
+<section style="height: 120em;">
+  <hgroup class="sticky-1 pat-sticky" style="margin-top: 390px; top: 390px;">
+    <h1 class="article-title"><a href="https://github.com/wilddeer/stickyfill">Stickyfill</a></h1>
+
+    <h2 class="tagline"><code>position:&nbsp;sticky</code> polyfill</h2>
+  </hgroup>
+
+  <p class="sticky sticky-1-2" style="text-align: center; opacity: 0.3; margin-bottom: 60em; top: 581px;">
+    <i class="icon-chevron-down scroll-me"></i>
+  </p>
+</section>
+
+<section style="height: 60em;">
+  <p class="sticky-2 pat-sticky" style="top: 3em; font-size: 1.2em; margin-top: 2em;">
+    Sticky is a block that sticks to the edge of the screen when you scroll past its top border. And when it reaches the bottom of the parent element&nbsp;– goes along with it. Just like this paragraph.
+  </p>
+</section>
+
+<section style="height: 100em;">
+  <div class="sticky-3 pat-sticky" style="top: 357.5px; margin-bottom: 70px;">
+    <p>
+      CSS code is straightforward:
+    </p>
+
+    <pre><code>.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}</code></pre>
+
+  </div>
+
+  <p class="sticky-4 pat-sticky" style="top: 659.5px; margin-top: 40em; margin-bottom: 0px;">
+    <small><code>top</code> changes sticky's position relatively to the edge of the viewport. You may also specify <code>margin-bottom</code> to alter sticky's bottom limit a bit.</small>
+  </p>
+</section>
+
+<section style="min-height: 160em;">
+  <div class="sticky-5 pat-sticky" style="top: 191.4px; margin-top: 30em; font-size: 1.2em; margin-bottom: 65px;">
+    <p>
+      The problem is, stickies are currently <a href="http://caniuse.com/#feat=css-pat-sticky">supported</a> only in Safari on OS X and iOS.
+    </p>
+  </div>
+
+  <div class="sticky-6 pat-sticky" style="top: 256.4px; margin-top: 50em; font-size: 1.2em;">
+    <p>
+      So I made <a href="https://github.com/wilddeer/stickyfill">Stickyfill</a>. It emulates stickies where they aren't supported natively.
+    </p>
+  </div>
+</section>
+
+<section style="min-height: 90em;">
+  <div class="sticky-7 pat-sticky" style="top: 142px; margin-top: 10em;">
+    <h3>What it does:</h3>
+
+    <ul>
+      <li>Supports top-positioned stickies</li>
+      <li><del>Supports table cell stickies</del> Disabled until Firefox <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=975644">makes a native implementation</a></li>
+      <li>Works in IE9+</li>
+      <li>Disables in older browsers and in browsers with native sticky support</li>
+      <li>Mimics original sticky behavior (where it can)</li>
+      <li>Considers <a href="http://wilddeer.github.io/stickyfill/test/">a whole lot of different use cases</a></li>
+    </ul>
+  </div>
+</section>
+
+<section style="min-height: 80em;">
+  <div class="sticky-8 pat-sticky" style="top: 162.4px; margin-top: 5em;">
+    <h3>What it doesn't do:</h3>
+
+    <ul>
+      <li>Doesn't support left, right, bottom or combined stickies</li>
+      <li>Doesn't support stacking of table cell stickies</li>
+      <li>Doesn't work in overflowed blocks</li>
+      <li>Doesn't parse your CSS (launch it manually)</li>
+    </ul>
+  </div>
+</section>
+
+<section style="min-height: 160em;">
+  <p class="sticky-9 pat-sticky" style="top: 491px; margin-top: 50em; font-size: 1.2em; text-align: center; margin-bottom: 491px;">
+    <a href="https://github.com/wilddeer/stickyfill" class="big-fucking-button"><i class="icon-github">&nbsp;</i>Get it on GitHub</a>
+  </p>
+</section>
+
+<figure class="info icon-heart-empty" style="margin-top: 30em;">
+  <p>In four days of diving into browser box models’ hell I discovered the difference between <code>window.pageYOffset</code>, <code>document.documentElement.scrollTop</code>, <code>window.scrollY</code> and <code>document.body.scrollTop</code>, discrepancies in <code>offsetWidth</code> of a block with  <code>box-sizing: border-box</code> in different browsers, how <code>element.offsetWidth</code> and <code>node.getBoundingClientRect().width</code> differ and why, what’s the difference between <code>getComputedStyle(element)</code> and real values, how to get viewport’s width without scroll width and how rounding errors tend to accumulate in the most inopportune moment.</p>
+</figure>
+
+
+
+<p class="meta">
+    Published on <time class="post-date" datetime="2014-06-10 00:00:00 +0200">June 10, 2014</time>
+
+    
+        
+            in <a href="../" class="iconlink">“<span>Scripts</span>”</a>
+        
+    
+</p>
+    </article>
+    
+
+    <footer>
+        <ul class="footer-links">
+            <li><a href="/en/" class="iconlink">“<span>Will finish in the morning</span>”</a> is powered by <a href="//jekyllrb.com" class="iconlink"><i class="icon-lab">&nbsp;</i><span>Jekyll</span></a></li>
+            <li>Blog’s source&nbsp;&amp; other stuff on <a href="//github.com/wilddeer" class="iconlink"><i class="icon-github">&nbsp;</i><span>GitHub</span></a></li>
+            <li>Post announcements&nbsp;&amp; various webdev junk on <a href="https://twitter.com/wildir" class="iconlink"><i class="icon-twitter">&nbsp;</i><span>Twitter</span></a></li>
+            <li>Comments, bugs&nbsp;&amp; remarks&nbsp;→ <a href="mailto:wd@dizaina.net" class="iconlink"><i class="icon-envelope">&nbsp;</i><span>wd@dizaina.net</span></a></li>
+        </ul>
+        <p><a href="//dizaina.net" class="logo"><span>∅ </span>dizaina.net</a></p>
+    </footer>
+
+    <script src="/js/scripts.js?173edc8c162c3c2771dc5e1e399a6c6b"></script>
+    <!--[if lte IE 8]>
+        <script src="/js/selectivizr.min.js"></script>
+    <![endif]-->
+
+
+</body>
+</html>
+
