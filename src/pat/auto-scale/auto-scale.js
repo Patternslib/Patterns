@@ -65,7 +65,7 @@ define([
             switch (this.options.method) {
                 case "scale":
                     this.$el.css("transform", "scale(" + scale + ")");
-                    if ($.inArray('auto-scale-wrapper', this.$el.parent().attr('class').split(/\s+/)) === -1) {
+                    if (this.$el.parent().attr('class') && $.inArray('auto-scale-wrapper', this.$el.parent().attr('class').split(/\s+/)) === -1) {
                         this.$el.wrap("<div class='auto-scale-wrapper'></div>");                        
                     }
                     this.$el.parent().height(scaled_height).width(scaled_width);
