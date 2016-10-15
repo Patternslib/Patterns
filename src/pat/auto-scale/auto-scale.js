@@ -50,7 +50,11 @@ define([
             if (this.$el[0].tagName.toLowerCase() === "body") {
                 available_space = $(window).width();
             } else {
-                available_space = this.$el.parent().outerWidth();
+                if (this.$el.closest('.auto-scale-wrapper').length != 0) {
+                    available_space = this.$el.closest('.auto-scale-wrapper').parent().outerWidth();
+                } else {
+                    available_space = this.$el.parent().outerWidth();
+                }
             }
             available_space = Math.min(available_space, this.options.maxWidth);
             available_space = Math.max(available_space, this.options.minWidth);
