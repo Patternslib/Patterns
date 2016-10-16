@@ -16,6 +16,7 @@
   Backwards incompatible change: The ``photoswipe-template`` RequireJS configuration variable is removed and a the ``pat-gallery-url`` variable is defined instead.
 - always recalculate masonry also at the very end, even if there are no images to be loaded
 - Fix a bug in pat-scroll that would only properly leave nav items alone if their urls end in a slash
+- An href can also contain a url left of the hashmark. pat-scroll should only care for the part right of the hashmark
 
 ## 2.0.14 - Aug. 15, 2016
 

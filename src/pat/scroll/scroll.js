@@ -131,7 +131,14 @@ define([
                 // starting from the *target*
                 // The intent is to move target into view within scrollable
                 // if the scrollable has no scrollbar, do not scroll body
-                var target = $(this.$el.attr('href'));
+
+                href = this.$el.attr('href');
+                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
+                var target = $('#'+fragment);
+                if (target.length === 0) {
+                    return;
+                }
+
                 scrollable = $(target.parents().filter(function() {
                     return ( $(this).css('overflow') === 'auto' ||
                              $(this).css('overflow') === 'scroll' );
