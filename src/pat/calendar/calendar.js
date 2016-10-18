@@ -178,12 +178,12 @@ define([
                 }
             };
 
-            $el.categories = _.uniq($el.find(".cal-events .cal-event")
+            $el.categories = $(_.uniq($el.find(".cal-events .cal-event")
                 .map(function() {
                     return this.className.split(" ").filter(function(cls) {
                         return (/^cal-cat/).test(cls);
                     });
-                }));
+                })));
             this._registerEventRefetchers($el);
             this._registerCategoryControls($el);
             var $controlRoot = cfg.calendarControls ? $(cfg.calendarControls) : $el;
