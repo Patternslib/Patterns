@@ -12,10 +12,11 @@ define([
     "pat-store",
     "pat-utils",
     "pat-registry",
+    "underscore",
     "moment-timezone-data",
     "jquery.fullcalendar.dnd",
     "jquery.fullcalendar"
-], function($, logger, Parser, store, utils, registry) {
+], function($, logger, Parser, store, utils, registry, _) {
     "use strict";
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
@@ -177,12 +178,12 @@ define([
                 }
             };
 
-            $el.categories = $el.find(".cal-events .cal-event")
+            $el.categories = $(_.uniq($el.find(".cal-events .cal-event")
                 .map(function() {
                     return this.className.split(" ").filter(function(cls) {
                         return (/^cal-cat/).test(cls);
                     });
-                });
+                })));
             this._registerEventRefetchers($el);
             this._registerCategoryControls($el);
             var $controlRoot = cfg.calendarControls ? $(cfg.calendarControls) : $el;
@@ -196,6 +197,10 @@ define([
             calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
             this._restoreCalendarControls();
+            setTimeout(function () {
+                $el.fullCalendar("option", "height", $el.find(".fc-content").height());
+                $el.fullCalendar("refetchEvents");
+            }, 900);
         },
 
         _addNewEvent: function($el, $event, data) {

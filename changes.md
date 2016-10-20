@@ -17,6 +17,8 @@
 - always recalculate masonry also at the very end, even if there are no images to be loaded
 - Fix a bug in pat-scroll that would only properly leave nav items alone if their urls end in a slash
 - An href can also contain a url left of the hashmark. pat-scroll should only care for the part right of the hashmark
+- Issue a delayed redraw of the calendar to prevent rendering race conditions
+- make list of calendar categories unique to speed up js processing on sites with many calendars.
 
 ## 2.0.14 - Aug. 15, 2016
 
