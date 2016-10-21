@@ -54,6 +54,7 @@ define([
                     available_space = this.$el.closest('.auto-scale-wrapper').parent().outerWidth();
                 } else {
                     available_space = this.$el.parent().outerWidth();
+                    console.log('as:' + available_space);
                 }
             }
             available_space = Math.min(available_space, this.options.maxWidth);
@@ -61,11 +62,16 @@ define([
             scale = available_space/this.$el.outerWidth();
             scaled_height = this.$el.outerHeight() * scale;
             scaled_width = this.$el.outerWidth() * scale;
+            console.log('as: ' + available_space + ' sh: ' + scaled_height + ' sw: ' + scaled_width);
+            console.log(this.options.method);
 
             switch (this.options.method) {
                 case "scale":
                     this.$el.css("transform", "scale(" + scale + ")");
-                    if (this.$el.parent().attr('class') && $.inArray('auto-scale-wrapper', this.$el.parent().attr('class').split(/\s+/)) === -1) {
+                    if (!this.$el.parent().attr('class') ||
+                        (this.$el.parent().attr('class') && 
+                         $.inArray('auto-scale-wrapper', this.$el.parent().attr('class').split(/\s+/)) === -1)
+                        ) {
                         this.$el.wrap("<div class='auto-scale-wrapper'></div>");                        
                     }
                     this.$el.parent().height(scaled_height).width(scaled_width);

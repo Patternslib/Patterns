@@ -6,10 +6,11 @@
     <link rel="stylesheet" href="/style/common.css" type="text/css">
     <script src="/main.js" type="text/javascript" charset="utf-8"></script>
     <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js"></script>
+    <style>#document-content { width:90%; } </style>
   </head>
   <body>
         <article class="pat-rich" style="display: block; min-height: 20em;">
-          <p>
+           <p>
             A random HTML elemement:
           </p>
           <p>
@@ -21,6 +22,13 @@
           <p>
             <button class="pat-button pat-auto-scale" data-pat-auto-scale="method: zoom">😊 BUTTON 😊</button>
           </p>
+          <div id="document-content">
+            <div class="slide pat-auto-scale">
+              <div class="slide-content">
+                <img src="https://dummyimage.com/1200x800/7a7b8f/fff.png">
+              </div>
+            </div>
+          </div>
         </article>
   </body>
 </html>
