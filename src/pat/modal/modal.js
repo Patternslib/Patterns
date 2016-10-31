@@ -124,9 +124,10 @@ define([
             var max_height = $(window).innerHeight() - modal_padding;
             var $tallest_child = this.getTallestChild();
             var tallest_child_height = $tallest_child.outerHeight(true);
+            var header_size = this.$el.find('.header').outerHeight(true);
 
             if (tallest_child_height !== modal_height) {
-                modal_height = tallest_child_height + modal_padding;
+                modal_height = tallest_child_height + header_size + modal_padding;
             }
             if (max_height < modal_height) {
                 this.$el.addClass("max-height").css("height", max_height);
