@@ -674,6 +674,9 @@ define([
                     if ($el.data("patterns.autoload") || !$.contains(document, $el[0])) {
                         return false;
                     }
+                    if (!$el.is(":visible")) {
+                        return false;
+                    } 
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
