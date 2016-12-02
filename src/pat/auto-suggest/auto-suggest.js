@@ -181,7 +181,7 @@ define([
                     ajax: {
                         url: pat_config.ajax.url,
                         dataType: pat_config.ajax["data-type"],
-                        type: "POST",
+                        type: "GET",
                         quietMillis: 400,
                         data: function (term, page) {
                             return {
