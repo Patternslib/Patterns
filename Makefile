@@ -128,4 +128,4 @@ _serve:
 
 designerhappy:: serve
 
-.PHONY: all bundle clean jshint tests
+.PHONY: all bundle clean jshint
