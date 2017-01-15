@@ -11,7 +11,16 @@
       section {
           border: 1px dashed red;
       }
-
+      .stick-me {
+          position: -webkit-sticky;
+          position: sticky;
+          top: 0;        
+      }
+      .stick-me:before,
+      .stick-me:after {
+        content: "";
+        display: table;
+      }
       .pat-sticky {
           position: -webkit-sticky;
           position: sticky;
@@ -91,7 +100,10 @@
         <p>The improvement of the producer-consumer problem has been widely studied. Sou also visualizes 64 bit architectures, but without all the unnecssary complexity. Similarly, A. Taylor et al. [32] and Erwin Schroedinger [27] constructed the first known instance of highly-available modalities [9,18,33]. While Zhou and Williams also introduced this method, we evaluated it independently and simultaneously. Further, we had our approach in mind before H. Zheng et al. published the recent well-known work on the study of Moore's Law [29,30,1]. Complexity aside, Sou develops even more accurately. Along these same lines, W. Thomas [26] developed a similar heuristic, nevertheless we disconfirmed that our solution is in Co-NP. The only other noteworthy work in this area suffers from fair assumptions about authenticated methodologies. Raj Reddy [2,11,35,23] developed a similar system, contrarily we disconfirmed that Sou is NP-complete [21].</p>
     </section>
 
+    <a id="inject-here" href="injected-sticky.html#content" class="pat-inject" data-pat-inject="source: #content; target: #inject-here; trigger: autoload-visible">Inject me on autoload</a>
+
     <section class="pat-sticky" data-pat-sticky="selector: .stick-me">
+        
         <div class="stick-me" style="background: #8CDD04;">
             <h1>I'm sticky with a class selector!</h1>
         </div>

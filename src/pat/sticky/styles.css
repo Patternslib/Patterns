@@ -1356,7 +1356,6 @@ html.bw .peppermint-active .peppermint-slides {
     position: sticky;
     top: 0;
 }
-
 .pat-sticky:before,
 .pat-sticky:after {
     content: '';
