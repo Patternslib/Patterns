@@ -36,7 +36,6 @@ define([
             }
             this.$stickies.each(function () {
                 $(this).Stickyfill();
-                $(this).addClass('sticking');
             });
         }
     });
