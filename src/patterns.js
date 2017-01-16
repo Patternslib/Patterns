@@ -50,6 +50,7 @@ define([
     "pat-slideshow-builder",
     "pat-sortable",
     "pat-stacks",
+    "pat-sticky",
     "pat-subform",
     "pat-switch",
     "pat-syntax-highlight",
