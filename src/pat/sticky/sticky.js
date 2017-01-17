@@ -32,7 +32,7 @@ define([
             if (this.options.selector === "") {
                 this.$stickies = this.$el;
             } else {
-                this.$stickies = this.$el.children().filter(this.options.selector);
+                this.$stickies = this.$el.find(this.options.selector);
             }
             this.$stickies.each(function () {
                 $(this).Stickyfill();
