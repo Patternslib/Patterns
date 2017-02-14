@@ -288,6 +288,10 @@ define([
                 if (data.pattern == "clone" && data.action == "remove") {
                     this.validateForm(ev);
                 }
+            } else if (data.pattern == "validation") {
+                // validation throws pat-update itself. If that happens within a tooltip, the tooltip closes.
+                // returning false here prevents this. @jc, any idea why this is a fix and whether this is harmful?
+                return false;
             }
             return true;
         },
