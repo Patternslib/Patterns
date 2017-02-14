@@ -121,12 +121,13 @@ define([
         resize: function() {
             var modal_height = this.$el.outerHeight(true);
             var modal_padding = modal_height - this.$el.outerHeight();
-            var max_height = $(window).innerHeight() - modal_padding;
+            // Introducing an arbitrary amount of padding that should always be given for a modal to keep a safety distance to the edges of a browser
+            var max_height = $(window).innerHeight() - modal_padding - 100;
             var $tallest_child = this.getTallestChild();
             var tallest_child_height = $tallest_child.outerHeight(true);
             var header_size = this.$el.find('.header').outerHeight(true);
 
-            if (tallest_child_height !== modal_height) {
+            if (tallest_child_height > modal_height - header_size) {
                 modal_height = tallest_child_height + header_size + modal_padding;
             }
             if (max_height < modal_height) {
