@@ -286,7 +286,7 @@ define([
                     calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                 });
                 $(document).on("pat-update.pat-calendar", function(ev, data) {
-                    if (data.pattern !== "validate") {
+                    if (data.pattern !== "validation") {
                         setTimeout(function() {
                             calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                         }, 300);
