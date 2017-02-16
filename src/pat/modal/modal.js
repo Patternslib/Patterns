@@ -119,21 +119,14 @@ define([
         },
 
         resize: function() {
-            var modal_height = this.$el.outerHeight(true);
-            var modal_padding = modal_height - this.$el.outerHeight();
-            var max_height = $(window).innerHeight() - modal_padding;
-            var $tallest_child = this.getTallestChild();
-            var tallest_child_height = $tallest_child.outerHeight(true);
-            var header_size = this.$el.find('.header').outerHeight(true);
+            
+            var panel_content_elem = this.$el.find(".panel-content");
+            var header_elem = this.$el.find('.header');
 
-            if (tallest_child_height !== modal_height) {
-                modal_height = tallest_child_height + header_size + modal_padding;
-            }
-            if (max_height < modal_height) {
+            var modal_height = panel_content_elem.outerHeight(true) + header_elem.outerHeight(true);
+
+            if (this.$el.height() < modal_height) {
                 this.$el.addClass("max-height").css("height", max_height);
-                this.setPosition();
-            } else if (modal_height !== this.$el.height()) {
-                this.$el.removeClass("max-height").css("height", modal_height);
                 this.setPosition();
             } else {
                 return;
