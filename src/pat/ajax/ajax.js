@@ -13,7 +13,6 @@ define([
 ], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.ajax"),
         parser = new Parser("ajax");
-
     parser.addArgument("url", function($el) {
         return ($el.is("a") ? $el.attr("href") :
                 ($el.is("form") ? $el.attr("action") : "")).split("#")[0];
@@ -23,6 +22,10 @@ define([
         // Disable caching of AJAX responses
         cache: false
     });
+
+    var xhrCount = {};
+    xhrCount.get = function(a) { return this[a] !== undefined ? this[a] : 0; };
+    xhrCount.inc = function(a) { this[a] = this.get(a) + 1; return this.get(a); };
 
     var _ = {
         name: "ajax",
@@ -76,12 +79,18 @@ define([
                         jqxhr: jqxhr
                     });
                 },
+                seqNumber = xhrCount.inc(cfg.url),
                 onSuccess = function(data, status, jqxhr) {
                     log.debug("success: jqxhr:", jqxhr);
-                    $el.trigger({
-                        type: "pat-ajax-success",
-                        jqxhr: jqxhr
-                    });
+                    if (seqNumber === xhrCount.get(cfg.url)) {
+                        // if this url is requested multiple time, only return the last result
+                        $el.trigger({
+                            type: "pat-ajax-success",
+                            jqxhr: jqxhr
+                        });
+                    } else {
+                        // ignore
+                    }
                 },
                 args = {
                     context: $el,
