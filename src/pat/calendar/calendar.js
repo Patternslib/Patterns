@@ -285,8 +285,11 @@ define([
                     }
                     calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                 });
-                $(document).on("pat-update.pat-calendar", function(ev, data) {
-                    if (data.pattern !== "validation") {
+                $(document).on("pat-update.pat-calendar", function(ev) {
+                    // Don't redraw if the change was in a tooltip, otherwise
+                    // it will close the tooltip prematurely (assuming here
+                    // it's a calendar event tooltip).
+                    if ($(ev.target).parents('.tooltip-container').length === 0) {
                         setTimeout(function() {
                             calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                         }, 300);
