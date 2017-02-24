@@ -23,6 +23,7 @@ define('pat-gallery', [
     return Base.extend({
         name: 'gallery',
         trigger: '.pat-gallery',
+        origBodyOverflow: 'auto',
 
         init: function patGalleryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
@@ -39,7 +40,9 @@ define('pat-gallery', [
                 loop: this.options.loop,
                 slideshowDelay: this.options.delay,
                 hideAnimationDuration: this.options.effectDuration,
-                showAnimationDuration: this.options.effectDuration
+                showAnimationDuration: this.options.effectDuration,
+                pinchToClose: false,
+                closeOnScroll: false
             };
             $(this.options.itemSelector, this.$el).click(function (ev) {
                 ev.preventDefault();
@@ -62,6 +65,15 @@ define('pat-gallery', [
                         };
                         img.src = item.src; // let's download image
                     }
+                });
+                gallery.listen('initialZoomInEnd', function() {
+                    // don't show body scrollbars when overlay is open
+                    this.origBodyOverflow = $('body').css('overflow');
+                    $('body').css('overflow', 'hidden');
+                });
+                gallery.listen('destroy', function() {
+                    // show original overlay value on body after closing
+                    $('body').css('overflow', this.origBodyOverflow);
                 });
                 gallery.init();
             });
