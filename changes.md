@@ -2,6 +2,7 @@
 
 ## 2.1.0 - (unreleased)
 
+- pat-masonry: Add option ``layout-after`` to allow layouting after all images have been loaded. This avoids overlapping images while loading.  
 - pat-gallery: UX improvements - do not close on scroll or pinch.
 - pat-gallery: UX improvements - remove scrollbars when gallery is opened. 
 - pat-gallery: add option ``item-selector`` for gallery items, which are added to the gallery.
