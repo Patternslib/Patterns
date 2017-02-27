@@ -35,6 +35,7 @@
     parser.addArgument("stamp", "");
     parser.addArgument("transition-duration", "0.4s");
     parser.addArgument("visible-style", "{ opacity: 1, transform: 'scale(1)' }");
+    parser.addArgument("layout-after", false);
 
     return Base.extend({
         name: "masonry",
@@ -42,12 +43,19 @@
 
         init: function masonryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
-            this.initMasonry();
             var imgLoad = imagesLoaded(this.$el);
-            imgLoad.on("progress", function() {
-                this.quicklayout();
-            }.bind(this));
-            imgLoad.on("always", this.layout.bind(this));
+            if (this.options.layoutAfter) {
+                imgLoad.on("always", function () {
+                    this.initMasonry();
+                    this.quicklayout();
+                }.bind(this));
+            } else {
+                imgLoad.on("progress", function() {
+                    this.quicklayout();
+                }.bind(this));
+                imgLoad.on("always", this.layout.bind(this));
+                this.initMasonry();
+            }
             // Update if something gets injected inside the pat-masonry
             // element.
             this.$el
@@ -55,7 +63,6 @@
                     utils.debounce(this.update.bind(this), 100))
                 .parents().on("pat-update", 
                     utils.debounce(this.quicklayout.bind(this), 200));
-
         },
 
         initMasonry: function () {
