@@ -21,6 +21,7 @@
 - An href can also contain a url left of the hashmark. pat-scroll should only care for the part right of the hashmark
 - Issue a delayed redraw of the calendar to prevent rendering race conditions
 - make list of calendar categories unique to speed up js processing on sites with many calendars.
+- don't pin modernizr, we always want the latest compatibility fixes
 
 ## 2.0.14 - Aug. 15, 2016
 
