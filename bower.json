@@ -22,7 +22,7 @@
     "jquery.tinymce": "",
     "logging": "",
     "masonry": "~4.1.0",
-    "modernizr": "",
+    "modernizr": "https://github.com/Modernizr/Modernizr.git#master",
     "moment": "2.10.6",
     "moment-timezone": "0.4.0",
     "parsleyjs": "1.2.4",
