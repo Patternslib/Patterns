@@ -3,7 +3,7 @@
     @media only screen and (max-width: $break-small) { @content; }
   }
   @else if $media == small-medium {
-    @media only screen and (max-width: $break-large -1) { @content; }
+    @media only screen and (max-width: $break-large - 1) { @content; }
   }
   @else if $media == medium {
     @media only screen and (min-width: $break-small + 1) and (max-width: $break-large - 1) { @content; }
