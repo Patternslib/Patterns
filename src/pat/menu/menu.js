@@ -39,7 +39,7 @@ define([
 
                     if (timer) {
                         clearTimeout(timer);
-                        timer=null;
+                        timer = null;
                     }
 
                     timer = setTimeout(function() { closeMenu($li); }, 1000);
