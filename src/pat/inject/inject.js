@@ -767,6 +767,9 @@ define([
         if (event.state) {
             window.location.reload();
         }
+        // Not only change the URL, also reload the page. 
+        // http://stackoverflow.com/questions/25066499/pushstate-and-back-button-works-but-content-doesnt-change
+        window.location.href = window.location.href;
     });
 
     // this entry ensures that the initally loaded page can be reached with
