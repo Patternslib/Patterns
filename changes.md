@@ -2,9 +2,10 @@
 
 ## 2.1.0 - (unreleased)
 
+- fix input-change-events for <input type="number" />
 - pat-masonry: Initialize masonry just before layouting gets startet, which is after first image has been loaded or at loading has finished. This avoids overlapping images while they are still being loaded.
 - pat-gallery: UX improvements - do not close on scroll or pinch.
-- pat-gallery: UX improvements - remove scrollbars when gallery is opened. 
+- pat-gallery: UX improvements - remove scrollbars when gallery is opened.
 - pat-gallery: add option ``item-selector`` for gallery items, which are added to the gallery.
   Defaults to ``a``.
   Fixes situations, when gallery items and normal links are mixed within the same container and normal links would open within the gallery lightbox.
@@ -25,7 +26,7 @@
 
 ## 2.0.14 - Aug. 15, 2016
 
-- A fix for pat-scroll to scroll up to current scroll container instead of body. 
+- A fix for pat-scroll to scroll up to current scroll container instead of body.
 - A fix for pat-scroll to await loading of all images before determining the amount to scroll up.
 - A fix for IE10/11 where the modal wouldn`t close anymore due to activeElement being undefined
 - Allow to configure different data-pat-inject per formaction, so that different targets can be configured per formaction
@@ -590,4 +591,3 @@
 ## 1.0.0 - Released January 28, 2013
 
 - First official release.
-

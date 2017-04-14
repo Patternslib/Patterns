@@ -45,9 +45,20 @@ define([
 
         registerHandlersForElement: function() {
             var $el = $(this),
+                isNumber = $el.is("input[type=number]"),
                 isText = $el.is("input:text, input[type=search], textarea");
 
-            if (isText) {
+            if (isNumber) {
+                // for <input type="number" /> we want to trigger the change
+                // on keyup
+                if ("onkeyup" in window) {
+                    $el.on("keyup." + namespace, function() {
+                        log.debug("translating keyup");
+                        $el.trigger("input-change");
+                    });
+                }
+            }
+            if (isText || isNumber) {
                 if ("oninput" in window) {
                     $el.on("input." + namespace, function() {
                         log.debug("translating input");
