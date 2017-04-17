@@ -99,7 +99,20 @@ define([
                     error: onError,
                     success: onSuccess
                 };
-
+            // add nocache url parameter to prevent IE11 from caching.
+            var questionMarkPosition = cfg.url.indexOf("?");
+            if ( questionMarkPosition == -1 ) {
+                args.url = cfg.url + '?nocache=' + Date.now();
+            }
+            else {
+                if ( cfg.url[questionMarkPosition+1] === undefined ) {
+                    // malformed url that ends with a '?'
+                    args.url = cfg.url + 'nocache=' + Date.now();
+                }
+                else {
+                    args.url = cfg.url + '&nocache=' + Date.now();                    
+                }
+            }
             $el.removeData("pat-ajax.clicked-data");
             log.debug("request:", args, $el[0]);
             if ($el.is("form")) {

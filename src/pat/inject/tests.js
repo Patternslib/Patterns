@@ -1,4 +1,17 @@
 define(["pat-inject", "pat-utils"], function(pattern, utils) {
+    var originalDateNow = Date.now;
+
+    beforeEach(function() {
+        // Monkey patch Date.now so that we dont get current time mismatches while testing
+        Date.now = function() {
+            return "123"; // dummy data instead of current time
+        };
+    });
+
+    afterEach(function() {
+        $("#lab").remove();
+        Date.now = originalDateNow;
+    });
 
     describe("pat-inject", function() {
 
@@ -393,7 +406,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($a);
                     $a.trigger("click");
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
+                    var url = "test.html?nocache=" + Date.now();
+                    expect($.ajax.mostRecentCall.args[0].url).toBe(url);
                 });
 
                 it("fetches url on autoload", function() {
@@ -588,7 +602,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         $submit2.trigger("click");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        var url = "other.html?nocache=" + Date.now() + '&submit=special';
+                        expect($.ajax.mostRecentCall.args[0].url).toBe(url);
                     });
 
                     it("use an image submit with a formaction value as action URL", function() {
@@ -602,7 +617,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         $submit2.trigger("click");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        var url = "other.html?nocache=" + Date.now() + '&submit=special';
+                        expect($.ajax.mostRecentCall.args[0].url).toBe(url);
                     });
 
                     it("use fragment in formaction value as source + target selector", function() {
@@ -622,7 +638,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                         expect($.ajax).toHaveBeenCalled();
                         expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        var url = "other.html?nocache=" + Date.now() + '&submit=special';
+                        expect($.ajax.mostRecentCall.args[0].url).toBe(url);
                         expect($target.html()).toBe("other");
                     });
 
@@ -644,7 +661,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                         expect($.ajax).toHaveBeenCalled();
                         expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        var url = "other.html?nocache=" + Date.now() + '&submit=special';
+                        expect($.ajax.mostRecentCall.args[0].url).toBe(url);
                         expect($target.html()).toBe("other");
                     });
 
@@ -667,7 +685,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                         expect($.ajax).toHaveBeenCalled();
                         expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        var url = "other.html?nocache=" + Date.now() + '&submit=special';
+                        expect($.ajax.mostRecentCall.args[0].url).toBe(url);
                         expect($target1.html()).toBe("other");
                         expect($target2.html()).toBe("other");
                     });
@@ -692,7 +711,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                         expect($.ajax).toHaveBeenCalled();
                         expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        var url = "other.html?nocache=" + Date.now() + '&submit=special';
+                        expect($.ajax.mostRecentCall.args[0].url).toBe(url);
                         expect($target1.html()).toBe("some");
                         expect($target2.html()).toBe("other");
                     });
