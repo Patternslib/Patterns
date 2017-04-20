@@ -56,7 +56,7 @@ define([
              * changes.
              */
             var $el = typeof ev !== "undefined" ? $(ev.target) : this.$el;
-            $el.find(".pat-subform").each(function (idx, el) {
+            $el.find(".pat-subform").not('.pat-autosubmit').each(function (idx, el) {
                 $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
             }.bind(this));
         },
