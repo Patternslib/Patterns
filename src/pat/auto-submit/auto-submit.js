@@ -4,7 +4,7 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012 Simplon B.V. - Wichert Akkerman
  * Copyright 2013 Marko Durkovic
- * Copyright 2014-2015 Syslab.com GmbH - JC Brand 
+ * Copyright 2014-2015 Syslab.com GmbH - JC Brand
  */
 define([
     "jquery",
@@ -56,7 +56,7 @@ define([
              * changes.
              */
             var $el = typeof ev !== "undefined" ? $(ev.target) : this.$el;
-            $el.find(".pat-subform").each(function (idx, el) {
+            $el.find(".pat-subform").not('.pat-autosubmit').each(function (idx, el) {
                 $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
             }.bind(this));
         },
@@ -73,18 +73,20 @@ define([
                 log.error("The defocus delay value makes only sense on text input elements.");
                 return this.$el;
             }
+
+            function trigger_event(ev) {
+              if ($(ev.target).closest('.pat-autosubmit')[0] !== this) {
+                return;
+              }
+              $(ev.target).trigger("input-change-delayed");
+            }
             if (this.options.delay === "defocus") {
-                this.$el.on("input-defocus.pat-autosubmit", function(ev) {
-                    $(ev.target).trigger("input-change-delayed");
-                });
+                this.$el.on("input-defocus.pat-autosubmit", trigger_event);
             } else if (this.options.delay > 0) {
-                this.$el.on("input-change.pat-autosubmit", utils.debounce(function(ev) {
-                    $(ev.target).trigger("input-change-delayed");
-                }, this.options.delay));
+                this.$el.on("input-change.pat-autosubmit",
+                            utils.debounce(trigger_event, this.options.delay));
             } else {
-                this.$el.on("input-change.pat-autosubmit", function(ev) {
-                    $(ev.target).trigger("input-change-delayed");
-                });
+                this.$el.on("input-change.pat-autosubmit", trigger_event);
             }
         },
 
