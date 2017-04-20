@@ -761,12 +761,8 @@ define([
             }
             return;
         }
-        // popstate event can be fired when history.back() is called. If
-        // event.state is null, then we are at the first "pageload" state
-        // and there's nothing left to do, so we do nothing.
-        if (event.state) {
-            window.location.reload();
-        }
+        // Not only change the URL, also reload the page. 
+        window.location.reload();
     });
 
     // this entry ensures that the initally loaded page can be reached with
