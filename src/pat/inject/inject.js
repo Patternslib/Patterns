@@ -761,15 +761,8 @@ define([
             }
             return;
         }
-        // popstate event can be fired when history.back() is called. If
-        // event.state is null, then we are at the first "pageload" state
-        // and there's nothing left to do, so we do nothing.
-        if (event.state) {
-            window.location.reload();
-        }
         // Not only change the URL, also reload the page. 
-        // http://stackoverflow.com/questions/25066499/pushstate-and-back-button-works-but-content-doesnt-change
-        window.location.href = window.location.href;
+        window.location.reload();
     });
 
     // this entry ensures that the initally loaded page can be reached with
