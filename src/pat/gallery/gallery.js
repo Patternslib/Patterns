@@ -30,7 +30,10 @@ define('pat-gallery', [
             if ($('#photoswipe-template').length === 0) {
                 $('body').append(_.template(template)());
             }
-            var images = $(this.options.itemSelector, this.$el).map(function () {
+            // Search for itemSelector including the current node
+            // See: https://stackoverflow.com/a/17538213/1337474
+            var image_wrapper = this.$el.find(this.options.itemSelector).addBack(this.options.itemSelector);
+            var images = image_wrapper.map(function () {
                 return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
@@ -44,7 +47,7 @@ define('pat-gallery', [
                 pinchToClose: false,
                 closeOnScroll: false
             };
-            $(this.options.itemSelector, this.$el).click(function (ev) {
+            image_wrapper.click(function (ev) {
                 ev.preventDefault();
                 if (this.href) {
                     options.index = _.indexOf(_.pluck(images, 'src'), this.href);

@@ -2,6 +2,8 @@
 
 ## 2.1.0 - (unreleased)
 
+- pat-gallery: Also include the node with the ``pat-gallery`` class trigger for initializing the gallery.
+  Now ``pat-gallery`` can be used on anchor tags wrapping images directly, making it possible to let images be opened individually in in the overlay without adding them to a gallery with navigation controls to the next image.
 - fix input-change-events for <input type="number" />
 - pat-autosubmit: allow nested autosubmitting subforms with different delays.
 - pat-masonry: Initialize masonry just before layouting gets startet, which is after first image has been loaded or at loading has finished. This avoids overlapping images while they are still being loaded.
