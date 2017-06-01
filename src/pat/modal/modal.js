@@ -10,6 +10,7 @@ define([
     parser.addArgument("class");
     parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
     parser.addArgument("close-text", 'Close');
+    parser.addArgument("panel-header-content", ":first:not(.header)");
 
     return Base.extend({
         name: "modal",
@@ -50,15 +51,21 @@ define([
             if (this.options.closing.indexOf("close-button")!==-1) {
                 $("<button type='button' class='close-panel'>" + this.options.closeText + "</button>").appendTo($header);
             }
+
             // We cannot handle text nodes here
-            var $children = this.$el.children(":last, :not(:first)");
+            if (this.options.panelHeaderContent === "none") {
+              var $children = this.$el.children();
+            } else {
+              var $children = this.$el.children(":last, :not(" + this.options.panelHeaderContent +")");
+            }
+
             if ($children.length) {
                 $children.wrapAll("<div class='panel-content' />");
             } else {
                 this.$el.append("<div class='panel-content' />");
             }
             $(".panel-content", this.$el).before($header);
-            this.$el.children(":first:not(.header)").prependTo($header);
+            this.$el.children(this.options.panelHeaderContent).prependTo($header);
 
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
