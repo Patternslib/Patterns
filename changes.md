@@ -5,6 +5,7 @@
 - fix input-change-events for <input type="number" />
 - pat-autosubmit: allow nested autosubmitting subforms with different delays.
 - pat-masonry: Initialize masonry just before layouting gets startet, which is after first image has been loaded or at loading has finished. This avoids overlapping images while they are still being loaded.
+- pat-masonry: fix layout of nested .pat-masonry elements
 - pat-gallery: UX improvements - do not close on scroll or pinch.
 - pat-gallery: UX improvements - remove scrollbars when gallery is opened.
 - pat-gallery: add option ``item-selector`` for gallery items, which are added to the gallery.
