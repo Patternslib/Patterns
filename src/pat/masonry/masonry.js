@@ -60,7 +60,7 @@
             this.$el
                 .on("patterns-injected.pat-masonry",
                     utils.debounce(this.update.bind(this), 100))
-                .parents().on("pat-update", 
+                .parents().on("pat-update",
                     utils.debounce(this.quicklayout.bind(this), 200));
 
         },
@@ -109,6 +109,11 @@
                 this.$el.addClass("masonry-ready");
             }.bind(this));
             this.msnry.layout();
+            this.$el.find('.pat-masonry').each(
+                function(idx, child) {
+                    $(child).patMasonry('quicklayout');
+                }
+           );
         },
 
         getTypeCastedValue: function (original) {
