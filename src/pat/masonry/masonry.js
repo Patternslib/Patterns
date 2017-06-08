@@ -60,7 +60,7 @@
             this.$el
                 .on("patterns-injected.pat-masonry",
                     utils.debounce(this.update.bind(this), 100))
-                .parents().on("pat-update",
+                .on("pat-update",
                     utils.debounce(this.quicklayout.bind(this), 200));
 
         },
@@ -99,7 +99,16 @@
         },
 
         quicklayout: function() {
-            // Just calling again without triggering the class change
+            if (!this.msnry) {
+                // Not initialized yet
+                return;
+            }
+            // call masonry layout on the children before calling it on this element
+            this.$el.find('.pat-masonry').each(
+                function(idx, child) {
+                    $(child).patMasonry('quicklayout');
+                }
+            );
             this.msnry.layout();
         },
 
@@ -109,11 +118,7 @@
                 this.$el.addClass("masonry-ready");
             }.bind(this));
             this.msnry.layout();
-            this.$el.find('.pat-masonry').each(
-                function(idx, child) {
-                    $(child).patMasonry('quicklayout');
-                }
-           );
+            this.quicklayout();
         },
 
         getTypeCastedValue: function (original) {

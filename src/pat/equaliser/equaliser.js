@@ -24,8 +24,8 @@ define([
                 var $container = $(this),
                     options = parser.parse($container, opts);
                 $container.data("pat-equaliser", options);
-                $container.on("pat-update.pat-equaliser", null, this, equaliser._onEvent);
-                $container.on("patterns-injected.pat-equaliser", null, this, equaliser._onEvent);
+                $container.on("pat-update.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
+                $container.on("patterns-injected.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
                 $container.parents('.pat-stacks').on("pat-update", null, this, utils.debounce(equaliser._onEvent, 100));
                 imagesLoaded(this, $.proxy(function() {
@@ -54,7 +54,7 @@ define([
 
             var new_css = {height: max_height+"px"};
 
-            switch (options.transition) {
+            switch (options && options.transition) {
                 case "none":
                     $children.css(new_css).addClass("equalised");
                     break;
@@ -64,6 +64,7 @@ define([
                     });
                     break;
             }
+            $container.trigger('pat-update', {pattern: 'equaliser'});
         },
 
         _onEvent: function(event) {
@@ -76,5 +77,3 @@ define([
     patterns.register(equaliser);
     return equaliser;
 });
-
-
