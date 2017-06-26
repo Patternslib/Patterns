@@ -27,4 +27,4 @@ First, update the version number in bower.json, package.json, VERSION.txt and ad
     git tag 2.0.0
     git push && git push --tags
 
-## update VERSION.txt to the next logical version number and append '-dev' to it.
+## checkout master, update VERSION.txt to the next logical version number and append '-dev' to it.
