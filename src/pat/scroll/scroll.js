@@ -28,7 +28,7 @@ define([
             if (this.options.trigger == "auto") {
                 // Only calculate the offset when all images are loaded
                 var that = this;
-                $('body').imagesLoaded( function() {
+                imagesLoaded($('body'), function() {
                    that.smoothScroll();
                 });
             } else if (this.options.trigger == "click") {
@@ -61,12 +61,12 @@ define([
         clearIfHidden: function(ev) {
             var active_target = '#' + window.location.hash.substr(1),
                 $active_target = $(active_target),
-                target = this.$el[0].href.split('/').pop();
+                target = '#' + this.$el[0].href.split('#').pop();
             if ($active_target.length > 0) {
                 if (active_target != target) {
                     // if the element does not match the one listed in the url #,
                     // clear the current class from it.
-                    var $target = $(this.$el[0].href.split('/').pop());
+                    var $target = $('#' + this.$el[0].href.split('#').pop());
                     $target.removeClass("current");
                     this.$el.removeClass("current");
                 }
@@ -121,46 +121,59 @@ define([
 
         smoothScroll: function() {
             var scroll = this.options.direction == "top" ? 'scrollTop' : 'scrollLeft',
-                $el, options = {};
+                scrollable, options = {};
             if (typeof this.options.offset != "undefined") {
-                $el = this.options.selector ? $(this.options.selector) : this.$el;
+                // apply scroll options directly
+                scrollable = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
             } else {
-                // Get the first element with overflow auto starting from the trigger
-                // (the scroll container)
-                // Then calculate the offset relatively to that container
-                $el = $(this.$el.parents()
-                    .filter(function() { 
-                        return $(this).css('overflow') === 'auto'; })
-                    .first())
-                if (typeof $el[0] === 'undefined') {
-                    $el = $('html, body');
+                // Get the first element with overflow (the scroll container)
+                // starting from the *target*
+                // The intent is to move target into view within scrollable
+                // if the scrollable has no scrollbar, do not scroll body
+
+                href = this.$el.attr('href');
+                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
+                var target = $('#'+fragment);
+                if (target.length === 0) {
+                    return;
                 }
 
-                var scroll_container = Math.floor( $el.offset().top );
-                var target = Math.floor( $(this.$el.attr('href')).offset().top );
+                scrollable = $(target.parents().filter(function() {
+                    return ( $(this).css('overflow') === 'auto' ||
+                             $(this).css('overflow') === 'scroll' );
+                }).first())
 
-                if (target == scroll_container) {
-                    options[scroll] = scroll_container;
-                } else if (target >= scroll_container) {
-                    options[scroll] = target - scroll_container;
-                    $el.animate(options, {
-                        duration: 500,
-                        start: function() {
-                            $('.pat-scroll').addClass('pat-scroll-animated');
-                        }
-                    });
+                if ( typeof scrollable[0] === 'undefined' ) {
+                    scrollable = $('html, body');
+                    // positioning context is document
+                    if ( scroll === "scrollTop" ) {
+                        options[scroll] = Math.floor(target.offset().top);
+                    } else {
+                        options[scroll] = Math.floor(target.offset().left);
+                    }
+                } else if ( scroll === "scrollTop" ) {
+                    // difference between target top and scrollable top becomes 0
+                    options[scroll] = Math.floor(scrollable.scrollTop()
+                                                 + target.offset().top
+                                                 - scrollable.offset().top);
                 } else {
-                    options[scroll] = target + scroll_container ;
-                    $el.animate(options, {
-                        duration: 500,
-                        start: function() {
-                            $('.pat-scroll').addClass('pat-scroll-animated');
-                        }
-                    });
+                    options[scroll] = Math.floor(scrollable.scrollLeft()
+                                                 + target.offset().left
+                                                 - scrollable.offset().left);
                 }
             }
+
+            // execute the scroll
+            scrollable.animate(options, {
+                duration: 500,
+                start: function() {
+                    $('.pat-scroll').addClass('pat-scroll-animated');
+                }
+            });
         }
+
+
     });
 });
 

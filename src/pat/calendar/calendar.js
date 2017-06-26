@@ -12,10 +12,11 @@ define([
     "pat-store",
     "pat-utils",
     "pat-registry",
-    "pat-calendar-moment-timezone-data",
+    "underscore",
+    "moment-timezone-data",
     "jquery.fullcalendar.dnd",
     "jquery.fullcalendar"
-], function($, logger, Parser, store, utils, registry) {
+], function($, logger, Parser, store, utils, registry, _) {
     "use strict";
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
@@ -177,12 +178,12 @@ define([
                 }
             };
 
-            $el.categories = $el.find(".cal-events .cal-event")
+            $el.categories = $(_.uniq($el.find(".cal-events .cal-event")
                 .map(function() {
                     return this.className.split(" ").filter(function(cls) {
                         return (/^cal-cat/).test(cls);
                     });
-                });
+                })));
             this._registerEventRefetchers($el);
             this._registerCategoryControls($el);
             var $controlRoot = cfg.calendarControls ? $(cfg.calendarControls) : $el;
@@ -196,6 +197,10 @@ define([
             calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
             this._restoreCalendarControls();
+            setTimeout(function () {
+                $el.fullCalendar("option", "height", $el.find(".fc-content").height());
+                $el.fullCalendar("refetchEvents");
+            }, 900);
         },
 
         _addNewEvent: function($el, $event, data) {
@@ -280,8 +285,11 @@ define([
                     }
                     calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                 });
-                $(document).on("pat-update.pat-calendar", function(ev, data) {
-                    if (data.pattern !== "validate") {
+                $(document).on("pat-update.pat-calendar", function(ev) {
+                    // Don't redraw if the change was in a tooltip, otherwise
+                    // it will close the tooltip prematurely (assuming here
+                    // it's a calendar event tooltip).
+                    if ($(ev.target).parents('.tooltip-container').length === 0) {
                         setTimeout(function() {
                             calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                         }, 300);

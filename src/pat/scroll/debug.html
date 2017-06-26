@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Scroll demo</title>
+    	<link rel="stylesheet" href="/style/common.css" type="text/css">
+        <script src="/main.js" type="text/javascript" charset="utf-8"></script>
+		<script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+    <style>
+        .current {
+            background-color: beige;
+        }
+        .defunct:after {
+           content: " [defunct]";
+           color: orange;
+        }
+        .weird {
+           font-weight: bold;
+           color: red;
+        }
+        .weird:after {
+           content: " [weird!]"
+        }
+        .high {
+          height: 100px;
+          background-color: #ddd;
+        }
+        article {
+            width: 70%;
+            height: 25em;
+            overflow: auto;
+            position: absolute;
+            top: 50px;
+           right: 0;
+        border: solid blue 1px;
+           padding: 5px;
+        }
+        aside {
+            width: 29%;
+            position: fixed;
+            top: 5em;
+            left: 1em;
+        }
+        .wrapper {
+          position: relative;
+          border: dotted red 1px;
+          padding: 5px;
+        }
+    </style>
+
+	</head>
+	<body>
+          <article class="pat-rich" id="scrollable">
+            <h1>Some more</h1>
+            <p class="high">A lot of stuff above top</p>
+            <h2>.. and more</h2>
+            <div class="wrapper">
+            <p class="high">A lot of stuff above top</p>
+            <p id="top">
+              <a href="#top" class="pat-scroll">Top</a> |
+              <a href="#p1" class="pat-scroll">001</a> |
+              <a href="#p2" class="pat-scroll">002</a> |
+              <a href="#p3" class="pat-scroll">003</a> |              
+              <a href="#bottom" class="pat-scroll">Bottom</a>
+            </p>
+            <section id="p1">
+                <h3>1</h3>
+                <p>
+                    From fairest creatures we desire increase,<br>
+                    That thereby beauty's rose might never die,<br>
+                    But as the riper should by time decease,<br>
+                    His tender heir might bear his memory:<br>
+                    But thou contracted to thine own bright eyes,<br>
+                    Feed'st thy light's flame with self-substantial fuel,<br>
+                    Making a famine where abundance lies,<br>
+                    Thy self thy foe, to thy sweet self too cruel:<br>
+                    Thou that art now the world's fresh ornament,<br>
+                    And only herald to the gaudy spring,<br>
+                    Within thine own bud buriest thy content,<br>
+                    And tender churl mak'st waste in niggarding:<br>
+                    Pity the world, or else this glutton be,<br>
+                    To eat the world's due, by the grave and thee.
+                </p>
+                <p id="p1-nav">
+                  <a href="#top" class="pat-scroll">Back to top</a> |
+                  <a href="#p1" class="pat-scroll">001</a> | 
+                  <a href="#p2" class="pat-scroll">002</a> | 
+                  <a href="#p3" class="pat-scroll">003</a> |
+                  <a href="#bottom" class="pat-scroll">Bottom</a>
+                </p>
+            </section>
+            <section id="p2">
+                <h3>2</h3>
+                <p>
+                    When forty winters shall besiege thy brow,<br>
+                    And dig deep trenches in thy beauty's field,<br>
+                    Thy youth's proud livery so gazed on now,<br>
+                    Will be a tattered weed of small worth held:<br>
+                    Then being asked, where all thy beauty lies,<br>
+                    Where all the treasure of thy lusty days;<br>
+                    To say within thine own deep sunken eyes,<br>
+                    Were an all-eating shame, and thriftless praise.<br>
+                    How much more praise deserved thy beauty's use,<br>
+                    If thou couldst answer 'This fair child of mine<br>
+                    Shall sum my count, and make my old excuse'<br>
+                    Proving his beauty by succession thine.<br>
+                    This were to be new made when thou art old,<br>
+                    And see thy blood warm when thou feel'st it cold.
+                </p>
+                <p id="p2-nav">
+                  <a href="#top" class="pat-scroll">Back to top</a> |
+                  <a href="#p1" class="pat-scroll">001</a> | 
+                  <a href="#p2" class="pat-scroll">002</a> | 
+                  <a href="#p3" class="pat-scroll">003</a> |
+                  <a href="#bottom" class="pat-scroll">Bottom</a>
+                </p>                
+            </section>
+            <section id="p3">
+                <h3>3</h3>
+                <p>
+                    Look in thy glass and tell the face thou viewest,<br>
+                    Now is the time that face should form another,<br>
+                    Whose fresh repair if now thou not renewest,<br>
+                    Thou dost beguile the world, unbless some mother.<br>
+                    For where is she so fair whose uneared womb<br>
+                    Disdains the tillage of thy husbandry?<br>
+                    Or who is he so fond will be the tomb,<br>
+                    Of his self-love to stop posterity?<br>
+                    Thou art thy mother's glass and she in thee<br>
+                    Calls back the lovely April of her prime,<br>
+                    So thou through windows of thine age shalt see,<br>
+                    Despite of wrinkles this thy golden time.<br>
+                    But if thou live remembered not to be,<br>
+                    Die single and thine image dies with thee.
+                </p>
+                <p id="p3-nav"></p>
+            </section>
+            <p id="bottom">
+              <a href="#top" class="pat-scroll">Back to top</a> |
+              <a href="#p1" class="pat-scroll">001</a> | 
+              <a href="#p2" class="pat-scroll">002</a> | 
+              <a href="#p3" class="pat-scroll">003</a> |
+              <a href="#bottom" class="pat-scroll">Bottom</a> |
+              <a href="#bottom" class="pat-scroll" data-pat-scroll="trigger: auto">Bottom autoscroll</a>
+            </p>
+            <p class="high">some extra stuff</p>
+            <p class="high">some extra stuff</p>
+            <p class="high">some extra stuff</p>
+            </div><!-- /wrapper -->
+            
+        </article>
+          <aside>
+            <h2>Scroll navigation</h2>
+            <ol class="mainnav" id="demo-main-nav">
+                <li><a href="#top" class="pat-scroll">Top</a></li>
+                <li><a href="#p1" class="pat-scroll">Shakespeare's Sonnet 001</a></li>
+                <li><a href="#p2" class="pat-scroll">Shakespeare's Sonnet 002</a></li>
+                <li><a href="#p3" class="pat-scroll">Shakespeare's Sonnet 003</a></li>
+                <li><a href="#bottom" class="pat-scroll">Bottom</a></li>
+            </ol>
+            <h2>Fragment navigation</h2>
+            <ol class="fragnav" id="demo-frag-nav">
+                <li><a href="#top">Top</a></li>              
+                <li><a href="#p1">Shakespeare's Sonnet 001</a></li>
+                <li><a href="#p2">Shakespeare's Sonnet 002</a></li>
+                <li><a href="#p3">Shakespeare's Sonnet 003</a></li>
+                <li><a href="#bottom">Bottom</a></li>
+            </ol>
+            <h2>Injection</h2>
+            <ol class="fragnav" id="demo-frag-nav">
+                <li><a href="#p1" class="pat-inject" data-pat-inject="source: #p1; target: #p1-nav::element::after && source: #bottom; target: #bottom">Shakespeare's Sonnet 001</a></li>
+                <li><a href="#p2" class="pat-inject" data-pat-inject="source: #p2; target: #p2-nav::element::after && source: #bottom; target: #bottom">Shakespeare's Sonnet 002</a></li>
+                <li><a href="#p3" class="pat-inject" data-pat-inject="source: #p3; target: #p3-nav::element::after && source: #bottom; target: #bottom">Shakespeare's Sonnet 003</a></li>
+            </ol>
+            <p>The injection links duplicate the targeted section content, changing the length of the scrollable, then
+              also re-inject the bottom auto-scroll link, which should trigger a re-auto-scroll.
+              Clicking these links multiple times demonstrates the "see-saw" effect.</p>
+        </aside>
+	</body>
+</html>

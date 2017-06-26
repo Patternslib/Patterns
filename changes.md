@@ -1,8 +1,36 @@
 # Changelog
 
+## 2.1.0 - Jun. 26, 2017
+
+- pat-gallery: Also include the node with the ``pat-gallery`` class trigger for initializing the gallery.
+  Now ``pat-gallery`` can be used on anchor tags wrapping images directly, making it possible to let images be opened individually in in the overlay without adding them to a gallery with navigation controls to the next image.
+- fix input-change-events for <input type="number" />
+- pat-autosubmit: allow nested autosubmitting subforms with different delays.
+- pat-masonry: Initialize masonry just before layouting gets startet, which is after first image has been loaded or at loading has finished. This avoids overlapping images while they are still being loaded.
+- pat-masonry: fix layout of nested .pat-masonry elements
+- pat-gallery: UX improvements - do not close on scroll or pinch.
+- pat-gallery: UX improvements - remove scrollbars when gallery is opened.
+- pat-gallery: add option ``item-selector`` for gallery items, which are added to the gallery.
+  Defaults to ``a``.
+  Fixes situations, when gallery items and normal links are mixed within the same container and normal links would open within the gallery lightbox.
+- Update to jQuery 1.11.3.
+- While images are loading, already do masonry layouting.
+- Remove the ``clear-imagesloaded-cache`` trigger, as cache functionality was removed from imagesloaded from version 3.2.0.
+  See: https://github.com/desandro/imagesloaded/issues/103#issuecomment-152152568
+- Change ``imagesloaded`` from usage of jQuery plugin to vanilla JavaScript to avoid timing errors, where the ``imagesloaded`` plugin wasn't available.
+- Update ``masonry`` and ``imagesloaded`` plugins.
+- Fix ``pat-gallery`` to work with ``requirejs-text`` instead ``requirejs-tpl-jcbrand``.
+  Fixes an obscure "window undefined" error.
+  Backwards incompatible change: The ``photoswipe-template`` RequireJS configuration variable is removed and a the ``pat-gallery-url`` variable is defined instead.
+- always recalculate masonry also at the very end, even if there are no images to be loaded
+- Fix a bug in pat-scroll that would only properly leave nav items alone if their urls end in a slash
+- An href can also contain a url left of the hashmark. pat-scroll should only care for the part right of the hashmark
+- Issue a delayed redraw of the calendar to prevent rendering race conditions
+- make list of calendar categories unique to speed up js processing on sites with many calendars.
+
 ## 2.0.14 - Aug. 15, 2016
 
-- A fix for pat-scroll to scroll up to current scroll container instead of body. 
+- A fix for pat-scroll to scroll up to current scroll container instead of body.
 - A fix for pat-scroll to await loading of all images before determining the amount to scroll up.
 - A fix for IE10/11 where the modal wouldn`t close anymore due to activeElement being undefined
 - Allow to configure different data-pat-inject per formaction, so that different targets can be configured per formaction
@@ -567,4 +595,3 @@
 ## 1.0.0 - Released January 28, 2013
 
 - First official release.
-

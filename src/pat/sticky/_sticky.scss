@@ -1,0 +1,111 @@
+body.post .content,
+body.post .content *,
+body.post .content *:before {
+  color: white;
+  background: transparent;
+  border-color: white;
+}
+
+body.post .content {
+  background: crimson;
+  background: -webkit-linear-gradient(crimson, darkslategray 87%, #26403A);
+  background: -moz-linear-gradient(crimson, darkslategray 87%, #26403A);
+  background: -o-linear-gradient(crimson, darkslategray 87%, #26403A);
+  background: linear-gradient(crimson, darkslategray 87%, #26403A);
+}
+
+@media all and (min-width: 60em) {
+  body.post .content {
+    font-size: 1.2em;
+  }
+}
+
+body.post .content figure.info {
+  border: 1px solid white;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+body.post .content a,
+body.post .content a:hover,
+body.post .content a *,
+body.post .content a:hover * {
+  text-decoration: none;
+}
+
+body.post .content a {
+  border-bottom: 1px solid white;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+body.post .content a:hover {
+  border-bottom: 1px solid rgba(255,255,255,1);
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+body.post .content h1,
+body.post .content h2,
+body.post .content h3,
+body.post .content h4 {
+  text-align: center;
+}
+
+body.post .content .article-title {
+  font-size: 4em;
+  margin-bottom: 0.2em;
+}
+
+body.post .content .article-title a {
+  border-bottom-width: 2px;
+}
+
+body.post .content .tagline {
+  font-size: 1.5em;
+}
+
+body.post .content .scroll-me {
+  font-size: 4em;
+  opacity: 0.4;
+  -webkit-animation-duration: 1.5s;
+  -webkit-animation-name: heartbeat;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: ease-in;
+  animation-duration: 1.5s;
+  animation-name: heartbeat;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in;
+}
+
+body.post .content a.big-fucking-button {
+  display: inline-block;
+  font-size: 1.2em;
+  text-decoration: none;
+  padding: 0.5em 0.7em;
+  border: 1px solid white;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 0.3em;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+body.post .content a.big-fucking-button:hover {
+  text-decoration: none;
+  border-color: deepskyblue;
+  background: deepskyblue;
+  -webkit-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+}
+
+ @media all and (min-width: 60em) {
+  body.post .content a.big-fucking-button {
+    font-size: 1.5em;
+  }
+}
+
+body.post .content section:before,
+body.post .content section:after {
+  content: '';
+  display: table;
+}

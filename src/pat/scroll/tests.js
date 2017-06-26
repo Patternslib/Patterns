@@ -1,4 +1,4 @@
-define(["pat-scroll"], function(Pattern) {
+define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
 
     describe("pat-scroll", function() {
 
@@ -19,7 +19,7 @@ define(["pat-scroll"], function(Pattern) {
                 Pattern.init($(".pat-scroll"));
                 var flag;
                 this.waitsFor(function() {
-                    $("body").imagesLoaded(function() {flag = true;});
+                    imagesLoaded($("body"), function() {flag = true;});
                     return flag;
                 }, "The images should be loaded", 750);
 
@@ -48,7 +48,7 @@ define(["pat-scroll"], function(Pattern) {
                 Pattern.init($el);
                 var flag;
                 this.waitsFor(function() {
-                    $("body").imagesLoaded(function() {flag = true;});
+                    imagesLoaded($("body"), function() {flag = true;});
                     return flag;
                 }, "The images should be loaded", 750);
                 $el.click();

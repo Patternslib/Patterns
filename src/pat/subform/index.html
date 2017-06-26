@@ -44,6 +44,17 @@
 				</fieldset>
 			    </form>
 			    <h3>
+			    	Auto-inject in auto-inject (other action via data-pat-inject="url: …", different delays)
+			    </h3>
+			    <form action="/src/pat/subform/form-response.html" method="get" class="concise pat-inject pat-autosubmit" data-pat-inject="target: #form-target">
+					<fieldset class="vertical">
+					    <label>Name <input name="name" type="text" value=""></label>
+					</fieldset>
+					<fieldset class="vertical pat-subform pat-autosubmit pat-inject" data-pat-inject="url: /src/pat/subform/subform-response.html; target: #subform-target" data-pat-autosubmit="delay: 1000ms">
+				    <label>Zipcode <input name="zipcode" type="text" value=""></label>
+				</fieldset>
+			    </form>
+			    <h3>
 			    	Manual-inject in Manual-inject (other action via data-pat-inject="url: …")
 			    </h3>
 			    <form action="/src/pat/subform/form-response.html" method="get" class="concise pat-inject" data-pat-inject="target: #form-target">

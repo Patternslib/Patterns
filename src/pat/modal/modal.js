@@ -10,6 +10,7 @@ define([
     parser.addArgument("class");
     parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
     parser.addArgument("close-text", 'Close');
+    parser.addArgument("panel-header-content", ":first:not(.header)");
 
     return Base.extend({
         name: "modal",
@@ -50,15 +51,21 @@ define([
             if (this.options.closing.indexOf("close-button")!==-1) {
                 $("<button type='button' class='close-panel'>" + this.options.closeText + "</button>").appendTo($header);
             }
+
             // We cannot handle text nodes here
-            var $children = this.$el.children(":last, :not(:first)");
+            if (this.options.panelHeaderContent === "none") {
+              var $children = this.$el.children();
+            } else {
+              var $children = this.$el.children(":last, :not(" + this.options.panelHeaderContent +")");
+            }
+
             if ($children.length) {
                 $children.wrapAll("<div class='panel-content' />");
             } else {
                 this.$el.append("<div class='panel-content' />");
             }
             $(".panel-content", this.$el).before($header);
-            this.$el.children(":first:not(.header)").prependTo($header);
+            this.$el.children(this.options.panelHeaderContent).prependTo($header);
 
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
@@ -119,23 +126,16 @@ define([
         },
 
         resize: function() {
-            var modal_height = this.$el.outerHeight(true);
-            var modal_padding = modal_height - this.$el.outerHeight();
-            var max_height = $(window).innerHeight() - modal_padding;
-            var $tallest_child = this.getTallestChild();
-            var tallest_child_height = $tallest_child.outerHeight(true);
+            // reset the height before setting a new one
+            this.$el.removeClass("max-height").css("height", "");
 
-            if (tallest_child_height !== modal_height) {
-                modal_height = tallest_child_height + modal_padding;
-            }
-            if (max_height < modal_height) {
-                this.$el.addClass("max-height").css("height", max_height);
+            var panel_content_elem = this.$el.find(".panel-content");
+            var header_elem = this.$el.find('.header');
+
+            var modal_height = panel_content_elem.outerHeight(true) + header_elem.outerHeight(true);
+            if (this.$el.height() < modal_height) {
+                this.$el.addClass("max-height").css({"height": modal_height+'px'});
                 this.setPosition();
-            } else if (modal_height !== this.$el.height()) {
-                this.$el.removeClass("max-height").css("height", modal_height);
-                this.setPosition();
-            } else {
-                return;
             }
             // XXX: This is a hack. When you have a modal inside a
             // modal.max-height, the CSS of the outermost modal affects the

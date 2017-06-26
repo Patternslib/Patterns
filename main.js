@@ -1,5 +1,5 @@
 var config;
-if (typeof(require) === 'undefined') {
+if (typeof(require) === "undefined") {
     /* XXX: Hack to work around r.js's stupid parsing.
      * We want to save the configuration in a variable so that we can reuse it in
      * tests/main.js.
@@ -8,12 +8,10 @@ if (typeof(require) === 'undefined') {
 }
 
 require.config({
-    baseUrl: 'src',
+    baseUrl: "src",
     paths: {
-        "eventEmitter":                     "bower_components/eventEmitter",
-        "eventie":                          "bower_components/eventie",
-        "get-size":                         "bower_components/get-size",
-        "get-style-property":               "bower_components/get-style-property",
+        "ev-emitter":                       "bower_components/ev-emitter/ev-emitter",
+        "get-size":                         "bower_components/get-size/get-size",
         "google-code-prettify":             "bower_components/google-code-prettify/src/prettify",
         "imagesloaded":                     "bower_components/imagesloaded/imagesloaded",
         "jcrop":                            "bower_components/jcrop/js/jquery.Jcrop",
@@ -28,16 +26,15 @@ require.config({
         "jquery.textchange":                "bower_components/jquery-textchange/jquery.textchange",
         "logging":                          "bower_components/logging/src/logging",
         "masonry":                          "bower_components/masonry/dist/masonry.pkgd",
-        "matches-selector":                 "bower_components/matches-selector",
+        "desandro-matches-selector":        "bower_components/desandro-matches-selector/matches-selector",
         "modernizr":                        "bower_components/modernizr/modernizr",
         "modernizr-csspositionsticky":      "bower_components/modernizr/feature-detects/css-positionsticky",
-        "outlayer":                         "bower_components/outlayer",
+        "outlayer":                         "bower_components/outlayer/outlayer",
         "parsley":                          "bower_components/parsleyjs/parsley",
         "parsley.extend":                   "bower_components/parsleyjs/parsley.extend",
         "patternslib.slides":               "bower_components/slides/src/slides",
         "photoswipe":                       "bower_components/photoswipe/dist/photoswipe",
         "photoswipe-ui":                    "bower_components/photoswipe/dist/photoswipe-ui-default",
-        "photoswipe-template":              "pat/gallery/template",
         "pikaday":                          "bower_components/pikaday/pikaday",
         "prefixfree":                       "bower_components/prefixfree/prefixfree.min",
         "select2":                          "bower_components/select2/select2.min",
@@ -46,8 +43,8 @@ require.config({
         "showdown-prettify":                "bower_components/showdown/src/extensions/prettify",
         "showdown-table":                   "bower_components/showdown/src/extensions/table",
         "spectrum":                         "bower_components/spectrum/spectrum",
+        "stickyfill":                       "bower_components/Stickyfill/src/stickyfill",
         "text":                             "bower_components/requirejs-text/text",
-        "tpl":                              "bower_components/requirejs-tpl-jcbrand/tpl",
         "tinymce":                          "bower_components/jquery.tinymce/jscripts/tiny_mce/jquery.tinymce",
         "underscore":                       "bower_components/underscore/underscore",
         "validate":                         "bower_components/validate/validate",
@@ -55,7 +52,7 @@ require.config({
         // Calendar pattern
         "moment": "bower_components/moment/moment",
         "moment-timezone": "bower_components/moment-timezone/moment-timezone",
-        "pat-calendar-moment-timezone-data": "pat/calendar/moment-timezone-data",
+        "moment-timezone-data": "pat/calendar/moment-timezone-with-data-2010-2020",
 
         // Core
         "pat-compat":               "core/compat",
@@ -104,6 +101,7 @@ require.config({
         "pat-form-state":              "pat/form-state/form-state",
         "pat-forward":                 "pat/forward/forward",
         "pat-gallery":                 "pat/gallery/gallery",
+        "pat-gallery-url":             "pat/gallery",
         "pat-grid":                    "pat/grid/grid",  // Hack, there's no grid jS, but we need for website bundler
         "pat-syntax-highlight":        "pat/syntax-highlight/syntax-highlight",
         "pat-image-crop":              "pat/image-crop/image-crop",
@@ -122,6 +120,7 @@ require.config({
         "pat-slideshow-builder":       "pat/slideshow-builder/slideshow-builder",
         "pat-sortable":                "pat/sortable/sortable",
         "pat-stacks":                  "pat/stacks/stacks",
+        "pat-sticky":                  "pat/sticky/sticky",
         "pat-subform":                 "pat/subform/subform",
         "pat-switch":                  "pat/switch/switch",
         "pat-scroll":                  "pat/scroll/scroll",
@@ -153,6 +152,6 @@ require.config({
     },
 });
 
-if (typeof(require) === 'function') {
+if (typeof(require) === "function") {
     require(["patterns"], function(patterns) {});
 }

@@ -6,7 +6,8 @@
  */
 define([
     "pat-registry",
-    "spectrum"
+    "spectrum",
+    "jquery"
 ], function(registry) {
     var _ = {
         name: "polyfill-color",

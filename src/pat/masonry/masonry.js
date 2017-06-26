@@ -42,13 +42,27 @@
 
         init: function masonryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
-            $(document).trigger("clear-imagesloaded-cache");
-            this.initMasonry();
-            this.$el.imagesLoaded(this.layout.bind(this));
+            var imgLoad = imagesLoaded(this.$el);
+            imgLoad.on("progress", function() {
+                if (! this.msnry) {
+                    this.initMasonry();
+                }
+                this.quicklayout();
+            }.bind(this));
+            imgLoad.on("always", function () {
+                if (! this.msnry) {
+                    this.initMasonry();
+                }
+                this.layout();
+            }.bind(this));
             // Update if something gets injected inside the pat-masonry
             // element.
-            this.$el.on("patterns-injected.pat-masonry",
-                    utils.debounce(this.update.bind(this), 100));
+            this.$el
+                .on("patterns-injected.pat-masonry",
+                    utils.debounce(this.update.bind(this), 100))
+                .on("pat-update",
+                    utils.debounce(this.quicklayout.bind(this), 200));
+
         },
 
         initMasonry: function () {
@@ -84,12 +98,27 @@
             this.layout();
         },
 
+        quicklayout: function() {
+            if (!this.msnry) {
+                // Not initialized yet
+                return;
+            }
+            // call masonry layout on the children before calling it on this element
+            this.$el.find('.pat-masonry').each(
+                function(idx, child) {
+                    $(child).patMasonry('quicklayout');
+                }
+            );
+            this.msnry.layout();
+        },
+
         layout: function () {
             this.$el.removeClass("masonry-ready");
             this.msnry.on("layoutComplete", function() {
                 this.$el.addClass("masonry-ready");
             }.bind(this));
             this.msnry.layout();
+            this.quicklayout();
         },
 
         getTypeCastedValue: function (original) {
