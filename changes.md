@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.0 - (unreleased)
+## 2.1.0 - Jun. 26, 2017
 
 - pat-gallery: Also include the node with the ``pat-gallery`` class trigger for initializing the gallery.
   Now ``pat-gallery`` can be used on anchor tags wrapping images directly, making it possible to let images be opened individually in in the overlay without adding them to a gallery with navigation controls to the next image.
