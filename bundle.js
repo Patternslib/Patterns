@@ -1,13 +1,11 @@
-// Patternslib 2.0.14
+// Patternslib 2.1.0
 
 /**
- * @license almond 0.3.1 Copyright (c) 2011-2014, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/jrburke/almond for details
+ * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
+ * Released under MIT license, http://github.com/requirejs/almond/LICENSE
  */
 //Going sloppy to avoid 'use strict' string cost, but strict practices should
 //be followed.
-/*jslint sloppy: true */
 /*global setTimeout: false */
 
 var requirejs, require, define;
@@ -35,60 +33,58 @@ var requirejs, require, define;
      */
     function normalize(name, baseName) {
         var nameParts, nameSegment, mapValue, foundMap, lastIndex,
-            foundI, foundStarMap, starI, i, j, part,
+            foundI, foundStarMap, starI, i, j, part, normalizedBaseParts,
             baseParts = baseName && baseName.split("/"),
             map = config.map,
             starMap = (map && map['*']) || {};
 
         //Adjust any relative paths.
-        if (name && name.charAt(0) === ".") {
-            //If have a base name, try to normalize against it,
-            //otherwise, assume it is a top-level require that will
-            //be relative to baseUrl in the end.
-            if (baseName) {
-                name = name.split('/');
-                lastIndex = name.length - 1;
+        if (name) {
+            name = name.split('/');
+            lastIndex = name.length - 1;
 
-                // Node .js allowance:
-                if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
-                    name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
-                }
+            // If wanting node ID compatibility, strip .js from end
+            // of IDs. Have to do this here, and not in nameToUrl
+            // because node allows either .js or non .js to map
+            // to same file.
+            if (config.nodeIdCompat && jsSuffixRegExp.test(name[lastIndex])) {
+                name[lastIndex] = name[lastIndex].replace(jsSuffixRegExp, '');
+            }
 
-                //Lop off the last part of baseParts, so that . matches the
-                //"directory" and not name of the baseName's module. For instance,
-                //baseName of "one/two/three", maps to "one/two/three.js", but we
-                //want the directory, "one/two" for this normalization.
-                name = baseParts.slice(0, baseParts.length - 1).concat(name);
+            // Starts with a '.' so need the baseName
+            if (name[0].charAt(0) === '.' && baseParts) {
+                //Convert baseName to array, and lop off the last part,
+                //so that . matches that 'directory' and not name of the baseName's
+                //module. For instance, baseName of 'one/two/three', maps to
+                //'one/two/three.js', but we want the directory, 'one/two' for
+                //this normalization.
+                normalizedBaseParts = baseParts.slice(0, baseParts.length - 1);
+                name = normalizedBaseParts.concat(name);
+            }
 
-                //start trimDots
-                for (i = 0; i < name.length; i += 1) {
-                    part = name[i];
-                    if (part === ".") {
-                        name.splice(i, 1);
-                        i -= 1;
-                    } else if (part === "..") {
-                        if (i === 1 && (name[2] === '..' || name[0] === '..')) {
-                            //End of the line. Keep at least one non-dot
-                            //path segment at the front so it can be mapped
-                            //correctly to disk. Otherwise, there is likely
-                            //no path mapping for a path starting with '..'.
-                            //This can still fail, but catches the most reasonable
-                            //uses of ..
-                            break;
-                        } else if (i > 0) {
-                            name.splice(i - 1, 2);
-                            i -= 2;
-                        }
+            //start trimDots
+            for (i = 0; i < name.length; i++) {
+                part = name[i];
+                if (part === '.') {
+                    name.splice(i, 1);
+                    i -= 1;
+                } else if (part === '..') {
+                    // If at the start, or previous value is still ..,
+                    // keep them so that when converted to a path it may
+                    // still work when converted to a path, even though
+                    // as an ID it is less than ideal. In larger point
+                    // releases, may be better to just kick out an error.
+                    if (i === 0 || (i === 1 && name[2] === '..') || name[i - 1] === '..') {
+                        continue;
+                    } else if (i > 0) {
+                        name.splice(i - 1, 2);
+                        i -= 2;
                     }
                 }
-                //end trimDots
-
-                name = name.join("/");
-            } else if (name.indexOf('./') === 0) {
-                // No baseName, so this is ID is resolved relative
-                // to baseUrl, pull off the leading dot.
-                name = name.substring(2);
             }
+            //end trimDots
+
+            name = name.join('/');
         }
 
         //Apply map config if available.
@@ -201,32 +197,39 @@ var requirejs, require, define;
         return [prefix, name];
     }
 
+    //Creates a parts array for a relName where first part is plugin ID,
+    //second part is resource ID. Assumes relName has already been normalized.
+    function makeRelParts(relName) {
+        return relName ? splitPrefix(relName) : [];
+    }
+
     /**
      * Makes a name map, normalizing the name, and using a plugin
      * for normalization if necessary. Grabs a ref to plugin
      * too, as an optimization.
      */
-    makeMap = function (name, relName) {
+    makeMap = function (name, relParts) {
         var plugin,
             parts = splitPrefix(name),
-            prefix = parts[0];
+            prefix = parts[0],
+            relResourceName = relParts[1];
 
         name = parts[1];
 
         if (prefix) {
-            prefix = normalize(prefix, relName);
+            prefix = normalize(prefix, relResourceName);
             plugin = callDep(prefix);
         }
 
         //Normalize according
         if (prefix) {
             if (plugin && plugin.normalize) {
-                name = plugin.normalize(name, makeNormalize(relName));
+                name = plugin.normalize(name, makeNormalize(relResourceName));
             } else {
-                name = normalize(name, relName);
+                name = normalize(name, relResourceName);
             }
         } else {
-            name = normalize(name, relName);
+            name = normalize(name, relResourceName);
             parts = splitPrefix(name);
             prefix = parts[0];
             name = parts[1];
@@ -273,13 +276,14 @@ var requirejs, require, define;
     };
 
     main = function (name, deps, callback, relName) {
-        var cjsModule, depName, ret, map, i,
+        var cjsModule, depName, ret, map, i, relParts,
             args = [],
             callbackType = typeof callback,
             usingExports;
 
         //Use name if no relName
         relName = relName || name;
+        relParts = makeRelParts(relName);
 
         //Call the callback to define the module, if necessary.
         if (callbackType === 'undefined' || callbackType === 'function') {
@@ -288,7 +292,7 @@ var requirejs, require, define;
             //Default to [require, exports, module] if no deps
             deps = !deps.length && callback.length ? ['require', 'exports', 'module'] : deps;
             for (i = 0; i < deps.length; i += 1) {
-                map = makeMap(deps[i], relName);
+                map = makeMap(deps[i], relParts);
                 depName = map.f;
 
                 //Fast path CommonJS standard dependencies.
@@ -344,7 +348,7 @@ var requirejs, require, define;
             //deps arg is the module name, and second arg (if passed)
             //is just the relName.
             //Normalize module name, if it contains . or ..
-            return callDep(makeMap(deps, callback).f);
+            return callDep(makeMap(deps, makeRelParts(callback)).f);
         } else if (!deps.splice) {
             //deps is a config object, not an array.
             config = deps;
@@ -434,7 +438,7 @@ var requirejs, require, define;
 define("almond", function(){});
 
 /*!
- * jQuery JavaScript Library v1.11.1
+ * jQuery JavaScript Library v1.11.3
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -444,7 +448,7 @@ define("almond", function(){});
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2014-05-01T17:42Z
+ * Date: 2015-04-28T16:19Z
  */
 
 (function( global, factory ) {
@@ -499,7 +503,7 @@ var support = {};
 
 
 var
-	version = "1.11.1",
+	version = "1.11.3",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -704,7 +708,8 @@ jQuery.extend({
 		// parseFloat NaNs numeric-cast false positives (null|true|false|"")
 		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
 		// subtraction forces infinities to NaN
-		return !jQuery.isArray( obj ) && obj - parseFloat( obj ) >= 0;
+		// adding 1 corrects loss of precision from parseFloat (#15100)
+		return !jQuery.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
 	},
 
 	isEmptyObject: function( obj ) {
@@ -1003,7 +1008,12 @@ jQuery.each("Boolean Number String Function Array Date RegExp Object Error".spli
 });
 
 function isArraylike( obj ) {
-	var length = obj.length,
+
+	// Support: iOS 8.2 (not reproducible in simulator)
+	// `in` check used to prevent JIT error (gh-2145)
+	// hasOwn isn't used here due to false negatives
+	// regarding Nodelist length in IE
+	var length = "length" in obj && obj.length,
 		type = jQuery.type( obj );
 
 	if ( type === "function" || jQuery.isWindow( obj ) ) {
@@ -1019,14 +1029,14 @@ function isArraylike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v1.10.19
+ * Sizzle CSS Selector Engine v2.2.0-pre
  * http://sizzlejs.com/
  *
- * Copyright 2013 jQuery Foundation, Inc. and other contributors
+ * Copyright 2008, 2014 jQuery Foundation, Inc. and other contributors
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2014-04-18
+ * Date: 2014-12-16
  */
 (function( window ) {
 
@@ -1053,7 +1063,7 @@ var i,
 	contains,
 
 	// Instance-specific data
-	expando = "sizzle" + -(new Date()),
+	expando = "sizzle" + 1 * new Date(),
 	preferredDoc = window.document,
 	dirruns = 0,
 	done = 0,
@@ -1068,7 +1078,6 @@ var i,
 	},
 
 	// General-purpose constants
-	strundefined = typeof undefined,
 	MAX_NEGATIVE = 1 << 31,
 
 	// Instance methods
@@ -1078,12 +1087,13 @@ var i,
 	push_native = arr.push,
 	push = arr.push,
 	slice = arr.slice,
-	// Use a stripped-down indexOf if we can't use a native one
-	indexOf = arr.indexOf || function( elem ) {
+	// Use a stripped-down indexOf as it's faster than native
+	// http://jsperf.com/thor-indexof-vs-for/5
+	indexOf = function( list, elem ) {
 		var i = 0,
-			len = this.length;
+			len = list.length;
 		for ( ; i < len; i++ ) {
-			if ( this[i] === elem ) {
+			if ( list[i] === elem ) {
 				return i;
 			}
 		}
@@ -1123,6 +1133,7 @@ var i,
 		")\\)|)",
 
 	// Leading and non-escaped trailing whitespace, capturing some non-whitespace characters preceding the latter
+	rwhitespace = new RegExp( whitespace + "+", "g" ),
 	rtrim = new RegExp( "^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$", "g" ),
 
 	rcomma = new RegExp( "^" + whitespace + "*," + whitespace + "*" ),
@@ -1174,6 +1185,14 @@ var i,
 				String.fromCharCode( high + 0x10000 ) :
 				// Supplemental Plane codepoint (surrogate pair)
 				String.fromCharCode( high >> 10 | 0xD800, high & 0x3FF | 0xDC00 );
+	},
+
+	// Used for iframes
+	// See setDocument()
+	// Removing the function wrapper causes a "Permission Denied"
+	// error in IE
+	unloadHandler = function() {
+		setDocument();
 	};
 
 // Optimize for push.apply( _, NodeList )
@@ -1216,19 +1235,18 @@ function Sizzle( selector, context, results, seed ) {
 
 	context = context || document;
 	results = results || [];
+	nodeType = context.nodeType;
 
-	if ( !selector || typeof selector !== "string" ) {
+	if ( typeof selector !== "string" || !selector ||
+		nodeType !== 1 && nodeType !== 9 && nodeType !== 11 ) {
+
 		return results;
 	}
 
-	if ( (nodeType = context.nodeType) !== 1 && nodeType !== 9 ) {
-		return [];
-	}
+	if ( !seed && documentIsHTML ) {
 
-	if ( documentIsHTML && !seed ) {
-
-		// Shortcuts
-		if ( (match = rquickExpr.exec( selector )) ) {
+		// Try to shortcut find operations when possible (e.g., not under DocumentFragment)
+		if ( nodeType !== 11 && (match = rquickExpr.exec( selector )) ) {
 			// Speed-up: Sizzle("#ID")
 			if ( (m = match[1]) ) {
 				if ( nodeType === 9 ) {
@@ -1260,7 +1278,7 @@ function Sizzle( selector, context, results, seed ) {
 				return results;
 
 			// Speed-up: Sizzle(".CLASS")
-			} else if ( (m = match[3]) && support.getElementsByClassName && context.getElementsByClassName ) {
+			} else if ( (m = match[3]) && support.getElementsByClassName ) {
 				push.apply( results, context.getElementsByClassName( m ) );
 				return results;
 			}
@@ -1270,7 +1288,7 @@ function Sizzle( selector, context, results, seed ) {
 		if ( support.qsa && (!rbuggyQSA || !rbuggyQSA.test( selector )) ) {
 			nid = old = expando;
 			newContext = context;
-			newSelector = nodeType === 9 && selector;
+			newSelector = nodeType !== 1 && selector;
 
 			// qSA works strangely on Element-rooted queries
 			// We can work around this by specifying an extra ID on the root
@@ -1457,7 +1475,7 @@ function createPositionalPseudo( fn ) {
  * @returns {Element|Object|Boolean} The input node if acceptable, otherwise a falsy value
  */
 function testContext( context ) {
-	return context && typeof context.getElementsByTagName !== strundefined && context;
+	return context && typeof context.getElementsByTagName !== "undefined" && context;
 }
 
 // Expose support vars for convenience
@@ -1481,9 +1499,8 @@ isXML = Sizzle.isXML = function( elem ) {
  * @returns {Object} Returns the current document
  */
 setDocument = Sizzle.setDocument = function( node ) {
-	var hasCompare,
-		doc = node ? node.ownerDocument || node : preferredDoc,
-		parent = doc.defaultView;
+	var hasCompare, parent,
+		doc = node ? node.ownerDocument || node : preferredDoc;
 
 	// If no document and documentElement is available, return
 	if ( doc === document || doc.nodeType !== 9 || !doc.documentElement ) {
@@ -1493,9 +1510,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// Set our document
 	document = doc;
 	docElem = doc.documentElement;
-
-	// Support tests
-	documentIsHTML = !isXML( doc );
+	parent = doc.defaultView;
 
 	// Support: IE>8
 	// If iframe document is assigned to "document" variable and if iframe has been reloaded,
@@ -1504,21 +1519,22 @@ setDocument = Sizzle.setDocument = function( node ) {
 	if ( parent && parent !== parent.top ) {
 		// IE11 does not have attachEvent, so all must suffer
 		if ( parent.addEventListener ) {
-			parent.addEventListener( "unload", function() {
-				setDocument();
-			}, false );
+			parent.addEventListener( "unload", unloadHandler, false );
 		} else if ( parent.attachEvent ) {
-			parent.attachEvent( "onunload", function() {
-				setDocument();
-			});
+			parent.attachEvent( "onunload", unloadHandler );
 		}
 	}
+
+	/* Support tests
+	---------------------------------------------------------------------- */
+	documentIsHTML = !isXML( doc );
 
 	/* Attributes
 	---------------------------------------------------------------------- */
 
 	// Support: IE<8
-	// Verify that getAttribute really returns attributes and not properties (excepting IE8 booleans)
+	// Verify that getAttribute really returns attributes and not properties
+	// (excepting IE8 booleans)
 	support.attributes = assert(function( div ) {
 		div.className = "i";
 		return !div.getAttribute("className");
@@ -1533,17 +1549,8 @@ setDocument = Sizzle.setDocument = function( node ) {
 		return !div.getElementsByTagName("*").length;
 	});
 
-	// Check if getElementsByClassName can be trusted
-	support.getElementsByClassName = rnative.test( doc.getElementsByClassName ) && assert(function( div ) {
-		div.innerHTML = "<div class='a'></div><div class='a i'></div>";
-
-		// Support: Safari<4
-		// Catch class over-caching
-		div.firstChild.className = "i";
-		// Support: Opera<10
-		// Catch gEBCN failure to find non-leading classes
-		return div.getElementsByClassName("i").length === 2;
-	});
+	// Support: IE<9
+	support.getElementsByClassName = rnative.test( doc.getElementsByClassName );
 
 	// Support: IE<10
 	// Check if getElementById returns elements by name
@@ -1557,7 +1564,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// ID find and filter
 	if ( support.getById ) {
 		Expr.find["ID"] = function( id, context ) {
-			if ( typeof context.getElementById !== strundefined && documentIsHTML ) {
+			if ( typeof context.getElementById !== "undefined" && documentIsHTML ) {
 				var m = context.getElementById( id );
 				// Check parentNode to catch when Blackberry 4.6 returns
 				// nodes that are no longer in the document #6963
@@ -1578,7 +1585,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 		Expr.filter["ID"] =  function( id ) {
 			var attrId = id.replace( runescape, funescape );
 			return function( elem ) {
-				var node = typeof elem.getAttributeNode !== strundefined && elem.getAttributeNode("id");
+				var node = typeof elem.getAttributeNode !== "undefined" && elem.getAttributeNode("id");
 				return node && node.value === attrId;
 			};
 		};
@@ -1587,14 +1594,20 @@ setDocument = Sizzle.setDocument = function( node ) {
 	// Tag
 	Expr.find["TAG"] = support.getElementsByTagName ?
 		function( tag, context ) {
-			if ( typeof context.getElementsByTagName !== strundefined ) {
+			if ( typeof context.getElementsByTagName !== "undefined" ) {
 				return context.getElementsByTagName( tag );
+
+			// DocumentFragment nodes don't have gEBTN
+			} else if ( support.qsa ) {
+				return context.querySelectorAll( tag );
 			}
 		} :
+
 		function( tag, context ) {
 			var elem,
 				tmp = [],
 				i = 0,
+				// By happy coincidence, a (broken) gEBTN appears on DocumentFragment nodes too
 				results = context.getElementsByTagName( tag );
 
 			// Filter out possible comments
@@ -1612,7 +1625,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 	// Class
 	Expr.find["CLASS"] = support.getElementsByClassName && function( className, context ) {
-		if ( typeof context.getElementsByClassName !== strundefined && documentIsHTML ) {
+		if ( documentIsHTML ) {
 			return context.getElementsByClassName( className );
 		}
 	};
@@ -1641,13 +1654,15 @@ setDocument = Sizzle.setDocument = function( node ) {
 			// setting a boolean content attribute,
 			// since its presence should be enough
 			// http://bugs.jquery.com/ticket/12359
-			div.innerHTML = "<select msallowclip=''><option selected=''></option></select>";
+			docElem.appendChild( div ).innerHTML = "<a id='" + expando + "'></a>" +
+				"<select id='" + expando + "-\f]' msallowcapture=''>" +
+				"<option selected=''></option></select>";
 
 			// Support: IE8, Opera 11-12.16
 			// Nothing should be selected when empty strings follow ^= or $= or *=
 			// The test attribute must be unknown in Opera but "safe" for WinRT
 			// http://msdn.microsoft.com/en-us/library/ie/hh465388.aspx#attribute_section
-			if ( div.querySelectorAll("[msallowclip^='']").length ) {
+			if ( div.querySelectorAll("[msallowcapture^='']").length ) {
 				rbuggyQSA.push( "[*^$]=" + whitespace + "*(?:''|\"\")" );
 			}
 
@@ -1657,11 +1672,23 @@ setDocument = Sizzle.setDocument = function( node ) {
 				rbuggyQSA.push( "\\[" + whitespace + "*(?:value|" + booleans + ")" );
 			}
 
+			// Support: Chrome<29, Android<4.2+, Safari<7.0+, iOS<7.0+, PhantomJS<1.9.7+
+			if ( !div.querySelectorAll( "[id~=" + expando + "-]" ).length ) {
+				rbuggyQSA.push("~=");
+			}
+
 			// Webkit/Opera - :checked should return selected option elements
 			// http://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
 			// IE8 throws error here and will not see later tests
 			if ( !div.querySelectorAll(":checked").length ) {
 				rbuggyQSA.push(":checked");
+			}
+
+			// Support: Safari 8+, iOS 8+
+			// https://bugs.webkit.org/show_bug.cgi?id=136851
+			// In-page `selector#id sibing-combinator selector` fails
+			if ( !div.querySelectorAll( "a#" + expando + "+*" ).length ) {
+				rbuggyQSA.push(".#.+[+~]");
 			}
 		});
 
@@ -1779,7 +1806,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 			// Maintain original order
 			return sortInput ?
-				( indexOf.call( sortInput, a ) - indexOf.call( sortInput, b ) ) :
+				( indexOf( sortInput, a ) - indexOf( sortInput, b ) ) :
 				0;
 		}
 
@@ -1806,7 +1833,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 				aup ? -1 :
 				bup ? 1 :
 				sortInput ?
-				( indexOf.call( sortInput, a ) - indexOf.call( sortInput, b ) ) :
+				( indexOf( sortInput, a ) - indexOf( sortInput, b ) ) :
 				0;
 
 		// If the nodes are siblings, we can do a quick check
@@ -1869,7 +1896,7 @@ Sizzle.matchesSelector = function( elem, expr ) {
 					elem.document && elem.document.nodeType !== 11 ) {
 				return ret;
 			}
-		} catch(e) {}
+		} catch (e) {}
 	}
 
 	return Sizzle( expr, document, null, [ elem ] ).length > 0;
@@ -2088,7 +2115,7 @@ Expr = Sizzle.selectors = {
 			return pattern ||
 				(pattern = new RegExp( "(^|" + whitespace + ")" + className + "(" + whitespace + "|$)" )) &&
 				classCache( className, function( elem ) {
-					return pattern.test( typeof elem.className === "string" && elem.className || typeof elem.getAttribute !== strundefined && elem.getAttribute("class") || "" );
+					return pattern.test( typeof elem.className === "string" && elem.className || typeof elem.getAttribute !== "undefined" && elem.getAttribute("class") || "" );
 				});
 		},
 
@@ -2110,7 +2137,7 @@ Expr = Sizzle.selectors = {
 					operator === "^=" ? check && result.indexOf( check ) === 0 :
 					operator === "*=" ? check && result.indexOf( check ) > -1 :
 					operator === "$=" ? check && result.slice( -check.length ) === check :
-					operator === "~=" ? ( " " + result + " " ).indexOf( check ) > -1 :
+					operator === "~=" ? ( " " + result.replace( rwhitespace, " " ) + " " ).indexOf( check ) > -1 :
 					operator === "|=" ? result === check || result.slice( 0, check.length + 1 ) === check + "-" :
 					false;
 			};
@@ -2230,7 +2257,7 @@ Expr = Sizzle.selectors = {
 							matched = fn( seed, argument ),
 							i = matched.length;
 						while ( i-- ) {
-							idx = indexOf.call( seed, matched[i] );
+							idx = indexOf( seed, matched[i] );
 							seed[ idx ] = !( matches[ idx ] = matched[i] );
 						}
 					}) :
@@ -2269,6 +2296,8 @@ Expr = Sizzle.selectors = {
 				function( elem, context, xml ) {
 					input[0] = elem;
 					matcher( input, null, xml, results );
+					// Don't keep the element (issue #299)
+					input[0] = null;
 					return !results.pop();
 				};
 		}),
@@ -2280,6 +2309,7 @@ Expr = Sizzle.selectors = {
 		}),
 
 		"contains": markFunction(function( text ) {
+			text = text.replace( runescape, funescape );
 			return function( elem ) {
 				return ( elem.textContent || elem.innerText || getText( elem ) ).indexOf( text ) > -1;
 			};
@@ -2701,7 +2731,7 @@ function setMatcher( preFilter, selector, matcher, postFilter, postFinder, postS
 				i = matcherOut.length;
 				while ( i-- ) {
 					if ( (elem = matcherOut[i]) &&
-						(temp = postFinder ? indexOf.call( seed, elem ) : preMap[i]) > -1 ) {
+						(temp = postFinder ? indexOf( seed, elem ) : preMap[i]) > -1 ) {
 
 						seed[temp] = !(results[temp] = elem);
 					}
@@ -2736,13 +2766,16 @@ function matcherFromTokens( tokens ) {
 			return elem === checkContext;
 		}, implicitRelative, true ),
 		matchAnyContext = addCombinator( function( elem ) {
-			return indexOf.call( checkContext, elem ) > -1;
+			return indexOf( checkContext, elem ) > -1;
 		}, implicitRelative, true ),
 		matchers = [ function( elem, context, xml ) {
-			return ( !leadingRelative && ( xml || context !== outermostContext ) ) || (
+			var ret = ( !leadingRelative && ( xml || context !== outermostContext ) ) || (
 				(checkContext = context).nodeType ?
 					matchContext( elem, context, xml ) :
 					matchAnyContext( elem, context, xml ) );
+			// Avoid hanging onto element (issue #299)
+			checkContext = null;
+			return ret;
 		} ];
 
 	for ( ; i < len; i++ ) {
@@ -2992,7 +3025,7 @@ select = Sizzle.select = function( selector, context, results, seed ) {
 // Sort stability
 support.sortStable = expando.split("").sort( sortOrder ).join("") === expando;
 
-// Support: Chrome<14
+// Support: Chrome 14-35+
 // Always assume duplicates if they aren't passed to the comparison function
 support.detectDuplicates = !!hasDuplicate;
 
@@ -6550,7 +6583,14 @@ var getStyles, curCSS,
 
 if ( window.getComputedStyle ) {
 	getStyles = function( elem ) {
-		return elem.ownerDocument.defaultView.getComputedStyle( elem, null );
+		// Support: IE<=11+, Firefox<=30+ (#15098, #14150)
+		// IE throws on elements created in popups
+		// FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
+		if ( elem.ownerDocument.defaultView.opener ) {
+			return elem.ownerDocument.defaultView.getComputedStyle( elem, null );
+		}
+
+		return window.getComputedStyle( elem, null );
 	};
 
 	curCSS = function( elem, name, computed ) {
@@ -6798,6 +6838,8 @@ function addGetHookIf( conditionFn, hookFn ) {
 
 			reliableMarginRightVal =
 				!parseFloat( ( window.getComputedStyle( contents, null ) || {} ).marginRight );
+
+			div.removeChild( contents );
 		}
 
 		// Support: IE8
@@ -9505,7 +9547,8 @@ jQuery.extend({
 		}
 
 		// We can fire global events as of now if asked to
-		fireGlobals = s.global;
+		// Don't fire events if jQuery.event is undefined in an AMD-usage scenario (#15118)
+		fireGlobals = jQuery.event && s.global;
 
 		// Watch for a new set of requests
 		if ( fireGlobals && jQuery.active++ === 0 ) {
@@ -9764,13 +9807,6 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 	};
 });
 
-// Attach a bunch of functions for handling common AJAX events
-jQuery.each( [ "ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend" ], function( i, type ) {
-	jQuery.fn[ type ] = function( fn ) {
-		return this.on( type, fn );
-	};
-});
-
 
 jQuery._evalUrl = function( url ) {
 	return jQuery.ajax({
@@ -9996,8 +10032,9 @@ var xhrId = 0,
 
 // Support: IE<10
 // Open requests must be manually aborted on unload (#5280)
-if ( window.ActiveXObject ) {
-	jQuery( window ).on( "unload", function() {
+// See https://support.microsoft.com/kb/2856746 for more info
+if ( window.attachEvent ) {
+	window.attachEvent( "onunload", function() {
 		for ( var key in xhrCallbacks ) {
 			xhrCallbacks[ key ]( undefined, true );
 		}
@@ -10427,6 +10464,16 @@ jQuery.fn.load = function( url, params, callback ) {
 
 	return this;
 };
+
+
+
+
+// Attach a bunch of functions for handling common AJAX events
+jQuery.each( [ "ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend" ], function( i, type ) {
+	jQuery.fn[ type ] = function( fn ) {
+		return this.on( type, fn );
+	};
+});
 
 
 
@@ -15760,7 +15807,6 @@ define('pat-ajax',[
 ], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.ajax"),
         parser = new Parser("ajax");
-
     parser.addArgument("url", function($el) {
         return ($el.is("a") ? $el.attr("href") :
                 ($el.is("form") ? $el.attr("action") : "")).split("#")[0];
@@ -15770,6 +15816,10 @@ define('pat-ajax',[
         // Disable caching of AJAX responses
         cache: false
     });
+
+    var xhrCount = {};
+    xhrCount.get = function(a) { return this[a] !== undefined ? this[a] : 0; };
+    xhrCount.inc = function(a) { this[a] = this.get(a) + 1; return this.get(a); };
 
     var _ = {
         name: "ajax",
@@ -15823,12 +15873,18 @@ define('pat-ajax',[
                         jqxhr: jqxhr
                     });
                 },
+                seqNumber = xhrCount.inc(cfg.url),
                 onSuccess = function(data, status, jqxhr) {
                     log.debug("success: jqxhr:", jqxhr);
-                    $el.trigger({
-                        type: "pat-ajax-success",
-                        jqxhr: jqxhr
-                    });
+                    if (seqNumber === xhrCount.get(cfg.url)) {
+                        // if this url is requested multiple time, only return the last result
+                        $el.trigger({
+                            type: "pat-ajax-success",
+                            jqxhr: jqxhr
+                        });
+                    } else {
+                        // ignore
+                    }
                 },
                 args = {
                     context: $el,
@@ -16133,7 +16189,11 @@ define('pat-autoscale',[
             if (this.$el[0].tagName.toLowerCase() === "body") {
                 available_space = $(window).width();
             } else {
-                available_space = this.$el.parent().outerWidth();
+                if (this.$el.closest('.auto-scale-wrapper').length != 0) {
+                    available_space = this.$el.closest('.auto-scale-wrapper').parent().outerWidth();
+                } else {
+                    available_space = this.$el.parent().outerWidth();
+                }
             }
             available_space = Math.min(available_space, this.options.maxWidth);
             available_space = Math.max(available_space, this.options.minWidth);
@@ -16144,7 +16204,9 @@ define('pat-autoscale',[
             switch (this.options.method) {
                 case "scale":
                     this.$el.css("transform", "scale(" + scale + ")");
-                    this.$el.wrap("<div class='auto-scale-wrapper'></div>");
+                    if (this.$el.parent().attr('class') && $.inArray('auto-scale-wrapper', this.$el.parent().attr('class').split(/\s+/)) === -1) {
+                        this.$el.wrap("<div class='auto-scale-wrapper'></div>");                        
+                    }
                     this.$el.parent().height(scaled_height).width(scaled_width);
                     break;
                 case "zoom":
@@ -16204,9 +16266,20 @@ define('pat-input-change-events',[
 
         registerHandlersForElement: function() {
             var $el = $(this),
+                isNumber = $el.is("input[type=number]"),
                 isText = $el.is("input:text, input[type=search], textarea");
 
-            if (isText) {
+            if (isNumber) {
+                // for <input type="number" /> we want to trigger the change
+                // on keyup
+                if ("onkeyup" in window) {
+                    $el.on("keyup." + namespace, function() {
+                        log.debug("translating keyup");
+                        $el.trigger("input-change");
+                    });
+                }
+            }
+            if (isText || isNumber) {
                 if ("oninput" in window) {
                     $el.on("input." + namespace, function() {
                         log.debug("translating input");
@@ -16270,7 +16343,7 @@ define('pat-input-change-events',[
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012 Simplon B.V. - Wichert Akkerman
  * Copyright 2013 Marko Durkovic
- * Copyright 2014-2015 Syslab.com GmbH - JC Brand 
+ * Copyright 2014-2015 Syslab.com GmbH - JC Brand
  */
 define('pat-autosubmit',[
     "jquery",
@@ -16322,7 +16395,7 @@ define('pat-autosubmit',[
              * changes.
              */
             var $el = typeof ev !== "undefined" ? $(ev.target) : this.$el;
-            $el.find(".pat-subform").each(function (idx, el) {
+            $el.find(".pat-subform").not('.pat-autosubmit').each(function (idx, el) {
                 $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
             }.bind(this));
         },
@@ -16339,18 +16412,20 @@ define('pat-autosubmit',[
                 log.error("The defocus delay value makes only sense on text input elements.");
                 return this.$el;
             }
+
+            function trigger_event(ev) {
+              if ($(ev.target).closest('.pat-autosubmit')[0] !== this) {
+                return;
+              }
+              $(ev.target).trigger("input-change-delayed");
+            }
             if (this.options.delay === "defocus") {
-                this.$el.on("input-defocus.pat-autosubmit", function(ev) {
-                    $(ev.target).trigger("input-change-delayed");
-                });
+                this.$el.on("input-defocus.pat-autosubmit", trigger_event);
             } else if (this.options.delay > 0) {
-                this.$el.on("input-change.pat-autosubmit", utils.debounce(function(ev) {
-                    $(ev.target).trigger("input-change-delayed");
-                }, this.options.delay));
+                this.$el.on("input-change.pat-autosubmit",
+                            utils.debounce(trigger_event, this.options.delay));
             } else {
-                this.$el.on("input-change.pat-autosubmit", function(ev) {
-                    $(ev.target).trigger("input-change-delayed");
-                });
+                this.$el.on("input-change.pat-autosubmit", trigger_event);
             }
         },
 
@@ -16583,7 +16658,7 @@ define('pat-autosuggest',[
                     ajax: {
                         url: pat_config.ajax.url,
                         dataType: pat_config.ajax["data-type"],
-                        type: "POST",
+                        type: "GET",
                         quietMillis: 400,
                         data: function (term, page) {
                             return {
@@ -21644,7 +21719,7 @@ define('pat-store',[],function() {
 
 }));
 //! moment-timezone.js
-//! version : 0.4.0
+//! version : 0.5.5
 //! author : Tim Wood
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -21654,8 +21729,8 @@ define('pat-store',[],function() {
 
 	/*global define*/
 	if (typeof define === 'function' && define.amd) {
-		define('moment-timezone',['moment'], factory);                 // AMD
-	} else if (typeof exports === 'object') {
+		define('moment-timezone-data',['moment'], factory);                 // AMD
+	} else if (typeof module === 'object' && module.exports) {
 		module.exports = factory(require('moment')); // Node
 	} else {
 		factory(root.moment);                        // Browser
@@ -21669,10 +21744,12 @@ define('pat-store',[],function() {
 		return moment;
 	}
 
-	var VERSION = "0.4.0",
+	var VERSION = "0.5.5",
 		zones = {},
 		links = {},
 		names = {},
+		guesses = {},
+		cachedGuess,
 
 		momentVersion = moment.version.split('.'),
 		major = +momentVersion[0],
@@ -21765,10 +21842,11 @@ define('pat-store',[],function() {
 		intToUntil(untils, indices.length);
 
 		return {
-			name    : data[0],
-			abbrs   : mapIndices(data[1].split(' '), indices),
-			offsets : mapIndices(offsets, indices),
-			untils  : untils
+			name       : data[0],
+			abbrs      : mapIndices(data[1].split(' '), indices),
+			offsets    : mapIndices(offsets, indices),
+			untils     : untils,
+			population : data[5] | 0
 		};
 	}
 
@@ -21784,10 +21862,11 @@ define('pat-store',[],function() {
 
 	Zone.prototype = {
 		_set : function (unpacked) {
-			this.name    = unpacked.name;
-			this.abbrs   = unpacked.abbrs;
-			this.untils  = unpacked.untils;
-			this.offsets = unpacked.offsets;
+			this.name       = unpacked.name;
+			this.abbrs      = unpacked.abbrs;
+			this.untils     = unpacked.untils;
+			this.offsets    = unpacked.offsets;
+			this.population = unpacked.population;
 		},
 
 		_index : function (timestamp) {
@@ -21838,6 +21917,171 @@ define('pat-store',[],function() {
 	};
 
 	/************************************
+		Current Timezone
+	************************************/
+
+	function OffsetAt(at) {
+		var timeString = at.toTimeString();
+		var abbr = timeString.match(/\([a-z ]+\)/i);
+		if (abbr && abbr[0]) {
+			// 17:56:31 GMT-0600 (CST)
+			// 17:56:31 GMT-0600 (Central Standard Time)
+			abbr = abbr[0].match(/[A-Z]/g);
+			abbr = abbr ? abbr.join('') : undefined;
+		} else {
+			// 17:56:31 CST
+			// 17:56:31 GMT+0800 (台北標準時間)
+			abbr = timeString.match(/[A-Z]{3,5}/g);
+			abbr = abbr ? abbr[0] : undefined;
+		}
+
+		if (abbr === 'GMT') {
+			abbr = undefined;
+		}
+
+		this.at = +at;
+		this.abbr = abbr;
+		this.offset = at.getTimezoneOffset();
+	}
+
+	function ZoneScore(zone) {
+		this.zone = zone;
+		this.offsetScore = 0;
+		this.abbrScore = 0;
+	}
+
+	ZoneScore.prototype.scoreOffsetAt = function (offsetAt) {
+		this.offsetScore += Math.abs(this.zone.offset(offsetAt.at) - offsetAt.offset);
+		if (this.zone.abbr(offsetAt.at).replace(/[^A-Z]/g, '') !== offsetAt.abbr) {
+			this.abbrScore++;
+		}
+	};
+
+	function findChange(low, high) {
+		var mid, diff;
+
+		while ((diff = ((high.at - low.at) / 12e4 | 0) * 6e4)) {
+			mid = new OffsetAt(new Date(low.at + diff));
+			if (mid.offset === low.offset) {
+				low = mid;
+			} else {
+				high = mid;
+			}
+		}
+
+		return low;
+	}
+
+	function userOffsets() {
+		var startYear = new Date().getFullYear() - 2,
+			last = new OffsetAt(new Date(startYear, 0, 1)),
+			offsets = [last],
+			change, next, i;
+
+		for (i = 1; i < 48; i++) {
+			next = new OffsetAt(new Date(startYear, i, 1));
+			if (next.offset !== last.offset) {
+				change = findChange(last, next);
+				offsets.push(change);
+				offsets.push(new OffsetAt(new Date(change.at + 6e4)));
+			}
+			last = next;
+		}
+
+		for (i = 0; i < 4; i++) {
+			offsets.push(new OffsetAt(new Date(startYear + i, 0, 1)));
+			offsets.push(new OffsetAt(new Date(startYear + i, 6, 1)));
+		}
+
+		return offsets;
+	}
+
+	function sortZoneScores (a, b) {
+		if (a.offsetScore !== b.offsetScore) {
+			return a.offsetScore - b.offsetScore;
+		}
+		if (a.abbrScore !== b.abbrScore) {
+			return a.abbrScore - b.abbrScore;
+		}
+		return b.zone.population - a.zone.population;
+	}
+
+	function addToGuesses (name, offsets) {
+		var i, offset;
+		arrayToInt(offsets);
+		for (i = 0; i < offsets.length; i++) {
+			offset = offsets[i];
+			guesses[offset] = guesses[offset] || {};
+			guesses[offset][name] = true;
+		}
+	}
+
+	function guessesForUserOffsets (offsets) {
+		var offsetsLength = offsets.length,
+			filteredGuesses = {},
+			out = [],
+			i, j, guessesOffset;
+
+		for (i = 0; i < offsetsLength; i++) {
+			guessesOffset = guesses[offsets[i].offset] || {};
+			for (j in guessesOffset) {
+				if (guessesOffset.hasOwnProperty(j)) {
+					filteredGuesses[j] = true;
+				}
+			}
+		}
+
+		for (i in filteredGuesses) {
+			if (filteredGuesses.hasOwnProperty(i)) {
+				out.push(names[i]);
+			}
+		}
+
+		return out;
+	}
+
+	function rebuildGuess () {
+
+		// use Intl API when available and returning valid time zone
+		try {
+			var intlName = Intl.DateTimeFormat().resolvedOptions().timeZone;  // jshint ignore:line
+			if (intlName){
+				var name = names[normalizeName(intlName)];
+				if (name) {
+					return name;
+				}
+				logError("Moment Timezone found " + intlName + " from the Intl api, but did not have that data loaded.");
+			}
+		} catch (e) {
+			// Intl unavailable, fall back to manual guessing.
+		}
+		var offsets = userOffsets(),
+			offsetsLength = offsets.length,
+			guesses = guessesForUserOffsets(offsets),
+			zoneScores = [],
+			zoneScore, i, j;
+
+		for (i = 0; i < guesses.length; i++) {
+			zoneScore = new ZoneScore(getZone(guesses[i]), offsetsLength);
+			for (j = 0; j < offsetsLength; j++) {
+				zoneScore.scoreOffsetAt(offsets[j]);
+			}
+			zoneScores.push(zoneScore);
+		}
+
+		zoneScores.sort(sortZoneScores);
+
+		return zoneScores.length > 0 ? zoneScores[0].zone.name : undefined;
+	}
+
+	function guess (ignoreCache) {
+		if (!cachedGuess || ignoreCache) {
+			cachedGuess = rebuildGuess();
+		}
+		return cachedGuess;
+	}
+
+	/************************************
 		Global Methods
 	************************************/
 
@@ -21846,17 +22090,21 @@ define('pat-store',[],function() {
 	}
 
 	function addZone (packed) {
-		var i, name, normalized;
+		var i, name, split, normalized;
 
 		if (typeof packed === "string") {
 			packed = [packed];
 		}
 
 		for (i = 0; i < packed.length; i++) {
-			name = packed[i].split('|')[0];
+			split = packed[i].split('|');
+			name = split[0];
 			normalized = normalizeName(name);
 			zones[normalized] = packed[i];
 			names[normalized] = name;
+			if (split[5]) {
+				addToGuesses(normalized, split[2].split(' '));
+			}
 		}
 	}
 
@@ -21865,7 +22113,7 @@ define('pat-store',[],function() {
 
 		var zone = zones[name];
 		var link;
-		
+
 		if (zone instanceof Zone) {
 			return zone;
 		}
@@ -21973,6 +22221,7 @@ define('pat-store',[],function() {
 	tz.load         = loadData;
 	tz.zone         = getZone;
 	tz.zoneExists   = zoneExists; // deprecated in 0.1.0
+	tz.guess        = guess;
 	tz.names        = getNames;
 	tz.Zone         = Zone;
 	tz.unpack       = unpack;
@@ -22065,5169 +22314,605 @@ define('pat-store',[],function() {
 		momentProperties._z = null;
 	}
 
-	// INJECT DATA
+	loadData({
+		"version": "2016f",
+		"zones": [
+			"Africa/Abidjan|GMT|0|0||48e5",
+			"Africa/Khartoum|EAT|-30|0||51e5",
+			"Africa/Algiers|CET|-10|0||26e5",
+			"Africa/Lagos|WAT|-10|0||17e6",
+			"Africa/Maputo|CAT|-20|0||26e5",
+			"Africa/Cairo|EET EEST|-20 -30|010101010|1Cby0 Fb0 c10 8n0 8Nd0 gL0 e10 mn0|15e6",
+			"Africa/Casablanca|WET WEST|0 -10|01010101010101010101010101010101010101010|1Cco0 Db0 1zd0 Lz0 1Nf0 wM0 co0 go0 1o00 s00 dA0 vc0 11A0 A00 e00 y00 11A0 uM0 e00 Dc0 11A0 s00 e00 IM0 WM0 mo0 gM0 LA0 WM0 jA0 e00 Rc0 11A0 e00 e00 U00 11A0 8o0 e00 11A0|32e5",
+			"Europe/Paris|CET CEST|-10 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|11e6",
+			"Africa/Johannesburg|SAST|-20|0||84e5",
+			"Africa/Tripoli|EET CET CEST|-20 -10 -20|0120|1IlA0 TA0 1o00|11e5",
+			"Africa/Windhoek|WAST WAT|-20 -10|01010101010101010101010|1C1c0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 11B0|32e4",
+			"America/Adak|HST HDT|a0 90|01010101010101010101010|1BR00 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|326",
+			"America/Anchorage|AKST AKDT|90 80|01010101010101010101010|1BQX0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|30e4",
+			"America/Santo_Domingo|AST|40|0||29e5",
+			"America/Araguaina|BRT BRST|30 20|010|1IdD0 Lz0|14e4",
+			"America/Argentina/Buenos_Aires|ART|30|0|",
+			"America/Asuncion|PYST PYT|30 40|01010101010101010101010|1C430 1a10 1fz0 1a10 1fz0 1cN0 17b0 1ip0 17b0 1ip0 17b0 1ip0 19X0 1fB0 19X0 1fB0 19X0 1ip0 17b0 1ip0 17b0 1ip0|28e5",
+			"America/Panama|EST|50|0||15e5",
+			"America/Bahia|BRT BRST|30 20|010|1FJf0 Rb0|27e5",
+			"America/Bahia_Banderas|MST CDT CST|70 50 60|01212121212121212121212|1C1l0 1nW0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|84e3",
+			"America/Fortaleza|BRT|30|0||34e5",
+			"America/Managua|CST|60|0||22e5",
+			"America/Manaus|AMT|40|0||19e5",
+			"America/Bogota|COT|50|0||90e5",
+			"America/Denver|MST MDT|70 60|01010101010101010101010|1BQV0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|26e5",
+			"America/Campo_Grande|AMST AMT|30 40|01010101010101010101010|1BIr0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10|77e4",
+			"America/Cancun|CST CDT EST|60 50 50|010101010102|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 Dd0|63e4",
+			"America/Caracas|VET VET|4u 40|01|1QMT0|29e5",
+			"America/Cayenne|GFT|30|0||58e3",
+			"America/Chicago|CST CDT|60 50|01010101010101010101010|1BQU0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|92e5",
+			"America/Chihuahua|MST MDT|70 60|01010101010101010101010|1C1l0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|81e4",
+			"America/Phoenix|MST|70|0||42e5",
+			"America/Los_Angeles|PST PDT|80 70|01010101010101010101010|1BQW0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|15e6",
+			"America/New_York|EST EDT|50 40|01010101010101010101010|1BQT0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|21e6",
+			"America/Rio_Branco|AMT ACT|40 50|01|1KLE0|31e4",
+			"America/Fort_Nelson|PST PDT MST|80 70 70|010101010102|1BQW0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0|39e2",
+			"America/Halifax|AST ADT|40 30|01010101010101010101010|1BQS0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|39e4",
+			"America/Godthab|WGT WGST|30 20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|17e3",
+			"America/Goose_Bay|AST ADT|40 30|01010101010101010101010|1BQQ1 1zb0 Op0 1zcX Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|76e2",
+			"America/Grand_Turk|EST EDT AST|50 40 40|0101010101012|1BQT0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|37e2",
+			"America/Guayaquil|ECT|50|0||27e5",
+			"America/Guyana|GYT|40|0||80e4",
+			"America/Havana|CST CDT|50 40|01010101010101010101010|1BQR0 1wo0 U00 1zc0 U00 1qM0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Rc0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0 Oo0 1zc0|21e5",
+			"America/La_Paz|BOT|40|0||19e5",
+			"America/Lima|PET|50|0||11e6",
+			"America/Mexico_City|CST CDT|60 50|01010101010101010101010|1C1k0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0 14p0 1lb0 14p0 1nX0 11B0 1nX0 11B0 1nX0 14p0 1lb0 14p0 1lb0|20e6",
+			"America/Metlakatla|PST AKST AKDT|80 90 80|012121212121|1PAa0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|14e2",
+			"America/Miquelon|PMST PMDT|30 20|01010101010101010101010|1BQR0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|61e2",
+			"America/Montevideo|UYST UYT|20 30|010101010101|1BQQ0 1ld0 14n0 1ld0 14n0 1o10 11z0 1o10 11z0 1o10 11z0|17e5",
+			"America/Noronha|FNT|20|0||30e2",
+			"America/North_Dakota/Beulah|MST MDT CST CDT|70 60 60 50|01232323232323232323232|1BQV0 1zb0 Oo0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0",
+			"America/Paramaribo|SRT|30|0||24e4",
+			"America/Port-au-Prince|EST EDT|50 40|010101010|1GI70 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|23e5",
+			"America/Santiago|CLST CLT|30 40|010101010101010101010|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 46n0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0|62e5",
+			"America/Sao_Paulo|BRST BRT|20 30|01010101010101010101010|1BIq0 1zd0 On0 1zd0 Rb0 1zd0 Lz0 1C10 Lz0 1C10 On0 1zd0 On0 1zd0 On0 1zd0 On0 1C10 Lz0 1C10 Lz0 1C10|20e6",
+			"America/Scoresbysund|EGT EGST|10 0|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|452",
+			"America/St_Johns|NST NDT|3u 2u|01010101010101010101010|1BQPv 1zb0 Op0 1zcX Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Rd0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0 Op0 1zb0|11e4",
+			"Antarctica/Casey|CAST AWST|-b0 -80|0101|1BN30 40P0 KL0|10",
+			"Antarctica/Davis|DAVT DAVT|-50 -70|0101|1BPw0 3Wn0 KN0|70",
+			"Antarctica/DumontDUrville|DDUT|-a0|0||80",
+			"Antarctica/Macquarie|AEDT MIST|-b0 -b0|01|1C140|1",
+			"Antarctica/Mawson|MAWT|-50|0||60",
+			"Pacific/Auckland|NZDT NZST|-d0 -c0|01010101010101010101010|1C120 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00|14e5",
+			"Antarctica/Rothera|ROTT|30|0||130",
+			"Antarctica/Syowa|SYOT|-30|0||20",
+			"Antarctica/Troll|UTC CEST|0 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|40",
+			"Antarctica/Vostok|VOST|-60|0||25",
+			"Asia/Baghdad|AST|-30|0||66e5",
+			"Asia/Almaty|+06|-60|0||15e5",
+			"Asia/Amman|EET EEST|-20 -30|010101010101010101010|1BVy0 1qM0 11A0 1o00 11A0 4bX0 Dd0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0|25e5",
+			"Asia/Anadyr|ANAT ANAST ANAT|-c0 -c0 -b0|0120|1BWe0 1qN0 WM0|13e3",
+			"Asia/Aqtobe|+05|-50|0||27e4",
+			"Asia/Ashgabat|TMT|-50|0||41e4",
+			"Asia/Baku|AZT AZST|-40 -50|0101010101010|1BWo0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00|27e5",
+			"Asia/Bangkok|ICT|-70|0||15e6",
+			"Asia/Barnaul|+06 +07|-60 -70|010101|1BWk0 1qM0 WM0 8Hz0 3rd0",
+			"Asia/Beirut|EET EEST|-20 -30|01010101010101010101010|1BWm0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0|22e5",
+			"Asia/Bishkek|KGT|-60|0||87e4",
+			"Asia/Brunei|BNT|-80|0||42e4",
+			"Asia/Kolkata|IST|-5u|0||15e6",
+			"Asia/Chita|YAKT YAKST YAKT IRKT|-90 -a0 -a0 -80|010230|1BWh0 1qM0 WM0 8Hz0 3re0|33e4",
+			"Asia/Choibalsan|CHOT CHOST|-80 -90|0101010101010|1O8G0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0|38e3",
+			"Asia/Shanghai|CST|-80|0||23e6",
+			"Asia/Dhaka|BDT|-60|0||16e6",
+			"Asia/Damascus|EET EEST|-20 -30|01010101010101010101010|1C0m0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0 WN0 1qL0 WN0 1qL0 11B0 1nX0 11B0 1nX0 11B0 1nX0 11B0 1qL0|26e5",
+			"Asia/Dili|TLT|-90|0||19e4",
+			"Asia/Dubai|GST|-40|0||39e5",
+			"Asia/Dushanbe|TJT|-50|0||76e4",
+			"Asia/Gaza|EET EEST|-20 -30|01010101010101010101010|1BVW1 SKX 1xd1 MKX 1AN0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1220 1ny0 1220 1qm0 1220 1ny0 1220 1ny0 1220 1ny0|18e5",
+			"Asia/Hebron|EET EEST|-20 -30|0101010101010101010101010|1BVy0 Tb0 1xd1 MKX bB0 cn0 1cN0 1a00 1fA0 1cL0 1cN0 1nX0 1210 1nz0 1220 1ny0 1220 1qm0 1220 1ny0 1220 1ny0 1220 1ny0|25e4",
+			"Asia/Hong_Kong|HKT|-80|0||73e5",
+			"Asia/Hovd|HOVT HOVST|-70 -80|0101010101010|1O8H0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0|81e3",
+			"Asia/Irkutsk|IRKT IRKST IRKT|-80 -90 -90|01020|1BWi0 1qM0 WM0 8Hz0|60e4",
+			"Europe/Istanbul|EET EEST|-20 -30|01010101010101010101010|1BWp0 1qM0 Xc0 1qo0 WM0 1qM0 11A0 1o00 1200 1nA0 11A0 1tA0 U00 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|13e6",
+			"Asia/Jakarta|WIB|-70|0||31e6",
+			"Asia/Jayapura|WIT|-90|0||26e4",
+			"Asia/Jerusalem|IST IDT|-20 -30|01010101010101010101010|1BVA0 17X0 1kp0 1dz0 1c10 1aL0 1eN0 1oL0 10N0 1oL0 10N0 1oL0 10N0 1rz0 W10 1rz0 W10 1rz0 10N0 1oL0 10N0 1oL0|81e4",
+			"Asia/Kabul|AFT|-4u|0||46e5",
+			"Asia/Kamchatka|PETT PETST PETT|-c0 -c0 -b0|0120|1BWe0 1qN0 WM0|18e4",
+			"Asia/Karachi|PKT|-50|0||24e6",
+			"Asia/Urumqi|XJT|-60|0||32e5",
+			"Asia/Kathmandu|NPT|-5J|0||12e5",
+			"Asia/Khandyga|VLAT VLAST VLAT YAKT YAKT|-a0 -b0 -b0 -a0 -90|010234|1BWg0 1qM0 WM0 17V0 7zD0|66e2",
+			"Asia/Krasnoyarsk|KRAT KRAST KRAT|-70 -80 -80|01020|1BWj0 1qM0 WM0 8Hz0|10e5",
+			"Asia/Kuala_Lumpur|MYT|-80|0||71e5",
+			"Asia/Magadan|MAGT MAGST MAGT MAGT|-b0 -c0 -c0 -a0|010230|1BWf0 1qM0 WM0 8Hz0 3Cq0|95e3",
+			"Asia/Makassar|WITA|-80|0||15e5",
+			"Asia/Manila|PHT|-80|0||24e6",
+			"Europe/Athens|EET EEST|-20 -30|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|35e5",
+			"Asia/Novokuznetsk|+07 +06|-70 -60|010|1Dp80 WM0|55e4",
+			"Asia/Novosibirsk|+06 +07|-60 -70|010101|1BWk0 1qM0 WM0 8Hz0 4eN0|15e5",
+			"Asia/Omsk|OMST OMSST OMST|-60 -70 -70|01020|1BWk0 1qM0 WM0 8Hz0|12e5",
+			"Asia/Pyongyang|KST KST|-90 -8u|01|1P4D0|29e5",
+			"Asia/Rangoon|MMT|-6u|0||48e5",
+			"Asia/Sakhalin|SAKT SAKST SAKT|-a0 -b0 -b0|010202|1BWg0 1qM0 WM0 8Hz0 3rd0|58e4",
+			"Asia/Tashkent|UZT|-50|0||23e5",
+			"Asia/Seoul|KST|-90|0||23e6",
+			"Asia/Singapore|SGT|-80|0||56e5",
+			"Asia/Srednekolymsk|MAGT MAGST MAGT SRET|-b0 -c0 -c0 -b0|01023|1BWf0 1qM0 WM0 8Hz0|35e2",
+			"Asia/Tbilisi|GET|-40|0||11e5",
+			"Asia/Tehran|IRST IRDT|-3u -4u|01010101010101010101010|1BTUu 1dz0 1cp0 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0 1cp0 1dz0 1cp0 1dz0 1cN0 1dz0 1cp0 1dz0 1cp0 1dz0 1cp0 1dz0|14e6",
+			"Asia/Thimphu|BTT|-60|0||79e3",
+			"Asia/Tokyo|JST|-90|0||38e6",
+			"Asia/Tomsk|+06 +07|-60 -70|010101|1BWk0 1qM0 WM0 8Hz0 3Qp0|10e5",
+			"Asia/Ulaanbaatar|ULAT ULAST|-80 -90|0101010101010|1O8G0 1cJ0 1cP0 1cJ0 1cP0 1fx0 1cP0 1cJ0 1cP0 1cJ0 1cP0 1cJ0|12e5",
+			"Asia/Ust-Nera|MAGT MAGST MAGT VLAT VLAT|-b0 -c0 -c0 -b0 -a0|010234|1BWf0 1qM0 WM0 17V0 7zD0|65e2",
+			"Asia/Vladivostok|VLAT VLAST VLAT|-a0 -b0 -b0|01020|1BWg0 1qM0 WM0 8Hz0|60e4",
+			"Asia/Yakutsk|YAKT YAKST YAKT|-90 -a0 -a0|01020|1BWh0 1qM0 WM0 8Hz0|28e4",
+			"Asia/Yekaterinburg|YEKT YEKST YEKT|-50 -60 -60|01020|1BWl0 1qM0 WM0 8Hz0|14e5",
+			"Asia/Yerevan|AMT AMST|-40 -50|01010|1BWm0 1qM0 WM0 1qM0|13e5",
+			"Atlantic/Azores|AZOT AZOST|10 0|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|25e4",
+			"Europe/Lisbon|WET WEST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|27e5",
+			"Atlantic/Cape_Verde|CVT|10|0||50e4",
+			"Atlantic/South_Georgia|GST|20|0||30",
+			"Atlantic/Stanley|FKST FKT|30 40|010|1C6R0 U10|21e2",
+			"Australia/Sydney|AEDT AEST|-b0 -a0|01010101010101010101010|1C140 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0|40e5",
+			"Australia/Adelaide|ACDT ACST|-au -9u|01010101010101010101010|1C14u 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1cM0 1fA0 1cM0 1cM0 1cM0 1cM0|11e5",
+			"Australia/Brisbane|AEST|-a0|0||20e5",
+			"Australia/Darwin|ACST|-9u|0||12e4",
+			"Australia/Eucla|ACWST|-8J|0||368",
+			"Australia/Lord_Howe|LHDT LHST|-b0 -au|01010101010101010101010|1C130 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1cMu 1cLu 1fAu 1cLu 1cMu 1cLu 1cMu|347",
+			"Australia/Perth|AWST|-80|0||18e5",
+			"Pacific/Easter|EASST EAST|50 60|010101010101010101010|1C1f0 1fB0 1nX0 G10 1EL0 Op0 1zb0 Rd0 1wn0 Rd0 46n0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0 1Nb0 Ap0|30e2",
+			"Europe/Dublin|GMT IST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|12e5",
+			"Etc/GMT+1|GMT+1|10|0|",
+			"Etc/GMT+10|GMT+10|a0|0|",
+			"Etc/GMT+11|GMT+11|b0|0|",
+			"Etc/GMT+12|GMT+12|c0|0|",
+			"Etc/GMT+2|GMT+2|20|0|",
+			"Etc/GMT+3|GMT+3|30|0|",
+			"Etc/GMT+4|GMT+4|40|0|",
+			"Etc/GMT+5|GMT+5|50|0|",
+			"Etc/GMT+6|GMT+6|60|0|",
+			"Etc/GMT+7|GMT+7|70|0|",
+			"Etc/GMT+8|GMT+8|80|0|",
+			"Etc/GMT+9|GMT+9|90|0|",
+			"Etc/GMT-1|GMT-1|-10|0|",
+			"Etc/GMT-10|GMT-10|-a0|0|",
+			"Etc/GMT-11|GMT-11|-b0|0|",
+			"Etc/GMT-12|GMT-12|-c0|0|",
+			"Etc/GMT-13|GMT-13|-d0|0|",
+			"Etc/GMT-14|GMT-14|-e0|0|",
+			"Etc/GMT-2|GMT-2|-20|0|",
+			"Etc/GMT-3|GMT-3|-30|0|",
+			"Etc/GMT-4|GMT-4|-40|0|",
+			"Etc/GMT-5|GMT-5|-50|0|",
+			"Etc/GMT-6|GMT-6|-60|0|",
+			"Etc/GMT-7|GMT-7|-70|0|",
+			"Etc/GMT-8|GMT-8|-80|0|",
+			"Etc/GMT-9|GMT-9|-90|0|",
+			"Etc/UCT|UCT|0|0|",
+			"Etc/UTC|UTC|0|0|",
+			"Europe/Astrakhan|+03 +04|-30 -40|010101|1BWn0 1qM0 WM0 8Hz0 3rd0",
+			"Europe/London|GMT BST|0 -10|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|10e6",
+			"Europe/Chisinau|EET EEST|-20 -30|01010101010101010101010|1BWo0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00|67e4",
+			"Europe/Kaliningrad|EET EEST FET|-20 -30 -30|01020|1BWo0 1qM0 WM0 8Hz0|44e4",
+			"Europe/Kirov|+03 +04|-30 -40|01010|1BWn0 1qM0 WM0 8Hz0|48e4",
+			"Europe/Minsk|EET EEST FET MSK|-20 -30 -30 -30|01023|1BWo0 1qM0 WM0 8Hy0|19e5",
+			"Europe/Moscow|MSK MSD MSK|-30 -40 -40|01020|1BWn0 1qM0 WM0 8Hz0|16e6",
+			"Europe/Samara|SAMT SAMST SAMT|-40 -40 -30|0120|1BWm0 1qN0 WM0|12e5",
+			"Europe/Simferopol|EET EEST MSK MSK|-20 -30 -40 -30|01010101023|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11z0 1nW0|33e4",
+			"Pacific/Honolulu|HST|a0|0||37e4",
+			"Indian/Chagos|IOT|-60|0||30e2",
+			"Indian/Christmas|CXT|-70|0||21e2",
+			"Indian/Cocos|CCT|-6u|0||596",
+			"Indian/Kerguelen|TFT|-50|0||130",
+			"Indian/Mahe|SCT|-40|0||79e3",
+			"Indian/Maldives|MVT|-50|0||35e4",
+			"Indian/Mauritius|MUT|-40|0||15e4",
+			"Indian/Reunion|RET|-40|0||84e4",
+			"Pacific/Majuro|MHT|-c0|0||28e3",
+			"MET|MET MEST|-10 -20|01010101010101010101010|1BWp0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00 11A0 1o00 11A0 1qM0 WM0 1qM0 WM0 1qM0 11A0 1o00 11A0 1o00",
+			"Pacific/Chatham|CHADT CHAST|-dJ -cJ|01010101010101010101010|1C120 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00|600",
+			"Pacific/Apia|SST SDT WSDT WSST|b0 a0 -e0 -d0|01012323232323232323232|1Dbn0 1ff0 1a00 CI0 AQ0 1cM0 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1a00 1fA0 1cM0 1fA0 1a00 1fA0 1a00|37e3",
+			"Pacific/Bougainville|PGT BST|-a0 -b0|01|1NwE0|18e4",
+			"Pacific/Chuuk|CHUT|-a0|0||49e3",
+			"Pacific/Efate|VUT|-b0|0||66e3",
+			"Pacific/Enderbury|PHOT|-d0|0||1",
+			"Pacific/Fakaofo|TKT TKT|b0 -d0|01|1Gfn0|483",
+			"Pacific/Fiji|FJST FJT|-d0 -c0|01010101010101010101010|1BWe0 1o00 Rc0 1wo0 Ao0 1Nc0 Ao0 1Q00 xz0 1SN0 uM0 1SM0 uM0 1VA0 s00 1VA0 uM0 1SM0 uM0 1SM0 uM0 1SM0|88e4",
+			"Pacific/Funafuti|TVT|-c0|0||45e2",
+			"Pacific/Galapagos|GALT|60|0||25e3",
+			"Pacific/Gambier|GAMT|90|0||125",
+			"Pacific/Guadalcanal|SBT|-b0|0||11e4",
+			"Pacific/Guam|ChST|-a0|0||17e4",
+			"Pacific/Kiritimati|LINT|-e0|0||51e2",
+			"Pacific/Kosrae|KOST|-b0|0||66e2",
+			"Pacific/Marquesas|MART|9u|0||86e2",
+			"Pacific/Pago_Pago|SST|b0|0||37e2",
+			"Pacific/Nauru|NRT|-c0|0||10e3",
+			"Pacific/Niue|NUT|b0|0||12e2",
+			"Pacific/Norfolk|NFT NFT|-bu -b0|01|1PoCu|25e4",
+			"Pacific/Noumea|NCT|-b0|0||98e3",
+			"Pacific/Palau|PWT|-90|0||21e3",
+			"Pacific/Pitcairn|PST|80|0||56",
+			"Pacific/Pohnpei|PONT|-b0|0||34e3",
+			"Pacific/Port_Moresby|PGT|-a0|0||25e4",
+			"Pacific/Rarotonga|CKT|a0|0||13e3",
+			"Pacific/Tahiti|TAHT|a0|0||18e4",
+			"Pacific/Tarawa|GILT|-c0|0||29e3",
+			"Pacific/Tongatapu|TOT|-d0|0||75e3",
+			"Pacific/Wake|WAKT|-c0|0||16e3",
+			"Pacific/Wallis|WFT|-c0|0||94"
+		],
+		"links": [
+			"Africa/Abidjan|Africa/Accra",
+			"Africa/Abidjan|Africa/Bamako",
+			"Africa/Abidjan|Africa/Banjul",
+			"Africa/Abidjan|Africa/Bissau",
+			"Africa/Abidjan|Africa/Conakry",
+			"Africa/Abidjan|Africa/Dakar",
+			"Africa/Abidjan|Africa/Freetown",
+			"Africa/Abidjan|Africa/Lome",
+			"Africa/Abidjan|Africa/Monrovia",
+			"Africa/Abidjan|Africa/Nouakchott",
+			"Africa/Abidjan|Africa/Ouagadougou",
+			"Africa/Abidjan|Africa/Sao_Tome",
+			"Africa/Abidjan|Africa/Timbuktu",
+			"Africa/Abidjan|America/Danmarkshavn",
+			"Africa/Abidjan|Atlantic/Reykjavik",
+			"Africa/Abidjan|Atlantic/St_Helena",
+			"Africa/Abidjan|Etc/GMT",
+			"Africa/Abidjan|Etc/GMT+0",
+			"Africa/Abidjan|Etc/GMT-0",
+			"Africa/Abidjan|Etc/GMT0",
+			"Africa/Abidjan|Etc/Greenwich",
+			"Africa/Abidjan|GMT",
+			"Africa/Abidjan|GMT+0",
+			"Africa/Abidjan|GMT-0",
+			"Africa/Abidjan|GMT0",
+			"Africa/Abidjan|Greenwich",
+			"Africa/Abidjan|Iceland",
+			"Africa/Algiers|Africa/Tunis",
+			"Africa/Cairo|Egypt",
+			"Africa/Casablanca|Africa/El_Aaiun",
+			"Africa/Johannesburg|Africa/Maseru",
+			"Africa/Johannesburg|Africa/Mbabane",
+			"Africa/Khartoum|Africa/Addis_Ababa",
+			"Africa/Khartoum|Africa/Asmara",
+			"Africa/Khartoum|Africa/Asmera",
+			"Africa/Khartoum|Africa/Dar_es_Salaam",
+			"Africa/Khartoum|Africa/Djibouti",
+			"Africa/Khartoum|Africa/Juba",
+			"Africa/Khartoum|Africa/Kampala",
+			"Africa/Khartoum|Africa/Mogadishu",
+			"Africa/Khartoum|Africa/Nairobi",
+			"Africa/Khartoum|Indian/Antananarivo",
+			"Africa/Khartoum|Indian/Comoro",
+			"Africa/Khartoum|Indian/Mayotte",
+			"Africa/Lagos|Africa/Bangui",
+			"Africa/Lagos|Africa/Brazzaville",
+			"Africa/Lagos|Africa/Douala",
+			"Africa/Lagos|Africa/Kinshasa",
+			"Africa/Lagos|Africa/Libreville",
+			"Africa/Lagos|Africa/Luanda",
+			"Africa/Lagos|Africa/Malabo",
+			"Africa/Lagos|Africa/Ndjamena",
+			"Africa/Lagos|Africa/Niamey",
+			"Africa/Lagos|Africa/Porto-Novo",
+			"Africa/Maputo|Africa/Blantyre",
+			"Africa/Maputo|Africa/Bujumbura",
+			"Africa/Maputo|Africa/Gaborone",
+			"Africa/Maputo|Africa/Harare",
+			"Africa/Maputo|Africa/Kigali",
+			"Africa/Maputo|Africa/Lubumbashi",
+			"Africa/Maputo|Africa/Lusaka",
+			"Africa/Tripoli|Libya",
+			"America/Adak|America/Atka",
+			"America/Adak|US/Aleutian",
+			"America/Anchorage|America/Juneau",
+			"America/Anchorage|America/Nome",
+			"America/Anchorage|America/Sitka",
+			"America/Anchorage|America/Yakutat",
+			"America/Anchorage|US/Alaska",
+			"America/Argentina/Buenos_Aires|America/Argentina/Catamarca",
+			"America/Argentina/Buenos_Aires|America/Argentina/ComodRivadavia",
+			"America/Argentina/Buenos_Aires|America/Argentina/Cordoba",
+			"America/Argentina/Buenos_Aires|America/Argentina/Jujuy",
+			"America/Argentina/Buenos_Aires|America/Argentina/La_Rioja",
+			"America/Argentina/Buenos_Aires|America/Argentina/Mendoza",
+			"America/Argentina/Buenos_Aires|America/Argentina/Rio_Gallegos",
+			"America/Argentina/Buenos_Aires|America/Argentina/Salta",
+			"America/Argentina/Buenos_Aires|America/Argentina/San_Juan",
+			"America/Argentina/Buenos_Aires|America/Argentina/San_Luis",
+			"America/Argentina/Buenos_Aires|America/Argentina/Tucuman",
+			"America/Argentina/Buenos_Aires|America/Argentina/Ushuaia",
+			"America/Argentina/Buenos_Aires|America/Buenos_Aires",
+			"America/Argentina/Buenos_Aires|America/Catamarca",
+			"America/Argentina/Buenos_Aires|America/Cordoba",
+			"America/Argentina/Buenos_Aires|America/Jujuy",
+			"America/Argentina/Buenos_Aires|America/Mendoza",
+			"America/Argentina/Buenos_Aires|America/Rosario",
+			"America/Campo_Grande|America/Cuiaba",
+			"America/Chicago|America/Indiana/Knox",
+			"America/Chicago|America/Indiana/Tell_City",
+			"America/Chicago|America/Knox_IN",
+			"America/Chicago|America/Matamoros",
+			"America/Chicago|America/Menominee",
+			"America/Chicago|America/North_Dakota/Center",
+			"America/Chicago|America/North_Dakota/New_Salem",
+			"America/Chicago|America/Rainy_River",
+			"America/Chicago|America/Rankin_Inlet",
+			"America/Chicago|America/Resolute",
+			"America/Chicago|America/Winnipeg",
+			"America/Chicago|CST6CDT",
+			"America/Chicago|Canada/Central",
+			"America/Chicago|US/Central",
+			"America/Chicago|US/Indiana-Starke",
+			"America/Chihuahua|America/Mazatlan",
+			"America/Chihuahua|Mexico/BajaSur",
+			"America/Denver|America/Boise",
+			"America/Denver|America/Cambridge_Bay",
+			"America/Denver|America/Edmonton",
+			"America/Denver|America/Inuvik",
+			"America/Denver|America/Ojinaga",
+			"America/Denver|America/Shiprock",
+			"America/Denver|America/Yellowknife",
+			"America/Denver|Canada/Mountain",
+			"America/Denver|MST7MDT",
+			"America/Denver|Navajo",
+			"America/Denver|US/Mountain",
+			"America/Fortaleza|America/Belem",
+			"America/Fortaleza|America/Maceio",
+			"America/Fortaleza|America/Recife",
+			"America/Fortaleza|America/Santarem",
+			"America/Halifax|America/Glace_Bay",
+			"America/Halifax|America/Moncton",
+			"America/Halifax|America/Thule",
+			"America/Halifax|Atlantic/Bermuda",
+			"America/Halifax|Canada/Atlantic",
+			"America/Havana|Cuba",
+			"America/Los_Angeles|America/Dawson",
+			"America/Los_Angeles|America/Ensenada",
+			"America/Los_Angeles|America/Santa_Isabel",
+			"America/Los_Angeles|America/Tijuana",
+			"America/Los_Angeles|America/Vancouver",
+			"America/Los_Angeles|America/Whitehorse",
+			"America/Los_Angeles|Canada/Pacific",
+			"America/Los_Angeles|Canada/Yukon",
+			"America/Los_Angeles|Mexico/BajaNorte",
+			"America/Los_Angeles|PST8PDT",
+			"America/Los_Angeles|US/Pacific",
+			"America/Los_Angeles|US/Pacific-New",
+			"America/Managua|America/Belize",
+			"America/Managua|America/Costa_Rica",
+			"America/Managua|America/El_Salvador",
+			"America/Managua|America/Guatemala",
+			"America/Managua|America/Regina",
+			"America/Managua|America/Swift_Current",
+			"America/Managua|America/Tegucigalpa",
+			"America/Managua|Canada/East-Saskatchewan",
+			"America/Managua|Canada/Saskatchewan",
+			"America/Manaus|America/Boa_Vista",
+			"America/Manaus|America/Porto_Velho",
+			"America/Manaus|Brazil/West",
+			"America/Mexico_City|America/Merida",
+			"America/Mexico_City|America/Monterrey",
+			"America/Mexico_City|Mexico/General",
+			"America/New_York|America/Detroit",
+			"America/New_York|America/Fort_Wayne",
+			"America/New_York|America/Indiana/Indianapolis",
+			"America/New_York|America/Indiana/Marengo",
+			"America/New_York|America/Indiana/Petersburg",
+			"America/New_York|America/Indiana/Vevay",
+			"America/New_York|America/Indiana/Vincennes",
+			"America/New_York|America/Indiana/Winamac",
+			"America/New_York|America/Indianapolis",
+			"America/New_York|America/Iqaluit",
+			"America/New_York|America/Kentucky/Louisville",
+			"America/New_York|America/Kentucky/Monticello",
+			"America/New_York|America/Louisville",
+			"America/New_York|America/Montreal",
+			"America/New_York|America/Nassau",
+			"America/New_York|America/Nipigon",
+			"America/New_York|America/Pangnirtung",
+			"America/New_York|America/Thunder_Bay",
+			"America/New_York|America/Toronto",
+			"America/New_York|Canada/Eastern",
+			"America/New_York|EST5EDT",
+			"America/New_York|US/East-Indiana",
+			"America/New_York|US/Eastern",
+			"America/New_York|US/Michigan",
+			"America/Noronha|Brazil/DeNoronha",
+			"America/Panama|America/Atikokan",
+			"America/Panama|America/Cayman",
+			"America/Panama|America/Coral_Harbour",
+			"America/Panama|America/Jamaica",
+			"America/Panama|EST",
+			"America/Panama|Jamaica",
+			"America/Phoenix|America/Creston",
+			"America/Phoenix|America/Dawson_Creek",
+			"America/Phoenix|America/Hermosillo",
+			"America/Phoenix|MST",
+			"America/Phoenix|US/Arizona",
+			"America/Rio_Branco|America/Eirunepe",
+			"America/Rio_Branco|America/Porto_Acre",
+			"America/Rio_Branco|Brazil/Acre",
+			"America/Santiago|Antarctica/Palmer",
+			"America/Santiago|Chile/Continental",
+			"America/Santo_Domingo|America/Anguilla",
+			"America/Santo_Domingo|America/Antigua",
+			"America/Santo_Domingo|America/Aruba",
+			"America/Santo_Domingo|America/Barbados",
+			"America/Santo_Domingo|America/Blanc-Sablon",
+			"America/Santo_Domingo|America/Curacao",
+			"America/Santo_Domingo|America/Dominica",
+			"America/Santo_Domingo|America/Grenada",
+			"America/Santo_Domingo|America/Guadeloupe",
+			"America/Santo_Domingo|America/Kralendijk",
+			"America/Santo_Domingo|America/Lower_Princes",
+			"America/Santo_Domingo|America/Marigot",
+			"America/Santo_Domingo|America/Martinique",
+			"America/Santo_Domingo|America/Montserrat",
+			"America/Santo_Domingo|America/Port_of_Spain",
+			"America/Santo_Domingo|America/Puerto_Rico",
+			"America/Santo_Domingo|America/St_Barthelemy",
+			"America/Santo_Domingo|America/St_Kitts",
+			"America/Santo_Domingo|America/St_Lucia",
+			"America/Santo_Domingo|America/St_Thomas",
+			"America/Santo_Domingo|America/St_Vincent",
+			"America/Santo_Domingo|America/Tortola",
+			"America/Santo_Domingo|America/Virgin",
+			"America/Sao_Paulo|Brazil/East",
+			"America/St_Johns|Canada/Newfoundland",
+			"Asia/Almaty|Asia/Qyzylorda",
+			"Asia/Aqtobe|Asia/Aqtau",
+			"Asia/Aqtobe|Asia/Oral",
+			"Asia/Ashgabat|Asia/Ashkhabad",
+			"Asia/Baghdad|Asia/Aden",
+			"Asia/Baghdad|Asia/Bahrain",
+			"Asia/Baghdad|Asia/Kuwait",
+			"Asia/Baghdad|Asia/Qatar",
+			"Asia/Baghdad|Asia/Riyadh",
+			"Asia/Bangkok|Asia/Ho_Chi_Minh",
+			"Asia/Bangkok|Asia/Phnom_Penh",
+			"Asia/Bangkok|Asia/Saigon",
+			"Asia/Bangkok|Asia/Vientiane",
+			"Asia/Dhaka|Asia/Dacca",
+			"Asia/Dubai|Asia/Muscat",
+			"Asia/Hong_Kong|Hongkong",
+			"Asia/Jakarta|Asia/Pontianak",
+			"Asia/Jerusalem|Asia/Tel_Aviv",
+			"Asia/Jerusalem|Israel",
+			"Asia/Kathmandu|Asia/Katmandu",
+			"Asia/Kolkata|Asia/Calcutta",
+			"Asia/Kolkata|Asia/Colombo",
+			"Asia/Kuala_Lumpur|Asia/Kuching",
+			"Asia/Makassar|Asia/Ujung_Pandang",
+			"Asia/Seoul|ROK",
+			"Asia/Shanghai|Asia/Chongqing",
+			"Asia/Shanghai|Asia/Chungking",
+			"Asia/Shanghai|Asia/Harbin",
+			"Asia/Shanghai|Asia/Macao",
+			"Asia/Shanghai|Asia/Macau",
+			"Asia/Shanghai|Asia/Taipei",
+			"Asia/Shanghai|PRC",
+			"Asia/Shanghai|ROC",
+			"Asia/Singapore|Singapore",
+			"Asia/Tashkent|Asia/Samarkand",
+			"Asia/Tehran|Iran",
+			"Asia/Thimphu|Asia/Thimbu",
+			"Asia/Tokyo|Japan",
+			"Asia/Ulaanbaatar|Asia/Ulan_Bator",
+			"Asia/Urumqi|Asia/Kashgar",
+			"Australia/Adelaide|Australia/Broken_Hill",
+			"Australia/Adelaide|Australia/South",
+			"Australia/Adelaide|Australia/Yancowinna",
+			"Australia/Brisbane|Australia/Lindeman",
+			"Australia/Brisbane|Australia/Queensland",
+			"Australia/Darwin|Australia/North",
+			"Australia/Lord_Howe|Australia/LHI",
+			"Australia/Perth|Australia/West",
+			"Australia/Sydney|Australia/ACT",
+			"Australia/Sydney|Australia/Canberra",
+			"Australia/Sydney|Australia/Currie",
+			"Australia/Sydney|Australia/Hobart",
+			"Australia/Sydney|Australia/Melbourne",
+			"Australia/Sydney|Australia/NSW",
+			"Australia/Sydney|Australia/Tasmania",
+			"Australia/Sydney|Australia/Victoria",
+			"Etc/UCT|UCT",
+			"Etc/UTC|Etc/Universal",
+			"Etc/UTC|Etc/Zulu",
+			"Etc/UTC|UTC",
+			"Etc/UTC|Universal",
+			"Etc/UTC|Zulu",
+			"Europe/Astrakhan|Europe/Ulyanovsk",
+			"Europe/Athens|Asia/Nicosia",
+			"Europe/Athens|EET",
+			"Europe/Athens|Europe/Bucharest",
+			"Europe/Athens|Europe/Helsinki",
+			"Europe/Athens|Europe/Kiev",
+			"Europe/Athens|Europe/Mariehamn",
+			"Europe/Athens|Europe/Nicosia",
+			"Europe/Athens|Europe/Riga",
+			"Europe/Athens|Europe/Sofia",
+			"Europe/Athens|Europe/Tallinn",
+			"Europe/Athens|Europe/Uzhgorod",
+			"Europe/Athens|Europe/Vilnius",
+			"Europe/Athens|Europe/Zaporozhye",
+			"Europe/Chisinau|Europe/Tiraspol",
+			"Europe/Dublin|Eire",
+			"Europe/Istanbul|Asia/Istanbul",
+			"Europe/Istanbul|Turkey",
+			"Europe/Lisbon|Atlantic/Canary",
+			"Europe/Lisbon|Atlantic/Faeroe",
+			"Europe/Lisbon|Atlantic/Faroe",
+			"Europe/Lisbon|Atlantic/Madeira",
+			"Europe/Lisbon|Portugal",
+			"Europe/Lisbon|WET",
+			"Europe/London|Europe/Belfast",
+			"Europe/London|Europe/Guernsey",
+			"Europe/London|Europe/Isle_of_Man",
+			"Europe/London|Europe/Jersey",
+			"Europe/London|GB",
+			"Europe/London|GB-Eire",
+			"Europe/Moscow|Europe/Volgograd",
+			"Europe/Moscow|W-SU",
+			"Europe/Paris|Africa/Ceuta",
+			"Europe/Paris|Arctic/Longyearbyen",
+			"Europe/Paris|Atlantic/Jan_Mayen",
+			"Europe/Paris|CET",
+			"Europe/Paris|Europe/Amsterdam",
+			"Europe/Paris|Europe/Andorra",
+			"Europe/Paris|Europe/Belgrade",
+			"Europe/Paris|Europe/Berlin",
+			"Europe/Paris|Europe/Bratislava",
+			"Europe/Paris|Europe/Brussels",
+			"Europe/Paris|Europe/Budapest",
+			"Europe/Paris|Europe/Busingen",
+			"Europe/Paris|Europe/Copenhagen",
+			"Europe/Paris|Europe/Gibraltar",
+			"Europe/Paris|Europe/Ljubljana",
+			"Europe/Paris|Europe/Luxembourg",
+			"Europe/Paris|Europe/Madrid",
+			"Europe/Paris|Europe/Malta",
+			"Europe/Paris|Europe/Monaco",
+			"Europe/Paris|Europe/Oslo",
+			"Europe/Paris|Europe/Podgorica",
+			"Europe/Paris|Europe/Prague",
+			"Europe/Paris|Europe/Rome",
+			"Europe/Paris|Europe/San_Marino",
+			"Europe/Paris|Europe/Sarajevo",
+			"Europe/Paris|Europe/Skopje",
+			"Europe/Paris|Europe/Stockholm",
+			"Europe/Paris|Europe/Tirane",
+			"Europe/Paris|Europe/Vaduz",
+			"Europe/Paris|Europe/Vatican",
+			"Europe/Paris|Europe/Vienna",
+			"Europe/Paris|Europe/Warsaw",
+			"Europe/Paris|Europe/Zagreb",
+			"Europe/Paris|Europe/Zurich",
+			"Europe/Paris|Poland",
+			"Pacific/Auckland|Antarctica/McMurdo",
+			"Pacific/Auckland|Antarctica/South_Pole",
+			"Pacific/Auckland|NZ",
+			"Pacific/Chatham|NZ-CHAT",
+			"Pacific/Chuuk|Pacific/Truk",
+			"Pacific/Chuuk|Pacific/Yap",
+			"Pacific/Easter|Chile/EasterIsland",
+			"Pacific/Guam|Pacific/Saipan",
+			"Pacific/Honolulu|HST",
+			"Pacific/Honolulu|Pacific/Johnston",
+			"Pacific/Honolulu|US/Hawaii",
+			"Pacific/Majuro|Kwajalein",
+			"Pacific/Majuro|Pacific/Kwajalein",
+			"Pacific/Pago_Pago|Pacific/Midway",
+			"Pacific/Pago_Pago|Pacific/Samoa",
+			"Pacific/Pago_Pago|US/Samoa",
+			"Pacific/Pohnpei|Pacific/Ponape"
+		]
+	});
+
 
 	return moment;
 }));
-
-define('pat-calendar-moment-timezone-data',["moment", "moment-timezone"], function (moment) { moment.tz.add({
-    "zones": {
-        "Africa/Abidjan": [
-            "-0:16:8 - LMT 1912 -0:16:8",
-            "0 - GMT"
-        ],
-        "Africa/Accra": [
-            "-0:0:52 - LMT 1918 -0:0:52",
-            "0 Ghana %s"
-        ],
-        "Africa/Addis_Ababa": [
-            "2:34:48 - LMT 1870 2:34:48",
-            "2:35:20 - ADMT 1936_4_5 2:35:20",
-            "3 - EAT"
-        ],
-        "Africa/Algiers": [
-            "0:12:12 - LMT 1891_2_15_0_1 0:12:12",
-            "0:9:21 - PMT 1911_2_11 0:9:21",
-            "0 Algeria WE%sT 1940_1_25_2",
-            "1 Algeria CE%sT 1946_9_7 1",
-            "0 - WET 1956_0_29",
-            "1 - CET 1963_3_14 1",
-            "0 Algeria WE%sT 1977_9_21 1",
-            "1 Algeria CE%sT 1979_9_26 1",
-            "0 Algeria WE%sT 1981_4",
-            "1 - CET"
-        ],
-        "Africa/Asmara": [
-            "2:35:32 - LMT 1870 2:35:32",
-            "2:35:32 - AMT 1890 2:35:32",
-            "2:35:20 - ADMT 1936_4_5 2:35:20",
-            "3 - EAT"
-        ],
-        "Africa/Bamako": [
-            "-0:32 - LMT 1912 -0:32",
-            "0 - GMT 1934_1_26",
-            "-1 - WAT 1960_5_20 -1",
-            "0 - GMT"
-        ],
-        "Africa/Bangui": [
-            "1:14:20 - LMT 1912 1:14:20",
-            "1 - WAT"
-        ],
-        "Africa/Banjul": [
-            "-1:6:36 - LMT 1912 -1:6:36",
-            "-1:6:36 - BMT 1935 -1:6:36",
-            "-1 - WAT 1964 -1",
-            "0 - GMT"
-        ],
-        "Africa/Bissau": [
-            "-1:2:20 - LMT 1911_4_26 -1:2:20",
-            "-1 - WAT 1975 -1",
-            "0 - GMT"
-        ],
-        "Africa/Blantyre": [
-            "2:20 - LMT 1903_2 2:20",
-            "2 - CAT"
-        ],
-        "Africa/Brazzaville": [
-            "1:1:8 - LMT 1912 1:1:8",
-            "1 - WAT"
-        ],
-        "Africa/Bujumbura": [
-            "1:57:28 - LMT 1890 1:57:28",
-            "2 - CAT"
-        ],
-        "Africa/Cairo": [
-            "2:5:9 - LMT 1900_9 2:5:9",
-            "2 Egypt EE%sT"
-        ],
-        "Africa/Casablanca": [
-            "-0:30:20 - LMT 1913_9_26 -0:30:20",
-            "0 Morocco WE%sT 1984_2_16",
-            "1 - CET 1986 1",
-            "0 Morocco WE%sT"
-        ],
-        "Africa/Ceuta": [
-            "-0:21:16 - LMT 1901 -0:21:16",
-            "0 - WET 1918_4_6_23",
-            "1 - WEST 1918_9_7_23 1",
-            "0 - WET 1924",
-            "0 Spain WE%sT 1929",
-            "0 SpainAfrica WE%sT 1984_2_16",
-            "1 - CET 1986 1",
-            "1 EU CE%sT"
-        ],
-        "Africa/Conakry": [
-            "-0:54:52 - LMT 1912 -0:54:52",
-            "0 - GMT 1934_1_26",
-            "-1 - WAT 1960 -1",
-            "0 - GMT"
-        ],
-        "Africa/Dakar": [
-            "-1:9:44 - LMT 1912 -1:9:44",
-            "-1 - WAT 1941_5 -1",
-            "0 - GMT"
-        ],
-        "Africa/Dar_es_Salaam": [
-            "2:37:8 - LMT 1931 2:37:8",
-            "3 - EAT 1948 3",
-            "2:45 - BEAUT 1961 2:45",
-            "3 - EAT"
-        ],
-        "Africa/Djibouti": [
-            "2:52:36 - LMT 1911_6 2:52:36",
-            "3 - EAT"
-        ],
-        "Africa/Douala": [
-            "0:38:48 - LMT 1912 0:38:48",
-            "1 - WAT"
-        ],
-        "Africa/El_Aaiun": [
-            "-0:52:48 - LMT 1934_0 -0:52:48",
-            "-1 - WAT 1976_3_14 -1",
-            "0 - WET"
-        ],
-        "Africa/Freetown": [
-            "-0:53 - LMT 1882 -0:53",
-            "-0:53 - FMT 1913_5 -0:53",
-            "-1 SL %s 1957 -1",
-            "0 SL %s"
-        ],
-        "Africa/Gaborone": [
-            "1:43:40 - LMT 1885 1:43:40",
-            "1:30 - SAST 1903_2 1:30",
-            "2 - CAT 1943_8_19_2 2",
-            "3 - CAST 1944_2_19_2 3",
-            "2 - CAT"
-        ],
-        "Africa/Harare": [
-            "2:4:12 - LMT 1903_2 2:4:12",
-            "2 - CAT"
-        ],
-        "Africa/Johannesburg": [
-            "1:52 - LMT 1892_1_8 1:52",
-            "1:30 - SAST 1903_2 1:30",
-            "2 SA SAST"
-        ],
-        "Africa/Juba": [
-            "2:6:24 - LMT 1931 2:6:24",
-            "2 Sudan CA%sT 2000_0_15_12 2",
-            "3 - EAT"
-        ],
-        "Africa/Kampala": [
-            "2:9:40 - LMT 1928_6 2:9:40",
-            "3 - EAT 1930 3",
-            "2:30 - BEAT 1948 2:30",
-            "2:45 - BEAUT 1957 2:45",
-            "3 - EAT"
-        ],
-        "Africa/Khartoum": [
-            "2:10:8 - LMT 1931 2:10:8",
-            "2 Sudan CA%sT 2000_0_15_12 2",
-            "3 - EAT"
-        ],
-        "Africa/Kigali": [
-            "2:0:16 - LMT 1935_5 2:0:16",
-            "2 - CAT"
-        ],
-        "Africa/Kinshasa": [
-            "1:1:12 - LMT 1897_10_9 1:1:12",
-            "1 - WAT"
-        ],
-        "Africa/Lagos": [
-            "0:13:36 - LMT 1919_8 0:13:36",
-            "1 - WAT"
-        ],
-        "Africa/Libreville": [
-            "0:37:48 - LMT 1912 0:37:48",
-            "1 - WAT"
-        ],
-        "Africa/Lome": [
-            "0:4:52 - LMT 1893 0:4:52",
-            "0 - GMT"
-        ],
-        "Africa/Luanda": [
-            "0:52:56 - LMT 1892 0:52:56",
-            "0:52:4 - AOT 1911_4_26 0:52:4",
-            "1 - WAT"
-        ],
-        "Africa/Lubumbashi": [
-            "1:49:52 - LMT 1897_10_9 1:49:52",
-            "2 - CAT"
-        ],
-        "Africa/Lusaka": [
-            "1:53:8 - LMT 1903_2 1:53:8",
-            "2 - CAT"
-        ],
-        "Africa/Malabo": [
-            "0:35:8 - LMT 1912 0:35:8",
-            "0 - GMT 1963_11_15",
-            "1 - WAT"
-        ],
-        "Africa/Maputo": [
-            "2:10:20 - LMT 1903_2 2:10:20",
-            "2 - CAT"
-        ],
-        "Africa/Maseru": [
-            "1:50 - LMT 1903_2 1:50",
-            "2 - SAST 1943_8_19_2 2",
-            "3 - SAST 1944_2_19_2 3",
-            "2 - SAST"
-        ],
-        "Africa/Mbabane": [
-            "2:4:24 - LMT 1903_2 2:4:24",
-            "2 - SAST"
-        ],
-        "Africa/Mogadishu": [
-            "3:1:28 - LMT 1893_10 3:1:28",
-            "3 - EAT 1931 3",
-            "2:30 - BEAT 1957 2:30",
-            "3 - EAT"
-        ],
-        "Africa/Monrovia": [
-            "-0:43:8 - LMT 1882 -0:43:8",
-            "-0:43:8 - MMT 1919_2 -0:43:8",
-            "-0:44:30 - LRT 1972_4 -0:44:30",
-            "0 - GMT"
-        ],
-        "Africa/Nairobi": [
-            "2:27:16 - LMT 1928_6 2:27:16",
-            "3 - EAT 1930 3",
-            "2:30 - BEAT 1940 2:30",
-            "2:45 - BEAUT 1960 2:45",
-            "3 - EAT"
-        ],
-        "Africa/Ndjamena": [
-            "1:0:12 - LMT 1912 1:0:12",
-            "1 - WAT 1979_9_14 1",
-            "2 - WAST 1980_2_8 2",
-            "1 - WAT"
-        ],
-        "Africa/Niamey": [
-            "0:8:28 - LMT 1912 0:8:28",
-            "-1 - WAT 1934_1_26 -1",
-            "0 - GMT 1960",
-            "1 - WAT"
-        ],
-        "Africa/Nouakchott": [
-            "-1:3:48 - LMT 1912 -1:3:48",
-            "0 - GMT 1934_1_26",
-            "-1 - WAT 1960_10_28 -1",
-            "0 - GMT"
-        ],
-        "Africa/Ouagadougou": [
-            "-0:6:4 - LMT 1912 -0:6:4",
-            "0 - GMT"
-        ],
-        "Africa/Porto-Novo": [
-            "0:10:28 - LMT 1912 0:10:28",
-            "0 - GMT 1934_1_26",
-            "1 - WAT"
-        ],
-        "Africa/Sao_Tome": [
-            "0:26:56 - LMT 1884 0:26:56",
-            "-0:36:32 - LMT 1912 -0:36:32",
-            "0 - GMT"
-        ],
-        "Africa/Tripoli": [
-            "0:52:44 - LMT 1920 0:52:44",
-            "1 Libya CE%sT 1959 1",
-            "2 - EET 1982 2",
-            "1 Libya CE%sT 1990_4_4 1",
-            "2 - EET 1996_8_30 2",
-            "1 Libya CE%sT 1997_9_4 2",
-            "2 - EET 2012_10_10_2 2",
-            "1 Libya CE%sT"
-        ],
-        "Africa/Tunis": [
-            "0:40:44 - LMT 1881_4_12 0:40:44",
-            "0:9:21 - PMT 1911_2_11 0:9:21",
-            "1 Tunisia CE%sT"
-        ],
-        "Africa/Windhoek": [
-            "1:8:24 - LMT 1892_1_8 1:8:24",
-            "1:30 - SWAT 1903_2 1:30",
-            "2 - SAST 1942_8_20_2 2",
-            "3 - SAST 1943_2_21_2 3",
-            "2 - SAST 1990_2_21 2",
-            "2 - CAT 1994_3_3 2",
-            "1 Namibia WA%sT"
-        ],
-        "America/Adak": [
-            "12:13:21 - LMT 1867_9_18 12:13:21",
-            "-11:46:38 - LMT 1900_7_20_12 -11:46:38",
-            "-11 - NST 1942 -11",
-            "-11 US N%sT 1946 -11",
-            "-11 - NST 1967_3 -11",
-            "-11 - BST 1969 -11",
-            "-11 US B%sT 1983_9_30_2 -10",
-            "-10 US AH%sT 1983_10_30 -10",
-            "-10 US HA%sT"
-        ],
-        "America/Anchorage": [
-            "14:0:24 - LMT 1867_9_18 14:0:24",
-            "-9:59:36 - LMT 1900_7_20_12 -9:59:36",
-            "-10 - CAT 1942 -10",
-            "-10 US CAT/CAWT 1945_7_14_23",
-            "-10 US CAT/CAPT 1946 -10",
-            "-10 - CAT 1967_3 -10",
-            "-10 - AHST 1969 -10",
-            "-10 US AH%sT 1983_9_30_2 -9",
-            "-9 US Y%sT 1983_10_30 -9",
-            "-9 US AK%sT"
-        ],
-        "America/Anguilla": [
-            "-4:12:16 - LMT 1912_2_2 -4:12:16",
-            "-4 - AST"
-        ],
-        "America/Antigua": [
-            "-4:7:12 - LMT 1912_2_2 -4:7:12",
-            "-5 - EST 1951 -5",
-            "-4 - AST"
-        ],
-        "America/Araguaina": [
-            "-3:12:48 - LMT 1914 -3:12:48",
-            "-3 Brazil BR%sT 1990_8_17 -3",
-            "-3 - BRT 1995_8_14 -3",
-            "-3 Brazil BR%sT 2003_8_24 -3",
-            "-3 - BRT 2012_9_21 -3",
-            "-3 Brazil BR%sT"
-        ],
-        "America/Argentina/Buenos_Aires": [
-            "-3:53:48 - LMT 1894_9_31 -3:53:48",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 Arg AR%sT"
-        ],
-        "America/Argentina/Catamarca": [
-            "-4:23:8 - LMT 1894_9_31 -4:23:8",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1991_2_3 -2",
-            "-4 - WART 1991_9_20 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 - ART 2004_5_1 -3",
-            "-4 - WART 2004_5_20 -4",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Argentina/Cordoba": [
-            "-4:16:48 - LMT 1894_9_31 -4:16:48",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1991_2_3 -2",
-            "-4 - WART 1991_9_20 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 Arg AR%sT"
-        ],
-        "America/Argentina/Jujuy": [
-            "-4:21:12 - LMT 1894_9_31 -4:21:12",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1990_2_4 -2",
-            "-4 - WART 1990_9_28 -4",
-            "-3 - WARST 1991_2_17 -3",
-            "-4 - WART 1991_9_6 -4",
-            "-2 - ARST 1992 -2",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Argentina/La_Rioja": [
-            "-4:27:24 - LMT 1894_9_31 -4:27:24",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1991_2_1 -2",
-            "-4 - WART 1991_4_7 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 - ART 2004_5_1 -3",
-            "-4 - WART 2004_5_20 -4",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Argentina/Mendoza": [
-            "-4:35:16 - LMT 1894_9_31 -4:35:16",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1990_2_4 -2",
-            "-4 - WART 1990_9_15 -4",
-            "-3 - WARST 1991_2_1 -3",
-            "-4 - WART 1991_9_15 -4",
-            "-3 - WARST 1992_2_1 -3",
-            "-4 - WART 1992_9_18 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 - ART 2004_4_23 -3",
-            "-4 - WART 2004_8_26 -4",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Argentina/Rio_Gallegos": [
-            "-4:36:52 - LMT 1894_9_31 -4:36:52",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 - ART 2004_5_1 -3",
-            "-4 - WART 2004_5_20 -4",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Argentina/Salta": [
-            "-4:21:40 - LMT 1894_9_31 -4:21:40",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1991_2_3 -2",
-            "-4 - WART 1991_9_20 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Argentina/San_Juan": [
-            "-4:34:4 - LMT 1894_9_31 -4:34:4",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1991_2_1 -2",
-            "-4 - WART 1991_4_7 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 - ART 2004_4_31 -3",
-            "-4 - WART 2004_6_25 -4",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Argentina/San_Luis": [
-            "-4:25:24 - LMT 1894_9_31 -4:25:24",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1990 -2",
-            "-2 - ARST 1990_2_14 -2",
-            "-4 - WART 1990_9_15 -4",
-            "-3 - WARST 1991_2_1 -3",
-            "-4 - WART 1991_5_1 -4",
-            "-3 - ART 1999_9_3 -3",
-            "-3 - WARST 2000_2_3 -3",
-            "-3 - ART 2004_4_31 -3",
-            "-4 - WART 2004_6_25 -4",
-            "-3 Arg AR%sT 2008_0_21 -2",
-            "-4 SanLuis WAR%sT"
-        ],
-        "America/Argentina/Tucuman": [
-            "-4:20:52 - LMT 1894_9_31 -4:20:52",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1991_2_3 -2",
-            "-4 - WART 1991_9_20 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 - ART 2004_5_1 -3",
-            "-4 - WART 2004_5_13 -4",
-            "-3 Arg AR%sT"
-        ],
-        "America/Argentina/Ushuaia": [
-            "-4:33:12 - LMT 1894_9_31 -4:33:12",
-            "-4:16:48 - CMT 1920_4 -4:16:48",
-            "-4 - ART 1930_11 -4",
-            "-4 Arg AR%sT 1969_9_5 -4",
-            "-3 Arg AR%sT 1999_9_3 -3",
-            "-4 Arg AR%sT 2000_2_3 -3",
-            "-3 - ART 2004_4_30 -3",
-            "-4 - WART 2004_5_20 -4",
-            "-3 Arg AR%sT 2008_9_18 -3",
-            "-3 - ART"
-        ],
-        "America/Aruba": [
-            "-4:40:24 - LMT 1912_1_12 -4:40:24",
-            "-4:30 - ANT 1965 -4:30",
-            "-4 - AST"
-        ],
-        "America/Asuncion": [
-            "-3:50:40 - LMT 1890 -3:50:40",
-            "-3:50:40 - AMT 1931_9_10 -3:50:40",
-            "-4 - PYT 1972_9 -4",
-            "-3 - PYT 1974_3 -3",
-            "-4 Para PY%sT"
-        ],
-        "America/Atikokan": [
-            "-6:6:28 - LMT 1895 -6:6:28",
-            "-6 Canada C%sT 1940_8_29 -6",
-            "-5 - CDT 1942_1_9_2 -6",
-            "-6 Canada C%sT 1945_8_30_2 -5",
-            "-5 - EST"
-        ],
-        "America/Bahia": [
-            "-2:34:4 - LMT 1914 -2:34:4",
-            "-3 Brazil BR%sT 2003_8_24 -3",
-            "-3 - BRT 2011_9_16 -3",
-            "-3 Brazil BR%sT 2012_9_21 -3",
-            "-3 - BRT"
-        ],
-        "America/Bahia_Banderas": [
-            "-7:1 - LMT 1921_11_31_23_59 -7:1",
-            "-7 - MST 1927_5_10_23 -7",
-            "-6 - CST 1930_10_15 -6",
-            "-7 - MST 1931_4_1_23 -7",
-            "-6 - CST 1931_9 -6",
-            "-7 - MST 1932_3_1 -7",
-            "-6 - CST 1942_3_24 -6",
-            "-7 - MST 1949_0_14 -7",
-            "-8 - PST 1970 -8",
-            "-7 Mexico M%sT 2010_3_4_2 -7",
-            "-6 Mexico C%sT"
-        ],
-        "America/Barbados": [
-            "-3:58:29 - LMT 1924 -3:58:29",
-            "-3:58:29 - BMT 1932 -3:58:29",
-            "-4 Barb A%sT"
-        ],
-        "America/Belem": [
-            "-3:13:56 - LMT 1914 -3:13:56",
-            "-3 Brazil BR%sT 1988_8_12 -3",
-            "-3 - BRT"
-        ],
-        "America/Belize": [
-            "-5:52:48 - LMT 1912_3 -5:52:48",
-            "-6 Belize C%sT"
-        ],
-        "America/Blanc-Sablon": [
-            "-3:48:28 - LMT 1884 -3:48:28",
-            "-4 Canada A%sT 1970 -4",
-            "-4 - AST"
-        ],
-        "America/Boa_Vista": [
-            "-4:2:40 - LMT 1914 -4:2:40",
-            "-4 Brazil AM%sT 1988_8_12 -4",
-            "-4 - AMT 1999_8_30 -4",
-            "-4 Brazil AM%sT 2000_9_15 -3",
-            "-4 - AMT"
-        ],
-        "America/Bogota": [
-            "-4:56:16 - LMT 1884_2_13 -4:56:16",
-            "-4:56:16 - BMT 1914_10_23 -4:56:16",
-            "-5 CO CO%sT"
-        ],
-        "America/Boise": [
-            "-7:44:49 - LMT 1883_10_18_12_15_11 -7:44:49",
-            "-8 US P%sT 1923_4_13_2 -8",
-            "-7 US M%sT 1974 -7",
-            "-7 - MST 1974_1_3_2 -7",
-            "-7 US M%sT"
-        ],
-        "America/Cambridge_Bay": [
-            "0 - zzz 1920",
-            "-7 NT_YK M%sT 1999_9_31_2 -6",
-            "-6 Canada C%sT 2000_9_29_2 -5",
-            "-5 - EST 2000_10_5_0 -5",
-            "-6 - CST 2001_3_1_3 -6",
-            "-7 Canada M%sT"
-        ],
-        "America/Campo_Grande": [
-            "-3:38:28 - LMT 1914 -3:38:28",
-            "-4 Brazil AM%sT"
-        ],
-        "America/Cancun": [
-            "-5:47:4 - LMT 1922_0_1_0_12_56 -5:47:4",
-            "-6 - CST 1981_11_23 -6",
-            "-5 Mexico E%sT 1998_7_2_2 -4",
-            "-6 Mexico C%sT"
-        ],
-        "America/Caracas": [
-            "-4:27:44 - LMT 1890 -4:27:44",
-            "-4:27:40 - CMT 1912_1_12 -4:27:40",
-            "-4:30 - VET 1965 -4:30",
-            "-4 - VET 2007_11_9_03 -4",
-            "-4:30 - VET"
-        ],
-        "America/Cayenne": [
-            "-3:29:20 - LMT 1911_6 -3:29:20",
-            "-4 - GFT 1967_9 -4",
-            "-3 - GFT"
-        ],
-        "America/Cayman": [
-            "-5:25:32 - LMT 1890 -5:25:32",
-            "-5:7:12 - KMT 1912_1 -5:7:12",
-            "-5 - EST"
-        ],
-        "America/Chicago": [
-            "-5:50:36 - LMT 1883_10_18_12_9_24 -5:50:36",
-            "-6 US C%sT 1920 -6",
-            "-6 Chicago C%sT 1936_2_1_2 -6",
-            "-5 - EST 1936_10_15_2 -5",
-            "-6 Chicago C%sT 1942 -6",
-            "-6 US C%sT 1946 -6",
-            "-6 Chicago C%sT 1967 -6",
-            "-6 US C%sT"
-        ],
-        "America/Chihuahua": [
-            "-7:4:20 - LMT 1921_11_31_23_55_40 -7:4:20",
-            "-7 - MST 1927_5_10_23 -7",
-            "-6 - CST 1930_10_15 -6",
-            "-7 - MST 1931_4_1_23 -7",
-            "-6 - CST 1931_9 -6",
-            "-7 - MST 1932_3_1 -7",
-            "-6 - CST 1996 -6",
-            "-6 Mexico C%sT 1998 -6",
-            "-6 - CST 1998_3_5_3 -6",
-            "-7 Mexico M%sT"
-        ],
-        "America/Costa_Rica": [
-            "-5:36:13 - LMT 1890 -5:36:13",
-            "-5:36:13 - SJMT 1921_0_15 -5:36:13",
-            "-6 CR C%sT"
-        ],
-        "America/Creston": [
-            "-7:46:4 - LMT 1884 -7:46:4",
-            "-7 - MST 1916_9_1 -7",
-            "-8 - PST 1918_5_2 -8",
-            "-7 - MST"
-        ],
-        "America/Cuiaba": [
-            "-3:44:20 - LMT 1914 -3:44:20",
-            "-4 Brazil AM%sT 2003_8_24 -4",
-            "-4 - AMT 2004_9_1 -4",
-            "-4 Brazil AM%sT"
-        ],
-        "America/Curacao": [
-            "-4:35:47 - LMT 1912_1_12 -4:35:47",
-            "-4:30 - ANT 1965 -4:30",
-            "-4 - AST"
-        ],
-        "America/Danmarkshavn": [
-            "-1:14:40 - LMT 1916_6_28 -1:14:40",
-            "-3 - WGT 1980_3_6_2 -3",
-            "-3 EU WG%sT 1996 -3",
-            "0 - GMT"
-        ],
-        "America/Dawson": [
-            "-9:17:40 - LMT 1900_7_20 -9:17:40",
-            "-9 NT_YK Y%sT 1973_9_28_0 -9",
-            "-8 NT_YK P%sT 1980 -8",
-            "-8 Canada P%sT"
-        ],
-        "America/Dawson_Creek": [
-            "-8:0:56 - LMT 1884 -8:0:56",
-            "-8 Canada P%sT 1947 -8",
-            "-8 Vanc P%sT 1972_7_30_2 -7",
-            "-7 - MST"
-        ],
-        "America/Denver": [
-            "-6:59:56 - LMT 1883_10_18_12_0_4 -6:59:56",
-            "-7 US M%sT 1920 -7",
-            "-7 Denver M%sT 1942 -7",
-            "-7 US M%sT 1946 -7",
-            "-7 Denver M%sT 1967 -7",
-            "-7 US M%sT"
-        ],
-        "America/Detroit": [
-            "-5:32:11 - LMT 1905 -5:32:11",
-            "-6 - CST 1915_4_15_2 -6",
-            "-5 - EST 1942 -5",
-            "-5 US E%sT 1946 -5",
-            "-5 Detroit E%sT 1973 -5",
-            "-5 US E%sT 1975 -5",
-            "-5 - EST 1975_3_27_2 -5",
-            "-5 US E%sT"
-        ],
-        "America/Dominica": [
-            "-4:5:36 - LMT 1911_6_1_0_1 -4:5:36",
-            "-4 - AST"
-        ],
-        "America/Edmonton": [
-            "-7:33:52 - LMT 1906_8 -7:33:52",
-            "-7 Edm M%sT 1987 -7",
-            "-7 Canada M%sT"
-        ],
-        "America/Eirunepe": [
-            "-4:39:28 - LMT 1914 -4:39:28",
-            "-5 Brazil AC%sT 1988_8_12 -5",
-            "-5 - ACT 1993_8_28 -5",
-            "-5 Brazil AC%sT 1994_8_22 -5",
-            "-5 - ACT 2008_5_24_00 -5",
-            "-4 - AMT"
-        ],
-        "America/El_Salvador": [
-            "-5:56:48 - LMT 1921 -5:56:48",
-            "-6 Salv C%sT"
-        ],
-        "America/Fortaleza": [
-            "-2:34 - LMT 1914 -2:34",
-            "-3 Brazil BR%sT 1990_8_17 -3",
-            "-3 - BRT 1999_8_30 -3",
-            "-3 Brazil BR%sT 2000_9_22 -2",
-            "-3 - BRT 2001_8_13 -3",
-            "-3 Brazil BR%sT 2002_9_1 -3",
-            "-3 - BRT"
-        ],
-        "America/Glace_Bay": [
-            "-3:59:48 - LMT 1902_5_15 -3:59:48",
-            "-4 Canada A%sT 1953 -4",
-            "-4 Halifax A%sT 1954 -4",
-            "-4 - AST 1972 -4",
-            "-4 Halifax A%sT 1974 -4",
-            "-4 Canada A%sT"
-        ],
-        "America/Godthab": [
-            "-3:26:56 - LMT 1916_6_28 -3:26:56",
-            "-3 - WGT 1980_3_6_2 -3",
-            "-3 EU WG%sT"
-        ],
-        "America/Goose_Bay": [
-            "-4:1:40 - LMT 1884 -4:1:40",
-            "-3:30:52 - NST 1918 -3:30:52",
-            "-3:30:52 Canada N%sT 1919 -3:30:52",
-            "-3:30:52 - NST 1935_2_30 -3:30:52",
-            "-3:30 - NST 1936 -3:30",
-            "-3:30 StJohns N%sT 1942_4_11 -3:30",
-            "-3:30 Canada N%sT 1946 -3:30",
-            "-3:30 StJohns N%sT 1966_2_15_2 -3:30",
-            "-4 StJohns A%sT 2011_10 -3",
-            "-4 Canada A%sT"
-        ],
-        "America/Grand_Turk": [
-            "-4:44:32 - LMT 1890 -4:44:32",
-            "-5:7:12 - KMT 1912_1 -5:7:12",
-            "-5 TC E%sT"
-        ],
-        "America/Grenada": [
-            "-4:7 - LMT 1911_6 -4:7",
-            "-4 - AST"
-        ],
-        "America/Guadeloupe": [
-            "-4:6:8 - LMT 1911_5_8 -4:6:8",
-            "-4 - AST"
-        ],
-        "America/Guatemala": [
-            "-6:2:4 - LMT 1918_9_5 -6:2:4",
-            "-6 Guat C%sT"
-        ],
-        "America/Guayaquil": [
-            "-5:19:20 - LMT 1890 -5:19:20",
-            "-5:14 - QMT 1931 -5:14",
-            "-5 - ECT"
-        ],
-        "America/Guyana": [
-            "-3:52:40 - LMT 1915_2 -3:52:40",
-            "-3:45 - GBGT 1966_4_26 -3:45",
-            "-3:45 - GYT 1975_6_31 -3:45",
-            "-3 - GYT 1991 -3",
-            "-4 - GYT"
-        ],
-        "America/Halifax": [
-            "-4:14:24 - LMT 1902_5_15 -4:14:24",
-            "-4 Halifax A%sT 1918 -4",
-            "-4 Canada A%sT 1919 -4",
-            "-4 Halifax A%sT 1942_1_9_2 -4",
-            "-4 Canada A%sT 1946 -4",
-            "-4 Halifax A%sT 1974 -4",
-            "-4 Canada A%sT"
-        ],
-        "America/Havana": [
-            "-5:29:28 - LMT 1890 -5:29:28",
-            "-5:29:36 - HMT 1925_6_19_12 -5:29:36",
-            "-5 Cuba C%sT"
-        ],
-        "America/Hermosillo": [
-            "-7:23:52 - LMT 1921_11_31_23_36_8 -7:23:52",
-            "-7 - MST 1927_5_10_23 -7",
-            "-6 - CST 1930_10_15 -6",
-            "-7 - MST 1931_4_1_23 -7",
-            "-6 - CST 1931_9 -6",
-            "-7 - MST 1932_3_1 -7",
-            "-6 - CST 1942_3_24 -6",
-            "-7 - MST 1949_0_14 -7",
-            "-8 - PST 1970 -8",
-            "-7 Mexico M%sT 1999 -7",
-            "-7 - MST"
-        ],
-        "America/Indiana/Indianapolis": [
-            "-5:44:38 - LMT 1883_10_18_12_15_22 -5:44:38",
-            "-6 US C%sT 1920 -6",
-            "-6 Indianapolis C%sT 1942 -6",
-            "-6 US C%sT 1946 -6",
-            "-6 Indianapolis C%sT 1955_3_24_2 -6",
-            "-5 - EST 1957_8_29_2 -5",
-            "-6 - CST 1958_3_27_2 -6",
-            "-5 - EST 1969 -5",
-            "-5 US E%sT 1971 -5",
-            "-5 - EST 2006 -5",
-            "-5 US E%sT"
-        ],
-        "America/Indiana/Knox": [
-            "-5:46:30 - LMT 1883_10_18_12_13_30 -5:46:30",
-            "-6 US C%sT 1947 -6",
-            "-6 Starke C%sT 1962_3_29_2 -6",
-            "-5 - EST 1963_9_27_2 -5",
-            "-6 US C%sT 1991_9_27_2 -5",
-            "-5 - EST 2006_3_2_2 -5",
-            "-6 US C%sT"
-        ],
-        "America/Indiana/Marengo": [
-            "-5:45:23 - LMT 1883_10_18_12_14_37 -5:45:23",
-            "-6 US C%sT 1951 -6",
-            "-6 Marengo C%sT 1961_3_30_2 -6",
-            "-5 - EST 1969 -5",
-            "-5 US E%sT 1974_0_6_2 -5",
-            "-5 - CDT 1974_9_27_2 -5",
-            "-5 US E%sT 1976 -5",
-            "-5 - EST 2006 -5",
-            "-5 US E%sT"
-        ],
-        "America/Indiana/Petersburg": [
-            "-5:49:7 - LMT 1883_10_18_12_10_53 -5:49:7",
-            "-6 US C%sT 1955 -6",
-            "-6 Pike C%sT 1965_3_25_2 -6",
-            "-5 - EST 1966_9_30_2 -5",
-            "-6 US C%sT 1977_9_30_2 -5",
-            "-5 - EST 2006_3_2_2 -5",
-            "-6 US C%sT 2007_10_4_2 -5",
-            "-5 US E%sT"
-        ],
-        "America/Indiana/Tell_City": [
-            "-5:47:3 - LMT 1883_10_18_12_12_57 -5:47:3",
-            "-6 US C%sT 1946 -6",
-            "-6 Perry C%sT 1964_3_26_2 -6",
-            "-5 - EST 1969 -5",
-            "-5 US E%sT 1971 -5",
-            "-5 - EST 2006_3_2_2 -5",
-            "-6 US C%sT"
-        ],
-        "America/Indiana/Vevay": [
-            "-5:40:16 - LMT 1883_10_18_12_19_44 -5:40:16",
-            "-6 US C%sT 1954_3_25_2 -6",
-            "-5 - EST 1969 -5",
-            "-5 US E%sT 1973 -5",
-            "-5 - EST 2006 -5",
-            "-5 US E%sT"
-        ],
-        "America/Indiana/Vincennes": [
-            "-5:50:7 - LMT 1883_10_18_12_9_53 -5:50:7",
-            "-6 US C%sT 1946 -6",
-            "-6 Vincennes C%sT 1964_3_26_2 -6",
-            "-5 - EST 1969 -5",
-            "-5 US E%sT 1971 -5",
-            "-5 - EST 2006_3_2_2 -5",
-            "-6 US C%sT 2007_10_4_2 -5",
-            "-5 US E%sT"
-        ],
-        "America/Indiana/Winamac": [
-            "-5:46:25 - LMT 1883_10_18_12_13_35 -5:46:25",
-            "-6 US C%sT 1946 -6",
-            "-6 Pulaski C%sT 1961_3_30_2 -6",
-            "-5 - EST 1969 -5",
-            "-5 US E%sT 1971 -5",
-            "-5 - EST 2006_3_2_2 -5",
-            "-6 US C%sT 2007_2_11_2 -6",
-            "-5 US E%sT"
-        ],
-        "America/Inuvik": [
-            "0 - zzz 1953",
-            "-8 NT_YK P%sT 1979_3_29_2 -8",
-            "-7 NT_YK M%sT 1980 -7",
-            "-7 Canada M%sT"
-        ],
-        "America/Iqaluit": [
-            "0 - zzz 1942_7",
-            "-5 NT_YK E%sT 1999_9_31_2 -4",
-            "-6 Canada C%sT 2000_9_29_2 -5",
-            "-5 Canada E%sT"
-        ],
-        "America/Jamaica": [
-            "-5:7:12 - LMT 1890 -5:7:12",
-            "-5:7:12 - KMT 1912_1 -5:7:12",
-            "-5 - EST 1974_3_28_2 -5",
-            "-5 US E%sT 1984 -5",
-            "-5 - EST"
-        ],
-        "America/Juneau": [
-            "15:2:19 - LMT 1867_9_18 15:2:19",
-            "-8:57:41 - LMT 1900_7_20_12 -8:57:41",
-            "-8 - PST 1942 -8",
-            "-8 US P%sT 1946 -8",
-            "-8 - PST 1969 -8",
-            "-8 US P%sT 1980_3_27_2 -8",
-            "-9 US Y%sT 1980_9_26_2 -8",
-            "-8 US P%sT 1983_9_30_2 -7",
-            "-9 US Y%sT 1983_10_30 -9",
-            "-9 US AK%sT"
-        ],
-        "America/Kentucky/Louisville": [
-            "-5:43:2 - LMT 1883_10_18_12_16_58 -5:43:2",
-            "-6 US C%sT 1921 -6",
-            "-6 Louisville C%sT 1942 -6",
-            "-6 US C%sT 1946 -6",
-            "-6 Louisville C%sT 1961_6_23_2 -5",
-            "-5 - EST 1968 -5",
-            "-5 US E%sT 1974_0_6_2 -5",
-            "-5 - CDT 1974_9_27_2 -5",
-            "-5 US E%sT"
-        ],
-        "America/Kentucky/Monticello": [
-            "-5:39:24 - LMT 1883_10_18_12_20_36 -5:39:24",
-            "-6 US C%sT 1946 -6",
-            "-6 - CST 1968 -6",
-            "-6 US C%sT 2000_9_29_2 -5",
-            "-5 US E%sT"
-        ],
-        "America/La_Paz": [
-            "-4:32:36 - LMT 1890 -4:32:36",
-            "-4:32:36 - CMT 1931_9_15 -4:32:36",
-            "-3:32:36 - BOST 1932_2_21 -3:32:36",
-            "-4 - BOT"
-        ],
-        "America/Lima": [
-            "-5:8:12 - LMT 1890 -5:8:12",
-            "-5:8:36 - LMT 1908_6_28 -5:8:36",
-            "-5 Peru PE%sT"
-        ],
-        "America/Los_Angeles": [
-            "-7:52:58 - LMT 1883_10_18_12_7_2 -7:52:58",
-            "-8 US P%sT 1946 -8",
-            "-8 CA P%sT 1967 -8",
-            "-8 US P%sT"
-        ],
-        "America/Maceio": [
-            "-2:22:52 - LMT 1914 -2:22:52",
-            "-3 Brazil BR%sT 1990_8_17 -3",
-            "-3 - BRT 1995_9_13 -3",
-            "-3 Brazil BR%sT 1996_8_4 -3",
-            "-3 - BRT 1999_8_30 -3",
-            "-3 Brazil BR%sT 2000_9_22 -2",
-            "-3 - BRT 2001_8_13 -3",
-            "-3 Brazil BR%sT 2002_9_1 -3",
-            "-3 - BRT"
-        ],
-        "America/Managua": [
-            "-5:45:8 - LMT 1890 -5:45:8",
-            "-5:45:12 - MMT 1934_5_23 -5:45:12",
-            "-6 - CST 1973_4 -6",
-            "-5 - EST 1975_1_16 -5",
-            "-6 Nic C%sT 1992_0_1_4 -6",
-            "-5 - EST 1992_8_24 -5",
-            "-6 - CST 1993 -6",
-            "-5 - EST 1997 -5",
-            "-6 Nic C%sT"
-        ],
-        "America/Manaus": [
-            "-4:0:4 - LMT 1914 -4:0:4",
-            "-4 Brazil AM%sT 1988_8_12 -4",
-            "-4 - AMT 1993_8_28 -4",
-            "-4 Brazil AM%sT 1994_8_22 -4",
-            "-4 - AMT"
-        ],
-        "America/Martinique": [
-            "-4:4:20 - LMT 1890 -4:4:20",
-            "-4:4:20 - FFMT 1911_4 -4:4:20",
-            "-4 - AST 1980_3_6 -4",
-            "-3 - ADT 1980_8_28 -3",
-            "-4 - AST"
-        ],
-        "America/Matamoros": [
-            "-6:40 - LMT 1921_11_31_23_20 -6:40",
-            "-6 - CST 1988 -6",
-            "-6 US C%sT 1989 -6",
-            "-6 Mexico C%sT 2010 -6",
-            "-6 US C%sT"
-        ],
-        "America/Mazatlan": [
-            "-7:5:40 - LMT 1921_11_31_23_54_20 -7:5:40",
-            "-7 - MST 1927_5_10_23 -7",
-            "-6 - CST 1930_10_15 -6",
-            "-7 - MST 1931_4_1_23 -7",
-            "-6 - CST 1931_9 -6",
-            "-7 - MST 1932_3_1 -7",
-            "-6 - CST 1942_3_24 -6",
-            "-7 - MST 1949_0_14 -7",
-            "-8 - PST 1970 -8",
-            "-7 Mexico M%sT"
-        ],
-        "America/Menominee": [
-            "-5:50:27 - LMT 1885_8_18_12 -5:50:27",
-            "-6 US C%sT 1946 -6",
-            "-6 Menominee C%sT 1969_3_27_2 -6",
-            "-5 - EST 1973_3_29_2 -5",
-            "-6 US C%sT"
-        ],
-        "America/Merida": [
-            "-5:58:28 - LMT 1922_0_1_0_1_32 -5:58:28",
-            "-6 - CST 1981_11_23 -6",
-            "-5 - EST 1982_11_2 -5",
-            "-6 Mexico C%sT"
-        ],
-        "America/Metlakatla": [
-            "15:13:42 - LMT 1867_9_18 15:13:42",
-            "-8:46:18 - LMT 1900_7_20_12 -8:46:18",
-            "-8 - PST 1942 -8",
-            "-8 US P%sT 1946 -8",
-            "-8 - PST 1969 -8",
-            "-8 US P%sT 1983_9_30_2 -7",
-            "-8 - MeST"
-        ],
-        "America/Mexico_City": [
-            "-6:36:36 - LMT 1922_0_1_0_23_24 -6:36:36",
-            "-7 - MST 1927_5_10_23 -7",
-            "-6 - CST 1930_10_15 -6",
-            "-7 - MST 1931_4_1_23 -7",
-            "-6 - CST 1931_9 -6",
-            "-7 - MST 1932_3_1 -7",
-            "-6 Mexico C%sT 2001_8_30_02 -5",
-            "-6 - CST 2002_1_20 -6",
-            "-6 Mexico C%sT"
-        ],
-        "America/Miquelon": [
-            "-3:44:40 - LMT 1911_4_15 -3:44:40",
-            "-4 - AST 1980_4 -4",
-            "-3 - PMST 1987 -3",
-            "-3 Canada PM%sT"
-        ],
-        "America/Moncton": [
-            "-4:19:8 - LMT 1883_11_9 -4:19:8",
-            "-5 - EST 1902_5_15 -5",
-            "-4 Canada A%sT 1933 -4",
-            "-4 Moncton A%sT 1942 -4",
-            "-4 Canada A%sT 1946 -4",
-            "-4 Moncton A%sT 1973 -4",
-            "-4 Canada A%sT 1993 -4",
-            "-4 Moncton A%sT 2007 -4",
-            "-4 Canada A%sT"
-        ],
-        "America/Monterrey": [
-            "-6:41:16 - LMT 1921_11_31_23_18_44 -6:41:16",
-            "-6 - CST 1988 -6",
-            "-6 US C%sT 1989 -6",
-            "-6 Mexico C%sT"
-        ],
-        "America/Montevideo": [
-            "-3:44:44 - LMT 1898_5_28 -3:44:44",
-            "-3:44:44 - MMT 1920_4_1 -3:44:44",
-            "-3:30 Uruguay UY%sT 1942_11_14 -3:30",
-            "-3 Uruguay UY%sT"
-        ],
-        "America/Montreal": [
-            "-4:54:16 - LMT 1884 -4:54:16",
-            "-5 Mont E%sT 1918 -5",
-            "-5 Canada E%sT 1919 -5",
-            "-5 Mont E%sT 1942_1_9_2 -5",
-            "-5 Canada E%sT 1946 -5",
-            "-5 Mont E%sT 1974 -5",
-            "-5 Canada E%sT"
-        ],
-        "America/Montserrat": [
-            "-4:8:52 - LMT 1911_6_1_0_1 -4:8:52",
-            "-4 - AST"
-        ],
-        "America/Nassau": [
-            "-5:9:30 - LMT 1912_2_2 -5:9:30",
-            "-5 Bahamas E%sT 1976 -5",
-            "-5 US E%sT"
-        ],
-        "America/New_York": [
-            "-4:56:2 - LMT 1883_10_18_12_3_58 -4:56:2",
-            "-5 US E%sT 1920 -5",
-            "-5 NYC E%sT 1942 -5",
-            "-5 US E%sT 1946 -5",
-            "-5 NYC E%sT 1967 -5",
-            "-5 US E%sT"
-        ],
-        "America/Nipigon": [
-            "-5:53:4 - LMT 1895 -5:53:4",
-            "-5 Canada E%sT 1940_8_29 -5",
-            "-4 - EDT 1942_1_9_2 -5",
-            "-5 Canada E%sT"
-        ],
-        "America/Nome": [
-            "12:58:21 - LMT 1867_9_18 12:58:21",
-            "-11:1:38 - LMT 1900_7_20_12 -11:1:38",
-            "-11 - NST 1942 -11",
-            "-11 US N%sT 1946 -11",
-            "-11 - NST 1967_3 -11",
-            "-11 - BST 1969 -11",
-            "-11 US B%sT 1983_9_30_2 -10",
-            "-9 US Y%sT 1983_10_30 -9",
-            "-9 US AK%sT"
-        ],
-        "America/Noronha": [
-            "-2:9:40 - LMT 1914 -2:9:40",
-            "-2 Brazil FN%sT 1990_8_17 -2",
-            "-2 - FNT 1999_8_30 -2",
-            "-2 Brazil FN%sT 2000_9_15 -1",
-            "-2 - FNT 2001_8_13 -2",
-            "-2 Brazil FN%sT 2002_9_1 -2",
-            "-2 - FNT"
-        ],
-        "America/North_Dakota/Beulah": [
-            "-6:47:7 - LMT 1883_10_18_12_12_53 -6:47:7",
-            "-7 US M%sT 2010_10_7_2 -6",
-            "-6 US C%sT"
-        ],
-        "America/North_Dakota/Center": [
-            "-6:45:12 - LMT 1883_10_18_12_14_48 -6:45:12",
-            "-7 US M%sT 1992_9_25_02 -6",
-            "-6 US C%sT"
-        ],
-        "America/North_Dakota/New_Salem": [
-            "-6:45:39 - LMT 1883_10_18_12_14_21 -6:45:39",
-            "-7 US M%sT 2003_9_26_02 -6",
-            "-6 US C%sT"
-        ],
-        "America/Ojinaga": [
-            "-6:57:40 - LMT 1922_0_1_0_2_20 -6:57:40",
-            "-7 - MST 1927_5_10_23 -7",
-            "-6 - CST 1930_10_15 -6",
-            "-7 - MST 1931_4_1_23 -7",
-            "-6 - CST 1931_9 -6",
-            "-7 - MST 1932_3_1 -7",
-            "-6 - CST 1996 -6",
-            "-6 Mexico C%sT 1998 -6",
-            "-6 - CST 1998_3_5_3 -6",
-            "-7 Mexico M%sT 2010 -7",
-            "-7 US M%sT"
-        ],
-        "America/Panama": [
-            "-5:18:8 - LMT 1890 -5:18:8",
-            "-5:19:36 - CMT 1908_3_22 -5:19:36",
-            "-5 - EST"
-        ],
-        "America/Pangnirtung": [
-            "0 - zzz 1921",
-            "-4 NT_YK A%sT 1995_3_2_2 -4",
-            "-5 Canada E%sT 1999_9_31_2 -4",
-            "-6 Canada C%sT 2000_9_29_2 -5",
-            "-5 Canada E%sT"
-        ],
-        "America/Paramaribo": [
-            "-3:40:40 - LMT 1911 -3:40:40",
-            "-3:40:52 - PMT 1935 -3:40:52",
-            "-3:40:36 - PMT 1945_9 -3:40:36",
-            "-3:30 - NEGT 1975_10_20 -3:30",
-            "-3:30 - SRT 1984_9 -3:30",
-            "-3 - SRT"
-        ],
-        "America/Phoenix": [
-            "-7:28:18 - LMT 1883_10_18_11_31_42 -7:28:18",
-            "-7 US M%sT 1944_0_1_00_1 -6",
-            "-7 - MST 1944_3_1_00_1 -7",
-            "-7 US M%sT 1944_9_1_00_1 -6",
-            "-7 - MST 1967 -7",
-            "-7 US M%sT 1968_2_21 -7",
-            "-7 - MST"
-        ],
-        "America/Port-au-Prince": [
-            "-4:49:20 - LMT 1890 -4:49:20",
-            "-4:49 - PPMT 1917_0_24_12 -4:49",
-            "-5 Haiti E%sT"
-        ],
-        "America/Port_of_Spain": [
-            "-4:6:4 - LMT 1912_2_2 -4:6:4",
-            "-4 - AST"
-        ],
-        "America/Porto_Velho": [
-            "-4:15:36 - LMT 1914 -4:15:36",
-            "-4 Brazil AM%sT 1988_8_12 -4",
-            "-4 - AMT"
-        ],
-        "America/Puerto_Rico": [
-            "-4:24:25 - LMT 1899_2_28_12 -4:24:25",
-            "-4 - AST 1942_4_3 -4",
-            "-4 US A%sT 1946 -4",
-            "-4 - AST"
-        ],
-        "America/Rainy_River": [
-            "-6:18:16 - LMT 1895 -6:18:16",
-            "-6 Canada C%sT 1940_8_29 -6",
-            "-5 - CDT 1942_1_9_2 -6",
-            "-6 Canada C%sT"
-        ],
-        "America/Rankin_Inlet": [
-            "0 - zzz 1957",
-            "-6 NT_YK C%sT 2000_9_29_2 -5",
-            "-5 - EST 2001_3_1_3 -5",
-            "-6 Canada C%sT"
-        ],
-        "America/Recife": [
-            "-2:19:36 - LMT 1914 -2:19:36",
-            "-3 Brazil BR%sT 1990_8_17 -3",
-            "-3 - BRT 1999_8_30 -3",
-            "-3 Brazil BR%sT 2000_9_15 -2",
-            "-3 - BRT 2001_8_13 -3",
-            "-3 Brazil BR%sT 2002_9_1 -3",
-            "-3 - BRT"
-        ],
-        "America/Regina": [
-            "-6:58:36 - LMT 1905_8 -6:58:36",
-            "-7 Regina M%sT 1960_3_24_2 -7",
-            "-6 - CST"
-        ],
-        "America/Resolute": [
-            "0 - zzz 1947_7_31",
-            "-6 NT_YK C%sT 2000_9_29_2 -5",
-            "-5 - EST 2001_3_1_3 -5",
-            "-6 Canada C%sT 2006_9_29_2 -5",
-            "-5 - EST 2007_2_11_3 -5",
-            "-6 Canada C%sT"
-        ],
-        "America/Rio_Branco": [
-            "-4:31:12 - LMT 1914 -4:31:12",
-            "-5 Brazil AC%sT 1988_8_12 -5",
-            "-5 - ACT 2008_5_24_00 -5",
-            "-4 - AMT"
-        ],
-        "America/Santa_Isabel": [
-            "-7:39:28 - LMT 1922_0_1_0_20_32 -7:39:28",
-            "-7 - MST 1924 -7",
-            "-8 - PST 1927_5_10_23 -8",
-            "-7 - MST 1930_10_15 -7",
-            "-8 - PST 1931_3_1 -8",
-            "-7 - PDT 1931_8_30 -7",
-            "-8 - PST 1942_3_24 -8",
-            "-7 - PWT 1945_7_14_23",
-            "-7 - PPT 1945_10_12 -7",
-            "-8 - PST 1948_3_5 -8",
-            "-7 - PDT 1949_0_14 -7",
-            "-8 - PST 1954 -8",
-            "-8 CA P%sT 1961 -8",
-            "-8 - PST 1976 -8",
-            "-8 US P%sT 1996 -8",
-            "-8 Mexico P%sT 2001 -8",
-            "-8 US P%sT 2002_1_20 -8",
-            "-8 Mexico P%sT"
-        ],
-        "America/Santarem": [
-            "-3:38:48 - LMT 1914 -3:38:48",
-            "-4 Brazil AM%sT 1988_8_12 -4",
-            "-4 - AMT 2008_5_24_00 -4",
-            "-3 - BRT"
-        ],
-        "America/Santiago": [
-            "-4:42:46 - LMT 1890 -4:42:46",
-            "-4:42:46 - SMT 1910 -4:42:46",
-            "-5 - CLT 1916_6_1 -5",
-            "-4:42:46 - SMT 1918_8_1 -4:42:46",
-            "-4 - CLT 1919_6_1 -4",
-            "-4:42:46 - SMT 1927_8_1 -4:42:46",
-            "-5 Chile CL%sT 1947_4_22 -5",
-            "-4 Chile CL%sT"
-        ],
-        "America/Santo_Domingo": [
-            "-4:39:36 - LMT 1890 -4:39:36",
-            "-4:40 - SDMT 1933_3_1_12 -4:40",
-            "-5 DR E%sT 1974_9_27 -5",
-            "-4 - AST 2000_9_29_02 -4",
-            "-5 US E%sT 2000_11_3_01 -5",
-            "-4 - AST"
-        ],
-        "America/Sao_Paulo": [
-            "-3:6:28 - LMT 1914 -3:6:28",
-            "-3 Brazil BR%sT 1963_9_23_00 -3",
-            "-2 - BRST 1964 -2",
-            "-3 Brazil BR%sT"
-        ],
-        "America/Scoresbysund": [
-            "-1:27:52 - LMT 1916_6_28 -1:27:52",
-            "-2 - CGT 1980_3_6_2 -2",
-            "-2 C-Eur CG%sT 1981_2_29 -2",
-            "-1 EU EG%sT"
-        ],
-        "America/Sitka": [
-            "14:58:47 - LMT 1867_9_18 14:58:47",
-            "-9:1:13 - LMT 1900_7_20_12 -9:1:13",
-            "-8 - PST 1942 -8",
-            "-8 US P%sT 1946 -8",
-            "-8 - PST 1969 -8",
-            "-8 US P%sT 1983_9_30_2 -7",
-            "-9 US Y%sT 1983_10_30 -9",
-            "-9 US AK%sT"
-        ],
-        "America/St_Johns": [
-            "-3:30:52 - LMT 1884 -3:30:52",
-            "-3:30:52 StJohns N%sT 1918 -3:30:52",
-            "-3:30:52 Canada N%sT 1919 -3:30:52",
-            "-3:30:52 StJohns N%sT 1935_2_30 -3:30:52",
-            "-3:30 StJohns N%sT 1942_4_11 -3:30",
-            "-3:30 Canada N%sT 1946 -3:30",
-            "-3:30 StJohns N%sT 2011_10 -2:30",
-            "-3:30 Canada N%sT"
-        ],
-        "America/St_Kitts": [
-            "-4:10:52 - LMT 1912_2_2 -4:10:52",
-            "-4 - AST"
-        ],
-        "America/St_Lucia": [
-            "-4:4 - LMT 1890 -4:4",
-            "-4:4 - CMT 1912 -4:4",
-            "-4 - AST"
-        ],
-        "America/St_Thomas": [
-            "-4:19:44 - LMT 1911_6 -4:19:44",
-            "-4 - AST"
-        ],
-        "America/St_Vincent": [
-            "-4:4:56 - LMT 1890 -4:4:56",
-            "-4:4:56 - KMT 1912 -4:4:56",
-            "-4 - AST"
-        ],
-        "America/Swift_Current": [
-            "-7:11:20 - LMT 1905_8 -7:11:20",
-            "-7 Canada M%sT 1946_3_28_2 -7",
-            "-7 Regina M%sT 1950 -7",
-            "-7 Swift M%sT 1972_3_30_2 -7",
-            "-6 - CST"
-        ],
-        "America/Tegucigalpa": [
-            "-5:48:52 - LMT 1921_3 -5:48:52",
-            "-6 Hond C%sT"
-        ],
-        "America/Thule": [
-            "-4:35:8 - LMT 1916_6_28 -4:35:8",
-            "-4 Thule A%sT"
-        ],
-        "America/Thunder_Bay": [
-            "-5:57 - LMT 1895 -5:57",
-            "-6 - CST 1910 -6",
-            "-5 - EST 1942 -5",
-            "-5 Canada E%sT 1970 -5",
-            "-5 Mont E%sT 1973 -5",
-            "-5 - EST 1974 -5",
-            "-5 Canada E%sT"
-        ],
-        "America/Tijuana": [
-            "-7:48:4 - LMT 1922_0_1_0_11_56 -7:48:4",
-            "-7 - MST 1924 -7",
-            "-8 - PST 1927_5_10_23 -8",
-            "-7 - MST 1930_10_15 -7",
-            "-8 - PST 1931_3_1 -8",
-            "-7 - PDT 1931_8_30 -7",
-            "-8 - PST 1942_3_24 -8",
-            "-7 - PWT 1945_7_14_23",
-            "-7 - PPT 1945_10_12 -7",
-            "-8 - PST 1948_3_5 -8",
-            "-7 - PDT 1949_0_14 -7",
-            "-8 - PST 1954 -8",
-            "-8 CA P%sT 1961 -8",
-            "-8 - PST 1976 -8",
-            "-8 US P%sT 1996 -8",
-            "-8 Mexico P%sT 2001 -8",
-            "-8 US P%sT 2002_1_20 -8",
-            "-8 Mexico P%sT 2010 -8",
-            "-8 US P%sT"
-        ],
-        "America/Toronto": [
-            "-5:17:32 - LMT 1895 -5:17:32",
-            "-5 Canada E%sT 1919 -5",
-            "-5 Toronto E%sT 1942_1_9_2 -5",
-            "-5 Canada E%sT 1946 -5",
-            "-5 Toronto E%sT 1974 -5",
-            "-5 Canada E%sT"
-        ],
-        "America/Tortola": [
-            "-4:18:28 - LMT 1911_6 -4:18:28",
-            "-4 - AST"
-        ],
-        "America/Vancouver": [
-            "-8:12:28 - LMT 1884 -8:12:28",
-            "-8 Vanc P%sT 1987 -8",
-            "-8 Canada P%sT"
-        ],
-        "America/Whitehorse": [
-            "-9:0:12 - LMT 1900_7_20 -9:0:12",
-            "-9 NT_YK Y%sT 1966_6_1_2 -9",
-            "-8 NT_YK P%sT 1980 -8",
-            "-8 Canada P%sT"
-        ],
-        "America/Winnipeg": [
-            "-6:28:36 - LMT 1887_6_16 -6:28:36",
-            "-6 Winn C%sT 2006 -6",
-            "-6 Canada C%sT"
-        ],
-        "America/Yakutat": [
-            "14:41:5 - LMT 1867_9_18 14:41:5",
-            "-9:18:55 - LMT 1900_7_20_12 -9:18:55",
-            "-9 - YST 1942 -9",
-            "-9 US Y%sT 1946 -9",
-            "-9 - YST 1969 -9",
-            "-9 US Y%sT 1983_10_30 -9",
-            "-9 US AK%sT"
-        ],
-        "America/Yellowknife": [
-            "0 - zzz 1935",
-            "-7 NT_YK M%sT 1980 -7",
-            "-7 Canada M%sT"
-        ],
-        "Antarctica/Casey": [
-            "0 - zzz 1969",
-            "8 - WST 2009_9_18_2 8",
-            "11 - CAST 2010_2_5_2 11",
-            "8 - WST 2011_9_28_2 8",
-            "11 - CAST 2012_1_21_17",
-            "8 - WST"
-        ],
-        "Antarctica/Davis": [
-            "0 - zzz 1957_0_13",
-            "7 - DAVT 1964_10 7",
-            "0 - zzz 1969_1",
-            "7 - DAVT 2009_9_18_2 7",
-            "5 - DAVT 2010_2_10_20",
-            "7 - DAVT 2011_9_28_2 7",
-            "5 - DAVT 2012_1_21_20",
-            "7 - DAVT"
-        ],
-        "Antarctica/DumontDUrville": [
-            "0 - zzz 1947",
-            "10 - PMT 1952_0_14 10",
-            "0 - zzz 1956_10",
-            "10 - DDUT"
-        ],
-        "Antarctica/Macquarie": [
-            "0 - zzz 1899_10",
-            "10 - EST 1916_9_1_2 10",
-            "11 - EST 1917_1 11",
-            "10 Aus EST 1919_3 10",
-            "0 - zzz 1948_2_25",
-            "10 Aus EST 1967 10",
-            "10 AT EST 2010_3_4_3 11",
-            "11 - MIST"
-        ],
-        "Antarctica/Mawson": [
-            "0 - zzz 1954_1_13",
-            "6 - MAWT 2009_9_18_2 6",
-            "5 - MAWT"
-        ],
-        "Antarctica/McMurdo": [
-            "0 - zzz 1956",
-            "12 NZAQ NZ%sT"
-        ],
-        "Antarctica/Palmer": [
-            "0 - zzz 1965",
-            "-4 ArgAQ AR%sT 1969_9_5 -4",
-            "-3 ArgAQ AR%sT 1982_4 -3",
-            "-4 ChileAQ CL%sT"
-        ],
-        "Antarctica/Rothera": [
-            "0 - zzz 1976_11_1",
-            "-3 - ROTT"
-        ],
-        "Antarctica/Syowa": [
-            "0 - zzz 1957_0_29",
-            "3 - SYOT"
-        ],
-        "Antarctica/Vostok": [
-            "0 - zzz 1957_11_16",
-            "6 - VOST"
-        ],
-        "Europe/Oslo": [
-            "0:43 - LMT 1895_0_1 0:43",
-            "1 Norway CE%sT 1940_7_10_23 1",
-            "1 C-Eur CE%sT 1945_3_2_2 1",
-            "1 Norway CE%sT 1980 1",
-            "1 EU CE%sT"
-        ],
-        "Asia/Aden": [
-            "2:59:54 - LMT 1950 2:59:54",
-            "3 - AST"
-        ],
-        "Asia/Almaty": [
-            "5:7:48 - LMT 1924_4_2 5:7:48",
-            "5 - ALMT 1930_5_21 5",
-            "6 RussiaAsia ALM%sT 1991 6",
-            "6 - ALMT 1992 6",
-            "6 RussiaAsia ALM%sT 2005_2_15 6",
-            "6 - ALMT"
-        ],
-        "Asia/Amman": [
-            "2:23:44 - LMT 1931 2:23:44",
-            "2 Jordan EE%sT"
-        ],
-        "Asia/Anadyr": [
-            "11:49:56 - LMT 1924_4_2 11:49:56",
-            "12 - ANAT 1930_5_21 12",
-            "13 Russia ANA%sT 1982_3_1_0 13",
-            "12 Russia ANA%sT 1991_2_31_2 12",
-            "11 Russia ANA%sT 1992_0_19_2 11",
-            "12 Russia ANA%sT 2010_2_28_2 12",
-            "11 Russia ANA%sT 2011_2_27_2 11",
-            "12 - ANAT"
-        ],
-        "Asia/Aqtau": [
-            "3:21:4 - LMT 1924_4_2 3:21:4",
-            "4 - FORT 1930_5_21 4",
-            "5 - FORT 1963 5",
-            "5 - SHET 1981_9_1 5",
-            "6 - SHET 1982_3_1 6",
-            "5 RussiaAsia SHE%sT 1991 5",
-            "5 - SHET 1991_11_16 5",
-            "5 RussiaAsia AQT%sT 1995_2_26_2 5",
-            "4 RussiaAsia AQT%sT 2005_2_15 4",
-            "5 - AQTT"
-        ],
-        "Asia/Aqtobe": [
-            "3:48:40 - LMT 1924_4_2 3:48:40",
-            "4 - AKTT 1930_5_21 4",
-            "5 - AKTT 1981_3_1 5",
-            "6 - AKTST 1981_9_1 6",
-            "6 - AKTT 1982_3_1 6",
-            "5 RussiaAsia AKT%sT 1991 5",
-            "5 - AKTT 1991_11_16 5",
-            "5 RussiaAsia AQT%sT 2005_2_15 5",
-            "5 - AQTT"
-        ],
-        "Asia/Ashgabat": [
-            "3:53:32 - LMT 1924_4_2 3:53:32",
-            "4 - ASHT 1930_5_21 4",
-            "5 RussiaAsia ASH%sT 1991_2_31_2 5",
-            "4 RussiaAsia ASH%sT 1991_9_27 4",
-            "4 RussiaAsia TM%sT 1992_0_19_2 4",
-            "5 - TMT"
-        ],
-        "Asia/Baghdad": [
-            "2:57:40 - LMT 1890 2:57:40",
-            "2:57:36 - BMT 1918 2:57:36",
-            "3 - AST 1982_4 3",
-            "3 Iraq A%sT"
-        ],
-        "Asia/Bahrain": [
-            "3:22:20 - LMT 1920 3:22:20",
-            "4 - GST 1972_5 4",
-            "3 - AST"
-        ],
-        "Asia/Baku": [
-            "3:19:24 - LMT 1924_4_2 3:19:24",
-            "3 - BAKT 1957_2 3",
-            "4 RussiaAsia BAK%sT 1991_2_31_2 4",
-            "4 - BAKST 1991_7_30 4",
-            "3 RussiaAsia AZ%sT 1992_8_26_23 4",
-            "4 - AZT 1996 4",
-            "4 EUAsia AZ%sT 1997 4",
-            "4 Azer AZ%sT"
-        ],
-        "Asia/Bangkok": [
-            "6:42:4 - LMT 1880 6:42:4",
-            "6:42:4 - BMT 1920_3 6:42:4",
-            "7 - ICT"
-        ],
-        "Asia/Beirut": [
-            "2:22 - LMT 1880 2:22",
-            "2 Lebanon EE%sT"
-        ],
-        "Asia/Bishkek": [
-            "4:58:24 - LMT 1924_4_2 4:58:24",
-            "5 - FRUT 1930_5_21 5",
-            "6 RussiaAsia FRU%sT 1991_2_31_2 6",
-            "6 - FRUST 1991_7_31_2 6",
-            "5 Kyrgyz KG%sT 2005_7_12 6",
-            "6 - KGT"
-        ],
-        "Asia/Brunei": [
-            "7:39:40 - LMT 1926_2 7:39:40",
-            "7:30 - BNT 1933 7:30",
-            "8 - BNT"
-        ],
-        "Asia/Choibalsan": [
-            "7:38 - LMT 1905_7 7:38",
-            "7 - ULAT 1978 7",
-            "8 - ULAT 1983_3 8",
-            "9 Mongol CHO%sT 2008_2_31 9",
-            "8 Mongol CHO%sT"
-        ],
-        "Asia/Chongqing": [
-            "7:6:20 - LMT 1928 7:6:20",
-            "7 - LONT 1980_4 7",
-            "8 PRC C%sT"
-        ],
-        "Asia/Colombo": [
-            "5:19:24 - LMT 1880 5:19:24",
-            "5:19:32 - MMT 1906 5:19:32",
-            "5:30 - IST 1942_0_5 5:30",
-            "6 - IHST 1942_8 6",
-            "6:30 - IST 1945_9_16_2 6:30",
-            "5:30 - IST 1996_4_25_0 5:30",
-            "6:30 - LKT 1996_9_26_0_30 6:30",
-            "6 - LKT 2006_3_15_0_30 6",
-            "5:30 - IST"
-        ],
-        "Asia/Damascus": [
-            "2:25:12 - LMT 1920 2:25:12",
-            "2 Syria EE%sT"
-        ],
-        "Asia/Dhaka": [
-            "6:1:40 - LMT 1890 6:1:40",
-            "5:53:20 - HMT 1941_9 5:53:20",
-            "6:30 - BURT 1942_4_15 6:30",
-            "5:30 - IST 1942_8 5:30",
-            "6:30 - BURT 1951_8_30 6:30",
-            "6 - DACT 1971_2_26 6",
-            "6 - BDT 2009 6",
-            "6 Dhaka BD%sT"
-        ],
-        "Asia/Dili": [
-            "8:22:20 - LMT 1912 8:22:20",
-            "8 - TLT 1942_1_21_23 8",
-            "9 - JST 1945_8_23 9",
-            "9 - TLT 1976_4_3 9",
-            "8 - CIT 2000_8_17_00 8",
-            "9 - TLT"
-        ],
-        "Asia/Dubai": [
-            "3:41:12 - LMT 1920 3:41:12",
-            "4 - GST"
-        ],
-        "Asia/Dushanbe": [
-            "4:35:12 - LMT 1924_4_2 4:35:12",
-            "5 - DUST 1930_5_21 5",
-            "6 RussiaAsia DUS%sT 1991_2_31_2 6",
-            "6 - DUSST 1991_8_9_2 5",
-            "5 - TJT"
-        ],
-        "Asia/Gaza": [
-            "2:17:52 - LMT 1900_9 2:17:52",
-            "2 Zion EET 1948_4_15 2",
-            "2 EgyptAsia EE%sT 1967_5_5 3",
-            "2 Zion I%sT 1996 2",
-            "2 Jordan EE%sT 1999 2",
-            "2 Palestine EE%sT 2008_7_29_0 3",
-            "2 - EET 2008_8 2",
-            "2 Palestine EE%sT 2010 2",
-            "2 - EET 2010_2_27_0_1 2",
-            "2 Palestine EE%sT 2011_7_1 3",
-            "2 - EET 2012 2",
-            "2 Palestine EE%sT"
-        ],
-        "Asia/Harbin": [
-            "8:26:44 - LMT 1928 8:26:44",
-            "8:30 - CHAT 1932_2 8:30",
-            "8 - CST 1940 8",
-            "9 - CHAT 1966_4 9",
-            "8:30 - CHAT 1980_4 8:30",
-            "8 PRC C%sT"
-        ],
-        "Asia/Hebron": [
-            "2:20:23 - LMT 1900_9 2:20:23",
-            "2 Zion EET 1948_4_15 2",
-            "2 EgyptAsia EE%sT 1967_5_5 3",
-            "2 Zion I%sT 1996 2",
-            "2 Jordan EE%sT 1999 2",
-            "2 Palestine EE%sT"
-        ],
-        "Asia/Ho_Chi_Minh": [
-            "7:6:40 - LMT 1906_5_9 7:6:40",
-            "7:6:20 - SMT 1911_2_11_0_1 7:6:20",
-            "7 - ICT 1912_4 7",
-            "8 - ICT 1931_4 8",
-            "7 - ICT"
-        ],
-        "Asia/Hong_Kong": [
-            "7:36:42 - LMT 1904_9_30 7:36:42",
-            "8 HK HK%sT 1941_11_25 8",
-            "9 - JST 1945_8_15 9",
-            "8 HK HK%sT"
-        ],
-        "Asia/Hovd": [
-            "6:6:36 - LMT 1905_7 6:6:36",
-            "6 - HOVT 1978 6",
-            "7 Mongol HOV%sT"
-        ],
-        "Asia/Irkutsk": [
-            "6:57:20 - LMT 1880 6:57:20",
-            "6:57:20 - IMT 1920_0_25 6:57:20",
-            "7 - IRKT 1930_5_21 7",
-            "8 Russia IRK%sT 1991_2_31_2 8",
-            "7 Russia IRK%sT 1992_0_19_2 7",
-            "8 Russia IRK%sT 2011_2_27_2 8",
-            "9 - IRKT"
-        ],
-        "Asia/Jakarta": [
-            "7:7:12 - LMT 1867_7_10 7:7:12",
-            "7:7:12 - JMT 1923_11_31_23_47_12 7:7:12",
-            "7:20 - JAVT 1932_10 7:20",
-            "7:30 - WIT 1942_2_23 7:30",
-            "9 - JST 1945_8_23 9",
-            "7:30 - WIT 1948_4 7:30",
-            "8 - WIT 1950_4 8",
-            "7:30 - WIT 1964 7:30",
-            "7 - WIT"
-        ],
-        "Asia/Jayapura": [
-            "9:22:48 - LMT 1932_10 9:22:48",
-            "9 - EIT 1944_8_1 9",
-            "9:30 - CST 1964 9:30",
-            "9 - EIT"
-        ],
-        "Asia/Jerusalem": [
-            "2:20:56 - LMT 1880 2:20:56",
-            "2:20:40 - JMT 1918 2:20:40",
-            "2 Zion I%sT"
-        ],
-        "Asia/Kabul": [
-            "4:36:48 - LMT 1890 4:36:48",
-            "4 - AFT 1945 4",
-            "4:30 - AFT"
-        ],
-        "Asia/Kamchatka": [
-            "10:34:36 - LMT 1922_10_10 10:34:36",
-            "11 - PETT 1930_5_21 11",
-            "12 Russia PET%sT 1991_2_31_2 12",
-            "11 Russia PET%sT 1992_0_19_2 11",
-            "12 Russia PET%sT 2010_2_28_2 12",
-            "11 Russia PET%sT 2011_2_27_2 11",
-            "12 - PETT"
-        ],
-        "Asia/Karachi": [
-            "4:28:12 - LMT 1907 4:28:12",
-            "5:30 - IST 1942_8 5:30",
-            "6:30 - IST 1945_9_15 6:30",
-            "5:30 - IST 1951_8_30 5:30",
-            "5 - KART 1971_2_26 5",
-            "5 Pakistan PK%sT"
-        ],
-        "Asia/Kashgar": [
-            "5:3:56 - LMT 1928 5:3:56",
-            "5:30 - KAST 1940 5:30",
-            "5 - KAST 1980_4 5",
-            "8 PRC C%sT"
-        ],
-        "Asia/Kathmandu": [
-            "5:41:16 - LMT 1920 5:41:16",
-            "5:30 - IST 1986 5:30",
-            "5:45 - NPT"
-        ],
-        "Asia/Khandyga": [
-            "9:2:13 - LMT 1919_11_15 9:2:13",
-            "8 - YAKT 1930_5_21 8",
-            "9 Russia YAK%sT 1991_2_31_2 9",
-            "8 Russia YAK%sT 1992_0_19_2 8",
-            "9 Russia YAK%sT 2004 9",
-            "10 Russia VLA%sT 2011_2_27_2 10",
-            "11 - VLAT 2011_8_13_0 11",
-            "10 - YAKT"
-        ],
-        "Asia/Kolkata": [
-            "5:53:28 - LMT 1880 5:53:28",
-            "5:53:20 - HMT 1941_9 5:53:20",
-            "6:30 - BURT 1942_4_15 6:30",
-            "5:30 - IST 1942_8 5:30",
-            "6:30 - IST 1945_9_15 6:30",
-            "5:30 - IST"
-        ],
-        "Asia/Krasnoyarsk": [
-            "6:11:20 - LMT 1920_0_6 6:11:20",
-            "6 - KRAT 1930_5_21 6",
-            "7 Russia KRA%sT 1991_2_31_2 7",
-            "6 Russia KRA%sT 1992_0_19_2 6",
-            "7 Russia KRA%sT 2011_2_27_2 7",
-            "8 - KRAT"
-        ],
-        "Asia/Kuala_Lumpur": [
-            "6:46:46 - LMT 1901_0_1 6:46:46",
-            "6:55:25 - SMT 1905_5_1 6:55:25",
-            "7 - MALT 1933_0_1 7",
-            "7:20 - MALST 1936_0_1 7:20",
-            "7:20 - MALT 1941_8_1 7:20",
-            "7:30 - MALT 1942_1_16 7:30",
-            "9 - JST 1945_8_12 9",
-            "7:30 - MALT 1982_0_1 7:30",
-            "8 - MYT"
-        ],
-        "Asia/Kuching": [
-            "7:21:20 - LMT 1926_2 7:21:20",
-            "7:30 - BORT 1933 7:30",
-            "8 NBorneo BOR%sT 1942_1_16 8",
-            "9 - JST 1945_8_12 9",
-            "8 - BORT 1982_0_1 8",
-            "8 - MYT"
-        ],
-        "Asia/Kuwait": [
-            "3:11:56 - LMT 1950 3:11:56",
-            "3 - AST"
-        ],
-        "Asia/Macau": [
-            "7:34:20 - LMT 1912 7:34:20",
-            "8 Macau MO%sT 1999_11_20 8",
-            "8 PRC C%sT"
-        ],
-        "Asia/Magadan": [
-            "10:3:12 - LMT 1924_4_2 10:3:12",
-            "10 - MAGT 1930_5_21 10",
-            "11 Russia MAG%sT 1991_2_31_2 11",
-            "10 Russia MAG%sT 1992_0_19_2 10",
-            "11 Russia MAG%sT 2011_2_27_2 11",
-            "12 - MAGT"
-        ],
-        "Asia/Makassar": [
-            "7:57:36 - LMT 1920 7:57:36",
-            "7:57:36 - MMT 1932_10 7:57:36",
-            "8 - CIT 1942_1_9 8",
-            "9 - JST 1945_8_23 9",
-            "8 - CIT"
-        ],
-        "Asia/Manila": [
-            "-15:56 - LMT 1844_11_31 -15:56",
-            "8:4 - LMT 1899_4_11 8:4",
-            "8 Phil PH%sT 1942_4 8",
-            "9 - JST 1944_10 9",
-            "8 Phil PH%sT"
-        ],
-        "Asia/Muscat": [
-            "3:54:24 - LMT 1920 3:54:24",
-            "4 - GST"
-        ],
-        "Asia/Nicosia": [
-            "2:13:28 - LMT 1921_10_14 2:13:28",
-            "2 Cyprus EE%sT 1998_8 3",
-            "2 EUAsia EE%sT"
-        ],
-        "Asia/Novokuznetsk": [
-            "5:48:48 - NMT 1920_0_6 5:48:48",
-            "6 - KRAT 1930_5_21 6",
-            "7 Russia KRA%sT 1991_2_31_2 7",
-            "6 Russia KRA%sT 1992_0_19_2 6",
-            "7 Russia KRA%sT 2010_2_28_2 7",
-            "6 Russia NOV%sT 2011_2_27_2 6",
-            "7 - NOVT"
-        ],
-        "Asia/Novosibirsk": [
-            "5:31:40 - LMT 1919_11_14_6 5:31:40",
-            "6 - NOVT 1930_5_21 6",
-            "7 Russia NOV%sT 1991_2_31_2 7",
-            "6 Russia NOV%sT 1992_0_19_2 6",
-            "7 Russia NOV%sT 1993_4_23 8",
-            "6 Russia NOV%sT 2011_2_27_2 6",
-            "7 - NOVT"
-        ],
-        "Asia/Omsk": [
-            "4:53:36 - LMT 1919_10_14 4:53:36",
-            "5 - OMST 1930_5_21 5",
-            "6 Russia OMS%sT 1991_2_31_2 6",
-            "5 Russia OMS%sT 1992_0_19_2 5",
-            "6 Russia OMS%sT 2011_2_27_2 6",
-            "7 - OMST"
-        ],
-        "Asia/Oral": [
-            "3:25:24 - LMT 1924_4_2 3:25:24",
-            "4 - URAT 1930_5_21 4",
-            "5 - URAT 1981_3_1 5",
-            "6 - URAST 1981_9_1 6",
-            "6 - URAT 1982_3_1 6",
-            "5 RussiaAsia URA%sT 1989_2_26_2 5",
-            "4 RussiaAsia URA%sT 1991 4",
-            "4 - URAT 1991_11_16 4",
-            "4 RussiaAsia ORA%sT 2005_2_15 4",
-            "5 - ORAT"
-        ],
-        "Asia/Phnom_Penh": [
-            "6:59:40 - LMT 1906_5_9 6:59:40",
-            "7:6:20 - SMT 1911_2_11_0_1 7:6:20",
-            "7 - ICT 1912_4 7",
-            "8 - ICT 1931_4 8",
-            "7 - ICT"
-        ],
-        "Asia/Pontianak": [
-            "7:17:20 - LMT 1908_4 7:17:20",
-            "7:17:20 - PMT 1932_10 7:17:20",
-            "7:30 - WIT 1942_0_29 7:30",
-            "9 - JST 1945_8_23 9",
-            "7:30 - WIT 1948_4 7:30",
-            "8 - WIT 1950_4 8",
-            "7:30 - WIT 1964 7:30",
-            "8 - CIT 1988_0_1 8",
-            "7 - WIT"
-        ],
-        "Asia/Pyongyang": [
-            "8:23 - LMT 1890 8:23",
-            "8:30 - KST 1904_11 8:30",
-            "9 - KST 1928 9",
-            "8:30 - KST 1932 8:30",
-            "9 - KST 1954_2_21 9",
-            "8 - KST 1961_7_10 8",
-            "9 - KST"
-        ],
-        "Asia/Qatar": [
-            "3:26:8 - LMT 1920 3:26:8",
-            "4 - GST 1972_5 4",
-            "3 - AST"
-        ],
-        "Asia/Qyzylorda": [
-            "4:21:52 - LMT 1924_4_2 4:21:52",
-            "4 - KIZT 1930_5_21 4",
-            "5 - KIZT 1981_3_1 5",
-            "6 - KIZST 1981_9_1 6",
-            "6 - KIZT 1982_3_1 6",
-            "5 RussiaAsia KIZ%sT 1991 5",
-            "5 - KIZT 1991_11_16 5",
-            "5 - QYZT 1992_0_19_2 5",
-            "6 RussiaAsia QYZ%sT 2005_2_15 6",
-            "6 - QYZT"
-        ],
-        "Asia/Rangoon": [
-            "6:24:40 - LMT 1880 6:24:40",
-            "6:24:40 - RMT 1920 6:24:40",
-            "6:30 - BURT 1942_4 6:30",
-            "9 - JST 1945_4_3 9",
-            "6:30 - MMT"
-        ],
-        "Asia/Riyadh": [
-            "3:6:52 - LMT 1950 3:6:52",
-            "3 - AST"
-        ],
-        "Asia/Sakhalin": [
-            "9:30:48 - LMT 1905_7_23 9:30:48",
-            "9 - CJT 1938 9",
-            "9 - JST 1945_7_25 9",
-            "11 Russia SAK%sT 1991_2_31_2 11",
-            "10 Russia SAK%sT 1992_0_19_2 10",
-            "11 Russia SAK%sT 1997_2_30_2 11",
-            "10 Russia SAK%sT 2011_2_27_2 10",
-            "11 - SAKT"
-        ],
-        "Asia/Samarkand": [
-            "4:27:12 - LMT 1924_4_2 4:27:12",
-            "4 - SAMT 1930_5_21 4",
-            "5 - SAMT 1981_3_1 5",
-            "6 - SAMST 1981_9_1 6",
-            "6 - TAST 1982_3_1 6",
-            "5 RussiaAsia SAM%sT 1991_8_1 6",
-            "5 RussiaAsia UZ%sT 1992 5",
-            "5 - UZT"
-        ],
-        "Asia/Seoul": [
-            "8:27:52 - LMT 1890 8:27:52",
-            "8:30 - KST 1904_11 8:30",
-            "9 - KST 1928 9",
-            "8:30 - KST 1932 8:30",
-            "9 - KST 1954_2_21 9",
-            "8 ROK K%sT 1961_7_10 8",
-            "8:30 - KST 1968_9 8:30",
-            "9 ROK K%sT"
-        ],
-        "Asia/Shanghai": [
-            "8:5:57 - LMT 1928 8:5:57",
-            "8 Shang C%sT 1949 8",
-            "8 PRC C%sT"
-        ],
-        "Asia/Singapore": [
-            "6:55:25 - LMT 1901_0_1 6:55:25",
-            "6:55:25 - SMT 1905_5_1 6:55:25",
-            "7 - MALT 1933_0_1 7",
-            "7:20 - MALST 1936_0_1 7:20",
-            "7:20 - MALT 1941_8_1 7:20",
-            "7:30 - MALT 1942_1_16 7:30",
-            "9 - JST 1945_8_12 9",
-            "7:30 - MALT 1965_7_9 7:30",
-            "7:30 - SGT 1982_0_1 7:30",
-            "8 - SGT"
-        ],
-        "Asia/Taipei": [
-            "8:6 - LMT 1896 8:6",
-            "8 Taiwan C%sT"
-        ],
-        "Asia/Tashkent": [
-            "4:37:12 - LMT 1924_4_2 4:37:12",
-            "5 - TAST 1930_5_21 5",
-            "6 RussiaAsia TAS%sT 1991_2_31_2 6",
-            "5 RussiaAsia TAS%sT 1991_8_1 6",
-            "5 RussiaAsia UZ%sT 1992 5",
-            "5 - UZT"
-        ],
-        "Asia/Tbilisi": [
-            "2:59:16 - LMT 1880 2:59:16",
-            "2:59:16 - TBMT 1924_4_2 2:59:16",
-            "3 - TBIT 1957_2 3",
-            "4 RussiaAsia TBI%sT 1991_2_31_2 4",
-            "4 - TBIST 1991_3_9 4",
-            "3 RussiaAsia GE%sT 1992 3",
-            "3 E-EurAsia GE%sT 1994_8_25 4",
-            "4 E-EurAsia GE%sT 1996_9_27 5",
-            "5 - GEST 1997_2_30 5",
-            "4 E-EurAsia GE%sT 2004_5_27 5",
-            "3 RussiaAsia GE%sT 2005_2_27_2 3",
-            "4 - GET"
-        ],
-        "Asia/Tehran": [
-            "3:25:44 - LMT 1916 3:25:44",
-            "3:25:44 - TMT 1946 3:25:44",
-            "3:30 - IRST 1977_10 3:30",
-            "4 Iran IR%sT 1979 4",
-            "3:30 Iran IR%sT"
-        ],
-        "Asia/Thimphu": [
-            "5:58:36 - LMT 1947_7_15 5:58:36",
-            "5:30 - IST 1987_9 5:30",
-            "6 - BTT"
-        ],
-        "Asia/Tokyo": [
-            "9:18:59 - LMT 1887_11_31_15",
-            "9 - JST 1896 9",
-            "9 - CJT 1938 9",
-            "9 Japan J%sT"
-        ],
-        "Asia/Ulaanbaatar": [
-            "7:7:32 - LMT 1905_7 7:7:32",
-            "7 - ULAT 1978 7",
-            "8 Mongol ULA%sT"
-        ],
-        "Asia/Urumqi": [
-            "5:50:20 - LMT 1928 5:50:20",
-            "6 - URUT 1980_4 6",
-            "8 PRC C%sT"
-        ],
-        "Asia/Ust-Nera": [
-            "9:32:54 - LMT 1919_11_15 9:32:54",
-            "8 - YAKT 1930_5_21 8",
-            "9 Russia YAKT 1981_3_1 9",
-            "11 Russia MAG%sT 1991_2_31_2 11",
-            "10 Russia MAG%sT 1992_0_19_2 10",
-            "11 Russia MAG%sT 2011_2_27_2 11",
-            "12 - MAGT 2011_8_13_0 12",
-            "11 - VLAT"
-        ],
-        "Asia/Vientiane": [
-            "6:50:24 - LMT 1906_5_9 6:50:24",
-            "7:6:20 - SMT 1911_2_11_0_1 7:6:20",
-            "7 - ICT 1912_4 7",
-            "8 - ICT 1931_4 8",
-            "7 - ICT"
-        ],
-        "Asia/Vladivostok": [
-            "8:47:44 - LMT 1922_10_15 8:47:44",
-            "9 - VLAT 1930_5_21 9",
-            "10 Russia VLA%sT 1991_2_31_2 10",
-            "9 Russia VLA%sST 1992_0_19_2 9",
-            "10 Russia VLA%sT 2011_2_27_2 10",
-            "11 - VLAT"
-        ],
-        "Asia/Yakutsk": [
-            "8:38:40 - LMT 1919_11_15 8:38:40",
-            "8 - YAKT 1930_5_21 8",
-            "9 Russia YAK%sT 1991_2_31_2 9",
-            "8 Russia YAK%sT 1992_0_19_2 8",
-            "9 Russia YAK%sT 2011_2_27_2 9",
-            "10 - YAKT"
-        ],
-        "Asia/Yekaterinburg": [
-            "4:2:24 - LMT 1919_6_15_4 4:2:24",
-            "4 - SVET 1930_5_21 4",
-            "5 Russia SVE%sT 1991_2_31_2 5",
-            "4 Russia SVE%sT 1992_0_19_2 4",
-            "5 Russia YEK%sT 2011_2_27_2 5",
-            "6 - YEKT"
-        ],
-        "Asia/Yerevan": [
-            "2:58 - LMT 1924_4_2 2:58",
-            "3 - YERT 1957_2 3",
-            "4 RussiaAsia YER%sT 1991_2_31_2 4",
-            "4 - YERST 1991_8_23 4",
-            "3 RussiaAsia AM%sT 1995_8_24_2 3",
-            "4 - AMT 1997 4",
-            "4 RussiaAsia AM%sT 2012_2_25_2 4",
-            "4 - AMT"
-        ],
-        "Atlantic/Azores": [
-            "-1:42:40 - LMT 1884 -1:42:40",
-            "-1:54:32 - HMT 1911_4_24 -1:54:32",
-            "-2 Port AZO%sT 1966_3_3_2 -2",
-            "-1 Port AZO%sT 1983_8_25_1 -1",
-            "-1 W-Eur AZO%sT 1992_8_27_1 -1",
-            "0 EU WE%sT 1993_2_28_1",
-            "-1 EU AZO%sT"
-        ],
-        "Atlantic/Bermuda": [
-            "-4:19:18 - LMT 1930_0_1_2 -4:19:18",
-            "-4 - AST 1974_3_28_2 -4",
-            "-4 Bahamas A%sT 1976 -4",
-            "-4 US A%sT"
-        ],
-        "Atlantic/Canary": [
-            "-1:1:36 - LMT 1922_2 -1:1:36",
-            "-1 - CANT 1946_8_30_1 -1",
-            "0 - WET 1980_3_6_0",
-            "1 - WEST 1980_8_28_0",
-            "0 EU WE%sT"
-        ],
-        "Atlantic/Cape_Verde": [
-            "-1:34:4 - LMT 1907 -1:34:4",
-            "-2 - CVT 1942_8 -2",
-            "-1 - CVST 1945_9_15 -1",
-            "-2 - CVT 1975_10_25_2 -2",
-            "-1 - CVT"
-        ],
-        "Atlantic/Faroe": [
-            "-0:27:4 - LMT 1908_0_11 -0:27:4",
-            "0 - WET 1981",
-            "0 EU WE%sT"
-        ],
-        "Atlantic/Madeira": [
-            "-1:7:36 - LMT 1884 -1:7:36",
-            "-1:7:36 - FMT 1911_4_24 -1:7:36",
-            "-1 Port MAD%sT 1966_3_3_2 -1",
-            "0 Port WE%sT 1983_8_25_1",
-            "0 EU WE%sT"
-        ],
-        "Atlantic/Reykjavik": [
-            "-1:27:24 - LMT 1837 -1:27:24",
-            "-1:27:48 - RMT 1908 -1:27:48",
-            "-1 Iceland IS%sT 1968_3_7_1 -1",
-            "0 - GMT"
-        ],
-        "Atlantic/South_Georgia": [
-            "-2:26:8 - LMT 1890 -2:26:8",
-            "-2 - GST"
-        ],
-        "Atlantic/St_Helena": [
-            "-0:22:48 - LMT 1890 -0:22:48",
-            "-0:22:48 - JMT 1951 -0:22:48",
-            "0 - GMT"
-        ],
-        "Atlantic/Stanley": [
-            "-3:51:24 - LMT 1890 -3:51:24",
-            "-3:51:24 - SMT 1912_2_12 -3:51:24",
-            "-4 Falk FK%sT 1983_4 -4",
-            "-3 Falk FK%sT 1985_8_15 -3",
-            "-4 Falk FK%sT 2010_8_5_02 -4",
-            "-3 - FKST"
-        ],
-        "Australia/Adelaide": [
-            "9:14:20 - LMT 1895_1 9:14:20",
-            "9 - CST 1899_4 9",
-            "9:30 Aus CST 1971 9:30",
-            "9:30 AS CST"
-        ],
-        "Australia/Brisbane": [
-            "10:12:8 - LMT 1895 10:12:8",
-            "10 Aus EST 1971 10",
-            "10 AQ EST"
-        ],
-        "Australia/Broken_Hill": [
-            "9:25:48 - LMT 1895_1 9:25:48",
-            "10 - EST 1896_7_23 10",
-            "9 - CST 1899_4 9",
-            "9:30 Aus CST 1971 9:30",
-            "9:30 AN CST 2000 10:30",
-            "9:30 AS CST"
-        ],
-        "Australia/Currie": [
-            "9:35:28 - LMT 1895_8 9:35:28",
-            "10 - EST 1916_9_1_2 10",
-            "11 - EST 1917_1 11",
-            "10 Aus EST 1971_6 10",
-            "10 AT EST"
-        ],
-        "Australia/Darwin": [
-            "8:43:20 - LMT 1895_1 8:43:20",
-            "9 - CST 1899_4 9",
-            "9:30 Aus CST"
-        ],
-        "Australia/Eucla": [
-            "8:35:28 - LMT 1895_11 8:35:28",
-            "8:45 Aus CWST 1943_6 8:45",
-            "8:45 AW CWST"
-        ],
-        "Australia/Hobart": [
-            "9:49:16 - LMT 1895_8 9:49:16",
-            "10 - EST 1916_9_1_2 10",
-            "11 - EST 1917_1 11",
-            "10 Aus EST 1967 10",
-            "10 AT EST"
-        ],
-        "Australia/Lindeman": [
-            "9:55:56 - LMT 1895 9:55:56",
-            "10 Aus EST 1971 10",
-            "10 AQ EST 1992_6 10",
-            "10 Holiday EST"
-        ],
-        "Australia/Lord_Howe": [
-            "10:36:20 - LMT 1895_1 10:36:20",
-            "10 - EST 1981_2 10",
-            "10:30 LH LHST"
-        ],
-        "Australia/Melbourne": [
-            "9:39:52 - LMT 1895_1 9:39:52",
-            "10 Aus EST 1971 10",
-            "10 AV EST"
-        ],
-        "Australia/Perth": [
-            "7:43:24 - LMT 1895_11 7:43:24",
-            "8 Aus WST 1943_6 8",
-            "8 AW WST"
-        ],
-        "Australia/Sydney": [
-            "10:4:52 - LMT 1895_1 10:4:52",
-            "10 Aus EST 1971 10",
-            "10 AN EST"
-        ],
-        "CET": [
-            "1 C-Eur CE%sT"
-        ],
-        "CST6CDT": [
-            "-6 US C%sT"
-        ],
-        "EET": [
-            "2 EU EE%sT"
-        ],
-        "EST": [
-            "-5 - EST"
-        ],
-        "EST5EDT": [
-            "-5 US E%sT"
-        ],
-        "HST": [
-            "-10 - HST"
-        ],
-        "MET": [
-            "1 C-Eur ME%sT"
-        ],
-        "MST": [
-            "-7 - MST"
-        ],
-        "MST7MDT": [
-            "-7 US M%sT"
-        ],
-        "PST8PDT": [
-            "-8 US P%sT"
-        ],
-        "WET": [
-            "0 EU WE%sT"
-        ],
-        "Europe/Amsterdam": [
-            "0:19:32 - LMT 1835 0:19:32",
-            "0:19:32 Neth %s 1937_6_1 1:19:32",
-            "0:20 Neth NE%sT 1940_4_16_0 0:20",
-            "1 C-Eur CE%sT 1945_3_2_2 1",
-            "1 Neth CE%sT 1977 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Andorra": [
-            "0:6:4 - LMT 1901 0:6:4",
-            "0 - WET 1946_8_30",
-            "1 - CET 1985_2_31_2 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Athens": [
-            "1:34:52 - LMT 1895_8_14 1:34:52",
-            "1:34:52 - AMT 1916_6_28_0_1 1:34:52",
-            "2 Greece EE%sT 1941_3_30 3",
-            "1 Greece CE%sT 1944_3_4 1",
-            "2 Greece EE%sT 1981 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Belgrade": [
-            "1:22 - LMT 1884 1:22",
-            "1 - CET 1941_3_18_23 1",
-            "1 C-Eur CE%sT 1945 1",
-            "1 - CET 1945_4_8_2 1",
-            "2 - CEST 1945_8_16_2 1",
-            "1 - CET 1982_10_27 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Berlin": [
-            "0:53:28 - LMT 1893_3 0:53:28",
-            "1 C-Eur CE%sT 1945_4_24_2 2",
-            "1 SovietZone CE%sT 1946 1",
-            "1 Germany CE%sT 1980 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Prague": [
-            "0:57:44 - LMT 1850 0:57:44",
-            "0:57:44 - PMT 1891_9 0:57:44",
-            "1 C-Eur CE%sT 1944_8_17_2 1",
-            "1 Czech CE%sT 1979 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Brussels": [
-            "0:17:30 - LMT 1880 0:17:30",
-            "0:17:30 - BMT 1892_4_1_12 0:17:30",
-            "0 - WET 1914_10_8",
-            "1 - CET 1916_4_1_0 1",
-            "1 C-Eur CE%sT 1918_10_11_11",
-            "0 Belgium WE%sT 1940_4_20_2",
-            "1 C-Eur CE%sT 1944_8_3 2",
-            "1 Belgium CE%sT 1977 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Bucharest": [
-            "1:44:24 - LMT 1891_9 1:44:24",
-            "1:44:24 - BMT 1931_6_24 1:44:24",
-            "2 Romania EE%sT 1981_2_29_2 2",
-            "2 C-Eur EE%sT 1991 2",
-            "2 Romania EE%sT 1994 2",
-            "2 E-Eur EE%sT 1997 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Budapest": [
-            "1:16:20 - LMT 1890_9 1:16:20",
-            "1 C-Eur CE%sT 1918 1",
-            "1 Hungary CE%sT 1941_3_6_2 1",
-            "1 C-Eur CE%sT 1945 1",
-            "1 Hungary CE%sT 1980_8_28_2 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Zurich": [
-            "0:34:8 - LMT 1848_8_12 0:34:8",
-            "0:29:44 - BMT 1894_5 0:29:44",
-            "1 Swiss CE%sT 1981 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Chisinau": [
-            "1:55:20 - LMT 1880 1:55:20",
-            "1:55 - CMT 1918_1_15 1:55",
-            "1:44:24 - BMT 1931_6_24 1:44:24",
-            "2 Romania EE%sT 1940_7_15 2",
-            "3 - EEST 1941_6_17 3",
-            "1 C-Eur CE%sT 1944_7_24 2",
-            "3 Russia MSK/MSD 1990 3",
-            "3 - MSK 1990_4_6 3",
-            "2 - EET 1991 2",
-            "2 Russia EE%sT 1992 2",
-            "2 E-Eur EE%sT 1997 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Copenhagen": [
-            "0:50:20 - LMT 1890 0:50:20",
-            "0:50:20 - CMT 1894_0_1 0:50:20",
-            "1 Denmark CE%sT 1942_10_2_2 1",
-            "1 C-Eur CE%sT 1945_3_2_2 1",
-            "1 Denmark CE%sT 1980 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Dublin": [
-            "-0:25 - LMT 1880_7_2 -0:25",
-            "-0:25:21 - DMT 1916_4_21_2 -0:25:21",
-            "0:34:39 - IST 1916_9_1_2 -0:25:21",
-            "0 GB-Eire %s 1921_11_6",
-            "0 GB-Eire GMT/IST 1940_1_25_2",
-            "1 - IST 1946_9_6_2 1",
-            "0 - GMT 1947_2_16_2",
-            "1 - IST 1947_10_2_2 1",
-            "0 - GMT 1948_3_18_2",
-            "0 GB-Eire GMT/IST 1968_9_27 1",
-            "1 - IST 1971_9_31_2",
-            "0 GB-Eire GMT/IST 1996",
-            "0 EU GMT/IST"
-        ],
-        "Europe/Gibraltar": [
-            "-0:21:24 - LMT 1880_7_2_0 -0:21:24",
-            "0 GB-Eire %s 1957_3_14_2",
-            "1 - CET 1982 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/London": [
-            "-0:1:15 - LMT 1847_11_1_0 -0:1:15",
-            "0 GB-Eire %s 1968_9_27 1",
-            "1 - BST 1971_9_31_2",
-            "0 GB-Eire %s 1996",
-            "0 EU GMT/BST"
-        ],
-        "Europe/Helsinki": [
-            "1:39:52 - LMT 1878_4_31 1:39:52",
-            "1:39:52 - HMT 1921_4 1:39:52",
-            "2 Finland EE%sT 1983 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Istanbul": [
-            "1:55:52 - LMT 1880 1:55:52",
-            "1:56:56 - IMT 1910_9 1:56:56",
-            "2 Turkey EE%sT 1978_9_15 3",
-            "3 Turkey TR%sT 1985_3_20 3",
-            "2 Turkey EE%sT 2007 2",
-            "2 EU EE%sT 2011_2_27_1",
-            "2 - EET 2011_2_28_1",
-            "2 EU EE%sT"
-        ],
-        "Europe/Kaliningrad": [
-            "1:22 - LMT 1893_3 1:22",
-            "1 C-Eur CE%sT 1945 1",
-            "2 Poland CE%sT 1946 2",
-            "3 Russia MSK/MSD 1991_2_31_2 3",
-            "2 Russia EE%sT 2011_2_27_2 2",
-            "3 - FET"
-        ],
-        "Europe/Kiev": [
-            "2:2:4 - LMT 1880 2:2:4",
-            "2:2:4 - KMT 1924_4_2 2:2:4",
-            "2 - EET 1930_5_21 2",
-            "3 - MSK 1941_8_20 3",
-            "1 C-Eur CE%sT 1943_10_6 1",
-            "3 Russia MSK/MSD 1990 3",
-            "3 - MSK 1990_6_1_2 3",
-            "2 - EET 1992 2",
-            "2 E-Eur EE%sT 1995 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Lisbon": [
-            "-0:36:32 - LMT 1884 -0:36:32",
-            "-0:36:32 - LMT 1912_0_1 -0:36:32",
-            "0 Port WE%sT 1966_3_3_2",
-            "1 - CET 1976_8_26_1 1",
-            "0 Port WE%sT 1983_8_25_1",
-            "0 W-Eur WE%sT 1992_8_27_1",
-            "1 EU CE%sT 1996_2_31_1",
-            "0 EU WE%sT"
-        ],
-        "Europe/Luxembourg": [
-            "0:24:36 - LMT 1904_5 0:24:36",
-            "1 Lux CE%sT 1918_10_25 1",
-            "0 Lux WE%sT 1929_9_6_2",
-            "0 Belgium WE%sT 1940_4_14_3 1",
-            "1 C-Eur WE%sT 1944_8_18_3 2",
-            "1 Belgium CE%sT 1977 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Madrid": [
-            "-0:14:44 - LMT 1901_0_1_0 -0:14:44",
-            "0 Spain WE%sT 1946_8_30 2",
-            "1 Spain CE%sT 1979 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Malta": [
-            "0:58:4 - LMT 1893_10_2_0 0:58:4",
-            "1 Italy CE%sT 1942_10_2_2 1",
-            "1 C-Eur CE%sT 1945_3_2_2 1",
-            "1 Italy CE%sT 1973_2_31 1",
-            "1 Malta CE%sT 1981 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Minsk": [
-            "1:50:16 - LMT 1880 1:50:16",
-            "1:50 - MMT 1924_4_2 1:50",
-            "2 - EET 1930_5_21 2",
-            "3 - MSK 1941_5_28 3",
-            "1 C-Eur CE%sT 1944_6_3 2",
-            "3 Russia MSK/MSD 1990 3",
-            "3 - MSK 1991_2_31_2 3",
-            "3 - EEST 1991_8_29_2 2",
-            "2 - EET 1992_2_29_0 2",
-            "3 - EEST 1992_8_27_0 2",
-            "2 Russia EE%sT 2011_2_27_2 2",
-            "3 - FET"
-        ],
-        "Europe/Monaco": [
-            "0:29:32 - LMT 1891_2_15 0:29:32",
-            "0:9:21 - PMT 1911_2_11 0:9:21",
-            "0 France WE%sT 1945_8_16_3 2",
-            "1 France CE%sT 1977 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Moscow": [
-            "2:30:20 - LMT 1880 2:30:20",
-            "2:30 - MMT 1916_6_3 2:30",
-            "2:30:48 Russia %s 1919_6_1_2 4:30:48",
-            "3 Russia MSK/MSD 1922_9 3",
-            "2 - EET 1930_5_21 2",
-            "3 Russia MSK/MSD 1991_2_31_2 3",
-            "2 Russia EE%sT 1992_0_19_2 2",
-            "3 Russia MSK/MSD 2011_2_27_2 3",
-            "4 - MSK"
-        ],
-        "Europe/Paris": [
-            "0:9:21 - LMT 1891_2_15_0_1 0:9:21",
-            "0:9:21 - PMT 1911_2_11_0_1 0:9:21",
-            "0 France WE%sT 1940_5_14_23 1",
-            "1 C-Eur CE%sT 1944_7_25 2",
-            "0 France WE%sT 1945_8_16_3 2",
-            "1 France CE%sT 1977 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Riga": [
-            "1:36:24 - LMT 1880 1:36:24",
-            "1:36:24 - RMT 1918_3_15_2 1:36:24",
-            "2:36:24 - LST 1918_8_16_3 2:36:24",
-            "1:36:24 - RMT 1919_3_1_2 1:36:24",
-            "2:36:24 - LST 1919_4_22_3 2:36:24",
-            "1:36:24 - RMT 1926_4_11 1:36:24",
-            "2 - EET 1940_7_5 2",
-            "3 - MSK 1941_6 3",
-            "1 C-Eur CE%sT 1944_9_13 1",
-            "3 Russia MSK/MSD 1989_2_26_2 3",
-            "3 - EEST 1989_8_24_2 2",
-            "2 Latvia EE%sT 1997_0_21 2",
-            "2 EU EE%sT 2000_1_29 2",
-            "2 - EET 2001_0_2 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Rome": [
-            "0:49:56 - LMT 1866_8_22 0:49:56",
-            "0:49:56 - RMT 1893_10_1_0 0:49:56",
-            "1 Italy CE%sT 1942_10_2_2 1",
-            "1 C-Eur CE%sT 1944_6 2",
-            "1 Italy CE%sT 1980 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Samara": [
-            "3:20:36 - LMT 1919_6_1_2 3:20:36",
-            "3 - SAMT 1930_5_21 3",
-            "4 - SAMT 1935_0_27 4",
-            "4 Russia KUY%sT 1989_2_26_2 4",
-            "3 Russia KUY%sT 1991_2_31_2 3",
-            "2 Russia KUY%sT 1991_8_29_2 2",
-            "3 - KUYT 1991_9_20_3 3",
-            "4 Russia SAM%sT 2010_2_28_2 4",
-            "3 Russia SAM%sT 2011_2_27_2 3",
-            "4 - SAMT"
-        ],
-        "Europe/Simferopol": [
-            "2:16:24 - LMT 1880 2:16:24",
-            "2:16 - SMT 1924_4_2 2:16",
-            "2 - EET 1930_5_21 2",
-            "3 - MSK 1941_10 3",
-            "1 C-Eur CE%sT 1944_3_13 2",
-            "3 Russia MSK/MSD 1990 3",
-            "3 - MSK 1990_6_1_2 3",
-            "2 - EET 1992 2",
-            "2 E-Eur EE%sT 1994_4 3",
-            "3 E-Eur MSK/MSD 1996_2_31_3 3",
-            "4 - MSD 1996_9_27_3 3",
-            "3 Russia MSK/MSD 1997 3",
-            "3 - MSK 1997_2_30_1",
-            "2 EU EE%sT"
-        ],
-        "Europe/Sofia": [
-            "1:33:16 - LMT 1880 1:33:16",
-            "1:56:56 - IMT 1894_10_30 1:56:56",
-            "2 - EET 1942_10_2_3 2",
-            "1 C-Eur CE%sT 1945 1",
-            "1 - CET 1945_3_2_3 1",
-            "2 - EET 1979_2_31_23 2",
-            "2 Bulg EE%sT 1982_8_26_2 3",
-            "2 C-Eur EE%sT 1991 2",
-            "2 E-Eur EE%sT 1997 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Stockholm": [
-            "1:12:12 - LMT 1879_0_1 1:12:12",
-            "1:0:14 - SET 1900_0_1 1:0:14",
-            "1 - CET 1916_4_14_23 1",
-            "2 - CEST 1916_9_1_01 2",
-            "1 - CET 1980 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Tallinn": [
-            "1:39 - LMT 1880 1:39",
-            "1:39 - TMT 1918_1 1:39",
-            "1 C-Eur CE%sT 1919_6 1",
-            "1:39 - TMT 1921_4 1:39",
-            "2 - EET 1940_7_6 2",
-            "3 - MSK 1941_8_15 3",
-            "1 C-Eur CE%sT 1944_8_22 2",
-            "3 Russia MSK/MSD 1989_2_26_2 3",
-            "3 - EEST 1989_8_24_2 2",
-            "2 C-Eur EE%sT 1998_8_22 3",
-            "2 EU EE%sT 1999_10_1 3",
-            "2 - EET 2002_1_21 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Tirane": [
-            "1:19:20 - LMT 1914 1:19:20",
-            "1 - CET 1940_5_16 1",
-            "1 Albania CE%sT 1984_6 2",
-            "1 EU CE%sT"
-        ],
-        "Europe/Uzhgorod": [
-            "1:29:12 - LMT 1890_9 1:29:12",
-            "1 - CET 1940 1",
-            "1 C-Eur CE%sT 1944_9 2",
-            "2 - CEST 1944_9_26 2",
-            "1 - CET 1945_5_29 1",
-            "3 Russia MSK/MSD 1990 3",
-            "3 - MSK 1990_6_1_2 3",
-            "1 - CET 1991_2_31_3 1",
-            "2 - EET 1992 2",
-            "2 E-Eur EE%sT 1995 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Vaduz": [
-            "0:38:4 - LMT 1894_5 0:38:4",
-            "1 - CET 1981 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Vienna": [
-            "1:5:21 - LMT 1893_3 1:5:21",
-            "1 C-Eur CE%sT 1920 1",
-            "1 Austria CE%sT 1940_3_1_2 1",
-            "1 C-Eur CE%sT 1945_3_2_2 1",
-            "2 - CEST 1945_3_12_2 1",
-            "1 - CET 1946 1",
-            "1 Austria CE%sT 1981 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Vilnius": [
-            "1:41:16 - LMT 1880 1:41:16",
-            "1:24 - WMT 1917 1:24",
-            "1:35:36 - KMT 1919_9_10 1:35:36",
-            "1 - CET 1920_6_12 1",
-            "2 - EET 1920_9_9 2",
-            "1 - CET 1940_7_3 1",
-            "3 - MSK 1941_5_24 3",
-            "1 C-Eur CE%sT 1944_7 2",
-            "3 Russia MSK/MSD 1991_2_31_2 3",
-            "3 - EEST 1991_8_29_2 2",
-            "2 C-Eur EE%sT 1998 2",
-            "2 - EET 1998_2_29_1",
-            "1 EU CE%sT 1999_9_31_1",
-            "2 - EET 2003_0_1 2",
-            "2 EU EE%sT"
-        ],
-        "Europe/Volgograd": [
-            "2:57:40 - LMT 1920_0_3 2:57:40",
-            "3 - TSAT 1925_3_6 3",
-            "3 - STAT 1930_5_21 3",
-            "4 - STAT 1961_10_11 4",
-            "4 Russia VOL%sT 1989_2_26_2 4",
-            "3 Russia VOL%sT 1991_2_31_2 3",
-            "4 - VOLT 1992_2_29_2 4",
-            "3 Russia VOL%sT 2011_2_27_2 3",
-            "4 - VOLT"
-        ],
-        "Europe/Warsaw": [
-            "1:24 - LMT 1880 1:24",
-            "1:24 - WMT 1915_7_5 1:24",
-            "1 C-Eur CE%sT 1918_8_16_3 2",
-            "2 Poland EE%sT 1922_5 2",
-            "1 Poland CE%sT 1940_5_23_2 1",
-            "1 C-Eur CE%sT 1944_9 2",
-            "1 Poland CE%sT 1977 1",
-            "1 W-Eur CE%sT 1988 1",
-            "1 EU CE%sT"
-        ],
-        "Europe/Zaporozhye": [
-            "2:20:40 - LMT 1880 2:20:40",
-            "2:20 - CUT 1924_4_2 2:20",
-            "2 - EET 1930_5_21 2",
-            "3 - MSK 1941_7_25 3",
-            "1 C-Eur CE%sT 1943_9_25 1",
-            "3 Russia MSK/MSD 1991_2_31_2 3",
-            "2 E-Eur EE%sT 1995 2",
-            "2 EU EE%sT"
-        ],
-        "Indian/Antananarivo": [
-            "3:10:4 - LMT 1911_6 3:10:4",
-            "3 - EAT 1954_1_27_23 3",
-            "4 - EAST 1954_4_29_23 3",
-            "3 - EAT"
-        ],
-        "Indian/Chagos": [
-            "4:49:40 - LMT 1907 4:49:40",
-            "5 - IOT 1996 5",
-            "6 - IOT"
-        ],
-        "Indian/Christmas": [
-            "7:2:52 - LMT 1895_1 7:2:52",
-            "7 - CXT"
-        ],
-        "Indian/Cocos": [
-            "6:27:40 - LMT 1900 6:27:40",
-            "6:30 - CCT"
-        ],
-        "Indian/Comoro": [
-            "2:53:4 - LMT 1911_6 2:53:4",
-            "3 - EAT"
-        ],
-        "Indian/Kerguelen": [
-            "0 - zzz 1950",
-            "5 - TFT"
-        ],
-        "Indian/Mahe": [
-            "3:41:48 - LMT 1906_5 3:41:48",
-            "4 - SCT"
-        ],
-        "Indian/Maldives": [
-            "4:54 - LMT 1880 4:54",
-            "4:54 - MMT 1960 4:54",
-            "5 - MVT"
-        ],
-        "Indian/Mauritius": [
-            "3:50 - LMT 1907 3:50",
-            "4 Mauritius MU%sT"
-        ],
-        "Indian/Mayotte": [
-            "3:0:56 - LMT 1911_6 3:0:56",
-            "3 - EAT"
-        ],
-        "Indian/Reunion": [
-            "3:41:52 - LMT 1911_5 3:41:52",
-            "4 - RET"
-        ],
-        "Pacific/Apia": [
-            "12:33:4 - LMT 1879_6_5 12:33:4",
-            "-11:26:56 - LMT 1911 -11:26:56",
-            "-11:30 - SAMT 1950 -11:30",
-            "-11 - WST 2010_8_26 -11",
-            "-10 - WSDT 2011_3_2_4 -10",
-            "-11 - WST 2011_8_24_3 -11",
-            "-10 - WSDT 2011_11_30 -10",
-            "14 - WSDT 2012_3_1_4 14",
-            "13 WS WS%sT"
-        ],
-        "Pacific/Auckland": [
-            "11:39:4 - LMT 1868_10_2 11:39:4",
-            "11:30 NZ NZ%sT 1946_0_1 12",
-            "12 NZ NZ%sT"
-        ],
-        "Pacific/Chatham": [
-            "12:13:48 - LMT 1957_0_1 12:13:48",
-            "12:45 Chatham CHA%sT"
-        ],
-        "Pacific/Chuuk": [
-            "10:7:8 - LMT 1901 10:7:8",
-            "10 - CHUT"
-        ],
-        "Pacific/Easter": [
-            "-7:17:44 - LMT 1890 -7:17:44",
-            "-7:17:28 - EMT 1932_8 -7:17:28",
-            "-7 Chile EAS%sT 1982_2_13_21 -6",
-            "-6 Chile EAS%sT"
-        ],
-        "Pacific/Efate": [
-            "11:13:16 - LMT 1912_0_13 11:13:16",
-            "11 Vanuatu VU%sT"
-        ],
-        "Pacific/Enderbury": [
-            "-11:24:20 - LMT 1901 -11:24:20",
-            "-12 - PHOT 1979_9 -12",
-            "-11 - PHOT 1995 -11",
-            "13 - PHOT"
-        ],
-        "Pacific/Fakaofo": [
-            "-11:24:56 - LMT 1901 -11:24:56",
-            "-11 - TKT 2011_11_30 -11",
-            "13 - TKT"
-        ],
-        "Pacific/Fiji": [
-            "11:55:44 - LMT 1915_9_26 11:55:44",
-            "12 Fiji FJ%sT"
-        ],
-        "Pacific/Funafuti": [
-            "11:56:52 - LMT 1901 11:56:52",
-            "12 - TVT"
-        ],
-        "Pacific/Galapagos": [
-            "-5:58:24 - LMT 1931 -5:58:24",
-            "-5 - ECT 1986 -5",
-            "-6 - GALT"
-        ],
-        "Pacific/Gambier": [
-            "-8:59:48 - LMT 1912_9 -8:59:48",
-            "-9 - GAMT"
-        ],
-        "Pacific/Guadalcanal": [
-            "10:39:48 - LMT 1912_9 10:39:48",
-            "11 - SBT"
-        ],
-        "Pacific/Guam": [
-            "-14:21 - LMT 1844_11_31 -14:21",
-            "9:39 - LMT 1901 9:39",
-            "10 - GST 2000_11_23 10",
-            "10 - ChST"
-        ],
-        "Pacific/Honolulu": [
-            "-10:31:26 - LMT 1896_0_13_12 -10:31:26",
-            "-10:30 - HST 1933_3_30_2 -10:30",
-            "-9:30 - HDT 1933_4_21_12 -9:30",
-            "-10:30 - HST 1942_1_09_2 -10:30",
-            "-9:30 - HDT 1945_8_30_2 -9:30",
-            "-10:30 - HST 1947_5_8_2 -10:30",
-            "-10 - HST"
-        ],
-        "Pacific/Johnston": [
-            "-10 - HST"
-        ],
-        "Pacific/Kiritimati": [
-            "-10:29:20 - LMT 1901 -10:29:20",
-            "-10:40 - LINT 1979_9 -10:40",
-            "-10 - LINT 1995 -10",
-            "14 - LINT"
-        ],
-        "Pacific/Kosrae": [
-            "10:51:56 - LMT 1901 10:51:56",
-            "11 - KOST 1969_9 11",
-            "12 - KOST 1999 12",
-            "11 - KOST"
-        ],
-        "Pacific/Kwajalein": [
-            "11:9:20 - LMT 1901 11:9:20",
-            "11 - MHT 1969_9 11",
-            "-12 - KWAT 1993_7_20 -12",
-            "12 - MHT"
-        ],
-        "Pacific/Majuro": [
-            "11:24:48 - LMT 1901 11:24:48",
-            "11 - MHT 1969_9 11",
-            "12 - MHT"
-        ],
-        "Pacific/Marquesas": [
-            "-9:18 - LMT 1912_9 -9:18",
-            "-9:30 - MART"
-        ],
-        "Pacific/Midway": [
-            "-11:49:28 - LMT 1901 -11:49:28",
-            "-11 - NST 1956_5_3 -11",
-            "-10 - NDT 1956_8_2 -10",
-            "-11 - NST 1967_3 -11",
-            "-11 - BST 1983_10_30 -11",
-            "-11 - SST"
-        ],
-        "Pacific/Nauru": [
-            "11:7:40 - LMT 1921_0_15 11:7:40",
-            "11:30 - NRT 1942_2_15 11:30",
-            "9 - JST 1944_7_15 9",
-            "11:30 - NRT 1979_4 11:30",
-            "12 - NRT"
-        ],
-        "Pacific/Niue": [
-            "-11:19:40 - LMT 1901 -11:19:40",
-            "-11:20 - NUT 1951 -11:20",
-            "-11:30 - NUT 1978_9_1 -11:30",
-            "-11 - NUT"
-        ],
-        "Pacific/Norfolk": [
-            "11:11:52 - LMT 1901 11:11:52",
-            "11:12 - NMT 1951 11:12",
-            "11:30 - NFT"
-        ],
-        "Pacific/Noumea": [
-            "11:5:48 - LMT 1912_0_13 11:5:48",
-            "11 NC NC%sT"
-        ],
-        "Pacific/Pago_Pago": [
-            "12:37:12 - LMT 1879_6_5 12:37:12",
-            "-11:22:48 - LMT 1911 -11:22:48",
-            "-11:30 - SAMT 1950 -11:30",
-            "-11 - NST 1967_3 -11",
-            "-11 - BST 1983_10_30 -11",
-            "-11 - SST"
-        ],
-        "Pacific/Palau": [
-            "8:57:56 - LMT 1901 8:57:56",
-            "9 - PWT"
-        ],
-        "Pacific/Pitcairn": [
-            "-8:40:20 - LMT 1901 -8:40:20",
-            "-8:30 - PNT 1998_3_27_00 -8:30",
-            "-8 - PST"
-        ],
-        "Pacific/Pohnpei": [
-            "10:32:52 - LMT 1901 10:32:52",
-            "11 - PONT"
-        ],
-        "Pacific/Port_Moresby": [
-            "9:48:40 - LMT 1880 9:48:40",
-            "9:48:32 - PMMT 1895 9:48:32",
-            "10 - PGT"
-        ],
-        "Pacific/Rarotonga": [
-            "-10:39:4 - LMT 1901 -10:39:4",
-            "-10:30 - CKT 1978_10_12 -10:30",
-            "-10 Cook CK%sT"
-        ],
-        "Pacific/Saipan": [
-            "-14:17 - LMT 1844_11_31 -14:17",
-            "9:43 - LMT 1901 9:43",
-            "9 - MPT 1969_9 9",
-            "10 - MPT 2000_11_23 10",
-            "10 - ChST"
-        ],
-        "Pacific/Tahiti": [
-            "-9:58:16 - LMT 1912_9 -9:58:16",
-            "-10 - TAHT"
-        ],
-        "Pacific/Tarawa": [
-            "11:32:4 - LMT 1901 11:32:4",
-            "12 - GILT"
-        ],
-        "Pacific/Tongatapu": [
-            "12:19:20 - LMT 1901 12:19:20",
-            "12:20 - TOT 1941 12:20",
-            "13 - TOT 1999 13",
-            "13 Tonga TO%sT"
-        ],
-        "Pacific/Wake": [
-            "11:6:28 - LMT 1901 11:6:28",
-            "12 - WAKT"
-        ],
-        "Pacific/Wallis": [
-            "12:15:20 - LMT 1901 12:15:20",
-            "12 - WFT"
-        ]
-    },
-    "rules": {
-        "Ghana": [
-            "1936 1942 8 1 7 0 0 0:20 GHST",
-            "1936 1942 11 31 7 0 0 0 GMT"
-        ],
-        "Algeria": [
-            "1916 1916 5 14 7 23 2 1 S",
-            "1916 1919 9 1 0 23 2 0",
-            "1917 1917 2 24 7 23 2 1 S",
-            "1918 1918 2 9 7 23 2 1 S",
-            "1919 1919 2 1 7 23 2 1 S",
-            "1920 1920 1 14 7 23 2 1 S",
-            "1920 1920 9 23 7 23 2 0",
-            "1921 1921 2 14 7 23 2 1 S",
-            "1921 1921 5 21 7 23 2 0",
-            "1939 1939 8 11 7 23 2 1 S",
-            "1939 1939 10 19 7 1 0 0",
-            "1944 1945 3 1 1 2 0 1 S",
-            "1944 1944 9 8 7 2 0 0",
-            "1945 1945 8 16 7 1 0 0",
-            "1971 1971 3 25 7 23 2 1 S",
-            "1971 1971 8 26 7 23 2 0",
-            "1977 1977 4 6 7 0 0 1 S",
-            "1977 1977 9 21 7 0 0 0",
-            "1978 1978 2 24 7 1 0 1 S",
-            "1978 1978 8 22 7 3 0 0",
-            "1980 1980 3 25 7 0 0 1 S",
-            "1980 1980 9 31 7 2 0 0"
-        ],
-        "Egypt": [
-            "1940 1940 6 15 7 0 0 1 S",
-            "1940 1940 9 1 7 0 0 0",
-            "1941 1941 3 15 7 0 0 1 S",
-            "1941 1941 8 16 7 0 0 0",
-            "1942 1944 3 1 7 0 0 1 S",
-            "1942 1942 9 27 7 0 0 0",
-            "1943 1945 10 1 7 0 0 0",
-            "1945 1945 3 16 7 0 0 1 S",
-            "1957 1957 4 10 7 0 0 1 S",
-            "1957 1958 9 1 7 0 0 0",
-            "1958 1958 4 1 7 0 0 1 S",
-            "1959 1981 4 1 7 1 0 1 S",
-            "1959 1965 8 30 7 3 0 0",
-            "1966 1994 9 1 7 3 0 0",
-            "1982 1982 6 25 7 1 0 1 S",
-            "1983 1983 6 12 7 1 0 1 S",
-            "1984 1988 4 1 7 1 0 1 S",
-            "1989 1989 4 6 7 1 0 1 S",
-            "1990 1994 4 1 7 1 0 1 S",
-            "1995 2010 3 5 8 0 2 1 S",
-            "1995 2005 8 4 8 23 2 0",
-            "2006 2006 8 21 7 23 2 0",
-            "2007 2007 8 1 4 23 2 0",
-            "2008 2008 7 4 8 23 2 0",
-            "2009 2009 7 20 7 23 2 0",
-            "2010 2010 7 11 7 0 0 0",
-            "2010 2010 8 10 7 0 0 1 S",
-            "2010 2010 8 4 8 23 2 0"
-        ],
-        "Morocco": [
-            "1939 1939 8 12 7 0 0 1 S",
-            "1939 1939 10 19 7 0 0 0",
-            "1940 1940 1 25 7 0 0 1 S",
-            "1945 1945 10 18 7 0 0 0",
-            "1950 1950 5 11 7 0 0 1 S",
-            "1950 1950 9 29 7 0 0 0",
-            "1967 1967 5 3 7 12 0 1 S",
-            "1967 1967 9 1 7 0 0 0",
-            "1974 1974 5 24 7 0 0 1 S",
-            "1974 1974 8 1 7 0 0 0",
-            "1976 1977 4 1 7 0 0 1 S",
-            "1976 1976 7 1 7 0 0 0",
-            "1977 1977 8 28 7 0 0 0",
-            "1978 1978 5 1 7 0 0 1 S",
-            "1978 1978 7 4 7 0 0 0",
-            "2008 2008 5 1 7 0 0 1 S",
-            "2008 2008 8 1 7 0 0 0",
-            "2009 2009 5 1 7 0 0 1 S",
-            "2009 2009 7 21 7 0 0 0",
-            "2010 2010 4 2 7 0 0 1 S",
-            "2010 2010 7 8 7 0 0 0",
-            "2011 2011 3 3 7 0 0 1 S",
-            "2011 2011 6 31 7 0 0 0",
-            "2012 2019 3 0 8 2 0 1 S",
-            "2012 9999 8 0 8 3 0 0",
-            "2012 2012 6 20 7 3 0 0",
-            "2012 2012 7 20 7 2 0 1 S",
-            "2013 2013 6 9 7 3 0 0",
-            "2013 2013 7 8 7 2 0 1 S",
-            "2014 2014 5 29 7 3 0 0",
-            "2014 2014 6 29 7 2 0 1 S",
-            "2015 2015 5 18 7 3 0 0",
-            "2015 2015 6 18 7 2 0 1 S",
-            "2016 2016 5 7 7 3 0 0",
-            "2016 2016 6 7 7 2 0 1 S",
-            "2017 2017 4 27 7 3 0 0",
-            "2017 2017 5 26 7 2 0 1 S",
-            "2018 2018 4 16 7 3 0 0",
-            "2018 2018 5 15 7 2 0 1 S",
-            "2019 2019 4 6 7 3 0 0",
-            "2019 2019 5 5 7 2 0 1 S",
-            "2020 2020 4 24 7 2 0 1 S",
-            "2021 2021 4 13 7 2 0 1 S",
-            "2022 2022 4 3 7 2 0 1 S",
-            "2023 9999 3 0 8 2 0 1 S"
-        ],
-        "Spain": [
-            "1917 1917 4 5 7 23 2 1 S",
-            "1917 1919 9 6 7 23 2 0",
-            "1918 1918 3 15 7 23 2 1 S",
-            "1919 1919 3 5 7 23 2 1 S",
-            "1924 1924 3 16 7 23 2 1 S",
-            "1924 1924 9 4 7 23 2 0",
-            "1926 1926 3 17 7 23 2 1 S",
-            "1926 1929 9 1 6 23 2 0",
-            "1927 1927 3 9 7 23 2 1 S",
-            "1928 1928 3 14 7 23 2 1 S",
-            "1929 1929 3 20 7 23 2 1 S",
-            "1937 1937 4 22 7 23 2 1 S",
-            "1937 1939 9 1 6 23 2 0",
-            "1938 1938 2 22 7 23 2 1 S",
-            "1939 1939 3 15 7 23 2 1 S",
-            "1940 1940 2 16 7 23 2 1 S",
-            "1942 1942 4 2 7 22 2 2 M",
-            "1942 1942 8 1 7 22 2 1 S",
-            "1943 1946 3 13 6 22 2 2 M",
-            "1943 1943 9 3 7 22 2 1 S",
-            "1944 1944 9 10 7 22 2 1 S",
-            "1945 1945 8 30 7 1 0 1 S",
-            "1946 1946 8 30 7 0 0 0",
-            "1949 1949 3 30 7 23 0 1 S",
-            "1949 1949 8 30 7 1 0 0",
-            "1974 1975 3 13 6 23 0 1 S",
-            "1974 1975 9 1 0 1 0 0",
-            "1976 1976 2 27 7 23 0 1 S",
-            "1976 1977 8 0 8 1 0 0",
-            "1977 1978 3 2 7 23 0 1 S",
-            "1978 1978 9 1 7 1 0 0"
-        ],
-        "SpainAfrica": [
-            "1967 1967 5 3 7 12 0 1 S",
-            "1967 1967 9 1 7 0 0 0",
-            "1974 1974 5 24 7 0 0 1 S",
-            "1974 1974 8 1 7 0 0 0",
-            "1976 1977 4 1 7 0 0 1 S",
-            "1976 1976 7 1 7 0 0 0",
-            "1977 1977 8 28 7 0 0 0",
-            "1978 1978 5 1 7 0 0 1 S",
-            "1978 1978 7 4 7 0 0 0"
-        ],
-        "EU": [
-            "1977 1980 3 1 0 1 1 1 S",
-            "1977 1977 8 0 8 1 1 0",
-            "1978 1978 9 1 7 1 1 0",
-            "1979 1995 8 0 8 1 1 0",
-            "1981 9999 2 0 8 1 1 1 S",
-            "1996 9999 9 0 8 1 1 0"
-        ],
-        "SL": [
-            "1935 1942 5 1 7 0 0 0:40 SLST",
-            "1935 1942 9 1 7 0 0 0 WAT",
-            "1957 1962 5 1 7 0 0 1 SLST",
-            "1957 1962 8 1 7 0 0 0 GMT"
-        ],
-        "SA": [
-            "1942 1943 8 15 0 2 0 1",
-            "1943 1944 2 15 0 2 0 0"
-        ],
-        "Sudan": [
-            "1970 1970 4 1 7 0 0 1 S",
-            "1970 1985 9 15 7 0 0 0",
-            "1971 1971 3 30 7 0 0 1 S",
-            "1972 1985 3 0 8 0 0 1 S"
-        ],
-        "Libya": [
-            "1951 1951 9 14 7 2 0 1 S",
-            "1952 1952 0 1 7 0 0 0",
-            "1953 1953 9 9 7 2 0 1 S",
-            "1954 1954 0 1 7 0 0 0",
-            "1955 1955 8 30 7 0 0 1 S",
-            "1956 1956 0 1 7 0 0 0",
-            "1982 1984 3 1 7 0 0 1 S",
-            "1982 1985 9 1 7 0 0 0",
-            "1985 1985 3 6 7 0 0 1 S",
-            "1986 1986 3 4 7 0 0 1 S",
-            "1986 1986 9 3 7 0 0 0",
-            "1987 1989 3 1 7 0 0 1 S",
-            "1987 1989 9 1 7 0 0 0",
-            "1997 1997 3 4 7 0 0 1 S",
-            "1997 1997 9 4 7 0 0 0",
-            "2013 9999 2 5 8 1 0 1 S",
-            "2013 9999 9 5 8 2 0 0"
-        ],
-        "Tunisia": [
-            "1939 1939 3 15 7 23 2 1 S",
-            "1939 1939 10 18 7 23 2 0",
-            "1940 1940 1 25 7 23 2 1 S",
-            "1941 1941 9 6 7 0 0 0",
-            "1942 1942 2 9 7 0 0 1 S",
-            "1942 1942 10 2 7 3 0 0",
-            "1943 1943 2 29 7 2 0 1 S",
-            "1943 1943 3 17 7 2 0 0",
-            "1943 1943 3 25 7 2 0 1 S",
-            "1943 1943 9 4 7 2 0 0",
-            "1944 1945 3 1 1 2 0 1 S",
-            "1944 1944 9 8 7 0 0 0",
-            "1945 1945 8 16 7 0 0 0",
-            "1977 1977 3 30 7 0 2 1 S",
-            "1977 1977 8 24 7 0 2 0",
-            "1978 1978 4 1 7 0 2 1 S",
-            "1978 1978 9 1 7 0 2 0",
-            "1988 1988 5 1 7 0 2 1 S",
-            "1988 1990 8 0 8 0 2 0",
-            "1989 1989 2 26 7 0 2 1 S",
-            "1990 1990 4 1 7 0 2 1 S",
-            "2005 2005 4 1 7 0 2 1 S",
-            "2005 2005 8 30 7 1 2 0",
-            "2006 2008 2 0 8 2 2 1 S",
-            "2006 2008 9 0 8 2 2 0"
-        ],
-        "Namibia": [
-            "1994 9999 8 1 0 2 0 1 S",
-            "1995 9999 3 1 0 2 0 0"
-        ],
-        "US": [
-            "1918 1919 2 0 8 2 0 1 D",
-            "1918 1919 9 0 8 2 0 0 S",
-            "1942 1942 1 9 7 2 0 1 W",
-            "1945 1945 7 14 7 23 1 1 P",
-            "1945 1945 8 30 7 2 0 0 S",
-            "1967 2006 9 0 8 2 0 0 S",
-            "1967 1973 3 0 8 2 0 1 D",
-            "1974 1974 0 6 7 2 0 1 D",
-            "1975 1975 1 23 7 2 0 1 D",
-            "1976 1986 3 0 8 2 0 1 D",
-            "1987 2006 3 1 0 2 0 1 D",
-            "2007 9999 2 8 0 2 0 1 D",
-            "2007 9999 10 1 0 2 0 0 S"
-        ],
-        "Brazil": [
-            "1931 1931 9 3 7 11 0 1 S",
-            "1932 1933 3 1 7 0 0 0",
-            "1932 1932 9 3 7 0 0 1 S",
-            "1949 1952 11 1 7 0 0 1 S",
-            "1950 1950 3 16 7 1 0 0",
-            "1951 1952 3 1 7 0 0 0",
-            "1953 1953 2 1 7 0 0 0",
-            "1963 1963 11 9 7 0 0 1 S",
-            "1964 1964 2 1 7 0 0 0",
-            "1965 1965 0 31 7 0 0 1 S",
-            "1965 1965 2 31 7 0 0 0",
-            "1965 1965 11 1 7 0 0 1 S",
-            "1966 1968 2 1 7 0 0 0",
-            "1966 1967 10 1 7 0 0 1 S",
-            "1985 1985 10 2 7 0 0 1 S",
-            "1986 1986 2 15 7 0 0 0",
-            "1986 1986 9 25 7 0 0 1 S",
-            "1987 1987 1 14 7 0 0 0",
-            "1987 1987 9 25 7 0 0 1 S",
-            "1988 1988 1 7 7 0 0 0",
-            "1988 1988 9 16 7 0 0 1 S",
-            "1989 1989 0 29 7 0 0 0",
-            "1989 1989 9 15 7 0 0 1 S",
-            "1990 1990 1 11 7 0 0 0",
-            "1990 1990 9 21 7 0 0 1 S",
-            "1991 1991 1 17 7 0 0 0",
-            "1991 1991 9 20 7 0 0 1 S",
-            "1992 1992 1 9 7 0 0 0",
-            "1992 1992 9 25 7 0 0 1 S",
-            "1993 1993 0 31 7 0 0 0",
-            "1993 1995 9 11 0 0 0 1 S",
-            "1994 1995 1 15 0 0 0 0",
-            "1996 1996 1 11 7 0 0 0",
-            "1996 1996 9 6 7 0 0 1 S",
-            "1997 1997 1 16 7 0 0 0",
-            "1997 1997 9 6 7 0 0 1 S",
-            "1998 1998 2 1 7 0 0 0",
-            "1998 1998 9 11 7 0 0 1 S",
-            "1999 1999 1 21 7 0 0 0",
-            "1999 1999 9 3 7 0 0 1 S",
-            "2000 2000 1 27 7 0 0 0",
-            "2000 2001 9 8 0 0 0 1 S",
-            "2001 2006 1 15 0 0 0 0",
-            "2002 2002 10 3 7 0 0 1 S",
-            "2003 2003 9 19 7 0 0 1 S",
-            "2004 2004 10 2 7 0 0 1 S",
-            "2005 2005 9 16 7 0 0 1 S",
-            "2006 2006 10 5 7 0 0 1 S",
-            "2007 2007 1 25 7 0 0 0",
-            "2007 2007 9 8 0 0 0 1 S",
-            "2008 9999 9 15 0 0 0 1 S",
-            "2008 2011 1 15 0 0 0 0",
-            "2012 2012 1 22 0 0 0 0",
-            "2013 2014 1 15 0 0 0 0",
-            "2015 2015 1 22 0 0 0 0",
-            "2016 2022 1 15 0 0 0 0",
-            "2023 2023 1 22 0 0 0 0",
-            "2024 2025 1 15 0 0 0 0",
-            "2026 2026 1 22 0 0 0 0",
-            "2027 2033 1 15 0 0 0 0",
-            "2034 2034 1 22 0 0 0 0",
-            "2035 2036 1 15 0 0 0 0",
-            "2037 2037 1 22 0 0 0 0",
-            "2038 9999 1 15 0 0 0 0"
-        ],
-        "Arg": [
-            "1930 1930 11 1 7 0 0 1 S",
-            "1931 1931 3 1 7 0 0 0",
-            "1931 1931 9 15 7 0 0 1 S",
-            "1932 1940 2 1 7 0 0 0",
-            "1932 1939 10 1 7 0 0 1 S",
-            "1940 1940 6 1 7 0 0 1 S",
-            "1941 1941 5 15 7 0 0 0",
-            "1941 1941 9 15 7 0 0 1 S",
-            "1943 1943 7 1 7 0 0 0",
-            "1943 1943 9 15 7 0 0 1 S",
-            "1946 1946 2 1 7 0 0 0",
-            "1946 1946 9 1 7 0 0 1 S",
-            "1963 1963 9 1 7 0 0 0",
-            "1963 1963 11 15 7 0 0 1 S",
-            "1964 1966 2 1 7 0 0 0",
-            "1964 1966 9 15 7 0 0 1 S",
-            "1967 1967 3 2 7 0 0 0",
-            "1967 1968 9 1 0 0 0 1 S",
-            "1968 1969 3 1 0 0 0 0",
-            "1974 1974 0 23 7 0 0 1 S",
-            "1974 1974 4 1 7 0 0 0",
-            "1988 1988 11 1 7 0 0 1 S",
-            "1989 1993 2 1 0 0 0 0",
-            "1989 1992 9 15 0 0 0 1 S",
-            "1999 1999 9 1 0 0 0 1 S",
-            "2000 2000 2 3 7 0 0 0",
-            "2007 2007 11 30 7 0 0 1 S",
-            "2008 2009 2 15 0 0 0 0",
-            "2008 2008 9 15 0 0 0 1 S"
-        ],
-        "SanLuis": [
-            "2008 2009 2 8 0 0 0 0",
-            "2007 2009 9 8 0 0 0 1 S"
-        ],
-        "Para": [
-            "1975 1988 9 1 7 0 0 1 S",
-            "1975 1978 2 1 7 0 0 0",
-            "1979 1991 3 1 7 0 0 0",
-            "1989 1989 9 22 7 0 0 1 S",
-            "1990 1990 9 1 7 0 0 1 S",
-            "1991 1991 9 6 7 0 0 1 S",
-            "1992 1992 2 1 7 0 0 0",
-            "1992 1992 9 5 7 0 0 1 S",
-            "1993 1993 2 31 7 0 0 0",
-            "1993 1995 9 1 7 0 0 1 S",
-            "1994 1995 1 0 8 0 0 0",
-            "1996 1996 2 1 7 0 0 0",
-            "1996 2001 9 1 0 0 0 1 S",
-            "1997 1997 1 0 8 0 0 0",
-            "1998 2001 2 1 0 0 0 0",
-            "2002 2004 3 1 0 0 0 0",
-            "2002 2003 8 1 0 0 0 1 S",
-            "2004 2009 9 15 0 0 0 1 S",
-            "2005 2009 2 8 0 0 0 0",
-            "2010 9999 9 1 0 0 0 1 S",
-            "2010 2012 3 8 0 0 0 0",
-            "2013 9999 2 22 0 0 0 0"
-        ],
-        "Canada": [
-            "1918 1918 3 14 7 2 0 1 D",
-            "1918 1918 9 27 7 2 0 0 S",
-            "1942 1942 1 9 7 2 0 1 W",
-            "1945 1945 7 14 7 23 1 1 P",
-            "1945 1945 8 30 7 2 0 0 S",
-            "1974 1986 3 0 8 2 0 1 D",
-            "1974 2006 9 0 8 2 0 0 S",
-            "1987 2006 3 1 0 2 0 1 D",
-            "2007 9999 2 8 0 2 0 1 D",
-            "2007 9999 10 1 0 2 0 0 S"
-        ],
-        "Mexico": [
-            "1939 1939 1 5 7 0 0 1 D",
-            "1939 1939 5 25 7 0 0 0 S",
-            "1940 1940 11 9 7 0 0 1 D",
-            "1941 1941 3 1 7 0 0 0 S",
-            "1943 1943 11 16 7 0 0 1 W",
-            "1944 1944 4 1 7 0 0 0 S",
-            "1950 1950 1 12 7 0 0 1 D",
-            "1950 1950 6 30 7 0 0 0 S",
-            "1996 2000 3 1 0 2 0 1 D",
-            "1996 2000 9 0 8 2 0 0 S",
-            "2001 2001 4 1 0 2 0 1 D",
-            "2001 2001 8 0 8 2 0 0 S",
-            "2002 9999 3 1 0 2 0 1 D",
-            "2002 9999 9 0 8 2 0 0 S"
-        ],
-        "Barb": [
-            "1977 1977 5 12 7 2 0 1 D",
-            "1977 1978 9 1 0 2 0 0 S",
-            "1978 1980 3 15 0 2 0 1 D",
-            "1979 1979 8 30 7 2 0 0 S",
-            "1980 1980 8 25 7 2 0 0 S"
-        ],
-        "Belize": [
-            "1918 1942 9 2 0 0 0 0:30 HD",
-            "1919 1943 1 9 0 0 0 0 S",
-            "1973 1973 11 5 7 0 0 1 D",
-            "1974 1974 1 9 7 0 0 0 S",
-            "1982 1982 11 18 7 0 0 1 D",
-            "1983 1983 1 12 7 0 0 0 S"
-        ],
-        "CO": [
-            "1992 1992 4 3 7 0 0 1 S",
-            "1993 1993 3 4 7 0 0 0"
-        ],
-        "NT_YK": [
-            "1918 1918 3 14 7 2 0 1 D",
-            "1918 1918 9 27 7 2 0 0 S",
-            "1919 1919 4 25 7 2 0 1 D",
-            "1919 1919 10 1 7 0 0 0 S",
-            "1942 1942 1 9 7 2 0 1 W",
-            "1945 1945 7 14 7 23 1 1 P",
-            "1945 1945 8 30 7 2 0 0 S",
-            "1965 1965 3 0 8 0 0 2 DD",
-            "1965 1965 9 0 8 2 0 0 S",
-            "1980 1986 3 0 8 2 0 1 D",
-            "1980 2006 9 0 8 2 0 0 S",
-            "1987 2006 3 1 0 2 0 1 D"
-        ],
-        "Chicago": [
-            "1920 1920 5 13 7 2 0 1 D",
-            "1920 1921 9 0 8 2 0 0 S",
-            "1921 1921 2 0 8 2 0 1 D",
-            "1922 1966 3 0 8 2 0 1 D",
-            "1922 1954 8 0 8 2 0 0 S",
-            "1955 1966 9 0 8 2 0 0 S"
-        ],
-        "CR": [
-            "1979 1980 1 0 8 0 0 1 D",
-            "1979 1980 5 1 0 0 0 0 S",
-            "1991 1992 0 15 6 0 0 1 D",
-            "1991 1991 6 1 7 0 0 0 S",
-            "1992 1992 2 15 7 0 0 0 S"
-        ],
-        "Vanc": [
-            "1918 1918 3 14 7 2 0 1 D",
-            "1918 1918 9 27 7 2 0 0 S",
-            "1942 1942 1 9 7 2 0 1 W",
-            "1945 1945 7 14 7 23 1 1 P",
-            "1945 1945 8 30 7 2 0 0 S",
-            "1946 1986 3 0 8 2 0 1 D",
-            "1946 1946 9 13 7 2 0 0 S",
-            "1947 1961 8 0 8 2 0 0 S",
-            "1962 2006 9 0 8 2 0 0 S"
-        ],
-        "Denver": [
-            "1920 1921 2 0 8 2 0 1 D",
-            "1920 1920 9 0 8 2 0 0 S",
-            "1921 1921 4 22 7 2 0 0 S",
-            "1965 1966 3 0 8 2 0 1 D",
-            "1965 1966 9 0 8 2 0 0 S"
-        ],
-        "Detroit": [
-            "1948 1948 3 0 8 2 0 1 D",
-            "1948 1948 8 0 8 2 0 0 S",
-            "1967 1967 5 14 7 2 0 1 D",
-            "1967 1967 9 0 8 2 0 0 S"
-        ],
-        "Edm": [
-            "1918 1919 3 8 0 2 0 1 D",
-            "1918 1918 9 27 7 2 0 0 S",
-            "1919 1919 4 27 7 2 0 0 S",
-            "1920 1923 3 0 8 2 0 1 D",
-            "1920 1920 9 0 8 2 0 0 S",
-            "1921 1923 8 0 8 2 0 0 S",
-            "1942 1942 1 9 7 2 0 1 W",
-            "1945 1945 7 14 7 23 1 1 P",
-            "1945 1945 8 0 8 2 0 0 S",
-            "1947 1947 3 0 8 2 0 1 D",
-            "1947 1947 8 0 8 2 0 0 S",
-            "1967 1967 3 0 8 2 0 1 D",
-            "1967 1967 9 0 8 2 0 0 S",
-            "1969 1969 3 0 8 2 0 1 D",
-            "1969 1969 9 0 8 2 0 0 S",
-            "1972 1986 3 0 8 2 0 1 D",
-            "1972 2006 9 0 8 2 0 0 S"
-        ],
-        "Salv": [
-            "1987 1988 4 1 0 0 0 1 D",
-            "1987 1988 8 0 8 0 0 0 S"
-        ],
-        "Halifax": [
-            "1916 1916 3 1 7 0 0 1 D",
-            "1916 1916 9 1 7 0 0 0 S",
-            "1920 1920 4 9 7 0 0 1 D",
-            "1920 1920 7 29 7 0 0 0 S",
-            "1921 1921 4 6 7 0 0 1 D",
-            "1921 1922 8 5 7 0 0 0 S",
-            "1922 1922 3 30 7 0 0 1 D",
-            "1923 1925 4 1 0 0 0 1 D",
-            "1923 1923 8 4 7 0 0 0 S",
-            "1924 1924 8 15 7 0 0 0 S",
-            "1925 1925 8 28 7 0 0 0 S",
-            "1926 1926 4 16 7 0 0 1 D",
-            "1926 1926 8 13 7 0 0 0 S",
-            "1927 1927 4 1 7 0 0 1 D",
-            "1927 1927 8 26 7 0 0 0 S",
-            "1928 1931 4 8 0 0 0 1 D",
-            "1928 1928 8 9 7 0 0 0 S",
-            "1929 1929 8 3 7 0 0 0 S",
-            "1930 1930 8 15 7 0 0 0 S",
-            "1931 1932 8 24 1 0 0 0 S",
-            "1932 1932 4 1 7 0 0 1 D",
-            "1933 1933 3 30 7 0 0 1 D",
-            "1933 1933 9 2 7 0 0 0 S",
-            "1934 1934 4 20 7 0 0 1 D",
-            "1934 1934 8 16 7 0 0 0 S",
-            "1935 1935 5 2 7 0 0 1 D",
-            "1935 1935 8 30 7 0 0 0 S",
-            "1936 1936 5 1 7 0 0 1 D",
-            "1936 1936 8 14 7 0 0 0 S",
-            "1937 1938 4 1 0 0 0 1 D",
-            "1937 1941 8 24 1 0 0 0 S",
-            "1939 1939 4 28 7 0 0 1 D",
-            "1940 1941 4 1 0 0 0 1 D",
-            "1946 1949 3 0 8 2 0 1 D",
-            "1946 1949 8 0 8 2 0 0 S",
-            "1951 1954 3 0 8 2 0 1 D",
-            "1951 1954 8 0 8 2 0 0 S",
-            "1956 1959 3 0 8 2 0 1 D",
-            "1956 1959 8 0 8 2 0 0 S",
-            "1962 1973 3 0 8 2 0 1 D",
-            "1962 1973 9 0 8 2 0 0 S"
-        ],
-        "StJohns": [
-            "1917 1917 3 8 7 2 0 1 D",
-            "1917 1917 8 17 7 2 0 0 S",
-            "1919 1919 4 5 7 23 0 1 D",
-            "1919 1919 7 12 7 23 0 0 S",
-            "1920 1935 4 1 0 23 0 1 D",
-            "1920 1935 9 0 8 23 0 0 S",
-            "1936 1941 4 9 1 0 0 1 D",
-            "1936 1941 9 2 1 0 0 0 S",
-            "1946 1950 4 8 0 2 0 1 D",
-            "1946 1950 9 2 0 2 0 0 S",
-            "1951 1986 3 0 8 2 0 1 D",
-            "1951 1959 8 0 8 2 0 0 S",
-            "1960 1986 9 0 8 2 0 0 S",
-            "1987 1987 3 1 0 0:1 0 1 D",
-            "1987 2006 9 0 8 0:1 0 0 S",
-            "1988 1988 3 1 0 0:1 0 2 DD",
-            "1989 2006 3 1 0 0:1 0 1 D",
-            "2007 2011 2 8 0 0:1 0 1 D",
-            "2007 2010 10 1 0 0:1 0 0 S"
-        ],
-        "TC": [
-            "1979 1986 3 0 8 2 0 1 D",
-            "1979 2006 9 0 8 2 0 0 S",
-            "1987 2006 3 1 0 2 0 1 D",
-            "2007 9999 2 8 0 2 0 1 D",
-            "2007 9999 10 1 0 2 0 0 S"
-        ],
-        "Guat": [
-            "1973 1973 10 25 7 0 0 1 D",
-            "1974 1974 1 24 7 0 0 0 S",
-            "1983 1983 4 21 7 0 0 1 D",
-            "1983 1983 8 22 7 0 0 0 S",
-            "1991 1991 2 23 7 0 0 1 D",
-            "1991 1991 8 7 7 0 0 0 S",
-            "2006 2006 3 30 7 0 0 1 D",
-            "2006 2006 9 1 7 0 0 0 S"
-        ],
-        "Cuba": [
-            "1928 1928 5 10 7 0 0 1 D",
-            "1928 1928 9 10 7 0 0 0 S",
-            "1940 1942 5 1 0 0 0 1 D",
-            "1940 1942 8 1 0 0 0 0 S",
-            "1945 1946 5 1 0 0 0 1 D",
-            "1945 1946 8 1 0 0 0 0 S",
-            "1965 1965 5 1 7 0 0 1 D",
-            "1965 1965 8 30 7 0 0 0 S",
-            "1966 1966 4 29 7 0 0 1 D",
-            "1966 1966 9 2 7 0 0 0 S",
-            "1967 1967 3 8 7 0 0 1 D",
-            "1967 1968 8 8 0 0 0 0 S",
-            "1968 1968 3 14 7 0 0 1 D",
-            "1969 1977 3 0 8 0 0 1 D",
-            "1969 1971 9 0 8 0 0 0 S",
-            "1972 1974 9 8 7 0 0 0 S",
-            "1975 1977 9 0 8 0 0 0 S",
-            "1978 1978 4 7 7 0 0 1 D",
-            "1978 1990 9 8 0 0 0 0 S",
-            "1979 1980 2 15 0 0 0 1 D",
-            "1981 1985 4 5 0 0 0 1 D",
-            "1986 1989 2 14 0 0 0 1 D",
-            "1990 1997 3 1 0 0 0 1 D",
-            "1991 1995 9 8 0 0 2 0 S",
-            "1996 1996 9 6 7 0 2 0 S",
-            "1997 1997 9 12 7 0 2 0 S",
-            "1998 1999 2 0 8 0 2 1 D",
-            "1998 2003 9 0 8 0 2 0 S",
-            "2000 2004 3 1 0 0 2 1 D",
-            "2006 2010 9 0 8 0 2 0 S",
-            "2007 2007 2 8 0 0 2 1 D",
-            "2008 2008 2 15 0 0 2 1 D",
-            "2009 2010 2 8 0 0 2 1 D",
-            "2011 2011 2 15 0 0 2 1 D",
-            "2011 2011 10 13 7 0 2 0 S",
-            "2012 2012 3 1 7 0 2 1 D",
-            "2012 9999 10 1 0 0 2 0 S",
-            "2013 9999 2 8 0 0 2 1 D"
-        ],
-        "Indianapolis": [
-            "1941 1941 5 22 7 2 0 1 D",
-            "1941 1954 8 0 8 2 0 0 S",
-            "1946 1954 3 0 8 2 0 1 D"
-        ],
-        "Starke": [
-            "1947 1961 3 0 8 2 0 1 D",
-            "1947 1954 8 0 8 2 0 0 S",
-            "1955 1956 9 0 8 2 0 0 S",
-            "1957 1958 8 0 8 2 0 0 S",
-            "1959 1961 9 0 8 2 0 0 S"
-        ],
-        "Marengo": [
-            "1951 1951 3 0 8 2 0 1 D",
-            "1951 1951 8 0 8 2 0 0 S",
-            "1954 1960 3 0 8 2 0 1 D",
-            "1954 1960 8 0 8 2 0 0 S"
-        ],
-        "Pike": [
-            "1955 1955 4 1 7 0 0 1 D",
-            "1955 1960 8 0 8 2 0 0 S",
-            "1956 1964 3 0 8 2 0 1 D",
-            "1961 1964 9 0 8 2 0 0 S"
-        ],
-        "Perry": [
-            "1946 1946 3 0 8 2 0 1 D",
-            "1946 1946 8 0 8 2 0 0 S",
-            "1953 1954 3 0 8 2 0 1 D",
-            "1953 1959 8 0 8 2 0 0 S",
-            "1955 1955 4 1 7 0 0 1 D",
-            "1956 1963 3 0 8 2 0 1 D",
-            "1960 1960 9 0 8 2 0 0 S",
-            "1961 1961 8 0 8 2 0 0 S",
-            "1962 1963 9 0 8 2 0 0 S"
-        ],
-        "Vincennes": [
-            "1946 1946 3 0 8 2 0 1 D",
-            "1946 1946 8 0 8 2 0 0 S",
-            "1953 1954 3 0 8 2 0 1 D",
-            "1953 1959 8 0 8 2 0 0 S",
-            "1955 1955 4 1 7 0 0 1 D",
-            "1956 1963 3 0 8 2 0 1 D",
-            "1960 1960 9 0 8 2 0 0 S",
-            "1961 1961 8 0 8 2 0 0 S",
-            "1962 1963 9 0 8 2 0 0 S"
-        ],
-        "Pulaski": [
-            "1946 1960 3 0 8 2 0 1 D",
-            "1946 1954 8 0 8 2 0 0 S",
-            "1955 1956 9 0 8 2 0 0 S",
-            "1957 1960 8 0 8 2 0 0 S"
-        ],
-        "Louisville": [
-            "1921 1921 4 1 7 2 0 1 D",
-            "1921 1921 8 1 7 2 0 0 S",
-            "1941 1961 3 0 8 2 0 1 D",
-            "1941 1941 8 0 8 2 0 0 S",
-            "1946 1946 5 2 7 2 0 0 S",
-            "1950 1955 8 0 8 2 0 0 S",
-            "1956 1960 9 0 8 2 0 0 S"
-        ],
-        "Peru": [
-            "1938 1938 0 1 7 0 0 1 S",
-            "1938 1938 3 1 7 0 0 0",
-            "1938 1939 8 0 8 0 0 1 S",
-            "1939 1940 2 24 0 0 0 0",
-            "1986 1987 0 1 7 0 0 1 S",
-            "1986 1987 3 1 7 0 0 0",
-            "1990 1990 0 1 7 0 0 1 S",
-            "1990 1990 3 1 7 0 0 0",
-            "1994 1994 0 1 7 0 0 1 S",
-            "1994 1994 3 1 7 0 0 0"
-        ],
-        "CA": [
-            "1948 1948 2 14 7 2 0 1 D",
-            "1949 1949 0 1 7 2 0 0 S",
-            "1950 1966 3 0 8 2 0 1 D",
-            "1950 1961 8 0 8 2 0 0 S",
-            "1962 1966 9 0 8 2 0 0 S"
-        ],
-        "Nic": [
-            "1979 1980 2 16 0 0 0 1 D",
-            "1979 1980 5 23 1 0 0 0 S",
-            "2005 2005 3 10 7 0 0 1 D",
-            "2005 2005 9 1 0 0 0 0 S",
-            "2006 2006 3 30 7 2 0 1 D",
-            "2006 2006 9 1 0 1 0 0 S"
-        ],
-        "Menominee": [
-            "1946 1946 3 0 8 2 0 1 D",
-            "1946 1946 8 0 8 2 0 0 S",
-            "1966 1966 3 0 8 2 0 1 D",
-            "1966 1966 9 0 8 2 0 0 S"
-        ],
-        "Moncton": [
-            "1933 1935 5 8 0 1 0 1 D",
-            "1933 1935 8 8 0 1 0 0 S",
-            "1936 1938 5 1 0 1 0 1 D",
-            "1936 1938 8 1 0 1 0 0 S",
-            "1939 1939 4 27 7 1 0 1 D",
-            "1939 1941 8 21 6 1 0 0 S",
-            "1940 1940 4 19 7 1 0 1 D",
-            "1941 1941 4 4 7 1 0 1 D",
-            "1946 1972 3 0 8 2 0 1 D",
-            "1946 1956 8 0 8 2 0 0 S",
-            "1957 1972 9 0 8 2 0 0 S",
-            "1993 2006 3 1 0 0:1 0 1 D",
-            "1993 2006 9 0 8 0:1 0 0 S"
-        ],
-        "Uruguay": [
-            "1923 1923 9 2 7 0 0 0:30 HS",
-            "1924 1926 3 1 7 0 0 0",
-            "1924 1925 9 1 7 0 0 0:30 HS",
-            "1933 1935 9 0 8 0 0 0:30 HS",
-            "1934 1936 2 25 6 23:30 2 0",
-            "1936 1936 10 1 7 0 0 0:30 HS",
-            "1937 1941 2 0 8 0 0 0",
-            "1937 1940 9 0 8 0 0 0:30 HS",
-            "1941 1941 7 1 7 0 0 0:30 HS",
-            "1942 1942 0 1 7 0 0 0",
-            "1942 1942 11 14 7 0 0 1 S",
-            "1943 1943 2 14 7 0 0 0",
-            "1959 1959 4 24 7 0 0 1 S",
-            "1959 1959 10 15 7 0 0 0",
-            "1960 1960 0 17 7 0 0 1 S",
-            "1960 1960 2 6 7 0 0 0",
-            "1965 1967 3 1 0 0 0 1 S",
-            "1965 1965 8 26 7 0 0 0",
-            "1966 1967 9 31 7 0 0 0",
-            "1968 1970 4 27 7 0 0 0:30 HS",
-            "1968 1970 11 2 7 0 0 0",
-            "1972 1972 3 24 7 0 0 1 S",
-            "1972 1972 7 15 7 0 0 0",
-            "1974 1974 2 10 7 0 0 0:30 HS",
-            "1974 1974 11 22 7 0 0 1 S",
-            "1976 1976 9 1 7 0 0 0",
-            "1977 1977 11 4 7 0 0 1 S",
-            "1978 1978 3 1 7 0 0 0",
-            "1979 1979 9 1 7 0 0 1 S",
-            "1980 1980 4 1 7 0 0 0",
-            "1987 1987 11 14 7 0 0 1 S",
-            "1988 1988 2 14 7 0 0 0",
-            "1988 1988 11 11 7 0 0 1 S",
-            "1989 1989 2 12 7 0 0 0",
-            "1989 1989 9 29 7 0 0 1 S",
-            "1990 1992 2 1 0 0 0 0",
-            "1990 1991 9 21 0 0 0 1 S",
-            "1992 1992 9 18 7 0 0 1 S",
-            "1993 1993 1 28 7 0 0 0",
-            "2004 2004 8 19 7 0 0 1 S",
-            "2005 2005 2 27 7 2 0 0",
-            "2005 2005 9 9 7 2 0 1 S",
-            "2006 2006 2 12 7 2 0 0",
-            "2006 9999 9 1 0 2 0 1 S",
-            "2007 9999 2 8 0 2 0 0"
-        ],
-        "Mont": [
-            "1917 1917 2 25 7 2 0 1 D",
-            "1917 1917 3 24 7 0 0 0 S",
-            "1919 1919 2 31 7 2:30 0 1 D",
-            "1919 1919 9 25 7 2:30 0 0 S",
-            "1920 1920 4 2 7 2:30 0 1 D",
-            "1920 1922 9 1 0 2:30 0 0 S",
-            "1921 1921 4 1 7 2 0 1 D",
-            "1922 1922 3 30 7 2 0 1 D",
-            "1924 1924 4 17 7 2 0 1 D",
-            "1924 1926 8 0 8 2:30 0 0 S",
-            "1925 1926 4 1 0 2 0 1 D",
-            "1927 1927 4 1 7 0 0 1 D",
-            "1927 1932 8 0 8 0 0 0 S",
-            "1928 1931 3 0 8 0 0 1 D",
-            "1932 1932 4 1 7 0 0 1 D",
-            "1933 1940 3 0 8 0 0 1 D",
-            "1933 1933 9 1 7 0 0 0 S",
-            "1934 1939 8 0 8 0 0 0 S",
-            "1946 1973 3 0 8 2 0 1 D",
-            "1945 1948 8 0 8 2 0 0 S",
-            "1949 1950 9 0 8 2 0 0 S",
-            "1951 1956 8 0 8 2 0 0 S",
-            "1957 1973 9 0 8 2 0 0 S"
-        ],
-        "Bahamas": [
-            "1964 1975 9 0 8 2 0 0 S",
-            "1964 1975 3 0 8 2 0 1 D"
-        ],
-        "NYC": [
-            "1920 1920 2 0 8 2 0 1 D",
-            "1920 1920 9 0 8 2 0 0 S",
-            "1921 1966 3 0 8 2 0 1 D",
-            "1921 1954 8 0 8 2 0 0 S",
-            "1955 1966 9 0 8 2 0 0 S"
-        ],
-        "Haiti": [
-            "1983 1983 4 8 7 0 0 1 D",
-            "1984 1987 3 0 8 0 0 1 D",
-            "1983 1987 9 0 8 0 0 0 S",
-            "1988 1997 3 1 0 1 2 1 D",
-            "1988 1997 9 0 8 1 2 0 S",
-            "2005 2006 3 1 0 0 0 1 D",
-            "2005 2006 9 0 8 0 0 0 S",
-            "2012 9999 2 8 0 2 0 1 D",
-            "2012 9999 10 1 0 2 0 0 S"
-        ],
-        "Regina": [
-            "1918 1918 3 14 7 2 0 1 D",
-            "1918 1918 9 27 7 2 0 0 S",
-            "1930 1934 4 1 0 0 0 1 D",
-            "1930 1934 9 1 0 0 0 0 S",
-            "1937 1941 3 8 0 0 0 1 D",
-            "1937 1937 9 8 0 0 0 0 S",
-            "1938 1938 9 1 0 0 0 0 S",
-            "1939 1941 9 8 0 0 0 0 S",
-            "1942 1942 1 9 7 2 0 1 W",
-            "1945 1945 7 14 7 23 1 1 P",
-            "1945 1945 8 0 8 2 0 0 S",
-            "1946 1946 3 8 0 2 0 1 D",
-            "1946 1946 9 8 0 2 0 0 S",
-            "1947 1957 3 0 8 2 0 1 D",
-            "1947 1957 8 0 8 2 0 0 S",
-            "1959 1959 3 0 8 2 0 1 D",
-            "1959 1959 9 0 8 2 0 0 S"
-        ],
-        "Chile": [
-            "1927 1932 8 1 7 0 0 1 S",
-            "1928 1932 3 1 7 0 0 0",
-            "1942 1942 5 1 7 4 1 0",
-            "1942 1942 7 1 7 5 1 1 S",
-            "1946 1946 6 15 7 4 1 1 S",
-            "1946 1946 8 1 7 3 1 0",
-            "1947 1947 3 1 7 4 1 0",
-            "1968 1968 10 3 7 4 1 1 S",
-            "1969 1969 2 30 7 3 1 0",
-            "1969 1969 10 23 7 4 1 1 S",
-            "1970 1970 2 29 7 3 1 0",
-            "1971 1971 2 14 7 3 1 0",
-            "1970 1972 9 9 0 4 1 1 S",
-            "1972 1986 2 9 0 3 1 0",
-            "1973 1973 8 30 7 4 1 1 S",
-            "1974 1987 9 9 0 4 1 1 S",
-            "1987 1987 3 12 7 3 1 0",
-            "1988 1989 2 9 0 3 1 0",
-            "1988 1988 9 1 0 4 1 1 S",
-            "1989 1989 9 9 0 4 1 1 S",
-            "1990 1990 2 18 7 3 1 0",
-            "1990 1990 8 16 7 4 1 1 S",
-            "1991 1996 2 9 0 3 1 0",
-            "1991 1997 9 9 0 4 1 1 S",
-            "1997 1997 2 30 7 3 1 0",
-            "1998 1998 2 9 0 3 1 0",
-            "1998 1998 8 27 7 4 1 1 S",
-            "1999 1999 3 4 7 3 1 0",
-            "1999 2010 9 9 0 4 1 1 S",
-            "2000 2007 2 9 0 3 1 0",
-            "2008 2008 2 30 7 3 1 0",
-            "2009 2009 2 9 0 3 1 0",
-            "2010 2010 3 1 0 3 1 0",
-            "2011 2011 4 2 0 3 1 0",
-            "2011 2011 7 16 0 4 1 1 S",
-            "2012 9999 3 23 0 3 1 0",
-            "2012 9999 8 2 0 4 1 1 S"
-        ],
-        "DR": [
-            "1966 1966 9 30 7 0 0 1 D",
-            "1967 1967 1 28 7 0 0 0 S",
-            "1969 1973 9 0 8 0 0 0:30 HD",
-            "1970 1970 1 21 7 0 0 0 S",
-            "1971 1971 0 20 7 0 0 0 S",
-            "1972 1974 0 21 7 0 0 0 S"
-        ],
-        "C-Eur": [
-            "1916 1916 3 30 7 23 0 1 S",
-            "1916 1916 9 1 7 1 0 0",
-            "1917 1918 3 15 1 2 2 1 S",
-            "1917 1918 8 15 1 2 2 0",
-            "1940 1940 3 1 7 2 2 1 S",
-            "1942 1942 10 2 7 2 2 0",
-            "1943 1943 2 29 7 2 2 1 S",
-            "1943 1943 9 4 7 2 2 0",
-            "1944 1945 3 1 1 2 2 1 S",
-            "1944 1944 9 2 7 2 2 0",
-            "1945 1945 8 16 7 2 2 0",
-            "1977 1980 3 1 0 2 2 1 S",
-            "1977 1977 8 0 8 2 2 0",
-            "1978 1978 9 1 7 2 2 0",
-            "1979 1995 8 0 8 2 2 0",
-            "1981 9999 2 0 8 2 2 1 S",
-            "1996 9999 9 0 8 2 2 0"
-        ],
-        "Swift": [
-            "1957 1957 3 0 8 2 0 1 D",
-            "1957 1957 9 0 8 2 0 0 S",
-            "1959 1961 3 0 8 2 0 1 D",
-            "1959 1959 9 0 8 2 0 0 S",
-            "1960 1961 8 0 8 2 0 0 S"
-        ],
-        "Hond": [
-            "1987 1988 4 1 0 0 0 1 D",
-            "1987 1988 8 0 8 0 0 0 S",
-            "2006 2006 4 1 0 0 0 1 D",
-            "2006 2006 7 1 1 0 0 0 S"
-        ],
-        "Thule": [
-            "1991 1992 2 0 8 2 0 1 D",
-            "1991 1992 8 0 8 2 0 0 S",
-            "1993 2006 3 1 0 2 0 1 D",
-            "1993 2006 9 0 8 2 0 0 S",
-            "2007 9999 2 8 0 2 0 1 D",
-            "2007 9999 10 1 0 2 0 0 S"
-        ],
-        "Toronto": [
-            "1919 1919 2 30 7 23:30 0 1 D",
-            "1919 1919 9 26 7 0 0 0 S",
-            "1920 1920 4 2 7 2 0 1 D",
-            "1920 1920 8 26 7 0 0 0 S",
-            "1921 1921 4 15 7 2 0 1 D",
-            "1921 1921 8 15 7 2 0 0 S",
-            "1922 1923 4 8 0 2 0 1 D",
-            "1922 1926 8 15 0 2 0 0 S",
-            "1924 1927 4 1 0 2 0 1 D",
-            "1927 1932 8 0 8 2 0 0 S",
-            "1928 1931 3 0 8 2 0 1 D",
-            "1932 1932 4 1 7 2 0 1 D",
-            "1933 1940 3 0 8 2 0 1 D",
-            "1933 1933 9 1 7 2 0 0 S",
-            "1934 1939 8 0 8 2 0 0 S",
-            "1945 1946 8 0 8 2 0 0 S",
-            "1946 1946 3 0 8 2 0 1 D",
-            "1947 1949 3 0 8 0 0 1 D",
-            "1947 1948 8 0 8 0 0 0 S",
-            "1949 1949 10 0 8 0 0 0 S",
-            "1950 1973 3 0 8 2 0 1 D",
-            "1950 1950 10 0 8 2 0 0 S",
-            "1951 1956 8 0 8 2 0 0 S",
-            "1957 1973 9 0 8 2 0 0 S"
-        ],
-        "Winn": [
-            "1916 1916 3 23 7 0 0 1 D",
-            "1916 1916 8 17 7 0 0 0 S",
-            "1918 1918 3 14 7 2 0 1 D",
-            "1918 1918 9 27 7 2 0 0 S",
-            "1937 1937 4 16 7 2 0 1 D",
-            "1937 1937 8 26 7 2 0 0 S",
-            "1942 1942 1 9 7 2 0 1 W",
-            "1945 1945 7 14 7 23 1 1 P",
-            "1945 1945 8 0 8 2 0 0 S",
-            "1946 1946 4 12 7 2 0 1 D",
-            "1946 1946 9 13 7 2 0 0 S",
-            "1947 1949 3 0 8 2 0 1 D",
-            "1947 1949 8 0 8 2 0 0 S",
-            "1950 1950 4 1 7 2 0 1 D",
-            "1950 1950 8 30 7 2 0 0 S",
-            "1951 1960 3 0 8 2 0 1 D",
-            "1951 1958 8 0 8 2 0 0 S",
-            "1959 1959 9 0 8 2 0 0 S",
-            "1960 1960 8 0 8 2 0 0 S",
-            "1963 1963 3 0 8 2 0 1 D",
-            "1963 1963 8 22 7 2 0 0 S",
-            "1966 1986 3 0 8 2 2 1 D",
-            "1966 2005 9 0 8 2 2 0 S",
-            "1987 2005 3 1 0 2 2 1 D"
-        ],
-        "Aus": [
-            "1917 1917 0 1 7 0:1 0 1",
-            "1917 1917 2 25 7 2 0 0",
-            "1942 1942 0 1 7 2 0 1",
-            "1942 1942 2 29 7 2 0 0",
-            "1942 1942 8 27 7 2 0 1",
-            "1943 1944 2 0 8 2 0 0",
-            "1943 1943 9 3 7 2 0 1"
-        ],
-        "AT": [
-            "1967 1967 9 1 0 2 2 1",
-            "1968 1968 2 0 8 2 2 0",
-            "1968 1985 9 0 8 2 2 1",
-            "1969 1971 2 8 0 2 2 0",
-            "1972 1972 1 0 8 2 2 0",
-            "1973 1981 2 1 0 2 2 0",
-            "1982 1983 2 0 8 2 2 0",
-            "1984 1986 2 1 0 2 2 0",
-            "1986 1986 9 15 0 2 2 1",
-            "1987 1990 2 15 0 2 2 0",
-            "1987 1987 9 22 0 2 2 1",
-            "1988 1990 9 0 8 2 2 1",
-            "1991 1999 9 1 0 2 2 1",
-            "1991 2005 2 0 8 2 2 0",
-            "2000 2000 7 0 8 2 2 1",
-            "2001 9999 9 1 0 2 2 1",
-            "2006 2006 3 1 0 2 2 0",
-            "2007 2007 2 0 8 2 2 0",
-            "2008 9999 3 1 0 2 2 0"
-        ],
-        "NZAQ": [
-            "1974 1974 10 3 7 2 2 1 D",
-            "1975 1988 9 0 8 2 2 1 D",
-            "1989 1989 9 8 7 2 2 1 D",
-            "1990 2006 9 1 0 2 2 1 D",
-            "1975 1975 1 23 7 2 2 0 S",
-            "1976 1989 2 1 0 2 2 0 S",
-            "1990 2007 2 15 0 2 2 0 S",
-            "2007 9999 8 0 8 2 2 1 D",
-            "2008 9999 3 1 0 2 2 0 S"
-        ],
-        "ArgAQ": [
-            "1964 1966 2 1 7 0 0 0",
-            "1964 1966 9 15 7 0 0 1 S",
-            "1967 1967 3 2 7 0 0 0",
-            "1967 1968 9 1 0 0 0 1 S",
-            "1968 1969 3 1 0 0 0 0",
-            "1974 1974 0 23 7 0 0 1 S",
-            "1974 1974 4 1 7 0 0 0"
-        ],
-        "ChileAQ": [
-            "1972 1986 2 9 0 3 1 0",
-            "1974 1987 9 9 0 4 1 1 S",
-            "1987 1987 3 12 7 3 1 0",
-            "1988 1989 2 9 0 3 1 0",
-            "1988 1988 9 1 0 4 1 1 S",
-            "1989 1989 9 9 0 4 1 1 S",
-            "1990 1990 2 18 7 3 1 0",
-            "1990 1990 8 16 7 4 1 1 S",
-            "1991 1996 2 9 0 3 1 0",
-            "1991 1997 9 9 0 4 1 1 S",
-            "1997 1997 2 30 7 3 1 0",
-            "1998 1998 2 9 0 3 1 0",
-            "1998 1998 8 27 7 4 1 1 S",
-            "1999 1999 3 4 7 3 1 0",
-            "1999 2010 9 9 0 4 1 1 S",
-            "2000 2007 2 9 0 3 1 0",
-            "2008 2008 2 30 7 3 1 0",
-            "2009 2009 2 9 0 3 1 0",
-            "2010 2010 3 1 0 3 1 0",
-            "2011 2011 4 2 0 3 1 0",
-            "2011 2011 7 16 0 4 1 1 S",
-            "2012 9999 3 23 0 3 1 0",
-            "2012 9999 8 2 0 4 1 1 S"
-        ],
-        "Norway": [
-            "1916 1916 4 22 7 1 0 1 S",
-            "1916 1916 8 30 7 0 0 0",
-            "1945 1945 3 2 7 2 2 1 S",
-            "1945 1945 9 1 7 2 2 0",
-            "1959 1964 2 15 0 2 2 1 S",
-            "1959 1965 8 15 0 2 2 0",
-            "1965 1965 3 25 7 2 2 1 S"
-        ],
-        "RussiaAsia": [
-            "1981 1984 3 1 7 0 0 1 S",
-            "1981 1983 9 1 7 0 0 0",
-            "1984 1991 8 0 8 2 2 0",
-            "1985 1991 2 0 8 2 2 1 S",
-            "1992 1992 2 6 8 23 0 1 S",
-            "1992 1992 8 6 8 23 0 0",
-            "1993 9999 2 0 8 2 2 1 S",
-            "1993 1995 8 0 8 2 2 0",
-            "1996 9999 9 0 8 2 2 0"
-        ],
-        "Jordan": [
-            "1973 1973 5 6 7 0 0 1 S",
-            "1973 1975 9 1 7 0 0 0",
-            "1974 1977 4 1 7 0 0 1 S",
-            "1976 1976 10 1 7 0 0 0",
-            "1977 1977 9 1 7 0 0 0",
-            "1978 1978 3 30 7 0 0 1 S",
-            "1978 1978 8 30 7 0 0 0",
-            "1985 1985 3 1 7 0 0 1 S",
-            "1985 1985 9 1 7 0 0 0",
-            "1986 1988 3 1 5 0 0 1 S",
-            "1986 1990 9 1 5 0 0 0",
-            "1989 1989 4 8 7 0 0 1 S",
-            "1990 1990 3 27 7 0 0 1 S",
-            "1991 1991 3 17 7 0 0 1 S",
-            "1991 1991 8 27 7 0 0 0",
-            "1992 1992 3 10 7 0 0 1 S",
-            "1992 1993 9 1 5 0 0 0",
-            "1993 1998 3 1 5 0 0 1 S",
-            "1994 1994 8 15 5 0 0 0",
-            "1995 1998 8 15 5 0 2 0",
-            "1999 1999 6 1 7 0 2 1 S",
-            "1999 2002 8 5 8 0 2 0",
-            "2000 2001 2 4 8 0 2 1 S",
-            "2002 9999 2 4 8 24 0 1 S",
-            "2003 2003 9 24 7 0 2 0",
-            "2004 2004 9 15 7 0 2 0",
-            "2005 2005 8 5 8 0 2 0",
-            "2006 2011 9 5 8 0 2 0",
-            "2013 9999 9 5 8 0 2 0"
-        ],
-        "Russia": [
-            "1917 1917 6 1 7 23 0 1 MST",
-            "1917 1917 11 28 7 0 0 0 MMT",
-            "1918 1918 4 31 7 22 0 2 MDST",
-            "1918 1918 8 16 7 1 0 1 MST",
-            "1919 1919 4 31 7 23 0 2 MDST",
-            "1919 1919 6 1 7 2 0 1 S",
-            "1919 1919 7 16 7 0 0 0",
-            "1921 1921 1 14 7 23 0 1 S",
-            "1921 1921 2 20 7 23 0 2 M",
-            "1921 1921 8 1 7 0 0 1 S",
-            "1921 1921 9 1 7 0 0 0",
-            "1981 1984 3 1 7 0 0 1 S",
-            "1981 1983 9 1 7 0 0 0",
-            "1984 1991 8 0 8 2 2 0",
-            "1985 1991 2 0 8 2 2 1 S",
-            "1992 1992 2 6 8 23 0 1 S",
-            "1992 1992 8 6 8 23 0 0",
-            "1993 2010 2 0 8 2 2 1 S",
-            "1993 1995 8 0 8 2 2 0",
-            "1996 2010 9 0 8 2 2 0"
-        ],
-        "Iraq": [
-            "1982 1982 4 1 7 0 0 1 D",
-            "1982 1984 9 1 7 0 0 0 S",
-            "1983 1983 2 31 7 0 0 1 D",
-            "1984 1985 3 1 7 0 0 1 D",
-            "1985 1990 8 0 8 1 2 0 S",
-            "1986 1990 2 0 8 1 2 1 D",
-            "1991 2007 3 1 7 3 2 1 D",
-            "1991 2007 9 1 7 3 2 0 S"
-        ],
-        "EUAsia": [
-            "1981 9999 2 0 8 1 1 1 S",
-            "1979 1995 8 0 8 1 1 0",
-            "1996 9999 9 0 8 1 1 0"
-        ],
-        "Azer": [
-            "1997 9999 2 0 8 4 0 1 S",
-            "1997 9999 9 0 8 5 0 0"
-        ],
-        "Lebanon": [
-            "1920 1920 2 28 7 0 0 1 S",
-            "1920 1920 9 25 7 0 0 0",
-            "1921 1921 3 3 7 0 0 1 S",
-            "1921 1921 9 3 7 0 0 0",
-            "1922 1922 2 26 7 0 0 1 S",
-            "1922 1922 9 8 7 0 0 0",
-            "1923 1923 3 22 7 0 0 1 S",
-            "1923 1923 8 16 7 0 0 0",
-            "1957 1961 4 1 7 0 0 1 S",
-            "1957 1961 9 1 7 0 0 0",
-            "1972 1972 5 22 7 0 0 1 S",
-            "1972 1977 9 1 7 0 0 0",
-            "1973 1977 4 1 7 0 0 1 S",
-            "1978 1978 3 30 7 0 0 1 S",
-            "1978 1978 8 30 7 0 0 0",
-            "1984 1987 4 1 7 0 0 1 S",
-            "1984 1991 9 16 7 0 0 0",
-            "1988 1988 5 1 7 0 0 1 S",
-            "1989 1989 4 10 7 0 0 1 S",
-            "1990 1992 4 1 7 0 0 1 S",
-            "1992 1992 9 4 7 0 0 0",
-            "1993 9999 2 0 8 0 0 1 S",
-            "1993 1998 8 0 8 0 0 0",
-            "1999 9999 9 0 8 0 0 0"
-        ],
-        "Kyrgyz": [
-            "1992 1996 3 7 0 0 2 1 S",
-            "1992 1996 8 0 8 0 0 0",
-            "1997 2005 2 0 8 2:30 0 1 S",
-            "1997 2004 9 0 8 2:30 0 0"
-        ],
-        "Mongol": [
-            "1983 1984 3 1 7 0 0 1 S",
-            "1983 1983 9 1 7 0 0 0",
-            "1985 1998 2 0 8 0 0 1 S",
-            "1984 1998 8 0 8 0 0 0",
-            "2001 2001 3 6 8 2 0 1 S",
-            "2001 2006 8 6 8 2 0 0",
-            "2002 2006 2 6 8 2 0 1 S"
-        ],
-        "PRC": [
-            "1986 1986 4 4 7 0 0 1 D",
-            "1986 1991 8 11 0 0 0 0 S",
-            "1987 1991 3 10 0 0 0 1 D"
-        ],
-        "Syria": [
-            "1920 1923 3 15 0 2 0 1 S",
-            "1920 1923 9 1 0 2 0 0",
-            "1962 1962 3 29 7 2 0 1 S",
-            "1962 1962 9 1 7 2 0 0",
-            "1963 1965 4 1 7 2 0 1 S",
-            "1963 1963 8 30 7 2 0 0",
-            "1964 1964 9 1 7 2 0 0",
-            "1965 1965 8 30 7 2 0 0",
-            "1966 1966 3 24 7 2 0 1 S",
-            "1966 1976 9 1 7 2 0 0",
-            "1967 1978 4 1 7 2 0 1 S",
-            "1977 1978 8 1 7 2 0 0",
-            "1983 1984 3 9 7 2 0 1 S",
-            "1983 1984 9 1 7 2 0 0",
-            "1986 1986 1 16 7 2 0 1 S",
-            "1986 1986 9 9 7 2 0 0",
-            "1987 1987 2 1 7 2 0 1 S",
-            "1987 1988 9 31 7 2 0 0",
-            "1988 1988 2 15 7 2 0 1 S",
-            "1989 1989 2 31 7 2 0 1 S",
-            "1989 1989 9 1 7 2 0 0",
-            "1990 1990 3 1 7 2 0 1 S",
-            "1990 1990 8 30 7 2 0 0",
-            "1991 1991 3 1 7 0 0 1 S",
-            "1991 1992 9 1 7 0 0 0",
-            "1992 1992 3 8 7 0 0 1 S",
-            "1993 1993 2 26 7 0 0 1 S",
-            "1993 1993 8 25 7 0 0 0",
-            "1994 1996 3 1 7 0 0 1 S",
-            "1994 2005 9 1 7 0 0 0",
-            "1997 1998 2 1 8 0 0 1 S",
-            "1999 2006 3 1 7 0 0 1 S",
-            "2006 2006 8 22 7 0 0 0",
-            "2007 2007 2 5 8 0 0 1 S",
-            "2007 2007 10 1 5 0 0 0",
-            "2008 2008 3 1 5 0 0 1 S",
-            "2008 2008 10 1 7 0 0 0",
-            "2009 2009 2 5 8 0 0 1 S",
-            "2010 2011 3 1 5 0 0 1 S",
-            "2012 9999 2 5 8 0 0 1 S",
-            "2009 9999 9 5 8 0 0 0"
-        ],
-        "Dhaka": [
-            "2009 2009 5 19 7 23 0 1 S",
-            "2009 2009 11 31 7 23:59 0 0"
-        ],
-        "Zion": [
-            "1940 1940 5 1 7 0 0 1 D",
-            "1942 1944 10 1 7 0 0 0 S",
-            "1943 1943 3 1 7 2 0 1 D",
-            "1944 1944 3 1 7 0 0 1 D",
-            "1945 1945 3 16 7 0 0 1 D",
-            "1945 1945 10 1 7 2 0 0 S",
-            "1946 1946 3 16 7 2 0 1 D",
-            "1946 1946 10 1 7 0 0 0 S",
-            "1948 1948 4 23 7 0 0 2 DD",
-            "1948 1948 8 1 7 0 0 1 D",
-            "1948 1949 10 1 7 2 0 0 S",
-            "1949 1949 4 1 7 0 0 1 D",
-            "1950 1950 3 16 7 0 0 1 D",
-            "1950 1950 8 15 7 3 0 0 S",
-            "1951 1951 3 1 7 0 0 1 D",
-            "1951 1951 10 11 7 3 0 0 S",
-            "1952 1952 3 20 7 2 0 1 D",
-            "1952 1952 9 19 7 3 0 0 S",
-            "1953 1953 3 12 7 2 0 1 D",
-            "1953 1953 8 13 7 3 0 0 S",
-            "1954 1954 5 13 7 0 0 1 D",
-            "1954 1954 8 12 7 0 0 0 S",
-            "1955 1955 5 11 7 2 0 1 D",
-            "1955 1955 8 11 7 0 0 0 S",
-            "1956 1956 5 3 7 0 0 1 D",
-            "1956 1956 8 30 7 3 0 0 S",
-            "1957 1957 3 29 7 2 0 1 D",
-            "1957 1957 8 22 7 0 0 0 S",
-            "1974 1974 6 7 7 0 0 1 D",
-            "1974 1974 9 13 7 0 0 0 S",
-            "1975 1975 3 20 7 0 0 1 D",
-            "1975 1975 7 31 7 0 0 0 S",
-            "1985 1985 3 14 7 0 0 1 D",
-            "1985 1985 8 15 7 0 0 0 S",
-            "1986 1986 4 18 7 0 0 1 D",
-            "1986 1986 8 7 7 0 0 0 S",
-            "1987 1987 3 15 7 0 0 1 D",
-            "1987 1987 8 13 7 0 0 0 S",
-            "1988 1988 3 9 7 0 0 1 D",
-            "1988 1988 8 3 7 0 0 0 S",
-            "1989 1989 3 30 7 0 0 1 D",
-            "1989 1989 8 3 7 0 0 0 S",
-            "1990 1990 2 25 7 0 0 1 D",
-            "1990 1990 7 26 7 0 0 0 S",
-            "1991 1991 2 24 7 0 0 1 D",
-            "1991 1991 8 1 7 0 0 0 S",
-            "1992 1992 2 29 7 0 0 1 D",
-            "1992 1992 8 6 7 0 0 0 S",
-            "1993 1993 3 2 7 0 0 1 D",
-            "1993 1993 8 5 7 0 0 0 S",
-            "1994 1994 3 1 7 0 0 1 D",
-            "1994 1994 7 28 7 0 0 0 S",
-            "1995 1995 2 31 7 0 0 1 D",
-            "1995 1995 8 3 7 0 0 0 S",
-            "1996 1996 2 15 7 0 0 1 D",
-            "1996 1996 8 16 7 0 0 0 S",
-            "1997 1997 2 21 7 0 0 1 D",
-            "1997 1997 8 14 7 0 0 0 S",
-            "1998 1998 2 20 7 0 0 1 D",
-            "1998 1998 8 6 7 0 0 0 S",
-            "1999 1999 3 2 7 2 0 1 D",
-            "1999 1999 8 3 7 2 0 0 S",
-            "2000 2000 3 14 7 2 0 1 D",
-            "2000 2000 9 6 7 1 0 0 S",
-            "2001 2001 3 9 7 1 0 1 D",
-            "2001 2001 8 24 7 1 0 0 S",
-            "2002 2002 2 29 7 1 0 1 D",
-            "2002 2002 9 7 7 1 0 0 S",
-            "2003 2003 2 28 7 1 0 1 D",
-            "2003 2003 9 3 7 1 0 0 S",
-            "2004 2004 3 7 7 1 0 1 D",
-            "2004 2004 8 22 7 1 0 0 S",
-            "2005 2005 3 1 7 2 0 1 D",
-            "2005 2005 9 9 7 2 0 0 S",
-            "2006 2010 2 26 5 2 0 1 D",
-            "2006 2006 9 1 7 2 0 0 S",
-            "2007 2007 8 16 7 2 0 0 S",
-            "2008 2008 9 5 7 2 0 0 S",
-            "2009 2009 8 27 7 2 0 0 S",
-            "2010 2010 8 12 7 2 0 0 S",
-            "2011 2011 3 1 7 2 0 1 D",
-            "2011 2011 9 2 7 2 0 0 S",
-            "2012 2012 2 26 5 2 0 1 D",
-            "2012 2012 8 23 7 2 0 0 S",
-            "2013 9999 2 23 5 2 0 1 D",
-            "2013 2026 9 2 0 2 0 0 S",
-            "2027 2027 9 3 1 2 0 0 S",
-            "2028 9999 9 2 0 2 0 0 S"
-        ],
-        "EgyptAsia": [
-            "1957 1957 4 10 7 0 0 1 S",
-            "1957 1958 9 1 7 0 0 0",
-            "1958 1958 4 1 7 0 0 1 S",
-            "1959 1967 4 1 7 1 0 1 S",
-            "1959 1965 8 30 7 3 0 0",
-            "1966 1966 9 1 7 3 0 0"
-        ],
-        "Palestine": [
-            "1999 2005 3 15 5 0 0 1 S",
-            "1999 2003 9 15 5 0 0 0",
-            "2004 2004 9 1 7 1 0 0",
-            "2005 2005 9 4 7 2 0 0",
-            "2006 2007 3 1 7 0 0 1 S",
-            "2006 2006 8 22 7 0 0 0",
-            "2007 2007 8 8 4 2 0 0",
-            "2008 2009 2 5 8 0 0 1 S",
-            "2008 2008 8 1 7 0 0 0",
-            "2009 2009 8 1 5 1 0 0",
-            "2010 2010 2 26 7 0 0 1 S",
-            "2010 2010 7 11 7 0 0 0",
-            "2011 2011 3 1 7 0:1 0 1 S",
-            "2011 2011 7 1 7 0 0 0",
-            "2011 2011 7 30 7 0 0 1 S",
-            "2011 2011 8 30 7 0 0 0",
-            "2012 9999 2 4 8 24 0 1 S",
-            "2012 9999 8 21 5 1 0 0"
-        ],
-        "HK": [
-            "1941 1941 3 1 7 3:30 0 1 S",
-            "1941 1941 8 30 7 3:30 0 0",
-            "1946 1946 3 20 7 3:30 0 1 S",
-            "1946 1946 11 1 7 3:30 0 0",
-            "1947 1947 3 13 7 3:30 0 1 S",
-            "1947 1947 11 30 7 3:30 0 0",
-            "1948 1948 4 2 7 3:30 0 1 S",
-            "1948 1951 9 0 8 3:30 0 0",
-            "1952 1952 9 25 7 3:30 0 0",
-            "1949 1953 3 1 0 3:30 0 1 S",
-            "1953 1953 10 1 7 3:30 0 0",
-            "1954 1964 2 18 0 3:30 0 1 S",
-            "1954 1954 9 31 7 3:30 0 0",
-            "1955 1964 10 1 0 3:30 0 0",
-            "1965 1976 3 16 0 3:30 0 1 S",
-            "1965 1976 9 16 0 3:30 0 0",
-            "1973 1973 11 30 7 3:30 0 1 S",
-            "1979 1979 4 8 0 3:30 0 1 S",
-            "1979 1979 9 16 0 3:30 0 0"
-        ],
-        "Pakistan": [
-            "2002 2002 3 2 0 0:1 0 1 S",
-            "2002 2002 9 2 0 0:1 0 0",
-            "2008 2008 5 1 7 0 0 1 S",
-            "2008 2008 10 1 7 0 0 0",
-            "2009 2009 3 15 7 0 0 1 S",
-            "2009 2009 10 1 7 0 0 0"
-        ],
-        "NBorneo": [
-            "1935 1941 8 14 7 0 0 0:20 TS",
-            "1935 1941 11 14 7 0 0 0"
-        ],
-        "Macau": [
-            "1961 1962 2 16 0 3:30 0 1 S",
-            "1961 1964 10 1 0 3:30 0 0",
-            "1963 1963 2 16 0 0 0 1 S",
-            "1964 1964 2 16 0 3:30 0 1 S",
-            "1965 1965 2 16 0 0 0 1 S",
-            "1965 1965 9 31 7 0 0 0",
-            "1966 1971 3 16 0 3:30 0 1 S",
-            "1966 1971 9 16 0 3:30 0 0",
-            "1972 1974 3 15 0 0 0 1 S",
-            "1972 1973 9 15 0 0 0 0",
-            "1974 1977 9 15 0 3:30 0 0",
-            "1975 1977 3 15 0 3:30 0 1 S",
-            "1978 1980 3 15 0 0 0 1 S",
-            "1978 1980 9 15 0 0 0 0"
-        ],
-        "Phil": [
-            "1936 1936 10 1 7 0 0 1 S",
-            "1937 1937 1 1 7 0 0 0",
-            "1954 1954 3 12 7 0 0 1 S",
-            "1954 1954 6 1 7 0 0 0",
-            "1978 1978 2 22 7 0 0 1 S",
-            "1978 1978 8 21 7 0 0 0"
-        ],
-        "Cyprus": [
-            "1975 1975 3 13 7 0 0 1 S",
-            "1975 1975 9 12 7 0 0 0",
-            "1976 1976 4 15 7 0 0 1 S",
-            "1976 1976 9 11 7 0 0 0",
-            "1977 1980 3 1 0 0 0 1 S",
-            "1977 1977 8 25 7 0 0 0",
-            "1978 1978 9 2 7 0 0 0",
-            "1979 1997 8 0 8 0 0 0",
-            "1981 1998 2 0 8 0 0 1 S"
-        ],
-        "ROK": [
-            "1960 1960 4 15 7 0 0 1 D",
-            "1960 1960 8 13 7 0 0 0 S",
-            "1987 1988 4 8 0 0 0 1 D",
-            "1987 1988 9 8 0 0 0 0 S"
-        ],
-        "Shang": [
-            "1940 1940 5 3 7 0 0 1 D",
-            "1940 1941 9 1 7 0 0 0 S",
-            "1941 1941 2 16 7 0 0 1 D"
-        ],
-        "Taiwan": [
-            "1945 1951 4 1 7 0 0 1 D",
-            "1945 1951 9 1 7 0 0 0 S",
-            "1952 1952 2 1 7 0 0 1 D",
-            "1952 1954 10 1 7 0 0 0 S",
-            "1953 1959 3 1 7 0 0 1 D",
-            "1955 1961 9 1 7 0 0 0 S",
-            "1960 1961 5 1 7 0 0 1 D",
-            "1974 1975 3 1 7 0 0 1 D",
-            "1974 1975 9 1 7 0 0 0 S",
-            "1979 1979 5 30 7 0 0 1 D",
-            "1979 1979 8 30 7 0 0 0 S"
-        ],
-        "E-EurAsia": [
-            "1981 9999 2 0 8 0 0 1 S",
-            "1979 1995 8 0 8 0 0 0",
-            "1996 9999 9 0 8 0 0 0"
-        ],
-        "Iran": [
-            "1978 1980 2 21 7 0 0 1 D",
-            "1978 1978 9 21 7 0 0 0 S",
-            "1979 1979 8 19 7 0 0 0 S",
-            "1980 1980 8 23 7 0 0 0 S",
-            "1991 1991 4 3 7 0 0 1 D",
-            "1992 1995 2 22 7 0 0 1 D",
-            "1991 1995 8 22 7 0 0 0 S",
-            "1996 1996 2 21 7 0 0 1 D",
-            "1996 1996 8 21 7 0 0 0 S",
-            "1997 1999 2 22 7 0 0 1 D",
-            "1997 1999 8 22 7 0 0 0 S",
-            "2000 2000 2 21 7 0 0 1 D",
-            "2000 2000 8 21 7 0 0 0 S",
-            "2001 2003 2 22 7 0 0 1 D",
-            "2001 2003 8 22 7 0 0 0 S",
-            "2004 2004 2 21 7 0 0 1 D",
-            "2004 2004 8 21 7 0 0 0 S",
-            "2005 2005 2 22 7 0 0 1 D",
-            "2005 2005 8 22 7 0 0 0 S",
-            "2008 2008 2 21 7 0 0 1 D",
-            "2008 2008 8 21 7 0 0 0 S",
-            "2009 2011 2 22 7 0 0 1 D",
-            "2009 2011 8 22 7 0 0 0 S",
-            "2012 2012 2 21 7 0 0 1 D",
-            "2012 2012 8 21 7 0 0 0 S",
-            "2013 2015 2 22 7 0 0 1 D",
-            "2013 2015 8 22 7 0 0 0 S",
-            "2016 2016 2 21 7 0 0 1 D",
-            "2016 2016 8 21 7 0 0 0 S",
-            "2017 2019 2 22 7 0 0 1 D",
-            "2017 2019 8 22 7 0 0 0 S",
-            "2020 2020 2 21 7 0 0 1 D",
-            "2020 2020 8 21 7 0 0 0 S",
-            "2021 2023 2 22 7 0 0 1 D",
-            "2021 2023 8 22 7 0 0 0 S",
-            "2024 2024 2 21 7 0 0 1 D",
-            "2024 2024 8 21 7 0 0 0 S",
-            "2025 2027 2 22 7 0 0 1 D",
-            "2025 2027 8 22 7 0 0 0 S",
-            "2028 2029 2 21 7 0 0 1 D",
-            "2028 2029 8 21 7 0 0 0 S",
-            "2030 2031 2 22 7 0 0 1 D",
-            "2030 2031 8 22 7 0 0 0 S",
-            "2032 2033 2 21 7 0 0 1 D",
-            "2032 2033 8 21 7 0 0 0 S",
-            "2034 2035 2 22 7 0 0 1 D",
-            "2034 2035 8 22 7 0 0 0 S",
-            "2036 2037 2 21 7 0 0 1 D",
-            "2036 2037 8 21 7 0 0 0 S"
-        ],
-        "Japan": [
-            "1948 1948 4 1 0 2 0 1 D",
-            "1948 1951 8 8 6 2 0 0 S",
-            "1949 1949 3 1 0 2 0 1 D",
-            "1950 1951 4 1 0 2 0 1 D"
-        ],
-        "Port": [
-            "1916 1916 5 17 7 23 0 1 S",
-            "1916 1916 10 1 7 1 0 0",
-            "1917 1917 1 28 7 23 2 1 S",
-            "1917 1921 9 14 7 23 2 0",
-            "1918 1918 2 1 7 23 2 1 S",
-            "1919 1919 1 28 7 23 2 1 S",
-            "1920 1920 1 29 7 23 2 1 S",
-            "1921 1921 1 28 7 23 2 1 S",
-            "1924 1924 3 16 7 23 2 1 S",
-            "1924 1924 9 14 7 23 2 0",
-            "1926 1926 3 17 7 23 2 1 S",
-            "1926 1929 9 1 6 23 2 0",
-            "1927 1927 3 9 7 23 2 1 S",
-            "1928 1928 3 14 7 23 2 1 S",
-            "1929 1929 3 20 7 23 2 1 S",
-            "1931 1931 3 18 7 23 2 1 S",
-            "1931 1932 9 1 6 23 2 0",
-            "1932 1932 3 2 7 23 2 1 S",
-            "1934 1934 3 7 7 23 2 1 S",
-            "1934 1938 9 1 6 23 2 0",
-            "1935 1935 2 30 7 23 2 1 S",
-            "1936 1936 3 18 7 23 2 1 S",
-            "1937 1937 3 3 7 23 2 1 S",
-            "1938 1938 2 26 7 23 2 1 S",
-            "1939 1939 3 15 7 23 2 1 S",
-            "1939 1939 10 18 7 23 2 0",
-            "1940 1940 1 24 7 23 2 1 S",
-            "1940 1941 9 5 7 23 2 0",
-            "1941 1941 3 5 7 23 2 1 S",
-            "1942 1945 2 8 6 23 2 1 S",
-            "1942 1942 3 25 7 22 2 2 M",
-            "1942 1942 7 15 7 22 2 1 S",
-            "1942 1945 9 24 6 23 2 0",
-            "1943 1943 3 17 7 22 2 2 M",
-            "1943 1945 7 25 6 22 2 1 S",
-            "1944 1945 3 21 6 22 2 2 M",
-            "1946 1946 3 1 6 23 2 1 S",
-            "1946 1946 9 1 6 23 2 0",
-            "1947 1949 3 1 0 2 2 1 S",
-            "1947 1949 9 1 0 2 2 0",
-            "1951 1965 3 1 0 2 2 1 S",
-            "1951 1965 9 1 0 2 2 0",
-            "1977 1977 2 27 7 0 2 1 S",
-            "1977 1977 8 25 7 0 2 0",
-            "1978 1979 3 1 0 0 2 1 S",
-            "1978 1978 9 1 7 0 2 0",
-            "1979 1982 8 0 8 1 2 0",
-            "1980 1980 2 0 8 0 2 1 S",
-            "1981 1982 2 0 8 1 2 1 S",
-            "1983 1983 2 0 8 2 2 1 S"
-        ],
-        "W-Eur": [
-            "1977 1980 3 1 0 1 2 1 S",
-            "1977 1977 8 0 8 1 2 0",
-            "1978 1978 9 1 7 1 2 0",
-            "1979 1995 8 0 8 1 2 0",
-            "1981 9999 2 0 8 1 2 1 S",
-            "1996 9999 9 0 8 1 2 0"
-        ],
-        "Iceland": [
-            "1917 1918 1 19 7 23 0 1 S",
-            "1917 1917 9 21 7 1 0 0",
-            "1918 1918 10 16 7 1 0 0",
-            "1939 1939 3 29 7 23 0 1 S",
-            "1939 1939 10 29 7 2 0 0",
-            "1940 1940 1 25 7 2 0 1 S",
-            "1940 1940 10 3 7 2 0 0",
-            "1941 1941 2 2 7 1 2 1 S",
-            "1941 1941 10 2 7 1 2 0",
-            "1942 1942 2 8 7 1 2 1 S",
-            "1942 1942 9 25 7 1 2 0",
-            "1943 1946 2 1 0 1 2 1 S",
-            "1943 1948 9 22 0 1 2 0",
-            "1947 1967 3 1 0 1 2 1 S",
-            "1949 1949 9 30 7 1 2 0",
-            "1950 1966 9 22 0 1 2 0",
-            "1967 1967 9 29 7 1 2 0"
-        ],
-        "Falk": [
-            "1937 1938 8 0 8 0 0 1 S",
-            "1938 1942 2 19 0 0 0 0",
-            "1939 1939 9 1 7 0 0 1 S",
-            "1940 1942 8 0 8 0 0 1 S",
-            "1943 1943 0 1 7 0 0 0",
-            "1983 1983 8 0 8 0 0 1 S",
-            "1984 1985 3 0 8 0 0 0",
-            "1984 1984 8 16 7 0 0 1 S",
-            "1985 2000 8 9 0 0 0 1 S",
-            "1986 2000 3 16 0 0 0 0",
-            "2001 2010 3 15 0 2 0 0",
-            "2001 2010 8 1 0 2 0 1 S"
-        ],
-        "AS": [
-            "1971 1985 9 0 8 2 2 1",
-            "1986 1986 9 19 7 2 2 1",
-            "1987 2007 9 0 8 2 2 1",
-            "1972 1972 1 27 7 2 2 0",
-            "1973 1985 2 1 0 2 2 0",
-            "1986 1990 2 15 0 2 2 0",
-            "1991 1991 2 3 7 2 2 0",
-            "1992 1992 2 22 7 2 2 0",
-            "1993 1993 2 7 7 2 2 0",
-            "1994 1994 2 20 7 2 2 0",
-            "1995 2005 2 0 8 2 2 0",
-            "2006 2006 3 2 7 2 2 0",
-            "2007 2007 2 0 8 2 2 0",
-            "2008 9999 3 1 0 2 2 0",
-            "2008 9999 9 1 0 2 2 1"
-        ],
-        "AQ": [
-            "1971 1971 9 0 8 2 2 1",
-            "1972 1972 1 0 8 2 2 0",
-            "1989 1991 9 0 8 2 2 1",
-            "1990 1992 2 1 0 2 2 0"
-        ],
-        "AN": [
-            "1971 1985 9 0 8 2 2 1",
-            "1972 1972 1 27 7 2 2 0",
-            "1973 1981 2 1 0 2 2 0",
-            "1982 1982 3 1 0 2 2 0",
-            "1983 1985 2 1 0 2 2 0",
-            "1986 1989 2 15 0 2 2 0",
-            "1986 1986 9 19 7 2 2 1",
-            "1987 1999 9 0 8 2 2 1",
-            "1990 1995 2 1 0 2 2 0",
-            "1996 2005 2 0 8 2 2 0",
-            "2000 2000 7 0 8 2 2 1",
-            "2001 2007 9 0 8 2 2 1",
-            "2006 2006 3 1 0 2 2 0",
-            "2007 2007 2 0 8 2 2 0",
-            "2008 9999 3 1 0 2 2 0",
-            "2008 9999 9 1 0 2 2 1"
-        ],
-        "AW": [
-            "1974 1974 9 0 8 2 2 1",
-            "1975 1975 2 1 0 2 2 0",
-            "1983 1983 9 0 8 2 2 1",
-            "1984 1984 2 1 0 2 2 0",
-            "1991 1991 10 17 7 2 2 1",
-            "1992 1992 2 1 0 2 2 0",
-            "2006 2006 11 3 7 2 2 1",
-            "2007 2009 2 0 8 2 2 0",
-            "2007 2008 9 0 8 2 2 1"
-        ],
-        "Holiday": [
-            "1992 1993 9 0 8 2 2 1",
-            "1993 1994 2 1 0 2 2 0"
-        ],
-        "LH": [
-            "1981 1984 9 0 8 2 0 1",
-            "1982 1985 2 1 0 2 0 0",
-            "1985 1985 9 0 8 2 0 0:30",
-            "1986 1989 2 15 0 2 0 0",
-            "1986 1986 9 19 7 2 0 0:30",
-            "1987 1999 9 0 8 2 0 0:30",
-            "1990 1995 2 1 0 2 0 0",
-            "1996 2005 2 0 8 2 0 0",
-            "2000 2000 7 0 8 2 0 0:30",
-            "2001 2007 9 0 8 2 0 0:30",
-            "2006 2006 3 1 0 2 0 0",
-            "2007 2007 2 0 8 2 0 0",
-            "2008 9999 3 1 0 2 0 0",
-            "2008 9999 9 1 0 2 0 0:30"
-        ],
-        "AV": [
-            "1971 1985 9 0 8 2 2 1",
-            "1972 1972 1 0 8 2 2 0",
-            "1973 1985 2 1 0 2 2 0",
-            "1986 1990 2 15 0 2 2 0",
-            "1986 1987 9 15 0 2 2 1",
-            "1988 1999 9 0 8 2 2 1",
-            "1991 1994 2 1 0 2 2 0",
-            "1995 2005 2 0 8 2 2 0",
-            "2000 2000 7 0 8 2 2 1",
-            "2001 2007 9 0 8 2 2 1",
-            "2006 2006 3 1 0 2 2 0",
-            "2007 2007 2 0 8 2 2 0",
-            "2008 9999 3 1 0 2 2 0",
-            "2008 9999 9 1 0 2 2 1"
-        ],
-        "Neth": [
-            "1916 1916 4 1 7 0 0 1 NST",
-            "1916 1916 9 1 7 0 0 0 AMT",
-            "1917 1917 3 16 7 2 2 1 NST",
-            "1917 1917 8 17 7 2 2 0 AMT",
-            "1918 1921 3 1 1 2 2 1 NST",
-            "1918 1921 8 1 8 2 2 0 AMT",
-            "1922 1922 2 0 8 2 2 1 NST",
-            "1922 1936 9 2 0 2 2 0 AMT",
-            "1923 1923 5 1 5 2 2 1 NST",
-            "1924 1924 2 0 8 2 2 1 NST",
-            "1925 1925 5 1 5 2 2 1 NST",
-            "1926 1931 4 15 7 2 2 1 NST",
-            "1932 1932 4 22 7 2 2 1 NST",
-            "1933 1936 4 15 7 2 2 1 NST",
-            "1937 1937 4 22 7 2 2 1 NST",
-            "1937 1937 6 1 7 0 0 1 S",
-            "1937 1939 9 2 0 2 2 0",
-            "1938 1939 4 15 7 2 2 1 S",
-            "1945 1945 3 2 7 2 2 1 S",
-            "1945 1945 8 16 7 2 2 0"
-        ],
-        "Greece": [
-            "1932 1932 6 7 7 0 0 1 S",
-            "1932 1932 8 1 7 0 0 0",
-            "1941 1941 3 7 7 0 0 1 S",
-            "1942 1942 10 2 7 3 0 0",
-            "1943 1943 2 30 7 0 0 1 S",
-            "1943 1943 9 4 7 0 0 0",
-            "1952 1952 6 1 7 0 0 1 S",
-            "1952 1952 10 2 7 0 0 0",
-            "1975 1975 3 12 7 0 2 1 S",
-            "1975 1975 10 26 7 0 2 0",
-            "1976 1976 3 11 7 2 2 1 S",
-            "1976 1976 9 10 7 2 2 0",
-            "1977 1978 3 1 0 2 2 1 S",
-            "1977 1977 8 26 7 2 2 0",
-            "1978 1978 8 24 7 4 0 0",
-            "1979 1979 3 1 7 9 0 1 S",
-            "1979 1979 8 29 7 2 0 0",
-            "1980 1980 3 1 7 0 0 1 S",
-            "1980 1980 8 28 7 0 0 0"
-        ],
-        "SovietZone": [
-            "1945 1945 4 24 7 2 0 2 M",
-            "1945 1945 8 24 7 3 0 1 S",
-            "1945 1945 10 18 7 2 2 0"
-        ],
-        "Germany": [
-            "1946 1946 3 14 7 2 2 1 S",
-            "1946 1946 9 7 7 2 2 0",
-            "1947 1949 9 1 0 2 2 0",
-            "1947 1947 3 6 7 3 2 1 S",
-            "1947 1947 4 11 7 2 2 2 M",
-            "1947 1947 5 29 7 3 0 1 S",
-            "1948 1948 3 18 7 2 2 1 S",
-            "1949 1949 3 10 7 2 2 1 S"
-        ],
-        "Czech": [
-            "1945 1945 3 8 7 2 2 1 S",
-            "1945 1945 10 18 7 2 2 0",
-            "1946 1946 4 6 7 2 2 1 S",
-            "1946 1949 9 1 0 2 2 0",
-            "1947 1947 3 20 7 2 2 1 S",
-            "1948 1948 3 18 7 2 2 1 S",
-            "1949 1949 3 9 7 2 2 1 S"
-        ],
-        "Belgium": [
-            "1918 1918 2 9 7 0 2 1 S",
-            "1918 1919 9 1 6 23 2 0",
-            "1919 1919 2 1 7 23 2 1 S",
-            "1920 1920 1 14 7 23 2 1 S",
-            "1920 1920 9 23 7 23 2 0",
-            "1921 1921 2 14 7 23 2 1 S",
-            "1921 1921 9 25 7 23 2 0",
-            "1922 1922 2 25 7 23 2 1 S",
-            "1922 1927 9 1 6 23 2 0",
-            "1923 1923 3 21 7 23 2 1 S",
-            "1924 1924 2 29 7 23 2 1 S",
-            "1925 1925 3 4 7 23 2 1 S",
-            "1926 1926 3 17 7 23 2 1 S",
-            "1927 1927 3 9 7 23 2 1 S",
-            "1928 1928 3 14 7 23 2 1 S",
-            "1928 1938 9 2 0 2 2 0",
-            "1929 1929 3 21 7 2 2 1 S",
-            "1930 1930 3 13 7 2 2 1 S",
-            "1931 1931 3 19 7 2 2 1 S",
-            "1932 1932 3 3 7 2 2 1 S",
-            "1933 1933 2 26 7 2 2 1 S",
-            "1934 1934 3 8 7 2 2 1 S",
-            "1935 1935 2 31 7 2 2 1 S",
-            "1936 1936 3 19 7 2 2 1 S",
-            "1937 1937 3 4 7 2 2 1 S",
-            "1938 1938 2 27 7 2 2 1 S",
-            "1939 1939 3 16 7 2 2 1 S",
-            "1939 1939 10 19 7 2 2 0",
-            "1940 1940 1 25 7 2 2 1 S",
-            "1944 1944 8 17 7 2 2 0",
-            "1945 1945 3 2 7 2 2 1 S",
-            "1945 1945 8 16 7 2 2 0",
-            "1946 1946 4 19 7 2 2 1 S",
-            "1946 1946 9 7 7 2 2 0"
-        ],
-        "Romania": [
-            "1932 1932 4 21 7 0 2 1 S",
-            "1932 1939 9 1 0 0 2 0",
-            "1933 1939 3 2 0 0 2 1 S",
-            "1979 1979 4 27 7 0 0 1 S",
-            "1979 1979 8 0 8 0 0 0",
-            "1980 1980 3 5 7 23 0 1 S",
-            "1980 1980 8 0 8 1 0 0",
-            "1991 1993 2 0 8 0 2 1 S",
-            "1991 1993 8 0 8 0 2 0"
-        ],
-        "E-Eur": [
-            "1977 1980 3 1 0 0 0 1 S",
-            "1977 1977 8 0 8 0 0 0",
-            "1978 1978 9 1 7 0 0 0",
-            "1979 1995 8 0 8 0 0 0",
-            "1981 9999 2 0 8 0 0 1 S",
-            "1996 9999 9 0 8 0 0 0"
-        ],
-        "Hungary": [
-            "1918 1918 3 1 7 3 0 1 S",
-            "1918 1918 8 29 7 3 0 0",
-            "1919 1919 3 15 7 3 0 1 S",
-            "1919 1919 8 15 7 3 0 0",
-            "1920 1920 3 5 7 3 0 1 S",
-            "1920 1920 8 30 7 3 0 0",
-            "1945 1945 4 1 7 23 0 1 S",
-            "1945 1945 10 3 7 0 0 0",
-            "1946 1946 2 31 7 2 2 1 S",
-            "1946 1949 9 1 0 2 2 0",
-            "1947 1949 3 4 0 2 2 1 S",
-            "1950 1950 3 17 7 2 2 1 S",
-            "1950 1950 9 23 7 2 2 0",
-            "1954 1955 4 23 7 0 0 1 S",
-            "1954 1955 9 3 7 0 0 0",
-            "1956 1956 5 1 0 0 0 1 S",
-            "1956 1956 8 0 8 0 0 0",
-            "1957 1957 5 1 0 1 0 1 S",
-            "1957 1957 8 0 8 3 0 0",
-            "1980 1980 3 6 7 1 0 1 S"
-        ],
-        "Swiss": [
-            "1941 1942 4 1 1 1 0 1 S",
-            "1941 1942 9 1 1 2 0 0"
-        ],
-        "Denmark": [
-            "1916 1916 4 14 7 23 0 1 S",
-            "1916 1916 8 30 7 23 0 0",
-            "1940 1940 4 15 7 0 0 1 S",
-            "1945 1945 3 2 7 2 2 1 S",
-            "1945 1945 7 15 7 2 2 0",
-            "1946 1946 4 1 7 2 2 1 S",
-            "1946 1946 8 1 7 2 2 0",
-            "1947 1947 4 4 7 2 2 1 S",
-            "1947 1947 7 10 7 2 2 0",
-            "1948 1948 4 9 7 2 2 1 S",
-            "1948 1948 7 8 7 2 2 0"
-        ],
-        "GB-Eire": [
-            "1916 1916 4 21 7 2 2 1 BST",
-            "1916 1916 9 1 7 2 2 0 GMT",
-            "1917 1917 3 8 7 2 2 1 BST",
-            "1917 1917 8 17 7 2 2 0 GMT",
-            "1918 1918 2 24 7 2 2 1 BST",
-            "1918 1918 8 30 7 2 2 0 GMT",
-            "1919 1919 2 30 7 2 2 1 BST",
-            "1919 1919 8 29 7 2 2 0 GMT",
-            "1920 1920 2 28 7 2 2 1 BST",
-            "1920 1920 9 25 7 2 2 0 GMT",
-            "1921 1921 3 3 7 2 2 1 BST",
-            "1921 1921 9 3 7 2 2 0 GMT",
-            "1922 1922 2 26 7 2 2 1 BST",
-            "1922 1922 9 8 7 2 2 0 GMT",
-            "1923 1923 3 16 0 2 2 1 BST",
-            "1923 1924 8 16 0 2 2 0 GMT",
-            "1924 1924 3 9 0 2 2 1 BST",
-            "1925 1926 3 16 0 2 2 1 BST",
-            "1925 1938 9 2 0 2 2 0 GMT",
-            "1927 1927 3 9 0 2 2 1 BST",
-            "1928 1929 3 16 0 2 2 1 BST",
-            "1930 1930 3 9 0 2 2 1 BST",
-            "1931 1932 3 16 0 2 2 1 BST",
-            "1933 1933 3 9 0 2 2 1 BST",
-            "1934 1934 3 16 0 2 2 1 BST",
-            "1935 1935 3 9 0 2 2 1 BST",
-            "1936 1937 3 16 0 2 2 1 BST",
-            "1938 1938 3 9 0 2 2 1 BST",
-            "1939 1939 3 16 0 2 2 1 BST",
-            "1939 1939 10 16 0 2 2 0 GMT",
-            "1940 1940 1 23 0 2 2 1 BST",
-            "1941 1941 4 2 0 1 2 2 BDST",
-            "1941 1943 7 9 0 1 2 1 BST",
-            "1942 1944 3 2 0 1 2 2 BDST",
-            "1944 1944 8 16 0 1 2 1 BST",
-            "1945 1945 3 2 1 1 2 2 BDST",
-            "1945 1945 6 9 0 1 2 1 BST",
-            "1945 1946 9 2 0 2 2 0 GMT",
-            "1946 1946 3 9 0 2 2 1 BST",
-            "1947 1947 2 16 7 2 2 1 BST",
-            "1947 1947 3 13 7 1 2 2 BDST",
-            "1947 1947 7 10 7 1 2 1 BST",
-            "1947 1947 10 2 7 2 2 0 GMT",
-            "1948 1948 2 14 7 2 2 1 BST",
-            "1948 1948 9 31 7 2 2 0 GMT",
-            "1949 1949 3 3 7 2 2 1 BST",
-            "1949 1949 9 30 7 2 2 0 GMT",
-            "1950 1952 3 14 0 2 2 1 BST",
-            "1950 1952 9 21 0 2 2 0 GMT",
-            "1953 1953 3 16 0 2 2 1 BST",
-            "1953 1960 9 2 0 2 2 0 GMT",
-            "1954 1954 3 9 0 2 2 1 BST",
-            "1955 1956 3 16 0 2 2 1 BST",
-            "1957 1957 3 9 0 2 2 1 BST",
-            "1958 1959 3 16 0 2 2 1 BST",
-            "1960 1960 3 9 0 2 2 1 BST",
-            "1961 1963 2 0 8 2 2 1 BST",
-            "1961 1968 9 23 0 2 2 0 GMT",
-            "1964 1967 2 19 0 2 2 1 BST",
-            "1968 1968 1 18 7 2 2 1 BST",
-            "1972 1980 2 16 0 2 2 1 BST",
-            "1972 1980 9 23 0 2 2 0 GMT",
-            "1981 1995 2 0 8 1 1 1 BST",
-            "1981 1989 9 23 0 1 1 0 GMT",
-            "1990 1995 9 22 0 1 1 0 GMT"
-        ],
-        "Finland": [
-            "1942 1942 3 3 7 0 0 1 S",
-            "1942 1942 9 3 7 0 0 0",
-            "1981 1982 2 0 8 2 0 1 S",
-            "1981 1982 8 0 8 3 0 0"
-        ],
-        "Turkey": [
-            "1916 1916 4 1 7 0 0 1 S",
-            "1916 1916 9 1 7 0 0 0",
-            "1920 1920 2 28 7 0 0 1 S",
-            "1920 1920 9 25 7 0 0 0",
-            "1921 1921 3 3 7 0 0 1 S",
-            "1921 1921 9 3 7 0 0 0",
-            "1922 1922 2 26 7 0 0 1 S",
-            "1922 1922 9 8 7 0 0 0",
-            "1924 1924 4 13 7 0 0 1 S",
-            "1924 1925 9 1 7 0 0 0",
-            "1925 1925 4 1 7 0 0 1 S",
-            "1940 1940 5 30 7 0 0 1 S",
-            "1940 1940 9 5 7 0 0 0",
-            "1940 1940 11 1 7 0 0 1 S",
-            "1941 1941 8 21 7 0 0 0",
-            "1942 1942 3 1 7 0 0 1 S",
-            "1942 1942 10 1 7 0 0 0",
-            "1945 1945 3 2 7 0 0 1 S",
-            "1945 1945 9 8 7 0 0 0",
-            "1946 1946 5 1 7 0 0 1 S",
-            "1946 1946 9 1 7 0 0 0",
-            "1947 1948 3 16 0 0 0 1 S",
-            "1947 1950 9 2 0 0 0 0",
-            "1949 1949 3 10 7 0 0 1 S",
-            "1950 1950 3 19 7 0 0 1 S",
-            "1951 1951 3 22 7 0 0 1 S",
-            "1951 1951 9 8 7 0 0 0",
-            "1962 1962 6 15 7 0 0 1 S",
-            "1962 1962 9 8 7 0 0 0",
-            "1964 1964 4 15 7 0 0 1 S",
-            "1964 1964 9 1 7 0 0 0",
-            "1970 1972 4 2 0 0 0 1 S",
-            "1970 1972 9 2 0 0 0 0",
-            "1973 1973 5 3 7 1 0 1 S",
-            "1973 1973 10 4 7 3 0 0",
-            "1974 1974 2 31 7 2 0 1 S",
-            "1974 1974 10 3 7 5 0 0",
-            "1975 1975 2 30 7 0 0 1 S",
-            "1975 1976 9 0 8 0 0 0",
-            "1976 1976 5 1 7 0 0 1 S",
-            "1977 1978 3 1 0 0 0 1 S",
-            "1977 1977 9 16 7 0 0 0",
-            "1979 1980 3 1 0 3 0 1 S",
-            "1979 1982 9 11 1 0 0 0",
-            "1981 1982 2 0 8 3 0 1 S",
-            "1983 1983 6 31 7 0 0 1 S",
-            "1983 1983 9 2 7 0 0 0",
-            "1985 1985 3 20 7 0 0 1 S",
-            "1985 1985 8 28 7 0 0 0",
-            "1986 1990 2 0 8 2 2 1 S",
-            "1986 1990 8 0 8 2 2 0",
-            "1991 2006 2 0 8 1 2 1 S",
-            "1991 1995 8 0 8 1 2 0",
-            "1996 2006 9 0 8 1 2 0"
-        ],
-        "Poland": [
-            "1918 1919 8 16 7 2 2 0",
-            "1919 1919 3 15 7 2 2 1 S",
-            "1944 1944 3 3 7 2 2 1 S",
-            "1944 1944 9 4 7 2 0 0",
-            "1945 1945 3 29 7 0 0 1 S",
-            "1945 1945 10 1 7 0 0 0",
-            "1946 1946 3 14 7 0 2 1 S",
-            "1946 1946 9 7 7 2 2 0",
-            "1947 1947 4 4 7 2 2 1 S",
-            "1947 1949 9 1 0 2 2 0",
-            "1948 1948 3 18 7 2 2 1 S",
-            "1949 1949 3 10 7 2 2 1 S",
-            "1957 1957 5 2 7 1 2 1 S",
-            "1957 1958 8 0 8 1 2 0",
-            "1958 1958 2 30 7 1 2 1 S",
-            "1959 1959 4 31 7 1 2 1 S",
-            "1959 1961 9 1 0 1 2 0",
-            "1960 1960 3 3 7 1 2 1 S",
-            "1961 1964 4 0 8 1 2 1 S",
-            "1962 1964 8 0 8 1 2 0"
-        ],
-        "Lux": [
-            "1916 1916 4 14 7 23 0 1 S",
-            "1916 1916 9 1 7 1 0 0",
-            "1917 1917 3 28 7 23 0 1 S",
-            "1917 1917 8 17 7 1 0 0",
-            "1918 1918 3 15 1 2 2 1 S",
-            "1918 1918 8 15 1 2 2 0",
-            "1919 1919 2 1 7 23 0 1 S",
-            "1919 1919 9 5 7 3 0 0",
-            "1920 1920 1 14 7 23 0 1 S",
-            "1920 1920 9 24 7 2 0 0",
-            "1921 1921 2 14 7 23 0 1 S",
-            "1921 1921 9 26 7 2 0 0",
-            "1922 1922 2 25 7 23 0 1 S",
-            "1922 1922 9 2 0 1 0 0",
-            "1923 1923 3 21 7 23 0 1 S",
-            "1923 1923 9 2 0 2 0 0",
-            "1924 1924 2 29 7 23 0 1 S",
-            "1924 1928 9 2 0 1 0 0",
-            "1925 1925 3 5 7 23 0 1 S",
-            "1926 1926 3 17 7 23 0 1 S",
-            "1927 1927 3 9 7 23 0 1 S",
-            "1928 1928 3 14 7 23 0 1 S",
-            "1929 1929 3 20 7 23 0 1 S"
-        ],
-        "Italy": [
-            "1916 1916 5 3 7 0 2 1 S",
-            "1916 1916 9 1 7 0 2 0",
-            "1917 1917 3 1 7 0 2 1 S",
-            "1917 1917 8 30 7 0 2 0",
-            "1918 1918 2 10 7 0 2 1 S",
-            "1918 1919 9 1 0 0 2 0",
-            "1919 1919 2 2 7 0 2 1 S",
-            "1920 1920 2 21 7 0 2 1 S",
-            "1920 1920 8 19 7 0 2 0",
-            "1940 1940 5 15 7 0 2 1 S",
-            "1944 1944 8 17 7 0 2 0",
-            "1945 1945 3 2 7 2 0 1 S",
-            "1945 1945 8 15 7 0 2 0",
-            "1946 1946 2 17 7 2 2 1 S",
-            "1946 1946 9 6 7 2 2 0",
-            "1947 1947 2 16 7 0 2 1 S",
-            "1947 1947 9 5 7 0 2 0",
-            "1948 1948 1 29 7 2 2 1 S",
-            "1948 1948 9 3 7 2 2 0",
-            "1966 1968 4 22 0 0 0 1 S",
-            "1966 1969 8 22 0 0 0 0",
-            "1969 1969 5 1 7 0 0 1 S",
-            "1970 1970 4 31 7 0 0 1 S",
-            "1970 1970 8 0 8 0 0 0",
-            "1971 1972 4 22 0 0 0 1 S",
-            "1971 1971 8 0 8 1 0 0",
-            "1972 1972 9 1 7 0 0 0",
-            "1973 1973 5 3 7 0 0 1 S",
-            "1973 1974 8 0 8 0 0 0",
-            "1974 1974 4 26 7 0 0 1 S",
-            "1975 1975 5 1 7 0 2 1 S",
-            "1975 1977 8 0 8 0 2 0",
-            "1976 1976 4 30 7 0 2 1 S",
-            "1977 1979 4 22 0 0 2 1 S",
-            "1978 1978 9 1 7 0 2 0",
-            "1979 1979 8 30 7 0 2 0"
-        ],
-        "Malta": [
-            "1973 1973 2 31 7 0 2 1 S",
-            "1973 1973 8 29 7 0 2 0",
-            "1974 1974 3 21 7 0 2 1 S",
-            "1974 1974 8 16 7 0 2 0",
-            "1975 1979 3 15 0 2 0 1 S",
-            "1975 1980 8 15 0 2 0 0",
-            "1980 1980 2 31 7 2 0 1 S"
-        ],
-        "France": [
-            "1916 1916 5 14 7 23 2 1 S",
-            "1916 1919 9 1 0 23 2 0",
-            "1917 1917 2 24 7 23 2 1 S",
-            "1918 1918 2 9 7 23 2 1 S",
-            "1919 1919 2 1 7 23 2 1 S",
-            "1920 1920 1 14 7 23 2 1 S",
-            "1920 1920 9 23 7 23 2 0",
-            "1921 1921 2 14 7 23 2 1 S",
-            "1921 1921 9 25 7 23 2 0",
-            "1922 1922 2 25 7 23 2 1 S",
-            "1922 1938 9 1 6 23 2 0",
-            "1923 1923 4 26 7 23 2 1 S",
-            "1924 1924 2 29 7 23 2 1 S",
-            "1925 1925 3 4 7 23 2 1 S",
-            "1926 1926 3 17 7 23 2 1 S",
-            "1927 1927 3 9 7 23 2 1 S",
-            "1928 1928 3 14 7 23 2 1 S",
-            "1929 1929 3 20 7 23 2 1 S",
-            "1930 1930 3 12 7 23 2 1 S",
-            "1931 1931 3 18 7 23 2 1 S",
-            "1932 1932 3 2 7 23 2 1 S",
-            "1933 1933 2 25 7 23 2 1 S",
-            "1934 1934 3 7 7 23 2 1 S",
-            "1935 1935 2 30 7 23 2 1 S",
-            "1936 1936 3 18 7 23 2 1 S",
-            "1937 1937 3 3 7 23 2 1 S",
-            "1938 1938 2 26 7 23 2 1 S",
-            "1939 1939 3 15 7 23 2 1 S",
-            "1939 1939 10 18 7 23 2 0",
-            "1940 1940 1 25 7 2 0 1 S",
-            "1941 1941 4 5 7 0 0 2 M",
-            "1941 1941 9 6 7 0 0 1 S",
-            "1942 1942 2 9 7 0 0 2 M",
-            "1942 1942 10 2 7 3 0 1 S",
-            "1943 1943 2 29 7 2 0 2 M",
-            "1943 1943 9 4 7 3 0 1 S",
-            "1944 1944 3 3 7 2 0 2 M",
-            "1944 1944 9 8 7 1 0 1 S",
-            "1945 1945 3 2 7 2 0 2 M",
-            "1945 1945 8 16 7 3 0 0",
-            "1976 1976 2 28 7 1 0 1 S",
-            "1976 1976 8 26 7 1 0 0"
-        ],
-        "Latvia": [
-            "1989 1996 2 0 8 2 2 1 S",
-            "1989 1996 8 0 8 2 2 0"
-        ],
-        "Bulg": [
-            "1979 1979 2 31 7 23 0 1 S",
-            "1979 1979 9 1 7 1 0 0",
-            "1980 1982 3 1 6 23 0 1 S",
-            "1980 1980 8 29 7 1 0 0",
-            "1981 1981 8 27 7 2 0 0"
-        ],
-        "Albania": [
-            "1940 1940 5 16 7 0 0 1 S",
-            "1942 1942 10 2 7 3 0 0",
-            "1943 1943 2 29 7 2 0 1 S",
-            "1943 1943 3 10 7 3 0 0",
-            "1974 1974 4 4 7 0 0 1 S",
-            "1974 1974 9 2 7 0 0 0",
-            "1975 1975 4 1 7 0 0 1 S",
-            "1975 1975 9 2 7 0 0 0",
-            "1976 1976 4 2 7 0 0 1 S",
-            "1976 1976 9 3 7 0 0 0",
-            "1977 1977 4 8 7 0 0 1 S",
-            "1977 1977 9 2 7 0 0 0",
-            "1978 1978 4 6 7 0 0 1 S",
-            "1978 1978 9 1 7 0 0 0",
-            "1979 1979 4 5 7 0 0 1 S",
-            "1979 1979 8 30 7 0 0 0",
-            "1980 1980 4 3 7 0 0 1 S",
-            "1980 1980 9 4 7 0 0 0",
-            "1981 1981 3 26 7 0 0 1 S",
-            "1981 1981 8 27 7 0 0 0",
-            "1982 1982 4 2 7 0 0 1 S",
-            "1982 1982 9 3 7 0 0 0",
-            "1983 1983 3 18 7 0 0 1 S",
-            "1983 1983 9 1 7 0 0 0",
-            "1984 1984 3 1 7 0 0 1 S"
-        ],
-        "Austria": [
-            "1920 1920 3 5 7 2 2 1 S",
-            "1920 1920 8 13 7 2 2 0",
-            "1946 1946 3 14 7 2 2 1 S",
-            "1946 1948 9 1 0 2 2 0",
-            "1947 1947 3 6 7 2 2 1 S",
-            "1948 1948 3 18 7 2 2 1 S",
-            "1980 1980 3 6 7 0 0 1 S",
-            "1980 1980 8 28 7 0 0 0"
-        ],
-        "Mauritius": [
-            "1982 1982 9 10 7 0 0 1 S",
-            "1983 1983 2 21 7 0 0 0",
-            "2008 2008 9 0 8 2 0 1 S",
-            "2009 2009 2 0 8 2 0 0"
-        ],
-        "WS": [
-            "2012 9999 8 0 8 3 0 1 D",
-            "2012 9999 3 1 0 4 0 0"
-        ],
-        "NZ": [
-            "1927 1927 10 6 7 2 0 1 S",
-            "1928 1928 2 4 7 2 0 0 M",
-            "1928 1933 9 8 0 2 0 0:30 S",
-            "1929 1933 2 15 0 2 0 0 M",
-            "1934 1940 3 0 8 2 0 0 M",
-            "1934 1940 8 0 8 2 0 0:30 S",
-            "1946 1946 0 1 7 0 0 0 S",
-            "1974 1974 10 1 0 2 2 1 D",
-            "1975 1975 1 0 8 2 2 0 S",
-            "1975 1988 9 0 8 2 2 1 D",
-            "1976 1989 2 1 0 2 2 0 S",
-            "1989 1989 9 8 0 2 2 1 D",
-            "1990 2006 9 1 0 2 2 1 D",
-            "1990 2007 2 15 0 2 2 0 S",
-            "2007 9999 8 0 8 2 2 1 D",
-            "2008 9999 3 1 0 2 2 0 S"
-        ],
-        "Chatham": [
-            "1974 1974 10 1 0 2:45 2 1 D",
-            "1975 1975 1 0 8 2:45 2 0 S",
-            "1975 1988 9 0 8 2:45 2 1 D",
-            "1976 1989 2 1 0 2:45 2 0 S",
-            "1989 1989 9 8 0 2:45 2 1 D",
-            "1990 2006 9 1 0 2:45 2 1 D",
-            "1990 2007 2 15 0 2:45 2 0 S",
-            "2007 9999 8 0 8 2:45 2 1 D",
-            "2008 9999 3 1 0 2:45 2 0 S"
-        ],
-        "Vanuatu": [
-            "1983 1983 8 25 7 0 0 1 S",
-            "1984 1991 2 23 0 0 0 0",
-            "1984 1984 9 23 7 0 0 1 S",
-            "1985 1991 8 23 0 0 0 1 S",
-            "1992 1993 0 23 0 0 0 0",
-            "1992 1992 9 23 0 0 0 1 S"
-        ],
-        "Fiji": [
-            "1998 1999 10 1 0 2 0 1 S",
-            "1999 2000 1 0 8 3 0 0",
-            "2009 2009 10 29 7 2 0 1 S",
-            "2010 2010 2 0 8 3 0 0",
-            "2010 9999 9 18 0 2 0 1 S",
-            "2011 2011 2 1 0 3 0 0",
-            "2012 9999 0 18 0 3 0 0"
-        ],
-        "NC": [
-            "1977 1978 11 1 0 0 0 1 S",
-            "1978 1979 1 27 7 0 0 0",
-            "1996 1996 11 1 7 2 2 1 S",
-            "1997 1997 2 2 7 2 2 0"
-        ],
-        "Cook": [
-            "1978 1978 10 12 7 0 0 0:30 HS",
-            "1979 1991 2 1 0 0 0 0",
-            "1979 1990 9 0 8 0 0 0:30 HS"
-        ],
-        "Tonga": [
-            "1999 1999 9 7 7 2 2 1 S",
-            "2000 2000 2 19 7 2 2 0",
-            "2000 2001 10 1 0 2 0 1 S",
-            "2001 2002 0 0 8 2 0 0"
-        ]
-    },
-    "links": {
-        "America/Kralendijk": "America/Curacao",
-        "America/Lower_Princes": "America/Curacao",
-        "America/Marigot": "America/Guadeloupe",
-        "America/Shiprock": "America/Denver",
-        "America/St_Barthelemy": "America/Guadeloupe",
-        "Antarctica/South_Pole": "Antarctica/McMurdo",
-        "Arctic/Longyearbyen": "Europe/Oslo",
-        "Europe/Bratislava": "Europe/Prague",
-        "Europe/Busingen": "Europe/Zurich",
-        "Europe/Guernsey": "Europe/London",
-        "Europe/Isle_of_Man": "Europe/London",
-        "Europe/Jersey": "Europe/London",
-        "Europe/Ljubljana": "Europe/Belgrade",
-        "Europe/Mariehamn": "Europe/Helsinki",
-        "Europe/Podgorica": "Europe/Belgrade",
-        "Europe/San_Marino": "Europe/Rome",
-        "Europe/Sarajevo": "Europe/Belgrade",
-        "Europe/Skopje": "Europe/Belgrade",
-        "Europe/Vatican": "Europe/Rome",
-        "Europe/Zagreb": "Europe/Belgrade",
-        "US/Alaska": "America/Juneau",
-        "US/Arizona": "America/Phoenix",
-        "US/Central": "America/Monterrey",
-        "US/Eastern": "America/New_York",
-        "US/East-Indiana": "America/Indiana/Indianapolis",
-        "US/Hawaii": "Pacific/Honolulu",
-        "US/Mountain": "America/Edmonton",
-        "US/Pacific": "America/Los_Angeles",
-        "Canada/Atlantic": "America/Halifax",
-        "Canada/Newfoundland": "America/St_Johns",
-        "Canada/Saskatchewan": "America/Regina",
-        "Brazil/East": "America/Sao_Paulo"
-    }
-}); });
 
 /*! jQuery UI - v1.10.4 - 2014-02-16
 * http://jqueryui.com
@@ -27277,10 +22962,11 @@ define('pat-calendar',[
     "pat-store",
     "pat-utils",
     "pat-registry",
-    "pat-calendar-moment-timezone-data",
+    "underscore",
+    "moment-timezone-data",
     "jquery.fullcalendar.dnd",
     "jquery.fullcalendar"
-], function($, logger, Parser, store, utils, registry) {
+], function($, logger, Parser, store, utils, registry, _) {
     "use strict";
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");
@@ -27442,12 +23128,12 @@ define('pat-calendar',[
                 }
             };
 
-            $el.categories = $el.find(".cal-events .cal-event")
+            $el.categories = $(_.uniq($el.find(".cal-events .cal-event")
                 .map(function() {
                     return this.className.split(" ").filter(function(cls) {
                         return (/^cal-cat/).test(cls);
                     });
-                });
+                })));
             this._registerEventRefetchers($el);
             this._registerCategoryControls($el);
             var $controlRoot = cfg.calendarControls ? $(cfg.calendarControls) : $el;
@@ -27461,6 +23147,10 @@ define('pat-calendar',[
             calendar._registerCalendarControls($el);
             $el.find(".cal-events").css("display", "none");
             this._restoreCalendarControls();
+            setTimeout(function () {
+                $el.fullCalendar("option", "height", $el.find(".fc-content").height());
+                $el.fullCalendar("refetchEvents");
+            }, 900);
         },
 
         _addNewEvent: function($el, $event, data) {
@@ -27545,8 +23235,11 @@ define('pat-calendar',[
                     }
                     calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                 });
-                $(document).on("pat-update.pat-calendar", function(ev, data) {
-                    if (data.pattern !== "validate") {
+                $(document).on("pat-update.pat-calendar", function(ev) {
+                    // Don't redraw if the change was in a tooltip, otherwise
+                    // it will close the tooltip prematurely (assuming here
+                    // it's a calendar event tooltip).
+                    if ($(ev.target).parents('.tooltip-container').length === 0) {
                         setTimeout(function() {
                             calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
                         }, 300);
@@ -30741,6 +26434,7 @@ define('pat-inject',[
     parser.addArgument("next-href");
     parser.addArgument("source");
     parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible"]);
+    parser.addArgument("delay", 0);    // only used in autoload
     parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
     parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
     parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
@@ -30780,24 +26474,34 @@ define('pat-inject',[
             }
 
             switch (cfgs[0].trigger) {
-                case "default":
-                    // setup event handlers
-                    if ($el.is("form")) {
-                        $el.on("submit.pat-inject", inject.onTrigger)
+            case "default":
+                // setup event handlers
+                if ($el.is("form")) {
+                    $el.on("submit.pat-inject", inject.onTrigger)
                         .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
                         .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", inject.onFormActionSubmit);
-                    } else if ($el.is(".pat-subform")) {
-                        log.debug("Initializing subform with injection");
-                    } else {
-                        $el.on("click.pat-inject", inject.onTrigger);
-                    }
-                    break;
-                case "autoload":
+                } else if ($el.is(".pat-subform")) {
+                    log.debug("Initializing subform with injection");
+                } else {
+                    $el.on("click.pat-inject", inject.onTrigger);
+                }
+                break;
+            case "autoload":
+                if (!cfgs[0].delay) {
                     inject.onTrigger.apply($el[0], []);
-                    break;
-                case "autoload-visible":
-                    inject._initAutoloadVisible($el);
-                    break;
+                } else {
+                    // function to trigger the autoload and mark as triggered
+                    function delayed_trigger() {
+                        $el.data("pat-inject-autoloaded", true);
+                        inject.onTrigger.apply($el[0], []);
+                        return true;
+                    }
+                    window.setTimeout(delayed_trigger, cfgs[0].delay);
+                }
+                break;
+            case "autoload-visible":
+                inject._initAutoloadVisible($el);
+                break;
             }
 
             log.debug("initialised:", $el);
@@ -31384,6 +27088,9 @@ define('pat-inject',[
                     if ($el.data("patterns.autoload") || !$.contains(document, $el[0])) {
                         return false;
                     }
+                    if (!$el.is(":visible")) {
+                        return false;
+                    } 
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -31468,12 +27175,8 @@ define('pat-inject',[
             }
             return;
         }
-        // popstate event can be fired when history.back() is called. If
-        // event.state is null, then we are at the first "pageload" state
-        // and there's nothing left to do, so we do nothing.
-        if (event.state) {
-            window.location.reload();
-        }
+        // Not only change the URL, also reload the page. 
+        window.location.reload();
     });
 
     // this entry ensures that the initally loaded page can be reached with
@@ -31689,7 +27392,7 @@ define('pat-collapsible',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-// Spectrum Colorpicker v1.7.1
+// Spectrum Colorpicker v1.8.0
 // https://github.com/bgrins/spectrum
 // Author: Brian Grinstead
 // License: MIT
@@ -31701,7 +27404,7 @@ define('pat-collapsible',[
         define('spectrum',['jquery'], factory);
     }
     else if (typeof exports == "object" && typeof module == "object") { // CommonJS
-        module.exports = factory;
+        module.exports = factory(require('jquery'));
     }
     else { // Browser
         factory(jQuery);
@@ -31925,8 +27628,7 @@ define('pat-collapsible',[
             previewElement = replacer.find(".sp-preview-inner"),
             initialColor = opts.color || (isInput && boundElement.val()),
             colorOnShow = false,
-            preferredFormat = opts.preferredFormat,
-            currentPreferredFormat = preferredFormat,
+            currentPreferredFormat = opts.preferredFormat,
             clickoutFiresChange = !opts.showButtons || opts.clickoutFiresChange,
             isEmpty = !initialColor,
             allowEmpty = opts.allowEmpty && !isInputTypeColor;
@@ -32134,7 +27836,7 @@ define('pat-collapsible',[
                 // In case color was black - update the preview UI and set the format
                 // since the set function will not run (default color is black).
                 updateUI();
-                currentPreferredFormat = preferredFormat || tinycolor(initialColor).format;
+                currentPreferredFormat = opts.preferredFormat || tinycolor(initialColor).format;
 
                 addColorToSelectionPalette(initialColor);
             }
@@ -32396,7 +28098,7 @@ define('pat-collapsible',[
             updateUI();
 
             if (newColor && newColor.isValid() && !ignoreFormatChange) {
-                currentPreferredFormat = preferredFormat || newColor.getFormat();
+                currentPreferredFormat = opts.preferredFormat || newColor.getFormat();
             }
         }
 
@@ -32569,6 +28271,9 @@ define('pat-collapsible',[
         }
 
         function reflow() {
+            if (!visible) {
+                return; // Calculations would be useless and wouldn't be reliable anyways
+            }
             dragWidth = dragger.width();
             dragHeight = dragger.height();
             dragHelperHeight = dragHelper.height();
@@ -32613,6 +28318,10 @@ define('pat-collapsible',[
             }
 
             opts[optionName] = optionValue;
+
+            if (optionName === "preferredFormat") {
+                currentPreferredFormat = opts.preferredFormat;
+            }
             applyOptions();
         }
 
@@ -34015,7 +29724,8 @@ define('pat-collapsible',[
  */
 define('pat-colour-picker',[
     "pat-registry",
-    "spectrum"
+    "spectrum",
+    "jquery"
 ], function(registry) {
     var _ = {
         name: "polyfill-color",
@@ -35069,7 +30779,7 @@ define('pat-date-picker',[
     "pat-base",
     "pikaday",
     "moment",
-    "moment-timezone",
+    "moment-timezone-data",
     "modernizr"
 ], function(_, Parser, registry, Base, Pikaday, moment, momenttimezone) {
     "use strict";
@@ -37163,566 +32873,124 @@ define('pat-depends',[
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
 ;
-/*!
- * EventEmitter v4.2.11 - git.io/ee
- * Unlicense - http://unlicense.org/
- * Oliver Caldwell - http://oli.me.uk/
- * @preserve
+/**
+ * EvEmitter v1.1.0
+ * Lil' event emitter
+ * MIT License
  */
 
-;(function () {
-    'use strict';
+/* jshint unused: true, undef: true, strict: true */
 
-    /**
-     * Class for managing events.
-     * Can be extended to provide event functionality in other classes.
-     *
-     * @class EventEmitter Manages event registering and emitting.
-     */
-    function EventEmitter() {}
+( function( global, factory ) {
+  // universal module definition
+  /* jshint strict: false */ /* globals define, module, window */
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD - RequireJS
+    define( 'ev-emitter/ev-emitter',factory );
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS - Browserify, Webpack
+    module.exports = factory();
+  } else {
+    // Browser globals
+    global.EvEmitter = factory();
+  }
 
-    // Shortcuts to improve speed and size
-    var proto = EventEmitter.prototype;
-    var exports = this;
-    var originalGlobalValue = exports.EventEmitter;
-
-    /**
-     * Finds the index of the listener for the event in its storage array.
-     *
-     * @param {Function[]} listeners Array of listeners to search through.
-     * @param {Function} listener Method to look for.
-     * @return {Number} Index of the specified listener, -1 if not found
-     * @api private
-     */
-    function indexOfListener(listeners, listener) {
-        var i = listeners.length;
-        while (i--) {
-            if (listeners[i].listener === listener) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
-     * Alias a method while keeping the context correct, to allow for overwriting of target method.
-     *
-     * @param {String} name The name of the target method.
-     * @return {Function} The aliased method
-     * @api private
-     */
-    function alias(name) {
-        return function aliasClosure() {
-            return this[name].apply(this, arguments);
-        };
-    }
-
-    /**
-     * Returns the listener array for the specified event.
-     * Will initialise the event object and listener arrays if required.
-     * Will return an object if you use a regex search. The object contains keys for each matched event. So /ba[rz]/ might return an object containing bar and baz. But only if you have either defined them with defineEvent or added some listeners to them.
-     * Each property in the object response is an array of listener functions.
-     *
-     * @param {String|RegExp} evt Name of the event to return the listeners from.
-     * @return {Function[]|Object} All listener functions for the event.
-     */
-    proto.getListeners = function getListeners(evt) {
-        var events = this._getEvents();
-        var response;
-        var key;
-
-        // Return a concatenated array of all matching events if
-        // the selector is a regular expression.
-        if (evt instanceof RegExp) {
-            response = {};
-            for (key in events) {
-                if (events.hasOwnProperty(key) && evt.test(key)) {
-                    response[key] = events[key];
-                }
-            }
-        }
-        else {
-            response = events[evt] || (events[evt] = []);
-        }
-
-        return response;
-    };
-
-    /**
-     * Takes a list of listener objects and flattens it into a list of listener functions.
-     *
-     * @param {Object[]} listeners Raw listener objects.
-     * @return {Function[]} Just the listener functions.
-     */
-    proto.flattenListeners = function flattenListeners(listeners) {
-        var flatListeners = [];
-        var i;
-
-        for (i = 0; i < listeners.length; i += 1) {
-            flatListeners.push(listeners[i].listener);
-        }
-
-        return flatListeners;
-    };
-
-    /**
-     * Fetches the requested listeners via getListeners but will always return the results inside an object. This is mainly for internal use but others may find it useful.
-     *
-     * @param {String|RegExp} evt Name of the event to return the listeners from.
-     * @return {Object} All listener functions for an event in an object.
-     */
-    proto.getListenersAsObject = function getListenersAsObject(evt) {
-        var listeners = this.getListeners(evt);
-        var response;
-
-        if (listeners instanceof Array) {
-            response = {};
-            response[evt] = listeners;
-        }
-
-        return response || listeners;
-    };
-
-    /**
-     * Adds a listener function to the specified event.
-     * The listener will not be added if it is a duplicate.
-     * If the listener returns true then it will be removed after it is called.
-     * If you pass a regular expression as the event name then the listener will be added to all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to attach the listener to.
-     * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.addListener = function addListener(evt, listener) {
-        var listeners = this.getListenersAsObject(evt);
-        var listenerIsWrapped = typeof listener === 'object';
-        var key;
-
-        for (key in listeners) {
-            if (listeners.hasOwnProperty(key) && indexOfListener(listeners[key], listener) === -1) {
-                listeners[key].push(listenerIsWrapped ? listener : {
-                    listener: listener,
-                    once: false
-                });
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of addListener
-     */
-    proto.on = alias('addListener');
-
-    /**
-     * Semi-alias of addListener. It will add a listener that will be
-     * automatically removed after its first execution.
-     *
-     * @param {String|RegExp} evt Name of the event to attach the listener to.
-     * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.addOnceListener = function addOnceListener(evt, listener) {
-        return this.addListener(evt, {
-            listener: listener,
-            once: true
-        });
-    };
-
-    /**
-     * Alias of addOnceListener.
-     */
-    proto.once = alias('addOnceListener');
-
-    /**
-     * Defines an event name. This is required if you want to use a regex to add a listener to multiple events at once. If you don't do this then how do you expect it to know what event to add to? Should it just add to every possible match for a regex? No. That is scary and bad.
-     * You need to tell it what event names should be matched by a regex.
-     *
-     * @param {String} evt Name of the event to create.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.defineEvent = function defineEvent(evt) {
-        this.getListeners(evt);
-        return this;
-    };
-
-    /**
-     * Uses defineEvent to define multiple events.
-     *
-     * @param {String[]} evts An array of event names to define.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.defineEvents = function defineEvents(evts) {
-        for (var i = 0; i < evts.length; i += 1) {
-            this.defineEvent(evts[i]);
-        }
-        return this;
-    };
-
-    /**
-     * Removes a listener function from the specified event.
-     * When passed a regular expression as the event name, it will remove the listener from all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to remove the listener from.
-     * @param {Function} listener Method to remove from the event.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.removeListener = function removeListener(evt, listener) {
-        var listeners = this.getListenersAsObject(evt);
-        var index;
-        var key;
-
-        for (key in listeners) {
-            if (listeners.hasOwnProperty(key)) {
-                index = indexOfListener(listeners[key], listener);
-
-                if (index !== -1) {
-                    listeners[key].splice(index, 1);
-                }
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of removeListener
-     */
-    proto.off = alias('removeListener');
-
-    /**
-     * Adds listeners in bulk using the manipulateListeners method.
-     * If you pass an object as the second argument you can add to multiple events at once. The object should contain key value pairs of events and listeners or listener arrays. You can also pass it an event name and an array of listeners to be added.
-     * You can also pass it a regular expression to add the array of listeners to all events that match it.
-     * Yeah, this function does quite a bit. That's probably a bad thing.
-     *
-     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add to multiple events at once.
-     * @param {Function[]} [listeners] An optional array of listener functions to add.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.addListeners = function addListeners(evt, listeners) {
-        // Pass through to manipulateListeners
-        return this.manipulateListeners(false, evt, listeners);
-    };
-
-    /**
-     * Removes listeners in bulk using the manipulateListeners method.
-     * If you pass an object as the second argument you can remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
-     * You can also pass it an event name and an array of listeners to be removed.
-     * You can also pass it a regular expression to remove the listeners from all events that match it.
-     *
-     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to remove from multiple events at once.
-     * @param {Function[]} [listeners] An optional array of listener functions to remove.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.removeListeners = function removeListeners(evt, listeners) {
-        // Pass through to manipulateListeners
-        return this.manipulateListeners(true, evt, listeners);
-    };
-
-    /**
-     * Edits listeners in bulk. The addListeners and removeListeners methods both use this to do their job. You should really use those instead, this is a little lower level.
-     * The first argument will determine if the listeners are removed (true) or added (false).
-     * If you pass an object as the second argument you can add/remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
-     * You can also pass it an event name and an array of listeners to be added/removed.
-     * You can also pass it a regular expression to manipulate the listeners of all events that match it.
-     *
-     * @param {Boolean} remove True if you want to remove listeners, false if you want to add.
-     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add/remove from multiple events at once.
-     * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.manipulateListeners = function manipulateListeners(remove, evt, listeners) {
-        var i;
-        var value;
-        var single = remove ? this.removeListener : this.addListener;
-        var multiple = remove ? this.removeListeners : this.addListeners;
-
-        // If evt is an object then pass each of its properties to this method
-        if (typeof evt === 'object' && !(evt instanceof RegExp)) {
-            for (i in evt) {
-                if (evt.hasOwnProperty(i) && (value = evt[i])) {
-                    // Pass the single listener straight through to the singular method
-                    if (typeof value === 'function') {
-                        single.call(this, i, value);
-                    }
-                    else {
-                        // Otherwise pass back to the multiple function
-                        multiple.call(this, i, value);
-                    }
-                }
-            }
-        }
-        else {
-            // So evt must be a string
-            // And listeners must be an array of listeners
-            // Loop over it and pass each one to the multiple method
-            i = listeners.length;
-            while (i--) {
-                single.call(this, evt, listeners[i]);
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Removes all listeners from a specified event.
-     * If you do not specify an event then all listeners will be removed.
-     * That means every event will be emptied.
-     * You can also pass a regex to remove all events that match it.
-     *
-     * @param {String|RegExp} [evt] Optional name of the event to remove all listeners for. Will remove from every event if not passed.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.removeEvent = function removeEvent(evt) {
-        var type = typeof evt;
-        var events = this._getEvents();
-        var key;
-
-        // Remove different things depending on the state of evt
-        if (type === 'string') {
-            // Remove all listeners for the specified event
-            delete events[evt];
-        }
-        else if (evt instanceof RegExp) {
-            // Remove all events matching the regex.
-            for (key in events) {
-                if (events.hasOwnProperty(key) && evt.test(key)) {
-                    delete events[key];
-                }
-            }
-        }
-        else {
-            // Remove all listeners in all events
-            delete this._events;
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of removeEvent.
-     *
-     * Added to mirror the node API.
-     */
-    proto.removeAllListeners = alias('removeEvent');
-
-    /**
-     * Emits an event of your choice.
-     * When emitted, every listener attached to that event will be executed.
-     * If you pass the optional argument array then those arguments will be passed to every listener upon execution.
-     * Because it uses `apply`, your array of arguments will be passed as if you wrote them out separately.
-     * So they will not arrive within the array on the other side, they will be separate.
-     * You can also pass a regular expression to emit to all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
-     * @param {Array} [args] Optional array of arguments to be passed to each listener.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.emitEvent = function emitEvent(evt, args) {
-        var listenersMap = this.getListenersAsObject(evt);
-        var listeners;
-        var listener;
-        var i;
-        var key;
-        var response;
-
-        for (key in listenersMap) {
-            if (listenersMap.hasOwnProperty(key)) {
-                listeners = listenersMap[key].slice(0);
-                i = listeners.length;
-
-                while (i--) {
-                    // If the listener returns true then it shall be removed from the event
-                    // The function is executed either with a basic call or an apply if there is an args array
-                    listener = listeners[i];
-
-                    if (listener.once === true) {
-                        this.removeListener(evt, listener.listener);
-                    }
-
-                    response = listener.listener.apply(this, args || []);
-
-                    if (response === this._getOnceReturnValue()) {
-                        this.removeListener(evt, listener.listener);
-                    }
-                }
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of emitEvent
-     */
-    proto.trigger = alias('emitEvent');
-
-    /**
-     * Subtly different from emitEvent in that it will pass its arguments on to the listeners, as opposed to taking a single array of arguments to pass on.
-     * As with emitEvent, you can pass a regex in place of the event name to emit to all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
-     * @param {...*} Optional additional arguments to be passed to each listener.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.emit = function emit(evt) {
-        var args = Array.prototype.slice.call(arguments, 1);
-        return this.emitEvent(evt, args);
-    };
-
-    /**
-     * Sets the current value to check against when executing listeners. If a
-     * listeners return value matches the one set here then it will be removed
-     * after execution. This value defaults to true.
-     *
-     * @param {*} value The new value to check for when executing listeners.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.setOnceReturnValue = function setOnceReturnValue(value) {
-        this._onceReturnValue = value;
-        return this;
-    };
-
-    /**
-     * Fetches the current value to check against when executing listeners. If
-     * the listeners return value matches this one then it should be removed
-     * automatically. It will return true by default.
-     *
-     * @return {*|Boolean} The current value to check for or the default, true.
-     * @api private
-     */
-    proto._getOnceReturnValue = function _getOnceReturnValue() {
-        if (this.hasOwnProperty('_onceReturnValue')) {
-            return this._onceReturnValue;
-        }
-        else {
-            return true;
-        }
-    };
-
-    /**
-     * Fetches the events object and creates one if required.
-     *
-     * @return {Object} The events storage object.
-     * @api private
-     */
-    proto._getEvents = function _getEvents() {
-        return this._events || (this._events = {});
-    };
-
-    /**
-     * Reverts the global {@link EventEmitter} to its previous value and returns a reference to this version.
-     *
-     * @return {Function} Non conflicting EventEmitter class.
-     */
-    EventEmitter.noConflict = function noConflict() {
-        exports.EventEmitter = originalGlobalValue;
-        return EventEmitter;
-    };
-
-    // Expose the class either via AMD, CommonJS or the global object
-    if (typeof define === 'function' && define.amd) {
-        define('eventEmitter/EventEmitter',[],function () {
-            return EventEmitter;
-        });
-    }
-    else if (typeof module === 'object' && module.exports){
-        module.exports = EventEmitter;
-    }
-    else {
-        exports.EventEmitter = EventEmitter;
-    }
-}.call(this));
-
-/*!
- * eventie v1.0.6
- * event binding helper
- *   eventie.bind( elem, 'click', myFn )
- *   eventie.unbind( elem, 'click', myFn )
- * MIT license
- */
-
-/*jshint browser: true, undef: true, unused: true */
-/*global define: false, module: false */
-
-( function( window ) {
+}( typeof window != 'undefined' ? window : this, function() {
 
 
 
-var docElem = document.documentElement;
+function EvEmitter() {}
 
-var bind = function() {};
+var proto = EvEmitter.prototype;
 
-function getIEEvent( obj ) {
-  var event = window.event;
-  // add event.target
-  event.target = event.target || event.srcElement || obj;
-  return event;
-}
+proto.on = function( eventName, listener ) {
+  if ( !eventName || !listener ) {
+    return;
+  }
+  // set events hash
+  var events = this._events = this._events || {};
+  // set listeners array
+  var listeners = events[ eventName ] = events[ eventName ] || [];
+  // only add once
+  if ( listeners.indexOf( listener ) == -1 ) {
+    listeners.push( listener );
+  }
 
-if ( docElem.addEventListener ) {
-  bind = function( obj, type, fn ) {
-    obj.addEventListener( type, fn, false );
-  };
-} else if ( docElem.attachEvent ) {
-  bind = function( obj, type, fn ) {
-    obj[ type + fn ] = fn.handleEvent ?
-      function() {
-        var event = getIEEvent( obj );
-        fn.handleEvent.call( fn, event );
-      } :
-      function() {
-        var event = getIEEvent( obj );
-        fn.call( obj, event );
-      };
-    obj.attachEvent( "on" + type, obj[ type + fn ] );
-  };
-}
-
-var unbind = function() {};
-
-if ( docElem.removeEventListener ) {
-  unbind = function( obj, type, fn ) {
-    obj.removeEventListener( type, fn, false );
-  };
-} else if ( docElem.detachEvent ) {
-  unbind = function( obj, type, fn ) {
-    obj.detachEvent( "on" + type, obj[ type + fn ] );
-    try {
-      delete obj[ type + fn ];
-    } catch ( err ) {
-      // can't delete window object properties
-      obj[ type + fn ] = undefined;
-    }
-  };
-}
-
-var eventie = {
-  bind: bind,
-  unbind: unbind
+  return this;
 };
 
-// ----- module definition ----- //
+proto.once = function( eventName, listener ) {
+  if ( !eventName || !listener ) {
+    return;
+  }
+  // add event
+  this.on( eventName, listener );
+  // set once flag
+  // set onceEvents hash
+  var onceEvents = this._onceEvents = this._onceEvents || {};
+  // set onceListeners object
+  var onceListeners = onceEvents[ eventName ] = onceEvents[ eventName ] || {};
+  // set flag
+  onceListeners[ listener ] = true;
 
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( 'eventie/eventie',eventie );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS
-  module.exports = eventie;
-} else {
-  // browser global
-  window.eventie = eventie;
-}
+  return this;
+};
 
-})( window );
+proto.off = function( eventName, listener ) {
+  var listeners = this._events && this._events[ eventName ];
+  if ( !listeners || !listeners.length ) {
+    return;
+  }
+  var index = listeners.indexOf( listener );
+  if ( index != -1 ) {
+    listeners.splice( index, 1 );
+  }
+
+  return this;
+};
+
+proto.emitEvent = function( eventName, args ) {
+  var listeners = this._events && this._events[ eventName ];
+  if ( !listeners || !listeners.length ) {
+    return;
+  }
+  var i = 0;
+  var listener = listeners[i];
+  args = args || [];
+  // once stuff
+  var onceListeners = this._onceEvents && this._onceEvents[ eventName ];
+
+  while ( listener ) {
+    var isOnce = onceListeners && onceListeners[ listener ];
+    if ( isOnce ) {
+      // remove listener
+      // remove before trigger to prevent recursion
+      this.off( eventName, listener );
+      // unset once flag
+      delete onceListeners[ listener ];
+    }
+    // trigger listener
+    listener.apply( this, args );
+    // get next listener
+    i += isOnce ? 0 : 1;
+    listener = listeners[i];
+  }
+
+  return this;
+};
+
+proto.allOff =
+proto.removeAllListeners = function() {
+  delete this._events;
+  delete this._onceEvents;
+};
+
+return EvEmitter;
+
+}));
 
 /*!
- * imagesLoaded v3.1.8
+ * imagesLoaded v4.1.3
  * JavaScript is all like "You images are done yet or what?"
  * MIT License
  */
@@ -37732,41 +33000,37 @@ if ( typeof define === 'function' && define.amd ) {
 
   /*global define: false, module: false, require: false */
 
-  if ( typeof define === 'function' && define.amd ) {
+  if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'imagesloaded',[
-      'eventEmitter/EventEmitter',
-      'eventie/eventie'
-    ], function( EventEmitter, eventie ) {
-      return factory( window, EventEmitter, eventie );
+      'ev-emitter/ev-emitter'
+    ], function( EvEmitter ) {
+      return factory( window, EvEmitter );
     });
-  } else if ( typeof exports === 'object' ) {
+  } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
       window,
-      require('wolfy87-eventemitter'),
-      require('eventie')
+      require('ev-emitter')
     );
   } else {
     // browser global
     window.imagesLoaded = factory(
       window,
-      window.EventEmitter,
-      window.eventie
+      window.EvEmitter
     );
   }
 
-})( window,
+})( typeof window !== 'undefined' ? window : this,
 
 // --------------------------  factory -------------------------- //
 
-function factory( window, EventEmitter, eventie ) {
+function factory( window, EvEmitter ) {
 
 
 
 var $ = window.jQuery;
 var console = window.console;
-var hasConsole = typeof console !== 'undefined';
 
 // -------------------------- helpers -------------------------- //
 
@@ -37778,20 +33042,15 @@ function extend( a, b ) {
   return a;
 }
 
-var objToString = Object.prototype.toString;
-function isArray( obj ) {
-  return objToString.call( obj ) === '[object Array]';
-}
-
 // turn element or nodeList into an array
 function makeArray( obj ) {
   var ary = [];
-  if ( isArray( obj ) ) {
+  if ( Array.isArray( obj ) ) {
     // use object if already an array
     ary = obj;
-  } else if ( typeof obj.length === 'number' ) {
+  } else if ( typeof obj.length == 'number' ) {
     // convert nodeList to array
-    for ( var i=0, len = obj.length; i < len; i++ ) {
+    for ( var i=0; i < obj.length; i++ ) {
       ary.push( obj[i] );
     }
   } else {
@@ -37801,259 +33060,303 @@ function makeArray( obj ) {
   return ary;
 }
 
-  // -------------------------- imagesLoaded -------------------------- //
+// -------------------------- imagesLoaded -------------------------- //
 
-  /**
-   * @param {Array, Element, NodeList, String} elem
-   * @param {Object or Function} options - if function, use as callback
-   * @param {Function} onAlways - callback function
-   */
-  function ImagesLoaded( elem, options, onAlways ) {
-    // coerce ImagesLoaded() without new, to be new ImagesLoaded()
-    if ( !( this instanceof ImagesLoaded ) ) {
-      return new ImagesLoaded( elem, options );
-    }
-    // use elem as selector string
-    if ( typeof elem === 'string' ) {
-      elem = document.querySelectorAll( elem );
-    }
-
-    this.elements = makeArray( elem );
-    this.options = extend( {}, this.options );
-
-    if ( typeof options === 'function' ) {
-      onAlways = options;
-    } else {
-      extend( this.options, options );
-    }
-
-    if ( onAlways ) {
-      this.on( 'always', onAlways );
-    }
-
-    this.getImages();
-
-    if ( $ ) {
-      // add jQuery Deferred object
-      this.jqDeferred = new $.Deferred();
-    }
-
-    // HACK check async to allow time to bind listeners
-    var _this = this;
-    setTimeout( function() {
-      _this.check();
-    });
+/**
+ * @param {Array, Element, NodeList, String} elem
+ * @param {Object or Function} options - if function, use as callback
+ * @param {Function} onAlways - callback function
+ */
+function ImagesLoaded( elem, options, onAlways ) {
+  // coerce ImagesLoaded() without new, to be new ImagesLoaded()
+  if ( !( this instanceof ImagesLoaded ) ) {
+    return new ImagesLoaded( elem, options, onAlways );
+  }
+  // use elem as selector string
+  if ( typeof elem == 'string' ) {
+    elem = document.querySelectorAll( elem );
   }
 
-  ImagesLoaded.prototype = new EventEmitter();
+  this.elements = makeArray( elem );
+  this.options = extend( {}, this.options );
 
-  ImagesLoaded.prototype.options = {};
+  if ( typeof options == 'function' ) {
+    onAlways = options;
+  } else {
+    extend( this.options, options );
+  }
 
-  ImagesLoaded.prototype.getImages = function() {
-    this.images = [];
+  if ( onAlways ) {
+    this.on( 'always', onAlways );
+  }
 
-    // filter & find items if we have an item selector
-    for ( var i=0, len = this.elements.length; i < len; i++ ) {
-      var elem = this.elements[i];
-      // filter siblings
-      if ( elem.nodeName === 'IMG' ) {
-        this.addImage( elem );
-      }
-      // find children
-      // no non-element nodes, #143
-      var nodeType = elem.nodeType;
-      if ( !nodeType || !( nodeType === 1 || nodeType === 9 || nodeType === 11 ) ) {
-        continue;
-      }
-      var childElems = elem.querySelectorAll('img');
-      // concat childElems to filterFound array
-      for ( var j=0, jLen = childElems.length; j < jLen; j++ ) {
-        var img = childElems[j];
-        this.addImage( img );
-      }
-    }
-  };
-
-  /**
-   * @param {Image} img
-   */
-  ImagesLoaded.prototype.addImage = function( img ) {
-    var loadingImage = new LoadingImage( img );
-    this.images.push( loadingImage );
-  };
-
-  ImagesLoaded.prototype.check = function() {
-    var _this = this;
-    var checkedCount = 0;
-    var length = this.images.length;
-    this.hasAnyBroken = false;
-    // complete if no images
-    if ( !length ) {
-      this.complete();
-      return;
-    }
-
-    function onConfirm( image, message ) {
-      if ( _this.options.debug && hasConsole ) {
-        console.log( 'confirm', image, message );
-      }
-
-      _this.progress( image );
-      checkedCount++;
-      if ( checkedCount === length ) {
-        _this.complete();
-      }
-      return true; // bind once
-    }
-
-    for ( var i=0; i < length; i++ ) {
-      var loadingImage = this.images[i];
-      loadingImage.on( 'confirm', onConfirm );
-      loadingImage.check();
-    }
-  };
-
-  ImagesLoaded.prototype.progress = function( image ) {
-    this.hasAnyBroken = this.hasAnyBroken || !image.isLoaded;
-    // HACK - Chrome triggers event before object properties have changed. #83
-    var _this = this;
-    setTimeout( function() {
-      _this.emit( 'progress', _this, image );
-      if ( _this.jqDeferred && _this.jqDeferred.notify ) {
-        _this.jqDeferred.notify( _this, image );
-      }
-    });
-  };
-
-  ImagesLoaded.prototype.complete = function() {
-    var eventName = this.hasAnyBroken ? 'fail' : 'done';
-    this.isComplete = true;
-    var _this = this;
-    // HACK - another setTimeout so that confirm happens after progress
-    setTimeout( function() {
-      _this.emit( eventName, _this );
-      _this.emit( 'always', _this );
-      if ( _this.jqDeferred ) {
-        var jqMethod = _this.hasAnyBroken ? 'reject' : 'resolve';
-        _this.jqDeferred[ jqMethod ]( _this );
-      }
-    });
-  };
-
-  // -------------------------- jquery -------------------------- //
+  this.getImages();
 
   if ( $ ) {
-    $.fn.imagesLoaded = function( options, callback ) {
-      var instance = new ImagesLoaded( this, options, callback );
-      return instance.jqDeferred.promise( $(this) );
-    };
+    // add jQuery Deferred object
+    this.jqDeferred = new $.Deferred();
   }
 
+  // HACK check async to allow time to bind listeners
+  setTimeout( function() {
+    this.check();
+  }.bind( this ));
+}
 
-  // --------------------------  -------------------------- //
+ImagesLoaded.prototype = Object.create( EvEmitter.prototype );
 
-  function LoadingImage( img ) {
-    this.img = img;
+ImagesLoaded.prototype.options = {};
+
+ImagesLoaded.prototype.getImages = function() {
+  this.images = [];
+
+  // filter & find items if we have an item selector
+  this.elements.forEach( this.addElementImages, this );
+};
+
+/**
+ * @param {Node} element
+ */
+ImagesLoaded.prototype.addElementImages = function( elem ) {
+  // filter siblings
+  if ( elem.nodeName == 'IMG' ) {
+    this.addImage( elem );
+  }
+  // get background image on element
+  if ( this.options.background === true ) {
+    this.addElementBackgroundImages( elem );
   }
 
-  LoadingImage.prototype = new EventEmitter();
+  // find children
+  // no non-element nodes, #143
+  var nodeType = elem.nodeType;
+  if ( !nodeType || !elementNodeTypes[ nodeType ] ) {
+    return;
+  }
+  var childImgs = elem.querySelectorAll('img');
+  // concat childElems to filterFound array
+  for ( var i=0; i < childImgs.length; i++ ) {
+    var img = childImgs[i];
+    this.addImage( img );
+  }
 
-  LoadingImage.prototype.check = function() {
-    // first check cached any previous images that have same src
-    var resource = cache[ this.img.src ] || new Resource( this.img.src );
-    if ( resource.isConfirmed ) {
-      this.confirm( resource.isLoaded, 'cached was confirmed' );
-      return;
+  // get child background images
+  if ( typeof this.options.background == 'string' ) {
+    var children = elem.querySelectorAll( this.options.background );
+    for ( i=0; i < children.length; i++ ) {
+      var child = children[i];
+      this.addElementBackgroundImages( child );
     }
+  }
+};
 
-    // If complete is true and browser supports natural sizes,
-    // try to check for image status manually.
-    if ( this.img.complete && this.img.naturalWidth !== undefined ) {
-      // report based on naturalWidth
-      this.confirm( this.img.naturalWidth !== 0, 'naturalWidth' );
-      return;
+var elementNodeTypes = {
+  1: true,
+  9: true,
+  11: true
+};
+
+ImagesLoaded.prototype.addElementBackgroundImages = function( elem ) {
+  var style = getComputedStyle( elem );
+  if ( !style ) {
+    // Firefox returns null if in a hidden iframe https://bugzil.la/548397
+    return;
+  }
+  // get url inside url("...")
+  var reURL = /url\((['"])?(.*?)\1\)/gi;
+  var matches = reURL.exec( style.backgroundImage );
+  while ( matches !== null ) {
+    var url = matches && matches[2];
+    if ( url ) {
+      this.addBackground( url, elem );
     }
+    matches = reURL.exec( style.backgroundImage );
+  }
+};
 
-    // If none of the checks above matched, simulate loading on detached element.
-    var _this = this;
-    resource.on( 'confirm', function( resrc, message ) {
-      _this.confirm( resrc.isLoaded, message );
-      return true;
+/**
+ * @param {Image} img
+ */
+ImagesLoaded.prototype.addImage = function( img ) {
+  var loadingImage = new LoadingImage( img );
+  this.images.push( loadingImage );
+};
+
+ImagesLoaded.prototype.addBackground = function( url, elem ) {
+  var background = new Background( url, elem );
+  this.images.push( background );
+};
+
+ImagesLoaded.prototype.check = function() {
+  var _this = this;
+  this.progressedCount = 0;
+  this.hasAnyBroken = false;
+  // complete if no images
+  if ( !this.images.length ) {
+    this.complete();
+    return;
+  }
+
+  function onProgress( image, elem, message ) {
+    // HACK - Chrome triggers event before object properties have changed. #83
+    setTimeout( function() {
+      _this.progress( image, elem, message );
     });
-
-    resource.check();
-  };
-
-  LoadingImage.prototype.confirm = function( isLoaded, message ) {
-    this.isLoaded = isLoaded;
-    this.emit( 'confirm', this, message );
-  };
-
-  // -------------------------- Resource -------------------------- //
-
-  // Resource checks each src, only once
-  // separate class from LoadingImage to prevent memory leaks. See #115
-
-  var cache = {};
-
-  function Resource( src ) {
-    this.src = src;
-    // add to cache
-    cache[ src ] = this;
   }
 
-  Resource.prototype = new EventEmitter();
+  this.images.forEach( function( loadingImage ) {
+    loadingImage.once( 'progress', onProgress );
+    loadingImage.check();
+  });
+};
 
-  Resource.prototype.check = function() {
-    // only trigger checking once
-    if ( this.isChecked ) {
-      return;
-    }
-    // simulate loading on detached element
-    var proxyImage = new Image();
-    eventie.bind( proxyImage, 'load', this );
-    eventie.bind( proxyImage, 'error', this );
-    proxyImage.src = this.src;
-    // set flag
-    this.isChecked = true;
+ImagesLoaded.prototype.progress = function( image, elem, message ) {
+  this.progressedCount++;
+  this.hasAnyBroken = this.hasAnyBroken || !image.isLoaded;
+  // progress event
+  this.emitEvent( 'progress', [ this, image, elem ] );
+  if ( this.jqDeferred && this.jqDeferred.notify ) {
+    this.jqDeferred.notify( this, image );
+  }
+  // check if completed
+  if ( this.progressedCount == this.images.length ) {
+    this.complete();
+  }
+
+  if ( this.options.debug && console ) {
+    console.log( 'progress: ' + message, image, elem );
+  }
+};
+
+ImagesLoaded.prototype.complete = function() {
+  var eventName = this.hasAnyBroken ? 'fail' : 'done';
+  this.isComplete = true;
+  this.emitEvent( eventName, [ this ] );
+  this.emitEvent( 'always', [ this ] );
+  if ( this.jqDeferred ) {
+    var jqMethod = this.hasAnyBroken ? 'reject' : 'resolve';
+    this.jqDeferred[ jqMethod ]( this );
+  }
+};
+
+// --------------------------  -------------------------- //
+
+function LoadingImage( img ) {
+  this.img = img;
+}
+
+LoadingImage.prototype = Object.create( EvEmitter.prototype );
+
+LoadingImage.prototype.check = function() {
+  // If complete is true and browser supports natural sizes,
+  // try to check for image status manually.
+  var isComplete = this.getIsImageComplete();
+  if ( isComplete ) {
+    // report based on naturalWidth
+    this.confirm( this.img.naturalWidth !== 0, 'naturalWidth' );
+    return;
+  }
+
+  // If none of the checks above matched, simulate loading on detached element.
+  this.proxyImage = new Image();
+  this.proxyImage.addEventListener( 'load', this );
+  this.proxyImage.addEventListener( 'error', this );
+  // bind to image as well for Firefox. #191
+  this.img.addEventListener( 'load', this );
+  this.img.addEventListener( 'error', this );
+  this.proxyImage.src = this.img.src;
+};
+
+LoadingImage.prototype.getIsImageComplete = function() {
+  return this.img.complete && this.img.naturalWidth !== undefined;
+};
+
+LoadingImage.prototype.confirm = function( isLoaded, message ) {
+  this.isLoaded = isLoaded;
+  this.emitEvent( 'progress', [ this, this.img, message ] );
+};
+
+// ----- events ----- //
+
+// trigger specified handler for event type
+LoadingImage.prototype.handleEvent = function( event ) {
+  var method = 'on' + event.type;
+  if ( this[ method ] ) {
+    this[ method ]( event );
+  }
+};
+
+LoadingImage.prototype.onload = function() {
+  this.confirm( true, 'onload' );
+  this.unbindEvents();
+};
+
+LoadingImage.prototype.onerror = function() {
+  this.confirm( false, 'onerror' );
+  this.unbindEvents();
+};
+
+LoadingImage.prototype.unbindEvents = function() {
+  this.proxyImage.removeEventListener( 'load', this );
+  this.proxyImage.removeEventListener( 'error', this );
+  this.img.removeEventListener( 'load', this );
+  this.img.removeEventListener( 'error', this );
+};
+
+// -------------------------- Background -------------------------- //
+
+function Background( url, element ) {
+  this.url = url;
+  this.element = element;
+  this.img = new Image();
+}
+
+// inherit LoadingImage prototype
+Background.prototype = Object.create( LoadingImage.prototype );
+
+Background.prototype.check = function() {
+  this.img.addEventListener( 'load', this );
+  this.img.addEventListener( 'error', this );
+  this.img.src = this.url;
+  // check if image is already complete
+  var isComplete = this.getIsImageComplete();
+  if ( isComplete ) {
+    this.confirm( this.img.naturalWidth !== 0, 'naturalWidth' );
+    this.unbindEvents();
+  }
+};
+
+Background.prototype.unbindEvents = function() {
+  this.img.removeEventListener( 'load', this );
+  this.img.removeEventListener( 'error', this );
+};
+
+Background.prototype.confirm = function( isLoaded, message ) {
+  this.isLoaded = isLoaded;
+  this.emitEvent( 'progress', [ this, this.element, message ] );
+};
+
+// -------------------------- jQuery -------------------------- //
+
+ImagesLoaded.makeJQueryPlugin = function( jQuery ) {
+  jQuery = jQuery || window.jQuery;
+  if ( !jQuery ) {
+    return;
+  }
+  // set local variable
+  $ = jQuery;
+  // $().imagesLoaded()
+  $.fn.imagesLoaded = function( options, callback ) {
+    var instance = new ImagesLoaded( this, options, callback );
+    return instance.jqDeferred.promise( $(this) );
   };
+};
+// try making plugin
+ImagesLoaded.makeJQueryPlugin();
 
-  // ----- events ----- //
+// --------------------------  -------------------------- //
 
-  // trigger specified handler for event type
-  Resource.prototype.handleEvent = function( event ) {
-    var method = 'on' + event.type;
-    if ( this[ method ] ) {
-      this[ method ]( event );
-    }
-  };
-
-  Resource.prototype.onload = function( event ) {
-    this.confirm( true, 'onload' );
-    this.unbindProxyEvents( event );
-  };
-
-  Resource.prototype.onerror = function( event ) {
-    this.confirm( false, 'onerror' );
-    this.unbindProxyEvents( event );
-  };
-
-  // ----- confirm ----- //
-
-  Resource.prototype.confirm = function( isLoaded, message ) {
-    this.isConfirmed = true;
-    this.isLoaded = isLoaded;
-    this.emit( 'confirm', this, message );
-  };
-
-  Resource.prototype.unbindProxyEvents = function( event ) {
-    eventie.unbind( event.target, 'load', this );
-    eventie.unbind( event.target, 'error', this );
-  };
-
-  // -----  ----- //
-
-  return ImagesLoaded;
+return ImagesLoaded;
 
 });
 
@@ -38083,8 +33386,8 @@ define('pat-equaliser',[
                 var $container = $(this),
                     options = parser.parse($container, opts);
                 $container.data("pat-equaliser", options);
-                $container.on("pat-update.pat-equaliser", null, this, equaliser._onEvent);
-                $container.on("patterns-injected.pat-equaliser", null, this, equaliser._onEvent);
+                $container.on("pat-update.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
+                $container.on("patterns-injected.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
                 $container.parents('.pat-stacks').on("pat-update", null, this, utils.debounce(equaliser._onEvent, 100));
                 imagesLoaded(this, $.proxy(function() {
@@ -38113,7 +33416,7 @@ define('pat-equaliser',[
 
             var new_css = {height: max_height+"px"};
 
-            switch (options.transition) {
+            switch (options && options.transition) {
                 case "none":
                     $children.css(new_css).addClass("equalised");
                     break;
@@ -38123,6 +33426,7 @@ define('pat-equaliser',[
                     });
                     break;
             }
+            $container.trigger('pat-update', {pattern: 'equaliser'});
         },
 
         _onEvent: function(event) {
@@ -38135,8 +33439,6 @@ define('pat-equaliser',[
     patterns.register(equaliser);
     return equaliser;
 });
-
-
 
 define('pat-expandable',[
     "jquery",
@@ -38281,6 +33583,7 @@ define('pat-modal',[
     parser.addArgument("class");
     parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
     parser.addArgument("close-text", 'Close');
+    parser.addArgument("panel-header-content", ":first:not(.header)");
 
     return Base.extend({
         name: "modal",
@@ -38321,15 +33624,21 @@ define('pat-modal',[
             if (this.options.closing.indexOf("close-button")!==-1) {
                 $("<button type='button' class='close-panel'>" + this.options.closeText + "</button>").appendTo($header);
             }
+
             // We cannot handle text nodes here
-            var $children = this.$el.children(":last, :not(:first)");
+            if (this.options.panelHeaderContent === "none") {
+              var $children = this.$el.children();
+            } else {
+              var $children = this.$el.children(":last, :not(" + this.options.panelHeaderContent +")");
+            }
+
             if ($children.length) {
                 $children.wrapAll("<div class='panel-content' />");
             } else {
                 this.$el.append("<div class='panel-content' />");
             }
             $(".panel-content", this.$el).before($header);
-            this.$el.children(":first:not(.header)").prependTo($header);
+            this.$el.children(this.options.panelHeaderContent).prependTo($header);
 
             // Restore focus in case the active element was a child of $el and
             // the focus was lost during the wrapping.
@@ -38390,23 +33699,16 @@ define('pat-modal',[
         },
 
         resize: function() {
-            var modal_height = this.$el.outerHeight(true);
-            var modal_padding = modal_height - this.$el.outerHeight();
-            var max_height = $(window).innerHeight() - modal_padding;
-            var $tallest_child = this.getTallestChild();
-            var tallest_child_height = $tallest_child.outerHeight(true);
+            // reset the height before setting a new one
+            this.$el.removeClass("max-height").css("height", "");
 
-            if (tallest_child_height !== modal_height) {
-                modal_height = tallest_child_height + modal_padding;
-            }
-            if (max_height < modal_height) {
-                this.$el.addClass("max-height").css("height", max_height);
+            var panel_content_elem = this.$el.find(".panel-content");
+            var header_elem = this.$el.find('.header');
+
+            var modal_height = panel_content_elem.outerHeight(true) + header_elem.outerHeight(true);
+            if (this.$el.height() < modal_height) {
+                this.$el.addClass("max-height").css({"height": modal_height+'px'});
                 this.setPosition();
-            } else if (modal_height !== this.$el.height()) {
-                this.$el.removeClass("max-height").css("height", modal_height);
-                this.setPosition();
-            } else {
-                return;
             }
             // XXX: This is a hack. When you have a modal inside a
             // modal.max-height, the CSS of the outermost modal affects the
@@ -38580,9 +33882,9 @@ define('pat-forward',[
 // vim: sw=4 expandtab
 
 ;
-/*! PhotoSwipe - v4.1.0 - 2015-07-11
+/*! PhotoSwipe - v4.1.2 - 2017-04-05
 * http://photoswipe.com
-* Copyright (c) 2015 Dmitry Semenov; */
+* Copyright (c) 2017 Dmitry Semenov; */
 (function (root, factory) { 
 	if (typeof define === 'function' && define.amd) {
 		define('photoswipe',factory);
@@ -38923,8 +34225,7 @@ var _options = {
 	modal: true,
 
 	// not fully implemented yet
-	scaleMode: 'fit', // TODO
-	alwaysFadeIn: false // TODO
+	scaleMode: 'fit' // TODO
 };
 framework.extend(_options, options);
 
@@ -38980,6 +34281,8 @@ var _isOpen,
 	_features,
 	_windowVisibleSize = {},
 	_renderMaxResolution = false,
+	_orientationChangeTimeout,
+
 
 	// Registers PhotoSWipe module (History, Controller ...)
 	_registerModule = function(name, module) {
@@ -39070,12 +34373,11 @@ var _isOpen,
 	_moveMainScroll = function(x, dragging) {
 
 		if(!_options.loop && dragging) {
-			// if of current item during scroll (float)
-			var newSlideIndexOffset = _currentItemIndex + (_slideSize.x * _currPositionIndex - x)/_slideSize.x; 
-			var delta = Math.round(x - _mainScrollPos.x);
+			var newSlideIndexOffset = _currentItemIndex + (_slideSize.x * _currPositionIndex - x) / _slideSize.x,
+				delta = Math.round(x - _mainScrollPos.x);
 
 			if( (newSlideIndexOffset < 0 && delta > 0) || 
-				(newSlideIndexOffset >= _getNumItems()-1 && delta < 0) ) {
+				(newSlideIndexOffset >= _getNumItems() - 1 && delta < 0) ) {
 				x = _mainScrollPos.x + delta * _options.mainScrollEndFriction;
 			} 
 		}
@@ -39128,13 +34430,13 @@ var _isOpen,
 			framework.bind(document, 'mousemove', _onFirstMouseMove);
 		}
 
-		framework.bind(window, 'resize scroll', self);
+		framework.bind(window, 'resize scroll orientationchange', self);
 
 		_shout('bindEvents');
 	},
 
 	_unbindEvents = function() {
-		framework.unbind(window, 'resize', self);
+		framework.unbind(window, 'resize scroll orientationchange', self);
 		framework.unbind(window, 'scroll', _globalEventHandlers.scroll);
 		framework.unbind(document, 'keydown', self);
 		framework.unbind(document, 'mousemove', _onFirstMouseMove);
@@ -39146,6 +34448,8 @@ var _isOpen,
 		if(_isDragging) {
 			framework.unbind(window, _upMoveEvents, self);
 		}
+
+		clearTimeout(_orientationChangeTimeout);
 
 		_shout('unbindEvents');
 	},
@@ -39392,7 +34696,7 @@ var publicMethods = {
 
 		var i;
 
-		self.framework = framework; // basic function
+		self.framework = framework; // basic functionality
 		self.template = template; // root DOM element of PhotoSwipe
 		self.bg = framework.getChildByClass(template, 'pswp__bg');
 
@@ -39425,6 +34729,18 @@ var publicMethods = {
 		// Setup global events
 		_globalEventHandlers = {
 			resize: self.updateSize,
+
+			// Fixes: iOS 10.3 resize event
+			// does not update scrollWrap.clientWidth instantly after resize
+			// https://github.com/dimsemenov/PhotoSwipe/issues/1315
+			orientationchange: function() {
+				clearTimeout(_orientationChangeTimeout);
+				_orientationChangeTimeout = setTimeout(function() {
+					if(_viewportSize.x !== self.scrollWrap.clientWidth) {
+						self.updateSize();
+					}
+				}, 500);
+			},
 			scroll: _updatePageScrollOffset,
 			keydown: _onKeyDown,
 			click: _onGlobalClick
@@ -39547,7 +34863,7 @@ var publicMethods = {
 		framework.addClass(template, 'pswp--visible');
 	},
 
-	// Closes the gallery, then destroy it
+	// Close the gallery, then destroy it
 	close: function() {
 		if(!_isOpen) {
 			return;
@@ -39558,10 +34874,10 @@ var publicMethods = {
 		_shout('close');
 		_unbindEvents();
 
-		_showOrHide( self.currItem, null, true, self.destroy);
+		_showOrHide(self.currItem, null, true, self.destroy);
 	},
 
-	// destroys gallery (unbinds events, cleans up intervals and timeouts to avoid memory leaks)
+	// destroys the gallery (unbinds events, cleans up intervals and timeouts to avoid memory leaks)
 	destroy: function() {
 		_shout('destroy');
 
@@ -39578,7 +34894,7 @@ var publicMethods = {
 
 		framework.unbind(self.scrollWrap, _downEvents, self);
 
-		// we unbind lost event at the end, as closing animation may depend on it
+		// we unbind scroll event at the end, as closing animation may depend on it
 		framework.unbind(window, 'scroll', self);
 
 		_stopDragUpdateLoop();
@@ -39880,7 +35196,6 @@ var publicMethods = {
 
 		_roundPoint(destPanOffset);
 
-		// _startZoomLevel = destZoomLevel;
 		var onUpdate = function(now) {
 			if(now === 1) {
 				_currZoomLevel = destZoomLevel;
@@ -39994,12 +35309,12 @@ var _gestureStartTime,
 	
 	// find the closest parent DOM element
 	_closestElement = function(el, fn) {
-	  	if(!el) {
+	  	if(!el || el === document) {
 	  		return false;
 	  	}
 
 	  	// don't search elements above pswp__scroll-wrap
-	  	if(el.className && el.className.indexOf('pswp__scroll-wrap') > -1 ) {
+	  	if(el.getAttribute('class') && el.getAttribute('class').indexOf('pswp__scroll-wrap') > -1 ) {
 	  		return false;
 	  	}
 
@@ -41130,21 +36445,23 @@ var _showOrHideTimeout,
 		// if bounds aren't provided, just open gallery without animation
 		if(!duration || !thumbBounds || thumbBounds.x === undefined) {
 
-			var finishWithoutAnimation = function() {
-				_shout('initialZoom' + (out ? 'Out' : 'In') );
+			_shout('initialZoom' + (out ? 'Out' : 'In') );
 
-				_currZoomLevel = item.initialZoomLevel;
-				_equalizePoints(_panOffset,  item.initialPosition );
-				_applyCurrentZoomPan();
+			_currZoomLevel = item.initialZoomLevel;
+			_equalizePoints(_panOffset,  item.initialPosition );
+			_applyCurrentZoomPan();
 
-				// no transition
-				template.style.opacity = out ? 0 : 1;
-				_applyBgOpacity(1);
+			template.style.opacity = out ? 0 : 1;
+			_applyBgOpacity(1);
 
+			if(duration) {
+				setTimeout(function() {
+					onComplete();
+				}, duration);
+			} else {
 				onComplete();
-			};
-			finishWithoutAnimation();
-			
+			}
+
 			return;
 		}
 
@@ -41372,7 +36689,7 @@ var _getItemAt,
 			// if it's not image, we return zero bounds (content is not zoomable)
 			return item.bounds;
 		}
-		return false;
+		
 	},
 
 	
@@ -41388,7 +36705,7 @@ var _getItemAt,
 		if(img) {
 
 			item.imageAppended = true;
-			_setImageSize(item, img);
+			_setImageSize(item, img, (item === self.currItem && _renderMaxResolution) );
 			
 			baseDiv.appendChild(img);
 
@@ -41488,7 +36805,7 @@ _registerModule('Controller', {
 			index = _getLoopedId(index);
 			var item = _getItemAt(index);
 
-			if(!item || item.loaded || item.loading) {
+			if(!item || ((item.loaded || item.loading) && !_itemsNeedUpdate)) {
 				return;
 			}
 
@@ -41516,7 +36833,7 @@ _registerModule('Controller', {
 			_listen('beforeChange', function(diff) {
 
 				var p = _options.preload,
-					isNext = diff === null ? true : (diff > 0),
+					isNext = diff === null ? true : (diff >= 0),
 					preloadBefore = Math.min(p[0], _getNumItems() ),
 					preloadAfter = Math.min(p[1], _getNumItems() ),
 					i;
@@ -42299,9 +37616,9 @@ _registerModule('History', {
 	framework.extend(self, publicMethods); };
 	return PhotoSwipe;
 });
-/*! PhotoSwipe Default UI - 4.1.0 - 2015-07-11
+/*! PhotoSwipe Default UI - 4.1.2 - 2017-04-05
 * http://photoswipe.com
-* Copyright (c) 2015 Dmitry Semenov; */
+* Copyright (c) 2017 Dmitry Semenov; */
 /**
 *
 * UI on top of main sliding area (caption, arrows, close button, etc.).
@@ -42394,7 +37711,8 @@ var PhotoSwipeUI_Default =
 				return pswp.currItem.title || '';
 			},
 				
-			indexIndicatorSep: ' / '
+			indexIndicatorSep: ' / ',
+			fitControlsWidth: 1200
 
 		},
 		_blockControlsTap,
@@ -42418,7 +37736,7 @@ var PhotoSwipeUI_Default =
 
 			var target = e.target || e.srcElement,
 				uiElement,
-				clickedClass = target.className,
+				clickedClass = target.getAttribute('class') || '',
 				found;
 
 			for(var i = 0; i < _uiElements.length; i++) {
@@ -42450,7 +37768,7 @@ var PhotoSwipeUI_Default =
 
 		},
 		_fitControlsInViewport = function() {
-			return !pswp.likelyTouchDevice || _options.mouseUsed || screen.width > 1200;
+			return !pswp.likelyTouchDevice || _options.mouseUsed || screen.width > _options.fitControlsWidth;
 		},
 		_togglePswpClass = function(el, cName, add) {
 			framework[ (add ? 'add' : 'remove') + 'Class' ](el, 'pswp__' + cName);
@@ -42581,7 +37899,7 @@ var PhotoSwipeUI_Default =
 			}
 		},
 		_setupFullscreenAPI = function() {
-			if(_options.fullscreenEl) {
+			if(_options.fullscreenEl && !framework.features.isOldAndroid) {
 				if(!_fullscrenAPI) {
 					_fullscrenAPI = ui.getFullscreenAPI();
 				}
@@ -42875,8 +38193,8 @@ var PhotoSwipeUI_Default =
 			var t = e.target || e.srcElement;
 			if(
 				t && 
-				t.className && e.type.indexOf('mouse') > -1 && 
-				( t.className.indexOf('__caption') > 0 || (/(SMALL|STRONG|EM)/i).test(t.tagName) ) 
+				t.getAttribute('class') && e.type.indexOf('mouse') > -1 && 
+				( t.getAttribute('class').indexOf('__caption') > 0 || (/(SMALL|STRONG|EM)/i).test(t.tagName) ) 
 			) {
 				preventObj.prevent = false;
 			}
@@ -43159,10 +38477,10 @@ return PhotoSwipeUI_Default;
 
 
 });
+
 /**
- * @license RequireJS text 2.0.14 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/requirejs/text for details
+ * @license text 2.0.15 Copyright jQuery Foundation and other contributors.
+ * Released under MIT license, http://github.com/requirejs/text/LICENSE
  */
 /*jslint regexp: true */
 /*global require, XMLHttpRequest, ActiveXObject,
@@ -43183,8 +38501,26 @@ define('text',['module'], function (module) {
         buildMap = {},
         masterConfig = (module.config && module.config()) || {};
 
+    function useDefault(value, defaultValue) {
+        return value === undefined || value === '' ? defaultValue : value;
+    }
+
+    //Allow for default ports for http and https.
+    function isSamePort(protocol1, port1, protocol2, port2) {
+        if (port1 === port2) {
+            return true;
+        } else if (protocol1 === protocol2) {
+            if (protocol1 === 'http') {
+                return useDefault(port1, '80') === useDefault(port2, '80');
+            } else if (protocol1 === 'https') {
+                return useDefault(port1, '443') === useDefault(port2, '443');
+            }
+        }
+        return false;
+    }
+
     text = {
-        version: '2.0.14',
+        version: '2.0.15',
 
         strip: function (content) {
             //Strips <?xml ...?> declarations so that external SVG and XML
@@ -43302,7 +38638,7 @@ define('text',['module'], function (module) {
 
             return (!uProtocol || uProtocol === protocol) &&
                    (!uHostName || uHostName.toLowerCase() === hostname.toLowerCase()) &&
-                   ((!uPort && !uHostName) || uPort === port);
+                   ((!uPort && !uHostName) || isSamePort(uProtocol, uPort, protocol, port));
         },
 
         finishLoad: function (name, strip, content, onLoad) {
@@ -43551,121 +38887,45 @@ define('text',['module'], function (module) {
     return text;
 });
 
-// RequireJS UnderscoreJS template plugin
-// http://github.com/jfparadis/requirejs-tpl
-//
-// An alternative to http://github.com/ZeeAgency/requirejs-tpl
-//
-// Using UnderscoreJS micro-templates at http://underscorejs.org/#template
-// Using and RequireJS text.js at http://requirejs.org/docs/api.html#text
-// @author JF Paradis
-// @version 0.0.2
-//
-// Released under the MIT license
-//
-// Usage:
-//   require(['backbone', 'tpl!mytemplate'], function (Backbone, mytemplate) {
-//     return Backbone.View.extend({
-//       initialize: function(){
-//         this.render();
-//       },
-//       render: function(){
-//         this.$el.html(mytemplate({message: 'hello'}));
-//     });
-//   });
-//
-// Configuration: (optional)
-//   require.config({
-//     tpl: {
-//       extension: '.tpl' // default = '.html'
-//     }
-//   });
 
-/*jslint nomen: true */
-/*global define: false */
-
-define('tpl',['text', 'underscore'], function (text, _) {
-    'use strict';
-
-    var buildMap = {},
-        buildTemplateSource = "define('{pluginName}!{moduleName}', function () { return {source}; });\n";
-
-    return {
-        version: '0.0.2',
-
-        load: function (moduleName, parentRequire, onload, config) {
-
-            if (config.tpl && config.tpl.templateSettings) {
-                _.templateSettings = config.tpl.templateSettings;
-            }
-
-            if (buildMap[moduleName]) {
-                onload(buildMap[moduleName]);
-
-            } else {
-                var ext = (config.tpl && config.tpl.extension) || '.html';
-                var path = (config.tpl && config.tpl.path) || '';
-                text.load(path + moduleName + ext, parentRequire, function (source) {
-                    buildMap[moduleName] = _.template(source);
-                    onload(buildMap[moduleName]);
-                }, config);
-            }
-        },
-
-        write: function (pluginName, moduleName, write) {
-            var build = buildMap[moduleName],
-                source = build && build.source;
-            if (source) {
-                write.asModule(pluginName + '!' + moduleName,
-                    buildTemplateSource
-                    .replace('{pluginName}', pluginName)
-                    .replace('{moduleName}', moduleName)
-                    .replace('{source}', source));
-            }
-        }
-    };
-});
-
-
-define('tpl!photoswipe-template', [],function () { return function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-with(obj||{}){
-__p+='<!-- Root element of PhotoSwipe. Must have class pswp. -->\n<div id="photoswipe-template" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">\n\n    <!-- Background of PhotoSwipe. \n         It\'s a separate element as animating opacity is faster than rgba(). -->\n    <div class="pswp__bg"></div>\n\n    <!-- Slides wrapper with overflow:hidden. -->\n    <div class="pswp__scroll-wrap">\n\n        <!-- Container that holds slides. \n            PhotoSwipe keeps only 3 of them in the DOM to save memory.\n            Don\'t modify these 3 pswp__item elements, data is added later on. -->\n        <div class="pswp__container">\n            <div class="pswp__item"></div>\n            <div class="pswp__item"></div>\n            <div class="pswp__item"></div>\n        </div>\n\n        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->\n        <div class="pswp__ui pswp__ui--hidden">\n\n            <div class="pswp__top-bar">\n\n                <!--  Controls are self-explanatory. Order can be changed. -->\n                <div class="pswp__counter"></div>\n\n                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>\n                <button class="pswp__button pswp__button--share" title="Share"></button>\n                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>\n                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>\n\n                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->\n                <!-- element will get class pswp__preloader__active when preloader is running -->\n                <div class="pswp__preloader">\n                    <div class="pswp__preloader__icn">\n                      <div class="pswp__preloader__cut">\n                        <div class="pswp__preloader__donut"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n\n            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">\n                <div class="pswp__share-tooltip"></div> \n            </div>\n\n            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">\n            </button>\n\n            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">\n            </button>\n\n            <div class="pswp__caption">\n                <div class="pswp__caption__center"></div>\n            </div>\n        </div>\n    </div>\n</div>\n';
-}
-return __p;
-}; });
+define('text!pat-gallery-url/template.html',[],function () { return '<!-- Root element of PhotoSwipe. Must have class pswp. -->\n<div id="photoswipe-template" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">\n\n    <!-- Background of PhotoSwipe. \n         It\'s a separate element as animating opacity is faster than rgba(). -->\n    <div class="pswp__bg"></div>\n\n    <!-- Slides wrapper with overflow:hidden. -->\n    <div class="pswp__scroll-wrap">\n\n        <!-- Container that holds slides. \n            PhotoSwipe keeps only 3 of them in the DOM to save memory.\n            Don\'t modify these 3 pswp__item elements, data is added later on. -->\n        <div class="pswp__container">\n            <div class="pswp__item"></div>\n            <div class="pswp__item"></div>\n            <div class="pswp__item"></div>\n        </div>\n\n        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->\n        <div class="pswp__ui pswp__ui--hidden">\n\n            <div class="pswp__top-bar">\n\n                <!--  Controls are self-explanatory. Order can be changed. -->\n                <div class="pswp__counter"></div>\n\n                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>\n                <button class="pswp__button pswp__button--share" title="Share"></button>\n                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>\n                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>\n\n                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->\n                <!-- element will get class pswp__preloader__active when preloader is running -->\n                <div class="pswp__preloader">\n                    <div class="pswp__preloader__icn">\n                      <div class="pswp__preloader__cut">\n                        <div class="pswp__preloader__donut"></div>\n                      </div>\n                    </div>\n                </div>\n            </div>\n\n            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">\n                <div class="pswp__share-tooltip"></div> \n            </div>\n\n            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">\n            </button>\n\n            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">\n            </button>\n\n            <div class="pswp__caption">\n                <div class="pswp__caption__center"></div>\n            </div>\n        </div>\n    </div>\n</div>\n';});
 
 /**
  * Patterns gallery - A simple gallery
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define("pat-gallery", [
-    "jquery",
-    "pat-registry",
-    "pat-base",
-    "pat-parser",
-    "photoswipe",
-    "photoswipe-ui",
-    "tpl!photoswipe-template",
-    "underscore"
+define('pat-gallery', [
+    'jquery',
+    'pat-registry',
+    'pat-base',
+    'pat-parser',
+    'photoswipe',
+    'photoswipe-ui',
+    'text!pat-gallery-url/template.html',
+    'underscore'
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
-    var parser = new Parser("gallery");
-    parser.addArgument("loop", true);
-    parser.addArgument("scale-method", "fit", ["fit", "fitNoUpscale", "zoom"]);
-    parser.addArgument("delay", 30000);
-    parser.addArgument("effect-duration", 250);
+    var parser = new Parser('gallery');
+    parser.addArgument('item-selector', 'a');  // selector for anchor element, which is added to the gallery.
+    parser.addArgument('loop', true);
+    parser.addArgument('scale-method', 'fit', ['fit', 'fitNoUpscale', 'zoom']);
+    parser.addArgument('delay', 30000);
+    parser.addArgument('effect-duration', 250);
 
     return Base.extend({
-        name: "gallery",
-        trigger: ".pat-gallery",
+        name: 'gallery',
+        trigger: '.pat-gallery',
+        origBodyOverflow: 'auto',
 
         init: function patGalleryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
             if ($('#photoswipe-template').length === 0) {
-                $('body').append(template());
+                $('body').append(_.template(template)());
             }
-            var images = $("a", this.$el).map(function () {
+            // Search for itemSelector including the current node
+            // See: https://stackoverflow.com/a/17538213/1337474
+            var image_wrapper = this.$el.find(this.options.itemSelector).addBack(this.options.itemSelector);
+            var images = image_wrapper.map(function () {
                 return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
@@ -43675,9 +38935,11 @@ define("pat-gallery", [
                 loop: this.options.loop,
                 slideshowDelay: this.options.delay,
                 hideAnimationDuration: this.options.effectDuration,
-                showAnimationDuration: this.options.effectDuration
+                showAnimationDuration: this.options.effectDuration,
+                pinchToClose: false,
+                closeOnScroll: false
             };
-            $("a", this.$el).click(function (ev) {
+            image_wrapper.click(function (ev) {
                 ev.preventDefault();
                 if (this.href) {
                     options.index = _.indexOf(_.pluck(images, 'src'), this.href);
@@ -43698,6 +38960,15 @@ define("pat-gallery", [
                         };
                         img.src = item.src; // let's download image
                     }
+                });
+                gallery.listen('initialZoomInEnd', function() {
+                    // don't show body scrollbars when overlay is open
+                    this.origBodyOverflow = $('body').css('overflow');
+                    $('body').css('overflow', 'hidden');
+                });
+                gallery.listen('destroy', function() {
+                    // show original overlay value on body after closing
+                    $('body').css('overflow', this.origBodyOverflow);
                 });
                 gallery.init();
             });
@@ -47692,7 +42963,7 @@ define('pat-notification',[
 // vim: sw=4 expandtab
 ;
 /*!
- * Masonry PACKAGED v3.2.3
+ * Masonry PACKAGED v4.1.1
  * Cascading grid layout library
  * http://masonry.desandro.com
  * MIT License
@@ -47701,849 +42972,285 @@ define('pat-notification',[
 
 /**
  * Bridget makes jQuery widgets
- * v1.1.0
+ * v2.0.1
  * MIT license
  */
 
-( function( window ) {
+/* jshint browser: true, strict: true, undef: true, unused: true */
 
-
-
-// -------------------------- utils -------------------------- //
-
-var slice = Array.prototype.slice;
-
-function noop() {}
-
-// -------------------------- definition -------------------------- //
-
-function defineBridget( $ ) {
-
-// bail if no jQuery
-if ( !$ ) {
-  return;
-}
-
-// -------------------------- addOptionMethod -------------------------- //
-
-/**
- * adds option method -> $().plugin('option', {...})
- * @param {Function} PluginClass - constructor class
- */
-function addOptionMethod( PluginClass ) {
-  // don't overwrite original option method
-  if ( PluginClass.prototype.option ) {
-    return;
+( function( window, factory ) {
+  // universal module definition
+  /*jshint strict: false */ /* globals define, module, require */
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( 'jquery-bridget/jquery-bridget',[ 'jquery' ], function( jQuery ) {
+      return factory( window, jQuery );
+    });
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS
+    module.exports = factory(
+      window,
+      require('jquery')
+    );
+  } else {
+    // browser global
+    window.jQueryBridget = factory(
+      window,
+      window.jQuery
+    );
   }
 
-  // option setter
-  PluginClass.prototype.option = function( opts ) {
-    // bail out if not an object
-    if ( !$.isPlainObject( opts ) ){
-      return;
-    }
-    this.options = $.extend( true, this.options, opts );
-  };
-}
+}( window, function factory( window, jQuery ) {
+'use strict';
 
-// -------------------------- plugin bridge -------------------------- //
+// ----- utils ----- //
+
+var arraySlice = Array.prototype.slice;
 
 // helper function for logging errors
 // $.error breaks jQuery chaining
-var logError = typeof console === 'undefined' ? noop :
+var console = window.console;
+var logError = typeof console == 'undefined' ? function() {} :
   function( message ) {
     console.error( message );
   };
 
-/**
- * jQuery plugin bridge, access methods like $elem.plugin('method')
- * @param {String} namespace - plugin name
- * @param {Function} PluginClass - constructor class
- */
-function bridge( namespace, PluginClass ) {
-  // add to jQuery fn namespace
-  $.fn[ namespace ] = function( options ) {
-    if ( typeof options === 'string' ) {
-      // call plugin method when first argument is a string
-      // get arguments for method
-      var args = slice.call( arguments, 1 );
+// ----- jQueryBridget ----- //
 
-      for ( var i=0, len = this.length; i < len; i++ ) {
-        var elem = this[i];
-        var instance = $.data( elem, namespace );
-        if ( !instance ) {
-          logError( "cannot call methods on " + namespace + " prior to initialization; " +
-            "attempted to call '" + options + "'" );
-          continue;
-        }
-        if ( !$.isFunction( instance[options] ) || options.charAt(0) === '_' ) {
-          logError( "no such method '" + options + "' for " + namespace + " instance" );
-          continue;
-        }
+function jQueryBridget( namespace, PluginClass, $ ) {
+  $ = $ || jQuery || window.jQuery;
+  if ( !$ ) {
+    return;
+  }
 
-        // trigger method with arguments
-        var returnValue = instance[ options ].apply( instance, args );
-
-        // break look and return first value if provided
-        if ( returnValue !== undefined ) {
-          return returnValue;
-        }
+  // add option method -> $().plugin('option', {...})
+  if ( !PluginClass.prototype.option ) {
+    // option setter
+    PluginClass.prototype.option = function( opts ) {
+      // bail out if not an object
+      if ( !$.isPlainObject( opts ) ){
+        return;
       }
-      // return this if no return value
-      return this;
-    } else {
-      return this.each( function() {
-        var instance = $.data( this, namespace );
-        if ( instance ) {
-          // apply options & init
-          instance.option( options );
-          instance._init();
-        } else {
-          // initialize new instance
-          instance = new PluginClass( this, options );
-          $.data( this, namespace, instance );
-        }
-      });
+      this.options = $.extend( true, this.options, opts );
+    };
+  }
+
+  // make jQuery plugin
+  $.fn[ namespace ] = function( arg0 /*, arg1 */ ) {
+    if ( typeof arg0 == 'string' ) {
+      // method call $().plugin( 'methodName', { options } )
+      // shift arguments by 1
+      var args = arraySlice.call( arguments, 1 );
+      return methodCall( this, arg0, args );
     }
+    // just $().plugin({ options })
+    plainCall( this, arg0 );
+    return this;
   };
+
+  // $().plugin('methodName')
+  function methodCall( $elems, methodName, args ) {
+    var returnValue;
+    var pluginMethodStr = '$().' + namespace + '("' + methodName + '")';
+
+    $elems.each( function( i, elem ) {
+      // get instance
+      var instance = $.data( elem, namespace );
+      if ( !instance ) {
+        logError( namespace + ' not initialized. Cannot call methods, i.e. ' +
+          pluginMethodStr );
+        return;
+      }
+
+      var method = instance[ methodName ];
+      if ( !method || methodName.charAt(0) == '_' ) {
+        logError( pluginMethodStr + ' is not a valid method' );
+        return;
+      }
+
+      // apply method, get return value
+      var value = method.apply( instance, args );
+      // set return value if value is returned, use only first value
+      returnValue = returnValue === undefined ? value : returnValue;
+    });
+
+    return returnValue !== undefined ? returnValue : $elems;
+  }
+
+  function plainCall( $elems, options ) {
+    $elems.each( function( i, elem ) {
+      var instance = $.data( elem, namespace );
+      if ( instance ) {
+        // set options & init
+        instance.option( options );
+        instance._init();
+      } else {
+        // initialize new instance
+        instance = new PluginClass( elem, options );
+        $.data( elem, namespace, instance );
+      }
+    });
+  }
+
+  updateJQuery( $ );
 
 }
 
-// -------------------------- bridget -------------------------- //
+// ----- updateJQuery ----- //
+
+// set $.bridget for v1 backwards compatibility
+function updateJQuery( $ ) {
+  if ( !$ || ( $ && $.bridget ) ) {
+    return;
+  }
+  $.bridget = jQueryBridget;
+}
+
+updateJQuery( jQuery || window.jQuery );
+
+// -----  ----- //
+
+return jQueryBridget;
+
+}));
 
 /**
- * converts a Prototypical class into a proper jQuery plugin
- *   the class must have a ._init method
- * @param {String} namespace - plugin name, used in $().pluginName
- * @param {Function} PluginClass - constructor class
+ * EvEmitter v1.0.3
+ * Lil' event emitter
+ * MIT License
  */
-$.bridget = function( namespace, PluginClass ) {
-  addOptionMethod( PluginClass );
-  bridge( namespace, PluginClass );
+
+/* jshint unused: true, undef: true, strict: true */
+
+( function( global, factory ) {
+  // universal module definition
+  /* jshint strict: false */ /* globals define, module, window */
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD - RequireJS
+    define( 'ev-emitter/ev-emitter',factory );
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS - Browserify, Webpack
+    module.exports = factory();
+  } else {
+    // Browser globals
+    global.EvEmitter = factory();
+  }
+
+}( typeof window != 'undefined' ? window : this, function() {
+
+
+
+function EvEmitter() {}
+
+var proto = EvEmitter.prototype;
+
+proto.on = function( eventName, listener ) {
+  if ( !eventName || !listener ) {
+    return;
+  }
+  // set events hash
+  var events = this._events = this._events || {};
+  // set listeners array
+  var listeners = events[ eventName ] = events[ eventName ] || [];
+  // only add once
+  if ( listeners.indexOf( listener ) == -1 ) {
+    listeners.push( listener );
+  }
+
+  return this;
 };
 
-return $.bridget;
+proto.once = function( eventName, listener ) {
+  if ( !eventName || !listener ) {
+    return;
+  }
+  // add event
+  this.on( eventName, listener );
+  // set once flag
+  // set onceEvents hash
+  var onceEvents = this._onceEvents = this._onceEvents || {};
+  // set onceListeners object
+  var onceListeners = onceEvents[ eventName ] = onceEvents[ eventName ] || {};
+  // set flag
+  onceListeners[ listener ] = true;
 
-}
-
-// transport
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( 'jquery-bridget/jquery.bridget',[ 'jquery' ], defineBridget );
-} else if ( typeof exports === 'object' ) {
-  defineBridget( require('jquery') );
-} else {
-  // get jquery from browser global
-  defineBridget( window.jQuery );
-}
-
-})( window );
-
-/*!
- * eventie v1.0.6
- * event binding helper
- *   eventie.bind( elem, 'click', myFn )
- *   eventie.unbind( elem, 'click', myFn )
- * MIT license
- */
-
-/*jshint browser: true, undef: true, unused: true */
-/*global define: false, module: false */
-
-( function( window ) {
-
-
-
-var docElem = document.documentElement;
-
-var bind = function() {};
-
-function getIEEvent( obj ) {
-  var event = window.event;
-  // add event.target
-  event.target = event.target || event.srcElement || obj;
-  return event;
-}
-
-if ( docElem.addEventListener ) {
-  bind = function( obj, type, fn ) {
-    obj.addEventListener( type, fn, false );
-  };
-} else if ( docElem.attachEvent ) {
-  bind = function( obj, type, fn ) {
-    obj[ type + fn ] = fn.handleEvent ?
-      function() {
-        var event = getIEEvent( obj );
-        fn.handleEvent.call( fn, event );
-      } :
-      function() {
-        var event = getIEEvent( obj );
-        fn.call( obj, event );
-      };
-    obj.attachEvent( "on" + type, obj[ type + fn ] );
-  };
-}
-
-var unbind = function() {};
-
-if ( docElem.removeEventListener ) {
-  unbind = function( obj, type, fn ) {
-    obj.removeEventListener( type, fn, false );
-  };
-} else if ( docElem.detachEvent ) {
-  unbind = function( obj, type, fn ) {
-    obj.detachEvent( "on" + type, obj[ type + fn ] );
-    try {
-      delete obj[ type + fn ];
-    } catch ( err ) {
-      // can't delete window object properties
-      obj[ type + fn ] = undefined;
-    }
-  };
-}
-
-var eventie = {
-  bind: bind,
-  unbind: unbind
+  return this;
 };
 
-// ----- module definition ----- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( 'eventie/eventie',eventie );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS
-  module.exports = eventie;
-} else {
-  // browser global
-  window.eventie = eventie;
-}
-
-})( window );
-
-/*!
- * docReady v1.0.4
- * Cross browser DOMContentLoaded event emitter
- * MIT license
- */
-
-/*jshint browser: true, strict: true, undef: true, unused: true*/
-/*global define: false, require: false, module: false */
-
-( function( window ) {
-
-
-
-var document = window.document;
-// collection of functions to be triggered on ready
-var queue = [];
-
-function docReady( fn ) {
-  // throw out non-functions
-  if ( typeof fn !== 'function' ) {
+proto.off = function( eventName, listener ) {
+  var listeners = this._events && this._events[ eventName ];
+  if ( !listeners || !listeners.length ) {
     return;
   }
-
-  if ( docReady.isReady ) {
-    // ready now, hit it
-    fn();
-  } else {
-    // queue function when ready
-    queue.push( fn );
+  var index = listeners.indexOf( listener );
+  if ( index != -1 ) {
+    listeners.splice( index, 1 );
   }
-}
 
-docReady.isReady = false;
+  return this;
+};
 
-// triggered on various doc ready events
-function onReady( event ) {
-  // bail if already triggered or IE8 document is not ready just yet
-  var isIE8NotReady = event.type === 'readystatechange' && document.readyState !== 'complete';
-  if ( docReady.isReady || isIE8NotReady ) {
+proto.emitEvent = function( eventName, args ) {
+  var listeners = this._events && this._events[ eventName ];
+  if ( !listeners || !listeners.length ) {
     return;
   }
+  var i = 0;
+  var listener = listeners[i];
+  args = args || [];
+  // once stuff
+  var onceListeners = this._onceEvents && this._onceEvents[ eventName ];
 
-  trigger();
-}
-
-function trigger() {
-  docReady.isReady = true;
-  // process queue
-  for ( var i=0, len = queue.length; i < len; i++ ) {
-    var fn = queue[i];
-    fn();
-  }
-}
-
-function defineDocReady( eventie ) {
-  // trigger ready if page is ready
-  if ( document.readyState === 'complete' ) {
-    trigger();
-  } else {
-    // listen for events
-    eventie.bind( document, 'DOMContentLoaded', onReady );
-    eventie.bind( document, 'readystatechange', onReady );
-    eventie.bind( window, 'load', onReady );
+  while ( listener ) {
+    var isOnce = onceListeners && onceListeners[ listener ];
+    if ( isOnce ) {
+      // remove listener
+      // remove before trigger to prevent recursion
+      this.off( eventName, listener );
+      // unset once flag
+      delete onceListeners[ listener ];
+    }
+    // trigger listener
+    listener.apply( this, args );
+    // get next listener
+    i += isOnce ? 0 : 1;
+    listener = listeners[i];
   }
 
-  return docReady;
-}
+  return this;
+};
 
-// transport
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( 'doc-ready/doc-ready',[ 'eventie/eventie' ], defineDocReady );
-} else if ( typeof exports === 'object' ) {
-  module.exports = defineDocReady( require('eventie') );
-} else {
-  // browser global
-  window.docReady = defineDocReady( window.eventie );
-}
+return EvEmitter;
 
-})( window );
+}));
 
 /*!
- * EventEmitter v4.2.11 - git.io/ee
- * Unlicense - http://unlicense.org/
- * Oliver Caldwell - http://oli.me.uk/
- * @preserve
- */
-
-;(function () {
-    
-
-    /**
-     * Class for managing events.
-     * Can be extended to provide event functionality in other classes.
-     *
-     * @class EventEmitter Manages event registering and emitting.
-     */
-    function EventEmitter() {}
-
-    // Shortcuts to improve speed and size
-    var proto = EventEmitter.prototype;
-    var exports = this;
-    var originalGlobalValue = exports.EventEmitter;
-
-    /**
-     * Finds the index of the listener for the event in its storage array.
-     *
-     * @param {Function[]} listeners Array of listeners to search through.
-     * @param {Function} listener Method to look for.
-     * @return {Number} Index of the specified listener, -1 if not found
-     * @api private
-     */
-    function indexOfListener(listeners, listener) {
-        var i = listeners.length;
-        while (i--) {
-            if (listeners[i].listener === listener) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
-     * Alias a method while keeping the context correct, to allow for overwriting of target method.
-     *
-     * @param {String} name The name of the target method.
-     * @return {Function} The aliased method
-     * @api private
-     */
-    function alias(name) {
-        return function aliasClosure() {
-            return this[name].apply(this, arguments);
-        };
-    }
-
-    /**
-     * Returns the listener array for the specified event.
-     * Will initialise the event object and listener arrays if required.
-     * Will return an object if you use a regex search. The object contains keys for each matched event. So /ba[rz]/ might return an object containing bar and baz. But only if you have either defined them with defineEvent or added some listeners to them.
-     * Each property in the object response is an array of listener functions.
-     *
-     * @param {String|RegExp} evt Name of the event to return the listeners from.
-     * @return {Function[]|Object} All listener functions for the event.
-     */
-    proto.getListeners = function getListeners(evt) {
-        var events = this._getEvents();
-        var response;
-        var key;
-
-        // Return a concatenated array of all matching events if
-        // the selector is a regular expression.
-        if (evt instanceof RegExp) {
-            response = {};
-            for (key in events) {
-                if (events.hasOwnProperty(key) && evt.test(key)) {
-                    response[key] = events[key];
-                }
-            }
-        }
-        else {
-            response = events[evt] || (events[evt] = []);
-        }
-
-        return response;
-    };
-
-    /**
-     * Takes a list of listener objects and flattens it into a list of listener functions.
-     *
-     * @param {Object[]} listeners Raw listener objects.
-     * @return {Function[]} Just the listener functions.
-     */
-    proto.flattenListeners = function flattenListeners(listeners) {
-        var flatListeners = [];
-        var i;
-
-        for (i = 0; i < listeners.length; i += 1) {
-            flatListeners.push(listeners[i].listener);
-        }
-
-        return flatListeners;
-    };
-
-    /**
-     * Fetches the requested listeners via getListeners but will always return the results inside an object. This is mainly for internal use but others may find it useful.
-     *
-     * @param {String|RegExp} evt Name of the event to return the listeners from.
-     * @return {Object} All listener functions for an event in an object.
-     */
-    proto.getListenersAsObject = function getListenersAsObject(evt) {
-        var listeners = this.getListeners(evt);
-        var response;
-
-        if (listeners instanceof Array) {
-            response = {};
-            response[evt] = listeners;
-        }
-
-        return response || listeners;
-    };
-
-    /**
-     * Adds a listener function to the specified event.
-     * The listener will not be added if it is a duplicate.
-     * If the listener returns true then it will be removed after it is called.
-     * If you pass a regular expression as the event name then the listener will be added to all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to attach the listener to.
-     * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.addListener = function addListener(evt, listener) {
-        var listeners = this.getListenersAsObject(evt);
-        var listenerIsWrapped = typeof listener === 'object';
-        var key;
-
-        for (key in listeners) {
-            if (listeners.hasOwnProperty(key) && indexOfListener(listeners[key], listener) === -1) {
-                listeners[key].push(listenerIsWrapped ? listener : {
-                    listener: listener,
-                    once: false
-                });
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of addListener
-     */
-    proto.on = alias('addListener');
-
-    /**
-     * Semi-alias of addListener. It will add a listener that will be
-     * automatically removed after its first execution.
-     *
-     * @param {String|RegExp} evt Name of the event to attach the listener to.
-     * @param {Function} listener Method to be called when the event is emitted. If the function returns true then it will be removed after calling.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.addOnceListener = function addOnceListener(evt, listener) {
-        return this.addListener(evt, {
-            listener: listener,
-            once: true
-        });
-    };
-
-    /**
-     * Alias of addOnceListener.
-     */
-    proto.once = alias('addOnceListener');
-
-    /**
-     * Defines an event name. This is required if you want to use a regex to add a listener to multiple events at once. If you don't do this then how do you expect it to know what event to add to? Should it just add to every possible match for a regex? No. That is scary and bad.
-     * You need to tell it what event names should be matched by a regex.
-     *
-     * @param {String} evt Name of the event to create.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.defineEvent = function defineEvent(evt) {
-        this.getListeners(evt);
-        return this;
-    };
-
-    /**
-     * Uses defineEvent to define multiple events.
-     *
-     * @param {String[]} evts An array of event names to define.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.defineEvents = function defineEvents(evts) {
-        for (var i = 0; i < evts.length; i += 1) {
-            this.defineEvent(evts[i]);
-        }
-        return this;
-    };
-
-    /**
-     * Removes a listener function from the specified event.
-     * When passed a regular expression as the event name, it will remove the listener from all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to remove the listener from.
-     * @param {Function} listener Method to remove from the event.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.removeListener = function removeListener(evt, listener) {
-        var listeners = this.getListenersAsObject(evt);
-        var index;
-        var key;
-
-        for (key in listeners) {
-            if (listeners.hasOwnProperty(key)) {
-                index = indexOfListener(listeners[key], listener);
-
-                if (index !== -1) {
-                    listeners[key].splice(index, 1);
-                }
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of removeListener
-     */
-    proto.off = alias('removeListener');
-
-    /**
-     * Adds listeners in bulk using the manipulateListeners method.
-     * If you pass an object as the second argument you can add to multiple events at once. The object should contain key value pairs of events and listeners or listener arrays. You can also pass it an event name and an array of listeners to be added.
-     * You can also pass it a regular expression to add the array of listeners to all events that match it.
-     * Yeah, this function does quite a bit. That's probably a bad thing.
-     *
-     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add to multiple events at once.
-     * @param {Function[]} [listeners] An optional array of listener functions to add.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.addListeners = function addListeners(evt, listeners) {
-        // Pass through to manipulateListeners
-        return this.manipulateListeners(false, evt, listeners);
-    };
-
-    /**
-     * Removes listeners in bulk using the manipulateListeners method.
-     * If you pass an object as the second argument you can remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
-     * You can also pass it an event name and an array of listeners to be removed.
-     * You can also pass it a regular expression to remove the listeners from all events that match it.
-     *
-     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to remove from multiple events at once.
-     * @param {Function[]} [listeners] An optional array of listener functions to remove.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.removeListeners = function removeListeners(evt, listeners) {
-        // Pass through to manipulateListeners
-        return this.manipulateListeners(true, evt, listeners);
-    };
-
-    /**
-     * Edits listeners in bulk. The addListeners and removeListeners methods both use this to do their job. You should really use those instead, this is a little lower level.
-     * The first argument will determine if the listeners are removed (true) or added (false).
-     * If you pass an object as the second argument you can add/remove from multiple events at once. The object should contain key value pairs of events and listeners or listener arrays.
-     * You can also pass it an event name and an array of listeners to be added/removed.
-     * You can also pass it a regular expression to manipulate the listeners of all events that match it.
-     *
-     * @param {Boolean} remove True if you want to remove listeners, false if you want to add.
-     * @param {String|Object|RegExp} evt An event name if you will pass an array of listeners next. An object if you wish to add/remove from multiple events at once.
-     * @param {Function[]} [listeners] An optional array of listener functions to add/remove.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.manipulateListeners = function manipulateListeners(remove, evt, listeners) {
-        var i;
-        var value;
-        var single = remove ? this.removeListener : this.addListener;
-        var multiple = remove ? this.removeListeners : this.addListeners;
-
-        // If evt is an object then pass each of its properties to this method
-        if (typeof evt === 'object' && !(evt instanceof RegExp)) {
-            for (i in evt) {
-                if (evt.hasOwnProperty(i) && (value = evt[i])) {
-                    // Pass the single listener straight through to the singular method
-                    if (typeof value === 'function') {
-                        single.call(this, i, value);
-                    }
-                    else {
-                        // Otherwise pass back to the multiple function
-                        multiple.call(this, i, value);
-                    }
-                }
-            }
-        }
-        else {
-            // So evt must be a string
-            // And listeners must be an array of listeners
-            // Loop over it and pass each one to the multiple method
-            i = listeners.length;
-            while (i--) {
-                single.call(this, evt, listeners[i]);
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Removes all listeners from a specified event.
-     * If you do not specify an event then all listeners will be removed.
-     * That means every event will be emptied.
-     * You can also pass a regex to remove all events that match it.
-     *
-     * @param {String|RegExp} [evt] Optional name of the event to remove all listeners for. Will remove from every event if not passed.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.removeEvent = function removeEvent(evt) {
-        var type = typeof evt;
-        var events = this._getEvents();
-        var key;
-
-        // Remove different things depending on the state of evt
-        if (type === 'string') {
-            // Remove all listeners for the specified event
-            delete events[evt];
-        }
-        else if (evt instanceof RegExp) {
-            // Remove all events matching the regex.
-            for (key in events) {
-                if (events.hasOwnProperty(key) && evt.test(key)) {
-                    delete events[key];
-                }
-            }
-        }
-        else {
-            // Remove all listeners in all events
-            delete this._events;
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of removeEvent.
-     *
-     * Added to mirror the node API.
-     */
-    proto.removeAllListeners = alias('removeEvent');
-
-    /**
-     * Emits an event of your choice.
-     * When emitted, every listener attached to that event will be executed.
-     * If you pass the optional argument array then those arguments will be passed to every listener upon execution.
-     * Because it uses `apply`, your array of arguments will be passed as if you wrote them out separately.
-     * So they will not arrive within the array on the other side, they will be separate.
-     * You can also pass a regular expression to emit to all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
-     * @param {Array} [args] Optional array of arguments to be passed to each listener.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.emitEvent = function emitEvent(evt, args) {
-        var listeners = this.getListenersAsObject(evt);
-        var listener;
-        var i;
-        var key;
-        var response;
-
-        for (key in listeners) {
-            if (listeners.hasOwnProperty(key)) {
-                i = listeners[key].length;
-
-                while (i--) {
-                    // If the listener returns true then it shall be removed from the event
-                    // The function is executed either with a basic call or an apply if there is an args array
-                    listener = listeners[key][i];
-
-                    if (listener.once === true) {
-                        this.removeListener(evt, listener.listener);
-                    }
-
-                    response = listener.listener.apply(this, args || []);
-
-                    if (response === this._getOnceReturnValue()) {
-                        this.removeListener(evt, listener.listener);
-                    }
-                }
-            }
-        }
-
-        return this;
-    };
-
-    /**
-     * Alias of emitEvent
-     */
-    proto.trigger = alias('emitEvent');
-
-    /**
-     * Subtly different from emitEvent in that it will pass its arguments on to the listeners, as opposed to taking a single array of arguments to pass on.
-     * As with emitEvent, you can pass a regex in place of the event name to emit to all events that match it.
-     *
-     * @param {String|RegExp} evt Name of the event to emit and execute listeners for.
-     * @param {...*} Optional additional arguments to be passed to each listener.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.emit = function emit(evt) {
-        var args = Array.prototype.slice.call(arguments, 1);
-        return this.emitEvent(evt, args);
-    };
-
-    /**
-     * Sets the current value to check against when executing listeners. If a
-     * listeners return value matches the one set here then it will be removed
-     * after execution. This value defaults to true.
-     *
-     * @param {*} value The new value to check for when executing listeners.
-     * @return {Object} Current instance of EventEmitter for chaining.
-     */
-    proto.setOnceReturnValue = function setOnceReturnValue(value) {
-        this._onceReturnValue = value;
-        return this;
-    };
-
-    /**
-     * Fetches the current value to check against when executing listeners. If
-     * the listeners return value matches this one then it should be removed
-     * automatically. It will return true by default.
-     *
-     * @return {*|Boolean} The current value to check for or the default, true.
-     * @api private
-     */
-    proto._getOnceReturnValue = function _getOnceReturnValue() {
-        if (this.hasOwnProperty('_onceReturnValue')) {
-            return this._onceReturnValue;
-        }
-        else {
-            return true;
-        }
-    };
-
-    /**
-     * Fetches the events object and creates one if required.
-     *
-     * @return {Object} The events storage object.
-     * @api private
-     */
-    proto._getEvents = function _getEvents() {
-        return this._events || (this._events = {});
-    };
-
-    /**
-     * Reverts the global {@link EventEmitter} to its previous value and returns a reference to this version.
-     *
-     * @return {Function} Non conflicting EventEmitter class.
-     */
-    EventEmitter.noConflict = function noConflict() {
-        exports.EventEmitter = originalGlobalValue;
-        return EventEmitter;
-    };
-
-    // Expose the class either via AMD, CommonJS or the global object
-    if (typeof define === 'function' && define.amd) {
-        define('eventEmitter/EventEmitter',[],function () {
-            return EventEmitter;
-        });
-    }
-    else if (typeof module === 'object' && module.exports){
-        module.exports = EventEmitter;
-    }
-    else {
-        exports.EventEmitter = EventEmitter;
-    }
-}.call(this));
-
-/*!
- * getStyleProperty v1.0.4
- * original by kangax
- * http://perfectionkills.com/feature-testing-css-properties/
- * MIT license
- */
-
-/*jshint browser: true, strict: true, undef: true */
-/*global define: false, exports: false, module: false */
-
-( function( window ) {
-
-
-
-var prefixes = 'Webkit Moz ms Ms O'.split(' ');
-var docElemStyle = document.documentElement.style;
-
-function getStyleProperty( propName ) {
-  if ( !propName ) {
-    return;
-  }
-
-  // test standard property first
-  if ( typeof docElemStyle[ propName ] === 'string' ) {
-    return propName;
-  }
-
-  // capitalize
-  propName = propName.charAt(0).toUpperCase() + propName.slice(1);
-
-  // test vendor specific properties
-  var prefixed;
-  for ( var i=0, len = prefixes.length; i < len; i++ ) {
-    prefixed = prefixes[i] + propName;
-    if ( typeof docElemStyle[ prefixed ] === 'string' ) {
-      return prefixed;
-    }
-  }
-}
-
-// transport
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( 'get-style-property/get-style-property',[],function() {
-    return getStyleProperty;
-  });
-} else if ( typeof exports === 'object' ) {
-  // CommonJS for Component
-  module.exports = getStyleProperty;
-} else {
-  // browser global
-  window.getStyleProperty = getStyleProperty;
-}
-
-})( window );
-
-/*!
- * getSize v1.2.2
+ * getSize v2.0.2
  * measure size of elements
  * MIT license
  */
 
 /*jshint browser: true, strict: true, undef: true, unused: true */
-/*global define: false, exports: false, require: false, module: false, console: false */
+/*global define: false, module: false, console: false */
 
-( function( window, undefined ) {
+( function( window, factory ) {
+  'use strict';
 
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( 'get-size/get-size',[],function() {
+      return factory();
+    });
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS
+    module.exports = factory();
+  } else {
+    // browser global
+    window.getSize = factory();
+  }
 
+})( window, function factory() {
+'use strict';
 
 // -------------------------- helpers -------------------------- //
 
@@ -48551,13 +43258,13 @@ if ( typeof define === 'function' && define.amd ) {
 function getStyleSize( value ) {
   var num = parseFloat( value );
   // not a percent like '100%', and a number
-  var isValid = value.indexOf('%') === -1 && !isNaN( num );
+  var isValid = value.indexOf('%') == -1 && !isNaN( num );
   return isValid && num;
 }
 
 function noop() {}
 
-var logError = typeof console === 'undefined' ? noop :
+var logError = typeof console == 'undefined' ? noop :
   function( message ) {
     console.error( message );
   };
@@ -48579,6 +43286,8 @@ var measurements = [
   'borderBottomWidth'
 ];
 
+var measurementsLength = measurements.length;
+
 function getZeroSize() {
   var size = {
     width: 0,
@@ -48588,27 +43297,39 @@ function getZeroSize() {
     outerWidth: 0,
     outerHeight: 0
   };
-  for ( var i=0, len = measurements.length; i < len; i++ ) {
+  for ( var i=0; i < measurementsLength; i++ ) {
     var measurement = measurements[i];
     size[ measurement ] = 0;
   }
   return size;
 }
 
+// -------------------------- getStyle -------------------------- //
 
-
-function defineGetSize( getStyleProperty ) {
+/**
+ * getStyle, get style of element, check for Firefox bug
+ * https://bugzilla.mozilla.org/show_bug.cgi?id=548397
+ */
+function getStyle( elem ) {
+  var style = getComputedStyle( elem );
+  if ( !style ) {
+    logError( 'Style returned ' + style +
+      '. Are you running this code in a hidden iframe on Firefox? ' +
+      'See http://bit.ly/getsizebug1' );
+  }
+  return style;
+}
 
 // -------------------------- setup -------------------------- //
 
 var isSetup = false;
 
-var getStyle, boxSizingProp, isBoxSizeOuter;
+var isBoxSizeOuter;
 
 /**
- * setup vars and functions
- * do it on initial getSize(), rather than on script load
- * For Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=548397
+ * setup
+ * check isBoxSizerOuter
+ * do on first getSize() rather than on page load for Firefox bug
  */
 function setup() {
   // setup once
@@ -48617,50 +43338,25 @@ function setup() {
   }
   isSetup = true;
 
-  var getComputedStyle = window.getComputedStyle;
-  getStyle = ( function() {
-    var getStyleFn = getComputedStyle ?
-      function( elem ) {
-        return getComputedStyle( elem, null );
-      } :
-      function( elem ) {
-        return elem.currentStyle;
-      };
-
-      return function getStyle( elem ) {
-        var style = getStyleFn( elem );
-        if ( !style ) {
-          logError( 'Style returned ' + style +
-            '. Are you running this code in a hidden iframe on Firefox? ' +
-            'See http://bit.ly/getsizebug1' );
-        }
-        return style;
-      };
-  })();
-
   // -------------------------- box sizing -------------------------- //
-
-  boxSizingProp = getStyleProperty('boxSizing');
 
   /**
    * WebKit measures the outer-width on style.width on border-box elems
-   * IE & Firefox measures the inner-width
+   * IE & Firefox<29 measures the inner-width
    */
-  if ( boxSizingProp ) {
-    var div = document.createElement('div');
-    div.style.width = '200px';
-    div.style.padding = '1px 2px 3px 4px';
-    div.style.borderStyle = 'solid';
-    div.style.borderWidth = '1px 2px 3px 4px';
-    div.style[ boxSizingProp ] = 'border-box';
+  var div = document.createElement('div');
+  div.style.width = '200px';
+  div.style.padding = '1px 2px 3px 4px';
+  div.style.borderStyle = 'solid';
+  div.style.borderWidth = '1px 2px 3px 4px';
+  div.style.boxSizing = 'border-box';
 
-    var body = document.body || document.documentElement;
-    body.appendChild( div );
-    var style = getStyle( div );
+  var body = document.body || document.documentElement;
+  body.appendChild( div );
+  var style = getStyle( div );
 
-    isBoxSizeOuter = getStyleSize( style.width ) === 200;
-    body.removeChild( div );
-  }
+  getSize.isBoxSizeOuter = isBoxSizeOuter = getStyleSize( style.width ) == 200;
+  body.removeChild( div );
 
 }
 
@@ -48670,19 +43366,19 @@ function getSize( elem ) {
   setup();
 
   // use querySeletor if elem is string
-  if ( typeof elem === 'string' ) {
+  if ( typeof elem == 'string' ) {
     elem = document.querySelector( elem );
   }
 
   // do not proceed on non-objects
-  if ( !elem || typeof elem !== 'object' || !elem.nodeType ) {
+  if ( !elem || typeof elem != 'object' || !elem.nodeType ) {
     return;
   }
 
   var style = getStyle( elem );
 
   // if hidden, everything is 0
-  if ( style.display === 'none' ) {
+  if ( style.display == 'none' ) {
     return getZeroSize();
   }
 
@@ -48690,14 +43386,12 @@ function getSize( elem ) {
   size.width = elem.offsetWidth;
   size.height = elem.offsetHeight;
 
-  var isBorderBox = size.isBorderBox = !!( boxSizingProp &&
-    style[ boxSizingProp ] && style[ boxSizingProp ] === 'border-box' );
+  var isBorderBox = size.isBorderBox = style.boxSizing == 'border-box';
 
   // get all measurements
-  for ( var i=0, len = measurements.length; i < len; i++ ) {
+  for ( var i=0; i < measurementsLength; i++ ) {
     var measurement = measurements[i];
     var value = style[ measurement ];
-    value = mungeNonPixel( elem, value );
     var num = parseFloat( value );
     // any 'auto', 'medium' value will be 0
     size[ measurement ] = !isNaN( num ) ? num : 0;
@@ -48736,67 +43430,38 @@ function getSize( elem ) {
   return size;
 }
 
-// IE8 returns percent values, not pixels
-// taken from jQuery's curCSS
-function mungeNonPixel( elem, value ) {
-  // IE8 and has percent value
-  if ( window.getComputedStyle || value.indexOf('%') === -1 ) {
-    return value;
-  }
-  var style = elem.style;
-  // Remember the original values
-  var left = style.left;
-  var rs = elem.runtimeStyle;
-  var rsLeft = rs && rs.left;
-
-  // Put in the new values to get a computed value out
-  if ( rsLeft ) {
-    rs.left = elem.currentStyle.left;
-  }
-  style.left = value;
-  value = style.pixelLeft;
-
-  // Revert the changed values
-  style.left = left;
-  if ( rsLeft ) {
-    rs.left = rsLeft;
-  }
-
-  return value;
-}
-
 return getSize;
 
-}
-
-// transport
-if ( typeof define === 'function' && define.amd ) {
-  // AMD for RequireJS
-  define( 'get-size/get-size',[ 'get-style-property/get-style-property' ], defineGetSize );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS for Component
-  module.exports = defineGetSize( require('desandro-get-style-property') );
-} else {
-  // browser global
-  window.getSize = defineGetSize( window.getStyleProperty );
-}
-
-})( window );
+});
 
 /**
- * matchesSelector v1.0.3
+ * matchesSelector v2.0.1
  * matchesSelector( element, '.selector' )
  * MIT license
  */
 
 /*jshint browser: true, strict: true, undef: true, unused: true */
-/*global define: false, module: false */
 
-( function( ElemProto ) {
+( function( window, factory ) {
+  /*global define: false, module: false */
+  'use strict';
+  // universal module definition
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( 'desandro-matches-selector/matches-selector',factory );
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS
+    module.exports = factory();
+  } else {
+    // browser global
+    window.matchesSelector = factory();
+  }
 
-  
+}( window, function factory() {
+  'use strict';
 
   var matchesMethod = ( function() {
+    var ElemProto = Element.prototype;
     // check for the standard method name first
     if ( ElemProto.matches ) {
       return 'matches';
@@ -48808,7 +43473,7 @@ if ( typeof define === 'function' && define.amd ) {
     // check vendor prefixes
     var prefixes = [ 'webkit', 'moz', 'ms', 'o' ];
 
-    for ( var i=0, len = prefixes.length; i < len; i++ ) {
+    for ( var i=0; i < prefixes.length; i++ ) {
       var prefix = prefixes[i];
       var method = prefix + 'MatchesSelector';
       if ( ElemProto[ method ] ) {
@@ -48817,107 +43482,283 @@ if ( typeof define === 'function' && define.amd ) {
     }
   })();
 
-  // ----- match ----- //
-
-  function match( elem, selector ) {
+  return function matchesSelector( elem, selector ) {
     return elem[ matchesMethod ]( selector );
+  };
+
+}));
+
+/**
+ * Fizzy UI utils v2.0.2
+ * MIT license
+ */
+
+/*jshint browser: true, undef: true, unused: true, strict: true */
+
+( function( window, factory ) {
+  // universal module definition
+  /*jshint strict: false */ /*globals define, module, require */
+
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( 'fizzy-ui-utils/utils',[
+      'desandro-matches-selector/matches-selector'
+    ], function( matchesSelector ) {
+      return factory( window, matchesSelector );
+    });
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS
+    module.exports = factory(
+      window,
+      require('desandro-matches-selector')
+    );
+  } else {
+    // browser global
+    window.fizzyUIUtils = factory(
+      window,
+      window.matchesSelector
+    );
   }
 
-  // ----- appendToFragment ----- //
+}( window, function factory( window, matchesSelector ) {
 
-  function checkParent( elem ) {
-    // not needed if already has parent
-    if ( elem.parentNode ) {
+
+
+var utils = {};
+
+// ----- extend ----- //
+
+// extends objects
+utils.extend = function( a, b ) {
+  for ( var prop in b ) {
+    a[ prop ] = b[ prop ];
+  }
+  return a;
+};
+
+// ----- modulo ----- //
+
+utils.modulo = function( num, div ) {
+  return ( ( num % div ) + div ) % div;
+};
+
+// ----- makeArray ----- //
+
+// turn element or nodeList into an array
+utils.makeArray = function( obj ) {
+  var ary = [];
+  if ( Array.isArray( obj ) ) {
+    // use object if already an array
+    ary = obj;
+  } else if ( obj && typeof obj.length == 'number' ) {
+    // convert nodeList to array
+    for ( var i=0; i < obj.length; i++ ) {
+      ary.push( obj[i] );
+    }
+  } else {
+    // array of single index
+    ary.push( obj );
+  }
+  return ary;
+};
+
+// ----- removeFrom ----- //
+
+utils.removeFrom = function( ary, obj ) {
+  var index = ary.indexOf( obj );
+  if ( index != -1 ) {
+    ary.splice( index, 1 );
+  }
+};
+
+// ----- getParent ----- //
+
+utils.getParent = function( elem, selector ) {
+  while ( elem != document.body ) {
+    elem = elem.parentNode;
+    if ( matchesSelector( elem, selector ) ) {
+      return elem;
+    }
+  }
+};
+
+// ----- getQueryElement ----- //
+
+// use element as selector string
+utils.getQueryElement = function( elem ) {
+  if ( typeof elem == 'string' ) {
+    return document.querySelector( elem );
+  }
+  return elem;
+};
+
+// ----- handleEvent ----- //
+
+// enable .ontype to trigger from .addEventListener( elem, 'type' )
+utils.handleEvent = function( event ) {
+  var method = 'on' + event.type;
+  if ( this[ method ] ) {
+    this[ method ]( event );
+  }
+};
+
+// ----- filterFindElements ----- //
+
+utils.filterFindElements = function( elems, selector ) {
+  // make array of elems
+  elems = utils.makeArray( elems );
+  var ffElems = [];
+
+  elems.forEach( function( elem ) {
+    // check that elem is an actual element
+    if ( !( elem instanceof HTMLElement ) ) {
       return;
     }
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild( elem );
-  }
-
-  // ----- query ----- //
-
-  // fall back to using QSA
-  // thx @jonathantneal https://gist.github.com/3062955
-  function query( elem, selector ) {
-    // append to fragment if no parent
-    checkParent( elem );
-
-    // match elem with all selected elems of parent
-    var elems = elem.parentNode.querySelectorAll( selector );
-    for ( var i=0, len = elems.length; i < len; i++ ) {
-      // return true if match
-      if ( elems[i] === elem ) {
-        return true;
-      }
+    // add elem if no selector
+    if ( !selector ) {
+      ffElems.push( elem );
+      return;
     }
-    // otherwise return false
-    return false;
-  }
+    // filter & find items if we have a selector
+    // filter
+    if ( matchesSelector( elem, selector ) ) {
+      ffElems.push( elem );
+    }
+    // find children
+    var childElems = elem.querySelectorAll( selector );
+    // concat childElems to filterFound array
+    for ( var i=0; i < childElems.length; i++ ) {
+      ffElems.push( childElems[i] );
+    }
+  });
 
-  // ----- matchChild ----- //
+  return ffElems;
+};
 
-  function matchChild( elem, selector ) {
-    checkParent( elem );
-    return match( elem, selector );
-  }
+// ----- debounceMethod ----- //
 
-  // ----- matchesSelector ----- //
+utils.debounceMethod = function( _class, methodName, threshold ) {
+  // original method
+  var method = _class.prototype[ methodName ];
+  var timeoutName = methodName + 'Timeout';
 
-  var matchesSelector;
+  _class.prototype[ methodName ] = function() {
+    var timeout = this[ timeoutName ];
+    if ( timeout ) {
+      clearTimeout( timeout );
+    }
+    var args = arguments;
 
-  if ( matchesMethod ) {
-    // IE9 supports matchesSelector, but doesn't work on orphaned elems
-    // check for that
-    var div = document.createElement('div');
-    var supportsOrphans = match( div, 'div' );
-    matchesSelector = supportsOrphans ? match : matchChild;
+    var _this = this;
+    this[ timeoutName ] = setTimeout( function() {
+      method.apply( _this, args );
+      delete _this[ timeoutName ];
+    }, threshold || 100 );
+  };
+};
+
+// ----- docReady ----- //
+
+utils.docReady = function( callback ) {
+  var readyState = document.readyState;
+  if ( readyState == 'complete' || readyState == 'interactive' ) {
+    callback();
   } else {
-    matchesSelector = query;
+    document.addEventListener( 'DOMContentLoaded', callback );
   }
+};
 
-  // transport
-  if ( typeof define === 'function' && define.amd ) {
-    // AMD
-    define( 'matches-selector/matches-selector',[],function() {
-      return matchesSelector;
+// ----- htmlInit ----- //
+
+// http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
+utils.toDashed = function( str ) {
+  return str.replace( /(.)([A-Z])/g, function( match, $1, $2 ) {
+    return $1 + '-' + $2;
+  }).toLowerCase();
+};
+
+var console = window.console;
+/**
+ * allow user to initialize classes via [data-namespace] or .js-namespace class
+ * htmlInit( Widget, 'widgetName' )
+ * options are parsed from data-namespace-options
+ */
+utils.htmlInit = function( WidgetClass, namespace ) {
+  utils.docReady( function() {
+    var dashedNamespace = utils.toDashed( namespace );
+    var dataAttr = 'data-' + dashedNamespace;
+    var dataAttrElems = document.querySelectorAll( '[' + dataAttr + ']' );
+    var jsDashElems = document.querySelectorAll( '.js-' + dashedNamespace );
+    var elems = utils.makeArray( dataAttrElems )
+      .concat( utils.makeArray( jsDashElems ) );
+    var dataOptionsAttr = dataAttr + '-options';
+    var jQuery = window.jQuery;
+
+    elems.forEach( function( elem ) {
+      var attr = elem.getAttribute( dataAttr ) ||
+        elem.getAttribute( dataOptionsAttr );
+      var options;
+      try {
+        options = attr && JSON.parse( attr );
+      } catch ( error ) {
+        // log error, do not initialize
+        if ( console ) {
+          console.error( 'Error parsing ' + dataAttr + ' on ' + elem.className +
+          ': ' + error );
+        }
+        return;
+      }
+      // initialize
+      var instance = new WidgetClass( elem, options );
+      // make available via $().data('layoutname')
+      if ( jQuery ) {
+        jQuery.data( elem, namespace, instance );
+      }
     });
-  } else if ( typeof exports === 'object' ) {
-    module.exports = matchesSelector;
-  }
-  else {
-    // browser global
-    window.matchesSelector = matchesSelector;
-  }
 
-})( Element.prototype );
+  });
+};
+
+// -----  ----- //
+
+return utils;
+
+}));
 
 /**
  * Outlayer Item
  */
 
-( function( window ) {
-
-
-
-// ----- get style ----- //
-
-var getComputedStyle = window.getComputedStyle;
-var getStyle = getComputedStyle ?
-  function( elem ) {
-    return getComputedStyle( elem, null );
-  } :
-  function( elem ) {
-    return elem.currentStyle;
-  };
-
-
-// extend objects
-function extend( a, b ) {
-  for ( var prop in b ) {
-    a[ prop ] = b[ prop ];
+( function( window, factory ) {
+  // universal module definition
+  /* jshint strict: false */ /* globals define, module, require */
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD - RequireJS
+    define( 'outlayer/item',[
+        'ev-emitter/ev-emitter',
+        'get-size/get-size'
+      ],
+      factory
+    );
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS - Browserify, Webpack
+    module.exports = factory(
+      require('ev-emitter'),
+      require('get-size')
+    );
+  } else {
+    // browser global
+    window.Outlayer = {};
+    window.Outlayer.Item = factory(
+      window.EvEmitter,
+      window.getSize
+    );
   }
-  return a;
-}
+
+}( window, function factory( EvEmitter, getSize ) {
+'use strict';
+
+// ----- helpers ----- //
 
 function isEmptyObj( obj ) {
   for ( var prop in obj ) {
@@ -48927,51 +43768,29 @@ function isEmptyObj( obj ) {
   return true;
 }
 
-// http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
-function toDash( str ) {
-  return str.replace( /([A-Z])/g, function( $1 ){
-    return '-' + $1.toLowerCase();
-  });
-}
-
-// -------------------------- Outlayer definition -------------------------- //
-
-function outlayerItemDefinition( EventEmitter, getSize, getStyleProperty ) {
-
 // -------------------------- CSS3 support -------------------------- //
 
-var transitionProperty = getStyleProperty('transition');
-var transformProperty = getStyleProperty('transform');
-var supportsCSS3 = transitionProperty && transformProperty;
-var is3d = !!getStyleProperty('perspective');
+
+var docElemStyle = document.documentElement.style;
+
+var transitionProperty = typeof docElemStyle.transition == 'string' ?
+  'transition' : 'WebkitTransition';
+var transformProperty = typeof docElemStyle.transform == 'string' ?
+  'transform' : 'WebkitTransform';
 
 var transitionEndEvent = {
   WebkitTransition: 'webkitTransitionEnd',
-  MozTransition: 'transitionend',
-  OTransition: 'otransitionend',
   transition: 'transitionend'
 }[ transitionProperty ];
 
-// properties that could have vendor prefix
-var prefixableProperties = [
-  'transform',
-  'transition',
-  'transitionDuration',
-  'transitionProperty'
-];
-
-// cache all vendor properties
-var vendorProperties = ( function() {
-  var cache = {};
-  for ( var i=0, len = prefixableProperties.length; i < len; i++ ) {
-    var prop = prefixableProperties[i];
-    var supportedProp = getStyleProperty( prop );
-    if ( supportedProp && supportedProp !== prop ) {
-      cache[ prop ] = supportedProp;
-    }
-  }
-  return cache;
-})();
+// cache all vendor properties that could have vendor prefix
+var vendorProperties = {
+  transform: transformProperty,
+  transition: transitionProperty,
+  transitionDuration: transitionProperty + 'Duration',
+  transitionProperty: transitionProperty + 'Property',
+  transitionDelay: transitionProperty + 'Delay'
+};
 
 // -------------------------- Item -------------------------- //
 
@@ -48991,10 +43810,11 @@ function Item( element, layout ) {
   this._create();
 }
 
-// inherit EventEmitter
-extend( Item.prototype, EventEmitter.prototype );
+// inherit EvEmitter
+var proto = Item.prototype = Object.create( EvEmitter.prototype );
+proto.constructor = Item;
 
-Item.prototype._create = function() {
+proto._create = function() {
   // transition objects
   this._transn = {
     ingProperties: {},
@@ -49008,14 +43828,14 @@ Item.prototype._create = function() {
 };
 
 // trigger specified handler for event type
-Item.prototype.handleEvent = function( event ) {
+proto.handleEvent = function( event ) {
   var method = 'on' + event.type;
   if ( this[ method ] ) {
     this[ method ]( event );
   }
 };
 
-Item.prototype.getSize = function() {
+proto.getSize = function() {
   this.size = getSize( this.element );
 };
 
@@ -49023,7 +43843,7 @@ Item.prototype.getSize = function() {
  * apply CSS styles to element
  * @param {Object} style
  */
-Item.prototype.css = function( style ) {
+proto.css = function( style ) {
   var elemStyle = this.element.style;
 
   for ( var prop in style ) {
@@ -49034,19 +43854,23 @@ Item.prototype.css = function( style ) {
 };
 
  // measure position, and sets it
-Item.prototype.getPosition = function() {
-  var style = getStyle( this.element );
-  var layoutOptions = this.layout.options;
-  var isOriginLeft = layoutOptions.isOriginLeft;
-  var isOriginTop = layoutOptions.isOriginTop;
-  var x = parseInt( style[ isOriginLeft ? 'left' : 'right' ], 10 );
-  var y = parseInt( style[ isOriginTop ? 'top' : 'bottom' ], 10 );
+proto.getPosition = function() {
+  var style = getComputedStyle( this.element );
+  var isOriginLeft = this.layout._getOption('originLeft');
+  var isOriginTop = this.layout._getOption('originTop');
+  var xValue = style[ isOriginLeft ? 'left' : 'right' ];
+  var yValue = style[ isOriginTop ? 'top' : 'bottom' ];
+  // convert percent to pixels
+  var layoutSize = this.layout.size;
+  var x = xValue.indexOf('%') != -1 ?
+    ( parseFloat( xValue ) / 100 ) * layoutSize.width : parseInt( xValue, 10 );
+  var y = yValue.indexOf('%') != -1 ?
+    ( parseFloat( yValue ) / 100 ) * layoutSize.height : parseInt( yValue, 10 );
 
   // clean up 'auto' or other non-integer values
   x = isNaN( x ) ? 0 : x;
   y = isNaN( y ) ? 0 : y;
   // remove padding from measurement
-  var layoutSize = this.layout.size;
   x -= isOriginLeft ? layoutSize.paddingLeft : layoutSize.paddingRight;
   y -= isOriginTop ? layoutSize.paddingTop : layoutSize.paddingBottom;
 
@@ -49055,44 +43879,51 @@ Item.prototype.getPosition = function() {
 };
 
 // set settled position, apply padding
-Item.prototype.layoutPosition = function() {
+proto.layoutPosition = function() {
   var layoutSize = this.layout.size;
-  var layoutOptions = this.layout.options;
   var style = {};
+  var isOriginLeft = this.layout._getOption('originLeft');
+  var isOriginTop = this.layout._getOption('originTop');
 
-  if ( layoutOptions.isOriginLeft ) {
-    style.left = ( this.position.x + layoutSize.paddingLeft ) + 'px';
-    // reset other property
-    style.right = '';
-  } else {
-    style.right = ( this.position.x + layoutSize.paddingRight ) + 'px';
-    style.left = '';
-  }
+  // x
+  var xPadding = isOriginLeft ? 'paddingLeft' : 'paddingRight';
+  var xProperty = isOriginLeft ? 'left' : 'right';
+  var xResetProperty = isOriginLeft ? 'right' : 'left';
 
-  if ( layoutOptions.isOriginTop ) {
-    style.top = ( this.position.y + layoutSize.paddingTop ) + 'px';
-    style.bottom = '';
-  } else {
-    style.bottom = ( this.position.y + layoutSize.paddingBottom ) + 'px';
-    style.top = '';
-  }
+  var x = this.position.x + layoutSize[ xPadding ];
+  // set in percentage or pixels
+  style[ xProperty ] = this.getXValue( x );
+  // reset other property
+  style[ xResetProperty ] = '';
+
+  // y
+  var yPadding = isOriginTop ? 'paddingTop' : 'paddingBottom';
+  var yProperty = isOriginTop ? 'top' : 'bottom';
+  var yResetProperty = isOriginTop ? 'bottom' : 'top';
+
+  var y = this.position.y + layoutSize[ yPadding ];
+  // set in percentage or pixels
+  style[ yProperty ] = this.getYValue( y );
+  // reset other property
+  style[ yResetProperty ] = '';
 
   this.css( style );
   this.emitEvent( 'layout', [ this ] );
 };
 
+proto.getXValue = function( x ) {
+  var isHorizontal = this.layout._getOption('horizontal');
+  return this.layout.options.percentPosition && !isHorizontal ?
+    ( ( x / this.layout.size.width ) * 100 ) + '%' : x + 'px';
+};
 
-// transform translate function
-var translate = is3d ?
-  function( x, y ) {
-    return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
-  } :
-  function( x, y ) {
-    return 'translate(' + x + 'px, ' + y + 'px)';
-  };
+proto.getYValue = function( y ) {
+  var isHorizontal = this.layout._getOption('horizontal');
+  return this.layout.options.percentPosition && isHorizontal ?
+    ( ( y / this.layout.size.height ) * 100 ) + '%' : y + 'px';
+};
 
-
-Item.prototype._transitionTo = function( x, y ) {
+proto._transitionTo = function( x, y ) {
   this.getPosition();
   // get current x & y from top/left
   var curX = this.position.x;
@@ -49114,11 +43945,7 @@ Item.prototype._transitionTo = function( x, y ) {
   var transX = x - curX;
   var transY = y - curY;
   var transitionStyle = {};
-  // flip cooridinates if origin on right or bottom
-  var layoutOptions = this.layout.options;
-  transX = layoutOptions.isOriginLeft ? transX : -transX;
-  transY = layoutOptions.isOriginTop ? transY : -transY;
-  transitionStyle.transform = translate( transX, transY );
+  transitionStyle.transform = this.getTranslate( transX, transY );
 
   this.transition({
     to: transitionStyle,
@@ -49129,17 +43956,24 @@ Item.prototype._transitionTo = function( x, y ) {
   });
 };
 
+proto.getTranslate = function( x, y ) {
+  // flip cooridinates if origin on right or bottom
+  var isOriginLeft = this.layout._getOption('originLeft');
+  var isOriginTop = this.layout._getOption('originTop');
+  x = isOriginLeft ? x : -x;
+  y = isOriginTop ? y : -y;
+  return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+};
+
 // non transition + transform support
-Item.prototype.goTo = function( x, y ) {
+proto.goTo = function( x, y ) {
   this.setPosition( x, y );
   this.layoutPosition();
 };
 
-// use transition and transforms if supported
-Item.prototype.moveTo = supportsCSS3 ?
-  Item.prototype._transitionTo : Item.prototype.goTo;
+proto.moveTo = proto._transitionTo;
 
-Item.prototype.setPosition = function( x, y ) {
+proto.setPosition = function( x, y ) {
   this.position.x = parseInt( x, 10 );
   this.position.y = parseInt( y, 10 );
 };
@@ -49152,7 +43986,7 @@ Item.prototype.setPosition = function( x, y ) {
  */
 
 // non transition, just trigger callback
-Item.prototype._nonTransition = function( args ) {
+proto._nonTransition = function( args ) {
   this.css( args.to );
   if ( args.isCleaning ) {
     this._removeStyles( args.to );
@@ -49170,7 +44004,7 @@ Item.prototype._nonTransition = function( args ) {
  *   @param {Boolean} isCleaning - removes transition styles after transition
  *   @param {Function} onTransitionEnd - callback
  */
-Item.prototype._transition = function( args ) {
+proto.transition = function( args ) {
   // redirect to nonTransition if no transition duration
   if ( !parseFloat( this.layout.options.transitionDuration ) ) {
     this._nonTransition( args );
@@ -49208,54 +44042,61 @@ Item.prototype._transition = function( args ) {
 
 };
 
-var itemTransitionProperties = transformProperty && ( toDash( transformProperty ) +
-  ',opacity' );
+// dash before all cap letters, including first for
+// WebkitTransform => -webkit-transform
+function toDashedAll( str ) {
+  return str.replace( /([A-Z])/g, function( $1 ) {
+    return '-' + $1.toLowerCase();
+  });
+}
 
-Item.prototype.enableTransition = function(/* style */) {
-  // only enable if not already transitioning
-  // bug in IE10 were re-setting transition style will prevent
-  // transitionend event from triggering
+var transitionProps = 'opacity,' + toDashedAll( transformProperty );
+
+proto.enableTransition = function(/* style */) {
+  // HACK changing transitionProperty during a transition
+  // will cause transition to jump
   if ( this.isTransitioning ) {
     return;
   }
 
-  // make transition: foo, bar, baz from style object
-  // TODO uncomment this bit when IE10 bug is resolved
-  // var transitionValue = [];
+  // make `transition: foo, bar, baz` from style object
+  // HACK un-comment this when enableTransition can work
+  // while a transition is happening
+  // var transitionValues = [];
   // for ( var prop in style ) {
   //   // dash-ify camelCased properties like WebkitTransition
-  //   transitionValue.push( toDash( prop ) );
+  //   prop = vendorProperties[ prop ] || prop;
+  //   transitionValues.push( toDashedAll( prop ) );
   // }
+  // munge number to millisecond, to match stagger
+  var duration = this.layout.options.transitionDuration;
+  duration = typeof duration == 'number' ? duration + 'ms' : duration;
   // enable transition styles
-  // HACK always enable transform,opacity for IE10
   this.css({
-    transitionProperty: itemTransitionProperties,
-    transitionDuration: this.layout.options.transitionDuration
+    transitionProperty: transitionProps,
+    transitionDuration: duration,
+    transitionDelay: this.staggerDelay || 0
   });
   // listen for transition end event
   this.element.addEventListener( transitionEndEvent, this, false );
 };
 
-Item.prototype.transition = Item.prototype[ transitionProperty ? '_transition' : '_nonTransition' ];
-
 // ----- events ----- //
 
-Item.prototype.onwebkitTransitionEnd = function( event ) {
+proto.onwebkitTransitionEnd = function( event ) {
   this.ontransitionend( event );
 };
 
-Item.prototype.onotransitionend = function( event ) {
+proto.onotransitionend = function( event ) {
   this.ontransitionend( event );
 };
 
 // properties that I munge to make my life easier
 var dashedVendorProperties = {
-  '-webkit-transform': 'transform',
-  '-moz-transform': 'transform',
-  '-o-transform': 'transform'
+  '-webkit-transform': 'transform'
 };
 
-Item.prototype.ontransitionend = function( event ) {
+proto.ontransitionend = function( event ) {
   // disregard bubbled events from children
   if ( event.target !== this.element ) {
     return;
@@ -49287,7 +44128,7 @@ Item.prototype.ontransitionend = function( event ) {
   this.emitEvent( 'transitionEnd', [ this ] );
 };
 
-Item.prototype.disableTransition = function() {
+proto.disableTransition = function() {
   this.removeTransitionStyles();
   this.element.removeEventListener( transitionEndEvent, this, false );
   this.isTransitioning = false;
@@ -49297,7 +44138,7 @@ Item.prototype.disableTransition = function() {
  * removes style property from element
  * @param {Object} style
 **/
-Item.prototype._removeStyles = function( style ) {
+proto._removeStyles = function( style ) {
   // clean up transition styles
   var cleanStyle = {};
   for ( var prop in style ) {
@@ -49308,23 +44149,33 @@ Item.prototype._removeStyles = function( style ) {
 
 var cleanTransitionStyle = {
   transitionProperty: '',
-  transitionDuration: ''
+  transitionDuration: '',
+  transitionDelay: ''
 };
 
-Item.prototype.removeTransitionStyles = function() {
+proto.removeTransitionStyles = function() {
   // remove transition
   this.css( cleanTransitionStyle );
+};
+
+// ----- stagger ----- //
+
+proto.stagger = function( delay ) {
+  delay = isNaN( delay ) ? 0 : delay;
+  this.staggerDelay = delay + 'ms';
 };
 
 // ----- show/hide/remove ----- //
 
 // remove element from DOM
-Item.prototype.removeElem = function() {
+proto.removeElem = function() {
   this.element.parentNode.removeChild( this.element );
+  // remove display: none
+  this.css({ display: '' });
   this.emitEvent( 'remove', [ this ] );
 };
 
-Item.prototype.remove = function() {
+proto.remove = function() {
   // just remove element if no transition support or no transition
   if ( !transitionProperty || !parseFloat( this.layout.options.transitionDuration ) ) {
     this.removeElem();
@@ -49332,52 +44183,87 @@ Item.prototype.remove = function() {
   }
 
   // start transition
-  var _this = this;
-  this.on( 'transitionEnd', function() {
-    _this.removeElem();
-    return true; // bind once
+  this.once( 'transitionEnd', function() {
+    this.removeElem();
   });
   this.hide();
 };
 
-Item.prototype.reveal = function() {
+proto.reveal = function() {
   delete this.isHidden;
   // remove display: none
   this.css({ display: '' });
 
   var options = this.layout.options;
+
+  var onTransitionEnd = {};
+  var transitionEndProperty = this.getHideRevealTransitionEndProperty('visibleStyle');
+  onTransitionEnd[ transitionEndProperty ] = this.onRevealTransitionEnd;
+
   this.transition({
     from: options.hiddenStyle,
     to: options.visibleStyle,
-    isCleaning: true
+    isCleaning: true,
+    onTransitionEnd: onTransitionEnd
   });
 };
 
-Item.prototype.hide = function() {
+proto.onRevealTransitionEnd = function() {
+  // check if still visible
+  // during transition, item may have been hidden
+  if ( !this.isHidden ) {
+    this.emitEvent('reveal');
+  }
+};
+
+/**
+ * get style property use for hide/reveal transition end
+ * @param {String} styleProperty - hiddenStyle/visibleStyle
+ * @returns {String}
+ */
+proto.getHideRevealTransitionEndProperty = function( styleProperty ) {
+  var optionStyle = this.layout.options[ styleProperty ];
+  // use opacity
+  if ( optionStyle.opacity ) {
+    return 'opacity';
+  }
+  // get first property
+  for ( var prop in optionStyle ) {
+    return prop;
+  }
+};
+
+proto.hide = function() {
   // set flag
   this.isHidden = true;
   // remove display: none
   this.css({ display: '' });
 
   var options = this.layout.options;
+
+  var onTransitionEnd = {};
+  var transitionEndProperty = this.getHideRevealTransitionEndProperty('hiddenStyle');
+  onTransitionEnd[ transitionEndProperty ] = this.onHideTransitionEnd;
+
   this.transition({
     from: options.visibleStyle,
     to: options.hiddenStyle,
     // keep hidden stuff hidden
     isCleaning: true,
-    onTransitionEnd: {
-      opacity: function() {
-        // check if still hidden
-        // during transition, item may have been un-hidden
-        if ( this.isHidden ) {
-          this.css({ display: 'none' });
-        }
-      }
-    }
+    onTransitionEnd: onTransitionEnd
   });
 };
 
-Item.prototype.destroy = function() {
+proto.onHideTransitionEnd = function() {
+  // check if still hidden
+  // during transition, item may have been un-hidden
+  if ( this.isHidden ) {
+    this.css({ display: 'none' });
+    this.emitEvent('hide');
+  }
+};
+
+proto.destroy = function() {
   this.css({
     position: '',
     left: '',
@@ -49391,126 +44277,58 @@ Item.prototype.destroy = function() {
 
 return Item;
 
-}
-
-// -------------------------- transport -------------------------- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( 'outlayer/item',[
-      'eventEmitter/EventEmitter',
-      'get-size/get-size',
-      'get-style-property/get-style-property'
-    ],
-    outlayerItemDefinition );
-} else if (typeof exports === 'object') {
-  // CommonJS
-  module.exports = outlayerItemDefinition(
-    require('wolfy87-eventemitter'),
-    require('get-size'),
-    require('desandro-get-style-property')
-  );
-} else {
-  // browser global
-  window.Outlayer = {};
-  window.Outlayer.Item = outlayerItemDefinition(
-    window.EventEmitter,
-    window.getSize,
-    window.getStyleProperty
-  );
-}
-
-})( window );
+}));
 
 /*!
- * Outlayer v1.3.0
+ * Outlayer v2.1.0
  * the brains and guts of a layout library
  * MIT license
  */
 
-( function( window ) {
+( function( window, factory ) {
+  'use strict';
+  // universal module definition
+  /* jshint strict: false */ /* globals define, module, require */
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD - RequireJS
+    define( 'outlayer/outlayer',[
+        'ev-emitter/ev-emitter',
+        'get-size/get-size',
+        'fizzy-ui-utils/utils',
+        './item'
+      ],
+      function( EvEmitter, getSize, utils, Item ) {
+        return factory( window, EvEmitter, getSize, utils, Item);
+      }
+    );
+  } else if ( typeof module == 'object' && module.exports ) {
+    // CommonJS - Browserify, Webpack
+    module.exports = factory(
+      window,
+      require('ev-emitter'),
+      require('get-size'),
+      require('fizzy-ui-utils'),
+      require('./item')
+    );
+  } else {
+    // browser global
+    window.Outlayer = factory(
+      window,
+      window.EvEmitter,
+      window.getSize,
+      window.fizzyUIUtils,
+      window.Outlayer.Item
+    );
+  }
 
-
+}( window, function factory( window, EvEmitter, getSize, utils, Item ) {
+'use strict';
 
 // ----- vars ----- //
 
-var document = window.document;
 var console = window.console;
 var jQuery = window.jQuery;
 var noop = function() {};
-
-// -------------------------- helpers -------------------------- //
-
-// extend objects
-function extend( a, b ) {
-  for ( var prop in b ) {
-    a[ prop ] = b[ prop ];
-  }
-  return a;
-}
-
-
-var objToString = Object.prototype.toString;
-function isArray( obj ) {
-  return objToString.call( obj ) === '[object Array]';
-}
-
-// turn element or nodeList into an array
-function makeArray( obj ) {
-  var ary = [];
-  if ( isArray( obj ) ) {
-    // use object if already an array
-    ary = obj;
-  } else if ( obj && typeof obj.length === 'number' ) {
-    // convert nodeList to array
-    for ( var i=0, len = obj.length; i < len; i++ ) {
-      ary.push( obj[i] );
-    }
-  } else {
-    // array of single index
-    ary.push( obj );
-  }
-  return ary;
-}
-
-// http://stackoverflow.com/a/384380/182183
-var isElement = ( typeof HTMLElement === 'function' || typeof HTMLElement === 'object' ) ?
-  function isElementDOM2( obj ) {
-    return obj instanceof HTMLElement;
-  } :
-  function isElementQuirky( obj ) {
-    return obj && typeof obj === 'object' &&
-      obj.nodeType === 1 && typeof obj.nodeName === 'string';
-  };
-
-// index of helper cause IE8
-var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
-    return ary.indexOf( obj );
-  } : function( ary, obj ) {
-    for ( var i=0, len = ary.length; i < len; i++ ) {
-      if ( ary[i] === obj ) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
-function removeFrom( obj, ary ) {
-  var index = indexOf( ary, obj );
-  if ( index !== -1 ) {
-    ary.splice( index, 1 );
-  }
-}
-
-// http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
-function toDashed( str ) {
-  return str.replace( /(.)([A-Z])/g, function( match, $1, $2 ) {
-    return $1 + '-' + $2;
-  }).toLowerCase();
-}
-
-
-function outlayerDefinition( eventie, docReady, EventEmitter, getSize, matchesSelector, Item ) {
 
 // -------------------------- Outlayer -------------------------- //
 
@@ -49526,23 +44344,22 @@ var instances = {};
  * @constructor
  */
 function Outlayer( element, options ) {
-  // use element as selector string
-  if ( typeof element === 'string' ) {
-    element = document.querySelector( element );
-  }
-
-  // bail out if not proper element
-  if ( !element || !isElement( element ) ) {
+  var queryElement = utils.getQueryElement( element );
+  if ( !queryElement ) {
     if ( console ) {
-      console.error( 'Bad ' + this.constructor.namespace + ' element: ' + element );
+      console.error( 'Bad element for ' + this.constructor.namespace +
+        ': ' + ( queryElement || element ) );
     }
     return;
   }
-
-  this.element = element;
+  this.element = queryElement;
+  // add jQuery
+  if ( jQuery ) {
+    this.$element = jQuery( this.element );
+  }
 
   // options
-  this.options = extend( {}, this.constructor.defaults );
+  this.options = utils.extend( {}, this.constructor.defaults );
   this.option( options );
 
   // add id for Outlayer.getFromElement
@@ -49553,7 +44370,8 @@ function Outlayer( element, options ) {
   // kick it off
   this._create();
 
-  if ( this.options.isInitLayout ) {
+  var isInitLayout = this._getOption('initLayout');
+  if ( isInitLayout ) {
     this.layout();
   }
 }
@@ -49567,11 +44385,11 @@ Outlayer.defaults = {
   containerStyle: {
     position: 'relative'
   },
-  isInitLayout: true,
-  isOriginLeft: true,
-  isOriginTop: true,
-  isResizeBound: true,
-  isResizingContainer: true,
+  initLayout: true,
+  originLeft: true,
+  originTop: true,
+  resize: true,
+  resizeContainer: true,
   // item options
   transitionDuration: '0.4s',
   hiddenStyle: {
@@ -49584,34 +44402,56 @@ Outlayer.defaults = {
   }
 };
 
-// inherit EventEmitter
-extend( Outlayer.prototype, EventEmitter.prototype );
+var proto = Outlayer.prototype;
+// inherit EvEmitter
+utils.extend( proto, EvEmitter.prototype );
 
 /**
  * set options
  * @param {Object} opts
  */
-Outlayer.prototype.option = function( opts ) {
-  extend( this.options, opts );
+proto.option = function( opts ) {
+  utils.extend( this.options, opts );
 };
 
-Outlayer.prototype._create = function() {
+/**
+ * get backwards compatible option value, check old name
+ */
+proto._getOption = function( option ) {
+  var oldOption = this.constructor.compatOptions[ option ];
+  return oldOption && this.options[ oldOption ] !== undefined ?
+    this.options[ oldOption ] : this.options[ option ];
+};
+
+Outlayer.compatOptions = {
+  // currentName: oldName
+  initLayout: 'isInitLayout',
+  horizontal: 'isHorizontal',
+  layoutInstant: 'isLayoutInstant',
+  originLeft: 'isOriginLeft',
+  originTop: 'isOriginTop',
+  resize: 'isResizeBound',
+  resizeContainer: 'isResizingContainer'
+};
+
+proto._create = function() {
   // get items from children
   this.reloadItems();
   // elements that affect layout, but are not laid out
   this.stamps = [];
   this.stamp( this.options.stamp );
   // set container style
-  extend( this.element.style, this.options.containerStyle );
+  utils.extend( this.element.style, this.options.containerStyle );
 
   // bind resize method
-  if ( this.options.isResizeBound ) {
+  var canBindResize = this._getOption('resize');
+  if ( canBindResize ) {
     this.bindResize();
   }
 };
 
 // goes through all children again and gets bricks in proper order
-Outlayer.prototype.reloadItems = function() {
+proto.reloadItems = function() {
   // collection of item elements
   this.items = this._itemize( this.element.children );
 };
@@ -49622,14 +44462,14 @@ Outlayer.prototype.reloadItems = function() {
  * @param {Array or NodeList or HTMLElement} elems
  * @returns {Array} items - collection of new Outlayer Items
  */
-Outlayer.prototype._itemize = function( elems ) {
+proto._itemize = function( elems ) {
 
   var itemElems = this._filterFindItemElements( elems );
   var Item = this.constructor.Item;
 
   // create new Outlayer Items for collection
   var items = [];
-  for ( var i=0, len = itemElems.length; i < len; i++ ) {
+  for ( var i=0; i < itemElems.length; i++ ) {
     var elem = itemElems[i];
     var item = new Item( elem, this );
     items.push( item );
@@ -49643,48 +44483,18 @@ Outlayer.prototype._itemize = function( elems ) {
  * @param {Array or NodeList or HTMLElement} elems
  * @returns {Array} items - item elements
  */
-Outlayer.prototype._filterFindItemElements = function( elems ) {
-  // make array of elems
-  elems = makeArray( elems );
-  var itemSelector = this.options.itemSelector;
-  var itemElems = [];
-
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    // check that elem is an actual element
-    if ( !isElement( elem ) ) {
-      continue;
-    }
-    // filter & find items if we have an item selector
-    if ( itemSelector ) {
-      // filter siblings
-      if ( matchesSelector( elem, itemSelector ) ) {
-        itemElems.push( elem );
-      }
-      // find children
-      var childElems = elem.querySelectorAll( itemSelector );
-      // concat childElems to filterFound array
-      for ( var j=0, jLen = childElems.length; j < jLen; j++ ) {
-        itemElems.push( childElems[j] );
-      }
-    } else {
-      itemElems.push( elem );
-    }
-  }
-
-  return itemElems;
+proto._filterFindItemElements = function( elems ) {
+  return utils.filterFindElements( elems, this.options.itemSelector );
 };
 
 /**
  * getter method for getting item elements
  * @returns {Array} elems - collection of item elements
  */
-Outlayer.prototype.getItemElements = function() {
-  var elems = [];
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    elems.push( this.items[i].element );
-  }
-  return elems;
+proto.getItemElements = function() {
+  return this.items.map( function( item ) {
+    return item.element;
+  });
 };
 
 // ----- init & layout ----- //
@@ -49692,13 +44502,14 @@ Outlayer.prototype.getItemElements = function() {
 /**
  * lays out all items
  */
-Outlayer.prototype.layout = function() {
+proto.layout = function() {
   this._resetLayout();
   this._manageStamps();
 
   // don't animate first layout
-  var isInstant = this.options.isLayoutInstant !== undefined ?
-    this.options.isLayoutInstant : !this._isLayoutInited;
+  var layoutInstant = this._getOption('layoutInstant');
+  var isInstant = layoutInstant !== undefined ?
+    layoutInstant : !this._isLayoutInited;
   this.layoutItems( this.items, isInstant );
 
   // flag for initalized
@@ -49706,17 +44517,17 @@ Outlayer.prototype.layout = function() {
 };
 
 // _init is alias for layout
-Outlayer.prototype._init = Outlayer.prototype.layout;
+proto._init = proto.layout;
 
 /**
  * logic before any new layout
  */
-Outlayer.prototype._resetLayout = function() {
+proto._resetLayout = function() {
   this.getSize();
 };
 
 
-Outlayer.prototype.getSize = function() {
+proto.getSize = function() {
   this.size = getSize( this.element );
 };
 
@@ -49730,7 +44541,7 @@ Outlayer.prototype.getSize = function() {
  * @param {String} size - width or height
  * @private
  */
-Outlayer.prototype._getMeasurement = function( measurement, size ) {
+proto._getMeasurement = function( measurement, size ) {
   var option = this.options[ measurement ];
   var elem;
   if ( !option ) {
@@ -49738,9 +44549,9 @@ Outlayer.prototype._getMeasurement = function( measurement, size ) {
     this[ measurement ] = 0;
   } else {
     // use option as an element
-    if ( typeof option === 'string' ) {
+    if ( typeof option == 'string' ) {
       elem = this.element.querySelector( option );
-    } else if ( isElement( option ) ) {
+    } else if ( option instanceof HTMLElement ) {
       elem = option;
     }
     // use size of element, if element
@@ -49752,7 +44563,7 @@ Outlayer.prototype._getMeasurement = function( measurement, size ) {
  * layout a collection of item elements
  * @api public
  */
-Outlayer.prototype.layoutItems = function( items, isInstant ) {
+proto.layoutItems = function( items, isInstant ) {
   items = this._getItemsForLayout( items );
 
   this._layoutItems( items, isInstant );
@@ -49766,15 +44577,10 @@ Outlayer.prototype.layoutItems = function( items, isInstant ) {
  * @param {Array} items
  * @returns {Array} items
  */
-Outlayer.prototype._getItemsForLayout = function( items ) {
-  var layoutItems = [];
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    if ( !item.isIgnored ) {
-      layoutItems.push( item );
-    }
-  }
-  return layoutItems;
+proto._getItemsForLayout = function( items ) {
+  return items.filter( function( item ) {
+    return !item.isIgnored;
+  });
 };
 
 /**
@@ -49782,32 +44588,24 @@ Outlayer.prototype._getItemsForLayout = function( items ) {
  * @param {Array} items
  * @param {Boolean} isInstant
  */
-Outlayer.prototype._layoutItems = function( items, isInstant ) {
-  var _this = this;
-  function onItemsLayout() {
-    _this.emitEvent( 'layoutComplete', [ _this, items ] );
-  }
+proto._layoutItems = function( items, isInstant ) {
+  this._emitCompleteOnItems( 'layout', items );
 
   if ( !items || !items.length ) {
     // no items, emit event with empty array
-    onItemsLayout();
     return;
   }
 
-  // emit layoutComplete when done
-  this._itemsOn( items, 'layout', onItemsLayout );
-
   var queue = [];
 
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
+  items.forEach( function( item ) {
     // get x/y object from method
     var position = this._getItemLayoutPosition( item );
     // enqueue
     position.item = item;
     position.isInstant = isInstant || item.isLayoutInstant;
     queue.push( position );
-  }
+  }, this );
 
   this._processLayoutQueue( queue );
 };
@@ -49817,7 +44615,7 @@ Outlayer.prototype._layoutItems = function( items, isInstant ) {
  * @param {Outlayer.Item} item
  * @returns {Object} x and y position
  */
-Outlayer.prototype._getItemLayoutPosition = function( /* item */ ) {
+proto._getItemLayoutPosition = function( /* item */ ) {
   return {
     x: 0,
     y: 0
@@ -49830,11 +44628,22 @@ Outlayer.prototype._getItemLayoutPosition = function( /* item */ ) {
  * thx @paul_irish
  * @param {Array} queue
  */
-Outlayer.prototype._processLayoutQueue = function( queue ) {
-  for ( var i=0, len = queue.length; i < len; i++ ) {
-    var obj = queue[i];
-    this._positionItem( obj.item, obj.x, obj.y, obj.isInstant );
+proto._processLayoutQueue = function( queue ) {
+  this.updateStagger();
+  queue.forEach( function( obj, i ) {
+    this._positionItem( obj.item, obj.x, obj.y, obj.isInstant, i );
+  }, this );
+};
+
+// set stagger from option in milliseconds number
+proto.updateStagger = function() {
+  var stagger = this.options.stagger;
+  if ( stagger === null || stagger === undefined ) {
+    this.stagger = 0;
+    return;
   }
+  this.stagger = getMilliseconds( stagger );
+  return this.stagger;
 };
 
 /**
@@ -49844,11 +44653,12 @@ Outlayer.prototype._processLayoutQueue = function( queue ) {
  * @param {Number} y - vertical position
  * @param {Boolean} isInstant - disables transitions
  */
-Outlayer.prototype._positionItem = function( item, x, y, isInstant ) {
+proto._positionItem = function( item, x, y, isInstant, i ) {
   if ( isInstant ) {
     // if not transition, just set CSS
     item.goTo( x, y );
   } else {
+    item.stagger( i * this.stagger );
     item.moveTo( x, y );
   }
 };
@@ -49857,12 +44667,13 @@ Outlayer.prototype._positionItem = function( item, x, y, isInstant ) {
  * Any logic you want to do after each layout,
  * i.e. size the container
  */
-Outlayer.prototype._postLayout = function() {
+proto._postLayout = function() {
   this.resizeContainer();
 };
 
-Outlayer.prototype.resizeContainer = function() {
-  if ( !this.options.isResizingContainer ) {
+proto.resizeContainer = function() {
+  var isResizingContainer = this._getOption('resizeContainer');
+  if ( !isResizingContainer ) {
     return;
   }
   var size = this._getContainerSize();
@@ -49878,13 +44689,13 @@ Outlayer.prototype.resizeContainer = function() {
  *   @param {Number} width
  *   @param {Number} height
  */
-Outlayer.prototype._getContainerSize = noop;
+proto._getContainerSize = noop;
 
 /**
  * @param {Number} measure - size of width or height
  * @param {Boolean} isWidth
  */
-Outlayer.prototype._setContainerMeasure = function( measure, isWidth ) {
+proto._setContainerMeasure = function( measure, isWidth ) {
   if ( measure === undefined ) {
     return;
   }
@@ -49903,27 +44714,59 @@ Outlayer.prototype._setContainerMeasure = function( measure, isWidth ) {
 };
 
 /**
- * trigger a callback for a collection of items events
- * @param {Array} items - Outlayer.Items
+ * emit eventComplete on a collection of items events
  * @param {String} eventName
- * @param {Function} callback
+ * @param {Array} items - Outlayer.Items
  */
-Outlayer.prototype._itemsOn = function( items, eventName, callback ) {
-  var doneCount = 0;
-  var count = items.length;
-  // event callback
+proto._emitCompleteOnItems = function( eventName, items ) {
   var _this = this;
+  function onComplete() {
+    _this.dispatchEvent( eventName + 'Complete', null, [ items ] );
+  }
+
+  var count = items.length;
+  if ( !items || !count ) {
+    onComplete();
+    return;
+  }
+
+  var doneCount = 0;
   function tick() {
     doneCount++;
-    if ( doneCount === count ) {
-      callback.call( _this );
+    if ( doneCount == count ) {
+      onComplete();
     }
-    return true; // bind once
   }
+
   // bind callback
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    item.on( eventName, tick );
+  items.forEach( function( item ) {
+    item.once( eventName, tick );
+  });
+};
+
+/**
+ * emits events via EvEmitter and jQuery events
+ * @param {String} type - name of event
+ * @param {Event} event - original event
+ * @param {Array} args - extra arguments
+ */
+proto.dispatchEvent = function( type, event, args ) {
+  // add original event to arguments
+  var emitArgs = event ? [ event ].concat( args ) : args;
+  this.emitEvent( type, emitArgs );
+
+  if ( jQuery ) {
+    // set this.$element
+    this.$element = this.$element || jQuery( this.element );
+    if ( event ) {
+      // create jQuery event
+      var $event = jQuery.Event( event );
+      $event.type = type;
+      this.$element.trigger( $event, args );
+    } else {
+      // just trigger with type if no event available
+      this.$element.trigger( type, args );
+    }
   }
 };
 
@@ -49935,7 +44778,7 @@ Outlayer.prototype._itemsOn = function( items, eventName, callback ) {
  * ignored items do not get skipped in layout
  * @param {Element} elem
  */
-Outlayer.prototype.ignore = function( elem ) {
+proto.ignore = function( elem ) {
   var item = this.getItem( elem );
   if ( item ) {
     item.isIgnored = true;
@@ -49946,7 +44789,7 @@ Outlayer.prototype.ignore = function( elem ) {
  * return item to layout collection
  * @param {Element} elem
  */
-Outlayer.prototype.unignore = function( elem ) {
+proto.unignore = function( elem ) {
   var item = this.getItem( elem );
   if ( item ) {
     delete item.isIgnored;
@@ -49957,7 +44800,7 @@ Outlayer.prototype.unignore = function( elem ) {
  * adds elements to stamps
  * @param {NodeList, Array, Element, or String} elems
  */
-Outlayer.prototype.stamp = function( elems ) {
+proto.stamp = function( elems ) {
   elems = this._find( elems );
   if ( !elems ) {
     return;
@@ -49965,29 +44808,24 @@ Outlayer.prototype.stamp = function( elems ) {
 
   this.stamps = this.stamps.concat( elems );
   // ignore
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    this.ignore( elem );
-  }
+  elems.forEach( this.ignore, this );
 };
 
 /**
  * removes elements to stamps
  * @param {NodeList, Array, or Element} elems
  */
-Outlayer.prototype.unstamp = function( elems ) {
+proto.unstamp = function( elems ) {
   elems = this._find( elems );
   if ( !elems ){
     return;
   }
 
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
+  elems.forEach( function( elem ) {
     // filter out removed stamp elements
-    removeFrom( elem, this.stamps );
+    utils.removeFrom( this.stamps, elem );
     this.unignore( elem );
-  }
-
+  }, this );
 };
 
 /**
@@ -49995,33 +44833,30 @@ Outlayer.prototype.unstamp = function( elems ) {
  * @param {NodeList, Array, Element, or String} elems
  * @returns {Array} elems
  */
-Outlayer.prototype._find = function( elems ) {
+proto._find = function( elems ) {
   if ( !elems ) {
     return;
   }
   // if string, use argument as selector string
-  if ( typeof elems === 'string' ) {
+  if ( typeof elems == 'string' ) {
     elems = this.element.querySelectorAll( elems );
   }
-  elems = makeArray( elems );
+  elems = utils.makeArray( elems );
   return elems;
 };
 
-Outlayer.prototype._manageStamps = function() {
+proto._manageStamps = function() {
   if ( !this.stamps || !this.stamps.length ) {
     return;
   }
 
   this._getBoundingRect();
 
-  for ( var i=0, len = this.stamps.length; i < len; i++ ) {
-    var stamp = this.stamps[i];
-    this._manageStamp( stamp );
-  }
+  this.stamps.forEach( this._manageStamp, this );
 };
 
 // update boundingLeft / Top
-Outlayer.prototype._getBoundingRect = function() {
+proto._getBoundingRect = function() {
   // get bounding rect for container element
   var boundingRect = this.element.getBoundingClientRect();
   var size = this.size;
@@ -50036,14 +44871,14 @@ Outlayer.prototype._getBoundingRect = function() {
 /**
  * @param {Element} stamp
 **/
-Outlayer.prototype._manageStamp = noop;
+proto._manageStamp = noop;
 
 /**
  * get x/y position of element relative to container element
  * @param {Element} elem
  * @returns {Object} offset - has left, top, right, bottom
  */
-Outlayer.prototype._getElementOffset = function( elem ) {
+proto._getElementOffset = function( elem ) {
   var boundingRect = elem.getBoundingClientRect();
   var thisRect = this._boundingRect;
   var size = getSize( elem );
@@ -50060,55 +44895,31 @@ Outlayer.prototype._getElementOffset = function( elem ) {
 
 // enable event handlers for listeners
 // i.e. resize -> onresize
-Outlayer.prototype.handleEvent = function( event ) {
-  var method = 'on' + event.type;
-  if ( this[ method ] ) {
-    this[ method ]( event );
-  }
-};
+proto.handleEvent = utils.handleEvent;
 
 /**
  * Bind layout to window resizing
  */
-Outlayer.prototype.bindResize = function() {
-  // bind just one listener
-  if ( this.isResizeBound ) {
-    return;
-  }
-  eventie.bind( window, 'resize', this );
+proto.bindResize = function() {
+  window.addEventListener( 'resize', this );
   this.isResizeBound = true;
 };
 
 /**
  * Unbind layout to window resizing
  */
-Outlayer.prototype.unbindResize = function() {
-  if ( this.isResizeBound ) {
-    eventie.unbind( window, 'resize', this );
-  }
+proto.unbindResize = function() {
+  window.removeEventListener( 'resize', this );
   this.isResizeBound = false;
 };
 
-// original debounce by John Hann
-// http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
-
-// this fires every resize
-Outlayer.prototype.onresize = function() {
-  if ( this.resizeTimeout ) {
-    clearTimeout( this.resizeTimeout );
-  }
-
-  var _this = this;
-  function delayed() {
-    _this.resize();
-    delete _this.resizeTimeout;
-  }
-
-  this.resizeTimeout = setTimeout( delayed, 100 );
+proto.onresize = function() {
+  this.resize();
 };
 
-// debounced, layout on resize
-Outlayer.prototype.resize = function() {
+utils.debounceMethod( Outlayer, 'onresize', 100 );
+
+proto.resize = function() {
   // don't trigger if size did not change
   // or if resize was unbound. See #9
   if ( !this.isResizeBound || !this.needsResizeLayout() ) {
@@ -50122,7 +44933,7 @@ Outlayer.prototype.resize = function() {
  * check if layout is needed post layout
  * @returns Boolean
  */
-Outlayer.prototype.needsResizeLayout = function() {
+proto.needsResizeLayout = function() {
   var size = getSize( this.element );
   // check that this.size and size are there
   // IE8 triggers resize on body size change, so they might not be
@@ -50137,7 +44948,7 @@ Outlayer.prototype.needsResizeLayout = function() {
  * @param {Array or NodeList or Element} elems
  * @returns {Array} items - Outlayer.Items
 **/
-Outlayer.prototype.addItems = function( elems ) {
+proto.addItems = function( elems ) {
   var items = this._itemize( elems );
   // add items to collection
   if ( items.length ) {
@@ -50150,7 +44961,7 @@ Outlayer.prototype.addItems = function( elems ) {
  * Layout newly-appended item elements
  * @param {Array or NodeList or Element} elems
  */
-Outlayer.prototype.appended = function( elems ) {
+proto.appended = function( elems ) {
   var items = this.addItems( elems );
   if ( !items.length ) {
     return;
@@ -50164,7 +44975,7 @@ Outlayer.prototype.appended = function( elems ) {
  * Layout prepended elements
  * @param {Array or NodeList or Element} elems
  */
-Outlayer.prototype.prepended = function( elems ) {
+proto.prepended = function( elems ) {
   var items = this._itemize( elems );
   if ( !items.length ) {
     return;
@@ -50186,30 +44997,50 @@ Outlayer.prototype.prepended = function( elems ) {
  * reveal a collection of items
  * @param {Array of Outlayer.Items} items
  */
-Outlayer.prototype.reveal = function( items ) {
-  var len = items && items.length;
-  if ( !len ) {
+proto.reveal = function( items ) {
+  this._emitCompleteOnItems( 'reveal', items );
+  if ( !items || !items.length ) {
     return;
   }
-  for ( var i=0; i < len; i++ ) {
-    var item = items[i];
+  var stagger = this.updateStagger();
+  items.forEach( function( item, i ) {
+    item.stagger( i * stagger );
     item.reveal();
-  }
+  });
 };
 
 /**
  * hide a collection of items
  * @param {Array of Outlayer.Items} items
  */
-Outlayer.prototype.hide = function( items ) {
-  var len = items && items.length;
-  if ( !len ) {
+proto.hide = function( items ) {
+  this._emitCompleteOnItems( 'hide', items );
+  if ( !items || !items.length ) {
     return;
   }
-  for ( var i=0; i < len; i++ ) {
-    var item = items[i];
+  var stagger = this.updateStagger();
+  items.forEach( function( item, i ) {
+    item.stagger( i * stagger );
     item.hide();
-  }
+  });
+};
+
+/**
+ * reveal item elements
+ * @param {Array}, {Element}, {NodeList} items
+ */
+proto.revealItemElements = function( elems ) {
+  var items = this.getItems( elems );
+  this.reveal( items );
+};
+
+/**
+ * hide item elements
+ * @param {Array}, {Element}, {NodeList} items
+ */
+proto.hideItemElements = function( elems ) {
+  var items = this.getItems( elems );
+  this.hide( items );
 };
 
 /**
@@ -50218,11 +45049,11 @@ Outlayer.prototype.hide = function( items ) {
  * @param {Function} callback
  * @returns {Outlayer.Item} item
  */
-Outlayer.prototype.getItem = function( elem ) {
+proto.getItem = function( elem ) {
   // loop through items to get the one that matches
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
+  for ( var i=0; i < this.items.length; i++ ) {
     var item = this.items[i];
-    if ( item.element === elem ) {
+    if ( item.element == elem ) {
       // return item
       return item;
     }
@@ -50234,18 +45065,15 @@ Outlayer.prototype.getItem = function( elem ) {
  * @param {Array} elems
  * @returns {Array} items - Outlayer.Items
  */
-Outlayer.prototype.getItems = function( elems ) {
-  if ( !elems || !elems.length ) {
-    return;
-  }
+proto.getItems = function( elems ) {
+  elems = utils.makeArray( elems );
   var items = [];
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
+  elems.forEach( function( elem ) {
     var item = this.getItem( elem );
     if ( item ) {
       items.push( item );
     }
-  }
+  }, this );
 
   return items;
 };
@@ -50254,41 +45082,36 @@ Outlayer.prototype.getItems = function( elems ) {
  * remove element(s) from instance and DOM
  * @param {Array or NodeList or Element} elems
  */
-Outlayer.prototype.remove = function( elems ) {
-  elems = makeArray( elems );
-
+proto.remove = function( elems ) {
   var removeItems = this.getItems( elems );
+
+  this._emitCompleteOnItems( 'remove', removeItems );
+
   // bail if no items to remove
   if ( !removeItems || !removeItems.length ) {
     return;
   }
 
-  this._itemsOn( removeItems, 'remove', function() {
-    this.emitEvent( 'removeComplete', [ this, removeItems ] );
-  });
-
-  for ( var i=0, len = removeItems.length; i < len; i++ ) {
-    var item = removeItems[i];
+  removeItems.forEach( function( item ) {
     item.remove();
     // remove item from collection
-    removeFrom( item, this.items );
-  }
+    utils.removeFrom( this.items, item );
+  }, this );
 };
 
 // ----- destroy ----- //
 
 // remove and disable Outlayer instance
-Outlayer.prototype.destroy = function() {
+proto.destroy = function() {
   // clean up dynamic styles
   var style = this.element.style;
   style.height = '';
   style.position = '';
   style.width = '';
   // destroy items
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    var item = this.items[i];
+  this.items.forEach( function( item ) {
     item.destroy();
-  }
+  });
 
   this.unbindResize();
 
@@ -50310,6 +45133,7 @@ Outlayer.prototype.destroy = function() {
  * @returns {Outlayer}
  */
 Outlayer.data = function( elem ) {
+  elem = utils.getQueryElement( elem );
   var id = elem && elem.outlayerGUID;
   return id && instances[ id ];
 };
@@ -50323,69 +45147,22 @@ Outlayer.data = function( elem ) {
  */
 Outlayer.create = function( namespace, options ) {
   // sub-class Outlayer
-  function Layout() {
-    Outlayer.apply( this, arguments );
-  }
-  // inherit Outlayer prototype, use Object.create if there
-  if ( Object.create ) {
-    Layout.prototype = Object.create( Outlayer.prototype );
-  } else {
-    extend( Layout.prototype, Outlayer.prototype );
-  }
-  // set contructor, used for namespace and Item
-  Layout.prototype.constructor = Layout;
-
-  Layout.defaults = extend( {}, Outlayer.defaults );
-  // apply new options
-  extend( Layout.defaults, options );
-  // keep prototype.settings for backwards compatibility (Packery v1.2.0)
-  Layout.prototype.settings = {};
+  var Layout = subclass( Outlayer );
+  // apply new options and compatOptions
+  Layout.defaults = utils.extend( {}, Outlayer.defaults );
+  utils.extend( Layout.defaults, options );
+  Layout.compatOptions = utils.extend( {}, Outlayer.compatOptions  );
 
   Layout.namespace = namespace;
 
   Layout.data = Outlayer.data;
 
   // sub-class Item
-  Layout.Item = function LayoutItem() {
-    Item.apply( this, arguments );
-  };
-
-  Layout.Item.prototype = new Item();
+  Layout.Item = subclass( Item );
 
   // -------------------------- declarative -------------------------- //
 
-  /**
-   * allow user to initialize Outlayer via .js-namespace class
-   * options are parsed from data-namespace-option attribute
-   */
-  docReady( function() {
-    var dashedNamespace = toDashed( namespace );
-    var elems = document.querySelectorAll( '.js-' + dashedNamespace );
-    var dataAttr = 'data-' + dashedNamespace + '-options';
-
-    for ( var i=0, len = elems.length; i < len; i++ ) {
-      var elem = elems[i];
-      var attr = elem.getAttribute( dataAttr );
-      var options;
-      try {
-        options = attr && JSON.parse( attr );
-      } catch ( error ) {
-        // log error, do not initialize
-        if ( console ) {
-          console.error( 'Error parsing ' + dataAttr + ' on ' +
-            elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
-            error );
-        }
-        continue;
-      }
-      // initialize
-      var instance = new Layout( elem, options );
-      // make available via $().data('layoutname')
-      if ( jQuery ) {
-        jQuery.data( elem, namespace, instance );
-      }
-    }
-  });
+  utils.htmlInit( Layout, namespace );
 
   // -------------------------- jQuery bridge -------------------------- //
 
@@ -50397,6 +45174,42 @@ Outlayer.create = function( namespace, options ) {
   return Layout;
 };
 
+function subclass( Parent ) {
+  function SubClass() {
+    Parent.apply( this, arguments );
+  }
+
+  SubClass.prototype = Object.create( Parent.prototype );
+  SubClass.prototype.constructor = SubClass;
+
+  return SubClass;
+}
+
+// ----- helpers ----- //
+
+// how many milliseconds are in each unit
+var msUnits = {
+  ms: 1,
+  s: 1000
+};
+
+// munge time-like parameter into millisecond number
+// '0.4s' -> 40
+function getMilliseconds( time ) {
+  if ( typeof time == 'number' ) {
+    return time;
+  }
+  var matches = time.match( /(^\d*\.?\d*)(\w*)/ );
+  var num = matches && matches[1];
+  var unit = matches && matches[2];
+  if ( !num.length ) {
+    return 0;
+  }
+  num = parseFloat( num );
+  var mult = msUnits[ unit ] || 1;
+  return num * mult;
+}
+
 // ----- fin ----- //
 
 // back in global
@@ -50404,47 +45217,10 @@ Outlayer.Item = Item;
 
 return Outlayer;
 
-}
-
-// -------------------------- transport -------------------------- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( 'outlayer/outlayer',[
-      'eventie/eventie',
-      'doc-ready/doc-ready',
-      'eventEmitter/EventEmitter',
-      'get-size/get-size',
-      'matches-selector/matches-selector',
-      './item'
-    ],
-    outlayerDefinition );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS
-  module.exports = outlayerDefinition(
-    require('eventie'),
-    require('doc-ready'),
-    require('wolfy87-eventemitter'),
-    require('get-size'),
-    require('desandro-matches-selector'),
-    require('./item')
-  );
-} else {
-  // browser global
-  window.Outlayer = outlayerDefinition(
-    window.eventie,
-    window.docReady,
-    window.EventEmitter,
-    window.getSize,
-    window.matchesSelector,
-    window.Outlayer.Item
-  );
-}
-
-})( window );
+}));
 
 /*!
- * Masonry v3.2.3
+ * Masonry v4.1.1
  * Cascading grid layout library
  * http://masonry.desandro.com
  * MIT License
@@ -50452,16 +45228,16 @@ if ( typeof define === 'function' && define.amd ) {
  */
 
 ( function( window, factory ) {
-  
   // universal module definition
-  if ( typeof define === 'function' && define.amd ) {
+  /* jshint strict: false */ /*globals define, module, require */
+  if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'masonry',[
         'outlayer/outlayer',
         'get-size/get-size'
       ],
       factory );
-  } else if ( typeof exports === 'object' ) {
+  } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
       require('outlayer'),
@@ -50479,26 +45255,12 @@ if ( typeof define === 'function' && define.amd ) {
 
 
 
-// -------------------------- helpers -------------------------- //
-
-var indexOf = Array.prototype.indexOf ?
-  function( items, value ) {
-    return items.indexOf( value );
-  } :
-  function ( items, value ) {
-    for ( var i=0, len = items.length; i < len; i++ ) {
-      var item = items[i];
-      if ( item === value ) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
 // -------------------------- masonryDefinition -------------------------- //
 
   // create an Outlayer layout class
   var Masonry = Outlayer.create('masonry');
+  // isFitWidth -> fitWidth
+  Masonry.compatOptions.fitWidth = 'isFitWidth';
 
   Masonry.prototype._resetLayout = function() {
     this.getSize();
@@ -50507,9 +45269,8 @@ var indexOf = Array.prototype.indexOf ?
     this.measureColumns();
 
     // reset column Y
-    var i = this.cols;
     this.colYs = [];
-    while (i--) {
+    for ( var i=0; i < this.cols; i++ ) {
       this.colYs.push( 0 );
     }
 
@@ -50543,7 +45304,8 @@ var indexOf = Array.prototype.indexOf ?
 
   Masonry.prototype.getContainerWidth = function() {
     // container is parent if fit width
-    var container = this.options.isFitWidth ? this.element.parentNode : this.element;
+    var isFitWidth = this._getOption('fitWidth');
+    var container = isFitWidth ? this.element.parentNode : this.element;
     // check that this.size and size are there
     // IE8 triggers resize on body size change, so they might not be
     var size = getSize( container );
@@ -50562,7 +45324,7 @@ var indexOf = Array.prototype.indexOf ?
     var colGroup = this._getColGroup( colSpan );
     // get the minimum Y value from the columns
     var minimumY = Math.min.apply( Math, colGroup );
-    var shortColIndex = indexOf( colGroup, minimumY );
+    var shortColIndex = colGroup.indexOf( minimumY );
 
     // position the brick
     var position = {
@@ -50607,7 +45369,8 @@ var indexOf = Array.prototype.indexOf ?
     var stampSize = getSize( stamp );
     var offset = this._getElementOffset( stamp );
     // get the columns that this stamp affects
-    var firstX = this.options.isOriginLeft ? offset.left : offset.right;
+    var isOriginLeft = this._getOption('originLeft');
+    var firstX = isOriginLeft ? offset.left : offset.right;
     var lastX = firstX + stampSize.outerWidth;
     var firstCol = Math.floor( firstX / this.columnWidth );
     firstCol = Math.max( 0, firstCol );
@@ -50616,7 +45379,9 @@ var indexOf = Array.prototype.indexOf ?
     lastCol -= lastX % this.columnWidth ? 0 : 1;
     lastCol = Math.min( this.cols - 1, lastCol );
     // set colYs to bottom of the stamp
-    var stampMaxY = ( this.options.isOriginTop ? offset.top : offset.bottom ) +
+
+    var isOriginTop = this._getOption('originTop');
+    var stampMaxY = ( isOriginTop ? offset.top : offset.bottom ) +
       stampSize.outerHeight;
     for ( var i = firstCol; i <= lastCol; i++ ) {
       this.colYs[i] = Math.max( stampMaxY, this.colYs[i] );
@@ -50629,7 +45394,7 @@ var indexOf = Array.prototype.indexOf ?
       height: this.maxY
     };
 
-    if ( this.options.isFitWidth ) {
+    if ( this._getOption('fitWidth') ) {
       size.width = this._getContainerFitWidth();
     }
 
@@ -50653,7 +45418,7 @@ var indexOf = Array.prototype.indexOf ?
   Masonry.prototype.needsResizeLayout = function() {
     var previousWidth = this.containerWidth;
     this.getContainerWidth();
-    return previousWidth !== this.containerWidth;
+    return previousWidth != this.containerWidth;
   };
 
   return Masonry;
@@ -50705,13 +45470,27 @@ var indexOf = Array.prototype.indexOf ?
 
         init: function masonryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
-            $(document).trigger("clear-imagesloaded-cache");
-            this.initMasonry();
-            this.$el.imagesLoaded(this.layout.bind(this));
+            var imgLoad = imagesLoaded(this.$el);
+            imgLoad.on("progress", function() {
+                if (! this.msnry) {
+                    this.initMasonry();
+                }
+                this.quicklayout();
+            }.bind(this));
+            imgLoad.on("always", function () {
+                if (! this.msnry) {
+                    this.initMasonry();
+                }
+                this.layout();
+            }.bind(this));
             // Update if something gets injected inside the pat-masonry
             // element.
-            this.$el.on("patterns-injected.pat-masonry",
-                    utils.debounce(this.update.bind(this), 100));
+            this.$el
+                .on("patterns-injected.pat-masonry",
+                    utils.debounce(this.update.bind(this), 100))
+                .on("pat-update",
+                    utils.debounce(this.quicklayout.bind(this), 200));
+
         },
 
         initMasonry: function () {
@@ -50747,12 +45526,27 @@ var indexOf = Array.prototype.indexOf ?
             this.layout();
         },
 
+        quicklayout: function() {
+            if (!this.msnry) {
+                // Not initialized yet
+                return;
+            }
+            // call masonry layout on the children before calling it on this element
+            this.$el.find('.pat-masonry').each(
+                function(idx, child) {
+                    $(child).patMasonry('quicklayout');
+                }
+            );
+            this.msnry.layout();
+        },
+
         layout: function () {
             this.$el.removeClass("masonry-ready");
             this.msnry.on("layoutComplete", function() {
                 this.$el.addClass("masonry-ready");
             }.bind(this));
             this.msnry.layout();
+            this.quicklayout();
         },
 
         getTypeCastedValue: function (original) {
@@ -50819,7 +45613,7 @@ define('pat-scroll',[
             if (this.options.trigger == "auto") {
                 // Only calculate the offset when all images are loaded
                 var that = this;
-                $('body').imagesLoaded( function() {
+                imagesLoaded($('body'), function() {
                    that.smoothScroll();
                 });
             } else if (this.options.trigger == "click") {
@@ -50852,12 +45646,12 @@ define('pat-scroll',[
         clearIfHidden: function(ev) {
             var active_target = '#' + window.location.hash.substr(1),
                 $active_target = $(active_target),
-                target = this.$el[0].href.split('/').pop();
+                target = '#' + this.$el[0].href.split('#').pop();
             if ($active_target.length > 0) {
                 if (active_target != target) {
                     // if the element does not match the one listed in the url #,
                     // clear the current class from it.
-                    var $target = $(this.$el[0].href.split('/').pop());
+                    var $target = $('#' + this.$el[0].href.split('#').pop());
                     $target.removeClass("current");
                     this.$el.removeClass("current");
                 }
@@ -50912,46 +45706,59 @@ define('pat-scroll',[
 
         smoothScroll: function() {
             var scroll = this.options.direction == "top" ? 'scrollTop' : 'scrollLeft',
-                $el, options = {};
+                scrollable, options = {};
             if (typeof this.options.offset != "undefined") {
-                $el = this.options.selector ? $(this.options.selector) : this.$el;
+                // apply scroll options directly
+                scrollable = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
             } else {
-                // Get the first element with overflow auto starting from the trigger
-                // (the scroll container)
-                // Then calculate the offset relatively to that container
-                $el = $(this.$el.parents()
-                    .filter(function() { 
-                        return $(this).css('overflow') === 'auto'; })
-                    .first())
-                if (typeof $el[0] === 'undefined') {
-                    $el = $('html, body');
+                // Get the first element with overflow (the scroll container)
+                // starting from the *target*
+                // The intent is to move target into view within scrollable
+                // if the scrollable has no scrollbar, do not scroll body
+
+                href = this.$el.attr('href');
+                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
+                var target = $('#'+fragment);
+                if (target.length === 0) {
+                    return;
                 }
 
-                var scroll_container = Math.floor( $el.offset().top );
-                var target = Math.floor( $(this.$el.attr('href')).offset().top );
+                scrollable = $(target.parents().filter(function() {
+                    return ( $(this).css('overflow') === 'auto' ||
+                             $(this).css('overflow') === 'scroll' );
+                }).first())
 
-                if (target == scroll_container) {
-                    options[scroll] = scroll_container;
-                } else if (target >= scroll_container) {
-                    options[scroll] = target - scroll_container;
-                    $el.animate(options, {
-                        duration: 500,
-                        start: function() {
-                            $('.pat-scroll').addClass('pat-scroll-animated');
-                        }
-                    });
+                if ( typeof scrollable[0] === 'undefined' ) {
+                    scrollable = $('html, body');
+                    // positioning context is document
+                    if ( scroll === "scrollTop" ) {
+                        options[scroll] = Math.floor(target.offset().top);
+                    } else {
+                        options[scroll] = Math.floor(target.offset().left);
+                    }
+                } else if ( scroll === "scrollTop" ) {
+                    // difference between target top and scrollable top becomes 0
+                    options[scroll] = Math.floor(scrollable.scrollTop()
+                                                 + target.offset().top
+                                                 - scrollable.offset().top);
                 } else {
-                    options[scroll] = target + scroll_container ;
-                    $el.animate(options, {
-                        duration: 500,
-                        start: function() {
-                            $('.pat-scroll').addClass('pat-scroll-animated');
-                        }
-                    });
+                    options[scroll] = Math.floor(scrollable.scrollLeft()
+                                                 + target.offset().left
+                                                 - scrollable.offset().left);
                 }
             }
+
+            // execute the scroll
+            scrollable.animate(options, {
+                duration: 500,
+                start: function() {
+                    $('.pat-scroll').addClass('pat-scroll-animated');
+                }
+            });
         }
+
+
     });
 });
 
@@ -52047,7 +46854,8 @@ define('pat-sortable',[
 
         onDragStart: function (ev) {
             var $handle = $(ev.target),
-                $dragged = $handle.parent();
+                $dragged = $handle.parent(),
+                that = this;
             if (typeof ev.originalEvent !== "undefined") {
                 // Firefox seems to need this set to any value
                 ev.originalEvent.dataTransfer.setData("Text", "");
@@ -52073,7 +46881,7 @@ define('pat-sortable',[
             this.$sortables.on("dragover.pat-sortable", function(ev) {
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
-                var $dropTarget = $(ev.target),
+                var $dropTarget = $(ev.target).closest(that.options.selector),
                     midlineY = $dropTarget.offset().top - $(document).scrollTop() + $dropTarget.height()/2;
 
                 if ($dropTarget.is($dragged)) {
@@ -52092,7 +46900,7 @@ define('pat-sortable',[
             }.bind(this));
 
             this.$sortables.on("drop.pat-sortable", function(ev) {
-                var $dropTarget = $(ev.target);
+                var $dropTarget = $(ev.target).closest(that.options.selector);
                 if ($dropTarget.is($dragged)) {
                     return;
                 }
@@ -52102,7 +46910,7 @@ define('pat-sortable',[
                     $dropTarget.before($dragged);
                 }
                 $dropTarget.removeClass("drop-target-above drop-target-below");
-                ev.prevDefault();
+                ev.preventDefault();
             });
         }
     });
@@ -52230,6 +47038,528 @@ define('pat-stacks',[
     });
 });
 
+(function(doc, win) {
+    var watchArray = [],
+        scroll,
+        initialized = false,
+        html = doc.documentElement,
+        noop = function() {},
+        checkTimer,
+
+        //visibility API strings
+        hiddenPropertyName = 'hidden',
+        visibilityChangeEventName = 'visibilitychange';
+
+    //fallback to prefixed names in old webkit browsers
+    if (doc.webkitHidden !== undefined) {
+        hiddenPropertyName = 'webkitHidden';
+        visibilityChangeEventName = 'webkitvisibilitychange';
+    }
+
+    //test getComputedStyle
+    if (!win.getComputedStyle) {
+        seppuku();
+    }
+
+    //test for native support
+    var prefixes = ['', '-webkit-', '-moz-', '-ms-'],
+        block = document.createElement('div');
+
+    for (var i = prefixes.length - 1; i >= 0; i--) {
+        try {
+            block.style.position = prefixes[i] + 'sticky';
+        }
+        catch(e) {}
+        if (block.style.position != '') {
+            seppuku();
+        }
+    }
+
+    updateScrollPos();
+
+    //commit seppuku!
+    function seppuku() {
+        init = add = rebuild = pause = stop = kill = noop;
+    }
+
+    function mergeObjects(targetObj, sourceObject) {
+        for (var key in sourceObject) {
+            if (sourceObject.hasOwnProperty(key)) {
+                targetObj[key] = sourceObject[key];
+            }
+        }
+    }
+
+    function parseNumeric(val) {
+        return parseFloat(val) || 0;
+    }
+
+    function updateScrollPos() {
+        scroll = {
+            top: win.pageYOffset,
+            left: win.pageXOffset
+        };
+    }
+
+    function onScroll() {
+        if (win.pageXOffset != scroll.left) {
+            updateScrollPos();
+            rebuild();
+            return;
+        }
+        
+        if (win.pageYOffset != scroll.top) {
+            updateScrollPos();
+            recalcAllPos();
+        }
+    }
+
+    //fixes flickering
+    function onWheel(event) {
+        setTimeout(function() {
+            if (win.pageYOffset != scroll.top) {
+                scroll.top = win.pageYOffset;
+                recalcAllPos();
+            }
+        }, 0);
+    }
+
+    function recalcAllPos() {
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            recalcElementPos(watchArray[i]);
+        }
+    }
+
+    function recalcElementPos(el) {
+        if (!el.inited) return;
+
+        var currentMode = (scroll.top <= el.limit.start? 0: scroll.top >= el.limit.end? 2: 1);
+
+        if (el.mode != currentMode) {
+            switchElementMode(el, currentMode);
+        }
+    }
+
+    //checks whether stickies start or stop positions have changed
+    function fastCheck() {
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            if (!watchArray[i].inited) continue;
+
+            var deltaTop = Math.abs(getDocOffsetTop(watchArray[i].clone) - watchArray[i].docOffsetTop),
+                deltaHeight = Math.abs(watchArray[i].parent.node.offsetHeight - watchArray[i].parent.height);
+
+            if (deltaTop >= 2 || deltaHeight >= 2) return false;
+        }
+        return true;
+    }
+
+    function initElement(el) {
+        if (isNaN(parseFloat(el.computed.top)) || el.isCell || el.computed.display == 'none') return;
+
+        el.inited = true;
+
+        if (!el.clone) clone(el);
+        if (el.parent.computed.position != 'absolute' &&
+            el.parent.computed.position != 'relative') el.parent.node.style.position = 'relative';
+
+        recalcElementPos(el);
+
+        el.parent.height = el.parent.node.offsetHeight;
+        el.docOffsetTop = getDocOffsetTop(el.clone);
+    }
+
+    function deinitElement(el) {
+        var deinitParent = true;
+
+        el.clone && killClone(el);
+        mergeObjects(el.node.style, el.css);
+
+        //check whether element's parent is used by other stickies
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            if (watchArray[i].node !== el.node && watchArray[i].parent.node === el.parent.node) {
+                deinitParent = false;
+                break;
+            }
+        };
+
+        if (deinitParent) el.parent.node.style.position = el.parent.css.position;
+        el.mode = -1;
+    }
+
+    function initAll() {
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            initElement(watchArray[i]);
+        }
+    }
+
+    function deinitAll() {
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            deinitElement(watchArray[i]);
+        }
+    }
+
+    function switchElementMode(el, mode) {
+        var nodeStyle = el.node.style;
+
+        switch (mode) {
+            case 0:
+                nodeStyle.position = 'absolute';
+                nodeStyle.left = el.offset.left + 'px';
+                nodeStyle.right = el.offset.right + 'px';
+                nodeStyle.top = el.offset.top + 'px';
+                nodeStyle.bottom = 'auto';
+                nodeStyle.width = 'auto';
+                nodeStyle.marginLeft = 0;
+                nodeStyle.marginRight = 0;
+                nodeStyle.marginTop = 0;
+                break;
+
+            case 1:
+                nodeStyle.position = 'fixed';
+                nodeStyle.left = el.box.left + 'px';
+                nodeStyle.right = el.box.right + 'px';
+                nodeStyle.top = el.css.top;
+                nodeStyle.bottom = 'auto';
+                nodeStyle.width = 'auto';
+                nodeStyle.marginLeft = 0;
+                nodeStyle.marginRight = 0;
+                nodeStyle.marginTop = 0;
+                break;
+
+            case 2:
+                nodeStyle.position = 'absolute';
+                nodeStyle.left = el.offset.left + 'px';
+                nodeStyle.right = el.offset.right + 'px';
+                nodeStyle.top = 'auto';
+                nodeStyle.bottom = 0;
+                nodeStyle.width = 'auto';
+                nodeStyle.marginLeft = 0;
+                nodeStyle.marginRight = 0;
+                break;
+        }
+
+        el.mode = mode;
+    }
+
+    function clone(el) {
+        el.clone = document.createElement('div');
+
+        var refElement = el.node.nextSibling || el.node,
+            cloneStyle = el.clone.style;
+
+        cloneStyle.height = el.height + 'px';
+        cloneStyle.width = el.width + 'px';
+        cloneStyle.marginTop = el.computed.marginTop;
+        cloneStyle.marginBottom = el.computed.marginBottom;
+        cloneStyle.marginLeft = el.computed.marginLeft;
+        cloneStyle.marginRight = el.computed.marginRight;
+        cloneStyle.padding = cloneStyle.border = cloneStyle.borderSpacing = 0;
+        cloneStyle.fontSize = '1em';
+        cloneStyle.position = 'static';
+        cloneStyle.cssFloat = el.computed.cssFloat;
+
+        el.node.parentNode.insertBefore(el.clone, refElement);
+    }
+
+    function killClone(el) {
+        el.clone.parentNode.removeChild(el.clone);
+        el.clone = undefined;
+    }
+
+    function getElementParams(node) {
+        var computedStyle = getComputedStyle(node),
+            parentNode = node.parentNode,
+            parentComputedStyle = getComputedStyle(parentNode),
+            cachedPosition = node.style.position;
+
+        node.style.position = 'relative';
+
+        var computed = {
+                top: computedStyle.top,
+                marginTop: computedStyle.marginTop,
+                marginBottom: computedStyle.marginBottom,
+                marginLeft: computedStyle.marginLeft,
+                marginRight: computedStyle.marginRight,
+                cssFloat: computedStyle.cssFloat,
+                display: computedStyle.display
+            },
+            numeric = {
+                top: parseNumeric(computedStyle.top),
+                marginBottom: parseNumeric(computedStyle.marginBottom),
+                paddingLeft: parseNumeric(computedStyle.paddingLeft),
+                paddingRight: parseNumeric(computedStyle.paddingRight),
+                borderLeftWidth: parseNumeric(computedStyle.borderLeftWidth),
+                borderRightWidth: parseNumeric(computedStyle.borderRightWidth)
+            };
+
+        node.style.position = cachedPosition;
+
+        var css = {
+                position: node.style.position,
+                top: node.style.top,
+                bottom: node.style.bottom,
+                left: node.style.left,
+                right: node.style.right,
+                width: node.style.width,
+                marginTop: node.style.marginTop,
+                marginLeft: node.style.marginLeft,
+                marginRight: node.style.marginRight
+            },
+            nodeOffset = getElementOffset(node),
+            parentOffset = getElementOffset(parentNode),
+            
+            parent = {
+                node: parentNode,
+                css: {
+                    position: parentNode.style.position
+                },
+                computed: {
+                    position: parentComputedStyle.position
+                },
+                numeric: {
+                    borderLeftWidth: parseNumeric(parentComputedStyle.borderLeftWidth),
+                    borderRightWidth: parseNumeric(parentComputedStyle.borderRightWidth),
+                    borderTopWidth: parseNumeric(parentComputedStyle.borderTopWidth),
+                    borderBottomWidth: parseNumeric(parentComputedStyle.borderBottomWidth)
+                }
+            },
+
+            el = {
+                node: node,
+                box: {
+                    left: nodeOffset.win.left,
+                    right: html.clientWidth - nodeOffset.win.right
+                },
+                offset: {
+                    top: nodeOffset.win.top - parentOffset.win.top - parent.numeric.borderTopWidth,
+                    left: nodeOffset.win.left - parentOffset.win.left - parent.numeric.borderLeftWidth,
+                    right: -nodeOffset.win.right + parentOffset.win.right - parent.numeric.borderRightWidth
+                },
+                css: css,
+                isCell: computedStyle.display == 'table-cell',
+                computed: computed,
+                numeric: numeric,
+                width: nodeOffset.win.right - nodeOffset.win.left,
+                height: nodeOffset.win.bottom - nodeOffset.win.top,
+                mode: -1,
+                inited: false,
+                parent: parent,
+                limit: {
+                    start: nodeOffset.doc.top - numeric.top,
+                    end: parentOffset.doc.top + parentNode.offsetHeight - parent.numeric.borderBottomWidth -
+                        node.offsetHeight - numeric.top - numeric.marginBottom
+                }
+            };
+
+        return el;
+    }
+
+    function getDocOffsetTop(node) {
+        var docOffsetTop = 0;
+
+        while (node) {
+            docOffsetTop += node.offsetTop;
+            node = node.offsetParent;
+        }
+
+        return docOffsetTop;
+    }
+
+    function getElementOffset(node) {
+        var box = node.getBoundingClientRect();
+
+            return {
+                doc: {
+                    top: box.top + win.pageYOffset,
+                    left: box.left + win.pageXOffset
+                },
+                win: box
+            };
+    }
+
+    function startFastCheckTimer() {
+        checkTimer = setInterval(function() {
+            !fastCheck() && rebuild();
+        }, 500);
+    }
+
+    function stopFastCheckTimer() {
+        clearInterval(checkTimer);
+    }
+
+    function handlePageVisibilityChange() {
+        if (!initialized) return;
+
+        if (document[hiddenPropertyName]) {
+            stopFastCheckTimer();
+        }
+        else {
+            startFastCheckTimer();
+        }
+    }
+
+    function init() {
+        if (initialized) return;
+
+        updateScrollPos();
+        initAll();
+
+        win.addEventListener('scroll', onScroll);
+        win.addEventListener('wheel', onWheel);
+
+        //watch for width changes
+        win.addEventListener('resize', rebuild);
+        win.addEventListener('orientationchange', rebuild);
+
+        //watch for page visibility
+        doc.addEventListener(visibilityChangeEventName, handlePageVisibilityChange);
+
+        startFastCheckTimer();
+
+        initialized = true;
+    }
+
+    function rebuild() {
+        if (!initialized) return;
+
+        deinitAll();
+        
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            watchArray[i] = getElementParams(watchArray[i].node);
+        }
+        
+        initAll();
+    }
+
+    function pause() {
+        win.removeEventListener('scroll', onScroll);
+        win.removeEventListener('wheel', onWheel);
+        win.removeEventListener('resize', rebuild);
+        win.removeEventListener('orientationchange', rebuild);
+        doc.removeEventListener(visibilityChangeEventName, handlePageVisibilityChange);
+
+        stopFastCheckTimer();
+
+        initialized = false;
+    }
+
+    function stop() {
+        pause();
+        deinitAll(); 
+    }
+
+    function kill() {
+        stop();
+
+        //empty the array without loosing the references,
+        //the most performant method according to http://jsperf.com/empty-javascript-array
+        while (watchArray.length) {
+            watchArray.pop();
+        }
+    }
+
+    function add(node) {
+        //check if Stickyfill is already applied to the node
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            if (watchArray[i].node === node) return;
+        };
+
+        var el = getElementParams(node);
+
+        watchArray.push(el);
+
+        if (!initialized) {
+            init();
+        }
+        else {
+            initElement(el);
+        }
+    }
+
+    function remove(node) {
+        for (var i = watchArray.length - 1; i >= 0; i--) {
+            if (watchArray[i].node === node) {
+                deinitElement(watchArray[i]);
+                watchArray.splice(i, 1);
+            }
+        };
+    }
+
+    //expose Stickyfill
+    win.Stickyfill = {
+        stickies: watchArray,
+        add: add,
+        remove: remove,
+        init: init,
+        rebuild: rebuild,
+        pause: pause,
+        stop: stop,
+        kill: kill
+    };
+})(document, window);
+
+
+//if jQuery is available -- create a plugin
+if (window.jQuery) {
+    (function($) {
+        $.fn.Stickyfill = function(options) {
+            this.each(function() {
+                Stickyfill.add(this);
+            });
+
+            return this;
+        };
+    })(window.jQuery);
+}
+;
+define("stickyfill", function(){});
+
+/* pat-date-picker  - Polyfill for input type=date */
+define('pat-sticky',[
+    "underscore",
+    "pat-parser",
+    "pat-registry",
+    "pat-base",
+    "pat-logger",
+    "stickyfill",
+], function(_, Parser, registry, Base, logger, Stickyfill) {
+    "use strict";
+    var parser = new Parser("sticky");
+    var log = logger.getLogger("sticky")
+    parser.addArgument("selector", "");
+
+    return Base.extend({
+        name: "sticky",
+        trigger: ".pat-sticky",
+        init: function() {
+            this.options = parser.parse(this.$el);
+            this.makeSticky();
+            this.$el.on('pat-update', this.onPatternUpdate.bind(this));
+            return this.$el;
+        },
+        onPatternUpdate: function (ev, data) {
+            /* Handler which gets called when pat-update is triggered within
+             * the .pat-sticky element.
+             */
+            this.makeSticky();
+            return true;
+        },
+        makeSticky: function() {
+            if (this.options.selector === "") {
+                this.$stickies = this.$el;
+            } else {
+                this.$stickies = this.$el.children().filter(this.options.selector);
+            }
+            this.$stickies.each(function () {
+                $(this).Stickyfill();
+            });
+        }
+    });
+});
+
+// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// vim: sw=4 expandtab
+;
 /**
  * Patterns subform - scoped submission of form content
  *
@@ -56547,6 +51877,7 @@ define('patterns',[
     "pat-slideshow-builder",
     "pat-sortable",
     "pat-stacks",
+    "pat-sticky",
     "pat-subform",
     "pat-switch",
     "pat-syntax-highlight",
