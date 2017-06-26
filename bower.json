@@ -10,6 +10,7 @@
     "almond": "",
     "AnythingSlider": "1.8.17",
     "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",
+    "ev-emitter": "1.0.3",
     "fullcalendar": "https://github.com/arshaw/fullcalendar/releases/download/v2.0.0/fullcalendar-2.0.0.zip",
     "google-code-prettify": "~1.0.4",
     "imagesloaded": "~4.1.1",

@@ -10,7 +10,7 @@ if (typeof(require) === "undefined") {
 require.config({
     baseUrl: "src",
     paths: {
-        "ev-emitter":                       "bower_components/ev-emitter/ev-emitter",
+        "ev-emitter":                       "bower_components/ev-emitter",
         "get-size":                         "bower_components/get-size/get-size",
         "google-code-prettify":             "bower_components/google-code-prettify/src/prettify",
         "imagesloaded":                     "bower_components/imagesloaded/imagesloaded",
