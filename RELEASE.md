@@ -30,9 +30,23 @@ First, update the version number in bower.json, package.json, VERSION.txt and ad
 ## checkout master, update VERSION.txt to the next logical version number and append '-dev' to it.
 
 ## Create the release in github
-## Go to https://github.com/Patternslib/Patterns/releases/
-## Click the new tag
-## Click "Edit tag"
-## Add a Title, e.g. "2.0.14 - Aug 15, 2016"
-## Copy the corresponding changelog part into the body field
-## Finally click "Publish release"
+
+- Go to https://github.com/Patternslib/Patterns/releases/
+- Click the new tag
+- Click "Edit tag"
+- Add a Title, e.g. "2.0.14 - Aug 15, 2016"
+- Copy the corresponding changelog part into the body field
+- Finally click "Publish release"
+
+## Now contact support@syslab.com and request an update of the patternslib.com site as well.
+
+This is done as follows:
+
+- Log into patternslib.syslab.com
+
+    sudo -iu patternslib
+    cd Patterns-site
+    cd patternslib
+    git pull
+    make clean && make bundle
+
