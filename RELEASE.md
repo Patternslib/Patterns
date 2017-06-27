@@ -28,3 +28,11 @@ First, update the version number in bower.json, package.json, VERSION.txt and ad
     git push && git push --tags
 
 ## checkout master, update VERSION.txt to the next logical version number and append '-dev' to it.
+
+## Create the release in github
+## Go to https://github.com/Patternslib/Patterns/releases/
+## Click the new tag
+## Click "Edit tag"
+## Add a Title, e.g. "2.0.14 - Aug 15, 2016"
+## Copy the corresponding changelog part into the body field
+## Finally click "Publish release"
