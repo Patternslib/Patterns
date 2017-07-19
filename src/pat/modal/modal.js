@@ -64,7 +64,7 @@ define([
             } else {
                 this.$el.append("<div class='panel-content' />");
             }
-            $(".panel-content", this.$el).before($header);
+            this.$el.children(".panel-content").before($header);
             this.$el.children(this.options.panelHeaderContent).prependTo($header);
 
             // Restore focus in case the active element was a child of $el and
