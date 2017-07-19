@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.1 - unreleased
+
+- pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
+
+
 ## 2.1.0 - Jun. 26, 2017
 
 - pat-gallery: Also include the node with the ``pat-gallery`` class trigger for initializing the gallery.
