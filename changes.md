@@ -1,6 +1,14 @@
 # Changelog
 
-## 2.1.1 - unreleased
+## 2.2.0 - unreleased
+
+Changes
+~~~~~~~
+
+- Switched fully to npm for package retrieval, deprecating bower (pilz)
+
+Fixes 
+~~~~~
 
 - pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
 

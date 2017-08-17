@@ -1,4 +1,3 @@
-BOWER 		?= node_modules/.bin/bower
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
@@ -29,10 +28,6 @@ stamp-npm: package.json
 	npm install
 	touch stamp-npm
 
-stamp-bower: stamp-npm bower.json
-	$(BOWER) install
-	touch stamp-bower
-
 stamp-bundler:
 	mkdir -p .bundle
 	gem install --user bundler --bindir .bundle/bin
@@ -40,7 +35,7 @@ stamp-bundler:
 	touch stamp-bundler
 
 clean::
-	rm -f stamp-npm stamp-bower
+	rm -f stamp-npm
 	rm -rf node_modules src/bower_components
 
 ########################################################################
@@ -52,7 +47,7 @@ jshint: stamp-npm
 
 
 .PHONY: check
-check:: stamp-bower jshint
+check:: stamp-npm jshint
 	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests.html
 
 
@@ -61,8 +56,8 @@ check:: stamp-bower jshint
 
 build:: bundle all_css
 
-bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
-	node_modules/.bin/r.js -o build.js
+bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-npm
+	node_modules/.bin/webpack src/patterns.js dist/bundle.js
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $<

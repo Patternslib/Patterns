@@ -1,11 +1,8 @@
 var config;
-if (typeof(require) === "undefined") {
-    /* XXX: Hack to work around r.js's stupid parsing.
-     * We want to save the configuration in a variable so that we can reuse it in
-     * tests/main.js.
-     */
+/*if (typeof(require) === "undefined") {
     require = { config: function (c) { config = c; } };
 }
+*/
 
 require.config({
     baseUrl: "src",
@@ -152,6 +149,6 @@ require.config({
     },
 });
 
-if (typeof(require) === "function") {
+/*if (typeof(require) === "function") {
     require(["patterns"], function(patterns) {});
-}
+}*/
