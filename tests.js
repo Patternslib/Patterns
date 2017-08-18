@@ -1,8 +1,8 @@
 /* jshint sub: true */
 /* global config */
 //
-config.paths["jasmine"] =        "bower_components/jasmine/lib/jasmine-core/jasmine";
-config.paths["jasmine-html"] =   "bower_components/jasmine/lib/jasmine-core/jasmine-html";
+config.paths["jasmine"] =        "node_modules/jasmine/lib/jasmine-core/jasmine";
+config.paths["jasmine-html"] =   "node_modules/jasmine/lib/jasmine-core/jasmine-html";
 config.paths["console-runner"] = "../node_modules/phantom-jasmine/lib/console-runner";
 config.shim['jasmine-html'] = {
     deps: ['jasmine'],
