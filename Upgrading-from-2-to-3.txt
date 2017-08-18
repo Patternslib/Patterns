@@ -1,5 +1,14 @@
 # Upgrading from Patternslib 2 to 3
 
+## Requirements
+
+You need to be on a recent node and npm version.
+
+- node 6.11.2LTS or greater
+
+The change has been made with webpack 3.5.5. Patternslib is configured to fetch the latest version
+
+
 ## Reason for the Upgrade
 
 Bower (https://bower.io) is going slowly out of maintenance and now recommends webpack (https://webpack.js.org) as replacement.

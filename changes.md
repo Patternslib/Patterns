@@ -5,9 +5,11 @@
 Breaking Changes
 ~~~~~~~~~~~~~~~~
 
++++Large Upgrade, changing the build system. Read Upgrade-from-2-to-3.txt for details.
+
 - Switched fully to npm for package retrieval, deprecating bower (pilz)
 - Introduce webpack to create the bundle and deprecate require.js (pilz)
-  Read Upgrade-from-2-to-3.txt for details
+  Read Upgrade-from-2-to-3.txt for details.
 
 
 Fixes 
