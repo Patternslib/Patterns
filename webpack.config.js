@@ -1,18 +1,44 @@
 const path = require('path');
 var webpack = require('webpack');
 
+var fs = require('fs');
+var headerWrap = fs.readFileSync('./VERSION.txt', 'utf8');
+var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8');
+var WrapperPlugin = require('wrapper-webpack-plugin');
+
+const UglifyJsPlugin = require('webpack-uglify-js-plugin');
+
 module.exports = {
-	entry: './src/patterns.js',
-	output: {
-		filename: 'bundle.js',
-		path: path.resolve(__dirname, 'dist')
+	entry: {
+		"bundle": "./src/patterns.js",
+		"bundle.min": "./src/patterns.js"
 	},
-    // module: {
-	   //  loaders: [
-	   //    // { test: /underscore/, loader: 'exports-loader?_' },
-	   //    // { test: /backbone/, loader: 'exports-loader?Backbone!imports-loader?underscore,jquery' }
-	   //  ]
-    // },
+	output: {
+		filename: "[name].js",
+		path: path.resolve(__dirname)
+	},
+    // Like shims in require.js
+    module: {
+	    loaders: [
+	      { test: /jcrop/, loader: 'imports-loader?jquery' },
+	      { test: /jquery/, loader: 'exports-loader?jQuery' },
+	      { test: /jquery.anythingslider/, loader: 'imports-loader?jquery' },
+	      { test: /jquery.chosen/, loader: 'imports-loader?jquery' },
+	      { test: /jquery.placeholder/, loader: 'imports-loader?jquery' },
+	      { test: /jquery.textchange/, loader: 'imports-loader?jquery' },
+	      { test: /parsley/, loader: 'imports-loader?jquery' },
+	      { test: /parsley.extend/, loader: 'imports-loader?jquery' },
+	      { test: /select2/, loader: 'imports-loader?jquery' },
+	      { test: /spectrum/, loader: 'imports-loader?jquery' },
+
+	      { test: /showdown-github/, loader: 'imports-loader?showdown' },
+	      { test: /showdown-prettify/, loader: 'imports-loader?showdown,google-code-prettify' },
+	      { test: /showdown-table/, loader: 'imports-loader?showdown' },
+
+	      { test: /modernizr-csspositionsticky/, loader: 'imports-loader?modernizr' },
+	      // { test: /backbone/, loader: 'exports-loader?Backbone!imports-loader?underscore,jquery' }
+	    ]
+    },
 	resolve: {
 		modules: ['src', 'node_modules'],
 		alias: {
@@ -150,18 +176,26 @@ module.exports = {
             fs: 'empty'
         },
 	plugins: [
-			// new webpack.optimize.CommonsChunkPlugin({
-		 //    	name: 'vendor',
-		 //    	filename: 'vendor-[hash].min.js',
-		 //  	}),
-	        // new webpack.optimize.UglifyJsPlugin({
-	        // 	compress: {
-	        // 		warnings: false,
-	        // 		drop_console: false,
-	        // 	}
-	        // }),
-	        //new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
-	        new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]), // saves ~100k from build
-	    ]
+		new WrapperPlugin({
+	      test: /\.js$/, // only wrap output of bundle files with '.js' extension 
+	      header: headerWrap,
+	      footer: footerWrap
+	    }),
+        new UglifyJsPlugin({
+		  cacheFolder: path.resolve(__dirname, 'cache/'),
+		  debug: true,
+		  include: /\.min\.js$/,
+		  minimize: true,
+		  sourceMap: true,
+		  output: {
+		    comments: false
+		  },
+		  compressor: {
+		    warnings: false
+		  }
+		}),
+
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    ]
 };
 

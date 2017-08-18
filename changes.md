@@ -1,11 +1,14 @@
 # Changelog
 
-## 2.2.0 - unreleased
+## 3.0.0 - unreleased
 
-Changes
-~~~~~~~
+Breaking Changes
+~~~~~~~~~~~~~~~~
 
 - Switched fully to npm for package retrieval, deprecating bower (pilz)
+- Introduce webpack to create the bundle and deprecate require.js (pilz)
+  Read Upgrade-from-2-to-3.txt for details
+
 
 Fixes 
 ~~~~~

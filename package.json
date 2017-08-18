@@ -58,8 +58,9 @@
     "pegjs": "0.7.0",
     "phantom-jasmine": "0.1.8",
     "phantomjs": "^1.9.18",
-    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
+    "webpack-uglify-js-plugin": "",
     "webpack": "",
+    "wrapper-webpack-plugin":"",
     "yo": "^1.4.8"
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",

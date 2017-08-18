@@ -36,7 +36,7 @@ stamp-bundler:
 
 clean::
 	rm -f stamp-npm
-	rm -rf node_modules src/bower_components
+	rm -rf node_modules
 
 ########################################################################
 ## Tests
@@ -57,14 +57,14 @@ check:: stamp-npm jshint
 build:: bundle all_css
 
 bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-npm
-	node_modules/.bin/webpack --display-reasons --display-modules src/patterns.js dist/bundle.js
+	node_modules/.bin/webpack
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 clean::
-	rm -f bundle.js
+	rm -f bundle.js bundle.min.js
 
 all_css:: css
 	@echo "Hang tight!"
