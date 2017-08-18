@@ -27,7 +27,7 @@ module.exports = {
     module: {
 	    loaders: [
 	      { test: /jcrop/, loader: 'imports-loader?jquery' },
-	      // { test: /jquery/, loader: 'exports-loader?jQuery' },
+		  { test: /jquery/, loader: 'exports-loader?jQuery' },
 	      { test: /jquery.anythingslider/, loader: 'imports-loader?jquery' },
 	      { test: /jquery.browser/, loader: 'imports-loader?jquery,window' },
 	      { test: /jcrop/, loader: 'imports-loader?jquery' },
