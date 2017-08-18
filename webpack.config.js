@@ -7,12 +7,18 @@ var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8');
 var WrapperPlugin = require('wrapper-webpack-plugin');
 
 const UglifyJsPlugin = require('webpack-uglify-js-plugin');
+var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 module.exports = {
 	entry: {
 		"bundle": "./src/patterns.js",
 		"bundle.min": "./src/patterns.js"
 	},
+	externals: [
+		{
+			 "window": "window"
+		}
+	],
 	output: {
 		filename: "[name].js",
 		path: path.resolve(__dirname)
@@ -21,9 +27,11 @@ module.exports = {
     module: {
 	    loaders: [
 	      { test: /jcrop/, loader: 'imports-loader?jquery' },
-	      { test: /jquery/, loader: 'exports-loader?jQuery' },
+	      // { test: /jquery/, loader: 'exports-loader?jQuery' },
 	      { test: /jquery.anythingslider/, loader: 'imports-loader?jquery' },
-	      { test: /jquery.chosen/, loader: 'imports-loader?jquery' },
+	      { test: /jquery.browser/, loader: 'imports-loader?jquery,window' },
+	      { test: /jcrop/, loader: 'imports-loader?jquery' },
+	      { test: /jquery.chosen/, loader: 'expose-loader?AbstractChosen!imports-loader?chosen,jQuery=jquery,$=jquery,this=>window' },
 	      { test: /jquery.placeholder/, loader: 'imports-loader?jquery' },
 	      { test: /jquery.textchange/, loader: 'imports-loader?jquery' },
 	      { test: /parsley/, loader: 'imports-loader?jquery' },
@@ -42,10 +50,11 @@ module.exports = {
 	resolve: {
 		modules: ['src', 'node_modules'],
 		alias: {
-        		"backbone": "lib/backbone-1.1.0",
-        		"jquery": "lib/jquery-1.10.2",
-        		"underscore": "lib/lodash.underscore-2.3.0",
-		        "jqueryUI": "lib/jquery-ui.min",
+				"jasmine": 							"jasmine/lib/jasmine-core/jasmine",
+				"jasmine-html":                     "jasmine-core/lib/jasmine-core/jasmine-html",
+				"console-runner":                   "phantom-jasmine/lib/console-runner.js",
+        		"backbone": 						"lib/backbone-1.1.0",
+		        "jqueryUI": 						"lib/jquery-ui.min",
 		        "ev-emitter":                       "ev-emitter",
 		        "get-size":                         "get-size/get-size.js",
 		        "google-code-prettify":             "google-code-prettify/src/prettify.js",
@@ -54,7 +63,7 @@ module.exports = {
 		        "jquery":                           "jquery/dist/jquery.js",
 		        "jquery.browser":                   "jquery.browser/dist/jquery.browser.js",
 		        "jquery.anythingslider":            "anythingslider/js/jquery.anythingslider.min.js",
-		        "jquery.chosen":                    "chosen/chosen/chosen.jquery.js",
+		        "jquery.chosen":                    "chosen-js/chosen.jquery.js",
 		        "jquery.form":                      "jquery-form/jquery.form.js",
 		        "fullcalendar":                     "fullcalendar/dist/fullcalendar.min.js",
 		        "jquery.placeholder":               "jquery-placeholder/jquery.placeholder.js",
@@ -194,8 +203,12 @@ module.exports = {
 		    warnings: false
 		  }
 		}),
-
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        new JasmineWebpackPlugin(),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        })
     ]
 };
 
