@@ -53,7 +53,7 @@ module.exports = {
 		        "jcrop":                            "jquery-jcrop/js/jquery.Jcrop.min.js",
 		        "jquery":                           "jquery/dist/jquery.js",
 		        "jquery.browser":                   "jquery.browser/dist/jquery.browser.js",
-		        "jquery.anythingslider":            "anythingSlider/js/jquery.anythingslider.min.js",
+		        "jquery.anythingslider":            "anythingslider/js/jquery.anythingslider.min.js",
 		        "jquery.chosen":                    "chosen/chosen/chosen.jquery.js",
 		        "jquery.form":                      "jquery-form/jquery.form.js",
 		        "fullcalendar":                     "fullcalendar/dist/fullcalendar.min.js",

@@ -25,7 +25,7 @@ all:: bundle.js css
 ## Install dependencies
 
 stamp-npm: package.json
-	npm install
+	npm install --no-optional
 	touch stamp-npm
 
 stamp-bundler:
