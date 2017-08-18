@@ -14,8 +14,7 @@ define([
     "pat-registry",
     "underscore",
     "moment-timezone-data",
-    "jquery.fullcalendar.dnd",
-    "jquery.fullcalendar"
+    "fullcalendar"
 ], function($, logger, Parser, store, utils, registry, _) {
     "use strict";
     var log = logger.getLogger("calendar"),

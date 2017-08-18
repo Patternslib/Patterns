@@ -57,7 +57,7 @@ check:: stamp-npm jshint
 build:: bundle all_css
 
 bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-npm
-	node_modules/.bin/webpack src/patterns.js dist/bundle.js
+	node_modules/.bin/webpack --display-reasons --display-modules src/patterns.js dist/bundle.js
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $<
