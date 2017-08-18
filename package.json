@@ -57,6 +57,7 @@
     "imports-loader": "",
     "jshint": "~2.9.3",
     "pegjs": "0.7.0",
+    "jasmine": "",
     "phantom-jasmine": "0.1.8",
     "phantomjs": "^1.9.18",
     "webpack-uglify-js-plugin": "",
