@@ -51,6 +51,10 @@ There has been some cleanup as well that might affect your project. Here is a li
   No longer required
 - jquery.textchange
   needed for tinymce, not npm compatible, assumed unnecessary as we removed jquery.tinymce
+- Showdown Table
+  As of showdown v 1.2.0, table support was moved into core as an opt-in feature making this extension obsolete. See https://github.com/showdownjs/table-extension
+- Showdown Github
+  As of showdown v 1.2.0, github support was moved into core as an opt-in feature making this extension obsolete. See https://github.com/showdownjs/github-extension
 
 ## Upgraded / converted
 
@@ -66,6 +70,7 @@ There has been some cleanup as well that might affect your project. Here is a li
   XXX NEEDS TESTING!
 - chosen upgraded from "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",
  to chosen-js latest
+- Showdown to 1.7.2
 
 ## Other changes or potential issues
 

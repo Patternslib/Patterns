@@ -6,8 +6,6 @@ define([
     "pat-base",
     "pat-inject",
     "showdown",
-    "showdown-github",
-    "showdown-table"
 ], function($, logger, registry, utils, Base, inject, Showdown) {
     var log = logger.getLogger("pat.markdown");
     var is_markdown_resource = /\.md$/;
@@ -29,7 +27,7 @@ define([
 
         render: function(text) {
             var $rendering = $("<div/>"),
-                converter = new Showdown.converter({extensions: ['table', 'prettify', 'github']});
+                converter = new Showdown.Converter({extensions: ['prettify']});
             $rendering.html(converter.makeHtml(text));
             return $rendering;
         },

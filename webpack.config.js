@@ -27,9 +27,9 @@ module.exports = {
     module: {
 	    loaders: [
 	      { test: /jcrop/, loader: 'imports-loader?jquery' },
-		  { test: /jquery/, loader: 'exports-loader?jQuery' },
+		  //{ test: /jquery/, loader: 'exports-loader?jQuery,$,jquery' },
 	      { test: /jquery.anythingslider/, loader: 'imports-loader?jquery' },
-	      { test: /jquery.browser/, loader: 'imports-loader?jquery,window' },
+	      // { test: /jquery.browser/, loader: 'imports-loader?jquery,this=>window' },
 	      { test: /jcrop/, loader: 'imports-loader?jquery' },
 	      { test: /jquery.chosen/, loader: 'expose-loader?AbstractChosen!imports-loader?chosen,jQuery=jquery,$=jquery,this=>window' },
 	      { test: /jquery.placeholder/, loader: 'imports-loader?jquery' },
@@ -39,9 +39,8 @@ module.exports = {
 	      { test: /select2/, loader: 'imports-loader?jquery' },
 	      { test: /spectrum/, loader: 'imports-loader?jquery' },
 
-	      { test: /showdown-github/, loader: 'imports-loader?showdown' },
+	      { test:  /^showdown-github$/, loader: 'imports-loader?jquery!expose-loader?Showdown' },
 	      { test: /showdown-prettify/, loader: 'imports-loader?showdown,google-code-prettify' },
-	      { test: /showdown-table/, loader: 'imports-loader?showdown' },
 
 	      { test: /modernizr-csspositionsticky/, loader: 'imports-loader?modernizr' },
 	      // { test: /backbone/, loader: 'exports-loader?Backbone!imports-loader?underscore,jquery' }
@@ -82,10 +81,8 @@ module.exports = {
 		        "pikaday":                          "pikaday/pikaday.js",
 		        "prefixfree":                       "prefixfree/prefixfree.min.js",
 		        "select2":                          "select2/select2.js",
-		        "showdown":                         "showdown/src/showdown.js",
-		        "showdown-github":                  "showdown-github/dist/showdown-github.min.js",
+		        "showdown":                         "showdown/dist/showdown.js",
 		        "showdown-prettify":                "showdown-prettify/dist/showdown-prettify.min.js",
-		        "showdown-table":                   "showdown-table/dist/showdown-table.min.js",
 		        "spectrum":                         "spectrum/lib/spectrum.js",
 		        "stickyfill":                       "Stickyfill/src/stickyfill.js",
 		        "text":                             "requirejs-text/text.js",
