@@ -35,12 +35,7 @@ module.exports = {
 	      { test: /parsley.extend/, loader: 'imports-loader?jquery' },
 	      { test: /select2/, loader: 'imports-loader?jquery' },
 	      { test: /spectrum/, loader: 'imports-loader?jquery' },
-
-	      { test:  /^showdown-github$/, loader: 'imports-loader?jquery!expose-loader?Showdown' },
-	      { test: /showdown-prettify/, loader: 'imports-loader?showdown,google-code-prettify' },
-
-	      // { test: /modernizr-csspositionsticky/, loader: 'imports-loader?modernizr' },
-	      // { test: /backbone/, loader: 'exports-loader?Backbone!imports-loader?underscore,jquery' }
+	      { test: /showdown-prettify/, loader: 'imports-loader?showdown,google-code-prettify' }
 	    ]
     },
 	resolve: {
@@ -68,7 +63,7 @@ module.exports = {
 		        "masonry":                          "masonry-layout/dist/masonry.pkgd.min.js",
 		        "desandro-matches-selector":        "desandro-matches-selector/matches-selector.js",
 		        "modernizr$":                       "modernizr/modernizr.js",
-		        "modernizr-csspositionsticky$":     path.resolve(__dirname, "node_modules/modernizr/feature-detects/css/positionsticky.js"),
+		        // "modernizr-csspositionsticky$":     path.resolve(__dirname, "node_modules/modernizr/feature-detects/css/positionsticky.js"),
 		        "outlayer":                         "outlayer/outlayer.js",
 		        "parsley":                          "parsleyjs/parsley.js",
 		        "parsley.extend":                   "parsleyjs/parsley.extend.js",

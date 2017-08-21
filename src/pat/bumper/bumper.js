@@ -12,8 +12,7 @@ define([
     "pat-parser",
     "pat-base",
     "pat-registry",
-    "modernizr",
-    "modernizr-csspositionsticky"
+    "modernizr"
 ], function($, _, logger, Parser, Base, registry) {
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");

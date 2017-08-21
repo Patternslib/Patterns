@@ -78,12 +78,10 @@ There has been some cleanup as well that might affect your project. Here is a li
 - validate is called validate.js on npmjs.org
 - in pat-gallery, replaced requirejs-text plugin with text-loader, see https://github.com/webpack/webpack/issues/1046
 - Webpack by default includes everything that is referenced in other files. Moment locale files ship with moment and get autoincluded which results in 100Kb more minified js. We are excluding moment locale files explicitly in webpack.config.js, so by default only english is included. XXX Check if that kills some of your localisations.
-- Modernizr has become modular. It is possible that we don't include all checks we need now. XXX Check if we need to explicitly include more modernizr features.
 
 - Tests need upgrading, we are using jasmine 2 now: http://thejsguy.com/2015/01/29/Upgrading-Jasmine-from-1.3-to-2.1.html
 
 
 ## Todo
-- bumper
 - calendar
 
