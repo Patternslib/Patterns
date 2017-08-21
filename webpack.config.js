@@ -26,6 +26,8 @@ module.exports = {
     // Like shims in require.js
     module: {
 	    loaders: [
+	      // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
+	      { test: require.resolve('jquery'), loader: 'expose-loader?$!expose-loader?jQuery' },
 	      { test: /jcrop/, loader: 'imports-loader?jquery' },
 	      { test: /jquery.anythingslider/, loader: 'imports-loader?jquery' },
 	      { test: /jquery.chosen/, loader: 'expose-loader?AbstractChosen!imports-loader?chosen,jQuery=jquery,$=jquery,this=>window' },
@@ -35,7 +37,8 @@ module.exports = {
 	      { test: /parsley.extend/, loader: 'imports-loader?jquery' },
 	      { test: /select2/, loader: 'imports-loader?jquery' },
 	      { test: /spectrum/, loader: 'imports-loader?jquery' },
-	      { test: /showdown-prettify/, loader: 'imports-loader?showdown,google-code-prettify' }
+	      { test: /showdown-prettify/, loader: 'imports-loader?showdown,google-code-prettify' },
+	      // { test: /pat-calendar/, loader: 'imports-loader?fullcalendar' }
 	    ]
     },
 	resolve: {
@@ -56,7 +59,7 @@ module.exports = {
 		        "jquery.anythingslider":            "anythingslider/js/jquery.anythingslider.min.js",
 		        "jquery.chosen":                    "chosen-js/chosen.jquery.js",
 		        "jquery.form":                      "jquery-form/jquery.form.js",
-		        "fullcalendar":                     "fullcalendar/dist/fullcalendar.min.js",
+		        "fullcalendar":                     "fullcalendar/dist/fullcalendar",
 		        "jquery.placeholder":               "jquery-placeholder/jquery.placeholder.js",
 		        "jquery.textchange":                "jquery-textchange/jquery.textchange.js",
 		        "logging":                          "logging/src/logging.js",
@@ -196,7 +199,8 @@ module.exports = {
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new webpack.ProvidePlugin({
             $: "jquery",
-            jQuery: "jquery"
+            jQuery: "jquery",
+            jquery: "jquery"
         })
     ]
 };

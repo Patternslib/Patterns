@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "2.2.0",
+  "version": "3.0.0a1",
   "title": "Markup patterns to drive behaviour.",
   "description": "Patternslib is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
   "author": {
@@ -21,7 +21,7 @@
     "anythingslider": "git+https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
     "chosen-js": "",
     "ev-emitter": "1.0.3",
-    "fullcalendar": "",
+    "fullcalendar": "2.9.1",
     "google-code-prettify": "1.0.4",
     "imagesloaded": "4.1.1",
     "jquery": "1.11.3",

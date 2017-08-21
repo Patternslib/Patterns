@@ -3,139 +3,140 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Demo page</title>
-    <link rel="stylesheet" href="../common.css" type="text/css">
-		<link rel="stylesheet" href="calendar.css" type="text/css">
-		<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+    <style src="../common.css" type="text/css"></style>
+		<style src="calendar.css" type="text/css"></style>
+		<style src="fullcalendar.css" type="text/css"></style>
+		<script src="../../../patternslib/bundle.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
-		<div class="pat-fullcalendar">
-			<div class="month" id="2013-01">
+		<div class="pat-calendar">
+			<div class="month" id="2017-01">
 					<h2>
-						<time datetime="2013-01">January 2013</time>
+						<time datetime="2017-01">January 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-02; source: #2013-02::element; target: #2013-01::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-02">Next month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-02; source: #2017-02::element; target: #2017-01::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-02">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-02">
+			<div class="month" id="2017-02">
 					<h2>
-						<time datetime="2013-02">February 2013</time>
+						<time datetime="2017-02">February 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-01; source: #2013-01::element; target: #2013-02::element::before" href="calendar-sources.html#2013-01">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-03; source: #2013-03::element; target: #2013-02::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-03">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-01; source: #2017-01::element; target: #2017-02::element::before" href="calendar-sources.html#2017-01">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-03; source: #2017-03::element; target: #2017-02::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-03">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-03">
+			<div class="month" id="2017-03">
 					<h2>
-						<time datetime="2013-03">March 2013</time>
+						<time datetime="2017-03">March 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-02; source: #2013-02::element; target: #2013-03::element::before" href="calendar-sources.html#2013-02">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-04; source: #2013-04::element; target: #2013-03::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-04">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-02; source: #2017-02::element; target: #2017-03::element::before" href="calendar-sources.html#2017-02">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-04; source: #2017-04::element; target: #2017-03::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-04">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-04">
+			<div class="month" id="2017-04">
 					<h2>
-						<time datetime="2013-04">April 2013</time>
+						<time datetime="2017-04">April 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-03; source: #2013-03::element; target: #2013-04::element::before" href="calendar-sources.html#2013-03">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-05; source: #2013-05::element; target: #2013-04::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-05">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-03; source: #2017-03::element; target: #2017-04::element::before" href="calendar-sources.html#2017-03">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-05; source: #2017-05::element; target: #2017-04::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-05">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-05">
+			<div class="month" id="2017-05">
 					<h2>
-						<time datetime="2013-05">May 2013</time>
+						<time datetime="2017-05">May 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-04; source: #2013-04::element; target: #2013-05::element::before" href="calendar-sources.html#2013-04">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-06; source: #2013-06::element; target: #2013-05::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-06">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-04; source: #2017-04::element; target: #2017-05::element::before" href="calendar-sources.html#2017-04">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-06; source: #2017-06::element; target: #2017-05::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-06">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-06">
+			<div class="month" id="2017-06">
 					<h2>
-						<time datetime="2013-06">June 2013</time>
+						<time datetime="2017-06">June 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-05; source: #2013-05::element; target: #2013-06::element::before" href="calendar-sources.html#2013-05">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-07; source: #2013-07::element; target: #2013-06::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-07">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-05; source: #2017-05::element; target: #2017-06::element::before" href="calendar-sources.html#2017-05">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-07; source: #2017-07::element; target: #2017-06::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-07">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-07">
+			<div class="month" id="2017-07">
 					<h2>
-						<time datetime="2013-07">July 2013</time>
+						<time datetime="2017-07">July 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-06; source: #2013-06::element; target: #2013-07::element::before" href="calendar-sources.html#2013-06">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-08; source: #2013-08::element; target: #2013-07::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-08">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-06; source: #2017-06::element; target: #2017-07::element::before" href="calendar-sources.html#2017-06">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-08; source: #2017-08::element; target: #2017-07::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-08">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-08">
+			<div class="month" id="2017-08">
 					<h2>
-						<time datetime="2013-08">August 2013</time>
+						<time datetime="2017-08">August 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-07; source: #2013-07::element; target: #2013-08::element::before" href="calendar-sources.html#2013-07">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-09; source: #2013-09::element; target: #2013-08::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-09">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-07; source: #2017-07::element; target: #2017-08::element::before" href="calendar-sources.html#2017-07">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-09; source: #2017-09::element; target: #2017-08::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-09">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-09">
+			<div class="month" id="2017-09">
 					<h2>
-						<time datetime="2013-09">September 2013</time>
+						<time datetime="2017-09">September 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-08; source: #2013-08::element; target: #2013-09::element::before" href="calendar-sources.html#2013-08">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-10; source: #2013-10::element; target: #2013-09::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-10">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-08; source: #2017-08::element; target: #2017-09::element::before" href="calendar-sources.html#2017-08">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-10; source: #2017-10::element; target: #2017-09::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-10">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-10">
+			<div class="month" id="2017-10">
 					<h2>
-						<time datetime="2013-10">October 2013</time>
+						<time datetime="2017-10">October 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-09; source: #2013-09::element; target: #2013-10::element::before" href="calendar-sources.html#2013-09">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-11; source: #2013-11::element; target: #2013-10::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-11">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-09; source: #2017-09::element; target: #2017-10::element::before" href="calendar-sources.html#2017-09">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-11; source: #2017-11::element; target: #2017-10::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-11">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-11">
+			<div class="month" id="2017-11">
 					<h2>
-						<time datetime="2013-11">November 2013</time>
+						<time datetime="2017-11">November 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-10; source: #2013-10::element; target: #2013-11::element::before" href="calendar-sources.html#2013-10">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2013-12; source: #2013-12::element; target: #2013-11::element::after; trigger: autoload-visible" href="calendar-sources.html#2013-12">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-10; source: #2017-10::element; target: #2017-11::element::before" href="calendar-sources.html#2017-10">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2017-12; source: #2017-12::element; target: #2017-11::element::after; trigger: autoload-visible" href="calendar-sources.html#2017-12">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
 				</div>
-			<div class="month" id="2013-12">
+			<div class="month" id="2017-12">
 					<h2>
-						<time datetime="2013-12">December 2013</time>
+						<time datetime="2017-12">December 2017</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-11; source: #2013-11::element; target: #2013-12::element::before" href="calendar-sources.html#2013-11">Previous month</a>
-						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2014-01; source: #2014-01::element; target: #2013-12::element::after; trigger: autoload-visible" href="calendar-sources.html#2014-01">Next month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-11; source: #2017-11::element; target: #2017-12::element::before" href="calendar-sources.html#2017-11">Previous month</a>
+						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2014-01; source: #2014-01::element; target: #2017-12::element::after; trigger: autoload-visible" href="calendar-sources.html#2014-01">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">
 					</ul>
@@ -145,7 +146,7 @@
 						<time datetime="2014-01">January 2014</time>
 					</h2>
 					<p class="controls">
-						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2013-12; source: #2013-12::element; target: #2014-01::element::before" href="calendar-sources.html#2013-12">Previous month</a>
+						<a class="prev-month pat-inject" title="Previous month" data-pat-inject="next-href: #2017-12; source: #2017-12::element; target: #2014-01::element::before" href="calendar-sources.html#2017-12">Previous month</a>
 						<a class="next-month pat-inject" title="Next month" data-pat-inject="next-href: #2014-02; source: #2014-02::element; target: #2014-01::element::after; trigger: autoload-visible" href="calendar-sources.html#2014-02">Next month</a>
 					</p>
 					<ul id="eventlistinbody" class="events">

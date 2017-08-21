@@ -76,8 +76,8 @@ define([
             this.$el = $el;
             this.cfg = cfg;
             this.storage = storage;
-            cfg.defaultDate = storage.get("date") || cfg.defaultDate;
-            cfg.defaultView = storage.get("view") || cfg.defaultView;
+            cfg.defaultDate = storage  && storage.get("date") || cfg.defaultDate;
+            cfg.defaultView = storage && storage.get("view") || cfg.defaultView;
             cfg.tooltipConfig = $el.data("patCalendarTooltip");
             if (cfg.tooltipConfig) {
                 var match = cfg.tooltipConfig.match(/url:[ ](.*?)(;|$)/);
@@ -161,7 +161,7 @@ define([
                     }
                     var end;
                     if (view.name !== "month") {
-                        end = moment.clone().add("minutes", 30);
+                        end = moment.clone().add(30, "minutes");
                     } else {
                         end = undefined;
                     }
@@ -197,7 +197,7 @@ define([
             $el.find(".cal-events").css("display", "none");
             this._restoreCalendarControls();
             setTimeout(function () {
-                $el.fullCalendar("option", "height", $el.find(".fc-content").height());
+                $el.fullCalendar("option", "height", $el.find(".fc-view-container").height());
                 $el.fullCalendar("refetchEvents");
             }, 900);
         },
@@ -228,7 +228,7 @@ define([
                 data.end = moment.clone().format();
                 data.allDay = true;
             } else {
-                data.end = moment.clone().add("minutes", 30).format();
+                data.end = moment.clone().add(30, "minutes").format();
                 data.allDay = false;
             }
             calendar._addNewEvent(calendar.$el, $event, data);
@@ -253,7 +253,7 @@ define([
                 // so we substract a day here.
                 data.end = ((evt.end === null) ? evt.start.clone() : evt.end.clone().subtract("days", 1)).format();
             } else {
-                data.end = ((evt.end === null) ? evt.start.clone().add("minutes", 30) : evt.end).format();
+                data.end = ((evt.end === null) ? evt.start.clone().add(30, "minutes") : evt.end).format();
             }
             var tzstr = (match && match.length > 0) ? match[0] : "";
             var startstr = data.start + tzstr;
@@ -268,7 +268,7 @@ define([
         },
 
         _redrawCalendar: function() {
-            this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
+            this.$el.fullCalendar("option", "height", this.$el.find(".fc-view-container").height());
         },
 
         _registerRedrawHandlers: function() {
@@ -282,7 +282,7 @@ define([
                         // Otherwise drag2resize breaks.
                         return;
                     }
-                    calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
+                    calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-view-container").height());
                 });
                 $(document).on("pat-update.pat-calendar", function(ev) {
                     // Don't redraw if the change was in a tooltip, otherwise
@@ -290,7 +290,7 @@ define([
                     // it's a calendar event tooltip).
                     if ($(ev.target).parents('.tooltip-container').length === 0) {
                         setTimeout(function() {
-                            calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
+                            calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-view-container").height());
                         }, 300);
                     }
                 });
@@ -381,8 +381,7 @@ define([
             $title.html($el.fullCalendar("getView").title);
             // adjust height
             if (calendar.cfg.height === "auto") {
-                $el.fullCalendar("option", "height",
-                                 $el.find(".fc-content").height());
+                $el.fullCalendar("option", "height", $el.find(".fc-view-container").height());
             }
             // store current date and view
             var date = $el.fullCalendar("getDate").format(),
@@ -469,6 +468,10 @@ define([
                     log.debug("remove due to search-text="+searchText, $event);
                     return false;
                 }
+                if (shownCats.length === 0) {
+                    // In case we don't use filter categories, always return all events
+                    return true;
+                }
                 return shownCats.filter(function() {
                     return $event.hasClass(this);
                 }).length;
@@ -499,7 +502,7 @@ define([
                     // XXX: In fullcalendar 2 the end-date is no longer inclusive, but
                     // it should be. We fix that by adding a day so that the
                     // pat-calendar API stays the same and stays intuitive.
-                    end.add("days", 1);
+                    end.add(1, "days");
                 }
                 if (timezone) {
                     start = start.tz(timezone);
