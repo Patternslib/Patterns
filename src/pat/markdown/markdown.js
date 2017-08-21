@@ -27,7 +27,7 @@ define([
 
         render: function(text) {
             var $rendering = $("<div/>"),
-                converter = new Showdown.Converter({extensions: ['prettify']});
+                converter = new Showdown.Converter({tables: true, extensions: ['prettify']});
             $rendering.html(converter.makeHtml(text));
             return $rendering;
         },

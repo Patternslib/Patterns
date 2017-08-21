@@ -59,7 +59,7 @@ The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:
 
 | Property | Default value | Available values | Description | Type |
-| -------- | ------------- | ------ | ----------- | ---- |
+| :------- | :------------ | :----- | :---------- | :---- |
 | `method` | `scale` | `scale` `zoom` | The scaling method to use. One of `scale` or `zoom` | Mutually exclusive |
 | `min-width` | | | The minimum width in pixels to scale to. | Number |
 | `max-width` | | | The maximum width in pixels to scale to. | Number |
