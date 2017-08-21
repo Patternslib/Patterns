@@ -81,3 +81,9 @@ There has been some cleanup as well that might affect your project. Here is a li
 - Modernizr has become modular. It is possible that we don't include all checks we need now. XXX Check if we need to explicitly include more modernizr features.
 
 - Tests need upgrading, we are using jasmine 2 now: http://thejsguy.com/2015/01/29/Upgrading-Jasmine-from-1.3-to-2.1.html
+
+
+## Todo
+- bumper
+- calendar
+

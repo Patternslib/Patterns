@@ -27,10 +27,7 @@ module.exports = {
     module: {
 	    loaders: [
 	      { test: /jcrop/, loader: 'imports-loader?jquery' },
-		  //{ test: /jquery/, loader: 'exports-loader?jQuery,$,jquery' },
 	      { test: /jquery.anythingslider/, loader: 'imports-loader?jquery' },
-	      // { test: /jquery.browser/, loader: 'imports-loader?jquery,this=>window' },
-	      { test: /jcrop/, loader: 'imports-loader?jquery' },
 	      { test: /jquery.chosen/, loader: 'expose-loader?AbstractChosen!imports-loader?chosen,jQuery=jquery,$=jquery,this=>window' },
 	      { test: /jquery.placeholder/, loader: 'imports-loader?jquery' },
 	      { test: /jquery.textchange/, loader: 'imports-loader?jquery' },
@@ -42,7 +39,7 @@ module.exports = {
 	      { test:  /^showdown-github$/, loader: 'imports-loader?jquery!expose-loader?Showdown' },
 	      { test: /showdown-prettify/, loader: 'imports-loader?showdown,google-code-prettify' },
 
-	      { test: /modernizr-csspositionsticky/, loader: 'imports-loader?modernizr' },
+	      // { test: /modernizr-csspositionsticky/, loader: 'imports-loader?modernizr' },
 	      // { test: /backbone/, loader: 'exports-loader?Backbone!imports-loader?underscore,jquery' }
 	    ]
     },
@@ -70,7 +67,7 @@ module.exports = {
 		        "logging":                          "logging/src/logging.js",
 		        "masonry":                          "masonry-layout/dist/masonry.pkgd.min.js",
 		        "desandro-matches-selector":        "desandro-matches-selector/matches-selector.js",
-		        "modernizr":                        "modernizr/src/Modernizr.js",
+		        "modernizr$":                       "modernizr/modernizr.js",
 		        "modernizr-csspositionsticky$":     path.resolve(__dirname, "node_modules/modernizr/feature-detects/css/positionsticky.js"),
 		        "outlayer":                         "outlayer/outlayer.js",
 		        "parsley":                          "parsleyjs/parsley.js",

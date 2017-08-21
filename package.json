@@ -60,8 +60,10 @@
     "script-loader": "",
     "jasmine": "",
     "jasmine-webpack-plugin": "",
+    "modernizr-webpack-plugin": "",
     "phantom-jasmine": "0.1.8",
     "phantomjs": "^1.9.18",
+    "postinstall-build": "",
     "webpack-uglify-js-plugin": "",
     "webpack": "",
     "webpack-dev-server": "",
@@ -69,7 +71,11 @@
     "wrapper-webpack-plugin": "",
     "yo": "^1.4.8"
   },
-  "scripts": { "test": "jasmine" },
+  "scripts": { 
+    "test": "jasmine", 
+    "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json",
+    "postinstall": "postinstall-build node_modules/modernizr/modernizr.js --script build_modernizr"
+  },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",
   "maintainers": [
