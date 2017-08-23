@@ -176,6 +176,9 @@ module.exports = {
             // https://github.com/webpack-contrib/css-loader/issues/447
             fs: 'empty'
         },
+    devServer: {
+        contentBase: './'
+    },
 	plugins: [
 		new WrapperPlugin({
 	      test: /\.js$/, // only wrap output of bundle files with '.js' extension 

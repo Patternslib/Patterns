@@ -73,6 +73,8 @@
   },
   "scripts": { 
     "test": "jasmine", 
+    "start": "webpack-dev-server --open",
+    "build": "webpack",
     "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json",
     "postinstall": "postinstall-build node_modules/modernizr/modernizr.js --script build_modernizr"
   },
