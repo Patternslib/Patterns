@@ -86,13 +86,15 @@ define([
                 cfg.newEventURL = match[1];
             }
 
-            if (cfg.externalEventSelector) {
-                $(cfg.externalEventSelector).draggable({
-                    zIndex: 200,
-                    helper: "clone",
-                    appendTo: "body"
-                });
-            }
+            // No longer necessary since 2.1 
+            // https://fullcalendar.io/docs/event_ui/Requirements/
+            // if (cfg.externalEventSelector) {
+            //     $(cfg.externalEventSelector).draggable({
+            //         zIndex: 200,
+            //         helper: "clone",
+            //         appendTo: "body"
+            //     });
+            // }
 
             if (!opts.ignoreUrl) {
                 var search = calendar._parseSearchString();
