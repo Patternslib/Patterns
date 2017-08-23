@@ -1,7 +1,6 @@
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
 PHANTOMJS	?= node_modules/.bin/phantomjs
-HTTPSERVE   ?= node_modules/.bin/http-server
 BUNDLE      ?= ./.bundle/bin/bundle
 SASS        ?= ./.bundle/bin/sass
 
@@ -26,7 +25,6 @@ all:: bundle.js css
 
 stamp-npm: package.json
 	npm install --no-optional
-	touch stamp-npm
 
 stamp-bundler:
 	mkdir -p .bundle
@@ -56,8 +54,8 @@ check:: stamp-npm jshint
 
 build:: bundle all_css
 
-bundle bundle.js: $(GENERATED) $(SOURCES) webpack.config.js stamp-npm
-	node_modules/.bin/webpack
+bundle bundle.js: $(GENERATED) $(SOURCES)
+	npm run build
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $<
@@ -118,8 +116,8 @@ watch::
 serve:: all _serve
 
 _serve:
-	@printf "\nDesigner, you can be happy now.\n Go to http://localhost:4001/ to see the demo \n\n"
-	@$(HTTPSERVE) -p 4001
+	npm run start
+	@printf "\nBundle built\n\n"
 
 designerhappy:: serve
 

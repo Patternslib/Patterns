@@ -13,8 +13,13 @@
 /stamp-npm
 /stamp-tinymce
 Gemfile.lock
+cache/
+webpack/cache/
 build-custom.js
 bundle.js
+bundle.js.map
+bundle.min.js
+bundle.min.js.map
 src/patterns-custom.js
 test-reports
 

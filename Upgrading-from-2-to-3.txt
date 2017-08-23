@@ -41,6 +41,21 @@ Once you are done, you can remove the following old files:
 - bower.json
 - .bowerrc
 
+## Development
+
+If you want to work on patternslib, you can start the webpack-dev-server by typing
+
+> npm start
+
+This will open a small http server on port 3001 and load it immediately in your standard web browser.
+You can now open the pattern demo pages and work on the js files. On save, dev server will recompile the bundle and you can test.
+
+### Improvement options
+
+This currently takes some time, at the time of writing about 20 secs.
+Comment out the uglifying plugin and it will be down to 1 sec.
+
+
 
 # Changelog
 

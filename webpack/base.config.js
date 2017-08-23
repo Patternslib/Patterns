@@ -1,3 +1,4 @@
+// Organised as described in https://simonsmith.io/organising-webpack-config-environments/
 const path = require('path');
 var webpack = require('webpack');
 
@@ -6,13 +7,11 @@ var headerWrap = fs.readFileSync('./VERSION.txt', 'utf8');
 var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8');
 var WrapperPlugin = require('wrapper-webpack-plugin');
 
-const UglifyJsPlugin = require('webpack-uglify-js-plugin');
 var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 module.exports = {
 	entry: {
 		"bundle": "./src/patterns.js",
-		"bundle.min": "./src/patterns.js"
 	},
 	externals: [
 		{
@@ -21,7 +20,7 @@ module.exports = {
 	],
 	output: {
 		filename: "[name].js",
-		path: path.resolve(__dirname)
+		path: path.resolve(__dirname, '..')
 	},
     // Like shims in require.js
     module: {
@@ -72,7 +71,7 @@ module.exports = {
 		        "parsley.extend":                   "parsleyjs/parsley.extend.js",
 		        "patternslib.slides":               "slides/src/slides.js",
 		        "photoswipe":                       "photoswipe/dist/photoswipe.js",
-		        "photoswipe-ui":                    path.resolve(__dirname, "node_modules/photoswipe/dist/photoswipe-ui-default"),
+		        "photoswipe-ui":                    path.resolve(__dirname, "../node_modules/photoswipe/dist/photoswipe-ui-default"),
 		        "pikaday":                          "pikaday/pikaday.js",
 		        "prefixfree":                       "prefixfree/prefixfree.min.js",
 		        "select2":                          "select2/select2.js",
@@ -135,7 +134,7 @@ module.exports = {
 		        "pat-form-state":              "pat/form-state/form-state.js",
 		        "pat-forward":                 "pat/forward/forward.js",
 		        "pat-gallery":                 "pat/gallery/gallery.js",
-		        "pat-gallery-url":             path.resolve(__dirname, "src/pat/gallery"),
+		        "pat-gallery-url":             path.resolve(__dirname, "../src/pat/gallery"),
 		        "pat-grid":                    "pat/grid/grid.js",  // Hack, there's no grid jS, but we need for website bundler
 		        "pat-syntax-highlight":        "pat/syntax-highlight/syntax-highlight.js",
 		        "pat-image-crop":              "pat/image-crop/image-crop.js",
@@ -185,20 +184,6 @@ module.exports = {
 	      header: headerWrap,
 	      footer: footerWrap
 	    }),
-  //       new UglifyJsPlugin({
-		//   cacheFolder: path.resolve(__dirname, 'cache/'),
-		//   debug: true,
-		//   include: /\.min\.js$/,
-		//   minimize: true,
-		//   sourceMap: true,
-		//   output: {
-		//     comments: false
-		//   },
-		//   compressor: {
-		//     warnings: false
-		//   }
-		// }),
-        new JasmineWebpackPlugin(),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new webpack.ProvidePlugin({
             $: "jquery",
