@@ -130,13 +130,14 @@ define([
                     callback(events);
                 },
                 eventAfterRender: function(ev, $event) {
+                    var url = "";
                     if (ev.id === "pat-calendar-new-event") {
                         /* Take the data from data-pat-calendar-tooltip to
                          * configure a tooltip trigger element.
                          */
                         if (!cfg.tooltipOpen) {
                             cfg.tooltipOpen = true;
-                            var url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
+                            url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
                             registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
                             $event.trigger("click.tooltip");
                             $event.on("pat-update", function (event, data) {
@@ -150,7 +151,7 @@ define([
                             });
                         }
                     } else {
-                            var url = utils.addURLQueryParameter(ev.url, "date", ev.start.format());
+                            url = utils.addURLQueryParameter(ev.url, "date", ev.start.format());
                             registry.scan($event.addClass("pat-modal").attr({"data-pat-modal": cfg.modalConfig}).attr({"href": url}));
                             // $event.trigger("click.modal");
                             $event.on("pat-update", function (event, data) {
