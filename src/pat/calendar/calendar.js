@@ -153,8 +153,8 @@ define([
                             });
                         }
                     } else {
-                            url = utils.addURLQueryParameter(ev.url, "date", ev.start.format());
-                            registry.scan($event.addClass("pat-modal").attr({"data-pat-modal": cfg.modalConfig}).attr({"href": url}));
+                            url = ev.url;
+                            registry.scan($event.addClass("pat-modal").attr({"data-pat-modal": cfg.modalConfig}).attr({"href": url});
                             // $event.trigger("click.modal");
                             $event.on("pat-update", function (event, data) {
                                 if (data.pattern === "modal" && data.hidden === true) {
