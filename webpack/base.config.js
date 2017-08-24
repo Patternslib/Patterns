@@ -37,44 +37,31 @@ module.exports = {
                 ]
             },
             {
-                test: /jcrop/,
-                loader: 'imports-loader?jquery'
-            },
-            {
-                test: /jquery.anythingslider/,
-                loader: 'imports-loader?jquery'
-            },
-            {
                 test: /jquery.chosen/,
-                // loader: 'expose-loader?AbstractChosen!imports-loader?chosen,jQuery=jquery,$=jquery,this=>window'
+                use: [{
+                        loader: 'expose-loader',
+                        query: 'AbstractChosen'
+                    },
+                    {
+                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window',
+                    }
+                ]
             },
             {
-                test: /jquery.placeholder/,
-                loader: 'imports-loader?jquery'
-            },
-            {
-                test: /jquery.textchange/,
-                loader: 'imports-loader?jquery'
-            },
-            {
-                test: /parsley/,
-                loader: 'imports-loader?jquery'
-            },
-            {
-                test: /parsley.extend/,
-                loader: 'imports-loader?jquery'
-            },
-            {
-                test: /select2/,
-                loader: 'imports-loader?jquery'
-            },
-            {
-                test: /spectrum/,
-                loader: 'imports-loader?jquery'
+                test: /jquery.anythingslider|jcrop|jquery.placeholder|jquery.textchange|parsley|parsley.extend|select2|spectrum/,
+                use: [
+                    {
+                      loader: 'imports-loader?jquery',
+                    }
+                ]
             },
             {
                 test: /showdown-prettify/,
-                loader: 'imports-loader?showdown,google-code-prettify'
+                use: [
+                    {
+                      loader: 'imports-loader?showdown,google-code-prettify',
+                    }
+                ]
             },
             // { test: /pat-calendar/, loader: 'imports-loader?fullcalendar' }
         ]
