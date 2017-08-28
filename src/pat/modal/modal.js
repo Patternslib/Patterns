@@ -154,7 +154,7 @@ define([
             $(document).off(".pat-modal");
             $el.remove();
             $('body').removeClass("modal-active");                
-        }   
+        },
         destroy_inject: function() {
             var $el = this.$el;
             if ($el.find('form').hasClass('pat-inject') ) {
