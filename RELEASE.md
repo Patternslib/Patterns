@@ -1,7 +1,11 @@
 # Making a release
 
-First, update the version number in bower.json, package.json, VERSION.txt and add the date to changes.md
-(remove the -dev from the version number in VERSION.txt)
+First, update the version number in 
+- bower.json
+- package.json
+- VERSION.txt (remove the -dev from the version number in VERSION.txt)
+- add the date to changes.md
+
 
 ## Merge master into the "release" branch
 
