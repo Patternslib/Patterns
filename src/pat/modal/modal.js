@@ -64,7 +64,7 @@ define([
             } else {
                 this.$el.append("<div class='panel-content' />");
             }
-            $(".panel-content", this.$el).before($header);
+            this.$el.children(".panel-content").before($header);
             this.$el.children(this.options.panelHeaderContent).prependTo($header);
 
             // Restore focus in case the active element was a child of $el and
@@ -147,12 +147,23 @@ define([
                 utils.redraw(this.$el.find(".panel-body"));
             }
         },
-
         destroy: function() {
-            $(document).off(".pat-modal");
-            this.$el.remove();
-            $('body').removeClass("modal-active");
-        }
+            var $el = this.$el;
+            if ($el.find('form').hasClass('pat-inject') ) {
+                // if pat-inject in modal form, listen to patterns-inject-triggered and destroy first
+                // once that has been triggered
+                $('body').on( "patterns-inject-triggered", function() {
+                    $(document).off(".pat-modal");
+                    $el.remove();
+                    $('body').removeClass("modal-active");                
+                });
+            } else {
+                // if working without injection, destroy right away.
+                $(document).off(".pat-modal");
+                $el.remove();
+                $('body').removeClass("modal-active");                
+            }
+        }   
     });
 });
 

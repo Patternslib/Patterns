@@ -58,7 +58,7 @@ define([
                 return;
             }
 
-            this.$panel = $el.find(".panel-content");
+            this.$panel = $el.children(".panel-content");
             if (this.$panel.length === 0) {
                 if ($content.length) {
                     this.$panel = $content
