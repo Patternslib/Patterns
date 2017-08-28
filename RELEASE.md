@@ -49,7 +49,7 @@ Run:
 - npm login
 - npm version <update_type> 
   where update_type is patch, minor or major. See https://docs.npmjs.com/getting-started/publishing-npm-packages.
-- npm publish
+- npm publish --access=public
 
 
 ## Now contact support@syslab.com and request an update of the patternslib.com site as well.

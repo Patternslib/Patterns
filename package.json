@@ -8,11 +8,11 @@
   },
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/patternslib/patterns/issues"
+    "url": "https://github.com/Patternslib/Patterns/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Patternslib/patterns.git"
+    "url": "https://github.com/Patternslib/Patterns.git"
   },
   "devDependencies": {
     "bower": "latest",
@@ -25,7 +25,7 @@
     "requirejs": "",
     "yo": "^1.4.8"
   },
-  "homepage": "https://gitub.com/Patternslib/Patterns",
+  "homepage": "https://github.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",
   "maintainers": [
     {
