@@ -149,10 +149,22 @@ define([
         },
 
         destroy: function() {
-            $(document).off(".pat-modal");
-            this.$el.remove();
-            $('body').removeClass("modal-active");
-        }
+            var $el = this.$el;
+            if ($el.find('form').hasClass('pat-inject') ) {
+                // if pat-inject in modal form, listen to patterns-inject-triggered and destroy first
+                // once that has been triggered
+                $('body').on( "patterns-inject-triggered", function() {
+                    $(document).off(".pat-modal");
+                    $el.remove();
+                    $('body').removeClass("modal-active");                
+                });
+            } else {
+                // if working without injection, destroy right away.
+                $(document).off(".pat-modal");
+                $el.remove();
+                $('body').removeClass("modal-active");                
+            }
+        }   
     });
 });
 
