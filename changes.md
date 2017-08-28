@@ -12,10 +12,14 @@ Breaking Changes
   Read Upgrade-from-2-to-3.txt for details.
 
 
+
+## 2.1.1 - Aug. 28, 2017
+
 Fixes 
 ~~~~~
 
 - pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
+- pat-modal: Fix an issue where chrome is so quick that a modal is closed before the actual injection call can be sent. 
 
 
 ## 2.1.0 - Jun. 26, 2017
