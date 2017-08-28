@@ -1,4 +1,4 @@
-// Patternslib 2.1.0
+// Patternslib 2.1.1-dev
 
 /**
  * @license almond 0.3.3 Copyright jQuery Foundation and other contributors.
@@ -27255,7 +27255,7 @@ define('pat-collapsible',[
                 return;
             }
 
-            this.$panel = $el.find(".panel-content");
+            this.$panel = $el.children(".panel-content");
             if (this.$panel.length === 0) {
                 if ($content.length) {
                     this.$panel = $content
@@ -32874,7 +32874,7 @@ define('pat-depends',[
 // vim: sw=4 expandtab
 ;
 /**
- * EvEmitter v1.1.0
+ * EvEmitter v1.0.3
  * Lil' event emitter
  * MIT License
  */
@@ -32977,12 +32977,6 @@ proto.emitEvent = function( eventName, args ) {
   }
 
   return this;
-};
-
-proto.allOff =
-proto.removeAllListeners = function() {
-  delete this._events;
-  delete this._onceEvents;
 };
 
 return EvEmitter;
@@ -33637,7 +33631,7 @@ define('pat-modal',[
             } else {
                 this.$el.append("<div class='panel-content' />");
             }
-            $(".panel-content", this.$el).before($header);
+            this.$el.children(".panel-content").before($header);
             this.$el.children(this.options.panelHeaderContent).prependTo($header);
 
             // Restore focus in case the active element was a child of $el and
@@ -33720,12 +33714,23 @@ define('pat-modal',[
                 utils.redraw(this.$el.find(".panel-body"));
             }
         },
-
         destroy: function() {
-            $(document).off(".pat-modal");
-            this.$el.remove();
-            $('body').removeClass("modal-active");
-        }
+            var $el = this.$el;
+            if ($el.find('form').hasClass('pat-inject') ) {
+                // if pat-inject in modal form, listen to patterns-inject-triggered and destroy first
+                // once that has been triggered
+                $('body').on( "patterns-inject-triggered", function() {
+                    $(document).off(".pat-modal");
+                    $el.remove();
+                    $('body').removeClass("modal-active");                
+                });
+            } else {
+                // if working without injection, destroy right away.
+                $(document).off(".pat-modal");
+                $el.remove();
+                $('body').removeClass("modal-active");                
+            }
+        }   
     });
 });
 
