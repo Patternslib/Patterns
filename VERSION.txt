@@ -1,2 +1,2 @@
-// Patternslib 2.1.2-dev
+// Patternslib 2.1.2
 

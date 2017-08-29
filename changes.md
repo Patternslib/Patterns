@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.2 - Aug. 29, 2017
+
+- pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
+
+
+
 ## 2.1.1 - Aug. 28, 2017
 
 - pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
