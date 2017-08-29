@@ -67,6 +67,6 @@ This is done as follows:
     cd patternslib
     git pull
     make clean && make bundle
-    bundle exec jekyll serve
+    cd .. && bundle exec jekyll serve
 
 
