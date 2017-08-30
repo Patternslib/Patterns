@@ -4,7 +4,9 @@ var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 
 module.exports = merge(baseConfig, {
-
+    entry: {
+      "bundle": "./src/patterns.js",
+    },
 	devtool: "source-map",
         node: {
             // https://github.com/webpack-contrib/css-loader/issues/447
@@ -19,4 +21,3 @@ module.exports = merge(baseConfig, {
         new JasmineWebpackPlugin(),
     ]
 });
-

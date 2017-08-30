@@ -72,10 +72,10 @@
     "wrapper-webpack-plugin": "",
     "yo": "^1.4.8"
   },
-  "scripts": { 
+  "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
-    "test": "jasmine", 
+    "test": "jasmine",
     "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json",
     "postinstall": "postinstall-build node_modules/modernizr/modernizr.js --script build_modernizr"
   },
