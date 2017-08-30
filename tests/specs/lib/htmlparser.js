@@ -1,4 +1,4 @@
-define(["pat-htmlparser"], function(htmlparser) {
+define(["../../../src/lib/htmlparser.js"], function(htmlparser) {
     describe("pat-htmlparser", function() {
         describe("HTML syntax", function() {
             it("Colon in attribute name", function() {

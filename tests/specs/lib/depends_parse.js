@@ -1,4 +1,4 @@
-define(["pat-depends_parse"], function(parser) {
+define(["../../../src/lib/depends_parse.js"], function(parser) {
 
     describe("Depedency expression parser", function() {
 

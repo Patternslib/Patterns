@@ -1,4 +1,4 @@
-define(["pat-dependshandler"], function(DependsHandler) {
+define(["../../../src/lib/dependshandler.js"], function(DependsHandler) {
 
     describe("pat-dependshandler", function() {
 
