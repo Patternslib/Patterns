@@ -33,8 +33,8 @@ module.exports = function(config) {
       //use babel-loader from webpack to compile es2015 features in .js files
       //add webpack as preprocessor
       //'test_requires.js': ['webpack'],
-      '../tests/specs/*/*.js': ['webpack', 'sourcemap', 'coverage'],
-      '../src/pat/*/tests.js': ['webpack', 'sourcemap', 'coverage'],
+      '../tests/specs/*/*.js': ['webpack', 'sourcemap'/*, 'coverage'*/],
+      '../src/pat/*/tests.js': ['webpack', 'sourcemap'/*, 'coverage'*/],
     },
 
     webpack: webpackOptions,
@@ -42,7 +42,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha','kjhtml', 'coverage'/*,'dots','progress','spec'*/],
+    reporters: ['mocha','kjhtml'/*, 'coverage','dots','progress','spec'*/],
     
     coverageReporter: {
       type : 'html',
