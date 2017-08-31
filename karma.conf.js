@@ -1,6 +1,7 @@
 // Karma configuration
 // Generated on Thu Aug 31 2017 11:03:54 GMT+0200 (CEST)
 // See more on https://www.npmjs.com/package/webpack-karma-jasmine
+const path = require('path');
 
 module.exports = function(config) {
   config.set({
@@ -28,36 +29,43 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      //use webpack to support require() in test-suits .js files 
-      //use babel-loader from webpack to compile es2015 features in .js files 
-      //add webpack as preprocessor 
+      //use webpack to support require() in test-suits .js files
+      //use babel-loader from webpack to compile es2015 features in .js files
+      //add webpack as preprocessor
       //'test_requires.js': ['webpack'],
-      'tests/specs/lib/*.js': ['webpack', 'sourcemap'],
+      'tests/specs/*/*.js': ['webpack', 'sourcemap'],
     },
 
+    webpack: {
+        resolve:{
+            alias:{
+                'pat-depends_parse': path.join(__dirname, 'src/lib/depends_parse.js'),
+            }
+        }
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['mocha','kjhtml'/*,'dots','progress','spec'*/],
-    
-    //address that the server will listen on, '0.0.0.0' is default 
+
+    //address that the server will listen on, '0.0.0.0' is default
     listenAddress: '0.0.0.0',
-    //hostname to be used when capturing browsers, 'localhost' is default 
+    //hostname to be used when capturing browsers, 'localhost' is default
     hostname: 'localhost',
-    //the port where the web server will be listening, 9876 is default 
+    //the port where the web server will be listening, 9876 is default
     port: 9876,
-    
-    //when a browser crashes, karma will try to relaunch, 2 is default 
+
+    //when a browser crashes, karma will try to relaunch, 2 is default
     retryLimit:0,
 
-    //how long does Karma wait for a browser to reconnect, 2000 is default 
+    //how long does Karma wait for a browser to reconnect, 2000 is default
     browserDisconnectTimeout: 5000,
-    
-    //how long will Karma wait for a message from a browser before disconnecting from it, 10000 is default 
+
+    //how long will Karma wait for a message from a browser before disconnecting from it, 10000 is default
     browserNoActivityTimeout: 10000,
-    
-    //timeout for capturing a browser, 60000 is default 
+
+    //timeout for capturing a browser, 60000 is default
     captureTimeout: 60000,
 
     // enable / disable colors in the output (reporters and logs)
@@ -81,8 +89,8 @@ module.exports = function(config) {
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,
-    
-    //if true, Karma fails on running empty test-suites 
+
+    //if true, Karma fails on running empty test-suites
     failOnEmptyTestSuite:false,
 
     // Concurrency level
@@ -92,14 +100,14 @@ module.exports = function(config) {
 
     /*karma-webpack config*/
     webpackMiddleware: {
-      //turn off webpack bash output when run the tests 
+      //turn off webpack bash output when run the tests
       noInfo: false, //true for later
       stats: 'errors-only'
     },
- 
+
     /*karma-mocha-reporter config*/
     mochaReporter: {
-        output: 'full'  //full, autowatch, minimal 
+        output: 'full'  //full, autowatch, minimal
     }
   })
 }
