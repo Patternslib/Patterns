@@ -182,7 +182,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                 $('[name="name"]').val('');
                 $a.trigger("click");
-                expect(window.confirm.callCount).toBe(1);
+                expect(window.confirm.calls.count()).toBe(1);
                 expect(pattern.onTrigger).toHaveBeenCalled();
             });
 
