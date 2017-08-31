@@ -82,7 +82,7 @@
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
-    "test": "karma start --single-run --browsers PhantomJS",
+    "test": "karma start webpack/karma.config.js --single-run --browsers PhantomJS",
     "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json",
     "postinstall": "postinstall-build node_modules/modernizr/modernizr.js --script build_modernizr"
   },
