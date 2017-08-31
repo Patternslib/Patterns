@@ -10,24 +10,21 @@ define(["pat-masonry"], function(pattern) {
 
         it("Sets class masonry-ready on the element after masonry has finished", function() {
             var $msnry;
-            runs(function () {
-                $("#lab").html(
-                    "<div class='pat-masonry'>" +
-                    "  <div class='item'>" +
-                    "    <img src='http://i.imgur.com/6Lo8oun.jpg'>"+
-                    "  </div>" +
-                    "  <div class='item'>" +
-                    "    <img src='http://i.imgur.com/HDSAMFl.jpg'>"+
-                    "  </div>" +
-                    "</div>");
-                $msnry = $("#lab .pat-masonry");
-                expect($msnry.hasClass("masonry-ready")).toBeFalsy();
-                pattern.init($msnry);
-            });
-            waits(800);
-            runs(function () {
+            $("#lab").html(
+                "<div class='pat-masonry'>" +
+                "  <div class='item'>" +
+                "    <img src='http://i.imgur.com/6Lo8oun.jpg'>"+
+                "  </div>" +
+                "  <div class='item'>" +
+                "    <img src='http://i.imgur.com/HDSAMFl.jpg'>"+
+                "  </div>" +
+                "</div>");
+            $msnry = $("#lab .pat-masonry");
+            expect($msnry.hasClass("masonry-ready")).toBeFalsy();
+            pattern.init($msnry);
+            setTimeout(function () {
                 expect($msnry.hasClass("masonry-ready")).toBeTruthy();
-            });
+            }, 800);
         });
     });
 });
