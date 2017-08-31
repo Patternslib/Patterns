@@ -1,6 +1,5 @@
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
-PHANTOMJS	?= node_modules/.bin/phantomjs
 BUNDLE      ?= ./.bundle/bin/bundle
 SASS        ?= ./.bundle/bin/sass
 
@@ -108,7 +107,7 @@ all_css:: css
 css:: stamp-bundler
 	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
 
-watch:: 
+watch::
 	$(SASS) --watch -I style -I . -I _sass _sass/_patterns.scss:style/patterns.css
 
 ########################################################################
