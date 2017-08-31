@@ -46,7 +46,7 @@
     "spectrum": "",
     "text-loader": "",
     "underscore": "1.8.3",
-    "validate.js": "0.8.0"
+    "validate.js": "0.11.1"
   },
   "devDependencies": {
     "ajv": "",
