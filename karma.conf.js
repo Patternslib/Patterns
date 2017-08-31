@@ -16,8 +16,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'tests/specs/**/*.js',
-      'src/pat/**/tests.js'
+      'test_requires.js'
     ],
 
 
@@ -91,8 +90,7 @@ module.exports = function(config) {
       //use webpack to support require() in test-suits .js files 
       //use babel-loader from webpack to compile es2015 features in .js files 
       //add webpack as preprocessor 
-      'tests/specs/**/*.js': ['webpack'],
-      'src/pat/**/tests.js': ['webpack']
+     'test_requires.js': ['webpack'],
 
     },
     webpackMiddleware: {
