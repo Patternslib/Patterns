@@ -40,16 +40,12 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 var $el = $(".pat-scroll");
                 spyOn($.fn, 'animate');
                 Pattern.init($el);
-                var flag;
-                this.waitsFor(function() {
-                    imagesLoaded($("body"), function() {flag = true;});
-                    return flag;
-                }, "The images should be loaded", 750);
-                $el.click();
-
-                this.runs(function() {
+                imagesLoaded($("body"));
+                setTimeout(function() {
+                    $el.click();
                     expect($.fn.animate).toHaveBeenCalled();
-                });
+                }, 500);
+
             });
 
             it("will scroll to an anchor on pat-update with originalEvent of click", function() {
