@@ -256,7 +256,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
         it("Fadeout with non-zero duration", function() {
             $("#lab").append("<div/>");
             var $slave = $("#lab div");
-            waitsFor( utils.hideOrShow($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}}), "Was never hidden", 800);
+            utils.hideOrShow($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}});
             expect($slave[0].style.display).toBe("none");
             expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
         });
