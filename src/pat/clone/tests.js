@@ -212,7 +212,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
 
             $lab.find('.remove-clone:last').click();
             expect(window.confirm).toHaveBeenCalled();
-            expect(window.confirm.callCount).toBe(1);
+            expect(window.confirm.calls.count()).toBe(1);
             expect($('div.item').length).toBe(1);
 
             $lab.empty();
@@ -228,7 +228,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('div.item').length).toBe(2);
 
             $lab.find('.remove-clone:last').click();
-            expect(window.confirm.callCount).toBe(1);
+            expect(window.confirm.calls.count()).toBe(1);
             expect($('div.item').length).toBe(1);
         });
     });

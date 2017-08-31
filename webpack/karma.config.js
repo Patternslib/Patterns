@@ -18,7 +18,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       '../tests/specs/*/*.js',
-      '../src/pat/*/tests*.js'
+      '../src/pat/*/tests.js'
     ],
 
 
@@ -34,7 +34,7 @@ module.exports = function(config) {
       //add webpack as preprocessor
       //'test_requires.js': ['webpack'],
       '../tests/specs/*/*.js': ['webpack', 'sourcemap'],
-      '../src/pat/*/tests*.js': ['webpack', 'sourcemap'],
+      '../src/pat/*/tests.js': ['webpack', 'sourcemap'],
     },
 
     webpack: webpackOptions,
