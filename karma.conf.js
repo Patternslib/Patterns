@@ -16,7 +16,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test_requires.js'
+      'tests/specs/lib/*.js'
+      //'test_requires.js'
     ],
 
 
@@ -24,10 +25,14 @@ module.exports = function(config) {
     exclude: [
     ],
 
-
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      //use webpack to support require() in test-suits .js files 
+      //use babel-loader from webpack to compile es2015 features in .js files 
+      //add webpack as preprocessor 
+      //'test_requires.js': ['webpack'],
+      'tests/specs/lib/*.js': ['webpack', 'sourcemap'],
     },
 
 
@@ -86,22 +91,15 @@ module.exports = function(config) {
 
 
     /*karma-webpack config*/
-    preprocessors: {
-      //use webpack to support require() in test-suits .js files 
-      //use babel-loader from webpack to compile es2015 features in .js files 
-      //add webpack as preprocessor 
-     'test_requires.js': ['webpack'],
-
-    },
     webpackMiddleware: {
       //turn off webpack bash output when run the tests 
-      noInfo: true,
+      noInfo: false, //true for later
       stats: 'errors-only'
     },
  
     /*karma-mocha-reporter config*/
     mochaReporter: {
-        output: 'noFailures'  //full, autowatch, minimal 
+        output: 'full'  //full, autowatch, minimal 
     }
   })
 }
