@@ -19,7 +19,7 @@ define(["pat-auto-scale", "jquery"], function(Pattern, jQuery) {
                   .appendTo("#lab");
                 var $child = $('#child').attr("data-pat-auto-scale", "method: zoom; min-width: 200; max-width: 1000");
                 new Pattern($child);
-                expect($child[0].style.zoom).toBe("0.5");
+                expect($child[0].style.zoom).toBe("0,5");
             });
 
             it("honours the max-width property", function() {

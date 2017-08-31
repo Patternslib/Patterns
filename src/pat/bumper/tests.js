@@ -70,7 +70,7 @@ define(["jquery", "pat-bumper"], function($, Bumper) {
             var pattern = new Bumper($el);
             pattern.init();
             pattern._markBumped(true);
-            expect(pattern.$el.attr('class')).toBe("pat-bumper bumped");
+            expect(pattern.$el.attr('class')).toBe("pat-bumper sticky-supported bumped");
         });
 
         it("updates classes for an unbumped element", function() {
@@ -85,7 +85,7 @@ define(["jquery", "pat-bumper"], function($, Bumper) {
             var pattern = new Bumper($el);
             pattern.init();
             pattern._markBumped(false);
-            expect(pattern.$el.attr('class')).toBe("pat-bumper plain");
+            expect(pattern.$el.attr('class')).toBe("pat-bumper sticky-supported plain");
         });
 
         it("listens on window scroll if no scrollable container is present", function() {

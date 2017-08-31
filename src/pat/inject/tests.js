@@ -294,7 +294,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     $("#lab").append($a).append($target);
                 });
-
+                afterEach(function() {
+                     $target.remove();
+                })
 
                 it("fall back to href id", function() {
                     var cfgs = pattern.extractConfig($a);
@@ -343,7 +345,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     expect(pattern.verifyConfig(cfgs)).toBeTruthy();
 
                     $target = $("#someid");
-                    this.after(function() { $target.remove(); });
+                    //this.after(function() { $target.remove(); });
                     expect($target.length).toBeGreaterThan(0);
                     expect($target.parent().prop("tagName")).toBe("BODY");
                 });
