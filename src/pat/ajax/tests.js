@@ -17,8 +17,8 @@ define(["pat-ajax"], function(pattern) {
                 pattern.init($a);
                 spyOn($, "ajax");
                 $a.click();
-                expect($.ajax.calls[0].args[0].context[0]).toBe($a[0]);
-                expect($.ajax.calls[0].args[0].url).toBe("href.html");
+                expect($.ajax.calls.argsFor(0)[0].context[0]).toBe($a[0]);
+                expect($.ajax.calls.argsFor(0)[0].url).toBe("href.html");
             });
         });
 
@@ -47,8 +47,8 @@ define(["pat-ajax"], function(pattern) {
             it("honors method='post'", function() {
                 $form.attr("method", "post");
                 $form.submit();
-                expect($.ajax.calls[0].args[0].url).toEqual("action.html");
-                expect($.ajax.calls[0].args[0].data).toEqual("input1=value1");
+                expect($.ajax.calls.argsFor(0)[0].url).toEqual("action.html");
+                expect($.ajax.calls.argsFor(0)[0].data).toEqual("input1=value1");
             });
 
             it("triggers ajax request on click submit", function() {
@@ -58,13 +58,13 @@ define(["pat-ajax"], function(pattern) {
 
             it("does include submit button clicked", function() {
                 $button.click();
-                expect($.ajax.calls[0].args[0].url)
+                expect($.ajax.calls.argsFor(0)[0].url)
                     .toEqual("action.html?input1=value1&submit=submit");
             });
 
             it("does not include submit buttons if not clicked", function() {
                 $form.submit();
-                expect($.ajax.calls[0].args[0].url)
+                expect($.ajax.calls.argsFor(0)[0].url)
                     .toEqual("action.html?input1=value1");
             });
         });

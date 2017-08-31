@@ -23,7 +23,7 @@ define(["pat-slideshow-builder"], function(pattern) {
                 form.action="slideshow.html";
                 pattern.init($(form));
                 expect($.ajax).toHaveBeenCalled();
-                var options = $.ajax.calls[0].args[0];
+                var options = $.ajax.calls.argsFor(0)[0];
                 expect(options.url.endsWith("slideshow.html")).toBeTruthy();
                 expect(options.context).toBe(form);
             });
@@ -36,7 +36,7 @@ define(["pat-slideshow-builder"], function(pattern) {
                 form.appendChild(container);
                 pattern.init($(container));
                 expect($.ajax).toHaveBeenCalled();
-                var options = $.ajax.calls[0].args[0];
+                var options = $.ajax.calls.argsFor(0)[0];
                 expect(options.url.endsWith("slideshow.html")).toBeTruthy();
                 expect(options.context).toBe(container);
             });

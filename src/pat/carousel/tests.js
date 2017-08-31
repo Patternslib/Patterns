@@ -21,7 +21,7 @@ define(["pat-carousel"], function(pattern) {
                 spyOn($.fn, "anythingSlider").andCallThrough();
                 pattern.init($carousel);
                 expect($.fn.anythingSlider).toHaveBeenCalled();
-                var options = $.fn.anythingSlider.calls[0].args[0];
+                var options = $.fn.anythingSlider.calls.argsFor(0)[0];
                 expect(options.autoPlay).toBe(false);
                 expect(options.stopAtEnd).toBe(false);
                 expect(options.resizeContents).toBe(false);
@@ -56,7 +56,7 @@ define(["pat-carousel"], function(pattern) {
                 spyOn($.fn, "anythingSlider").andCallThrough();
                 pattern.init($carousel);
                 expect($.fn.anythingSlider).toHaveBeenCalled();
-                var options = $.fn.anythingSlider.calls[0].args[0];
+                var options = $.fn.anythingSlider.calls.argsFor(0)[0];
                 expect(options.autoPlay).toBe(false);
                 expect(options.stopAtEnd).toBe(true);
                 expect(options.delay).toBe(50);
