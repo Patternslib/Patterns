@@ -240,7 +240,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
             var $slave = $("#lab div");
             spyOn($.fn, "trigger");
             utils.hideOrShow($slave, true, {transition: "none", effect: {duration: "fast", easing: "swing"}}, "depends");
-            expect($.fn.trigger.calls.length).toEqual(1);
+            expect($.fn.trigger.calls.count()).toEqual(1);
             expect($.fn.trigger).toHaveBeenCalledWith(
                 "pat-update", {pattern: "depends", transition: "complete"});
         });
@@ -256,7 +256,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
         it("Fadeout with non-zero duration", function() {
             $("#lab").append("<div/>");
             var $slave = $("#lab div");
-            utils.hideOrShow($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}});
+            waitsFor( utils.hideOrShow($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}}), "Was never hidden", 800);
             expect($slave[0].style.display).toBe("none");
             expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
         });
@@ -266,7 +266,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
             var $slave = $("#lab div");
             spyOn($.fn, "trigger");
             utils.hideOrShow($slave, false, {transition: "slide", effect: {duration: "fast", easing: "swing"}}, "depends");
-            expect($.fn.trigger.calls.length).toEqual(2);
+            expect($.fn.trigger.calls.count()).toEqual(2);
             expect($.fn.trigger).toHaveBeenCalledWith(
                 "pat-update", {pattern: "depends", transition: "start"});
             expect($.fn.trigger).toHaveBeenCalledWith(

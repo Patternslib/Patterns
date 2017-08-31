@@ -31,7 +31,7 @@ define(["pat-registry", "pat-base", "underscore"], function(registry, Base, _) {
         });
 
         it("will automatically register a pattern in the registry when extended", function() {
-            spyOn(registry, "register").andCallThrough();
+            spyOn(registry, "register").and.callThrough();
             var NewPattern = Base.extend({
                 name: "example",
                 trigger: ".pat-example"
@@ -44,14 +44,14 @@ define(["pat-registry", "pat-base", "underscore"], function(registry, Base, _) {
         });
 
         it("will not automatically register a pattern without a \"name\" attribute", function() {
-            spyOn(registry, "register").andCallThrough();
+            spyOn(registry, "register").and.callThrough();
             var NewPattern = Base.extend({trigger: ".pat-example"});
             expect(NewPattern.prototype.trigger).toEqual(".pat-example");
             expect(registry.register).not.toHaveBeenCalled();
         });
 
         it("will not automatically register a pattern without a \"trigger\" attribute", function() {
-            spyOn(registry, "register").andCallThrough();
+            spyOn(registry, "register").and.callThrough();
             var NewPattern = Base.extend({name: "example"});
             expect(registry.register).not.toHaveBeenCalled();
             expect(NewPattern.prototype.name).toEqual("example");
@@ -65,15 +65,15 @@ define(["pat-registry", "pat-base", "underscore"], function(registry, Base, _) {
                     expect(this.$el.attr("class")).toEqual("pat-example");
                 }
             });
-            spyOn(NewPattern, "init").andCallThrough();
+            spyOn(NewPattern, "init").and.callThrough();
             registry.scan($("<div class=\"pat-example\"/>"));
             expect(NewPattern.init).toHaveBeenCalled();
         });
 
         it("requires that patterns that extend it provide an object of properties", function() {
             expect(Base.extend)
-                .toThrow(
-                    new Error("Pattern configuration properties required when calling Base.extend")
+                .toThrowError(
+                    "Pattern configuration properties required when calling Base.extend"
                 );
         });
 
