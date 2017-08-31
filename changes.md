@@ -5,19 +5,34 @@
 Breaking Changes
 ~~~~~~~~~~~~~~~~
 
-+++Large Upgrade, changing the build system. Read Upgrade-from-2-to-3.txt for details.
++++Big breaking upgrade changing the build system. Read Upgrade-from-2-to-3.txt for details.+++
 
 - Switched fully to npm for package retrieval, deprecating bower (pilz)
 - Introduce webpack to create the bundle and deprecate require.js (pilz)
   Read Upgrade-from-2-to-3.txt for details.
 - Tests are upgraded to Jasmine 2.8.0 syntax
 - Testrunner is now karma 1.7
+- Removed deprecated packages
+  - jquery.tinymce 
+    Very big and unmaintained. We have never advertised it so we don't include it anymore to clean up.
+  - requirejs
+    No longer required
+  - requirejs-text
+    No longer required
+  - jquery.textchange
+    needed for tinymce, not npm compatible, assumed unnecessary as we removed jquery.tinymce
+  - Showdown Table
+    As of showdown v 1.2.0, table support was moved into core as an opt-in feature making this extension obsolete. See https://github.com/showdownjs/table-extension
+  - Showdown Github
+    As of showdown v 1.2.0, github support was moved into core as an opt-in feature making this extension obsolete. See https://github.com/showdownjs/github-extension
+  - pat-validate
+    Has been superceeded by pat-validation and is no longer maintained.
+
 
 
 ## 2.1.2 - Aug. 29, 2017
 
 - pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
-
 
 
 ## 2.1.1 - Aug. 28, 2017
