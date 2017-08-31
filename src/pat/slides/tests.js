@@ -12,7 +12,7 @@ define(["pat-slides"], function(pattern) {
 
         describe("init", function() {
             it("Return result from _hook", function() {
-                spyOn(pattern, "_hook").andCallFake(function() {
+                spyOn(pattern, "_hook").and.callFake(function() {
                     return "jq";
                 });
                 var elements = $();
@@ -24,8 +24,8 @@ define(["pat-slides"], function(pattern) {
         describe("_hook", function() {
             it("Return jQuery object", function() {
                 var jq = jasmine.createSpyObj("jQuery", ["off", "on"]);
-                jq.off.andReturn(jq);
-                jq.on.andReturn(jq);
+                jq.off.and.returnValue(jq);
+                jq.on.and.returnValue(jq);
                 expect(pattern._hook(jq)).toBe(jq);
             });
         });
@@ -71,7 +71,7 @@ define(["pat-slides"], function(pattern) {
                 for (var i=1; i<=4; i++)
                     $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
                 var utils = require("pat-utils");
-                spyOn(utils, "debounce").andCallFake(function(func) {
+                spyOn(utils, "debounce").and.callFake(function(func) {
                     return func;
                 });
                 spyOn(pattern, "_reset");

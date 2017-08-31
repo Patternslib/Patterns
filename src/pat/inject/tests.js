@@ -110,7 +110,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
                 spyOn(pattern, "onTrigger").and.callThrough();
-                spyOn(window, 'confirm').andReturn(false);
+                spyOn(window, 'confirm').and.returnValue(false);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -131,7 +131,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
                 spyOn(pattern, "onTrigger").and.callThrough();
-                spyOn(window, 'confirm').andReturn(false);
+                spyOn(window, 'confirm').and.returnValue(false);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -149,7 +149,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
                 spyOn(pattern, "onTrigger").and.callThrough();
-                spyOn(window, 'confirm').andReturn(true);
+                spyOn(window, 'confirm').and.returnValue(true);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -167,7 +167,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $div = $("<form id=\"someid\"><input type=\"text\" name=\"name\"/></form>");
                 $("#lab").empty().append($a).append($div);
                 spyOn(pattern, "onTrigger").and.callThrough();
-                spyOn(window, 'confirm').andReturn(true);
+                spyOn(window, 'confirm').and.returnValue(true);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -196,7 +196,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     var $div = $("<div id=\"someid\" />");
                     $("#lab").empty().append($a).append($div);
                     spyOn(pattern, "onTrigger").and.callThrough();
-                    spyOn(window, 'confirm').andReturn(false);
+                    spyOn(window, 'confirm').and.returnValue(false);
 
                     // Test default value for parser argument
                     var cfgs = pattern.extractConfig($a, {});
@@ -239,7 +239,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("Element with link attribute", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a href=\"example.com\">This is a test</a>"))
                     .toBe("<a href=\"REBASED\">This is a test</a>");
@@ -247,21 +247,21 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("Automatically fix casing of attribute", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a HrEf=\"example.com\">This is a test</a>"))
                     .toBe("<a href=\"REBASED\">This is a test</a>");
             });
 
             it("Check if image is rebased correctly", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<img src=\"example.com\">"))
                     .toBe("<img src=\"REBASED\">");
             });
 
             it("Leave non attribute occurences of src intact", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"))
                     .toBe("<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>");

@@ -13,7 +13,7 @@ define(["pat-slideshow-builder"], function(pattern) {
         describe("init", function() {
             it("Return jQuery wrapper", function() {
                 var jq = jasmine.createSpyObj("jQuery", ["each"]);
-                jq.each.andReturn(jq);
+                jq.each.and.returnValue(jq);
                 expect(pattern.init(jq)).toBe(jq);
             });
 

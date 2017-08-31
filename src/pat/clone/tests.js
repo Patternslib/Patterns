@@ -114,7 +114,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
         });
 
         it("has a \"clone-element\" argument which is necessary when starting with pre-existing clones", function() {
-            spyOn(window, 'confirm').andCallFake(function () {
+            spyOn(window, 'confirm').and.callFake(function () {
                 return true;
             });
             var $lab = $('#lab');
@@ -145,7 +145,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
         });
 
         it("will remove a clone when .remove-clone inside the clone is clicked.", function() {
-            spyOn(window, 'confirm').andCallFake(function () {
+            spyOn(window, 'confirm').and.callFake(function () {
                 return true;
             });
             var $lab = $('#lab');
@@ -170,7 +170,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
         });
 
         it("allows the remove element to be configured", function() {
-            spyOn(window, 'confirm').andCallFake(function () {
+            spyOn(window, 'confirm').and.callFake(function () {
                 return true;
             });
             var $lab = $('#lab');
@@ -195,7 +195,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
         });
 
         it("will by default ask for confirmation before removing elements, but can be configured otherwise", function() {
-            spyOn(window, 'confirm').andCallFake(function () {
+            spyOn(window, 'confirm').and.callFake(function () {
                 return true;
             });
             var $lab = $('#lab');
