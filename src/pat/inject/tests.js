@@ -345,7 +345,6 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     expect(pattern.verifyConfig(cfgs)).toBeTruthy();
 
                     $target = $("#someid");
-                    //this.after(function() { $target.remove(); });
                     expect($target.length).toBeGreaterThan(0);
                     expect($target.parent().prop("tagName")).toBe("BODY");
                 });
