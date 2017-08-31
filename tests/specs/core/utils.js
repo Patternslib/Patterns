@@ -260,7 +260,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
             setTimeout(function () {
                 expect($slave[0].style.display).toBe("none");
                 expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
-                done();
+                
             }, 500);
         });
 
@@ -275,7 +275,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
                     "pat-update", {pattern: "depends", transition: "start"});
                 expect($.fn.trigger).toHaveBeenCalledWith(
                     "pat-update", {pattern: "depends", transition: "complete"});
-                done();
+                
             }, 500);
 
         });
