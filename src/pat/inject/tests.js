@@ -296,7 +296,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 });
                 afterEach(function() {
                      $target.remove();
-                })
+                });
 
                 it("fall back to href id", function() {
                     var cfgs = pattern.extractConfig($a);

@@ -126,7 +126,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
 
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
 
-                var $el = $("a#tooltip");
+                $el = $("a#tooltip");
                 var $container = $el.data("patterns.tooltip.container");
                 $container.trigger("patterns-inject-triggered");
 

@@ -17,8 +17,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                     ].join("\n"));
                 spyOn($.fn, 'animate');
                 Pattern.init($(".pat-scroll"));
-                var flag;
-                imagesLoaded($("body"))
+                imagesLoaded($("body"));
                 setTimeout(function () {
                     expect($.fn.animate).toHaveBeenCalled();
                 }, 750);
