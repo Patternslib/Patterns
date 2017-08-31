@@ -46,7 +46,8 @@ jshint: stamp-npm
 
 .PHONY: check
 check:: stamp-npm jshint
-	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests.html
+	npm run test
+	# $(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests.html
 
 
 ########################################################################
