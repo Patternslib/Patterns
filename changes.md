@@ -10,8 +10,13 @@ Breaking Changes
 - Switched fully to npm for package retrieval, deprecating bower (pilz)
 - Introduce webpack to create the bundle and deprecate require.js (pilz)
   Read Upgrade-from-2-to-3.txt for details.
-- Tests are upgraded to Jasmine 2 syntax
-- Testrunner is now karma
+- Tests are upgraded to Jasmine 2.8.0 syntax
+- Testrunner is now karma 1.7
+
+
+## 2.1.2 - Aug. 29, 2017
+
+- pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
 
 
 
