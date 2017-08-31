@@ -63,6 +63,8 @@
     "karma-chrome-launcher": "",
     "karma-jasmine": "",
     "karma-phantomjs-launcher": "^1.0.4",
+    "karma-firefox-launcher": "",
+    "karma-safari-launcher": "",
     "karma-sourcemap-loader": "",
     "modernizr-webpack-plugin": "",
     "pegjs": "0.7.0",
