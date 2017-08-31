@@ -12,6 +12,7 @@ Breaking Changes
   Read Upgrade-from-2-to-3.txt for details.
 - Tests are upgraded to Jasmine 2.8.0 syntax
 - Testrunner is now karma 1.7
+- Coverage reports are generated
 - Removed deprecated packages
   - jquery.tinymce 
     Very big and unmaintained. We have never advertised it so we don't include it anymore to clean up.
