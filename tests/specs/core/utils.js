@@ -210,11 +210,13 @@ define(["underscore", "pat-utils"], function(_, utils) {
     describe("hideOrShow", function() {
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
-            jasmine.Clock.useMock();$("<div/>", {id: "lab"}).appendTo(document.body);
+            jasmine.clock().install();
+            $("<div/>", {id: "lab"}).appendTo(document.body);
         });
 
         afterEach(function() {
             $("#lab").remove();
+            jasmine.clock().uninstall();
         });
 
         it("Hide without a transition", function() {
