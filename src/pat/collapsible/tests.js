@@ -100,8 +100,10 @@ define(["pat-registry", "pat-collapsible"], function(registry, Pattern) {
                 expect($collapsible.hasClass("open")).toBe(false);
                 expect($collapsible.hasClass("closed")).toBe(true);
                 $('#open').click();
-                expect($collapsible.hasClass("open")).toBe(true);
-                expect($collapsible.hasClass("closed")).toBe(false);
+                setTimeout(function () {
+                    expect($collapsible.hasClass("open")).toBe(true);
+                    expect($collapsible.hasClass("closed")).toBe(false);
+                }, 500);
             });
 
             it("can be configured to have trigger which only closes it", function() {
@@ -118,8 +120,10 @@ define(["pat-registry", "pat-collapsible"], function(registry, Pattern) {
                 expect($collapsible.hasClass("closed")).toBe(false);
                 expect($collapsible.hasClass("open")).toBe(true);
                 $('#close').click();
-                expect($collapsible.hasClass("closed")).toBe(true);
-                expect($collapsible.hasClass("open")).toBe(false);
+                setTimeout(function () {
+                    expect($collapsible.hasClass("closed")).toBe(true);
+                    expect($collapsible.hasClass("open")).toBe(false);
+                }, 500);
             });
         });
     });
