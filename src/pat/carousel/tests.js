@@ -18,7 +18,7 @@ define(["pat-carousel"], function(pattern) {
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "anythingSlider").andCallThrough();
+                spyOn($.fn, "anythingSlider").and.callThrough();
                 pattern.init($carousel);
                 expect($.fn.anythingSlider).toHaveBeenCalled();
                 var options = $.fn.anythingSlider.calls.argsFor(0)[0];
@@ -53,7 +53,7 @@ define(["pat-carousel"], function(pattern) {
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "anythingSlider").andCallThrough();
+                spyOn($.fn, "anythingSlider").and.callThrough();
                 pattern.init($carousel);
                 expect($.fn.anythingSlider).toHaveBeenCalled();
                 var options = $.fn.anythingSlider.calls.argsFor(0)[0];

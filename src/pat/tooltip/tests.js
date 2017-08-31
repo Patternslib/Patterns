@@ -50,8 +50,8 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                         href: "#content"
                     });
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").andCallThrough();
-                    spyOn(pattern, "hide").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
+                    spyOn(pattern, "hide").and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
                     expect(pattern.show).toHaveBeenCalled();
@@ -76,8 +76,8 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                         href: "#content"
                     });
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").andCallThrough();
-                    spyOn(pattern, "hide").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
+                    spyOn(pattern, "hide").and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
                     expect(pattern.show).toHaveBeenCalled();
@@ -108,8 +108,8 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                         data: "trigger: click; closing: close-button",
                         href: "/tests/content.html#content"
                     });
-                    spyOn(pattern, "show").andCallThrough();
-                    spyOn(pattern, "hide").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
+                    spyOn(pattern, "hide").and.callThrough();
                     var $el = $("a#tooltip");
                     pattern.init($el);
                     $el.trigger(utils.click);
@@ -129,8 +129,8 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                         href: "/tests/content.html#content"
                     });
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").andCallThrough();
-                    spyOn(pattern, "hide").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
+                    spyOn(pattern, "hide").and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
                     expect(pattern.show).toHaveBeenCalled();
@@ -158,7 +158,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 });
                 it("the default click action is prevented", function () {
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
                     spyOn(utils.click, "preventDefault");
                     pattern.init($el);
                     $el.trigger(utils.click);
@@ -174,7 +174,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 it("will show the contents of the 'title' attribute", function () {
                     utils.createTooltip({data: "source: title"});
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
                     var title = $el.attr("title");
                     pattern.init($el);
                     // The 'title' attr gets removed, otherwise the browser's
@@ -195,8 +195,8 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 it("will fetch its contents via ajax", function () {
                     utils.createTooltip({data: "source: auto", href: "/tests/content.html#content"});
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").andCallThrough();
-                    spyOn(inject, "execute"); //.andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
+                    spyOn(inject, "execute"); //.and.callThrough();
                     pattern.init($el);
                     runs(function () {
                         $el.trigger(utils.click);
@@ -225,7 +225,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     utils.createTooltip({data: "source: content", href: "#tooltip-source"});
                     utils.createTooltipSource();
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
                     expect(pattern.show).toHaveBeenCalled();
@@ -278,7 +278,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
             });
             it("will not close if the contained trigger is clicked", function () {
                 runs(function () {
-                    spyOn(pattern, "show").andCallThrough();
+                    spyOn(pattern, "show").and.callThrough();
                     var $el = $("a#tooltip");
                     pattern.init($el);
                     pattern.init($("a#nested-tooltip"));
