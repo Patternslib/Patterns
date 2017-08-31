@@ -33,8 +33,8 @@ module.exports = function(config) {
       //use babel-loader from webpack to compile es2015 features in .js files
       //add webpack as preprocessor
       //'test_requires.js': ['webpack'],
-      '../tests/specs/*/*.js': ['webpack', 'sourcemap'],
-      '../src/pat/*/tests.js': ['webpack', 'sourcemap'],
+      '../tests/specs/*/*.js': ['webpack', 'sourcemap', 'coverage'],
+      '../src/pat/*/tests.js': ['webpack', 'sourcemap', 'coverage'],
     },
 
     webpack: webpackOptions,
@@ -42,8 +42,12 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha','kjhtml'/*,'dots','progress','spec'*/],
-
+    reporters: ['mocha','kjhtml', 'coverage'/*,'dots','progress','spec'*/],
+    
+    coverageReporter: {
+      type : 'html',
+      dir : '../coverage/'
+    },
     //address that the server will listen on, '0.0.0.0' is default
     listenAddress: '0.0.0.0',
     //hostname to be used when capturing browsers, 'localhost' is default

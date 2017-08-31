@@ -4,6 +4,7 @@
 *~
 .bundle
 .sass-cache
+coverage/
 /node_modules
 /paternslib.sublime-project
 /paternslib.sublime-workspace

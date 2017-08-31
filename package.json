@@ -61,6 +61,7 @@
     "jshint": "~2.9.3",
     "karma": "",
     "karma-chrome-launcher": "",
+    "karma-coverage": "",
     "karma-jasmine": "",
     "karma-phantomjs-launcher": "^1.0.4",
     "karma-firefox-launcher": "",
