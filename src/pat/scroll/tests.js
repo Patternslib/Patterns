@@ -18,15 +18,10 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 spyOn($.fn, 'animate');
                 Pattern.init($(".pat-scroll"));
                 var flag;
-                this.waitsFor(function() {
-                    imagesLoaded($("body"), function() {flag = true;});
-                    return flag;
-                }, "The images should be loaded", 750);
-
-                this.runs(function() {
+                imagesLoaded($("body"))
+                setTimeout(function () {
                     expect($.fn.animate).toHaveBeenCalled();
-                });
-                // expect($.fn.animate).toHaveBeenCalled();
+                }, 750);
             });
         });
 
