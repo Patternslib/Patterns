@@ -10,6 +10,8 @@ Breaking Changes
 - Switched fully to npm for package retrieval, deprecating bower (pilz)
 - Introduce webpack to create the bundle and deprecate require.js (pilz)
   Read Upgrade-from-2-to-3.txt for details.
+- Tests are upgraded to Jasmine 2 syntax
+- Testrunner is now karma
 
 
 

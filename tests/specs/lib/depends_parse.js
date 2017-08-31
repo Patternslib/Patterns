@@ -28,7 +28,7 @@ define(["../../../src/lib/depends_parse.js"], function(parser) {
             it("Can not do order comparison to string", function() {
                 expect(function() {
                     parser.parse("foo<bar");
-                }).toThrowError('');
+                }).toThrowError('Expected number or whitespace but "b" found.');
 
             });
 
