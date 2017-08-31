@@ -148,7 +148,6 @@ define([
                 utils.redraw(this.$el.find(".panel-body"));
             }
         },
-
         destroy: function() {
             var $el = this.$el;
             // if working without injection, destroy right away.
