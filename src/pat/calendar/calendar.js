@@ -14,8 +14,7 @@ define([
     "pat-registry",
     "underscore",
     "moment-timezone-data",
-    "jquery.fullcalendar.dnd",
-    "jquery.fullcalendar"
+    "fullcalendar"
 ], function($, logger, Parser, store, utils, registry, _) {
     "use strict";
     var log = logger.getLogger("calendar"),
@@ -77,22 +76,25 @@ define([
             this.$el = $el;
             this.cfg = cfg;
             this.storage = storage;
-            cfg.defaultDate = storage.get("date") || cfg.defaultDate;
-            cfg.defaultView = storage.get("view") || cfg.defaultView;
+            cfg.defaultDate = storage  && storage.get("date") || cfg.defaultDate;
+            cfg.defaultView = storage && storage.get("view") || cfg.defaultView;
             cfg.tooltipConfig = $el.data("patCalendarTooltip");
+            cfg.modalConfig = $el.data("patCalendarModal");
             if (cfg.tooltipConfig) {
                 var match = cfg.tooltipConfig.match(/url:[ ](.*?)(;|$)/);
                 cfg.tooltipConfig = cfg.tooltipConfig.replace(match[0], "");
                 cfg.newEventURL = match[1];
             }
 
-            if (cfg.externalEventSelector) {
-                $(cfg.externalEventSelector).draggable({
-                    zIndex: 200,
-                    helper: "clone",
-                    appendTo: "body"
-                });
-            }
+            // No longer necessary since 2.1 
+            // https://fullcalendar.io/docs/event_ui/Requirements/
+            // if (cfg.externalEventSelector) {
+            //     $(cfg.externalEventSelector).draggable({
+            //         zIndex: 200,
+            //         helper: "clone",
+            //         appendTo: "body"
+            //     });
+            // }
 
             if (!opts.ignoreUrl) {
                 var search = calendar._parseSearchString();
@@ -130,26 +132,38 @@ define([
                     callback(events);
                 },
                 eventAfterRender: function(ev, $event) {
-                    if (ev.id !== "pat-calendar-new-event") {
-                        return;
-                    }
-                    /* Take the data from data-pat-calendar-tooltip to
-                     * configure a tooltip trigger element.
-                     */
-                    if (!cfg.tooltipOpen) {
-                        cfg.tooltipOpen = true;
-                        var url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
-                        registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
-                        $event.trigger("click.tooltip");
-                        $event.on("pat-update", function (event, data) {
-                            if (data.pattern === "tooltip" && data.hidden === true) {
-                                event.stopPropagation();
-                                if ($(this).is(":visible")) {
-                                    $el.fullCalendar("removeEvents", ev.id);
-                                    cfg.tooltipOpen = false;
+                    var url = "";
+                    if (ev.id === "pat-calendar-new-event") {
+                        /* Take the data from data-pat-calendar-tooltip to
+                         * configure a tooltip trigger element.
+                         */
+                        if (!cfg.tooltipOpen) {
+                            cfg.tooltipOpen = true;
+                            url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
+                            registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
+                            $event.trigger("click.tooltip");
+                            $event.on("pat-update", function (event, data) {
+                                if (data.pattern === "tooltip" && data.hidden === true) {
+                                    event.stopPropagation();
+                                    if ($(this).is(":visible")) {
+                                        $el.fullCalendar("removeEvents", ev.id);
+                                        cfg.tooltipOpen = false;
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    } else {
+                            url = ev.url;
+                            registry.scan($event.addClass("pat-modal").attr({"data-pat-modal": cfg.modalConfig}).attr({"href": url}));
+                            // $event.trigger("click.modal");
+                            $event.on("pat-update", function (event, data) {
+                                if (data.pattern === "modal" && data.hidden === true) {
+                                    event.stopPropagation();
+                                    if ($(this).is(":visible")) {
+                                        $el.fullCalendar("removeEvents", ev.id);
+                                    }
+                                }
+                            });
                     }
                 },
                 dayClick: function (moment, ev, view) {
@@ -162,7 +176,7 @@ define([
                     }
                     var end;
                     if (view.name !== "month") {
-                        end = moment.clone().add("minutes", 30);
+                        end = moment.clone().add(30, "minutes");
                     } else {
                         end = undefined;
                     }
@@ -198,7 +212,7 @@ define([
             $el.find(".cal-events").css("display", "none");
             this._restoreCalendarControls();
             setTimeout(function () {
-                $el.fullCalendar("option", "height", $el.find(".fc-content").height());
+                $el.fullCalendar("option", "height", $el.find(".fc-view-container").height());
                 $el.fullCalendar("refetchEvents");
             }, 900);
         },
@@ -229,7 +243,7 @@ define([
                 data.end = moment.clone().format();
                 data.allDay = true;
             } else {
-                data.end = moment.clone().add("minutes", 30).format();
+                data.end = moment.clone().add(30, "minutes").format();
                 data.allDay = false;
             }
             calendar._addNewEvent(calendar.$el, $event, data);
@@ -254,7 +268,7 @@ define([
                 // so we substract a day here.
                 data.end = ((evt.end === null) ? evt.start.clone() : evt.end.clone().subtract("days", 1)).format();
             } else {
-                data.end = ((evt.end === null) ? evt.start.clone().add("minutes", 30) : evt.end).format();
+                data.end = ((evt.end === null) ? evt.start.clone().add(30, "minutes") : evt.end).format();
             }
             var tzstr = (match && match.length > 0) ? match[0] : "";
             var startstr = data.start + tzstr;
@@ -269,7 +283,7 @@ define([
         },
 
         _redrawCalendar: function() {
-            this.$el.fullCalendar("option", "height", this.$el.find(".fc-content").height());
+            this.$el.fullCalendar("option", "height", this.$el.find(".fc-view-container").height());
         },
 
         _registerRedrawHandlers: function() {
@@ -283,7 +297,7 @@ define([
                         // Otherwise drag2resize breaks.
                         return;
                     }
-                    calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
+                    calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-view-container").height());
                 });
                 $(document).on("pat-update.pat-calendar", function(ev) {
                     // Don't redraw if the change was in a tooltip, otherwise
@@ -291,7 +305,7 @@ define([
                     // it's a calendar event tooltip).
                     if ($(ev.target).parents('.tooltip-container').length === 0) {
                         setTimeout(function() {
-                            calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-content").height());
+                            calendar.$el.fullCalendar("option", "height", calendar.$el.find(".fc-view-container").height());
                         }, 300);
                     }
                 });
@@ -382,8 +396,7 @@ define([
             $title.html($el.fullCalendar("getView").title);
             // adjust height
             if (calendar.cfg.height === "auto") {
-                $el.fullCalendar("option", "height",
-                                 $el.find(".fc-content").height());
+                $el.fullCalendar("option", "height", $el.find(".fc-view-container").height());
             }
             // store current date and view
             var date = $el.fullCalendar("getDate").format(),
@@ -470,6 +483,10 @@ define([
                     log.debug("remove due to search-text="+searchText, $event);
                     return false;
                 }
+                if (shownCats.length === 0) {
+                    // In case we don't use filter categories, always return all events
+                    return true;
+                }
                 return shownCats.filter(function() {
                     return $event.hasClass(this);
                 }).length;
@@ -500,7 +517,7 @@ define([
                     // XXX: In fullcalendar 2 the end-date is no longer inclusive, but
                     // it should be. We fix that by adding a day so that the
                     // pat-calendar API stays the same and stays intuitive.
-                    end.add("days", 1);
+                    end.add(1, "days");
                 }
                 if (timezone) {
                     start = start.tz(timezone);

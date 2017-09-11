@@ -1,6 +1,6 @@
 {
-  "name": "@patternslib/patternslib",
-  "version": "2.1.2",
+  "name": "patternslib",
+  "version": "3.0.0a1",
   "title": "Markup patterns to drive behaviour.",
   "description": "Patternslib is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
   "author": {
@@ -8,26 +8,95 @@
   },
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/Patternslib/Patterns/issues"
+    "url": "https://github.com/patternslib/patterns/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Patternslib/Patterns.git"
+    "url": "https://github.com/Patternslib/patterns.git"
+  },
+  "dependencies": {
+    "AnythingSlider": "https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
+    "Stickyfill": "https://github.com/wilddeer/stickyfill.git",
+    "almond": "",
+    "anythingslider": "git+https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
+    "chosen-js": "",
+    "ev-emitter": "1.0.3",
+    "fullcalendar": "2.9.1",
+    "google-code-prettify": "1.0.4",
+    "imagesloaded": "4.1.1",
+    "jquery": "1.11.3",
+    "jquery-form": "3.50.0",
+    "jquery-jcrop": "",
+    "jquery-placeholder": "2.0.7",
+    "jquery.browser": "0.1.0",
+    "logging": "https://github.com/Patternslib/logging.git",
+    "masonry-layout": "4.1.1",
+    "modernizr": "3.5.0",
+    "moment": "2.10.6",
+    "moment-timezone": "0.4.0",
+    "parsleyjs": "2.7.2",
+    "photoswipe": "4.1.0",
+    "pikaday": "1.3.2",
+    "prefixfree": "",
+    "select2": "3.4.5",
+    "showdown": "1.7.2",
+    "showdown-github": "",
+    "showdown-prettify": "",
+    "slides": "https://github.com/Patternslib/slides.git",
+    "spectrum": "",
+    "text-loader": "",
+    "underscore": "1.8.3",
+    "validate.js": "0.11.1"
   },
   "devDependencies": {
-    "bower": "latest",
+    "ajv": "",
+    "exports-loader": "",
+    "expose-loader": "",
     "generator-patternslib": "0.2.1",
     "http-server": "^0.7.5",
+    "imports-loader": "",
+    "jasmine": "",
+    "jasmine-core": "",
+    "jasmine-webpack-plugin": "",
     "jshint": "~2.9.3",
+    "karma": "",
+    "karma-chrome-launcher": "",
+    "karma-coverage": "",
+    "karma-jasmine": "",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-firefox-launcher": "",
+    "karma-safari-launcher": "",
+    "karma-sourcemap-loader": "",
+    "modernizr-webpack-plugin": "",
     "pegjs": "0.7.0",
     "phantom-jasmine": "0.1.8",
     "phantomjs": "^1.9.18",
-    "requirejs": "",
+    "postinstall-build": "",
+    "script-loader": "",
+    "webpack": "",
+    "webpack-dev-server": "",
+    "webpack-jasmine-html-runner-plugin": "",
+    "webpack-karma-jasmine": "",
+    "webpack-merge": "",
+    "webpack-uglify-js-plugin": "",
+    "wrapper-webpack-plugin": "",
     "yo": "^1.4.8"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
+    "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
+    "test": "karma start webpack/karma.config.js --single-run --browsers PhantomJS",
+    "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json",
+    "postinstall": "postinstall-build node_modules/modernizr/modernizr.js --script build_modernizr"
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",
   "maintainers": [
+    {
+      "name": "Syslab.com GmbH",
+      "email": "info@syslab.com",
+      "url": "http://www.syslab.com"
+    },
     {
       "name": "Cornelis Kolbach",
       "url": "http://cornae.com"
@@ -36,11 +105,6 @@
       "name": "JC Brand",
       "email": "jc@opkode.com",
       "url": "https://www.opkode.com"
-    },
-    {
-      "name": "Syslab.com GmbH",
-      "email": "info@syslab.com",
-      "url": "http://www.syslab.com"
     }
   ]
 }

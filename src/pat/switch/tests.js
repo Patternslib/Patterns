@@ -24,7 +24,7 @@ define(["pat-switch", "jquery"], function(pattern, jQuery) {
                         type: "click",
                         preventDefault: function () {}
                     };
-                    spyOn(pattern, "_onClick").andCallThrough();
+                    spyOn(pattern, "_onClick").and.callThrough();
                     spyOn(pattern, "_go");
                     spyOn(ev, "preventDefault");
                     pattern.init($el);
@@ -49,7 +49,7 @@ define(["pat-switch", "jquery"], function(pattern, jQuery) {
                         type: "click",
                         preventDefault: function () {}
                     };
-                    spyOn(pattern, "_onClick").andCallThrough();
+                    spyOn(pattern, "_onClick").and.callThrough();
                     spyOn(pattern, "_go");
                     spyOn(ev, "preventDefault");
                     pattern.init($el);

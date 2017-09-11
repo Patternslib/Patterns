@@ -264,13 +264,14 @@ define(["pat-checkedflag"], function(pattern) {
             pattern.init($input);
             $("#foo").prop("checked", false).change();
             $("#bar").prop("checked", "checked").change();
-            jasmine.Clock.useMock();
+            jasmine.clock().install();
             $input[0].form.reset();
-            jasmine.Clock.tick(100);
+            jasmine.clock().tick(100);
             expect($("label:has(#foo)").hasClass("checked")).toBe(true);
             expect($("label:has(#bar)").hasClass("unchecked")).toBe(true);
             expect($("#lab fieldset").hasClass("checked")).toBe(true);
             expect($("label:has(select)").attr("data-option")).toBe("one");
+            jasmine.clock().uninstall();
         });
 
         describe("setting value", function() {

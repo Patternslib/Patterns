@@ -1,6 +1,7 @@
+dist: xenial
 language: node_js
 node_js:
-- 0.10
-before_script: travis_retry make stamp-bower
+- 8
+before_script: travis_retry make stamp-npm
 script: make check
 sudo: false

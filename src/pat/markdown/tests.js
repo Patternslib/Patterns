@@ -14,7 +14,7 @@ define(["pat-markdown"], function(Pattern) {
             it("replaces the DOM element with the rendered Markdown content.", function() {
                 var $el = $('<p class="pat-markdown"></p>');
                 $el.appendTo("#lab");
-                spyOn(Pattern.prototype, "render").andReturn($("<p>Rendering</p>"));
+                spyOn(Pattern.prototype, "render").and.returnValue($("<p>Rendering</p>"));
                 Pattern.init($el);
                 expect($("#lab").html()).toBe("<p>Rendering</p>");
             });
@@ -22,7 +22,7 @@ define(["pat-markdown"], function(Pattern) {
             it("does not replace the DOM element if it doesn't have the pattern trigger", function() {
                 var $el = $('<p></p>');
                 $el.appendTo("#lab");
-                spyOn(Pattern.prototype, "render").andReturn($("<p>Rendering</p>"));
+                spyOn(Pattern.prototype, "render").and.returnValue($("<p>Rendering</p>"));
                 Pattern.init($el);
                 expect($("#lab").html()).toBe("<p></p>");
             });
@@ -30,7 +30,7 @@ define(["pat-markdown"], function(Pattern) {
             it("uses content for non-input elements", function() {
                 var $el = $('<p class="pat-markdown"/>').text("This is markdown");
                 $el.appendTo("#lab");
-                spyOn(Pattern.prototype, "render").andReturn($("<p/>"));
+                spyOn(Pattern.prototype, "render").and.returnValue($("<p/>"));
                 Pattern.init($el);
                 expect(Pattern.prototype.render).toHaveBeenCalledWith("This is markdown");
             });
@@ -38,7 +38,7 @@ define(["pat-markdown"], function(Pattern) {
             it("uses value for input elements", function() {
                 var $el = $('<textarea class="pat-markdown"/>').val("This is markdown");
                 $el.appendTo("#lab");
-                spyOn(Pattern.prototype, "render").andReturn($("<p/>"));
+                spyOn(Pattern.prototype, "render").and.returnValue($("<p/>"));
                 Pattern.init($el);
                 expect(Pattern.prototype.render).toHaveBeenCalledWith("This is markdown");
             });

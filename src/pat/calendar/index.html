@@ -4,13 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Demo page</title>
     <link rel="stylesheet" href="/style/common.css" type="text/css">
-    <script src="/main.js" type="text/javascript" charset="utf-8"></script>
-    <script data-main="/src/pat/main" src="/src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-    <section class="description">
-        <a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-    </section>
     <section class="demo">
         <h2>Demo</h2>
         <div id="demo">
@@ -27,7 +23,8 @@
                     column-week: ddd D MMM;
                     calendar-controls: .cal-controls;
                     category-controls: .cal-categories;
-                    store: session">
+                    store: session"
+                data-pat-calendar-modal="close-text: 'Exit'">
                 <h1 class="cal-title">Calendar</h1>
                 <fieldset class="cal-nav cal-controls">
                     <button class="jump-prev" title="Back" type="button">&lt;</button> 
@@ -36,25 +33,25 @@
                  </fieldset>
                 <ul class="cal-events">
                     <li class="cal-event cal-cat-baggage-handling all-day">
-                        <a class="url external" href="#">
+                        <a class="url external pat-modal" href="some-event-details.html">
                         <h4 class="title">Read the patterns calendar documentation</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-01-05">5 January 2013, 9:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-01-05">5 January 2017, 9:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-01-08">8 January 2013, 17:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-01-08">8 January 2017, 17:00 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
                     <li class="cal-event cal-cat-baggage-handling all-day editable">
-                        <a class="url external" href="some-event-details.html">
+                        <a class="url external pat-modal" href="some-event-details.html">
                         <h4 class="title">Patterns sprint</h4>
 
                         <p class="location">Munich</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-01-11">11 January 2013</time></li>
-                            <li>Ends <time class="end" datetime="2013-01-15">15 January 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-01-11">11 January 2017</time></li>
+                            <li>Ends <time class="end" datetime="2017-01-15">15 January 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -63,9 +60,9 @@
                         <h4 class="title">Prototype review</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-04T10:00Z">4 September 2013, 10:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-04T10:00Z">4 September 2017, 10:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-04T16:30Z">4 September 2013, 16:30 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-04T16:30Z">4 September 2017, 16:30 (UTC+2)</time></li>
                         </ul></a>
                     </li><!-- Start Baggage Handling Events -->
 
@@ -76,8 +73,8 @@
                         <p class="description">The new Report on "Focus on Baggage" goes out today.</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-05">5 September 2013</time></li>
-                            <li>Ends <time class="end" datetime="2013-09-05">5 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-05">5 September 2017</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-05">5 September 2017</time></li>
 
                             <li>Location <span class="location">Star HQ, Germany</span></li>
                         </ul>
@@ -91,14 +88,14 @@
                         <h4 class="title"><a class="pat-modal external" href="project-calendar-detail.html#content">Annual Baggage Handling Workgroup
                         Meeting</a></h4>
 
-                        <p class="description">Star Alliance is proud to offer its 10th annual Baggage Handling Workgroup Program in September 2013. This
+                        <p class="description">Star Alliance is proud to offer its 10th annual Baggage Handling Workgroup Program in September 2017. This
                         program provides you an introduction to the forecasting and optimization models found in baggage handling systems and focuses on
                         recent research and new developments in baggage handling models for changing and less restricted baggage environments.</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-10">10 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-10">10 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-12">12 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-12">12 September 2017</time></li>
 
                             <li>Location <span class="location">Frankfurt, Germany</span></li>
 
@@ -123,8 +120,8 @@
                         <p class="description">Key Flight Report Deadline</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-15">15 September 2013</time></li>
-                            <li>Ends <time class="end" datetime="2013-09-15">15 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-15">15 September 2017</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-15">15 September 2017</time></li>
                         </ul>
 
                         <form action="">
@@ -139,9 +136,9 @@
                         performance. Demonstration of the new baggage application and its potential to reduce delays.</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-18">18 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-18">18 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-19">19 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-19">19 September 2017</time></li>
 
                             <li>Location <span class="location">Cape Town, South Africa</span></li>
 
@@ -165,9 +162,9 @@
                         <p class="description">To celebrate another successful year with even less lost luggage!</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-20T18:00Z">20 September 2013, 18:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-20T18:00Z">20 September 2017, 18:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-21T04:00Z">21 September 2013, 04:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-21T04:00Z">21 September 2017, 04:00 (UTC+2)</time></li>
 
                             <li>Location <span class="location">Cape Town Crystal Tower, South Africa</span></li>
 
@@ -190,8 +187,8 @@
                         <p class="description">Publication of the new "Mishandled Bag Files Created" Statistics</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-30T12:00Z">30 September 2013, 12:00 (UTC+2)</time></li>
-                            <li>Ends <time class="end" datetime="2013-09-30T12:00Z">30 September 2013, 12:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-30T12:00Z">30 September 2017, 12:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-30T12:00Z">30 September 2017, 12:00 (UTC+2)</time></li>
 
                             <li>Location <span class="location">Frankfurt, Germany</span></li>
                         </ul>
@@ -240,9 +237,9 @@
                         <h4 class="title">Customer Experience Strategy Team Meeting (Radisson Blu Edwardian, Heathrow)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-10">10 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-10">10 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-11">11 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-11">11 September 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -251,9 +248,9 @@
                         <h4 class="title">IT Strategy Team Meeting (Radisson Blu Edwardian, Heathrow)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-11">11 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-11">11 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-12">12 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-12">12 September 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -262,9 +259,9 @@
                         <h4 class="title">Loyalty Strategy Team Meeting (Radisson Blu Edwardian, Heathrow)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-11T09:00Z">11 September 2013, 09:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-11T09:00Z">11 September 2017, 09:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-12T12:30Z">12 September 2013, 12:30 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-12T12:30Z">12 September 2017, 12:30 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
@@ -273,9 +270,9 @@
                         <h4 class="title">Commercial Cooperation Strategy Team Meeting (Radisson Blu Edwardian, Heathrow)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-12">12 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-12">12 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-13">13 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-13">13 September 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -284,9 +281,9 @@
                         <h4 class="title">Membership Liaison and Quality Committee Meeting (Frankfurt)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-17">17 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-17">17 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-18">18 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-18">18 September 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -295,9 +292,9 @@
                         <h4 class="title">SAAT Meeting (South Mezzanine Conf)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-18T10:00Z">18 September 2013, 10:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-18T10:00Z">18 September 2017, 10:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-18T11:00Z">18 September 2013, 11:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-18T11:00Z">18 September 2017, 11:00 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
@@ -306,20 +303,20 @@
                         <h4 class="title">STAR BE CSMG/CSC MEETING (BRU)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-19T10:00Z">19 September 2013, 10:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-19T10:00Z">19 September 2017, 10:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-19T15:00Z">19 September 2013, 15:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-19T15:00Z">19 September 2017, 15:00 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
                     <li class="cal-event all-day cal-cat-alien editable cal-cat-star-alliance-events">
                         <a class="url external" href="some-event-details.html">
-                        <h4 class="title">Revenue Management Education Program 2013 (Bangkok)</h4>
+                        <h4 class="title">Revenue Management Education Program 2017 (Bangkok)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-23">23 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-23">23 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-27">27 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-27">27 September 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -328,9 +325,9 @@
                         <h4 class="title">STAR NL CSMG MEETING (AMS)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-24">24 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-24">24 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-26">26 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-26">26 September 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -339,9 +336,9 @@
                         <h4 class="title">STAR NL CSC MEETING (AMS)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-26T10:00Z">26 September 2013, 10:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-26T10:00Z">26 September 2017, 10:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-26T12:00Z">26 September 2013, 12:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-26T12:00Z">26 September 2017, 12:00 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
@@ -350,9 +347,9 @@
                         <h4 class="title">IT Committee Meeting - LHR (LHR)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-10-08">8 October 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-10-08">8 October 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-10-09">9 October 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-10-09">9 October 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -361,9 +358,9 @@
                         <h4 class="title">Marketing Committee (LHR)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-10-08T09:00Z">8 October 2013, 09:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-10-08T09:00Z">8 October 2017, 09:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-10-08T18:00Z">8 October 2013, 18:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-10-08T18:00Z">8 October 2017, 18:00 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
@@ -372,9 +369,9 @@
                         <h4 class="title">STAR BE CSMG MEETING (BRU)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-10-08T10:00Z">8 October 2013, 10:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-10-08T10:00Z">8 October 2017, 10:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-10-08T12:00Z">8 October 2013, 12:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-10-08T12:00Z">8 October 2017, 12:00 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
@@ -383,9 +380,9 @@
                         <h4 class="title">Customer Experience Committee Meeting - LHR (LHR)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-10-09">9 October 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-10-09">9 October 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-10-10">10 October 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-10-10">10 October 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -394,9 +391,9 @@
                         <h4 class="title">Commercial Cooperation (LHR)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-10-10T09:00Z">10 October 2013, 09:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-10-10T09:00Z">10 October 2017, 09:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-10-10T18:00Z">10 October 2013, 18:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-10-10T18:00Z">10 October 2017, 18:00 (UTC+2)</time></li>
                         </ul></a>
                     </li>
 
@@ -405,18 +402,18 @@
                         <h4 class="title">Loyalty Committee Meeting (LHR)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-10-09T09:00Z">9 October 2013, 09:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-10-09T09:00Z">9 October 2017, 09:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-10-09T18:00Z">9 October 2013, 18:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-10-09T18:00Z">9 October 2017, 18:00 (UTC+2)</time></li>
                         </ul></a>
                     </li><!-- End Star Alliance Events -->
 
                     <li class="cal-event cal-cat-alien editable all-day cal-cat-star-alliance-publications">
                         <a class="url external" href="some-event-details.html">
-                        <h4 class="title">Release of the 2013 Network Facts &amp; Figures</h4>
+                        <h4 class="title">Release of the 2017 Network Facts &amp; Figures</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-26T12:00Z">26 September 2013, 12:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-26T12:00Z">26 September 2017, 12:00 (UTC+2)</time></li>
                         </ul></a>
                     </li><!-- Start Commercial Cooperation Strategy Team -->
 
@@ -425,9 +422,9 @@
                         <h4 class="title">Performance Report Data Collection Meeting</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-20T10:00Z">20 September 2013, 10:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-20T10:00Z">20 September 2017, 10:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-20T11:30Z">20 September 2013, 11:30 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-20T11:30Z">20 September 2017, 11:30 (UTC+2)</time></li>
                         </ul></a>
                     </li><!-- End Commercial Cooperation Strategy Team -->
                     <!-- Start SAUA-->
@@ -437,9 +434,9 @@
                         <h4 class="title">Update: SAUA Product Feature Matrix All Carriers SEP13</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-13T14:00Z">13 September 2013, 14:00 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-13T14:00Z">13 September 2017, 14:00 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-13T14:00Z">20 September 2013, 14:00 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-13T14:00Z">20 September 2017, 14:00 (UTC+2)</time></li>
                         </ul></a>
                     </li><!-- End SAUA -->
                     <!-- Start Emergency Committee-->
@@ -449,21 +446,21 @@
                         <h4 class="title">SCP ERCMTE Meeting</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-16">16 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-16">16 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-18">18 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-18">18 September 2017</time></li>
                         </ul></a>
                     </li><!-- End -->
 
                     <li class="cal-event cal-cat-baggage-handling-regulations">
                         <h4 class="title"><a data-pat-inject="source: #document-body; target: #document-body && source: .document-controls; target: .document-controls" class="pat-inject" href="event-amb-fra-2011.html#document-body">AMB 16-17 November 2011, Frankfurt</a></h4>
 
-                        <p class="description">Alliance Management Board Meeting 16-17 November 2013</p>
+                        <p class="description">Alliance Management Board Meeting 16-17 November 2017</p>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-11-30">16 November 2013 (UTC+2)</time></li>
+                            <li>Starts <time class="start" datetime="2017-11-30">16 November 2017 (UTC+2)</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-11-30">17 November 2013 (UTC+2)</time></li>
+                            <li>Ends <time class="end" datetime="2017-11-30">17 November 2017 (UTC+2)</time></li>
 
                             <li>Location <span class="location">Frankfurt, Germany</span></li>
                         </ul>
@@ -478,9 +475,9 @@
                         <h4 class="title">Prolonged weekend of german unity (LH)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-06">6 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-06">6 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-09">9 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-09">9 September 2017</time></li>
                         </ul></a>
                     </li>
 
@@ -490,18 +487,15 @@
                         TK, UA, US)</h4>
 
                         <ul class="details">
-                            <li>Starts <time class="start" datetime="2013-09-19">19 September 2013</time></li>
+                            <li>Starts <time class="start" datetime="2017-09-19">19 September 2017</time></li>
 
-                            <li>Ends <time class="end" datetime="2013-09-19">19 September 2013</time></li>
+                            <li>Ends <time class="end" datetime="2017-09-19">19 September 2017</time></li>
                         </ul></a>
                     </li><!-- End -->
                 </ul>
             </div>
         </div>
     </div>
-    </section>
-    <section class="documentation">
-        <a href="documentation.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Documentation</a>
     </section>
 </body>
 </html>

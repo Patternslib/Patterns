@@ -1,3 +1,8 @@
+## Description
+
+A day, week and month view to display events as a calendar.
+
+
 ## Documentation
 
 ### Options reference

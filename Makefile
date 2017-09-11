@@ -1,8 +1,5 @@
-BOWER 		?= node_modules/.bin/bower
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
-PHANTOMJS	?= node_modules/.bin/phantomjs
-HTTPSERVE   ?= node_modules/.bin/http-server
 BUNDLE      ?= ./.bundle/bin/bundle
 SASS        ?= ./.bundle/bin/sass
 
@@ -26,12 +23,7 @@ all:: bundle.js css
 ## Install dependencies
 
 stamp-npm: package.json
-	npm install
-	touch stamp-npm
-
-stamp-bower: stamp-npm bower.json
-	$(BOWER) install
-	touch stamp-bower
+	npm install --no-optional
 
 stamp-bundler:
 	mkdir -p .bundle
@@ -40,8 +32,8 @@ stamp-bundler:
 	touch stamp-bundler
 
 clean::
-	rm -f stamp-npm stamp-bower
-	rm -rf node_modules src/bower_components
+	rm -f stamp-npm
+	rm -rf node_modules
 
 ########################################################################
 ## Tests
@@ -52,8 +44,8 @@ jshint: stamp-npm
 
 
 .PHONY: check
-check:: stamp-bower jshint
-	$(PHANTOMJS) node_modules/phantom-jasmine/lib/run_jasmine_test.coffee tests.html
+check:: stamp-npm jshint
+	npm run test
 
 
 ########################################################################
@@ -61,15 +53,15 @@ check:: stamp-bower jshint
 
 build:: bundle all_css
 
-bundle bundle.js: $(GENERATED) $(SOURCES) build.js stamp-bower
-	node_modules/.bin/r.js -o build.js
+bundle bundle.js: $(GENERATED) $(SOURCES)
+	npm run build
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
 	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
 clean::
-	rm -f bundle.js
+	rm -f bundle.js bundle.min.js
 
 all_css:: css
 	@echo "Hang tight!"
@@ -115,7 +107,7 @@ all_css:: css
 css:: stamp-bundler
 	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
 
-watch:: 
+watch::
 	$(SASS) --watch -I style -I . -I _sass _sass/_patterns.scss:style/patterns.css
 
 ########################################################################
@@ -123,8 +115,8 @@ watch::
 serve:: all _serve
 
 _serve:
-	@printf "\nDesigner, you can be happy now.\n Go to http://localhost:4001/ to see the demo \n\n"
-	@$(HTTPSERVE) -p 4001
+	npm run start
+	@printf "\nBundle built\n\n"
 
 designerhappy:: serve
 

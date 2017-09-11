@@ -4,7 +4,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
         var answer = function(html) {
             expect($.ajax).toHaveBeenCalled();
-            $.ajax.mostRecentCall.args[0].success(html, "ok", { responseText: html });
+            $.ajax.calls.mostRecent().args[0].success(html, "ok", { responseText: html });
         };
 
         beforeEach(function() {
@@ -109,8 +109,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
-                spyOn(pattern, "onTrigger").andCallThrough();
-                spyOn(window, 'confirm').andReturn(false);
+                spyOn(pattern, "onTrigger").and.callThrough();
+                spyOn(window, 'confirm').and.returnValue(false);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -130,8 +130,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: never\">link</a>");
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
-                spyOn(pattern, "onTrigger").andCallThrough();
-                spyOn(window, 'confirm').andReturn(false);
+                spyOn(pattern, "onTrigger").and.callThrough();
+                spyOn(window, 'confirm').and.returnValue(false);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -148,8 +148,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: always\">link</a>");
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
-                spyOn(pattern, "onTrigger").andCallThrough();
-                spyOn(window, 'confirm').andReturn(true);
+                spyOn(pattern, "onTrigger").and.callThrough();
+                spyOn(window, 'confirm').and.returnValue(true);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -166,8 +166,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: form-data\">link</a>");
                 var $div = $("<form id=\"someid\"><input type=\"text\" name=\"name\"/></form>");
                 $("#lab").empty().append($a).append($div);
-                spyOn(pattern, "onTrigger").andCallThrough();
-                spyOn(window, 'confirm').andReturn(true);
+                spyOn(pattern, "onTrigger").and.callThrough();
+                spyOn(window, 'confirm').and.returnValue(true);
 
                 // Test default value for parser argument
                 var cfgs = pattern.extractConfig($a, {});
@@ -182,7 +182,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                 $('[name="name"]').val('');
                 $a.trigger("click");
-                expect(window.confirm.callCount).toBe(1);
+                expect(window.confirm.calls.count()).toBe(1);
                 expect(pattern.onTrigger).toHaveBeenCalled();
             });
 
@@ -195,8 +195,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\" data-pat-inject=\"confirm: always; confirm-message: Hello world\">link</a>");
                     var $div = $("<div id=\"someid\" />");
                     $("#lab").empty().append($a).append($div);
-                    spyOn(pattern, "onTrigger").andCallThrough();
-                    spyOn(window, 'confirm').andReturn(false);
+                    spyOn(pattern, "onTrigger").and.callThrough();
+                    spyOn(window, 'confirm').and.returnValue(false);
 
                     // Test default value for parser argument
                     var cfgs = pattern.extractConfig($a, {});
@@ -239,7 +239,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("Element with link attribute", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a href=\"example.com\">This is a test</a>"))
                     .toBe("<a href=\"REBASED\">This is a test</a>");
@@ -247,21 +247,21 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("Automatically fix casing of attribute", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<a HrEf=\"example.com\">This is a test</a>"))
                     .toBe("<a href=\"REBASED\">This is a test</a>");
             });
 
             it("Check if image is rebased correctly", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<img src=\"example.com\">"))
                     .toBe("<img src=\"REBASED\">");
             });
 
             it("Leave non attribute occurences of src intact", function() {
-                spyOn(utils, "rebaseURL").andReturn("REBASED");
+                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML("base", "<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>"))
                     .toBe("<p>This string has    src = \"foo\" , src= bar , and SrC='foo'</p>");
@@ -294,7 +294,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     $("#lab").append($a).append($target);
                 });
-
+                afterEach(function() {
+                     $target.remove();
+                });
 
                 it("fall back to href id", function() {
                     var cfgs = pattern.extractConfig($a);
@@ -343,7 +345,6 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     expect(pattern.verifyConfig(cfgs)).toBeTruthy();
 
                     $target = $("#someid");
-                    this.after(function() { $target.remove(); });
                     expect($target.length).toBeGreaterThan(0);
                     expect($target.parent().prop("tagName")).toBe("BODY");
                 });
@@ -393,14 +394,14 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($a);
                     $a.trigger("click");
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
+                    expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
                 });
 
                 it("fetches url on autoload", function() {
                     $a.attr("data-pat-inject", "autoload");
                     pattern.init($a);
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
+                    expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
                 });
 
                 it("fetches url on autoload-delayed", function() {
@@ -408,7 +409,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($a);
                     // this needs to be checked async - is beyond me
                     // expect($.ajax).toHaveBeenCalled();
-                    // expect($.ajax.mostRecentCall.args[0].url).toBe("test.html");
+                    // expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
                 });
                 
                 it("injects into existing div", function() {
@@ -549,7 +550,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     $form.trigger("submit");
 
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.mostRecentCall.args[0].url).toContain("param=somevalue");
+                    expect($.ajax.calls.mostRecent().args[0].url).toContain("param=somevalue");
                 });
 
                 it("pass post form parameters in ajax call as data", function() {
@@ -560,7 +561,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     $form.trigger("submit");
 
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.mostRecentCall.args[0].data).toContain("param=somevalue");
+                    expect($.ajax.calls.mostRecent().args[0].data).toContain("param=somevalue");
                 });
 
                 it("pass submit button value in ajax call as data", function() {
@@ -573,7 +574,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     $submit.trigger("click");
 
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.mostRecentCall.args[0].data).toContain("submit=label");
+                    expect($.ajax.calls.mostRecent().args[0].data).toContain("submit=label");
                 });
 
                 describe("formaction attribute on submit buttons", function() {
@@ -588,7 +589,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         $submit2.trigger("click");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
                     });
 
                     it("use an image submit with a formaction value as action URL", function() {
@@ -602,7 +603,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         $submit2.trigger("click");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
                     });
 
                     it("use fragment in formaction value as source + target selector", function() {
@@ -621,8 +622,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "</body></html>");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
                         expect($target.html()).toBe("other");
                     });
 
@@ -643,8 +644,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "</body></html>");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
                         expect($target.html()).toBe("other");
                     });
 
@@ -666,8 +667,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "</body></html>");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
                         expect($target1.html()).toBe("other");
                         expect($target2.html()).toBe("other");
                     });
@@ -691,8 +692,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "</body></html>");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
                         expect($target1.html()).toBe("some");
                         expect($target2.html()).toBe("other");
                     });
@@ -715,8 +716,8 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "</body></html>");
 
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.mostRecentCall.args[0].url).toContain("submit=special");
-                        expect($.ajax.mostRecentCall.args[0].url).toBe("other.html?submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
+                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
                         expect($target1.html()).toBe("some");
                         expect($target2.html()).toBe("other");
                     });

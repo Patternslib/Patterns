@@ -326,7 +326,7 @@ define(function(){
 	}
 
 	return {HTMLParser: HTMLParser,
-		HTMLtoXML: HTMLtoXML,
-		HTMLtoDOM: HTMLtoDOM
+		HTMLtoXML: this.HTMLtoXML,
+		HTMLtoDOM: this.HTMLtoDOM
 	};
 });

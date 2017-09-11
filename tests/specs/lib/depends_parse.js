@@ -1,4 +1,4 @@
-define(["pat-depends_parse"], function(parser) {
+define(["../../../src/lib/depends_parse.js"], function(parser) {
 
     describe("Depedency expression parser", function() {
 
@@ -28,7 +28,7 @@ define(["pat-depends_parse"], function(parser) {
             it("Can not do order comparison to string", function() {
                 expect(function() {
                     parser.parse("foo<bar");
-                }).toThrow();
+                }).toThrowError('Expected number or whitespace but "b" found.');
 
             });
 

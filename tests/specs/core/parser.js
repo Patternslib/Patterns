@@ -311,7 +311,7 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
 
             it("Default value from function", function() {
                 var parser=new ArgumentParser(),
-                    func=jasmine.createSpy("func").andReturn("default");
+                    func=jasmine.createSpy("func").and.returnValue("default");
                 parser.addArgument("selector", func);
                 var defaults = parser._defaults("element");
                 expect(defaults.selector).toBe("default");
@@ -474,7 +474,7 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
 
             it("Coerce to type from default function", function() {
                 var parser=new ArgumentParser("mypattern"),
-                    func=jasmine.createSpy("func").andReturn(15),
+                    func=jasmine.createSpy("func").and.returnValue(15),
                     $content = $("<div data-pat-mypattern='value: 32'/>");
                 parser.addArgument("value", func);
                 var defaults = parser.parse($content);
@@ -630,7 +630,7 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
                     var parser=new ArgumentParser(),
                         opts={};
                     parser.addArgument("value", 1);
-                    spyOn(parser, "_coerce").andReturn("coerced!");
+                    spyOn(parser, "_coerce").and.returnValue("coerced!");
                     parser._set(opts, "value", "1");
                     expect(parser._coerce).toHaveBeenCalledWith("value", "1");
                     expect(opts.value).toBe("coerced!");
@@ -640,7 +640,7 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
                     var parser=new ArgumentParser(),
                         opts={};
                     parser.addArgument("value", 1);
-                    spyOn(parser, "_coerce").andReturn(null);
+                    spyOn(parser, "_coerce").and.returnValue(null);
                     parser._set(opts, "value", "1");
                     expect(opts.value).toBe(undefined);
                 });
@@ -659,7 +659,7 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
                     var parser=new ArgumentParser(),
                         opts={};
                     parser.addArgument("value", [1], null, true);
-                    spyOn(parser, "_coerce").andReturn("coerced!");
+                    spyOn(parser, "_coerce").and.returnValue("coerced!");
                     parser._set(opts, "value", "1");
                     expect(parser._coerce).toHaveBeenCalledWith("value", "1");
                     expect(opts.value).toEqual(["coerced!"]);
@@ -669,7 +669,7 @@ define(["underscore", "pat-parser"], function(_, ArgumentParser) {
                     var parser=new ArgumentParser(),
                         opts={};
                     parser.addArgument("value", 1);
-                    spyOn(parser, "_coerce").andReturn(null);
+                    spyOn(parser, "_coerce").and.returnValue(null);
                     parser._set(opts, "value", "1");
                     expect(opts.value).toBe(undefined);
                 });

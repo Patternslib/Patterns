@@ -76,7 +76,7 @@ define(["pat-autosuggest"], function(pattern) {
                 spyOn($el, "select2");
 
                 pattern.init($el);
-                expect($el.select2.mostRecentCall.args[0].ajax).toBeDefined();
+                expect($el.select2.calls.mostRecent().args[0].ajax).toBeDefined();
                 utils.removeSelect2();
             });
         });
