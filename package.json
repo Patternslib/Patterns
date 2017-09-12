@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "3.0.0a1",
+  "version": "3.0.0a2",
   "title": "Markup patterns to drive behaviour.",
   "description": "Patternslib is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
   "author": {
@@ -86,8 +86,7 @@
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "test": "karma start webpack/karma.config.js --single-run --browsers PhantomJS",
-    "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json",
-    "postinstall": "postinstall-build node_modules/modernizr/modernizr.js --script build_modernizr"
+    "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json -d ../../src/modernizr.js"
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",

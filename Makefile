@@ -24,6 +24,7 @@ all:: bundle.js css
 
 stamp-npm: package.json
 	npm install --no-optional
+	npm run build_modernizr
 
 stamp-bundler:
 	mkdir -p .bundle
@@ -53,7 +54,7 @@ check:: stamp-npm jshint
 
 build:: bundle all_css
 
-bundle bundle.js: $(GENERATED) $(SOURCES)
+bundle bundle.js: $(GENERATED) $(SOURCES) stamp-npm
 	npm run build
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
