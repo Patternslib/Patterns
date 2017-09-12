@@ -84,7 +84,7 @@ module.exports = {
             "masonry": "masonry-layout/dist/masonry.pkgd.min.js",
             "modernizr$": "modernizr.js",
             "patternslib.slides": "slides/src/slides.js",
-            "photoswipe-ui": path.resolve(__dirname, "../node_modules/photoswipe/dist/photoswipe-ui-default"),
+            "photoswipe-ui": "photoswipe/dist/photoswipe-ui-default",
             "prefixfree": "prefixfree/prefixfree.min.js",
             "select2": "select2/select2.js",
             "showdown-prettify": "showdown-prettify/dist/showdown-prettify.min.js",
@@ -140,7 +140,7 @@ module.exports = {
             "pat-form-state": "pat/form-state/form-state.js",
             "pat-forward": "pat/forward/forward.js",
             "pat-gallery": "pat/gallery/gallery.js",
-            "pat-gallery-url": path.resolve(__dirname, "../src/pat/gallery"),
+            "pat-gallery-url": "pat/gallery",
             "pat-grid": "pat/grid/grid.js", // Hack, there's no grid jS, but we need for website bundler
             "pat-syntax-highlight": "pat/syntax-highlight/syntax-highlight.js",
             "pat-image-crop": "pat/image-crop/image-crop.js",
