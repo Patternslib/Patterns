@@ -28,7 +28,7 @@ Breaking Changes
     As of showdown v 1.2.0, github support was moved into core as an opt-in feature making this extension obsolete. See https://github.com/showdownjs/github-extension
   - pat-validate
     Has been superceeded by pat-validation and is no longer maintained.
-
+  - fixed path to spectrum-colorpicker
 
 
 ## 2.1.2 - Aug. 29, 2017

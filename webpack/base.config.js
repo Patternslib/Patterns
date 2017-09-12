@@ -52,7 +52,7 @@ module.exports = {
                 ]
             },
             {
-                test: /jquery.anythingslider|jcrop|jquery.placeholder|jquery.textchange|parsley|parsley.extend|select2|spectrum/,
+                test: /jquery.anythingslider|jcrop|jquery.placeholder|jquery.textchange|parsley|parsley.extend|select2|spectrum|spectrum-colorpicker/,
                 use: [
                     {
                       loader: 'imports-loader?jquery',

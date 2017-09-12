@@ -6,7 +6,7 @@
  */
 define([
     "pat-registry",
-    "spectrum",
+    "spectrum-colorpicker",
     "jquery"
 ], function(registry) {
     var _ = {
