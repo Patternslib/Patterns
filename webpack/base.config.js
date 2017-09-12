@@ -3,8 +3,12 @@ const path = require('path');
 var webpack = require('webpack');
 
 var fs = require('fs');
-var headerWrap = fs.readFileSync('./VERSION.txt', 'utf8');
-var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8');
+var headerWrap = '';
+try { var headerWrap = fs.readFileSync('./VERSION.txt', 'utf8'); } catch (err) {}
+var footerWrap = '';
+try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (err) {}
+
+
 var WrapperPlugin = require('wrapper-webpack-plugin');
 
 var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
