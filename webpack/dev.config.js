@@ -4,11 +4,6 @@ var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 
 module.exports = merge(baseConfig, {
-	devtool: "source-map",
-        node: {
-            // https://github.com/webpack-contrib/css-loader/issues/447
-            fs: 'empty'
-        },
     devServer: {
     	inline: true,
         contentBase: './',
