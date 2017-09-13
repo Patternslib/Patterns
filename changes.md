@@ -29,7 +29,8 @@ Breaking Changes
   - pat-validate
     Has been superceeded by pat-validation and is no longer maintained.
   - fixed path to spectrum-colorpicker
-
+  - fixed #512 by also setting the data-option-value attribute
+  
 
 ## 2.1.2 - Aug. 29, 2017
 
