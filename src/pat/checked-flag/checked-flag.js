@@ -187,6 +187,9 @@ define([
             $select.parent().attr(
                 "data-option",
                 $select.find("option:selected").text()
+            ).attr(
+                "data-option-value",
+                $select.find("option:selected").attr('value')
             );
         }
     };
