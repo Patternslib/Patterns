@@ -26,6 +26,7 @@ define([
     "pat-collapsible",
     "pat-colour-picker",
     "pat-date-picker",
+    "pat-datetime-picker",
     "pat-depends",
     "pat-equaliser",
     "pat-expandable",
