@@ -3,11 +3,11 @@
 
 ## Update numbers
 
-First, update the version number in 
+First, update the version number in
 - bower.json
 - package.json
 - VERSION.txt (remove the -dev from the version number in VERSION.txt)
-- and add the date to changes.md
+- and add the date to CHANGES.md
 
     git commit -m "Prepare release"
 
@@ -51,7 +51,7 @@ First, update the version number in
 Run:
 
 - npm login
-- npm version <update_type> 
+- npm version <update_type>
   where update_type is patch, minor or major. See https://docs.npmjs.com/getting-started/publishing-npm-packages.
 - npm publish
 
