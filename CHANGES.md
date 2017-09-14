@@ -55,6 +55,7 @@ Breaking Changes
 ## 2.2 - unreleased
 
 - pat-datetime-picker: Add new pattern for setting the date and time.
+- pat-date-picker: Remove the dependency on ``moment-timezone-data`` - it's not used and there is no use in a date picker anyways.
 - Makefile: with the ``clean`` target, also remove the ``stamp-bundler`` marker file.
 
 

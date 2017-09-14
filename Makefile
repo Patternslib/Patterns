@@ -18,7 +18,7 @@ JSHINTEXCEPTIONS = $(GENERATED) \
 		   $(TESTSOURCES)
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
-all:: bundle.js css
+all:: bundle.js
 
 ########################################################################
 ## Install dependencies
@@ -53,7 +53,7 @@ check:: stamp-npm jshint
 ########################################################################
 ## Builds
 
-build:: bundle all_css
+build:: bundle
 
 bundle bundle.js: $(GENERATED) $(SOURCES) stamp-npm
 	npm run build
@@ -79,6 +79,7 @@ all_css:: css
 	@$(SASS) -I . -I _sass src/pat/clone/_clone.scss src/pat/clone/clone.css
 	@$(SASS) -I . -I _sass src/pat/collapsible/_collapsible.scss src/pat/collapsible/collapsible.css
 	@$(SASS) -I . -I _sass src/pat/date-picker/_date-picker.scss src/pat/date-picker/date-picker.css
+	@$(SASS) -I . -I _sass src/pat/datetime-picker/_datetime-picker.scss src/pat/datetime-picker/datetime-picker.css
 	@$(SASS) -I . -I _sass src/pat/depends/_depends.scss src/pat/depends/depends.css
 	@$(SASS) -I . -I _sass src/pat/edit-tinymce/_edit-tinymce.scss src/pat/edit-tinymce/edit-tinymce.css
 	@$(SASS) -I . -I _sass src/pat/equaliser/_equaliser.scss src/pat/equaliser/equaliser.css
