@@ -5,16 +5,16 @@
 Breaking Changes
 ~~~~~~~~~~~~~~~~
 
-+++Big breaking upgrade changing the build system. Read Upgrade-from-2-to-3.txt for details.+++
++++Big breaking upgrade changing the build system. Read the [version 2 to 3 upgrade guide](./UPGRADE-2-TO-3.md) for details.+++
 
 - Switched fully to npm for package retrieval, deprecating bower (pilz)
 - Introduce webpack to create the bundle and deprecate require.js (pilz)
-  Read Upgrade-from-2-to-3.txt for details.
+  Read [version 2 to 3 upgrade guide](./UPGRADE-2-TO-3.md) for details.
 - Tests are upgraded to Jasmine 2.8.0 syntax
 - Testrunner is now karma 1.7
 - Coverage reports are generated
 - Removed deprecated packages
-  - jquery.tinymce 
+  - jquery.tinymce
     Very big and unmaintained. We have never advertised it so we don't include it anymore to clean up.
   - requirejs
     No longer required
@@ -30,7 +30,7 @@ Breaking Changes
     Has been superceeded by pat-validation and is no longer maintained.
   - fixed path to spectrum-colorpicker
   - fixed #512 by also setting the data-option-value attribute
-  
+
 
 ## 2.1.2 - Aug. 29, 2017
 
@@ -39,17 +39,17 @@ Breaking Changes
 
 ## 2.1.1 - Aug. 28, 2017
 
-Fixes 
+Fixes
 ~~~~~
 
 - pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
-- pat-modal: Fix an issue where chrome is so quick that a modal is closed before the actual injection call can be sent. 
+- pat-modal: Fix an issue where chrome is so quick that a modal is closed before the actual injection call can be sent.
 
 
 ## 2.1.1 - Aug. 28, 2017
 
 - pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
-- pat-modal: Fix an issue where chrome is so quick that a modal is closed before the actual injection call can be sent. 
+- pat-modal: Fix an issue where chrome is so quick that a modal is closed before the actual injection call can be sent.
 
 ## 2.1.0 - Jun. 26, 2017
 
