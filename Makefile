@@ -40,7 +40,7 @@ stamp-bundler:
 	touch stamp-bundler
 
 clean::
-	rm -f stamp-npm stamp-bower
+	rm -f stamp-npm stamp-bower stamp-bundler
 	rm -rf node_modules src/bower_components
 
 ########################################################################

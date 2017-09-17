@@ -79,6 +79,9 @@ The simplest way to run the tests are to use make:
 
 This will install all required npm and bower packages and run the tests.
 
+To run the tests in a browser, open the ``tests.html`` file in the browser of your choice.
+
+
 ### Organisations and projects which use Patternslib
 
 - [Overstroom ik?](http://www.overstroomik.nl), a website which informs Dutch citizens of their risk of flooding. It was introduced and highly praised by the Dutch minister of infrastructure and environment, Melanie Schultz.
