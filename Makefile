@@ -34,7 +34,7 @@ stamp-bundler:
 	touch stamp-bundler
 
 clean::
-	rm -f stamp-npm
+	rm -f stamp-npm stamp-bundler
 	rm -rf node_modules
 
 ########################################################################

@@ -52,6 +52,11 @@ Breaking Changes
 - pat-carousel gets infinite option
 - pat-subform that also have the pat-autosubmit can be submitted pressing enter
 - fixed the way how the tab with is calculated in pat-tabs.
+## 2.2 - unreleased
+
+- pat-datetime-picker: Add new pattern for setting the date and time.
+- Makefile: with the ``clean`` target, also remove the ``stamp-bundler`` marker file.
+
 
 
 ## 2.1.2 - Aug. 29, 2017
