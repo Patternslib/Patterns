@@ -8,8 +8,9 @@ define([
     "jquery",
     "pat-jquery-ext",
     "pat-parser",
-    "pat-registry"
-], function($, dummy, Parser, registry) {
+    "pat-registry",
+    "pat-utils"
+], function($, dummy, Parser, registry, utils) {
     var parser = new Parser("checklist");
     parser.addArgument("select", ".select-all");
     parser.addArgument("deselect", ".deselect-all");
@@ -32,6 +33,15 @@ define([
                 $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
                 // update select/deselect button status
                 _.onChange({data: {trigger: $trigger}});
+
+                $trigger.find("input[type=checkbox]")
+                    .each(_._onChangeCheckbox)
+                    .on("change.pat-checklist", _._onChangeCheckbox);
+
+                $trigger.find("input[type=radio]")
+                    .each(_._initRadio)
+                    .on("change.pat-checklist", _._onChangeRadio);
+
             });
         },
 
@@ -92,7 +102,80 @@ define([
                 $(this).attr({disabled: "disabled"});
             });
             event.preventDefault();
-        }
+        },
+
+        /* The following methods are moved here from pat-checked-flag, which is being deprecated */
+        _getLabelAndFieldset: function(el) {
+            var $result = $(utils.findLabel(el));
+            return $result.add($(el).closest("fieldset"));
+        },
+
+        _getSiblingsWithLabelsAndFieldsets: function(el) {
+            var selector = "input[name=\""+el.name+"\"]",
+                $related = (el.form===null) ? $(selector) : $(selector, el.form),
+                $result = $();
+            $result = $related=$related.not(el);
+            for (var i=0; i<$related.length; i++) {
+                $result=$result.add(_._getLabelAndFieldset($related[i]));
+            }
+            return $result;
+        },
+
+        _onChangeCheckbox: function() {
+            var $el = $(this),
+                $label = $(utils.findLabel(this)),
+                $fieldset = $el.closest("fieldset");
+
+            if ($el.closest("ul.radioList").length) {
+                $label=$label.add($el.closest("li"));
+            }
+
+            if (this.checked) {
+                $label.add($fieldset).removeClass("unchecked").addClass("checked");
+            } else {
+                $label.addClass("unchecked").removeClass("checked");
+                if ($fieldset.find("input:checked").length) {
+                    $fieldset.removeClass("unchecked").addClass("checked");
+                } else
+                    $fieldset.addClass("unchecked").removeClass("checked");
+            }
+        },
+
+        _initRadio: function() {
+            _._updateRadio(this, false);
+        },
+
+        _onChangeRadio: function() {
+            _._updateRadio(this, true);
+        },
+
+        _updateRadio: function(input, update_siblings) {
+            var $el = $(input),
+                $label = $(utils.findLabel(input)),
+                $fieldset = $el.closest("fieldset"),
+                $siblings = _._getSiblingsWithLabelsAndFieldsets(input);
+
+            if ($el.closest("ul.radioList").length) {
+                $label=$label.add($el.closest("li"));
+                $siblings=$siblings.closest("li");
+            }
+
+            if (update_siblings) {
+                 $siblings.removeClass("checked").addClass("unchecked");
+            }
+            if (input.checked) {
+                $label.add($fieldset).removeClass("unchecked").addClass("checked");
+            } else {
+                $label.addClass("unchecked").removeClass("checked");
+                if ($fieldset.find("input:checked").length) {
+                    $fieldset.removeClass("unchecked").addClass("checked");
+                } else {
+                    $fieldset.addClass("unchecked").removeClass("checked");
+                }
+            }
+        },
+
+
     };
     registry.register(_);
     return _;
