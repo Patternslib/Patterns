@@ -12,7 +12,7 @@ define([
 ], function($, patterns) {
     var selectbox = {
         name: "selectbox",
-        trigger: ".pat-select,.pat-selectbox",
+        trigger: ".pat-select",
 
         init: function($el) {
             var $forms = $();
