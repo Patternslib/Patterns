@@ -19,7 +19,7 @@ define([
     "pat-bumper",
     "pat-calendar",
     "pat-carousel",
-    "pat-checkedflag",
+//    "pat-checkedflag",
     "pat-checklist",
     "pat-chosen",
     "pat-clone",
