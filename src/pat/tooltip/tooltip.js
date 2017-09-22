@@ -135,7 +135,7 @@ define([
                  * again.
                  * If there is a reason why a tooltip must close after an
                  * injection, it needs to be much more specific.
-                 
+
                     // close if something inside the tooltip triggered an injection
                     $container.on("patterns-inject-triggered.tooltip",
                                 $trigger, tooltip.hide);
@@ -215,21 +215,44 @@ define([
         },
 
         hide: function(event) {
-            var $trigger = event.data,
+
+            var $this = $(this),
+                $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
-                options = $trigger.data("patterns.tooltip"),
+                options = $trigger && $trigger.data("patterns.tooltip"),
                 namespace = $container.attr("id");
 
-            // when another tooltip trigger is clicked, only close the previous tooltip if it does not contain the trigger
-            if (event.type !== "pat-tooltip-click" || $container.has(event.target).length <= 0) {
-                $container.css("visibility", "hidden");
-                $container.parents().add(window).off("." + namespace);
-                tooltip.removeHideEvents($trigger);
-                tooltip.setupShowEvents($trigger);
-                if (options.markInactive) {
-                    $trigger.removeClass("active").addClass("inactive");
+            function should_wait_for_injection() {
+                if ($this.parents(".pat-inject").length == 0) {
+                    return false;
                 }
-                $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
+                if ($this.attr('type') !== "submit") {
+                    return false;
+                }
+                return true;
+            }
+
+            function do_hide() {
+                if (!$trigger) {
+                    return;
+                }
+                // when another tooltip trigger is clicked, only close the previous tooltip if it does not contain the trigger
+                if (event.type !== "pat-tooltip-click" || $container.has(event.target).length <= 0) {
+                    $container.css("visibility", "hidden");
+                    $container.parents().add(window).off("." + namespace);
+                    tooltip.removeHideEvents($trigger);
+                    tooltip.setupShowEvents($trigger);
+                    if (options.markInactive) {
+                        $trigger.removeClass("active").addClass("inactive");
+                    }
+                    $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
+                }
+            }
+
+            if (should_wait_for_injection()) {
+                $("body").on( "patterns-inject-triggered", do_hide);
+            } else {
+                do_hide();
             }
         },
 
