@@ -35,7 +35,7 @@
     "jquery-placeholder": "2.0.7",
     "jquery.browser": "0.1.0",
     "logging": "https://github.com/Patternslib/logging.git",
-    "masonry-layout": "4.1.1",
+    "masonry-layout": "4.2.0",
     "modernizr": "3.6.0",
     "moment": "2.19.3",
     "moment-timezone": "0.5.13",
