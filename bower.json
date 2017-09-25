@@ -22,7 +22,7 @@
     "jquery.browser": "~0.0.7",
     "jquery.tinymce": "",
     "logging": "",
-    "masonry": "~4.1.1",
+    "masonry": "~4.2.0",
     "modernizr": "2.8.3",
     "moment": "2.18.1",
     "moment-timezone": "0.5.13",
