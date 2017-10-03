@@ -1,46 +1,86 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>pat-navigation demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>pat-navigation demo page</title>
+  <link rel="stylesheet" href="/style/common.css" type="text/css">
+  <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  <style>
+    .current {
+      border-left: 3px solid black;
+    }
+  </style>
 </head>
-<body>
-	<section class="description">
-		<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-	</section>
-	<h2>Demo</h2>
-	<div id="demo">
-	<section class="demo">
-		<p>Testing tab .current behaviour</p>
-		<ul class="pat-navigation">
-			<li>
-				<a href="pattern-test-response.html#inject-tab-1" class="pat-inject"
-                    data-pat-inject="target: #content-tab">Tab 1</a>
 
-			    <ul class="navigation">
-			      <li>
-				    <a href="pattern-test-response.html#inject-tab-1-1" class="pat-inject" 
-                        data-pat-inject="target: #content-tab">Link 1.1</a>
-				  </li>
-				  <li>
-					<a href="pattern-test-response.html#inject-tab-1-2" class="pat-inject"
-                        data-pat-inject="target: #content-tab">Link 1.2</a>
-                  </li>
-                </ul>
-			</li>
-			<li>
-				<a href="pattern-test-response.html#inject-tab-2" class="pat-inject"
-                    data-pat-inject="target: #content-tab">Tab 2</a>
-			</li>
-		</ul>
-		<div id="content-tab">Content will appear here</div>
-	</section>
-	</div>
-	<section class="documentation">
-        <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
-	</section>
+<body>
+  <section class="description">
+    <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Description::element; target: self::element; trigger: autoload">Description</a>
+  </section>
+  <h2>Demo</h2>
+  <div id="demo">
+    <section class="demo">
+      <p>Testing nav > li > a (no need to set a class to trigger the pattern)</p>
+      <nav>
+        <li>
+          <a href="index.html#demo" class="pat-inject" data-pat-inject="target: #demo; history: record;">Reinject the demo page</a>
+        </li>
+        <li>
+          <a href="pattern-test-response1.html#inject-tab-1" class="pat-inject" data-pat-inject="target: #content-tab; history: record;">Tab 1</a>
+        </li>
+        <li>
+          <a href="pattern-test-response2.html#inject-tab-2" class="pat-inject" data-pat-inject="target: #content-tab; history: record;">Tab 2</a>
+        </li>
+      </nav>
+
+      <p>Testing nested .pat-navigation elements</p>
+      <ul class="pat-navigation navigation-load-current">
+        <li class="current">
+          <a href="pattern-test-response1.html#inject-tab-1" class="pat-inject" data-pat-inject="target: #content-tab; history: record;">Tab 1</a>
+          <ul class="navigation">
+            <li>
+              <a href="pattern-test-response1.html#inject-tab-1-1" class="pat-inject" data-pat-inject="target: #content-tab">Link 1.1</a>
+            </li>
+            <li>
+              <a href="pattern-test-response1.html#inject-tab-1-2" class="pat-inject" data-pat-inject="target: #content-tab">Link 1.2</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="pattern-test-response1.html#inject-tab-2" class="pat-inject" data-pat-inject="target: #content-tab">Tab 2</a>
+        </li>
+      </ul>
+
+      <p>Testing anchor with no parent (item-parent-selector: ;)</p>
+      <dir class="pat-navigation" data-pat-navigation="item-parent-selector: ;">
+        <a href="pattern-test-response1.html#inject-tab-1" class="pat-inject" data-pat-inject="target: #content-tab">Tab 1</a>
+        <a href="pattern-test-response1.html#inject-tab-2" class="pat-inject" data-pat-inject="target: #content-tab">Tab 2</a>
+      </dir>
+
+      <p>Testing anchor inside paragraphs (item-parent-selector: p;)</p>
+      <dir class="pat-navigation" data-pat-navigation="item-parent-selector: p">
+        <p>
+          <a href="pattern-test-response1.html#inject-tab-1" class="pat-inject" data-pat-inject="target: #content-tab">Tab 1</a>
+        </p>
+        <p>
+          <a href="pattern-test-response1.html#inject-tab-2" class="pat-inject" data-pat-inject="target: #content-tab">Tab 2</a>
+        </p>
+      </dir>
+
+      <p>Injected content</p>
+      <div id="content-tab">Content will appear here</div>
+      <p>Reset links (not inside pat-navigation)</p>
+      <p>
+        <a href="pattern-test-response1.html#inject-tab-1" class="pat-inject" data-pat-inject="target: #content-tab">Reset Tab 1</a>
+        <a href="pattern-test-response1.html#inject-tab-2" class="pat-inject" data-pat-inject="target: #content-tab">Reset Tab 2</a>
+        <a href="index.html">Reset everything</a>
+      </p>
+    </section>
+  </div>
+  <section class="documentation">
+    <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
+  </section>
 </body>
+
 </html>
