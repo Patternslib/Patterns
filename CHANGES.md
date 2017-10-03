@@ -36,6 +36,7 @@ Breaking Changes
 - pat-navigation: Better handling of navigation anchors. We now have an item-parent-selector option (defaults to `li` for backward compatibility) and handle nested navigations. (ale-rt)
 
 
+
 ## 2.1.2 - Aug. 29, 2017
 
 - pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
