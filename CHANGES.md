@@ -33,7 +33,6 @@ Breaking Changes
 - fixed path to spectrum-colorpicker
 - fixed #512 by also setting the data-option-value attribute
 - pat-tooltip: before hiding the tooltip wait for the injection to be triggered. (ale-rt)
-- pat-navigation: Better handling of navigation anchors. We now have an item-parent-selector option (defaults to `li` for backward compatibility) and handle nested navigations. (ale-rt)
 
 
 
