@@ -162,7 +162,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 it("will show the contents of the 'title' attribute", function () {
                     utils.createTooltip({data: "source: title"});
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").and.callThrough();
+                    var spy = spyOn(pattern, "show").and.callThrough();
                     var title = $el.attr("title");
                     pattern.init($el);
                     // The 'title' attr gets removed, otherwise the browser's
@@ -170,8 +170,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     expect($el.attr("title")).toBeFalsy();
 
                     $el.trigger(utils.click);
-                    jasmine.clock().tick(100); // hide events get registered 50 ms after show
-                    expect(pattern.show).toHaveBeenCalled();
+                    expect(spy).toHaveBeenCalled();
                     var $container = $el.data("patterns.tooltip.container");
                     expect($container.find('p').text()).toBe(title);
                 });
@@ -264,13 +263,12 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 utils.removeTooltip();
             });
             it("will not close if the contained trigger is clicked", function () {
-                spyOn(pattern, "show").and.callThrough();
+                var spy = spyOn(pattern, "show").and.callThrough();
                 var $el = $("a#tooltip");
                 pattern.init($el);
                 pattern.init($("a#nested-tooltip"));
                 $el.trigger(utils.click);
-                jasmine.clock().tick(100); // hide events get registered 50 ms after show
-                expect(pattern.show).toHaveBeenCalled();
+                expect(spy).toHaveBeenCalled();
 
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
 
