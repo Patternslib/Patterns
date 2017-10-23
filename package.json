@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "3.0.0a3",
+  "version": "3.0.0a4",
   "title": "Markup patterns to drive behaviour.",
   "description": "Patternslib is a JavaScript library that enables designers to build rich interactive prototypes without the need for writing any Javascript. All events are triggered by classes and other attributes in the HTML, without abusing the HTML as a programming language. Accessibility, SEO and well structured HTML are core values of Patterns.",
   "author": {
@@ -30,7 +30,7 @@
     "jquery-placeholder": "2.0.7",
     "jquery.browser": "0.1.0",
     "logging": "https://github.com/Patternslib/logging.git",
-    "masonry-layout": "4.1.1",
+    "masonry-layout": "4.2.0",
     "modernizr": "3.5.0",
     "moment": "2.10.6",
     "moment-timezone": "0.4.0",

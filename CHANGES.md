@@ -33,7 +33,7 @@ Breaking Changes
 - fixed path to spectrum-colorpicker
 - fixed #512 by also setting the data-option-value attribute
 - pat-tooltip: before hiding the tooltip wait for the injection to be triggered. (ale-rt)
-
+- update masonry-layout to 4.2.0
 
 
 ## 2.1.2 - Aug. 29, 2017
