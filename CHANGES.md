@@ -33,7 +33,7 @@ Breaking Changes
 - fixed path to spectrum-colorpicker
 - fixed #512 by also setting the data-option-value attribute
 - pat-tooltip: before hiding the tooltip wait for the injection to be triggered. (ale-rt)
-
+- Downgrading jquery to 1.11.0 to preserve a feature check for IE11 which otherwise breaks masonry on SVG files. See https://github.com/quaive/ploneintranet.prototype/issues/547
 
 
 ## 2.1.2 - Aug. 29, 2017
