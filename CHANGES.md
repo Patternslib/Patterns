@@ -33,7 +33,7 @@ Breaking Changes
 - fixed path to spectrum-colorpicker
 - fixed #512 by also setting the data-option-value attribute
 - pat-tooltip: before hiding the tooltip wait for the injection to be triggered. (ale-rt)
-
+- Upgraded sizzle to 2.3.3 to prevent an IE bug: https://github.com/jquery/sizzle/issues/322
 
 
 ## 2.1.2 - Aug. 29, 2017
