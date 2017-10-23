@@ -42,6 +42,7 @@
     "showdown": "1.7.2",
     "showdown-github": "",
     "showdown-prettify": "",
+    "sizzle": "2.3.3",
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "",
     "text-loader": "",
