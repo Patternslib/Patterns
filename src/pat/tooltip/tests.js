@@ -170,6 +170,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     expect($el.attr("title")).toBeFalsy();
 
                     $el.trigger(utils.click);
+                    jasmine.clock().tick(100); // hide events get registered 50 ms after show
                     expect(pattern.show).toHaveBeenCalled();
                     var $container = $el.data("patterns.tooltip.container");
                     expect($container.find('p').text()).toBe(title);
@@ -268,6 +269,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 pattern.init($el);
                 pattern.init($("a#nested-tooltip"));
                 $el.trigger(utils.click);
+                jasmine.clock().tick(100); // hide events get registered 50 ms after show
                 expect(pattern.show).toHaveBeenCalled();
 
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
