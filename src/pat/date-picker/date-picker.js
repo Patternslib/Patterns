@@ -6,8 +6,7 @@ define([
     "pat-base",
     "pikaday",
     "moment",
-    "moment-timezone-data",
-    "modernizr"
+    "moment-timezone-data"
 ], function(_, Parser, registry, Base, Pikaday, moment, momenttimezone) {
     "use strict";
     var parser = new Parser("date-picker");

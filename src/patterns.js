@@ -8,6 +8,7 @@
  */
 define([
     "jquery",
+    "modernizr",
     "pat-registry",
     "prefixfree",
     "pat-ajax",
