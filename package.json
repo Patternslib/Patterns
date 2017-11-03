@@ -85,7 +85,7 @@
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "test": "karma start webpack/karma.config.js --single-run --browsers PhantomJS",
-    "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c lib/config-all.json -d ../../src/modernizr.js"
+    "build_modernizr": "cd node_modules/modernizr && bin/modernizr -c ../../src/modernizr-config.json -d ../../src/modernizr.js"
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",
