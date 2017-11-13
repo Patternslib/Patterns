@@ -1,8 +1,7 @@
 define([
     "jquery",
-    "jquery.browser",
     "pat-registry"
-], function($, dummy, registry) {
+], function($, registry) {
     var legend = {
         name: "legend",
         trigger: "legend",
@@ -26,12 +25,6 @@ define([
             $root.findInclusive("legend:not(.cant-touch-this)").each(function() {
                 $(this).replaceWith("<p class='legend'>"+$(this).html()+"</p>");
             });
-            // Replace objects with iframes for IE 8 and older.
-            if ($.browser.msie ) {
-                var version = Number( $.browser.version.split(".", 2).join(""));
-                if (version<=80)
-                    legend._convertToIframes($root);
-            }
         }
     };
     registry.register(legend);
