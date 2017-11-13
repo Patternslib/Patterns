@@ -35,8 +35,6 @@ define([
             if ($.browser.mozilla) {
                 // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 this.force_method = "scale";
-            } else if ($.browser.msie && parseInt($.browser.version, 10) < 9) {
-                this.force_method = "zoom";
             }
             $(window).on("resize.autoscale",
                 _.debounce(this.scale.bind(this), 250, true)

@@ -34,37 +34,14 @@ define(["pat-auto-scale", "jquery"], function(Pattern, jQuery) {
         });
 
         describe("The scale method", function() {
-            var mozilla, msie, version;
+            var mozilla;
             beforeEach(function() {
                 mozilla = jQuery.browser.mozilla;
-                msie = jQuery.browser.msie;
-                version = jQuery.browser.version;
                 jQuery.browser.mozilla = false;
-                jQuery.browser.msie = false;
             });
 
             afterEach(function() {
                 jQuery.browser.mozilla = mozilla;
-                jQuery.browser.msie = msie;
-                jQuery.browser.version = version;
-            });
-
-            it("is forced to zoom on old IE versions", function() {
-                jQuery.browser.msie = true;
-                jQuery.browser.version = "8.192.921";
-                $("#lab").html('<img class="pat-auto-scale" src="http://placehold.it/250x250">');
-                var pattern = new Pattern($(".pat-auto-scale"));
-                pattern._setup();
-                expect(pattern.force_method).toBe("zoom");
-            });
-
-            it("is not forced to anything on recent IE versions", function() {
-                jQuery.browser.msie = true;
-                jQuery.browser.version="9.0.19A";
-                $("#lab").html('<img class="pat-auto-scale" src="http://placehold.it/250x250">');
-                var pattern = new Pattern($(".pat-auto-scale"));
-                pattern._setup();
-                expect(pattern.force_method).toBe(null);
             });
 
             it("is forced to scale on gecko", function() {
