@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "AnythingSlider": "https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
-    "Stickyfill": "https://github.com/wilddeer/stickyfill.git",
     "almond": "",
     "anythingslider": "git+https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
     "chosen-js": "",
@@ -44,6 +43,7 @@
     "showdown-prettify": "",
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "",
+    "stickyfilljs": "^2.0.2",
     "text-loader": "",
     "underscore": "1.8.3",
     "validate.js": "0.11.1"
