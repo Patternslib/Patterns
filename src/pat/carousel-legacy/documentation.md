@@ -1,45 +1,8 @@
 ## Description
 
-The carousel pattern allows for displaying more content in the same amount of screen estate by letting users click or swipe through through slices of content.
+This pattern provides a very simple way to create carousels.
 
 ## Documentation
-
-…
-
-### Usage
-
-…
-
-
-    <div class="pat-carousel">
-     …
-    </div>
-
-
-
-
-### Option reference
-
-| Property         | Description                              | Default | Allowed Values  | Type                             |
-| ---------------- | ---------------------------------------- | ------- | --------------- | -------------------------------- |
-| autoplay         | …                                        | false   | true, false     | Boolean                          |
-| autoplay-speed   | …                                        | 1000    |                 | Integer                          |
-| slides-to-scroll | …                                        | 1       |                 | Integer                          |
-| slides-to-show   |                                          | 3       |                 | Integer                          |
-| dots             | …                                        | show    | show, hide      | One of the allowed string values |
-| speed            | …                                        | 500     |                 | Integer                          |
-| height           | Enables adaptive height for single slide horizontal carousels. | fixed   | fixed, adaptive | One of the allowed string values |
-| arrows           | Prev/Next Arrows                         | show    | show, hide      | One of the allowed string values |
-| append-dots      | Change where the navigation dots are attached (Selector, htmlString, Array, Element, jQuery object) |         |                 | CSS selector                     |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-
-
-
-## OLD Documentation
 
 Patterns builds on the excellent
 [AnythingSlider](https://github.com/CSS-Tricks/AnythingSlider/wiki)

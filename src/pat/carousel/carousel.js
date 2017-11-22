@@ -1,15 +1,14 @@
 /**
  * Patterns carousel
  *
- * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
- * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2017 Syslab.com GmbH Alexander Pilz
  */
 define([
     "jquery",
     "pat-registry",
     "pat-logger",
     "pat-parser",
-    "jquery.anythingslider"
+    "slick-carousel"
 ], function($, patterns, logger, Parser) {
     var log = logger.getLogger("pat.carousel"),
         parser = new Parser("carousel");
@@ -34,22 +33,22 @@ define([
                     options = parser.parse($carousel, opts),
                     settings = {hashTags: false};
 
-                settings.autoPlay = options.autoPlay;
-                settings.stopAtEnd = !options.loop;
-                settings.resizeContents = options.resize;
-                settings.expand = options.expand;
-                settings.buildArrows = options.control.arrows;
-                settings.buildNavigation = options.control.navigation;
-                settings.buildStartStop = options.control.startstop;
-                settings.delay = options.time.delay;
-                settings.animationTime = options.time.animation;
-                settings.onInitialized = carousel.onInitialized;
-                settings.onSlideInit = carousel.onSlideInit;
+                // settings.autoPlay = options.autoPlay;
+                // settings.stopAtEnd = !options.loop;
+                // settings.resizeContents = options.resize;
+                // settings.expand = options.expand;
+                // settings.buildArrows = options.control.arrows;
+                // settings.buildNavigation = options.control.navigation;
+                // settings.buildStartStop = options.control.startstop;
+                // settings.delay = options.time.delay;
+                // settings.animationTime = options.time.animation;
+                // settings.onInitialized = carousel.onInitialized;
+                // settings.onSlideInit = carousel.onSlideInit;
                 carousel.setup($carousel, settings);
             });
         },
 
-	setup: function($el, settings) {
+        setup: function($el, settings) {
             var loaded = true,
                 $images = $el.find("img"),
                 img, i;
@@ -66,59 +65,59 @@ define([
                 return;
             }
 
-            var $carousel = $el.anythingSlider(settings),
-                control = $carousel.data("AnythingSlider"),
+            var $carousel = $el.slick(settings),
+                // control = $carousel.data("AnythingSlider"),
                 $panel_links = $();
 
-            $carousel
-                .children().each(function(index) {
-                    if (!this.id)
-                        return;
+            // $carousel
+            //     .children().each(function(index) {
+            //         if (!this.id)
+            //             return;
 
-                    var $links = $("a[href=#" + this.id+"]");
-                    if (index===control.currentPage)
-                        $links.addClass("current");
-                    else
-                        $links.removeClass("current");
-                    $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
-                    $panel_links = $panel_links.add($links);
-                }).end()
-                .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
-	},
+            //         var $links = $("a[href=#" + this.id+"]");
+            //         if (index===control.currentPage)
+            //             $links.addClass("current");
+            //         else
+            //             $links.removeClass("current");
+            //         $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+            //         $panel_links = $panel_links.add($links);
+            //     }).end()
+            //     .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
+	    },
 
-        _loadPanelImages: function(slider, page) {
-            var $img;
-            log.info("Loading lazy images on panel " + page);
-            slider.$items.eq(page).find("img").andSelf().filter("[data-src]").each(function() {
-                $img=$(this);
-                this.src=$img.attr("data-src");
-                $img.removeAttr("data-src");
-            });
-        },
+        // _loadPanelImages: function(slider, page) {
+        //     var $img;
+        //     log.info("Loading lazy images on panel " + page);
+        //     slider.$items.eq(page).find("img").andSelf().filter("[data-src]").each(function() {
+        //         $img=$(this);
+        //         this.src=$img.attr("data-src");
+        //         $img.removeAttr("data-src");
+        //     });
+        // },
 
-        onPanelLinkClick: function(event) {
-            event.data.control.gotoPage(event.data.index, false);
-            event.preventDefault();
-        },
+        // onPanelLinkClick: function(event) {
+        //     event.data.control.gotoPage(event.data.index, false);
+        //     event.preventDefault();
+        // },
 
-        onInitialized: function(event, slider) {
-            carousel._loadPanelImages(slider, slider.options.startPanel);
-            carousel._loadPanelImages(slider, slider.options.startPanel+1);
-            carousel._loadPanelImages(slider, 0);
-            carousel._loadPanelImages(slider, slider.pages+1);
-        },
+        // onInitialized: function(event, slider) {
+        //     carousel._loadPanelImages(slider, slider.options.startPanel);
+        //     carousel._loadPanelImages(slider, slider.options.startPanel+1);
+        //     carousel._loadPanelImages(slider, 0);
+        //     carousel._loadPanelImages(slider, slider.pages+1);
+        // },
 
-        onSlideInit: function(event, slider) {
-            carousel._loadPanelImages(slider, slider.targetPage);
-        },
+        // onSlideInit: function(event, slider) {
+        //     carousel._loadPanelImages(slider, slider.targetPage);
+        // },
 
-        onSlideComplete: function(event, slider) {
-            var $panel_links = event.data;
-            $panel_links.removeClass("current");
-            if (slider.$targetPage[0].id)
-                $panel_links.filter("[href=#" + slider.$targetPage[0].id + "]").addClass("current");
-            carousel._loadPanelImages(slider, slider.targetPage+1);
-        }
+        // onSlideComplete: function(event, slider) {
+        //     var $panel_links = event.data;
+        //     $panel_links.removeClass("current");
+        //     if (slider.$targetPage[0].id)
+        //         $panel_links.filter("[href=#" + slider.$targetPage[0].id + "]").addClass("current");
+        //     carousel._loadPanelImages(slider, slider.targetPage+1);
+        // }
     };
 
     patterns.register(carousel);
