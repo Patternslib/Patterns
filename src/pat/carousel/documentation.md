@@ -22,8 +22,8 @@ The carousel pattern allows for displaying more content in the same amount of sc
 
 | Property         | Description                              | Default | Allowed Values  | Type                             |
 | ---------------- | ---------------------------------------- | ------- | --------------- | -------------------------------- |
-| autoplay         | …                                        | false   | true, false     | Boolean                          |
-| autoplay-speed   | …                                        | 1000    |                 | Integer                          |
+| auto-play         | …                                        | false   | true, false     | Boolean                          |
+| auto-play-speed   | …                                        | 1000    |                 | Integer                          |
 | slides-to-scroll | …                                        | 1       |                 | Integer                          |
 | slides-to-show   |                                          | 3       |                 | Integer                          |
 | dots             | …                                        | show    | show, hide      | One of the allowed string values |
