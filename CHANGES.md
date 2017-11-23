@@ -35,6 +35,8 @@ Breaking Changes
 - pat-tooltip: before hiding the tooltip wait for the injection to be triggered. (ale-rt)
 - Downgrading jquery to 1.11.0 to preserve a feature check for IE11 which otherwise breaks masonry on SVG files. See https://github.com/quaive/ploneintranet.prototype/issues/547
 - Include own modernizr config file and reduce amount of checks included to mainly css ones
+- New carousel pattern based on slick carousel (http://kenwheeler.github.io/slick/)
+  The old carousel based on anythingslider is still available as pat-carousel-legacy
 
 
 ## 2.1.2 - Aug. 29, 2017
