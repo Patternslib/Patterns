@@ -4,45 +4,8 @@ The carousel pattern allows for displaying more content in the same amount of sc
 
 ## Documentation
 
-…
-
-### Usage
-
-…
-
-
-    <div class="pat-carousel">
-     …
-    </div>
-
-
-
-
-### Option reference
-
-| Property         | Description                              | Default | Allowed Values  | Type                             |
-| ---------------- | ---------------------------------------- | ------- | --------------- | -------------------------------- |
-| auto-play         | …                                        | false   | true, false     | Boolean                          |
-| auto-play-speed   | …                                        | 1000    |                 | Integer                          |
-| slides-to-scroll | …                                        | 1       |                 | Integer                          |
-| slides-to-show   |                                          | 3       |                 | Integer                          |
-| dots             | …                                        | show    | show, hide      | One of the allowed string values |
-| speed            | …                                        | 500     |                 | Integer                          |
-| height           | Enables adaptive height for single slide horizontal carousels. | fixed   | fixed, adaptive | One of the allowed string values |
-| arrows           | Prev/Next Arrows                         | show    | show, hide      | One of the allowed string values |
-| append-dots      | Change where the navigation dots are attached (Selector, htmlString, Array, Element, jQuery object) |         |                 | CSS selector                     |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-|                  |                                          |         |                 |                                  |
-
-
-
-## OLD Documentation
-
-Patterns builds on the excellent
-[AnythingSlider](https://github.com/CSS-Tricks/AnythingSlider/wiki)
+Patterns builds on the slick library
+[Slick](http://kenwheeler.github.io/slick/)
 (licensed under LGPL 3) to provide a very simple way to create
 carousels. Just by adding a `pat-carousel` class to your markup you can
 turn anything into a beautiful carousel.
@@ -110,28 +73,15 @@ options in the `data-pat-carousel` attribute.
     </ul>
 
 
->    This plugin is not fully stable yet. The available options and spelling may
->    change in the future.
 
-
-| Setting | Default | Description |
-| ------- | ------- | ----------- |
-| `auto-play` | true | Indicates if the carousel should start playing automatically. If `control-arrows` is enabled users will be able to control this manually.|
-| ------- | ------- | ----------- |
-| `loop` | true | Indicates if the carousel will loop. | 
-| ------- | ------- | ----------- |
-| `resize` | false | If enabled the carousel will be resized to fill its parent. | 
-| ------- | ------- | ----------- |
-| `expand` | false | If enable all panels will be resizes to fill the carousel. If not enabled the will dynamically adjust its size to match the currently shown panel. | 
-| ------- | ------- | ----------- |
-| `control-arrows` | false | If enabled back and forward-arrows are are created. Note that users can always use swipes and keyboard to control the carousel as well. | 
-| ------- | ------- | ----------- |
-| `control-navigation` | false | If enabled a list of links to navigate within the carousel is created. | 
-| ------- | ------- | ----------- |
-| `control-startstop` | false | If enabled a button to start and stop carousel animation is added. | 
-| ------- | ------- | ----------- |
-| `time-delay` | 3000 | The time in milliseconds a single panel is shown when animation is active. | 
-| ------- | ------- | ----------- |
-| `time-animation` | 600 | The duration of a transition animation in milliseconds. | 
-| ------- | ------- | ----------- |
-
+| Property         | Description                              | Default | Allowed Values  | Type                             |
+| ---------------- | ---------------------------------------- | ------- | --------------- | -------------------------------- |
+| auto-play         | …                                        | false   | true, false     | Boolean                          |
+| auto-play-speed   | …                                        | 1000    |                 | Integer                          |
+| slides-to-scroll | …                                        | 1       |                 | Integer                          |
+| slides-to-show   |                                          | 3       |                 | Integer                          |
+| dots             | …                                        | show    | show, hide      | One of the allowed string values |
+| speed            | …                                        | 500     |                 | Integer                          |
+| height           | Enables adaptive height for single slide horizontal carousels. | fixed   | fixed, adaptive | One of the allowed string values |
+| arrows           | Prev/Next Arrows                         | show    | show, hide      | One of the allowed string values |
+| append-dots      | Change where the navigation dots are attached (Selector, htmlString, Array, Element, jQuery object) |         |                 | CSS selector                     |
