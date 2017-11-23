@@ -11,7 +11,7 @@ define([
     "pat-parser",
     "jquery.anythingslider"
 ], function($, patterns, logger, Parser) {
-    var log = logger.getLogger("pat.carousel"),
+    var log = logger.getLogger("pat.carousel-legacy"),
         parser = new Parser("carousel");
 
     parser.addArgument("auto-play", false);
@@ -25,8 +25,8 @@ define([
     parser.addArgument("time-animation", 600);
 
     var carousel = {
-        name: "carousel",
-        trigger: ".pat-carousel",
+        name: "carousel-legacy",
+        trigger: ".pat-carousel-legacy",
 
         init: function($el, opts) {
             return $el.each(function() {
@@ -80,10 +80,10 @@ define([
                         $links.addClass("current");
                     else
                         $links.removeClass("current");
-                    $links.on("click.pat-carousel", null, {control: control, index: index}, carousel.onPanelLinkClick);
+                    $links.on("click.pat-carousel-legacy", null, {control: control, index: index}, carousel.onPanelLinkClick);
                     $panel_links = $panel_links.add($links);
                 }).end()
-                .on("slide_complete.pat-carousel", null, $panel_links, carousel.onSlideComplete);
+                .on("slide_complete.pat-carousel-legacy", null, $panel_links, carousel.onSlideComplete);
 	},
 
         _loadPanelImages: function(slider, page) {
