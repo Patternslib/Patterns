@@ -1,6 +1,6 @@
-define(["pat-carousel"], function(pattern) {
+define(["pat-carousel-legacy"], function(pattern) {
 
-    describe("carousel-plugin", function() {
+    describe("carousel-legacy-plugin", function() {
 
         beforeEach(function() {
             $("<div/>", {id: "lab"}).appendTo(document.body);
@@ -13,7 +13,7 @@ define(["pat-carousel"], function(pattern) {
         describe("init", function() {
             it("Default options", function() {
                 $("#lab").html(
-                    "<ul class='pat-carousel'>" +
+                    "<ul class='pat-carousel-legacy'>" +
                     "  <li>Panel 1</li>" +
                     "  <li>Panel 2</li>" +
                     "</ul>");
@@ -32,7 +32,7 @@ define(["pat-carousel"], function(pattern) {
 
             it("Default options (DOM test)", function() {
                 $("#lab").html(
-                    "<ul class='pat-carousel'>" +
+                    "<ul class='pat-carousel-legacy'>" +
                     "  <li>Panel 1</li>" +
                     "  <li>Panel 2</li>" +
                     "</ul>");
@@ -48,7 +48,7 @@ define(["pat-carousel"], function(pattern) {
 
             it("Tweak options via DOM", function() {
                 $("#lab").html(
-                    "<ul class='pat-carousel' data-pat-carousel='auto-play: false; loop: false; time-delay: 50'>" +
+                    "<ul class='pat-carousel-legacy' data-pat-carousel-legacy='auto-play: false; loop: false; time-delay: 50'>" +
                     "  <li>Panel 1</li>" +
                     "  <li>Panel 2</li>" +
                     "</ul>");

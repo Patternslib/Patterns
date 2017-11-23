@@ -12,7 +12,7 @@ define([
     "jquery.anythingslider"
 ], function($, patterns, logger, Parser) {
     var log = logger.getLogger("pat.carousel-legacy"),
-        parser = new Parser("carousel");
+        parser = new Parser("carousel-legacy");
 
     parser.addArgument("auto-play", false);
     parser.addArgument("loop", true);

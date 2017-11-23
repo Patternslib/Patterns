@@ -125,6 +125,7 @@ module.exports = {
             "pat-bumper": "pat/bumper/bumper.js",
             "pat-calendar": "pat/calendar/calendar.js",
             "pat-carousel": "pat/carousel/carousel.js",
+            "pat-carousel-legacy": "pat/carousel-legacy/carousel-legacy.js",
             "pat-checkedflag": "pat/checked-flag/checked-flag.js",
             "pat-checked-flag": "pat/checked-flag/checked-flag.js",
             "pat-checklist": "pat/checklist/checklist.js",
