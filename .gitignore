@@ -23,6 +23,7 @@ bundle.min.js
 bundle.min.js.map
 src/patterns-custom.js
 test-reports
+/.DS_Store
 
 src/pat/auto-scale/auto-scale.css
 src/pat/auto-submit/auto-submit.css

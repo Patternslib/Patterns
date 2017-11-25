@@ -18,16 +18,19 @@ define(["pat-carousel"], function(pattern) {
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "anythingSlider").and.callThrough();
+                spyOn($.fn, "slick").and.callThrough();
                 pattern.init($carousel);
-                expect($.fn.anythingSlider).toHaveBeenCalled();
-                var options = $.fn.anythingSlider.calls.argsFor(0)[0];
-                expect(options.autoPlay).toBe(false);
-                expect(options.stopAtEnd).toBe(false);
-                expect(options.resizeContents).toBe(false);
-                expect(options.expand).toBe(false);
-                expect(options.buildArrows).toBe(true);
-                expect(options.expand).toBe(false);
+                expect($.fn.slick).toHaveBeenCalled();
+                var options = $.fn.slick.calls.argsFor(0)[0];
+                expect(options.autoplay).toBe(false);
+                expect(options.autoplaySpeed).toBe(1000);
+                expect(options.speed).toBe(500);
+                expect(options.adaptiveHeight).toBe(false);
+                expect(options.arrows).toBe(true);
+                expect(options.slidesToShow).toBe(1);
+                expect(options.slidesToScroll).toBe(1);
+                expect(options.dots).toBe(true);
+                expect(options.appendDots).toBe(undefined);
             });
 
             it("Default options (DOM test)", function() {
@@ -38,28 +41,28 @@ define(["pat-carousel"], function(pattern) {
                     "</ul>");
                 var $carousel = $("#lab ul");
                 pattern.init($carousel);
-                // No arrows created
-                expect($carousel.find(".arrow").length).toBe(0);
-                // No start-stop button created
-                expect($carousel.find(".start-stop").length).toBe(0);
+                // has been initialized
+                expect($carousel.hasClass('slick-initialized')).toBe(true);
+                // arrows created
+                expect($carousel.find(".slick-arrow").length).toBe(2);
                 // No navigation boxes
-                expect($carousel.find(".anythingNavWindow").length).toBe(0);
+                expect($carousel.find(".slick-dots").length).toBe(1);
             });
 
             it("Tweak options via DOM", function() {
                 $("#lab").html(
-                    "<ul class='pat-carousel' data-pat-carousel='auto-play: false; loop: false; time-delay: 50'>" +
+                    "<ul class='pat-carousel' data-pat-carousel='auto-play: true; auto-play-speed: 345; height: adaptive'>" +
                     "  <li>Panel 1</li>" +
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "anythingSlider").and.callThrough();
+                spyOn($.fn, "slick").and.callThrough();
                 pattern.init($carousel);
-                expect($.fn.anythingSlider).toHaveBeenCalled();
-                var options = $.fn.anythingSlider.calls.argsFor(0)[0];
-                expect(options.autoPlay).toBe(false);
-                expect(options.stopAtEnd).toBe(true);
-                expect(options.delay).toBe(50);
+                expect($.fn.slick).toHaveBeenCalled();
+                var options = $.fn.slick.calls.argsFor(0)[0];
+                expect(options.autoplay).toBe(true);
+                expect(options.autoplaySpeed).toBe(345);
+                expect(options.adaptiveHeight).toBe(true);
             });
         });
     });

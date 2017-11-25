@@ -51,15 +51,15 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     href: "#content"
                 });
                 var $el = $("a#tooltip");
-                spyOn(pattern, "show").and.callThrough();
-                spyOn(pattern, "hide").and.callThrough();
+                var spy_show = spyOn(pattern, "show").and.callThrough();
+                var spy_hide = spyOn(pattern, "hide").and.callThrough();
                 pattern.init($el);
                 $el.trigger(utils.click);
-                expect(pattern.show).toHaveBeenCalled();
+                expect(spy_show).toHaveBeenCalled();
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
                 $(document).on("submit", function (ev) { ev.preventDefault(); });
                 $("form.close-panel").submit();
-                expect(pattern.hide).toHaveBeenCalled();
+                expect(spy_hide).toHaveBeenCalled();
                 $("div#content").remove();
             });
 
@@ -73,15 +73,15 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     href: "#content"
                 });
                 var $el = $("a#tooltip");
-                spyOn(pattern, "show").and.callThrough();
-                spyOn(pattern, "hide").and.callThrough();
+                var spy_show = spyOn(pattern, "show").and.callThrough();
+                var spy_hide = spyOn(pattern, "hide").and.callThrough();
                 pattern.init($el);
                 $el.trigger(utils.click);
-                expect(pattern.show).toHaveBeenCalled();
+                expect(spy_show).toHaveBeenCalled();
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
                 $(document).on("submit", function (ev) { ev.preventDefault(); });
                 $("#content form").submit();
-                expect(pattern.hide).not.toHaveBeenCalled();
+                expect(spy_hide).not.toHaveBeenCalled();
                 $("div#content").remove();
             });
 
@@ -101,15 +101,15 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     data: "trigger: click; closing: close-button",
                     href: "/tests/content.html#content"
                 });
-                spyOn(pattern, "show").and.callThrough();
-                spyOn(pattern, "hide").and.callThrough();
+                var spy_show = spyOn(pattern, "show").and.callThrough();
+                var spy_hide = spyOn(pattern, "hide").and.callThrough();
                 var $el = $("a#tooltip");
                 pattern.init($el);
                 $el.trigger(utils.click);
-                expect(pattern.show).toHaveBeenCalled();
+                expect(spy_show).toHaveBeenCalled();
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
                 $(".close-panel").click();
-                expect(pattern.hide).toHaveBeenCalled();
+                expect(spy_hide).toHaveBeenCalled();
             });
 
             it("is NOT closed when an injection happens", function () {
@@ -118,11 +118,11 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     href: "/tests/content.html#content"
                 });
                 var $el = $("a#tooltip");
-                spyOn(pattern, "show").and.callThrough();
-                spyOn(pattern, "hide").and.callThrough();
+                var spy_show = spyOn(pattern, "show").and.callThrough();
+                var spy_hide = spyOn(pattern, "hide").and.callThrough();
                 pattern.init($el);
                 $el.trigger(utils.click);
-                expect(pattern.show).toHaveBeenCalled();
+                expect(spy_show).toHaveBeenCalled();
 
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
 
@@ -132,7 +132,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
 
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
 
-                expect(pattern.hide).not.toHaveBeenCalled();
+                expect(spy_hide).not.toHaveBeenCalled();
             });
         });
 
@@ -146,12 +146,12 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 });
                 it("the default click action is prevented", function () {
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").and.callThrough();
-                    spyOn(utils.click, "preventDefault");
+                    var spy_show = spyOn(pattern, "show").and.callThrough();
+                    var spy_preventdefault = spyOn(utils.click, "preventDefault");
                     pattern.init($el);
                     $el.trigger(utils.click);
-                    expect(pattern.show).toHaveBeenCalled();
-                    expect(utils.click.preventDefault).toHaveBeenCalled();
+                    expect(spy_show).toHaveBeenCalled();
+                    expect(spy_preventdefault).toHaveBeenCalled();
                 });
             });
 
@@ -183,15 +183,15 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 it("will fetch its contents via ajax", function () {
                     utils.createTooltip({data: "source: auto", href: "/tests/content.html#content"});
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").and.callThrough();
-                    spyOn(inject, "execute"); //.and.callThrough();
+                    var spy_show = spyOn(pattern, "show").and.callThrough();
+                    var spy_execute = spyOn(inject, "execute"); //.and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
 
                     jasmine.clock().tick(200);
 
-                    expect(pattern.show).toHaveBeenCalled();
-                    expect(inject.execute).toHaveBeenCalled();
+                    expect(spy_show).toHaveBeenCalled();
+                    expect(spy_execute).toHaveBeenCalled();
                     /* XXX: The ajax call works fine in the browser but not
                     * via PhantomJS. Will have to debug later.
                     *
@@ -211,10 +211,10 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     utils.createTooltip({data: "source: content", href: "#tooltip-source"});
                     utils.createTooltipSource();
                     var $el = $("a#tooltip");
-                    spyOn(pattern, "show").and.callThrough();
+                    var spy_show = spyOn(pattern, "show").and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
-                    expect(pattern.show).toHaveBeenCalled();
+                    expect(spy_show).toHaveBeenCalled();
                     var $container = $el.data("patterns.tooltip.container");
                     expect($container.find('strong').text()).toBe("Local content");
                 });
