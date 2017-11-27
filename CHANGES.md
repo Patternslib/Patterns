@@ -30,6 +30,7 @@ Breaking Changes
     Has been superceeded by pat-validation and is no longer maintained.
   - pat-checkedflag will go away. Its functionality is duplicated by pat-select and pat-checklist
 
+- pat-switch: after a switch occurs, trigger a resize event (some elements may have been appeared and we might need a redraw)
 - fixed path to spectrum-colorpicker
 - fixed #512 by also setting the data-option-value attribute
 - pat-tooltip: before hiding the tooltip wait for the injection to be triggered. (ale-rt)
