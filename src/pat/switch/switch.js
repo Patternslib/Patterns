@@ -83,6 +83,7 @@ define([
                 if (option._storage)
                     option._storage.set(option.selector, {remove: option.remove, add: option.add});
             }
+            $trigger.trigger('resize');
         },
 
         _validateOptions: function(options) {
