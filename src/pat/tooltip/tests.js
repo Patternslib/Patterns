@@ -147,7 +147,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 it("the default click action is prevented", function () {
                     var $el = $("a#tooltip");
                     var spy_show = spyOn(pattern, "show").and.callThrough();
-                    var spy_preventdefault = spyOn(utils.click, "preventDefault");
+                    var spy_preventdefault = spyOn(utils.click, "preventDefault").and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
                     expect(spy_show).toHaveBeenCalled();
