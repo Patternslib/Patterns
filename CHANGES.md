@@ -37,6 +37,7 @@ Breaking Changes
 - Include own modernizr config file and reduce amount of checks included to mainly css ones
 - New carousel pattern based on slick carousel (http://kenwheeler.github.io/slick/)
   The old carousel based on anythingslider is still available as pat-carousel-legacy
+- Improve pat-checklist to allow select/deselect on subset of elements
 
 
 ## 2.1.2 - Aug. 29, 2017
