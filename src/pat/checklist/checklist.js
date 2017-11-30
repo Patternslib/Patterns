@@ -71,7 +71,13 @@ define([
 
 
             var all_selects = $trigger.find(options.select);
+            if (all_selects.length === 0) {
+                all_selects = $(options.select);
+            }
             var all_deselects = $trigger.find(options.deselect);
+            if (all_deselects.length === 0) {
+                all_deselects = $(options.deselect);
+            }
             for (var i=0; i<all_selects.length; i++) {
 
                 if (_._findSiblings(all_selects[i], "input[type=checkbox]:visible").filter(":not(:checked)").length === 0) {
