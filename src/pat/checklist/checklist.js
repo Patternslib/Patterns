@@ -56,50 +56,65 @@ define([
             });
         },
 
+        _findSiblings: function(elem, sel) {
+            var parents = $(elem).parents();
+            for (var i=0; i<parents.length; i++) {
+                var checkbox_children = $(parents[i]).find(sel);
+                if (checkbox_children.length != 0) {
+                    return checkbox_children;
+                }
+            }
+        },
         onChange: function(event) {
             var $trigger = event.data.trigger,
-                options = $trigger.data("patternChecklist"),
-                deselect = $trigger.scopedFind(options.deselect),
-                select = $trigger.scopedFind(options.select);
-            if ($trigger.find("input[type=checkbox]:visible:checked").length===0) {
-                deselect.prop("disabled", true);
-            } else {
-                deselect.prop("disabled", false);
+                options = $trigger.data("patternChecklist");
+
+
+            var all_selects = $trigger.find(options.select);
+            var all_deselects = $trigger.find(options.deselect);
+            for (var i=0; i<all_selects.length; i++) {
+
+                if (_._findSiblings(all_selects[i], "input[type=checkbox]:visible").filter(":not(:checked)").length === 0) {
+                    $(all_selects[i]).prop("disabled", true);
+                } else {
+                    $(all_selects[i]).prop("disabled", false);
+                }
+            }
+            for (var i=0; i< all_deselects.length; i++) {
+                if (_._findSiblings(all_deselects[i], "input[type=checkbox]:visible").filter(":checked").length === 0) {
+                    $(all_deselects[i]).prop("disabled", true);
+                } else {
+                    $(all_deselects[i]).prop("disabled", false);
+                }
             }
 
-            if ($trigger.find("input[type=checkbox]:visible:not(:checked)").length===0) {
-                select.prop("disabled", true);
-            } else {
-                select.prop("disabled", false);
-            }
         },
 
         onSelectAll: function(event) {
             var $trigger = event.data.trigger,
-                options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:not(:checked)").each(function () {
+                options = $trigger.data("patternChecklist"),
+                button_clicked = event.currentTarget;
+            
+            /* look up checkboxes which are related to my button by going up one parent 
+            at a time until I find some for the first time */
+            var checkbox_siblings = _._findSiblings(button_clicked, "input[type=checkbox]:not(:checked)");
+            checkbox_siblings.each(function () {
                 $(this).prop("checked", true).trigger("change");
             });
-            $trigger.scopedFind(options.deselect).each(function () {
-                $(this).prop("disabled", false);
-            });
-            $trigger.scopedFind(options.select).each(function () {
-                $(this).attr({disabled: "disabled"});
-            });
+
             event.preventDefault();
         },
 
         onDeselectAll: function(event) {
             var $trigger = event.data.trigger,
-                options = $trigger.data("patternChecklist");
-            $trigger.find("input[type=checkbox]:checked").each(function () {
+                options = $trigger.data("patternChecklist"),
+                button_clicked = event.currentTarget;
+
+            /* look up checkboxes which are related to my button by going up one parent 
+            at a time until I find some for the first time */
+            var checkbox_siblings = _._findSiblings(button_clicked, "input[type=checkbox]:checked");
+            checkbox_siblings.each(function () {
                 $(this).prop("checked", false).trigger("change");
-            });
-            $trigger.scopedFind(options.select).each(function () {
-                $(this).prop("disabled", false);
-            });
-            $trigger.scopedFind(options.deselect).each(function () {
-                $(this).attr({disabled: "disabled"});
             });
             event.preventDefault();
         },
