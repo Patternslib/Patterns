@@ -18,9 +18,9 @@ define(["pat-carousel"], function(pattern) {
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "slick").and.callThrough();
+                var spy_slick = spyOn($.fn, "slick").and.callThrough();
                 pattern.init($carousel);
-                expect($.fn.slick).toHaveBeenCalled();
+                expect(spy_slick).toHaveBeenCalled();
                 var options = $.fn.slick.calls.argsFor(0)[0];
                 expect(options.autoplay).toBe(false);
                 expect(options.autoplaySpeed).toBe(1000);
@@ -56,9 +56,9 @@ define(["pat-carousel"], function(pattern) {
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "slick").and.callThrough();
+                var spy_slick = spyOn($.fn, "slick").and.callThrough();
                 pattern.init($carousel);
-                expect($.fn.slick).toHaveBeenCalled();
+                expect(spy_slick).toHaveBeenCalled();
                 var options = $.fn.slick.calls.argsFor(0)[0];
                 expect(options.autoplay).toBe(true);
                 expect(options.autoplaySpeed).toBe(345);

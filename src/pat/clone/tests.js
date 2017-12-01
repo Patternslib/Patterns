@@ -145,7 +145,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
         });
 
         it("will remove a clone when .remove-clone inside the clone is clicked.", function() {
-            spyOn(window, 'confirm').and.callFake(function () {
+            var spy_window = spyOn(window, 'confirm').and.callFake(function () {
                 return true;
             });
             var $lab = $('#lab');
@@ -161,16 +161,16 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('div.item').length).toBe(2);
 
             $lab.find('.remove-clone:last').click();
-            expect(window.confirm).toHaveBeenCalled();
+            expect(spy_window).toHaveBeenCalled();
             expect($('div.item').length).toBe(1);
 
             $lab.find('.remove-clone').click();
-            expect(window.confirm).toHaveBeenCalled();
+            expect(spy_window).toHaveBeenCalled();
             expect($('div.item').length).toBe(0);
         });
 
         it("allows the remove element to be configured", function() {
-            spyOn(window, 'confirm').and.callFake(function () {
+            var spy_window = spyOn(window, 'confirm').and.callFake(function () {
                 return true;
             });
             var $lab = $('#lab');
@@ -186,16 +186,16 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('div.item').length).toBe(2);
 
             $lab.find('.custom-remove-class:last').click();
-            expect(window.confirm).toHaveBeenCalled();
+            expect(spy_window).toHaveBeenCalled();
             expect($('div.item').length).toBe(1);
 
             $lab.find('.custom-remove-class').click();
-            expect(window.confirm).toHaveBeenCalled();
+            expect(spy_window).toHaveBeenCalled();
             expect($('div.item').length).toBe(0);
         });
 
         it("will by default ask for confirmation before removing elements, but can be configured otherwise", function() {
-            spyOn(window, 'confirm').and.callFake(function () {
+            var spy_confirm = spyOn(window, 'confirm').and.callFake(function () {
                 return true;
             });
             var $lab = $('#lab');
@@ -211,7 +211,7 @@ define(["pat-registry", "pat-clone"], function(registry) {
             expect($('div.item').length).toBe(2);
 
             $lab.find('.remove-clone:last').click();
-            expect(window.confirm).toHaveBeenCalled();
+            expect(spy_confirm).toHaveBeenCalled();
             expect(window.confirm.calls.count()).toBe(1);
             expect($('div.item').length).toBe(1);
 

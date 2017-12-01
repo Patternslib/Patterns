@@ -93,13 +93,13 @@ define(["pat-image-crop"], function(pattern) {
             });
 
             it("Update from user interaction", function() {
-                spyOn(pattern, "updatePreview");
-                spyOn(pattern, "updateInputs");
+                var spy_updatePreview = spyOn(pattern, "updatePreview");
+                var spy_updateInputs = spyOn(pattern, "updateInputs");
 
                 pattern.onSelect(c, data);
 
-                expect(pattern.updatePreview).toHaveBeenCalledWith(c, data);
-                expect(pattern.updateInputs).toHaveBeenCalledWith(c, data);
+                expect(spy_updatePreview).toHaveBeenCalledWith(c, data);
+                expect(spy_updateInputs).toHaveBeenCalledWith(c, data);
             });
         });
     });

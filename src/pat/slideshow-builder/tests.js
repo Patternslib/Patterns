@@ -18,34 +18,34 @@ define(["pat-slideshow-builder"], function(pattern) {
             });
 
             it("Invoke AJAX for all slideshow", function() {
-                spyOn($, "ajax");
+                var spy_ajax = spyOn($, "ajax");
                 var form = document.createElement("form");
                 form.action="slideshow.html";
                 pattern.init($(form));
-                expect($.ajax).toHaveBeenCalled();
+                expect(spy_ajax).toHaveBeenCalled();
                 var options = $.ajax.calls.argsFor(0)[0];
                 expect(options.url.endsWith("slideshow.html")).toBeTruthy();
                 expect(options.context).toBe(form);
             });
 
             it("Trigger inside form", function() {
-                spyOn($, "ajax");
+                var spy_ajax = spyOn($, "ajax");
                 var form = document.createElement("form");
                 form.action="slideshow.html";
                 var container = document.createElement("div");
                 form.appendChild(container);
                 pattern.init($(container));
-                expect($.ajax).toHaveBeenCalled();
+                expect(spy_ajax).toHaveBeenCalled();
                 var options = $.ajax.calls.argsFor(0)[0];
                 expect(options.url.endsWith("slideshow.html")).toBeTruthy();
                 expect(options.context).toBe(container);
             });
 
             it("Trigger not in a form", function() {
-                spyOn($, "ajax");
+                var spy_ajax = spyOn($, "ajax");
                 var container = document.createElement("div");
                 pattern.init($(container));
-                expect($.ajax).not.toHaveBeenCalled();
+                expect(spy_ajax).not.toHaveBeenCalled();
             });
         });
 

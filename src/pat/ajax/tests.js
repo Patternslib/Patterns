@@ -27,7 +27,7 @@ define(["pat-ajax"], function(pattern) {
         // path in jquery.form that does not use $.ajax
         //
         describe("form", function() {
-            var $form, $button;
+            var $form, $button, spy_ajax;
 
             beforeEach(function() {
                 $form = $("<form action='action.html'></form>").appendTo($lab);
@@ -36,12 +36,12 @@ define(["pat-ajax"], function(pattern) {
                 ).appendTo($form);
                 $("<input name='input1' value='value1' />").appendTo($form);
                 pattern.init($form);
-                spyOn($, "ajax");
+                spy_ajax = spyOn($, "ajax");
             });
 
             it("triggers ajax request on submit", function() {
                 $form.submit();
-                expect($.ajax).toHaveBeenCalled();
+                expect(spy_ajax).toHaveBeenCalled();
             });
 
             it("honors method='post'", function() {
@@ -53,7 +53,7 @@ define(["pat-ajax"], function(pattern) {
 
             it("triggers ajax request on click submit", function() {
                 $button.click();
-                expect($.ajax).toHaveBeenCalled();
+                expect(spy_ajax).toHaveBeenCalled();
             });
 
             it("does include submit button clicked", function() {

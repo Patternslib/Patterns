@@ -96,10 +96,10 @@ define(["jquery", "pat-bumper"], function($, Bumper) {
                 ].join("\n"));
             var $el = $(".pat-bumper");
             var pattern = new Bumper($el);
-            spyOn(pattern, "_updateStatus");
+            var spy_update = spyOn(pattern, "_updateStatus");
             pattern.init();
             window.scrollTo(0, 0);
-            expect(pattern._updateStatus).toHaveBeenCalled();
+            expect(spy_update).toHaveBeenCalled();
         });
 
         it("correctly transitions an element to bumped at the top", function() {
@@ -114,17 +114,17 @@ define(["jquery", "pat-bumper"], function($, Bumper) {
                 ].join("\n"));
             var $el = $(".pat-bumper");
             var pattern = new Bumper($el);
-            spyOn(pattern, "_markBumped");
+            var spy_mark = spyOn(pattern, "_markBumped");
             pattern.init();
             $(".parent")[0].scrollTop = 5;
             pattern._updateStatus();
-            expect(pattern._markBumped).toHaveBeenCalled();
+            expect(spy_mark).toHaveBeenCalled();
             expect(pattern._markBumped.calls.mostRecent().args[0]).toBeTruthy();
             expect(pattern.$el[0].style.top).toBe("5px");
 
             $(".parent")[0].scrollTop = 13;
             pattern._updateStatus();
-            expect(pattern._markBumped).toHaveBeenCalled();
+            expect(spy_mark).toHaveBeenCalled();
             expect(pattern._markBumped.calls.mostRecent().args[0]).toBeTruthy();
             expect(pattern.$el[0].style.top).toBe("13px");
         });

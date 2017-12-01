@@ -24,14 +24,14 @@ define(["pat-switch", "jquery"], function(pattern, jQuery) {
                         type: "click",
                         preventDefault: function () {}
                     };
-                    spyOn(pattern, "_onClick").and.callThrough();
-                    spyOn(pattern, "_go");
-                    spyOn(ev, "preventDefault");
+                    var spy_onClick = spyOn(pattern, "_onClick").and.callThrough();
+                    var spy_go = spyOn(pattern, "_go");
+                    var spy_preventDefault = spyOn(ev, "preventDefault");
                     pattern.init($el);
                     $el.trigger(ev);
-                    expect(pattern._onClick).toHaveBeenCalled();
-                    expect(pattern._go).toHaveBeenCalled();
-                    expect(ev.preventDefault).toHaveBeenCalled();
+                    expect(spy_onClick).toHaveBeenCalled();
+                    expect(spy_go).toHaveBeenCalled();
+                    expect(spy_preventDefault).toHaveBeenCalled();
                     $el.remove();
                 });
             });
@@ -49,14 +49,14 @@ define(["pat-switch", "jquery"], function(pattern, jQuery) {
                         type: "click",
                         preventDefault: function () {}
                     };
-                    spyOn(pattern, "_onClick").and.callThrough();
-                    spyOn(pattern, "_go");
-                    spyOn(ev, "preventDefault");
+                    var spy_onClick = spyOn(pattern, "_onClick").and.callThrough();
+                    var spy_go = spyOn(pattern, "_go");
+                    var spy_preventDefault = spyOn(ev, "preventDefault");
                     pattern.init($el);
                     $el.trigger(ev);
-                    expect(pattern._onClick).toHaveBeenCalled();
-                    expect(pattern._go).toHaveBeenCalled();
-                    expect(ev.preventDefault).not.toHaveBeenCalled();
+                    expect(spy_onClick).toHaveBeenCalled();
+                    expect(spy_go).toHaveBeenCalled();
+                    expect(spy_preventDefault).not.toHaveBeenCalled();
                     $el.remove();
                 });
             });
@@ -79,11 +79,11 @@ define(["pat-switch", "jquery"], function(pattern, jQuery) {
 
         describe("_update", function() {
             it("No targets", function() {
-                spyOn(jQuery.fn, "addClass");
-                spyOn(jQuery.fn, "removeClass");
+                var spy_addClass = spyOn(jQuery.fn, "addClass");
+                var spy_removeClass = spyOn(jQuery.fn, "removeClass");
                 pattern._update(".missing");
-                expect(jQuery.fn.addClass).not.toHaveBeenCalled();
-                expect(jQuery.fn.removeClass).not.toHaveBeenCalled();
+                expect(spy_addClass).not.toHaveBeenCalled();
+                expect(spy_removeClass).not.toHaveBeenCalled();
             });
 
             it("Remove basic class", function() {
@@ -106,9 +106,9 @@ define(["pat-switch", "jquery"], function(pattern, jQuery) {
 
             it("Send pat-update event", function() {
                 $("#lab").html("<div id='victim' class='always'/>");
-                spyOn($.fn, "trigger");
+                var spy_trigger = spyOn($.fn, "trigger");
                 pattern._update("#lab div", null, "icon-alert");
-                expect($.fn.trigger).toHaveBeenCalledWith(
+                expect(spy_trigger).toHaveBeenCalledWith(
                     "pat-update", {pattern: "switch"});
             });
         });
