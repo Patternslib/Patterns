@@ -63,9 +63,9 @@ define(["pat-stacks"], function(Stacks) {
             it("gets triggered when you click on an external link", function() {
                 var e = {currentTarget: {href: "http://other.domain#s1"}};
                 var pattern = new Stacks($('.pat-stacks'));
-                spyOn(pattern, "_updateAnchors");
+                var spy_update = spyOn(pattern, "_updateAnchors");
                 pattern._onClick(e);
-                expect(pattern._updateAnchors).not.toHaveBeenCalled();
+                expect(spy_update).not.toHaveBeenCalled();
             });
 
             it("gets triggered when you click on a link without fragment", function() {
@@ -73,9 +73,9 @@ define(["pat-stacks"], function(Stacks) {
                 pattern.document = {URL: document.URL};
                 pattern.document.URL = "http://www.example.com";
                 var e = {currentTarget: {href: "http://www.example.com"}};
-                spyOn(pattern, "_updateAnchors");
+                var spy_update = spyOn(pattern, "_updateAnchors");
                 pattern._onClick(e);
-                expect(pattern._updateAnchors).not.toHaveBeenCalled();
+                expect(spy_update).not.toHaveBeenCalled();
             });
 
             it("gets tirggered when you click on a non-stack link", function() {
@@ -83,9 +83,9 @@ define(["pat-stacks"], function(Stacks) {
                 pattern.document = {URL: document.URL};
                 pattern.document.URL = "http://www.example.com";
                 var e = {currentTarget: {href: "http://www.example.com#other"}};
-                spyOn(pattern, "_updateAnchors");
+                var spy_update = spyOn(pattern, "_updateAnchors");
                 pattern._onClick(e);
-                expect(pattern._updateAnchors).not.toHaveBeenCalled();
+                expect(spy_update).not.toHaveBeenCalled();
             });
 
             it("gets called when you click on the stack link", function() {
@@ -94,12 +94,12 @@ define(["pat-stacks"], function(Stacks) {
                 pattern.document.URL = "http://www.example.com";
                 var e = jasmine.createSpyObj("e", ["preventDefault"]);
                 e.currentTarget={href: "http://www.example.com#s1"};
-                spyOn(pattern, "_updateAnchors");
-                spyOn(pattern, "_switch");
+                var spy_update = spyOn(pattern, "_updateAnchors");
+                var spy_switch = spyOn(pattern, "_switch");
                 pattern._onClick(e);
                 expect(e.preventDefault).toHaveBeenCalled();
-                expect(pattern._updateAnchors).toHaveBeenCalled();
-                expect(pattern._switch).toHaveBeenCalled();
+                expect(spy_update).toHaveBeenCalled();
+                expect(spy_switch).toHaveBeenCalled();
             });
 
             it("triggers a pat-update event, which other patterns can listen for", function() {
@@ -107,7 +107,7 @@ define(["pat-stacks"], function(Stacks) {
                 var pattern = new Stacks($el);
                 pattern.document = {URL: document.URL};
                 pattern.document.URL = "http://www.example.com";
-                spyOn($.fn, 'trigger');
+                var spy_trigger = spyOn($.fn, 'trigger');
                 var e = {
                     'target': $el,
                     'type': 'click',
@@ -115,7 +115,7 @@ define(["pat-stacks"], function(Stacks) {
                     'currentTarget': { href: "http://www.example.com#s1" }
                 };
                 pattern._onClick(e);
-                expect($.fn.trigger).toHaveBeenCalledWith(
+                expect(spy_trigger).toHaveBeenCalledWith(
                     "pat-update",
                     jasmine.objectContaining({pattern: "stacks"})
                 );

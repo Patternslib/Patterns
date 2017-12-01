@@ -15,11 +15,11 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
                     '<p id="p1"></p>'
                     ].join("\n"));
-                spyOn($.fn, 'animate');
+                var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($(".pat-scroll"));
                 imagesLoaded($("body"));
                 setTimeout(function () {
-                    expect($.fn.animate).toHaveBeenCalled();
+                    expect(spy_animate).toHaveBeenCalled();
                 }, 750);
             });
         });
@@ -38,12 +38,12 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                     '<p id="p1"></p>'
                     ].join("\n"));
                 var $el = $(".pat-scroll");
-                spyOn($.fn, 'animate');
+                var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($el);
                 imagesLoaded($("body"));
                 setTimeout(function() {
                     $el.click();
-                    expect($.fn.animate).toHaveBeenCalled();
+                    expect(spy_animate).toHaveBeenCalled();
                 }, 500);
 
             });
@@ -54,7 +54,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                     '<p id="p1"></p>'
                     ].join("\n"));
                 var $el = $(".pat-scroll");
-                spyOn($.fn, 'animate');
+                var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($el);
                 $el.trigger("pat-update", {
                     'pattern': "stacks",
@@ -62,7 +62,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                         'type': 'click'
                     }
                 });
-                expect($.fn.animate).toHaveBeenCalled();
+                expect(spy_animate).toHaveBeenCalled();
             });
         });
     });
