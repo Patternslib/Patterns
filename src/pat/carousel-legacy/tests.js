@@ -18,9 +18,9 @@ define(["pat-carousel-legacy"], function(pattern) {
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "anythingSlider").and.callThrough();
+                var spy_slider = spyOn($.fn, "anythingSlider").and.callThrough();
                 pattern.init($carousel);
-                expect($.fn.anythingSlider).toHaveBeenCalled();
+                expect(spy_slider).toHaveBeenCalled();
                 var options = $.fn.anythingSlider.calls.argsFor(0)[0];
                 expect(options.autoPlay).toBe(false);
                 expect(options.stopAtEnd).toBe(false);
@@ -53,9 +53,9 @@ define(["pat-carousel-legacy"], function(pattern) {
                     "  <li>Panel 2</li>" +
                     "</ul>");
                 var $carousel = $("#lab ul");
-                spyOn($.fn, "anythingSlider").and.callThrough();
+                var spy_slider = spyOn($.fn, "anythingSlider").and.callThrough();
                 pattern.init($carousel);
-                expect($.fn.anythingSlider).toHaveBeenCalled();
+                expect(spy_slider).toHaveBeenCalled();
                 var options = $.fn.anythingSlider.calls.argsFor(0)[0];
                 expect(options.autoPlay).toBe(false);
                 expect(options.stopAtEnd).toBe(true);

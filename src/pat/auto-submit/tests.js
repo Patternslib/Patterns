@@ -19,9 +19,9 @@ define(["pat-registry", "pat-autosubmit"], function(registry, pattern) {
                     '   <label><input type="checkbox" name="local"/> Only search in this section</label>'+
                     ' </fieldset>'+
                     '</form>');
-                spyOn(pattern, "init");
+                var spy_init = spyOn(pattern, "init");
                 registry.scan($form);
-                expect(pattern.init).toHaveBeenCalled();
+                expect(spy_init).toHaveBeenCalled();
             });
 
             it("when a grouping of inputs has the pat-autosubmit class", function() {
@@ -31,16 +31,16 @@ define(["pat-registry", "pat-autosubmit"], function(registry, pattern) {
                 '   <label><input type="checkbox" name="local"/> Only search in this section</label>'+
                 ' </fieldset>'+
                 '</form>');
-                spyOn(pattern, "init");
+                var spy_init = spyOn(pattern, "init");
                 registry.scan($form);
-                expect(pattern.init).toHaveBeenCalled();
+                expect(spy_init).toHaveBeenCalled();
             });
 
             it("when a single input has the pat-autosubmit class", function() {
                 var $form = $('<form><input class="pat-autosubmit" type="text" name="q" placeholder="Search query"/></form>');
-                spyOn(pattern, "init");
+                var spy_init = spyOn(pattern, "init");
                 registry.scan($form);
-                expect(pattern.init).toHaveBeenCalled();
+                expect(spy_init).toHaveBeenCalled();
             });
         });
 
