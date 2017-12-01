@@ -56,7 +56,7 @@ define(["pat-switch", "jquery"], function(pattern, jQuery) {
                     $el.trigger(ev);
                     expect(spy_onClick).toHaveBeenCalled();
                     expect(spy_go).toHaveBeenCalled();
-                    expect(spy_preventDefault).toHaveBeenCalled();
+                    expect(spy_preventDefault).not.toHaveBeenCalled();
                     $el.remove();
                 });
             });
