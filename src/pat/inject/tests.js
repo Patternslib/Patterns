@@ -3,9 +3,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
     describe("pat-inject", function() {
 
         var answer = function(html) {
-            var spy_ajax = spyOn($, "ajax");
-
-            expect(spy_ajax).toHaveBeenCalled();
+            expect($.ajax).toHaveBeenCalled();
             $.ajax.calls.mostRecent().args[0].success(html, "ok", { responseText: html });
         };
 
