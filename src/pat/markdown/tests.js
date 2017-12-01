@@ -30,17 +30,17 @@ define(["pat-markdown"], function(Pattern) {
             it("uses content for non-input elements", function() {
                 var $el = $('<p class="pat-markdown"/>').text("This is markdown");
                 $el.appendTo("#lab");
-                spyOn(Pattern.prototype, "render").and.returnValue($("<p/>"));
+                var spy_render = spyOn(Pattern.prototype, "render").and.returnValue($("<p/>"));
                 Pattern.init($el);
-                expect(Pattern.prototype.render).toHaveBeenCalledWith("This is markdown");
+                expect(spy_render).toHaveBeenCalledWith("This is markdown");
             });
 
             it("uses value for input elements", function() {
                 var $el = $('<textarea class="pat-markdown"/>').val("This is markdown");
                 $el.appendTo("#lab");
-                spyOn(Pattern.prototype, "render").and.returnValue($("<p/>"));
+                var spy_render = spyOn(Pattern.prototype, "render").and.returnValue($("<p/>"));
                 Pattern.init($el);
-                expect(Pattern.prototype.render).toHaveBeenCalledWith("This is markdown");
+                expect(spy_render).toHaveBeenCalledWith("This is markdown");
             });
         });
 
