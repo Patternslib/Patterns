@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const merge = require('webpack-merge');
-const UglifyJsPlugin = require('webpack-uglify-js-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const baseConfig = require('./base.config.js');
 
 module.exports = merge(baseConfig, {
@@ -12,17 +12,10 @@ module.exports = merge(baseConfig, {
 
   plugins: [
     new UglifyJsPlugin({
-      cacheFolder: path.resolve(__dirname, '../cache/'),
-      debug: true,
+      cache: path.resolve(__dirname, '../cache/'),
       include: /\.min\.js$/,
-      minimize: true,
       sourceMap: true,
-      output: {
-        comments: false
-      },
-      compressor: {
-        warnings: false
-      }
+      extractComments: false
     }),
   ],
 });
