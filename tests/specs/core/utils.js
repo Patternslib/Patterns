@@ -288,4 +288,42 @@ define(["underscore", "pat-utils"], function(_, utils) {
             expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
         });
     });
+
+    describe("hasValue", function() {
+        it("Handles text input", function() {
+            var el = document.createElement("input");
+            el.type = "text";
+            expect(utils.hasValue(el)).toBeFalsy();
+            el.value = "foo";
+            expect(utils.hasValue(el)).toBeTruthy();
+        });
+
+        it("Handles checkbox inputs", function() {
+            var el = document.createElement("input");
+            el.type = "checkbox";
+            el.value = "foo"
+            expect(utils.hasValue(el)).toBeFalsy();
+            el.checked = true
+            expect(utils.hasValue(el)).toBeTruthy();
+        });
+
+        it("Handles radio inputs", function() {
+            var el = document.createElement("input");
+            el.type = "radio";
+            el.value = "foo"
+            expect(utils.hasValue(el)).toBeFalsy();
+            el.checked = true
+            expect(utils.hasValue(el)).toBeTruthy();
+        });
+
+        it("Handles select elements", function() {
+            var el = document.createElement("select");
+            var o = document.createElement("option");
+            o.value = "foo";
+            o.appendTo(el);
+            expect(utils.hasValue(el)).toBeFalsy();
+            el.selectedIndex = 0;
+            expect(utils.hasValue(el)).toBeTruthy();
+        });
+    });
 });

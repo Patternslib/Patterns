@@ -246,6 +246,15 @@ define([
         }
     }
 
+    function hasValue(el) {
+        return
+            (el.type === "checkbox" && el.checked) ||
+            (el.type === "radio" && el.checker) ||
+            (el.tagName === "SELECT" && el.selectedIndex !== -1) ||
+            (el.value && el.value !== "");
+    }
+
+
     var transitions = {
         none: {hide: "hide", show: "show"},
         fade: {hide: "fadeOut", show: "fadeIn"},
@@ -420,7 +429,8 @@ define([
         addURLQueryParameter: addURLQueryParameter,
         removeDuplicateObjects: removeDuplicateObjects,
         mergeStack: mergeStack,
-        isElementInViewport: isElementInViewport
+        isElementInViewport: isElementInViewport,
+        hasValue: hasValue
     };
     return utils;
 });
