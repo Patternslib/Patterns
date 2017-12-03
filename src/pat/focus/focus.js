@@ -13,7 +13,7 @@ define([
 
         onNewContent: function() {
             if ($(document.activeElement).is(":input"))
-                focus._findRelatives(document.activeElement).addClass("focus");
+                focus._doFocus(document.activeElement);
         },
 
         _findRelatives: function(el) {
@@ -37,11 +37,31 @@ define([
         },
 
         onFocus: function() {
-            focus._findRelatives(this).addClass("focus");
+            focus._doFocus(this);
+        },
+
+        _doFocus: function(el) {
+            var $relatives = focus._findRelatives(el);
+
+            function setHasValue() {
+                console.log('Value is now: ', el.value)
+                if (el.value)
+                    $relatives.addClass("has-value");
+                else
+                    $relatives.removeClass("has-value")
+            }
+
+            if (el.placeholder)
+                $relatives.attr("data-placeholder", el.placeholder);
+            $relatives.addClass("focus");
+            setHasValue($relatives);
+            $(el).on("change.pat-focus keyup.pat-focus", setHasValue)
         },
 
         onBlur: function() {
             var $relatives = focus._findRelatives(this);
+
+            $(this).off("change.pat-focus keyup.pat-focus");
 
             $(document).one("mouseup keyup", function() {
                 $relatives.filter(":not(:has(:input:focus))").removeClass("focus");
