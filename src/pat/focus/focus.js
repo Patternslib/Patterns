@@ -6,8 +6,9 @@
  */
 define([
     "jquery",
-    "pat-registry"
-], function($, patterns) {
+    "pat-registry",
+    "pat-utils"
+], function($, patterns, utils) {
     var focus = {
         name: "focus",
 
@@ -43,19 +44,23 @@ define([
         _doFocus: function(el) {
             var $relatives = focus._findRelatives(el);
 
-            function setHasValue() {
-                console.log('Value is now: ', el.value)
-                if (el.value)
+            function updateHasValue() {
+                var hv = utils.hasValue(el);
+
+                if (hv)
                     $relatives.addClass("has-value");
-                else
-                    $relatives.removeClass("has-value")
+                else {
+                    $relatives
+                        .filter(function (ix, e) { return !utils.hasValue(e) })
+                        .removeClass("has-value");
+                }
             }
 
             if (el.placeholder)
                 $relatives.attr("data-placeholder", el.placeholder);
             $relatives.addClass("focus");
-            setHasValue($relatives);
-            $(el).on("change.pat-focus keyup.pat-focus", setHasValue)
+            updateHasValue($relatives);
+            $(el).on("change.pat-focus keyup.pat-focus", updateHasValue)
         },
 
         onBlur: function() {

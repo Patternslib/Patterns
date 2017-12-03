@@ -246,14 +246,11 @@ define([
         }
     }
 
-    function hasValue(el) {
-        return
+    const hasValue = el =>
             (el.type === "checkbox" && el.checked) ||
             (el.type === "radio" && el.checker) ||
             (el.tagName === "SELECT" && el.selectedIndex !== -1) ||
-            (el.value && el.value !== "");
-    }
-
+            (el.value !== "");
 
     var transitions = {
         none: {hide: "hide", show: "show"},
