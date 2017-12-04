@@ -320,7 +320,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
             var el = document.createElement("select");
             var o = document.createElement("option");
             o.value = "foo";
-            o.appendTo(el);
+            el.appendChild(o);
             expect(utils.hasValue(el)).toBeFalsy();
             el.selectedIndex = 0;
             expect(utils.hasValue(el)).toBeTruthy();

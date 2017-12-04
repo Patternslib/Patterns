@@ -256,7 +256,7 @@ define([
        if (el.tagName === "SELECT") {
            return el.selectedIndex !== -1;
        }
-       if (el.tagName === "SELECT") {
+       if (el.tagName === "TEXTAREA") {
            return el.value !== "";
        }
        return false;
