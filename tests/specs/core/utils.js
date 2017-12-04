@@ -301,18 +301,18 @@ define(["underscore", "pat-utils"], function(_, utils) {
         it("Handles checkbox inputs", function() {
             var el = document.createElement("input");
             el.type = "checkbox";
-            el.value = "foo"
+            el.value = "foo";
             expect(utils.hasValue(el)).toBeFalsy();
-            el.checked = true
+            el.checked = true;
             expect(utils.hasValue(el)).toBeTruthy();
         });
 
         it("Handles radio inputs", function() {
             var el = document.createElement("input");
             el.type = "radio";
-            el.value = "foo"
+            el.value = "foo";
             expect(utils.hasValue(el)).toBeFalsy();
-            el.checked = true
+            el.checked = true;
             expect(utils.hasValue(el)).toBeTruthy();
         });
 
