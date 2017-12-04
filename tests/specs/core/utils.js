@@ -318,6 +318,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
 
         it("Handles select elements", function() {
             var el = document.createElement("select");
+	    el.multiple = true;
             var o = document.createElement("option");
             o.value = "foo";
             el.appendChild(o);
