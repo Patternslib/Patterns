@@ -247,10 +247,19 @@ define([
     }
 
     function hasValue(el) {
-        return (el.type === "checkbox" && el.checked) ||
-             (el.type === "radio" && el.checked) ||
-             (el.tagName === "SELECT" && el.selectedIndex !== -1) ||
-             el.value !== "";
+       if (el.tagName === "INPUT") {
+           if (el.type === "checkbox" || el.type === "radio") {
+               return el.checked;
+           }
+           return el.value !== "";
+       }
+       if (el.tagName === "SELECT") {
+           return el.selectedIndex !== -1;
+       }
+       if (el.tagName === "SELECT") {
+           return el.value !== "";
+       }
+       return false;
     };
 
     var transitions = {
