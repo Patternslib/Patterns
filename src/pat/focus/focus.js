@@ -51,7 +51,7 @@ define([
                     $relatives.addClass("has-value");
                 else {
                     $relatives
-                        .filter((ix, e) => {
+                        .filter(function (ix, e) {
                             const inputs = $(":input", e);
                             for (var i=0; i<inputs.length; i++)
                                 if (utils.hasValue(inputs[i]))
