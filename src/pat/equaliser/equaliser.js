@@ -8,8 +8,9 @@ define([
     "pat-registry",
     "pat-parser",
     "pat-utils",
-    "imagesloaded"
-], function($, patterns, Parser, utils, imagesLoaded) {
+    "imagesloaded",
+    "underscore"
+], function($, patterns, Parser, utils, imagesLoaded, _) {
     var parser = new Parser("equaliser");
     parser.addArgument("transition", "none", ["none", "grow"]);
     parser.addArgument("effect-duration", "fast");
@@ -67,7 +68,10 @@ define([
             $container.trigger('pat-update', {pattern: 'equaliser'});
         },
 
-        _onEvent: function(event) {
+        _onEvent: function(event, extra) {
+            if (!_.isUndefined(extra) && extra.pattern === 'equaliser') {
+                return;
+            }
             if (typeof event.data !== "undefined") {
                 equaliser._update(event.data);
             }
