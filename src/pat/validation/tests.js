@@ -127,6 +127,29 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($el.find('em.warning').text()).toBe("Slegs heelgetalle");
         });
 
+        it("validates dates", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="date" name="date" data-pat-validation="type: date;">'+
+                '</form>');
+            var $input = $el.find(':input');
+            $input.val('2000-02-30');
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This value must be a valid date");
+
+            $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="date" name="date" data-pat-validation="type: date;">'+
+                '</form>');
+            $input = $el.find(':input');
+            $input.val('2000-02-28');
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+        });
+
         it("doesn't validate disabled elements", function() {
             var $el = $(
                 '<form class="pat-validation">'+
