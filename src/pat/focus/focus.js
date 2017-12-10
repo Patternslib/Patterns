@@ -17,6 +17,14 @@ define([
                 focus._doFocus(document.activeElement);
         },
 
+        transform: function($root) {
+            $root.find(":input[placeholder]").each(function(ix, el) {
+                var $relatives = focus._findRelatives(el);
+                if (el.placeholder)
+                    $relatives.attr("data-placeholder", el.placeholder);
+            });
+        },
+
         _findRelatives: function(el) {
             var $el = $(el),
                 $relatives = $(el),
@@ -62,8 +70,6 @@ define([
                 }
             }
 
-            if (el.placeholder)
-                $relatives.attr("data-placeholder", el.placeholder);
             $relatives.addClass("focus");
             updateHasValue($relatives);
             $(el).on("change.pat-focus keyup.pat-focus", updateHasValue)
