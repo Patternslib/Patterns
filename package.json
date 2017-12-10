@@ -41,7 +41,7 @@
     "showdown": "1.7.2",
     "showdown-github": "",
     "showdown-prettify": "",
-    "slick-carousel": "",
+    "slick-carousel": "1.8.0",
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "",
     "stickyfilljs": "^2.0.2",
