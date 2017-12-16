@@ -30,6 +30,7 @@ Breaking Changes
     Has been superceeded by pat-validation and is no longer maintained.
   - pat-checkedflag will go away. Its functionality is duplicated by pat-select and pat-checklist
 
+- pat-auto-scale: support more sizing options.
 - pat-validation: fix date validation
 - pat-switch: after a switch occurs, trigger a resize event (some elements may have been appeared and we might need a redraw)
 - fixed path to spectrum-colorpicker

@@ -14,8 +14,11 @@ define([
 ], function($, dummy, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
+    parser.addArgument("size", "width", ["width", "height", "contain", "cover"]);
     parser.addArgument("min-width", 0);
     parser.addArgument("max-width", 1000000);
+    parser.addArgument("min-height", 0);
+    parser.addArgument("max-height", 1000000);
 
     return Base.extend({
         name: "autoscale",
@@ -44,20 +47,52 @@ define([
         },
 
         scale: function() {
-            var available_space, scale, scaled_height, scaled_width;
+            var available_space, scale, scaled_height, scaled_width, container;
 
-            if (this.$el[0].tagName.toLowerCase() === "body") {
-                available_space = $(window).width();
+            if (this.$el[0].tagName === "BODY") {
+                container = this.$el[0]
             } else {
+                var $parent;
                 if (this.$el.closest('.auto-scale-wrapper').length != 0) {
-                    available_space = this.$el.closest('.auto-scale-wrapper').parent().outerWidth();
+                    container = this.$el.closest('.auto-scale-wrapper').parent()[0];
                 } else {
-                    available_space = this.$el.parent().outerWidth();
+                    container = this.$el.parent()[0];
                 }
             }
-            available_space = Math.min(available_space, this.options.maxWidth);
-            available_space = Math.max(available_space, this.options.minWidth);
-            scale = available_space/this.$el.outerWidth();
+            if (!container) {
+                // Element has not been added to the DOM yet.
+                return;
+            }
+
+            var style = window.getComputedStyle(container);
+            available_space = {
+                width: parseInt(style.width, 10),
+                height: parseInt(style.height, 10)
+            }
+
+            available_space.width = Math.min(available_space.width, this.options.max.width);
+            available_space.width = Math.max(available_space.width, this.options.min.width);
+            available_space.height = Math.min(available_space.height, this.options.max.height);
+            available_space.height = Math.max(available_space.height, this.options.min.height);
+            switch (this.options.size) {
+                case "width":
+                    scale = available_space.width / this.$el.outerWidth();
+                    break;
+                case "height":
+                    scale = available_space.height / this.$el.outerHeight();
+                    break;
+                case "contain":
+                    // Fit entire content on area, allowing for extra space
+                    scale = Math.min(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
+                    break;
+                case "cover":
+                    // Covert entire area, possible clipping
+                    scale = Math.max(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
+                    break;
+                default:
+                    return;
+            }
+
             scaled_height = this.$el.outerHeight() * scale;
             scaled_width = this.$el.outerWidth() * scale;
 
