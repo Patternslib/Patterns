@@ -47,7 +47,7 @@ define([
         },
 
         scale: function() {
-            var available_space, scale_x, scale_y, scaled_height, scaled_width, container;
+            var available_space, scale, scaled_height, scaled_width, container;
 
             if (this.$el[0].tagName === "BODY") {
                 container = this.$el[0]
@@ -58,6 +58,10 @@ define([
                 } else {
                     container = this.$el.parent()[0];
                 }
+            }
+            if (!container) {
+                // Element has not been added to the DOM yet.
+                return;
             }
 
             var style = window.getComputedStyle(container);
