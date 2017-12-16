@@ -14,7 +14,7 @@ define([
 ], function($, dummy, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
-    parser.addArgument("size", "width", ["width", "height", "fill", "cover"]);
+    parser.addArgument("size", "width", ["width", "height", "contain", "cover"]);
     parser.addArgument("min-width", 0);
     parser.addArgument("max-width", 1000000);
     parser.addArgument("min-height", 0);
@@ -77,12 +77,12 @@ define([
 		case "height":
 		    scale = available_space.height / this.$el.outerHeight();
 		    break;
-		case "fill":
-		    // Fit entire content on screen, allowing for extra space
+		case "contain":
+		    // Fit entire content on area, allowing for extra space
 		    scale = Math.min(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
 		    break;
 		case "cover":
-		    // Covert entire screen, possible clipping
+		    // Covert entire area, possible clipping
 		    scale = Math.max(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
 		    break;
 		default:
