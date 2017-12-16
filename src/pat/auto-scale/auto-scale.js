@@ -14,8 +14,11 @@ define([
 ], function($, dummy, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
+    parser.addArgument("size", "width", ["width", "height", "fill", "cover"]);
     parser.addArgument("min-width", 0);
     parser.addArgument("max-width", 1000000);
+    parser.addArgument("min-height", 0);
+    parser.addArgument("max-height", 1000000);
 
     return Base.extend({
         name: "autoscale",
@@ -44,20 +47,48 @@ define([
         },
 
         scale: function() {
-            var available_space, scale, scaled_height, scaled_width;
+            var available_space, scale_x, scale_y, scaled_height, scaled_width;
 
             if (this.$el[0].tagName.toLowerCase() === "body") {
-                available_space = $(window).width();
+                available_space = {
+		    width: $(window).width(),
+		    height: $(window).height()
+		}
             } else {
+		var $parent;
                 if (this.$el.closest('.auto-scale-wrapper').length != 0) {
-                    available_space = this.$el.closest('.auto-scale-wrapper').parent().outerWidth();
+		    $parent = this.$el.closest('.auto-scale-wrapper').parent()
                 } else {
-                    available_space = this.$el.parent().outerWidth();
+                    $parent = this.$el.parent();
                 }
+		available_space = {
+		    width: $parent.outerWidth(),
+		    height: $parent.outerHeight(),
+		};
             }
-            available_space = Math.min(available_space, this.options.maxWidth);
-            available_space = Math.max(available_space, this.options.minWidth);
-            scale = available_space/this.$el.outerWidth();
+            available_space.width = Math.min(available_space.width, this.options.maxWidth);
+            available_space.width = Math.max(available_space.width, this.options.minWidth);
+            available_space.height = Math.min(available_space.height, this.options.maxHeight);
+            available_space.height = Math.max(available_space.height, this.options.minHeight);
+	    switch (this.options.size) {
+		case "width":
+		    scale = available_space.width / this.$el.outerWidth();
+		    break;
+		case "height":
+		    scale = available_space.height / this.$el.outerHeight();
+		    break;
+		case "fill":
+		    // Fit entire content on screen, allowing for extra space
+		    scale = Math.min(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
+		    break;
+		case "cover":
+		    // Covert entire screen, possible clipping
+		    scale = Math.max(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
+		    break;
+		default:
+		    return;
+	    }
+
             scaled_height = this.$el.outerHeight() * scale;
             scaled_width = this.$el.outerWidth() * scale;
 

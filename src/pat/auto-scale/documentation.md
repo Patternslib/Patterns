@@ -61,6 +61,9 @@ The available options are:
 | Property | Default value | Available values | Description | Type |
 | :------- | :------------ | :----- | :---------- | :---- |
 | `method` | `scale` | `scale` `zoom` | The scaling method to use. One of `scale` or `zoom` | Mutually exclusive |
+| `size` | `width` | `width` `height` `fill` `cover` | How to calculate the scaling factor. | Mutually exclusive |
 | `min-width` | | | The minimum width in pixels to scale to. | Number |
 | `max-width` | | | The maximum width in pixels to scale to. | Number |
+| `min-height` | | | The minimum height in pixels to scale to. | Number |
+| `max-height` | | | The maximum height in pixels to scale to. | Number |
 
