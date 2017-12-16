@@ -47,49 +47,47 @@ define([
         },
 
         scale: function() {
-            var available_space, scale_x, scale_y, scaled_height, scaled_width;
-	    var el = this.$el[0];
-	    var style = window.getComputedStyle(el);
+            var available_space, scale_x, scale_y, scaled_height, scaled_width, container;
 
-            if (el.tagName === "BODY") {
-                available_space = {
-		    width: parseInt(style.width, 10) - parseInt(style.paddingLeft, 10) - parseInt(style.paddingRight, 10),
-		    height: parseInt(style.height, 10) - parseInt(style.paddingTop, 10) - parseInt(style.paddingBottom, 10)
-		}
+            if (this.$el[0].tagName === "BODY") {
+                container = this.$el[0]
             } else {
-		var $parent;
+                var $parent;
                 if (this.$el.closest('.auto-scale-wrapper').length != 0) {
-		    $parent = this.$el.closest('.auto-scale-wrapper').parent()
+                    container = this.$el.closest('.auto-scale-wrapper').parent()[0];
                 } else {
-                    $parent = this.$el.parent();
+                    container = this.$el.parent()[0];
                 }
-		available_space = {
-		    width: $parent.outerWidth(),
-		    height: $parent.outerHeight(),
-		};
             }
+
+            var style = window.getComputedStyle(container);
+            available_space = {
+                width: parseInt(style.width, 10) - parseInt(style.paddingLeft, 10) - parseInt(style.paddingRight, 10),
+                height: parseInt(style.height, 10) - parseInt(style.paddingTop, 10) - parseInt(style.paddingBottom, 10)
+            }
+
             available_space.width = Math.min(available_space.width, this.options.max.width);
             available_space.width = Math.max(available_space.width, this.options.min.width);
             available_space.height = Math.min(available_space.height, this.options.max.height);
             available_space.height = Math.max(available_space.height, this.options.min.height);
-	    switch (this.options.size) {
-		case "width":
-		    scale = available_space.width / this.$el.outerWidth();
-		    break;
-		case "height":
-		    scale = available_space.height / this.$el.outerHeight();
-		    break;
-		case "contain":
-		    // Fit entire content on area, allowing for extra space
-		    scale = Math.min(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
-		    break;
-		case "cover":
-		    // Covert entire area, possible clipping
-		    scale = Math.max(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
-		    break;
-		default:
-		    return;
-	    }
+            switch (this.options.size) {
+                case "width":
+                    scale = available_space.width / this.$el.outerWidth();
+                    break;
+                case "height":
+                    scale = available_space.height / this.$el.outerHeight();
+                    break;
+                case "contain":
+                    // Fit entire content on area, allowing for extra space
+                    scale = Math.min(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
+                    break;
+                case "cover":
+                    // Covert entire area, possible clipping
+                    scale = Math.max(available_space.width / this.$el.outerWidth(), available_space.height / this.$el.outerHeight());
+                    break;
+                default:
+                    return;
+            }
 
             scaled_height = this.$el.outerHeight() * scale;
             scaled_width = this.$el.outerWidth() * scale;
