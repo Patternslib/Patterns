@@ -62,8 +62,8 @@ define([
 
             var style = window.getComputedStyle(container);
             available_space = {
-                width: parseInt(style.width, 10) - parseInt(style.paddingLeft, 10) - parseInt(style.paddingRight, 10),
-                height: parseInt(style.height, 10) - parseInt(style.paddingTop, 10) - parseInt(style.paddingBottom, 10)
+                width: parseInt(style.width, 10),
+                height: parseInt(style.height, 10)
             }
 
             available_space.width = Math.min(available_space.width, this.options.max.width);
