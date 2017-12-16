@@ -18,8 +18,32 @@
             The same HTML elemement, now scaled up to match the width it parent element by pat-auto-scale:
           </p>
           <p>
-            <button class="pat-button pat-auto-scale" data-pat-auto-scale="method: zoom">😊 BUTTON 😊</button>
+            <button class="pat-button pat-auto-scale">😊 BUTTON 😊</button>
           </p>
+          
+          <p>
+            Another elemement, scaled up to fill the parent element:
+          </p>
+          <p style="border: 4px black solid; width: 350px; height: 100px;">
+            <button class="pat-button pat-auto-scale" data-pat-auto-scale="size: contain">😊</button>
+          </p>
+          
+          <p>
+            The same elemement, now scaled up to fill the parent completely. The styling property `overflow: hidden` is used on the parent element to prevent bleeding.
+          </p>
+          <p style="border: 4px black solid; width: 350px; height: 150px; overflow: hidden;">
+
+            <button class="pat-button pat-auto-scale" data-pat-auto-scale="size: cover">😊</button>
+
+          </p>
+
+          <style type="text/css">
+            button {
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+            }
+          </style>
+
         </article>
   </body>
 </html>
