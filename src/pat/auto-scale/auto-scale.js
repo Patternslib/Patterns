@@ -66,10 +66,10 @@ define([
 		    height: $parent.outerHeight(),
 		};
             }
-            available_space.width = Math.min(available_space.width, this.options.maxWidth);
-            available_space.width = Math.max(available_space.width, this.options.minWidth);
-            available_space.height = Math.min(available_space.height, this.options.maxHeight);
-            available_space.height = Math.max(available_space.height, this.options.minHeight);
+            available_space.width = Math.min(available_space.width, this.options.max.width);
+            available_space.width = Math.max(available_space.width, this.options.min.width);
+            available_space.height = Math.min(available_space.height, this.options.max.height);
+            available_space.height = Math.max(available_space.height, this.options.min.height);
 	    switch (this.options.size) {
 		case "width":
 		    scale = available_space.width / this.$el.outerWidth();
