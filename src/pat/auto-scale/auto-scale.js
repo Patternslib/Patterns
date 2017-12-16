@@ -48,11 +48,13 @@ define([
 
         scale: function() {
             var available_space, scale_x, scale_y, scaled_height, scaled_width;
+	    var el = this.$el[0];
+	    var style = window.getComputedStyle(el);
 
-            if (this.$el[0].tagName.toLowerCase() === "body") {
+            if (el.tagName === "BODY") {
                 available_space = {
-		    width: $(window).width(),
-		    height: $(window).height()
+		    width: parseInt(style.width, 10) - parseInt(style.paddingLeft, 10) - parseInt(style.paddingRight, 10),
+		    height: parseInt(style.height, 10) - parseInt(style.paddingTop, 10) - parseInt(style.paddingBottom, 10)
 		}
             } else {
 		var $parent;
