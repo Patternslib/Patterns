@@ -50,7 +50,7 @@ define([
             var available_space, scale, scaled_height, scaled_width, container;
 
             if (this.$el[0].tagName === "BODY") {
-                container = this.$el[0];
+                container = this.$el[0]
             } else {
                 var $parent;
                 if (this.$el.closest('.auto-scale-wrapper').length != 0) {
@@ -58,23 +58,16 @@ define([
                 } else {
                     container = this.$el.parent()[0];
                 }
-                if (!container) {
-                    // Element has not been added to the DOM yet.
-                    return;
-                }
+            }
+            if (!container) {
+                // Element has not been added to the DOM yet.
+                return;
             }
 
-            if (container.tagName === "BODY" ) {
-                available_space = {
-                    width: window.innerWidth,
-                           height: window.innerHeight
-                }
-            } else {
-                var style = window.getComputedStyle(container);
-                available_space = {
-                    width: parseInt(style.width, 10),
-                    height: parseInt(style.height, 10)
-                }
+            var style = window.getComputedStyle(container);
+            available_space = {
+                width: parseInt(style.width, 10),
+                height: parseInt(style.height, 10)
             }
 
             available_space.width = Math.min(available_space.width, this.options.max.width);
