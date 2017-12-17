@@ -39,9 +39,15 @@ define([
                 // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 this.force_method = "scale";
             }
-            $(window).on("resize.autoscale",
-                _.debounce(this.scale.bind(this), 250, true)
-            );
+
+            var scaler =  _.debounce(this.scale.bind(this), 250, true)
+
+            $(window).on("resize.autoscale", scaler)
+            document.addEventListener("fullscreenchange", scaler)
+            document.addEventListener("webkitfullscreenchange", scaler)
+            document.addEventListener("mozfullscreenchange", scaler)
+            document.addEventListener("MSFullscreenChange", scaler)
+
             $(document).on("pat-update.autoscale", _.debounce(this.scale.bind(this), 250));
             return this;
         },
