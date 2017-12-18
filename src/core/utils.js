@@ -1,14 +1,14 @@
 define([
     "jquery",
     "underscore",
-    "jquery.browser"  // adds itself to the jquery object, no need to pass to the define callback.
-], function($, _) {
+    "jquery.browser"
+], function($, _, browser) {
 
     $.fn.safeClone = function () {
         var $clone = this.clone();
         // IE BUG : Placeholder text becomes actual value after deep clone on textarea
         // https://connect.microsoft.com/IE/feedback/details/781612/placeholder-text-becomes-actual-value-after-deep-clone-on-textarea
-        if ($.browser.msie !== undefined && true) {
+        if (browser.msie !== undefined && true) {
             $clone.findInclusive(':input[placeholder]').each(function(i, item) {
                 var $item = $(item);
                 if ($item.attr('placeholder') === $item.val()) {

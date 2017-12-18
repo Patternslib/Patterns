@@ -11,7 +11,7 @@ define([
     "pat-registry",
     "pat-parser",
     "underscore"
-], function($, dummy, Base, registry, Parser, _) {
+], function($, browser, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
     parser.addArgument("size", "width", ["width", "height", "contain", "cover"]);
@@ -35,7 +35,7 @@ define([
         },
 
         _setup: function() {
-            if ($.browser.mozilla) {
+            if (browser.mozilla) {
                 // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 this.force_method = "scale";
             }
