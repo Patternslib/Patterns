@@ -46,6 +46,7 @@ Breaking Changes
 - Extend pat-focus to add `has-value` class and `data-placeholder` attribute.
 - Fixed injection so that urls with data: in them don't get prefixed with a / anymore.
 
+
 ## 2.1.2 - Aug. 29, 2017
 
 - pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
