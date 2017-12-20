@@ -72,6 +72,7 @@ define([
         onChange: function(event) {
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist");
+            var siblings;
 
 
             var all_selects = $trigger.find(options.select);
@@ -83,15 +84,16 @@ define([
                 all_deselects = $(options.deselect);
             }
             for (var i=0; i<all_selects.length; i++) {
-
-                if (_._findSiblings(all_selects[i], "input[type=checkbox]:visible").filter(":not(:checked)").length === 0) {
+                siblings = _._findSiblings(all_selects[i], "input[type=checkbox]:visible");
+                if (siblings && siblings.filter(":not(:checked)").length === 0) {
                     $(all_selects[i]).prop("disabled", true);
                 } else {
                     $(all_selects[i]).prop("disabled", false);
                 }
             }
             for (var i=0; i< all_deselects.length; i++) {
-                if (_._findSiblings(all_deselects[i], "input[type=checkbox]:visible").filter(":checked").length === 0) {
+                siblings = _._findSiblings(all_deselects[i], "input[type=checkbox]:visible");
+                if (siblings && siblings.filter(":checked").length === 0) {
                     $(all_deselects[i]).prop("disabled", true);
                 } else {
                     $(all_deselects[i]).prop("disabled", false);
