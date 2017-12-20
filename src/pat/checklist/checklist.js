@@ -21,28 +21,32 @@ define([
         jquery_plugin: true,
 
         init: function($el, opts) {
-            return $el.each(function() {
-                var $trigger = $(this),
-                    options = parser.parse($trigger, opts, false);
+            function _init() {
+                return $el.each(function() {
+                    var $trigger = $(this),
+                        options = parser.parse($trigger, opts, false);
 
-                $trigger.data("patternChecklist", options);
-                $trigger.scopedFind(options.select)
-                    .on("click.pat-checklist", {trigger: $trigger}, _.onSelectAll);
-                $trigger.scopedFind(options.deselect)
-                    .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
-                $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
-                // update select/deselect button status
-                _.onChange({data: {trigger: $trigger}});
+                    $trigger.data("patternChecklist", options);
+                    $trigger.scopedFind(options.select)
+                        .on("click.pat-checklist", {trigger: $trigger}, _.onSelectAll);
+                    $trigger.scopedFind(options.deselect)
+                        .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
+                    $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
+                    // update select/deselect button status
+                    _.onChange({data: {trigger: $trigger}});
 
-                $trigger.find("input[type=checkbox]")
-                    .each(_._onChangeCheckbox)
-                    .on("change.pat-checklist", _._onChangeCheckbox);
+                    $trigger.find("input[type=checkbox]")
+                        .each(_._onChangeCheckbox)
+                        .on("change.pat-checklist", _._onChangeCheckbox);
 
-                $trigger.find("input[type=radio]")
-                    .each(_._initRadio)
-                    .on("change.pat-checklist", _._onChangeRadio);
+                    $trigger.find("input[type=radio]")
+                        .each(_._initRadio)
+                        .on("change.pat-checklist", _._onChangeRadio);
 
-            });
+                });
+            };
+            $el.on('patterns-injected', _init);
+            return _init();
         },
 
         destroy: function($el) {
@@ -100,8 +104,8 @@ define([
             var $trigger = event.data.trigger,
                 options = $trigger.data("patternChecklist"),
                 button_clicked = event.currentTarget;
-            
-            /* look up checkboxes which are related to my button by going up one parent 
+
+            /* look up checkboxes which are related to my button by going up one parent
             at a time until I find some for the first time */
             var checkbox_siblings = _._findSiblings(button_clicked, "input[type=checkbox]:not(:checked)");
             checkbox_siblings.each(function () {
@@ -116,7 +120,7 @@ define([
                 options = $trigger.data("patternChecklist"),
                 button_clicked = event.currentTarget;
 
-            /* look up checkboxes which are related to my button by going up one parent 
+            /* look up checkboxes which are related to my button by going up one parent
             at a time until I find some for the first time */
             var checkbox_siblings = _._findSiblings(button_clicked, "input[type=checkbox]:checked");
             checkbox_siblings.each(function () {
