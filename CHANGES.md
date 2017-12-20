@@ -44,6 +44,7 @@ Breaking Changes
 - upgrade moment.js to 2.19.3 to address security vulnerability
 - Improve pat-checklist to allow select/deselect on subset of elements
 - Extend pat-focus to add `has-value` class and `data-placeholder` attribute.
+- Fixed injection so that urls with data: in them don't get prefixed with a / anymore.
 
 ## 2.1.2 - Aug. 29, 2017
 
