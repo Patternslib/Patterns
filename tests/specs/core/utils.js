@@ -24,6 +24,11 @@ define(["underscore", "pat-utils"], function(_, utils) {
                     utils.rebaseURL("http://example.com/foo/", "me/page.html"))
                     .toBe("http://example.com/foo/me/page.html");
             });
+            it("Doesn't rebase data: urls", function() {
+                expect(
+                    utils.rebaseURL("http://example.com/foo/", "data:image-base64gibberish"))
+                    .toBe("data:image-base64gibberish");
+            });
         });
 
         describe("removeDuplicateObjects", function() {
