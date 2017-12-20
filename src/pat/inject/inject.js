@@ -660,11 +660,13 @@ define([
             var $scrollable = $el.parents(":scrollable"), checkVisibility;
 
             // function to trigger the autoload and mark as triggered
-            function trigger() {
+            function trigger(event) {
                 $el.data("pat-inject-autoloaded", true);
                 inject.onTrigger.apply($el[0], []);
+                event && event.preventDefault();
                 return true;
             }
+            $el.click(trigger);
 
             // Use case 1: a (heigh-constrained) scrollable parent
             if ($scrollable.length) {
@@ -676,7 +678,7 @@ define([
                     }
                     if (!$el.is(":visible")) {
                         return false;
-                    } 
+                    }
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -761,7 +763,7 @@ define([
             }
             return;
         }
-        // Not only change the URL, also reload the page. 
+        // Not only change the URL, also reload the page.
         window.location.reload();
     });
 
