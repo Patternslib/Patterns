@@ -661,7 +661,7 @@ define([
 
             // function to trigger the autoload and mark as triggered
             function trigger(event) {
-                if($el.data("pat-inject-autoloaded") {
+                if ($el.data("pat-inject-autoloaded")) {
                     return false;
                 };
                 $el.data("pat-inject-autoloaded", true);
