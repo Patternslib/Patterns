@@ -699,6 +699,12 @@ define([
             } else {
                 // Use case 2: scrolling the entire page
                 checkVisibility = utils.debounce(function inject_checkVisibility_not_scrollable() {
+                    if ($el.parents(":scrollable")) {
+                        // Because of a resize the element has now a scrollable parent
+                        // and we should reset the correct event
+                        $(window).off(".pat-autoload", checkVisibility);
+                        return inject._initAutoloadVisible($el);
+                    }
                     if ($el.data("patterns.autoload")) {
                         return false;
                     }

@@ -30,6 +30,7 @@ Breaking Changes
     Has been superceeded by pat-validation and is no longer maintained.
   - pat-checkedflag will go away. Its functionality is duplicated by pat-select and pat-checklist
 
+- pat-inject: Fix autoload visible link inside collapsed elements
 - pat-checklist: understand injection
 - pat-auto-scale: support more sizing options.
 - pat-validation: fix date validation
