@@ -31,6 +31,7 @@ Breaking Changes
   - pat-checkedflag will go away. Its functionality is duplicated by pat-select and pat-checklist
 
 - pat-inject: Fix autoload visible link inside collapsed elements
+- pat-inject: Fix double click on a pat-inject link
 - pat-checklist: understand injection
 - pat-auto-scale: support more sizing options.
 - pat-validation: fix date validation

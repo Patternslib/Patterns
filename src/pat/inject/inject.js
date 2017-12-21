@@ -106,8 +106,7 @@ define([
              */
             var cfgs = $(this).data("pat-inject"),
                 $el = $(this);
-            if (ev)
-                ev.preventDefault();
+            ev && ev.preventDefault();
             $el.trigger("patterns-inject-triggered");
             inject.execute(cfgs, $el);
         },
@@ -457,11 +456,19 @@ define([
             if (!inject.askForConfirmation(cfgs)) {
                 return;
             }
+            if ($el.data('pat-inject-triggered')) {
+                // Prevent double triggers;
+                return;
+            };
+            $el.data('pat-inject-triggered', true);
             // possibility for spinners on targets
             _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
 
             $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
             $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
+            $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", function() {
+                $el.removeData('pat-inject-triggered');
+            });
 
             if (cfgs[0].url.length) {
                 ajax.request($el, {url: cfgs[0].url});
