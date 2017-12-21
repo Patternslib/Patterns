@@ -148,6 +148,7 @@
     "storage/localstorage",
     "storage/sessionstorage",
     "storage/websqldatabase",
+    "touchevents",
     "unicode",
     "unicode-range",
     "url/bloburls",
