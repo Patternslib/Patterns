@@ -661,6 +661,9 @@ define([
 
             // function to trigger the autoload and mark as triggered
             function trigger(event) {
+                if($el.data("pat-inject-autoloaded") {
+                    return false;
+                };
                 $el.data("pat-inject-autoloaded", true);
                 inject.onTrigger.apply($el[0], []);
                 event && event.preventDefault();
@@ -699,7 +702,7 @@ define([
             } else {
                 // Use case 2: scrolling the entire page
                 checkVisibility = utils.debounce(function inject_checkVisibility_not_scrollable() {
-                    if ($el.parents(":scrollable")) {
+                    if ($el.parents(":scrollable").length) {
                         // Because of a resize the element has now a scrollable parent
                         // and we should reset the correct event
                         $(window).off(".pat-autoload", checkVisibility);
