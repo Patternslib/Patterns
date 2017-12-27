@@ -20,7 +20,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 imagesLoaded($("body"));
                 setTimeout(function () {
                     expect(spy_animate).toHaveBeenCalled();
-                }, 750);
+                }, 1000);
             });
         });
 
@@ -44,7 +44,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 setTimeout(function() {
                     $el.click();
                     expect(spy_animate).toHaveBeenCalled();
-                }, 500);
+                }, 1000);
 
             });
 

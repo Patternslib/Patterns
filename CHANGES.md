@@ -30,6 +30,8 @@ Breaking Changes
     Has been superceeded by pat-validation and is no longer maintained.
   - pat-checkedflag will go away. Its functionality is duplicated by pat-select and pat-checklist
 
+- pat-inject: Fix autoload visible link inside collapsed elements
+- pat-checklist: understand injection
 - pat-auto-scale: support more sizing options.
 - pat-validation: fix date validation
 - pat-switch: after a switch occurs, trigger a resize event (some elements may have been appeared and we might need a redraw)
@@ -44,6 +46,7 @@ Breaking Changes
 - Improve pat-checklist to allow select/deselect on subset of elements
 - Extend pat-focus to add `has-value` class and `data-placeholder` attribute.
 - Add idle trigger to injection.
+- Fixed injection so that urls with data: in them don't get prefixed with a / anymore.
 
 ## 2.1.2 - Aug. 29, 2017
 

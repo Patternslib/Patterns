@@ -698,11 +698,16 @@ define([
             var $scrollable = $el.parents(":scrollable"), checkVisibility;
 
             // function to trigger the autoload and mark as triggered
-            function trigger() {
+            function trigger(event) {
+                if ($el.data("pat-inject-autoloaded")) {
+                    return false;
+                };
                 $el.data("pat-inject-autoloaded", true);
                 inject.onTrigger.apply($el[0], []);
+                event && event.preventDefault();
                 return true;
             }
+            $el.click(trigger);
 
             // Use case 1: a (heigh-constrained) scrollable parent
             if ($scrollable.length) {
@@ -714,7 +719,7 @@ define([
                     }
                     if (!$el.is(":visible")) {
                         return false;
-                    } 
+                    }
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -735,6 +740,12 @@ define([
             } else {
                 // Use case 2: scrolling the entire page
                 checkVisibility = utils.debounce(function inject_checkVisibility_not_scrollable() {
+                    if ($el.parents(":scrollable").length) {
+                        // Because of a resize the element has now a scrollable parent
+                        // and we should reset the correct event
+                        $(window).off(".pat-autoload", checkVisibility);
+                        return inject._initAutoloadVisible($el);
+                    }
                     if ($el.data("patterns.autoload")) {
                         return false;
                     }
@@ -838,7 +849,7 @@ define([
             }
             return;
         }
-        // Not only change the URL, also reload the page. 
+        // Not only change the URL, also reload the page.
         window.location.reload();
     });
 
