@@ -19,7 +19,7 @@ define([
     parser.addArgument("data-type", "html");
     parser.addArgument("next-href");
     parser.addArgument("source");
-    parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible"]);
+    parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible", "idle"]);
     parser.addArgument("delay", 0);    // only used in autoload
     parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
     parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
@@ -59,35 +59,73 @@ define([
                 }
             }
 
-            switch (cfgs[0].trigger) {
-            case "default":
-                // setup event handlers
-                if ($el.is("form")) {
-                    $el.on("submit.pat-inject", inject.onTrigger)
-                        .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
-                        .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", inject.onFormActionSubmit);
-                } else if ($el.is(".pat-subform")) {
-                    log.debug("Initializing subform with injection");
-                } else {
-                    $el.on("click.pat-inject", inject.onTrigger);
-                }
-                break;
-            case "autoload":
-                if (!cfgs[0].delay) {
+            if (cfgs[0].idleTrigger) {
+                // XXX TODO: handle item removed from DOM
+                var timeout = parseInt(cfgs[0].idleTrigger, 10);
+                var timer;
+
+                function onTimeout() {
                     inject.onTrigger.apply($el[0], []);
-                } else {
-                    // function to trigger the autoload and mark as triggered
-                    function delayed_trigger() {
-                        $el.data("pat-inject-autoloaded", true);
-                        inject.onTrigger.apply($el[0], []);
-                        return true;
-                    }
-                    window.setTimeout(delayed_trigger, cfgs[0].delay);
+                    unsub();
+                    clearTimeout(timer);
                 }
-                break;
-            case "autoload-visible":
-                inject._initAutoloadVisible($el);
-                break;
+
+                var onInteraction = utils.debounce(function onInteraction() {
+                    clearTimeout(timer)
+                    timer = setTimeout(onTimeout, cfgs[0].trigger)
+                }, timeout);
+
+                function unsub() {
+                    ["scroll", "resize"].forEach(function(e) {
+                        window.removeEventListener(e, onInteraction);
+                    });
+                    ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
+                        document.removeEventListener(e, onInteraction);
+                    });
+                }
+
+                onInteraction();
+
+                ["scroll", "resize"].forEach(function(e) {
+                    window.addEventListener(e, onInteraction);
+                });
+                ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
+                    document.addEventListener(e, onInteraction);
+                });
+            } else {
+                switch (cfgs[0].trigger) {
+                case "default":
+                    // setup event handlers
+                    if ($el.is("form")) {
+                        $el.on("submit.pat-inject", inject.onTrigger)
+                            .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
+                            .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", inject.onFormActionSubmit);
+                    } else if ($el.is(".pat-subform")) {
+                        log.debug("Initializing subform with injection");
+                    } else {
+                        $el.on("click.pat-inject", inject.onTrigger);
+                    }
+                    break;
+                case "autoload":
+                    if (!cfgs[0].delay) {
+                        inject.onTrigger.apply($el[0], []);
+                    } else {
+                        // function to trigger the autoload and mark as triggered
+                        function delayed_trigger() {
+                            $el.data("pat-inject-autoloaded", true);
+                            inject.onTrigger.apply($el[0], []);
+                            return true;
+                        }
+                        window.setTimeout(delayed_trigger, cfgs[0].delay);
+                    }
+                    break;
+                case "autoload-visible":
+                    inject._initAutoloadVisible($el);
+                    break;
+                case "idle":
+                    inject._initIdleTrigger($el, cfgs[0].delay);
+                    break;
+                }
             }
 
             log.debug("initialised:", $el);
@@ -723,6 +761,45 @@ define([
                 $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
             }
             return false;
+        },
+
+        _initIdleTrigger: function inject_initIdleTrigger($el, delay) {
+            // XXX TODO: handle item removed from DOM
+            var timeout = parseInt(delay, 10);
+            var timer;
+
+            function onTimeout() {
+                inject.onTrigger.apply($el[0], []);
+                unsub();
+                clearTimeout(timer);
+            }
+
+            var onInteraction = utils.debounce(function onInteraction() {
+                if (!document.body.contains($el[0])) {
+                    unsub();
+                    return;
+                }
+                clearTimeout(timer)
+                timer = setTimeout(onTimeout, timeout)
+            }, timeout);
+
+            function unsub() {
+                ["scroll", "resize"].forEach(function(e) {
+                    window.removeEventListener(e, onInteraction);
+                });
+                ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
+                    document.removeEventListener(e, onInteraction);
+                });
+            }
+
+            onInteraction();
+
+            ["scroll", "resize"].forEach(function(e) {
+                window.addEventListener(e, onInteraction);
+            });
+            ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
+                document.addEventListener(e, onInteraction);
+            });
         },
 
         // XXX: simple so far to see what the team thinks of the idea
