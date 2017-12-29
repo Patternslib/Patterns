@@ -133,19 +133,23 @@ define([
 
         /* The following methods are moved here from pat-checked-flag, which is being deprecated */
         _getLabelAndFieldset: function(el) {
-            var $result = $(utils.findLabel(el));
-            return $result.add($(el).closest("fieldset"));
+            var result = new Set();
+            result.add($(utils.findLabel(el)) );
+            result.add($(el).closest("fieldset"));
+            return result;
         },
 
         _getSiblingsWithLabelsAndFieldsets: function(el) {
             var selector = "input[name=\""+el.name+"\"]",
                 $related = (el.form===null) ? $(selector) : $(selector, el.form),
                 $result = $();
+            var result = new Set();
             $result = $related=$related.not(el);
+            $result.each(function(item) {result.add(item)});
             for (var i=0; i<$related.length; i++) {
-                $result=$result.add(_._getLabelAndFieldset($related[i]));
+                result = new Set (result, _._getLabelAndFieldset($related[i]));
             }
-            return $result;
+            return result;
         },
 
         _onChangeCheckbox: function() {
