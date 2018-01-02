@@ -95,6 +95,11 @@ define([
             } else {
                 switch (cfgs[0].trigger) {
                 case "default":
+                    cfgs.forEach(function(cfg) {
+                        if (cfg.delay) {
+                            cfg.processDelay = cfg.delay;
+                        }
+                    });
                     // setup event handlers
                     if ($el.is("form")) {
                         $el.on("submit.pat-inject", inject.onTrigger)
@@ -204,6 +209,7 @@ define([
                 }
 
                 cfg.selector = cfg.selector || defaultSelector;
+                cfg.processDelay = 0;
             });
             return cfgs;
         },
@@ -457,9 +463,11 @@ define([
             inject.stopBubblingFromRemovedElement($el, cfgs, ev);
             sources$ = inject.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
             cfgs.forEach(function(cfg, idx) {
-                cfg.$target.each(function() {
-                    inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
-                });
+                setTimeout(function() {
+                    cfg.$target.each(function() {
+                        inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
+                    });
+                }, cfg.processDelay);
             });
             if (cfgs[0].nextHref && $el.is("a")) {
                 // In case next-href is specified the anchor's href will
