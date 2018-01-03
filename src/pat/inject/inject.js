@@ -20,7 +20,7 @@ define([
     parser.addArgument("next-href");
     parser.addArgument("source");
     parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible", "idle"]);
-    parser.addArgument("delay", 0);    // only used in autoload
+    parser.addArgument("delay");    // only used in autoload
     parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
     parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
     parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
@@ -209,6 +209,14 @@ define([
                 }
 
                 cfg.selector = cfg.selector || defaultSelector;
+                if (cfg.delay) {
+                    try {
+                        cfg.delay = utils.parseTime(cfg.delay);
+                    } catch (e) {
+                        log.warn("Invalid delay value: ", cfg.delay)
+                        cfg.delay = null;
+                    }
+                }
                 cfg.processDelay = 0;
             });
             return cfgs;
