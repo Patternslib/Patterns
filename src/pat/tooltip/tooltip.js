@@ -10,10 +10,11 @@ define([
     "jquery",
     "pat-logger",
     "pat-registry",
+    "pat-utils",
     "pat-parser",
     "pat-inject",
     "pat-remove"
-], function($, logger, registry, Parser, inject) {
+], function($, logger, registry, utils, Parser, inject) {
     var log = logger.getLogger("tooltip"),
         parser = new Parser("tooltip");
 
@@ -28,7 +29,7 @@ define([
     parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
     parser.addArgument("source", "title", ["auto", "ajax", "content", "content-html", "title"]);
     parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
-    parser.addArgument("delay", 0);
+    parser.addArgument("delay");
     parser.addArgument("mark-inactive", true);
     parser.addArgument("class");
     parser.addArgument("target", "body");
@@ -45,6 +46,10 @@ define([
                 var $trigger = $(this),
                     href,
                     options = parser.parse($trigger, opts);
+
+                if (options.delay) {
+                    options.delay = utils.parseTime(options.delay);
+                }
 
                 if (options.source==="auto") {
                     href = $trigger.attr("href");

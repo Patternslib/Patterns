@@ -332,4 +332,35 @@ define(["underscore", "pat-utils"], function(_, utils) {
             expect(utils.hasValue(el)).toBeTruthy();
         });
     });
+
+    describe("parseTime", function() {
+        it("raises exception for invalid input", function() {
+            var p = function() {
+                utils.parseTime("abc");
+            };
+            expect(p).toThrow();
+        });
+
+        it("handles units", function() {
+            expect(utils.parseTime("1000ms")).toBe(1000);
+            expect(utils.parseTime("1s")).toBe(1000);
+            expect(utils.parseTime("1m")).toBe(60000);
+        });
+
+        it("accepts fractional units", function() {
+            expect(utils.parseTime("0.5s")).toBe(500);
+        });
+
+        it("rounds fractional units to whole milliseconds", function() {
+            expect(utils.parseTime("0.8ms")).toBe(1);
+        });
+
+        it("assumes milliseconds by default", function() {
+            expect(utils.parseTime("1000")).toBe(1000);
+        });
+
+        it("treats unknown units as milliseconds", function() {
+            expect(utils.parseTime("1000w")).toBe(1000);
+        });
+    });
 });
