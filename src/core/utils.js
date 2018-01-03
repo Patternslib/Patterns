@@ -421,6 +421,23 @@ define([
         }
     };
 
+    function parseTime(time) {
+        var m = /^(\d+(?:\.\d+)?)\s*(\w*)/.exec(time);
+        if (!m) {
+            throw new Error('Invalid time');
+        }
+        var amount = parseFloat(m[1])
+        switch (m[2]) {
+            case 's':
+                return Math.round(amount * 1000);
+            case 'm':
+                return Math.round(amount * 1000 * 60);
+            case 'ms':
+            default:
+                return Math.round(amount);
+        }
+    }
+
     var utils = {
         // pattern pimping - own module?
         jqueryPlugin: jqueryPlugin,
@@ -437,7 +454,8 @@ define([
         removeDuplicateObjects: removeDuplicateObjects,
         mergeStack: mergeStack,
         isElementInViewport: isElementInViewport,
-        hasValue: hasValue
+        hasValue: hasValue,
+        parseTime: parseTime
     };
     return utils;
 });
