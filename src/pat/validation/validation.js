@@ -62,6 +62,9 @@ define([
                 this.validateElement(ev.target);
             }.bind(this), 500));
             this.$inputs.on('change.pat-validation', function (ev) { this.validateElement(ev.target); }.bind(this));
+            // formaction causes form validation to be skipped, so validate on
+            // submit button click instead.
+            this.$el.find('button[type=submit][formaction]').on('click.pat-validation', this.validateForm.bind(this));
             this.$el.on('submit.pat-validation', this.validateForm.bind(this));
             this.$el.on('pat-update.pat-validation', this.onPatternUpdate.bind(this));
             this.$el.on("click.pat-validation", ".close-panel", function (ev) {
