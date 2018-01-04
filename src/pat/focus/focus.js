@@ -55,9 +55,11 @@ define([
             function updateHasValue() {
                 var hv = utils.hasValue(el);
 
-                if (hv)
-                    $relatives.addClass("has-value");
-                else {
+                if (hv) {
+                    $relatives
+                        .addClass("has-value")
+                        .attr("data-value", el.value);
+                } else {
                     $relatives
                         .filter(function (ix, e) {
                             const inputs = $(":input", e);
@@ -66,7 +68,8 @@ define([
                                     return false;
                             return true;
                         })
-                        .removeClass("has-value");
+                        .removeClass("has-value")
+                        .attr("data-value", null);
                 }
             }
 

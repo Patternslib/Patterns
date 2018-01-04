@@ -45,7 +45,7 @@ Breaking Changes
   The old carousel based on anythingslider is still available as pat-carousel-legacy
 - upgrade moment.js to 2.19.3 to address security vulnerability
 - Improve pat-checklist to allow select/deselect on subset of elements
-- Extend pat-focus to add `has-value` class and `data-placeholder` attribute.
+- Extend pat-focus to add `has-value` class, `data-placeholder` and `data-value` attributes.
 - Add idle trigger to injection.
 - Fixed injection so that urls with data: in them don't get prefixed with a / anymore.
 - pat-checklist now uses Sets to collect its siblings, that should make it much faster with large lists of icons.
