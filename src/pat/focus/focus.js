@@ -23,6 +23,7 @@ define([
                 if (el.placeholder)
                     $relatives.attr("data-placeholder", el.placeholder);
             });
+            $root.find(":input").each(focus.onChange);
         },
 
         _findRelatives: function(el) {
@@ -49,50 +50,52 @@ define([
             focus._doFocus(this);
         },
 
+        _updateHasValue: function(el) {
+            var $relatives = focus._findRelatives(el);
+            var hv = utils.hasValue(el);
+
+            if (hv) {
+                $relatives
+                    .addClass("has-value")
+                    .attr("data-value", el.value);
+            } else {
+                $relatives
+                    .filter(function (ix, e) {
+                        const inputs = $(":input", e);
+                        for (var i=0; i<inputs.length; i++)
+                            if (utils.hasValue(inputs[i]))
+                                return false;
+                        return true;
+                    })
+                    .removeClass("has-value")
+                    .attr("data-value", null);
+            }
+        },
+
         _doFocus: function(el) {
             var $relatives = focus._findRelatives(el);
-
-            function updateHasValue() {
-                var hv = utils.hasValue(el);
-
-                if (hv) {
-                    $relatives
-                        .addClass("has-value")
-                        .attr("data-value", el.value);
-                } else {
-                    $relatives
-                        .filter(function (ix, e) {
-                            const inputs = $(":input", e);
-                            for (var i=0; i<inputs.length; i++)
-                                if (utils.hasValue(inputs[i]))
-                                    return false;
-                            return true;
-                        })
-                        .removeClass("has-value")
-                        .attr("data-value", null);
-                }
-            }
-
             $relatives.addClass("focus");
-            updateHasValue($relatives);
-            $(el).on("change.pat-focus keyup.pat-focus", updateHasValue)
+            this._updateHasValue($relatives);
         },
 
         onBlur: function() {
             var $relatives = focus._findRelatives(this);
 
-            $(this).off("change.pat-focus keyup.pat-focus");
-
             $(document).one("mouseup keyup", function() {
                 $relatives.filter(":not(:has(:input:focus))").removeClass("focus");
             });
+        },
+
+        onChange: function() {
+            focus._updateHasValue(this);
         }
     };
 
     $(document)
         .on("focus.patterns", ":input", focus.onFocus)
         .on("blur.patterns", ":input", focus.onBlur)
-        .on("newContent", focus.onNewContent);
+        .on("newContent", focus.onNewContent)
+        .on("change.pat-focus keyup.pat-focus", ":input", focus.onChange);
     patterns.register(focus);
     return focus;
 });
