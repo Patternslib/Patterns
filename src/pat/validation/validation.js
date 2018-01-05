@@ -188,7 +188,7 @@ define([
             var value_dict = {};
             var name = input.getAttribute('name');
             var value = input.value;
-            if (input.getAttribute('type') == "number") {
+            if (input.getAttribute('type') == 'number' && value !== '') {
                 try {
                     value = Number(input.value);
                 } catch (e) {
