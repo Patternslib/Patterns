@@ -19,31 +19,11 @@ define([
 
         transform: function($root) {
             $root.find(":input[placeholder]").each(function(ix, el) {
-                var $relatives = focus._findRelatives(el);
+                var $relatives = utils.findRelatives(el);
                 if (el.placeholder)
                     $relatives.attr("data-placeholder", el.placeholder);
             });
             $root.find(":input").each(focus.onChange);
-        },
-
-        _findRelatives: function(el) {
-            var $el = $(el),
-                $relatives = $(el),
-                $label = $();
-
-            $relatives=$relatives.add($el.closest("label"));
-            $relatives=$relatives.add($el.closest("fieldset"));
-
-            if (el.id)
-                $label=$("label[for='"+el.id+"']");
-            if (!$label.length) {
-                var $form = $el.closest("form");
-                if (!$form.length)
-                    $form=$(document.body);
-                $label=$form.find("label[for='"+el.name+"']");
-            }
-            $relatives=$relatives.add($label);
-            return $relatives;
         },
 
         onFocus: function() {
@@ -51,7 +31,7 @@ define([
         },
 
         _updateHasValue: function(el) {
-            var $relatives = focus._findRelatives(el);
+            var $relatives = utils.findRelatives(el);
             var hv = utils.hasValue(el);
 
             if (hv) {
@@ -73,13 +53,13 @@ define([
         },
 
         _doFocus: function(el) {
-            var $relatives = focus._findRelatives(el);
+            var $relatives = utils.findRelatives(el);
             $relatives.addClass("focus");
             this._updateHasValue($relatives);
         },
 
         onBlur: function() {
-            var $relatives = focus._findRelatives(this);
+            var $relatives = utils.findRelatives(this);
 
             $(document).one("mouseup keyup", function() {
                 $relatives.filter(":not(:has(:input:focus))").removeClass("focus");
