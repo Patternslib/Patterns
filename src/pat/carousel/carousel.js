@@ -22,6 +22,7 @@ define([
     parser.addArgument("slides-to-scroll", 1);
     parser.addArgument("dots", "show");
     parser.addArgument("append-dots", "");
+    parser.addArgument("infinite", false);
 
     var carousel = {
         name: "carousel",
@@ -44,7 +45,7 @@ define([
                 if (options.appendDots) {
                     settings.appendDots = options.appendDots;
                 }
-
+                settings.infinite = options.infinite;
                 carousel.setup($carousel, settings);
             });
         },
