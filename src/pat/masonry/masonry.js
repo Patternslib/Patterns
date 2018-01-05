@@ -63,6 +63,17 @@
                 .on("pat-update",
                     utils.debounce(this.quicklayout.bind(this), 200));
 
+            const callback = utils.debounce(this.quicklayout.bind(this), 100);
+            const observer = new MutationObserver(callback);
+            const config = {
+              childList: true,
+              subtree: true,
+              characterData: true,
+              attributes: true
+            };
+            observer.observe(document.body, config);
+
+
         },
 
         initMasonry: function () {
