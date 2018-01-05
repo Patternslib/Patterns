@@ -326,6 +326,7 @@ define([
             var $errors = this.findErrorMessages(input);
             this.errors = this.errors - $errors.length;
             $errors.remove();
+            utils.findRelatives(input).removeClass('is-invalid').addClass('is-valid');
             if (this.errors < 1 && this.options.disableSelector) {
                 $(this.options.disableSelector).prop('disabled', false).removeClass('disabled');
             }
@@ -333,6 +334,7 @@ define([
 
         showError: function(error, input) {
             var $el = $(input),
+                $relatives = utils.findRelatives(input),
                 $position = $el,
                 strategy="after",
                 $message = $("<em/>", {"class": "validation warning message"}),
@@ -354,6 +356,7 @@ define([
                     $message.insertAfter($position);
                     break;
             }
+            $relatives.removeClass('is-valid').addClass('is-invalid');
             this.errors += 1;
             if (this.options.disableSelector) {
                 $(this.options.disableSelector).prop('disabled', true).addClass('disabled');
