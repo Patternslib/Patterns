@@ -76,7 +76,7 @@ define([
         .on("blur.patterns", ":input", focus.onBlur)
         .on("newContent", focus.onNewContent)
         .on("change.pat-focus keyup.pat-focus", ":input", focus.onChange)
-        .on("input.pat-focus", ":input[type=slider]", utils.debounce(focus.onChange, 50))
+        .on("input.pat-focus", ":input[type=range]", utils.debounce(focus.onChange, 50))
         ;
     patterns.register(focus);
     return focus;
