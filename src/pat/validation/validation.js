@@ -188,11 +188,15 @@ define([
             var value_dict = {};
             var name = input.getAttribute('name');
             var value = input.value;
-            if (input.getAttribute('type') == 'number' && value !== '') {
-                try {
-                    value = Number(input.value);
-                } catch (e) {
-                    value = input.value;
+            if (input.getAttribute('type') == 'number') {
+		if (value !== '') {
+                    try {
+                        value = Number(input.value);
+                    } catch (e) {
+                        value = input.value;
+                    }
+                } else {
+                    value = null;
                 }
             }
             value_dict[name] = value;
