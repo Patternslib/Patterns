@@ -1,4 +1,4 @@
-/* pat-date-picker  - Polyfill for input type=date */
+/* pat-sticky - A pattern for a sticky polyfill */
 define([
     "underscore",
     "pat-parser",

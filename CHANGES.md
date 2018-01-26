@@ -64,7 +64,6 @@ Breaking Changes
     - Add Aliases from v4 (no ``is-*``) to v3 names (with ``is-`` for booleans), while keeping the v3 names. The patternslib parser does boolean casting for ``is-*`` options.
 - pat-datetime-picker: Add new pattern for setting the date and time.
 - pat-date-picker: Remove the dependency on ``moment-timezone-data`` - it's not used and there is no use in a date picker anyways.
-- Makefile: with the ``clean`` target, also remove the ``stamp-bundler`` marker file.
 
 
 

@@ -18,7 +18,7 @@ JSHINTEXCEPTIONS = $(GENERATED) \
 		   $(TESTSOURCES)
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
-all:: bundle.js
+all:: bundle.js css
 
 ########################################################################
 ## Install dependencies
@@ -34,7 +34,7 @@ stamp-bundler:
 	touch stamp-bundler
 
 clean::
-	rm -f stamp-npm stamp-bundler
+	rm -f stamp-npm
 	rm -rf node_modules
 
 ########################################################################
@@ -53,7 +53,7 @@ check:: stamp-npm jshint
 ########################################################################
 ## Builds
 
-build:: bundle
+build:: bundle all_css
 
 bundle bundle.js: $(GENERATED) $(SOURCES) stamp-npm
 	npm run build
