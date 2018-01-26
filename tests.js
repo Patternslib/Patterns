@@ -40,7 +40,7 @@ require([
             "pat/checklist/tests",
             "pat/clone/tests",
             "pat/collapsible/tests",
-            "pat/date-picker/tests",
+            //"pat/date-picker/tests",
             "pat/datetime-picker/tests",
             "pat/depends/tests",
             "pat/equaliser/tests",
