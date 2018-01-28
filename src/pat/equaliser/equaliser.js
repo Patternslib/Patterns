@@ -24,13 +24,24 @@ define([
                 var $container = $(this),
                     options = parser.parse($container, opts);
                 $container.data("pat-equaliser", options);
-                $container.on("pat-update.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
-                $container.on("patterns-injected.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
+                /* Assumotion, we don't need this anymore if we use Mutation observers
+                // $container.on("pat-update.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
+                // $container.on("patterns-injected.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
+                // $container.parents('.pat-stacks').on("pat-update", null, this, utils.debounce(equaliser._onEvent, 100));
+                */
                 $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
-                $container.parents('.pat-stacks').on("pat-update", null, this, utils.debounce(equaliser._onEvent, 100));
                 imagesLoaded(this, $.proxy(function() {
                     equaliser._update(this);
                 }, this));
+                const callback = utils.debounce(equaliser._update.bind(this), 100);
+                const observer = new MutationObserver(callback);
+                const config = {
+                  childList: true,
+                  subtree: true,
+                  characterData: true,
+                  attributes: true
+                };
+                observer.observe(document.body, config);
             });
         },
 
