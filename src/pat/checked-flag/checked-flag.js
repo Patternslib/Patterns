@@ -113,19 +113,22 @@ define([
         },
 
         _getLabelAndFieldset: function(el) {
-            var $result = $(utils.findLabel(el));
-            return $result.add($(el).closest("fieldset"));
+            var result = new Set();
+            result.add($(utils.findLabel(el)) );
+            result.add($(el).closest("fieldset"));
+            return result;
         },
 
         _getSiblingsWithLabelsAndFieldsets: function(el) {
             var selector = "input[name=\""+el.name+"\"]",
                 $related = (el.form===null) ? $(selector) : $(selector, el.form),
                 $result = $();
-            $result = $related=$related.not(el);
+            var result = new Set();
+            $result.each(function(item) {result.add($result[item])});
             for (var i=0; i<$related.length; i++) {
-                $result=$result.add(checkedflag._getLabelAndFieldset($related[i]));
+                result = new Set ([...result, ...checkedflag._getLabelAndFieldset($related[i])]);
             }
-            return $result;
+            return result;
         },
 
         _onChangeCheckbox: function() {

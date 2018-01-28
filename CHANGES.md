@@ -48,7 +48,7 @@ Breaking Changes
 - Extend pat-focus to add `has-value` class, `data-placeholder` and `data-value` attributes.
 - Add idle trigger to injection.
 - Fixed injection so that urls with data: in them don't get prefixed with a / anymore.
-- pat-checklist now uses Sets to collect its siblings, that should make it much faster with large lists of icons.
+- pat-checklist and pat-checked-flag use Sets to collect siblings, that makes them much faster with large lists of icons.
 - pat-carousel gets infinite option
 
 ## 2.1.2 - Aug. 29, 2017
