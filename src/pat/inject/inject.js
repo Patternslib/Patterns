@@ -471,11 +471,18 @@ define([
             inject.stopBubblingFromRemovedElement($el, cfgs, ev);
             sources$ = inject.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
             cfgs.forEach(function(cfg, idx) {
-                setTimeout(function() {
+                function perform_inject() {
                     cfg.$target.each(function() {
                         inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
                     });
-                }, cfg.processDelay);
+                }
+                if (cfg.processDelay) {
+                    setTimeout(function() {
+                        perform_inject();
+                    }, cfg.processDelay);
+                } else {
+                    perform_inject();
+                }
             });
             if (cfgs[0].nextHref && $el.is("a")) {
                 // In case next-href is specified the anchor's href will
