@@ -147,10 +147,7 @@ define([
             $result = $related=$related.not(el);
             $result.each(function(item) {result.add($result[item])});
             for (var i=0; i<$related.length; i++) {
-                var label_and_fieldset =  _._getLabelAndFieldset($related[i]);
-                for (var j=0; i<label_and_fieldset.length; i++) {
-                    result.add(label_and_fieldset[j]);
-                }
+                result = new Set ([...result, ..._._getLabelAndFieldset($related[i]) ] );
             }
             return result;
         },
@@ -188,22 +185,19 @@ define([
                 $label = $(utils.findLabel(input)),
                 $fieldset = $el.closest("fieldset"),
                 $siblings = _._getSiblingsWithLabelsAndFieldsets(input);
-            var values;
+
             if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
                 var newset = new Set();
-                values = $siblings.values();
-                for (var i=0; i<values.length; i++) {
-                    newset.add($(values[i]).closest("li"));
+                for (item of $siblings.values()) {
+                    newset.add($(item).closest("li"));
                 }
                 $siblings=newset;
             }
 
             if (update_siblings) {
-                values = $siblings.values();
-                for (var i=0; i<values.length; i++) {
-                    $(values[i]).removeClass("checked").addClass("unchecked");
-                }
+                for (item of $siblings.values())
+                     $(item).removeClass("checked").addClass("unchecked");
             }
             if (input.checked) {
                 $label.add($fieldset).removeClass("unchecked").addClass("checked");
