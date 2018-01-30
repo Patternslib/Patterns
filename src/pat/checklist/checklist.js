@@ -144,14 +144,15 @@ define([
                 $related = (el.form===null) ? $(selector) : $(selector, el.form),
                 $result = $();
             var result = new Set();
-            $result = $related=$related.not(el);
-            $result.each(function(item) {result.add($result[item])});
-            for (var i=0; i<$related.length; i++) {
-                var label_and_fieldset =  _._getLabelAndFieldset($related[i]);
-                for (var j=0; i<label_and_fieldset.length; i++) {
-                    result.add(label_and_fieldset[j]);
-                }
-            }
+            var label_and_fieldset;
+            $related = $related.not(el);
+            $related.each(function(idx, item) {
+                result.add(item);
+                label_and_fieldset = _._getLabelAndFieldset(item);
+                label_and_fieldset.forEach(function(item) {
+                    result.add(item)
+                });
+            });
             return result;
         },
 
@@ -187,23 +188,20 @@ define([
             var $el = $(input),
                 $label = $(utils.findLabel(input)),
                 $fieldset = $el.closest("fieldset"),
-                $siblings = _._getSiblingsWithLabelsAndFieldsets(input);
-            var values;
+                siblings = _._getSiblingsWithLabelsAndFieldsets(input);
             if ($el.closest("ul.radioList").length) {
                 $label=$label.add($el.closest("li"));
                 var newset = new Set();
-                values = $siblings.values();
-                for (var i=0; i<values.length; i++) {
-                    newset.add($(values[i]).closest("li"));
-                }
-                $siblings=newset;
+                siblings.forEach(function(sibling) {
+                    newset.add($(sibling).closest("li"));
+                });
+                siblings = newset;
             }
 
             if (update_siblings) {
-                values = $siblings.values();
-                for (var i=0; i<values.length; i++) {
-                    $(values[i]).removeClass("checked").addClass("unchecked");
-                }
+                siblings.forEach(function(sibling) {
+                    $(sibling).removeClass("checked").addClass("unchecked");
+                });
             }
             if (input.checked) {
                 $label.add($fieldset).removeClass("unchecked").addClass("checked");
