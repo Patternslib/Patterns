@@ -24,7 +24,7 @@ define(["pat-masonry"], function(pattern) {
             pattern.init($msnry);
             setTimeout(function () {
                 expect($msnry.hasClass("masonry-ready")).toBeTruthy();
-            }, 800);
+            }, 2000);
         });
     });
 });

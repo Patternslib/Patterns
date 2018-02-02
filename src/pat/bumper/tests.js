@@ -1,4 +1,4 @@
-define(["jquery", "pat-bumper"], function($, Bumper) {
+define(["jquery", "pat-bumper", "modernizr"], function($, Bumper) {
 
     describe("pat-bumper", function() {
         beforeEach(function() {
@@ -70,7 +70,11 @@ define(["jquery", "pat-bumper"], function($, Bumper) {
             var pattern = new Bumper($el);
             pattern.init();
             pattern._markBumped(true);
-            expect(pattern.$el.attr('class')).toBe("pat-bumper sticky-supported bumped");
+            if (Modernizr.csspositionsticky) {
+                expect(pattern.$el.attr('class')).toBe("pat-bumper sticky-supported bumped");
+            } else {                
+                expect(pattern.$el.attr('class')).toBe("pat-bumper bumped");
+            }
         });
 
         it("updates classes for an unbumped element", function() {
@@ -85,7 +89,11 @@ define(["jquery", "pat-bumper"], function($, Bumper) {
             var pattern = new Bumper($el);
             pattern.init();
             pattern._markBumped(false);
-            expect(pattern.$el.attr('class')).toBe("pat-bumper sticky-supported plain");
+            if (Modernizr.csspositionsticky) {
+                expect(pattern.$el.attr('class')).toBe("pat-bumper sticky-supported plain");
+            } else {                
+                expect(pattern.$el.attr('class')).toBe("pat-bumper plain");
+            }
         });
 
         it("listens on window scroll if no scrollable container is present", function() {
