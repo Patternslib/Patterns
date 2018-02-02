@@ -170,7 +170,10 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     expect($el.attr("title")).toBeFalsy();
 
                     $el.trigger(utils.click);
-                    expect(spy).toHaveBeenCalled();
+                    setTimeout(function() {
+                        expect(spy).toHaveBeenCalled();
+                    }, 2000);
+
                     var $container = $el.data("patterns.tooltip.container");
                     expect($container.find('p').text()).toBe(title);
                 });
@@ -188,10 +191,11 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     pattern.init($el);
                     $el.trigger(utils.click);
 
-                    jasmine.clock().tick(200);
+                    setTimeout(function() {
+                        expect(spy_show).toHaveBeenCalled();
+                        expect(spy_execute).toHaveBeenCalled();
+                    }, 2000);
 
-                    expect(spy_show).toHaveBeenCalled();
-                    expect(spy_execute).toHaveBeenCalled();
                     /* XXX: The ajax call works fine in the browser but not
                     * via PhantomJS. Will have to debug later.
                     *

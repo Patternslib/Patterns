@@ -20,7 +20,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 imagesLoaded($("body"));
                 setTimeout(function () {
                     expect(spy_animate).toHaveBeenCalled();
-                }, 1000);
+                }, 2000);
             });
         });
 
@@ -44,7 +44,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 setTimeout(function() {
                     $el.click();
                     expect(spy_animate).toHaveBeenCalled();
-                }, 1000);
+                }, 2000);
 
             });
 
@@ -62,7 +62,9 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                         'type': 'click'
                     }
                 });
-                expect(spy_animate).toHaveBeenCalled();
+                setTimeout(function() {
+                    expect(spy_animate).toHaveBeenCalled();
+                }, 2000);
             });
         });
     });
