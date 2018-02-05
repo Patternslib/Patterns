@@ -50,6 +50,7 @@ Breaking Changes
 - Fixed injection so that urls with data: in them don't get prefixed with a / anymore.
 - pat-checklist now uses Sets to collect its siblings, that should make it much faster with large lists of icons.
 - pat-carousel gets infinite option
+- pat-subform that also have the pat-autosubmit can be submitted pressing enter
 
 ## 2.1.2 - Aug. 29, 2017
 

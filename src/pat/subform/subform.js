@@ -20,8 +20,8 @@ define([
         init: function($el) {
             return $el.each(function() {
                 var $el = $(this);
-
                 $el.submit(_.submit);
+                $el.find('input').on('keyup keypress keydown', _.keyboard_handler);
                 $el.find("button[type=submit]").on("click", _.submitClicked);
                 return $el;
             });
@@ -73,6 +73,19 @@ define([
             } else {
                 _.scopedSubmit($this);
             }
+        },
+
+        keyboard_handler: function (ev) {
+            // If the user presses the enter key and
+            // we have an autosubmit form trigger the subform submission
+            if (ev.keyCode != 13) {
+                return;
+            }
+            var $subform = $(this).parents('.pat-subform');
+            if (!$subform.is('.pat-autosubmit')) {
+                return;
+            }
+            return $subform.submit();
         },
 
         submitClicked: function(ev) {
