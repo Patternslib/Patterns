@@ -61,13 +61,7 @@ define([
         },
 
         _findSiblings: function(elem, sel) {
-            var parents = $(elem).parents();
-            for (var i=0; i<parents.length; i++) {
-                var checkbox_children = $(parents[i]).find(sel);
-                if (checkbox_children.length != 0) {
-                    return checkbox_children;
-                }
-            }
+            return $(elem).closest('.pat-checklist').find(sel);
         },
         onChange: function(event) {
             var $trigger = event.data.trigger,
