@@ -155,6 +155,26 @@ define(["pat-checklist"], function() {
                 expect($(".select-all").prop("disabled")).toBe(true);
             });
         });
+
+        describe("The function _findSiblings", function() {
+            it("has a scope limited to the current form", function () {
+                utils.createCheckList();
+                // Duplicate the check list with all the items checked
+                $("#lab").append($("#lab").find('.pat-checklist').clone());
+                $(".pat-checklist").last().patternChecklist();
+                expect($('.pat-checklist').first().find(':checked').length).toBe(3);
+                expect($('.pat-checklist').last().find(':checked').length).toBe(3);
+
+                // Click the last form deselect all button
+                $('.pat-checklist').last().find('.deselect-all').click();
+                expect($('.pat-checklist').first().find(':checked').length).toBe(3);
+                expect($('.pat-checklist').last().find(':checked').length).toBe(0);
+                // Clicking again does not touch the selected checkboxes in the other fieldset
+                $('.pat-checklist').last().find('.deselect-all').click();
+                expect($('.pat-checklist').first().find(':checked').length).toBe(3);
+                expect($('.pat-checklist').last().find(':checked').length).toBe(0);
+            });
+        });
     });
 });
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
