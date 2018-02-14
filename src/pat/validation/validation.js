@@ -115,6 +115,14 @@ define([
                         $ref.data('pat-validation-refs', arr);
                     }
                     c[constraint] = $ref.val();
+                    /* This is a workaround to allow empty values as dates and only validate 
+                       if values are provided. There is probably a better way in validate, but
+                       I still have to find it.
+                       The following code removes the date validation constraint in case there 
+                       is no date to validate for. */
+                    if ($ref.val() === "") {
+                        constraints[name].date = false;
+                    }
                 }
             });
             return constraints;
@@ -172,7 +180,7 @@ define([
                 constraints = {};
             if (!name) { return; }
             constraints[name.replace(/\./g, '\\.')] = {
-                'presence': input.getAttribute('required') ? { 'message': '^'+this.options.message.required } : false,
+                'presence': input.getAttribute('required') ? { 'message': '^'+this.options.message.required } : {allowEmpty: true},
                 'email': type == 'email' ? { 'message': '^'+this.options.message.email } : false,
                 'numericality': type == 'number' ? true : false,
                 'datetime': type == 'datetime' ? { 'message': '^'+this.options.message.datetime } : false,
