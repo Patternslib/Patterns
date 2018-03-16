@@ -136,6 +136,7 @@ define([
                     if (ev.id === "pat-calendar-new-event") {
                         url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
                         registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
+                        $event.trigger("click.tooltip");
                         $event.on("pat-update", function (event, data) {
                             if (data.pattern === "tooltip" && data.hidden === true) {
                                 event.stopPropagation();
