@@ -54,6 +54,8 @@ define('pat-gallery', [
                 } else {
                     options.index = 0;
                 }
+                options.history = false;  // this fixes the reload on gallery close which was induced by a history back call.
+                
                 var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, images, options);
                 gallery.listen('gettingData', function(index, item) {
                     // Workaround for the fact that we don't know the image sizes.
