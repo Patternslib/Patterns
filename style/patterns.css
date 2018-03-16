@@ -141,7 +141,7 @@ button.pat-button[disabled="disabled"], button.pat-button:disabled {
   display: inline-block;
   overflow: hidden;
   border-radius: 50%;
-  border: 0.055556em solid rgba(0, 0, 0, 0.2);
+  border: 0.05556em solid rgba(0, 0, 0, 0.2);
   height: 2em;
   width: 2em; }
   .pat-avatar img {
@@ -315,7 +315,7 @@ form {
     /*Next 2 lines is a bizarre patch to make misbehaving FF hide the original dropdown button*/
     text-indent: 0.01px;
     text-overflow: '';
-    border-right: 0.35em solid rgba(0, 0, 0, 0);
+    border-right: 0.35em solid transparent;
     padding-right: 1em;
     background-repeat: no-repeat;
     background-position: right center;
@@ -714,7 +714,7 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+  -webkit-tap-highlight-color: transparent; }
   .select2-results ul.select2-result-sub {
     margin: 0;
     padding-left: 0; }
@@ -2883,7 +2883,7 @@ label.focus {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none; }
 
 .pswp__zoom-wrap {
@@ -3166,7 +3166,7 @@ a.pswp__share--facebook:before {
   position: absolute;
   top: -12px;
   right: 15px;
-  border: 6px solid rgba(0, 0, 0, 0);
+  border: 6px solid transparent;
   border-bottom-color: #FFF;
   -webkit-pointer-events: none;
   -moz-pointer-events: none;
