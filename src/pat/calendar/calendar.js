@@ -134,36 +134,25 @@ define([
                 eventAfterRender: function(ev, $event) {
                     var url = "";
                     if (ev.id === "pat-calendar-new-event") {
-                        /* Take the data from data-pat-calendar-tooltip to
-                         * configure a tooltip trigger element.
-                         */
-                        if (!cfg.tooltipOpen) {
-                            cfg.tooltipOpen = true;
-                            url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
-                            registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
-                            $event.trigger("click.tooltip");
-                            $event.on("pat-update", function (event, data) {
-                                if (data.pattern === "tooltip" && data.hidden === true) {
-                                    event.stopPropagation();
-                                    if ($(this).is(":visible")) {
-                                        $el.fullCalendar("removeEvents", ev.id);
-                                        cfg.tooltipOpen = false;
-                                    }
+                        url = utils.addURLQueryParameter(cfg.newEventURL, "date", ev.start.format());
+                        registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
+                        $event.on("pat-update", function (event, data) {
+                            if (data.pattern === "tooltip" && data.hidden === true) {
+                                event.stopPropagation();
+                                if ($(this).is(":visible")) {
+                                    $el.fullCalendar("removeEvents", ev.id);
                                 }
-                            });
-                        }
+                            }
+                        });
+
                     } else {
-                            url = ev.url;
-                            registry.scan($event.addClass("pat-modal").attr({"data-pat-modal": cfg.modalConfig}).attr({"href": url}));
-                            // $event.trigger("click.modal");
-                            $event.on("pat-update", function (event, data) {
-                                if (data.pattern === "modal" && data.hidden === true) {
-                                    event.stopPropagation();
-                                    if ($(this).is(":visible")) {
-                                        $el.fullCalendar("removeEvents", ev.id);
-                                    }
-                                }
-                            });
+                        url = ev.url;
+                        registry.scan($event.addClass("pat-tooltip").attr({"data-pat-tooltip": cfg.tooltipConfig}).attr({"href": url}));
+                        $event.on("pat-update", function (event, data) {
+                            if (data.pattern === "tooltip" && data.hidden === true) {
+                                event.stopPropagation();
+                            }
+                        });
                     }
                 },
                 dayClick: function (moment, ev, view) {
@@ -182,7 +171,6 @@ define([
                     }
                     var id = "pat-calendar-new-event";
                     $el.fullCalendar("removeEvents", id);
-                    cfg.tooltipOpen = false;
                     $el.fullCalendar("renderEvent", {
                         title: "New Event",
                         start: moment,
