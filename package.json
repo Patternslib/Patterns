@@ -36,7 +36,7 @@
     "jquery.browser": "0.1.0",
     "logging": "https://github.com/Patternslib/logging.git",
     "masonry-layout": "4.1.1",
-    "modernizr": "3.5.0",
+    "modernizr": "3.6.0",
     "moment": "2.19.3",
     "moment-timezone": "0.4.0",
     "parsleyjs": "2.7.2",
