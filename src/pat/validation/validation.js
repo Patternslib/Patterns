@@ -270,7 +270,13 @@ define([
         validateGroupedElement: function (name) {
             /* Handler which gets called for :checkbox and :radio elments. */
             var input = this.$el.find('[name="'+name+'"]')[0];
-            var error = validate(_.pick(validate.collectFormValues(this.$el), name), this.getConstraints(input));
+            var my_value = _.pick(validate.collectFormValues(this.$el), name);
+            /* my_value can be null. That is not recognised by validate as a valid 
+               empty value so it claims that this must be required. Setting it to false
+               correctly validates as not required. There must be a better fix */
+            if (my_value[name] === null) my_value[name] = false;
+
+            var error = validate(my_value, this.getConstraints(input));
             if (!error) {
                 this.removeError(input);
             } else {
