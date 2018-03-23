@@ -73,6 +73,7 @@ module.exports = {
     resolve: {
         modules: ['src', 'node_modules'],
         alias: {
+            "jquery": "jquery/dist/jquery.js",
             "google-code-prettify": "google-code-prettify/src/prettify.js",
             "jcrop": "jquery-jcrop/js/jquery.Jcrop.min.js",
             "jquery.anythingslider": "anythingslider/js/jquery.anythingslider.min.js",
