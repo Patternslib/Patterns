@@ -223,9 +223,16 @@ define(["jquery"], function($) {
     // XXX: In compat.js we include things for browser compatibility,
     // but these two seem to be only convenience. Do we really want to
     // include these as part of patterns?
-    String.prototype.startsWith = function(str) { return (this.match("^"+str) !== null); };
-    String.prototype.endsWith = function(str) { return (this.match(str+"$") !== null); };
-
+    if (!String.prototype.startsWith) {
+        String.prototype.startsWith = function (str) {
+            return (this.match("^" + str) !== null);
+        };
+    }
+    if (!String.prototype.endsWith) {
+        String.prototype.endsWith = function(str) {
+            return (this.match(str+"$") !== null);
+        };
+    }
 
     /******************************
 
