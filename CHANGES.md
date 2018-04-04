@@ -51,6 +51,7 @@ Breaking Changes
 - pat-checklist now uses Sets to collect its siblings, that should make it much faster with large lists of icons.
 - pat-carousel gets infinite option
 - pat-subform that also have the pat-autosubmit can be submitted pressing enter
+- fixed the way how the tab with is calculated in pat-tabs.
 
 ## 2.1.2 - Aug. 29, 2017
 
