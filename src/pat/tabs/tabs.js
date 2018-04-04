@@ -58,17 +58,18 @@ define([
 
                 // only execute if all tabs cannot fit comfortably in the container
                 if ( total_width >= container_width ) {
+                    this.$el.append('<span class="extra-tabs"></span>'); // create extra-tabs span
+                    var extra_tab_width = $('.extra-tabs').outerWidth(true);
                     total_width = 0;
                     tab_width = $($children[idx]).outerWidth(true);
                     // iterate through all visible tabs until we find the first obscured tab
-                    while ( (total_width+tab_width) < container_width ) {
+                    while ( (total_width+tab_width) < container_width - extra_tab_width) {
                         total_width += tab_width;
                         idx++;
                         tab_width = $($children[idx]).outerWidth(true);
                     }
                     $overflowing = this.$el.children(':gt('+(idx-1)+')');
                     // move obscured tabs to a special 'extra-tabs' span
-                    this.$el.append('<span class="extra-tabs"></span>'); // create extra-tabs span
                     this.$el.children().filter(".extra-tabs").append($overflowing); // move tabs into it
                 }
             }
