@@ -58,6 +58,7 @@ require.config({
         "pat-compat":               "core/compat",
         "pat-base":                 "core/base",
         "pat-date-picker":          "pat/date-picker/date-picker",
+        "pat-datetime-picker":      "pat/datetime-picker/datetime-picker",
         "pat-depends_parse":        "lib/depends_parse",
         "pat-dependshandler":       "lib/dependshandler",
         "pat-htmlparser":           "lib/htmlparser",
