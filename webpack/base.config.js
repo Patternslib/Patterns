@@ -99,6 +99,7 @@ module.exports = {
             "pat-compat": "core/compat.js",
             "pat-base": "core/base.js",
             "pat-date-picker": "pat/date-picker/date-picker.js",
+            "pat-datetime-picker": "pat/datetime-picker/datetime-picker.js",
             "pat-depends_parse": "lib/depends_parse.js",
             "pat-dependshandler": "lib/dependshandler.js",
             "pat-htmlparser": "lib/htmlparser.js",

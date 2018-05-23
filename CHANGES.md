@@ -52,6 +52,19 @@ Breaking Changes
 - pat-carousel gets infinite option
 - pat-subform that also have the pat-autosubmit can be submitted pressing enter
 - fixed the way how the tab with is calculated in pat-tabs.
+## 2.2 - unreleased
+
+- pat-masonry:
+  - Re-Layout on ``load`` events emitted on ``img`` nodes within the masonry scope.
+  - Do not depend on ``imagesloaded``.
+  - Update masonry to version 4.2.0.
+  - Align options with new version:
+    - Add options ``is-horizontal-order``, ``is-percent-position`` and ``is-resize``.
+    - Remove options ``visible-style`` and ``hidden-style``.
+    - Add Aliases from v4 (no ``is-*``) to v3 names (with ``is-`` for booleans), while keeping the v3 names. The patternslib parser does boolean casting for ``is-*`` options.
+- pat-datetime-picker: Add new pattern for setting the date and time.
+- pat-date-picker: Remove the dependency on ``moment-timezone-data`` - it's not used and there is no use in a date picker anyways.
+
 
 
 ## 2.1.2 - Aug. 29, 2017
