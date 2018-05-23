@@ -87,8 +87,8 @@
     "webpack-dev-server": "^2.8.2",
     "webpack-jasmine-html-runner-plugin": "^0.8.0",
     "webpack-karma-jasmine": "^1.0.4",
-    "webpack-merge": "",
-    "wrapper-webpack-plugin": "",
+    "webpack-merge": "^4.1.2",
+    "wrapper-webpack-plugin": "^1",
     "yo": "^1.4.8"
   },
   "scripts": {
