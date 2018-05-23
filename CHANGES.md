@@ -53,6 +53,7 @@ Breaking Changes
 - pat-subform that also have the pat-autosubmit can be submitted pressing enter
 - fixed the way how the tab with is calculated in pat-tabs.
 
+
 ## 2.1.2 - Aug. 29, 2017
 
 - pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
