@@ -41,7 +41,7 @@
     "moment-timezone": "0.5.13",
     "parsleyjs": "2.7.2",
     "photoswipe": "4.1.0",
-    "pikaday": "1.6.1",
+    "pikaday": "^1.6.1",
     "prefixfree": "",
     "select2": "3.4.5",
     "showdown": "1.7.2",
