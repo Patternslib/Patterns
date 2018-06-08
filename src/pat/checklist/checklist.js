@@ -160,7 +160,7 @@ define([
                 result.add(item);
                 label_and_fieldset = _._getLabelAndFieldset(item);
                 label_and_fieldset.forEach(function(item) {
-                    result.add(item)
+                    result.add(item);
                 });
             });
             return result;
