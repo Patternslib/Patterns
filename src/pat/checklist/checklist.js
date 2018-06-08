@@ -94,23 +94,22 @@ define([
             if (all_deselects.length === 0) {
                 all_deselects = $(options.deselect);
             }
-            for (var i=0; i<all_selects.length; i++) {
-                siblings = _._findSiblings(all_selects[i], "input[type=checkbox]:visible");
+            all_selects.each(function (idx, el) {
+                siblings = _._findSiblings(el, "input[type=checkbox]:visible");
                 if (siblings && siblings.filter(":not(:checked)").length === 0) {
-                    $(all_selects[i]).prop("disabled", true);
+                    $(el).prop("disabled", true);
                 } else {
-                    $(all_selects[i]).prop("disabled", false);
+                    $(el).prop("disabled", false);
                 }
-            }
-            for (var i=0; i< all_deselects.length; i++) {
-                siblings = _._findSiblings(all_deselects[i], "input[type=checkbox]:visible");
+            });
+            all_deselects.each(function (idx, el) {
+                siblings = _._findSiblings(el, "input[type=checkbox]:visible");
                 if (siblings && siblings.filter(":checked").length === 0) {
-                    $(all_deselects[i]).prop("disabled", true);
+                    $(el).prop("disabled", true);
                 } else {
-                    $(all_deselects[i]).prop("disabled", false);
+                    $(el).prop("disabled", false);
                 }
-            }
-
+            });
         },
 
         onSelectAll: function(event) {
