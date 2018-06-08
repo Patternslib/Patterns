@@ -120,8 +120,8 @@ define([
             /* look up checkboxes which are related to my button by going up one parent
             at a time until I find some for the first time */
             var checkbox_siblings = _._findSiblings(button_clicked, "input[type=checkbox]:not(:checked)");
-            checkbox_siblings.each(function () {
-                $(this).prop("checked", true).trigger("change");
+            checkbox_siblings.each(function (idx, el) {
+                $(el).prop("checked", true).trigger("change");
             });
 
             event.preventDefault();
