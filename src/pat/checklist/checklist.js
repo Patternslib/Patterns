@@ -22,7 +22,7 @@ define([
 
         init: function($el, opts) {
             function _init() {
-                return $el.each(function() {
+                result = $el.each(function() {
                     var $trigger = $(this),
                         options = parser.parse($trigger, opts, false);
 
@@ -32,8 +32,7 @@ define([
                     $trigger.scopedFind(options.deselect)
                         .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
                     $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
-                    // update select/deselect button status
-                    _.onChange({data: {trigger: $trigger}});
+
 
                     $trigger.find("input[type=checkbox]")
                         .each(_._onChangeCheckbox)
@@ -44,7 +43,10 @@ define([
                         .on("change.pat-checklist", _._onChangeRadio);
 
                 });
-            };
+                // update select/deselect button status
+                _.onChange({data: {trigger: $el}});
+                return result;
+            }
             $el.on('patterns-injected', _init);
             return _init();
         },
