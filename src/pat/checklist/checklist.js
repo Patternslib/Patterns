@@ -33,7 +33,6 @@ define([
                         .on("click.pat-checklist", {trigger: $trigger}, _.onDeselectAll);
                     $trigger.on("change.pat-checklist", {trigger: $trigger}, _.onChange);
 
-
                     $trigger.find("input[type=checkbox]")
                         .each(_._onChangeCheckbox)
                         .on("change.pat-checklist", _._onChangeCheckbox);
@@ -98,7 +97,7 @@ define([
             }
             all_selects.each(function (idx, el) {
                 siblings = _._findSiblings(el, "input[type=checkbox]:visible");
-                if (siblings && siblings.filter(":not(:checked)").length === 0) {
+                if (siblings.filter(":not(:checked)").length === 0) {
                     $(el).prop("disabled", true);
                 } else {
                     $(el).prop("disabled", false);
@@ -106,7 +105,7 @@ define([
             });
             all_deselects.each(function (idx, el) {
                 siblings = _._findSiblings(el, "input[type=checkbox]:visible");
-                if (siblings && siblings.filter(":checked").length === 0) {
+                if (siblings.filter(":checked").length === 0) {
                     $(el).prop("disabled", true);
                 } else {
                     $(el).prop("disabled", false);
