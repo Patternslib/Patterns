@@ -58,7 +58,7 @@
 
             // Initialize
             this.initMasonry();
-
+            this.layout();
             // Update if something gets injected inside the pat-masonry
             this.$el
                 .on("patterns-injected.pat-masonry",
