@@ -61,7 +61,24 @@ define([
         },
 
         _findSiblings: function(elem, sel) {
-            return $(elem).closest('.pat-checklist').find(sel);
+            // Looks for the closest elements that match the `sel` selector
+            var checkbox_children, $parent;
+            var parents = $(elem).parents();
+            for (var i=0; i<parents.length; i++) {
+                $parent = $(parents[i]);
+                checkbox_children = $(parents[i]).find(sel);
+                if (checkbox_children.length != 0) {
+                    return checkbox_children;
+                }
+                if ($parent.hasClass('pat-checklist')) {
+                    // we reached the top node and did not find any match,
+                    // return an empty match
+                    return $([]);
+                }
+            }
+            // This should not happen because because we expect `elem` to have
+            // a .pat-checklist parent
+            return $([]);
         },
         onChange: function(event) {
             var $trigger = event.data.trigger,
