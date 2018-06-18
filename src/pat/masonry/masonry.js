@@ -12,8 +12,8 @@
             "pat-parser",
             "pat-base",
             "pat-utils",
-            "imagesloaded",
-            "masonry"
+            "masonry",
+            "imagesloaded"
             ], function() {
                 return factory.apply(this, arguments);
         });
