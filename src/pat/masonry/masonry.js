@@ -12,14 +12,15 @@
             "pat-parser",
             "pat-base",
             "pat-utils",
-            "masonry"
+            "masonry",
+            "imagesloaded"
             ], function() {
                 return factory.apply(this, arguments);
         });
     } else {
-        factory(root.$, root.patterns, root.patterns.Parser, root.Base, root.Masonry);
+        factory(root.$, root.patterns, root.patterns.Parser, root.Base, root.Masonry, root.imagesLoaded);
     }
-}(this, function($, logger, registry, Parser, Base, utils, Masonry) {
+}(this, function($, logger, registry, Parser, Base, utils, Masonry, imagesLoaded) {
     "use strict";
     var log = logger.getLogger("pat.masonry");
     var parser = new Parser("masonry");
@@ -55,10 +56,23 @@
 
         init: function masonryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
-
             // Initialize
             this.initMasonry();
-            this.layout();
+
+            var imgLoad = imagesLoaded(this.$el);
+            imgLoad.on("progress", function() {
+                if (! this.msnry) {
+                    this.initMasonry();
+                }
+                this.quicklayout();
+            }.bind(this));
+            imgLoad.on("always", function () {
+                if (! this.msnry) {
+                    this.initMasonry();
+                }
+                this.layout();
+            }.bind(this));
+
             // Update if something gets injected inside the pat-masonry
             this.$el
                 .on("patterns-injected.pat-masonry",
