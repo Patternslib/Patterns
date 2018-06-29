@@ -472,7 +472,7 @@ define([
                     log.debug("remove due to search-text="+searchText, $event);
                     return false;
                 }
-                if (shownCats.length === 0) {
+                if ($el.$catControls.length === 0) {
                     // In case we don't use filter categories, always return all events
                     return true;
                 }
