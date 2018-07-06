@@ -20,6 +20,7 @@ define([
     parser.addArgument("ajax-url", "");
     parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
     parser.addArgument("max-selection-size", 0);
+    parser.addArgument("minimum-input-length", 2);
     parser.addArgument("placeholder", function($el) { return $el.attr("placeholder") || "Enter text"; });
     parser.addArgument("prefill", function($el) { return $el.val(); });
     parser.addArgument("prefill-json", ""); // JSON format for pre-filling
@@ -50,7 +51,8 @@ define([
                 placeholder: $el.attr("readonly") ? "" : pat_config.placeholder,
                 tokenSeparators: [","],
                 openOnEnter: false,
-                maximumSelectionSize: pat_config.maxSelectionSize
+                maximumSelectionSize: pat_config.maxSelectionSize,
+                minimumInputLength: pat_config.minimumInputLength
             };
 
             if (pat_config.selectionClasses) {
@@ -99,7 +101,7 @@ define([
         },
 
         configureInput: function ($el, pat_config, select2_config) {
-            var d, data, words, ids = [], prefill;
+            var d, data, words = [], ids = [], prefill;
 
             select2_config.createSearchChoice = function(term, data) {
                 if (pat_config.allowNewWords) {
@@ -122,10 +124,24 @@ define([
                 if (! Array.isArray(words)) {
                     words = $.map(words, function (v, k) { return {id: k, text: v}; });
                 }
-            } else {
-                words = pat_config.words ? pat_config.words.split(/\s*,\s*/) : [];
+            } 
+            if (pat_config.words) {
+                words = pat_config.words.split(/\s*,\s*/);
+                words = $.map(words, function (v) { return {id: v, text: v}; });
             }
-            select2_config.tags = words;
+ 
+            // Per Cornelis, if our max lenght is 1, we want select style. If it is larger, we want tag style
+            // Now this is somewhat fishy because so far, we always configured tag style by setting config.tags = words.
+            // Even if words was [], we would get a tag stylee select
+            // That was then properly working with ajax if configured.
+
+            if (pat_config.maxSelectionSize == 1) {
+                select2_config.data = words;
+                // We allow exactly one value, use dropdown styles. How do we feed in words?
+            } else {
+                // We allow multiple values, use the pill style - called tags in select 2 speech
+                select2_config.tags = words;                
+            }
 
             if (pat_config.prefill && pat_config.prefill.length) {
                 prefill = pat_config.prefill.split(",");
@@ -136,6 +152,7 @@ define([
                     for (i=0; i<values.length; i++) {
                         data.push({id: values[i], text: values[i]});
                     }
+                    if (pat_config.maxSelectionSize == 1) data = data[0];
                     callback(data);
                 };
             }
@@ -168,6 +185,7 @@ define([
                                 _data.push({id: d, text: data[d]});
                             }
                         }
+                        if (pat_config.maxSelectionSize == 1) _data = _data[0];
                         callback(_data);
                     };
                 } catch(SyntaxError) {
@@ -177,7 +195,7 @@ define([
 
             if ((pat_config.ajax) && (pat_config.ajax.url)) {
                 select2_config = $.extend(true, {
-                    minimumInputLength: 2,
+                    minimumInputLength: pat_config.minimumInputLength,
                     ajax: {
                         url: pat_config.ajax.url,
                         dataType: pat_config.ajax["data-type"],

@@ -53,6 +53,8 @@ Breaking Changes
 - pat-carousel gets infinite option
 - pat-subform that also have the pat-autosubmit can be submitted pressing enter
 - fixed the way how the tab with is calculated in pat-tabs.
+- improve pat-autosuggest to display max one selects as select instead of input
+
 ## 2.2 - unreleased
 
 - pat-masonry:
