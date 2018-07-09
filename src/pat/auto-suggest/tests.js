@@ -149,8 +149,8 @@ define(["pat-autosuggest"], function(pattern) {
                 expect($(".select2-input").length).toBe(1);
                 expect($(".select2-selection-limit").length).toBe(0);
                 $(".select2-input").val("apple").click();
-                expect($(".select2-selection-limit").length).toBe(1);
-                expect($(".select2-selection-limit").text()).toBe("You can only select 1 item");
+                // Now we have a select style control. It has a close button
+                expect($(".select2-search-choice-close").length).toBe(1);
                 utils.removeSelect2();
             });
         });

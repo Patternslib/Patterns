@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Demo page</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Demo page</title>
         <link rel="stylesheet" href="/style/common.css" type="text/css">
-		<link rel="stylesheet" href="select2.css" type="text/css">
+    <link rel="stylesheet" href="select2.css" type="text/css">
         <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-	<body>
+  </head>
+  <body>
          <h2>Demo</h2>
         <fieldset>
             <label>In this example the words 'Apples', 'Oranges', 'Pears' and 'Bananas' will be suggested, although you may also enter your own text.
-                <input class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas" type="text"></input>
+                <input id="a1" class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas; pre-fill: Oranges;maximum-selection-size: 1" type="text"></input>
             </label>
 
-            <label>Here you may only choose one of the suggested cars, and nothing else.
-                <input class="pat-autosuggest" placeholder="Pick a car"
+            <label>Here you may only choose one of the suggested cars, and nothing else. Vocabulary as list.
+                <input id="a2"  class="pat-autosuggest" placeholder="Pick a car"
                         data-pat-autosuggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
-                                            allow-new-words: false; max-selection-size: 1" type="text"></input>
+                                            allow-new-words: false; max-selection-size: 1;" type="text"></input>
             </label>
 
             <label>An example with pre-filled words:
-                <input class="pat-autosuggest" placeholder="Pick a car"
+                <input id="a3" class="pat-autosuggest" placeholder="Pick a car"
                     data-pat-autosuggest="pre-fill: Toyota;
                                             words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
                                             allow-new-words: false;" type="text"></input>
             </label>
 
             <label>An example with pre-filled words in JSON format:
-                <input class="pat-autosuggest" placeholder="Pick a character"
+                <input  id="a4" class="pat-autosuggest" placeholder="Pick a character"
+                    data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}, {"id": "goofy", "text":"Goofy"}]; 
+                    prefill-json: {"john-snow":"John Snow", "tywin-lannister": "Tywin Lannister"};
+                    allow-new-words: false;' type="text"></input>
+            </label>
+
+            <label>An example with pre-filled words in JSON format. Only one pick allowed:
+                <input  id="a4" class="pat-autosuggest" placeholder="Pick a character"
                     data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}];
-                                            prefill-json: {"john-snow":"John Snow"};
+                    max-selection-size: 1;
+                    prefill-json: {"john-snow":"John Snow"};
+                    allow-new-words: false;' type="text"></input>
+            </label>
+
+            <label>An example with ajax allowing one:
+                <input  id="a5" class="pat-autosuggest" placeholder="Pick a character"
+                    data-pat-autosuggest='ajax-url: data.json; max-selection-size: 1;
                                             allow-new-words: false;' type="text"></input>
             </label>
+            <label>An example with ajax allowing more than one:
+                <input  id="a6" class="pat-autosuggest" placeholder="Pick a character"
+                    data-pat-autosuggest='ajax-url: data.json;
+                                            allow-new-words: false;' type="text"></input>
+            </label>
+
         </fieldset>
-	</body>
+  </body>
 </html>
