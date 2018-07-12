@@ -80,6 +80,10 @@ define([
                             if (value===null)
                                 return false;
                             return value.indexOf(node.value)!=-1;
+                        case "=~":
+                            if (value===null || !node.value)
+                                return false;
+                            return node.value.indexOf(value)!=-1;
                     }
                     break;
                 case "truthy":
