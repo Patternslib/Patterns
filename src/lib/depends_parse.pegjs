@@ -49,6 +49,7 @@ equal_comparison "comparison operator"
   = "="
   / "!="
   / "~="
+  / "=~"
 
 order_comparison "comparison operator"
   = "<="
