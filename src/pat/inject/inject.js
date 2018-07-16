@@ -115,13 +115,21 @@ define([
                     if (!cfgs[0].delay) {
                         inject.onTrigger.apply($el[0], []);
                     } else {
+                        // generate UID
+                        var uid = Math.random().toString(36);
+                        $el.attr('data-pat-inject-uid', uid);
+
                         // function to trigger the autoload and mark as triggered
-                        function delayed_trigger() {
+                        function delayed_trigger(uid) {
+                            // Check if the element has been removed from the dom
+                            var still_there = $("[data-pat-inject-uid='"+uid+"']");
+                            if (still_there.length == 0) return false;
+
                             $el.data("pat-inject-autoloaded", true);
                             inject.onTrigger.apply($el[0], []);
                             return true;
                         }
-                        window.setTimeout(delayed_trigger, cfgs[0].delay);
+                        window.setTimeout(delayed_trigger.bind(null, uid), cfgs[0].delay);
                     }
                     break;
                 case "autoload-visible":
@@ -132,7 +140,7 @@ define([
                     break;
                 }
             }
-
+ 
             log.debug("initialised:", $el);
             return $el;
         },
