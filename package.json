@@ -28,6 +28,7 @@
     "ev-emitter": "1.1.0",
     "fullcalendar": "2.9.1",
     "google-code-prettify": "1.0.4",
+    "@horizon/client": "",
     "imagesloaded": "4.1.4",
     "jquery": "1.11.0",
     "jquery-form": "4.2.2",
