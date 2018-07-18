@@ -117,6 +117,9 @@ watch::
 
 serve:: all _serve
 
+push: 
+	cd push && hz serve --dev
+
 _serve:
 	npm run start
 	@printf "\nBundle built\n\n"

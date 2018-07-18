@@ -1,34 +1,34 @@
 const horizon = new Horizon()
-const notifications = horizon('notifications')
+const push_markers = horizon('push_marker')
 
 const app = new Vue({
   el: '#app',
   template: `
     <div>
-      <div id="chatMessages">
+      <div id="pushMarkers">
         <ul>
-          <li v-for="notification in notifications">
-            {{ notification.title }}
+          <li v-for="push_marker in push_markers">
+            {{ push_marker.title }}
           </li>
         </ul>
       </div>
       <div id="input">
-        <input @keyup.enter="sendNotification" ></input>
+        <input @keyup.enter="sendPushMarker" ></input>
       </div>
     </div>
   `,
   data: {
-    // Our dynamic list of chat messages
-    notifications: []
+    // Our dynamic list of pushMarkers
+    push_markers: []
   },
   created() {
-    // Subscribe to messages
-    notifications.order('datetime', 'descending').limit(10).watch()
-    .subscribe(allNotifications => {
+    // Subscribe to push_markers
+    push_markers.order('datetime', 'descending').limit(10).watch()
+    .subscribe(allPushMarkers => {
         // Make a copy of the array and reverse it, so newest images push into
         // the messages feed from the bottom of the rendered list. (Otherwise
         // they appear initially at the top and move down)
-        this.notifications = [...allNotifications].reverse()
+        this.push_markers = [...allPushMarkers].reverse()
       },
       // When error occurs on server
       error => console.log(error)
@@ -45,8 +45,8 @@ const app = new Vue({
     )
   },
   methods: {
-    sendNotification(event) {
-      notifications.store({
+    sendPushMarker(event) {
+      push_markers.store({
         title: event.target.value, // Current value inside <input> tag
         datetime: new Date() // Warning clock skew!
       }).subscribe(
