@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.0.1 - unreleased
+
+Features
+~~~~~~~~
+
+- Added support for a push subsystem using reethinkdb and horizon. 
+  That allows us to trigger an injection by sending a push_marker to all connected browsers. 
+  (This is still in an evaluation state)
+
+
 ## 3.0.0 - unreleased
 
 Breaking Changes
