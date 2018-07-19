@@ -60,3 +60,65 @@ const app = new Vue({
     }
   }
 })
+
+const desktop_notifications = horizon('desktop_notification')
+
+const desktop_app = new Vue({
+  el: '#desktop-app',
+  template: `
+    <div>
+      <div id="desktopNotifications">
+        <ul>
+          <li v-for="note in desktop_notifications">
+            {{ note.title }}
+          </li>
+        </ul>
+      </div>
+      <div id="input">
+        <input @keyup.enter="sendDesktopNotification" ></input>
+      </div>
+    </div>
+  `,
+  data: {
+    // Our dynamic list of desktopNotifications
+    desktop_notifications: []
+  },
+  created() {
+    // Subscribe to push_markers
+    desktop_notifications.order('datetime', 'descending').limit(10).watch()
+    .subscribe(allDesktopNotifications => {
+        // Make a copy of the array and reverse it, so newest images push into
+        // the messages feed from the bottom of the rendered list. (Otherwise
+        // they appear initially at the top and move down)
+        this.desktop_notifications = [...allDesktopNotifications].reverse()
+      },
+      // When error occurs on server
+      error => console.log(error)
+    )
+
+    // Triggers when client successfully connects to server
+    horizon.onReady().subscribe(
+      () => console.log("Connected to Horizon server")
+    )
+
+    // Triggers when disconnected from server
+    horizon.onDisconnected().subscribe(
+      () => console.log("Disconnected from Horizon server")
+    )
+  },
+  methods: {
+    sendDesktopNotification(event) {
+      desktop_notifications.store({
+        title: event.target.value, // Current value inside <input> tag
+        datetime: new Date() // Warning clock skew!
+      }).subscribe(
+          // Returns id of saved objects
+          result => console.log(result),
+          // Returns server error message
+          error => console.log(error)
+        )
+        // Clear input for next message
+        event.target.value = ''
+    }
+  }
+})
