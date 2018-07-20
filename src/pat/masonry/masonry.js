@@ -36,6 +36,7 @@
     parser.addArgument("is-percent-position", false);  // set item positions in percent values. items will not transition on resize.
     parser.addArgument("is-resize", true);  // adjust sizes and position on resize.
     parser.addArgument("item-selector", ".item");
+    parser.addArgument("min-width");  // Don't render if window is smaller than this
     parser.addArgument("stamp", "");
     parser.addArgument("transition-duration", "0.4s");
 
@@ -47,7 +48,7 @@
     parser.addAlias("horizontal-order", "is-horizontal-order");
     parser.addAlias("percent-position", "is-percent-position");
     parser.addAlias("resize", "is-resize");
-
+ 
 
 
     return Base.extend({
@@ -56,6 +57,7 @@
 
         init: function masonryInit($el, opts) {
             this.options = parser.parse(this.$el, opts);
+            if (this._tooSmall()) return; // if the device is small, we want to save power and not use masonry
             // Initialize
             this.initMasonry();
 
@@ -90,7 +92,13 @@
             };
             observer.observe(document.body, config);
         },
-
+        _tooSmall: function () {
+            if (this.options.minWidth && $(window).width() < this.options.minWidth ) {
+                console.log("Too small, masonry not rendered.")
+                return true;
+            }
+            return false;
+        },
         initMasonry: function () {
             var containerStyle;
             try {
