@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.1 - unreleased
+## 3.0.0a5 - unreleased
 
 Features
 ~~~~~~~~
@@ -10,7 +10,7 @@ Features
   (This is still in an evaluation state)
 
 
-## 3.0.0 - unreleased
+## 3.0.0a1 - unreleased
 
 Breaking Changes
 ~~~~~~~~~~~~~~~~
