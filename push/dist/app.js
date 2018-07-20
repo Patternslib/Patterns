@@ -84,7 +84,7 @@ const desktop_app = new Vue({
     desktop_notifications: []
   },
   created() {
-    // Subscribe to push_markers
+    // Subscribe to desktop_notifications
     desktop_notifications.order('datetime', 'descending').limit(10).watch()
     .subscribe(allDesktopNotifications => {
         // Make a copy of the array and reverse it, so newest images push into
