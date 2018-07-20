@@ -74,6 +74,7 @@ module.exports = {
         modules: ['src', 'node_modules'],
         alias: {
             "jquery": "jquery/dist/jquery.js",
+            "push-kit": "core/push_kit.js",
             "google-code-prettify": "google-code-prettify/src/prettify.js",
             "jcrop": "jquery-jcrop/js/jquery.Jcrop.min.js",
             "jquery.anythingslider": "anythingslider/js/jquery.anythingslider.min.js",

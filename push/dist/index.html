@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    <link rel="stylesheet" href="https://purecss.io/combo/1.18.13?/css/layouts/blog.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/horizon/horizon.js"></script>
+  </head>
+  <body>
+    <div class="pure-g" id="layout">
+      <div class="sidebar pure-u-1 pure-u-md-1-4">
+        <div class="header">
+            <h1 class="brand-title">Push Trigger</h1>
+            <h2 class="brand-tagline">Send push markers to proto</h2>
+
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="pure-button" href="http://localhost:4003" target="_blank">Open proto</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+      </div>
+      <div class="content pure-u-1 pure-u-md-3-4">
+        <div class="push-marker-forms">
+          <div class="posts">
+            <h1 class="content-subhead">Websocket client</h1>
+            <section class="post">
+              <h1>Send push markers</h1>
+              <p>Anything you type here will be sent via the push mechanism to the frontend. A push event will be triggered on the body element and the string you paste here will be given to the event as data, the push marker. If you have a pattern listening for this push_marker, it will trigger.</p>
+              <div id="app"></div>
+            </section>
+
+            <h1 class="content-subhead">Websocket client</h1>
+            <section class="post">
+              <h1>Send desktop notification</h1>
+              <p>What you type here will be sent as desktop notification.</p>
+              <div id="desktop-app"></div>
+            </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.25/vue.js"></script>
+    <script type="text/javascript" src="/app.js"></script>
+  </body>
+</html>
