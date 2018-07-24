@@ -331,7 +331,7 @@ define([
              * form) you would expect to populate with initial placeholder
              */
             var $form = cfg.$target.parents('form');
-            if ($form.size() !== 0 && cfg.$target.data('initial-value') === undefined) {
+            if ($form.length !== 0 && cfg.$target.data('initial-value') === undefined) {
                 cfg.$target.data('initial-value', cfg.$target.html());
                 $form.on('reset', function() {
                     cfg.$target.html(cfg.$target.data('initial-value'));

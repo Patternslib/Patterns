@@ -235,15 +235,15 @@ define(["pat-toggle", "pat-registry"], function(pattern, registry) {
             });
 
             it('by default toggles on click event', function() {
-                expect($('.toggled', this.$el).size()).toEqual(0);
+                expect($('.toggled', this.$el).length).toEqual(0);
 
                 // scan dom for patterns
                 registry.scan(this.$el);
-                expect($('.toggled', this.$el).size()).toEqual(0);
+                expect($('.toggled', this.$el).length).toEqual(0);
                 $('.pat-toggle', this.$el).trigger('click');
-                expect($('.toggled', this.$el).size()).toEqual(1);
+                expect($('.toggled', this.$el).length).toEqual(1);
                 $('.pat-toggle', this.$el).trigger('click');
-                expect($('.toggled', this.$el).size()).toEqual(0);
+                expect($('.toggled', this.$el).length).toEqual(0);
             });
         });
 
@@ -265,11 +265,11 @@ define(["pat-toggle", "pat-registry"], function(pattern, registry) {
             });
 
             it('can also listen to custom event', function() {
-                expect($('.toggled', this.$el).size()).toEqual(0);
+                expect($('.toggled', this.$el).length).toEqual(0);
                 registry.scan(this.$el);
-                expect($('.toggled', this.$el).size()).toEqual(0);
+                expect($('.toggled', this.$el).length).toEqual(0);
                 $('.pat-toggle', this.$el).trigger('onmouseenter');
-                expect($('.toggled', this.$el).size()).toEqual(1);
+                expect($('.toggled', this.$el).length).toEqual(1);
             });
 
         });
