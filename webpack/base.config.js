@@ -85,7 +85,6 @@ module.exports = {
         modules: ['src', 'node_modules'],
         alias: {
             "jquery": "jquery/dist/jquery.js",
-//            "jquery-migrate": "jquery-migrate/dist/jquery-migrate.js",
             "google-code-prettify": "google-code-prettify/src/prettify.js",
             "jcrop": "jquery-jcrop/js/jquery.Jcrop.min.js",
             "jquery.anythingslider": "anythingslider/js/jquery.anythingslider.min.js",
