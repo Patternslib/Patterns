@@ -47,7 +47,7 @@ module.exports = {
                         query: 'AbstractChosen'
                     },
                     {
-                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window',
+                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window,jqmigrate=jquery-migrate',
                     }
                 ]
             },
@@ -55,7 +55,7 @@ module.exports = {
                 test: /jquery.anythingslider|jcrop|jquery.placeholder|jquery.textchange|parsley|parsley.extend|select2|spectrum|spectrum-colorpicker/,
                 use: [
                     {
-                      loader: 'imports-loader?jquery',
+                      loader: 'imports-loader?jquery,jqmigrate=jquery-migrate',
                     }
                 ]
             },
@@ -68,12 +68,24 @@ module.exports = {
                 ]
             },
             // { test: /pat-calendar/, loader: 'imports-loader?fullcalendar' }
+            {
+                issuer: [
+                    '/../tests/specs/*/*.js$/',
+                    '../src/pat/*/tests.js$/'
+                ],
+                use: [
+                    {
+                        loader: 'imports-loader?jQuery=jquery,$=jquery,jqmigrate=jquery-migrate'
+                    }
+                ]
+            }
         ]
     },
     resolve: {
         modules: ['src', 'node_modules'],
         alias: {
             "jquery": "jquery/dist/jquery.js",
+//            "jquery-migrate": "jquery-migrate/dist/jquery-migrate.js",
             "google-code-prettify": "google-code-prettify/src/prettify.js",
             "jcrop": "jquery-jcrop/js/jquery.Jcrop.min.js",
             "jquery.anythingslider": "anythingslider/js/jquery.anythingslider.min.js",

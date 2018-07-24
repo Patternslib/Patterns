@@ -20,6 +20,11 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 $("#lab").empty();
             });
 
+            it("check jquery-migrate version", function () {
+                //require('jquery-migrate');
+                expect($.migrateVersion).toBe('1.4.1x');
+            });
+
             it("allows you to specify the href to be applied to the clicked element after injection", function () {
                 var $a = $("<a class=\"pat-inject\" data-pat-inject=\"next-href: http://patternslib.com\" href=\"/src/pat/inject/inject-sources.html#pos-1\">link</a>");
                 var $div = $("<div id=\"pos-1\" />");
