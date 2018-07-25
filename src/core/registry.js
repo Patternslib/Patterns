@@ -23,8 +23,7 @@ define([
     "pat-utils",
     // below here modules that are only loaded
     "pat-compat",
-    "pat-jquery-ext",
-    "jquery-migrate" 
+    "pat-jquery-ext"
 ], function($, _, logger, utils) {
     var log = logger.getLogger("registry"),
         disable_re = /patterns-disable=([^&]+)/g,
