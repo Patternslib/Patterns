@@ -154,6 +154,7 @@ define([
             $(document).off(".pat-modal");
             $el.remove();
             $('body').removeClass("modal-active");                
+            $('body').removeClass("modal-panel");                
         },
         destroy_inject: function() {
             var $el = this.$el;
@@ -164,12 +165,14 @@ define([
                     $(document).off(".pat-modal");
                     $el.remove();
                     $('body').removeClass("modal-active");                
+                    $('body').removeClass("modal-panel");                
                 });
             } else {
                 // if working without injection, destroy right away.
                 $(document).off(".pat-modal");
                 $el.remove();
                 $('body').removeClass("modal-active");                
+                $('body').removeClass("modal-panel");                
             }
         }   
     });
