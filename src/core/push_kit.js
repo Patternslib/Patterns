@@ -19,6 +19,17 @@ define([
 		        console.log("Horizon push support initialised on " + pps)
 		    });
 		    horizon.connect();
+		    var status = horizon.status();
+		    if (status._value.type == 'unconnected') {
+		        console.log("Connection failed to Horizon server. No push support available.");
+		        return;	    	
+		    } else if (status._value.type == 'disconnected') {
+		        console.log("Connection disconnected to Horizon server. No push support available.");
+		        return;    	
+		    } else if (status._value.type == 'error') {
+		        console.log("Connection failed to to an error. No push support available.");
+		        return;    	
+		    } 
 		    const push_markers = horizon("push_marker");
 		    push_markers.order("datetime", "descending").watch().subscribe(
 		      (items) => {
