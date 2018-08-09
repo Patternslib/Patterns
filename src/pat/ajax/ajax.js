@@ -96,8 +96,8 @@ define([
                     context: $el,
                     data: $el.data("pat-ajax.clicked-data"),
                     url: cfg.url,
-                    fail: onError,
-                    done: onSuccess
+                    error: onError,
+                    success: onSuccess
                 };
 
             $el.removeData("pat-ajax.clicked-data");
