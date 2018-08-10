@@ -51,8 +51,9 @@ define([
 
         markBasedOnFragment: function(ev) {
             // Get the fragment from the URL and set the corresponding this.$el as current
-            var $target = $('#' + window.location.hash.substr(1));
-            if ($target.length > 0) {
+            const fragment = window.location.hash.substr(1);
+            if (fragment) {
+                var $target = $('#' + fragment);
                 this.$el.addClass("current"); // the element that was clicked on
                 $target.addClass("current");
             }
