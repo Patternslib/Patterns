@@ -176,6 +176,25 @@ define(["jquery"], function($) {
         });
     };
 
+    //Work around warning for jQuery 3.x:
+    //JQMIGRATE: jQuery.fn.offset() requires an element connected to a document
+    $.fn.safeOffset = function() {
+        var docElem,
+            elem = this[ 0 ],
+            origin = { top: 0, left: 0 };
+
+	if ( !elem || !elem.nodeType ) {
+            return origin;
+	}
+
+        docElem = ( elem.ownerDocument || document).documentElement;
+        if ( !jQuery.contains(docElem, elem)) {
+            return origin;
+        }
+
+        return jQuery.fn.offset.apply( this, arguments );
+    };
+
     //Make absolute location
     $.fn.setPositionAbsolute = function(element,offsettop,offsetleft) {
         return this.each(function() {
@@ -183,7 +202,7 @@ define(["jquery"], function($) {
             // dynamically since every browser has different settings
             var $this = $(this);
             var thiswidth = $(this).width();
-            var    pos   = element.offset();
+            var    pos   = element.safeOffset();
             var    width = element.width();
             var    height = element.height();
             var setleft = (pos.left + width - thiswidth + offsetleft);
@@ -202,10 +221,10 @@ define(["jquery"], function($) {
             var $ancestor = $(this).closest(selector);
             if ($ancestor.length && $ancestor.css("position") !== "static") {
                 var $child = $(this);
-                var childMarginEdgeLeft = $child.offset().left - parseInt($child.css("marginLeft"), 10);
-                var childMarginEdgeTop = $child.offset().top - parseInt($child.css("marginTop"), 10);
-                var ancestorPaddingEdgeLeft = $ancestor.offset().left + parseInt($ancestor.css("borderLeftWidth"), 10);
-                var ancestorPaddingEdgeTop = $ancestor.offset().top + parseInt($ancestor.css("borderTopWidth"), 10);
+                var childMarginEdgeLeft = $child.safeOffset().left - parseInt($child.css("marginLeft"), 10);
+                var childMarginEdgeTop = $child.safeOffset().top - parseInt($child.css("marginTop"), 10);
+                var ancestorPaddingEdgeLeft = $ancestor.safeOffset().left + parseInt($ancestor.css("borderLeftWidth"), 10);
+                var ancestorPaddingEdgeTop = $ancestor.safeOffset().top + parseInt($ancestor.css("borderTopWidth"), 10);
                 left = childMarginEdgeLeft - ancestorPaddingEdgeLeft;
                 top = childMarginEdgeTop - ancestorPaddingEdgeTop;
                 // we have found the ancestor and computed the position

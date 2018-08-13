@@ -758,7 +758,7 @@ define([
                     if (!$el.is(":visible")) {
                         return false;
                     }
-                    var reltop = $el.offset().top - $scrollable.offset().top - 1000,
+                    var reltop = $el.safeOffset().top - $scrollable.safeOffset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
                         // checkVisibility was possibly installed as a scroll

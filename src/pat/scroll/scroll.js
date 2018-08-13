@@ -149,19 +149,19 @@ define([
                     scrollable = $('html, body');
                     // positioning context is document
                     if ( scroll === "scrollTop" ) {
-                        options[scroll] = Math.floor(target.offset().top);
+                        options[scroll] = Math.floor(target.safeOffset().top);
                     } else {
-                        options[scroll] = Math.floor(target.offset().left);
+                        options[scroll] = Math.floor(target.safeOffset().left);
                     }
                 } else if ( scroll === "scrollTop" ) {
                     // difference between target top and scrollable top becomes 0
                     options[scroll] = Math.floor(scrollable.scrollTop()
-                                                 + target.offset().top
-                                                 - scrollable.offset().top);
+                                                 + target.safeOffset().top
+                                                 - scrollable.safeOffset().top);
                 } else {
                     options[scroll] = Math.floor(scrollable.scrollLeft()
-                                                 + target.offset().left
-                                                 - scrollable.offset().left);
+                                                 + target.safeOffset().left
+                                                 - scrollable.safeOffset().left);
                 }
             }
 
