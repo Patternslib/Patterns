@@ -9,6 +9,10 @@ Features
   That allows us to trigger an injection by sending a push_marker to all connected browsers. 
   (This is still in an evaluation state)
 
+Fixes
+~~~~~
+
+- Enable babel transpiler
 
 
 ## 3.0.0a1 - unreleased
