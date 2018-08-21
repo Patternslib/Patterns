@@ -4,7 +4,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
         var answer = function(html) {
             expect($.ajax).toHaveBeenCalled();
-            $.ajax.calls.mostRecent().args[0].success(html, "ok", { responseText: html });
+            $.ajax.calls.mostRecent().args[0].done(html, "ok", { responseText: html });
         };
 
         beforeEach(function() {
