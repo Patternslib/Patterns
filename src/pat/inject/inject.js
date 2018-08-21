@@ -877,7 +877,7 @@ define([
         }
     });
 
-    $(window).bind("popstate", function (event) {
+    $(window).on("popstate", function (event) {
         // popstate also triggers on traditional anchors
         if (!event.originalEvent.state && ("replaceState" in history)) {
             try {

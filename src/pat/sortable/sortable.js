@@ -84,8 +84,8 @@ define([
         onDragEnd: function (ev) {
             var $dragged = $(ev.target).parent();
             $dragged.removeClass(this.options.dragClass);
-            this.$sortables.unbind(".pat-sortable");
-            this.$el.unbind(".pat-sortable");
+            this.$sortables.off(".pat-sortable");
+            this.$el.off(".pat-sortable");
             $("#pat-scroll-up, #pat-scroll-dn").detach();
             var change = this.submitChangedAmount($(ev.target).closest('.sortable'));
             // Call the optionally passed-in callback function

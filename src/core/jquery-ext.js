@@ -28,8 +28,8 @@ define(["jquery"], function($) {
                         "inExceptionArea": false
                     });
 
-                    $this.bind( "mouseover.timeout", methods.mouseMoved );
-                    $this.bind( "mouseenter.timeout", methods.mouseMoved );
+                    $this.on( "mouseover.timeout", methods.mouseMoved );
+                    $this.on( "mouseenter.timeout", methods.mouseMoved );
 
                     $(settings.exceptionAreas).each(function() {
                         $this.find(this)
@@ -63,7 +63,7 @@ define(["jquery"], function($) {
                 var $this = $(this),
                     data = $this.data("timeout");
 
-                $(window).unbind(".timeout");
+                $(window).off(".timeout");
                 data.timeout.remove();
                 $this.removeData("timeout");
             });
