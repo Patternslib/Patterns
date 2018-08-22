@@ -2,6 +2,7 @@
 <html>
 	<head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="patterns-push-server" content="127.0.0.1:8181" />
         <title>Injection pattern</title>
         <link rel="stylesheet" href="/style/common.css" type="text/css">
         <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
@@ -43,6 +44,10 @@
 				<li>
 					<a href="inject-sources.html#pos-2" data-pat-inject="source: #pos-2; target: #pos-4; trigger: autoload; trigger: idle; delay: 2000" class="pat-inject">Autoloads "Wilde" in column 4 after you are idle for 2 seconds</a>
 					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; data-pat-inject=&quot;source: #pos-2; target: #pos-4; trigger: autload; delay: 2000&quot; class=&quot;pat-inject&quot;&gt;Autoloads &quot;Wilde&quot; in column 4 after a 2 second delay&lt;/a&gt;</code></em>
+				</li>
+				<li>
+					<a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="push-marker: content-updated">Place "Wilde" in column 2 on push (push_marker: content-updated)</a>
+					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;push-marker: content-updated&quot;&gt;</code></em>
 				</li>
 			</ul>
 		</article>

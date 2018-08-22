@@ -395,13 +395,13 @@ define(function() {
         var result0;
         
         reportFailures++;
-        if (input.charCodeAt(pos) === 61) {
-          result0 = "=";
-          pos++;
+        if (input.substr(pos, 2) === "=~") {
+          result0 = "=~";
+          pos += 2;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("\"=\"");
+            matchFailed("\"=~\"");
           }
         }
         if (result0 === null) {
@@ -425,13 +425,13 @@ define(function() {
               }
             }
             if (result0 === null) {
-              if (input.substr(pos, 2) === "=~") {
-                result0 = "=~";
-                pos += 2;
+              if (input.charCodeAt(pos) === 61) {
+                result0 = "=";
+                pos++;
               } else {
                 result0 = null;
                 if (reportFailures === 0) {
-                  matchFailed("\"=~\"");
+                  matchFailed("\"=\"");
                 }
               }
             }

@@ -27,6 +27,7 @@ define([
     parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
     parser.addArgument("class"); // Add a class to the injected content.
     parser.addArgument("history");
+    parser.addArgument("push-marker");
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
@@ -58,7 +59,13 @@ define([
                     return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
                 }
             }
-
+            if (cfgs[0].pushMarker) {
+                $('body').on('push', function(event, data) {
+                    if (data == cfgs[0].pushMarker) {
+                        inject.onTrigger.apply($el[0], []);
+                    }
+                });
+            }
             if (cfgs[0].idleTrigger) {
                 // XXX TODO: handle item removed from DOM
                 var timeout = parseInt(cfgs[0].idleTrigger, 10);

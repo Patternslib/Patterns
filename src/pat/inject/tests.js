@@ -411,6 +411,13 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     // expect($.ajax).toHaveBeenCalled();
                     // expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
                 });
+                it("fetches url on push_marker sent", function() {
+                    $a.attr("data-pat-inject", "push-marker: content-updated");
+                    pattern.init($a);
+                    $('body').trigger('push', ['content-updated']);
+                    expect($.ajax).toHaveBeenCalled();
+                    expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
+                });
                 
                 it("injects into existing div", function() {
                     pattern.init($a);
