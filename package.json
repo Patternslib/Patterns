@@ -51,7 +51,7 @@
     "slick-carousel": "",
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "",
-    "stickyfilljs": "^2.0.2",
+    "stickyfilljs": "^2.1.0",
     "text-loader": "",
     "underscore": "1.8.3",
     "validate.js": "0.11.1"
