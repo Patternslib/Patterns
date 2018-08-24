@@ -118,6 +118,13 @@ module.exports = function(config) {
         /*karma-mocha-reporter config*/
         mochaReporter: {
             output: 'full' //full, autowatch, minimal
+        },
+
+        customLaunchers: {
+            'PhantomJS_debug': {
+                base: 'PhantomJS',
+                debug: true
+            }
         }
     })
 }
