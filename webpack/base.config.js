@@ -108,7 +108,7 @@ module.exports = {
             "select2": "select2/select2.js",
             "showdown-prettify": "showdown-prettify/dist/showdown-prettify.min.js",
             "slick-carousel": "slick-carousel/slick/slick.js",
-            "stickyfill": "stickyfilljs/dist/stickyfill.js",
+            "stickyfilljs": "stickyfilljs/dist/stickyfill.js",
             "text": "requirejs-text/text.js",
             "validate": "validate.js/validate.js",
             // Calendar pattern
