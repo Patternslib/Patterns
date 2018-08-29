@@ -13,7 +13,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
         };
 
         beforeEach(function() {
-            deferred = new jQuery.Deferred();
+            deferred = new $.Deferred();
             $("<div/>", {id: "lab"}).appendTo(document.body);
         });
 
@@ -443,7 +443,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     // Deferred objects are supposed to be resolved only once.
                     // This is a trick to force the second ajax() call to return a new Deferred().
                     // It is only needed here, because this is the only test case that makes two ajax() calls.
-                    deferred = new jQuery.Deferred();
+                    deferred = new $.Deferred();
                     $.ajax.calls.reset();
                     $.ajax.and.returnValue(function() { return deferred; }());
 

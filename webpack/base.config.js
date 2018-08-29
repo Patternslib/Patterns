@@ -96,7 +96,6 @@ module.exports = {
             "jcrop": "jquery-jcrop/js/jquery.Jcrop.min.js",
             "jquery.anythingslider": "anythingslider/js/jquery.anythingslider.min.js",
             "jquery.chosen": "chosen-js/chosen.jquery.js",
-            "jquery.form": "jquery-form/dist/jquery.form.min.js",
             "jquery.placeholder": "jquery-placeholder/jquery.placeholder.js",
             "jquery.textchange": "jquery-textchange/jquery.textchange.js",
             "logging": "logging/src/logging.js",

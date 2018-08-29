@@ -8,9 +8,8 @@ define([
     "jquery",
     "pat-logger",
     "pat-parser",
-    "pat-registry",
-    "jquery-form"
-], function($, logger, Parser, registry, jqform) {
+    "pat-registry"
+], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.ajax"),
         parser = new Parser("ajax");
     parser.addArgument("url", function($el) {
