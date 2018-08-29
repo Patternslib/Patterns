@@ -2,12 +2,18 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
     describe("pat-inject", function() {
 
+        var deferred;
         var answer = function(html) {
             expect($.ajax).toHaveBeenCalled();
             $.ajax.calls.mostRecent().args[0].done(html, "ok", { responseText: html });
         };
 
+        var answer_deferred = function(html) {
+            deferred.resolve(html, "ok", { responseText: html });
+        };
+
         beforeEach(function() {
+            deferred = new jQuery.Deferred();
             $("<div/>", {id: "lab"}).appendTo(document.body);
         });
 
@@ -44,7 +50,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("has a default value of 'injecting' and gets added to the target while content is still loading'", function() {
-                spyOn($, "ajax");
+                spyOn($, "ajax").and.returnValue(deferred);
                 var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
@@ -60,7 +66,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                 expect($div.hasClass("injecting")).toBeTruthy();
 
-                answer("<html><body>" +
+                answer_deferred("<html><body>" +
                         "<div id=\"someid\">repl</div>" +
                         "</body></html>");
                 expect($div.hasClass("injecting")).toBeFalsy();
@@ -68,7 +74,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("can be set to another string value which then gets added to the target while content is still loading'", function() {
-                spyOn($, "ajax");
+                spyOn($, "ajax").and.returnValue(deferred);
                 var $a = $("<a class=\"pat-inject\" data-pat-inject=\"loading-class: other-class;\" href=\"test.html#someid\">link</a>");
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
@@ -81,7 +87,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                 expect($div.hasClass("other-class")).toBeTruthy();
 
-                answer("<html><body>" +
+                answer_deferred("<html><body>" +
                         "<div id=\"someid\">repl</div>" +
                         "</body></html>");
                 expect($div.hasClass("other-class")).toBeFalsy();
@@ -361,11 +367,11 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
         describe("DOM tests", function() {
             beforeEach(function() {
-                spyOn($, "ajax");
             });
 
             describe("The patterns-injected event", function() {
                 it("gets triggered after injection has finished'", function() {
+                    spyOn($, "ajax").and.returnValue(deferred);
                     var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
                     var $div = $("<div id=\"someid\" />");
                     $("#lab").empty().append($a).append($div);
@@ -373,7 +379,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     $(document).on("patterns-injected", callback);
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body>" +
+                    answer_deferred("<html><body>" +
                             "<div id=\"someid\">repl</div>" +
                             "</body></html>");
                     expect(callback).toHaveBeenCalled();
@@ -384,6 +390,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $a, $div;
 
                 beforeEach(function() {
+                    spyOn($, "ajax").and.returnValue(deferred);
                     $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
                     $div = $("<div id=\"someid\" />");
                     $("#lab").append($a).append($div);
@@ -422,7 +429,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 it("injects into existing div", function() {
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body><div id=\"someid\">replacement</div></body></html>");
+                    answer_deferred("<html><body><div id=\"someid\">replacement</div></body></html>");
 
                     expect($div.html()).toBe("replacement");
                 });
@@ -430,11 +437,15 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 it("injects multiple times", function() {
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body><div id=\"someid\">replacement</div></body></html>");
+                    answer_deferred("<html><body><div id=\"someid\">replacement</div></body></html>");
                     expect($div.html()).toBe("replacement");
 
+                    deferred = new jQuery.Deferred();
+                    $.ajax.calls.reset();
+                    $.ajax.and.returnValue(function() { return deferred; }());
+
                     $a.trigger("click");
-                    answer("<html><body><div id=\"someid\">new replacement</div></body></html>");
+                    answer_deferred("<html><body><div id=\"someid\">new replacement</div></body></html>");
                     expect($div.html()).toBe("new replacement");
                 });
 
@@ -446,7 +457,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body>" +
+                    answer_deferred("<html><body>" +
                            "<div id=\"someid1\">repl1</div>" +
                            "<div id=\"someid2\">repl2</div>" +
                            "</body></html>");
@@ -463,7 +474,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body>" +
+                    answer_deferred("<html><body>" +
                            "<div id=\"someid\">repl</div>" +
                            "</body></html>");
 
@@ -476,7 +487,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body>" +
+                    answer_deferred("<html><body>" +
                            "<div id=\"otherid\" class=\"someclass\">repl</div>" +
                            "</body></html>");
 
@@ -490,7 +501,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body>" +
+                    answer_deferred("<html><body>" +
                            "<div id=\"someid\" class=\"someclass\">repl</div>" +
                            "</body></html>");
 
@@ -506,7 +517,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body>" +
+                    answer_deferred("<html><body>" +
                            "<div id=\"someid\">repl</div>" +
                            "</body></html>");
 
@@ -520,7 +531,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     pattern.init($a);
                     $a.trigger("click");
-                    answer("<html><body>" +
+                    answer_deferred("<html><body>" +
                            "<div id=\"someid\">repl</div>" +
                            "</body></html>");
 
@@ -533,6 +544,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $form, $div;
 
                 beforeEach(function() {
+                    spyOn($, "ajax");
                     $form = $("<form class=\"pat-inject\" action=\"test.html#someid\" />");
                     $div = $("<div id=\"someid\" />");
                     $("#lab").append($form).append($div);

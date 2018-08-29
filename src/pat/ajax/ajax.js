@@ -75,7 +75,7 @@ define([
                     log.error("load error for " + cfg.url + ":", error, jqxhr);
                     $el.trigger({
                         type: "pat-ajax-error",
-                        error: error,
+                        fail: onError,
                         jqxhr: jqxhr
                     });
                 },
@@ -105,7 +105,11 @@ define([
             if ($el.is("form")) {
                 $el.ajaxSubmit(args);
             } else {
-                $.ajax(args);
+                var jqxhr = $.ajax(args);
+                if (jqxhr) {
+                    jqxhr.done(onSuccess);
+                    jqxhr.fail(onError);
+                }
             }
         }
     };
