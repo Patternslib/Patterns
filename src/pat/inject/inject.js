@@ -509,7 +509,18 @@ define([
             $el.off("pat-ajax-error.pat-inject");
         },
 
-        _onInjectError: function ($el, cfgs) {
+        _onInjectError: function ($el, cfgs, event) {
+            var explanation = '';
+            if (event.jqxhr.status == '404') {
+                explanation = "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
+            } else if (event.jqxhr.status == '503') {
+                explanation = "Oh my! There was an error at the server. Support will help you. Thank you!";
+            }
+            var msg = explanation + '<br>('+event.jqxhr.status + ' ' + event.jqxhr.statusText+')' ;
+
+            $note = $('<p class="pat-notification" id="inject-error" data-pat-notification="class: error; type: banner">' + msg + '</p>');
+            $("body").append($note);
+            registry.init($note);
             cfgs.forEach(function(cfg) {
                 if ("$injected" in cfg)
                     cfg.$injected.remove();
