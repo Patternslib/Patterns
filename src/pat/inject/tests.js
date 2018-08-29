@@ -440,6 +440,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     answer_deferred("<html><body><div id=\"someid\">replacement</div></body></html>");
                     expect($div.html()).toBe("replacement");
 
+                    // Deferred objects are supposed to be resolved only once.
+                    // This is a trick to force the second ajax() call to return a new Deferred().
+                    // It is only needed here, because this is the only test case that makes two ajax() calls.
                     deferred = new jQuery.Deferred();
                     $.ajax.calls.reset();
                     $.ajax.and.returnValue(function() { return deferred; }());
