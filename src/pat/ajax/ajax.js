@@ -103,8 +103,12 @@ define([
             $el.removeData("pat-ajax.clicked-data");
             log.debug("request:", args, $el[0]);
             if ($el.is("form")) {
-                $el.ajaxSubmit(args);
-            } else {
+                var jqxhr = $.get(args);
+                if (jqxhr) {
+                    jqxhr.done(onSuccess);
+                    jqxhr.fail(onError);                    
+                }
+           } else {
                 var jqxhr = $.ajax(args);
                 if (jqxhr) {
                     jqxhr.done(onSuccess);
