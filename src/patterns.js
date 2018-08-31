@@ -48,6 +48,7 @@ define([
     "pat-notification",
     "pat-masonry",
     "pat-placeholder",
+    "pat-prevent-double-submit",
     "pat-scroll",
     "pat-selectbox",
     "pat-slides",
