@@ -164,7 +164,6 @@ module.exports = {
             "pat-navigation": "pat/navigation/navigation.js",
             "pat-notification": "pat/notification/notification.js",
             "pat-placeholder": "pat/placeholder/placeholder.js",
-            "pat-prevent-double-submit": "pat/prevent-double-submit/prevent-double-submit.js",
             "pat-selectbox": "pat/selectbox/selectbox.js",
             "pat-skeleton": "pat/skeleton/skeleton.js",
             "pat-slides": "pat/slides/slides.js",
