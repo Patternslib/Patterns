@@ -25,6 +25,8 @@ define([
     parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
     parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
     parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
+    parser.addArgument("executing-class", "executing"); // Add a class to the element while content is still loading.
+    parser.addArgument("executed-class", "executed"); // Add a class to the element when content is loaded.
     parser.addArgument("class"); // Add a class to the injected content.
     parser.addArgument("history");
     parser.addArgument("push-marker");
@@ -539,6 +541,8 @@ define([
             $el.data('pat-inject-triggered', true);
             // possibility for spinners on targets
             _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
+            // Put the execute class on the elem that has pat inject on it
+            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { $el.addClass(cfg.executingClass); });
 
             $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
             $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
@@ -878,6 +882,8 @@ define([
          * then scan the injected content for new patterns.
          */
         cfg.$target.removeClass(cfg.loadingClass);
+        // Remove the executing class, add the executed class to the element with pat.inject on it.
+        $(trigger).removeClass(cfg.executingClass).addClass(cfg.executedClass);
         if (injected.nodeType !== TEXT_NODE && injected !== COMMENT_NODE) {
             registry.scan(injected, null, {type: "injection", element: trigger});
             $(injected).trigger("patterns-injected-scanned");
