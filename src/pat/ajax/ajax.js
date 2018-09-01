@@ -74,7 +74,6 @@ define([
                     log.error("load error for " + cfg.url + ":", error, jqxhr);
                     $el.trigger({
                         type: "pat-ajax-error",
-                        fail: onError,
                         jqxhr: jqxhr
                     });
                 },
@@ -91,29 +90,25 @@ define([
                         // ignore
                     }
                 },
+                temp = $el.data("pat-ajax.clicked-data"),
+                clickedData = (temp ? $.param(temp) : '');
                 args = {
                     context: $el,
-                    data: $el.data("pat-ajax.clicked-data"),
+                    data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
                     url: cfg.url,
-                    fail: onError,
-                    done: onSuccess
                 };
+
+            if ($el.is("form") && $el.attr("method"))
+                args["method"] = $el.attr("method");
 
             $el.removeData("pat-ajax.clicked-data");
             log.debug("request:", args, $el[0]);
-            if ($el.is("form")) {
-                var jqxhr = $.get(args);
-                if (jqxhr) {
-                    jqxhr.done(onSuccess);
-                    jqxhr.fail(onError);                    
-                }
-           } else {
-                var jqxhr = $.ajax(args);
-                if (jqxhr) {
-                    jqxhr.done(onSuccess);
-                    jqxhr.fail(onError);
-                }
-            }
+
+            // Make it happen
+            var ajax_deferred = $.ajax(args);
+
+            if (ajax_deferred)
+                ajax_deferred.done(onSuccess).fail(onError);
         }
     };
 
