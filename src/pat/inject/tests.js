@@ -595,7 +595,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
                     var ajaxargs = $.ajax.calls.mostRecent().args[0];
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.calls.mostRecent().args[0].data).toContain("submit=label");
+                    expect(ajaxargs.data).toContain("submit=label");
                 });
 
                 describe("formaction attribute on submit buttons", function() {
