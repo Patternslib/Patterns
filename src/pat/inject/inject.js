@@ -518,10 +518,15 @@ define([
                 explanation = "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
             } else if (event.jqxhr.status % 100 == 5) {
                 explanation = "I am very sorry! There was an error at the server. Please make a screenshot and contact support. Thank you!";
+            } else if (event.jqxhr.status == 0) {
+                explanation = "It seems, the server is down. Please make a screenshot and contact support. Thank you!";
             }
-            var msg_attr = explanation + ' ('+event.jqxhr.status + ' ' + event.jqxhr.statusText+ ' - ' + timestamp + ')' ;
+            var msg_attr = explanation + ' Status is '+event.jqxhr.status + ' ' + event.jqxhr.statusText + ', time was ' + timestamp + '. You can click to close this.' ;
             $("body").attr('data-error-message', msg_attr);
-
+            $('body').on('click', function() {
+                $('body').removeAttr('data-error-message');
+                window.location.href = window.location.href;
+            })
             cfgs.forEach(function(cfg) {
                 if ("$injected" in cfg)
                     cfg.$injected.remove();
