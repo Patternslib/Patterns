@@ -516,11 +516,9 @@ define([
             } else if (event.jqxhr.status == '503') {
                 explanation = "Oh my! There was an error at the server. Support will help you. Thank you!";
             }
-            var msg = explanation + '<br>('+event.jqxhr.status + ' ' + event.jqxhr.statusText+')' ;
+            var msg_attr = explanation + '<br>('+event.jqxhr.status + ' ' + event.jqxhr.statusText+')' ;
+            $("body").attr('data-error-message', msg_attr);
 
-            $note = $('<p class="pat-notification" id="inject-error" data-pat-notification="class: error; type: banner">' + msg + '</p>');
-            $("body").append($note);
-            registry.init($note);
             cfgs.forEach(function(cfg) {
                 if ("$injected" in cfg)
                     cfg.$injected.remove();
