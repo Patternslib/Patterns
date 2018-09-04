@@ -513,12 +513,13 @@ define([
 
         _onInjectError: function ($el, cfgs, event) {
             var explanation = '';
-            if (event.jqxhr.status == '404') {
+            timestamp = new Date();
+            if (event.jqxhr.status.startsWith('4')) {
                 explanation = "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
-            } else if (event.jqxhr.status == '503') {
-                explanation = "Oh my! There was an error at the server. Support will help you. Thank you!";
+            } else if (event.jqxhr.status.startsWith('5')) {
+                explanation = "I am very sorry! There was an error at the server. Please make a screenshot and contact support. Thank you!";
             }
-            var msg_attr = explanation + '<br>('+event.jqxhr.status + ' ' + event.jqxhr.statusText+')' ;
+            var msg_attr = explanation + ' ('+event.jqxhr.status + ' ' + event.jqxhr.statusText+ ' - ' + timestamp + ')' ;
             $("body").attr('data-error-message', msg_attr);
 
             cfgs.forEach(function(cfg) {
