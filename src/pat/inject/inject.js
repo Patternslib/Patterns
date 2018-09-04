@@ -513,7 +513,7 @@ define([
 
         _onInjectError: function ($el, cfgs, event) {
             var explanation = '';
-            timestamp = new Date();
+            var timestamp = new Date();
             if (event.jqxhr.status % 100 == 4) {
                 explanation = "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
             } else if (event.jqxhr.status % 100 == 5) {
