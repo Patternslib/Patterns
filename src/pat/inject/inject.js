@@ -514,9 +514,9 @@ define([
         _onInjectError: function ($el, cfgs, event) {
             var explanation = '';
             timestamp = new Date();
-            if (event.jqxhr.status.startsWith('4')) {
+            if (event.jqxhr.status % 100 == 4) {
                 explanation = "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
-            } else if (event.jqxhr.status.startsWith('5')) {
+            } else if (event.jqxhr.status % 100 == 5) {
                 explanation = "I am very sorry! There was an error at the server. Please make a screenshot and contact support. Thank you!";
             }
             var msg_attr = explanation + ' ('+event.jqxhr.status + ' ' + event.jqxhr.statusText+ ' - ' + timestamp + ')' ;
