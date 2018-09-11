@@ -25,6 +25,8 @@ define([
     parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
     parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
     parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
+    parser.addArgument("executing-class", "executing"); // Add a class to the element while content is still loading.
+    parser.addArgument("executed-class", "executed"); // Add a class to the element when content is loaded.
     parser.addArgument("class"); // Add a class to the injected content.
     parser.addArgument("history");
     parser.addArgument("push-marker");
@@ -509,7 +511,22 @@ define([
             $el.off("pat-ajax-error.pat-inject");
         },
 
-        _onInjectError: function ($el, cfgs) {
+        _onInjectError: function ($el, cfgs, event) {
+            var explanation = '';
+            var timestamp = new Date();
+            if (event.jqxhr.status % 100 == 4) {
+                explanation = "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
+            } else if (event.jqxhr.status % 100 == 5) {
+                explanation = "I am very sorry! There was an error at the server. Please make a screenshot and contact support. Thank you!";
+            } else if (event.jqxhr.status == 0) {
+                explanation = "It seems, the server is down. Please make a screenshot and contact support. Thank you!";
+            }
+            var msg_attr = explanation + ' Status is '+event.jqxhr.status + ' ' + event.jqxhr.statusText + ', time was ' + timestamp + '. You can click to close this.' ;
+            $("body").attr('data-error-message', msg_attr);
+            $('body').on('click', function() {
+                $('body').removeAttr('data-error-message');
+                window.location.href = window.location.href;
+            })
             cfgs.forEach(function(cfg) {
                 if ("$injected" in cfg)
                     cfg.$injected.remove();
@@ -539,6 +556,8 @@ define([
             $el.data('pat-inject-triggered', true);
             // possibility for spinners on targets
             _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
+            // Put the execute class on the elem that has pat inject on it
+            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { $el.addClass(cfg.executingClass); });
 
             $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
             $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
@@ -878,6 +897,8 @@ define([
          * then scan the injected content for new patterns.
          */
         cfg.$target.removeClass(cfg.loadingClass);
+        // Remove the executing class, add the executed class to the element with pat.inject on it.
+        $(trigger).removeClass(cfg.executingClass).addClass(cfg.executedClass);
         if (injected.nodeType !== TEXT_NODE && injected !== COMMENT_NODE) {
             registry.scan(injected, null, {type: "injection", element: trigger});
             $(injected).trigger("patterns-injected-scanned");
