@@ -120,6 +120,7 @@ define([
         },
 
         smoothScroll: function() {
+            var href, fragment;
             var scroll = this.options.direction == "top" ? 'scrollTop' : 'scrollLeft',
                 scrollable, options = {};
             if (typeof this.options.offset != "undefined") {
