@@ -30,7 +30,10 @@ module.exports = {
             // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
             {
                 test: /push_kit\.js$/,
-                loader: 'babel-loader?presets[]=es2015'
+                loader: 'babel-loader',
+                options:{
+                  presets:['@babel/env']
+                }
             },
             {
                 test: require.resolve('jquery'),
