@@ -1,4 +1,5 @@
 // Organised as described in https://simonsmith.io/organising-webpack-config-environments/
+process.traceDeprecation = true;
 const path = require('path');
 var webpack = require('webpack');
 
@@ -29,7 +30,7 @@ module.exports = {
         rules: [
             // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
             {
-                test: /push_kit\.js$/,
+                test: /(equaliser|focus|masonry|push_kit|scroll)\.js$/,
                 loader: 'babel-loader',
                 options:{
                   presets:['@babel/env']
