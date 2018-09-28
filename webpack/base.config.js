@@ -78,8 +78,8 @@ module.exports = {
             // { test: /pat-calendar/, loader: 'imports-loader?fullcalendar' }
             {
                 issuer: [
-                    '/../tests/specs/*/*.js$/',
-                    '../src/pat/*/tests.js$/'
+                    __dirname + '/../tests/specs/*/*.js$/',
+                    __dirname + '../src/pat/*/tests.js$/'
                 ],
                 use: [
                     {
