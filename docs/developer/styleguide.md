@@ -1,7 +1,5 @@
 # The Patternslib coding style guide
 
-*NOTE: Patternslib doesn't yet use any of the new [ES2015](https://babeljs.io/docs/learn-es2015/) features.*
-
 Many of the style guide recommendations here come from Douglas Crockford's
 seminal book [Javascript, the good parts](http://shop.oreilly.com/product/9780596517748.do).
 
@@ -151,7 +149,7 @@ to the correct or expected context (as referenced with the `this` variable). In
 [ES2015](https://babeljs.io/docs/learn-es2015/), this problem is solved
 by using so-called arrow functions for callbacks.
 
-However, while we're still writing ES5 code, please use the `.bind` method to
+However, when writing ES5 code, please use the `.bind` method to
 bind the correct `this` context to the callback method.
 
 For example:
