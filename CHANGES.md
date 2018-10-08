@@ -13,6 +13,8 @@ Fixes
 ~~~~~
 
 - Enable babel transpiler
+- Interim condition to trigger: autoload-visible to abort injection in case the tartget element is no longer present.
+
 
 
 ## 3.0.0a1 - unreleased
