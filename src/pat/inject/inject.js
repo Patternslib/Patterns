@@ -784,6 +784,11 @@ define([
                     if (!$el.is(":visible")) {
                         return false;
                     }
+                    // check if the target element still exists. Otherwise halt and catch fire
+                    var target = $el.data("pat-inject")[0].target.replace(/::element/, '');
+                    if ($(target).length === 0) {
+                        return false;                        
+                    }                    
                     var reltop = $el.safeOffset().top - $scrollable.safeOffset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -815,6 +820,11 @@ define([
                     }
                     if (!utils.elementInViewport($el[0])) {
                         return false;
+                    }
+                    // check if the target element still exists. Otherwise halt and catch fire
+                    var target = $el.data("pat-inject")[0].target.replace(/::element/, '');
+                    if ($(target).length === 0) {
+                        return false;                        
                     }
                     $(window).off(".pat-autoload", checkVisibility);
                     return trigger();
