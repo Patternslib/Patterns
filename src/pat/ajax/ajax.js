@@ -91,7 +91,7 @@ define([
                     }
                 },
                 temp = $el.data("pat-ajax.clicked-data"),
-                clickedData = (temp ? $.param(temp) : '');
+                clickedData = (temp ? $.param(temp) : ''),
                 args = {
                     context: $el,
                     data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
