@@ -7,6 +7,7 @@ define([
     "pat-registry",
     "pat-utils",
     "pat-htmlparser",
+    "intersection-observer",
     "pat-jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, _, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
@@ -835,6 +836,7 @@ define([
                 if (checkVisibility()) {
                     return true;
                 }
+                // https://github.com/w3c/IntersectionObserver/tree/master/polyfill
                 if (IntersectionObserver) {
                     var observer = new IntersectionObserver(checkVisibility);
                     $el.each(
