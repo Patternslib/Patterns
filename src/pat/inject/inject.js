@@ -785,8 +785,8 @@ define([
                         return false;
                     }
                     // check if the target element still exists. Otherwise halt and catch fire
-                    var target = $el.data("pat-inject")[0].target.replace(/::element/, '');
-                    if ($(target).length === 0) {
+                    var target = ($el.data("pat-inject")[0].target || cfgs[0].selector).replace(/::element/, '');
+                    if (target && target !== 'self' && $(target).length === 0) {
                         return false;
                     }
                     var reltop = $el.offset().top - $scrollable.offset().top - 1000,
