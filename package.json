@@ -30,6 +30,7 @@
     "google-code-prettify": "1.0.4",
     "@horizon/client": "",
     "imagesloaded": "4.1.4",
+    "intersection-observer": "0.5.0",
     "jquery": "1.11.0",
     "jquery-form": "4.2.2",
     "jquery-jcrop": "",
