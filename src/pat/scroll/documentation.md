@@ -51,5 +51,5 @@ The available options are:
 | ----- | ------- | ----------- | ----------- | 
 | `trigger`   | `click` | `click`, `auto` | `auto` means that the scrolling will happen as soon as the page loads. `click` means that the configured element needs to be clicked first. |
 | `direction` | `top`   | `top`, `left`   |  The direction in which the scrolling happens. |
-| `selector`  |         | A CSS or jQuery selector string. | A selector for the element which will be scrolled. By default it will be the element on which the pattern is declared.|
-| `offset`    |         | A number   | If an offset is given, then the element will be scrolled relative to that. Otherwise, an anchor to scroll to is determined from the href attribute of the element on which pat-scroll is declared. |
+| `selector`  |         | A CSS or jQuery selector string. | A selector for the element which will be scrolled by a number of pixels equal to `offset`. By default it will be the element on which the pattern is declared. Ignored unless `offset` is specified.|
+| `offset`    |         | A number   | `offset` can only be used with scrollable elements.  (An element is "scrollable" if it has scrollbars, i.e. when the CSS property `overflow` is either `auto` or `scroll`.)  The element scrolled by `offset` can be specified with the `selector` option.  If `selector` is not present, the element on which `pat-scroll` is declared will be scrolled. |
