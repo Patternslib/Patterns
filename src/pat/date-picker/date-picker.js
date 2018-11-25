@@ -62,13 +62,20 @@ define(
                 }
 
                 if (this.options.i18n) {
-                    $.getJSON(this.options.i18n, function(data) {
+                    $.getJSON(
+                        this.options.i18n
+                    ).done(function(data) {
                         config.i18n = data;
+                    }).fail($.proxy(function() {
+                        console.error('date-picker could not load i18n: ' + this.options.i18n);
+                    }, this)).always(function() {
+                        new Pikaday(config);
                     });
+                } else {
+                    new Pikaday(config);
                 }
-
-                new Pikaday(config);
                 return this.$el;
+
             },
 
             isodate: function() {

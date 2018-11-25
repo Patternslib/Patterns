@@ -7,7 +7,7 @@ var webpackOptions = require('./base.config.js');
 module.exports = function(config) {
     config.set({
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: '',
+        basePath: path.join(__dirname, '..'),
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -16,9 +16,22 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            '../tests/specs/*/*.js',
-            '../src/pat/*/tests.js'
+            'tests/specs/*/*.js',
+            'src/pat/*/tests.js',
+            {
+                pattern: 'src/pat/date-picker/i18n.json',
+                served: true,
+                included: false
+            },
+            {
+                pattern: 'src/pat/date-picker/date-picker.css',
+                served: true,
+                included: false
+            }
         ],
+        proxies: {
+            '/src/pat/date-picker': '/base/src/pat/date-picker'
+        },
 
 
         // list of files to exclude
@@ -31,10 +44,10 @@ module.exports = function(config) {
             //use babel-loader from webpack to compile es2015 features in .js files
             //add webpack as preprocessor
             //'test_requires.js': ['webpack'],
-            '../tests/specs/*/*.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
-            '../src/pat/*/tests.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
+            'tests/specs/*/*.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
+            'src/pat/*/tests.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
             // list here the files that you want transpiled by babel
-            '../src/pat/masonry/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
+            'src/pat/masonry/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
         },
         babelPreprocessor: {
             options: {
@@ -57,7 +70,7 @@ module.exports = function(config) {
 
         coverageReporter: {
             type: 'html',
-            dir: '../coverage/'
+            dir: 'coverage/'
         },
         //address that the server will listen on, '0.0.0.0' is default
         listenAddress: '0.0.0.0',
