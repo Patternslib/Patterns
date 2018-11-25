@@ -66,7 +66,9 @@ define(
                         this.options.i18n
                     ).done(function(data) {
                         config.i18n = data;
-                    }).always(function() {
+                    }).fail($.proxy(function() {
+                        console.error('date-picker could not load i18n: ' + this.options.i18n);
+                    }, this)).always(function() {
                         new Pikaday(config);
                     });
                 } else {
