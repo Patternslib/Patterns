@@ -1,4 +1,5 @@
 // Organised as described in https://simonsmith.io/organising-webpack-config-environments/
+process.traceDeprecation = true;
 const path = require('path');
 var webpack = require('webpack');
 
@@ -11,7 +12,7 @@ try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (er
 
 var WrapperPlugin = require('wrapper-webpack-plugin');
 
-var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
+//var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -26,14 +27,15 @@ module.exports = {
     },
     // Like shims in require.js
     module: {
-        loaders: [
-            {
-                test: /push_kit\.js$/,
-                loader: 'babel-loader?presets[]=es2015'
-            }
-        ],
         rules: [
             // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
+            {
+                test: /(equaliser|focus|masonry|push_kit|scroll)\.js$/,
+                loader: 'babel-loader',
+                options:{
+                  presets:['@babel/env']
+                }
+            },
             {
                 test: require.resolve('jquery'),
                 use: [{
@@ -76,8 +78,8 @@ module.exports = {
             // { test: /pat-calendar/, loader: 'imports-loader?fullcalendar' }
             {
                 issuer: [
-                    '/../tests/specs/*/*.js$/',
-                    '../src/pat/*/tests.js$/'
+                    __dirname + '/../tests/specs/*/*.js$/',
+                    __dirname + '../src/pat/*/tests.js$/'
                 ],
                 use: [
                     {

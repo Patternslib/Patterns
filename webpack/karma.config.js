@@ -3,6 +3,7 @@
 // See more on https://www.npmjs.com/package/webpack-karma-jasmine
 const path = require('path');
 var webpackOptions = require('./base.config.js');
+webpackOptions['mode'] = 'development';
 
 module.exports = function(config) {
     config.set({
@@ -38,7 +39,7 @@ module.exports = function(config) {
         },
         babelPreprocessor: {
             options: {
-                presets: ['env'],
+                presets: ['@babel/env'],
                 sourceMap: 'inline'
             },
             filename: function(file) {
