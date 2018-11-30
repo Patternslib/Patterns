@@ -93,6 +93,7 @@ module.exports = {
             "jquery": "jquery/dist/jquery.js",
             "push-kit": "core/push_kit.js",
             "google-code-prettify": "google-code-prettify/src/prettify.js",
+            "intersection-observer": "intersection-observer/intersection-observer.js",
             "jcrop": "jquery-jcrop/js/jquery.Jcrop.min.js",
             "jquery.anythingslider": "anythingslider/js/jquery.anythingslider.min.js",
             "jquery.chosen": "chosen-js/chosen.jquery.js",

@@ -53,7 +53,14 @@
 					<a href="page-that-doesnt-exist#nothing" class="pat-inject">Trigger an inject that fails.</a>
 					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;page-that-doesnt-exist&quot; class=&quot;pat-inject&quot;&gt;</code></em>
 				</li>
+        <li>
+          Place "Wilde in column 2 when <button onclick="document.getElementById('autoload-visible-item').removeAttribute('style')">the hidden link appears</button>
+          <span id="autoload-visible-item" style="display:none">
+            <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="trigger: autoload-visible">I am visible now</a>
+          </span>
+        </li>
 			</ul>
+      <button onclick="document.getElementById('autoload-visible-li').removeAttribute("style")">Show autoload visible</button>
 		</article>
 		<div id="poems" class="row pat-equaliser">
 			<div class="item poem three columns">
@@ -91,7 +98,7 @@
 			}
 
 			#poems .poem {
-				
+
 			}
 
 			#poems article figure {
@@ -135,7 +142,7 @@
 				-moz-box-sizing: border-box;
 				-webkit-box-sizing: border-box;
 				box-sizing: border-box;
-				
+
 				border: double white 12px;
 			}
 
@@ -148,7 +155,7 @@
 				font-size: 1.5em;
 				font-weight: bold;
 				margin-bottom: 1em;
-			}	
+			}
 		</style>
 	</body>
 </html>

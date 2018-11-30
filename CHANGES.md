@@ -5,8 +5,8 @@
 Features
 ~~~~~~~~
 
-- Added support for a push subsystem using reethinkdb and horizon. 
-  That allows us to trigger an injection by sending a push_marker to all connected browsers. 
+- Added support for a push subsystem using reethinkdb and horizon.
+  That allows us to trigger an injection by sending a push_marker to all connected browsers.
   (This is still in an evaluation state)
 
 Fixes
@@ -14,7 +14,8 @@ Fixes
 
 - Enable babel transpiler
 - Interim condition to trigger: autoload-visible to abort injection in case the tartget element is no longer present.
-
+- pat-inject: autoload-visible now uses the intersection observer
+- Allow clearing a selection if the field is not required
 
 
 ## 3.0.0a1 - unreleased

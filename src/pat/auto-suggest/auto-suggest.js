@@ -52,7 +52,8 @@ define([
                 tokenSeparators: [","],
                 openOnEnter: false,
                 maximumSelectionSize: pat_config.maxSelectionSize,
-                minimumInputLength: pat_config.minimumInputLength
+                minimumInputLength: pat_config.minimumInputLength,
+                allowClear: pat_config.maxSelectionSize === 1 && !$el.prop('required')
             };
 
             if (pat_config.selectionClasses) {

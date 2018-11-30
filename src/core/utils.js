@@ -373,14 +373,14 @@ define([
         return results;
     }
 
-    isElementInViewport = function (el, partial, offset) { 
-        /* returns true if element is visible to the user ie. is in the viewport. 
+    isElementInViewport = function (el, partial, offset) {
+        /* returns true if element is visible to the user ie. is in the viewport.
          * Setting partial parameter to true, will only check if a part of the element is visible
-         * in the viewport, specifically that some part of that element is touching the top part 
+         * in the viewport, specifically that some part of that element is touching the top part
          * of the viewport. This only applies to the vertical direction, ie. doesnt check partial
          * visibility for horizontal scrolling
          * some code taken from:
-         * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433         
+         * http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433
          */
         if (el === []) {
             return false;
@@ -392,14 +392,14 @@ define([
             rec_values = [rec.top, rec.bottom, rec.left, rec.right];
         if ( _.every(rec_values, function zero(v) { if ( v === 0 ){ return true;}}) ) {
             // if every property of rec is 0, the element is invisible;
-            return false;            
+            return false;
         } else if (partial) {
             // when using getBoundingClientRect() (in the vertical case)
             // negative means above top of viewport, positive means below top of viewport
             // therefore for part of the element to be touching or crossing the top of the viewport
-            // rec.top must <= 0 and rec.bottom must >= 0 
-            // an optional tolerance offset can be added for when the desired element is not exactly 
-            // toucing the top of the viewport but needs to be considered as touching. 
+            // rec.top must <= 0 and rec.bottom must >= 0
+            // an optional tolerance offset can be added for when the desired element is not exactly
+            // toucing the top of the viewport but needs to be considered as touching.
             if (offset === undefined) {
                 offset = 0;
             }
@@ -410,14 +410,14 @@ define([
                 // XXX do we want to include a check for the padding of an element?
                 // using window.getComputedStyle(target).paddingTop
             );
-        } else {           
-            // this will return true if the entire element is completely in the viewport 
-            return ( 
+        } else {
+            // this will return true if the entire element is completely in the viewport
+            return (
                 rec.top >= 0 &&
                 rec.left >= 0 &&
                 rec.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
                 rec.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
-            );        
+            );
         }
     };
 

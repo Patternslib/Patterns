@@ -7,6 +7,7 @@ define([
     "pat-registry",
     "pat-utils",
     "pat-htmlparser",
+    "intersection-observer",
     "pat-jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, _, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
@@ -142,14 +143,14 @@ define([
                     }
                     break;
                 case "autoload-visible":
-                    inject._initAutoloadVisible($el);
+                    inject._initAutoloadVisible($el, cfgs);
                     break;
                 case "idle":
                     inject._initIdleTrigger($el, cfgs[0].delay);
                     break;
                 }
             }
- 
+
             log.debug("initialised:", $el);
             return $el;
         },
@@ -754,7 +755,7 @@ define([
         },
 
         // XXX: hack
-        _initAutoloadVisible: function inject_initAutoloadVisible($el) {
+        _initAutoloadVisible: function inject_initAutoloadVisible($el, cfgs) {
             if ($el.data("pat-inject-autoloaded")) {
                 // ignore executed autoloads
                 return false;
@@ -785,10 +786,10 @@ define([
                         return false;
                     }
                     // check if the target element still exists. Otherwise halt and catch fire
-                    var target = $el.data("pat-inject")[0].target.replace(/::element/, '');
-                    if ($(target).length === 0) {
-                        return false;                        
-                    }                    
+                    var target = ($el.data("pat-inject")[0].target || cfgs[0].selector).replace(/::element/, '');
+                    if (target && target !== 'self' && $(target).length === 0) {
+                        return false;
+                    }
                     var reltop = $el.safeOffset().top - $scrollable.safeOffset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
@@ -818,13 +819,16 @@ define([
                     if ($el.data("patterns.autoload")) {
                         return false;
                     }
+                    if (!$el.is(':visible')) {
+                        return false;
+                    }
                     if (!utils.elementInViewport($el[0])) {
                         return false;
                     }
                     // check if the target element still exists. Otherwise halt and catch fire
-                    var target = $el.data("pat-inject")[0].target.replace(/::element/, '');
-                    if ($(target).length === 0) {
-                        return false;                        
+                    var target = ($el.data("pat-inject")[0].target || cfgs[0].selector).replace(/::element/, '');
+                    if (target && target !== 'self' && $(target).length === 0) {
+                        return false;
                     }
                     $(window).off(".pat-autoload", checkVisibility);
                     return trigger();
@@ -832,7 +836,18 @@ define([
                 if (checkVisibility()) {
                     return true;
                 }
-                $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
+                // https://github.com/w3c/IntersectionObserver/tree/master/polyfill
+                if (IntersectionObserver) {
+                    var observer = new IntersectionObserver(checkVisibility);
+                    $el.each(
+                        function(idx, el) {
+                            observer.observe(el);
+                        }
+                    );
+                } else {
+                    $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
+                }
+
             }
             return false;
         },
