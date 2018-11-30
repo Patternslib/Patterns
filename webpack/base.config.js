@@ -12,7 +12,7 @@ try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (er
 
 var WrapperPlugin = require('wrapper-webpack-plugin');
 
-var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
+//var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 module.exports = {
     entry: {
