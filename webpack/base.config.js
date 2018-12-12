@@ -29,8 +29,21 @@ module.exports = {
         rules: [
             // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
             {
-                test: /push_kit\.js$/,
-                loader: 'babel-loader?presets[]=es2015'
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [ 
+                            ["env", {
+                                  "targets": {
+                                    "browsers": ["last 2 versions", "ie >= 11"]
+                                  },
+                                  "useBuiltIns": true
+                            }]
+                        ]
+                    }
+                }
             },
             {
                 test: require.resolve('jquery'),
