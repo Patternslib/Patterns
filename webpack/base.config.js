@@ -30,18 +30,15 @@ module.exports = {
             // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
             {
                 test: /\.js$/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [ ["es2015", {"loose": true}]  
-                            // ["env", {
-                            //       "targets": {
-                            //         "browsers": ["last 2 versions", "ie >= 11"]
-                            //       },
-                            //       "useBuiltIns": true
-                            // }]
-                        ]
-                    }
+                loader: 'babel-loader',
+                query: {
+                    presets: [ 
+                        ["env", {
+                            "targets": {
+                            "browsers": ["last 2 versions", "ie >= 11"]
+                            }
+                        }]
+                    ]
                 }
             },
             {
