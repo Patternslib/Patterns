@@ -23,6 +23,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "7.1.5",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "",
     "chosen-js": "",
     "ecstatic": "~>2.0.0",
     "ev-emitter": "1.1.0",
