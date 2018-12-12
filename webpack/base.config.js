@@ -26,14 +26,12 @@ module.exports = {
     },
     // Like shims in require.js
     module: {
-        loaders: [
+        rules: [
+            // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
             {
                 test: /push_kit\.js$/,
                 loader: 'babel-loader?presets[]=es2015'
-            }
-        ],
-        rules: [
-            // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
+            },
             {
                 test: require.resolve('jquery'),
                 use: [{
