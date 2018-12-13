@@ -27,6 +27,19 @@ module.exports = {
     module: {
         rules: [
             // { test: /fullcalendar/, loader: 'imports-loader?jquery,moment' },
+            // {
+            //     test: /pat-date-picker\.js$/,
+            //     loader: 'babel-loader',
+            //     query: {
+            //         presets: [ 
+            //             ["env", {
+            //                 "targets": {
+            //                 "browsers": ["last 2 versions", "ie >= 11"]
+            //                 }
+            //             }]
+            //         ]
+            //     }
+            // },
             {
                 test: /(equaliser|focus|masonry|push_kit|scroll)\.js$/,
                 loader: 'babel-loader',
@@ -212,6 +225,9 @@ module.exports = {
             footer: footerWrap
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.ProvidePlugin({
+            Promise: 'es6-promise-promise',
+        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
