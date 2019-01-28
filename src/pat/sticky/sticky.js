@@ -19,6 +19,18 @@ define([
             this.options = parser.parse(this.$el);
             this.makeSticky();
             this.$el.on('pat-update', this.onPatternUpdate.bind(this));
+            
+            /* recalc if the DOM changes. Should fix positioning issues when parts of the page get injected */
+            var callback = utils.debounce(this.makesticky.bind(this), 100);
+            var observer = new MutationObserver(callback);
+            var config = {
+                childList: true,
+                subtree: true,
+                characterData: false,
+                attributes: false
+            };
+            observer.observe(document.body, config);
+
             return this.$el;
         },
         onPatternUpdate: function (ev, data) {
