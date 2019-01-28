@@ -19,18 +19,9 @@ define([
         init: function() {
             this.options = parser.parse(this.$el);
             this.makeSticky();
-            this.$el.on('pat-update', this.onPatternUpdate.bind(this));
+            $('body').on('pat-update', utils.debounce(this.onPatternUpdate.bind(this), 500));
             
             /* recalc if the DOM changes. Should fix positioning issues when parts of the page get injected */
-            var callback = utils.debounce(this.makeSticky.bind(this), 100);
-            var observer = new MutationObserver(callback);
-            var config = {
-                childList: true,
-                subtree: true,
-                characterData: false,
-                attributes: false
-            };
-            observer.observe(document.body, config);
 
             return this.$el;
         },
@@ -38,7 +29,7 @@ define([
             /* Handler which gets called when pat-update is triggered within
              * the .pat-sticky element.
              */
-            this.makeSticky();
+            Stickyfill.refreshAll()
             return true;
         },
         makeSticky: function() {
