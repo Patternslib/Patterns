@@ -22,7 +22,7 @@ define([
             this.$el.on('pat-update', this.onPatternUpdate.bind(this));
             
             /* recalc if the DOM changes. Should fix positioning issues when parts of the page get injected */
-            var callback = utils.debounce(this.makesticky.bind(this), 100);
+            var callback = utils.debounce(this.makeSticky.bind(this), 100);
             var observer = new MutationObserver(callback);
             var config = {
                 childList: true,
