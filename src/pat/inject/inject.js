@@ -493,7 +493,10 @@ define([
             /* pick the title source for dedicated handling later
               Title - if present - is always appended at the end. */
             var title;
-            if (sources$[sources$.length-1][0].nodeName == "TITLE") {
+            if (sources$ && 
+                sources$[sources$.length-1] &&
+                sources$[sources$.length-1][0] && 
+                sources$[sources$.length-1][0].nodeName == "TITLE") {
                 title = sources$[sources$.length-1];
             }        
             cfgs.forEach(function(cfg, idx) {
