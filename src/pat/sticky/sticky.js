@@ -5,8 +5,9 @@ define([
     "pat-registry",
     "pat-base",
     "pat-logger",
-    "stickyfilljs",
-], function(_, Parser, registry, Base, logger, Stickyfill) {
+    "pat-utils",
+    "stickyfilljs"
+], function(_, Parser, registry, Base, logger, utils, Stickyfill) {
     "use strict";
     var parser = new Parser("sticky");
     var log = logger.getLogger("sticky")
