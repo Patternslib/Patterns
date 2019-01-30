@@ -11,6 +11,7 @@ try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (er
 
 
 var WrapperPlugin = require('wrapper-webpack-plugin');
+var DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -232,6 +233,10 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery",
             jquery: "jquery"
+        }),
+        new DuplicatePackageCheckerPlugin({
+            verbose: true,
+            emitError: true
         })
     ]
 };
