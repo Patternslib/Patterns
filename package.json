@@ -46,6 +46,7 @@
     "photoswipe": "4.1.0",
     "pikaday": "^1.8.0",
     "prefixfree": "",
+    "promise-polyfill": "",
     "select2": "3.5.1",
     "showdown": "1.7.2",
     "showdown-github": "",
