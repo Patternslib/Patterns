@@ -450,8 +450,9 @@ define([
                 } else {
                     history.pushState({'url': cfg.url}, "", cfg.url);
                 }
-                // Also inject title element
-                inject._inject(trigger, title, $("title"), {action: 'element'});
+                // Also inject title element if we have one
+                if (title)
+                    inject._inject(trigger, title, $("title"), {action: 'element'});
             }
         },
 
