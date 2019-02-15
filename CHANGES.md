@@ -17,7 +17,7 @@ Fixes
 - Interim condition to trigger: autoload-visible to abort injection in case the tartget element is no longer present.
 - pat-inject: autoload-visible now uses the intersection observer
 - Allow clearing a selection if the field is not required
-
+- pat-scroll doesn't send a pat-update anymore once it marks a link as current. This doesn't scale well.
 
 ## 3.0.0a1 - unreleased
 

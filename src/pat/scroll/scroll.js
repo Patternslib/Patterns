@@ -91,7 +91,6 @@ define([
                             $target.addClass("current");
                             this.$el.addClass("current");
                         }
-                        $(this.$el).trigger("pat-update", {pattern: "scroll"});
                     }
                 }
             }
