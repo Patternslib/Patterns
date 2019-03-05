@@ -167,6 +167,8 @@ define([
              */
             var cfgs = $(this).data("pat-inject"),
                 $el = $(this);
+            if ($el.is("form"))
+                $(cfgs).each(function(i, v) {v.params = $.param($el.serializeArray());});
             ev && ev.preventDefault();
             $el.trigger("patterns-inject-triggered");
             inject.execute(cfgs, $el);
@@ -181,6 +183,8 @@ define([
                 opts = {url: formaction},
                 $cfg_node = $button.closest("[data-pat-inject]"),
                 cfgs = inject.extractConfig($cfg_node, opts);
+
+            $(cfgs).each(function(i, v) {v.params = $.param($form.serializeArray());});
 
             ev.preventDefault();
             $form.trigger("patterns-inject-triggered");
@@ -446,8 +450,9 @@ define([
                 } else {
                     history.pushState({'url': cfg.url}, "", cfg.url);
                 }
-                // Also inject title element
-                inject._inject(trigger, title, $("title"), {action: 'element'});
+                // Also inject title element if we have one
+                if (title)
+                    inject._inject(trigger, title, $("title"), {action: 'element'});
             }
         },
 
