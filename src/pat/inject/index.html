@@ -163,6 +163,17 @@
 
 			<p id="history-inject-target"><i>here goes the injection</i></p>
 		</article>
+		<article class="pat-rich">
+			<h3>Inject autosubmit with form using GET and POST</h3>
+
+			<form method="post" class="pat-inject pat-autosubmit" data-pat-inject="history:record" action="inject-form.html?approach=questionable#form-submit-target">
+				<input type="text" name="title" value="Hello World">
+				<input type="submit">
+			</form>
+			
+
+			<p id="form-submit-target"><i>here goes the injection</i></p>
+		</article>
 
 
 	</body>

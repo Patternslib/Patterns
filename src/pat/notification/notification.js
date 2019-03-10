@@ -95,7 +95,7 @@ define([
 
             // add close icon if requested
             if (options.controls.indexOf("icons") >= 0) {
-                $el.append("<button type='button' class=.close-panel'>" + closetext + "</button>");
+                $el.append("<button type='button' class='close-panel'>" + closetext + "</button>");
             }
 
             // add close button if requested

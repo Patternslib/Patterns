@@ -444,9 +444,12 @@ define([
             // Now the injection actually happens.
             if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
             // History support. if subform is submitted, append form params
+            var glue = '?'; 
             if ((cfg.history === "record") && ("pushState" in history)) {
                 if (cfg.params) {
-                    history.pushState({'url': cfg.url + '?' + cfg.params}, "", cfg.url + '?' + cfg.params);
+                    if (cfg.url.indexOf('?') > -1) 
+                        glue = '&';
+                    history.pushState({'url': cfg.url + glue + cfg.params}, "", cfg.url + glue + cfg.params);
                 } else {
                     history.pushState({'url': cfg.url}, "", cfg.url);
                 }
