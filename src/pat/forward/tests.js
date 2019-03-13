@@ -1,4 +1,4 @@
-define(["pat-forward", "pat-utils"], function(pattern, utils) {
+define(["pat-forward"], function(pattern) {
 
     describe("pat-forward", function() {
 
@@ -14,16 +14,16 @@ define(["pat-forward", "pat-utils"], function(pattern, utils) {
             it("allows you to forward the click from an element to another one", function () {
                 var $lab = $("#lab");
                 $lab.append($(
-                    '<form>' +
+                    "<form>" +
                     '    <input id="checkbox" type="checkbox" />' +
                     '    <button class="pat-forward" data-pat-forward="#checkbox">Button</button>' +
-                    '</form>'
+                    "</form>"
                 ));
 
                 pattern.init($(pattern.trigger));
-                expect($lab.find('#checkbox').is(':checked')).toBeFalsy();
-                $lab.find('.pat-forward').click();
-                expect($lab.find('#checkbox').is(':checked')).toBeTruthy();
+                expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
+                $lab.find(".pat-forward").click();
+                expect($lab.find("#checkbox").is(":checked")).toBeTruthy();
             });
         });
 
@@ -31,16 +31,16 @@ define(["pat-forward", "pat-utils"], function(pattern, utils) {
             it("allows you to forward the click authomatically when the pattern is initialized", function () {
                 var $lab = $("#lab");
                 $lab.append($(
-                    '<form>' +
+                    "<form>" +
                     '    <input id="checkbox" type="checkbox" />' +
                     '    <button class="pat-forward" data-pat-forward="#checkbox; trigger: auto">Button</button>' +
-                    '</form>'
+                    "</form>"
                 ));
 
                 pattern.init($(pattern.trigger));
-                expect($lab.find('#checkbox').is(':checked')).toBeTruthy();
-                $lab.find('.pat-forward').click();
-                expect($lab.find('#checkbox').is(':checked')).toBeFalsy();
+                expect($lab.find("#checkbox").is(":checked")).toBeTruthy();
+                $lab.find(".pat-forward").click();
+                expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
             });
         });
 
