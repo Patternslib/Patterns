@@ -11,20 +11,24 @@ define([
     var parser = new Parser("forward");
 
     parser.addArgument("selector");
+    parser.addArgument("trigger", "click", ["click", "auto"]);
 
     var _ = {
         name: "forward",
         trigger: ".pat-forward",
 
         init: function($el, opts) {
-            return $el.each(function() {
+            return $el.each(function () {
                 var $el = $(this),
-                    options = parser.parse($el, opts);
+                options = parser.parse($el, opts);
 
                 if (!options.selector)
-                    return;
+                return;
 
                 $el.on("click", null, options.selector, _._onClick);
+                if (options.trigger === "auto") {
+                    $el.trigger("click");
+                }
             });
         },
 
@@ -39,4 +43,3 @@ define([
 });
 
 // vim: sw=4 expandtab
-

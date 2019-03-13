@@ -13,10 +13,16 @@
                     <label>
                         <input id="checkbox" type="checkbox"/> I may be ticked through the button too!
                     </label>
-                </fieldset>
+                  </fieldset>
+                  <fieldset class="pat-checklist">
+                      <label>
+                          <input id="autocheckbox" type="checkbox"/> I am automatically ticked on page load!
+                      </label>
+                  </fieldset>
                 <fieldset class="pat-button-bar">
                     <button type="button" class="pat-button pat-forward" data-pat-forward="#checkbox">Click me…</button>
                 </fieldset>
+                <a class="pat-forward" data-pat-forward="#autocheckbox; trigger: auto;"></a>
             </fieldset>
         </form>
 	</body>
