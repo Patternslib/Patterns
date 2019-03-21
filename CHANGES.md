@@ -14,7 +14,6 @@ Fixes
 
 - pat-notification: fix how the close button is rendered (#639)
 - pat-modal: remove an handler after the modal is closed (allows for injection inside modals, see #550)
-- pat-modal: fix .pat-modal inside .pat-inject (allows for modals inside inject elemets, see #303)
 - Enable babel transpiler
 - Interim condition to trigger: autoload-visible to abort injection in case the tartget element is no longer present.
 - pat-inject: autoload-visible now uses the intersection observer

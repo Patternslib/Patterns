@@ -385,24 +385,8 @@ define([
             }
             inherit = (inherit!==false);
             var stack = inherit ? [[this._defaults($el)]] : [[{}]];
-            var $possible_config_providers;
-            var final_length = 1
-            /*
-             * XXX this is a workaround for:
-             * - https://github.com/Patternslib/Patterns/issues/393
-             *
-             * Prevents the parser to pollute the pat-modal configuration
-             * with data-pat-inject elements define in a `.pat-modal` parent element.
-             *
-             *  Probably this function should be completely revisited, see:
-             * - https://github.com/Patternslib/Patterns/issues/627
-             *
-             */
-            if (!inherit || ($el.hasClass('pat-modal') && this.attribute === 'data-pat-inject')) {
-                $possible_config_providers = $el;
-            } else {
-                $possible_config_providers = $el.parents().andSelf();
-            }
+            var $possible_config_providers = inherit ? $el.parents().addBack() : $el,
+                final_length = 1;
 
             _.each($possible_config_providers, function (provider) {
                 var data = $(provider).attr(this.attribute), frame, _parse;

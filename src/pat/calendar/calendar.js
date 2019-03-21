@@ -461,7 +461,7 @@ define([
                     return this.checked &&
                         $(this)
                             .parents()
-                            .andSelf()
+                            .addBack()
                             .hasClass(cat);
                 }).length;
             });

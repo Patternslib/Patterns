@@ -142,7 +142,7 @@ define([
             /* Calculates the bounding box for a given element, taking margins
              * into consideration
              */
-            var box = $sticker.offset();
+            var box = $sticker.safeOffset();
             margin = margin ? margin : 0;
             box.top -= (parseFloat($sticker.css("margin-top")) || 0) + margin;
             box.left -= (parseFloat($sticker.css("margin-left")) || 0) + margin;

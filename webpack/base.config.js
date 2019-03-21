@@ -1,4 +1,5 @@
 // Organised as described in https://simonsmith.io/organising-webpack-config-environments/
+process.traceDeprecation = true;
 const path = require('path');
 var webpack = require('webpack');
 
@@ -10,8 +11,7 @@ try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (er
 
 
 var WrapperPlugin = require('wrapper-webpack-plugin');
-
-var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
+var DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -42,6 +42,13 @@ module.exports = {
             //     }
             // },
             {
+                test: /(equaliser|focus|masonry|push_kit|scroll)\.js$/,
+                loader: 'babel-loader',
+                options:{
+                  presets:['@babel/env']
+                }
+            },
+            {
                 test: require.resolve('jquery'),
                 use: [{
                         loader: 'expose-loader',
@@ -60,7 +67,7 @@ module.exports = {
                         query: 'AbstractChosen'
                     },
                     {
-                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window',
+                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window,jqmigrate=jquery-migrate',
                     }
                 ]
             },
@@ -68,7 +75,7 @@ module.exports = {
                 test: /jquery.anythingslider|jcrop|jquery.placeholder|jquery.textchange|parsley|parsley.extend|select2|spectrum|spectrum-colorpicker/,
                 use: [
                     {
-                      loader: 'imports-loader?jquery',
+                      loader: 'imports-loader?jquery,jqmigrate=jquery-migrate',
                     }
                 ]
             },
@@ -81,6 +88,17 @@ module.exports = {
                 ]
             },
             // { test: /pat-calendar/, loader: 'imports-loader?fullcalendar' }
+            {
+                issuer: [
+                    __dirname + '/../tests/specs/*/*.js$/',
+                    __dirname + '../src/pat/*/tests.js$/'
+                ],
+                use: [
+                    {
+                        loader: 'imports-loader?jQuery=jquery,$=jquery,jqmigrate=jquery-migrate'
+                    }
+                ]
+            }
         ]
     },
     resolve: {
@@ -93,7 +111,6 @@ module.exports = {
             "jcrop": "jquery-jcrop/js/jquery.Jcrop.min.js",
             "jquery.anythingslider": "anythingslider/js/jquery.anythingslider.min.js",
             "jquery.chosen": "chosen-js/chosen.jquery.js",
-            "jquery.form": "jquery-form/dist/jquery.form.min.js",
             "jquery.placeholder": "jquery-placeholder/jquery.placeholder.js",
             "jquery.textchange": "jquery-textchange/jquery.textchange.js",
             "logging": "logging/src/logging.js",
@@ -159,7 +176,7 @@ module.exports = {
             "pat-form-state": "pat/form-state/form-state.js",
             "pat-forward": "pat/forward/forward.js",
             "pat-gallery": "pat/gallery/gallery.js",
-            "pat-gallery-template": "pat/gallery/template.html",
+            "pat-gallery-url": "pat/gallery",
             "pat-grid": "pat/grid/grid.js", // Hack, there's no grid jS, but we need for website bundler
             "pat-syntax-highlight": "pat/syntax-highlight/syntax-highlight.js",
             "pat-image-crop": "pat/image-crop/image-crop.js",
@@ -216,6 +233,10 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery",
             jquery: "jquery"
+        }),
+        new DuplicatePackageCheckerPlugin({
+            verbose: true,
+            emitError: true
         })
     ]
 };

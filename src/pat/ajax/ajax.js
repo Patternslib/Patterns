@@ -8,9 +8,8 @@ define([
     "jquery",
     "pat-logger",
     "pat-parser",
-    "pat-registry",
-    "jquery-form"
-], function($, logger, Parser, registry, jqform) {
+    "pat-registry"
+], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.ajax"),
         parser = new Parser("ajax");
     parser.addArgument("url", function($el) {
@@ -75,7 +74,6 @@ define([
                     log.error("load error for " + cfg.url + ":", error, jqxhr);
                     $el.trigger({
                         type: "pat-ajax-error",
-                        error: error,
                         jqxhr: jqxhr
                     });
                 },
@@ -92,21 +90,25 @@ define([
                         // ignore
                     }
                 },
+                temp = $el.data("pat-ajax.clicked-data"),
+                clickedData = (temp ? $.param(temp) : ''),
                 args = {
                     context: $el,
-                    data: $el.data("pat-ajax.clicked-data"),
+                    data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
                     url: cfg.url,
-                    error: onError,
-                    success: onSuccess
                 };
+
+            if ($el.is("form") && $el.attr("method"))
+                args["method"] = $el.attr("method");
 
             $el.removeData("pat-ajax.clicked-data");
             log.debug("request:", args, $el[0]);
-            if ($el.is("form")) {
-                $el.ajaxSubmit(args);
-            } else {
-                $.ajax(args);
-            }
+
+            // Make it happen
+            var ajax_deferred = $.ajax(args);
+
+            if (ajax_deferred)
+                ajax_deferred.done(onSuccess).fail(onError);
         }
     };
 

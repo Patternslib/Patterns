@@ -2,12 +2,14 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
     describe("pat-inject", function() {
 
+        var deferred;
+
         var answer = function(html) {
-            expect($.ajax).toHaveBeenCalled();
-            $.ajax.calls.mostRecent().args[0].success(html, "ok", { responseText: html });
+            deferred.resolve(html, "ok", { responseText: html });
         };
 
         beforeEach(function() {
+            deferred = new $.Deferred();
             $("<div/>", {id: "lab"}).appendTo(document.body);
         });
 
@@ -44,7 +46,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("has a default value of 'injecting' and gets added to the target while content is still loading'", function() {
-                spyOn($, "ajax");
+                spyOn($, "ajax").and.returnValue(deferred);
                 var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
@@ -68,7 +70,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("can be set to another string value which then gets added to the target while content is still loading'", function() {
-                spyOn($, "ajax");
+                spyOn($, "ajax").and.returnValue(deferred);
                 var $a = $("<a class=\"pat-inject\" data-pat-inject=\"loading-class: other-class;\" href=\"test.html#someid\">link</a>");
                 var $div = $("<div id=\"someid\" />");
                 $("#lab").empty().append($a).append($div);
@@ -361,11 +363,11 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
 
         describe("DOM tests", function() {
             beforeEach(function() {
-                spyOn($, "ajax");
             });
 
             describe("The patterns-injected event", function() {
                 it("gets triggered after injection has finished'", function() {
+                    spyOn($, "ajax").and.returnValue(deferred);
                     var $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
                     var $div = $("<div id=\"someid\" />");
                     $("#lab").empty().append($a).append($div);
@@ -384,6 +386,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $a, $div;
 
                 beforeEach(function() {
+                    spyOn($, "ajax").and.returnValue(deferred);
                     $a = $("<a class=\"pat-inject\" href=\"test.html#someid\">link</a>");
                     $div = $("<div id=\"someid\" />");
                     $("#lab").append($a).append($div);
@@ -418,7 +421,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     expect($.ajax).toHaveBeenCalled();
                     expect($.ajax.calls.mostRecent().args[0].url).toBe("test.html");
                 });
-                
+
                 it("injects into existing div", function() {
                     pattern.init($a);
                     $a.trigger("click");
@@ -432,6 +435,13 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     $a.trigger("click");
                     answer("<html><body><div id=\"someid\">replacement</div></body></html>");
                     expect($div.html()).toBe("replacement");
+
+                    // Deferred objects are supposed to be resolved only once.
+                    // This is a trick to force the second ajax() call to return a new Deferred().
+                    // It is only needed here, because this is the only test case that makes two ajax() calls.
+                    deferred = new $.Deferred();
+                    $.ajax.calls.reset();
+                    $.ajax.and.returnValue(function() { return deferred; }());
 
                     $a.trigger("click");
                     answer("<html><body><div id=\"someid\">new replacement</div></body></html>");
@@ -533,6 +543,7 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                 var $form, $div;
 
                 beforeEach(function() {
+                    spyOn($, "ajax").and.returnValue(deferred);
                     $form = $("<form class=\"pat-inject\" action=\"test.html#someid\" />");
                     $div = $("<div id=\"someid\" />");
                     $("#lab").append($form).append($div);
@@ -556,8 +567,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($form);
                     $form.trigger("submit");
 
+                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.calls.mostRecent().args[0].url).toContain("param=somevalue");
+                    expect(ajaxargs.data).toContain("param=somevalue");
                 });
 
                 it("pass post form parameters in ajax call as data", function() {
@@ -567,8 +579,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($form);
                     $form.trigger("submit");
 
+                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.calls.mostRecent().args[0].data).toContain("param=somevalue");
+                    expect(ajaxargs.data).toContain("param=somevalue");
                 });
 
                 it("pass submit button value in ajax call as data", function() {
@@ -580,8 +593,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($form);
                     $submit.trigger("click");
 
+                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
                     expect($.ajax).toHaveBeenCalled();
-                    expect($.ajax.calls.mostRecent().args[0].data).toContain("submit=label");
+                    expect(ajaxargs.data).toContain("submit=label");
                 });
 
                 describe("formaction attribute on submit buttons", function() {
@@ -595,8 +609,10 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         pattern.init($form);
                         $submit2.trigger("click");
 
+                        var ajaxargs = $.ajax.calls.mostRecent().args[0];
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toBe("submit=special");
                     });
 
                     it("use an image submit with a formaction value as action URL", function() {
@@ -609,8 +625,10 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                         pattern.init($form);
                         $submit2.trigger("click");
 
+                        var ajaxargs = $.ajax.calls.mostRecent().args[0];
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toBe("submit=special");
                     });
 
                     it("use fragment in formaction value as source + target selector", function() {
@@ -628,9 +646,10 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "<div id=\"otherid\">other</div>" +
                                "</body></html>");
 
+                        var ajaxargs = $.ajax.calls.mostRecent().args[0];
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
-                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
                         expect($target.html()).toBe("other");
                     });
 
@@ -650,9 +669,10 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "<div id=\"otherid\">other</div>" +
                                "</body></html>");
 
+                        var ajaxargs = $.ajax.calls.mostRecent().args[0];
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
-                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
                         expect($target.html()).toBe("other");
                     });
 
@@ -673,9 +693,10 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "<div id=\"otherid\">other</div>" +
                                "</body></html>");
 
+                        var ajaxargs = $.ajax.calls.mostRecent().args[0];
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
-                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
                         expect($target1.html()).toBe("other");
                         expect($target2.html()).toBe("other");
                     });
@@ -698,12 +719,14 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "<div id=\"otherid\">other</div>" +
                                "</body></html>");
 
+                        var ajaxargs = $.ajax.calls.mostRecent().args[0];
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
-                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
                         expect($target1.html()).toBe("some");
                         expect($target2.html()).toBe("other");
                     });
+
                     it("formaction works source and target on the button", function() {
                         var $submit1 = $("<input type=\"submit\" name=\"submit\" value=\"default\" />"),
                             $submit2 = $("<input type=\"submit\" name=\"submit\" value=\"special\" />"),
@@ -722,9 +745,10 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                                "<div id=\"otherid\">other</div>" +
                                "</body></html>");
 
+                        var ajaxargs = $.ajax.calls.mostRecent().args[0];
                         expect($.ajax).toHaveBeenCalled();
-                        expect($.ajax.calls.mostRecent().args[0].url).toContain("submit=special");
-                        expect($.ajax.calls.mostRecent().args[0].url).toBe("other.html?submit=special");
+                        expect(ajaxargs.url).toBe("other.html");
+                        expect(ajaxargs.data).toContain("submit=special");
                         expect($target1.html()).toBe("some");
                         expect($target2.html()).toBe("other");
                     });
