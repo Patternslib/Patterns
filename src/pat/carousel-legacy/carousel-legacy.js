@@ -89,7 +89,7 @@ define([
         _loadPanelImages: function(slider, page) {
             var $img;
             log.info("Loading lazy images on panel " + page);
-            slider.$items.eq(page).find("img").addBack().filter("[data-src]").each(function() {
+            slider.$items.eq(page).find("img").andSelf().filter("[data-src]").each(function() {
                 $img=$(this);
                 this.src=$img.attr("data-src");
                 $img.removeAttr("data-src");

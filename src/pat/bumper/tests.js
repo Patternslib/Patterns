@@ -164,7 +164,7 @@ define(["jquery", "pat-bumper", "modernizr"], function($, Bumper) {
 
         describe("The init method", function(){
             it("Returns the jQuery-wrapped DOM node", function() {
-                var $el = $('<div class="pat-scroll"></div>');
+                var $el = $('<div class="pat-scroll"></div');
                 var pattern = new Bumper($el);
                 expect(pattern.init($el)).toBe($el);
             });

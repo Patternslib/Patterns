@@ -26,7 +26,7 @@ define([
                 };
 
                 closeMenu = function($li) {
-                    $li.find("li.open").addBack().removeClass("open").addClass("closed");
+                    $li.find("li.open").andSelf().removeClass("open").addClass("closed");
                 };
 
                 mouseOverHandler = function() {

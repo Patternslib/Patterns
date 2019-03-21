@@ -64,7 +64,7 @@ define(["pat-auto-scale", "jquery"], function(Pattern, jQuery) {
         describe("When the pattern is initialized", function() {
 
             it("returns the jQuery-wrapped DOM node", function() {
-                var $el = $('<div class="pat-auto-scale"></div>');
+                var $el = $('<div class="pat-auto-scale"></div');
                 var pattern = new Pattern($el);
                 expect(pattern.init($el)).toBe($el);
             });

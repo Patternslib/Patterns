@@ -63,7 +63,7 @@ define("pat-clone",[
             $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
             $clone.find(this.options.remove.element).on("click", this.confirmRemoval.bind(this, $clone));
 
-            $clone.prop("hidden", false);
+            $clone.removeAttr("hidden");
             registry.scan($clone);
 
             $clone.trigger("pat-update", {'pattern':"clone", 'action': 'clone', '$el': $clone});

@@ -58,7 +58,7 @@ define([
             this.errors = 0;
             this.options = parser.parse(this.$el, opts);
             this.$inputs = this.$el.find(':input[name]');
-            this.$el.find(":input[type=number]").on('keyup mouseup', _.debounce(function (ev) {
+            this.$el.find(":input[type=number]").bind('keyup mouseup', _.debounce(function (ev) {
                 this.validateElement(ev.target);
             }.bind(this), 500));
             this.$inputs.on('change.pat-validation', function (ev) { this.validateElement(ev.target); }.bind(this));
