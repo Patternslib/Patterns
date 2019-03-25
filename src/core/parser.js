@@ -401,22 +401,25 @@ define([
             if (!inherit || ($el.hasClass('pat-modal') && this.attribute === 'data-pat-inject')) {
                 $possible_config_providers = $el;
             } else {
-                $possible_config_providers = $el.parents().andSelf();
+                $possible_config_providers = $el.parents("[" + this.attribute + "]").andSelf();
             }
 
             _.each($possible_config_providers, function (provider) {
-                var data = $(provider).attr(this.attribute), frame, _parse;
-                if (data) {
-                    _parse = this._parse.bind(this);
-                    if (data.match(/&&/))
-                        frame = data.split(/\s*&&\s*/).map(_parse);
-                    else
-                        frame = [_parse(data)];
-                    final_length = Math.max(frame.length, final_length);
-                    stack.push(frame);
+                var data, frame, _parse;
+                data = $(provider).attr(this.attribute)
+                if (!data) {
+                    return;
                 }
+                _parse = this._parse.bind(this);
+                if (data.match(/&&/))
+                    frame = data.split(/\s*&&\s*/).map(_parse);
+                else
+                    frame = [_parse(data)];
+                final_length = Math.max(frame.length, final_length);
+                stack.push(frame);
             }.bind(this));
-            if (typeof options==="object") {
+
+            if (typeof options === "object") {
                 if (Array.isArray(options)) {
                     stack.push(options);
                     final_length = Math.max(options.length, final_length);
