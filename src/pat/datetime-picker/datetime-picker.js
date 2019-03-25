@@ -16,6 +16,7 @@ define(
         parser.addArgument('i18n'); // URL pointing to JSON resource with i18n values
         parser.addArgument('today', 'Today');
         parser.addArgument('clear', 'Clear');
+        parser.addArgument('first-day', 0);
 
         return DatePicker.extend({
             name: 'datetime-picker',
@@ -33,7 +34,8 @@ define(
                 var date_options = {
                     behavior: this.options.behavior,
                     format: this.options.format,
-                    weekNumbers: this.options.weekNumbers
+                    weekNumbers: this.options.weekNumbers,
+                    firstDay: this.options.firstDay
                 };
 
                 this.$date = $('<input class="date" type="date" placeholder="YYYY-MM-DD"/>')
