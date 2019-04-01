@@ -15,6 +15,8 @@ define(
         parser.addArgument('format', 'YYYY-MM-DD');
         parser.addArgument('week-numbers', [], ['show', 'hide']);
         parser.addArgument('i18n'); // URL pointing to JSON resource with i18n values
+        parser.addArgument('first-day', 0);
+
         /* JSON format for i18n
         * { "previousMonth": "Previous Month",
         *   "nextMonth"    : "Next Month",
@@ -40,6 +42,7 @@ define(
                 var config = {
                     field: this.$el[0],
                     format: this.options.format,
+                    firstDay: this.options.firstDay,
                     showWeekNumber: this.options.weekNumbers === 'show',
                     toString: function (date, format) {
                         var date = moment(date).format(format);

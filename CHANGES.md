@@ -12,6 +12,7 @@ Features
 Fixes
 ~~~~~
 
+- pat-date-picker, pat-datetime-picker: Support the `first-day` parameter (#647)
 - pat-notification: fix how the close button is rendered (#639)
 - pat-modal: remove an handler after the modal is closed (allows for injection inside modals, see #550)
 - Enable babel transpiler
