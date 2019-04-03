@@ -18,6 +18,7 @@
     "AnythingSlider": "https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
     "almond": "",
     "anythingslider": "git+https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
+    "autobahn": "^18.10.2",
     "babel-cli": "^6.26.0",
     "babel-core": "6.26.3",
     "babel-loader": "7.1.5",

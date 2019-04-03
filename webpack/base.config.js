@@ -87,6 +87,7 @@ module.exports = {
         modules: ['src', 'node_modules'],
         alias: {
             "jquery": "jquery/dist/jquery.js",
+            "autobahn": "autobahn/lib/autobahn.js",
             "push-kit": "core/push_kit.js",
             "google-code-prettify": "google-code-prettify/src/prettify.js",
             "intersection-observer": "intersection-observer/intersection-observer.js",

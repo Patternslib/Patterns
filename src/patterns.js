@@ -11,7 +11,7 @@ define([
     "pat-registry",
     "modernizr",
     "prefixfree",
-//    "push-kit",
+    "push-kit",
     "pat-ajax",
 
     "pat-autofocus",
