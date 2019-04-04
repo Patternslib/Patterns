@@ -6,60 +6,61 @@
 
 define([
     "jquery",
-    "@horizon/client",
+    "autobahn",
     "pat-utils"
-], function($, Horizon, utils) {
+], function($, autobahn, utils) {
     var push_kit = {
 
     	init: function () {
     		var pps = $('meta[name=patterns-push-server]').attr("content");
     		if (!pps) return;
-		    const horizon = Horizon({host: pps});
-		    horizon.onReady(function() {
-		        console.log("Horizon push support initialised on " + pps)
-		    });
-		    horizon.connect();
-		    var status = horizon.status();
-		    if (status._value.type == 'unconnected') {
-		        console.log("Connection failed to Horizon server. No push support available.");
-		        return;	    	
-		    } else if (status._value.type == 'disconnected') {
-		        console.log("Connection disconnected to Horizon server. No push support available.");
-		        return;    	
-		    } else if (status._value.type == 'error') {
-		        console.log("Connection failed to to an error. No push support available.");
-		        return;    	
-		    } 
-		    const push_markers = horizon("push_marker");
-		    push_markers.order("datetime", "descending").watch().subscribe(
-		      (items) => {
-		          item = items[0];
-		          console.log(item);
-		          if (!item) return;
+
+    		var connection = new autobahn.Connection({
+   				url: pps,  
+   				realm: 'quaivecloud',
+				on_user_error: function (error, customErrorMessage) {
+		           // here comes your custom error handling, when a 
+		           // something went wrong in a user defined callback.
+			      console.log("User error: ", error);},
+		        on_internal_error: function (error, customErrorMessage) {
+		           // here comes your custom error handling, when a 
+		           // something went wrong in the autobahn core.
+			      console.log("Internal error: ", error);}
+			    }
+			);
+			connection.onopen = function (session) {
+
+			   function oneventPushMarker(args, kwargs, details) {
+			   	  var item = args[0];
+			      console.log("Received push event: ", item);
+				  if (!item) return;
 		          // only show if the notification is max 1 sec old
-		          if (item['datetime'].getTime() > new Date().getTime()-1000)
+		          if (item['datetime'] > new Date().getTime()-1000)
 					$('body').trigger('push', [ item['title'] ]);
-		      },
-		      // If an error occurs, this function
-		      //  will execute with the `err` message
-		      (err) => {
-		        console.log(err);
-		      });
-			const desktop_notifications = horizon("desktop_notification");
-		    desktop_notifications.order("datetime", "descending").watch().subscribe(
-		      (items) => {
-		          item = items[0];
-		          console.log(item);
-		          if (!item) return;
+
+			   }
+
+			   session.subscribe('push_marker', oneventPushMarker);
+			   
+
+			   function oneventDesktopNotification(args, kwargs, details) {
+			   	  var item = args[0];
+			      console.log("Received push event: ", item);
+				  if (!item) return;
 		          // only show if the notification is max 1 sec old
-		          if (item['datetime'].getTime() > new Date().getTime()-1000)
+		          if (item['datetime'] > new Date().getTime()-1000)
 					push_kit.createNotification(item['title']);
-		      },
-		      // If an error occurs, this function
-		      //  will execute with the `err` message
-		      (err) => {
-		        console.log(err);
-		      });
+
+			   }
+
+			   session.subscribe('desktop_notification', oneventDesktopNotification);
+
+
+			};
+
+			connection.open();
+	        console.log("Crossbar push support initialised on " + pps)
+
     	},
 
 
