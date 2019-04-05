@@ -485,7 +485,16 @@ define([
                 });
             }
             if (cfg.scroll) {
-                $(cfg['target'])[0].scrollTop = $(cfg['scroll'])[0].offsetTop;
+                if (cfg['scroll'] == 'top') {
+                    $(cfg['target'])[0].scrollTop = 0;
+                } else if (cfg['scroll'] == 'target') 
+                    /* scrollable: target Target indicates the target in the URL fragment the URL 
+                       that's in the href or action in the case of a form. After injection, the 
+                       page or scroll container will scroll to bring the element with that ID into view. */
+                    //$(cfg['target'])[0].scrollTop = $(cfg['scroll'])[0].offsetTop;
+                } else {
+                    $(cfg['target'])[0].scrollTop = $(cfg['scroll'])[0].offsetTop;
+                }
             }
             $el.trigger("pat-inject-success");
         },
