@@ -53,18 +53,22 @@
 					<a href="page-that-doesnt-exist#nothing" class="pat-inject">Trigger an inject that fails.</a>
 					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;page-that-doesnt-exist&quot; class=&quot;pat-inject&quot;&gt;</code></em>
 				</li>
-        <li>
-          Place "Wilde in column 2 when <button onclick="document.getElementById('autoload-visible-item').removeAttribute('style')">the hidden link appears</button>
-          <span id="autoload-visible-item" style="display:none">
-            <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="trigger: autoload-visible">I am visible now</a>
-          </span>
-        </li>
+		        <li>
+		          Place "Wilde in column 2 when <button onclick="document.getElementById('autoload-visible-item').removeAttribute('style')">the hidden link appears</button>
+		          <span id="autoload-visible-item" style="display:none">
+		            <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="trigger: autoload-visible">I am visible now</a>
+		          </span>
+		        </li>
+		        <li>
+		        	<a href="inject-text.html#pos-1" class="pat-inject" data-pat-inject="scroll: #scroll-target">Load text into column 1 and scoll to #scroll-target</a>
+		        	<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-text.html&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;scroll: #scroll-target&quot;&gt;</code></em>
+		        </li>
 			</ul>
       <button onclick="document.getElementById('autoload-visible-li').removeAttribute("style")">Show autoload visible</button>
 		</article>
 		<div id="poems" class="row pat-equaliser">
 			<div class="item poem three columns">
-				<article class="pat-rich" id="pos-1">
+				<article class="pat-rich" id="pos-1" style="overflow:scroll">
 					<p>
 						<strong class="placeholder">?</strong>
 					</p>
