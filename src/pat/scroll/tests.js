@@ -67,7 +67,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 setTimeout(function() {
                     expect(spy_animate).toHaveBeenCalled();
                     done();
-                }, 2000);
+                }, 3000);
             });
         });
     });

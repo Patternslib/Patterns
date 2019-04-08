@@ -99,7 +99,7 @@ define([
                     method: $el.attr("method") ? $el.attr("method") : "GET"
                 };
 
-            if ($el.is("form") && $el.attr("method") && $el.attr("method").toLowerCase() == "post") {
+            if ($el.is("form") && $el.attr("method") && $el.attr("method").toUpperCase() == "POST") {
                 var formdata = new FormData($el[0]);
                 args["method"] = "POST";
                 args["data"] = formdata;
