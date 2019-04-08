@@ -50,8 +50,8 @@ define(["pat-ajax"], function(pattern) {
                 $form.submit();
                 var ajaxargs = $.ajax.calls.mostRecent().args[0];
                 expect(ajaxargs.url).toEqual("action.html");
-                expect(ajaxargs.method).toEqual("post");
-                expect(ajaxargs.data).toEqual("input1=value1");
+                expect(ajaxargs.method).toEqual("POST");
+                expect(ajaxargs.data.get('input1')).toContain("value1");
             });
 
             it("triggers ajax request on click submit", function() {

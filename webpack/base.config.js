@@ -177,7 +177,7 @@ module.exports = {
             "pat-form-state": "pat/form-state/form-state.js",
             "pat-forward": "pat/forward/forward.js",
             "pat-gallery": "pat/gallery/gallery.js",
-            "pat-gallery-url": "pat/gallery",
+            "pat-gallery-template": "pat/gallery/template.html",
             "pat-grid": "pat/grid/grid.js", // Hack, there's no grid jS, but we need for website bundler
             "pat-syntax-highlight": "pat/syntax-highlight/syntax-highlight.js",
             "pat-image-crop": "pat/image-crop/image-crop.js",

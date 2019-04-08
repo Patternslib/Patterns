@@ -96,11 +96,12 @@ define([
                     context: $el,
                     data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
                     url: cfg.url,
+                    method: $el.attr("method") ? $el.attr("method") : "GET"
                 };
 
-            if ($el.is("form") && $el.attr("method")) {
+            if ($el.is("form") && $el.attr("method") && $el.attr("method").toLowerCase() == "post") {
                 var formdata = new FormData($el[0]);
-                args["method"] = $el.attr("method");
+                args["method"] = "POST";
                 args["data"] = formdata;
                 args["cache"] = false;
                 args["contentType"] =  false;
