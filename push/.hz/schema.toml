@@ -1,3 +1,0 @@
-[groups.admin]
-[groups.admin.rules.carte_blanche]
-template = "any()"

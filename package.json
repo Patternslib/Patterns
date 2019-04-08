@@ -17,6 +17,7 @@
   "dependencies": {
     "almond": "0.3.3",
     "anythingslider": "git+https://github.com/CSS-Tricks/AnythingSlider.git#v1.9.6",
+    "autobahn": "^18.10.2",
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
