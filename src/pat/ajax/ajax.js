@@ -98,8 +98,15 @@ define([
                     url: cfg.url,
                 };
 
-            if ($el.is("form") && $el.attr("method"))
+            if ($el.is("form") && $el.attr("method")) {
+                var formdata = new FormData($el[0]);
                 args["method"] = $el.attr("method");
+                args["data"] = formdata;
+                args["cache"] = false;
+                args["contentType"] =  false;
+                args["processData"] =  false;
+                args["type"] = "POST";
+            }
 
             $el.removeData("pat-ajax.clicked-data");
             log.debug("request:", args, $el[0]);
