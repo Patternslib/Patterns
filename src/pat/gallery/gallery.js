@@ -10,7 +10,7 @@ define('pat-gallery', [
     'pat-parser',
     'photoswipe',
     'photoswipe-ui',
-    'text!pat-gallery-url/template.html',
+    'text!pat-gallery-template',
     'underscore'
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser('gallery');

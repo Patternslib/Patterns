@@ -35,8 +35,22 @@ define(['pat-date-picker'], function(pattern) {
                 document.querySelector('.pika-lendar td.is-today button').getAttribute('data-pika-day')
             ).toBe(day);
 
+            expect(
+                document.querySelector('.pika-lendar th:first-child abbr').textContent
+            ).toBe('Sun');
+
         });
 
+        it('Date picker starts at Monday.', function () {
+            var $pika = $('<input type="date" class="pat-date-picker" data-pat-date-picker="first-day: 1" />').appendTo(document.body);
+            pattern.init($pika);
+            $pika.click();
+
+            expect(
+                document.querySelector('.pika-lendar th:first-child abbr').textContent
+            ).toBe('Mon');
+
+        });
 
         it('Date picker with pre-set value.', function () {
             var $pika = $('<input type="date" class="pat-date-picker" value="1900-01-01"/>').appendTo(document.body);

@@ -167,6 +167,8 @@ define([
              */
             var cfgs = $(this).data("pat-inject"),
                 $el = $(this);
+            if ($el.is("form"))
+                $(cfgs).each(function(i, v) {v.params = $.param($el.serializeArray());});
             ev && ev.preventDefault();
             $el.trigger("patterns-inject-triggered");
             inject.execute(cfgs, $el);
@@ -181,6 +183,8 @@ define([
                 opts = {url: formaction},
                 $cfg_node = $button.closest("[data-pat-inject]"),
                 cfgs = inject.extractConfig($cfg_node, opts);
+
+            $(cfgs).each(function(i, v) {v.params = $.param($form.serializeArray());});
 
             ev.preventDefault();
             $form.trigger("patterns-inject-triggered");
@@ -414,7 +418,7 @@ define([
             }
         },
 
-        _performInjection: function ($el, $source, cfg, trigger) {
+        _performInjection: function ($el, $source, cfg, trigger, title) {
             /* Called after the XHR has succeeded and we have a new $source
              * element to inject.
              */
@@ -440,12 +444,18 @@ define([
             // Now the injection actually happens.
             if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
             // History support. if subform is submitted, append form params
+            var glue = '?'; 
             if ((cfg.history === "record") && ("pushState" in history)) {
                 if (cfg.params) {
-                    history.pushState({'url': cfg.url + '?' + cfg.params}, "", cfg.url + '?' + cfg.params);
+                    if (cfg.url.indexOf('?') > -1) 
+                        glue = '&';
+                    history.pushState({'url': cfg.url + glue + cfg.params}, "", cfg.url + glue + cfg.params);
                 } else {
                     history.pushState({'url': cfg.url}, "", cfg.url);
                 }
+                // Also inject title element if we have one
+                if (title)
+                    inject._inject(trigger, title, $("title"), {action: 'element'});
             }
         },
 
@@ -488,10 +498,19 @@ define([
             });
             inject.stopBubblingFromRemovedElement($el, cfgs, ev);
             sources$ = inject.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
+            /* pick the title source for dedicated handling later
+              Title - if present - is always appended at the end. */
+            var title;
+            if (sources$ && 
+                sources$[sources$.length-1] &&
+                sources$[sources$.length-1][0] && 
+                sources$[sources$.length-1][0].nodeName == "TITLE") {
+                title = sources$[sources$.length-1];
+            }        
             cfgs.forEach(function(cfg, idx) {
                 function perform_inject() {
                     cfg.$target.each(function() {
-                        inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target]);
+                        inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target, title]);
                     });
                 }
                 if (cfg.processDelay) {
@@ -737,11 +756,15 @@ define([
             url = url || "";
 
             // remove script tags and head and replace body by a div
+            var title = html.match(/\<title\>(.*)\<\/title\>/);
             var clean_html = html
                     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
                     .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
                     .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
                     .replace(/<\/body([^>]*?)>/gi, "</div>");
+            if (title && title.length == 2) {
+                clean_html = title[0] + clean_html;
+            }
             try {
                 clean_html = inject._rebaseHTML(url, clean_html);
             } catch (e) {
@@ -909,6 +932,7 @@ define([
             "html": {
                 sources: function(cfgs, data) {
                     var sources = cfgs.map(function(cfg) { return cfg.source; });
+                    sources.push("title");
                     return inject._sourcesFromHtml(data, cfgs[0].url, sources);
                 }
             }

@@ -2,7 +2,7 @@
 <html>
 	<head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="patterns-push-server" content="127.0.0.1:8181" />
+        <meta name="patterns-push-server" content="ws://push.quaivecloud.com/ws" />
         <title>Injection pattern</title>
         <link rel="stylesheet" href="/style/common.css" type="text/css">
         <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
@@ -157,5 +157,24 @@
 				margin-bottom: 1em;
 			}
 		</style>
+		<article class="pat-rich">
+			<h3>Inject history example</h3>
+			<p><a href="history-inject-source.html#content" class="pat-inject" data-pat-inject="history:record; source: #content; target: #history-inject-target">Inject some text and record the history</a></p>
+
+			<p id="history-inject-target"><i>here goes the injection</i></p>
+		</article>
+		<article class="pat-rich">
+			<h3>Inject autosubmit with form using GET and POST</h3>
+
+			<form method="post" class="pat-inject pat-autosubmit" data-pat-inject="history:record" action="inject-form.html?approach=questionable#form-submit-target">
+				<input type="text" name="title" value="Hello World">
+				<input type="submit">
+			</form>
+			
+
+			<p id="form-submit-target"><i>here goes the injection</i></p>
+		</article>
+
+
 	</body>
 </html>
