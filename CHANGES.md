@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.0.0 - unreleased
+
+- Runs now on jQuery 3
+
 ## 3.0.0a5 - unreleased
 
 Features
