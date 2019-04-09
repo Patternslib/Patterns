@@ -102,7 +102,7 @@ define([
             if ($el.is("form") && $el.attr("method") && $el.attr("method").toUpperCase() == "POST") {
                 var formdata = new FormData($el[0]);
                 for (var key in temp) {
-                    formdata.set(key, temp[key]);
+                    formdata.append(key, temp[key]);
                 }
                 args["method"] = "POST";
                 args["data"] = formdata;

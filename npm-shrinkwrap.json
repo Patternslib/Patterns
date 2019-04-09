@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "3.0.0-a5",
+  "version": "4.0.0dev",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
