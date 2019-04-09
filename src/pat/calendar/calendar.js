@@ -498,8 +498,8 @@ define([
                 var location = ($(".location", event).html() || "").trim();
                 var startstr = $(".start", event).attr("datetime"),
                     endstr = $(".end", event).attr("datetime"),
-                    start = $.fullCalendar.moment.parseZone(startstr),
-                    end = $.fullCalendar.moment.parseZone(endstr),
+                    start = momentTz.parseZone(startstr),
+                    end = momentTz.parseZone(endstr),
                     allday = $(event).hasClass("all-day");
 
                 if (allday) {
