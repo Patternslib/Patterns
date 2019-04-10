@@ -1360,6 +1360,11 @@
       "resolved": "https://registry.npmjs.org/babel-plugin-dynamic-import-webpack/-/babel-plugin-dynamic-import-webpack-1.1.0.tgz",
       "integrity": "sha512-Q/Vxl3zRwC5/DMyg97Ey2UD/f7ApvO+0zXgzwT3G2N7oajGFroqcUEmXZ23QXJsr0Y+DBVNK57saaUnQhCpllA=="
     },
+    "babel-plugin-syntax-dynamic-import": {
+      "version": "6.18.0",
+      "resolved": "https://registry.npmjs.org/babel-plugin-syntax-dynamic-import/-/babel-plugin-syntax-dynamic-import-6.18.0.tgz",
+      "integrity": "sha1-jWomIpyDdFqZgqRBBRVyyqF5sdo="
+    },
     "babel-polyfill": {
       "version": "6.26.0",
       "resolved": "https://registry.npmjs.org/babel-polyfill/-/babel-polyfill-6.26.0.tgz",

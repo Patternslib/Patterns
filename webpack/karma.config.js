@@ -44,15 +44,20 @@ module.exports = function(config) {
             //use webpack to support require() in test-suits .js files
             //use babel-loader from webpack to compile es2015 features in .js files
             //add webpack as preprocessor
-            //'test_requires.js': ['webpack'],
             'tests/specs/*/*.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
             'src/pat/*/tests.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
             // list here the files that you want transpiled by babel
             'src/pat/masonry/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
+            'src/pat/calendar/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
         },
         babelPreprocessor: {
             options: {
-                presets: ['@babel/env'],
+                plugins: ['syntax-dynamic-import'],
+                presets: [["@babel/env", {
+                      "targets": {
+                        "browsers": ["last 2 versions", "ie >= 11"]
+                      }
+                    }]],
                 sourceMap: 'inline'
             },
             filename: function(file) {

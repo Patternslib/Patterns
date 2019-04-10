@@ -13,7 +13,8 @@ define([
     "pat-utils",
     "pat-registry",
     "underscore",
-    "moment-timezone-data"
+    "moment-timezone-data",
+    "fullcalendar"
 ], function($, logger, Parser, store, utils, registry, _, momentTz) {
     "use strict";
     var log = logger.getLogger("calendar"),
@@ -68,7 +69,7 @@ define([
         },
 
         init: function($elem, opts) {
-            import(/* webpackChunkName: "fullcalendar" */ 'fullcalendar').then(() => {
+//            const fullCalendar = import(/* webpackChunkName: "fullcalendar" */ 'fullcalendar').then(() => {
                 opts = opts || {};
                 var $el = $elem,
                     cfg = store.updateOptions($el[0], parser.parse($el)),
@@ -114,7 +115,7 @@ define([
                     droppable: cfg.dropExternalEvents,  // Enable dropping of external elements (i.e. not events)
                     editable: cfg.dragAndDrop,          // Enable drag&drop and drag2resize of events
                     dropAccept: cfg.externalEventSelector,
-                    firstDay: (this.dayNames.indexOf(cfg.first.day) >= 0) ? this.dayNames.indexOf(cfg.first.day) : undefined,
+                    firstDay: (this.dayNames.indexOf(cfg.first.day) >= 0) ? this.dayNames.indexOf(cfg.first.day) : 0,
                     firstHour: cfg.first.hour,
                     header: false,
                     height: cfg.height !== "auto" ? cfg.height : undefined,
@@ -204,7 +205,7 @@ define([
                     $el.fullCalendar("option", "height", $el.find(".fc-view-container").height());
                     $el.fullCalendar("refetchEvents");
                 }, 900);
-            } )
+//            } )
         },
 
         _addNewEvent: function($el, $event, data) {
