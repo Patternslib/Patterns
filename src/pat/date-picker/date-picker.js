@@ -6,8 +6,7 @@ define(
         'pat-registry',
         'pat-base',
         'pikaday',
-        'moment',
-        'modernizr'
+        'moment'
     ],
     function(_, Parser, registry, Base, Pikaday, moment) {
         var parser = new Parser('date-picker');
