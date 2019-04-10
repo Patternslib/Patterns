@@ -11,9 +11,10 @@ define([
     "pat-logger",
     "pat-parser",
     "pat-base",
-    "pat-registry"
+    "pat-registry",
+    "modernizr"
 ], function($, _, logger, Parser, Base, registry) {
-    const Modernizr = import('modernizr');
+    
 
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
@@ -39,7 +40,6 @@ define([
             if (Modernizr.csspositionsticky) {
                 this.$el.addClass("sticky-supported");
             }
-
             this.$el[0].style.position = "relative";
             if (!this.$container.length) {
                 $(window).on("scroll.bumper", this._updateStatus.bind(this));
