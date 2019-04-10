@@ -21,7 +21,6 @@ bundle.min.js.map
 /chunks
 test-reports
 /.DS_Store
-modernizr-bundle.js
 
 src/pat/auto-scale/auto-scale.css
 src/pat/auto-submit/auto-submit.css

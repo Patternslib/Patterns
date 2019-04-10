@@ -92,7 +92,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "^4.0.0-rc.5",
-    "modernizr-webpack-plugin": "1.0.7",
+    "modernizr": "3.6.0",
     "mustache": "3.0.0",
     "node-sass": "4.9.3",
     "pegjs": "0.7.0",
@@ -105,6 +105,7 @@
     "webpack-dev-server": "^3.1.14",
     "webpack-jasmine-html-runner-plugin": "^0.9.0",
     "webpack-merge": "^4.1.2",
+    "webpack-modernizr-loader": "^5.0.0",
     "wrapper-webpack-plugin": "^2.0.0",
     "yo": "^2.0.5"
   },

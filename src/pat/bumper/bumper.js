@@ -13,6 +13,8 @@ define([
     "pat-base",
     "pat-registry"
 ], function($, _, logger, Parser, Base, registry) {
+    const Modernizr = import('modernizr');
+
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
 

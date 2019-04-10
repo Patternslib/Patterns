@@ -3,7 +3,8 @@ PEGJS		?= node_modules/.bin/pegjs
 BUNDLE      ?= ./.bundle/bin/bundle
 SASS        ?= ./.bundle/bin/sass
 
-SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/pat/calendar/*.js) $(wildcard src/lib/*.js)
+# SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/pat/*/*.js) $(wildcard src/pat/calendar/*.js) $(wildcard src/lib/*.js)
+SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
 
 GENERATED	= src/lib/depends_parse.js

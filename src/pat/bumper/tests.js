@@ -1,5 +1,7 @@
 define(["jquery", "pat-bumper"], function($, Bumper) {
 
+    const Modernizr = import('modernizr');   // jshint ignore:line
+    
     describe("pat-bumper", function() {
         beforeEach(function() {
             $("#lab").remove();

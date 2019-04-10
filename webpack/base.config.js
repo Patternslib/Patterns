@@ -2,7 +2,6 @@
 process.traceDeprecation = true;
 const path = require('path');
 var webpack = require('webpack');
-var ModernizrWebpackPlugin = require('modernizr-webpack-plugin');
 
 var fs = require('fs');
 var headerWrap = '';
@@ -13,174 +12,6 @@ try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (er
 
 var WrapperPlugin = require('wrapper-webpack-plugin');
 var DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
-
-var modernizr_config = {
-  "classPrefix": "",
-  "options": [
-    "addTest",
-    "atRule",
-    "domPrefixes",
-    "hasEvent",
-    "html5shiv",
-    "html5printshiv",
-    "load",
-    "mq",
-    "prefixed",
-    "prefixes",
-    "prefixedCSS",
-    "setClasses",
-    "testAllProps",
-    "testProp",
-    "testStyles"
-  ],
-  "feature-detects": [
-    "a/download",
-    "applicationcache",
-    "blob",
-    "canvas",
-    "canvas/blending",
-    "canvas/todataurl",
-    "canvas/winding",
-    "canvastext",
-    "contenteditable",
-    "contextmenu",
-    "cookies",
-    "cors",
-    "custom-elements",
-    "css/all",
-    "css/animations",
-    "css/appearance",
-    "css/backdropfilter",
-    "css/backgroundblendmode",
-    "css/backgroundcliptext",
-    "css/backgroundposition-shorthand",
-    "css/backgroundposition-xy",
-    "css/backgroundrepeat",
-    "css/backgroundsize",
-    "css/backgroundsizecover",
-    "css/borderimage",
-    "css/borderradius",
-    "css/boxshadow",
-    "css/boxsizing",
-    "css/calc",
-    "css/checked",
-    "css/chunit",
-    "css/columns",
-    "css/cssgrid",
-    "css/cubicbezierrange",
-    "css/displayrunin",
-    "css/displaytable",
-    "css/ellipsis",
-    "css/escape",
-    "css/exunit",
-    "css/filters",
-    "css/flexbox",
-    "css/flexboxlegacy",
-    "css/flexboxtweener",
-    "css/flexwrap",
-    "css/fontface",
-    "css/generatedcontent",
-    "css/gradients",
-    "css/hairline",
-    "css/hsla",
-    "css/invalid",
-    "css/lastchild",
-    "css/mask",
-    "css/mediaqueries",
-    "css/multiplebgs",
-    "css/nthchild",
-    "css/objectfit",
-    "css/opacity",
-    "css/overflow-scrolling",
-    "css/pointerevents",
-    "css/positionsticky",
-    "css/pseudoanimations",
-    "css/pseudotransitions",
-    "css/reflections",
-    "css/regions",
-    "css/remunit",
-    "css/resize",
-    "css/rgba",
-    "css/scrollbars",
-    "css/scrollsnappoints",
-    "css/shapes",
-    "css/siblinggeneral",
-    "css/subpixelfont",
-    "css/supports",
-    "css/target",
-    "css/textalignlast",
-    "css/textshadow",
-    "css/transforms",
-    "css/transformslevel2",
-    "css/transforms3d",
-    "css/transformstylepreserve3d",
-    "css/transitions",
-    "css/userselect",
-    "css/valid",
-    "css/vhunit",
-    "css/vmaxunit",
-    "css/vminunit",
-    "css/vwunit",
-    "css/will-change",
-    "css/wrapflow",
-    "dom/classlist",
-    "dom/createElement-attrs",
-    "dom/dataset",
-    "dom/documentfragment",
-    "dom/hidden",
-    "dom/microdata",
-    "dom/mutationObserver",
-    "dom/passiveeventlisteners",
-    "event/deviceorientation-motion",
-    "event/oninput",
-    "eventlistener",
-    "exif-orientation",
-    "forms/capture",
-    "forms/fileinput",
-    "forms/fileinputdirectory",
-    "forms/formattribute",
-    "forms/inputnumber-l10n",
-    "forms/placeholder",
-    "forms/requestautocomplete",
-    "forms/validation",
-    "fullscreen-api",
-    "hashchange",
-    "hiddenscroll",
-    "history",
-    "htmlimports",
-    "iframe/sandbox",
-    "iframe/seamless",
-    "iframe/srcdoc",
-    "json",
-    "mediaquery/hovermq",
-    "mediaquery/pointermq",
-    "notification",
-    "pagevisibility-api",
-    "performance",
-    "postmessage",
-    "proximity",
-    "queryselector",
-    "requestanimationframe",
-    "storage/localstorage",
-    "storage/sessionstorage",
-    "storage/websqldatabase",
-    "touchevents",
-    "unicode",
-    "unicode-range",
-    "url/bloburls",
-    "url/data-uri",
-    "url/parser",
-    "url/urlsearchparams",
-    "userdata",
-    "vibration",
-    "video",
-    "video/autoplay",
-    "video/crossorigin",
-    "video/loop",
-    "video/preload",
-    "xdomainrequest"
-  ]
-}
 
 
 module.exports = {
@@ -205,7 +36,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /(display-time|equaliser|focus|masonry|push_kit|scroll)\.js$/,
+                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll)\.js$/,
                 loader: 'babel-loader',
                 query: {
                     presets: [["@babel/env", {
@@ -265,7 +96,11 @@ module.exports = {
                         loader: 'imports-loader?jQuery=jquery,$=jquery,jqmigrate=jquery-migrate'
                     }
                 ]
-            }
+            },
+              {
+                loader: "webpack-modernizr-loader",
+                test: /\.modernizrrc\.js$/
+              }            
         ]
     },
     resolve: {
@@ -282,7 +117,7 @@ module.exports = {
             "jquery.textchange": path.resolve(__dirname, "../node_modules/jquery-textchange/jquery.textchange.js"),
             "logging": path.resolve(__dirname, "../node_modules/logging/src/logging.js"),
             "masonry": path.resolve(__dirname, "../node_modules/masonry-layout/dist/masonry.pkgd.min.js"),
-            "modernizr$": path.resolve(__dirname, "../modernizr-bundle.js"),
+            "modernizr": path.resolve(__dirname, "../.modernizrrc.js"),
             "patternslib.slides": path.resolve(__dirname, "../node_modules/slides/src/slides.js"),
             "photoswipe-ui": path.resolve(__dirname, "../node_modules/photoswipe/dist/photoswipe-ui-default"),
             "prefixfree": path.resolve(__dirname, "../node_modules/prefixfree/prefixfree.min.js"),
@@ -409,7 +244,6 @@ module.exports = {
         contentBase: './'
     },
     plugins: [
-        new ModernizrWebpackPlugin(modernizr_config),
         new WrapperPlugin({
             test: /\.js$/, // only wrap output of bundle files with '.js' extension
             header: headerWrap,

@@ -11,6 +11,7 @@ define([
     "jquery",
     "pat-registry",
     "moment",
+    "modernizr",
     "prefixfree",
 //    "push-kit",
     "pat-ajax",
