@@ -1,4 +1,4 @@
-define(["jquery", "pat-bumper", "modernizr"], function($, Bumper) {
+define(["jquery", "pat-bumper"], function($, Bumper) {
 
     describe("pat-bumper", function() {
         beforeEach(function() {
