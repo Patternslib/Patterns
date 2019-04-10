@@ -15,7 +15,7 @@ define([
     "underscore",
     "moment-timezone-data",
     "fullcalendar"
-], function($, logger, Parser, store, utils, registry, _, momentTz, fullcalendar) {
+], function($, logger, Parser, store, utils, registry, _, momentTz) {
     "use strict";
     var log = logger.getLogger("calendar"),
         parser = new Parser("calendar");

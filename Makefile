@@ -25,7 +25,6 @@ all:: bundle.js css
 
 stamp-npm: package.json
 	npm install --no-optional
-	npm run build_modernizr
 
 stamp-bundler:
 	mkdir -p .bundle
