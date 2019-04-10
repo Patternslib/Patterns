@@ -13,7 +13,7 @@ define([
     "pat-base",
     "pat-registry",
     "modernizr"
-], function($, _, logger, Parser, Base, registry) {
+], function($, _, logger, Parser, Base, registry, Modernizr) {
     
 
     var parser = new Parser("bumper"),
