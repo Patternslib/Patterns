@@ -27,7 +27,6 @@
     "babel-polyfill": "^6.26.0",
     "browserslist": "^4.5.4",
     "caniuse-lite": "^1.0.0",
-    "chosen-js": "1.8.7",
     "clean-css": "^4.2.1",
     "ecstatic": "~>2.0.0",
     "es6-promise-promise": "1.0.0",
@@ -99,6 +98,7 @@
     "pegjs": "0.7.0",
     "phantomjs-prebuilt": "^2.1.8",
     "postinstall-build": "^5.0.1",
+    "puppeteer": "1.14.0",
     "script-loader": "^0.7.2",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.27.1",
@@ -117,7 +117,7 @@
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
-    "test": "karma start webpack/karma.config.js --single-run --browsers PhantomJS"
+    "test": "karma start webpack/karma.config.js --single-run --browsers ChromeHeadless"
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",

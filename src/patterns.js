@@ -25,7 +25,7 @@ define([
     "pat-carousel",
     "pat-carousel-legacy",
     "pat-checklist",
-    "pat-chosen",
+//    "pat-chosen",
     "pat-clone",
     "pat-collapsible",
     "pat-colour-picker",
