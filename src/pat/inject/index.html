@@ -55,12 +55,6 @@
 					<a href="page-that-doesnt-exist#nothing" class="pat-inject">Trigger an inject that fails. (Puts an error message in a data attribute on the body tag)</a>
 					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;page-that-doesnt-exist&quot; class=&quot;pat-inject&quot;&gt;</code></em>
 				</li>
-		        <li>
-		          Place "Wilde in frame 2 when <button onclick="document.getElementById('autoload-visible-item').removeAttribute('style')">the hidden link appears</button>
-		          <span id="autoload-visible-item" style="display:none">
-		            <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="trigger: autoload-visible">I am visible now</a>
-		          </span>
-		        </li>
 			</ul>
       		<button onclick="document.getElementById('autoload-visible-li').removeAttribute("style")">Show autoload visible</button>
 		</article>
@@ -84,9 +78,6 @@
 		</div>
 
 		<article class="pat-rich">
-			<h2>
-				Inject and scroll
-			</h2>
 			<ul>
 				<li>
 					<a href="inject-sources.html#pos-3" class="pat-inject" data-pat-inject="target: #pos-4; scroll: #dieu-nu-p-1">Inject 'Cocteau' in the frame below and scroll directly to the first paragraph.</a>
@@ -102,6 +93,25 @@
 				</p>
 			</article>
 		</div>
+
+		<div class="poems">
+			<article class="poem cols-full pat-rich" id="pos-5">
+				<p>
+					<strong class="placeholder">?</strong>
+				</p>
+			</article>
+		</div>
+
+		<article class="pat-rich">
+			<ul>
+		        <li>
+		          Place "Wilde in the frame above when <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="trigger: autoload-visible; target: #pos-5">this link</a> appears in view.
+		        </li>
+		        <li>
+		          <a href="inject-sources#pos-2" class="pat-inject" data-pat-inject="scroll: target">Place "Cocteau" in the second frame on this page and scroll towards it.</a>
+		        </li>
+			</ul>
+		</article>
 
 
 
