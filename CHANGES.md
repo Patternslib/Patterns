@@ -5,6 +5,7 @@
 - Runs now on jQuery 3
 - Integrated pat-display-time from https://github.com/ploneintranet/pat-display-time
 
+
 ## 3.0.0a5 - unreleased
 
 Features
