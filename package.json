@@ -49,6 +49,7 @@
     "parsleyjs": "2.7.2",
     "photoswipe": "4.1.3",
     "pikaday": "^1.8.0",
+    "popper.js": "^1.15.0",
     "prefixfree": "1.0.0",
     "promise-polyfill": "^8.1.0",
     "select2": "3.5.1",
@@ -60,6 +61,7 @@
     "spectrum-colorpicker": "1.8.0",
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
     "text-loader": "0.0.1",
+    "tippy.js": "^4.2.1",
     "underscore": "1.9.1",
     "validate.js": "0.11.1"
   },
