@@ -401,7 +401,7 @@ define([
             if (!inherit || ($el.hasClass('pat-modal') && this.attribute === 'data-pat-inject')) {
                 $possible_config_providers = $el;
             } else {
-                $possible_config_providers = $el.parents("[" + this.attribute + "]").andSelf();
+                $possible_config_providers = $el.parents("[" + this.attribute + "]").addBack();
             }
 
             _.each($possible_config_providers, function (provider) {

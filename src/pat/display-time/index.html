@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>pat-display-time demo</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css">
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body role="document">
+
+    <h1>pat-display-time demo</h1>
+
+    <h2>Example of default</h2>
+    <h3>Code</h3>
+    <pre>
+        <code>
+            &lt;time class="pat-display-time"
+                  datetime="2015-01-20T08:00Z"&gt;
+                20 January 2015, 08:00
+            &lt;/time&gt;
+        </code>
+    </pre>
+
+    <h3>Output</h3>
+    <p>
+        <time class="pat-display-time" datetime="2015-01-20T08:00Z">
+            20 January 2015, 08:00
+        </time>
+    </p>
+
+    <hr>
+
+    <h2>Example setting the output format explicitly</h2>
+    <h3>Code</h3>
+    <pre>
+        <code>
+            &lt;time class="pat-display-time"
+                  datetime="2015-01-20T08:00Z"
+                  data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss a"&gt;
+                20 January 2015, 08:00
+            &lt;/time&gt;
+        </code>
+    </pre>
+    <h3>Output</h3>
+    <p>
+        <time class="pat-display-time" datetime="2015-01-20T08:00Z" data-pat-display-time="output-format: MMMM dddd Do YYYY, h:mm:ss">
+            20 January 2015, 08:00
+        </time>
+    </p>
+
+    <hr>
+
+    <h2>Output formatted as local</h2>
+    <h3>Code</h3>
+    <pre>
+        <code>
+            &lt;time class="pat-display-time"
+                  datetime="2015-01-20T08:00Z"
+                  data-pat-display-time="output-format: L"&gt;
+                20 January 2015, 08:00
+            &lt;/time&gt;
+        </code>
+    </pre>
+    <h3>Output</h3>
+    <p>
+        <time class="pat-display-time" datetime="2015-01-20T08:00Z" data-pat-display-time="output-format: L">
+            20 January 2015, 08:00
+        </time>
+    </p>
+
+    <hr>
+
+    <h2>Output formatted as 'from now'</h2>
+    <h3>Code</h3>
+    <pre>
+        <code>
+            &lt;time class="pat-display-time"
+                  datetime="2015-01-20T08:00Z"
+                  data-pat-display-time="from-now: true"&gt;
+                20 January 2015, 08:00
+            &lt;/time&gt;
+        </code>
+    </pre>
+    <h3>Output</h3>
+    <p>
+        <time class="pat-display-time" datetime="2015-01-20T08:00Z" data-pat-display-time="from-now: true">
+            20 January 2015, 08:00
+        </time>
+    </p>
+
+    <hr>
+
+    <h2>Output formatted as 'from now' with no suffix</h2>
+    <h3>Code</h3>
+    <pre>
+        <code>
+            &lt;time class="pat-display-time"
+                  datetime="2015-01-20T08:00Z"
+                  data-pat-display-time="from-now: true; no-suffix: true"&gt;
+                20 January 2015, 08:00
+            &lt;/time&gt;
+        </code>
+    </pre>
+    <h3>Output</h3>
+    <p>
+        <time class="pat-display-time" datetime="2015-01-20T08:00Z" data-pat-display-time="from-now: true; no-suffix: true">
+            20 January 2015, 08:00
+        </time>
+    </p>
+
+
+    <h2>Output formatted as 'from now' with no suffix in german</h2>
+    <h3>Code</h3>
+    <pre>
+        <code>
+            &lt;time class="pat-display-time"
+                  datetime="2015-01-20T08:00Z"
+                  data-pat-display-time="from-now: true; no-suffix: true; locale: de"&gt;
+                20 January 2015, 08:00
+            &lt;/time&gt;
+        </code>
+    </pre>
+    <h3>Output</h3>
+    <p>
+        <time class="pat-display-time" datetime="2015-01-20T08:00Z" data-pat-display-time="from-now: true; no-suffix: true; locale: de">
+            20 January 2015, 08:00
+        </time>
+    </p>
+</body>
+
+</html>

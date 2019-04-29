@@ -9,7 +9,7 @@ define(
         'moment',
         'modernizr'
     ],
-    function(_, Parser, registry, Base, Pikaday, moment) {
+    function(_, Parser, registry, Base, Pikaday, moment, Modernizr) {
         var parser = new Parser('date-picker');
         parser.addArgument('behavior', 'styled', ['native', 'styled']);
         parser.addArgument('format', 'YYYY-MM-DD');

@@ -61,7 +61,7 @@ define([
                 config.formatSelection = function(obj, container) {
                     var selectionClasses = null;
                     try {
-                        selectionClasses = $.parseJSON(pat_config.selectionClasses)[obj.text];
+                        selectionClasses = JSON.parse(pat_config.selectionClasses)[obj.text];
                     } catch(SyntaxError) {
                         log.error("SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)");
                     }
@@ -117,7 +117,7 @@ define([
 
             if (pat_config.wordsJson && pat_config.wordsJson.length) {
                 try {
-                    words = $.parseJSON(pat_config.wordsJson);
+                    words = JSON.parse(pat_config.wordsJson);
                 } catch(SyntaxError) {
                     words = [];
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
@@ -168,7 +168,7 @@ define([
                  *   ]
                  */
                 try {
-                    data = $.parseJSON(pat_config.prefillJson);
+                    data = JSON.parse(pat_config.prefillJson);
                     for (d in data) {
                         if (typeof d === "object") {
                             ids.push(d.id);

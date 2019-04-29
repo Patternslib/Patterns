@@ -327,7 +327,7 @@ define([
         },
 
         boundingBox: function($el) {
-            var box = $el.offset();
+            var box = $el.safeOffset();
             box.height = $el.height();
             box.width = $el.width();
             box.bottom = box.top + box.height;
@@ -621,7 +621,7 @@ define([
             var $offsetParent = $container.offsetParent();
 
             if ($offsetParent.length) {
-                var offset = $offsetParent.offset();
+                var offset = $offsetParent.safeOffset();
                 container_offset.top -= offset.top;
                 container_offset.left -= offset.left;
             }
