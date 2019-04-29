@@ -1,6 +1,4 @@
-define(["jquery", "pat-bumper"], function($, Bumper) {
-
-    const Modernizr = import('modernizr');   // jshint ignore:line
+define(["jquery", "pat-bumper", "modernizr"], function($, Bumper, Modernizr) {
     
     describe("pat-bumper", function() {
         beforeEach(function() {
