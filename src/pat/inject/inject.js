@@ -34,6 +34,7 @@ define([
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
+    parser.addArgument("scroll");
     parser.addArgument("url");
 
     var inject = {
@@ -482,6 +483,18 @@ define([
                         $(this).addClass(cfg["class"]).trigger("patterns-injected", [cfg, $el[0], this]);
                     }
                 });
+            }
+            if (cfg.scroll) {
+                if (cfg['scroll'] == 'top') {
+                    $(cfg['target'])[0].scrollTop = 0;
+                } else if (cfg['scroll'] == 'target') {
+                    /* scrollable: target Target indicates the target in the URL fragment the URL 
+                       that's in the href or action in the case of a form. After injection, the 
+                       page or scroll container will scroll to bring the element with that ID into view. */
+                    /*$(cfg['target'])[0].scrollTop = $(cfg['selector'])[0].offsetTop;*/
+                } else {
+                    $(cfg['target'])[0].scrollTop = $(cfg['scroll'])[0].offsetTop;
+                }
             }
             $el.trigger("pat-inject-success");
         },
