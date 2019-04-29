@@ -64,3 +64,4 @@ src/pat/toggle/toggle.css
 src/pat/tooltip/tooltip.css
 src/pat/validate/validate.css
 src/pat/zoom/zoom.css
+.DS_Store
