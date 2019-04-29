@@ -140,9 +140,15 @@ module.exports = function(config) {
         },
 
         customLaunchers: {
-            'PhantomJS_debug': {
-                base: 'PhantomJS',
-                debug: true
+            'MyCustomLauncher': {
+                base: 'ChromeHeadless',
+                debug: true,
+                options: {
+                    viewportSize: {
+                      width: 1280,
+                      height: 1024
+                    }
+                }
             }
         }
     })
