@@ -58,6 +58,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 var $el = $(".pat-scroll");
                 var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($el);
+                imagesLoaded($("body"));
                 $el.trigger("pat-update", {
                     'pattern': "stacks",
                     'originalEvent': {
