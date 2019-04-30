@@ -145,8 +145,8 @@ module.exports = function(config) {
                 debug: true,
                 options: {
                     viewportSize: {
-                      width: 1280,
-                      height: 1024
+                      width: 1440,
+                      height: 1200
                     }
                 }
             }
