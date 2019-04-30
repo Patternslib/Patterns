@@ -5,3 +5,5 @@ node_js:
 before_script: travis_retry make stamp-npm
 script: make check
 sudo: false
+addons:
+  chrome: stable
