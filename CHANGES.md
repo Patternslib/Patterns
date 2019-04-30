@@ -4,7 +4,7 @@
 
 - Runs now on jQuery 3
 - Integrated pat-display-time from https://github.com/ploneintranet/pat-display-time
-
+- fix minimum input length default so that you can display select results already on click
 
 ## 3.0.0a5 - unreleased
 

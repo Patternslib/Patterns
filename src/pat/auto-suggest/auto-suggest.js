@@ -20,7 +20,7 @@ define([
     parser.addArgument("ajax-url", "");
     parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
     parser.addArgument("max-selection-size", 0);
-    parser.addArgument("minimum-input-length", 2);
+    parser.addArgument("minimum-input-length");   // Don't restrict by default so that all results show
     parser.addArgument("placeholder", function($el) { return $el.attr("placeholder") || "Enter text"; });
     parser.addArgument("prefill", function($el) { return $el.val(); });
     parser.addArgument("prefill-json", ""); // JSON format for pre-filling
