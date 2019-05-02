@@ -108,7 +108,7 @@
     "webpack-merge": "^4.1.2",
     "webpack-modernizr-loader": "^5.0.0",
     "wrapper-webpack-plugin": "^2.0.0",
-    "yo": "^2.0.5"
+    "yo": "^2.0.6"
   },
   "optionalDependencies": {
     "fsevents": "^2.0.1"
