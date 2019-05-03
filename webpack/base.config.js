@@ -66,7 +66,7 @@ module.exports = {
                         query: 'AbstractChosen'
                     },
                     {
-                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window,jqmigrate=jquery-migrate',
+                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window',
                     }
                 ]
             },
@@ -74,7 +74,7 @@ module.exports = {
                 test: /jquery.anythingslider|jcrop|jquery.placeholder|jquery.textchange|parsley|parsley.extend|select2|spectrum|spectrum-colorpicker/,
                 use: [
                     {
-                      loader: 'imports-loader?jquery,jqmigrate=jquery-migrate',
+                      loader: 'imports-loader?jquery',
                     }
                 ]
             },
@@ -93,7 +93,7 @@ module.exports = {
                 ],
                 use: [
                     {
-                        loader: 'imports-loader?jQuery=jquery,$=jquery,jqmigrate=jquery-migrate'
+                        loader: 'imports-loader?jQuery=jquery,$=jquery'
                     }
                 ]
             },
