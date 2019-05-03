@@ -4,6 +4,7 @@
 const path = require('path');
 var webpackOptions = require('./base.config.js');
 webpackOptions['mode'] = 'development';
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 module.exports = function(config) {
     config.set({
