@@ -86,7 +86,7 @@
                 childList: true,
                 subtree: true,
                 characterData: false,
-                attributes: false
+                attributes: true
             };
             observer.observe(document.body, config);
         },
