@@ -13,14 +13,14 @@ define([
     "select2"
 ], function($, logger, Parser, registry) {
     "use strict";
-    var log = logger.getLogger("calendar");
+    var log = logger.getLogger("autosuggest.");
     var parser = new Parser("autosuggest");
     parser.addArgument("ajax-data-type", "JSON");
     parser.addArgument("ajax-search-index", "");
     parser.addArgument("ajax-url", "");
     parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
     parser.addArgument("max-selection-size", 0);
-    parser.addArgument("minimum-input-length", 2);
+    parser.addArgument("minimum-input-length");   // Don't restrict by default so that all results show
     parser.addArgument("placeholder", function($el) { return $el.attr("placeholder") || "Enter text"; });
     parser.addArgument("prefill", function($el) { return $el.val(); });
     parser.addArgument("prefill-json", ""); // JSON format for pre-filling
@@ -41,7 +41,7 @@ define([
 
     var _ = {
         name: "autosuggest",
-        trigger: ".pat-autosuggest",
+        trigger: ".pat-autosuggest,.pat-auto-suggest",
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });

@@ -115,7 +115,7 @@
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
-    "test": "karma start webpack/karma.config.js --single-run --browsers ChromeHeadless"
+    "test": "karma start webpack/karma.config.js --single-run "
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",

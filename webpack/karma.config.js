@@ -113,7 +113,7 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome' /*,'PhantomJS','Firefox','Edge','ChromeCanary','Opera','IE','Safari'*/ ],
+        browsers: ['MyCustomLauncher' /*,'PhantomJS','Firefox','Edge','ChromeCanary','Opera','IE','Safari'*/ ],
 
 
         // Continuous Integration mode
@@ -141,9 +141,15 @@ module.exports = function(config) {
         },
 
         customLaunchers: {
-            'PhantomJS_debug': {
-                base: 'PhantomJS',
-                debug: true
+            'MyCustomLauncher': {
+                base: 'ChromeHeadless',
+                debug: true,
+                options: {
+                    viewportSize: {
+                      width: 1440,
+                      height: 1200
+                    }
+                }
             }
         }
     })
