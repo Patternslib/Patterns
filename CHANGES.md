@@ -14,6 +14,7 @@ Features
 - Added support for a push subsystem using reethinkdb and horizon.
   That allows us to trigger an injection by sending a push_marker to all connected browsers.
   (This is still in an evaluation state)
+- pat-forward: understand the trigger auto option
 
 Fixes
 ~~~~~
