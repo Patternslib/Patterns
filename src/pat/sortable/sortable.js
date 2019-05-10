@@ -84,8 +84,8 @@ define([
         onDragEnd: function (ev) {
             var $dragged = $(ev.target).parent();
             $dragged.removeClass(this.options.dragClass);
-            this.$sortables.unbind(".pat-sortable");
-            this.$el.unbind(".pat-sortable");
+            this.$sortables.off(".pat-sortable");
+            this.$el.off(".pat-sortable");
             $("#pat-scroll-up, #pat-scroll-dn").detach();
             var change = this.submitChangedAmount($(ev.target).closest('.sortable'));
             // Call the optionally passed-in callback function
@@ -136,9 +136,9 @@ define([
                 if (this.$el.is(":animated")) return;
 
                 var pos = ev.originalEvent.clientY + $("body").scrollTop();
-                if (pos - this.$el.offset().top < 32)
+                if (pos - this.$el.safeOffset().top < 32)
                     this.$el.animate({scrollTop: this.$el.scrollTop()-32}, 50, "linear");
-                else if (this.$el.offset().top+this.$el.height() - pos < 32)
+                else if (this.$el.safeOffset().top+this.$el.height() - pos < 32)
                     this.$el.animate({scrollTop: this.$el.scrollTop()+32}, 50, "linear");
             }.bind(this));
 
@@ -146,7 +146,7 @@ define([
                 // list elements are only drop targets when one element of the
                 // list is being dragged. avoids dragging between lists.
                 var $dropTarget = $(ev.target).closest(that.options.selector),
-                    midlineY = $dropTarget.offset().top - $(document).scrollTop() + $dropTarget.height()/2;
+                    midlineY = $dropTarget.safeOffset().top - $(document).scrollTop() + $dropTarget.height()/2;
 
                 if ($dropTarget.is($dragged)) {
                     return;

@@ -13,7 +13,9 @@ define([
     "pat-base",
     "pat-registry",
     "modernizr"
-], function($, _, logger, Parser, Base, registry) {
+], function($, _, logger, Parser, Base, registry, Modernizr) {
+    
+
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
 
@@ -38,7 +40,6 @@ define([
             if (Modernizr.csspositionsticky) {
                 this.$el.addClass("sticky-supported");
             }
-
             this.$el[0].style.position = "relative";
             if (!this.$container.length) {
                 $(window).on("scroll.bumper", this._updateStatus.bind(this));
@@ -142,7 +143,7 @@ define([
             /* Calculates the bounding box for a given element, taking margins
              * into consideration
              */
-            var box = $sticker.offset();
+            var box = $sticker.safeOffset();
             margin = margin ? margin : 0;
             box.top -= (parseFloat($sticker.css("margin-top")) || 0) + margin;
             box.left -= (parseFloat($sticker.css("margin-left")) || 0) + margin;

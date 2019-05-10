@@ -14,6 +14,13 @@
                 <input id="a1" class="pat-autosuggest" placeholder="Pick some fruit" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas; pre-fill: Oranges;maximum-selection-size: 1" type="text"></input>
             </label>
 
+            <label>In this example, we are showing groups of foods
+                <input  id="a1a" class="pat-autosuggest" placeholder="Pick a character"
+                    data-pat-autosuggest='ajax-url: datagroup.json;
+                                            allow-new-words: false;' type="text"></input>
+            </label>
+
+
             <label>Here you may only choose one of the suggested cars, and nothing else. Vocabulary as list.
                 <input id="a2"  class="pat-autosuggest" placeholder="Pick a car"
                         data-pat-autosuggest="words: Toyota, Volkswagen, Honda, Chevrolet, BMW, Mercedes, Volvo, Citröen, Audi;
@@ -52,6 +59,7 @@
                     data-pat-autosuggest='ajax-url: data.json;
                                             allow-new-words: false;' type="text"></input>
             </label>
+
 
         </fieldset>
   </body>

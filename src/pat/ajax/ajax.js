@@ -8,9 +8,8 @@ define([
     "jquery",
     "pat-logger",
     "pat-parser",
-    "pat-registry",
-    "jquery-form"
-], function($, logger, Parser, registry, jqform) {
+    "pat-registry"
+], function($, logger, Parser, registry) {
     var log = logger.getLogger("pat.ajax"),
         parser = new Parser("ajax");
     parser.addArgument("url", function($el) {
@@ -75,7 +74,6 @@ define([
                     log.error("load error for " + cfg.url + ":", error, jqxhr);
                     $el.trigger({
                         type: "pat-ajax-error",
-                        error: error,
                         jqxhr: jqxhr
                     });
                 },
@@ -92,21 +90,36 @@ define([
                         // ignore
                     }
                 },
+                temp = $el.data("pat-ajax.clicked-data"),
+                clickedData = (temp ? $.param(temp) : ''),
                 args = {
                     context: $el,
-                    data: $el.data("pat-ajax.clicked-data"),
+                    data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
                     url: cfg.url,
-                    error: onError,
-                    success: onSuccess
+                    method: $el.attr("method") ? $el.attr("method") : "GET"
                 };
+
+            if ($el.is("form") && $el.attr("method") && $el.attr("method").toUpperCase() == "POST") {
+                var formdata = new FormData($el[0]);
+                for (var key in temp) {
+                    formdata.append(key, temp[key]);
+                }
+                args["method"] = "POST";
+                args["data"] = formdata;
+                args["cache"] = false;
+                args["contentType"] =  false;
+                args["processData"] =  false;
+                args["type"] = "POST";
+            }
 
             $el.removeData("pat-ajax.clicked-data");
             log.debug("request:", args, $el[0]);
-            if ($el.is("form")) {
-                $el.ajaxSubmit(args);
-            } else {
-                $.ajax(args);
-            }
+
+            // Make it happen
+            var ajax_deferred = $.ajax(args);
+
+            if (ajax_deferred)
+                ajax_deferred.done(onSuccess).fail(onError);
         }
     };
 

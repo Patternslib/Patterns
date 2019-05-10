@@ -51,8 +51,9 @@ define([
 
         markBasedOnFragment: function(ev) {
             // Get the fragment from the URL and set the corresponding this.$el as current
-            var $target = $('#' + window.location.hash.substr(1));
-            if ($target.length > 0) {
+            const fragment = window.location.hash.substr(1);
+            if (fragment) {
+                var $target = $('#' + fragment);
                 this.$el.addClass("current"); // the element that was clicked on
                 $target.addClass("current");
             }
@@ -149,19 +150,19 @@ define([
                     scrollable = $('html, body');
                     // positioning context is document
                     if ( scroll === "scrollTop" ) {
-                        options[scroll] = Math.floor(target.offset().top);
+                        options[scroll] = Math.floor(target.safeOffset().top);
                     } else {
-                        options[scroll] = Math.floor(target.offset().left);
+                        options[scroll] = Math.floor(target.safeOffset().left);
                     }
                 } else if ( scroll === "scrollTop" ) {
                     // difference between target top and scrollable top becomes 0
                     options[scroll] = Math.floor(scrollable.scrollTop()
-                                                 + target.offset().top
-                                                 - scrollable.offset().top);
+                                                 + target.safeOffset().top
+                                                 - scrollable.safeOffset().top);
                 } else {
                     options[scroll] = Math.floor(scrollable.scrollLeft()
-                                                 + target.offset().left
-                                                 - scrollable.offset().left);
+                                                 + target.safeOffset().left
+                                                 - scrollable.safeOffset().left);
                 }
             }
 

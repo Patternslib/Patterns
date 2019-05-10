@@ -34,6 +34,7 @@ define([
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
+    parser.addArgument("scroll");
     parser.addArgument("url");
 
     var inject = {
@@ -345,7 +346,7 @@ define([
              * form) you would expect to populate with initial placeholder
              */
             var $form = cfg.$target.parents('form');
-            if ($form.size() !== 0 && cfg.$target.data('initial-value') === undefined) {
+            if ($form.length !== 0 && cfg.$target.data('initial-value') === undefined) {
                 cfg.$target.data('initial-value', cfg.$target.html());
                 $form.on('reset', function() {
                     cfg.$target.html(cfg.$target.data('initial-value'));
@@ -482,6 +483,18 @@ define([
                         $(this).addClass(cfg["class"]).trigger("patterns-injected", [cfg, $el[0], this]);
                     }
                 });
+            }
+            if (cfg.scroll) {
+                if (cfg['scroll'] == 'top') {
+                    $(cfg['target'])[0].scrollTop = 0;
+                } else if (cfg['scroll'] == 'target') {
+                    /* scrollable: target Target indicates the target in the URL fragment the URL 
+                       that's in the href or action in the case of a form. After injection, the 
+                       page or scroll container will scroll to bring the element with that ID into view. */
+                    /*$(cfg['target'])[0].scrollTop = $(cfg['selector'])[0].offsetTop;*/
+                } else {
+                    $(cfg['target'])[0].scrollTop = $(cfg['scroll'])[0].offsetTop;
+                }
             }
             $el.trigger("pat-inject-success");
         },
@@ -813,7 +826,7 @@ define([
                     if (target && target !== 'self' && $(target).length === 0) {
                         return false;
                     }
-                    var reltop = $el.offset().top - $scrollable.offset().top - 1000,
+                    var reltop = $el.safeOffset().top - $scrollable.safeOffset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
                         // checkVisibility was possibly installed as a scroll
@@ -954,7 +967,7 @@ define([
         }
     });
 
-    $(window).bind("popstate", function (event) {
+    $(window).on("popstate", function (event) {
         // popstate also triggers on traditional anchors
         if (!event.originalEvent.state && ("replaceState" in history)) {
             try {

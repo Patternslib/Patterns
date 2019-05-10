@@ -2,6 +2,7 @@
     "browser": true,
     "devel": true,
     "eqeqeq": true,
+    "esversion": 6,
     "indent": 4,
     "jquery": false,
     "smarttabs": true,
@@ -33,6 +34,10 @@
         "waits",
         "jasmine",
         "$"
-    ]
+    ],
+    "globals": {
+      "esversion": 6
+    }
+    
 }
 

@@ -13,14 +13,14 @@ define([
     "select2"
 ], function($, logger, Parser, registry) {
     "use strict";
-    var log = logger.getLogger("calendar");
+    var log = logger.getLogger("autosuggest.");
     var parser = new Parser("autosuggest");
     parser.addArgument("ajax-data-type", "JSON");
     parser.addArgument("ajax-search-index", "");
     parser.addArgument("ajax-url", "");
     parser.addArgument("allow-new-words", true); // Should custom tags be allowed?
     parser.addArgument("max-selection-size", 0);
-    parser.addArgument("minimum-input-length", 2);
+    parser.addArgument("minimum-input-length");   // Don't restrict by default so that all results show
     parser.addArgument("placeholder", function($el) { return $el.attr("placeholder") || "Enter text"; });
     parser.addArgument("prefill", function($el) { return $el.val(); });
     parser.addArgument("prefill-json", ""); // JSON format for pre-filling
@@ -41,7 +41,7 @@ define([
 
     var _ = {
         name: "autosuggest",
-        trigger: ".pat-autosuggest",
+        trigger: ".pat-autosuggest,.pat-auto-suggest",
         init: function($el, opts) {
             if ($el.length > 1) {
                 return $el.each(function() { _.init($(this), opts); });
@@ -61,7 +61,7 @@ define([
                 config.formatSelection = function(obj, container) {
                     var selectionClasses = null;
                     try {
-                        selectionClasses = $.parseJSON(pat_config.selectionClasses)[obj.text];
+                        selectionClasses = JSON.parse(pat_config.selectionClasses)[obj.text];
                     } catch(SyntaxError) {
                         log.error("SyntaxError: non-JSON data given to pat-autosuggest (selection-classes)");
                     }
@@ -117,7 +117,7 @@ define([
 
             if (pat_config.wordsJson && pat_config.wordsJson.length) {
                 try {
-                    words = $.parseJSON(pat_config.wordsJson);
+                    words = JSON.parse(pat_config.wordsJson);
                 } catch(SyntaxError) {
                     words = [];
                     log.error("SyntaxError: non-JSON data given to pat-autosuggest");
@@ -168,7 +168,7 @@ define([
                  *   ]
                  */
                 try {
-                    data = $.parseJSON(pat_config.prefillJson);
+                    data = JSON.parse(pat_config.prefillJson);
                     for (d in data) {
                         if (typeof d === "object") {
                             ids.push(d.id);

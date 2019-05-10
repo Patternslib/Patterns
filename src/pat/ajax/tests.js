@@ -17,8 +17,9 @@ define(["pat-ajax"], function(pattern) {
                 pattern.init($a);
                 spyOn($, "ajax");
                 $a.click();
-                expect($.ajax.calls.argsFor(0)[0].context[0]).toBe($a[0]);
-                expect($.ajax.calls.argsFor(0)[0].url).toBe("href.html");
+                var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                expect(ajaxargs.context[0]).toBe($a[0]);
+                expect(ajaxargs.url).toBe("href.html");
             });
         });
 
@@ -47,8 +48,12 @@ define(["pat-ajax"], function(pattern) {
             it("honors method='post'", function() {
                 $form.attr("method", "post");
                 $form.submit();
-                expect($.ajax.calls.argsFor(0)[0].url).toEqual("action.html");
-                expect($.ajax.calls.argsFor(0)[0].data).toEqual("input1=value1");
+                var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                expect(ajaxargs.url).toEqual("action.html");
+                expect(ajaxargs.method).toEqual("POST");
+                // Commenting this out because phantomjs doesn't support formdata
+                // https://github.com/ariya/phantomjs/issues/14867
+                //expect(ajaxargs.data.get('input1')).toContain("value1");
             });
 
             it("triggers ajax request on click submit", function() {
@@ -58,14 +63,16 @@ define(["pat-ajax"], function(pattern) {
 
             it("does include submit button clicked", function() {
                 $button.click();
-                expect($.ajax.calls.argsFor(0)[0].url)
-                    .toEqual("action.html?input1=value1&submit=submit");
+                var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                expect(ajaxargs.url).toEqual("action.html");
+                expect(ajaxargs.data).toEqual("input1=value1&submit=submit");
             });
 
             it("does not include submit buttons if not clicked", function() {
                 $form.submit();
-                expect($.ajax.calls.argsFor(0)[0].url)
-                    .toEqual("action.html?input1=value1");
+                var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                expect(ajaxargs.url).toEqual("action.html");
+                expect(ajaxargs.data).toEqual("input1=value1");
             });
         });
     });

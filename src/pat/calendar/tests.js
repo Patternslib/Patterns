@@ -1,5 +1,8 @@
 define(["pat-calendar"], function(pattern) {
 
+
+    const fullCalendar = import('fullcalendar');   // jshint ignore:line
+
     describe("pat-calendar", function() {
 
         beforeEach(function() {

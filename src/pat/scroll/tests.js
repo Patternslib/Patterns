@@ -10,7 +10,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 $("#lab").remove();
             });
 
-            it("will automatically scroll to an anchor if the trigger is set to 'auto'", function() {
+            it("will automatically scroll to an anchor if the trigger is set to 'auto'", function(done) {
                 $("#lab").html([
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
                     '<p id="p1"></p>'
@@ -20,6 +20,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 imagesLoaded($("body"));
                 setTimeout(function () {
                     expect(spy_animate).toHaveBeenCalled();
+                    done();
                 }, 2000);
             });
         });
@@ -32,7 +33,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 $("#lab").remove();
             });
 
-            it("will scroll to an anchor on click", function() {
+            it("will scroll to an anchor on click", function(done) {
                 $("#lab").html([
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
                     '<p id="p1"></p>'
@@ -44,11 +45,12 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 setTimeout(function() {
                     $el.click();
                     expect(spy_animate).toHaveBeenCalled();
+                    done();
                 }, 2000);
 
             });
 
-            it("will scroll to an anchor on pat-update with originalEvent of click", function() {
+            it("will scroll to an anchor on pat-update with originalEvent of click", function(done) {
                 $("#lab").html([
                     '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
                     '<p id="p1"></p>'
@@ -56,6 +58,7 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 var $el = $(".pat-scroll");
                 var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($el);
+                imagesLoaded($("body"));
                 $el.trigger("pat-update", {
                     'pattern': "stacks",
                     'originalEvent': {
@@ -64,7 +67,8 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 });
                 setTimeout(function() {
                     expect(spy_animate).toHaveBeenCalled();
-                }, 2000);
+                    done();
+                }, 3000);
             });
         });
     });

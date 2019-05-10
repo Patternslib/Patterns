@@ -385,22 +385,41 @@ define([
             }
             inherit = (inherit!==false);
             var stack = inherit ? [[this._defaults($el)]] : [[{}]];
-            var $possible_config_providers = inherit ? $el.parents().andSelf() : $el,
-                final_length = 1;
+            var $possible_config_providers;
+            var final_length = 1
+            /*
+             * XXX this is a workaround for:
+             * - https://github.com/Patternslib/Patterns/issues/393
+             *
+             * Prevents the parser to pollute the pat-modal configuration
+             * with data-pat-inject elements define in a `.pat-modal` parent element.
+             *
+             *  Probably this function should be completely revisited, see:
+             * - https://github.com/Patternslib/Patterns/issues/627
+             *
+             */
+            if (!inherit || ($el.hasClass('pat-modal') && this.attribute === 'data-pat-inject')) {
+                $possible_config_providers = $el;
+            } else {
+                $possible_config_providers = $el.parents("[" + this.attribute + "]").addBack();
+            }
 
             _.each($possible_config_providers, function (provider) {
-                var data = $(provider).attr(this.attribute), frame, _parse;
-                if (data) {
-                    _parse = this._parse.bind(this);
-                    if (data.match(/&&/))
-                        frame = data.split(/\s*&&\s*/).map(_parse);
-                    else
-                        frame = [_parse(data)];
-                    final_length = Math.max(frame.length, final_length);
-                    stack.push(frame);
+                var data, frame, _parse;
+                data = $(provider).attr(this.attribute)
+                if (!data) {
+                    return;
                 }
+                _parse = this._parse.bind(this);
+                if (data.match(/&&/))
+                    frame = data.split(/\s*&&\s*/).map(_parse);
+                else
+                    frame = [_parse(data)];
+                final_length = Math.max(frame.length, final_length);
+                stack.push(frame);
             }.bind(this));
-            if (typeof options==="object") {
+
+            if (typeof options === "object") {
                 if (Array.isArray(options)) {
                     stack.push(options);
                     final_length = Math.max(options.length, final_length);

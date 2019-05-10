@@ -21,19 +21,23 @@ rendering when available.
 By default this pattern will NOT defer to the browser's HTML5 picker.
 
     <input class="pat-date-picker" type="date">
-    
+
 ####Default value
 
     <input class="pat-date-picker" type="date" value="2015-01-01">
-    
+
+####First day on Monday
+
+    <input class="pat-date-picker" type="date" value="2015-01-01" data-pat-date-picker="first-day: 1">
+
 ####Specifying the "min" and "max" attributes.
 
     <input class="pat-date-picker" min="2015-01-01" max="2015-12-31" type="date">
-    
+
 ####Show the week number.
 
     <input class="pat-date-picker" data-pat-date-picker="week-numbers: show;" type="date">
-    
+
 ####Multilingual support with German translations
 
 The picker's UI can be translated by providing a URL to the `i18n` option. This
@@ -50,7 +54,7 @@ Here are all the i18n values in JSON format:
        "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
        "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
      }
-    
+
 
 ### Why did we base this library on Pikaday?
 
@@ -85,8 +89,9 @@ The HTML5 attributes `min` and `max` will be honoured.
 
 In addition, the following options can be passed to `data-pat-date-picker`:
 
-|Property                    | Type   | Default Value | Available values  | Description                                                   |
-|----------------------------|--------|---------------|-------------------|---------------------------------------------------------------|
-|**behavior** (or behaviour) | string | styled        | native, styled    | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
-|**week-numbers**            | string | hide          | show, hide        | "show" will show the weeks' numbers in a leftmost column.     |
-|**i18n**                    | URL    |               |                   | Provide a URL to a JSON resource which gives the i18n values. |
+|Property                    | Type    | Default Value | Available values  | Description                                                   |
+|----------------------------|---------|---------------|-------------------|---------------------------------------------------------------|
+|**behavior** (or behaviour) | string  | styled        | native, styled    | "native" to defer to the browser's HTML5 date support, or "styled" to universally use the custom picker. |
+|**week-numbers**            | string  | hide          | show, hide        | "show" will show the weeks' numbers in a leftmost column.     |
+|**i18n**                    | URL     |               |                   | Provide a URL to a JSON resource which gives the i18n values. |
+|**first-day**               | Integer | 0             |                   | Set the first day of the week (0 -> Sunday, 1-> Monday, ...). |

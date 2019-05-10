@@ -1,7 +1,9 @@
 dist: xenial
 language: node_js
 node_js:
-- 7
+- lts/*
 before_script: travis_retry make stamp-npm
 script: make check
-sudo: false
+sudo: required
+addons:
+  chrome: beta

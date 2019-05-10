@@ -8,20 +8,17 @@ coverage/
 /node_modules
 /paternslib.sublime-project
 /paternslib.sublime-workspace
-/src/bower_components
 /stamp-bower
 /stamp-bundler
 /stamp-npm
-/stamp-tinymce
 Gemfile.lock
 cache/
 webpack/cache/
-build-custom.js
 bundle.js
 bundle.js.map
 bundle.min.js
 bundle.min.js.map
-src/patterns-custom.js
+/chunks
 test-reports
 /.DS_Store
 
@@ -64,3 +61,4 @@ src/pat/toggle/toggle.css
 src/pat/tooltip/tooltip.css
 src/pat/validate/validate.css
 src/pat/zoom/zoom.css
+.DS_Store

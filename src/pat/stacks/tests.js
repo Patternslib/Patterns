@@ -11,7 +11,7 @@ define(["pat-stacks"], function(Stacks) {
 
         describe("The init method", function(){
             it("Returns the jQuery-wrapped DOM node", function() {
-                var $el = $('<div class="pat-stacks"></div');
+                var $el = $('<div class="pat-stacks"></div>');
                 var pattern = new Stacks($el);
                 expect(pattern.init($el)).toBe($el);
             });
@@ -19,7 +19,7 @@ define(["pat-stacks"], function(Stacks) {
 
         describe("_base_URL", function() {
             it("URL without fragment", function() {
-                var $el = $('<div class="pat-stacks"></div');
+                var $el = $('<div class="pat-stacks"></div>');
                 var pattern = new Stacks($el);
                 pattern.document = {URL: document.URL};
                 pattern.document.URL="http://www.example.com/folder/file.png";
@@ -27,7 +27,7 @@ define(["pat-stacks"], function(Stacks) {
             });
 
             it("URL with fragment", function() {
-                var $el = $('<div class="pat-stacks"></div');
+                var $el = $('<div class="pat-stacks"></div>');
                 var pattern = new Stacks($el);
                 pattern.document = {URL: document.URL};
                 pattern.document.URL = "http://www.example.com/folder/file.png#fragment";
@@ -37,7 +37,7 @@ define(["pat-stacks"], function(Stacks) {
 
         describe("_currentFragment", function() {
             it(" without fragment", function() {
-                var $el = $('<div class="pat-stacks"></div');
+                var $el = $('<div class="pat-stacks"></div>');
                 var pattern = new Stacks($el);
                 pattern.document = {URL: document.URL};
                 pattern.document.URL = "http://www.example.com/folder/file.png";
@@ -45,7 +45,7 @@ define(["pat-stacks"], function(Stacks) {
             });
 
             it("URL with fragment", function() {
-                var $el = $('<div class="pat-stacks"></div');
+                var $el = $('<div class="pat-stacks"></div>');
                 var pattern = new Stacks($el);
                 pattern.document = {URL: document.URL};
                 pattern.document.URL = "http://www.example.com/folder/file.png#fragment";

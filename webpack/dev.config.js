@@ -4,6 +4,7 @@ var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 
 module.exports = merge(baseConfig, {
+    mode: 'development',
     devServer: {
     	inline: true,
         contentBase: './',
