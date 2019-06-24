@@ -137,7 +137,6 @@ module.exports = {
     "json",
     "mediaquery/hovermq",
     "mediaquery/pointermq",
-    "notification",
     "pagevisibility-api",
     "performance",
     "postmessage",
