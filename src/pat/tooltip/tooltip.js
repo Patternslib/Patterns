@@ -146,20 +146,35 @@ define([
             var $trigger = $(instance.reference),
                 options = $trigger.data("patterns.tooltip");
 
-            if (options.source == 'ajax') {
-                $content=$("<progress/>", {"id": "tooltip-load-" + instance.id});
-                instance.setContent($content[0]);
-                var source = $trigger.attr("href").split("#"),
-                    target_id = "tooltip-load-" + instance.id;
-                $(instance)
-                    .on("pat-ajax-success.pat-inject", 
-                        tooltip._update.bind(this));
-                inject.execute([{
-                    url: source[0],
-                    source: "#" + source[1],
-                    target: "#" + target_id + "::element",
-                    dataType: options.ajaxDataType
-                }], $(instance));
+            switch (options.source) {
+                case 'ajax':
+                    $content=$("<progress/>", {"id": "tooltip-load-" + instance.id});
+                    instance.setContent($content[0]);
+
+                    var source = $trigger.attr("href").split("#"),
+                        target_id = "tooltip-load-" + instance.id;
+                    $(instance)
+                        .on("pat-ajax-success.pat-inject", 
+                            tooltip._update.bind(this));
+                    inject.execute([{
+                        url: source[0],
+                        source: "#" + source[1],
+                        target: "#" + target_id + "::element",
+                        dataType: options.ajaxDataType
+                    }], $(instance));
+
+                    break;
+                case 'auto':
+                case 'content':
+                case 'content-html':
+
+                    instance.setContent($trigger.html());
+                    break;
+                case 'title':
+                    instance.setContent(options.content);
+                    break;
+                default:
+                    // Do nothing
             }
         },
         _update: function(instance) {
