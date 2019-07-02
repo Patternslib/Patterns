@@ -230,6 +230,7 @@ module.exports = {
             "pat-tabs": path.resolve(__dirname, "../src/pat/tabs/tabs.js"),
             "pat-toggle": path.resolve(__dirname, "../src/pat/toggle/toggle.js"),
             "pat-tooltip": path.resolve(__dirname, "../src/pat/tooltip/tooltip.js"),
+            "pat-tooltip-ng": path.resolve(__dirname, "../src/pat/tooltip-ng/tooltip-ng.js"),
             "pat-validation": path.resolve(__dirname, "../src/pat/validation/validation.js"),
             "pat-zoom": path.resolve(__dirname, "../src/pat/zoom/zoom.js")
         }
