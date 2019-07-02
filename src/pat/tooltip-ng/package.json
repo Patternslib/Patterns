@@ -1,0 +1,13 @@
+{
+  "name": "pat-tooltip-ng",
+  "version": "0.0.1",
+  "keywords": [
+    "patternslib",
+    "pattern"
+  ],
+  "dependencies": {},
+  "license": "BSD",
+  "devDependencies": {
+    "requirejs": ""
+  }
+}
