@@ -7,16 +7,18 @@
             "pat-base",
             "pat-registry",
             "pat-parser",
-            "pat-logger"
+            "pat-logger",
+	    "tippy.js",
+	    "tippy-theme.css",
         ], function() {
             return factory.apply(this, arguments);
         });
     } else {
         // If require.js is not available, you'll need to make sure that these
         // global variables are available.
-        factory($, patterns.Base, patterns, patterns.Parser, patterns.logger);
+        factory($, patterns.Base, patterns, patterns.Parser, patterns.logger, tippy, tippytheme);
     }
-}(this, function($, Base, registry, Parser, logger) {
+}(this, function($, Base, registry, Parser, logger, tippy, tippytheme) {
     'use strict';
 
     var log = logger.getLogger("pat-tooltip-ng");
@@ -48,6 +50,16 @@
      *      parser.addArgument('color', 'blue', ['red', 'green', 'blue'], false);
      */
 
+            tippy.default.setDefaults({
+                animation: 'fade',
+                arrow: true,
+		delay: 0,
+		trigger: 'mouseenter focus',
+		theme: 'light-border'
+            });
+    var tippy = tippy.default;
+    log.debug(tippy.defaults);
+
     return Base.extend({
         /* The name is used to store the pattern in a registry and needs to be
          * unique.
@@ -59,8 +71,9 @@
         trigger: ".pat-tooltip",
 
         init: function initUndefined () {
-            this.options = parser.parse(this.$el);
-            log.debug(this.$el);
+            var $trigger = this.$el;
+            this.options = parser.parse($trigger);
+            log.debug($trigger);
             log.debug(this.options);
             /* this.options will now contain the configured pattern properties
              * you've registered with the parser.addArgument method.
@@ -68,6 +81,10 @@
              * If the user provided any values via the data-pat-tooltip-ng
              * attribute, those values will already be set.
              */
+	    var content = { content: $trigger.attr("title") }
+	    $trigger.removeAttr("title");
+	    log.debug(content);
+	    tippy($trigger[0], content);
         }
     });
 }));
