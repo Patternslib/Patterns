@@ -100,7 +100,11 @@ module.exports = {
               {
                 loader: "webpack-modernizr-loader",
                 test: /\.modernizrrc\.js$/
-              }
+              },
+	    {
+		test: /\.css$/,
+		use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+	    },
         ]
     },
     resolve: {
@@ -128,6 +132,7 @@ module.exports = {
             "slick-carousel": path.resolve(__dirname, "../node_modules/slick-carousel/slick/slick.js"),
             "stickyfilljs": path.resolve(__dirname, "../node_modules/stickyfilljs/dist/stickyfill.js"),
             "text": path.resolve(__dirname, "../node_modules/requirejs-text/text.js"),
+	    "tippy-theme.css": path.resolve(__dirname, "../node_modules/tippy.js/themes/light-border.css"),
             "validate": path.resolve(__dirname, "../node_modules/validate.js/validate.js"),
             "moment-locale-bg": path.resolve(__dirname, "../node_modules/moment/locale/bg"),
             "moment-locale-hr": path.resolve(__dirname, "../node_modules/moment/locale/hr"),
