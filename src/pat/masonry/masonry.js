@@ -80,7 +80,7 @@
                 .on("pat-update",
                     utils.debounce(this.quicklayout.bind(this), 200));
 
-            var callback = utils.debounce(this.quicklayout.bind(this), 100);
+            var callback = utils.debounce(this.quicklayout.bind(this), 400);
             var observer = new MutationObserver(callback);
             /* Explicitly not including style. We assume style is set dynamically only by scripts and we do all our controlled changes through classes.
                That way we avoid masonry to react on its own style calculation */
@@ -88,8 +88,8 @@
                 childList: true,
                 subtree: true,
                 characterData: false,
-                attributes: true,
-                attributeFilter: ['class', 'cols', 'controls', 'height', 'width', 'maxlength', 'rows', 'size', 'wrap']
+                attributeOldValue: true,
+                attributeFilter: ['class']
             };
             observer.observe(document.body, config);
         },
