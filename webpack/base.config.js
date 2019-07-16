@@ -130,6 +130,7 @@ module.exports = {
             "slick-carousel": path.resolve(__dirname, "../node_modules/slick-carousel/slick/slick.js"),
             "stickyfilljs": path.resolve(__dirname, "../node_modules/stickyfilljs/dist/stickyfill.js"),
             "text": path.resolve(__dirname, "../node_modules/requirejs-text/text.js"),
+	    "tippy": path.resolve(__dirname, "../node_modules/tippy.js/umd/index.all.js"),
 	    "tippy-theme.css": path.resolve(__dirname, "../node_modules/tippy.js/themes/light-border.css"),
             "validate": path.resolve(__dirname, "../node_modules/validate.js/validate.js"),
             "moment-locale-bg": path.resolve(__dirname, "../node_modules/moment/locale/bg"),

@@ -18,8 +18,10 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/specs/*/*.js',
-            'src/pat/*/tests.js',
+            //'tests/specs/*/*.js',
+            'tests/specs/lib/tippy.js',
+//            'src/pat/*/tests.js',
+            'src/pat/tooltip-ng/tests.js',
             {
                 pattern: 'src/pat/date-picker/i18n.json',
                 served: true,

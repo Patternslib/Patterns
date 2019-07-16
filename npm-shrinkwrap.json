@@ -2580,8 +2580,7 @@
             "safe-buffer": {
               "version": "5.1.1",
               "resolved": false,
-              "integrity": "sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg==",
-              "optional": true
+              "integrity": "sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg=="
             },
             "safer-buffer": {
               "version": "2.1.2",

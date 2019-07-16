@@ -17,6 +17,8 @@ define([
 ], function($, logger, registry, utils, Parser, inject) {
     var log = logger.getLogger("tooltip"),
         parser = new Parser("tooltip");
+    log.setLevel(10);
+    log.debug("Initializing pat-tooltip");
 
     var all_positions = ["tl", "tm", "tr",
                          "rt", "rm", "rb",
@@ -306,6 +308,7 @@ define([
             case "content":
                 href = $trigger.attr("href");
                 if (typeof(href) === "string" && href.indexOf("#") !== -1) {
+		    log.debug("#"+href.split("#")[1]);
                     $content = $("#"+href.split("#")[1]).children().clone();
                 } else {
                     $content = $trigger.children().clone();
