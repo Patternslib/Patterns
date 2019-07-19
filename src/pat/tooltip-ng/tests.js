@@ -9,7 +9,7 @@ define(["pat-tooltip-ng"], function(pattern) {
                 "data-pat-tooltip-ng": "" || cfg.data,
                 "class": "pat-tooltip-ng"
             }).text(cfg.content
-	    ).appendTo($("div#lab"));
+            ).appendTo($("div#lab"));
         },
 
         removeTooltip: function removeTooltip() {
@@ -115,7 +115,7 @@ define(["pat-tooltip-ng"], function(pattern) {
                         it("will show the content of the link", function (done) {
 		            var content = "Local content";
                             utils.createTooltip({
-		                data: "source: content; trigger: hover", 
+		                data: "source: content; trigger: hover",
 		                href: "#",
 		                content: content
 		            });
@@ -153,6 +153,68 @@ define(["pat-tooltip-ng"], function(pattern) {
                 });
 
             });
+            describe("if the 'target' parameter is 'body'", function () {
+                afterEach(function() {
+                    utils.removeTooltip();
+                });
+                it("will append the .tippy-popper to the document.body",
+                    function (done) {
+                        var $el = utils.createTooltip({
+                            data: "target: body",
+		                    href: "#",
+		                });
+                        pattern.init($el);
+                        $el[0].dispatchEvent(new Event('click'));
+                        setTimeout(function() {
+                            var $container = $(".tippy-popper");
+                            expect($(".tippy-popper", "body").length).toEqual(1);
+                            done();
+                        }, 200);
+                });
+            });
+            describe("if the 'target' parameter is 'parent'", function () {
+                afterEach(function() {
+                    utils.removeTooltip();
+                });
+                it("will append the .tippy-popper to the reference element's parent node",
+                    function (done) {
+                        var $el = utils.createTooltip({
+                            data: "target: parent",
+		                    href: "#",
+		                });
+                        pattern.init($el);
+                        $el[0].dispatchEvent(new Event('click'));
+                        setTimeout(function() {
+                            var $container = $(".tippy-popper");
+                            expect($(".tippy-popper", "#lab").length).toEqual(1);
+                            done();
+                        }, 200);
+                });
+            });
+            describe("if the 'target' parameter is a selector", function () {
+                afterEach(function() {
+                    utils.removeTooltip();
+                });
+                it("will append the .tippy-popper to the selected element",
+                    function (done) {
+                        var $el = utils.createTooltip({
+                            data: "target: #child3",
+		                    href: "#",
+		                });
+                        $("<div/>", {id: "child3"})
+                            .appendTo($("<div/>", {id: "child2"}))
+                            .appendTo($("<div/>", {id: "child1"}))
+                            .appendTo(document.body);
+                        pattern.init($el);
+                        $el[0].dispatchEvent(new Event('click'));
+                        setTimeout(function() {
+                            var $container = $(".tippy-popper");
+                            expect($(".tippy-popper", "#child3").length).toEqual(1);
+                            done();
+                        }, 200);
+                });
+            });
+
         });
     });
 });

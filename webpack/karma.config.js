@@ -145,6 +145,7 @@ module.exports = function(config) {
         customLaunchers: {
             'MyCustomLauncher': {
                 base: 'ChromeHeadless',
+                flags: ['--no-sandbox'],
                 debug: true,
                 options: {
                     viewportSize: {
