@@ -33,6 +33,7 @@ define([
     parser.addArgument("first-hour", "6");
     parser.addArgument("height", "auto");
     parser.addArgument("ignore-url", false);
+    parser.addArgument("lang", "en");
     parser.addArgument("start-date");
     parser.addArgument("store", "none", ["none", "session", "local"]);
     parser.addArgument("time-format", "h(:mm)t");
@@ -69,7 +70,15 @@ define([
         },
 
         init: function($elem, opts) {
-//            const fullCalendar = import(/* webpackChunkName: "fullcalendar" */ 'fullcalendar').then(() => {
+                var lang = document.getElementsByTagName("html")[0].getAttribute("lang");
+                if (lang && lang != "en" && lang != null) {
+                    // we don't support any country-specific language variants, always use first 2 letters
+                    lang = lang.substr(0,2).toLowerCase();
+                    import(/* webpackChunkName: "fullcalendar" */ 'fullcalendar/dist/lang/' + lang + '.js').then(() => {
+                        console.log('loaded cal locale for ' + lang);
+                    } )
+                } 
+
                 opts = opts || {};
                 var $el = $elem,
                     cfg = store.updateOptions($el[0], parser.parse($el)),
@@ -87,16 +96,6 @@ define([
                     cfg.newEventURL = match[1];
                 }
 
-                // No longer necessary since 2.1 
-                // https://fullcalendar.io/docs/event_ui/Requirements/
-                // if (cfg.externalEventSelector) {
-                //     $(cfg.externalEventSelector).draggable({
-                //         zIndex: 200,
-                //         helper: "clone",
-                //         appendTo: "body"
-                //     });
-                // }
-
                 if (!opts.ignoreUrl) {
                     var search = calendar._parseSearchString();
                     if (search["default-date"]) {
@@ -108,6 +107,7 @@ define([
                 }
 
                 var calOpts = {
+                    lang: lang,
                     axisFormat: cfg.timeFormat,
                     columnFormat: cfg.column,
                     defaultDate: cfg.defaultDate,
@@ -468,7 +468,6 @@ define([
                 }).length;
             });
 
-//            const momentTz = import(/* webpackChunkName: "momentTz" */ 'moment-timezone-data').then(() => {
                 var events = $events.find(".cal-event").filter(function() {
                     var $event = $(this);
                     if (searchText && !regex.test($event.find(".title").text())) {
@@ -538,7 +537,6 @@ define([
                     }
                     return ev;
                 }).toArray();
-//            });
 
             return events;
         }
