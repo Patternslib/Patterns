@@ -1,5 +1,3 @@
-import Promise from 'promise-polyfill';
-
 define([
     "jquery",
     "pat-base",
@@ -7,6 +5,7 @@ define([
     "pat-parser",
     "pat-logger",
     "moment",
+    "promise-polyfill"
 ], function($, Base, registry, Parser, logger, moment) {
     "use strict";
 
