@@ -121,6 +121,7 @@ module.exports = {
             "patternslib.slides": path.resolve(__dirname, "../node_modules/slides/src/slides.js"),
             "photoswipe-ui": path.resolve(__dirname, "../node_modules/photoswipe/dist/photoswipe-ui-default"),
             "prefixfree": path.resolve(__dirname, "../node_modules/prefixfree/prefixfree.min.js"),
+            "promise-polyfill": path.resolve(__dirname, "../node_modules/promise-polyfill/dist/polyfill.js"),
             "select2": path.resolve(__dirname, "../node_modules/select2/select2.js"),
             "showdown-prettify": path.resolve(__dirname, "../node_modules/showdown-prettify/dist/showdown-prettify.min.js"),
             "slick-carousel": path.resolve(__dirname, "../node_modules/slick-carousel/slick/slick.js"),

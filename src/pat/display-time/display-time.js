@@ -1,3 +1,4 @@
+import Promise from 'promise-polyfill';
 
 (function (root, factory) {
     // We use AMD (Asynchronous Module Definition) or browser globals to create
