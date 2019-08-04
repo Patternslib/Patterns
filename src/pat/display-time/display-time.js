@@ -1,25 +1,13 @@
 import Promise from 'promise-polyfill';
 
-(function (root, factory) {
-    // We use AMD (Asynchronous Module Definition) or browser globals to create
-    // this module.
-    if (typeof define === "function" && define.amd) {
-        define([
-            "jquery",
-            "pat-base",
-            "pat-registry",
-            "pat-parser",
-            "pat-logger",
-            "moment",
-        ], function() {
-            return factory.apply(this, arguments);
-        });
-    } else {
-        // If require.js is not available, you'll need to make sure that these
-        // global variables are available.
-        factory($, patterns.Base, patterns, patterns.Parser, patterns.logger, moment);
-    }
-}(this, function($, Base, registry, Parser, logger, moment) {
+define([
+    "jquery",
+    "pat-base",
+    "pat-registry",
+    "pat-parser",
+    "pat-logger",
+    "moment",
+], function($, Base, registry, Parser, logger, moment) {
     "use strict";
 
     var log = logger.getLogger("pat-display-time");
@@ -93,4 +81,4 @@ import Promise from 'promise-polyfill';
             })
         }
     });
-}));
+});
