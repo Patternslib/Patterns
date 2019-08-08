@@ -89,6 +89,7 @@
                 subtree: true,
                 characterData: false,
                 attributeOldValue: true,
+                attributes: true, 
                 attributeFilter: ['class']
             };
             observer.observe(document.body, config);
