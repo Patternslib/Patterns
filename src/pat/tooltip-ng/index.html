@@ -14,22 +14,59 @@
         By default tooltips are triggered by clicking and they will show the contents
         of the title attribute of the element being clicked.
         </p>
-        <p>
         <h3>Configurations</h3>
-        Tooltips can be configured. Click the following link to show <a href="#" title="This is just the title" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click; source: content">the same content in the link</a> inside the tooltip.
+        <p>Tooltips can be configured.</p>
+        <h4>Class</h4>
+        <p>
+        <code>class: wasabi</code>. A tooltip with CSS class <code>wasabi</code> is displayed when the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="class: wasabi">element</a> is clicked.
+        </p>
+        <h4>Trigger</h4>
+        <p>
+        <code>trigger: click</code> (default). A tooltip is displayed when the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click">element</a> is clicked.
         </p>
         <p>
-        Tooltips can be configured. Click the following link to show <a href="#tooltip-source" title="This is just the title" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click; source: content">the same content in the link</a> inside the tooltip.
+        <code>trigger: hover</code>. A tooltip is displayed when hovering the mouse pointer over the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: hover">element</a>.
+        </p>
+        <h4>Source</h4>
+        <p>
+        <code>source: title</code> (default).  Click <a href="#" title="Normally, tooltips will use the title attribute as text source." class="pat-tooltip-ng" data-pat-tooltip-ng="source: title">here</a> to see the title attribute in the tooltip.
+        </p>
+        <p>
+        <code>source: content</code> and <code>href="#"</code>. Click the following link to show <a href="#" class="pat-tooltip-ng" data-pat-tooltip-ng="source: content">the same content in the link</a> inside the tooltip.
+        </p>
+        <p>
+        <code>source: content</code> and <code>href="#tooltip-source"</code>. Click the following link to show <a href="#tooltip-source" class="pat-tooltip-ng" data-pat-tooltip-ng="source: content">the content of the element matching the given selector</a> inside the tooltip.
+        </p>
+        <p>
+        <code>source: ajax</code>. Mouse over the following link to show <a href="pattern-test-response.html#myTip" class="pat-tooltip-ng" data-pat-tooltip-ng="source: ajax; trigger: hover">the content of pattern-test-response.html#myTip</a> loaded by ajax inside the tooltip.
+        </p>
+        <p>
+        <code>source: ajax</code>. Click the following link to show <a href="pattern-test-response.html#myTip" class="pat-tooltip-ng" data-pat-tooltip-ng="source: ajax; trigger: click">the content of pattern-test-response.html#myTip</a> loaded by ajax inside the tooltip.
+        </p>
+        <p>
+        <code>source: auto</code> and <code>href="#tooltip-source"</code>. Click the following link to show <a href="#tooltip-source" class="pat-tooltip-ng" data-pat-tooltip-ng="source: auto">the content of the element matching the given selector</a> inside the tooltip.
+        </p>
+        <h4>Target</h4>
+        <p>
+        <code>target: body</code> (default). When clicking <a href="#tooltip-source" title="This is just the title" class="pat-tooltip-ng" data-pat-tooltip-ng="target: body">this link</a> the tooltip will be appended to the <code>document.body</code>.
+        </p>
+        <p>
+        <code>target: parent</code>. When clicking <a href="#tooltip-source" title="This is just the title" class="pat-tooltip-ng" data-pat-tooltip-ng="target: parent">this link</a> the tooltip will be appended to its parent container.
+        </p>
+        <p>
+        <code>target: #tooltip-container</code>. When clicking <a href="#" title="This is just the title" class="pat-tooltip-ng" data-pat-tooltip-ng="target: #tooltip-container">this link</a> the tooltip will be appended to an element matching the given selector.
         </p>
         <p>
         You can configure tooltips to set their preferred positions as well when they will appear.
-        This <a href="#" title="This tooltip prefers to be in the top-middle position, but doesn't have enough space there. Poor fellow." class="pat-tooltip-ng" data-pat-tooltip-ng=" trigger: hover">tooltip</a>is configured to preferably appear in the top middle, but won't appear there if there isn't enough space.
+        This <a href="#" title="This tooltip prefers to be in the top-middle position, but doesn't have enough space there. Poor fellow." class="pat-tooltip-ng" data-pat-tooltip-ng=" trigger: hover">tooltip</a> is configured to preferably appear in the top middle, but won't appear there if there isn't enough space.
         </p>
 
-        
+
     </div>
     <div id="tooltip-source" class="sources" style="display:none;">
 	<strong>Hello there</strong>
+    </div>
+    <div id="tooltip-container">
     </div>
 </body>
 </html>

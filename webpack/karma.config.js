@@ -18,10 +18,8 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            //'tests/specs/*/*.js',
-            'tests/specs/lib/tippy.js',
-//            'src/pat/*/tests.js',
-            'src/pat/tooltip-ng/tests.js',
+            'tests/specs/*/*.js',
+            'src/pat/*/tests.js',
             {
                 pattern: 'src/pat/date-picker/i18n.json',
                 served: true,
@@ -31,10 +29,16 @@ module.exports = function(config) {
                 pattern: 'src/pat/date-picker/date-picker.css',
                 served: true,
                 included: false
+            },
+            {
+                pattern: 'tests/content.html',
+                served: true,
+                included: false
             }
         ],
         proxies: {
-            '/src/pat/date-picker': '/base/src/pat/date-picker'
+            '/src/pat/date-picker': '/base/src/pat/date-picker',
+            '/tests': '/base/tests',
         },
 
 
@@ -145,6 +149,7 @@ module.exports = function(config) {
         customLaunchers: {
             'MyCustomLauncher': {
                 base: 'ChromeHeadless',
+                flags: ['--no-sandbox'],
                 debug: true,
                 options: {
                     viewportSize: {
