@@ -31,10 +31,16 @@ module.exports = function(config) {
                 pattern: 'src/pat/date-picker/date-picker.css',
                 served: true,
                 included: false
+            },
+            {
+                pattern: 'tests/content.html',
+                served: true,
+                included: false
             }
         ],
         proxies: {
-            '/src/pat/date-picker': '/base/src/pat/date-picker'
+            '/src/pat/date-picker': '/base/src/pat/date-picker',
+            '/tests': '/base/tests',
         },
 
 
