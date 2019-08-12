@@ -17,9 +17,11 @@
     } else {
         // If require.js is not available, you'll need to make sure that these
         // global variables are available.
-        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy, tippytheme)
+//        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy, tippytheme)
+        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy)
     }
-}(this, function($, Base, registry, Parser, inject, logger, tippy, tippytheme) {
+//}(this, function($, Base, registry, Parser, inject, logger, tippy, tippytheme) {
+}(this, function($, Base, registry, Parser, inject, logger, tippy) {
     'use strict'
 
     let start = 0
@@ -34,20 +36,6 @@
      * For more information on how to use the logger and how to view log messages, please read:
      * https://github.com/Patternslib/logging
      */
-
-    const tippy_args = [
-        'position-list',
-        'position-policy',
-        'height',
-        'trigger',
-        'closing',
-        'source',
-        'ajax-data-type',
-        'delay',
-        'mark-inactive',
-        'class',
-        'target'
-    ]
 
     let parser = new Parser('tooltip-ng')
     /* If you'd like your pattern to be configurable via the
@@ -126,7 +114,7 @@
                         .on('destroy.pat-tooltip-ng', tooltip._onDestroy)
 
                 this.options = tooltip.parseOptionsForTippy(this.options, $trigger)
-                const tippy_instance = $(tippy($trigger[0], this.options))
+                tippy($trigger[0], this.options)
                 tooltip.setupShowEvents($trigger)
             })
         },
@@ -140,8 +128,8 @@
 
                     'height': notImplemented,
 
-                    'trigger': name => {
-                        if (opts.trigger == 'hover') {
+                    'trigger': () => {
+                        if (opts.trigger === 'hover') {
                             opts.trigger = 'mouseenter focus'
                         }
                     },
@@ -239,14 +227,14 @@
             $trigger.on('click.pat-tooltip-ng', tooltip.blockDefault)
         },
 
-        removeShowEvents: $trigger => {
+        removeShowEvents: $trigger => {// jshint ignore:line
         },
 
         setupHideEvents: $trigger => {
             $trigger.on('click.pat-tooltip-ng', tooltip.blockdefault)
         },
 
-        removeHideEvents: $trigger => {
+        removeHideEvents: $trigger => {// jshint ignore:line
         },
 
         blockDefault: event => {
@@ -280,7 +268,7 @@
             }
         },
 
-        _onTrigger: (instance, event) => {
+        _onTrigger: (instance, event) => {// jshint ignore:line
             timelog('ONTRIGGER')
         },
 
@@ -289,9 +277,9 @@
             $(instance.reference).trigger('pat-tippy-mount', instance.popperChildren.tooltip)
         },
 
-        _onShow: instance =>
+        _onShow: instance => {// jshint ignore:line
             timelog('ONSHOW')
-        ,
+        },
 
         _onShown: instance => {
             timelog('ONSHOWN')
@@ -307,7 +295,7 @@
             tooltip.setupShowEvents($trigger)
         },
 
-        _onHidden: instance => {
+        _onHidden: instance => { // jshint ignore:line
             timelog('ONHIDDEN')
         },
 
@@ -363,3 +351,4 @@
     registry.register(tooltip)
     return tooltip
 }))
+/*global $, patterns, tippy */

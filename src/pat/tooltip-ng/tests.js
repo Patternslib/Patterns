@@ -2,9 +2,9 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
     const _OAC = '_onAjaxCallback',
           _OS = '_onShown',
           _OAB = '_onAjaxBypass',
-          _OACS = '_onAjaxContentSet'
+          _OACS = '_onAjaxContentSet',
           _PD =  'preventDefault',
-          ANYOPTS = jasmine.any(Object)
+          ANYOPTS = jasmine.any(Object) // jshint ignore:line
 
     var log = logger.getLogger('pat-tooltip-ng.tests'),
         start,
@@ -180,7 +180,6 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             data: 'source: title; trigger: hover'
                         })
                         var $el = $('a#tooltip')
-                        var title = $el.attr('title')
                         var spy = spyOn(pattern, '_onHidden').and.callThrough()
                         pattern.init($el)
 
@@ -247,7 +246,6 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     pattern.init($el)
                     utils.click($el)
                     setTimeout(() => {
-                        var $container = $('.tippy-popper')
                         expect($('.tippy-popper', 'body').length).toEqual(1)
                         done()
                     }, 200)
@@ -262,7 +260,6 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     pattern.init($el)
                     utils.click($el)
                     setTimeout(() => {
-                        var $container = $('.tippy-popper')
                         expect($('.tippy-popper', '#lab').length).toEqual(1)
                         done()
                     }, 200)
@@ -281,7 +278,6 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     pattern.init($el)
                     utils.click($el)
                     setTimeout(() => {
-                        var $container = $('.tippy-popper')
                         expect($('.tippy-popper', '#child3').length).toEqual(1)
                         done()
                     }, 200)
@@ -342,7 +338,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         href: 'tests/content.html#content'
                     }),
                     click = new Event('click'),
-                    spy_prevented = spyOn(click, _PD).and.callThrough()
+                    spy_prevented = spyOn(click, _PD).and.callThrough(),
                     spy_show = spyOn(pattern, _OAC).and.callThrough()
 
                 pattern.init($el)
@@ -445,13 +441,13 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             data: 'source: ajax; trigger: click',
                             href: 'tests/content.html#content'
                         }),
-                        spy_ajax = spyOn(pattern, _OAC).and.callFake(
-                            utils.delayed(_OAC, 500)
-                        ),
                         spy_show = spyOn(pattern, _OS).and.callThrough(),
                         spy_byps = spyOn(pattern, _OAB).and.callThrough(),
                         spy_cset = spyOn(pattern, _OACS).and.callThrough()
 
+                    spyOn(pattern, _OAC).and.callFake(
+                        utils.delayed(_OAC, 500)
+                    )
                     utils.log('pattern init')
                     pattern.init($el)
                     utils.click($el)
@@ -480,13 +476,13 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             data: 'source: ajax; trigger: hover',
                             href: 'tests/content.html#content'
                         }),
-                        spy_ajax = spyOn(pattern, _OAC).and.callFake(
-                            utils.delayed(_OAC, 500)
-                        ),
                         spy_show = spyOn(pattern, _OS).and.callThrough(),
                         spy_byps = spyOn(pattern, _OAB).and.callThrough(),
                         spy_cset = spyOn(pattern, _OACS).and.callThrough()
 
+                    spyOn(pattern, _OAC).and.callFake(
+                        utils.delayed(_OAC, 500)
+                    )
                     utils.log('pattern init')
                     pattern.init($el)
                     utils.mouseenter($el)
@@ -513,4 +509,5 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
 
     })
 })
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
+// jshint indent: 4, browser: true, jquery: true, quotmark: single
+/*global describe, it, beforeEach, afterEach, spyOn, afterAll, expect */
