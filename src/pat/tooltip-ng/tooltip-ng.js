@@ -26,7 +26,7 @@
     const log = logger.getLogger('pat-tooltip-ng'),
           timelog = msg => { log.debug(`${Date.now() - start} ${msg}`) }
 
-    log.setLevel(10)
+    log.setLevel(20)
     timelog('Initializing pat-tooltip-ng')
 
     /* For logging, you can call log.debug, log.info, log.warn, log.error and log.fatal.
