@@ -36,7 +36,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll)\.js$/,
+                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll|tooltip-ng)\.js$/,
                 loader: 'babel-loader',
                 query: {
                     presets: [["@babel/env", {
