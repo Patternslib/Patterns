@@ -3,46 +3,53 @@
     // this module.
     if (typeof define === 'function' && define.amd) {
         define([
-            "jquery",
-            "pat-base",
-            "pat-registry",
-            "pat-parser",
-            "pat-inject",
-            "pat-logger",
-	        "tippy.js",
-	        "tippy-theme.css",
+            'jquery',
+            'pat-base',
+            'pat-registry',
+            'pat-parser',
+            'pat-inject',
+            'pat-logger',
+	        'tippy.js',
+	        'tippy-theme.css',
         ], function() {
-            return factory.apply(this, arguments);
-        });
+            return factory.apply(this, arguments)
+        })
     } else {
         // If require.js is not available, you'll need to make sure that these
         // global variables are available.
-        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy, tippytheme);
+        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy, tippytheme)
     }
 }(this, function($, Base, registry, Parser, inject, logger, tippy, tippytheme) {
-    'use strict';
+    'use strict'
 
-    var log = logger.getLogger("pat-tooltip-ng");
-    log.setLevel(10);
-    log.debug("Initializing pat-tooltip-ng");
+    let start = 0
+    const log = logger.getLogger('pat-tooltip-ng'),
+          timelog = msg => { log.debug(`${Date.now() - start} ${msg}`) }
+
+    log.setLevel(10)
+    timelog('Initializing pat-tooltip-ng')
 
     /* For logging, you can call log.debug, log.info, log.warn, log.error and log.fatal.
      *
      * For more information on how to use the logger and how to view log messages, please read:
      * https://github.com/Patternslib/logging
      */
-    var defaults = {
-        'allowHTML': true,
-        'animation': 'fade',
-        'arrow': true,
-        'flipOnUpdate': true,
-        'ignoreAttributes': true,
-        'interactive': false,
-        'theme': 'light-border',
-        'trigger': 'click'
-    };
 
-    var parser = new Parser('tooltip-ng');
+    const tippy_args = [
+        'position-list',
+        'position-policy',
+        'height',
+        'trigger',
+        'closing',
+        'source',
+        'ajax-data-type',
+        'delay',
+        'mark-inactive',
+        'class',
+        'target'
+    ]
+
+    let parser = new Parser('tooltip-ng')
     /* If you'd like your pattern to be configurable via the
      * data-pat-tooltip-ng attribute, then you need to
      * specify the available arguments here, by calling parser.addArgument.
@@ -58,17 +65,16 @@
      *      property can be multivalued or not.
      *
      *  For example:
-     *      parser.addArgument('color', 'blue', ['red', 'green', 'blue'], false);
+     *      parser.addArgument('color', 'blue', ['red', 'green', 'blue'], false)
      */
-    parser.addArgument("trigger", "click", ["click", "hover"]);
-    parser.addArgument("source", "title", ["auto", "ajax", "content", "content-html", "title"]);
-    parser.addArgument("target", "body");
+    parser.addArgument('trigger', 'click', ['click', 'hover'])
+    parser.addArgument('source', 'title', ['auto', 'ajax', 'content', 'content-html', 'title'])
+    parser.addArgument('class')
+    parser.addArgument('target', 'body')
 
-    tippy.default.setDefaults(defaults);
-    var tippy = tippy.default;
 
     //return Base.extend({
-    var tooltip = {
+    let tooltip = {
         /* The name is used to store the pattern in a registry and needs to be
          * unique.
          */
@@ -76,115 +82,284 @@
         /* The trigger specifies the selector (CSS or jQuery) which Patternslib
          * will scan for in order to identifiy and initialize this pattern.
          */
-        trigger: ".pat-tooltip-ng",
+        trigger: '.pat-tooltip-ng',
 
-        init: function initUndefined ($el, opts) {
-	        //var config = defaults;
-            var $trigger = $el;
-            this.options = parser.parse($trigger, opts);
-	        if (this.options.trigger == "hover") {
-		        this.options.trigger = "mouseenter focus";
-	        }
-	        if (this.options.hasOwnProperty('source')) {
-	            if (this.options.source==="title") {
-	                var content = $trigger.attr("title");
-	                this.options.content = content;
-	            }
-    	    	if (this.options.source==="content") {
-    	    	    var href = $trigger.attr("href");
-    	    	    var content = $trigger.text();
-    	    	    if (typeof(href) === "string" && href.indexOf("#") !== -1 && href.length > 1) {
-    	    		    content = $("#"+href.split("#")[1]).children().clone();
-    	    	    } else {
-    	    		    content = $trigger.children().clone();
-            			if (!content.length) {
-            			    content = $("<p/>").text($trigger.text());
-            			}
-    	    	    }
-    	            this.options.content = content[0];
-    	    	}
-                if (this.options.source==='ajax') {
-                    this.options.content = $('<progress/>')[0];
-                    this.options.onMount = tooltip._onAjax($trigger);
+        tippy: tippy.default,
+
+        init: ($el, opts) => {
+
+            return $el.each(function() {
+                this.defaults = {
+                    'allowHTML': true,
+                    'animation': 'fade',
+                    'arrow': true,
+                    //'delay': [0, 1800],
+                    //'duration': [325, 275],
+                    'flipOnUpdate': true,
+                    'ignoreAttributes': true,
+                    'interactive': false,
+                    'onHidden': tooltip._onHidden,
+                    'onHide': tooltip._onHide,
+                    'onMount': tooltip._onMount,
+                    'onShow': tooltip._onShow,
+                    'onShown': tooltip._onShown,
+                    'onTrigger': tooltip._onTrigger,
+                    'theme': 'light-border',
+                    'trigger': 'click'
                 }
-    	    	delete this.options.source;
-	        }
-	        if ($trigger.attr("title")) {
-		        $trigger.removeAttr("title");
-	        }
-	        if (this.options.hasOwnProperty('target')) {
-                if (this.options.target === 'parent') {
-                    this.options.appendTo = 'parent';
-                } else if (this.options.target !== 'body') {
-                    this.options.appendTo = $(this.options.target)[0];
+
+                start = Date.now()
+                const tippy = tooltip.tippy,
+                      $trigger = $(this)
+
+                tippy.setDefaults(this.defaults)
+                this.options = parser.parse($trigger, opts)
+
+                /* this.options will now contain the configured pattern properties
+                 * you've registered with the parser.addArgument method.
+                 *
+                 * If the user provided any values via the data-pat-tooltip-ng
+                 * attribute, those values will already be set.
+                 */
+
+                $trigger.data('patterns.tooltip-ng', tooltip._mutateOptions(this.options))
+                        .on('destroy.pat-tooltip-ng', tooltip._onDestroy)
+
+                this.options = tooltip.parseOptionsForTippy(this.options, $trigger)
+                const tippy_instance = $(tippy($trigger[0], this.options))
+                tooltip.setupShowEvents($trigger)
+            })
+        },
+
+        parseOptionsForTippy: (opts, $trigger) => {
+            const notImplemented = (name) => { log.error(`${name} not implemented`) },
+                parsers = {
+                    'position-list': notImplemented,
+
+                    'position-policy': notImplemented,
+
+                    'height': notImplemented,
+
+                    'trigger': name => {
+                        if (opts.trigger == 'hover') {
+                            opts.trigger = 'mouseenter focus'
+                        }
+                    },
+                    'closing': notImplemented,
+
+                    'source': () => {
+                        if (opts.hasOwnProperty('source')) {
+                            if (opts.source==='title') {
+                                opts.content = $trigger.attr('title')
+                            }
+                            if (opts.source === 'auto') {
+                                const href = $trigger.attr('href')
+                                if (typeof(href) !== 'string') {
+                                    log.error(`href must be specified if 'source' is set to 'auto'`)
+                                    return
+                                }
+                                if (href.indexOf('#') === 0) {
+                                    tooltip._setSource(opts, 'content')
+                                } else {
+                                    tooltip._setSource(opts, 'ajax')
+                                }
+                            }
+                            if (opts.source==='content') {
+                                const href = $trigger.attr('href'),
+                                      is_string = typeof(href) === 'string',
+                                      has_hash = href.indexOf('#') !== -1,
+                                      has_more = href.length > 1
+                                let $content
+
+                                if (is_string && has_hash && has_more) {
+                                    $content = $('#'+href.split('#')[1]).children().clone()
+                                } else {
+                                    $content = $trigger.children().clone()
+                                    if (!$content.length) {
+                                        $content = $('<p/>').text($trigger.text())
+                                    }
+                                }
+                                opts.content = $content[0]
+                                registry.scan($content[0])
+                            }
+                            if (opts.source==='ajax') {
+                                const $p = $('<progress/>')[0]
+
+                                opts.content = $p
+                                opts.onShow = tooltip._onAjax($trigger)
+                                opts.onHidden = instance => {
+                                    timelog('ONAJAXHIDDEN')
+                                    instance.setContent($p)
+                                    instance.state.ajax.canFetch = true
+                                }
+                            }
+                            delete opts.source
+                        }
+                    },
+
+                    'ajax-data-type': notImplemented,
+
+                    'delay': notImplemented,
+
+                    'mark-inactive': notImplemented,
+
+                    'class': () => {
+                        if (opts.hasOwnProperty('class')) {
+                            const klass = opts.class,
+                                  handler = tooltip._addClassHandler(klass)
+
+                            $trigger.on('pat-tippy-mount', handler)
+                            delete opts.class
+                        }
+                    },
+
+                    'target': () => {
+                        if (opts.hasOwnProperty('target')) {
+                            if (opts.target === 'parent') {
+                                opts.appendTo = 'parent'
+                            } else if (opts.target !== 'body') {
+                                opts.appendTo = $(opts.target)[0]
+                            }
+                            delete opts.target
+                        }
+                    }
                 }
-                delete this.options.target;
+
+            for (let arg in opts) {
+                parsers[arg](arg)
             }
-            //log.debug($trigger);
-            /* this.options will now contain the configured pattern properties
-             * you've registered with the parser.addArgument method.
-             *
-             * If the user provided any values via the data-pat-tooltip-ng
-             * attribute, those values will already be set.
-             */
-	        this.options.onShown = tooltip._onShown;
-	        this.options.onHidden = tooltip._onHidden;
-            this.options.onTrigger = tooltip._onTrigger;
-            //log.debug(this.options);
 
-	        var foo = $(tippy($trigger[0], this.options)).data("patterns.tooltip-ng", this.options);
-	        //log.debug($trigger);
-
-	        $trigger
-                .on("destroy", tooltip._onDestroy);
-            log.debug(foo.data());
+	        if ($trigger.attr('title')) {
+		        $trigger.removeAttr('title')
+	        }
+            return opts
         },
 
-        _onDestroy: function onDestroyUndefined (event) {
-            log.debug('ONDESTROY');
-            var $trigger = event.target;
-            $trigger._tippy.destroy();
+        setupShowEvents: $trigger => {
+            $trigger.on('click.pat-tooltip-ng', tooltip.blockDefault)
         },
 
-        _onShown: function onShownUndefined (instance) {
-            log.debug('ONSHOWN');
+        removeShowEvents: $trigger => {
         },
 
-        _onHidden: function onHiddenUndefined (instance) {
-            log.debug('ONHIDDEN');
+        setupHideEvents: $trigger => {
+            $trigger.on('click.pat-tooltip-ng', tooltip.blockdefault)
         },
 
-        _onAjax: function onAjaxUndefined ($trigger) {
-            log.debug('OnAJAX');
-            var source = $trigger.attr("href").split("#");
-            return function (instance) {
-                log.debug('in ajax content function');
-                log.debug(instance);
-                  setTimeout(()=>{
-//                inject.execute([{
-//                    url: source[0],
-//                    source: "#" + source[1],
-//                    target: "#" + instance.popper.id + " .tippy-content",
-//                    dataType: "html"
-//                }], $trigger);
-                fetch(source[0]).then(response => {
-                    return response.text().then(text => {
-                        var $tmp = $('<div></div>').append($.parseHTML(text));
-                        instance.setContent($tmp.find('#'+source[1])[0]);
-                    })
-                })}, 2000);
-            };
+        removeHideEvents: $trigger => {
         },
 
-        _onTrigger: function onTriggerUndefined (instance, event) {
-            log.debug('ONTRIGGER');
-            log.debug(event);
-            if (event.type === "click") {
-                event.stopPropagation();
-                event.preventDefault();
+        blockDefault: event => {
+            if (event.preventDefault) {
+                event.preventDefault()
             }
+        },
+
+        _mutateOptions: opts => opts,
+
+        _addClassHandler: klass => {
+            return (event, tooltip) => { $(tooltip).addClass(klass) }
+        },
+
+        _setSource: (opts, source) => {
+            opts.source = source
+        },
+
+        _onDestroy: event => {
+            timelog('ONDESTROY')
+            const $trigger = event.target
+            $trigger._tippy.destroy()
+        },
+
+        _onClick: (instance, event) => {
+            timelog('ONCLICK')
+            if (event.type === 'click') {
+                timelog(`it's click`)
+                event.stopPropagation()
+                event.preventDefault()
+            }
+        },
+
+        _onTrigger: (instance, event) => {
+            timelog('ONTRIGGER')
+        },
+
+        _onMount: instance => {
+            timelog('ONMOUNT')
+            $(instance.reference).trigger('pat-tippy-mount', instance.popperChildren.tooltip)
+        },
+
+        _onShow: instance =>
+            timelog('ONSHOW')
+        ,
+
+        _onShown: instance => {
+            timelog('ONSHOWN')
+            const $trigger = $(instance.reference)
+            tooltip.removeShowEvents($trigger)
+            tooltip.setupHideEvents($trigger)
+        },
+
+        _onHide: instance => {
+            timelog('ONHIDE')
+            const $trigger = $(instance.reference)
+            tooltip.removeHideEvents($trigger)
+            tooltip.setupShowEvents($trigger)
+        },
+
+        _onHidden: instance => {
+            timelog('ONHIDDEN')
+        },
+
+        _onAjax: $trigger => {
+            timelog('OnAJAX')
+            const source = $trigger.attr('href').split('#')
+            return instance => {
+                timelog('in ajax content function')
+                timelog(`instance.state.ajax ${JSON.stringify(instance.state.ajax)}`)
+                if (instance.state.ajax === undefined) {
+                    instance.state.ajax = {
+                        isFetching : false,
+                        canFetch : true
+                    }
+                }
+
+                if (instance.state.ajax.isFetching || !instance.state.ajax.canFetch) {
+                    return tooltip._onAjaxBypass()
+                }
+
+                instance.state.ajax = {
+                    isFetching: true,
+                    canFetch: false
+                }
+                tooltip._onAjaxCallback(instance, source)
+            }
+        },
+
+        _onAjaxCallback: (instance, src) => {
+            timelog('AJAXCALLBACK')
+            fetch(src[0]).then(response => {
+                return response.text().then(text => {
+                    timelog(`ajax response received: ${text}`)
+                    const $tmp = $('<div></div>').append($.parseHTML(text))
+                    instance.setContent($tmp.find('#'+src[1])[0])
+                }).finally(() => {
+                        tooltip._onAjaxContentSet(instance)
+                })
+            })
+        },
+
+        _onAjaxBypass: () => {
+            timelog('AJAX BYPASSED')
+            return undefined
+        },
+
+        _onAjaxContentSet: (instance) => {
+            timelog('AJAXCONTENTSET')
+            instance.state.ajax.isFetching = false
         }
-    };
-    registry.register(tooltip);
-    return tooltip;
-}));
+    }
+
+    registry.register(tooltip)
+    return tooltip
+}))
