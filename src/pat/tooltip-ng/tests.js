@@ -1,6 +1,8 @@
 define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
     const _OAC = '_onAjaxCallback',
-          _OS = '_onShown',
+          _OS = '_onShow',
+          _OSN = '_onShown',
+          _OT = '_onTrigger',
           _OAB = '_onAjaxBypass',
           _OACS = '_onAjaxContentSet',
           _PD =  'preventDefault',
@@ -59,6 +61,15 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                 }
             },
 
+            stopwatch: (name, timer) => {
+                return (...args) => {
+                    timer[name] = Date.now()
+                    pattern[name].and.callThrough()
+                    pattern[name].apply(null, args)
+                    pattern[name].and.callFake(utils.stopwatch(name, timer))
+                }
+            },
+
             log: (msg) => {
                 log.debug( String(Date.now() - start) + ' ' + msg)
             }
@@ -88,12 +99,12 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             data: 'source: title; trigger: hover; class: wasabi',
                         }),
                         title = $el.attr('title'),
-                        spy_show = spyOn(pattern, _OS).and.callThrough()
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
 
                     pattern.init($el)
                     utils.mouseenter($el)
                     setTimeout(() => {
-                        expect(spy_show).toHaveBeenCalled()
+                        expect(spy_shown).toHaveBeenCalled()
                         var $container = $('.tippy-tooltip')
                         expect($container.length).toEqual(1)
                         var expected = $container.find('.tippy-content').text()
@@ -114,13 +125,13 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         }),
                         title1 = $el1.attr('title'),
                         title2 = $el2.attr('title'),
-                        spy_show = spyOn(pattern, _OS).and.callThrough()
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
 
                     pattern.init($el1)
                     pattern.init($el2)
                     utils.click($el2)
                     setTimeout(() => {
-                        expect(spy_show).toHaveBeenCalled()
+                        expect(spy_shown).toHaveBeenCalled()
                         var $container = $('.tippy-tooltip')
                         expect($container.length).toEqual(1)
                         var expected = $container.find('.tippy-content').text()
@@ -128,7 +139,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         expect($container.hasClass('wasabi')).toBe(false)
                         utils.click($el1)
                         setTimeout(() => {
-                            expect(spy_show).toHaveBeenCalled()
+                            expect(spy_shown).toHaveBeenCalled()
                             var $container = $('.tippy-tooltip')
                             expect($container.length).toEqual(1)
                             var expected = $container.find('.tippy-content').text()
@@ -136,7 +147,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             expect($container.hasClass('wasabi')).toBe(true)
                             utils.click($el2)
                             setTimeout(() => {
-                                expect(spy_show).toHaveBeenCalled()
+                                expect(spy_shown).toHaveBeenCalled()
                                 var $container = $('.tippy-tooltip')
                                 expect($container.length).toEqual(1)
                                 var expected = $container.find('.tippy-content').text()
@@ -149,6 +160,36 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                 })
             })
 
+            describe(`if the 'delay' parameter exists`, () => {
+                it('will wait accordingly before showing the tooltip', (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'delay: 1000; trigger: hover',
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough(),
+                        timer = {}
+
+                    spyOn(pattern, _OT).and.callFake(
+                        utils.stopwatch(_OT, timer)
+                    )
+                    spyOn(pattern, _OS).and.callFake(
+                        utils.stopwatch(_OS, timer)
+                    )
+                    pattern.init($el)
+                    utils.mouseenter($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        const duration = timer[_OS] - timer[_OT]
+                        expect(duration/1000).toBeCloseTo(1,1)
+                        done()
+                    }, 1500)
+                })
+            })
+
             describe(`if the 'trigger' parameter is 'hover'`, () => {
                 describe(`if the 'source' parameter is 'title'`, () => {
 
@@ -158,7 +199,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         })
                         var $el = $('a#tooltip')
                         var title = $el.attr('title')
-                        var spy = spyOn(pattern, _OS).and.callThrough()
+                        var spy = spyOn(pattern, _OSN).and.callThrough()
                         pattern.init($el)
                         // The 'title' attr gets removed, otherwise the browser's
                         // tooltip will appear
@@ -206,11 +247,11 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                                     href: '#',
                                     content: content
                                 }),
-                                spy_show = spyOn(pattern, _OS).and.callThrough()
+                                spy_shown = spyOn(pattern, _OSN).and.callThrough()
                             pattern.init($el)
                             utils.mouseenter($el)
                             setTimeout(() => {
-                                expect(spy_show).toHaveBeenCalled()
+                                expect(spy_shown).toHaveBeenCalled()
                                 var $container = $('.tippy-popper')
                                 expect($container.text()).toBe(content)
                                 done()
@@ -223,12 +264,12 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                                 data: 'source: content; trigger: hover',
                                 href: '#tooltip-source'
                                 }),
-                                spy_show = spyOn(pattern, _OS).and.callThrough()
+                                spy_shown = spyOn(pattern, _OSN).and.callThrough()
                             utils.createTooltipSource()
                             pattern.init($el)
                             utils.mouseenter($el)
                             setTimeout(() => {
-                                expect(spy_show).toHaveBeenCalled()
+                                expect(spy_shown).toHaveBeenCalled()
                                 var $container = $('.tippy-popper')
                                 expect($container.find('strong').text()).toBe('Local content')
                                 done()
@@ -339,14 +380,14 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     }),
                     click = new Event('click'),
                     spy_prevented = spyOn(click, _PD).and.callThrough(),
-                    spy_show = spyOn(pattern, _OAC).and.callThrough()
+                    spy_shown = spyOn(pattern, _OAC).and.callThrough()
 
                 pattern.init($el)
                 $el[0].dispatchEvent(click)
                 $el[0].dispatchEvent(click)
                 $el[0].dispatchEvent(click)
                 setTimeout(() => {
-                    expect(spy_show).toHaveBeenCalledBefore(spy_prevented)
+                    expect(spy_shown).toHaveBeenCalledBefore(spy_prevented)
                     done()
                 }, 500)
             })
@@ -357,13 +398,13 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         href: 'tests/content.html#content'
                     }),
                     spy_ajax = spyOn(pattern, _OAC).and.callThrough(),
-                    spy_show = spyOn(pattern, _OS).and.callThrough()
+                    spy_shown = spyOn(pattern, _OSN).and.callThrough()
 
                 pattern.init($el)
                 utils.click($el)
                 setTimeout(() => {
                     expect(spy_ajax).toHaveBeenCalled()
-                    expect(spy_show).toHaveBeenCalled()
+                    expect(spy_shown).toHaveBeenCalled()
                     var $container = $('.tippy-popper .tippy-content')
                     expect($container.text()).toBe(
                         'External content fetched via an HTTP request.')
@@ -378,7 +419,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             href: 'tests/content.html#content'
                         }),
                         spy_ajax = spyOn(pattern, _OAC).and.callThrough(),
-                        spy_show = spyOn(pattern, _OS).and.callThrough(),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough(),
                         spy_byps = spyOn(pattern, _OAB).and.callThrough()
 
                     utils.log('pattern init')
@@ -394,7 +435,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     }, 10)
                     setTimeout(() => {
                         expect(spy_ajax).toHaveBeenCalledBefore(spy_byps)
-                        expect(spy_show).toHaveBeenCalled()
+                        expect(spy_shown).toHaveBeenCalled()
                         var $container = $('.tippy-popper .tippy-content')
                         expect($container.text()).toBe(
                             'External content fetched via an HTTP request.')
@@ -408,7 +449,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             href: 'tests/content.html#content'
                         }),
                         spy_ajax = spyOn(pattern, _OAC).and.callThrough(),
-                        spy_show = spyOn(pattern, _OS).and.callThrough(),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough(),
                         spy_byps = spyOn(pattern, _OAB).and.callThrough()
 
                     utils.log('pattern init')
@@ -424,7 +465,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     }, 10)
                     setTimeout(() => {
                         expect(spy_ajax).toHaveBeenCalledBefore(spy_byps)
-                        expect(spy_show).toHaveBeenCalled()
+                        expect(spy_shown).toHaveBeenCalled()
                         var $container = $('.tippy-popper .tippy-content')
                         expect($container.text()).toBe(
                             'External content fetched via an HTTP request.')
@@ -441,7 +482,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             data: 'source: ajax; trigger: click',
                             href: 'tests/content.html#content'
                         }),
-                        spy_show = spyOn(pattern, _OS).and.callThrough(),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough(),
                         spy_byps = spyOn(pattern, _OAB).and.callThrough(),
                         spy_cset = spyOn(pattern, _OACS).and.callThrough()
 
@@ -463,7 +504,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     // second click
                     setTimeout(() => {
                         expect(spy_byps).toHaveBeenCalledBefore(spy_cset)
-                        expect(spy_show).toHaveBeenCalled()
+                        expect(spy_shown).toHaveBeenCalled()
                         var $container = $('.tippy-popper .tippy-content')
                         expect($container.text()).toBe(
                             'External content fetched via an HTTP request.')
@@ -476,7 +517,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             data: 'source: ajax; trigger: hover',
                             href: 'tests/content.html#content'
                         }),
-                        spy_show = spyOn(pattern, _OS).and.callThrough(),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough(),
                         spy_byps = spyOn(pattern, _OAB).and.callThrough(),
                         spy_cset = spyOn(pattern, _OACS).and.callThrough()
 
@@ -497,7 +538,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     }, 10)
                     setTimeout(() => {
                         expect(spy_byps).toHaveBeenCalledBefore(spy_cset)
-                        expect(spy_show).toHaveBeenCalled()
+                        expect(spy_shown).toHaveBeenCalled()
                         var $container = $('.tippy-popper .tippy-content')
                         expect($container.text()).toBe(
                             'External content fetched via an HTTP request.')

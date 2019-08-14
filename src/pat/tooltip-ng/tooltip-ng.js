@@ -6,6 +6,7 @@
             'jquery',
             'pat-base',
             'pat-registry',
+            'pat-utils',
             'pat-parser',
             'pat-inject',
             'pat-logger',
@@ -18,10 +19,10 @@
         // If require.js is not available, you'll need to make sure that these
         // global variables are available.
 //        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy, tippytheme)
-        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy)
+        factory($, patterns.Base, patterns, patterns.utils, patterns.Parser, patterns.inject, patterns.logger, tippy)
     }
 //}(this, function($, Base, registry, Parser, inject, logger, tippy, tippytheme) {
-}(this, function($, Base, registry, Parser, inject, logger, tippy) {
+}(this, function($, Base, registry, utils, Parser, inject, logger, tippy) {
     'use strict'
 
     let start = 0
@@ -57,6 +58,7 @@
      */
     parser.addArgument('trigger', 'click', ['click', 'hover'])
     parser.addArgument('source', 'title', ['auto', 'ajax', 'content', 'content-html', 'title'])
+    parser.addArgument('delay')
     parser.addArgument('class')
     parser.addArgument('target', 'body')
 
@@ -187,7 +189,11 @@
 
                     'ajax-data-type': notImplemented,
 
-                    'delay': notImplemented,
+                    'delay': () => {
+                        if (opts.hasOwnProperty('delay')) {
+                            opts.delay = [utils.parseTime(opts.delay), 0]
+                        }
+                    },
 
                     'mark-inactive': notImplemented,
 
