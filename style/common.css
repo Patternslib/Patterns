@@ -13,17 +13,25 @@
 }*/
 
 body {
-	width: auto;
+	/*width: auto;*/
 	position: relative;
 	/*background-image: url(texture-light-grain.png);*/
 	font: 14px/2em "Lucida Grande", Lucida, Verdana, sans-serif;
 	color: #525151;
+	/*margin: 0;*/
+	/*max-width: 910px;
+	margin-left: auto;
+	margin-right: auto;*/
 	margin: 0;
+	padding: 70px 20px;
+	text-rendering: optimizeLegibility;
+}
+
+.container {
 	max-width: 910px;
 	margin-left: auto;
 	margin-right: auto;
-	padding: 70px 20px;
-	text-rendering: optimizeLegibility;
+	padding: 0 20px;
 }
 
 #test {
