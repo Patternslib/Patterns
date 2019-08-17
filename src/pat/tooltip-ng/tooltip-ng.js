@@ -59,6 +59,7 @@
     parser.addArgument('trigger', 'click', ['click', 'hover'])
     parser.addArgument('source', 'title', ['auto', 'ajax', 'content', 'content-html', 'title'])
     parser.addArgument('delay')
+    parser.addArgument('mark-inactive', true)
     parser.addArgument('class')
     parser.addArgument('target', 'body')
 
@@ -135,6 +136,7 @@
                             opts.trigger = 'mouseenter focus'
                         }
                     },
+
                     'closing': notImplemented,
 
                     'source': () => {
@@ -195,7 +197,12 @@
                         }
                     },
 
-                    'mark-inactive': notImplemented,
+                    'markInactive': () => {
+                        if (opts.markInactive) {
+                            $trigger.addClass('inactive')
+                        }
+                        delete opts.markInactive
+                    },
 
                     'class': () => {
                         if (opts.hasOwnProperty('class')) {
@@ -220,6 +227,10 @@
                 }
 
             for (let arg in opts) {
+                if (arg === 'mark-inactive') {
+                    arg = 'markInactive'
+                }
+                log.debug(arg)
                 parsers[arg](arg)
             }
 
@@ -249,7 +260,10 @@
             }
         },
 
-        _mutateOptions: opts => opts,
+        _mutateOptions: opts => {
+            // shallow copy
+            return Object.assign({}, opts)
+        },
 
         _addClassHandler: klass => {
             return (event, tooltip) => { $(tooltip).addClass(klass) }
@@ -290,8 +304,12 @@
         _onShown: instance => {
             timelog('ONSHOWN')
             const $trigger = $(instance.reference)
+            const options = $trigger.data('patterns.tooltip-ng')
             tooltip.removeShowEvents($trigger)
             tooltip.setupHideEvents($trigger)
+            if (options.markInactive) {
+                $trigger.removeClass('inactive').addClass('active')
+            }
         },
 
         _onHide: instance => {
@@ -303,6 +321,11 @@
 
         _onHidden: instance => { // jshint ignore:line
             timelog('ONHIDDEN')
+            const $trigger = $(instance.reference)
+            const options = $trigger.data('patterns.tooltip-ng')
+            if (options.markInactive) {
+                $trigger.removeClass('active').addClass('inactive')
+            }
         },
 
         _onAjax: $trigger => {
