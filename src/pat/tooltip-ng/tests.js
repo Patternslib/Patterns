@@ -5,6 +5,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
           _OT = '_onTrigger',
           _OAB = '_onAjaxBypass',
           _OACS = '_onAjaxContentSet',
+          _OH = '_onHidden',
           _PD =  'preventDefault',
           ANYOPTS = jasmine.any(Object) // jshint ignore:line
 
@@ -187,6 +188,71 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         expect(duration/1000).toBeCloseTo(1,1)
                         done()
                     }, 1500)
+                })
+            })
+
+            describe(`the 'mark-inactive' paramater`, () => {
+                it('when true, toggles the active/inactive class on the trigger', (done) => {
+                    const $el = utils.createTooltip({
+                        data: 'mark-inactive: true',
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough(),
+                        spy_hidden = spyOn(pattern, _OH).and.callThrough()
+
+                    pattern.init($el)
+                    expect($el.hasClass('inactive')).toBe(true)
+                    expect($el.hasClass('active')).toBe(false)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($el.hasClass('active')).toBe(true)
+                        expect($el.hasClass('inactive')).toBe(false)
+                        utils.click($el)
+                        setTimeout(() => {
+                            expect(spy_hidden).toHaveBeenCalled()
+                            const $container = $('.tippy-tooltip')
+                            expect($container.length).toEqual(0)
+                            expect($el.hasClass('active')).toBe(false)
+                            expect($el.hasClass('inactive')).toBe(true)
+                            done()
+                        }, 500)
+                    }, 500)
+                })
+                it('when false, the trigger does not get the active/inactive class', (done) => {
+                    const $el = utils.createTooltip({
+                        data: 'mark-inactive: false',
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough(),
+                        spy_hidden = spyOn(pattern, _OH).and.callThrough()
+
+                    pattern.init($el)
+                    expect($el.hasClass('inactive')).toBe(false)
+                    expect($el.hasClass('active')).toBe(false)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($el.hasClass('active')).toBe(false)
+                        expect($el.hasClass('inactive')).toBe(false)
+                        utils.click($el)
+                        setTimeout(() => {
+                            expect(spy_hidden).toHaveBeenCalled()
+                            const $container = $('.tippy-tooltip')
+                            expect($container.length).toEqual(0)
+                            expect($el.hasClass('active')).toBe(false)
+                            expect($el.hasClass('inactive')).toBe(false)
+                            done()
+                        }, 500)
+                    }, 500)
                 })
             })
 
