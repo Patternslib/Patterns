@@ -8,7 +8,7 @@
             'pat-registry',
             'pat-utils',
             'pat-parser',
-            'pat-inject',
+            'pat-markdown',
             'pat-logger',
 	        'tippy.js',
 	        'tippy-theme.css',
@@ -18,11 +18,11 @@
     } else {
         // If require.js is not available, you'll need to make sure that these
         // global variables are available.
-//        factory($, patterns.Base, patterns, patterns.Parser, patterns.inject, patterns.logger, tippy, tippytheme)
-        factory($, patterns.Base, patterns, patterns.utils, patterns.Parser, patterns.inject, patterns.logger, tippy)
+//        factory($, patterns.Base, patterns, patterns.Parser, patterns.logger, tippy, tippytheme)
+        factory($, patterns.Base, patterns, patterns.utils, patterns.Parser, patterns.markdown, patterns.logger, tippy)
     }
-//}(this, function($, Base, registry, Parser, inject, logger, tippy, tippytheme) {
-}(this, function($, Base, registry, utils, Parser, inject, logger, tippy) {
+//}(this, function($, Base, registry, Parser, logger, tippy, tippytheme) {
+}(this, function($, Base, registry, utils, Parser, Markdown, logger, tippy) {
     'use strict'
 
     let start = 0
@@ -58,6 +58,7 @@
      */
     parser.addArgument('trigger', 'click', ['click', 'hover'])
     parser.addArgument('source', 'title', ['auto', 'ajax', 'content', 'content-html', 'title'])
+    parser.addArgument('ajax-data-type', 'html', ['html', 'markdown'])
     parser.addArgument('delay')
     parser.addArgument('mark-inactive', true)
     parser.addArgument('class')
@@ -77,7 +78,8 @@
 
         tippy: tippy.default,
 
-        init: ($el, opts) => {
+        init: ($el, opts, debuglevel=20) => {
+            log.setLevel(debuglevel)
 
             return $el.each(function() {
                 this.defaults = {
@@ -189,7 +191,9 @@
                         }
                     },
 
-                    'ajax-data-type': notImplemented,
+                    'ajaxDataType': () => {
+                        delete opts.ajaxDataType
+                    },
 
                     'delay': () => {
                         if (opts.hasOwnProperty('delay')) {
@@ -227,8 +231,13 @@
                 }
 
             for (let arg in opts) {
-                if (arg === 'mark-inactive') {
-                    arg = 'markInactive'
+                switch (arg) {
+                    case 'ajax-data-type':
+                        arg = 'ajaxDataType';
+                        break;
+                    case 'mark-inactive':
+                        arg = 'markInactive';
+                        break;
                 }
                 log.debug(arg)
                 parsers[arg](arg)
@@ -355,13 +364,14 @@
 
         _onAjaxCallback: (instance, src) => {
             timelog('AJAXCALLBACK')
+            const $trigger = $(instance.reference),
+                  options = $trigger.data('patterns.tooltip-ng'),
+                  handler = tooltip._ajaxDataTypeHandlers[options.ajaxDataType]
             fetch(src[0]).then(response => {
                 return response.text().then(text => {
-                    timelog(`ajax response received: ${text}`)
-                    const $tmp = $('<div></div>').append($.parseHTML(text))
-                    instance.setContent($tmp.find('#'+src[1])[0])
+                    instance.setContent(handler(text, src))
                 }).finally(() => {
-                        tooltip._onAjaxContentSet(instance)
+                    tooltip._onAjaxContentSet(instance)
                 })
             })
         },
@@ -374,6 +384,19 @@
         _onAjaxContentSet: (instance) => {
             timelog('AJAXCONTENTSET')
             instance.state.ajax.isFetching = false
+        },
+
+        _ajaxDataTypeHandlers: {
+            'html': (text, src) => {
+                const $tmp = $('<div/>').append($.parseHTML(text))
+                return $tmp.find(`#${src[1]}`)[0]
+            },
+
+            'markdown': (text, src) => {
+                const pat = Markdown.init($('<div/>'))
+                const cfg = { url: src[0], source: `#${src[1]}` }
+                return pat.renderForInjection(cfg, text)[0]
+            }
         }
     }
 

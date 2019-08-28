@@ -110,7 +110,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         expect($container.length).toEqual(1)
                         var expected = $container.find('.tippy-content').text()
                         expect(expected).toBe(title)
-                        expect($container.hasClass('wasabi')).toBe(true)
+                        expect($container.hasClass('wasabi')).toBeTruthy()
                         done()
                     }, 400)
                 })
@@ -137,7 +137,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         expect($container.length).toEqual(1)
                         var expected = $container.find('.tippy-content').text()
                         expect(expected).toBe(title2)
-                        expect($container.hasClass('wasabi')).toBe(false)
+                        expect($container.hasClass('wasabi')).toBeFalsy()
                         utils.click($el1)
                         setTimeout(() => {
                             expect(spy_shown).toHaveBeenCalled()
@@ -145,7 +145,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                             expect($container.length).toEqual(1)
                             var expected = $container.find('.tippy-content').text()
                             expect(expected).toBe(title1)
-                            expect($container.hasClass('wasabi')).toBe(true)
+                            expect($container.hasClass('wasabi')).toBeTruthy()
                             utils.click($el2)
                             setTimeout(() => {
                                 expect(spy_shown).toHaveBeenCalled()
@@ -153,7 +153,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                                 expect($container.length).toEqual(1)
                                 var expected = $container.find('.tippy-content').text()
                                 expect(expected).toBe(title2)
-                                expect($container.hasClass('wasabi')).toBe(false)
+                                expect($container.hasClass('wasabi')).toBeFalsy()
                                 done()
                             }, 400)
                         }, 400)
@@ -201,8 +201,8 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         spy_hidden = spyOn(pattern, _OH).and.callThrough()
 
                     pattern.init($el)
-                    expect($el.hasClass('inactive')).toBe(true)
-                    expect($el.hasClass('active')).toBe(false)
+                    expect($el.hasClass('inactive')).toBeTruthy()
+                    expect($el.hasClass('active')).toBeFalsy()
                     utils.click($el)
                     setTimeout(() => {
                         expect(spy_shown).toHaveBeenCalled()
@@ -210,15 +210,15 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         expect($container.length).toEqual(1)
                         const expected = $container.find('.tippy-content').text()
                         expect(expected).toBe(title)
-                        expect($el.hasClass('active')).toBe(true)
-                        expect($el.hasClass('inactive')).toBe(false)
+                        expect($el.hasClass('active')).toBeTruthy()
+                        expect($el.hasClass('inactive')).toBeFalsy()
                         utils.click($el)
                         setTimeout(() => {
                             expect(spy_hidden).toHaveBeenCalled()
                             const $container = $('.tippy-tooltip')
                             expect($container.length).toEqual(0)
-                            expect($el.hasClass('active')).toBe(false)
-                            expect($el.hasClass('inactive')).toBe(true)
+                            expect($el.hasClass('active')).toBeFalsy()
+                            expect($el.hasClass('inactive')).toBeTruthy()
                             done()
                         }, 500)
                     }, 500)
@@ -232,8 +232,8 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         spy_hidden = spyOn(pattern, _OH).and.callThrough()
 
                     pattern.init($el)
-                    expect($el.hasClass('inactive')).toBe(false)
-                    expect($el.hasClass('active')).toBe(false)
+                    expect($el.hasClass('inactive')).toBeFalsy()
+                    expect($el.hasClass('active')).toBeFalsy()
                     utils.click($el)
                     setTimeout(() => {
                         expect(spy_shown).toHaveBeenCalled()
@@ -241,15 +241,15 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         expect($container.length).toEqual(1)
                         const expected = $container.find('.tippy-content').text()
                         expect(expected).toBe(title)
-                        expect($el.hasClass('active')).toBe(false)
-                        expect($el.hasClass('inactive')).toBe(false)
+                        expect($el.hasClass('active')).toBeFalsy()
+                        expect($el.hasClass('inactive')).toBeFalsy()
                         utils.click($el)
                         setTimeout(() => {
                             expect(spy_hidden).toHaveBeenCalled()
                             const $container = $('.tippy-tooltip')
                             expect($container.length).toEqual(0)
-                            expect($el.hasClass('active')).toBe(false)
-                            expect($el.hasClass('inactive')).toBe(false)
+                            expect($el.hasClass('active')).toBeFalsy()
+                            expect($el.hasClass('inactive')).toBeFalsy()
                             done()
                         }, 500)
                     }, 500)
@@ -474,6 +474,29 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                     var $container = $('.tippy-popper .tippy-content')
                     expect($container.text()).toBe(
                         'External content fetched via an HTTP request.')
+                    done()
+                }, 500)
+            })
+
+            it('will handle markdown content', (done) => {
+                var $el = utils.createTooltip({
+                        data: 'source: ajax; ajax-data-type: markdown',
+                        href: 'tests/content.md#Display'
+                    }),
+                    spy_ajax = spyOn(pattern, _OAC).and.callThrough()
+                    // Not sure why _OSN is not called in this test
+                    // spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                pattern.init($el)
+                utils.click($el)
+                setTimeout(() => {
+                    expect(spy_ajax).toHaveBeenCalled()
+                    // expect(spy_shown).toHaveBeenCalled()
+                    var $container = $('.tippy-popper .tippy-content')
+                    expect($container.text()).toContain(
+                        'Tooltips are shown')
+                    expect($container.text()).not.toContain(
+                        'contextual')
                     done()
                 }, 500)
             })
