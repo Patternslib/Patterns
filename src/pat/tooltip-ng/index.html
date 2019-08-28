@@ -17,26 +17,26 @@
         </p>
         <h3>Configurations</h3>
         <p>Tooltips can be configured.</p>
-        <h4>Class</h4>
+        <h4>class</h4>
         <p>
         <code>class: wasabi</code>. A tooltip with CSS class <code>wasabi</code> is displayed when the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="class: wasabi">element</a> is clicked.
         </p>
-        <h4>Delay</h4>
+        <h4>delay</h4>
         <p>
         <code>delay: 1000</code>. A tooltip is displayed with a delay of 1000 ms when hovering the mouse over the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: hover; delay: 1000">element</a>.
         </p>
-        <h4>Mark Inactive</h4>
+        <h4>mark-inactive</h4>
         <p>
         <code>mark-inactive: false</code>. The default for <code>mark-inactive</code> is <code>true</code> and it toggles the class of the trigger element between <code>active</code> and <code>inactive</code> every time the tooltip is shown or hidden.  This example disables this behavior.  All the other examples have it enabled (as per default).  A tooltip is displayed when clicking the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="mark-inactive: false">element</a>.
         </p>
-        <h4>Trigger</h4>
+        <h4>trigger</h4>
         <p>
         <code>trigger: click</code> (default). A tooltip is displayed when the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click">element</a> is clicked.
         </p>
         <p>
         <code>trigger: hover</code>. A tooltip is displayed when hovering the mouse pointer over the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: hover">element</a>.
         </p>
-        <h4>Source</h4>
+        <h4>source</h4>
         <p>
         <code>source: title</code> (default).  Click <a href="#" title="Normally, tooltips will use the title attribute as text source." class="pat-tooltip-ng" data-pat-tooltip-ng="source: title">here</a> to see the title attribute in the tooltip.
         </p>
@@ -55,7 +55,10 @@
         <p>
         <code>source: auto</code> and <code>href="#tooltip-source"</code>. Click the following link to show <a href="#tooltip-source" class="pat-tooltip-ng" data-pat-tooltip-ng="source: auto">the content of the element matching the given selector</a> inside the tooltip.
         </p>
-        <h4>Target</h4>
+        <h4>ajax-data-type</h4>
+        <p>
+        <code>ajax-data-type: markdown</code>.  Applies when injecting content via ajax.  The default is html, but this example shows a tooltip with content in markdown <a href="documentation.md#Display" class="pat-tooltip-ng" data-pat-tooltip-ng="source: ajax; ajax-data-type: markdown">on click</a>.
+        <h4>target</h4>
         <p>
         <code>target: body</code> (default). When clicking <a href="#tooltip-source" title="This is just the title" class="pat-tooltip-ng" data-pat-tooltip-ng="target: body">this link</a> the tooltip will be appended to the <code>document.body</code>.
         </p>

@@ -31,7 +31,7 @@ module.exports = function(config) {
                 included: false
             },
             {
-                pattern: 'tests/content.html',
+                pattern: 'tests/*',
                 served: true,
                 included: false
             }
