@@ -12,7 +12,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
     var log = logger.getLogger('pat-tooltip-ng.tests'),
         start,
         utils = {
-            createTooltip: c => {
+            createTooltip(c) {
                 var cfg = c || {}
                 return $('<a/>', {
                     'id':   cfg.id || 'tooltip',
@@ -24,35 +24,35 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                 ).appendTo($('div#lab'))
             },
 
-            removeTooltip: function removeTooltip() {
+            removeTooltip() {
                 var $el = $('a#tooltip')
                 $el.trigger('destroy.pat-tooltip-ng')
                 $el.remove()
             },
 
-            createTooltipSource: () => {
+            createTooltipSource() {
                 return $(`<span style='display: none' id='tooltip-source'>`+
                         '<strong>Local content</strong></span>')
                     .appendTo($('div#lab'))
             },
 
-            dispatchEvent: ($target, event_name) => {
+            dispatchEvent($target, event_name) {
                 $target[0].dispatchEvent(new Event(event_name))
             },
 
-            click: $target => {
+            click($target) {
                 utils.dispatchEvent($target, 'click')
             },
 
-            mouseenter: $target => {
+            mouseenter($target) {
                 utils.dispatchEvent($target, 'mouseenter')
             },
 
-            mouseleave: $target => {
+            mouseleave($target) {
                 utils.dispatchEvent($target, 'mouseleave')
             },
 
-            delayed: (name, timeout) => {
+            delayed(name, timeout) {
                 return (...args) => {
                     setTimeout(() => {
                         pattern[name].and.callThrough()
@@ -62,7 +62,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                 }
             },
 
-            stopwatch: (name, timer) => {
+            stopwatch(name, timer) {
                 return (...args) => {
                     timer[name] = Date.now()
                     pattern[name].and.callThrough()
@@ -71,7 +71,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                 }
             },
 
-            log: (msg) => {
+            log(msg) {
                 log.debug( String(Date.now() - start) + ' ' + msg)
             }
         };

@@ -78,7 +78,7 @@
 
         tippy: tippy.default,
 
-        init: ($el, opts, debuglevel=20) => {
+        init($el, opts, debuglevel=20) {
             log.setLevel(debuglevel)
 
             return $el.each(function() {
@@ -124,24 +124,24 @@
             })
         },
 
-        parseOptionsForTippy: (opts, $trigger) => {
+        parseOptionsForTippy(opts, $trigger) {
             const notImplemented = (name) => { log.error(`${name} not implemented`) },
                 parsers = {
-                    'position-list': notImplemented,
+                    positionList: notImplemented,
 
-                    'position-policy': notImplemented,
+                    positionPolicy: notImplemented,
 
-                    'height': notImplemented,
+                    height: notImplemented,
 
-                    'trigger': () => {
+                    trigger() {
                         if (opts.trigger === 'hover') {
                             opts.trigger = 'mouseenter focus'
                         }
                     },
 
-                    'closing': notImplemented,
+                    closing: notImplemented,
 
-                    'source': () => {
+                    source() {
                         if (opts.hasOwnProperty('source')) {
                             if (opts.source==='title') {
                                 opts.content = $trigger.attr('title')
@@ -191,17 +191,17 @@
                         }
                     },
 
-                    'ajaxDataType': () => {
+                    ajaxDataType() {
                         delete opts.ajaxDataType
                     },
 
-                    'delay': () => {
+                    delay() {
                         if (opts.hasOwnProperty('delay')) {
                             opts.delay = [utils.parseTime(opts.delay), 0]
                         }
                     },
 
-                    'markInactive': () => {
+                    markInactive() {
                         if (opts.markInactive) {
                             $trigger.addClass('inactive')
                         }
@@ -218,7 +218,7 @@
                         }
                     },
 
-                    'target': () => {
+                    target() {
                         if (opts.hasOwnProperty('target')) {
                             if (opts.target === 'parent') {
                                 opts.appendTo = 'parent'
@@ -249,46 +249,46 @@
             return opts
         },
 
-        setupShowEvents: $trigger => {
+        setupShowEvents($trigger) {
             $trigger.on('click.pat-tooltip-ng', tooltip.blockDefault)
         },
 
-        removeShowEvents: $trigger => {// jshint ignore:line
+        removeShowEvents($trigger) {// jshint ignore:line
         },
 
-        setupHideEvents: $trigger => {
+        setupHideEvents($trigger) {
             $trigger.on('click.pat-tooltip-ng', tooltip.blockdefault)
         },
 
-        removeHideEvents: $trigger => {// jshint ignore:line
+        removeHideEvents($trigger) {// jshint ignore:line
         },
 
-        blockDefault: event => {
+        blockDefault(event) {
             if (event.preventDefault) {
                 event.preventDefault()
             }
         },
 
-        _mutateOptions: opts => {
+        _mutateOptions(opts) {
             // shallow copy
             return Object.assign({}, opts)
         },
 
-        _addClassHandler: klass => {
+        _addClassHandler(klass) {
             return (event, tooltip) => { $(tooltip).addClass(klass) }
         },
 
-        _setSource: (opts, source) => {
+        _setSource(opts, source) {
             opts.source = source
         },
 
-        _onDestroy: event => {
+        _onDestroy(event) {
             timelog('ONDESTROY')
             const $trigger = event.target
             $trigger._tippy.destroy()
         },
 
-        _onClick: (instance, event) => {
+        _onClick(instance, event) {
             timelog('ONCLICK')
             if (event.type === 'click') {
                 timelog(`it's click`)
@@ -297,20 +297,20 @@
             }
         },
 
-        _onTrigger: (instance, event) => {// jshint ignore:line
+        _onTrigger(instance, event) {// jshint ignore:line
             timelog('ONTRIGGER')
         },
 
-        _onMount: instance => {
+        _onMount(instance) {
             timelog('ONMOUNT')
             $(instance.reference).trigger('pat-tippy-mount', instance.popperChildren.tooltip)
         },
 
-        _onShow: instance => {// jshint ignore:line
+        _onShow(instance) {// jshint ignore:line
             timelog('ONSHOW')
         },
 
-        _onShown: instance => {
+        _onShown(instance) {
             timelog('ONSHOWN')
             const $trigger = $(instance.reference)
             const options = $trigger.data('patterns.tooltip-ng')
@@ -321,14 +321,14 @@
             }
         },
 
-        _onHide: instance => {
+        _onHide(instance) {
             timelog('ONHIDE')
             const $trigger = $(instance.reference)
             tooltip.removeHideEvents($trigger)
             tooltip.setupShowEvents($trigger)
         },
 
-        _onHidden: instance => { // jshint ignore:line
+        _onHidden(instance) { // jshint ignore:line
             timelog('ONHIDDEN')
             const $trigger = $(instance.reference)
             const options = $trigger.data('patterns.tooltip-ng')
@@ -337,7 +337,7 @@
             }
         },
 
-        _onAjax: $trigger => {
+        _onAjax($trigger) {
             timelog('OnAJAX')
             const source = $trigger.attr('href').split('#')
             return instance => {
@@ -362,7 +362,7 @@
             }
         },
 
-        _onAjaxCallback: (instance, src) => {
+        _onAjaxCallback(instance, src) {
             timelog('AJAXCALLBACK')
             const $trigger = $(instance.reference),
                   options = $trigger.data('patterns.tooltip-ng'),
@@ -376,12 +376,12 @@
             })
         },
 
-        _onAjaxBypass: () => {
+        _onAjaxBypass() {
             timelog('AJAX BYPASSED')
             return undefined
         },
 
-        _onAjaxContentSet: (instance) => {
+        _onAjaxContentSet(instance) {
             timelog('AJAXCONTENTSET')
             instance.state.ajax.isFetching = false
         },
