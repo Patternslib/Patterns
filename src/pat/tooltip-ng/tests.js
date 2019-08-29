@@ -254,7 +254,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         done()
                     }, 500)
                 })
-                xit(`'lt' will place the tooltip as 'right-start'`, (done) => {
+                it(`'lt' will place the tooltip as 'right-start'`, (done) => {
                     const $el = utils.createTooltip({
                             data: 'position-list: lt',
                             title: LOREM,
@@ -274,7 +274,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         done()
                     }, 500)
                 })
-                xit(`'lb' will place the tooltip as 'right-end'`, (done) => {
+                it(`'lb' will place the tooltip as 'right-end'`, (done) => {
                     const $el = utils.createTooltip({
                             data: 'position-list: lb',
                             title: LOREM,
@@ -294,7 +294,7 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         done()
                     }, 500)
                 })
-                xit(`'lm' will place the tooltip as 'right'`, (done) => {
+                it(`'lm' will place the tooltip as 'right'`, (done) => {
                     const $el = utils.createTooltip({
                             data: 'position-list: lm',
                             title: LOREM,
