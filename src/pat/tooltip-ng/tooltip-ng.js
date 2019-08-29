@@ -56,6 +56,12 @@
      *  For example:
      *      parser.addArgument('color', 'blue', ['red', 'green', 'blue'], false)
      */
+    const all_positions = ['tl', 'tm', 'tr',
+                           'rt', 'rm', 'rb',
+                           'br', 'bm', 'bl',
+                           'lb', 'lm', 'lt']
+    parser.addArgument('position-list', [], all_positions, true)
+    parser.addArgument('position-policy', 'auto', ['auto', 'force'])
     parser.addArgument('trigger', 'click', ['click', 'hover'])
     parser.addArgument('source', 'title', ['auto', 'ajax', 'content', 'content-html', 'title'])
     parser.addArgument('ajax-data-type', 'html', ['html', 'markdown'])
@@ -75,6 +81,8 @@
          * will scan for in order to identifiy and initialize this pattern.
          */
         trigger: '.pat-tooltip-ng',
+
+        jquery_plugin: true,
 
         tippy: tippy.default,
 
@@ -126,10 +134,43 @@
 
         parseOptionsForTippy(opts, $trigger) {
             const notImplemented = (name) => { log.error(`${name} not implemented`) },
-                parsers = {
-                    positionList: notImplemented,
 
-                    positionPolicy: notImplemented,
+                placement = (pos) => {
+                    const primary = (pos) => (
+                        {
+                            t: 'bottom',
+                            r: 'left',
+                            b: 'top',
+                            l: 'right',
+                        }
+                    )[pos]
+
+                    const secondary = (pos) => (
+                        ({
+                            l: '-start',
+                            r: '-end',
+                            m: '',
+                            t: '-start',
+                            b: '-end',
+                        })[pos]
+                    )
+                    return `${primary(pos[0])}${secondary(pos[1])}`
+                },
+
+                parsers = {
+                    position() {
+                        if (opts.hasOwnProperty('position')) {
+                            if (opts.position.list.length > 0) {
+                                const pos = opts.position.list[0]
+                                opts.placement = placement(pos)
+                            }
+                            delete opts.position
+                        }
+                    },
+
+                    positionPolicy() {
+                        delete opts.positionPolicy
+                    },
 
                     height: notImplemented,
 
@@ -233,11 +274,11 @@
             for (let arg in opts) {
                 switch (arg) {
                     case 'ajax-data-type':
-                        arg = 'ajaxDataType';
-                        break;
+                        arg = 'ajaxDataType'
+                        break
                     case 'mark-inactive':
-                        arg = 'markInactive';
-                        break;
+                        arg = 'markInactive'
+                        break
                 }
                 log.debug(arg)
                 parsers[arg](arg)
@@ -387,14 +428,15 @@
         },
 
         _ajaxDataTypeHandlers: {
-            'html': (text, src) => {
+            html(text, src) {
                 const $tmp = $('<div/>').append($.parseHTML(text))
                 return $tmp.find(`#${src[1]}`)[0]
             },
 
-            'markdown': (text, src) => {
-                const pat = Markdown.init($('<div/>'))
-                const cfg = { url: src[0], source: `#${src[1]}` }
+            markdown(text, src) {
+                const [url, source] = src,
+                       cfg = { url, source: `#${source}` },
+                       pat = Markdown.init($('<div/>'))
                 return pat.renderForInjection(cfg, text)[0]
             }
         }
