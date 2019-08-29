@@ -7,7 +7,9 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
           _OACS = '_onAjaxContentSet',
           _OH = '_onHidden',
           _PD =  'preventDefault',
-          ANYOPTS = jasmine.any(Object) // jshint ignore:line
+          ANYOPTS = jasmine.any(Object), // jshint ignore:line
+          LOREM = `Lorem.`,
+          LONGLOREM = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
 
     var log = logger.getLogger('pat-tooltip-ng.tests'),
         start,
@@ -188,6 +190,249 @@ define(['pat-tooltip-ng', 'pat-logger'], (pattern, logger) => {
                         expect(duration/1000).toBeCloseTo(1,1)
                         done()
                     }, 1500)
+                })
+            })
+
+            describe(`if the 'position-list' parameter exists`, () => {
+                xit(`'rt' will place the tooltip as 'left-start'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: rt',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('left-start')
+                        done()
+                    }, 500)
+                })
+                xit(`'rb' will place the tooltip as 'left-end'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: rb',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('left-end')
+                        done()
+                    }, 500)
+                })
+                xit(`'rm' will place the tooltip as 'left'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: rm',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('left')
+                        done()
+                    }, 500)
+                })
+                xit(`'lt' will place the tooltip as 'right-start'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: lt',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('right-start')
+                        done()
+                    }, 500)
+                })
+                xit(`'lb' will place the tooltip as 'right-end'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: lb',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('right-end')
+                        done()
+                    }, 500)
+                })
+                xit(`'lm' will place the tooltip as 'right'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: lm',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('right')
+                        done()
+                    }, 500)
+                })
+                it(`'bl' will place the tooltip as 'top-start'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: bl',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('top-start')
+                        done()
+                    }, 500)
+                })
+                it(`'br' will place the tooltip as 'top-end'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: br',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('top-end')
+                        done()
+                    }, 500)
+                })
+                it(`'bm' will place the tooltip as 'top'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: bm',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('top')
+                        done()
+                    }, 500)
+                })
+                xit(`'tl' will place the tooltip as 'bottom-start'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: tl',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('bottom-start')
+                        done()
+                    }, 500)
+                })
+                xit(`'tr' will place the tooltip as 'bottom-end'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: tr',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('bottom-end')
+                        done()
+                    }, 500)
+                })
+                xit(`'tm' will place the tooltip as 'bottom'`, (done) => {
+                    const $el = utils.createTooltip({
+                            data: 'position-list: tm',
+                            title: LOREM,
+                        }),
+                        title = $el.attr('title'),
+                        spy_shown = spyOn(pattern, _OSN).and.callThrough()
+
+                    pattern.init($el)
+                    utils.click($el)
+                    setTimeout(() => {
+                        expect(spy_shown).toHaveBeenCalled()
+                        const $container = $('.tippy-tooltip')
+                        expect($container.length).toEqual(1)
+                        const expected = $container.find('.tippy-content').text()
+                        expect(expected).toBe(title)
+                        expect($container.attr('x-placement')).toBe('bottom')
+                        done()
+                    }, 500)
                 })
             })
 
