@@ -10,8 +10,8 @@
             'pat-parser',
             'pat-markdown',
             'pat-logger',
-	        'tippy.js',
-	        'tippy-theme.css',
+            'tippy.js',
+            'tippy-theme.css',
         ], function() {
             return factory.apply(this, arguments)
         })
@@ -136,40 +136,46 @@
             const notImplemented = (name) => { log.error(`${name} not implemented`) },
 
                 placement = (pos) => {
-                    const primary = (pos) => (
-                        {
+                    const primary = (pos) => ({
                             t: 'bottom',
                             r: 'left',
                             b: 'top',
                             l: 'right',
-                        }
-                    )[pos]
+                        }[pos])
 
-                    const secondary = (pos) => (
-                        ({
+                    const secondary = (pos) => ({
                             l: '-start',
                             r: '-end',
                             m: '',
                             t: '-start',
                             b: '-end',
-                        })[pos]
-                    )
+                        }[pos])
+
                     return `${primary(pos[0])}${secondary(pos[1])}`
                 },
+
+                flipBehavior = (pos) => placement(`${pos[0]}m`),
 
                 parsers = {
                     position() {
                         if (opts.hasOwnProperty('position')) {
-                            if (opts.position.list.length > 0) {
-                                const pos = opts.position.list[0]
+                            const prefs = opts.position.list
+                            if (prefs.length > 0) {
+                                const pos = prefs[0]
                                 opts.placement = placement(pos)
+
+                                if (prefs.length > 1) {
+                                    opts.flipBehavior = prefs.map(flipBehavior)
+                                    opts.flip = true
+                                    opts.flipOnUpdate = true
+                                }
+                            }
+                            if (opts.position.policy === 'force') {
+                                opts.flip = false
+                                opts.flipOnUpdate = false
                             }
                             delete opts.position
                         }
-                    },
-
-                    positionPolicy() {
-                        delete opts.positionPolicy
                     },
 
                     height: notImplemented,
@@ -284,9 +290,9 @@
                 parsers[arg](arg)
             }
 
-	        if ($trigger.attr('title')) {
-		        $trigger.removeAttr('title')
-	        }
+            if ($trigger.attr('title')) {
+                $trigger.removeAttr('title')
+            }
             return opts
         },
 
