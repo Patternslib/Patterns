@@ -2980,6 +2980,15 @@ fieldset.focus > .legend,
 label.focus {
   color: #0198E1; }
 
+:fullscreen {
+  background-color: transparent; }
+
+.fullscreen-exit {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer; }
+
 /*! PhotoSwipe main CSS by Dmitry Semenov | photoswipe.com | MIT license */
 /*
 	Styles for basic PhotoSwipe functionality (sliding area, open/close transitions)

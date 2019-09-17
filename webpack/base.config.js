@@ -100,7 +100,7 @@ module.exports = {
               {
                 loader: "webpack-modernizr-loader",
                 test: /\.modernizrrc\.js$/
-              }            
+              }
         ]
     },
     resolve: {
@@ -200,6 +200,7 @@ module.exports = {
             "pat-focus": path.resolve(__dirname, "../src/pat/focus/focus.js"),
             "pat-form-state": path.resolve(__dirname, "../src/pat/form-state/form-state.js"),
             "pat-forward": path.resolve(__dirname, "../src/pat/forward/forward.js"),
+            "pat-fullscreen": path.resolve(__dirname, "../src/pat/fullscreen/fullscreen.js"),
             "pat-gallery": path.resolve(__dirname, "../src/pat/gallery/gallery.js"),
             "pat-gallery-template": path.resolve(__dirname, "../src/pat/gallery/template.html"),
             "pat-grid": path.resolve(__dirname, "../src/pat/grid/grid.js"), // Hack, there's no grid jS, but we need for website bundler

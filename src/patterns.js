@@ -38,6 +38,7 @@ define([
     "pat-focus",
     "pat-form-state",
     "pat-forward",
+    "pat-fullscreen",
     "pat-gallery",
     "pat-image-crop",
     "pat-inject",
