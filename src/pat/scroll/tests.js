@@ -1,4 +1,4 @@
-define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
+define(["pat-scroll"], function(Pattern) {
 
     describe("pat-scroll", function() {
 
@@ -17,7 +17,6 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                     ].join("\n"));
                 var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($(".pat-scroll"));
-                imagesLoaded($("body"));
                 setTimeout(function () {
                     expect(spy_animate).toHaveBeenCalled();
                     done();
@@ -41,11 +40,13 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 var $el = $(".pat-scroll");
                 var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($el);
-                imagesLoaded($("body"));
                 setTimeout(function() {
                     $el.click();
-                    expect(spy_animate).toHaveBeenCalled();
-                    done();
+                    setTimeout(function() {
+                        // wait for scrolling via click to be done.
+                        expect(spy_animate).toHaveBeenCalled();
+                        done();
+                    }, 2000);
                 }, 2000);
 
             });
@@ -58,7 +59,6 @@ define(["pat-scroll", "imagesloaded"], function(Pattern, imagesLoaded) {
                 var $el = $(".pat-scroll");
                 var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($el);
-                imagesLoaded($("body"));
                 $el.trigger("pat-update", {
                     'pattern': "stacks",
                     'originalEvent': {
