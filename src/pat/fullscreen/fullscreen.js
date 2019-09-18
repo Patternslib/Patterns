@@ -16,7 +16,7 @@ define([
         init: function($el, opts) {
             this.options = parser.parse(this.$el, opts);
             var el = this.$el[0];
-            el.addEventListener('click', function (e) {
+            el.addEventListener('click', async function (e) {
                 e.preventDefault();
                 // querying the fullscreen element fs_el and inside the event
                 // handler instead of outside allows for dynamic injecting
@@ -32,12 +32,17 @@ define([
                     exit_el.addEventListener('click', function (e) {
                         e.preventDefault();
                         screenful.exit();
-                        fs_el.removeChild(exit_el);
                     });
-                    // setting page to fullscreen
-                    screenful.request(fs_el);
                     fs_el.appendChild(exit_el);
-
+                    // setting page to fullscreen
+                    await screenful.request(fs_el);
+                    screenful.on('change', function (event) {
+                        // Removing exit button.
+                        // The button is also removed when pressing the <ESC> button.
+                        if (!screenful.isFullscreen) {
+                            fs_el.removeChild(exit_el);
+                        }
+                    });
                 } else {
                     log.error('No fullscreen element found.');
                 }
