@@ -2989,6 +2989,9 @@ label.focus {
   right: 1rem;
   cursor: pointer; }
 
+.pat-fullscreen {
+  cursor: pointer; }
+
 /*! PhotoSwipe main CSS by Dmitry Semenov | photoswipe.com | MIT license */
 /*
 	Styles for basic PhotoSwipe functionality (sliding area, open/close transitions)

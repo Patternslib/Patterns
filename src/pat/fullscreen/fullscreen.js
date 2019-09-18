@@ -1,22 +1,29 @@
 define([
     "pat-base",
+    "pat-parser",
     "pat-logger",
     "screenful"
-], function(Base, logging, screenful) {
+], function(Base, Parser, logging, screenful) {
     var log = logging.getLogger("fullscreen");
+    var parser = new Parser('fullscreen');
+    parser.addArgument('target', null);
 
     return Base.extend({
         name: "fullscreen",
         trigger: ".pat-fullscreen",
 
-        init: function() {
+
+        init: function($el, opts) {
+            this.options = parser.parse(this.$el, opts);
             var el = this.$el[0];
             el.addEventListener('click', function (e) {
                 e.preventDefault();
                 // querying the fullscreen element fs_el and inside the event
                 // handler instead of outside allows for dynamic injecting
                 // fullscreen elements even after pattern initialization.
-                var fs_el = document.querySelector(el.getAttribute('href'));
+                var fs_el_sel = this.options.target ? this.options.target : el.getAttribute('href');
+                fs_el_sel = fs_el_sel ? fs_el_sel : 'body';
+                var fs_el = document.querySelector(fs_el_sel);
                 if (fs_el) {
                     // setting up the exit button
                     var exit_el = document.createElement('a');
@@ -34,7 +41,7 @@ define([
                 } else {
                     log.error('No fullscreen element found.');
                 }
-            });
+            }.bind(this));
         }
     });
 });
