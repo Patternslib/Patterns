@@ -20,8 +20,9 @@ define([
             // setting up the exit button
             var exit_el = null;
             if (this.options.exitbutton) {
-                var exit_el = document.createElement('a');
+                var exit_el = document.createElement('button');
                 exit_el.className = 'fullscreen-exit';
+                exit_el.title = 'Exit fullscreen';
                 exit_el.appendChild(document.createTextNode('Exit fullscreen'));
                 exit_el.addEventListener('click', function (e) {
                     e.preventDefault();
