@@ -124,6 +124,7 @@ module.exports = {
             "promise-polyfill": path.resolve(__dirname, "../node_modules/promise-polyfill/dist/polyfill.js"),
             "select2": path.resolve(__dirname, "../node_modules/select2/select2.js"),
             "showdown-prettify": path.resolve(__dirname, "../node_modules/showdown-prettify/dist/showdown-prettify.min.js"),
+            "screenful": path.resolve(__dirname, "../node_modules/screenfull/dist/screenfull.js"),
             "slick-carousel": path.resolve(__dirname, "../node_modules/slick-carousel/slick/slick.js"),
             "stickyfilljs": path.resolve(__dirname, "../node_modules/stickyfilljs/dist/stickyfill.js"),
             "text": path.resolve(__dirname, "../node_modules/requirejs-text/text.js"),

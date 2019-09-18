@@ -1,7 +1,8 @@
 define([
     "pat-base",
-    "pat-logger"
-], function(Base, logging) {
+    "pat-logger",
+    "screenful"
+], function(Base, logging, screenful) {
     var log = logging.getLogger("fullscreen");
 
     return Base.extend({
@@ -23,11 +24,11 @@ define([
                     exit_el.appendChild(document.createTextNode('Exit fullscreen'));
                     exit_el.addEventListener('click', function (e) {
                         e.preventDefault();
-                        document.exitFullscreen();
+                        screenful.exit();
                         exit_el.remove();
                     });
                     // setting page to fullscreen
-                    fs_el.requestFullscreen();
+                    screenful.request(fs_el);
                     fs_el.appendChild(exit_el);
 
                 } else {
