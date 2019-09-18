@@ -25,7 +25,7 @@ define([
                     exit_el.addEventListener('click', function (e) {
                         e.preventDefault();
                         screenful.exit();
-                        exit_el.remove();
+                        fs_el.removeChild(exit_el);
                     });
                     // setting page to fullscreen
                     screenful.request(fs_el);
