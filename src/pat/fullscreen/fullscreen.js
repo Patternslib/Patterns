@@ -31,7 +31,7 @@ define([
             }
 
             var el = this.$el[0];
-            el.addEventListener('click', async function (e) {
+            el.addEventListener('click', function (e) {
                 e.preventDefault();
                 // querying the fullscreen element fs_el and inside the event
                 // handler instead of outside allows for dynamic injecting
@@ -41,7 +41,7 @@ define([
                 var fs_el = document.querySelector(fs_el_sel);
                 if (fs_el) {
                     // setting page to fullscreen
-                    await screenful.request(fs_el);
+                    screenful.request(fs_el);
                     if (this.options.exitbutton) {
                         fs_el.appendChild(exit_el);
                         screenful.on('change', function (event) {
