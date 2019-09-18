@@ -9,9 +9,32 @@ A link with the class ``fullscreen-exit`` is added to the element which is sent 
 
 ### Examples
 
-    <a href="#fs1" class="pat-fullscreen">Open fullscreen</a>
-    <section id="fs3">
-      <h2>Example</h2>
-      <img src="https://picsum.photos/600"/>
-    </section>
+Open in fullscreen via an id reference in the href attribute of an anchor tag.
+    <div id="fs1">
+        <a class="pat-fullscreen" href="#fs1">Open in fullscreen</a>
+    </div>
+
+Open in fullscreen via an selector reference in the fullscreen options.
+    <div class=".fs2">
+        <button class="pat-fullscreen" data-pat-fullscreen="target:.fs2">Open in fullscreen</button>
+    </div>
+
+Open the ``body`` element in fullscreen without giving any options.
+
+    <button class="pat-fullscreen">Open in fullscreen</button>
+
+Open in fullscreen without showing the close button.
+
+    <button class="pat-fullscreen" data-pat-fullscreen="exitbutton:false">Open in fullscreen</button>
+
+
+### Option reference
+
+The fullscreen pattern can be configured through a `data-pat-fullscreen` attribute.
+The available options are:
+
+| Field | Default | Options | Description |
+| ----- | ------- | ----------- | ----------- |
+| `target`   | `body` | A CSS selector | The target element which should be shown in fullscreen. If not given, open the body in fullscreen.
+| `exitbutton` | `true`   | `true`, `false` | `true` if a exit button should be shown when entering fullscreen mode.
 
