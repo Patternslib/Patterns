@@ -1,75 +1,102 @@
-define(["pat-scroll"], function(Pattern) {
+const timeout = ms => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
 
-    describe("pat-scroll", function() {
+define(["pat-fullscreen"], function(Pattern) {
 
-        describe("If the trigger is set to 'auto", function() {
-            beforeEach(function() {
-                $("<div/>", {id: "lab"}).appendTo(document.body);
-            });
-            afterEach(function() {
-                $("#lab").remove();
-            });
-
-            it("will automatically scroll to an anchor if the trigger is set to 'auto'", function(done) {
-                $("#lab").html([
-                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
-                    '<p id="p1"></p>'
-                    ].join("\n"));
-                var spy_animate = spyOn($.fn, 'animate');
-                Pattern.init($(".pat-scroll"));
-                setTimeout(function () {
-                    expect(spy_animate).toHaveBeenCalled();
-                    done();
-                }, 2000);
-            });
+    describe("Open in fullscreen", function() {
+        beforeEach(function() {
+            var el = document.createElement('div');
+            el.setAttribute('class', 'fs');
+            el.setAttribute('id', 'fs');
+            document.body.appendChild(el);
+        });
+        afterEach(function() {
+            document.body.removeChild(document.querySelector('#fs'));
+            var exit = document.querySelector('.close-fullscreen');
+            if (exit) {
+                document.body.removeChild(exit);
+            }
         });
 
-        describe("If the trigger is set to 'click'", function() {
-            beforeEach(function() {
-                $("<div/>", {id: "lab"}).appendTo(document.body);
-            });
-            afterEach(function() {
-                $("#lab").remove();
-            });
+        // NOTE:
+        // These tests run in an iframe.
+        // Setting fullscreen within an iframe doesn't work properly except the ``allow="fullscreen"`` attribute is set.
+        // Running karma with ``client.useIframe: false`` doesn't help either.
+        // Because of that screenful change event isn't thrown and the close button never removed.
+        // Therefore do not fully assure the functionality of the fullscreen pattern.
 
-            it("will scroll to an anchor on click", function(done) {
-                $("#lab").html([
-                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
-                    '<p id="p1"></p>'
-                    ].join("\n"));
-                var $el = $(".pat-scroll");
-                var spy_animate = spyOn($.fn, 'animate');
-                Pattern.init($el);
-                setTimeout(function() {
-                    $el.click();
-                    setTimeout(function() {
-                        // wait for scrolling via click to be done.
-                        expect(spy_animate).toHaveBeenCalled();
-                        done();
-                    }, 2000);
-                }, 2000);
+        it("Open in fullscreen via an id reference in the href attribute of an anchor tag.", async function(done) {
+            var fs_el = document.querySelector('#fs');
+            var pat_el = document.createElement('a');
+            pat_el.setAttribute('class', 'pat-fullscreen');
+            pat_el.setAttribute('href', '#fs');
+            pat_el.appendChild(document.createTextNode('Open in fullscreen'));
+            fs_el.appendChild(pat_el);
 
-            });
-
-            it("will scroll to an anchor on pat-update with originalEvent of click", function(done) {
-                $("#lab").html([
-                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
-                    '<p id="p1"></p>'
-                    ].join("\n"));
-                var $el = $(".pat-scroll");
-                var spy_animate = spyOn($.fn, 'animate');
-                Pattern.init($el);
-                $el.trigger("pat-update", {
-                    'pattern': "stacks",
-                    'originalEvent': {
-                        'type': 'click'
-                    }
-                });
-                setTimeout(function() {
-                    expect(spy_animate).toHaveBeenCalled();
-                    done();
-                }, 3000);
-            });
+            Pattern.init($(".pat-fullscreen"));
+            await timeout(1000);
+            $('.pat-fullscreen').click();
+            await timeout(1000);
+            expect($('.close-fullscreen').length).toBe(1);
+            // $('.close-fullscreen').click();
+            // await timeout(1000);
+            // expect($('.close-fullscreen').length).toBe(0);
+            done();
         });
+
+        it("Open in fullscreen via an class reference in data attributes.", async function(done) {
+            var fs_el = document.querySelector('#fs');
+            var pat_el = document.createElement('button');
+            pat_el.setAttribute('class', 'pat-fullscreen');
+            pat_el.setAttribute('data-pat-fullscreen', 'target:.fs');
+            pat_el.appendChild(document.createTextNode('Open in fullscreen'));
+            fs_el.appendChild(pat_el);
+
+            Pattern.init($(".pat-fullscreen"));
+            await timeout(1000);
+            $('.pat-fullscreen').click();
+            await timeout(1000);
+            expect($('.close-fullscreen').length).toBe(1);
+            // $('.close-fullscreen').click();
+            // await timeout(1000);
+            // expect($('.close-fullscreen').length).toBe(0);
+            done();
+        });
+
+        it("Open body in fullscreen.", async function(done) {
+            var fs_el = document.querySelector('#fs');
+            var pat_el = document.createElement('button');
+            pat_el.setAttribute('class', 'pat-fullscreen');
+            pat_el.appendChild(document.createTextNode('Open in fullscreen'));
+            fs_el.appendChild(pat_el);
+
+            Pattern.init($(".pat-fullscreen"));
+            await timeout(1000);
+            $('.pat-fullscreen').click();
+            await timeout(1000);
+            expect($('.close-fullscreen').length).toBe(1);
+            // $('.close-fullscreen').click();
+            // await timeout(1000);
+            // expect($('.close-fullscreen').length).toBe(0);
+            done();
+        });
+
+        it("Open in fullscreen without an close button.", async function(done) {
+            var fs_el = document.querySelector('#fs');
+            var pat_el = document.createElement('button');
+            pat_el.setAttribute('class', 'pat-fullscreen');
+            pat_el.setAttribute('data-pat-fullscreen', 'exitbutton:false');
+            pat_el.appendChild(document.createTextNode('Open in fullscreen'));
+            fs_el.appendChild(pat_el);
+
+            Pattern.init($(".pat-fullscreen"));
+            await timeout(1000);
+            $('.pat-fullscreen').click();
+            await timeout(1000);
+            expect($('.close-fullscreen').length).toBe(0);
+            done();
+        });
+
     });
 });

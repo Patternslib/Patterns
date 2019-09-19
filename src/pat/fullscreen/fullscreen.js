@@ -31,7 +31,8 @@ define([
             }
 
             var el = this.$el[0];
-            el.addEventListener('click', function (e) {
+            this.$el.on('click', function (e) {
+            //el.addEventListener('click', function (e) {  // TODO: doesn't work in karma
                 e.preventDefault();
                 // querying the fullscreen element fs_el and inside the event
                 // handler instead of outside allows for dynamic injecting
