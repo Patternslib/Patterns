@@ -25,7 +25,7 @@ Open the ``body`` element in fullscreen without giving any options.
 
 Open in fullscreen without showing the close button.
 
-    <button class="pat-fullscreen" data-pat-fullscreen="exitbutton:false">Open in fullscreen</button>
+    <button class="pat-fullscreen" data-pat-fullscreen="closebutton:false">Open in fullscreen</button>
 
 
 ### Option reference
@@ -36,5 +36,5 @@ The available options are:
 | Field | Default | Options | Description |
 | ----- | ------- | ----------- | ----------- |
 | `target`   | `body` | A CSS selector | The target element which should be shown in fullscreen. If not given, open the body in fullscreen.
-| `exitbutton` | `true`   | `true`, `false` | `true` if a exit button should be shown when entering fullscreen mode.
+| `closebutton` | `true`   | `true`, `false` | `true` if a exit button should be shown when entering fullscreen mode.
 

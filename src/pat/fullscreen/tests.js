@@ -73,7 +73,7 @@ define(["pat-fullscreen"], function(Pattern) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('button');
             pat_el.setAttribute('class', 'pat-fullscreen');
-            pat_el.setAttribute('data-pat-fullscreen', 'exitbutton:false');
+            pat_el.setAttribute('data-pat-fullscreen', 'closebutton:false');
             pat_el.appendChild(document.createTextNode('Open in fullscreen'));
             fs_el.appendChild(pat_el);
 

@@ -7,7 +7,7 @@ define([
     var log = logging.getLogger("fullscreen");
     var parser = new Parser('fullscreen');
     parser.addArgument('target', null);
-    parser.addArgument('exitbutton', true);
+    parser.addArgument('closebutton', true);
 
     return Base.extend({
         name: "fullscreen",
@@ -19,7 +19,7 @@ define([
 
             // setting up the exit button
             var exit_el = null;
-            if (this.options.exitbutton) {
+            if (this.options.closebutton) {
                 var exit_el = document.createElement('button');
                 exit_el.className = 'close-fullscreen';
                 exit_el.title = 'Exit fullscreen';
@@ -43,7 +43,7 @@ define([
                 if (fs_el) {
                     // setting page to fullscreen
                     screenful.request(fs_el);
-                    if (this.options.exitbutton) {
+                    if (this.options.closebutton) {
                         fs_el.appendChild(exit_el);
                         screenful.on('change', function (event) {
                             // Removing exit button.
