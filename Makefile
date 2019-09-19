@@ -47,7 +47,7 @@ jshint: stamp-npm
 
 .PHONY: check
 check:: stamp-npm jshint
-	npm run test
+	npm run testonce
 
 
 ########################################################################
