@@ -2986,7 +2986,7 @@ label.focus {
 .pat-fullscreen {
   cursor: pointer; }
 
-.fullscreen-exit {
+.close-fullscreen {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -3001,7 +3001,7 @@ label.focus {
   text-indent: -1000px;
   overflow: hidden;
   border: none; }
-  .fullscreen-exit:before {
+  .close-fullscreen:before {
     content: "󢀅";
     text-indent: 0;
     position: absolute;
