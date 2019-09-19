@@ -1,7 +1,3 @@
-const timeout = ms => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-};
-
 define(["pat-fullscreen"], function(Pattern) {
 
     describe("Open in fullscreen", function() {
@@ -26,7 +22,7 @@ define(["pat-fullscreen"], function(Pattern) {
         // Because of that screenful change event isn't thrown and the close button never removed.
         // Therefore do not fully assure the functionality of the fullscreen pattern.
 
-        it("Open in fullscreen via an id reference in the href attribute of an anchor tag.", async function(done) {
+        it("Open in fullscreen via an id reference in the href attribute of an anchor tag.", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('a');
             pat_el.setAttribute('class', 'pat-fullscreen');
@@ -35,17 +31,14 @@ define(["pat-fullscreen"], function(Pattern) {
             fs_el.appendChild(pat_el);
 
             Pattern.init($(".pat-fullscreen"));
-            await timeout(1000);
             $('.pat-fullscreen').click();
-            await timeout(1000);
             expect($('.close-fullscreen').length).toBe(1);
             // $('.close-fullscreen').click();
-            // await timeout(1000);
             // expect($('.close-fullscreen').length).toBe(0);
             done();
         });
 
-        it("Open in fullscreen via an class reference in data attributes.", async function(done) {
+        it("Open in fullscreen via an class reference in data attributes.", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('button');
             pat_el.setAttribute('class', 'pat-fullscreen');
@@ -54,17 +47,14 @@ define(["pat-fullscreen"], function(Pattern) {
             fs_el.appendChild(pat_el);
 
             Pattern.init($(".pat-fullscreen"));
-            await timeout(1000);
             $('.pat-fullscreen').click();
-            await timeout(1000);
             expect($('.close-fullscreen').length).toBe(1);
             // $('.close-fullscreen').click();
-            // await timeout(1000);
             // expect($('.close-fullscreen').length).toBe(0);
             done();
         });
 
-        it("Open body in fullscreen.", async function(done) {
+        it("Open body in fullscreen.", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('button');
             pat_el.setAttribute('class', 'pat-fullscreen');
@@ -72,17 +62,14 @@ define(["pat-fullscreen"], function(Pattern) {
             fs_el.appendChild(pat_el);
 
             Pattern.init($(".pat-fullscreen"));
-            await timeout(1000);
             $('.pat-fullscreen').click();
-            await timeout(1000);
             expect($('.close-fullscreen').length).toBe(1);
             // $('.close-fullscreen').click();
-            // await timeout(1000);
             // expect($('.close-fullscreen').length).toBe(0);
             done();
         });
 
-        it("Open in fullscreen without an close button.", async function(done) {
+        it("Open in fullscreen without an close button.", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('button');
             pat_el.setAttribute('class', 'pat-fullscreen');
@@ -91,9 +78,7 @@ define(["pat-fullscreen"], function(Pattern) {
             fs_el.appendChild(pat_el);
 
             Pattern.init($(".pat-fullscreen"));
-            await timeout(1000);
             $('.pat-fullscreen').click();
-            await timeout(1000);
             expect($('.close-fullscreen').length).toBe(0);
             done();
         });
