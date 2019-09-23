@@ -2980,6 +2980,35 @@ fieldset.focus > .legend,
 label.focus {
   color: #0198E1; }
 
+:fullscreen {
+  background-color: transparent; }
+
+.pat-fullscreen {
+  cursor: pointer; }
+
+.pat-fullscreen-close-fullscreen {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  background: transparent;
+  height: 3rem;
+  width: 3rem;
+  line-height: 3rem;
+  margin: 0;
+  padding: 0;
+  text-indent: -1000px;
+  overflow: hidden;
+  border: none; }
+  .pat-fullscreen-close-fullscreen:before {
+    content: "󢀅";
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3rem;
+    font: normal 3rem fontello; }
+
 /*! PhotoSwipe main CSS by Dmitry Semenov | photoswipe.com | MIT license */
 /*
 	Styles for basic PhotoSwipe functionality (sliding area, open/close transitions)

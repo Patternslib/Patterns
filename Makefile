@@ -87,6 +87,7 @@ all_css:: css
 	@$(SASS) -I . -I _sass src/pat/focus/_focus.scss src/pat/focus/focus.css
 	@echo "Almost there, don't give up!"
 	@$(SASS) -I . -I _sass src/pat/forward/_forward.scss src/pat/forward/forward.css
+	@$(SASS) -I . -I _sass src/pat/fullscreen/_fullscreen.scss src/pat/fullscreen/fullscreen.css
 	@$(SASS) -I . -I _sass src/pat/gallery/_gallery.scss src/pat/gallery/gallery.css
 	@$(SASS) -I . -I _sass src/pat/grid/_grid.scss src/pat/grid/grid.css
 	@$(SASS) -I . -I _sass src/pat/image-crop/_image-crop.scss src/pat/image-crop/image-crop.css
@@ -117,7 +118,7 @@ watch::
 
 serve:: all _serve
 
-push: 
+push:
 	cd push && hz serve --dev
 
 _serve:

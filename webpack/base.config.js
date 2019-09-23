@@ -100,7 +100,7 @@ module.exports = {
               {
                 loader: "webpack-modernizr-loader",
                 test: /\.modernizrrc\.js$/
-              }            
+              }
         ]
     },
     resolve: {
@@ -124,6 +124,7 @@ module.exports = {
             "promise-polyfill": path.resolve(__dirname, "../node_modules/promise-polyfill/dist/polyfill.js"),
             "select2": path.resolve(__dirname, "../node_modules/select2/select2.js"),
             "showdown-prettify": path.resolve(__dirname, "../node_modules/showdown-prettify/dist/showdown-prettify.min.js"),
+            "screenful": path.resolve(__dirname, "../node_modules/screenfull/dist/screenfull.js"),
             "slick-carousel": path.resolve(__dirname, "../node_modules/slick-carousel/slick/slick.js"),
             "stickyfilljs": path.resolve(__dirname, "../node_modules/stickyfilljs/dist/stickyfill.js"),
             "text": path.resolve(__dirname, "../node_modules/requirejs-text/text.js"),
@@ -200,6 +201,7 @@ module.exports = {
             "pat-focus": path.resolve(__dirname, "../src/pat/focus/focus.js"),
             "pat-form-state": path.resolve(__dirname, "../src/pat/form-state/form-state.js"),
             "pat-forward": path.resolve(__dirname, "../src/pat/forward/forward.js"),
+            "pat-fullscreen": path.resolve(__dirname, "../src/pat/fullscreen/fullscreen.js"),
             "pat-gallery": path.resolve(__dirname, "../src/pat/gallery/gallery.js"),
             "pat-gallery-template": path.resolve(__dirname, "../src/pat/gallery/template.html"),
             "pat-grid": path.resolve(__dirname, "../src/pat/grid/grid.js"), // Hack, there's no grid jS, but we need for website bundler

@@ -90,7 +90,7 @@ module.exports = function(config) {
         retryLimit: 0,
 
         //how long does Karma wait for a browser to reconnect, 2000 is default
-        browserDisconnectTimeout: 5000,
+        browserDisconnectTimeout: 10000, // some tests take longer.
 
         //how long will Karma wait for a message from a browser before disconnecting from it, 10000 is default
         browserNoActivityTimeout: 10000,

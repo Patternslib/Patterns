@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- Add ``pat-fullscreen`` pattern to allow any element to be displayed in fullscreen-mode.
 - Runs now on jQuery 3.
 - Integrated pat-display-time from https://github.com/ploneintranet/pat-display-time
 
