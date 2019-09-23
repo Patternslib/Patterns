@@ -1,4 +1,4 @@
-define(["pat-fullscreen"], function(Pattern) {
+define(["pat-fullscreen", "screenful"], function(Pattern, screenful) {
 
     describe("Open in fullscreen", function() {
         beforeEach(function() {
@@ -6,23 +6,18 @@ define(["pat-fullscreen"], function(Pattern) {
             el.setAttribute('class', 'fs');
             el.setAttribute('id', 'fs');
             document.body.appendChild(el);
+            spyOn(screenful, 'request').and.callThrough();
+            spyOn(screenful, 'exit').and.callThrough();
         });
         afterEach(function() {
             document.body.removeChild(document.querySelector('#fs'));
-            var exit = document.querySelector('.close-fullscreen');
+            var exit = document.querySelector('.pat-fullscreen-close-fullscreen');
             if (exit) {
                 document.body.removeChild(exit);
             }
         });
 
-        // NOTE:
-        // These tests run in an iframe.
-        // Setting fullscreen within an iframe doesn't work properly except the ``allow="fullscreen"`` attribute is set.
-        // Running karma with ``client.useIframe: false`` doesn't help either.
-        // Because of that screenful change event isn't thrown and the close button never removed.
-        // Therefore do not fully assure the functionality of the fullscreen pattern.
-
-        it("Open in fullscreen via an id reference in the href attribute of an anchor tag.", function(done) {
+        it("Test 1: Define fullscreen element via href-target", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('a');
             pat_el.setAttribute('class', 'pat-fullscreen');
@@ -32,29 +27,52 @@ define(["pat-fullscreen"], function(Pattern) {
 
             Pattern.init($(".pat-fullscreen"));
             $('.pat-fullscreen').click();
-            expect($('.close-fullscreen').length).toBe(1);
-            // $('.close-fullscreen').click();
-            // expect($('.close-fullscreen').length).toBe(0);
+            expect(screenful.request).toHaveBeenCalled();
+
             done();
         });
 
-        it("Open in fullscreen via an class reference in data attributes.", function(done) {
+        it("Test 2: data-attr configuration: selector and close-button", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('button');
             pat_el.setAttribute('class', 'pat-fullscreen');
-            pat_el.setAttribute('data-pat-fullscreen', 'target:.fs');
+            pat_el.setAttribute('data-pat-fullscreen', 'selector:.fs;close-button:show');
             pat_el.appendChild(document.createTextNode('Open in fullscreen'));
             fs_el.appendChild(pat_el);
 
             Pattern.init($(".pat-fullscreen"));
             $('.pat-fullscreen').click();
-            expect($('.close-fullscreen').length).toBe(1);
-            // $('.close-fullscreen').click();
-            // expect($('.close-fullscreen').length).toBe(0);
+            expect(screenful.request).toHaveBeenCalled();
+
+            $('.pat-fullscreen-close-fullscreen').click();
+            expect(screenful.exit).toHaveBeenCalled();
+
             done();
         });
 
-        it("Open body in fullscreen.", function(done) {
+        it("Test 3: Existing .close-fullscreen elements.", function(done) {
+            var fs_el = document.querySelector('#fs');
+            var pat_el = document.createElement('button');
+            pat_el.setAttribute('class', 'pat-fullscreen');
+            pat_el.setAttribute('data-pat-fullscreen', 'selector:.fs');
+            pat_el.appendChild(document.createTextNode('Open in fullscreen'));
+            fs_el.appendChild(pat_el);
+            var pat_close = document.createElement('button');
+            pat_close.setAttribute('class', 'close-fullscreen');
+            pat_close.appendChild(document.createTextNode('Close fullscreen'));
+            fs_el.appendChild(pat_close);
+
+            Pattern.init($(".pat-fullscreen"));
+            $('.pat-fullscreen').click();
+            expect(screenful.request).toHaveBeenCalled();
+
+            $('.close-fullscreen').click();
+            expect(screenful.exit).toHaveBeenCalled();
+
+            done();
+        });
+
+        it("Example 4: No fullscreen element definition opens fullscreen on body.", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('button');
             pat_el.setAttribute('class', 'pat-fullscreen');
@@ -63,23 +81,8 @@ define(["pat-fullscreen"], function(Pattern) {
 
             Pattern.init($(".pat-fullscreen"));
             $('.pat-fullscreen').click();
-            expect($('.close-fullscreen').length).toBe(1);
-            // $('.close-fullscreen').click();
-            // expect($('.close-fullscreen').length).toBe(0);
-            done();
-        });
+            expect(screenful.request).toHaveBeenCalled();
 
-        it("Open in fullscreen without an close button.", function(done) {
-            var fs_el = document.querySelector('#fs');
-            var pat_el = document.createElement('button');
-            pat_el.setAttribute('class', 'pat-fullscreen');
-            pat_el.setAttribute('data-pat-fullscreen', 'closebutton:false');
-            pat_el.appendChild(document.createTextNode('Open in fullscreen'));
-            fs_el.appendChild(pat_el);
-
-            Pattern.init($(".pat-fullscreen"));
-            $('.pat-fullscreen').click();
-            expect($('.close-fullscreen').length).toBe(0);
             done();
         });
 

@@ -4,28 +4,43 @@ The *fullscreen* pattern allows you to display any element in fullscreen-mode.
 
 ## Documentation
 
-When the ``pat-fullscreen`` link is clicked, the element which the anchor-link refers to in it's ``href`` attribute is sent to fullscreen.
-A link with the class ``close-fullscreen`` is added to the element which is sent to fullscreen and removed when exiting fullscreen-mode.
+When an element with the ``pat-fullscreen`` class is clicked another element is set to fullscreen.
+The element sent to fullscreen is  defined so:
+1) If there is a ``data-pat-fullscreen`` with a selector option, that one is used.
+2) if the pat-fullscreen element is an anchor link, it's href attribute is used to point to an element with the id specified in the href attribute.
+3) Otherwise, the body is sent to fullscreen.
+
+You can add a close button by setting the ``close-button`` option to ``show``.
+
+Anyways, any ``.close-fullscreen`` element within the fullscreen element itself will be used to close the fullscreen.
+
+See examples below.
+
 
 ### Examples
 
-Open in fullscreen via an id reference in the href attribute of an anchor tag.
+Fullscreen via anchor-element:
+
     <div id="fs1">
         <a class="pat-fullscreen" href="#fs1">Open in fullscreen</a>
     </div>
 
-Open in fullscreen via an selector reference in the fullscreen options.
+Configuration via data attributes:
+
     <div class=".fs2">
-        <button class="pat-fullscreen" data-pat-fullscreen="target:.fs2">Open in fullscreen</button>
+        <button class="pat-fullscreen" data-pat-fullscreen="selector:.fs2;close-button:show">Open fullscreen</button>
+    </div>
+
+Custom close buttons:
+
+    <div class=".fs3">
+        <button class="pat-fullscreen" data-pat-fullscreen="selector:.fs2">Open fullscreen</button>
+        <button class="close-fullscreen">Close Fullscreen</button>
     </div>
 
 Open the ``body`` element in fullscreen without giving any options.
 
     <button class="pat-fullscreen">Open in fullscreen</button>
-
-Open in fullscreen without showing the close button.
-
-    <button class="pat-fullscreen" data-pat-fullscreen="closebutton:false">Open in fullscreen</button>
 
 
 ### Option reference
@@ -35,6 +50,6 @@ The available options are:
 
 | Field | Default | Options | Description |
 | ----- | ------- | ----------- | ----------- |
-| `target`   | `body` | A CSS selector | The target element which should be shown in fullscreen. If not given, open the body in fullscreen.
-| `closebutton` | `true`   | `true`, `false` | `true` if a exit button should be shown when entering fullscreen mode.
+| `selector`   | `null` | A CSS selector | The target element which should be shown in fullscreen. If not given, open the body in fullscreen.
+| `close-button` | `none`   | `none`, `show` | `show` if a exit button should be shown when entering fullscreen mode.
 

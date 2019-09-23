@@ -6,13 +6,12 @@
   cursor: pointer; // show the pointer-cursor also on element, where it wouldn't
 }
 
-.close-fullscreen {
+.pat-fullscreen-close-fullscreen {
   position: absolute;
   top: 1rem;
   right: 1rem;
   cursor: pointer;
-  color: white;
-  box-shadow: 0.5rem 0.5rem 0.5rem black;
+  background: transparent;
   height: 3rem;
   width: 3rem;
   line-height: 3rem;
