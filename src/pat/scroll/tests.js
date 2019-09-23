@@ -57,7 +57,7 @@ define(["pat-scroll"], function(Pattern) {
                     '<p id="p1"></p>'
                     ].join("\n"));
                 var $el = $(".pat-scroll");
-                var spy_animate = spyOn($.fn, 'animate');
+                // var spy_animate = spyOn($.fn, 'animate');
                 Pattern.init($el);
                 $el.trigger("pat-update", {
                     'pattern': "stacks",
@@ -67,7 +67,7 @@ define(["pat-scroll"], function(Pattern) {
                 });
                 setTimeout(function() {
                     // heisenbug: expect(spy_animate).toHaveBeenCalled();
-                    console.log("Heisenbug")
+                    console.log("Heisenbug");
                     done();
                 }, 3000);
             });
