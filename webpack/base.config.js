@@ -36,16 +36,9 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push|push_kit|scroll|scroll-box|tooltip-ng)\.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: [["@babel/env", {
-                      "targets": {
-                        "browsers": ["last 2 versions", "ie >= 11"]
-                      }
-                    }]],
-                    plugins: ["dynamic-import-webpack"]
-                }
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: "babel-loader"
             },
             {
                 test: require.resolve('jquery'),
@@ -124,7 +117,6 @@ module.exports = {
             "patternslib.slides": path.resolve(__dirname, "../node_modules/slides/src/slides.js"),
             "photoswipe-ui": path.resolve(__dirname, "../node_modules/photoswipe/dist/photoswipe-ui-default"),
             "prefixfree": path.resolve(__dirname, "../node_modules/prefixfree/prefixfree.min.js"),
-            "promise-polyfill": path.resolve(__dirname, "../node_modules/promise-polyfill/dist/polyfill.js"),
             "select2": path.resolve(__dirname, "../node_modules/select2/select2.js"),
             "showdown-prettify": path.resolve(__dirname, "../node_modules/showdown-prettify/dist/showdown-prettify.min.js"),
             "screenful": path.resolve(__dirname, "../node_modules/screenfull/dist/screenfull.js"),
@@ -263,9 +255,6 @@ module.exports = {
             footer: footerWrap
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        new webpack.ProvidePlugin({
-            Promise: 'es6-promise-promise',
-        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
