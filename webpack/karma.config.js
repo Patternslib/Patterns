@@ -41,7 +41,6 @@ module.exports = function(config) {
             '/tests': '/base/tests',
         },
 
-
         // list of files to exclude
         exclude: [],
 
@@ -51,40 +50,31 @@ module.exports = function(config) {
             //use webpack to support require() in test-suits .js files
             //use babel-loader from webpack to compile es2015 features in .js files
             //add webpack as preprocessor
-            'tests/specs/*/*.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
-            'src/pat/*/tests.js': ['webpack', 'sourcemap' /*, 'coverage'*/ ],
-            // list here the files that you want transpiled by babel
-            'src/pat/masonry/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
-            'src/pat/calendar/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
+            'tests/specs/*/*.js': ['webpack', 'babel' /*, 'coverage'*/ ],
+            'src/pat/*/tests.js': ['webpack', 'babel' /*, 'coverage'*/ ]
         },
-        babelPreprocessor: {
-            options: {
-                plugins: ['syntax-dynamic-import'],
-                presets: [["@babel/env", {
-                      "targets": {
-                        "browsers": ["last 2 versions", "ie >= 11"]
-                      }
-                    }]],
-                sourceMap: 'inline'
-            },
-            filename: function(file) {
-                return file.originalPath.replace(/\.js$/, '.es5.js');
-            },
-            sourceFileName: function(file) {
-                return file.originalPath;
-            }
-        },
+
         webpack: webpackOptions,
+
+        plugins: [
+          'karma-babel-preprocessor',
+          'karma-chrome-launcher',
+          'karma-jasmine',
+          'karma-jasmine-html-reporter',
+          'karma-mocha-reporter',
+          'karma-webpack',
+        ],
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['mocha', 'kjhtml' /*, 'coverage','dots','progress','spec'*/ ],
+        reporters: ['progress', 'mocha', 'kjhtml' /*, 'coverage','dots','progress','spec'*/ ],
 
         coverageReporter: {
             type: 'html',
             dir: 'coverage/'
         },
+
         //address that the server will listen on, '0.0.0.0' is default
         listenAddress: '0.0.0.0',
         //hostname to be used when capturing browsers, 'localhost' is default
