@@ -11,7 +11,7 @@ https://horizon-io.surge.sh
 
 There is a configuration in this folder which allows you to start up the dev server for the websocket connection including a rethinkdb instance.
 
-No start the websocket serever 
+Now start the websocket serever
 
 > hz serve --dev
 
