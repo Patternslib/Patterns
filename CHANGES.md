@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- Use babel for all files, allowing latest JavaScript features everywhere.
 - Add ``pat-fullscreen`` pattern to allow any element to be displayed in fullscreen-mode.
   A second pattern ``pat-fullscreen-close`` which is triggered on ``close-fullscreen`` CSS class allows for closing the fullscreen with custom buttons.
 - Runs now on jQuery 3.
@@ -13,6 +14,7 @@ Features
 Fixes
 ~~~~~
 
+- Update build infrastructure and packages.
 - Fix heisenbug with pat-scroll on testruns.
 - Fix minimum input length default so that you can display select results already on click.
 
