@@ -12,6 +12,7 @@ coverage/
 /stamp-bower
 /stamp-bundler
 /stamp-npm
+/stamp-yarn
 Gemfile.lock
 cache/
 webpack/cache/
