@@ -1,4 +1,4 @@
-define(["underscore", "pat-parser"], function(_, ArgumentParser) {
+define(["lodash", "pat-parser"], function(_, ArgumentParser) {
 
     describe("trim", function() {
         it("No whitespace", function() {

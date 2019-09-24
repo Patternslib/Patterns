@@ -12,7 +12,7 @@ define([
     "pat-store",
     "pat-utils",
     "pat-registry",
-    "underscore",
+    "lodash",
     "moment-timezone-data",
     "fullcalendar"
 ], function($, logger, Parser, store, utils, registry, _, momentTz) {
@@ -77,7 +77,7 @@ define([
                     import(/* webpackChunkName: "fullcalendar" */ 'fullcalendar/dist/lang/' + lang + '.js').then(() => {
                         console.log('loaded cal locale for ' + lang);
                     } )
-                } 
+                }
 
                 opts = opts || {};
                 var $el = $elem,

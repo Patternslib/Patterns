@@ -10,8 +10,8 @@ define([
     "pat-base",
     "pat-registry",
     "pat-parser",
-    "underscore"
-], function($, browser, Base, registry, Parser, _) {
+    "pat-utils"
+], function($, browser, Base, registry, Parser, utils) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
     parser.addArgument("size", "width", ["width", "height", "contain", "cover"]);
@@ -40,7 +40,7 @@ define([
                 this.force_method = "scale";
             }
 
-            var scaler =  _.debounce(this.scale.bind(this), 250, true)
+            var scaler =  utils.debounce(this.scale.bind(this), 250, true)
 
             $(window).on("resize.autoscale", scaler)
             document.addEventListener("fullscreenchange", scaler)
@@ -48,7 +48,7 @@ define([
             document.addEventListener("mozfullscreenchange", scaler)
             document.addEventListener("MSFullscreenChange", scaler)
 
-            $(document).on("pat-update.autoscale", _.debounce(this.scale.bind(this), 250));
+            $(document).on("pat-update.autoscale", utils.debounce(this.scale.bind(this), 250));
             return this;
         },
 
@@ -106,7 +106,7 @@ define([
                 case "scale":
                     this.$el.css("transform", "scale(" + scale + ")");
                     if (this.$el.parent().attr('class') === undefined || this.$el.parent().attr('class') != undefined && $.inArray('auto-scale-wrapper', this.$el.parent().attr('class').split(/\s+/)) === -1) {
-                        this.$el.wrap("<div class='auto-scale-wrapper'></div>");                        
+                        this.$el.wrap("<div class='auto-scale-wrapper'></div>");
                     }
                     this.$el.parent().height(scaled_height).width(scaled_width);
                     break;

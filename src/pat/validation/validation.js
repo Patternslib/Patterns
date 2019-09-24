@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "pat-parser",
     "pat-base",
     "pat-utils",
@@ -58,7 +58,7 @@ define([
             this.errors = 0;
             this.options = parser.parse(this.$el, opts);
             this.$inputs = this.$el.find(':input[name]');
-            this.$el.find(":input[type=number]").on('keyup mouseup', _.debounce(function (ev) {
+            this.$el.find(":input[type=number]").on('keyup mouseup', utils.debounce(function (ev) {
                 this.validateElement(ev.target);
             }.bind(this), 500));
             this.$inputs.on('change.pat-validation', function (ev) { this.validateElement(ev.target); }.bind(this));
@@ -77,7 +77,7 @@ define([
         getFieldType: function (input) {
             var opts = parser.parse($(input));
             var type = input.getAttribute('type');
-            if (_.contains(['datetime', 'date'], opts.type)) {
+            if (_.includes(['datetime', 'date'], opts.type)) {
                 type = opts.type;
             }
             return type;
@@ -110,15 +110,15 @@ define([
                         console.log(e);
                     }
                     arr = $ref.data('pat-validation-refs') || [];
-                    if (!_.contains(arr, input)) {
+                    if (!_.includes(arr, input)) {
                         arr.unshift(input);
                         $ref.data('pat-validation-refs', arr);
                     }
                     c[constraint] = $ref.val();
-                    /* This is a workaround to allow empty values as dates and only validate 
+                    /* This is a workaround to allow empty values as dates and only validate
                        if values are provided. There is probably a better way in validate, but
                        I still have to find it.
-                       The following code removes the date validation constraint in case there 
+                       The following code removes the date validation constraint in case there
                        is no date to validate for. */
                     if ($ref.val() === "") {
                         constraints[name].date = false;
@@ -138,7 +138,7 @@ define([
                 type = this.getFieldType(input),
                 opts = parser.parse($(input)),
                 constraint = constraints[name];
-            if (_.contains(['datetime', 'date'], type)) {
+            if (_.includes(['datetime', 'date'], type)) {
                 this.setLocalDateConstraints(input, opts, constraints);
             } else if (type == 'number') {
                 _.each(['min', 'max'], function (limit) {

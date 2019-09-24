@@ -1,4 +1,4 @@
-define(["underscore", "pat-utils"], function(_, utils) {
+define(["lodash", "pat-utils"], function(_, utils) {
     describe("pat-utils", function() {
         describe("rebaseURL", function() {
             it("Keep URL with scheme", function() {
@@ -265,7 +265,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
             setTimeout(function () {
                 expect($slave[0].style.display).toBe("none");
                 expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
-                
+
             }, 500);
         });
 
@@ -280,7 +280,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
                     "pat-update", {pattern: "depends", transition: "start"});
                 expect($.fn.trigger).toHaveBeenCalledWith(
                     "pat-update", {pattern: "depends", transition: "complete"});
-                
+
             }, 500);
 
         });

@@ -18,7 +18,7 @@
  */
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "pat-logger",
     "pat-utils",
     // below here modules that are only loaded
@@ -109,7 +109,7 @@ define([
             // sure here, that it appears first. Not sure what would be
             // the best solution. Perhaps some kind of way to register
             // patterns "before" or "after" other patterns.
-            if (_.contains(patterns, "validation") && _.contains(patterns, "inject")) {
+            if (_.includes(patterns, "validation") && _.includes(patterns, "inject")) {
                 patterns.splice(patterns.indexOf("validation"), 1);
                 patterns.unshift("validation");
             }

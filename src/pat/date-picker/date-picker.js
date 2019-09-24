@@ -1,7 +1,6 @@
 /* pat-date-picker  - Polyfill for input type=date */
 define(
     [
-        'underscore',
         'pat-parser',
         'pat-registry',
         'pat-base',
@@ -9,7 +8,7 @@ define(
         'moment',
         'modernizr'
     ],
-    function(_, Parser, registry, Base, Pikaday, moment, Modernizr) {
+    function(Parser, registry, Base, Pikaday, moment, Modernizr) {
         var parser = new Parser('date-picker');
         parser.addArgument('behavior', 'styled', ['native', 'styled']);
         parser.addArgument('format', 'YYYY-MM-DD');

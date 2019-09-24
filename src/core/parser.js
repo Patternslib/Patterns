@@ -6,7 +6,7 @@
  */
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "pat-utils",
     "pat-logger"
 ], function($, _, utils, logger) {
@@ -428,7 +428,7 @@ define([
             }
             if (!multiple) { final_length = 1; }
             var results = _.map(
-                _.compose(utils.removeDuplicateObjects, _.partial(utils.mergeStack, _, final_length))(stack),
+                _.flowRight(utils.removeDuplicateObjects, _.partial(utils.mergeStack, _, final_length))(stack),
                 this._cleanupOptions.bind(this)
             );
             return multiple ? results : results[0];

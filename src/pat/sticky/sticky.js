@@ -1,13 +1,12 @@
 /* pat-sticky - A pattern for a sticky polyfill */
 define([
-    "underscore",
     "pat-parser",
     "pat-registry",
     "pat-base",
     "pat-logger",
     "pat-utils",
     "stickyfilljs"
-], function(_, Parser, registry, Base, logger, utils, Stickyfill) {
+], function(Parser, registry, Base, logger, utils, Stickyfill) {
     "use strict";
     var parser = new Parser("sticky");
     var log = logger.getLogger("sticky")
@@ -20,7 +19,7 @@ define([
             this.options = parser.parse(this.$el);
             this.makeSticky();
             $('body').on('pat-update', utils.debounce(this.onPatternUpdate.bind(this), 500));
-            
+
             /* recalc if the DOM changes. Should fix positioning issues when parts of the page get injected */
 
             return this.$el;

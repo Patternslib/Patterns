@@ -5,6 +5,8 @@
 Features
 ~~~~~~~~
 
+
+- Use ``lodash`` instead of ``underscore`` und remove where not neccessary.
 - Use node-sass as suggested by https://sass-lang.com/install - the ruby version is deprecated.
 - Use ``yarn`` instead of ``npm``.
 - Use babel for all files, allowing latest JavaScript features everywhere.

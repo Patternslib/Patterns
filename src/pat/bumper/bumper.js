@@ -7,14 +7,14 @@
  */
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "pat-logger",
     "pat-parser",
     "pat-base",
     "pat-registry",
     "modernizr"
 ], function($, _, logger, Parser, Base, registry, Modernizr) {
-    
+
 
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
@@ -59,13 +59,13 @@ define([
             var $parent = this.$el.parent(),
                 overflow;
             while (!$parent.is($(document.body)) && $parent.length) {
-                if (_.contains(['all', 'top', 'bottom'], this.options.side)) {
+                if (_.includes(['all', 'top', 'bottom'], this.options.side)) {
                     overflow = $parent.css("overflow-y");
                     if ((overflow === "auto" || overflow === "scroll")) {
                         return $parent;
                     }
-                } 
-                if (_.contains(['all', 'left', 'right'], this.options.side)) {
+                }
+                if (_.includes(['all', 'left', 'right'], this.options.side)) {
                     overflow = $parent.css("overflow-x");
                     if ((overflow === "auto" || overflow === "scroll")) {
                         return $parent;
@@ -78,10 +78,10 @@ define([
 
         _markBumped: function markBumper(is_bumped) {
             var $target = this.options.selector ? $(this.options.selector) : this.$el,
-                todo = is_bumped ? this.options.bump : this.options.unbump;    
+                todo = is_bumped ? this.options.bump : this.options.unbump;
             if (todo.add) {
                 $target.addClass(todo.add);
-            } 
+            }
             if (todo.remove) {
                 $target.removeClass(todo.remove);
             }

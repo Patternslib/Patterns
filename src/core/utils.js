@@ -1,6 +1,6 @@
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "jquery.browser"
 ], function($, _, browser) {
 
@@ -134,52 +134,6 @@ define([
             }
         };
     };
-
-    //     Underscore.js 1.3.1
-    //     (c) 2009-2012 Jeremy Ashkenas, DocumentCloud Inc.
-    //     Underscore is freely distributable under the MIT license.
-    //     Portions of Underscore are inspired or borrowed from Prototype,
-    //     Oliver Steele's Functional, and John Resig's Micro-Templating.
-    //     For all details and documentation:
-    //     http://documentcloud.github.com/underscore
-    //
-    // Returns a function, that, as long as it continues to be invoked, will not
-    // be triggered. The function will be called after it stops being called for
-    // N milliseconds.
-    function debounce(func, wait) {
-        var timeout;
-        return function debounce_run() {
-            var context = this, args = arguments;
-            var later = function() {
-                timeout = null;
-                func.apply(context, args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    // Is a given variable an object?
-    function isObject(obj) {
-        var type = typeof obj;
-        return type === 'function' || type === 'object' && !!obj;
-    }
-
-    // Extend a given object with all the properties in passed-in object(s).
-    function extend(obj) {
-        if (!isObject(obj)) return obj;
-        var source, prop;
-        for (var i = 1, length = arguments.length; i < length; i++) {
-            source = arguments[i];
-            for (prop in source) {
-                if (hasOwnProperty.call(source, prop)) {
-                    obj[prop] = source[prop];
-                }
-            }
-        }
-        return obj;
-    }
-    // END: Taken from Underscore.js until here.
 
     function rebaseURL(base, url) {
         if (url.indexOf("://")!==-1 || url[0]==="/" || url.indexOf("data:")===0)
@@ -462,10 +416,10 @@ define([
     var utils = {
         // pattern pimping - own module?
         jqueryPlugin: jqueryPlugin,
-        debounce: debounce,
+        debounce: _.debounce,
         escapeRegExp: escapeRegExp,
-        isObject: isObject,
-        extend: extend,
+        isObject: _.isObject,
+        extend: _.extend,
         rebaseURL: rebaseURL,
         findLabel: findLabel,
         elementInViewport: elementInViewport,

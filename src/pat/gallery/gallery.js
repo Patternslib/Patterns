@@ -11,7 +11,7 @@ define('pat-gallery', [
     'photoswipe',
     'photoswipe-ui',
     'text!pat-gallery-template',
-    'underscore'
+    'lodash'
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser('gallery');
     parser.addArgument('item-selector', 'a');  // selector for anchor element, which is added to the gallery.
@@ -55,7 +55,7 @@ define('pat-gallery', [
                     options.index = 0;
                 }
                 options.history = false;  // this fixes the reload on gallery close which was induced by a history back call.
-                
+
                 var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, images, options);
                 gallery.listen('gettingData', function(index, item) {
                     // Workaround for the fact that we don't know the image sizes.

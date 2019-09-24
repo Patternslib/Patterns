@@ -48,7 +48,6 @@
     "spectrum-colorpicker": "^1.8.0",
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
     "text-loader": "^0.0.1",
-    "underscore": "^1.9.1",
     "validate.js": "0.11.1"
   },
   "devDependencies": {

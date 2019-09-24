@@ -1,14 +1,13 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
 define(
     [
-        'underscore',
         'pat-parser',
         'pat-registry',
         'pat-base',
         'pat-date-picker',
         'moment'
     ],
-    function(_, Parser, registry, Base, DatePicker, moment) {
+    function(Parser, registry, Base, DatePicker, moment) {
         var parser = new Parser('datetime-picker');
         parser.addArgument('behavior', 'styled', ['native', 'styled']);
         parser.addArgument('format', 'YYYY-MM-DD');

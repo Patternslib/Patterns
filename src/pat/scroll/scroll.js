@@ -8,9 +8,8 @@ define([
     "pat-utils",
     "pat-logger",
     "pat-parser",
-    "underscore",
     "imagesloaded"
-], function($, patterns, Base, utils, logging, Parser, _, imagesLoaded) {
+], function($, patterns, Base, utils, logging, Parser, imagesLoaded) {
     var log = logging.getLogger("scroll"),
         parser = new Parser("scroll");
     parser.addArgument("trigger", "click", ["click", "auto"]);
@@ -37,7 +36,7 @@ define([
             this.$el.on("pat-update", this.onPatternsUpdate.bind(this));
             this.markBasedOnFragment();
             this.on('hashchange', this.clearIfHidden.bind(this));
-            $(window).scroll(_.debounce(this.markIfVisible.bind(this), 50));
+            $(window).scroll(utils.debounce(this.markIfVisible.bind(this), 50));
         },
 
         onClick: function(ev) {

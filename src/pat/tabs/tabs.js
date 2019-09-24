@@ -3,7 +3,7 @@
  */
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "pat-registry",
     "pat-base",
     "pat-utils",
@@ -20,7 +20,7 @@ define([
 
         init: function($el, opts) {
             this.options = parser.parse(this.$el, opts); // redundant - at the moment we have no parameter options
-            $(window).resize(_.debounce(this.adjustTabs.bind(this), 100));
+            $(window).resize(utils.debounce(this.adjustTabs.bind(this), 100));
             $('body').on("pat-update", this.filterByPatternsUpdate.bind(this));
             this.adjustTabs();
         },
@@ -28,7 +28,7 @@ define([
         filterByPatternsUpdate: function(ev, data) {
             // determine when to call adjustTabs depending as to which pattern triggered pat-update
             var allowed_patterns = ["stacks", "switch", "auto-scale", "grid", "equaliser", "masonry", "zoom"];
-            // XXX TODO add other (or remove redundant) layout modifying patterns    
+            // XXX TODO add other (or remove redundant) layout modifying patterns
             if ( $.inArray(data.pattern, allowed_patterns) > -1 ) {
                 this.adjustTabs();
             }
@@ -44,17 +44,17 @@ define([
 
             if ( $children.length !== 0 ) {
                 // here we want to gather all tabs including those that may be in a special 'extra-tabs'
-                // span and place them all as equal children, before we recalculate which tabs are 
+                // span and place them all as equal children, before we recalculate which tabs are
                 // visible and which are potentially fully or partially obscured.
                 var $grouper = $children.filter('.extra-tabs');
                 $grouper.children().appendTo(this.$el);
                 $grouper.remove();
                 $children = this.$el.children();
 
-                // precalculate the collective size of all the tabs 
+                // precalculate the collective size of all the tabs
                 total_width = _.reduce($children, function(value, el) {
                     return value + $(el).outerWidth(true);
-                }, 0);     
+                }, 0);
 
                 // only execute if all tabs cannot fit comfortably in the container
                 if ( total_width >= container_width ) {
