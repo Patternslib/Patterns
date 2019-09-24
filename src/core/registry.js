@@ -89,7 +89,7 @@ define([
             var $el = $(el);
             var pattern = registry.patterns[name];
             if (pattern.init) {
-                plog = logger.getLogger("pat." + name);
+                var plog = logger.getLogger("pat." + name);
                 if ($el.is(pattern.trigger)) {
                     plog.debug("Initialising:", $el);
                     try {
@@ -117,7 +117,7 @@ define([
         },
 
         scan: function registryScan(content, patterns, trigger) {
-            var selectors = [], $match, plog;
+            var selectors = [], $match;
             patterns = this.orderPatterns(patterns || Object.keys(registry.patterns));
             patterns.forEach(_.partial(this.transformPattern, _, content));
             patterns = _.each(patterns, function (name) {
