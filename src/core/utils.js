@@ -375,7 +375,7 @@ define([
         return results;
     }
 
-    isElementInViewport = function (el, partial, offset) {
+    function isElementInViewport(el, partial, offset) {
         /* returns true if element is visible to the user ie. is in the viewport.
          * Setting partial parameter to true, will only check if a part of the element is visible
          * in the viewport, specifically that some part of that element is touching the top part
@@ -421,7 +421,7 @@ define([
                 rec.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
             );
         }
-    };
+    }
 
     function parseTime(time) {
         var m = /^(\d+(?:\.\d+)?)\s*(\w*)/.exec(time);
