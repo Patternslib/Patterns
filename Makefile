@@ -1,7 +1,6 @@
 JSHINT 		?= node_modules/.bin/jshint
 PEGJS		?= node_modules/.bin/pegjs
-BUNDLE      ?= ./.bundle/bin/bundle
-SASS        ?= ./.bundle/bin/sass
+SASS		?= node_modules/.bin/sass
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
@@ -25,12 +24,6 @@ all:: bundle.js css
 
 stamp-yarn: package.json
 	yarn install
-
-stamp-bundler:
-	mkdir -p .bundle
-	gem install --user bundler --bindir .bundle/bin
-	$(BUNDLE) install --path .bundle --binstubs .bundle/bin
-	touch stamp-bundler
 
 clean::
 	rm -f stamp-yarn
@@ -106,7 +99,7 @@ all_css:: css
 	@$(SASS) -I . -I _sass src/pat/zoom/_zoom.scss src/pat/zoom/zoom.css
 	@echo "Done. Each pattern now has a CSS file."
 
-css:: stamp-bundler
+css::
 	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
 
 watch::
