@@ -34,7 +34,7 @@ define(["pat-scroll"], function(Pattern) {
 
             it("will scroll to an anchor on click", function(done) {
                 $("#lab").html([
-                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
+                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>',
                     '<p id="p1"></p>'
                     ].join("\n"));
                 var $el = $(".pat-scroll");
@@ -53,7 +53,7 @@ define(["pat-scroll"], function(Pattern) {
 
             it("will scroll to an anchor on pat-update with originalEvent of click", function(done) {
                 $("#lab").html([
-                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: auto">p1</a>',
+                    '<a href="#p1" class="pat-scroll" data-pat-scroll="trigger: click">p1</a>',
                     '<p id="p1"></p>'
                     ].join("\n"));
                 var $el = $(".pat-scroll");
