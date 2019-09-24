@@ -296,7 +296,7 @@ define([
             _.each(list, function(obj) {
                 is_duplicate = (
                     (_.keys(obj).length === _.keys(next_obj).length) &&
-                    (!_.chain(obj).omit(comparator.bind(next_obj)).keys().value().length)
+                    (! Object.keys(obj.filter(it => it !== comparator.bind(next_obj))).length)
                 );
             });
             if (!is_duplicate) {

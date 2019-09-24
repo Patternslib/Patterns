@@ -241,9 +241,10 @@ define([
                     return;
                 }
                 var name = matches[1],
-                    value = matches[2].trim(),
-                    arg = _.chain(this.parameters).where({'alias': name}).value(),
-                    is_alias = arg.length === 1;
+                    value = matches[2].trim();
+
+                let arg = Object.values(this.parameters).filter(it => it.alias === name);
+                let is_alias = arg.length === 1;
 
                 if (is_alias) {
                     this._set(opts, arg[0].name, value);
