@@ -2,7 +2,7 @@ dist: xenial
 language: node_js
 node_js:
 - lts/*
-before_script: travis_retry make stamp-npm
+before_script: travis_retry make stamp-yarn
 script: make check
 sudo: required
 addons:

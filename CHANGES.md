@@ -25,6 +25,7 @@ Features
 - Add configurable scrolling behavior to pat-inject.
 - Add ``webpack-visualizer-plugin`` for analyzation of generated bundles.
 - Fix ``pat-auto-scale`` not correctly rescaling after fullscreen changes. Fixes #673
+- Use ``yarn`` instead of ``npm``.
 - Use babel for all files, allowing latest JavaScript features everywhere.
 - Add ``pat-fullscreen`` pattern to allow any element to be displayed in fullscreen-mode.
   A second pattern ``pat-fullscreen-close`` which is triggered on ``close-fullscreen`` CSS class allows for closing the fullscreen with custom buttons.
