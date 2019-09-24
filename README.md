@@ -22,6 +22,8 @@ Other browser version may work too, but are not actively tested against.
 
 ## Installation
 
+You need to be on a recent node version and have yarn installed.
+
     git clone git://github.com/Patternslib/Patterns.git
     cd Patterns
     make
