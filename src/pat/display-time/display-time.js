@@ -4,8 +4,7 @@ define([
     "pat-registry",
     "pat-parser",
     "pat-logger",
-    "moment",
-    "promise-polyfill"
+    "moment"
 ], function($, Base, registry, Parser, logger, moment) {
     "use strict";
 
