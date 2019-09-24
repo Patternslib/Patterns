@@ -3,7 +3,6 @@ PEGJS		?= node_modules/.bin/pegjs
 BUNDLE      ?= ./.bundle/bin/bundle
 SASS        ?= ./.bundle/bin/sass
 
-# SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/pat/*/*.js) $(wildcard src/pat/calendar/*.js) $(wildcard src/lib/*.js)
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 BUNDLES		= bundles/patterns.js bundles/patterns.min.js
 
@@ -24,8 +23,8 @@ all:: bundle.js css
 ########################################################################
 ## Install dependencies
 
-stamp-npm: package.json
-	npm install --no-optional
+stamp-yarn: package.json
+	yarn install
 
 stamp-bundler:
 	mkdir -p .bundle
@@ -34,20 +33,20 @@ stamp-bundler:
 	touch stamp-bundler
 
 clean::
-	rm -f stamp-npm
+	rm -f stamp-yarn
 	rm -rf node_modules
 
 ########################################################################
 ## Tests
 
-jshint: stamp-npm
+jshint: stamp-yarn
 	$(JSHINT) --config jshintrc $(CHECKSOURCES)
 	$(JSHINT) --config jshintrc-tests $(TESTSOURCES)
 
 
 .PHONY: check
-check:: stamp-npm jshint
-	npm run testonce
+check:: stamp-yarn jshint
+	yarn run testonce
 
 
 ########################################################################
@@ -55,10 +54,10 @@ check:: stamp-npm jshint
 
 build:: bundle all_css
 
-bundle bundle.js: $(GENERATED) $(SOURCES) stamp-npm
-	npm run build
+bundle bundle.js: $(GENERATED) $(SOURCES) stamp-yarn
+	yarn run build
 
-src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-npm
+src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
@@ -118,7 +117,7 @@ watch::
 serve:: all _serve
 
 _serve:
-	npm run start
+	yarn run start
 	@printf "\nBundle built\n\n"
 
 designerhappy:: serve
