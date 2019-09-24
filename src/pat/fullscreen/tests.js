@@ -1,4 +1,4 @@
-define(["pat-fullscreen", "screenful"], function(Pattern, screenful) {
+define(["pat-fullscreen", "pat-fullscreen-close", "screenful"], function(Pattern, Pattern2, screenful) {
 
     describe("Open in fullscreen", function() {
         beforeEach(function() {
@@ -66,13 +66,14 @@ define(["pat-fullscreen", "screenful"], function(Pattern, screenful) {
             $('.pat-fullscreen').click();
             expect(screenful.request).toHaveBeenCalled();
 
+            Pattern2.init($(".close-fullscreen"));
             $('.close-fullscreen').click();
             expect(screenful.exit).toHaveBeenCalled();
 
             done();
         });
 
-        it("Example 4: No fullscreen element definition opens fullscreen on body.", function(done) {
+        it("Test 4: No fullscreen element definition opens fullscreen on body.", function(done) {
             var fs_el = document.querySelector('#fs');
             var pat_el = document.createElement('button');
             pat_el.setAttribute('class', 'pat-fullscreen');
