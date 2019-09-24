@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- Use ``yarn`` instead of ``npm``.
 - Use babel for all files, allowing latest JavaScript features everywhere.
 - Add ``pat-fullscreen`` pattern to allow any element to be displayed in fullscreen-mode.
 - Runs now on jQuery 3.

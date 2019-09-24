@@ -3,7 +3,7 @@
 
 ## Requirements
 
-You need to be on a recent node and npm version.
+You need to be on a recent node version and have yarn installed.
 
 - node 6.11.2LTS or greater
 
@@ -26,7 +26,7 @@ If you are using your own Makefile, bower.js and package.js, things should just 
 
 ## What has been changed?
 
-- The package.json has been extended to download all dependencies, including those that were downloaded by bower before. This required some package name and path changes. As we have downloaded dev dependencies using npm before, this should not have a big influence for you. 
+- The package.json has been extended to download all dependencies, including those that were downloaded by bower before. This required some package name and path changes. As we have downloaded dev dependencies using npm before, this should not have a big influence for you.
   **Action to take: If you have your own package.json and bower.json files, copy over the new "dependencies" section from package.json in patternslib and then extend it with any custom paths you have in your bower.json file. Make sure the names are still the same on npmjs.org compared to the old bower.io package names!**
 
 - The Makefile has been changed to run webpack instead of require.js
@@ -66,7 +66,7 @@ There has been some cleanup as well that might affect your project. Here is a li
 
 ## Packages removed
 
-- jquery.tinymce 
+- jquery.tinymce
   Very big and unmaintained. We have never advertised it so we don't include it anymore to clean up.
 - requirejs
   No longer required
@@ -88,9 +88,9 @@ There has been some cleanup as well that might affect your project. Here is a li
   Is now pulled from a git repository as it is not available on npmjs.org
 - jquery.form
   Has been upgraded from 3.46.0 to 3.50.0 as there is no 3.46 on npmjs.org
-- Parsley 
+- Parsley
   Has been upgraded from 1.2.4 to 2.7.2, because 1.x is not npm compatible
-- jcrop 
+- jcrop
   Has been upgraded from 0.9.14 to 2.0.4 to be npm compatible
 - chosen upgraded from "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",
  to chosen-js latest
@@ -103,7 +103,7 @@ There has been some cleanup as well that might affect your project. Here is a li
 - masonry is now called masonry-layout on npmjs.org
 - validate is called validate.js on npmjs.org
 - in pat-gallery, replaced requirejs-text plugin with text-loader, see https://github.com/webpack/webpack/issues/1046
-- Webpack by default includes everything that is referenced in other files. Moment locale files ship with moment and get autoincluded which results in 100Kb more minified js. We are excluding moment locale files explicitly in webpack.config.js, so by default only english is included. 
+- Webpack by default includes everything that is referenced in other files. Moment locale files ship with moment and get autoincluded which results in 100Kb more minified js. We are excluding moment locale files explicitly in webpack.config.js, so by default only english is included.
   XXX Check if that kills some of your localisations.
 
 
