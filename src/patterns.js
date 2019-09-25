@@ -39,6 +39,7 @@ define([
     "pat-form-state",
     "pat-forward",
     "pat-fullscreen",
+    "pat-fullscreen-close",
     "pat-gallery",
     "pat-image-crop",
     "pat-inject",

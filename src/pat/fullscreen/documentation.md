@@ -5,7 +5,12 @@ The *fullscreen* pattern allows you to display any element in fullscreen-mode.
 ## Documentation
 
 When an element with the ``pat-fullscreen`` class is clicked another element is set to fullscreen.
+There is also a second pattern ``pat-fullscreen-close`` which is triggered on the ``close-fullscreen`` CSS class.
+It triggers a close fullscreen when clicking.
+This is done as a seperate pattern so that HTML structures injected with ``pat-inject`` are initialized and working correctly.
+
 The element sent to fullscreen is  defined so:
+
 1) If there is a ``data-pat-fullscreen`` with a selector option, that one is used.
 2) if the pat-fullscreen element is an anchor link, it's href attribute is used to point to an element with the id specified in the href attribute.
 3) Otherwise, the body is sent to fullscreen.

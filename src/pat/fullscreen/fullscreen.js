@@ -32,7 +32,7 @@ define([
 
             var el = this.$el[0];
             this.$el.on('click', function (e) {
-            //el.addEventListener('click', function (e) {  // TODO: doesn't work in karma
+            //el.addEventListener('click', function (e) {  // TODO: doesn't work in karma for href links
                 e.preventDefault();
                 // querying the fullscreen element fs_el and inside the event
                 // handler instead of outside allows for dynamic injecting
@@ -51,14 +51,6 @@ define([
                             if (!screenful.isFullscreen) {
                                 fs_el.removeChild(exit_el);
                             }
-                        });
-                    }
-                    var close_buttons = fs_el.querySelectorAll('.close-fullscreen');
-                    for (var i=0; i < close_buttons.length; i++) {
-                        close_buttons[i].addEventListener('click', function (event) {
-                            // no prevent-default nor stop propagation to let
-                            // the button also do other stuff.
-                            screenful.exit();
                         });
                     }
                 } else {
