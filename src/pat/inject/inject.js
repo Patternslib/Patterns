@@ -587,10 +587,16 @@ define([
                 return;
             };
             $el.data('pat-inject-triggered', true);
-            // possibility for spinners on targets
-            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
-            // Put the execute class on the elem that has pat inject on it
-            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { $el.addClass(cfg.executingClass); });
+
+            cfgs = cfgs.map(it => {
+                if ('loadingClass' in it) {
+                    // possibility for spinners on targets
+                    it.$target.addClass(it.loadingClass);
+                    // Put the execute class on the elem that has pat inject on it
+                    $el.addClass(it.executingClass);
+                }
+                return it;
+            });
 
             $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
             $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));

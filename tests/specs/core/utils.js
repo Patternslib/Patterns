@@ -33,7 +33,7 @@ define(["lodash", "pat-utils"], function(_, utils) {
 
         describe("removeDuplicateObjects", function() {
 
-            it("removes removes duplicates inside an array of objects", function() {
+            it("removes duplicates inside an array of objects", function() {
                 var objs = [];
                 expect(utils.removeDuplicateObjects(objs).length).toBe(0);
                 expect(typeof utils.removeDuplicateObjects(objs)).toBe("object");

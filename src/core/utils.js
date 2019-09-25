@@ -288,22 +288,7 @@ define([
         /* Given an array of objects, remove any duplicate objects which might
          * be present.
          */
-        var comparator = function(v, k) {
-            return this[k] === v;
-        };
-        return _.reduce(objs, function(list, next_obj) {
-            var is_duplicate = false;
-            _.each(list, function(obj) {
-                is_duplicate = (
-                    (_.keys(obj).length === _.keys(next_obj).length) &&
-                    (! Object.keys(obj.filter(it => it !== comparator.bind(next_obj))).length)
-                );
-            });
-            if (!is_duplicate) {
-                list.push(next_obj);
-            }
-            return list;
-        }, []);
+        return Array.from(new Set(objs));
     }
 
     function mergeStack(stack, length) {
