@@ -19,6 +19,8 @@ bundle.js.map
 bundle.min.js
 bundle.min.js.map
 /chunks
+stats.json
+stats.html
 test-reports
 /.DS_Store
 
