@@ -81,6 +81,15 @@
     "webpack-visualizer-plugin": "^0.1.11",
     "wrapper-webpack-plugin": "^2.1.0"
   },
+  "optionalDependencies": {
+    "fsevents": "^2.0.1"
+  },
+  "prettier": {
+    "singleQuote": false,
+    "htmlWhitespaceSensitivity": "ignore",
+    "trailingComma": "none",
+    "printWidth": 120
+  },
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
