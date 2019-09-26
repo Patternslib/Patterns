@@ -46,10 +46,10 @@
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "1.8.0",
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
-    "style-loader": "^0.23.1",
-    "text-loader": "0.0.1",
-    "tippy.js": "5.2.0",
-    "underscore": "1.9.1",
+    "terser-webpack-plugin": "^2.1.0",
+    "text-loader": "^0.0.1",
+    "tippy.js": ">=5.2.0",
+    "underscore": "^1.9.1",
     "validate.js": "0.11.1"
   },
   "devDependencies": {
@@ -72,6 +72,7 @@
     "pegjs": "^0.7.0",
     "puppeteer": "^1.20.0",
     "sass": "^1.22.12",
+    "style-loader": "^0.23.1",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.1",
