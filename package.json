@@ -15,7 +15,6 @@
     "url": "https://github.com/Patternslib/patterns.git"
   },
   "dependencies": {
-    "@horizon/client": "^2.0.0",
     "anythingslider": "git+https://github.com/fulv/AnythingSlider.git",
     "autobahn": "^19.9.2",
     "core-js": "3",
@@ -28,7 +27,6 @@
     "jquery-jcrop": "^0.9.13",
     "jquery-placeholder": "^2.3.1",
     "jquery.browser": "^0.1.0",
-    "lodash": "^4.17.15",
     "logging": "https://github.com/Patternslib/logging.git",
     "masonry-layout": "^4.2.2",
     "modernizr": "^3.7.1",
