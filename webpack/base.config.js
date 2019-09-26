@@ -13,6 +13,7 @@ try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (er
 var WrapperPlugin = require('wrapper-webpack-plugin');
 var DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 const BundleVisualizer = require('webpack-visualizer-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -31,7 +32,12 @@ module.exports = {
         splitChunks: {
             chunks: "async",
         },
-        minimize: false
+        minimize: true,
+        minimizer: [
+          new TerserPlugin({
+            include: /\.min\.js$/,
+          }),
+        ],
     },
     module: {
         rules: [
