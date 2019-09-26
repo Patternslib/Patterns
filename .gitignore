@@ -24,6 +24,8 @@ bundle-polyfills.js
 bundle-polyfills.js.map
 bundle-polyfills.min.js
 bundle-polyfills.min.js.map
+bundle-vendors.js
+bundle-vendors.js.map
 /chunks
 stats.json
 stats.html
