@@ -45,6 +45,7 @@
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "^1.8.0",
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
+    "terser-webpack-plugin": "^2.1.0",
     "text-loader": "^0.0.1",
     "underscore": "^1.9.1",
     "validate.js": "0.11.1"
