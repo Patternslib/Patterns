@@ -30,13 +30,27 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
-            chunks: "async",
+            chunks: 'async',
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'initial',
+                    filename: 'bundle-[name].js',
+                }
+            }
         },
         minimize: true,
         minimizer: [
-          new TerserPlugin({
-            include: /\.min\.js$/,
-          }),
+            new TerserPlugin({
+                include: /(\.min\.js$|bundle-vendors.js$)/,
+                extractComments: false,
+                terserOptions: {
+                    output: {
+                        comments: false,
+                    },
+                },
+            }),
         ],
     },
     module: {
