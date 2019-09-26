@@ -44,14 +44,14 @@ module.exports = function(config) {
             //use webpack to support require() in test-suits .js files
             //use babel-loader from webpack to compile es2015 features in .js files
             //add webpack as preprocessor
-            'tests/specs/*/*.js': ['webpack', 'babel' /*, 'coverage'*/ ],
-            'src/pat/*/tests.js': ['webpack', 'babel' /*, 'coverage'*/ ]
+            'tests/specs/*/*.js': ['webpack' /*, 'babel'*/ /*, 'coverage'*/ ],
+            'src/pat/*/tests.js': ['webpack' /*, 'babel'*/ /*, 'coverage'*/ ]
         },
 
         webpack: webpackOptions,
 
         plugins: [
-          'karma-babel-preprocessor',
+          //'karma-babel-preprocessor',
           'karma-chrome-launcher',
           'karma-jasmine',
           'karma-jasmine-html-reporter',

@@ -12,6 +12,7 @@ try { var footerWrap = fs.readFileSync('./src/wrap-end.js', 'utf8'); } catch (er
 
 var WrapperPlugin = require('wrapper-webpack-plugin');
 var DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const BundleVisualizer = require('webpack-visualizer-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -275,6 +276,7 @@ module.exports = {
             verbose: true,
             emitError: true
         }),
+        new BundleAnalyzerPlugin(),
         new BundleVisualizer(),
     ]
 };
