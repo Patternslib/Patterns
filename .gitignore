@@ -20,6 +20,8 @@ bundle.js.map
 bundle.min.js
 bundle.min.js.map
 bundle.min.js.LICENSE
+bundle-vendors.js
+bundle-vendors.js.map
 /chunks
 stats.json
 stats.html
