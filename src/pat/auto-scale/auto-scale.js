@@ -4,7 +4,14 @@
  * Copyright 2012 Humberto Sermeno
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define(["jquery", "jquery.browser", "pat-base", "pat-registry", "pat-parser", "underscore"], function(
+define([
+    "jquery",
+    "jquery.browser",
+    "pat-base",
+    "pat-registry",
+    "pat-parser",
+    "underscore",
+], function(
     $,
     browser,
     Base,
@@ -39,16 +46,9 @@ define(["jquery", "jquery.browser", "pat-base", "pat-registry", "pat-parser", "u
                 // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 this.force_method = "scale";
             }
-
-            var scaler = _.debounce(this.scale.bind(this), 250, true);
-
+            var scaler = _.debounce(this.scale.bind(this), 250);
             $(window).on("resize.autoscale", scaler);
-            document.addEventListener("fullscreenchange", scaler);
-            document.addEventListener("webkitfullscreenchange", scaler);
-            document.addEventListener("mozfullscreenchange", scaler);
-            document.addEventListener("MSFullscreenChange", scaler);
-
-            $(document).on("pat-update.autoscale", _.debounce(this.scale.bind(this), 250));
+            $(document).on("pat-update.autoscale", scaler);
             return this;
         },
 
