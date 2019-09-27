@@ -41,10 +41,18 @@
       The same elemement, now scaled up to fill the parent completely. The styling property `overflow: hidden` is used on the parent element to prevent bleeding. This is done with the property: `size: cover`.
     </p>
     <p style="border: 4px solid skyblue; width: 350px; height: 350px; overflow: hidden;">
-
       <button class="pat-button pat-auto-scale" data-pat-auto-scale="size: cover">👌</button>
-
     </p>
+
+
+    <p>
+      Autoscale and fullscreen:
+    </p>
+    <p class="fullscreen-element">
+      <button class="pat-button pat-auto-scale">👉 BUTTON 👈</button>
+    </p>
+    <button class="pat-fullscreen" data-pat-fullscreen="selector:.fullscreen-element">open in fullscreen</button>
+
 
     <style type="text/css">
       .pat-button {
