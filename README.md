@@ -81,6 +81,12 @@ This will install all required npm and bower packages and run the tests.
 
 To run the tests in a browser, open the ``tests.html`` file in the browser of your choice.
 
+### Check bundle sizes
+
+We added a webpack plugin which helps in analyzing bundle sizes.
+Check if the bundle size doesn't grow much bigger.
+After running webpack via ``make build``, ``make serve`` or ``make check`` stats.json and stats.html file are created.
+Open stats.html in a browser to interactively check the payload each package contributes to the generated bundle.
 
 ### Organisations and projects which use Patternslib
 

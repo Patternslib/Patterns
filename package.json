@@ -110,6 +110,7 @@
     "webpack-jasmine-html-runner-plugin": "^0.9.0",
     "webpack-merge": "^4.1.2",
     "webpack-modernizr-loader": "^5.0.0",
+    "webpack-visualizer-plugin": "^0.1.11",
     "wrapper-webpack-plugin": "^2.0.0",
     "yo": "^2.0.6"
   },
