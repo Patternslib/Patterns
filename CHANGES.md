@@ -14,6 +14,7 @@ Features
 Fixes
 ~~~~~
 
+- Fix ``pat-auto-suggest`` to not show a placeholder if none is defined. Fixes #675
 - Fix ``pat-auto-scale`` not correctly rescaling after fullscreen changes. Fixes #673
 - Fix heisenbug with pat-scroll on testruns.
 - Fix minimum input length default so that you can display select results already on click.

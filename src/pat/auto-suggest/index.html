@@ -15,7 +15,7 @@
             </label>
 
             <label>In this example, we are showing groups of foods
-                <input  id="a1a" class="pat-autosuggest" placeholder="Pick a character"
+                <input  id="a1a" class="pat-autosuggest" placeholder="Pick some fruit"
                     data-pat-autosuggest='ajax-url: datagroup.json;
                                             allow-new-words: false;' type="text"></input>
             </label>
@@ -36,7 +36,7 @@
 
             <label>An example with pre-filled words in JSON format:
                 <input  id="a4" class="pat-autosuggest" placeholder="Pick a character"
-                    data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}, {"id": "goofy", "text":"Goofy"}]; 
+                    data-pat-autosuggest='words-json: [{"id": "john-snow", "text": "John Snow"}, {"id": "tywin-lannister", "text":"Tywin Lannister"}, {"id": "goofy", "text":"Goofy"}];
                     prefill-json: {"john-snow":"John Snow", "tywin-lannister": "Tywin Lannister"};
                     allow-new-words: false;' type="text"></input>
             </label>
@@ -60,6 +60,11 @@
                                             allow-new-words: false;' type="text"></input>
             </label>
 
+            <label>If no placeholder is given, don't add one automatically
+                <input  id="a1a" class="pat-autosuggest"
+                    data-pat-autosuggest='ajax-url: datagroup.json;
+                                            allow-new-words: false;' type="text"></input>
+            </label>
 
         </fieldset>
   </body>
