@@ -31,10 +31,10 @@ define([
     parser.addArgument("class"); // Add a class to the injected content.
     parser.addArgument("history");
     parser.addArgument("push-marker");
+    parser.addArgument("scroll");
     // XXX: this should not be here but the parser would bail on
     // unknown parameters and expand/collapsible need to pass the url
     // to us
-    parser.addArgument("scroll");
     parser.addArgument("url");
 
     var inject = {
@@ -445,10 +445,10 @@ define([
             // Now the injection actually happens.
             if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
             // History support. if subform is submitted, append form params
-            var glue = '?'; 
+            var glue = '?';
             if ((cfg.history === "record") && ("pushState" in history)) {
                 if (cfg.params) {
-                    if (cfg.url.indexOf('?') > -1) 
+                    if (cfg.url.indexOf('?') > -1)
                         glue = '&';
                     history.pushState({'url': cfg.url + glue + cfg.params}, "", cfg.url + glue + cfg.params);
                 } else {
@@ -488,8 +488,8 @@ define([
                 if (cfg['scroll'] == 'top') {
                     $(cfg['target'])[0].scrollTop = 0;
                 } else if (cfg['scroll'] == 'target') {
-                    /* scrollable: target Target indicates the target in the URL fragment the URL 
-                       that's in the href or action in the case of a form. After injection, the 
+                    /* scrollable: target Target indicates the target in the URL fragment the URL
+                       that's in the href or action in the case of a form. After injection, the
                        page or scroll container will scroll to bring the element with that ID into view. */
                     /*$(cfg['target'])[0].scrollTop = $(cfg['selector'])[0].offsetTop;*/
                 } else {
@@ -514,12 +514,12 @@ define([
             /* pick the title source for dedicated handling later
               Title - if present - is always appended at the end. */
             var title;
-            if (sources$ && 
+            if (sources$ &&
                 sources$[sources$.length-1] &&
-                sources$[sources$.length-1][0] && 
+                sources$[sources$.length-1][0] &&
                 sources$[sources$.length-1][0].nodeName == "TITLE") {
                 title = sources$[sources$.length-1];
-            }        
+            }
             cfgs.forEach(function(cfg, idx) {
                 function perform_inject() {
                     cfg.$target.each(function() {

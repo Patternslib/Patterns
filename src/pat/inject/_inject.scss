@@ -1,32 +1,32 @@
 .blue {
-	background-color: blue;
-	color: white;
+  background-color: blue;
+  color: white;
 }
 
 .red {
-	background-color: red;
-	color: white;
+  background-color: red;
+  color: white;
 }
 
 form.pat-inject,
 fieldset.pat-inject {
-	&.executing {
-		[type="submit"] {
-			    -ms-pointer-events: none;
-			   -moz-pointer-events: none;
-			-webkit-pointer-events: none;
-				    pointer-events: none;
-			opacity: 0.5;
-		}
-	}
+  &.executing {
+    [type="submit"] {
+          -ms-pointer-events: none;
+         -moz-pointer-events: none;
+      -webkit-pointer-events: none;
+              pointer-events: none;
+      opacity: 0.5;
+    }
+  }
 }
 
 a.pat-inject {
-	&.executing {
-	    -ms-pointer-events: none;
-	   -moz-pointer-events: none;
-	-webkit-pointer-events: none;
-		    pointer-events: none;
-		opacity: 0.5;
-	}
+  &.executing {
+        -ms-pointer-events: none;
+       -moz-pointer-events: none;
+    -webkit-pointer-events: none;
+            pointer-events: none;
+    opacity: 0.5;
+  }
 }

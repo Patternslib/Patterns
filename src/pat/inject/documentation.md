@@ -30,7 +30,7 @@ The possibilities don't stop here. Other applications of injection include injec
 The most simple form of injection is a link which loads content when clicked:
 
     <a href="demos/frobber.html#demo-content" class="pat-inject">Demo the frobber</a>
-    
+
     <section id="demo-content">
       …
     </section>
@@ -41,7 +41,7 @@ In another situation you may not want to replace content but add new content. Yo
 
     <a href="latest-news.html#demo-content" class="pat-inject"
        data-pat-inject="target: #news::before">Tell me more</a>
-    
+
     <section id="news">
       …
     </section>
@@ -103,7 +103,7 @@ In case one source element is to be used for both targets, it can be specified a
                         source: #src; target: #tgt2">
       One source element for two targets.
     </a>
-    
+
     <a class="pat-inject" href="sources.html#src"
        data-pat-inject="target: #tgt1 &&
                         target: #tgt2">
@@ -259,10 +259,10 @@ A `autoload` may be delayed, by providing a `delay` argument in `data-pat-inject
 
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload">Autoloads as soon as initialised</a>
-    
+
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload-visible">Autoloads as soon as visible</a>
-    
+
     <a href="sources.html#id" class="pat-inject"
        data-pat-inject="trigger: autoload; delay: 2000">Autoloads 2 seconds after the page is initialised.</a>
 
@@ -317,12 +317,12 @@ It corresponds and is shorthand notation for:
 After injection was triggered:
 
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
-    
+
     <div id="modal" class="pat-modal">
       Content from modal-source.html's ``body``.
     </div>
     </body>
-    
+
     <a class="pat-inject" href="modal-source.html" data-pat-inject="type: modal">
 
 ### Options reference
