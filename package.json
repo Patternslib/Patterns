@@ -77,7 +77,6 @@
     "webpack-modernizr-loader": "^5.0.0",
     "webpack-visualizer-plugin": "^0.1.11",
     "wrapper-webpack-plugin": "^2.1.0"
-    "yo": "^2.0.6"
   },
   "optionalDependencies": {
     "fsevents": "^2.0.1"
