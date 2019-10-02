@@ -19,7 +19,7 @@ Fixes
 - Fix ``pat-auto-scale`` not correctly rescaling after fullscreen changes. Fixes #673
 - Fix heisenbug with pat-scroll on testruns.
 - Fix minimum input length default so that you can display select results already on click.
-
+- When an inject fails because the source doesn't contain the intended selector, redirect to the target url instead of failing silently. This will show the login form in case an inject fails because the user is no longer authenticated.
 
 ## 3.0.0a5 - unreleased
 
