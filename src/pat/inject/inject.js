@@ -489,13 +489,12 @@ define([
 
 
             if (cfg.scroll && cfg.scroll !== 'none') {
-                var $target = $(cfg.target);
-                var scroll_container = $target.parents().addBack().filter(':scrollable');
-                scroll_container = scroll_container.length ? scroll_container : $(window);
                 if (cfg.scroll === 'top') {
+                    var scroll_container = $(cfg.target).parents().addBack().filter(':scrollable');
+                    scroll_container = scroll_container.length ? scroll_container : $(window);
                     scroll_container[0].scrollTo(0, 0);
                 } else if (cfg.scroll === 'target') {
-                    $target[0].scrollIntoView();
+                    $(cfg.target)[0].scrollIntoView();
                 } else {
                     $(cfg.scroll)[0].scrollIntoView();
                 }
