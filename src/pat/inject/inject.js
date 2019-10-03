@@ -425,6 +425,7 @@ define([
             /* Called after the XHR has succeeded and we have a new $source
              * element to inject.
              */
+            
             if (cfg.sourceMod === "content") {
                 $source = $source.contents();
             }
@@ -633,10 +634,6 @@ define([
                 $(trigger).trigger("pat-inject-missingSource",
                         {url: cfg.url,
                          selector: cfg.source});
-                // XXX: Actually doing a redirect to the original url
-                // this might be an unauthorized case. Show the target.
-                // This is likely also helping in debugging.
-                window.location.href = cfg.url;
                 return false;
             }
             if ($target.length === 0) {

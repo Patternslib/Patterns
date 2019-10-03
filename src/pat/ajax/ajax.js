@@ -76,6 +76,8 @@ define([
                         type: "pat-ajax-error",
                         jqxhr: jqxhr
                     });
+                    // Expose the error by redirecting to the url.
+                    window.location.href = cfg.url;
                 },
                 seqNumber = xhrCount.inc(cfg.url),
                 onSuccess = function(data, status, jqxhr) {
