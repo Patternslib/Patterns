@@ -58,6 +58,7 @@
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "1.8.0",
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
+    "style-loader": "^0.23.1",
     "text-loader": "0.0.1",
     "tippy.js": "^4.3.4",
     "underscore": "1.9.1",
