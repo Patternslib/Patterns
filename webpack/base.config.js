@@ -36,7 +36,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll)\.js$/,
+                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll|tooltip-ng)\.js$/,
                 loader: 'babel-loader',
                 query: {
                     presets: [["@babel/env", {
@@ -97,10 +97,14 @@ module.exports = {
                     }
                 ]
             },
-              {
+            {
                 loader: "webpack-modernizr-loader",
                 test: /\.modernizrrc\.js$/
-              }
+            },
+	        {
+		        test: /\.css$/,
+		        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+	        },
         ]
     },
     resolve: {
@@ -128,6 +132,8 @@ module.exports = {
             "slick-carousel": path.resolve(__dirname, "../node_modules/slick-carousel/slick/slick.js"),
             "stickyfilljs": path.resolve(__dirname, "../node_modules/stickyfilljs/dist/stickyfill.js"),
             "text": path.resolve(__dirname, "../node_modules/requirejs-text/text.js"),
+	        "tippy": path.resolve(__dirname, "../node_modules/tippy.js/umd/index.all.js"),
+	        "tippy-theme.css": path.resolve(__dirname, "../node_modules/tippy.js/themes/light-border.css"),
             "validate": path.resolve(__dirname, "../node_modules/validate.js/validate.js"),
             "moment-locale-bg": path.resolve(__dirname, "../node_modules/moment/locale/bg"),
             "moment-locale-hr": path.resolve(__dirname, "../node_modules/moment/locale/hr"),
@@ -230,6 +236,7 @@ module.exports = {
             "pat-tabs": path.resolve(__dirname, "../src/pat/tabs/tabs.js"),
             "pat-toggle": path.resolve(__dirname, "../src/pat/toggle/toggle.js"),
             "pat-tooltip": path.resolve(__dirname, "../src/pat/tooltip/tooltip.js"),
+            "pat-tooltip-ng": path.resolve(__dirname, "../src/pat/tooltip-ng/tooltip-ng.js"),
             "pat-validation": path.resolve(__dirname, "../src/pat/validation/validation.js"),
             "pat-zoom": path.resolve(__dirname, "../src/pat/zoom/zoom.js")
         }

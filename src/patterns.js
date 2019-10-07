@@ -65,6 +65,7 @@ define([
     "pat-tabs",
     "pat-toggle",
     "pat-tooltip",
+    "pat-tooltip-ng",
     "pat-url",
     "pat-validation",
     "pat-zoom"
