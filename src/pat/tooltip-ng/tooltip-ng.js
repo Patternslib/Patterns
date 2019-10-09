@@ -436,7 +436,7 @@
         _ajaxDataTypeHandlers: {
             html(text, src) {
                 const $tmp = $('<div/>').append($.parseHTML(text))
-                return $tmp.find(`#${src[1]}`)[0]
+                return $tmp.find("#".concat(src[1])).prop('innerHTML');
             },
 
             markdown(text, src) {
