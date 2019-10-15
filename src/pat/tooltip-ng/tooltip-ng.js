@@ -97,7 +97,7 @@
                     //'duration': [325, 275],
                     'flipOnUpdate': true,
                     'ignoreAttributes': true,
-                    'interactive': false,
+                    'interactive': true,
                     'onHidden': tooltip._onHidden,
                     'onHide': tooltip._onHide,
                     'onMount': tooltip._onMount,
