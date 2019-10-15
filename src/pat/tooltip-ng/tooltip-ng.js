@@ -10,8 +10,7 @@
             'pat-parser',
             'pat-markdown',
             'pat-logger',
-            'tippy.js',
-            'tippy-theme.css',
+            'tippy.js'
         ], function() {
             return factory.apply(this, arguments)
         })
@@ -92,7 +91,7 @@
             return $el.each(function() {
                 this.defaults = {
                     'allowHTML': true,
-                    'animation': 'fade',
+                    'animation': false,
                     'arrow': true,
                     //'delay': [0, 1800],
                     //'duration': [325, 275],
@@ -105,7 +104,6 @@
                     'onShow': tooltip._onShow,
                     'onShown': tooltip._onShown,
                     'onTrigger': tooltip._onTrigger,
-                    'theme': 'light-border',
                     'trigger': 'click'
                 }
 
