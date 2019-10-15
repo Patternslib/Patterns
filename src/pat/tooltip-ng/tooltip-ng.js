@@ -89,7 +89,7 @@
             log.setLevel(debuglevel)
 
             return $el.each(function() {
-                this.defaults = {
+                this.defaultProps = {
                     'allowHTML': true,
                     'animation': false,
                     'arrow': true,
@@ -111,7 +111,7 @@
                 const tippy = tooltip.tippy,
                       $trigger = $(this)
 
-                tippy.setDefaults(this.defaults)
+                tippy.setDefaultProps(this.defaultProps)
                 this.options = parser.parse($trigger, opts)
 
                 /* this.options will now contain the configured pattern properties
