@@ -11,6 +11,7 @@ Features
   A second pattern ``pat-fullscreen-close`` which is triggered on ``close-fullscreen`` CSS class allows for closing the fullscreen with custom buttons.
 - Runs now on jQuery 3.
 - Integrated pat-display-time from https://github.com/ploneintranet/pat-display-time
+- pat-autofocus now also works on textarea
 
 Fixes
 ~~~~~
