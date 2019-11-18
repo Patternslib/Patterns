@@ -63,10 +63,6 @@ define([
             }
 
             importLocale(lang).then(() => {
-                // info about used language for moment
-                console.log('Used language: ' + (lang || 'en'));
-
-
                 var date_str = this.$el.attr("datetime");
 
                 var date = moment(date_str, this.options.format, this.options.strict)
