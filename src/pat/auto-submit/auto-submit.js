@@ -25,7 +25,7 @@ define([
 
     return Base.extend({
         name: "autosubmit",
-        trigger: ".pat-autosubmit",
+        trigger: ".pat-autosubmit, .pat-auto-submit",
         parser: {
             parse: function($el, opts) {
                 var cfg = parser.parse($el, opts);
