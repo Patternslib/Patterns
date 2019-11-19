@@ -41,7 +41,7 @@ define([
         },
 
         onClick: function(ev) {
-            ev.preventDefault();
+            //ev.preventDefault();
             history.pushState({}, null, this.$el.attr('href'));
             this.smoothScroll();
             this.markBasedOnFragment();
@@ -133,10 +133,13 @@ define([
                 // starting from the *target*
                 // The intent is to move target into view within scrollable
                 // if the scrollable has no scrollbar, do not scroll body
-
-                href = this.$el.attr('href');
-                fragment = href.indexOf('#') !== -1 && href.split('#').pop() || undefined;
-                var target = $('#'+fragment);
+                if (this.options.selector) {
+                    fragment = this.options.selector;
+                } else {
+                    href = this.$el.attr('href');
+                    fragment = href.indexOf('#') !== -1 && '#' + href.split('#').pop() || undefined;                    
+                }
+                var target = $(fragment);
                 if (target.length === 0) {
                     return;
                 }
