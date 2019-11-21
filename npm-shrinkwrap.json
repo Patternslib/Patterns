@@ -1,6 +1,6 @@
 {
   "name": "patternslib",
-  "version": "4.0.0dev",
+  "version": "4.0.0-dev",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -9421,9 +9421,9 @@
       }
     },
     "popper.js": {
-      "version": "1.15.0",
-      "resolved": "https://registry.npmjs.org/popper.js/-/popper.js-1.15.0.tgz",
-      "integrity": "sha1-VWC5m7rXZH6fqkdca4BWYh9aT/I="
+      "version": "1.16.0",
+      "resolved": "https://registry.npmjs.org/popper.js/-/popper.js-1.16.0.tgz",
+      "integrity": "sha512-+G+EkOPoE5S/zChTpmBSSDYmhXJ5PsW8eMhH8cP/CQHMFPBG/kC9Y5IIw6qNYgdJ+/COf0ddY2li28iHaZRSjw=="
     },
     "posix-character-classes": {
       "version": "0.1.1",
@@ -11963,11 +11963,11 @@
       }
     },
     "tippy.js": {
-      "version": "5.0.3",
-      "resolved": "https://registry.npmjs.org/tippy.js/-/tippy.js-5.0.3.tgz",
-      "integrity": "sha512-6OVy2/pWuzcphHdEAK/2GPOOsT75AY9D7Xhk9U6WHB/dT737avXtgW1K6ch8jrp81PxbXxHgdmeHRPBnqunwpQ==",
+      "version": "5.1.1",
+      "resolved": "https://registry.npmjs.org/tippy.js/-/tippy.js-5.1.1.tgz",
+      "integrity": "sha512-ZrATAG/GX//w4aAWNyDeBTiNuDqwAqU5dnrkBxBcxdVQ+ywUs1CZOaQV/IT+8R9O3dqcPm7cZpUI9/iZ/OaU9Q==",
       "requires": {
-        "popper.js": "^1.15.0"
+        "popper.js": "^1.16.0"
       }
     },
     "title-case": {
