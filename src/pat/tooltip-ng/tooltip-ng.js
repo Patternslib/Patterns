@@ -100,6 +100,7 @@
                     'flipOnUpdate': true,
                     'ignoreAttributes': true,
                     'interactive': true,
+                    'appendTo': function appendTo() {return document.body},
                     'onHidden': tooltip._onHidden,
                     'onHide': tooltip._onHide,
                     'onMount': tooltip._onMount,
@@ -253,7 +254,7 @@
                             opts.distance = [parseInt(opts.distance), 20];
                         }
                     },
-                    
+
                     markInactive() {
                         if (opts.markInactive) {
                             $trigger.addClass('inactive')
@@ -278,7 +279,7 @@
                             } else if (opts.target !== 'body') {
                                 opts.appendTo = $(opts.target)[0]
                             }
-                            delete opts.target
+                            delete opts.target;
                         }
                     }
                 }
