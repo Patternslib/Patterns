@@ -65,6 +65,7 @@
     parser.addArgument('source', 'title', ['auto', 'ajax', 'content', 'content-html', 'title'])
     parser.addArgument('ajax-data-type', 'html', ['html', 'markdown'])
     parser.addArgument('delay')
+    parser.addArgument('distance')
     parser.addArgument('mark-inactive', true)
     parser.addArgument('class')
     parser.addArgument('target', 'body')
@@ -95,6 +96,7 @@
                     'arrow': true,
                     //'delay': [0, 1800],
                     //'duration': [325, 275],
+                    'distance': 20,
                     'flipOnUpdate': true,
                     'ignoreAttributes': true,
                     'interactive': true,
@@ -246,6 +248,12 @@
                         }
                     },
 
+                    distance() {
+                        if (opts.hasOwnProperty('distance')) {
+                            opts.distance = [parseInt(opts.distance), 20];
+                        }
+                    },
+                    
                     markInactive() {
                         if (opts.markInactive) {
                             $trigger.addClass('inactive')
