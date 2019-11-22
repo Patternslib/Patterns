@@ -426,6 +426,7 @@
                     instance.setContent(handler(text, src))
                 }).finally(() => {
                     tooltip._onAjaxContentSet(instance)
+                    registry.scan(instance.popper)
                 })
             })
         },
