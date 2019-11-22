@@ -98,6 +98,7 @@
                     //'duration': [325, 275],
                     'distance': 20,
                     'flipOnUpdate': true,
+                    'hideOnClick': 'toggle',
                     'ignoreAttributes': true,
                     'interactive': true,
                     'appendTo': function appendTo() {return document.body},
