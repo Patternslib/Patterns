@@ -23,7 +23,7 @@ define([
             var $visible = $all.filter(function(index) {
                 if ($(this).is(":visible")) return true;
             })
-            setTimeout(function() {$visible.get(0).focus()}, 10);
+            setTimeout(function() {$visible.get(0) && $visible.get(0).focus();}, 10);
         }
 
     };
