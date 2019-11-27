@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- Add ``utils.getCSSValue`` for retrieving CSS property values for DOM nodes.
 - Add configurable scrolling behavior to pat-inject.
 - Add ``webpack-visualizer-plugin`` for analyzation of generated bundles.
 - Add ``pat-fullscreen`` pattern to allow any element to be displayed in fullscreen-mode.
@@ -13,6 +14,7 @@ Features
 - Integrated pat-display-time from https://github.com/ploneintranet/pat-display-time
 - Fixed an issue with pat-scroll when placed on an item without a href
 - Fixed an issue with pat-autofocus that would set focus on hidden items
+- Fixed an issue with pat-inject scroll that would scroll too much (#694)
 
 Fixes
 ~~~~~

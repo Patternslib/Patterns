@@ -265,7 +265,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
             setTimeout(function () {
                 expect($slave[0].style.display).toBe("none");
                 expect(Array.prototype.slice.call($slave[0].classList)).toEqual(["hidden"]);
-                
+
             }, 500);
         });
 
@@ -280,7 +280,7 @@ define(["underscore", "pat-utils"], function(_, utils) {
                     "pat-update", {pattern: "depends", transition: "start"});
                 expect($.fn.trigger).toHaveBeenCalledWith(
                     "pat-update", {pattern: "depends", transition: "complete"});
-                
+
             }, 500);
 
         });
@@ -361,6 +361,36 @@ define(["underscore", "pat-utils"], function(_, utils) {
 
         it("treats unknown units as milliseconds", function() {
             expect(utils.parseTime("1000w")).toBe(1000);
+        });
+    });
+
+    describe("getCSSValue", function() {
+        it("returns values for properties of a html node", function() {
+
+            var el1 = document.createElement('div');
+            var el2 = document.createElement('div');
+
+            // Need to attach element to body to make CSS calculation work.
+            document.body.appendChild(el1);
+
+            el1.style['font-size'] = '12px';
+            el1.style['margin-top'] = '26px';
+            el1.style.position = 'relative';
+
+            el2.style['margin-bottom'] = '10px';
+
+            el1.appendChild(el2);
+
+            expect(utils.getCSSValue(el1, 'font-size')).toBe('12px');
+            expect(utils.getCSSValue(el1, 'font-size', true)).toBe(12.0);
+            expect(utils.getCSSValue(el2, 'font-size')).toBe('12px');
+
+            expect(utils.getCSSValue(el1, 'position')).toBe('relative');
+
+            expect(utils.getCSSValue(el1, 'margin-top', true)).toBe(26.0);
+            expect(utils.getCSSValue(el2, 'margin-top', true)).toBe(0.0);
+            expect(utils.getCSSValue(el2, 'margin-bottom', true)).toBe(10.0);
+
         });
     });
 });

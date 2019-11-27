@@ -459,6 +459,17 @@ define([
         return $relatives;
     }
 
+    function getCSSValue(el, property, asFloat) {
+        /* Return a CSS property value for a given DOM node.
+         * Optionally parse as float.
+        */
+        var value = window.getComputedStyle(el).getPropertyValue(property);
+        if (asFloat) {
+            value = parseFloat(value) || 0.0;
+        }
+        return value;
+    }
+
     var utils = {
         // pattern pimping - own module?
         jqueryPlugin: jqueryPlugin,
@@ -477,8 +488,8 @@ define([
         isElementInViewport: isElementInViewport,
         hasValue: hasValue,
         parseTime: parseTime,
-        findRelatives: findRelatives
-
+        findRelatives: findRelatives,
+        getCSSValue: getCSSValue
     };
     return utils;
 });
