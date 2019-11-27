@@ -489,14 +489,60 @@ define([
 
 
             if (cfg.scroll && cfg.scroll !== 'none') {
-                if (cfg.scroll === 'top') {
-                    var scroll_container = $(cfg.target).parents().addBack().filter(':scrollable');
-                    scroll_container = scroll_container.length ? scroll_container : $(window);
-                    scroll_container[0].scrollTo(0, 0);
-                } else if (cfg.scroll === 'target') {
-                    $(cfg.target)[0].scrollIntoView();
+                var scroll_container = cfg.$target.parents().addBack().filter(':scrollable');
+                scroll_container = scroll_container.length ? scroll_container[0] : window;
+
+                // default for scroll===top
+                var top = 0;
+                var left = 0;
+
+                if (cfg.scroll !== 'top') {
+                    var scroll_target;
+                    if (cfg.scroll === 'target') {
+                        scroll_target = cfg.$target[0];
+                    } else {
+                        scroll_target = $injected.filter(cfg.scroll)[0];
+                    }
+
+                    // Get the reference element to which against we calculate
+                    // the relative position of the target.
+                    // In case of a scroll container of window, we do not have
+                    // getBoundingClientRect method, so get the body instead.
+                    var scroll_container_ref = scroll_container;
+                    if (scroll_container_ref === window) {
+                        scroll_container_ref = document.body;
+                    }
+
+                    // Calculate absolute [¹] position difference between
+                    // scroll_container and scroll_target.
+                    // Substract the container's border from the scrolling
+                    // value, as this one isn't respected by
+                    // getBoundingClientRect [²] and would lead to covered
+                    // items [³].
+                    // ¹) so that it doesn't make a difference, if the element
+                    // is below or above the scrolling container. We just need
+                    // to know the absolute difference.
+                    // ²) Calculations are based from the viewport.
+                    // ³) See:
+                    //      https://docs.microsoft.com/en-us/previous-versions//hh781509(v=vs.85)
+                    //      https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+                    left = Math.abs(
+                        scroll_target.getBoundingClientRect().left
+                        - scroll_container_ref.getBoundingClientRect().left
+                        - utils.getCSSValue(scroll_container, 'border-left', true)
+                    );
+                    top = Math.abs(
+                        scroll_target.getBoundingClientRect().top
+                        - scroll_container_ref.getBoundingClientRect().top
+                        - utils.getCSSValue(scroll_container, 'border-top', true)
+                    );
+
+                }
+                if (scroll_container === window) {
+                    scroll_container.scrollTo(left, top);
                 } else {
-                    $(cfg.scroll)[0].scrollIntoView();
+                    scroll_container.scrollLeft = left;
+                    scroll_container.scrollTop = top;
                 }
             }
 

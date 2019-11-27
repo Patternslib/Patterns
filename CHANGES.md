@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- Add ``utils.getCSSValue`` for retrieving CSS property values for DOM nodes.
 - Add configurable scrolling behavior to pat-inject.
 - Add ``webpack-visualizer-plugin`` for analyzation of generated bundles.
 - Add ``pat-fullscreen`` pattern to allow any element to be displayed in fullscreen-mode.
