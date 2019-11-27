@@ -14,6 +14,7 @@ Features
 - Integrated pat-display-time from https://github.com/ploneintranet/pat-display-time
 - Fixed an issue with pat-scroll when placed on an item without a href
 - Fixed an issue with pat-autofocus that would set focus on hidden items
+- Fixed an issue with pat-inject scroll that would scroll too much (#694)
 
 Fixes
 ~~~~~
