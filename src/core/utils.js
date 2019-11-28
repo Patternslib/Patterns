@@ -459,12 +459,13 @@ define([
         return $relatives;
     }
 
-    function getCSSValue(el, property, asFloat) {
+    function getCSSValue(el, property, asPixels) {
         /* Return a CSS property value for a given DOM node.
-         * Optionally parse as float.
+         * For length-values, relative values are converted to pixels.
+         * Optionally parse as pixels, if applicable.
         */
         var value = window.getComputedStyle(el).getPropertyValue(property);
-        if (asFloat) {
+        if (asPixels) {
             value = parseFloat(value) || 0.0;
         }
         return value;

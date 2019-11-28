@@ -365,31 +365,40 @@ define(["underscore", "pat-utils"], function(_, utils) {
     });
 
     describe("getCSSValue", function() {
-        it("returns values for properties of a html node", function() {
+        it("Return values for CSS properties of a HTML node", function() {
 
             var el1 = document.createElement('div');
             var el2 = document.createElement('div');
+            el1.appendChild(el2);
 
             // Need to attach element to body to make CSS calculation work.
             document.body.appendChild(el1);
 
             el1.style['font-size'] = '12px';
-            el1.style['margin-top'] = '26px';
+            el1.style['margin-top'] = '1em';
+            el1.style.border = '1em solid black';
             el1.style.position = 'relative';
-
-            el2.style['margin-bottom'] = '10px';
-
-            el1.appendChild(el2);
+            el2.style['margin-bottom'] = '2em';
 
             expect(utils.getCSSValue(el1, 'font-size')).toBe('12px');
             expect(utils.getCSSValue(el1, 'font-size', true)).toBe(12.0);
             expect(utils.getCSSValue(el2, 'font-size')).toBe('12px');
 
+            // ``em`` are parsed to pixel values.
+            // shorthand property sets like ``border`` are split up into their
+            // individual properties, like ``border-top-width``.
+            expect(utils.getCSSValue(el1, 'border-top-width')).toBe('12px');
+            expect(utils.getCSSValue(el1, 'border-top-style')).toBe('solid');
+            expect(utils.getCSSValue(el1, 'border-top-color')).toBe('rgb(0, 0, 0)');
+
             expect(utils.getCSSValue(el1, 'position')).toBe('relative');
 
-            expect(utils.getCSSValue(el1, 'margin-top', true)).toBe(26.0);
+            // again, relative length-type values are converted to absolute pixels.
+            expect(utils.getCSSValue(el1, 'margin-top')).toBe('12px');
+            expect(utils.getCSSValue(el1, 'margin-top', true)).toBe(12.0);
             expect(utils.getCSSValue(el2, 'margin-top', true)).toBe(0.0);
-            expect(utils.getCSSValue(el2, 'margin-bottom', true)).toBe(10.0);
+            expect(utils.getCSSValue(el2, 'margin-bottom')).toBe('24px');
+            expect(utils.getCSSValue(el2, 'margin-bottom', true)).toBe(24.0);
 
         });
     });
