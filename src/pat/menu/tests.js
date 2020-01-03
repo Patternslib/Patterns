@@ -10,7 +10,7 @@ define(["pat-menu"], function(Pattern) {
             $("#lab").remove();
         });
 
- 
+
         describe("init tests", function() {
             it("adds class closed on init", function() {
                 var $lab = $("#lab");
@@ -24,13 +24,10 @@ define(["pat-menu"], function(Pattern) {
                 var $list = $("ul.pat-menu");
 
                 Pattern.init($list);
-                
+
                 expect($($list).children().not(".closed").length).toBe(0);
             });
         });
     });
 
 });
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
