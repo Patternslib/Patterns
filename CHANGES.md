@@ -15,6 +15,7 @@ Features
 - Fixed an issue with pat-scroll when placed on an item without a href
 - Fixed an issue with pat-autofocus that would set focus on hidden items
 - Fixed an issue with pat-inject scroll that would scroll too much (#694)
+- Fixed an issue with pat-markdown where rendering was not like expected when source has prepending whitespace (#697)
 
 Fixes
 ~~~~~

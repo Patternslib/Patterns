@@ -54,6 +54,13 @@ define(["pat-markdown"], function(Pattern) {
                 var $rendering = Pattern.prototype.render("*This is markdown*");
                 expect($rendering.html()).toBe("<p><em>This is markdown</em></p>");
             });
+
+            it("removes whitespace from start and end of text", function() {
+                // If text is not removed, the rendering breaks and ouputs this instead:
+                // '<pre class="pat-syntax-highlight" tabindex="0"><code data-inner="1"> *This is markdown*     </code></pre>'
+                var $rendering = Pattern.prototype.render("     *This is markdown*     ");
+                expect($rendering.html()).toBe("<p><em>This is markdown</em></p>");
+            });
         });
 
         describe("Session extraction", function() {
