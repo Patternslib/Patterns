@@ -101,7 +101,6 @@
                     'hideOnClick': true,
                     'ignoreAttributes': true,
                     'interactive': true,
-                    'appendTo': function appendTo() {return document.body},
                     'onHidden': tooltip._onHidden,
                     'onHide': tooltip._onHide,
                     'onMount': tooltip._onMount,
@@ -133,7 +132,9 @@
                 tooltip.setupShowEvents($trigger)
             })
         },
-
+        _returnBody: function _returnBody(args) {
+            return document.body;
+        },
         parseOptionsForTippy(opts, $trigger) {
             const notImplemented = (name) => { log.error(`${name} not implemented`) },
 
@@ -279,7 +280,10 @@
                                 opts.appendTo = 'parent'
                             } else if (opts.target !== 'body') {
                                 opts.appendTo = $(opts.target)[0]
+                            } else {
+                                opts.appendTo = tooltip._returnBody;
                             }
+
                             delete opts.target;
                         }
                     }
