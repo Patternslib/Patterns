@@ -140,10 +140,10 @@
 
                 placement = (pos) => {
                     const primary = (pos) => ({
-                            t: 'bottom',
-                            r: 'left',
-                            b: 'top',
-                            l: 'right',
+                            t: 'top',
+                            r: 'right',
+                            b: 'bottom',
+                            l: 'left',
                         }[pos])
 
                     const secondary = (pos) => ({
