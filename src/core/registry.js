@@ -16,27 +16,32 @@
  * - no turnstile anymore
  * - set pattern.jquery_plugin if you want it
  */
-define([
-    "jquery",
-    "underscore",
-    "pat-logger",
-    "pat-utils",
-    // below here modules that are only loaded
-    "pat-compat",
-    "pat-jquery-ext"
-], function($, _, logger, utils) {
+import $ from "jquery";
+import _ from "underscore";
+import logger from "./logger";
+import utils from "./utils";
+
+
+// below here modules that are only loaded
+// "pat-compat",
+// "pat-jquery-ext";
+import "./compat"
+import "./jquery-ext"
+
+export default (function($, _, logger, utils) {
     var log = logger.getLogger("registry"),
         disable_re = /patterns-disable=([^&]+)/g,
         dont_catch_re = /patterns-dont-catch/g,
         dont_catch = false,
-        disabled = {}, match;
+        disabled = {},
+        match;
 
-    while ((match=disable_re.exec(window.location.search)) !== null) {
+    while ((match = disable_re.exec(window.location.search)) !== null) {
         disabled[match[1]] = true;
         log.info("Pattern disabled via url config:", match[1]);
     }
 
-    while ((match=dont_catch_re.exec(window.location.search)) !== null) {
+    while ((match = dont_catch_re.exec(window.location.search)) !== null) {
         dont_catch = true;
         log.info("I will not catch init exceptions");
     }
@@ -50,7 +55,12 @@ define([
         initialized: false,
         init: function registry_init() {
             $(document).ready(function() {
-                log.info("loaded: " + Object.keys(registry.patterns).sort().join(", "));
+                log.info(
+                    "loaded: " +
+                        Object.keys(registry.patterns)
+                            .sort()
+                            .join(", ")
+                );
                 registry.scan(document.body);
                 registry.initialized = true;
                 log.info("finished initial scan.");
@@ -76,7 +86,9 @@ define([
                 try {
                     pattern.transform($(content));
                 } catch (e) {
-                    if (dont_catch) { throw(e); }
+                    if (dont_catch) {
+                        throw e;
+                    }
                     log.error("Transform error for pattern" + name, e);
                 }
             }
@@ -96,20 +108,25 @@ define([
                         pattern.init($el, null, trigger);
                         plog.debug("done.");
                     } catch (e) {
-                        if (dont_catch) { throw(e); }
+                        if (dont_catch) {
+                            throw e;
+                        }
                         plog.error("Caught error:", e);
                     }
                 }
             }
         },
 
-        orderPatterns: function (patterns) {
+        orderPatterns: function(patterns) {
             // XXX: Bit of a hack. We need the validation pattern to be
             // parsed and initiated before the inject pattern. So we make
             // sure here, that it appears first. Not sure what would be
             // the best solution. Perhaps some kind of way to register
             // patterns "before" or "after" other patterns.
-            if (_.contains(patterns, "validation") && _.contains(patterns, "inject")) {
+            if (
+                _.contains(patterns, "validation") &&
+                _.contains(patterns, "inject")
+            ) {
                 patterns.splice(patterns.indexOf("validation"), 1);
                 patterns.unshift("validation");
             }
@@ -117,23 +134,33 @@ define([
         },
 
         scan: function registryScan(content, patterns, trigger) {
-            var selectors = [], $match;
-            patterns = this.orderPatterns(patterns || Object.keys(registry.patterns));
+            var selectors = [],
+                $match;
+            patterns = this.orderPatterns(
+                patterns || Object.keys(registry.patterns)
+            );
             patterns.forEach(_.partial(this.transformPattern, _, content));
-            patterns = _.each(patterns, function (name) {
+            patterns = _.each(patterns, function(name) {
                 var pattern = registry.patterns[name];
                 if (pattern.trigger) {
                     selectors.unshift(pattern.trigger);
                 }
             });
             $match = $(content).findInclusive(selectors.join(",")); // Find all DOM elements belonging to a pattern
-            $match = $match.filter(function() { return $(this).parents("pre").length === 0; });
+            $match = $match.filter(function() {
+                return $(this).parents("pre").length === 0;
+            });
             $match = $match.filter(":not(.cant-touch-this)");
 
             // walk list backwards and initialize patterns inside-out.
-            $match.toArray().reduceRight(function registryInitPattern(acc, el) {
-                patterns.forEach(_.partial(this.initPattern, _, el, trigger));
-            }.bind(this), null);
+            $match.toArray().reduceRight(
+                function registryInitPattern(acc, el) {
+                    patterns.forEach(
+                        _.partial(this.initPattern, _, el, trigger)
+                    );
+                }.bind(this),
+                null
+            );
             $("body").addClass("patterns-loaded");
         },
 
@@ -154,13 +181,16 @@ define([
 
             // register pattern as jquery plugin
             if (pattern.jquery_plugin) {
-                plugin_name = ("pat-" + name)
-                        .replace(/-([a-zA-Z])/g, function(match, p1) {
-                            return p1.toUpperCase();
-                        });
+                plugin_name = ("pat-" + name).replace(/-([a-zA-Z])/g, function(
+                    match,
+                    p1
+                ) {
+                    return p1.toUpperCase();
+                });
                 $.fn[plugin_name] = utils.jqueryPlugin(pattern);
                 // BBB 2012-12-10 and also for Mockup patterns.
-                $.fn[plugin_name.replace(/^pat/, "pattern")] = $.fn[plugin_name];
+                $.fn[plugin_name.replace(/^pat/, "pattern")] =
+                    $.fn[plugin_name];
             }
             log.debug("Registered pattern:", name, pattern);
             if (registry.initialized) {
@@ -170,6 +200,6 @@ define([
         }
     };
     return registry;
-});
+})($, _, logger, utils);
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
