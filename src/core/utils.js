@@ -1,18 +1,16 @@
-define([
-    "jquery",
-    "underscore",
-    "jquery.browser"
-], function($, _, browser) {
+import $ from "jquery";
+import _ from "underscore";
 
-    $.fn.safeClone = function () {
+export default (function($, _, browser) {
+    $.fn.safeClone = function() {
         var $clone = this.clone();
         // IE BUG : Placeholder text becomes actual value after deep clone on textarea
         // https://connect.microsoft.com/IE/feedback/details/781612/placeholder-text-becomes-actual-value-after-deep-clone-on-textarea
         if (browser.msie !== undefined && true) {
-            $clone.findInclusive(':input[placeholder]').each(function(i, item) {
+            $clone.findInclusive(":input[placeholder]").each(function(i, item) {
                 var $item = $(item);
-                if ($item.attr('placeholder') === $item.val()) {
-                    $item.val('');
+                if ($item.attr("placeholder") === $item.val()) {
+                    $item.val("");
                 }
             });
         }
@@ -25,7 +23,7 @@ define([
         Array.prototype.forEach = function(callback, thisArg) {
             var T, k;
             if (this === null) {
-                throw new TypeError(' this is null or not defined');
+                throw new TypeError(" this is null or not defined");
             }
             // 1. Let O be the result of calling ToObject passing the |this| value as the argument.
             var O = Object(this);
@@ -35,7 +33,7 @@ define([
             // 4. If IsCallable(callback) is false, throw a TypeError exception.
             // See: http://es5.github.com/#x9.11
             if (typeof callback !== "function") {
-                throw new TypeError(callback + ' is not a function');
+                throw new TypeError(callback + " is not a function");
             }
             // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
             if (arguments.length > 1) {
@@ -65,7 +63,7 @@ define([
         };
     }
 
-    var singleBoundJQueryPlugin = function (pattern, method, options) {
+    var singleBoundJQueryPlugin = function(pattern, method, options) {
         /* This is a jQuery plugin for patterns which are invoked ONCE FOR EACH
          * matched element in the DOM.
          *
@@ -75,17 +73,26 @@ define([
          */
         var $this = this;
         $this.each(function() {
-            var pat, $el = $(this);
+            var pat,
+                $el = $(this);
             pat = pattern.init($el, options);
             if (method) {
                 if (pat[method] === undefined) {
-                    $.error("Method " + method +
-                            " does not exist on jQuery." + pattern.name);
+                    $.error(
+                        "Method " +
+                            method +
+                            " does not exist on jQuery." +
+                            pattern.name
+                    );
                     return false;
                 }
-                if (method.charAt(0) === '_') {
-                    $.error("Method " + method +
-                            " is private on jQuery." + pattern.name);
+                if (method.charAt(0) === "_") {
+                    $.error(
+                        "Method " +
+                            method +
+                            " is private on jQuery." +
+                            pattern.name
+                    );
                     return false;
                 }
                 pat[method].apply(pat, [options]);
@@ -94,7 +101,7 @@ define([
         return $this;
     };
 
-    var pluralBoundJQueryPlugin = function (pattern, method, options) {
+    var pluralBoundJQueryPlugin = function(pattern, method, options) {
         /* This is a jQuery plugin for patterns which are invoked ONCE FOR ALL
          * matched elements in the DOM.
          *
@@ -108,8 +115,12 @@ define([
             if (pattern[method]) {
                 return pattern[method].apply($this, [$this].concat([options]));
             } else {
-                $.error("Method " + method +
-                        " does not exist on jQuery." + pattern.name);
+                $.error(
+                    "Method " +
+                        method +
+                        " does not exist on jQuery." +
+                        pattern.name
+                );
             }
         } else {
             pattern.init.apply($this, [$this].concat([options]));
@@ -123,14 +134,24 @@ define([
             if ($this.length === 0) {
                 return $this;
             }
-            if (typeof method === 'object') {
+            if (typeof method === "object") {
                 options = method;
                 method = undefined;
             }
             if (typeof pattern === "function") {
-                return singleBoundJQueryPlugin.call(this, pattern, method, options);
+                return singleBoundJQueryPlugin.call(
+                    this,
+                    pattern,
+                    method,
+                    options
+                );
             } else {
-                return pluralBoundJQueryPlugin.call(this, pattern, method, options);
+                return pluralBoundJQueryPlugin.call(
+                    this,
+                    pattern,
+                    method,
+                    options
+                );
             }
         };
     };
@@ -149,7 +170,8 @@ define([
     function debounce(func, wait) {
         var timeout;
         return function debounce_run() {
-            var context = this, args = arguments;
+            var context = this,
+                args = arguments;
             var later = function() {
                 timeout = null;
                 func.apply(context, args);
@@ -162,7 +184,7 @@ define([
     // Is a given variable an object?
     function isObject(obj) {
         var type = typeof obj;
-        return type === 'function' || type === 'object' && !!obj;
+        return type === "function" || (type === "object" && !!obj);
     }
 
     // Extend a given object with all the properties in passed-in object(s).
@@ -182,23 +204,31 @@ define([
     // END: Taken from Underscore.js until here.
 
     function rebaseURL(base, url) {
-        if (url.indexOf("://")!==-1 || url[0]==="/" || url.indexOf("data:")===0)
+        if (
+            url.indexOf("://") !== -1 ||
+            url[0] === "/" ||
+            url.indexOf("data:") === 0
+        )
             return url;
-        return base.slice(0, base.lastIndexOf("/")+1) + url;
+        return base.slice(0, base.lastIndexOf("/") + 1) + url;
     }
 
     function findLabel(input) {
         var $label;
-        for (var label=input.parentNode; label && label.nodeType!==11; label=label.parentNode) {
-            if (label.tagName==="LABEL") {
+        for (
+            var label = input.parentNode;
+            label && label.nodeType !== 11;
+            label = label.parentNode
+        ) {
+            if (label.tagName === "LABEL") {
                 return label;
             }
         }
         if (input.id) {
-            $label = $("label[for=\""+input.id+"\"]");
+            $label = $('label[for="' + input.id + '"]');
         }
-        if ($label && $label.length===0 && input.form) {
-            $label = $("label[for=\""+input.name+"\"]", input.form);
+        if ($label && $label.length === 0 && input.form) {
+            $label = $('label[for="' + input.name + '"]', input.form);
         }
         if ($label && $label.length) {
             return $label[0];
@@ -209,12 +239,17 @@ define([
 
     // Taken from http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
     function elementInViewport(el) {
-       var rect = el.getBoundingClientRect(),
-           docEl = document.documentElement,
-           vWidth = window.innerWidth || docEl.clientWidth,
-           vHeight = window.innerHeight || docEl.clientHeight;
+        var rect = el.getBoundingClientRect(),
+            docEl = document.documentElement,
+            vWidth = window.innerWidth || docEl.clientWidth,
+            vHeight = window.innerHeight || docEl.clientHeight;
 
-        if (rect.right<0 || rect.bottom<0 || rect.left>vWidth || rect.top>vHeight)
+        if (
+            rect.right < 0 ||
+            rect.bottom < 0 ||
+            rect.left > vWidth ||
+            rect.top > vHeight
+        )
             return false;
         return true;
     }
@@ -225,8 +260,7 @@ define([
     }
 
     function removeWildcardClass($targets, classes) {
-        if (classes.indexOf("*")===-1)
-            $targets.removeClass(classes);
+        if (classes.indexOf("*") === -1) $targets.removeClass(classes);
         else {
             var matcher = classes.replace(/[\-\[\]{}()+?.,\\\^$|#\s]/g, "\\$&");
             matcher = matcher.replace(/[*]/g, ".*");
@@ -234,63 +268,63 @@ define([
             $targets.filter("[class]").each(function() {
                 var $this = $(this),
                     classes = $this.attr("class").split(/\s+/),
-                    ok=[];
-                for (var i=0; i<classes.length; i++)
-                    if (!matcher.test(classes[i]))
-                        ok.push(classes[i]);
-                if (ok.length)
-                    $this.attr("class", ok.join(" "));
-                else
-                    $this.removeAttr("class");
+                    ok = [];
+                for (var i = 0; i < classes.length; i++)
+                    if (!matcher.test(classes[i])) ok.push(classes[i]);
+                if (ok.length) $this.attr("class", ok.join(" "));
+                else $this.removeAttr("class");
             });
         }
     }
 
     function hasValue(el) {
-       if (el.tagName === "INPUT") {
-           if (el.type === "checkbox" || el.type === "radio") {
-               return el.checked;
-           }
-           return el.value !== "";
-       }
-       if (el.tagName === "SELECT") {
-           return el.selectedIndex !== -1;
-       }
-       if (el.tagName === "TEXTAREA") {
-           return el.value !== "";
-       }
-       return false;
-    };
+        if (el.tagName === "INPUT") {
+            if (el.type === "checkbox" || el.type === "radio") {
+                return el.checked;
+            }
+            return el.value !== "";
+        }
+        if (el.tagName === "SELECT") {
+            return el.selectedIndex !== -1;
+        }
+        if (el.tagName === "TEXTAREA") {
+            return el.value !== "";
+        }
+        return false;
+    }
 
     var transitions = {
-        none: {hide: "hide", show: "show"},
-        fade: {hide: "fadeOut", show: "fadeIn"},
-        slide: {hide: "slideUp", show: "slideDown"}
+        none: { hide: "hide", show: "show" },
+        fade: { hide: "fadeOut", show: "fadeIn" },
+        slide: { hide: "slideUp", show: "slideDown" }
     };
 
     function hideOrShow($slave, visible, options, pattern_name) {
-        var duration = (options.transition==="css" || options.transition==="none") ? null : options.effect.duration;
+        var duration =
+            options.transition === "css" || options.transition === "none"
+                ? null
+                : options.effect.duration;
 
         $slave.removeClass("visible hidden in-progress");
         var onComplete = function() {
             $slave
                 .removeClass("in-progress")
                 .addClass(visible ? "visible" : "hidden")
-                .trigger("pat-update",
-                        {pattern: pattern_name,
-                         transition: "complete"});
+                .trigger("pat-update", {
+                    pattern: pattern_name,
+                    transition: "complete"
+                });
         };
         if (!duration) {
-            if (options.transition!=="css")
+            if (options.transition !== "css")
                 $slave[visible ? "show" : "hide"]();
             onComplete();
         } else {
             var t = transitions[options.transition];
-            $slave
-                .addClass("in-progress")
-                .trigger("pat-update",
-                        {pattern: pattern_name,
-                         transition: "start"});
+            $slave.addClass("in-progress").trigger("pat-update", {
+                pattern: pattern_name,
+                transition: "start"
+            });
             $slave[visible ? t.show : t.hide]({
                 duration: duration,
                 easing: options.effect.easing,
@@ -307,8 +341,8 @@ define([
          *
          * Taken from http://stackoverflow.com/questions/7640270/adding-modify-query-string-get-variables-in-a-url-with-javascript
          */
-        var val = new RegExp('(\\?|\\&)' + param + '=.*?(?=(&|$))'),
-            parts = fullURL.toString().split('#'),
+        var val = new RegExp("(\\?|\\&)" + param + "=.*?(?=(&|$))"),
+            parts = fullURL.toString().split("#"),
             url = parts[0],
             hash = parts[1],
             qstring = /\?.+$/,
@@ -317,16 +351,18 @@ define([
         if (val.test(url)) {
             // if it does, replace it, using the captured group
             // to determine & or ? at the beginning
-            newURL = url.replace(val, '$1' + param + '=' + value);
+            newURL = url.replace(val, "$1" + param + "=" + value);
         } else if (qstring.test(url)) {
             // otherwise, if there is a query string at all
             // add the param to the end of it
-            newURL = url + '&' + param + '=' + value;
+            newURL = url + "&" + param + "=" + value;
         } else {
             // if there's no query string, add one
-            newURL = url + '?' + param + '=' + value;
+            newURL = url + "?" + param + "=" + value;
         }
-        if (hash) { newURL += '#' + hash; }
+        if (hash) {
+            newURL += "#" + hash;
+        }
         return newURL;
     }
 
@@ -337,19 +373,25 @@ define([
         var comparator = function(v, k) {
             return this[k] === v;
         };
-        return _.reduce(objs, function(list, next_obj) {
-            var is_duplicate = false;
-            _.each(list, function(obj) {
-                is_duplicate = (
-                    (_.keys(obj).length === _.keys(next_obj).length) &&
-                    (!_.chain(obj).omit(comparator.bind(next_obj)).keys().value().length)
-                );
-            });
-            if (!is_duplicate) {
-                list.push(next_obj);
-            }
-            return list;
-        }, []);
+        return _.reduce(
+            objs,
+            function(list, next_obj) {
+                var is_duplicate = false;
+                _.each(list, function(obj) {
+                    is_duplicate =
+                        _.keys(obj).length === _.keys(next_obj).length &&
+                        !_.chain(obj)
+                            .omit(comparator.bind(next_obj))
+                            .keys()
+                            .value().length;
+                });
+                if (!is_duplicate) {
+                    list.push(next_obj);
+                }
+                return list;
+            },
+            []
+        );
     }
 
     function mergeStack(stack, length) {
@@ -361,13 +403,16 @@ define([
          * index, the last object in that list is merged.
          */
         var results = [];
-        for (var i=0; i<length; i++) {
+        for (var i = 0; i < length; i++) {
             results.push({});
         }
         _.each(stack, function(frame) {
-            var frame_length = frame.length-1;
-            for (var x=0; x<length; x++) {
-                results[x] = $.extend(results[x] || {}, frame[(x>frame_length) ? frame_length : x]);
+            var frame_length = frame.length - 1;
+            for (var x = 0; x < length; x++) {
+                results[x] = $.extend(
+                    results[x] || {},
+                    frame[x > frame_length ? frame_length : x]
+                );
             }
         });
         return results;
@@ -390,7 +435,13 @@ define([
         }
         var rec = el.getBoundingClientRect(),
             rec_values = [rec.top, rec.bottom, rec.left, rec.right];
-        if ( _.every(rec_values, function zero(v) { if ( v === 0 ){ return true;}}) ) {
+        if (
+            _.every(rec_values, function zero(v) {
+                if (v === 0) {
+                    return true;
+                }
+            })
+        ) {
             // if every property of rec is 0, the element is invisible;
             return false;
         } else if (partial) {
@@ -404,9 +455,9 @@ define([
                 offset = 0;
             }
             return (
-                (rec.top <= 0+offset && rec.bottom >= 0+offset)
+                rec.top <= 0 + offset && rec.bottom >= 0 + offset
                 //(rec.top >= 0+offset && rec.top <= window.innerHeight) // this checks if the element
-                                                                       // touches bottom part of viewport
+                // touches bottom part of viewport
                 // XXX do we want to include a check for the padding of an element?
                 // using window.getComputedStyle(target).paddingTop
             );
@@ -415,8 +466,14 @@ define([
             return (
                 rec.top >= 0 &&
                 rec.left >= 0 &&
-                rec.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-                rec.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+                rec.bottom <=
+                    (window.innerHeight ||
+                        document.documentElement
+                            .clientHeight) /*or $(window).height() */ &&
+                rec.right <=
+                    (window.innerWidth ||
+                        document.documentElement
+                            .clientWidth) /*or $(window).width() */
             );
         }
     }
@@ -424,15 +481,15 @@ define([
     function parseTime(time) {
         var m = /^(\d+(?:\.\d+)?)\s*(\w*)/.exec(time);
         if (!m) {
-            throw new Error('Invalid time');
+            throw new Error("Invalid time");
         }
-        var amount = parseFloat(m[1])
+        var amount = parseFloat(m[1]);
         switch (m[2]) {
-            case 's':
+            case "s":
                 return Math.round(amount * 1000);
-            case 'm':
+            case "m":
                 return Math.round(amount * 1000 * 60);
-            case 'ms':
+            case "ms":
             default:
                 return Math.round(amount);
         }
@@ -444,18 +501,16 @@ define([
             $relatives = $(el),
             $label = $();
 
-        $relatives=$relatives.add($el.closest("label"));
-        $relatives=$relatives.add($el.closest("fieldset"));
+        $relatives = $relatives.add($el.closest("label"));
+        $relatives = $relatives.add($el.closest("fieldset"));
 
-        if (el.id)
-            $label=$("label[for='"+el.id+"']");
+        if (el.id) $label = $("label[for='" + el.id + "']");
         if (!$label.length) {
             var $form = $el.closest("form");
-            if (!$form.length)
-                $form=$(document.body);
-            $label=$form.find("label[for='"+el.name+"']");
+            if (!$form.length) $form = $(document.body);
+            $label = $form.find("label[for='" + el.name + "']");
         }
-        $relatives=$relatives.add($label);
+        $relatives = $relatives.add($label);
         return $relatives;
     }
 
@@ -493,4 +548,4 @@ define([
         getCSSValue: getCSSValue
     };
     return utils;
-});
+})($, _, $.browser);
