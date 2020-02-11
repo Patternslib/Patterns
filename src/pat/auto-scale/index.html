@@ -1,67 +1,89 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Auto scale</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script
+      src="/bundle-vendors.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
 
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Auto scale</title>
-  <link rel="stylesheet" href="/style/common.css" type="text/css">
-  <script src="/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
-  <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
+  <body>
+    <article class="pat-rich" style="display: block; min-height: 20em;">
+      <p>
+        A random HTML elemement:
+      </p>
+      <p>
+        <button class="pat-button">👉 BUTTON 👈</button>
+      </p>
+      <p>
+        The same HTML elemement, now scaled up to match the width it parent
+        element by pat-auto-scale:
+      </p>
+      <p>
+        <button class="pat-button pat-auto-scale">👉 BUTTON 👈</button>
+      </p>
 
-<body>
-  <article class="pat-rich" style="display: block; min-height: 20em;">
-    <p>
-      A random HTML elemement:
-    </p>
-    <p>
-      <button class="pat-button">👉 BUTTON 👈</button>
-    </p>
-    <p>
-      The same HTML elemement, now scaled up to match the width it parent element by pat-auto-scale:
-    </p>
-    <p>
-      <button class="pat-button pat-auto-scale">👉 BUTTON 👈</button>
-    </p>
+      <p>
+        The scaling mechanism takes paddings into account:
+      </p>
+      <p
+        style="border: 4px solid skyblue; width: 350px; height: 100px; padding: 20px"
+      >
+        <button class="pat-button pat-auto-scale">👉 BUTTON 👈</button>
+      </p>
 
-    <p>
-      The scaling mechanism takes paddings into account:
-    </p>
-    <p style="border: 4px solid skyblue; width: 350px; height: 100px; padding: 20px">
-      <button class="pat-button pat-auto-scale">👉 BUTTON 👈</button>
-    </p>
+      <p>
+        Another elemement, scaled up to fill the parent element. This is done
+        with the property: `size: contain`.
+      </p>
+      <p style="border: 4px solid skyblue; width: 350px; height: 100px;">
+        <button
+          class="pat-button pat-auto-scale"
+          data-pat-auto-scale="size: contain"
+        >
+          👌
+        </button>
+      </p>
 
-    <p>
-      Another elemement, scaled up to fill the parent element. This is done with the property: `size: contain`.
-    </p>
-    <p style="border: 4px solid skyblue; width: 350px; height: 100px;">
-      <button class="pat-button pat-auto-scale" data-pat-auto-scale="size: contain">👌</button>
-    </p>
+      <p>
+        The same elemement, now scaled up to fill the parent completely. The
+        styling property `overflow: hidden` is used on the parent element to
+        prevent bleeding. This is done with the property: `size: cover`.
+      </p>
+      <p
+        style="border: 4px solid skyblue; width: 350px; height: 350px; overflow: hidden;"
+      >
+        <button
+          class="pat-button pat-auto-scale"
+          data-pat-auto-scale="size: cover"
+        >
+          👌
+        </button>
+      </p>
 
-    <p>
-      The same elemement, now scaled up to fill the parent completely. The styling property `overflow: hidden` is used on the parent element to prevent bleeding. This is done with the property: `size: cover`.
-    </p>
-    <p style="border: 4px solid skyblue; width: 350px; height: 350px; overflow: hidden;">
-      <button class="pat-button pat-auto-scale" data-pat-auto-scale="size: cover">👌</button>
-    </p>
+      <p>
+        Autoscale and fullscreen:
+      </p>
+      <p class="fullscreen-element">
+        <button class="pat-button pat-auto-scale">👉 BUTTON 👈</button>
+      </p>
+      <button
+        class="pat-fullscreen"
+        data-pat-fullscreen="selector:.fullscreen-element"
+      >
+        open in fullscreen
+      </button>
 
-
-    <p>
-      Autoscale and fullscreen:
-    </p>
-    <p class="fullscreen-element">
-      <button class="pat-button pat-auto-scale">👉 BUTTON 👈</button>
-    </p>
-    <button class="pat-fullscreen" data-pat-fullscreen="selector:.fullscreen-element">open in fullscreen</button>
-
-
-    <style type="text/css">
-      .pat-button {
-        float: left;
-      }
-    </style>
-
-  </article>
-</body>
-
+      <style type="text/css">
+        .pat-button {
+          float: left;
+        }
+      </style>
+    </article>
+  </body>
 </html>

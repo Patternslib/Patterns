@@ -1,7 +1,4 @@
-define([
-    "jquery",
-    "pat-registry"
-], function($, registry) {
+define(["jquery", "pat-registry"], function($, registry) {
     var legend = {
         name: "legend",
         trigger: "legend",
@@ -22,9 +19,13 @@ define([
         },
 
         transform: function($root) {
-            $root.findInclusive("legend:not(.cant-touch-this)").each(function() {
-                $(this).replaceWith("<p class='legend'>"+$(this).html()+"</p>");
-            });
+            $root
+                .findInclusive("legend:not(.cant-touch-this)")
+                .each(function() {
+                    $(this).replaceWith(
+                        "<p class='legend'>" + $(this).html() + "</p>"
+                    );
+                });
         }
     };
     registry.register(legend);

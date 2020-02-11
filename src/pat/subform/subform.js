@@ -21,7 +21,10 @@ define([
             return $el.each(function() {
                 var $el = $(this);
                 $el.submit(_.submit);
-                $el.find('input').on('keyup keypress keydown', _.keyboard_handler);
+                $el.find("input").on(
+                    "keyup keypress keydown",
+                    _.keyboard_handler
+                );
                 $el.find("button[type=submit]").on("click", _.submitClicked);
                 return $el;
             });
@@ -33,11 +36,9 @@ define([
 
         scopedSubmit: function($el) {
             var $form = $el.parents("form"),
-                $exclude = $form
-                            .find(":input")
-                            .filter(function() {
-                                return !$(this).is($el.find("*"));
-                            });
+                $exclude = $form.find(":input").filter(function() {
+                    return !$(this).is($el.find("*"));
+                });
             // make other controls "unsuccessful"
             log.debug("Hiding unwanted elements from submission.");
             var names = $exclude.map(function() {
@@ -75,14 +76,14 @@ define([
             }
         },
 
-        keyboard_handler: function (ev) {
+        keyboard_handler: function(ev) {
             // If the user presses the enter key and
             // we have an autosubmit form trigger the subform submission
             if (ev.keyCode != 13) {
                 return;
             }
-            var $subform = $(this).parents('.pat-subform');
-            if (!$subform.is('.pat-autosubmit')) {
+            var $subform = $(this).parents(".pat-subform");
+            if (!$subform.is(".pat-autosubmit")) {
                 return;
             }
             return $subform.submit();
@@ -101,11 +102,18 @@ define([
                 // override the default action and restore afterwards
                 if ($sub.is(".pat-inject")) {
                     var previousValue = $sub.data("pat-inject");
-                    $sub.data("pat-inject", inject.extractConfig($sub, {url: formaction}));
+                    $sub.data(
+                        "pat-inject",
+                        inject.extractConfig($sub, { url: formaction })
+                    );
                     _.scopedSubmit($sub);
                     $sub.data("pat-inject", previousValue);
                 } else if ($sub.is(".pat-modal")) {
-                    $sub.data("pat-inject", [$.extend($sub.data("pat-inject")[0], {url: formaction})]);
+                    $sub.data("pat-inject", [
+                        $.extend($sub.data("pat-inject")[0], {
+                            url: formaction
+                        })
+                    ]);
                     _.scopedSubmit($sub);
                 } else {
                     $sub.parents("form").attr("action", formaction);

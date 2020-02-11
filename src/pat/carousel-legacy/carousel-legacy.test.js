@@ -1,9 +1,7 @@
 define(["pat-carousel-legacy"], function(pattern) {
-
     describe("carousel-legacy-plugin", function() {
-
         beforeEach(function() {
-            $("<div/>", {id: "lab"}).appendTo(document.body);
+            $("<div/>", { id: "lab" }).appendTo(document.body);
         });
 
         afterEach(function() {
@@ -14,11 +12,15 @@ define(["pat-carousel-legacy"], function(pattern) {
             it("Default options", function() {
                 $("#lab").html(
                     "<ul class='pat-carousel-legacy'>" +
-                    "  <li>Panel 1</li>" +
-                    "  <li>Panel 2</li>" +
-                    "</ul>");
+                        "  <li>Panel 1</li>" +
+                        "  <li>Panel 2</li>" +
+                        "</ul>"
+                );
                 var $carousel = $("#lab ul");
-                var spy_slider = spyOn($.fn, "anythingSlider").and.callThrough();
+                var spy_slider = spyOn(
+                    $.fn,
+                    "anythingSlider"
+                ).and.callThrough();
                 pattern.init($carousel);
                 expect(spy_slider).toHaveBeenCalled();
                 var options = $.fn.anythingSlider.calls.argsFor(0)[0];
@@ -33,9 +35,10 @@ define(["pat-carousel-legacy"], function(pattern) {
             it("Default options (DOM test)", function() {
                 $("#lab").html(
                     "<ul class='pat-carousel-legacy'>" +
-                    "  <li>Panel 1</li>" +
-                    "  <li>Panel 2</li>" +
-                    "</ul>");
+                        "  <li>Panel 1</li>" +
+                        "  <li>Panel 2</li>" +
+                        "</ul>"
+                );
                 var $carousel = $("#lab ul");
                 pattern.init($carousel);
                 // No arrows created
@@ -49,11 +52,15 @@ define(["pat-carousel-legacy"], function(pattern) {
             it("Tweak options via DOM", function() {
                 $("#lab").html(
                     "<ul class='pat-carousel-legacy' data-pat-carousel-legacy='auto-play: false; loop: false; time-delay: 50'>" +
-                    "  <li>Panel 1</li>" +
-                    "  <li>Panel 2</li>" +
-                    "</ul>");
+                        "  <li>Panel 1</li>" +
+                        "  <li>Panel 2</li>" +
+                        "</ul>"
+                );
                 var $carousel = $("#lab ul");
-                var spy_slider = spyOn($.fn, "anythingSlider").and.callThrough();
+                var spy_slider = spyOn(
+                    $.fn,
+                    "anythingSlider"
+                ).and.callThrough();
                 pattern.init($carousel);
                 expect(spy_slider).toHaveBeenCalled();
                 var options = $.fn.anythingSlider.calls.argsFor(0)[0];
@@ -63,7 +70,6 @@ define(["pat-carousel-legacy"], function(pattern) {
             });
         });
     });
-
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

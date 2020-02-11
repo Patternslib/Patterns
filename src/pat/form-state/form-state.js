@@ -13,7 +13,9 @@ define([
         trigger: "form.pat-form-state",
         init: function($form) {
             if ($form.length > 1)
-                return $form.each(function() { _.init($(this)); });
+                return $form.each(function() {
+                    _.init($(this));
+                });
 
             input_change_events.setup($form, _.name);
 
@@ -41,7 +43,8 @@ define([
             $form.find("[type=reset]").prop("disabled", false);
             $form.find("[type=submit]").prop("disabled", false);
 
-            $form.addClass("modified")
+            $form
+                .addClass("modified")
                 .off(".pat-form-state")
                 .one("reset.pat-form-state", _.setReset)
                 .one("pat-ajax-error.pat-form-state", _.setError)
@@ -52,9 +55,14 @@ define([
             var $form = $(this);
 
             // hide only if form has changeable inputs
-            if ($form.find(":input[type!=\"hidden\"][type!=\"submit\"]" +
-                "[type!=\"reset\"][type!=button]").not("button").length) {
-
+            if (
+                $form
+                    .find(
+                        ':input[type!="hidden"][type!="submit"]' +
+                            '[type!="reset"][type!=button]'
+                    )
+                    .not("button").length
+            ) {
                 $form.find("[type=reset]").prop("disabled", true);
                 $form.find("[type=submit]").prop("disabled", true);
             }
@@ -67,36 +75,45 @@ define([
         },
         setError: function(event) {
             var msg = [event.jqxhr.status, event.jqxhr.statusText].join(" ");
-            modal.init($(
-                "<div class='pat-modal small'>" +
-                    "<h3>Error</h3>" +
-                    "<div class='wizard-box'>" +
-                    "<div class='panel-body'>" +
-                    "<p>A server error has occured.</p>" +
-                    "<p>The error message is: <strong>" + msg + "</strong>.</p>" +
-                    "</div>" +
-                    "<div class='buttons panel-footer'>" +
-                    "<button class='close-panel'>Ok</button>" +
-                    "</div>" +
-                    "</div>" +
-                    "</div>"
-            ).appendTo($("body")));
+            modal.init(
+                $(
+                    "<div class='pat-modal small'>" +
+                        "<h3>Error</h3>" +
+                        "<div class='wizard-box'>" +
+                        "<div class='panel-body'>" +
+                        "<p>A server error has occured.</p>" +
+                        "<p>The error message is: <strong>" +
+                        msg +
+                        "</strong>.</p>" +
+                        "</div>" +
+                        "<div class='buttons panel-footer'>" +
+                        "<button class='close-panel'>Ok</button>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>"
+                ).appendTo($("body"))
+            );
         },
         setSaved: function(event) {
-            if (event.target !== this)
-                return;
+            if (event.target !== this) return;
 
             var $form = $(this);
             _.setReset.call($form);
 
             var time = new Date(),
-                timestr = time.getHours() + ":" +
-                    time.getMinutes() + ":" +
+                timestr =
+                    time.getHours() +
+                    ":" +
+                    time.getMinutes() +
+                    ":" +
                     time.getSeconds();
             $form.find("time.last-saved").remove();
             $form.prepend(
-                "<time class='last-saved' datetime='" + timestr + "'>" +
-                    timestr + "</time>"
+                "<time class='last-saved' datetime='" +
+                    timestr +
+                    "'>" +
+                    timestr +
+                    "</time>"
             );
 
             $form.addClass("saved");

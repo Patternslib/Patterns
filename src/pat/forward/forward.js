@@ -3,11 +3,7 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define([
-    "jquery",
-    "pat-parser",
-    "pat-registry"
-], function($, Parser, registry) {
+define(["jquery", "pat-parser", "pat-registry"], function($, Parser, registry) {
     var parser = new Parser("forward");
 
     parser.addArgument("selector");
@@ -18,12 +14,11 @@ define([
         trigger: ".pat-forward",
 
         init: function($el, opts) {
-            return $el.each(function () {
+            return $el.each(function() {
                 var $el = $(this),
-                options = parser.parse($el, opts);
+                    options = parser.parse($el, opts);
 
-                if (!options.selector)
-                return;
+                if (!options.selector) return;
 
                 $el.on("click", null, options.selector, _._onClick);
                 if (options.trigger === "auto") {

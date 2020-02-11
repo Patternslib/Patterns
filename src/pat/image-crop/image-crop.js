@@ -32,21 +32,27 @@ define([
                     data = {};
 
                 // Initialize the preview parameters
-                if (opts.preview.id.length === 0)
-                    data.preview = false;
+                if (opts.preview.id.length === 0) data.preview = false;
                 else {
                     data.preview = {};
                     data.preview.element = $(opts.preview.id);
                     if (data.preview.element.length === 0) {
-                        log.error("Invalid preview element ID supplied: " + opts.preview.id);
+                        log.error(
+                            "Invalid preview element ID supplied: " +
+                                opts.preview.id
+                        );
                         return;
                     }
                     if (opts.previewWidth > 0 && opts.preview.height > 0) {
                         data.preview.width = opts.preview.width;
                         data.preview.height = opts.preview.height;
                     } else {
-                        data.preview.width = data.preview.element.parent().width();
-                        data.preview.height = data.preview.element.parent().height();
+                        data.preview.width = data.preview.element
+                            .parent()
+                            .width();
+                        data.preview.height = data.preview.element
+                            .parent()
+                            .height();
                     }
                 }
 
@@ -69,7 +75,11 @@ define([
                 data.prefix = opts.inputPrefix;
                 data.inputs = {};
                 for (var i = 0; i < _.inputNames.length; i++)
-                    data.inputs[_.inputNames[i]] = _._setupInput(data.form, data.prefix, _.inputNames[i]);
+                    data.inputs[_.inputNames[i]] = _._setupInput(
+                        data.form,
+                        data.prefix,
+                        _.inputNames[i]
+                    );
 
                 //
                 // Initial coordinates
@@ -84,53 +94,61 @@ define([
                 data.minSize = _._parseOpt(opts.minSize);
                 data.maxSize = _._parseOpt(opts.maxSize);
 
-                var handler = function(c) { _.onSelect(c, data); };
+                var handler = function(c) {
+                    _.onSelect(c, data);
+                };
 
-                $this.Jcrop({
-                    onChange: handler,
-                    onSelect: handler,
-                    onRelease: handler,
-                    aspectRatio: data.aspectRatio,
-                    setSelect: data.initialCoords,
-                    minSize: data.minSize,
-                    maxSize: data.maxSize
-                }, function() {
-                    data.api = this;
-                    _.onSelect(this.tellSelect(), data);
-                });
+                $this.Jcrop(
+                    {
+                        onChange: handler,
+                        onSelect: handler,
+                        onRelease: handler,
+                        aspectRatio: data.aspectRatio,
+                        setSelect: data.initialCoords,
+                        minSize: data.minSize,
+                        maxSize: data.maxSize
+                    },
+                    function() {
+                        data.api = this;
+                        _.onSelect(this.tellSelect(), data);
+                    }
+                );
             });
         },
 
         _setupInput: function($form, prefix, name) {
             var input = $form.find("input[name=" + prefix + name + "]");
             if (input.length === 0)
-                input = $("<input type=\"hidden\" name=\"" + prefix + name + "\" />").appendTo($form);
+                input = $(
+                    '<input type="hidden" name="' + prefix + name + '" />'
+                ).appendTo($form);
             return input;
         },
 
         _parseOpt: function(val) {
-            var ret = val.replace(/\s{2,}/g, " ").trim().split(" ");
-            for (var i = 0; i < ret.length; i++ )
-                ret[i] = parseInt(ret[i], 10);
+            var ret = val
+                .replace(/\s{2,}/g, " ")
+                .trim()
+                .split(" ");
+            for (var i = 0; i < ret.length; i++) ret[i] = parseInt(ret[i], 10);
             return ret;
         },
 
         onSelect: function(c, data) {
-            if (data.preview)
-                _.updatePreview(c, data);
+            if (data.preview) _.updatePreview(c, data);
             _.updateInputs(c, data);
         },
 
         updatePreview: function(c, data) {
-            if (!data.api)
-                return;
+            if (!data.api) return;
             if (parseInt(c.w, 10) > 0) {
-                var rx = data.preview.width/c.w, ry = data.preview.height/c.h,
+                var rx = data.preview.width / c.w,
+                    ry = data.preview.height / c.h,
                     bounds = data.api.getBounds();
 
                 data.preview.element.css({
-                    width: Math.round( rx * bounds[0] ) + "px",
-                    height: Math.round( ry * bounds[1] ) + "px",
+                    width: Math.round(rx * bounds[0]) + "px",
+                    height: Math.round(ry * bounds[1]) + "px",
                     marginLeft: "-" + Math.round(rx * c.x) + "px",
                     marginTop: "-" + Math.round(ry * c.y) + "px"
                 });

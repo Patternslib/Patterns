@@ -72,17 +72,15 @@ options in the `data-pat-carousel` attribute.
       <li><img title="Panel 3"/></li>
     </ul>
 
-
-
-| Property         | Description                              | Default | Allowed Values  | Type                             |
-| ---------------- | ---------------------------------------- | ------- | --------------- | -------------------------------- |
-| auto-play        | …                                        | false   | true, false     | Boolean                          |
-| auto-play-speed  | …                                        | 1000    |                 | Integer                          |
-| slides-to-scroll | …                                        | 1       |                 | Integer                          |
-| slides-to-show   |                                          | 3       |                 | Integer                          |
-| dots             | …                                        | show    | show, hide      | One of the allowed string values |
-| speed            | …                                        | 500     |                 | Integer                          |
-| height           | Enables adaptive height for single slide horizontal carousels. | fixed   | fixed, adaptive | One of the allowed string values |
-| arrows           | Prev/Next Arrows                         | show    | show, hide      | One of the allowed string values |
+| Property         | Description                                                                                         | Default | Allowed Values  | Type                             |
+| ---------------- | --------------------------------------------------------------------------------------------------- | ------- | --------------- | -------------------------------- |
+| auto-play        | …                                                                                                   | false   | true, false     | Boolean                          |
+| auto-play-speed  | …                                                                                                   | 1000    |                 | Integer                          |
+| slides-to-scroll | …                                                                                                   | 1       |                 | Integer                          |
+| slides-to-show   |                                                                                                     | 3       |                 | Integer                          |
+| dots             | …                                                                                                   | show    | show, hide      | One of the allowed string values |
+| speed            | …                                                                                                   | 500     |                 | Integer                          |
+| height           | Enables adaptive height for single slide horizontal carousels.                                      | fixed   | fixed, adaptive | One of the allowed string values |
+| arrows           | Prev/Next Arrows                                                                                    | show    | show, hide      | One of the allowed string values |
 | append-dots      | Change where the navigation dots are attached (Selector, htmlString, Array, Element, jQuery object) |         |                 | CSS selector                     |
-| infinite         | Infinite loop sliding                    | false   | true, false     | Boolean                          |
+| infinite         | Infinite loop sliding                                                                               | false   | true, false     | Boolean                          |

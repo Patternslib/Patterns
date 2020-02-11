@@ -6,10 +6,7 @@
  * Copyright 2012 JC Brand
  * Copyright 2012-2013 Florian Friesdorf
  */
-define([
-    "jquery",
-    "pat-registry"
-], function($, patterns) {
+define(["jquery", "pat-registry"], function($, patterns) {
     var selectbox = {
         name: "selectbox",
         trigger: ".pat-select",
@@ -19,8 +16,7 @@ define([
             $el.each(function() {
                 if (this.form !== null) {
                     var $form = $(this.form);
-                    if ($form.data("pat-selectbox.reset"))
-                        return;
+                    if ($form.data("pat-selectbox.reset")) return;
                     $form.data("pat-selectbox.reset", true);
                     $forms = $forms.add(this.form);
                 }
@@ -30,8 +26,7 @@ define([
                 .each(function() {
                     var $el = $(this);
                     // create parent span if not direct child of a label
-                    if ($el.parent("label").length === 0)
-                        $el.wrap("<span />");
+                    if ($el.parent("label").length === 0) $el.wrap("<span />");
                     selectbox.onChangeSelect.call(this);
                 })
                 .on("change.pat-selectbox", selectbox.onChangeSelect);
@@ -49,16 +44,17 @@ define([
             // to fix this.
             var form = this;
             setTimeout(function() {
-                $("select:not([multiple])", form).each(selectbox.onChangeSelect);
+                $("select:not([multiple])", form).each(
+                    selectbox.onChangeSelect
+                );
             }, 50);
         },
 
         onChangeSelect: function() {
             var $select = $(this);
-            $select.parent().attr(
-                "data-option",
-                $select.find("option:selected").text()
-            );
+            $select
+                .parent()
+                .attr("data-option", $select.find("option:selected").text());
             $select.parent().attr("data-option-value", $select.val());
         }
     };

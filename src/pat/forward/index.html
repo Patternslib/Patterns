@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Toggle</title>
-        <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-	<body>
-        <form>
-            <fieldset class="vertical">
-                <fieldset class="pat-checklist">
-                    <label>
-                        <input id="checkbox" type="checkbox"/> I may be ticked through the button too!
-                    </label>
-                  </fieldset>
-                  <fieldset class="pat-checklist">
-                      <label>
-                          <input id="autocheckbox" type="checkbox"/> I am automatically ticked on page load!
-                      </label>
-                  </fieldset>
-                <fieldset class="pat-button-bar">
-                    <button type="button" class="pat-button pat-forward" data-pat-forward="#checkbox">Click me…</button>
-                </fieldset>
-                <a class="pat-forward" data-pat-forward="#autocheckbox; trigger: auto;"></a>
-            </fieldset>
-        </form>
-	</body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Toggle</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <form>
+      <fieldset class="vertical">
+        <fieldset class="pat-checklist">
+          <label>
+            <input id="checkbox" type="checkbox" /> I may be ticked through the
+            button too!
+          </label>
+        </fieldset>
+        <fieldset class="pat-checklist">
+          <label>
+            <input id="autocheckbox" type="checkbox" /> I am automatically
+            ticked on page load!
+          </label>
+        </fieldset>
+        <fieldset class="pat-button-bar">
+          <button
+            type="button"
+            class="pat-button pat-forward"
+            data-pat-forward="#checkbox"
+          >
+            Click me…
+          </button>
+        </fieldset>
+        <a
+          class="pat-forward"
+          data-pat-forward="#autocheckbox; trigger: auto;"
+        ></a>
+      </fieldset>
+    </form>
+  </body>
 </html>

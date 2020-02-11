@@ -1,7 +1,4 @@
-define([
-    "jquery",
-    "pat-registry"
-], function($, patterns) {
+define(["jquery", "pat-registry"], function($, patterns) {
     var menu = {
         name: "menu",
         trigger: "ul.pat-menu",
@@ -10,8 +7,10 @@ define([
             return $root.each(function() {
                 var $menu = $(this),
                     timer,
-                    closeMenu, openMenu,
-                    mouseOverHandler, mouseOutHandler;
+                    closeMenu,
+                    openMenu,
+                    mouseOverHandler,
+                    mouseOutHandler;
 
                 openMenu = function($li) {
                     if (timer) {
@@ -20,13 +19,18 @@ define([
                     }
 
                     if (!$li.hasClass("open")) {
-                        $li.siblings("li.open").each(function() { closeMenu($menu);});
+                        $li.siblings("li.open").each(function() {
+                            closeMenu($menu);
+                        });
                         $li.addClass("open").removeClass("closed");
                     }
                 };
 
                 closeMenu = function($li) {
-                    $li.find("li.open").addBack().removeClass("open").addClass("closed");
+                    $li.find("li.open")
+                        .addBack()
+                        .removeClass("open")
+                        .addClass("closed");
                 };
 
                 mouseOverHandler = function() {
@@ -39,15 +43,20 @@ define([
 
                     if (timer) {
                         clearTimeout(timer);
-                        timer=null;
+                        timer = null;
                     }
 
-                    timer = setTimeout(function() { closeMenu($li); }, 1000);
+                    timer = setTimeout(function() {
+                        closeMenu($li);
+                    }, 1000);
                 };
 
-                $root.find("li")
+                $root
+                    .find("li")
                     .addClass("closed")
-                    .filter(":has(ul)").addClass("hasChildren").end()
+                    .filter(":has(ul)")
+                    .addClass("hasChildren")
+                    .end()
                     .on("mouseover.pat-menu", mouseOverHandler)
                     .on("mouseout.pat-menu", mouseOutHandler);
             });

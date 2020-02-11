@@ -30,29 +30,40 @@ define([
             return $el.each(function() {
                 var $trigger = $(this),
                     options = parser.parse($trigger, defaults, true);
-                options=switcher._validateOptions(options);
+                options = switcher._validateOptions(options);
                 if (options.length) {
                     $trigger
                         .data("patternSwitch", options)
                         .off(".patternSwitch")
                         .on("click.patternSwitch", switcher._onClick);
-                    for (var i=0; i<options.length; i++) {
+                    for (var i = 0; i < options.length; i++) {
                         var option = options[i];
-                        if (option.store!=="none") {
-                            option._storage = (option.store==="local" ? store.local : store.session)("switch");
+                        if (option.store !== "none") {
+                            option._storage = (option.store === "local"
+                                ? store.local
+                                : store.session)("switch");
                             var state = option._storage.get(option.selector);
-                            if (state && state.remove===option.remove && state.add===option.add)
-                                switcher._update(option.selector, state.remove, state.add);
+                            if (
+                                state &&
+                                state.remove === option.remove &&
+                                state.add === option.add
+                            )
+                                switcher._update(
+                                    option.selector,
+                                    state.remove,
+                                    state.add
+                                );
                         }
                     }
                 }
-
             });
         },
 
         destroy: function($el) {
             return $el.each(function() {
-                $(this).removeData("patternSwitch").off("click.patternSwitch");
+                $(this)
+                    .removeData("patternSwitch")
+                    .off("click.patternSwitch");
             });
         },
 
@@ -72,29 +83,37 @@ define([
 
         _go: function($trigger) {
             var options = $trigger.data("patternSwitch"),
-                option, i;
+                option,
+                i;
             if (!options) {
-                log.error("Tried to execute a switch for an uninitialised element.");
+                log.error(
+                    "Tried to execute a switch for an uninitialised element."
+                );
                 return;
             }
-            for (i=0; i<options.length; i++) {
-                option=options[i];
+            for (i = 0; i < options.length; i++) {
+                option = options[i];
                 switcher._update(option.selector, option.remove, option.add);
                 if (option._storage)
-                    option._storage.set(option.selector, {remove: option.remove, add: option.add});
+                    option._storage.set(option.selector, {
+                        remove: option.remove,
+                        add: option.add
+                    });
             }
-            $trigger.trigger('resize');
+            $trigger.trigger("resize");
         },
 
         _validateOptions: function(options) {
             var correct = [];
 
-            for (var i=0; i<options.length; i++) {
+            for (var i = 0; i < options.length; i++) {
                 var option = options[i];
                 if (option.selector && (option.remove || option.add))
                     correct.push(option);
                 else
-                    log.error("Switch pattern requires selector and one of add or remove.");
+                    log.error(
+                        "Switch pattern requires selector and one of add or remove."
+                    );
             }
             return correct;
         },
@@ -102,14 +121,11 @@ define([
         _update: function(selector, remove, add) {
             var $targets = $(selector);
 
-            if (!$targets.length)
-                return;
+            if (!$targets.length) return;
 
-            if (remove)
-                utils.removeWildcardClass($targets, remove);
-            if (add)
-                $targets.addClass(add);
-            $targets.trigger("pat-update", {pattern: "switch"});
+            if (remove) utils.removeWildcardClass($targets, remove);
+            if (add) $targets.addClass(add);
+            $targets.trigger("pat-update", { pattern: "switch" });
         }
     };
 

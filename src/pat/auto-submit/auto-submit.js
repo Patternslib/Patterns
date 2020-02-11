@@ -45,9 +45,12 @@ define([
         },
 
         registerListeners: function() {
-            this.$el.on("input-change-delayed.pat-autosubmit", this.onInputChange);
+            this.$el.on(
+                "input-change-delayed.pat-autosubmit",
+                this.onInputChange
+            );
             this.registerSubformListeners();
-            this.$el.on('patterns-injected', this.refreshListeners.bind(this));
+            this.$el.on("patterns-injected", this.refreshListeners.bind(this));
         },
 
         registerSubformListeners: function(ev) {
@@ -56,9 +59,16 @@ define([
              * changes.
              */
             var $el = typeof ev !== "undefined" ? $(ev.target) : this.$el;
-            $el.find(".pat-subform").not('.pat-autosubmit').each(function (idx, el) {
-                $(el).on("input-change-delayed.pat-autosubmit", this.onInputChange);
-            }.bind(this));
+            $el.find(".pat-subform")
+                .not(".pat-autosubmit")
+                .each(
+                    function(idx, el) {
+                        $(el).on(
+                            "input-change-delayed.pat-autosubmit",
+                            this.onInputChange
+                        );
+                    }.bind(this)
+                );
         },
 
         refreshListeners: function(ev, cfg, el, injected) {
@@ -68,23 +78,29 @@ define([
         },
 
         registerTriggers: function() {
-            var isText = this.$el.is("input:text, input[type=search], textarea");
+            var isText = this.$el.is(
+                "input:text, input[type=search], textarea"
+            );
             if (this.options.delay === "defocus" && !isText) {
-                log.error("The defocus delay value makes only sense on text input elements.");
+                log.error(
+                    "The defocus delay value makes only sense on text input elements."
+                );
                 return this.$el;
             }
 
             function trigger_event(ev) {
-              if ($(ev.target).closest('.pat-autosubmit')[0] !== this) {
-                return;
-              }
-              $(ev.target).trigger("input-change-delayed");
+                if ($(ev.target).closest(".pat-autosubmit")[0] !== this) {
+                    return;
+                }
+                $(ev.target).trigger("input-change-delayed");
             }
             if (this.options.delay === "defocus") {
                 this.$el.on("input-defocus.pat-autosubmit", trigger_event);
             } else if (this.options.delay > 0) {
-                this.$el.on("input-change.pat-autosubmit",
-                            utils.debounce(trigger_event, this.options.delay));
+                this.$el.on(
+                    "input-change.pat-autosubmit",
+                    utils.debounce(trigger_event, this.options.delay)
+                );
             } else {
                 this.$el.on("input-change.pat-autosubmit", trigger_event);
             }
@@ -93,9 +109,12 @@ define([
         destroy: function($el) {
             input_change_events.remove($el, "autosubmit");
             if (this.$el.is("form")) {
-                this.$el.find(".pat-subform").addBack(this.$el).each(function (idx, el) {
-                    $(el).off(".pat-autosubmit");
-                });
+                this.$el
+                    .find(".pat-subform")
+                    .addBack(this.$el)
+                    .each(function(idx, el) {
+                        $(el).off(".pat-autosubmit");
+                    });
             } else {
                 $el.off(".pat-autosubmit");
             }

@@ -6,7 +6,6 @@ import $ from "jquery";
 
 (function(Pattern, Pattern2, screenful) {
     describe("Open in fullscreen", function() {
-
         beforeEach(function() {
             var el = document.createElement("div");
             el.setAttribute("class", "fs");

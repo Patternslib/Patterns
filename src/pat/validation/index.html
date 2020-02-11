@@ -1,49 +1,93 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Form validation</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
-      <form class="pat-validation vertical" method="get" action="#" novalidate>
-          <fieldset class="horizontal">
-            <label>Full name <input type="text" name="name" required="required"/></label>
-            
-            <label>Age <input type="number" name="age" min="16" max="65" required="required"/></label>
+    <form class="pat-validation vertical" method="get" action="#" novalidate>
+      <fieldset class="horizontal">
+        <label
+          >Full name <input type="text" name="name" required="required"
+        /></label>
 
-            <fieldset class="group pat-checklist radio">
-              <legend>Favourite colour</legend>
-              <label><input name="colour" required="required" type="radio" value="blue"/> Blue</label>
-              <label><input name="colour" required="required" type="radio" value="pink"/> Pink</label>
-              <label><input name="colour" required="required" type="radio" value="red"/> Red</label>
-              <label><input name="colour" required="required" type="radio" value="yellow"/> yellow</label>
-            </fieldset>
+        <label
+          >Age
+          <input type="number" name="age" min="16" max="65" required="required"
+        /></label>
 
-            <label>Planning start
-                <input
-                    type="date" class="pat-date-picker"
-                    name="measure.planning_start:records"
-                    data-pat-date-picker="behavior: native"
-                    data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
-                    id="planning-start"
-                    value="2015-10-10"/>
-            </label>
+        <fieldset class="group pat-checklist radio">
+          <legend>Favourite colour</legend>
+          <label
+            ><input
+              name="colour"
+              required="required"
+              type="radio"
+              value="blue"
+            />
+            Blue</label
+          >
+          <label
+            ><input
+              name="colour"
+              required="required"
+              type="radio"
+              value="pink"
+            />
+            Pink</label
+          >
+          <label
+            ><input
+              name="colour"
+              required="required"
+              type="radio"
+              value="red"
+            />
+            Red</label
+          >
+          <label
+            ><input
+              name="colour"
+              required="required"
+              type="radio"
+              value="yellow"
+            />
+            yellow</label
+          >
+        </fieldset>
 
-            <label>Planning end
-                <input
-                    type="date" class="pat-date-picker" name="measure.planning_end:records"
-                    data-pat-date-picker="behavior: native"
-                    data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
-                    id="planning-end"
-                    value="2015-09-10"/>
-            </label>
-            
-            <fieldset class="buttons">
-              <button class="pat-button">Test</button>
-            </fieldset>
-          </fieldset>
-      </form>
+        <label
+          >Planning start
+          <input
+            type="date"
+            class="pat-date-picker"
+            name="measure.planning_start:records"
+            data-pat-date-picker="behavior: native"
+            data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+            id="planning-start"
+            value="2015-10-10"
+          />
+        </label>
+
+        <label
+          >Planning end
+          <input
+            type="date"
+            class="pat-date-picker"
+            name="measure.planning_end:records"
+            data-pat-date-picker="behavior: native"
+            data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
+            id="planning-end"
+            value="2015-09-10"
+          />
+        </label>
+
+        <fieldset class="buttons">
+          <button class="pat-button">Test</button>
+        </fieldset>
+      </fieldset>
+    </form>
   </body>
 </html>

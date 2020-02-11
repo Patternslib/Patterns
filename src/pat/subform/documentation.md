@@ -1,9 +1,11 @@
 # Subform
 
 ## Description
+
 Subfrom allows parts of a form to be submitted to different destinations.
 
 ## Documentation
+
 The subform pattern on a subset of controls in a form. It is enabled by class
 "pat-subform" on grouping elements of the form.
 
@@ -63,4 +65,3 @@ injection.
         <input type="text" name="local" placeholder="Local control"/>
       </fieldset>
     </form>
-

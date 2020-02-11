@@ -29,17 +29,28 @@ define([
                 // $container.on("patterns-injected.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
                 // $container.parents('.pat-stacks').on("pat-update", null, this, utils.debounce(equaliser._onEvent, 100));
                 */
-                $(window).on("resize.pat-equaliser", null, this, utils.debounce(equaliser._onEvent, 100));
-                imagesLoaded(this, $.proxy(function() {
-                    equaliser._update(this);
-                }, this));
-                const callback = utils.debounce(equaliser._update.bind(this), 100);
+                $(window).on(
+                    "resize.pat-equaliser",
+                    null,
+                    this,
+                    utils.debounce(equaliser._onEvent, 100)
+                );
+                imagesLoaded(
+                    this,
+                    $.proxy(function() {
+                        equaliser._update(this);
+                    }, this)
+                );
+                const callback = utils.debounce(
+                    equaliser._update.bind(this),
+                    100
+                );
                 const observer = new MutationObserver(callback);
                 const config = {
-                  childList: true,
-                  subtree: true,
-                  characterData: true,
-                  attributes: true
+                    childList: true,
+                    subtree: true,
+                    characterData: true,
+                    attributes: true
                 };
                 observer.observe(document.body, config);
             });
@@ -51,31 +62,34 @@ define([
                 $children = $container.children(),
                 max_height = 0;
 
-            for (var i=0; i<$children.length; i++) {
+            for (var i = 0; i < $children.length; i++) {
                 var $child = $children.eq(i),
                     css = $child.css("height"),
                     height;
                 $child.css("height", "").removeClass("equalised");
-                height=$child.height();
-                if (height>max_height)
-                    max_height=height;
-                if (css)
-                    $child.css("height", css);
+                height = $child.height();
+                if (height > max_height) max_height = height;
+                if (css) $child.css("height", css);
             }
 
-            var new_css = {height: max_height+"px"};
+            var new_css = { height: max_height + "px" };
 
             switch (options && options.transition) {
                 case "none":
                     $children.css(new_css).addClass("equalised");
                     break;
                 case "grow":
-                    $children.animate(new_css, options.effect.duration, options.effect.easing, function() {
-                        $(this).addClass("equalised");
-                    });
+                    $children.animate(
+                        new_css,
+                        options.effect.duration,
+                        options.effect.easing,
+                        function() {
+                            $(this).addClass("equalised");
+                        }
+                    );
                     break;
             }
-            $container.trigger('pat-update', {pattern: 'equaliser'});
+            $container.trigger("pat-update", { pattern: "equaliser" });
         },
 
         _onEvent: function(event) {

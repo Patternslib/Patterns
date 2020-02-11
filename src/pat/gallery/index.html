@@ -1,34 +1,70 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Gallery</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-    <link rel="stylesheet" href="/src/bower_components/photoswipe/dist/photoswipe.css" type="text/css">
-    <link rel="stylesheet" href="/src/bower_components/photoswipe/dist/default-skin/default-skin.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="/src/bower_components/photoswipe/dist/photoswipe.css"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="/src/bower_components/photoswipe/dist/default-skin/default-skin.css"
+      type="text/css"
+    />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
     <h1>Normal gallery</h1>
     <nav class="pat-gallery" data-pat-gallery="hide-overlay: 0">
-      <a href="full-1.jpg"><img src="thumb-1.jpg" title="Aurora Borealis. Photo by Beverly &amp; Pack"/></a>
-      <a href="full-2.jpg"><img src="thumb-2.jpg" title="Photo by Doug88888"/></a>
-      <a href="full-3.jpg"><img src="thumb-3.jpg" title="Photy by Paulo Brandao"/></a>
+      <a href="full-1.jpg"
+        ><img
+          src="thumb-1.jpg"
+          title="Aurora Borealis. Photo by Beverly &amp; Pack"
+      /></a>
+      <a href="full-2.jpg"
+        ><img src="thumb-2.jpg" title="Photo by Doug88888"
+      /></a>
+      <a href="full-3.jpg"
+        ><img src="thumb-3.jpg" title="Photy by Paulo Brandao"
+      /></a>
     </nav>
     <h1>Gallery with mixed content</h1>
     <p>Only items which match the selecor ``a.add-to-gallery`` are added.</p>
     <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery">
-      <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-1.jpg" title="Aurora Borealis. Photo by Beverly &amp; Pack"/></a>
-      <a href="full-2.jpg"><img src="thumb-2.jpg" title="Photo by Doug88888"/></a>
+      <a href="full-1.jpg" class="add-to-gallery"
+        ><img
+          src="thumb-1.jpg"
+          title="Aurora Borealis. Photo by Beverly &amp; Pack"
+      /></a>
+      <a href="full-2.jpg"
+        ><img src="thumb-2.jpg" title="Photo by Doug88888"
+      /></a>
       <a href="">Link only</a>
-      <a href="full-3.jpg" class="add-to-gallery"><img src="thumb-3.jpg" title="Photy by Paulo Brandao"/></a>
+      <a href="full-3.jpg" class="add-to-gallery"
+        ><img src="thumb-3.jpg" title="Photy by Paulo Brandao"
+      /></a>
     </nav>
     <h1>Image popups, not collected in a gallery</h1>
     <nav>
-      <a href="full-1.jpg" class="pat-gallery"><img src="thumb-1.jpg" title="Aurora Borealis. Photo by Beverly &amp; Pack"/></a>
-      <a href="full-2.jpg" class="pat-gallery"><img src="thumb-2.jpg" title="Photo by Doug88888"/></a>
-      <a href="full-3.jpg" class="pat-gallery"><img src="thumb-3.jpg" title="Photy by Paulo Brandao"/></a>
+      <a href="full-1.jpg" class="pat-gallery"
+        ><img
+          src="thumb-1.jpg"
+          title="Aurora Borealis. Photo by Beverly &amp; Pack"
+      /></a>
+      <a href="full-2.jpg" class="pat-gallery"
+        ><img src="thumb-2.jpg" title="Photo by Doug88888"
+      /></a>
+      <a href="full-3.jpg" class="pat-gallery"
+        ><img src="thumb-3.jpg" title="Photy by Paulo Brandao"
+      /></a>
     </nav>
-(Timestamp to see if page has reloaded: <script>document.write(Math.round(new Date().getTime()/1000));</script>)
+    (Timestamp to see if page has reloaded:
+    <script>
+      document.write(Math.round(new Date().getTime() / 1000));
+    </script>
+    )
   </body>
 </html>

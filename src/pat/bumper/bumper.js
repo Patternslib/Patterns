@@ -14,8 +14,6 @@ define([
     "pat-registry",
     "modernizr"
 ], function($, _, logger, Parser, Base, registry, Modernizr) {
-    
-
     var parser = new Parser("bumper"),
         log = logger.getLogger("bumper");
 
@@ -25,7 +23,13 @@ define([
     parser.addArgument("bump-remove");
     parser.addArgument("unbump-add");
     parser.addArgument("unbump-remove", "bumped");
-    parser.addArgument("side", "top", ['all', 'top', 'right', 'bottom', 'left']);
+    parser.addArgument("side", "top", [
+        "all",
+        "top",
+        "right",
+        "bottom",
+        "left"
+    ]);
 
     // XXX Handle resize
     return Base.extend({
@@ -44,13 +48,20 @@ define([
             if (!this.$container.length) {
                 $(window).on("scroll.bumper", this._updateStatus.bind(this));
             } else {
-                this.$container.on("scroll.bumper", this._updateStatus.bind(this));
+                this.$container.on(
+                    "scroll.bumper",
+                    this._updateStatus.bind(this)
+                );
             }
-            var bumpall = (this.options.side.indexOf("all") > -1);
-            this.options.bumptop =    bumpall || (this.options.side.indexOf("top") > -1);
-            this.options.bumpright =  bumpall || (this.options.side.indexOf("right") > -1);
-            this.options.bumpbottom = bumpall || (this.options.side.indexOf("bottom") > -1);
-            this.options.bumpleft =   bumpall || (this.options.side.indexOf("left") > -1);
+            var bumpall = this.options.side.indexOf("all") > -1;
+            this.options.bumptop =
+                bumpall || this.options.side.indexOf("top") > -1;
+            this.options.bumpright =
+                bumpall || this.options.side.indexOf("right") > -1;
+            this.options.bumpbottom =
+                bumpall || this.options.side.indexOf("bottom") > -1;
+            this.options.bumpleft =
+                bumpall || this.options.side.indexOf("left") > -1;
             this._updateStatus();
             return this.$el;
         },
@@ -59,15 +70,15 @@ define([
             var $parent = this.$el.parent(),
                 overflow;
             while (!$parent.is($(document.body)) && $parent.length) {
-                if (_.contains(['all', 'top', 'bottom'], this.options.side)) {
+                if (_.contains(["all", "top", "bottom"], this.options.side)) {
                     overflow = $parent.css("overflow-y");
-                    if ((overflow === "auto" || overflow === "scroll")) {
+                    if (overflow === "auto" || overflow === "scroll") {
                         return $parent;
                     }
-                } 
-                if (_.contains(['all', 'left', 'right'], this.options.side)) {
+                }
+                if (_.contains(["all", "left", "right"], this.options.side)) {
                     overflow = $parent.css("overflow-x");
-                    if ((overflow === "auto" || overflow === "scroll")) {
+                    if (overflow === "auto" || overflow === "scroll") {
                         return $parent;
                     }
                 }
@@ -77,11 +88,13 @@ define([
         },
 
         _markBumped: function markBumper(is_bumped) {
-            var $target = this.options.selector ? $(this.options.selector) : this.$el,
-                todo = is_bumped ? this.options.bump : this.options.unbump;    
+            var $target = this.options.selector
+                    ? $(this.options.selector)
+                    : this.$el,
+                todo = is_bumped ? this.options.bump : this.options.unbump;
             if (todo.add) {
                 $target.addClass(todo.add);
-            } 
+            }
             if (todo.remove) {
                 $target.removeClass(todo.remove);
             }
@@ -101,25 +114,27 @@ define([
             }
 
             delta.top = sticker.style.top ? parseFloat(this.$el.css("top")) : 0;
-            delta.left = sticker.style.left ? parseFloat(this.$el.css("left")) : 0;
+            delta.left = sticker.style.left
+                ? parseFloat(this.$el.css("left"))
+                : 0;
 
             box.top -= delta.top;
             box.bottom -= delta.top;
             box.left -= delta.left;
             box.right -= delta.left;
 
-            if ((frame.top > box.top) && this.options.bumptop) {
-                sticker.style.top = (frame.top - box.top) + "px";
-            } else if ((frame.bottom < box.bottom) && this.options.bumpbottom) {
-                sticker.style.top = (frame.bottom - box.bottom) + "px";
+            if (frame.top > box.top && this.options.bumptop) {
+                sticker.style.top = frame.top - box.top + "px";
+            } else if (frame.bottom < box.bottom && this.options.bumpbottom) {
+                sticker.style.top = frame.bottom - box.bottom + "px";
             } else {
                 sticker.style.top = "";
             }
 
-            if ((frame.left > box.left) && this.options.bumpleft) {
-                sticker.style.left = (frame.left - box.left) + "px";
-            } else if ((frame.right < box.right) && this.options.bumpright) {
-                sticker.style.left = (frame.right - box.right) + "px";
+            if (frame.left > box.left && this.options.bumpleft) {
+                sticker.style.left = frame.left - box.left + "px";
+            } else if (frame.right < box.right && this.options.bumpright) {
+                sticker.style.left = frame.right - box.right + "px";
             } else {
                 sticker.style.left = "";
             }
@@ -147,8 +162,8 @@ define([
             margin = margin ? margin : 0;
             box.top -= (parseFloat($sticker.css("margin-top")) || 0) + margin;
             box.left -= (parseFloat($sticker.css("margin-left")) || 0) + margin;
-            box.right = box.left + $sticker.outerWidth(true) + (2 * margin);
-            box.bottom = box.top + $sticker.outerHeight(true) + (2 * margin);
+            box.right = box.left + $sticker.outerWidth(true) + 2 * margin;
+            box.bottom = box.top + $sticker.outerHeight(true) + 2 * margin;
             return box;
         }
     });

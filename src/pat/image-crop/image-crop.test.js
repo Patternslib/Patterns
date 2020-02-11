@@ -1,9 +1,7 @@
 define(["pat-image-crop"], function(pattern) {
-
     describe("pat-image-crop", function() {
-
         beforeEach(function() {
-            $("<div/>", {id: "lab"}).appendTo(document.body);
+            $("<div/>", { id: "lab" }).appendTo(document.body);
         });
 
         afterEach(function() {
@@ -19,7 +17,7 @@ define(["pat-image-crop"], function(pattern) {
             });
 
             it("Input setup - input already exists", function() {
-                $("#lab").html("<form><input type=\"text\" name=\"x1\" /></form>");
+                $("#lab").html('<form><input type="text" name="x1" /></form>');
 
                 var form = $("#lab form");
                 pattern._setupInput(form, "", "x1");
@@ -29,12 +27,12 @@ define(["pat-image-crop"], function(pattern) {
             });
 
             it("Input setup - input doesn't exist", function() {
-                $("#lab").html("<form><input type=\"text\" name=\"x1\" /></form>");
+                $("#lab").html('<form><input type="text" name="x1" /></form>');
 
                 var form = $("#lab form");
                 pattern._setupInput(form, "p_", "x1");
 
-                var input = form.find("input[name=\"p_x1\"]");
+                var input = form.find('input[name="p_x1"]');
                 expect(input.length).toBe(1);
             });
         });
@@ -48,7 +46,7 @@ define(["pat-image-crop"], function(pattern) {
                 inputs: {},
                 api: {
                     getBounds: function() {
-                        return [ 500, 600 ];
+                        return [500, 600];
                     }
                 }
             };
@@ -62,14 +60,14 @@ define(["pat-image-crop"], function(pattern) {
                 y2: 600
             };
 
-            beforeEach(function(){
+            beforeEach(function() {
                 data.preview.element = $("<div>");
-                data.inputs.x1 = $("<input type=\"hidden\" name=\"p_x1\" />");
-                data.inputs.x2 = $("<input type=\"hidden\" name=\"p_x2\" />");
-                data.inputs.y1 = $("<input type=\"hidden\" name=\"p_y1\" />");
-                data.inputs.y2 = $("<input type=\"hidden\" name=\"p_y2\" />");
-                data.inputs.w  = $("<input type=\"hidden\" name=\"p_w\" />");
-                data.inputs.h  = $("<input type=\"hidden\" name=\"p_h\" />");
+                data.inputs.x1 = $('<input type="hidden" name="p_x1" />');
+                data.inputs.x2 = $('<input type="hidden" name="p_x2" />');
+                data.inputs.y1 = $('<input type="hidden" name="p_y1" />');
+                data.inputs.y2 = $('<input type="hidden" name="p_y2" />');
+                data.inputs.w = $('<input type="hidden" name="p_w" />');
+                data.inputs.h = $('<input type="hidden" name="p_h" />');
             });
 
             it("Update preview", function() {
@@ -103,5 +101,4 @@ define(["pat-image-crop"], function(pattern) {
             });
         });
     });
-
 });

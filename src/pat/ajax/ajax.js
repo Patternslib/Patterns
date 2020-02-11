@@ -4,27 +4,36 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2013 Marko Durkovic
  */
-define([
-    "jquery",
-    "pat-logger",
-    "pat-parser",
-    "pat-registry"
-], function($, logger, Parser, registry) {
+define(["jquery", "pat-logger", "pat-parser", "pat-registry"], function(
+    $,
+    logger,
+    Parser,
+    registry
+) {
     var log = logger.getLogger("pat.ajax"),
         parser = new Parser("ajax");
     parser.addArgument("url", function($el) {
-        return ($el.is("a") ? $el.attr("href") :
-                ($el.is("form") ? $el.attr("action") : "")).split("#")[0];
+        return ($el.is("a")
+            ? $el.attr("href")
+            : $el.is("form")
+            ? $el.attr("action")
+            : ""
+        ).split("#")[0];
     });
 
-    $.ajaxSetup ({
+    $.ajaxSetup({
         // Disable caching of AJAX responses
         cache: false
     });
 
     var xhrCount = {};
-    xhrCount.get = function(a) { return this[a] !== undefined ? this[a] : 0; };
-    xhrCount.inc = function(a) { this[a] = this.get(a) + 1; return this.get(a); };
+    xhrCount.get = function(a) {
+        return this[a] !== undefined ? this[a] : 0;
+    };
+    xhrCount.inc = function(a) {
+        this[a] = this.get(a) + 1;
+        return this.get(a);
+    };
 
     var _ = {
         name: "ajax",
@@ -45,7 +54,9 @@ define([
             $el.off(".pat-ajax");
         },
         onClickSubmit: function(event) {
-            var $form = $(event.target).parents("form").first(),
+            var $form = $(event.target)
+                    .parents("form")
+                    .first(),
                 name = event.target.name,
                 value = $(event.target).val(),
                 data = {};
@@ -91,15 +102,21 @@ define([
                     }
                 },
                 temp = $el.data("pat-ajax.clicked-data"),
-                clickedData = (temp ? $.param(temp) : ''),
+                clickedData = temp ? $.param(temp) : "",
                 args = {
                     context: $el,
-                    data: [$el.serialize(), clickedData].filter(Boolean).join("&"),
+                    data: [$el.serialize(), clickedData]
+                        .filter(Boolean)
+                        .join("&"),
                     url: cfg.url,
                     method: $el.attr("method") ? $el.attr("method") : "GET"
                 };
 
-            if ($el.is("form") && $el.attr("method") && $el.attr("method").toUpperCase() == "POST") {
+            if (
+                $el.is("form") &&
+                $el.attr("method") &&
+                $el.attr("method").toUpperCase() == "POST"
+            ) {
                 var formdata = new FormData($el[0]);
                 for (var key in temp) {
                     formdata.append(key, temp[key]);
@@ -107,8 +124,8 @@ define([
                 args["method"] = "POST";
                 args["data"] = formdata;
                 args["cache"] = false;
-                args["contentType"] =  false;
-                args["processData"] =  false;
+                args["contentType"] = false;
+                args["processData"] = false;
                 args["type"] = "POST";
             }
 
@@ -118,8 +135,7 @@ define([
             // Make it happen
             var ajax_deferred = $.ajax(args);
 
-            if (ajax_deferred)
-                ajax_deferred.done(onSuccess).fail(onError);
+            if (ajax_deferred) ajax_deferred.done(onSuccess).fail(onError);
         }
     };
 
