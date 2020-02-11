@@ -1,11 +1,10 @@
 ## Description
 
-A *collapsible* is an element where content is can be shown or visible by clicking on a triggering element.
-
+A _collapsible_ is an element where content is can be shown or visible by clicking on a triggering element.
 
 ## Documentation
 
-A *collapsible* is an element inside which content can be shown or hidden
+A _collapsible_ is an element inside which content can be shown or hidden
 by clicking on a triggering element. One way to use this is to implement
 a very minimal accordion.
 
@@ -15,7 +14,7 @@ a very minimal accordion.
       <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
     </section>
 
-In the above example clicking on the *About us* header will hide or
+In the above example clicking on the _About us_ header will hide or
 show the remainder of the section content. Another possible use case is
 to create a simple contextual menu.
 
@@ -35,7 +34,7 @@ Collapsibles default to being open. You can change this by adding a
 ### Custom triggers
 
 The standard behaviour is to use the first element as the trigger to open or
-close a collapsible. You can also use the `trigger` option to specify a 
+close a collapsible. You can also use the `trigger` option to specify a
 different element.
 
     <button id="trigger">About us</button>
@@ -46,7 +45,7 @@ different element.
       <p>Neque porro quisquam est, qui dolorem ipsum quia...</p>
     </aside>
 
-You can also specify triggers specifically for *closing* or *opening* a
+You can also specify triggers specifically for _closing_ or _opening_ a
 collapsible.
 
 The options for doing so are **open-trigger** and **close-trigger**.
@@ -70,7 +69,7 @@ All further children will be part of the content that collapses.
 The containing element will get a `open` or `closed` class which indicates if
 the collapsible is currently open (content is visible) or closed (content is
 not visible). Likewise the triggering element will get a `collapsible-open` or
-`collapsible-closed` class.  the content of the collapsible is wrapped in a new
+`collapsible-closed` class. the content of the collapsible is wrapped in a new
 `div` element with class `panel-content`.
 
 Post-processing our first example will look like this after the
@@ -119,9 +118,9 @@ To use this you requirements must be met:
 
 The possible values for the `store` parameter are:
 
--  `none`: do not remember the toggle state (default).
--  `local`: remember the state as part of the local storage.
--  `session`: remember the status as part of the session storage.
+- `none`: do not remember the toggle state (default).
+- `local`: remember the state as part of the local storage.
+- `session`: remember the status as part of the session storage.
 
 ### Transitions
 
@@ -155,19 +154,18 @@ are also included: `fade` will fade the element in and out, and `slide`
 uses a vertical sliding effect. During a transition an `in-progress`
 class will be set on the element.
 
-
 ### Option reference
 
 The collapsible can be configured through a `data-pat-collapsible`
 attribute. The available options are:
 
-| Field          | Default | Description                               |
-| -------------- | ------- | ----------------------------------------- |
-| `load-content` |         | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible. |
-| `trigger` | `::first` | Selector used to identify the open/close trigger for the collapsible. |
-| `close-trigger` |  | Selector used to identify a trigger for closing the collapsible. |
-| `open-trigger` |  | Selector used to identify a trigger for opening the collapsible. |
-| `store`        | `none`  | How to remember the state of a collapsible. Must be one of `none`, `session` or `local`. |
-| `transition` | `slide` | Transition effect when opening or closing a collapsinble. Must be one of `none`, `css`, `fade`, `slide` or `slide-horizontal`. |
-| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. 
-| `effect-easing`  | `swing` | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
+| Field             | Default   | Description                                                                                                                                                          |
+| ----------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `load-content`    |           | A URL (possibly including a fragment id) for content which must be loaded and used as content for the collapsible.                                                   |
+| `trigger`         | `::first` | Selector used to identify the open/close trigger for the collapsible.                                                                                                |
+| `close-trigger`   |           | Selector used to identify a trigger for closing the collapsible.                                                                                                     |
+| `open-trigger`    |           | Selector used to identify a trigger for opening the collapsible.                                                                                                     |
+| `store`           | `none`    | How to remember the state of a collapsible. Must be one of `none`, `session` or `local`.                                                                             |
+| `transition`      | `slide`   | Transition effect when opening or closing a collapsinble. Must be one of `none`, `css`, `fade`, `slide` or `slide-horizontal`.                                       |
+| `effect-duration` | `fast`    | Duration of transition. This is ignored if the transition is `none` or `css`.                                                                                        |
+| `effect-easing`   | `swing`   | Easing to use for the open/close animation. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |

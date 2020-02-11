@@ -1,8 +1,9 @@
-.checkNative , .checkPattern {
-	font-size:3vh;
+.checkNative,
+.checkPattern {
+  font-size: 3vh;
 }
 
-#native{
-	width: 5%;
-	height:4vh;
+#native {
+  width: 5%;
+  height: 4vh;
 }

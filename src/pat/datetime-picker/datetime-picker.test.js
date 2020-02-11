@@ -1,87 +1,106 @@
-define(['pat-datetime-picker'], function(pattern) {
-
-    describe('pat-datetime-picker', function() {
-
-        beforeEach(function () {
-            $('<link href="src/pat/datetime-picker/datetime-picker.css" rel="stylesheet"/>').appendTo(document.head);
+define(["pat-datetime-picker"], function(pattern) {
+    describe("pat-datetime-picker", function() {
+        beforeEach(function() {
+            $(
+                '<link href="src/pat/datetime-picker/datetime-picker.css" rel="stylesheet"/>'
+            ).appendTo(document.head);
         });
-        afterEach(function () {
+        afterEach(function() {
             //$('head link[href$="date-picker.css"').remove();
-            $('input.pat-datetime-picker').remove();
-            $('.datetime-picker-wrapper').remove();
-            $('.pika-single, .pika-lendar').remove();
+            $("input.pat-datetime-picker").remove();
+            $(".datetime-picker-wrapper").remove();
+            $(".pika-single, .pika-lendar").remove();
         });
 
-        it('Default datetime picker.', function () {
-            var $el = $('<input type="datetime-local" class="pat-datetime-picker"/>').appendTo(document.body);
+        it("Default datetime picker.", function() {
+            var $el = $(
+                '<input type="datetime-local" class="pat-datetime-picker"/>'
+            ).appendTo(document.body);
             pattern.init($el);
 
-            $('input.date', $el.next()).click();
+            $("input.date", $el.next()).click();
 
             var date = new Date();
             var day = date.getDate().toString();
-            var month = (date.getMonth()).toString();  // remember, month-count starts from 0
+            var month = date.getMonth().toString(); // remember, month-count starts from 0
             var year = date.getFullYear().toString();
 
             expect(
-                document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]').textContent
+                document.querySelector(
+                    '.pika-lendar .pika-select-year option[selected="selected"]'
+                ).textContent
             ).toBe(year);
 
             expect(
-                document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]').value
+                document.querySelector(
+                    '.pika-lendar .pika-select-month option[selected="selected"]'
+                ).value
             ).toBe(month);
 
             expect(
-                document.querySelector('.pika-lendar td.is-today button').getAttribute('data-pika-day')
+                document
+                    .querySelector(".pika-lendar td.is-today button")
+                    .getAttribute("data-pika-day")
             ).toBe(day);
 
             expect(
-                document.querySelector('.pika-lendar th:first-child abbr').textContent
-            ).toBe('Sun');
-
+                document.querySelector(".pika-lendar th:first-child abbr")
+                    .textContent
+            ).toBe("Sun");
         });
 
-        it('Date/Time picker starts at Monday.', function () {
-            var $el = $('<input type="date" class="pat-datetime-picker" data-pat-datetime-picker="first-day: 1" />').appendTo(document.body);
+        it("Date/Time picker starts at Monday.", function() {
+            var $el = $(
+                '<input type="date" class="pat-datetime-picker" data-pat-datetime-picker="first-day: 1" />'
+            ).appendTo(document.body);
             pattern.init($el);
-            $('input.date', $el.next()).click();
+            $("input.date", $el.next()).click();
 
             expect(
-                document.querySelector('.pika-lendar th:first-child abbr').textContent
-            ).toBe('Mon');
-
+                document.querySelector(".pika-lendar th:first-child abbr")
+                    .textContent
+            ).toBe("Mon");
         });
 
-        it('Date/Time picker with pre-set value.', function () {
-            var $el = $('<input type="datetime-local" class="pat-datetime-picker" value="1900-01-01T00:00"/>').appendTo(document.body);
+        it("Date/Time picker with pre-set value.", function() {
+            var $el = $(
+                '<input type="datetime-local" class="pat-datetime-picker" value="1900-01-01T00:00"/>'
+            ).appendTo(document.body);
             pattern.init($el);
 
-            $('input.date', $el.next()).click();
+            $("input.date", $el.next()).click();
 
             expect(
-                document.querySelector('.pika-lendar .pika-select-year option[selected="selected"]').textContent
-            ).toBe('1900');
+                document.querySelector(
+                    '.pika-lendar .pika-select-year option[selected="selected"]'
+                ).textContent
+            ).toBe("1900");
 
             expect(
-                document.querySelector('.pika-lendar .pika-select-month option[selected="selected"]').value
-            ).toBe('0');
+                document.querySelector(
+                    '.pika-lendar .pika-select-month option[selected="selected"]'
+                ).value
+            ).toBe("0");
 
             expect(
-                document.querySelector('.pika-lendar td.is-selected button').getAttribute('data-pika-day')
-            ).toBe('1');
-
+                document
+                    .querySelector(".pika-lendar td.is-selected button")
+                    .getAttribute("data-pika-day")
+            ).toBe("1");
         });
 
-        it('Date/Time picker with week numbers.', function () {
-            var $el = $('<input type="datetime-local" class="pat-datetime-picker" data-pat-datetime-picker="week-numbers: show;" value="2017-09-18T23:42"/>').appendTo(document.body);
+        it("Date/Time picker with week numbers.", function() {
+            var $el = $(
+                '<input type="datetime-local" class="pat-datetime-picker" data-pat-datetime-picker="week-numbers: show;" value="2017-09-18T23:42"/>'
+            ).appendTo(document.body);
             pattern.init($el);
 
-            $('input.date', $el.next()).click();
+            $("input.date", $el.next()).click();
 
             expect(
-                document.querySelectorAll('.pika-lendar .pika-week')[0].textContent
-            ).toBe('35');
-
+                document.querySelectorAll(".pika-lendar .pika-week")[0]
+                    .textContent
+            ).toBe("35");
         });
 
         /* TODO: fix and properly mock with jasmine.Clock().mockTime in jasmine 2.x
@@ -121,6 +140,5 @@ define(['pat-datetime-picker'], function(pattern) {
 
         });
         */
-
     });
 });

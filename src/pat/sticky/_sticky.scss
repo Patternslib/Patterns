@@ -8,10 +8,10 @@ body.post .content *:before {
 
 body.post .content {
   background: crimson;
-  background: -webkit-linear-gradient(crimson, darkslategray 87%, #26403A);
-  background: -moz-linear-gradient(crimson, darkslategray 87%, #26403A);
-  background: -o-linear-gradient(crimson, darkslategray 87%, #26403A);
-  background: linear-gradient(crimson, darkslategray 87%, #26403A);
+  background: -webkit-linear-gradient(crimson, darkslategray 87%, #26403a);
+  background: -moz-linear-gradient(crimson, darkslategray 87%, #26403a);
+  background: -o-linear-gradient(crimson, darkslategray 87%, #26403a);
+  background: linear-gradient(crimson, darkslategray 87%, #26403a);
 }
 
 @media all and (min-width: 60em) {
@@ -22,7 +22,7 @@ body.post .content {
 
 body.post .content figure.info {
   border: 1px solid white;
-  border: 1px solid rgba(255,255,255,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 body.post .content a,
@@ -34,13 +34,13 @@ body.post .content a:hover * {
 
 body.post .content a {
   border-bottom: 1px solid white;
-  border-bottom: 1px solid rgba(255,255,255,0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
 
 body.post .content a:hover {
-  border-bottom: 1px solid rgba(255,255,255,1);
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
   -webkit-transition: all 0.1s ease;
   transition: all 0.1s ease;
 }
@@ -84,7 +84,7 @@ body.post .content a.big-fucking-button {
   text-decoration: none;
   padding: 0.5em 0.7em;
   border: 1px solid white;
-  border: 1px solid rgba(255,255,255,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 0.3em;
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
@@ -98,7 +98,7 @@ body.post .content a.big-fucking-button:hover {
   transition: all 0.1s ease;
 }
 
- @media all and (min-width: 60em) {
+@media all and (min-width: 60em) {
   body.post .content a.big-fucking-button {
     font-size: 1.5em;
   }
@@ -106,6 +106,6 @@ body.post .content a.big-fucking-button:hover {
 
 body.post .content section:before,
 body.post .content section:after {
-  content: '';
+  content: "";
   display: table;
 }

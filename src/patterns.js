@@ -12,12 +12,10 @@
 // import pat_parser from './core/parser.js';
 // import pat_logger from './core/logger.js';
 
-
 // Import base
-import pat_registry from './core/registry.js';
-import jquery from 'jquery';
-import 'prefixfree';
-
+import pat_registry from "./core/registry.js";
+import jquery from "jquery";
+import "prefixfree";
 
 // Import all used patterns for the bundle to be generated
 /*
@@ -81,10 +79,10 @@ import pat_push_kit from './core/push_kit.js';
 // import pat_chosen from './pat/chosen/chosen.js';
 */
 
-import pat_fullscreen from './pat/fullscreen/fullscreen.js';
+import pat_fullscreen from "./pat/fullscreen/fullscreen.js";
 
 // Import locales for moment
-import 'moment/locale/de';
+import "moment/locale/de";
 // import 'moment/locale/bg';
 // import 'moment/locale/hr';
 // import 'moment/locale/cs';
@@ -107,7 +105,6 @@ import 'moment/locale/de';
 // import 'moment/locale/es';
 // import 'moment/locale/sv';
 
-
 window.jQuery = jquery;
 jquery(() => pat_registry.init());
 
@@ -115,4 +112,4 @@ jquery(() => pat_registry.init());
 //     var window = require("window");
 //     require("imports-loader?this=>window!jquery.browser");
 
-export default { pat_fullscreen }
+export default { pat_fullscreen };

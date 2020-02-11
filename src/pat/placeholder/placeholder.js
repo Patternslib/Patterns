@@ -1,7 +1,4 @@
-define([
-    "pat-registry",
-    "jquery.placeholder"
-], function(patterns) {
+define(["pat-registry", "jquery.placeholder"], function(patterns) {
     var pattern_spec = {
         name: "placeholder",
         trigger: ":input[placeholder]",
@@ -12,8 +9,12 @@ define([
     };
 
     // This is slightly more accurate test than Modernizr uses.
-    if (!("placeholder" in document.createElement("input") &&
-          "placeholder" in document.createElement("textarea")))
+    if (
+        !(
+            "placeholder" in document.createElement("input") &&
+            "placeholder" in document.createElement("textarea")
+        )
+    )
         patterns.register(pattern_spec);
     return pattern_spec;
 });

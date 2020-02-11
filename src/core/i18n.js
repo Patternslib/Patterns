@@ -8,7 +8,7 @@
  */
 
 define([], function() {
-    return function translate (str) {
+    return function translate(str) {
         return str;
     };
 });

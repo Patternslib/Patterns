@@ -1,31 +1,51 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Notification demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
-	<body>
-        <p class="pat-notification" data-pat-notification="healing: persistent">
-            This content will be gone only if you dismiss it yourself
-        </p>
-        <p class="pat-notification" data-pat-notification="healing: persistent; class: warning">
-            This message gets an extra class 'warning' on it
-        </p>
-        <p class="pat-notification">
-            This content will be gone in five seconds
-        </p>
-        <form action="inject-source.html" method="get" class="pat-notification" data-pat-notification="type: banner">
-            <fieldset>
-                <button class="pat-button" type="submit">Give feedback</button> in a banner via a form submit.
-            </fieldset>
-        </form>
-        <p>
-            <a href="inject-source.html" class="pat-notification" data-pat-notification="healing: persistent; class: success">Injected content with <strong>persistent</strong> banner notification</a>
-        </p>
-        <p>
-            <a href="inject-notification.html" class="pat-inject" data-pat-inject="target: self::element::after">Inject content with banner notification using pattern Injection</a>
-        </p>
-	</body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Notification demo page</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <p class="pat-notification" data-pat-notification="healing: persistent">
+      This content will be gone only if you dismiss it yourself
+    </p>
+    <p
+      class="pat-notification"
+      data-pat-notification="healing: persistent; class: warning"
+    >
+      This message gets an extra class 'warning' on it
+    </p>
+    <p class="pat-notification">
+      This content will be gone in five seconds
+    </p>
+    <form
+      action="inject-source.html"
+      method="get"
+      class="pat-notification"
+      data-pat-notification="type: banner"
+    >
+      <fieldset>
+        <button class="pat-button" type="submit">Give feedback</button> in a
+        banner via a form submit.
+      </fieldset>
+    </form>
+    <p>
+      <a
+        href="inject-source.html"
+        class="pat-notification"
+        data-pat-notification="healing: persistent; class: success"
+        >Injected content with <strong>persistent</strong> banner
+        notification</a
+      >
+    </p>
+    <p>
+      <a
+        href="inject-notification.html"
+        class="pat-inject"
+        data-pat-inject="target: self::element::after"
+        >Inject content with banner notification using pattern Injection</a
+      >
+    </p>
+  </body>
 </html>

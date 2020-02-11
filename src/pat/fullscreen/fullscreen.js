@@ -33,7 +33,9 @@ export default Base.extend({
         // querying the fullscreen element fs_el and inside the event
         // handler instead of outside allows for dynamic injecting
         // fullscreen elements even after pattern initialization.
-        let fs_el_sel = this.options.selector ? this.options.selector : el.getAttribute("href");
+        let fs_el_sel = this.options.selector
+            ? this.options.selector
+            : el.getAttribute("href");
         fs_el_sel = fs_el_sel ? fs_el_sel : "body";
         const fs_el = document.querySelector(fs_el_sel);
         if (fs_el) {

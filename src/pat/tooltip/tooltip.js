@@ -18,16 +18,32 @@ define([
     var log = logger.getLogger("tooltip"),
         parser = new Parser("tooltip");
 
-    var all_positions = ["tl", "tm", "tr",
-                         "rt", "rm", "rb",
-                         "br", "bm", "bl",
-                         "lb", "lm", "lt"];
+    var all_positions = [
+        "tl",
+        "tm",
+        "tr",
+        "rt",
+        "rm",
+        "rb",
+        "br",
+        "bm",
+        "bl",
+        "lb",
+        "lm",
+        "lt"
+    ];
     parser.addArgument("position-list", [], all_positions, true);
     parser.addArgument("position-policy", "auto", ["auto", "force"]);
     parser.addArgument("height", "auto", ["auto", "max"]);
     parser.addArgument("trigger", "click", ["click", "hover"]);
     parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
-    parser.addArgument("source", "title", ["auto", "ajax", "content", "content-html", "title"]);
+    parser.addArgument("source", "title", [
+        "auto",
+        "ajax",
+        "content",
+        "content-html",
+        "title"
+    ]);
     parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
     parser.addArgument("delay");
     parser.addArgument("mark-inactive", true);
@@ -51,10 +67,12 @@ define([
                     options.delay = utils.parseTime(options.delay);
                 }
 
-                if (options.source==="auto") {
+                if (options.source === "auto") {
                     href = $trigger.attr("href");
-                    if (typeof(href) !== "string") {
-                        log.error("href must be specififed if 'source' is set to 'auto'");
+                    if (typeof href !== "string") {
+                        log.error(
+                            "href must be specififed if 'source' is set to 'auto'"
+                        );
                         return;
                     }
                     if (href.indexOf("#") === 0) {
@@ -64,10 +82,10 @@ define([
                     }
                 }
 
-                if (options.source==="title") {
-                    options.title=$trigger.attr("title");
+                if (options.source === "title") {
+                    options.title = $trigger.attr("title");
                     $trigger.removeAttr("title");
-                } else if (options.trigger==="hover") {
+                } else if (options.trigger === "hover") {
                     $trigger.removeAttr("title");
                 }
                 $trigger
@@ -82,13 +100,16 @@ define([
 
         setupShowEvents: function($trigger) {
             var options = $trigger.data("patterns.tooltip");
-            if (options.trigger==="click") {
+            if (options.trigger === "click") {
                 $trigger.on("click.tooltip", $trigger, tooltip.show);
             } else {
                 if (options.delay) {
-                    $trigger.on("mouseover.tooltip", $trigger, tooltip.delayedShow);
-                } else
-                    $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
+                    $trigger.on(
+                        "mouseover.tooltip",
+                        $trigger,
+                        tooltip.delayedShow
+                    );
+                } else $trigger.on("mouseover.tooltip", $trigger, tooltip.show);
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
             }
@@ -100,10 +121,12 @@ define([
 
             tooltip.removeShowEvents($trigger);
             $trigger
-                .data("patterns.tooltip.timer", setTimeout(
-                    function() {
+                .data(
+                    "patterns.tooltip.timer",
+                    setTimeout(function() {
                         tooltip.show(event);
-                    }, options.delay))
+                    }, options.delay)
+                )
                 .on("mouseleave.tooltip", $trigger, tooltip.cancelDelayedShow);
         },
 
@@ -121,17 +144,29 @@ define([
         setupHideEvents: function($trigger) {
             var $container = tooltip.getContainer($trigger),
                 options = $trigger.data("patterns.tooltip");
-            $container.on("click.tooltip", ".close-panel", $trigger, tooltip.hide);
+            $container.on(
+                "click.tooltip",
+                ".close-panel",
+                $trigger,
+                tooltip.hide
+            );
 
-            if (options.closing==="close-button") {
+            if (options.closing === "close-button") {
                 // Make sure click on the trigger element becomes a NOP
                 $trigger.on("click.tooltip", $trigger, tooltip.blockDefault);
-            } else if (options.closing==="sticky" || (options.trigger==="click" && options.closing==="auto")) {
+            } else if (
+                options.closing === "sticky" ||
+                (options.trigger === "click" && options.closing === "auto")
+            ) {
                 $container.on("click.tooltip", $trigger, function(ev) {
                     ev.stopPropagation();
                 });
                 $(document).on("click.tooltip", $trigger, tooltip.hide);
-                $(document).on("pat-tooltip-click.tooltip", $trigger, tooltip.hide);
+                $(document).on(
+                    "pat-tooltip-click.tooltip",
+                    $trigger,
+                    tooltip.hide
+                );
                 $trigger.on("click.tooltip", $trigger, tooltip._onClick);
                 /* XXX: It's also not clear what this was for, but we
                  * definitely don't want tooltips to close whenever an
@@ -145,7 +180,12 @@ define([
                     $container.on("patterns-inject-triggered.tooltip",
                                 $trigger, tooltip.hide);
                 */
-                $container.on("submit.tooltip", ".close-panel", $trigger, tooltip.hide);
+                $container.on(
+                    "submit.tooltip",
+                    ".close-panel",
+                    $trigger,
+                    tooltip.hide
+                );
             } else {
                 $container.on("click.tooltip", $trigger, tooltip.hide);
                 $trigger.on("mouseleave.tooltip", $trigger, tooltip.hide);
@@ -193,26 +233,36 @@ define([
             tooltip.removeShowEvents($trigger);
             // Wrap in a timeout to make sure this click is not used to
             // trigger a hide as well.
-            setTimeout(function() { tooltip.setupHideEvents($trigger); }, 50);
+            setTimeout(function() {
+                tooltip.setupHideEvents($trigger);
+            }, 50);
 
-            if (options.source==="ajax") {
+            if (options.source === "ajax") {
                 var source = $trigger.attr("href").split("#"),
                     target_id = $container.find("progress").attr("id");
-                inject.execute([{
-                    url: source[0],
-                    source: "#" + source[1],
-                    target: "#" + target_id + "::element",
-                    dataType: options.ajaxDataType
-                }], $trigger);
+                inject.execute(
+                    [
+                        {
+                            url: source[0],
+                            source: "#" + source[1],
+                            target: "#" + target_id + "::element",
+                            dataType: options.ajaxDataType
+                        }
+                    ],
+                    $trigger
+                );
             }
 
             tooltip.positionContainer($trigger, $container);
             $container.css("visibility", "visible");
 
             // reposition tooltip everytime we scroll or resize
-            $container.parents().add(window).on("scroll." + namespace + " resize." + namespace, function () {
-                 tooltip.positionContainer($trigger, $container);
-            });
+            $container
+                .parents()
+                .add(window)
+                .on("scroll." + namespace + " resize." + namespace, function() {
+                    tooltip.positionContainer($trigger, $container);
+                });
 
             if (options.markInactive) {
                 $trigger.removeClass("inactive").addClass("active");
@@ -220,7 +270,6 @@ define([
         },
 
         hide: function(event) {
-
             var $this = $(this),
                 $trigger = event.data,
                 $container = tooltip.getContainer($trigger),
@@ -231,7 +280,7 @@ define([
                 if ($this.parents(".pat-inject").length == 0) {
                     return false;
                 }
-                if ($this.attr('type') !== "submit") {
+                if ($this.attr("type") !== "submit") {
                     return false;
                 }
                 return true;
@@ -242,20 +291,29 @@ define([
                     return;
                 }
                 // when another tooltip trigger is clicked, only close the previous tooltip if it does not contain the trigger
-                if (event.type !== "pat-tooltip-click" || $container.has(event.target).length <= 0) {
+                if (
+                    event.type !== "pat-tooltip-click" ||
+                    $container.has(event.target).length <= 0
+                ) {
                     $container.css("visibility", "hidden");
-                    $container.parents().add(window).off("." + namespace);
+                    $container
+                        .parents()
+                        .add(window)
+                        .off("." + namespace);
                     tooltip.removeHideEvents($trigger);
                     tooltip.setupShowEvents($trigger);
                     if (options.markInactive) {
                         $trigger.removeClass("active").addClass("inactive");
                     }
-                    $trigger.trigger("pat-update", {pattern: "tooltip", hidden: true});
+                    $trigger.trigger("pat-update", {
+                        pattern: "tooltip",
+                        hidden: true
+                    });
                 }
             }
 
             if (should_wait_for_injection()) {
-                $("body").on( "patterns-inject-triggered", do_hide);
+                $("body").on("patterns-inject-triggered", do_hide);
             } else {
                 do_hide();
             }
@@ -264,8 +322,7 @@ define([
         onDestroy: function(event) {
             var $trigger = event.data,
                 $container = $trigger.data("patterns.tooltip.container");
-            if ($container!==undefined)
-                $container.remove();
+            if ($container !== undefined) $container.remove();
         },
 
         getContainer: function($trigger, create) {
@@ -285,41 +342,52 @@ define([
         createContainer: function($trigger) {
             var options = $trigger.data("patterns.tooltip"),
                 count = ++tooltip.count,
-                $content, $container, href;
+                $content,
+                $container,
+                href;
 
             $trigger.data("patterns.tooltip.number", count);
-            $container = $("<div/>", {"class": "tooltip-container type-"+options.closing,
-                                     "id": "tooltip" + count});
-            if (options["class"])
-                $container.addClass(options["class"]);
+            $container = $("<div/>", {
+                class: "tooltip-container type-" + options.closing,
+                id: "tooltip" + count
+            });
+            if (options["class"]) $container.addClass(options["class"]);
             $container.css("visibility", "hidden");
             switch (options.source) {
-            case "ajax":
-                $content=$("<progress/>", {"id": "tooltip-load-" + count});
-                break;
-            case "title":
-                $content=$("<p/>").text(options.title);
-                break;
-            case "content-html":
-                $content = $("<div/>").html(options.content);
-                break;
-            case "content":
-                href = $trigger.attr("href");
-                if (typeof(href) === "string" && href.indexOf("#") !== -1) {
-                    $content = $("#"+href.split("#")[1]).children().clone();
-                } else {
-                    $content = $trigger.children().clone();
-                    if (!$content.length) {
-                        $content = $("<p/>").text($trigger.text());
+                case "ajax":
+                    $content = $("<progress/>", {
+                        id: "tooltip-load-" + count
+                    });
+                    break;
+                case "title":
+                    $content = $("<p/>").text(options.title);
+                    break;
+                case "content-html":
+                    $content = $("<div/>").html(options.content);
+                    break;
+                case "content":
+                    href = $trigger.attr("href");
+                    if (typeof href === "string" && href.indexOf("#") !== -1) {
+                        $content = $("#" + href.split("#")[1])
+                            .children()
+                            .clone();
+                    } else {
+                        $content = $trigger.children().clone();
+                        if (!$content.length) {
+                            $content = $("<p/>").text($trigger.text());
+                        }
                     }
-                }
-                registry.scan($content);
-                break;
+                    registry.scan($content);
+                    break;
             }
-            $container.append(
-                $("<div/>").css("display", "block").append($content))
-                .append($("<span></span>", {"class": "pointer"}));
-            $("<button/>", {"class": "close-panel"})
+            $container
+                .append(
+                    $("<div/>")
+                        .css("display", "block")
+                        .append($content)
+                )
+                .append($("<span></span>", { class: "pointer" }));
+            $("<button/>", { class: "close-panel" })
                 .text("Close")
                 .insertBefore($container.find("*:first"));
             $(options.target).append($container);
@@ -347,19 +415,22 @@ define([
 
             scroll.top = $window.scrollTop();
             scroll.left = $window.scrollLeft();
-            trigger_center = {top: trigger_box.top + (trigger_box.height/2),
-                              left: trigger_box.left + (trigger_box.width/2)};
+            trigger_center = {
+                top: trigger_box.top + trigger_box.height / 2,
+                left: trigger_box.left + trigger_box.width / 2
+            };
             space.top = trigger_box.top - scroll.top;
             space.bottom = window_height - space.top - trigger_box.height;
             space.left = trigger_box.left - scroll.left;
             space.right = window_width - space.left - trigger_box.width;
 
-            return {space: space,
-                    trigger_center: trigger_center,
-                    trigger_box: trigger_box,
-                    tooltip_box: tooltip_box,
-                    scroll: scroll,
-                    window: {width: window_width, height: window_height}
+            return {
+                space: space,
+                trigger_center: trigger_center,
+                trigger_box: trigger_box,
+                tooltip_box: tooltip_box,
+                scroll: scroll,
+                window: { width: window_width, height: window_height }
             };
         },
 
@@ -368,38 +439,42 @@ define([
         // and returns a two-character position indicator.
         findBestPosition: function(status) {
             var space = status.space,
-                 cls = "";
+                cls = "";
 
             if (space.top > Math.max(space.right, space.bottom, space.left)) {
                 cls = "b";
-            } else if (space.right > Math.max(space.bottom, space.left, space.top)) {
+            } else if (
+                space.right > Math.max(space.bottom, space.left, space.top)
+            ) {
                 cls = "l";
-            } else if (space.bottom > Math.max(space.left, space.top, space.right)) {
+            } else if (
+                space.bottom > Math.max(space.left, space.top, space.right)
+            ) {
                 cls = "t";
             } else {
                 cls = "r";
             }
 
             switch (cls[0]) {
-            case "t":
-            case "b":
-                if (Math.abs(space.left-space.right) < 20) {
-                    cls += "m";
-                } else if (space.left > space.right) {
-                    cls += "r";
-                } else {
-                    cls += "l";
-                }
-                break;
-            case "l":
-            case "r":
-                if (Math.abs(space.top-space.bottom) < 20) {
-                    cls += "m";
-                } else if (space.top > space.bottom) {
-                    cls += "b";
-                } else {
-                    cls += "t";
-                }
+                case "t":
+                case "b":
+                    if (Math.abs(space.left - space.right) < 20) {
+                        cls += "m";
+                    } else if (space.left > space.right) {
+                        cls += "r";
+                    } else {
+                        cls += "l";
+                    }
+                    break;
+                case "l":
+                case "r":
+                    if (Math.abs(space.top - space.bottom) < 20) {
+                        cls += "m";
+                    } else if (space.top > space.bottom) {
+                        cls += "b";
+                    } else {
+                        cls += "t";
+                    }
             }
             return cls;
         },
@@ -409,75 +484,81 @@ define([
                 tooltip_box = status.tooltip_box;
 
             switch (position[0]) {
-            case "t":
-                if (tooltip_box.height > space.bottom) {
+                case "t":
+                    if (tooltip_box.height > space.bottom) {
+                        return false;
+                    }
+                    break;
+                case "r":
+                    if (tooltip_box.width > space.left) {
+                        return false;
+                    }
+                    break;
+                case "b":
+                    if (tooltip_box.height > space.top) {
+                        return false;
+                    }
+                    break;
+                case "l":
+                    if (tooltip_box.width > space.right) {
+                        return false;
+                    }
+                    break;
+                default:
                     return false;
-                }
-                break;
-            case "r":
-                if (tooltip_box.width > space.left) {
-                    return false;
-                }
-                break;
-            case "b":
-                if (tooltip_box.height > space.top) {
-                    return false;
-                }
-                break;
-            case "l":
-                if (tooltip_box.width > space.right) {
-                    return false;
-                }
-                break;
-            default:
-                return false;
             }
 
             switch (position[0]) {
-            case "t":
-            case "b":
-                switch (position[1]) {
-                    case "l":
-                        if ((tooltip_box.width-20)>space.right) {
+                case "t":
+                case "b":
+                    switch (position[1]) {
+                        case "l":
+                            if (tooltip_box.width - 20 > space.right) {
+                                return false;
+                            }
+                            break;
+                        case "m":
+                            if (
+                                tooltip_box.width / 2 > space.left ||
+                                tooltip_box.width / 2 > space.right
+                            ) {
+                                return false;
+                            }
+                            break;
+                        case "r":
+                            if (tooltip_box.width - 20 > space.left) {
+                                return false;
+                            }
+                            break;
+                        default:
                             return false;
-                        }
-                        break;
-                    case "m":
-                        if ((tooltip_box.width/2)>space.left || (tooltip_box.width/2)>space.right) {
+                    }
+                    break;
+                case "l":
+                case "r":
+                    switch (position[1]) {
+                        case "t":
+                            if (tooltip_box.height - 20 > space.bottom) {
+                                return false;
+                            }
+                            break;
+                        case "m":
+                            if (
+                                tooltip_box.height / 2 > space.top ||
+                                tooltip_box.height / 2 > space.bottom
+                            ) {
+                                return false;
+                            }
+                            break;
+                        case "b":
+                            if (tooltip_box.height - 20 > space.top) {
+                                return false;
+                            }
+                            break;
+                        default:
                             return false;
-                        }
-                        break;
-                    case "r":
-                        if ((tooltip_box.width-20)>space.left) {
-                            return false;
-                        }
-                        break;
-                    default:
-                        return false;
-                }
-                break;
-            case "l":
-            case "r":
-                switch (position[1]) {
-                    case "t":
-                        if ((tooltip_box.height-20)>space.bottom) {
-                            return false;
-                        }
-                        break;
-                    case "m":
-                        if ((tooltip_box.height/2)>space.top || (tooltip_box.height/2)>space.bottom) {
-                            return false;
-                        }
-                        break;
-                    case "b":
-                        if ((tooltip_box.height-20)>space.top) {
-                            return false;
-                        }
-                        break;
-                    default:
-                        return false;
-                }
-                break;
+                    }
+                    break;
             }
             return true;
         },
@@ -491,8 +572,11 @@ define([
                 tip_offset = {},
                 position;
 
-            for (var i=0; i<options.position.list.length; i++) {
-                if (options.position.policy==="force" || tooltip.isVisible(status, options.position.list[i])) {
+            for (var i = 0; i < options.position.list.length; i++) {
+                if (
+                    options.position.policy === "force" ||
+                    tooltip.isVisible(status, options.position.list[i])
+                ) {
                     position = options.position.list[i];
                     break;
                 }
@@ -510,112 +594,152 @@ define([
                 trigger_box = status.trigger_box,
                 tooltip_box = status.tooltip_box,
                 trigger_center = status.trigger_center,
-                content_css = {"max-height": "", "max-width": ""},
-                container_css = {"max-height": "", "max-width": ""},
-                bottom_row, x;
+                content_css = { "max-height": "", "max-width": "" },
+                container_css = { "max-height": "", "max-width": "" },
+                bottom_row,
+                x;
 
             switch (position[0]) {
-            case "t":
-                container_offset.top = trigger_box.bottom + tip_margin;
-                tip_offset.top = -23;
-                bottom_row = status.scroll.top + status.window.height;
-                content_css["max-height"] = (bottom_row - container_offset.top - container_margin) + "px";
-                break;
-            case "l":
-                container_offset.left = trigger_box.right + tip_margin;
-                tip_offset.left = -23;
-                x = status.window.width + status.scroll.left;
-                content_css["max-width"] = (x - container_offset.left - container_margin) + "px";
-                break;
-            case "b":
-                if (options.height === "max") {
-                    container_offset.top = container_margin;
-                    content_css["max-height"] = (trigger_box.top - 2*container_margin) + "px";
-                } else {
-                    container_offset.top = trigger_box.top - tooltip_box.height + 10;
-                    tip_offset.top = tooltip_box.height;
-                    x = (status.scroll.top + 10) - container_offset.top;
-                    if (x>0) {
-                        tip_offset.top -= x;
-                        content_css["max-height"] = (tooltip_box.height - x) + "px";
-                        container_offset.top += x;
+                case "t":
+                    container_offset.top = trigger_box.bottom + tip_margin;
+                    tip_offset.top = -23;
+                    bottom_row = status.scroll.top + status.window.height;
+                    content_css["max-height"] =
+                        bottom_row -
+                        container_offset.top -
+                        container_margin +
+                        "px";
+                    break;
+                case "l":
+                    container_offset.left = trigger_box.right + tip_margin;
+                    tip_offset.left = -23;
+                    x = status.window.width + status.scroll.left;
+                    content_css["max-width"] =
+                        x - container_offset.left - container_margin + "px";
+                    break;
+                case "b":
+                    if (options.height === "max") {
+                        container_offset.top = container_margin;
+                        content_css["max-height"] =
+                            trigger_box.top - 2 * container_margin + "px";
+                    } else {
+                        container_offset.top =
+                            trigger_box.top - tooltip_box.height + 10;
+                        tip_offset.top = tooltip_box.height;
+                        x = status.scroll.top + 10 - container_offset.top;
+                        if (x > 0) {
+                            tip_offset.top -= x;
+                            content_css["max-height"] =
+                                tooltip_box.height - x + "px";
+                            container_offset.top += x;
+                        }
                     }
-                }
-                break;
-            case "r":
-                if (tooltip_box.width > trigger_box.left) {
-                    // Tooltip is too wide, we need to restrict its width.
-                    container_offset.left = container_margin;
-                    tip_offset.left = trigger_box.left - container_margin;
-                    container_css["max-width"] = (trigger_box.left - container_margin) + "px";
-                } else {
-                    container_offset.left = trigger_box.left - tooltip_box.width - tip_margin;
-                    tip_offset.left = tooltip_box.width;
-                }
-                break;
+                    break;
+                case "r":
+                    if (tooltip_box.width > trigger_box.left) {
+                        // Tooltip is too wide, we need to restrict its width.
+                        container_offset.left = container_margin;
+                        tip_offset.left = trigger_box.left - container_margin;
+                        container_css["max-width"] =
+                            trigger_box.left - container_margin + "px";
+                    } else {
+                        container_offset.left =
+                            trigger_box.left - tooltip_box.width - tip_margin;
+                        tip_offset.left = tooltip_box.width;
+                    }
+                    break;
             }
 
             switch (position[0]) {
-            case "t":
-            case "b":
-                switch (position[1]) {
-                case "l":
-                    container_offset.left = trigger_center.left - tip_margin;
-                    tip_offset.left = 0;
-                    if ((trigger_center.left - tooltip_box.width) < 0) {
-                        // Tooltip is too wide, we need to restrict its width.
-                        container_css["max-width"] = (status.window.width - trigger_center.left -container_margin) + "px";
-                        container_offset.right = container_margin;
+                case "t":
+                case "b":
+                    switch (position[1]) {
+                        case "l":
+                            container_offset.left =
+                                trigger_center.left - tip_margin;
+                            tip_offset.left = 0;
+                            if (trigger_center.left - tooltip_box.width < 0) {
+                                // Tooltip is too wide, we need to restrict its width.
+                                container_css["max-width"] =
+                                    status.window.width -
+                                    trigger_center.left -
+                                    container_margin +
+                                    "px";
+                                container_offset.right = container_margin;
+                            }
+                            break;
+                        case "m":
+                            container_offset.left =
+                                trigger_center.left - tooltip_box.width / 2;
+                            tip_offset.left =
+                                tooltip_box.width / 2 - tip_margin / 2;
+                            break;
+                        case "r":
+                            container_offset.left =
+                                trigger_center.left + 29 - tooltip_box.width;
+                            tip_offset.left = tooltip_box.width - tip_margin;
+                            break;
                     }
                     break;
-                case "m":
-                    container_offset.left = trigger_center.left - (tooltip_box.width/2);
-                    tip_offset.left = tooltip_box.width/2 - tip_margin/2;
-                    break;
+                case "l":
                 case "r":
-                    container_offset.left = trigger_center.left + 29 - tooltip_box.width;
-                    tip_offset.left = tooltip_box.width - tip_margin;
+                    switch (position[1]) {
+                        case "t":
+                            if (options.height === "max") {
+                                container_offset.top = container_margin;
+                                tip_offset.top =
+                                    trigger_box.top -
+                                    container_margin -
+                                    tip_margin;
+                            } else {
+                                container_offset.top =
+                                    trigger_center.top - container_margin;
+                                tip_offset.top = 0;
+                            }
+                            bottom_row =
+                                status.scroll.top + status.window.height;
+                            content_css["max-height"] =
+                                bottom_row -
+                                container_offset.top -
+                                container_margin +
+                                "px";
+                            break;
+                        case "m":
+                            if (options.height === "max") {
+                                container_offset.top = container_margin;
+                                bottom_row =
+                                    status.scroll.top + status.window.height;
+                                content_css["max-height"] =
+                                    bottom_row - 2 * container_margin + "px";
+                                tip_offset.top =
+                                    trigger_box.top - container_margin;
+                            } else {
+                                container_offset.top =
+                                    trigger_center.top - tooltip_box.height / 2;
+                                tip_offset.top =
+                                    tooltip_box.height / 2 - tip_margin / 2;
+                            }
+                            break;
+                        case "b":
+                            if (options.height === "max") {
+                                container_offset.top = 2 * container_margin;
+                                bottom_row =
+                                    status.scroll.top + status.window.height;
+                                content_css.height =
+                                    bottom_row - 3 * container_margin + "px";
+                                tip_offset.top =
+                                    trigger_center.top -
+                                    container_margin -
+                                    tip_margin;
+                            } else {
+                                container_offset.top =
+                                    trigger_center.top - tooltip_box.height;
+                                tip_offset.top =
+                                    trigger_center.top - tip_margin;
+                            }
+                            break;
+                    }
                     break;
-                }
-                break;
-            case "l":
-            case "r":
-                switch (position[1]) {
-                    case "t":
-                        if (options.height === "max") {
-                            container_offset.top = container_margin;
-                            tip_offset.top = trigger_box.top - container_margin - tip_margin;
-                        } else {
-                            container_offset.top = trigger_center.top - container_margin;
-                            tip_offset.top = 0;
-                        }
-                        bottom_row = status.scroll.top + status.window.height;
-                        content_css["max-height"] = (bottom_row - container_offset.top - container_margin) + "px";
-                        break;
-                    case "m":
-                        if (options.height === "max") {
-                            container_offset.top = container_margin ;
-                            bottom_row = status.scroll.top + status.window.height;
-                            content_css["max-height"] = (bottom_row - 2*container_margin) + "px";
-                            tip_offset.top = trigger_box.top - container_margin;
-                        } else {
-                            container_offset.top = trigger_center.top - (tooltip_box.height/2);
-                            tip_offset.top = tooltip_box.height/2 - tip_margin/2;
-                        }
-                        break;
-                    case "b":
-                        if (options.height === "max") {
-                            container_offset.top = 2*container_margin;
-                            bottom_row = status.scroll.top + status.window.height;
-                            content_css.height = (bottom_row - 3*container_margin) + "px";
-                            tip_offset.top = trigger_center.top - container_margin - tip_margin;
-                        } else {
-                            container_offset.top = trigger_center.top - tooltip_box.height;
-                            tip_offset.top = trigger_center.top - tip_margin;
-                        }
-                        break;
-                }
-                break;
             }
 
             var $offsetParent = $container.offsetParent();
@@ -630,12 +754,13 @@ define([
             $container.find("> div").css(content_css);
             $container.removeClass(all_positions.join(" ")).addClass(position);
             $container.css({
-                top: container_offset.top+"px",
-                left: container_offset.left+"px"
+                top: container_offset.top + "px",
+                left: container_offset.left + "px"
             });
             $container.find(".pointer").css({
-                top: tip_offset.top+"px",
-                left: tip_offset.left+"px"});
+                top: tip_offset.top + "px",
+                left: tip_offset.left + "px"
+            });
         }
     };
 

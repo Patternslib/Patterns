@@ -10,7 +10,7 @@ define([
 ], function(_, Parser, registry, Base, logger, utils, Stickyfill) {
     "use strict";
     var parser = new Parser("sticky");
-    var log = logger.getLogger("sticky")
+    var log = logger.getLogger("sticky");
     parser.addArgument("selector", "");
 
     return Base.extend({
@@ -19,17 +19,20 @@ define([
         init: function() {
             this.options = parser.parse(this.$el);
             this.makeSticky();
-            $('body').on('pat-update', utils.debounce(this.onPatternUpdate.bind(this), 500));
-            
+            $("body").on(
+                "pat-update",
+                utils.debounce(this.onPatternUpdate.bind(this), 500)
+            );
+
             /* recalc if the DOM changes. Should fix positioning issues when parts of the page get injected */
 
             return this.$el;
         },
-        onPatternUpdate: function (ev, data) {
+        onPatternUpdate: function(ev, data) {
             /* Handler which gets called when pat-update is triggered within
              * the .pat-sticky element.
              */
-            Stickyfill.refreshAll()
+            Stickyfill.refreshAll();
             return true;
         },
         makeSticky: function() {
@@ -38,7 +41,7 @@ define([
             } else {
                 this.$stickies = this.$el.find(this.options.selector);
             }
-            this.$stickies.each(function (idx, elem) {
+            this.$stickies.each(function(idx, elem) {
                 Stickyfill.add(elem);
             });
         }

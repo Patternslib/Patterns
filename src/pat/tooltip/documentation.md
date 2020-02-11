@@ -34,7 +34,7 @@ tooltip, it naturally follows that the tooltip itself will be placed to
 the left of the triggering element.
 
 The position of the tip within the tooltip can be specified with a
-*position* property which specifies the preferred positions. This is
+_position_ property which specifies the preferred positions. This is
 formatted as `<preference>[,preference]*`. The possible preferences are:
 
 - `tl`: tip placed at the leftmost corner of the top side of the tooltip

@@ -4,10 +4,7 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012 Simplon B.V. - Wichert Akkerman
  */
-define([
-    "jquery",
-    "pat-registry"
-], function($, registry) {
+define(["jquery", "pat-registry"], function($, registry) {
     var _ = {
         name: "breadcrumbs",
         trigger: "nav.pat-breadcrumbs",
@@ -19,12 +16,15 @@ define([
             }
 
             // wrap elements in a DIV that will be shifted around
-            var $content = $el.children()
-                    .wrapAll("<div class='pat-breadcrumbs-content'></div>").parent();
+            var $content = $el
+                .children()
+                .wrapAll("<div class='pat-breadcrumbs-content'></div>")
+                .parent();
 
             // shift ctrl
-            var $ctrl = $("<span class='button shift'>shift</span>")
-                    .prependTo($el);
+            var $ctrl = $("<span class='button shift'>shift</span>").prependTo(
+                $el
+            );
 
             var shifted = false,
                 shifting = false,
@@ -34,13 +34,13 @@ define([
                     var margin;
                     if (toggle) {
                         margin = shifted ? 0 : difference;
-                        $content.animate({"margin-left": margin}, function() {
+                        $content.animate({ "margin-left": margin }, function() {
                             $ctrl.toggleClass("shift-right shift-left");
                             shifted = !shifted;
                         });
                     } else {
                         margin = shifted ? difference : 0;
-                        $content.css({"margin-left": margin});
+                        $content.css({ "margin-left": margin });
                     }
                 };
             };
@@ -65,7 +65,7 @@ define([
                 } else {
                     // we should not be shifting
                     if (shifting) {
-                        $content.animate({"margin-left": 0}, function() {
+                        $content.animate({ "margin-left": 0 }, function() {
                             shifted = false;
                             shifting = false;
                             $el.removeClass("shifting");
@@ -79,12 +79,15 @@ define([
 
             var recalculate = function() {
                 // set fixed width on content
-                var width = $content.children().toArray().reduce(function(acc, el) {
-                    // outerWidth is buggy http://bugs.jquery.com/ticket/8443 so
-                    // add a magic buffer value of 5.
-                    // XXX: maybe make the buffer configurable.
-                    return acc + $(el).outerWidth(true) + 5;
-                }, 0);
+                var width = $content
+                    .children()
+                    .toArray()
+                    .reduce(function(acc, el) {
+                        // outerWidth is buggy http://bugs.jquery.com/ticket/8443 so
+                        // add a magic buffer value of 5.
+                        // XXX: maybe make the buffer configurable.
+                        return acc + $(el).outerWidth(true) + 5;
+                    }, 0);
                 $content.width(width);
                 maybeshift();
             };

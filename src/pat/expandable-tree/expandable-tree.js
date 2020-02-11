@@ -1,9 +1,9 @@
-define([
-    "jquery",
-    "pat-inject",
-    "pat-parser",
-    "pat-registry"
-], function($, inject, Parser, registry) {
+define(["jquery", "pat-inject", "pat-parser", "pat-registry"], function(
+    $,
+    inject,
+    Parser,
+    registry
+) {
     var parser = new Parser("expandable");
 
     parser.addArgument("load-content");
@@ -14,8 +14,9 @@ define([
         jquery_plugin: true,
         init: function($el) {
             // make sure inject folders have a ul
-            $el.find(".folder[data-pat-expandable]:not(:has(ul))")
-                .append("<ul />");
+            $el.find(".folder[data-pat-expandable]:not(:has(ul))").append(
+                "<ul />"
+            );
 
             // find all folders that contain a ul
             var $folders = $el.find("li.folder:has(ul)");
@@ -35,7 +36,8 @@ define([
                 var $ctrl = $(this),
                     $folder = $ctrl.parent();
                 $ctrl.on("click.pat-expandable", function() {
-                    $folder.toggleClass("open closed")
+                    $folder
+                        .toggleClass("open closed")
                         .filter(".open[data-pat-expandable]")
                         .patExpandable("loadContent");
                 });
@@ -49,16 +51,17 @@ define([
                     components = url.split("#"),
                     base_url = components[0],
                     id = components[1] ? "#" + components[1] : "body",
-                    opts = [{
-                        url: base_url,
-                        source: id,
-                        $target: $el.find("ul"),
-                        dataType: "html"
-                    }];
+                    opts = [
+                        {
+                            url: base_url,
+                            source: id,
+                            $target: $el.find("ul"),
+                            dataType: "html"
+                        }
+                    ];
                 inject.execute(opts, $el);
             });
         }
-
     };
     registry.register(_);
     return _;

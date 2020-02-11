@@ -1,9 +1,7 @@
 define(["pat-slides"], function(pattern) {
-
     describe("pat-slides", function() {
-
         beforeEach(function() {
-            $("<div/>", {id: "lab"}).appendTo(document.body);
+            $("<div/>", { id: "lab" }).appendTo(document.body);
         });
 
         afterEach(function() {
@@ -36,11 +34,17 @@ define(["pat-slides"], function(pattern) {
             });
 
             it("Comma-separated list of ids", function() {
-                expect(pattern._collapse_ids(["foo,bar"])).toEqual(["foo", "bar"]);
+                expect(pattern._collapse_ids(["foo,bar"])).toEqual([
+                    "foo",
+                    "bar"
+                ]);
             });
 
             it("Skip empty ids", function() {
-                expect(pattern._collapse_ids(["foo,,bar"])).toEqual(["foo", "bar"]);
+                expect(pattern._collapse_ids(["foo,,bar"])).toEqual([
+                    "foo",
+                    "bar"
+                ]);
             });
 
             it("Parameter without value", function() {
@@ -52,24 +56,35 @@ define(["pat-slides"], function(pattern) {
             });
 
             it("Multiple parameters", function() {
-                expect(pattern._collapse_ids(["foo", "bar"])).toEqual(["foo", "bar"]);
+                expect(pattern._collapse_ids(["foo", "bar"])).toEqual([
+                    "foo",
+                    "bar"
+                ]);
             });
         });
 
         describe("_remove_slides", function() {
             it("Remove slides from DOM", function() {
-                var $show = $("<div/>", {"class": "pat-slides"});
-                for (var i=1; i<=4; i++)
-                    $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
+                var $show = $("<div/>", { class: "pat-slides" });
+                for (var i = 1; i <= 4; i++)
+                    $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
+                        $show
+                    );
                 pattern._remove_slides($show, ["slide1", "slide3"]);
-                var ids = $.makeArray($show.find(".slide").map(function(idx, el) { return el.id;}));
+                var ids = $.makeArray(
+                    $show.find(".slide").map(function(idx, el) {
+                        return el.id;
+                    })
+                );
                 expect(ids).toEqual(["slide1", "slide3"]);
             });
 
             xit("Trigger reset when removing slides", function() {
-                var $show = $("<div/>", {"class": "pat-slides"});
-                for (var i=1; i<=4; i++)
-                    $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
+                var $show = $("<div/>", { class: "pat-slides" });
+                for (var i = 1; i <= 4; i++)
+                    $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
+                        $show
+                    );
                 var utils = require("pat-utils");
                 spyOn(utils, "debounce").and.callFake(function(func) {
                     return func;
@@ -81,9 +96,11 @@ define(["pat-slides"], function(pattern) {
             });
 
             it("Do not trigger reset when not doing anything", function() {
-                var $show = $("<div/>", {"class": "pat-slides"});
-                for (var i=1; i<=2; i++)
-                    $("<div/>", {"class": "slide", id: "slide"+i}).appendTo($show);
+                var $show = $("<div/>", { class: "pat-slides" });
+                for (var i = 1; i <= 2; i++)
+                    $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
+                        $show
+                    );
                 var spy_reset = spyOn(pattern, "_reset");
                 pattern._remove_slides($show, ["slide1", "slide2"]);
                 expect(spy_reset).not.toHaveBeenCalled();

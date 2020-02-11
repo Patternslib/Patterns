@@ -10,18 +10,16 @@ define([
     "pat-base",
     "pat-registry",
     "pat-parser",
-    "underscore",
-], function(
-    $,
-    browser,
-    Base,
-    registry,
-    Parser,
-    _
-) {
+    "underscore"
+], function($, browser, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
-    parser.addArgument("size", "width", ["width", "height", "contain", "cover"]);
+    parser.addArgument("size", "width", [
+        "width",
+        "height",
+        "contain",
+        "cover"
+    ]);
     parser.addArgument("min-width", 0);
     parser.addArgument("max-width", 1000000);
     parser.addArgument("min-height", 0);
@@ -60,7 +58,9 @@ define([
             } else {
                 var $parent;
                 if (this.$el.closest(".auto-scale-wrapper").length != 0) {
-                    container = this.$el.closest(".auto-scale-wrapper").parent()[0];
+                    container = this.$el
+                        .closest(".auto-scale-wrapper")
+                        .parent()[0];
                 } else {
                     container = this.$el.parent()[0];
                 }
@@ -76,10 +76,22 @@ define([
                 height: parseInt(style.height, 10)
             };
 
-            available_space.width = Math.min(available_space.width, this.options.max.width);
-            available_space.width = Math.max(available_space.width, this.options.min.width);
-            available_space.height = Math.min(available_space.height, this.options.max.height);
-            available_space.height = Math.max(available_space.height, this.options.min.height);
+            available_space.width = Math.min(
+                available_space.width,
+                this.options.max.width
+            );
+            available_space.width = Math.max(
+                available_space.width,
+                this.options.min.width
+            );
+            available_space.height = Math.min(
+                available_space.height,
+                this.options.max.height
+            );
+            available_space.height = Math.max(
+                available_space.height,
+                this.options.min.height
+            );
             switch (this.options.size) {
                 case "width":
                     scale = available_space.width / this.$el.outerWidth();
