@@ -2,33 +2,33 @@
 @import "components/button";
 
 .pat-collapsible {
-	margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 
-	 > *:first-child:before {
-		content: "▼";
-		width: 1.5em;
-		display: inline-block;
-	}
+  > *:first-child:before {
+    content: "▼";
+    width: 1.5em;
+    display: inline-block;
+  }
 
-	&.closed > *:first-child:before {
-		content: "▶";
-	}
+  &.closed > *:first-child:before {
+    content: "▶";
+  }
 
-	 > .panel-content {
-		padding-top: 1em;
-		padding-bottom: 1em;
-		width: 100% !important;
-	}
-	
-	> *:first-child {
-		@include pat-button();
+  > .panel-content {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    width: 100% !important;
+  }
 
-		font-weight: normal;
-		width: 100%;
+  > *:first-child {
+    @include pat-button();
 
-		-moz-box-sizing: border-box;
-		-webkit-box-sizing: border-box;
-		box-sizing: border-box;
-		// font-size: 0.8em;
-	}
+    font-weight: normal;
+    width: 100%;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    // font-size: 0.8em;
+  }
 }

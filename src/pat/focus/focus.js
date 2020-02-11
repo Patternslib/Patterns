@@ -4,11 +4,7 @@
  *
  * Copyright 2012 Simplon B.V.
  */
-define([
-    "jquery",
-    "pat-registry",
-    "pat-utils"
-], function($, patterns, utils) {
+define(["jquery", "pat-registry", "pat-utils"], function($, patterns, utils) {
     var focus = {
         name: "focus",
 
@@ -35,16 +31,13 @@ define([
             var hv = utils.hasValue(el);
 
             if (hv) {
-                $relatives
-                    .addClass("has-value")
-                    .attr("data-value", el.value);
+                $relatives.addClass("has-value").attr("data-value", el.value);
             } else {
                 $relatives
-                    .filter(function (ix, e) {
+                    .filter(function(ix, e) {
                         const inputs = $(":input", e);
-                        for (var i=0; i<inputs.length; i++)
-                            if (utils.hasValue(inputs[i]))
-                                return false;
+                        for (var i = 0; i < inputs.length; i++)
+                            if (utils.hasValue(inputs[i])) return false;
                         return true;
                     })
                     .removeClass("has-value")
@@ -62,7 +55,9 @@ define([
             var $relatives = utils.findRelatives(this);
 
             $(document).one("mouseup keyup", function() {
-                $relatives.filter(":not(:has(:input:focus))").removeClass("focus");
+                $relatives
+                    .filter(":not(:has(:input:focus))")
+                    .removeClass("focus");
             });
         },
 
@@ -76,8 +71,11 @@ define([
         .on("blur.patterns", ":input", focus.onBlur)
         .on("newContent", focus.onNewContent)
         .on("change.pat-focus keyup.pat-focus", ":input", focus.onChange)
-        .on("input.pat-focus", ":input[type=range]", utils.debounce(focus.onChange, 50))
-        ;
+        .on(
+            "input.pat-focus",
+            ":input[type=range]",
+            utils.debounce(focus.onChange, 50)
+        );
     patterns.register(focus);
     return focus;
 });

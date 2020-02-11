@@ -24,7 +24,11 @@ define([
                 var formid = $form.attr("id"),
                     name = $el.attr("name");
                 if (!formid) {
-                    log.error("Textarea or parent form needs an id", $el, $form);
+                    log.error(
+                        "Textarea or parent form needs an id",
+                        $el,
+                        $form
+                    );
                     return false;
                 }
                 if (!name) {
@@ -32,11 +36,11 @@ define([
                     return false;
                 }
                 id = formid + "_" + name;
-                if ($("#"+id).length > 0) {
+                if ($("#" + id).length > 0) {
                     log.error("Textarea needs an id", $el);
                     return false;
                 }
-                $el.attr({id: id});
+                $el.attr({ id: id });
             }
 
             // read configuration
@@ -57,25 +61,39 @@ define([
                 return false;
             }
 
-            var base_url = window.location.toString(), idx;
-            if ((idx=base_url.indexOf("?"))!==-1)
-                base_url=base_url.slice(0, idx);
+            var base_url = window.location.toString(),
+                idx;
+            if ((idx = base_url.indexOf("?")) !== -1)
+                base_url = base_url.slice(0, idx);
 
             // handle rebasing of own urls if we were injected
             var parents = $el.parents().filter(function() {
                 return $(this).data("pat-injected");
             });
             if (parents.length)
-                base_url = utils.rebaseURL(base_url, parents.first().data("pat-injected").origin);
+                base_url = utils.rebaseURL(
+                    base_url,
+                    parents.first().data("pat-injected").origin
+                );
             if (cfg.content_css)
                 cfg.content_css = utils.rebaseURL(base_url, cfg.content_css);
 
-            if (args.tinymceBaseurl.indexOf("://")!==-1 || args.tinymceBaseurl[0]==="/") {
+            if (
+                args.tinymceBaseurl.indexOf("://") !== -1 ||
+                args.tinymceBaseurl[0] === "/"
+            ) {
                 // tinyMCE.baseURL must be absolute
-                tinyMCE.baseURL = window.location.protocol + "//" +
-                    window.location.host+"/" + args.tinymceBaseurl;
+                tinyMCE.baseURL =
+                    window.location.protocol +
+                    "//" +
+                    window.location.host +
+                    "/" +
+                    args.tinymceBaseurl;
             } else {
-                tinyMCE.baseURL = utils.rebaseURL(base_url, args.tinymceBaseurl);
+                tinyMCE.baseURL = utils.rebaseURL(
+                    base_url,
+                    args.tinymceBaseurl
+                );
             }
             tinyMCE.baseURI = new tinyMCE.util.URI(tinyMCE.baseURL);
 
@@ -83,7 +101,7 @@ define([
                 var editors = tinyMCE.editors.filter(function(e) {
                         return e.id === id;
                     }),
-                    ed = editors[editors.length-1];
+                    ed = editors[editors.length - 1];
 
                 var handler = function() {
                     tinyMCE.editors[id].save();

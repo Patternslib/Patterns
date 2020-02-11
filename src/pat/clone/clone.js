@@ -1,5 +1,5 @@
 /* Clone pattern */
-define("pat-clone",[
+define("pat-clone", [
     "jquery",
     "pat-parser",
     "pat-registry",
@@ -14,7 +14,10 @@ define("pat-clone",[
     parser.addArgument("trigger-element", ".add-clone");
     parser.addArgument("remove-element", ".remove-clone");
     parser.addArgument("remove-behaviour", "confirm", ["confirm", "none"]);
-    parser.addArgument("remove-confirmation", "Are you sure you want to remove this element?");
+    parser.addArgument(
+        "remove-confirmation",
+        "Are you sure you want to remove this element?"
+    );
     parser.addArgument("clone-element", ".clone");
     parser.addAlias("remove-behavior", "remove-behaviour");
     var TEXT_NODE = 3;
@@ -30,43 +33,68 @@ define("pat-clone",[
             } else {
                 this.$template = $(this.options.template);
             }
-            $(document).on("click", this.options.triggerElement, this.clone.bind(this));
+            $(document).on(
+                "click",
+                this.options.triggerElement,
+                this.clone.bind(this)
+            );
 
             var $clones = this.$el.find(this.options.cloneElement);
             this.num_clones = $clones.length;
-            $clones.each(function (idx, clone) {
-                var $clone = $(clone);
-                $clone.find(this.options.remove.element).on("click", this.confirmRemoval.bind(this, $clone));
-            }.bind(this));
+            $clones.each(
+                function(idx, clone) {
+                    var $clone = $(clone);
+                    $clone
+                        .find(this.options.remove.element)
+                        .on("click", this.confirmRemoval.bind(this, $clone));
+                }.bind(this)
+            );
         },
 
         clone: function clone() {
             if (this.num_clones >= this.options.max) {
-                alert("Sorry, only "+this.options.max+" elements allowed.");
+                alert("Sorry, only " + this.options.max + " elements allowed.");
                 return;
             }
             this.num_clones += 1;
             var $clone = this.$template.safeClone();
             var ids = ($clone.attr("id") || "").split(" ");
             $clone.removeAttr("id").removeClass("cant-touch-this");
-            $.each(ids, function (idx, id) {
-                // Re-add all ids that have the substring #{1} in them, while
-                // also replacing that substring with the number of clones.
-                if (id.indexOf("#{1}") !== -1) {
-                    $clone.attr("id",
-                        $clone.attr("id") ? $clone.attr("id") + " " : "" +
-                            id.replace("#{1}", this.num_clones));
-                }
-            }.bind(this));
+            $.each(
+                ids,
+                function(idx, id) {
+                    // Re-add all ids that have the substring #{1} in them, while
+                    // also replacing that substring with the number of clones.
+                    if (id.indexOf("#{1}") !== -1) {
+                        $clone.attr(
+                            "id",
+                            $clone.attr("id")
+                                ? $clone.attr("id") + " "
+                                : "" + id.replace("#{1}", this.num_clones)
+                        );
+                    }
+                }.bind(this)
+            );
 
             $clone.appendTo(this.$el);
-            $clone.children().addBack().contents().addBack().filter(this.incrementValues.bind(this));
-            $clone.find(this.options.remove.element).on("click", this.confirmRemoval.bind(this, $clone));
+            $clone
+                .children()
+                .addBack()
+                .contents()
+                .addBack()
+                .filter(this.incrementValues.bind(this));
+            $clone
+                .find(this.options.remove.element)
+                .on("click", this.confirmRemoval.bind(this, $clone));
 
             $clone.prop("hidden", false);
             registry.scan($clone);
 
-            $clone.trigger("pat-update", {'pattern':"clone", 'action': 'clone', '$el': $clone});
+            $clone.trigger("pat-update", {
+                pattern: "clone",
+                action: "clone",
+                $el: $clone
+            });
             if (this.num_clones >= this.options.max) {
                 $(this.options.triggerElement).hide();
             }
@@ -74,11 +102,19 @@ define("pat-clone",[
 
         incrementValues: function incrementValues(idx, el) {
             var $el = $(el);
-            $el.children().addBack().contents().filter(this.incrementValues.bind(this));
-            var callback = function (idx, attr) {
-                if (attr.name === "type" || !$el.attr(attr.name)) { return; }
+            $el.children()
+                .addBack()
+                .contents()
+                .filter(this.incrementValues.bind(this));
+            var callback = function(idx, attr) {
+                if (attr.name === "type" || !$el.attr(attr.name)) {
+                    return;
+                }
                 try {
-                    $el.attr(attr.name, $el.attr(attr.name).replace("#{1}", this.num_clones));
+                    $el.attr(
+                        attr.name,
+                        $el.attr(attr.name).replace("#{1}", this.num_clones)
+                    );
                 } catch (e) {
                     log.warn(e);
                 }
@@ -106,7 +142,11 @@ define("pat-clone",[
             if (this.num_clones < this.options.max) {
                 $(this.options.triggerElement).show();
             }
-            this.$el.trigger("pat-update", {'pattern':"clone", 'action': 'remove', '$el': $el});
+            this.$el.trigger("pat-update", {
+                pattern: "clone",
+                action: "remove",
+                $el: $el
+            });
         }
     });
 });

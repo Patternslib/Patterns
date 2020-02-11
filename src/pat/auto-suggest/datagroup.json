@@ -1,28 +1,28 @@
 [
-    { 
-      "text": "Fruits", 
-      "children" : [
-        {
-            "id": 1,
-            "text": "Apples"
-        },
-        {
-            "id": 2,
-            "text": "Pears"
-        }
-      ]
-    },
-    { 
-      "text": "Vegetables", 
-      "children" : [
-        {
-            "id": 3,
-            "text": "Salad"
-        },
-        {
-            "id": 4,
-            "text": "Onion"
-        }
-      ]
-    }
-  ]
+  {
+    "text": "Fruits",
+    "children": [
+      {
+        "id": 1,
+        "text": "Apples"
+      },
+      {
+        "id": 2,
+        "text": "Pears"
+      }
+    ]
+  },
+  {
+    "text": "Vegetables",
+    "children": [
+      {
+        "id": 3,
+        "text": "Salad"
+      },
+      {
+        "id": 4,
+        "text": "Onion"
+      }
+    ]
+  }
+]

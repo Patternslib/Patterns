@@ -1,14 +1,14 @@
 # Making a release
 
-
 ## Update numbers
 
 First, update the version number in
+
 - package.json
 - VERSION.txt (remove the -dev from the version number in VERSION.txt)
 - and add the date to CHANGES.md
 
-    git commit -m "Prepare release"
+  git commit -m "Prepare release"
 
 ## Merge master into the "release" branch
 
@@ -54,18 +54,15 @@ Run:
   where update_type is patch, minor or major. See https://docs.npmjs.com/getting-started/publishing-npm-packages.
 - npm publish
 
-
 ## Now contact support@syslab.com and request an update of the patternslib.com site as well.
 
 This is done as follows:
 
 - Log into patternslib.syslab.com
 
-    sudo -iu patternslib
-    cd Patterns-site
-    cd patternslib
-    git pull
-    make clean && make bundle
-    cd .. && bundle exec jekyll serve
-
-
+  sudo -iu patternslib
+  cd Patterns-site
+  cd patternslib
+  git pull
+  make clean && make bundle
+  cd .. && bundle exec jekyll serve

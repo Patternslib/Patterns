@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Toggle</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-    <script src="/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Toggle</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script
+      src="/bundle-vendors.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
     <div class="row">
-	  <article class="pat-rich six columns">
-	    <h2>Toggle a class</h2>
-	    <p><span class="red" id="toToggle">This is getting toggled</span></p>
-	    <p>
-		  <button class="pat-button pat-toggle" data-pat-toggle="selector: #toToggle; value: red blue; store: session">Change colour</button></p>
-	    <p>Also notice how the status persists across page reloads.</p>
-	  </article>
+      <article class="pat-rich six columns">
+        <h2>Toggle a class</h2>
+        <p><span class="red" id="toToggle">This is getting toggled</span></p>
+        <p>
+          <button
+            class="pat-button pat-toggle"
+            data-pat-toggle="selector: #toToggle; value: red blue; store: session"
+          >
+            Change colour
+          </button>
+        </p>
+        <p>Also notice how the status persists across page reloads.</p>
+      </article>
 
       <!-- XXX Disable because currently it's not possible to toggle other attributes, only classes
 	  <article class="pat-rich six columns">
@@ -29,7 +39,6 @@
 		<p><button class="pat-button pat-toggle" data-pat-toggle="#toCheck checked checked">Toggle checkbox</button></p>
 	  </article>
       -->
-
     </div>
   </body>
 </html>

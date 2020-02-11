@@ -1,10 +1,5 @@
-define([
-    "jquery",
-    "pat-base",
-    "pat-parser",
-    "pat-logger",
-], function($, Base, Parser, logger) {
-    var log = logger.getLogger("navigation");
+define(["jquery", "pat-base", "pat-parser", "pat-logger"], function($, Base, Parser, logger) {
+    var log = logger.getLogger("pat.navigation");
     var parser = new Parser("navigation");
 
     parser.addArgument("item-wrapper", "li");
@@ -99,7 +94,7 @@ define([
                 return false;
             }
             // current path needs to end in the anchor's path
-            if (path !== curpath.slice(- path.length)) {
+            if (path !== curpath.slice(-path.length)) {
                 log.debug(curpath, "does not end in", path);
                 return false;
             }
@@ -113,7 +108,10 @@ define([
                 return "";
             }
             if (path.length === 1) return path[0];
-            return path[1].split("/").slice(1).join("/");
+            return path[1]
+                .split("/")
+                .slice(1)
+                .join("/");
         }
     });
 });

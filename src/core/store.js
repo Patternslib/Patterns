@@ -7,8 +7,8 @@
  */
 define(function() {
     function Storage(backend, prefix) {
-        this.prefix=prefix;
-        this.backend=backend;
+        this.prefix = prefix;
+        this.backend = backend;
     }
 
     Storage.prototype._key = function Storage_key(name) {
@@ -19,12 +19,12 @@ define(function() {
         var keys = [],
             prefix = this.prefix + ":",
             prefix_length = prefix.length,
-            key, i;
+            key,
+            i;
 
-        for (i=0; i<this.backend.length; i++) {
-            key=this.backend.key(i);
-            if (key.slice(0, prefix_length)===prefix)
-                keys.push(key);
+        for (i = 0; i < this.backend.length; i++) {
+            key = this.backend.key(i);
+            if (key.slice(0, prefix_length) === prefix) keys.push(key);
         }
         return keys;
     };
@@ -32,8 +32,7 @@ define(function() {
     Storage.prototype.get = function Storage_get(name) {
         var key = this._key(name),
             value = this.backend.getItem(key);
-        if (value!==null)
-            value=JSON.parse(value);
+        if (value !== null) value = JSON.parse(value);
         return value;
     };
 
@@ -49,8 +48,7 @@ define(function() {
 
     Storage.prototype.clear = function Storage_clear() {
         var keys = this._allKeys();
-        for (var i=0; i<keys.length; i++)
-            this.backend.removeItem(keys[i]);
+        for (var i = 0; i < keys.length; i++) this.backend.removeItem(keys[i]);
     };
 
     Storage.prototype.all = function Storage_all() {
@@ -59,29 +57,29 @@ define(function() {
             lk,
             data = {};
 
-        for (var i=0; i<keys.length; i++) {
+        for (var i = 0; i < keys.length; i++) {
             lk = keys[i].slice(prefix_length);
-            data[lk]=JSON.parse(this.backend.getItem(keys[i]));
+            data[lk] = JSON.parse(this.backend.getItem(keys[i]));
         }
         return data;
     };
 
     function ValueStorage(store, name) {
-        this.store=store;
-        this.name=name;
+        this.store = store;
+        this.name = name;
     }
 
     ValueStorage.prototype.get = function ValueStorage_get() {
         return this.store.get(this.name);
-    }
+    };
 
     ValueStorage.prototype.set = function ValueStorage_get(value) {
         return this.store.set(this.name, value);
-    }
+    };
 
     ValueStorage.prototype.remove = function ValueStorage_remove() {
         return this.store.remove(this.name);
-    }
+    };
 
     var store = {
         supported: false,
@@ -98,13 +96,17 @@ define(function() {
 
         // Update storage options for a given element.
         updateOptions: function store_updateOptions(trigger, options) {
-            if (options.store!=="none") {
+            if (options.store !== "none") {
                 if (!trigger.id) {
-                    log.warn("state persistance requested, but element has no id");
-                    options.store="none";
+                    log.warn(
+                        "state persistance requested, but element has no id"
+                    );
+                    options.store = "none";
                 } else if (!store.supported) {
-                    log.warn("state persistance requested, but browser does not support webstorage");
-                    options.store="none";
+                    log.warn(
+                        "state persistance requested, but browser does not support webstorage"
+                    );
+                    options.store = "none";
                 }
             }
             return options;
@@ -114,9 +116,8 @@ define(function() {
     // Perform the test separately since this may throw a SecurityError as
     // reported in #326
     try {
-        store.supported=typeof window.sessionStorage !== 'undefined';
-    } catch(e) {
-    }
+        store.supported = typeof window.sessionStorage !== "undefined";
+    } catch (e) {}
 
     return store;
 });

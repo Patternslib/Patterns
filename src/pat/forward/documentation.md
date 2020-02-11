@@ -1,5 +1,6 @@
 ## Description
-The *forward* pattern forwards click events to another element(s).
+
+The _forward_ pattern forwards click events to another element(s).
 
 ## Documentation
 
@@ -20,7 +21,7 @@ immediately after the page is loaded.
 
 ### Option reference
 
-| Property | Description | Default | Allowed Values | Type |
-|------|------|-----|------|
-| `selector` | The element to which the click event should be forwarded. | | | CSS Selector |
-| `trigger` | When the forward action should be fired | `click` | `click|auto` | One of the mutually exclusive string values |
+| Property   | Description                                               | Default | Allowed Values | Type                                        |
+| ---------- | --------------------------------------------------------- | ------- | -------------- | ------------------------------------------- |
+| `selector` | The element to which the click event should be forwarded. |         |                | CSS Selector                                |
+| `trigger`  | When the forward action should be fired                   | `click` | `click|auto`   | One of the mutually exclusive string values |
