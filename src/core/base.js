@@ -12,12 +12,13 @@
  * all DOM elements.
  */
 
-define([
-  "jquery",
-  "pat-registry",
-  "pat-mockup-parser",
-  "pat-logger"
-], function($, Registry, mockupParser, logger) {
+import $ from "jquery";
+import logger from "./logger";
+import Registry from "./registry";
+import mockupParser from "./mockup-parser";
+
+
+export default (function($, Registry, mockupParser, logger) {
     "use strict";
     var log = logger.getLogger("Patternslib Base");
 
@@ -27,10 +28,16 @@ define([
         var pattern = $el.data("pattern-" + name);
         if (pattern === undefined && Registry.patterns[name]) {
             try {
-                options = this.prototype.parser  === "mockup" ? mockupParser.getOptions($el, name, options) : options;
+                options =
+                    this.prototype.parser === "mockup"
+                        ? mockupParser.getOptions($el, name, options)
+                        : options;
                 pattern = new Registry.patterns[name]($el, options, trigger);
             } catch (e) {
-                log.error("Failed while initializing '" + name + "' pattern.", e);
+                log.error(
+                    "Failed while initializing '" + name + "' pattern.",
+                    e
+                );
             }
             $el.data("pattern-" + name, pattern);
         }
@@ -47,7 +54,10 @@ define([
     Base.prototype = {
         constructor: Base,
         on: function(eventName, eventCallback) {
-            this.$el.on(eventName + "." + this.name + ".patterns", eventCallback);
+            this.$el.on(
+                eventName + "." + this.name + ".patterns",
+                eventCallback
+            );
         },
         emit: function(eventName, args) {
             // args should be a list
@@ -60,13 +70,15 @@ define([
 
     Base.extend = function(patternProps) {
         /* Helper function to correctly set up the prototype chain for new patterns.
-        */
+         */
         var parent = this;
         var child;
 
         // Check that the required configuration properties are given.
         if (!patternProps) {
-            throw new Error("Pattern configuration properties required when calling Base.extend");
+            throw new Error(
+                "Pattern configuration properties required when calling Base.extend"
+            );
         }
 
         // The constructor function for the new subclass is either defined by you
@@ -75,20 +87,24 @@ define([
         if (patternProps.hasOwnProperty("constructor")) {
             child = patternProps.constructor;
         } else {
-            child = function() { parent.apply(this, arguments); };
+            child = function() {
+                parent.apply(this, arguments);
+            };
         }
 
         // Allow patterns to be extended indefinitely
         child.extend = Base.extend;
 
-        // Static properties required by the Patternslib registry 
+        // Static properties required by the Patternslib registry
         child.init = initBasePattern;
         child.jquery_plugin = true;
         child.trigger = patternProps.trigger;
 
         // Set the prototype chain to inherit from `parent`, without calling
         // `parent`'s constructor function.
-        var Surrogate = function() { this.constructor = child; };
+        var Surrogate = function() {
+            this.constructor = child;
+        };
         Surrogate.prototype = parent.prototype;
         child.prototype = new Surrogate();
 
@@ -101,14 +117,20 @@ define([
 
         // Register the pattern in the Patternslib registry.
         if (!patternProps.name) {
-            log.warn("This pattern without a name attribute will not be registered!");
+            log.warn(
+                "This pattern without a name attribute will not be registered!"
+            );
         } else if (!patternProps.trigger) {
-            log.warn("The pattern '"+patternProps.name+"' does not " +
-                     "have a trigger attribute, it will not be registered.");
+            log.warn(
+                "The pattern '" +
+                    patternProps.name +
+                    "' does not " +
+                    "have a trigger attribute, it will not be registered."
+            );
         } else {
             Registry.register(child, patternProps.name);
         }
         return child;
     };
     return Base;
-});
+})($, Registry, mockupParser, logger);
