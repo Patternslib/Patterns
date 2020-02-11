@@ -20,6 +20,7 @@ import 'prefixfree';
 
 
 // Import all used patterns for the bundle to be generated
+/*
 import pat_ajax from './pat/ajax/ajax.js';
 import pat_autofocus from './pat/autofocus/autofocus.js';
 import pat_autoscale from './pat/auto-scale/auto-scale.js';
@@ -78,7 +79,9 @@ import pat_validation from './pat/validation/validation.js';
 import pat_zoom from './pat/zoom/zoom.js';
 import pat_push_kit from './core/push_kit.js';
 // import pat_chosen from './pat/chosen/chosen.js';
+*/
 
+import pat_fullscreen from './pat/fullscreen/fullscreen.js';
 
 // Import locales for moment
 import 'moment/locale/de';
@@ -111,3 +114,5 @@ jquery(() => pat_registry.init());
 //     // Since we are in a non-AMD env, register a few useful utilites
 //     var window = require("window");
 //     require("imports-loader?this=>window!jquery.browser");
+
+export default { pat_fullscreen }
