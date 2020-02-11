@@ -4,12 +4,13 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
-define([
-    "jquery",
-    "underscore",
-    "pat-utils",
-    "pat-logger"
-], function($, _, utils, logger) {
+
+import $ from "jquery";
+import _ from "underscore";
+import utils from "./utils.js";
+import logger from "./logger";
+
+export default (function($, _, utils, logger) {
     "use strict";
 
     function ArgumentParser(name, opts) {
@@ -31,7 +32,7 @@ define([
         token_pattern: /((["']).*?(?!\\)\2)|\s*(\S+)\s*/g,
 
         _camelCase: function(str) {
-            return str.replace(/\-([a-z])/g, function(_, p1){
+            return str.replace(/\-([a-z])/g, function(_, p1) {
                 return p1.toUpperCase();
             });
         },
@@ -45,7 +46,11 @@ define([
             if (this.parameters[original]) {
                 this.parameters[original].alias = alias;
             } else {
-                throw("Attempted to add an alias \""+alias+"\" for a non-existing parser argument \""+original+"\".");
+                throw 'Attempted to add an alias "' +
+                    alias +
+                    '" for a non-existing parser argument "' +
+                    original +
+                    '".';
             }
         },
 
@@ -61,16 +66,27 @@ define([
                     field = m[2];
                 if (group in this.possible_groups) {
                     var first_spec = this.possible_groups[group],
-                        first_name = first_spec.name.match(this.group_pattern)[2];
+                        first_name = first_spec.name.match(
+                            this.group_pattern
+                        )[2];
                     first_spec.group = group;
                     first_spec.dest = first_name;
                     this.groups[group] = new ArgumentParser();
                     this.groups[group].addArgument(
-                            first_name, first_spec.value, first_spec.choices, first_spec.multiple);
+                        first_name,
+                        first_spec.value,
+                        first_spec.choices,
+                        first_spec.multiple
+                    );
                     delete this.possible_groups[group];
                 }
                 if (group in this.groups) {
-                    this.groups[group].addArgument(field, spec.value, spec.choices, spec.multiple);
+                    this.groups[group].addArgument(
+                        field,
+                        spec.value,
+                        spec.choices,
+                        spec.multiple
+                    );
                     spec.group = group;
                     spec.dest = field;
                 } else {
@@ -81,7 +97,10 @@ define([
             return spec;
         },
 
-        addJSONArgument: function argParserAddJSONArgument(name, default_value) {
+        addJSONArgument: function argParserAddJSONArgument(
+            name,
+            default_value
+        ) {
             /* Add an argument where the value is provided in JSON format.
              *
              * This is a different usecase than specifying all arguments to
@@ -99,10 +118,18 @@ define([
             });
         },
 
-        addArgument: function ArgParserAddArgument(name, default_value, choices, multiple) {
+        addArgument: function ArgParserAddArgument(
+            name,
+            default_value,
+            choices,
+            multiple
+        ) {
             var spec = {
                 name: name,
-                value: (multiple && !Array.isArray(default_value)) ? [default_value] : default_value,
+                value:
+                    multiple && !Array.isArray(default_value)
+                        ? [default_value]
+                        : default_value,
                 multiple: multiple,
                 dest: name,
                 group: null
@@ -110,17 +137,20 @@ define([
             if (choices && Array.isArray(choices) && choices.length) {
                 spec.choices = choices;
                 spec.type = this._typeof(choices[0]);
-                for (var i=0; i<choices.length; i++) {
-                    if (this.enum_conflicts.indexOf(choices[i])!==-1) {
+                for (var i = 0; i < choices.length; i++) {
+                    if (this.enum_conflicts.indexOf(choices[i]) !== -1) {
                         continue;
                     } else if (choices[i] in this.enum_values) {
                         this.enum_conflicts.push(choices[i]);
                         delete this.enum_values[choices[i]];
                     } else {
-                        this.enum_values[choices[i]]=name;
+                        this.enum_values[choices[i]] = name;
                     }
                 }
-            } else if (typeof spec.value==="string" && spec.value.slice(0, 1)==="$") {
+            } else if (
+                typeof spec.value === "string" &&
+                spec.value.slice(0, 1) === "$"
+            ) {
                 spec.type = this.parameters[spec.value.slice(1)].type;
             } else {
                 // Note that this will get reset by _defaults if default_value is a function.
@@ -132,8 +162,7 @@ define([
 
         _typeof: function argParserTypeof(obj) {
             var type = typeof obj;
-            if (obj===null)
-                return "null";
+            if (obj === null) return "null";
             return type;
         },
 
@@ -149,40 +178,52 @@ define([
                             if (typeof value === "string") {
                                 value = value.toLowerCase();
                                 var num = parseInt(value, 10);
-                                if (!isNaN(num))
-                                    value = !!num;
+                                if (!isNaN(num)) value = !!num;
                                 else
-                                    value=(value==="true" || value==="y" || value==="yes" || value==="y");
+                                    value =
+                                        value === "true" ||
+                                        value === "y" ||
+                                        value === "yes" ||
+                                        value === "y";
                             } else if (typeof value === "number")
                                 value = !!value;
                             else
-                                throw ("Cannot convert value for " + name + " to boolean");
+                                throw "Cannot convert value for " +
+                                    name +
+                                    " to boolean";
                             break;
                         case "number":
                             if (typeof value === "string") {
                                 value = parseInt(value, 10);
                                 if (isNaN(value))
-                                    throw ("Cannot convert value for " + name + " to number");
+                                    throw "Cannot convert value for " +
+                                        name +
+                                        " to number";
                             } else if (typeof value === "boolean")
                                 value = value + 0;
                             else
-                                throw ("Cannot convert value for " + name + " to number");
+                                throw "Cannot convert value for " +
+                                    name +
+                                    " to number";
                             break;
                         case "string":
-                            value=value.toString();
+                            value = value.toString();
                             break;
-                        case "null":  // Missing default values
+                        case "null": // Missing default values
                         case "undefined":
                             break;
                         default:
-                            throw ("Do not know how to convert value for " + name + " to " + spec.type);
+                            throw "Do not know how to convert value for " +
+                                name +
+                                " to " +
+                                spec.type;
                     }
                 } catch (e) {
                     this.log.warn(e);
                     return null;
                 }
 
-            if (spec.choices && spec.choices.indexOf(value)===-1) {
+            if (spec.choices && spec.choices.indexOf(value) === -1) {
                 this.log.warn("Illegal value for " + name + ": " + value);
                 return null;
             }
@@ -195,7 +236,9 @@ define([
                 return;
             }
             var spec = this.parameters[name],
-                parts, i, v;
+                parts,
+                i,
+                v;
             if (spec.multiple) {
                 if (typeof value === "string") {
                     parts = value.split(/,+/);
@@ -203,88 +246,112 @@ define([
                     parts = value;
                 }
                 value = [];
-                for (i=0; i<parts.length; i++) {
+                for (i = 0; i < parts.length; i++) {
                     v = this._coerce(name, parts[i].trim());
-                    if (v!==null)
-                        value.push(v);
+                    if (v !== null) value.push(v);
                 }
             } else {
                 value = this._coerce(name, value);
-                if (value===null)
-                    return;
+                if (value === null) return;
             }
             opts[name] = value;
         },
 
         _split: function argParserSplit(text) {
             var tokens = [];
-            text.replace(this.token_pattern, function(match, quoted, _, simple) {
-                if (quoted)
-                    tokens.push(quoted);
-                else if (simple)
-                    tokens.push(simple);
+            text.replace(this.token_pattern, function(
+                match,
+                quoted,
+                _,
+                simple
+            ) {
+                if (quoted) tokens.push(quoted);
+                else if (simple) tokens.push(simple);
             });
             return tokens;
         },
 
-        _parseExtendedNotation: function argParserParseExtendedNotation(argstring) {
+        _parseExtendedNotation: function argParserParseExtendedNotation(
+            argstring
+        ) {
             var opts = {};
-            var parts = argstring.replace(/;;/g, "\0x1f").replace(/&amp;/g, "&amp\0x1f").split(/;/)
-                        .map(function(el) {
-                            return el.replace(new RegExp("\0x1f", 'g'), ";");
-                        });
-            _.each(parts, function (part, i) {
-                if (!part) { return; }
-                var matches = part.match(this.named_param_pattern);
-                if (!matches) {
-                    this.log.warn("Invalid parameter: " + part + ": " + argstring);
-                    return;
-                }
-                var name = matches[1],
-                    value = matches[2].trim(),
-                    arg = _.chain(this.parameters).where({'alias': name}).value(),
-                    is_alias = arg.length === 1;
-
-                if (is_alias) {
-                    this._set(opts, arg[0].name, value);
-                } else if (name in this.parameters) {
-                    this._set(opts, name, value);
-                } else if (name in this.groups) {
-                    var subopt = this.groups[name]._parseShorthandNotation(value);
-                    for (var field in subopt) {
-                        this._set(opts, name+"-"+field, subopt[field]);
+            var parts = argstring
+                .replace(/;;/g, "\0x1f")
+                .replace(/&amp;/g, "&amp\0x1f")
+                .split(/;/)
+                .map(function(el) {
+                    return el.replace(new RegExp("\0x1f", "g"), ";");
+                });
+            _.each(
+                parts,
+                function(part, i) {
+                    if (!part) {
+                        return;
                     }
-                } else {
-                    this.log.warn("Unknown named parameter " + matches[1]);
-                    return;
-                }
-            }.bind(this));
+                    var matches = part.match(this.named_param_pattern);
+                    if (!matches) {
+                        this.log.warn(
+                            "Invalid parameter: " + part + ": " + argstring
+                        );
+                        return;
+                    }
+                    var name = matches[1],
+                        value = matches[2].trim(),
+                        arg = _.chain(this.parameters)
+                            .where({ alias: name })
+                            .value(),
+                        is_alias = arg.length === 1;
+
+                    if (is_alias) {
+                        this._set(opts, arg[0].name, value);
+                    } else if (name in this.parameters) {
+                        this._set(opts, name, value);
+                    } else if (name in this.groups) {
+                        var subopt = this.groups[name]._parseShorthandNotation(
+                            value
+                        );
+                        for (var field in subopt) {
+                            this._set(opts, name + "-" + field, subopt[field]);
+                        }
+                    } else {
+                        this.log.warn("Unknown named parameter " + matches[1]);
+                        return;
+                    }
+                }.bind(this)
+            );
             return opts;
         },
 
-        _parseShorthandNotation: function argParserParseShorthandNotation(parameter) {
+        _parseShorthandNotation: function argParserParseShorthandNotation(
+            parameter
+        ) {
             var parts = this._split(parameter),
                 opts = {},
                 positional = true,
-                i=0, part, flag, sense;
+                i = 0,
+                part,
+                flag,
+                sense;
 
             while (parts.length) {
-                part=parts.shift().trim();
-                if (part.slice(0, 3)==="no-") {
+                part = parts.shift().trim();
+                if (part.slice(0, 3) === "no-") {
                     sense = false;
-                    flag=part.slice(3);
+                    flag = part.slice(3);
                 } else {
                     sense = true;
                     flag = part;
                 }
-                if (flag in this.parameters && this.parameters[flag].type==="boolean") {
+                if (
+                    flag in this.parameters &&
+                    this.parameters[flag].type === "boolean"
+                ) {
                     positional = false;
                     this._set(opts, flag, sense);
                 } else if (flag in this.enum_values) {
                     positional = false;
                     this._set(opts, this.enum_values[flag], flag);
-                } else if (positional)
-                    this._set(opts, this.order[i], part);
+                } else if (positional) this._set(opts, this.order[i], part);
                 else {
                     parts.unshift(part);
                     break;
@@ -301,12 +368,14 @@ define([
 
         _parse: function argParser_parse(parameter) {
             var opts, extended, sep;
-            if (!parameter) { return {}; }
+            if (!parameter) {
+                return {};
+            }
             if (parameter.match(this.json_param_pattern)) {
                 try {
                     return JSON.parse(parameter);
                 } catch (e) {
-                    this.log.warn("Invalid JSON argument found: "+parameter);
+                    this.log.warn("Invalid JSON argument found: " + parameter);
                 }
             }
             if (parameter.match(this.named_param_pattern)) {
@@ -317,9 +386,8 @@ define([
                 return this._parseShorthandNotation(parameter);
             }
             opts = this._parseShorthandNotation(parameter.slice(0, sep));
-            extended = this._parseExtendedNotation(parameter.slice(sep+1));
-            for (var name in extended)
-                opts[name] = extended[name];
+            extended = this._parseExtendedNotation(parameter.slice(sep + 1));
+            for (var name in extended) opts[name] = extended[name];
             return opts;
         },
 
@@ -329,40 +397,45 @@ define([
                 if (typeof this.parameters[name].value === "function")
                     try {
                         result[name] = this.parameters[name].value($el, name);
-                        this.parameters[name].type=typeof result[name];
-                    } catch(e) {
-                        this.log.error("Default function for " + name + " failed.");
+                        this.parameters[name].type = typeof result[name];
+                    } catch (e) {
+                        this.log.error(
+                            "Default function for " + name + " failed."
+                        );
                     }
-                else
-                    result[name] = this.parameters[name].value;
+                else result[name] = this.parameters[name].value;
             return result;
         },
 
         _cleanupOptions: function argParserCleanupOptions(options) {
             var keys = Object.keys(options),
-                i, spec, name, target;
+                i,
+                spec,
+                name,
+                target;
 
             // Resolve references
-            for (i=0; i<keys.length; i++) {
+            for (i = 0; i < keys.length; i++) {
                 name = keys[i];
                 spec = this.parameters[name];
-                if (spec === undefined)
-                    continue;
+                if (spec === undefined) continue;
 
-                if (options[name] === spec.value &&
-                        typeof spec.value==="string" && spec.value.slice(0, 1)==="$")
+                if (
+                    options[name] === spec.value &&
+                    typeof spec.value === "string" &&
+                    spec.value.slice(0, 1) === "$"
+                )
                     options[name] = options[spec.value.slice(1)];
             }
             // Move options into groups and do renames
             keys = Object.keys(options);
-            for (i=0; i<keys.length; i++) {
+            for (i = 0; i < keys.length; i++) {
                 name = keys[i];
                 spec = this.parameters[name];
-                if (spec === undefined)
-                    continue;
+                if (spec === undefined) continue;
 
-                if (spec.group)  {
-                    if (typeof options[spec.group]!=="object")
+                if (spec.group) {
+                    if (typeof options[spec.group] !== "object")
                         options[spec.group] = {};
                     target = options[spec.group];
                 } else {
@@ -377,16 +450,15 @@ define([
             return options;
         },
 
-
         parse: function argParserParse($el, options, multiple, inherit) {
-            if (typeof options==="boolean" && multiple===undefined) {
-                multiple=options;
-                options={};
+            if (typeof options === "boolean" && multiple === undefined) {
+                multiple = options;
+                options = {};
             }
-            inherit = (inherit!==false);
+            inherit = inherit !== false;
             var stack = inherit ? [[this._defaults($el)]] : [[{}]];
             var $possible_config_providers;
-            var final_length = 1
+            var final_length = 1;
             /*
              * XXX this is a workaround for:
              * - https://github.com/Patternslib/Patterns/issues/393
@@ -398,45 +470,58 @@ define([
              * - https://github.com/Patternslib/Patterns/issues/627
              *
              */
-            if (!inherit || ($el.hasClass('pat-modal') && this.attribute === 'data-pat-inject')) {
+            if (
+                !inherit ||
+                ($el.hasClass("pat-modal") &&
+                    this.attribute === "data-pat-inject")
+            ) {
                 $possible_config_providers = $el;
             } else {
-                $possible_config_providers = $el.parents("[" + this.attribute + "]").addBack();
+                $possible_config_providers = $el
+                    .parents("[" + this.attribute + "]")
+                    .addBack();
             }
 
-            _.each($possible_config_providers, function (provider) {
-                var data, frame, _parse;
-                data = $(provider).attr(this.attribute)
-                if (!data) {
-                    return;
-                }
-                _parse = this._parse.bind(this);
-                if (data.match(/&&/))
-                    frame = data.split(/\s*&&\s*/).map(_parse);
-                else
-                    frame = [_parse(data)];
-                final_length = Math.max(frame.length, final_length);
-                stack.push(frame);
-            }.bind(this));
+            _.each(
+                $possible_config_providers,
+                function(provider) {
+                    var data, frame, _parse;
+                    data = $(provider).attr(this.attribute);
+                    if (!data) {
+                        return;
+                    }
+                    _parse = this._parse.bind(this);
+                    if (data.match(/&&/))
+                        frame = data.split(/\s*&&\s*/).map(_parse);
+                    else frame = [_parse(data)];
+                    final_length = Math.max(frame.length, final_length);
+                    stack.push(frame);
+                }.bind(this)
+            );
 
             if (typeof options === "object") {
                 if (Array.isArray(options)) {
                     stack.push(options);
                     final_length = Math.max(options.length, final_length);
-                } else
-                    stack.push([options]);
+                } else stack.push([options]);
             }
-            if (!multiple) { final_length = 1; }
+            if (!multiple) {
+                final_length = 1;
+            }
             var results = _.map(
-                _.compose(utils.removeDuplicateObjects, _.partial(utils.mergeStack, _, final_length))(stack),
+                _.compose(
+                    utils.removeDuplicateObjects,
+                    _.partial(utils.mergeStack, _, final_length)
+                )(stack),
                 this._cleanupOptions.bind(this)
             );
             return multiple ? results : results[0];
         }
     };
     // BBB
-    ArgumentParser.prototype.add_argument = ArgumentParser.prototype.addArgument;
+    ArgumentParser.prototype.add_argument =
+        ArgumentParser.prototype.addArgument;
     return ArgumentParser;
-});
+})($, _, utils, logger);
 // jshint indent: 4, browser: true, jquery: true, quotmark: double
 // vim: sw=4 expandtab
