@@ -1,89 +1,105 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Masonry Pattern demo</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body  class="sidebar-closed">
-    <p><button class="pat-button pat-toggle" data-pat-toggle="selector: body; value: sidebar-open sidebar-closed; store: session">Expand sidebar</button></p>
-    
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body class="sidebar-closed">
+    <p>
+      <button
+        class="pat-button pat-toggle"
+        data-pat-toggle="selector: body; value: sidebar-open sidebar-closed; store: session"
+      >
+        Expand sidebar
+      </button>
+    </p>
+
     <div id="sidebar">
-        This is a sidebar pushing the masonry aside. It should detect this and rerender.
+      This is a sidebar pushing the masonry aside. It should detect this and
+      rerender.
     </div>
-    <div class="pat-masonry row" data-pat-masonry="column-width: .sizer; gutter: 0; item-selector: .item;">
-        <div class="four columns sizer"></div>
-        <div class="four columns item">
-            <a href="http://erikjohanssonphoto.com/work/imagecats/personal/">
-                <img src="http://i.imgur.com/6Lo8oun.jpg"><p class="example-title">Erik Johansson</p>
-            </a>
-        </div>
-        <div class="four columns item">
-            <a href="http://iam.beyonce.com/">
-                <img src="http://i.imgur.com/HDSAMFl.jpg"><p class="example-title">Beyoncé | I Am</p>
-            </a>
-        </div>
-        <div class="four columns item">
-            <a href="http://www.voxmedia.com">
-                <img src="http://i.imgur.com/xSiTFij.jpg"><p class="example-title">Vox Media</p>
-            </a>
-        </div>
-        <div class="four columns item w2">
-            <a href="http://halcyon-theme.tumblr.com/">
-                <img src="http://i.imgur.com/A1RSOhg.jpg"><p class="example-title">Halcyon theme</p>
-            </a>
-        </div>
-        <div class="four columns item">
-            <a href="http://resize.thatsh.it/">
-                <img src="http://i.imgur.com/00xWxLG.png"><p class="example-title">RESIZE.THATSH.IT</p>
-            </a>
-        </div>
+    <div
+      class="pat-masonry row"
+      data-pat-masonry="column-width: .sizer; gutter: 0; item-selector: .item;"
+    >
+      <div class="four columns sizer"></div>
+      <div class="four columns item">
+        <a href="http://erikjohanssonphoto.com/work/imagecats/personal/">
+          <img src="http://i.imgur.com/6Lo8oun.jpg" />
+          <p class="example-title">Erik Johansson</p>
+        </a>
+      </div>
+      <div class="four columns item">
+        <a href="http://iam.beyonce.com/">
+          <img src="http://i.imgur.com/HDSAMFl.jpg" />
+          <p class="example-title">Beyoncé | I Am</p>
+        </a>
+      </div>
+      <div class="four columns item">
+        <a href="http://www.voxmedia.com">
+          <img src="http://i.imgur.com/xSiTFij.jpg" />
+          <p class="example-title">Vox Media</p>
+        </a>
+      </div>
+      <div class="four columns item w2">
+        <a href="http://halcyon-theme.tumblr.com/">
+          <img src="http://i.imgur.com/A1RSOhg.jpg" />
+          <p class="example-title">Halcyon theme</p>
+        </a>
+      </div>
+      <div class="four columns item">
+        <a href="http://resize.thatsh.it/">
+          <img src="http://i.imgur.com/00xWxLG.png" />
+          <p class="example-title">RESIZE.THATSH.IT</p>
+        </a>
+      </div>
     </div>
     <style>
-        #sidebar {
-            height: 400px;
-            background: #eee;
-            float: left;
-            width: 0;
-            padding: 1em;
-        }
-        body.sidebar-closed #sidebar {
-            width: 0;
-            display: none;
-        }
-        body.sidebar-open #sidebar {
-            width: 32%;
-            margin-right: 1%;
-        }
-        .pat-masonry {
-            float:left;
-            width: 100%;
-        }
-        body.sidebar-open .pat-masonry {
-            width: 66%;
-        }
-        .item {
-            margin-bottom: 1em;
-        }
-        .item a {
-            border: 1px solid silver;
-            padding: 0.5em;
-            float: left;
-            width: 100%;
-            text-decoration: none;
-        }
+      #sidebar {
+        height: 400px;
+        background: #eee;
+        float: left;
+        width: 0;
+        padding: 1em;
+      }
+      body.sidebar-closed #sidebar {
+        width: 0;
+        display: none;
+      }
+      body.sidebar-open #sidebar {
+        width: 32%;
+        margin-right: 1%;
+      }
+      .pat-masonry {
+        float: left;
+        width: 100%;
+      }
+      body.sidebar-open .pat-masonry {
+        width: 66%;
+      }
+      .item {
+        margin-bottom: 1em;
+      }
+      .item a {
+        border: 1px solid silver;
+        padding: 0.5em;
+        float: left;
+        width: 100%;
+        text-decoration: none;
+      }
 
-        .item a p {  
-            text-align: center;
-            font-weight: bold;
-            color: #666;
-        }
+      .item a p {
+        text-align: center;
+        font-weight: bold;
+        color: #666;
+      }
 
-        .item a img {
-            margin-bottom: 0.5em;
-            width: 100%;
-        }
+      .item a img {
+        margin-bottom: 0.5em;
+        width: 100%;
+      }
     </style>
-</body>
+  </body>
 </html>

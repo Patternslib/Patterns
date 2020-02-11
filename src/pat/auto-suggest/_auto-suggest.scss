@@ -28,7 +28,8 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
   height: auto !important;
 }
 
-.select2-container, .select2-drop {
+.select2-container,
+.select2-drop {
   box-sizing: border-box;
 }
 
@@ -95,7 +96,7 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
       font-size: 1px;
       text-decoration: none;
       border: 0;
-      background: url('select2.png') right top no-repeat;
+      background: url("select2.png") right top no-repeat;
       cursor: pointer;
       outline: 0;
     }
@@ -226,7 +227,7 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
 }
 
 .select2-search input.select2-active {
-  background: white url('select2-spinner.gif') no-repeat 100%;
+  background: white url("select2-spinner.gif") no-repeat 100%;
   // background: url('select2-spinner.gif') no-repeat 100%, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
   // background: url('select2-spinner.gif') no-repeat 100%, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
   // background: url('select2-spinner.gif') no-repeat 100%, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
@@ -234,7 +235,8 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
 }
 
 .select2-container-active {
-  .select2-choice, .select2-choices {
+  .select2-choice,
+  .select2-choices {
     border: 1px solid #5897fb;
     outline: none;
     // -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -257,7 +259,8 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
     // background-image: linear-gradient(top, white 0%, #eeeeee 50%);
   }
   &.select2-drop-above {
-    .select2-choice, .select2-choices {
+    .select2-choice,
+    .select2-choices {
       border: 1px solid #5897fb;
       border-top-color: transparent;
       // background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, white), color-stop(0.5, #eeeeee));
@@ -358,7 +361,9 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
       color: #000;
     }
   }
-  .select2-no-results, .select2-searching, .select2-selection-limit {
+  .select2-no-results,
+  .select2-searching,
+  .select2-selection-limit {
     background: #f4f4f4;
     display: list-item;
   }
@@ -384,7 +389,7 @@ disabled look for disabled choices in the results dropdown
 
 .select2-more-results {
   &.select2-active {
-    background: #f4f4f4 url('select2-spinner.gif') no-repeat 100%;
+    background: #f4f4f4 url("select2-spinner.gif") no-repeat 100%;
   }
   background: #f4f4f4;
   display: list-item;
@@ -461,7 +466,7 @@ disabled look for disabled choices in the results dropdown
         width: 20px;
         background-color: transparent;
         &.select2-active {
-          background: white url('select2-spinner.gif') no-repeat 100% !important;
+          background: white url("select2-spinner.gif") no-repeat 100% !important;
         }
       }
     }
@@ -535,7 +540,8 @@ disabled look for disabled choices in the results dropdown
     top: 0em;
   }
   .select2-choices {
-    .select2-search-choice .select2-search-choice-close:hover, .select2-search-choice-focus .select2-search-choice-close {
+    .select2-search-choice .select2-search-choice-close:hover,
+    .select2-search-choice-focus .select2-search-choice-close {
       background-position: right -11px;
     }
   }
@@ -607,14 +613,18 @@ disabled look for disabled choices in the results dropdown
 
 /* @end */
 
-.select2-container-multi.select2-container-disabled .select2-choices .select2-search-choice .select2-search-choice-close {
+.select2-container-multi.select2-container-disabled
+  .select2-choices
+  .select2-search-choice
+  .select2-search-choice-close {
   display: none;
   background: none;
 }
 
 /* end multiselect */
 
-.select2-result-selectable .select2-match, .select2-result-unselectable .select2-match {
+.select2-result-selectable .select2-match,
+.select2-result-unselectable .select2-match {
   text-decoration: underline;
 }
 
@@ -660,15 +670,18 @@ disabled look for disabled choices in the results dropdown
 
 /* Retina-ize icons */
 
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi) {
-  .select2-search input, .select2-search-choice-close {
-    background-image: url('select2x2.png') !important;
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+  only screen and (min-resolution: 144dpi) {
+  .select2-search input,
+  .select2-search-choice-close {
+    background-image: url("select2x2.png") !important;
     background-repeat: no-repeat !important;
     background-size: 60px 40px !important;
   }
   .select2-container .select2-choice {
-    abbr, .select2-arrow b {
-      background-image: url('select2x2.png') !important;
+    abbr,
+    .select2-arrow b {
+      background-image: url("select2x2.png") !important;
       background-repeat: no-repeat !important;
       background-size: 60px 40px !important;
     }

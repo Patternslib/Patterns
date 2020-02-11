@@ -91,28 +91,40 @@
     }
   }
 
-  &.bl .pointer, &.bm .pointer, &.br .pointer {
+  &.bl .pointer,
+  &.bm .pointer,
+  &.br .pointer {
     margin-top: -12px;
   }
-  &.lt .pointer, &.lm .pointer, &.lb .pointer {
+  &.lt .pointer,
+  &.lm .pointer,
+  &.lb .pointer {
     margin-left: 12px;
   }
-  &.tl .pointer, &.tm .pointer, &.tr .pointer {
+  &.tl .pointer,
+  &.tm .pointer,
+  &.tr .pointer {
     margin-top: 12px;
   }
-  &.rt .pointer, &.rm .pointer, &.rb .pointer {
+  &.rt .pointer,
+  &.rm .pointer,
+  &.rb .pointer {
     margin-left: -12px;
   }
-  &.lt .pointer, &.rt .pointer {
+  &.lt .pointer,
+  &.rt .pointer {
     margin-top: 20px;
   }
-  &.lb .pointer, &.rb .pointer {
+  &.lb .pointer,
+  &.rb .pointer {
     margin-top: -20px;
   }
-  &.tl .pointer, &.bl .pointer {
+  &.tl .pointer,
+  &.bl .pointer {
     margin-left: 20px;
   }
-  &.tr .pointer, &.br .pointer {
+  &.tr .pointer,
+  &.br .pointer {
     margin-left: -20px;
   }
 
@@ -175,7 +187,7 @@
   ul.menu {
     margin: 0;
     list-style-type: none;
-    
+
     li {
       line-height: 1.5em;
 
@@ -193,7 +205,7 @@
         }
       }
 
-      a:before, 
+      a:before,
       button:before {
         margin-left: -1.6em;
         float: left;
@@ -202,7 +214,6 @@
     }
 
     li {
-
       &.current a {
         &:before {
           content: "✓";
@@ -227,14 +238,14 @@
         text-indent: 20px;
         height: 25px;
         overflow: hidden;
-        
+
         &:before {
           content: "\e808";
           font-family: fontello;
           position: absolute;
           left: -13px;
         }
-        
+
         form {
           position: absolute;
           top: 0;

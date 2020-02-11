@@ -1,64 +1,117 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pat-clone demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
     <h2>Demo</h2>
-    <form action="" class="pat-validation" data-pat-validation="disable-selector: #submit"  novalidate>
-        <h3>List of family members</h3>
-        <div class="pat-clone" data-pat-clone="template: #clone-template; trigger-element: .clone-trigger; max: 5">
-            <!-- First visible instance and also template -->
-            <fieldset class="clone">
-                <legend>Family member 1</legend>
-                <input name="name-1" size="20" type="text" placeholder="Name" required="required"/>
-                <input name="date-1" type="date" placeholder="birthdate" />
-                <button type="button" class="pat-button remove-clone icon-trash">Remove</button>
-            </fieldset>
-            <fieldset id="clone-template" hidden>
-                <legend>Family member #{1}</legend>
-                <input name="name-#{1}" size="20" type="text" placeholder="Name" required="required"/>
-                <input name="date-#{1}" type="date" placeholder="birthdate" />
-                <button type="button" class="pat-button remove-clone icon-trash">Remove</button>
-            </fieldset>
-        </div>
-        <!-- Clone trigger -->
-        <button type="button" class="pat-button clone-trigger">Add an extra family member</button>
-        <button class="pat-button" id="submit" type="submit">submit</button>
+    <form
+      action=""
+      class="pat-validation"
+      data-pat-validation="disable-selector: #submit"
+      novalidate
+    >
+      <h3>List of family members</h3>
+      <div
+        class="pat-clone"
+        data-pat-clone="template: #clone-template; trigger-element: .clone-trigger; max: 5"
+      >
+        <!-- First visible instance and also template -->
+        <fieldset class="clone">
+          <legend>Family member 1</legend>
+          <input
+            name="name-1"
+            size="20"
+            type="text"
+            placeholder="Name"
+            required="required"
+          />
+          <input name="date-1" type="date" placeholder="birthdate" />
+          <button type="button" class="pat-button remove-clone icon-trash">
+            Remove
+          </button>
+        </fieldset>
+        <fieldset id="clone-template" hidden>
+          <legend>Family member #{1}</legend>
+          <input
+            name="name-#{1}"
+            size="20"
+            type="text"
+            placeholder="Name"
+            required="required"
+          />
+          <input name="date-#{1}" type="date" placeholder="birthdate" />
+          <button type="button" class="pat-button remove-clone icon-trash">
+            Remove
+          </button>
+        </fieldset>
+      </div>
+      <!-- Clone trigger -->
+      <button type="button" class="pat-button clone-trigger">
+        Add an extra family member
+      </button>
+      <button class="pat-button" id="submit" type="submit">submit</button>
     </form>
 
-
-    Open <a class="pat-tooltip" data-pat-tooltip="ajax ; trigger: click ; closing: close-button" href="#tooltip-content">a tooltip with a clone in it</a>.
+    Open
+    <a
+      class="pat-tooltip"
+      data-pat-tooltip="ajax ; trigger: click ; closing: close-button"
+      href="#tooltip-content"
+      >a tooltip with a clone in it</a
+    >.
 
     <div id="tooltip-content" style="display:none">
-        <form action="" class="pat-validation" data-pat-validation="disable-selector: #submit"  novalidate>
-            <h3>List of family members</h3>
-            <div class="pat-clone" data-pat-clone="template: #clone-template-tooltip; trigger-element: .clone-trigger-tooltip; max: 5">
-                <!-- First visible instance and also template -->
-                <fieldset class="clone">
-                    <legend>Family member 1</legend>
-                    <input name="name-1" size="20" type="text" placeholder="Name" required="required"/>
-                    <input name="date-1" type="date" placeholder="birthdate" />
-                    <button type="button" class="pat-button remove-clone icon-trash">Remove</button>
-                </fieldset>
-                <fieldset id="clone-template-tooltip" hidden>
-                    <legend>Family member #{1}</legend>
-                    <input name="name-#{1}" size="20" type="text" placeholder="Name" required="required"/>
-                    <input name="date-#{1}" type="date" placeholder="birthdate" />
-                    <button type="button" class="pat-button remove-clone icon-trash">Remove</button>
-                </fieldset>
-            </div>
-            <!-- Clone trigger -->
-            <button type="button" class="pat-button clone-trigger-tooltip">Add an extra family member</button>
-            <button class="pat-button" id="submit" type="submit">submit</button>
-        </form>
-
+      <form
+        action=""
+        class="pat-validation"
+        data-pat-validation="disable-selector: #submit"
+        novalidate
+      >
+        <h3>List of family members</h3>
+        <div
+          class="pat-clone"
+          data-pat-clone="template: #clone-template-tooltip; trigger-element: .clone-trigger-tooltip; max: 5"
+        >
+          <!-- First visible instance and also template -->
+          <fieldset class="clone">
+            <legend>Family member 1</legend>
+            <input
+              name="name-1"
+              size="20"
+              type="text"
+              placeholder="Name"
+              required="required"
+            />
+            <input name="date-1" type="date" placeholder="birthdate" />
+            <button type="button" class="pat-button remove-clone icon-trash">
+              Remove
+            </button>
+          </fieldset>
+          <fieldset id="clone-template-tooltip" hidden>
+            <legend>Family member #{1}</legend>
+            <input
+              name="name-#{1}"
+              size="20"
+              type="text"
+              placeholder="Name"
+              required="required"
+            />
+            <input name="date-#{1}" type="date" placeholder="birthdate" />
+            <button type="button" class="pat-button remove-clone icon-trash">
+              Remove
+            </button>
+          </fieldset>
+        </div>
+        <!-- Clone trigger -->
+        <button type="button" class="pat-button clone-trigger-tooltip">
+          Add an extra family member
+        </button>
+        <button class="pat-button" id="submit" type="submit">submit</button>
+      </form>
     </div>
-
-
-
-</body>
+  </body>
 </html>

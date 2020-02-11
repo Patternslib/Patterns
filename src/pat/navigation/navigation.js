@@ -1,8 +1,4 @@
-define([
-    "jquery",
-    "pat-logger",
-    "pat-registry"
-], function($, logger, registry) {
+define(["jquery", "pat-logger", "pat-registry"], function($, logger, registry) {
     var log = logger.getLogger("pat.navigation");
 
     var _ = {
@@ -20,10 +16,8 @@ define([
                     // check for current elements injected here
                     $el.on("patterns-injected-scanned", function(ev) {
                         var $target = $(ev.target);
-                        if ($target.is("a.current"))
-                            $target.click();
-                        if ($target.is(".current"))
-                            $target.find("a").click();
+                        if ($target.is("a.current")) $target.click();
+                        if ($target.is(".current")) $target.find("a").click();
                         _._updatenavpath($el);
                     });
                 }
@@ -51,7 +45,12 @@ define([
                             return;
                         }
                         path = _._pathfromurl(url);
-                        log.debug("checking url:", url, "extracted path:", path);
+                        log.debug(
+                            "checking url:",
+                            url,
+                            "extracted path:",
+                            path
+                        );
                         if (_._match(curpath, path)) {
                             log.debug("found match", $li);
                             $li.addClass("current");
@@ -71,7 +70,7 @@ define([
                 return false;
             }
             // current path needs to end in the anchor's path
-            if (path !== curpath.slice(- path.length)) {
+            if (path !== curpath.slice(-path.length)) {
                 log.debug(curpath, "does not end in", path);
                 return false;
             }
@@ -85,7 +84,10 @@ define([
                 return "";
             }
             if (path.length === 1) return path[0];
-            return path[1].split("/").slice(1).join("/");
+            return path[1]
+                .split("/")
+                .slice(1)
+                .join("/");
         }
     };
     registry.register(_);

@@ -1,25 +1,51 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Injection history demo page</title>
-	<link rel="stylesheet" href="../common.css" type="text/css">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Injection history demo page</title>
+    <link rel="stylesheet" href="../common.css" type="text/css" />
     <script src="../../main.js" type="text/javascript" charset="utf-8"></script>
-	<script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
-	<h1>Injection history demo</h1>
-	<div id="injection-content">
-	<h2>This is page3</h2>
-		
-		<a name="list"></a>
-		<ul>
-			<li><a href="index.html" class="pat-inject" data-pat-inject="history: record">index</a></li>
-			<li><a href="page1.html" class="pat-inject" data-pat-inject="history: record">page1</a></li>
-			<li><a href="page2.html" class="pat-inject" data-pat-inject="history: record">page2</a></li>
-			<li><a href="page3.html" class="pat-inject">page3 (no history)</a></li>
-		</ul>
-		<a class="anchor" href="#list">Anchors also trigger onpopstate events</a>
-	</div>
-</body>
+    <script
+      data-main="../main"
+      src="../../src/bower_components/requirejs/require.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+  </head>
+  <body>
+    <h1>Injection history demo</h1>
+    <div id="injection-content">
+      <h2>This is page3</h2>
+
+      <a name="list"></a>
+      <ul>
+        <li>
+          <a
+            href="index.html"
+            class="pat-inject"
+            data-pat-inject="history: record"
+            >index</a
+          >
+        </li>
+        <li>
+          <a
+            href="page1.html"
+            class="pat-inject"
+            data-pat-inject="history: record"
+            >page1</a
+          >
+        </li>
+        <li>
+          <a
+            href="page2.html"
+            class="pat-inject"
+            data-pat-inject="history: record"
+            >page2</a
+          >
+        </li>
+        <li><a href="page3.html" class="pat-inject">page3 (no history)</a></li>
+      </ul>
+      <a class="anchor" href="#list">Anchors also trigger onpopstate events</a>
+    </div>
+  </body>
 </html>

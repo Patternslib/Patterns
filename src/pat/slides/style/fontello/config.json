@@ -2,9 +2,7 @@
   "name": "",
   "glyphs": [
     {
-      "search": [
-        "home"
-      ],
+      "search": ["home"],
       "code": 8962,
       "uid": "513ac180ff85bd275f2b736720cbbf5e",
       "css": "home",
@@ -14,9 +12,7 @@
       "from": 8962
     },
     {
-      "search": [
-        "star"
-      ],
+      "search": ["star"],
       "code": 9733,
       "from": 9733,
       "uid": "474656633f79ea2f1dad59ff63f6bf07",
@@ -26,9 +22,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "star"
-      ],
+      "search": ["star"],
       "code": 9734,
       "from": 9734,
       "uid": "d17030afaecc1e1c22349b99f3c4992a",
@@ -38,10 +32,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "menu",
-        "list"
-      ],
+      "search": ["menu", "list"],
       "code": 9776,
       "uid": "2cfb3f2b46b34a1790aec0aa846297b6",
       "css": "list",
@@ -51,9 +42,7 @@
       "from": 9776
     },
     {
-      "search": [
-        "list"
-      ],
+      "search": ["list"],
       "code": 59399,
       "from": 9776,
       "uid": "lu2wqmd7v9zp21knhy4eifo41wjp4cnx",
@@ -63,9 +52,7 @@
       "src": "typicons"
     },
     {
-      "search": [
-        "heart"
-      ],
+      "search": ["heart"],
       "code": 59392,
       "from": 9825,
       "uid": "f3dc2d6d8fe9cf9ebff84dc260888cdf",
@@ -75,9 +62,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "heart"
-      ],
+      "search": ["heart"],
       "code": 59393,
       "from": 9829,
       "uid": "d73eceadda1f594cec0536087539afbf",
@@ -87,11 +72,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "image",
-        "list",
-        "thumbnails"
-      ],
+      "search": ["image", "list", "thumbnails"],
       "code": 9871,
       "uid": "5e9f01871d44e56b45ecbfd00f4dbc3a",
       "css": "tiles",
@@ -101,11 +82,7 @@
       "from": 9871
     },
     {
-      "search": [
-        "image",
-        "list",
-        "thumbnails"
-      ],
+      "search": ["image", "list", "thumbnails"],
       "code": 59403,
       "from": 9871,
       "uid": "9x8p16w516pn1b19chr85japkedporm7",
@@ -115,9 +92,7 @@
       "src": "typicons"
     },
     {
-      "search": [
-        "flag"
-      ],
+      "search": ["flag"],
       "code": 9873,
       "from": 9873,
       "uid": "57a0ac800df728aad61a7cf9e12f5fef",
@@ -127,11 +102,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "settings",
-        "cog",
-        "gear"
-      ],
+      "search": ["settings", "cog", "gear"],
       "code": 59396,
       "from": 9881,
       "uid": "e99461abfef3923546da8d745372c995",
@@ -141,11 +112,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "settings",
-        "cog",
-        "gear"
-      ],
+      "search": ["settings", "cog", "gear"],
       "code": 9967,
       "from": 9967,
       "uid": "98687378abd1faf8f6af97c254eb6cd6",
@@ -155,10 +122,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "mail",
-        "email"
-      ],
+      "search": ["mail", "email"],
       "code": 9993,
       "uid": "e335adbc2d898c7d85d40c507796e7b4",
       "css": "mail",
@@ -168,12 +132,7 @@
       "from": 9993
     },
     {
-      "search": [
-        "pencil",
-        "write",
-        "reply",
-        "edit"
-      ],
+      "search": ["pencil", "write", "reply", "edit"],
       "code": 9997,
       "from": 9997,
       "uid": "41087bc74d4b20b55059c60a33bf4008",
@@ -183,12 +142,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "pencil",
-        "write",
-        "reply",
-        "edit"
-      ],
+      "search": ["pencil", "write", "reply", "edit"],
       "code": 9998,
       "uid": "c77fd2fd065b5fe16d6f2b41e190b266",
       "css": "pencil",
@@ -198,12 +152,7 @@
       "from": 9998
     },
     {
-      "search": [
-        "ok",
-        true,
-        "check",
-        "mark"
-      ],
+      "search": ["ok", true, "check", "mark"],
       "code": 10004,
       "from": 10004,
       "uid": "43ab845088317bd348dee1d975700c48",
@@ -213,11 +162,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "close",
-        "cancel",
-        "reject"
-      ],
+      "search": ["close", "cancel", "reject"],
       "code": 59395,
       "from": 10006,
       "uid": "0f4cae16f34ae243a6144c18a003f2d8",
@@ -227,9 +172,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "plus"
-      ],
+      "search": ["plus"],
       "code": 59394,
       "from": 10133,
       "uid": "4ba33d2607902cf690dd45df09774cb0",
@@ -239,9 +182,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "minus"
-      ],
+      "search": ["minus"],
       "code": 10134,
       "from": 10134,
       "uid": "eeadb020bb75d089b25d8424aabe19e0",
@@ -251,11 +192,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "reload",
-        "undo",
-        "arrow"
-      ],
+      "search": ["reload", "undo", "arrow"],
       "code": 10226,
       "from": 10226,
       "uid": "f9c3205df26e7778abac86183aefdc99",
@@ -265,12 +202,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "profile",
-        "contact",
-        "user",
-        "add"
-      ],
+      "search": ["profile", "contact", "user", "add"],
       "code": 59136,
       "uid": "6274e0601f2feef7eced89146e708de0",
       "css": "user-add",
@@ -280,12 +212,7 @@
       "from": 59136
     },
     {
-      "search": [
-        "ok",
-        true,
-        "check",
-        "mark"
-      ],
+      "search": ["ok", true, "check", "mark"],
       "code": 59138,
       "from": 59138,
       "uid": "ad33e708f4d2e25c5056c931da1528d6",
@@ -295,11 +222,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "close",
-        "cancel",
-        "reject"
-      ],
+      "search": ["close", "cancel", "reject"],
       "code": 59139,
       "from": 59139,
       "uid": "2e2dba0307a502a8507c1729084c7ab5",
@@ -309,10 +232,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "help",
-        "question"
-      ],
+      "search": ["help", "question"],
       "code": 59140,
       "from": 59140,
       "uid": "17ebadd1e3f274ff0205601eef7b9cc4",
@@ -322,9 +242,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "info"
-      ],
+      "search": ["info"],
       "code": 59141,
       "from": 59141,
       "uid": "e82cedfa1d5f15b00c5a81c9bd731ea2",
@@ -334,10 +252,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "eye",
-        "subscribe"
-      ],
+      "search": ["eye", "subscribe"],
       "code": 59146,
       "uid": "25fc99a30fecc4021fdcae5fff5ba9ac",
       "css": "eye",
@@ -347,12 +262,7 @@
       "from": 59146
     },
     {
-      "search": [
-        "tag",
-        "category",
-        "price",
-        "offer"
-      ],
+      "search": ["tag", "category", "price", "offer"],
       "code": 59148,
       "from": 59148,
       "uid": "3db5347bd219f3bce6025780f5d9ef45",
@@ -362,12 +272,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "tag",
-        "category",
-        "price",
-        "offer"
-      ],
+      "search": ["tag", "category", "price", "offer"],
       "code": 59149,
       "from": 59149,
       "uid": "a3f89e106175a5c5c4e9738870b12e55",
@@ -377,10 +282,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "upload",
-        "cloud"
-      ],
+      "search": ["upload", "cloud"],
       "code": 59153,
       "uid": "5d595124cecf472869d1cdc020da0ccc",
       "css": "upload-cloud",
@@ -390,10 +292,7 @@
       "from": 59153
     },
     {
-      "search": [
-        "export",
-        "share"
-      ],
+      "search": ["export", "share"],
       "code": 59402,
       "from": 59157,
       "uid": "895405dfac8a3b7b2f23b183c6608ee6",
@@ -403,9 +302,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "print"
-      ],
+      "search": ["print"],
       "code": 59158,
       "uid": "28f124a10127a47b9d9472699193d75a",
       "css": "print",
@@ -415,11 +312,7 @@
       "from": 59158
     },
     {
-      "search": [
-        "comment",
-        "reply",
-        "write"
-      ],
+      "search": ["comment", "reply", "write"],
       "code": 59398,
       "from": 59160,
       "uid": "85528017f1e6053b2253785c31047f44",
@@ -429,10 +322,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "chat",
-        "talk"
-      ],
+      "search": ["chat", "talk"],
       "code": 59397,
       "from": 59168,
       "uid": "dcedf50ab1ede3283d7a6c70e2fe32f3",
@@ -442,11 +332,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "contact",
-        "card",
-        "vcard"
-      ],
+      "search": ["contact", "card", "vcard"],
       "code": 59170,
       "uid": "457c8e2b305e7af74c1be4f07a01ca92",
       "css": "vcard",
@@ -456,10 +342,7 @@
       "from": 59170
     },
     {
-      "search": [
-        "trash",
-        "delete"
-      ],
+      "search": ["trash", "delete"],
       "code": 59177,
       "from": 59177,
       "uid": "f48ae54adfb27d8ada53d0fd9e34ee10",
@@ -469,9 +352,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "rss"
-      ],
+      "search": ["rss"],
       "code": 59194,
       "uid": "3e617d8049807e128c80d0344ba09e37",
       "css": "rss",
@@ -481,10 +362,7 @@
       "from": 59194
     },
     {
-      "search": [
-        "resize",
-        "fullscreen"
-      ],
+      "search": ["resize", "fullscreen"],
       "code": 59204,
       "from": 59204,
       "uid": "e594fc6e5870b4ab7e49f52571d52577",
@@ -494,9 +372,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "resize"
-      ],
+      "search": ["resize"],
       "code": 59206,
       "from": 59206,
       "uid": "3c24ee33c9487bbf18796ca6dffa1905",
@@ -506,9 +382,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "net"
-      ],
+      "search": ["net"],
       "code": 59254,
       "uid": "414fe97e4af5215a06d29be0f2cecdf5",
       "css": "network",
@@ -518,11 +392,7 @@
       "from": 59254
     },
     {
-      "search": [
-        "image",
-        "picture",
-        "photo"
-      ],
+      "search": ["image", "picture", "photo"],
       "code": 127748,
       "from": 127748,
       "uid": "baa375529925294ea0a2bc889c93ba2d",
@@ -532,13 +402,7 @@
       "src": "websymbols"
     },
     {
-      "search": [
-        "thumbs",
-        "up",
-        "like",
-        "love",
-        "vote"
-      ],
+      "search": ["thumbs", "up", "like", "love", "vote"],
       "code": 128077,
       "uid": "7ad4d2306ebda8452e5e3eff3cd8241c",
       "css": "thumbs-up",
@@ -548,11 +412,7 @@
       "from": 128077
     },
     {
-      "search": [
-        "profile",
-        "contact",
-        "user"
-      ],
+      "search": ["profile", "contact", "user"],
       "code": 128100,
       "uid": "bbd66ef66bb8fa9edde54d9a90b89150",
       "css": "user",
@@ -562,11 +422,7 @@
       "from": 128100
     },
     {
-      "search": [
-        "users",
-        "contacts",
-        "friends"
-      ],
+      "search": ["users", "contacts", "friends"],
       "code": 128101,
       "uid": "ecf8edb95c3f45eb433b4cce7ba9f740",
       "css": "users",
@@ -576,9 +432,7 @@
       "from": 128101
     },
     {
-      "search": [
-        "folder"
-      ],
+      "search": ["folder"],
       "code": 128193,
       "uid": "0ccb084ddeeae372673793ed0b45bb4a",
       "css": "folder",
@@ -588,10 +442,7 @@
       "from": 128193
     },
     {
-      "search": [
-        "pin",
-        "pushpin"
-      ],
+      "search": ["pin", "pushpin"],
       "code": 128204,
       "from": 128204,
       "uid": "5b0772e9484a1a11646793a82edd622a",
@@ -601,10 +452,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "attach",
-        "clip"
-      ],
+      "search": ["attach", "clip"],
       "code": 128206,
       "uid": "44b9e75612c5fad5505edd70d071651f",
       "css": "attach",
@@ -614,11 +462,7 @@
       "from": 128206
     },
     {
-      "search": [
-        "phone",
-        "telephone",
-        "call"
-      ],
+      "search": ["phone", "telephone", "call"],
       "code": 128222,
       "uid": "5854855e963044f93b15738a5bb27a29",
       "css": "phone",
@@ -628,9 +472,7 @@
       "from": 128222
     },
     {
-      "search": [
-        "upload"
-      ],
+      "search": ["upload"],
       "code": 59400,
       "from": 128228,
       "uid": "eeec3208c90b7b48e804919d0d2d4a41",
@@ -640,9 +482,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "download"
-      ],
+      "search": ["download"],
       "code": 59401,
       "from": 128229,
       "uid": "9a76bc135eac17d2c8b8ad4a5774fc87",
@@ -652,10 +492,7 @@
       "src": "fontawesome"
     },
     {
-      "search": [
-        "search",
-        "find"
-      ],
+      "search": ["search", "find"],
       "code": 128269,
       "uid": "7222571caa5c15f83dcfd447c58d68d9",
       "css": "search",
@@ -665,9 +502,7 @@
       "from": 128269
     },
     {
-      "search": [
-        "lock"
-      ],
+      "search": ["lock"],
       "code": 128274,
       "uid": "1a7104205ea96e6f40ac716d0ca72f21",
       "css": "lock",
@@ -677,11 +512,7 @@
       "from": 128274
     },
     {
-      "search": [
-        "lock",
-        "open",
-        "unlock"
-      ],
+      "search": ["lock", "open", "unlock"],
       "code": 128275,
       "uid": "e81fc3a0d39ace6ee735d7b24eedd56d",
       "css": "lock-open",
@@ -691,10 +522,7 @@
       "from": 128275
     },
     {
-      "search": [
-        "link",
-        "url"
-      ],
+      "search": ["link", "url"],
       "code": 128279,
       "uid": "815503841e980c848f55e0271deacead",
       "css": "link",

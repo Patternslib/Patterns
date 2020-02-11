@@ -3,11 +3,11 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
         createTooltip: function(c) {
             var cfg = c || {};
             return $("<a/>", {
-                "id":   cfg.id || "tooltip",
-                "href": cfg.href || "#anchor",
-                "title": cfg.title || "tooltip title attribute",
+                id: cfg.id || "tooltip",
+                href: cfg.href || "#anchor",
+                title: cfg.title || "tooltip title attribute",
                 "data-pat-tooltip": "" || cfg.data,
-                "class": "pat-tooltip"
+                class: "pat-tooltip"
             }).appendTo($("div#lab"));
         },
 
@@ -17,20 +17,21 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
         },
 
         createTooltipSource: function() {
-            return $("<span style='display: none' id='tooltip-source'>"+
-                    "<strong>Local content</strong></span>")
-                .appendTo($("div#lab"));
+            return $(
+                "<span style='display: none' id='tooltip-source'>" +
+                    "<strong>Local content</strong></span>"
+            ).appendTo($("div#lab"));
         },
 
         click: {
             type: "click",
-            preventDefault: function () {}
+            preventDefault: function() {}
         }
     };
 
-    describe("pat-tooltip", function () {
+    describe("pat-tooltip", function() {
         beforeEach(function() {
-            $("<div/>", {id: "lab"}).appendTo(document.body);
+            $("<div/>", { id: "lab" }).appendTo(document.body);
             jasmine.clock().install();
         });
 
@@ -39,11 +40,10 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
             jasmine.clock().uninstall();
         });
 
-        describe("A Tooltip", function () {
-
-            it("will be closed when a form with class .close-panel is submitted", function () {
-                var $div = $("<div/>", {id: "content"});
-                var $form = $("<form/>", {"class": "close-panel"});
+        describe("A Tooltip", function() {
+            it("will be closed when a form with class .close-panel is submitted", function() {
+                var $div = $("<div/>", { id: "content" });
+                var $form = $("<form/>", { class: "close-panel" });
                 $div.appendTo(document.body);
                 $form.appendTo($div[0]);
                 utils.createTooltip({
@@ -57,14 +57,16 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 $el.trigger(utils.click);
                 expect(spy_show).toHaveBeenCalled();
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
-                $(document).on("submit", function (ev) { ev.preventDefault(); });
+                $(document).on("submit", function(ev) {
+                    ev.preventDefault();
+                });
                 $("form.close-panel").submit();
                 expect(spy_hide).toHaveBeenCalled();
                 $("div#content").remove();
             });
 
-            it("will NOT be closed when a form WITHOUT class .close-panel is submitted", function () {
-                var $div = $("<div/>", {id: "content"});
+            it("will NOT be closed when a form WITHOUT class .close-panel is submitted", function() {
+                var $div = $("<div/>", { id: "content" });
                 var $form = $("<form/>");
                 $div.appendTo(document.body);
                 $form.appendTo($div[0]);
@@ -79,13 +81,15 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 $el.trigger(utils.click);
                 expect(spy_show).toHaveBeenCalled();
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
-                $(document).on("submit", function (ev) { ev.preventDefault(); });
+                $(document).on("submit", function(ev) {
+                    ev.preventDefault();
+                });
                 $("#content form").submit();
                 expect(spy_hide).not.toHaveBeenCalled();
                 $("div#content").remove();
             });
 
-            it("gets a .close-panel element when closing=close-button", function () {
+            it("gets a .close-panel element when closing=close-button", function() {
                 utils.createTooltip({
                     data: "closing: close-button",
                     href: "/tests/content.html#content"
@@ -96,7 +100,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 expect($(".close-panel").length).toBeTruthy();
             });
 
-            it("is closed when one clicks on a .close-panel element", function () {
+            it("is closed when one clicks on a .close-panel element", function() {
                 utils.createTooltip({
                     data: "trigger: click; closing: close-button",
                     href: "/tests/content.html#content"
@@ -112,7 +116,7 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 expect(spy_hide).toHaveBeenCalled();
             });
 
-            it("is NOT closed when an injection happens", function () {
+            it("is NOT closed when an injection happens", function() {
                 utils.createTooltip({
                     data: "trigger: click; closing: auto",
                     href: "/tests/content.html#content"
@@ -136,18 +140,21 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
             });
         });
 
-        describe("When a tooltip is clicked", function () {
-            describe("if the tootip is a hyperlink", function () {
+        describe("When a tooltip is clicked", function() {
+            describe("if the tootip is a hyperlink", function() {
                 beforeEach(function() {
                     utils.createTooltip();
                 });
                 afterEach(function() {
                     utils.removeTooltip();
                 });
-                it("the default click action is prevented", function () {
+                it("the default click action is prevented", function() {
                     var $el = $("a#tooltip");
                     var spy_show = spyOn(pattern, "show").and.callThrough();
-                    var spy_preventdefault = spyOn(utils.click, "preventDefault").and.callThrough();
+                    var spy_preventdefault = spyOn(
+                        utils.click,
+                        "preventDefault"
+                    ).and.callThrough();
                     pattern.init($el);
                     $el.trigger(utils.click);
                     expect(spy_show).toHaveBeenCalled();
@@ -155,12 +162,12 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 });
             });
 
-            describe("if the 'source' parameter is 'title'", function () {
+            describe("if the 'source' parameter is 'title'", function() {
                 afterEach(function() {
                     utils.removeTooltip();
                 });
-                it("will show the contents of the 'title' attribute", function () {
-                    utils.createTooltip({data: "source: title"});
+                it("will show the contents of the 'title' attribute", function() {
+                    utils.createTooltip({ data: "source: title" });
                     var $el = $("a#tooltip");
                     var spy = spyOn(pattern, "show").and.callThrough();
                     var title = $el.attr("title");
@@ -175,16 +182,19 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     }, 2000);
 
                     var $container = $el.data("patterns.tooltip.container");
-                    expect($container.find('p').text()).toBe(title);
+                    expect($container.find("p").text()).toBe(title);
                 });
             });
 
-            describe("if the 'source' parameter is 'ajax'", function () {
+            describe("if the 'source' parameter is 'ajax'", function() {
                 afterEach(function() {
                     utils.removeTooltip();
                 });
-                it("will fetch its contents via ajax", function () {
-                    utils.createTooltip({data: "source: auto", href: "/tests/content.html#content"});
+                it("will fetch its contents via ajax", function() {
+                    utils.createTooltip({
+                        data: "source: auto",
+                        href: "/tests/content.html#content"
+                    });
                     var $el = $("a#tooltip");
                     var spy_show = spyOn(pattern, "show").and.callThrough();
                     var spy_execute = spyOn(inject, "execute"); //.and.callThrough();
@@ -207,12 +217,15 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 });
             });
 
-            describe("if the 'source' parameter is 'content'", function () {
+            describe("if the 'source' parameter is 'content'", function() {
                 afterEach(function() {
                     utils.removeTooltip();
                 });
-                it("will clone a DOM element from the page", function () {
-                    utils.createTooltip({data: "source: content", href: "#tooltip-source"});
+                it("will clone a DOM element from the page", function() {
+                    utils.createTooltip({
+                        data: "source: content",
+                        href: "#tooltip-source"
+                    });
                     utils.createTooltipSource();
                     var $el = $("a#tooltip");
                     var spy_show = spyOn(pattern, "show").and.callThrough();
@@ -220,24 +233,32 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     $el.trigger(utils.click);
                     expect(spy_show).toHaveBeenCalled();
                     var $container = $el.data("patterns.tooltip.container");
-                    expect($container.find('strong').text()).toBe("Local content");
+                    expect($container.find("strong").text()).toBe(
+                        "Local content"
+                    );
                 });
             });
 
-            describe("if the 'source' parameter is 'auto'", function () {
+            describe("if the 'source' parameter is 'auto'", function() {
                 afterEach(function() {
                     utils.removeTooltip();
                 });
-                it("will revert to 'ajax' if 'href' points to an external URL", function () {
-                    utils.createTooltip({data: "source: auto", href: "/tests/content.html#content"});
+                it("will revert to 'ajax' if 'href' points to an external URL", function() {
+                    utils.createTooltip({
+                        data: "source: auto",
+                        href: "/tests/content.html#content"
+                    });
                     var $el = $("a#tooltip");
                     pattern.init($el);
                     var options = $el.data("patterns.tooltip");
                     expect(options.source).toBe("ajax");
                 });
-                it("will revert to 'content' if 'href' points to a document fragment", function () {
+                it("will revert to 'content' if 'href' points to a document fragment", function() {
                     utils.createTooltipSource();
-                    utils.createTooltip({data: "source: auto", href: "#tooltip-source"});
+                    utils.createTooltip({
+                        data: "source: auto",
+                        href: "#tooltip-source"
+                    });
                     var $el = $("a#tooltip");
                     pattern.init($el);
                     var options = $el.data("patterns.tooltip");
@@ -246,27 +267,27 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
             });
         });
 
-        describe("A tooltip that opens on click and contains another tooltip trigger", function () {
+        describe("A tooltip that opens on click and contains another tooltip trigger", function() {
             beforeEach(function() {
                 utils.createTooltip({
                     data: "trigger: click; source: content",
                     href: "#tooltip-content"
                 });
                 $("<div />", {
-                    "id":   "tooltip-content"
+                    id: "tooltip-content"
                 }).appendTo($("div#lab"));
                 $("<a/>", {
-                    "id":   "nested-tooltip",
-                    "href": "#nested-tooltip-content",
-                    "title": "nested tooltip title attribute",
+                    id: "nested-tooltip",
+                    href: "#nested-tooltip-content",
+                    title: "nested tooltip title attribute",
                     "data-pat-tooltip": "trigger: click; source: content",
-                    "class": "pat-tooltip"
+                    class: "pat-tooltip"
                 }).appendTo($("div#tooltip-content"));
             });
             afterEach(function() {
                 utils.removeTooltip();
             });
-            it("will not close if the contained trigger is clicked", function () {
+            it("will not close if the contained trigger is clicked", function() {
                 var spy = spyOn(pattern, "show").and.callThrough();
                 var $el = $("a#tooltip");
                 pattern.init($el);
@@ -277,7 +298,9 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                 jasmine.clock().tick(100); // hide events get registered 50 ms after show
 
                 $(".tooltip-container a#nested-tooltip").trigger(utils.click);
-                expect($(".tooltip-container a#nested-tooltip").css("visibility")).toBe("visible");
+                expect(
+                    $(".tooltip-container a#nested-tooltip").css("visibility")
+                ).toBe("visible");
             });
         });
     });

@@ -6,12 +6,12 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2014 Syslab.com GmBH
  */
-define([
-    "jquery",
-    "pat-registry",
-    "pat-logger",
-    "pat-utils"
-], function($, patterns, logger, utils) {
+define(["jquery", "pat-registry", "pat-logger", "pat-utils"], function(
+    $,
+    patterns,
+    logger,
+    utils
+) {
     var log = logger.getLogger("checkedflag");
 
     var checkedflag = {
@@ -53,7 +53,9 @@ define([
                 .on("change.pat-checkedflag", checkedflag.onChangeSelect);
 
             $el.filter("input:disabled").each(function() {
-                $(this).closest("label").addClass("disabled");
+                $(this)
+                    .closest("label")
+                    .addClass("disabled");
             });
 
             $forms.on("reset.pat-checkedflag", checkedflag._onFormReset);
@@ -88,9 +90,9 @@ define([
                         // XXX: implement me
                     } else {
                         // just change the current state
-                        $select.find("option:selected")
-                            .prop("selected", false);
-                        $select.find("option[value=\"" + val + "\"]")
+                        $select.find("option:selected").prop("selected", false);
+                        $select
+                            .find('option[value="' + val + '"]')
                             .prop("selected", true);
                     }
                     checkedflag.onChangeSelect.call(this);
@@ -106,9 +108,13 @@ define([
             // to fix this.
             var form = this;
             setTimeout(function() {
-                $("input[type=checkbox]", form).each(checkedflag._onChangeCheckbox);
+                $("input[type=checkbox]", form).each(
+                    checkedflag._onChangeCheckbox
+                );
                 $("input[type=radio]", form).each(checkedflag._initRadio);
-                $("select:not([multiple])", form).each(checkedflag.onChangeSelect);
+                $("select:not([multiple])", form).each(
+                    checkedflag.onChangeSelect
+                );
             }, 50);
         },
 
@@ -118,12 +124,15 @@ define([
         },
 
         _getSiblingsWithLabelsAndFieldsets: function(el) {
-            var selector = "input[name=\""+el.name+"\"]",
-                $related = (el.form===null) ? $(selector) : $(selector, el.form),
+            var selector = 'input[name="' + el.name + '"]',
+                $related =
+                    el.form === null ? $(selector) : $(selector, el.form),
                 $result = $();
-            $result = $related=$related.not(el);
-            for (var i=0; i<$related.length; i++) {
-                $result=$result.add(checkedflag._getLabelAndFieldset($related[i]));
+            $result = $related = $related.not(el);
+            for (var i = 0; i < $related.length; i++) {
+                $result = $result.add(
+                    checkedflag._getLabelAndFieldset($related[i])
+                );
             }
             return $result;
         },
@@ -134,17 +143,19 @@ define([
                 $fieldset = $el.closest("fieldset");
 
             if ($el.closest("ul.radioList").length) {
-                $label=$label.add($el.closest("li"));
+                $label = $label.add($el.closest("li"));
             }
 
             if (this.checked) {
-                $label.add($fieldset).removeClass("unchecked").addClass("checked");
+                $label
+                    .add($fieldset)
+                    .removeClass("unchecked")
+                    .addClass("checked");
             } else {
                 $label.addClass("unchecked").removeClass("checked");
                 if ($fieldset.find("input:checked").length) {
                     $fieldset.removeClass("unchecked").addClass("checked");
-                } else
-                    $fieldset.addClass("unchecked").removeClass("checked");
+                } else $fieldset.addClass("unchecked").removeClass("checked");
             }
         },
 
@@ -160,18 +171,23 @@ define([
             var $el = $(input),
                 $label = $(utils.findLabel(input)),
                 $fieldset = $el.closest("fieldset"),
-                $siblings = checkedflag._getSiblingsWithLabelsAndFieldsets(input);
+                $siblings = checkedflag._getSiblingsWithLabelsAndFieldsets(
+                    input
+                );
 
             if ($el.closest("ul.radioList").length) {
-                $label=$label.add($el.closest("li"));
-                $siblings=$siblings.closest("li");
+                $label = $label.add($el.closest("li"));
+                $siblings = $siblings.closest("li");
             }
 
             if (update_siblings) {
-                 $siblings.removeClass("checked").addClass("unchecked");
+                $siblings.removeClass("checked").addClass("unchecked");
             }
             if (input.checked) {
-                $label.add($fieldset).removeClass("unchecked").addClass("checked");
+                $label
+                    .add($fieldset)
+                    .removeClass("unchecked")
+                    .addClass("checked");
             } else {
                 $label.addClass("unchecked").removeClass("checked");
                 if ($fieldset.find("input:checked").length) {
@@ -184,13 +200,13 @@ define([
 
         onChangeSelect: function() {
             var $select = $(this);
-            $select.parent().attr(
-                "data-option",
-                $select.find("option:selected").text()
-            ).attr(
-                "data-option-value",
-                $select.find("option:selected").attr('value')
-            );
+            $select
+                .parent()
+                .attr("data-option", $select.find("option:selected").text())
+                .attr(
+                    "data-option-value",
+                    $select.find("option:selected").attr("value")
+                );
         }
     };
 

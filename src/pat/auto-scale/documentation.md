@@ -31,7 +31,7 @@ set with the `data-pat-auto-scale` HTML5 attribute.
 The default setting for the `method` property is `scale`, which means that the element will be
 scaled by means of a [scale transform](http://www.w3.org/TR/css3-2d-transforms/#two-d-transform-functions).
 
-Alternatively, you can set the method to `zoom`, which means that the [zoom](http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx)
+Alternatively, you can set the method to `zoom`, which means that the [zoom](<http://msdn.microsoft.com/en-us/library/ms531189(VS.85).aspx>)
 CSS property will be used for scaling.
 
 Here is an example where the scale method is set to `zoom`.
@@ -47,10 +47,10 @@ Patterns will check if the browser supports the requested method; if the request
 method is known to not be supported then another method will be used. The current overrides
 are:
 
-* Firefox zoom does not support zoom ([mozilla bug
+- Firefox zoom does not support zoom ([mozilla bug
   \#390936](https://bugzilla.mozilla.org/show_bug.cgi?id=390936)) so the scale
   transform is always used.
-* IE versions before 9 do not support the scale transform, so zoom is always
+- IE versions before 9 do not support the scale transform, so zoom is always
   used.
 
 ### Option reference
@@ -58,12 +58,11 @@ are:
 The depends can be configured through a `data-pat-auto-scale` attribute.
 The available options are:
 
-| Property | Default value | Available values | Description | Type |
-| :------- | :------------ | :----- | :---------- | :---- |
-| `method` | `scale` | `scale` `zoom` | The scaling method to use. One of `scale` or `zoom` | Mutually exclusive |
-| `size` | `width` | `width` `height` `contain` `cover` | How to calculate the scaling factor. | Mutually exclusive |
-| `min-width` | | | The minimum width in pixels to scale to. | Number |
-| `max-width` | | | The maximum width in pixels to scale to. | Number |
-| `min-height` | | | The minimum height in pixels to scale to. | Number |
-| `max-height` | | | The maximum height in pixels to scale to. | Number |
-
+| Property     |  Default value | Available values                   | Description                                         | Type               |
+| :----------- | :------------- | :--------------------------------- | :-------------------------------------------------- | :----------------- |
+| `method`     | `scale`        | `scale` `zoom`                     | The scaling method to use. One of `scale` or `zoom` | Mutually exclusive |
+| `size`       | `width`        | `width` `height` `contain` `cover` | How to calculate the scaling factor.                | Mutually exclusive |
+| `min-width`  |                |                                    | The minimum width in pixels to scale to.            | Number             |
+| `max-width`  |                |                                    | The maximum width in pixels to scale to.            | Number             |
+| `min-height` |                |                                    | The minimum height in pixels to scale to.           | Number             |
+| `max-height` |                |                                    | The maximum height in pixels to scale to.           | Number             |

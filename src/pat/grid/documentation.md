@@ -1,7 +1,9 @@
 ## Description
+
 The grid patterns allows you create responsive layout, without having to write CSS for it. The Patterns Grid pattern is based on the [Zurb Foundation grid system](http://foundation.zurb.com/grid.php "The Zurb foundation website").
 
 ## Documentation
+
 ### The grid
 
 **Create powerful multi-device layouts quickly and easily with the 12-column, nestable Foundation grid. If you're familiar with grid systems, you'll feel right at home.**
@@ -34,6 +36,6 @@ Sometimes within the grid you want the order of your markup to not necessarily b
 
 The syntax supports push and pull for two to ten columns, and is added directly to the columns themselves.
 
-* * *
+---
 
 The above text is based on the [Zurb Foundation grid documentation](http://foundation.zurb.com/docs/grid.php)

@@ -1,60 +1,72 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Tabs demo</title>
-    	<link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-	<body>
-		<style media="screen" type="text/css">
-		.extra-tabs > a { color: #f0f !important;} .navigation.tabs.pat-tabs{ background: #eee;}
-		</style>
-	        <nav class="navigation tabs pat-tabs">
-				<a href="" class="pat-inject current">General</a>
-				<a href="" class="pat-inject">Members</a>
-				<a href="" class="pat-inject">Security</a>
-				<a href="" class="pat-inject">Advanced</a>
-				<a href="" class="pat-inject">Other</a>
-				<a href="" class="pat-inject">Documentation</a>
-				<a href="" class="pat-inject">Configuration</a>
-				<a href="" class="pat-inject">Promotions</a>					
-			</nav>
-			<div>&nbsp;</div>
-			<div>Resize the browser window, pink colored tabs are those that are overflowing and are placed in extra-tabs span element.</div>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Tabs demo</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <style media="screen" type="text/css">
+      .extra-tabs > a {
+        color: #f0f !important;
+      }
+      .navigation.tabs.pat-tabs {
+        background: #eee;
+      }
+    </style>
+    <nav class="navigation tabs pat-tabs">
+      <a href="" class="pat-inject current">General</a>
+      <a href="" class="pat-inject">Members</a>
+      <a href="" class="pat-inject">Security</a>
+      <a href="" class="pat-inject">Advanced</a>
+      <a href="" class="pat-inject">Other</a>
+      <a href="" class="pat-inject">Documentation</a>
+      <a href="" class="pat-inject">Configuration</a>
+      <a href="" class="pat-inject">Promotions</a>
+    </nav>
+    <div>&nbsp;</div>
+    <div>
+      Resize the browser window, pink colored tabs are those that are
+      overflowing and are placed in extra-tabs span element.
+    </div>
 
-		<div>&nbsp;</div>
-		<h5>When incorporating another layout changing pattern such as the stacks pattern:</h5>
-		<div>&nbsp;</div>
-		<nav class="tabs">
-		    <a href="#sheet-1" class="current">Tab one</a> <a href="#sheet-2">Tab two</a>
-		</nav>
-		<div>&nbsp;</div>
-		<article class="pat-stacks">
-		    <section id="sheet-1">
-		        <nav class="navigation tabs pat-tabs">
-					<a href="" class="pat-inject">General</a>
-					<a href="" class="pat-inject">Members</a>
-					<a href="" class="pat-inject">Security</a>
-					<a href="" class="pat-inject">Advanced</a>
-					<a href="" class="pat-inject">Other</a>
-					<a href="" class="pat-inject">Documentation</a>
-					<a href="" class="pat-inject">Configuration</a>
-					<a href="" class="pat-inject">Promotions</a>
-					<a href="" class="pat-inject">Actions</a>
-					<a href="" class="pat-inject">Tools</a>					
-				</nav>
-		    </section>
-		    <section id="sheet-2">
-		        <h4>Sheet two</h4>
-			        <nav class="navigation tabs pat-tabs">
-						<a href="" class="pat-inject">Configuration</a>
-						<a href="" class="pat-inject">Other</a>
-    					<a href="" class="pat-inject">Promotions</a>
-						<a href="" class="pat-inject">Actions</a>
-						<a href="" class="pat-inject">Tools</a>
-					</nav>
-		    </section>
-		</article>
-	</body>
+    <div>&nbsp;</div>
+    <h5>
+      When incorporating another layout changing pattern such as the stacks
+      pattern:
+    </h5>
+    <div>&nbsp;</div>
+    <nav class="tabs">
+      <a href="#sheet-1" class="current">Tab one</a>
+      <a href="#sheet-2">Tab two</a>
+    </nav>
+    <div>&nbsp;</div>
+    <article class="pat-stacks">
+      <section id="sheet-1">
+        <nav class="navigation tabs pat-tabs">
+          <a href="" class="pat-inject">General</a>
+          <a href="" class="pat-inject">Members</a>
+          <a href="" class="pat-inject">Security</a>
+          <a href="" class="pat-inject">Advanced</a>
+          <a href="" class="pat-inject">Other</a>
+          <a href="" class="pat-inject">Documentation</a>
+          <a href="" class="pat-inject">Configuration</a>
+          <a href="" class="pat-inject">Promotions</a>
+          <a href="" class="pat-inject">Actions</a>
+          <a href="" class="pat-inject">Tools</a>
+        </nav>
+      </section>
+      <section id="sheet-2">
+        <h4>Sheet two</h4>
+        <nav class="navigation tabs pat-tabs">
+          <a href="" class="pat-inject">Configuration</a>
+          <a href="" class="pat-inject">Other</a>
+          <a href="" class="pat-inject">Promotions</a>
+          <a href="" class="pat-inject">Actions</a>
+          <a href="" class="pat-inject">Tools</a>
+        </nav>
+      </section>
+    </article>
+  </body>
 </html>
