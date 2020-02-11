@@ -16,6 +16,6 @@ define([
         init: function() {
             this.$el.addClass("prettyprint");
             utils.debounce(prettify.prettyPrint, 50)();
-        },
+        }
     });
 });

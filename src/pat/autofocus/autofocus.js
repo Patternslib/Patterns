@@ -3,10 +3,7 @@
  *
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
-define([
-    "jquery",
-    "pat-registry"
-], function($, registry) {
+define(["jquery", "pat-registry"], function($, registry) {
     var autofocus = {
         name: "autofocus",
         trigger: ":input.pat-autofocus,:input[autofocus]",

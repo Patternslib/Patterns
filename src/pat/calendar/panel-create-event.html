@@ -1,282 +1,948 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Create event</title>
-</head>
-<body>
-
-  <div id="main">
-   <div id="content">
-     <div id="document-content">
-        <h1 panel-class->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Create event</title>
+  </head>
+  <body>
+    <div id="main">
+      <div id="content">
+        <div id="document-content">
+          <h1 panel-class->
             Create event
-        </h1>
+          </h1>
 
-        <form action="/workspaces.html#workspaces" class="wizard-box panel-class- pat-inject " data-pat-inject="">
-
+          <form
+            action="/workspaces.html#workspaces"
+            class="wizard-box panel-class- pat-inject "
+            data-pat-inject=""
+          >
             <div class="panel-body">
-                <div class="container">
-                    <fieldset class="vertical">
-                     <label>
-                      <input placeholder="Event title" type="text" />
+              <div class="container">
+                <fieldset class="vertical">
+                  <label>
+                    <input placeholder="Event title" type="text" />
                   </label>
 
-                  <br/>
+                  <br />
 
                   <label>
-                      <textarea placeholder="Event description" rows="6"></textarea>
+                    <textarea
+                      placeholder="Event description"
+                      rows="6"
+                    ></textarea>
                   </label>
 
-                  <br/>
+                  <br />
 
                   <label class="location">
-                    Location <input name="location" type="text" value="">
-                </label>
+                    Location <input name="location" type="text" value="" />
+                  </label>
 
-                <br>
+                  <br />
 
-                <label class="organiser">
-                    Organiser <input class="pat-autosuggest users" data-pat-autosuggest="words: Bi Angli &lt;bi.angli@shenzenair.com&gt;, Edmund Hall &lt;edmund.hall@aircanada.com&gt;, Hanns-Martin Schulte &lt;hanns.martin.schulte@lufthansa.de&gt;, Helge Nørdal &lt;hnoerdal@sas.dk&gt;, John Doe &lt;john.doe@aircanada.com&gt;, Liz Baker &lt;liz.baker@united.com&gt;, Peter Meier &lt;peter.meier@swiss.com&gt;, Ratana Preecha &lt;ratana.preecha@thaiair.com&gt;" type="text" value="" placeholder="Name of organiser">
-                </label>
+                  <label class="organiser">
+                    Organiser
+                    <input
+                      class="pat-autosuggest users"
+                      data-pat-autosuggest="words: Bi Angli &lt;bi.angli@shenzenair.com&gt;, Edmund Hall &lt;edmund.hall@aircanada.com&gt;, Hanns-Martin Schulte &lt;hanns.martin.schulte@lufthansa.de&gt;, Helge Nørdal &lt;hnoerdal@sas.dk&gt;, John Doe &lt;john.doe@aircanada.com&gt;, Liz Baker &lt;liz.baker@united.com&gt;, Peter Meier &lt;peter.meier@swiss.com&gt;, Ratana Preecha &lt;ratana.preecha@thaiair.com&gt;"
+                      type="text"
+                      value=""
+                      placeholder="Name of organiser"
+                    />
+                  </label>
 
-                <br>
+                  <br />
 
-                <fieldset class="pat-checklist options">
+                  <fieldset class="pat-checklist options">
+                    <label> <input type="checkbox" /> All day event </label>
+                    <br />
                     <label>
-                        <input type="checkbox"> All day event
+                      <input checked type="checkbox" /> Visible on other
+                      calendars
                     </label>
-                    <br>
-                    <label>
-                        <input checked type="checkbox"> Visible on other calendars
-                    </label>
-                </fieldset>
+                  </fieldset>
 
-                <br>
+                  <br />
 
-                <fieldset class="group date-time">
+                  <fieldset class="group date-time">
                     <fieldset class="row group">
-                        <fieldset class="group six columns">
-                            <legend>From</legend>
-                            <div class="row">
-                                <label class="seven columns">
-                                    <input type="date" size="10" class="date pat-date-picker" name="start-day" placeholder="Date" value="16-09-2013" />
-                                </label>                                
-                                <label class="five columns">
-                                    <input type="time" size="10" class="time" name="start-time" placeholder="Time" value="09:00" />
-                                </label>
-                            </div>
-                        </fieldset>
+                      <fieldset class="group six columns">
+                        <legend>From</legend>
+                        <div class="row">
+                          <label class="seven columns">
+                            <input
+                              type="date"
+                              size="10"
+                              class="date pat-date-picker"
+                              name="start-day"
+                              placeholder="Date"
+                              value="16-09-2013"
+                            />
+                          </label>
+                          <label class="five columns">
+                            <input
+                              type="time"
+                              size="10"
+                              class="time"
+                              name="start-time"
+                              placeholder="Time"
+                              value="09:00"
+                            />
+                          </label>
+                        </div>
+                      </fieldset>
 
-                        <fieldset class="group six columns">
-                            <legend>Until</legend>
-                            <div class="row">
-                                <label class="seven columns">
-                                    <input type="date" size="10" class="date pat-date-picker" name="end-day" placeholder="Date" value="16-09-2013" />
-                                </label>                                
-                                <label class="five columns">
-                                    <input type="time" size="10" class="time" name="end-time" placeholder="Time" value="09:00" />
-                                </label>
-                            </div>
-                        </fieldset>
+                      <fieldset class="group six columns">
+                        <legend>Until</legend>
+                        <div class="row">
+                          <label class="seven columns">
+                            <input
+                              type="date"
+                              size="10"
+                              class="date pat-date-picker"
+                              name="end-day"
+                              placeholder="Date"
+                              value="16-09-2013"
+                            />
+                          </label>
+                          <label class="five columns">
+                            <input
+                              type="time"
+                              size="10"
+                              class="time"
+                              name="end-time"
+                              placeholder="Time"
+                              value="09:00"
+                            />
+                          </label>
+                        </div>
+                      </fieldset>
                     </fieldset>
-                    <label class="timezone">Timezone 
-                        <select class="timezone">
-                            <option data-timezone-id="1" gmt-adjustment="GMT-12:00" data-use-daylight-time="0" value="-12">(GMT-12:00) International Date Line West</option>
-                            <option data-timezone-id="2" gmt-adjustment="GMT-11:00" data-use-daylight-time="0" value="-11">(GMT-11:00) Midway Island, Samoa</option>
-                            <option data-timezone-id="3" gmt-adjustment="GMT-10:00" data-use-daylight-time="0" value="-10">(GMT-10:00) Hawaii</option>
-                            <option data-timezone-id="4" gmt-adjustment="GMT-09:00" data-use-daylight-time="1" value="-9">(GMT-09:00) Alaska</option>
-                            <option data-timezone-id="5" gmt-adjustment="GMT-08:00" data-use-daylight-time="1" value="-8">(GMT-08:00) Pacific Time (US &amp; Canada)</option>
-                            <option data-timezone-id="6" gmt-adjustment="GMT-08:00" data-use-daylight-time="1" value="-8">(GMT-08:00) Tijuana, Baja California</option>
-                            <option data-timezone-id="7" gmt-adjustment="GMT-07:00" data-use-daylight-time="0" value="-7">(GMT-07:00) Arizona</option>
-                            <option data-timezone-id="8" gmt-adjustment="GMT-07:00" data-use-daylight-time="1" value="-7">(GMT-07:00) Chihuahua, La Paz, Mazatlan</option>
-                            <option data-timezone-id="9" gmt-adjustment="GMT-07:00" data-use-daylight-time="1" value="-7">(GMT-07:00) Mountain Time (US &amp; Canada)</option>
-                            <option data-timezone-id="10" gmt-adjustment="GMT-06:00" data-use-daylight-time="0" value="-6">(GMT-06:00) Central America</option>
-                            <option data-timezone-id="11" gmt-adjustment="GMT-06:00" data-use-daylight-time="1" value="-6">(GMT-06:00) Central Time (US &amp; Canada)</option>
-                            <option data-timezone-id="12" gmt-adjustment="GMT-06:00" data-use-daylight-time="1" value="-6">(GMT-06:00) Guadalajara, Mexico City, Monterrey</option>
-                            <option data-timezone-id="13" gmt-adjustment="GMT-06:00" data-use-daylight-time="0" value="-6">(GMT-06:00) Saskatchewan</option>
-                            <option data-timezone-id="14" gmt-adjustment="GMT-05:00" data-use-daylight-time="0" value="-5">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</option>
-                            <option data-timezone-id="15" gmt-adjustment="GMT-05:00" data-use-daylight-time="1" value="-5">(GMT-05:00) Eastern Time (US &amp; Canada)</option>
-                            <option data-timezone-id="16" gmt-adjustment="GMT-05:00" data-use-daylight-time="1" value="-5">(GMT-05:00) Indiana (East)</option>
-                            <option data-timezone-id="17" gmt-adjustment="GMT-04:00" data-use-daylight-time="1" value="-4">(GMT-04:00) Atlantic Time (Canada)</option>
-                            <option data-timezone-id="18" gmt-adjustment="GMT-04:00" data-use-daylight-time="0" value="-4">(GMT-04:00) Caracas, La Paz</option>
-                            <option data-timezone-id="19" gmt-adjustment="GMT-04:00" data-use-daylight-time="0" value="-4">(GMT-04:00) Manaus</option>
-                            <option data-timezone-id="20" gmt-adjustment="GMT-04:00" data-use-daylight-time="1" value="-4">(GMT-04:00) Santiago</option>
-                            <option data-timezone-id="21" gmt-adjustment="GMT-03:30" data-use-daylight-time="1" value="-3.5">(GMT-03:30) Newfoundland</option>
-                            <option data-timezone-id="22" gmt-adjustment="GMT-03:00" data-use-daylight-time="1" value="-3">(GMT-03:00) Brasilia</option>
-                            <option data-timezone-id="23" gmt-adjustment="GMT-03:00" data-use-daylight-time="0" value="-3">(GMT-03:00) Buenos Aires, Georgetown</option>
-                            <option data-timezone-id="24" gmt-adjustment="GMT-03:00" data-use-daylight-time="1" value="-3">(GMT-03:00) Greenland</option>
-                            <option data-timezone-id="25" gmt-adjustment="GMT-03:00" data-use-daylight-time="1" value="-3">(GMT-03:00) Montevideo</option>
-                            <option data-timezone-id="26" gmt-adjustment="GMT-02:00" data-use-daylight-time="1" value="-2">(GMT-02:00) Mid-Atlantic</option>
-                            <option data-timezone-id="27" gmt-adjustment="GMT-01:00" data-use-daylight-time="0" value="-1">(GMT-01:00) Cape Verde Is.</option>
-                            <option data-timezone-id="28" gmt-adjustment="GMT-01:00" data-use-daylight-time="1" value="-1">(GMT-01:00) Azores</option>
-                            <option data-timezone-id="29" gmt-adjustment="GMT+00:00" data-use-daylight-time="0" value="0">(GMT+00:00) Casablanca, Monrovia, Reykjavik</option>
-                            <option data-timezone-id="30" gmt-adjustment="GMT+00:00" data-use-daylight-time="1" value="0">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</option>
-                            <option selected data-timezone-id="31" gmt-adjustment="GMT+01:00" data-use-daylight-time="1" value="1">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
-                            <option data-timezone-id="32" gmt-adjustment="GMT+01:00" data-use-daylight-time="1" value="1">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
-                            <option data-timezone-id="33" gmt-adjustment="GMT+01:00" data-use-daylight-time="1" value="1">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</option>
-                            <option data-timezone-id="34" gmt-adjustment="GMT+01:00" data-use-daylight-time="1" value="1">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
-                            <option data-timezone-id="35" gmt-adjustment="GMT+01:00" data-use-daylight-time="1" value="1">(GMT+01:00) West Central Africa</option>
-                            <option data-timezone-id="36" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Amman</option>
-                            <option data-timezone-id="37" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Athens, Bucharest, Istanbul</option>
-                            <option data-timezone-id="38" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Beirut</option>
-                            <option data-timezone-id="39" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Cairo</option>
-                            <option data-timezone-id="40" gmt-adjustment="GMT+02:00" data-use-daylight-time="0" value="2">(GMT+02:00) Harare, Pretoria</option>
-                            <option data-timezone-id="41" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</option>
-                            <option data-timezone-id="42" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Jerusalem</option>
-                            <option data-timezone-id="43" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Minsk</option>
-                            <option data-timezone-id="44" gmt-adjustment="GMT+02:00" data-use-daylight-time="1" value="2">(GMT+02:00) Windhoek</option>
-                            <option data-timezone-id="45" gmt-adjustment="GMT+03:00" data-use-daylight-time="0" value="3">(GMT+03:00) Kuwait, Riyadh, Baghdad</option>
-                            <option data-timezone-id="46" gmt-adjustment="GMT+03:00" data-use-daylight-time="1" value="3">(GMT+03:00) Moscow, St. Petersburg, Volgograd</option>
-                            <option data-timezone-id="47" gmt-adjustment="GMT+03:00" data-use-daylight-time="0" value="3">(GMT+03:00) Nairobi</option>
-                            <option data-timezone-id="48" gmt-adjustment="GMT+03:00" data-use-daylight-time="0" value="3">(GMT+03:00) Tbilisi</option>
-                            <option data-timezone-id="49" gmt-adjustment="GMT+03:30" data-use-daylight-time="1" value="3.5">(GMT+03:30) Tehran</option>
-                            <option data-timezone-id="50" gmt-adjustment="GMT+04:00" data-use-daylight-time="0" value="4">(GMT+04:00) Abu Dhabi, Muscat</option>
-                            <option data-timezone-id="51" gmt-adjustment="GMT+04:00" data-use-daylight-time="1" value="4">(GMT+04:00) Baku</option>
-                            <option data-timezone-id="52" gmt-adjustment="GMT+04:00" data-use-daylight-time="1" value="4">(GMT+04:00) Yerevan</option>
-                            <option data-timezone-id="53" gmt-adjustment="GMT+04:30" data-use-daylight-time="0" value="4.5">(GMT+04:30) Kabul</option>
-                            <option data-timezone-id="54" gmt-adjustment="GMT+05:00" data-use-daylight-time="1" value="5">(GMT+05:00) Yekaterinburg</option>
-                            <option data-timezone-id="55" gmt-adjustment="GMT+05:00" data-use-daylight-time="0" value="5">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
-                            <option data-timezone-id="56" gmt-adjustment="GMT+05:30" data-use-daylight-time="0" value="5.5">(GMT+05:30) Sri Jayawardenapura</option>
-                            <option data-timezone-id="57" gmt-adjustment="GMT+05:30" data-use-daylight-time="0" value="5.5">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
-                            <option data-timezone-id="58" gmt-adjustment="GMT+05:45" data-use-daylight-time="0" value="5.75">(GMT+05:45) Kathmandu</option>
-                            <option data-timezone-id="59" gmt-adjustment="GMT+06:00" data-use-daylight-time="1" value="6">(GMT+06:00) Almaty, Novosibirsk</option>
-                            <option data-timezone-id="60" gmt-adjustment="GMT+06:00" data-use-daylight-time="0" value="6">(GMT+06:00) Astana, Dhaka</option>
-                            <option data-timezone-id="61" gmt-adjustment="GMT+06:30" data-use-daylight-time="0" value="6.5">(GMT+06:30) Yangon (Rangoon)</option>
-                            <option data-timezone-id="62" gmt-adjustment="GMT+07:00" data-use-daylight-time="0" value="7">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
-                            <option data-timezone-id="63" gmt-adjustment="GMT+07:00" data-use-daylight-time="1" value="7">(GMT+07:00) Krasnoyarsk</option>
-                            <option data-timezone-id="64" gmt-adjustment="GMT+08:00" data-use-daylight-time="0" value="8">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
-                            <option data-timezone-id="65" gmt-adjustment="GMT+08:00" data-use-daylight-time="0" value="8">(GMT+08:00) Kuala Lumpur, Singapore</option>
-                            <option data-timezone-id="66" gmt-adjustment="GMT+08:00" data-use-daylight-time="0" value="8">(GMT+08:00) Irkutsk, Ulaan Bataar</option>
-                            <option data-timezone-id="67" gmt-adjustment="GMT+08:00" data-use-daylight-time="0" value="8">(GMT+08:00) Perth</option>
-                            <option data-timezone-id="68" gmt-adjustment="GMT+08:00" data-use-daylight-time="0" value="8">(GMT+08:00) Taipei</option>
-                            <option data-timezone-id="69" gmt-adjustment="GMT+09:00" data-use-daylight-time="0" value="9">(GMT+09:00) Osaka, Sapporo, Tokyo</option>
-                            <option data-timezone-id="70" gmt-adjustment="GMT+09:00" data-use-daylight-time="0" value="9">(GMT+09:00) Seoul</option>
-                            <option data-timezone-id="71" gmt-adjustment="GMT+09:00" data-use-daylight-time="1" value="9">(GMT+09:00) Yakutsk</option>
-                            <option data-timezone-id="72" gmt-adjustment="GMT+09:30" data-use-daylight-time="0" value="9.5">(GMT+09:30) Adelaide</option>
-                            <option data-timezone-id="73" gmt-adjustment="GMT+09:30" data-use-daylight-time="0" value="9.5">(GMT+09:30) Darwin</option>
-                            <option data-timezone-id="74" gmt-adjustment="GMT+10:00" data-use-daylight-time="0" value="10">(GMT+10:00) Brisbane</option>
-                            <option data-timezone-id="75" gmt-adjustment="GMT+10:00" data-use-daylight-time="1" value="10">(GMT+10:00) Canberra, Melbourne, Sydney</option>
-                            <option data-timezone-id="76" gmt-adjustment="GMT+10:00" data-use-daylight-time="1" value="10">(GMT+10:00) Hobart</option>
-                            <option data-timezone-id="77" gmt-adjustment="GMT+10:00" data-use-daylight-time="0" value="10">(GMT+10:00) Guam, Port Moresby</option>
-                            <option data-timezone-id="78" gmt-adjustment="GMT+10:00" data-use-daylight-time="1" value="10">(GMT+10:00) Vladivostok</option>
-                            <option data-timezone-id="79" gmt-adjustment="GMT+11:00" data-use-daylight-time="1" value="11">(GMT+11:00) Magadan, Solomon Is., New Caledonia</option>
-                            <option data-timezone-id="80" gmt-adjustment="GMT+12:00" data-use-daylight-time="1" value="12">(GMT+12:00) Auckland, Wellington</option>
-                            <option data-timezone-id="81" gmt-adjustment="GMT+12:00" data-use-daylight-time="0" value="12">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option>
-                            <option data-timezone-id="82" gmt-adjustment="GMT+13:00" data-use-daylight-time="0" value="13">(GMT+13:00) Nuku'alofa</option>
-                        </select> 
+                    <label class="timezone"
+                      >Timezone
+                      <select class="timezone">
+                        <option
+                          data-timezone-id="1"
+                          gmt-adjustment="GMT-12:00"
+                          data-use-daylight-time="0"
+                          value="-12"
+                          >(GMT-12:00) International Date Line West</option
+                        >
+                        <option
+                          data-timezone-id="2"
+                          gmt-adjustment="GMT-11:00"
+                          data-use-daylight-time="0"
+                          value="-11"
+                          >(GMT-11:00) Midway Island, Samoa</option
+                        >
+                        <option
+                          data-timezone-id="3"
+                          gmt-adjustment="GMT-10:00"
+                          data-use-daylight-time="0"
+                          value="-10"
+                          >(GMT-10:00) Hawaii</option
+                        >
+                        <option
+                          data-timezone-id="4"
+                          gmt-adjustment="GMT-09:00"
+                          data-use-daylight-time="1"
+                          value="-9"
+                          >(GMT-09:00) Alaska</option
+                        >
+                        <option
+                          data-timezone-id="5"
+                          gmt-adjustment="GMT-08:00"
+                          data-use-daylight-time="1"
+                          value="-8"
+                          >(GMT-08:00) Pacific Time (US &amp; Canada)</option
+                        >
+                        <option
+                          data-timezone-id="6"
+                          gmt-adjustment="GMT-08:00"
+                          data-use-daylight-time="1"
+                          value="-8"
+                          >(GMT-08:00) Tijuana, Baja California</option
+                        >
+                        <option
+                          data-timezone-id="7"
+                          gmt-adjustment="GMT-07:00"
+                          data-use-daylight-time="0"
+                          value="-7"
+                          >(GMT-07:00) Arizona</option
+                        >
+                        <option
+                          data-timezone-id="8"
+                          gmt-adjustment="GMT-07:00"
+                          data-use-daylight-time="1"
+                          value="-7"
+                          >(GMT-07:00) Chihuahua, La Paz, Mazatlan</option
+                        >
+                        <option
+                          data-timezone-id="9"
+                          gmt-adjustment="GMT-07:00"
+                          data-use-daylight-time="1"
+                          value="-7"
+                          >(GMT-07:00) Mountain Time (US &amp; Canada)</option
+                        >
+                        <option
+                          data-timezone-id="10"
+                          gmt-adjustment="GMT-06:00"
+                          data-use-daylight-time="0"
+                          value="-6"
+                          >(GMT-06:00) Central America</option
+                        >
+                        <option
+                          data-timezone-id="11"
+                          gmt-adjustment="GMT-06:00"
+                          data-use-daylight-time="1"
+                          value="-6"
+                          >(GMT-06:00) Central Time (US &amp; Canada)</option
+                        >
+                        <option
+                          data-timezone-id="12"
+                          gmt-adjustment="GMT-06:00"
+                          data-use-daylight-time="1"
+                          value="-6"
+                          >(GMT-06:00) Guadalajara, Mexico City,
+                          Monterrey</option
+                        >
+                        <option
+                          data-timezone-id="13"
+                          gmt-adjustment="GMT-06:00"
+                          data-use-daylight-time="0"
+                          value="-6"
+                          >(GMT-06:00) Saskatchewan</option
+                        >
+                        <option
+                          data-timezone-id="14"
+                          gmt-adjustment="GMT-05:00"
+                          data-use-daylight-time="0"
+                          value="-5"
+                          >(GMT-05:00) Bogota, Lima, Quito, Rio Branco</option
+                        >
+                        <option
+                          data-timezone-id="15"
+                          gmt-adjustment="GMT-05:00"
+                          data-use-daylight-time="1"
+                          value="-5"
+                          >(GMT-05:00) Eastern Time (US &amp; Canada)</option
+                        >
+                        <option
+                          data-timezone-id="16"
+                          gmt-adjustment="GMT-05:00"
+                          data-use-daylight-time="1"
+                          value="-5"
+                          >(GMT-05:00) Indiana (East)</option
+                        >
+                        <option
+                          data-timezone-id="17"
+                          gmt-adjustment="GMT-04:00"
+                          data-use-daylight-time="1"
+                          value="-4"
+                          >(GMT-04:00) Atlantic Time (Canada)</option
+                        >
+                        <option
+                          data-timezone-id="18"
+                          gmt-adjustment="GMT-04:00"
+                          data-use-daylight-time="0"
+                          value="-4"
+                          >(GMT-04:00) Caracas, La Paz</option
+                        >
+                        <option
+                          data-timezone-id="19"
+                          gmt-adjustment="GMT-04:00"
+                          data-use-daylight-time="0"
+                          value="-4"
+                          >(GMT-04:00) Manaus</option
+                        >
+                        <option
+                          data-timezone-id="20"
+                          gmt-adjustment="GMT-04:00"
+                          data-use-daylight-time="1"
+                          value="-4"
+                          >(GMT-04:00) Santiago</option
+                        >
+                        <option
+                          data-timezone-id="21"
+                          gmt-adjustment="GMT-03:30"
+                          data-use-daylight-time="1"
+                          value="-3.5"
+                          >(GMT-03:30) Newfoundland</option
+                        >
+                        <option
+                          data-timezone-id="22"
+                          gmt-adjustment="GMT-03:00"
+                          data-use-daylight-time="1"
+                          value="-3"
+                          >(GMT-03:00) Brasilia</option
+                        >
+                        <option
+                          data-timezone-id="23"
+                          gmt-adjustment="GMT-03:00"
+                          data-use-daylight-time="0"
+                          value="-3"
+                          >(GMT-03:00) Buenos Aires, Georgetown</option
+                        >
+                        <option
+                          data-timezone-id="24"
+                          gmt-adjustment="GMT-03:00"
+                          data-use-daylight-time="1"
+                          value="-3"
+                          >(GMT-03:00) Greenland</option
+                        >
+                        <option
+                          data-timezone-id="25"
+                          gmt-adjustment="GMT-03:00"
+                          data-use-daylight-time="1"
+                          value="-3"
+                          >(GMT-03:00) Montevideo</option
+                        >
+                        <option
+                          data-timezone-id="26"
+                          gmt-adjustment="GMT-02:00"
+                          data-use-daylight-time="1"
+                          value="-2"
+                          >(GMT-02:00) Mid-Atlantic</option
+                        >
+                        <option
+                          data-timezone-id="27"
+                          gmt-adjustment="GMT-01:00"
+                          data-use-daylight-time="0"
+                          value="-1"
+                          >(GMT-01:00) Cape Verde Is.</option
+                        >
+                        <option
+                          data-timezone-id="28"
+                          gmt-adjustment="GMT-01:00"
+                          data-use-daylight-time="1"
+                          value="-1"
+                          >(GMT-01:00) Azores</option
+                        >
+                        <option
+                          data-timezone-id="29"
+                          gmt-adjustment="GMT+00:00"
+                          data-use-daylight-time="0"
+                          value="0"
+                          >(GMT+00:00) Casablanca, Monrovia, Reykjavik</option
+                        >
+                        <option
+                          data-timezone-id="30"
+                          gmt-adjustment="GMT+00:00"
+                          data-use-daylight-time="1"
+                          value="0"
+                          >(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh,
+                          Lisbon, London</option
+                        >
+                        <option
+                          selected
+                          data-timezone-id="31"
+                          gmt-adjustment="GMT+01:00"
+                          data-use-daylight-time="1"
+                          value="1"
+                          >(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm,
+                          Vienna</option
+                        >
+                        <option
+                          data-timezone-id="32"
+                          gmt-adjustment="GMT+01:00"
+                          data-use-daylight-time="1"
+                          value="1"
+                          >(GMT+01:00) Belgrade, Bratislava, Budapest,
+                          Ljubljana, Prague</option
+                        >
+                        <option
+                          data-timezone-id="33"
+                          gmt-adjustment="GMT+01:00"
+                          data-use-daylight-time="1"
+                          value="1"
+                          >(GMT+01:00) Brussels, Copenhagen, Madrid,
+                          Paris</option
+                        >
+                        <option
+                          data-timezone-id="34"
+                          gmt-adjustment="GMT+01:00"
+                          data-use-daylight-time="1"
+                          value="1"
+                          >(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option
+                        >
+                        <option
+                          data-timezone-id="35"
+                          gmt-adjustment="GMT+01:00"
+                          data-use-daylight-time="1"
+                          value="1"
+                          >(GMT+01:00) West Central Africa</option
+                        >
+                        <option
+                          data-timezone-id="36"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Amman</option
+                        >
+                        <option
+                          data-timezone-id="37"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Athens, Bucharest, Istanbul</option
+                        >
+                        <option
+                          data-timezone-id="38"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Beirut</option
+                        >
+                        <option
+                          data-timezone-id="39"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Cairo</option
+                        >
+                        <option
+                          data-timezone-id="40"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="0"
+                          value="2"
+                          >(GMT+02:00) Harare, Pretoria</option
+                        >
+                        <option
+                          data-timezone-id="41"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn,
+                          Vilnius</option
+                        >
+                        <option
+                          data-timezone-id="42"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Jerusalem</option
+                        >
+                        <option
+                          data-timezone-id="43"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Minsk</option
+                        >
+                        <option
+                          data-timezone-id="44"
+                          gmt-adjustment="GMT+02:00"
+                          data-use-daylight-time="1"
+                          value="2"
+                          >(GMT+02:00) Windhoek</option
+                        >
+                        <option
+                          data-timezone-id="45"
+                          gmt-adjustment="GMT+03:00"
+                          data-use-daylight-time="0"
+                          value="3"
+                          >(GMT+03:00) Kuwait, Riyadh, Baghdad</option
+                        >
+                        <option
+                          data-timezone-id="46"
+                          gmt-adjustment="GMT+03:00"
+                          data-use-daylight-time="1"
+                          value="3"
+                          >(GMT+03:00) Moscow, St. Petersburg, Volgograd</option
+                        >
+                        <option
+                          data-timezone-id="47"
+                          gmt-adjustment="GMT+03:00"
+                          data-use-daylight-time="0"
+                          value="3"
+                          >(GMT+03:00) Nairobi</option
+                        >
+                        <option
+                          data-timezone-id="48"
+                          gmt-adjustment="GMT+03:00"
+                          data-use-daylight-time="0"
+                          value="3"
+                          >(GMT+03:00) Tbilisi</option
+                        >
+                        <option
+                          data-timezone-id="49"
+                          gmt-adjustment="GMT+03:30"
+                          data-use-daylight-time="1"
+                          value="3.5"
+                          >(GMT+03:30) Tehran</option
+                        >
+                        <option
+                          data-timezone-id="50"
+                          gmt-adjustment="GMT+04:00"
+                          data-use-daylight-time="0"
+                          value="4"
+                          >(GMT+04:00) Abu Dhabi, Muscat</option
+                        >
+                        <option
+                          data-timezone-id="51"
+                          gmt-adjustment="GMT+04:00"
+                          data-use-daylight-time="1"
+                          value="4"
+                          >(GMT+04:00) Baku</option
+                        >
+                        <option
+                          data-timezone-id="52"
+                          gmt-adjustment="GMT+04:00"
+                          data-use-daylight-time="1"
+                          value="4"
+                          >(GMT+04:00) Yerevan</option
+                        >
+                        <option
+                          data-timezone-id="53"
+                          gmt-adjustment="GMT+04:30"
+                          data-use-daylight-time="0"
+                          value="4.5"
+                          >(GMT+04:30) Kabul</option
+                        >
+                        <option
+                          data-timezone-id="54"
+                          gmt-adjustment="GMT+05:00"
+                          data-use-daylight-time="1"
+                          value="5"
+                          >(GMT+05:00) Yekaterinburg</option
+                        >
+                        <option
+                          data-timezone-id="55"
+                          gmt-adjustment="GMT+05:00"
+                          data-use-daylight-time="0"
+                          value="5"
+                          >(GMT+05:00) Islamabad, Karachi, Tashkent</option
+                        >
+                        <option
+                          data-timezone-id="56"
+                          gmt-adjustment="GMT+05:30"
+                          data-use-daylight-time="0"
+                          value="5.5"
+                          >(GMT+05:30) Sri Jayawardenapura</option
+                        >
+                        <option
+                          data-timezone-id="57"
+                          gmt-adjustment="GMT+05:30"
+                          data-use-daylight-time="0"
+                          value="5.5"
+                          >(GMT+05:30) Chennai, Kolkata, Mumbai, New
+                          Delhi</option
+                        >
+                        <option
+                          data-timezone-id="58"
+                          gmt-adjustment="GMT+05:45"
+                          data-use-daylight-time="0"
+                          value="5.75"
+                          >(GMT+05:45) Kathmandu</option
+                        >
+                        <option
+                          data-timezone-id="59"
+                          gmt-adjustment="GMT+06:00"
+                          data-use-daylight-time="1"
+                          value="6"
+                          >(GMT+06:00) Almaty, Novosibirsk</option
+                        >
+                        <option
+                          data-timezone-id="60"
+                          gmt-adjustment="GMT+06:00"
+                          data-use-daylight-time="0"
+                          value="6"
+                          >(GMT+06:00) Astana, Dhaka</option
+                        >
+                        <option
+                          data-timezone-id="61"
+                          gmt-adjustment="GMT+06:30"
+                          data-use-daylight-time="0"
+                          value="6.5"
+                          >(GMT+06:30) Yangon (Rangoon)</option
+                        >
+                        <option
+                          data-timezone-id="62"
+                          gmt-adjustment="GMT+07:00"
+                          data-use-daylight-time="0"
+                          value="7"
+                          >(GMT+07:00) Bangkok, Hanoi, Jakarta</option
+                        >
+                        <option
+                          data-timezone-id="63"
+                          gmt-adjustment="GMT+07:00"
+                          data-use-daylight-time="1"
+                          value="7"
+                          >(GMT+07:00) Krasnoyarsk</option
+                        >
+                        <option
+                          data-timezone-id="64"
+                          gmt-adjustment="GMT+08:00"
+                          data-use-daylight-time="0"
+                          value="8"
+                          >(GMT+08:00) Beijing, Chongqing, Hong Kong,
+                          Urumqi</option
+                        >
+                        <option
+                          data-timezone-id="65"
+                          gmt-adjustment="GMT+08:00"
+                          data-use-daylight-time="0"
+                          value="8"
+                          >(GMT+08:00) Kuala Lumpur, Singapore</option
+                        >
+                        <option
+                          data-timezone-id="66"
+                          gmt-adjustment="GMT+08:00"
+                          data-use-daylight-time="0"
+                          value="8"
+                          >(GMT+08:00) Irkutsk, Ulaan Bataar</option
+                        >
+                        <option
+                          data-timezone-id="67"
+                          gmt-adjustment="GMT+08:00"
+                          data-use-daylight-time="0"
+                          value="8"
+                          >(GMT+08:00) Perth</option
+                        >
+                        <option
+                          data-timezone-id="68"
+                          gmt-adjustment="GMT+08:00"
+                          data-use-daylight-time="0"
+                          value="8"
+                          >(GMT+08:00) Taipei</option
+                        >
+                        <option
+                          data-timezone-id="69"
+                          gmt-adjustment="GMT+09:00"
+                          data-use-daylight-time="0"
+                          value="9"
+                          >(GMT+09:00) Osaka, Sapporo, Tokyo</option
+                        >
+                        <option
+                          data-timezone-id="70"
+                          gmt-adjustment="GMT+09:00"
+                          data-use-daylight-time="0"
+                          value="9"
+                          >(GMT+09:00) Seoul</option
+                        >
+                        <option
+                          data-timezone-id="71"
+                          gmt-adjustment="GMT+09:00"
+                          data-use-daylight-time="1"
+                          value="9"
+                          >(GMT+09:00) Yakutsk</option
+                        >
+                        <option
+                          data-timezone-id="72"
+                          gmt-adjustment="GMT+09:30"
+                          data-use-daylight-time="0"
+                          value="9.5"
+                          >(GMT+09:30) Adelaide</option
+                        >
+                        <option
+                          data-timezone-id="73"
+                          gmt-adjustment="GMT+09:30"
+                          data-use-daylight-time="0"
+                          value="9.5"
+                          >(GMT+09:30) Darwin</option
+                        >
+                        <option
+                          data-timezone-id="74"
+                          gmt-adjustment="GMT+10:00"
+                          data-use-daylight-time="0"
+                          value="10"
+                          >(GMT+10:00) Brisbane</option
+                        >
+                        <option
+                          data-timezone-id="75"
+                          gmt-adjustment="GMT+10:00"
+                          data-use-daylight-time="1"
+                          value="10"
+                          >(GMT+10:00) Canberra, Melbourne, Sydney</option
+                        >
+                        <option
+                          data-timezone-id="76"
+                          gmt-adjustment="GMT+10:00"
+                          data-use-daylight-time="1"
+                          value="10"
+                          >(GMT+10:00) Hobart</option
+                        >
+                        <option
+                          data-timezone-id="77"
+                          gmt-adjustment="GMT+10:00"
+                          data-use-daylight-time="0"
+                          value="10"
+                          >(GMT+10:00) Guam, Port Moresby</option
+                        >
+                        <option
+                          data-timezone-id="78"
+                          gmt-adjustment="GMT+10:00"
+                          data-use-daylight-time="1"
+                          value="10"
+                          >(GMT+10:00) Vladivostok</option
+                        >
+                        <option
+                          data-timezone-id="79"
+                          gmt-adjustment="GMT+11:00"
+                          data-use-daylight-time="1"
+                          value="11"
+                          >(GMT+11:00) Magadan, Solomon Is., New
+                          Caledonia</option
+                        >
+                        <option
+                          data-timezone-id="80"
+                          gmt-adjustment="GMT+12:00"
+                          data-use-daylight-time="1"
+                          value="12"
+                          >(GMT+12:00) Auckland, Wellington</option
+                        >
+                        <option
+                          data-timezone-id="81"
+                          gmt-adjustment="GMT+12:00"
+                          data-use-daylight-time="0"
+                          value="12"
+                          >(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option
+                        >
+                        <option
+                          data-timezone-id="82"
+                          gmt-adjustment="GMT+13:00"
+                          data-use-daylight-time="0"
+                          value="13"
+                          >(GMT+13:00) Nuku'alofa</option
+                        >
+                      </select>
                     </label>
-                </fieldset>
+                  </fieldset>
 
-                <br>
+                  <br />
 
-                <fieldset class="group agenda">
+                  <fieldset class="group agenda">
                     <legend>Agenda</legend>
-                    <ol class="pat-sortable pat-clone items-list" data-pat-clone="template: #agenda-item-template" data-pat-sortable="selector: .sortable">
+                    <ol
+                      class="pat-sortable pat-clone items-list"
+                      data-pat-clone="template: #agenda-item-template"
+                      data-pat-sortable="selector: .sortable"
+                    >
+                      <li class="agenda-item sortable">
+                        <input type="text" placeholder="Name of agenda item" />
+                        <span class="button-cluster"
+                          ><button
+                            class="sortable-button-up small pat-button"
+                            type="submit"
+                            name="up"
+                            value="up"
+                          >
+                            Up
+                          </button>
+                          <button
+                            class="sortable-button-down small pat-button"
+                            type="submit"
+                            name="item_3_down"
+                            value="item_3_down"
+                          >
+                            down
+                          </button></span
+                        >
+                      </li>
 
-                        <li class="agenda-item sortable">
-                           <input type="text" placeholder="Name of agenda item" /> <span class="button-cluster"><button class="sortable-button-up small pat-button" type="submit" name="up" value="up">Up</button> <button class="sortable-button-down small pat-button" type="submit" name="item_3_down" value="item_3_down">down</button></span>
-                       </li>
+                      <li
+                        hidden
+                        class="agenda-item sortable"
+                        id="agenda-item-template"
+                      >
+                        <input type="text" placeholder="Name of agenda item" />
+                        <span class="button-cluster"
+                          ><button
+                            class="sortable-button-up small pat-button"
+                            type="submit"
+                            name="up"
+                            value="up"
+                          >
+                            Up
+                          </button>
+                          <button
+                            class="sortable-button-down small pat-button"
+                            type="submit"
+                            name="item_3_down"
+                            value="item_3_down"
+                          >
+                            down
+                          </button></span
+                        >
+                      </li>
+                    </ol>
 
-                       <li hidden class="agenda-item sortable" id="agenda-item-template">
-                           <input type="text" placeholder="Name of agenda item" /> <span class="button-cluster"><button class="sortable-button-up small pat-button" type="submit" name="up" value="up">Up</button> <button class="sortable-button-down small pat-button" type="submit" name="item_3_down" value="item_3_down">down</button></span>
-                       </li>
+                    <p class="button-bar">
+                      <button
+                        class="add-item icon-plus-circle small add-clone"
+                        type="button"
+                        id="add-agenda-item"
+                      >
+                        Add agenda item
+                      </button>
+                    </p>
 
-                   </ol>
+                    <input
+                      type="hidden"
+                      class="sortable-amount"
+                      name="pat-sortable-amount"
+                      value="1"
+                    />
+                  </fieldset>
+                  <br />
 
-                   <p class="button-bar">
-                    <button class="add-item icon-plus-circle small add-clone" type="button" id="add-agenda-item">Add agenda item</button>
-                </p>
+                  <label class="invitees"
+                    >Invitees
+                    <input
+                      class="pat-autosuggest users"
+                      data-pat-autosuggest="words:EPP LDAP Administrator &lt;admin@staralliance.com&gt;,Plone LDAP Administrator &lt;admin@staralliance.com&gt;,Administrator StarDesk &lt;webworkadmin@staralliance.com&gt;,Berislav Dobrenic &lt;beri.dobrenic@dlh.de&gt;,Sunathee Isavarphornchai &lt;sunathee.i@thaiairways.com&gt;,Anja Weinand &lt;anja.weinand@dlh.de&gt;,Sitdhinai Chantranon &lt;sitdhinai.c@thaiairways.com&gt;,John Whittaker &lt;john.whittaker@airnz.co.nz&gt;,Petchakul Knapornworakarn &lt;petchakul.k@thaiairways.com&gt;,Silvijo Posavec &lt;silvio.posavec@croatiaairlines.hr&gt;,Moritz Pfeiffer &lt;moritz.pfeiffer@aircanada.ca&gt;,Ewa Przybylska &lt;ewa.przybylska@lot.pl&gt;,Brett Anderson &lt;brett.anderson@united.com&gt;,Franklin Auber &lt;franklin_auber@singaporeair.com.sg&gt;,Elisabeth Manzi &lt;elisabeth.manzi@sas.se&gt;,Kazuhisa Okamoto &lt;kazuhisa_okamoto@singaporeair.com.sg&gt;,SOICHIRO YOSHIMOTO &lt;soichiro_yoshimoto@singaporeair.com.sg&gt;,Tanja Tolkmitt &lt;tanja.tolkmitt@dlh.de&gt;,Alex X. Schaefer &lt;alex_x._schaefer@noemail.com&gt;,Steffen Harbarth &lt;steffen.harbarth@dlh.de&gt;,Juliana Henriques &lt;juliana.henriques@tam.com.br-deactivated&gt;,Rita Silva &lt;rsilva@tap.pt&gt;,Lunchana Poowitayaphant &lt;lunchana.p@thaiairways.com&gt;,Mee Chee Yong &lt;meechee_yong@singaporeair.com.sg&gt;,Deborah Mathias &lt;deborah.mathias@dlh.de&gt;,Karsten Hellmann &lt;karsten.hellmann@dlh.de&gt;,Ewa Mazur &lt;ewa.mazur@sas.dk&gt;,Lillian Lautzenheiser-Page &lt;lillian.lautz-page@ual.com&gt;,Yonatan Tilahun &lt;yonatant@ethiopianairlines.com&gt;,Annette Malvar &lt;annette.malvar@aircanada.ca&gt;,Joseph Antony Raja &lt;jantonyraja.j@tcs.com&gt;,Jun Sasaki &lt;j.sasaki@ana.co.jp&gt;,Julija Pirc &lt;julija.pirc@adria.si&gt;,Paul Dorai Raj &lt;paul_dorairaj@singaporeair.com.sg&gt;,Kazimierz Szostak &lt;k.szostak@lot.pl&gt;,Tonya Robertson &lt;tonyarobertson@lon.flysaa.com&gt;,Rosalie Rissetto &lt;rosalie.rissetto@airnz.co.nz&gt;,Chin Wah Ong &lt;chinwah_ong@singaporeair.com.sg&gt;,Nahree Yoon &lt;yoonnahree@flyasiana.com&gt;,Julie Pepiot &lt;julie.pepiot@swiss.com&gt;,Miguel Cervera Navarro &lt;mcervera@tap.pt&gt;,Willem Diederichs &lt;willem.diederichs@dlh.de&gt;,Chai Woo Foo &lt;chaiwoo_foo@singaporeair.com.sg&gt;,Manoj Papa &lt;manojpapa@flysaa.com&gt;,Arthur Nikas &lt;arthur.nikas@swiss.com&gt;,Chakrapong Claiymukh &lt;chakrapong.c@thaiairways.com&gt;,Boris Ogursky &lt;boris.ogursky@dlh.de&gt;,Mui Seng Tay &lt;muiseng_tay@singaporeair.com.sg&gt;,Claudia Boedecker &lt;claudia.boedecker@dlh.de&gt;,Frederico de Sa &lt;frederico.sa@tam.com.br-deactivated&gt;,Ashley Lau &lt;ashley.lau@swiss.com&gt;,Manfred Hahn &lt;manfred.hahn@austrian.com&gt;,YUTA HASUMI &lt;hasumi@asiana.co.jp&gt;,Eva Koenig &lt;eva.koenig@swiss.com&gt;,Bruno Moreira &lt;btmoreira@tap.pt&gt;,Rajesh Kini &lt;webworks@mouglie.e4ward.com&gt;,Lucia Cavaleiro &lt;lcavaleiro@tap.pt&gt;,Beth Turner &lt;beth.d.turner@united.com&gt;,Isabella Signoretta &lt;isabella.signoretta@aircanada.ca&gt;,Adrijana Selj &lt;adrijana.selj@adria.si&gt;,Masahiko Kimura &lt;m.kimura@ana.co.jp&gt;,Robert Stephens &lt;robert.stephens@airnz.co.nz&gt;,Miroslaw Romanowski &lt;m.romanowski@lot.pl&gt;,Michael Burny &lt;michael.burny@united.com&gt;,Ahmed Imam &lt;ahmedimam@egyptair.de&gt;,Stefanie Bayard &lt;stefanie.bayard@swiss.com&gt;,Josef Geisseler &lt;josef.geisseler@swiss.com&gt;,Annika Dalsvall &lt;annika.dalsvall@sas.se&gt;,Kevin Hong &lt;kevin_hong@singaporeair.com.sg&gt;,Liu Peng &lt;liupeng@airchina.com&gt;,Peter LeBlanc &lt;peter.leblanc@aircanada.ca&gt;,Marina Beros &lt;marina.beros@croatiaairlines.hr&gt;,Denise Dalton &lt;denise.dalton@thaiairways.com.au&gt;,Geert Sciot &lt;geert.sciot@brusselsairlines.com&gt;,Ildiko Daranyi &lt;budmarketing@thy.com&gt;,Martin Friend &lt;martin_friend@singaporeair.com.sg&gt;,Jesada Chandrema &lt;paraa@thaiairways.fr&gt;,Reto Schmid &lt;reto.schmid@swiss.com&gt;,Cristina Ciolacu &lt;cristina.ciolacu@dlh.de&gt;,Claire Alexander &lt;claire.alexander@aircanada.ca&gt;,Haiping Peng &lt;penghaiping@airchina.com&gt;,Suzana Rodrigues &lt;smrodrigues@tap.pt&gt;,Andrea Engelhardt &lt;andrea.engelhardt@dlh.de&gt;,Mohamed Samir &lt;m.samir@egyptair.com&gt;,Chatchai Disson &lt;chatchai.d@thaiairways.com&gt;,Corinne Jessica Friedrich &lt;corinne-jessica.friedrich@dlh.de&gt;,Bart Debruyn &lt;bart.debruyn@brusselsairlines.com&gt;,Yuen Ling Haily Kwan &lt;haily.kwan@dlh.de&gt;,Raymond C. L. Ho &lt;raymond.ho@aircanada.ca&gt;,Birgitta Hedgaardh &lt;birgitta.hedgaardh@dlh.de&gt;,Matthias Hinze &lt;matthias.hinze@dlh.de&gt;,Ismini Riga &lt;ismini.riga@aegeanair.com&gt;,Carmen Noboa &lt;carmen.noboa@united.com&gt;,Wit Kitchathorn &lt;lonaatg@thaiairways.co.uk&gt;,Gabor Horvath &lt;gabor.horvath@dlh.de&gt;,Anna Karolina Johansson &lt;anna.johansson@dlh.de&gt;,Jeanette Ang &lt;jeanetteangpr@hotmail.com&gt;,Susanne Tewfik &lt;susanne.tewfik@dlh.de&gt;,Roxanne Mendez &lt;roxanne.mendez@coair.com&gt;,Frank Zimmermann &lt;frank.zimmermann@dlh.de&gt;,Natalia Klochkova &lt;natalia_klochkova@singaporeair.com.sg&gt;,Hyeong Eui Yoon &lt;heyun@flyasiana.com&gt;,Isabel Palma &lt;mpalma@tap.pt&gt;,Vichuda Sthalanand &lt;vichuda.s@thaiairways.com&gt;,Bill Meares &lt;bill.meares@united.com&gt;,Lena Barnes &lt;lbarnes@sasair.com&gt;,Marwa Taher &lt;marwa.taher@dlh.de&gt;,Tadashi Mikuri &lt;tadashi.mikuri@swiss.com&gt;,Christophe Bernheim &lt;christophe.bernheim@dlh.de&gt;,Edith Bezikofer &lt;bezikofer.edith@aegeanair.com&gt;,Marek Grabowski &lt;m.grabowski@lot.pl&gt;,Cynthia van der Wiel &lt;cwiel@tap.pt&gt;,Eloi Oliveira &lt;eloi.oliveira@tam.com.br-deactivated&gt;,Michael Fromm &lt;michael.fromm@dlh.de&gt;,Barbara Ahlers &lt;barbara.ahlers@dlh.de&gt;,Pascale Le Maillot &lt;lemaillot@ana.co.jp&gt;,Ana Maria Carriedo Scher &lt;ana.carriedo@dlh.de&gt;,Hironori Yamamoto &lt;hi.yamamoto@ana.co.jp&gt;,Gabriele Mannucci &lt;gabriele.mannucci@tam.com.br-deactivated&gt;,Maria da Salvacao Alves &lt;salves@tap.pt&gt;,Dina Labib &lt;dina.labib@dlh.de&gt;,Abdullah Sait SENLER &lt;asenler@thy.com&gt;,Danijela Kalmeta &lt;danijela.kalmeta@croatiaairlines.hr&gt;,Stuart Schofield &lt;stuart.schofield@united.com&gt;,Cunha Flavia &lt;flavia.cunha@tam.com.br-deactivated&gt;,Yp Jun &lt;ypjun@flyasiana.com&gt;,Maria Petalidou &lt;maria.petalidou@ana.co.jp&gt;,Karin Kroneisl &lt;karin.kroneisl@austrian.com&gt;,Irene Lee &lt;irene.lee@dlh.de&gt;,Ekaterina Seredneva &lt;ekaterina.seredneva@austrian.com&gt;,Kate Price &lt;kate.price@aircanada.ca&gt;,Srecko Simunovic &lt;srecko.simunovic@croatiaairlines.hr&gt;,Yvonne Frantzen &lt;yvonne.frantzen@dlh.de&gt;,Alice Acar &lt;alice.acar@dlh.de&gt;,Hrvoje Tkalcic &lt;hrvoje.tkalcic@croatiaairlines.hr&gt;,Iva Petrovic &lt;iva.petrovic@croatiaairlines.hr&gt;,Richard Holden &lt;richard.holden@airnz.co.nz&gt;,Wolfgang Wisberg &lt;wolfgang.wisberg@dlh.de&gt;,Christelle Perianin &lt;christelle.perianin@parnassus-accounting.com&gt;,Bruce Kim &lt;byungyul1@flyasiana.com&gt;,Susanna Rainsborough &lt;susanna.rainsborough@dlh.de&gt;"
+                      type="text"
+                      value=""
+                      data-pat-autosuggest-classes='{"Brett Anderson &lt;brett.anderson@united.com&gt;": ["undecided"], "Steffen Harbarth &lt;steffen.harbarth@dlh.de&gt;": ["confirmed"], "Julie Pepiot &lt;julie.pepiot@swiss.com&gt;": ["tentative"], "Lillian Lautzenheiser-Page &lt;lillian.lautz-page@ual.com&gt;": ["declined"], "G7 &lt;g7@world.com&gt;": ["group"]}'
+                      placeholder="Names of invitees"
+                    />
 
-                <input type="hidden" class="sortable-amount" name="pat-sortable-amount" value="1" />
-            </fieldset>
-            <br>
+                    <span class="legend">
+                      <dfn class="undecided">Undecided</dfn>
+                      <dfn class="confirmed">Confirmed</dfn>
+                      <dfn class="tentative">Tentative</dfn>
+                      <dfn class="declined">Declined</dfn>
+                    </span>
+                  </label>
 
-            <label class="invitees">Invitees 
-                <input class="pat-autosuggest users" data-pat-autosuggest="words:EPP LDAP Administrator &lt;admin@staralliance.com&gt;,Plone LDAP Administrator &lt;admin@staralliance.com&gt;,Administrator StarDesk &lt;webworkadmin@staralliance.com&gt;,Berislav Dobrenic &lt;beri.dobrenic@dlh.de&gt;,Sunathee Isavarphornchai &lt;sunathee.i@thaiairways.com&gt;,Anja Weinand &lt;anja.weinand@dlh.de&gt;,Sitdhinai Chantranon &lt;sitdhinai.c@thaiairways.com&gt;,John Whittaker &lt;john.whittaker@airnz.co.nz&gt;,Petchakul Knapornworakarn &lt;petchakul.k@thaiairways.com&gt;,Silvijo Posavec &lt;silvio.posavec@croatiaairlines.hr&gt;,Moritz Pfeiffer &lt;moritz.pfeiffer@aircanada.ca&gt;,Ewa Przybylska &lt;ewa.przybylska@lot.pl&gt;,Brett Anderson &lt;brett.anderson@united.com&gt;,Franklin Auber &lt;franklin_auber@singaporeair.com.sg&gt;,Elisabeth Manzi &lt;elisabeth.manzi@sas.se&gt;,Kazuhisa Okamoto &lt;kazuhisa_okamoto@singaporeair.com.sg&gt;,SOICHIRO YOSHIMOTO &lt;soichiro_yoshimoto@singaporeair.com.sg&gt;,Tanja Tolkmitt &lt;tanja.tolkmitt@dlh.de&gt;,Alex X. Schaefer &lt;alex_x._schaefer@noemail.com&gt;,Steffen Harbarth &lt;steffen.harbarth@dlh.de&gt;,Juliana Henriques &lt;juliana.henriques@tam.com.br-deactivated&gt;,Rita Silva &lt;rsilva@tap.pt&gt;,Lunchana Poowitayaphant &lt;lunchana.p@thaiairways.com&gt;,Mee Chee Yong &lt;meechee_yong@singaporeair.com.sg&gt;,Deborah Mathias &lt;deborah.mathias@dlh.de&gt;,Karsten Hellmann &lt;karsten.hellmann@dlh.de&gt;,Ewa Mazur &lt;ewa.mazur@sas.dk&gt;,Lillian Lautzenheiser-Page &lt;lillian.lautz-page@ual.com&gt;,Yonatan Tilahun &lt;yonatant@ethiopianairlines.com&gt;,Annette Malvar &lt;annette.malvar@aircanada.ca&gt;,Joseph Antony Raja &lt;jantonyraja.j@tcs.com&gt;,Jun Sasaki &lt;j.sasaki@ana.co.jp&gt;,Julija Pirc &lt;julija.pirc@adria.si&gt;,Paul Dorai Raj &lt;paul_dorairaj@singaporeair.com.sg&gt;,Kazimierz Szostak &lt;k.szostak@lot.pl&gt;,Tonya Robertson &lt;tonyarobertson@lon.flysaa.com&gt;,Rosalie Rissetto &lt;rosalie.rissetto@airnz.co.nz&gt;,Chin Wah Ong &lt;chinwah_ong@singaporeair.com.sg&gt;,Nahree Yoon &lt;yoonnahree@flyasiana.com&gt;,Julie Pepiot &lt;julie.pepiot@swiss.com&gt;,Miguel Cervera Navarro &lt;mcervera@tap.pt&gt;,Willem Diederichs &lt;willem.diederichs@dlh.de&gt;,Chai Woo Foo &lt;chaiwoo_foo@singaporeair.com.sg&gt;,Manoj Papa &lt;manojpapa@flysaa.com&gt;,Arthur Nikas &lt;arthur.nikas@swiss.com&gt;,Chakrapong Claiymukh &lt;chakrapong.c@thaiairways.com&gt;,Boris Ogursky &lt;boris.ogursky@dlh.de&gt;,Mui Seng Tay &lt;muiseng_tay@singaporeair.com.sg&gt;,Claudia Boedecker &lt;claudia.boedecker@dlh.de&gt;,Frederico de Sa &lt;frederico.sa@tam.com.br-deactivated&gt;,Ashley Lau &lt;ashley.lau@swiss.com&gt;,Manfred Hahn &lt;manfred.hahn@austrian.com&gt;,YUTA HASUMI &lt;hasumi@asiana.co.jp&gt;,Eva Koenig &lt;eva.koenig@swiss.com&gt;,Bruno Moreira &lt;btmoreira@tap.pt&gt;,Rajesh Kini &lt;webworks@mouglie.e4ward.com&gt;,Lucia Cavaleiro &lt;lcavaleiro@tap.pt&gt;,Beth Turner &lt;beth.d.turner@united.com&gt;,Isabella Signoretta &lt;isabella.signoretta@aircanada.ca&gt;,Adrijana Selj &lt;adrijana.selj@adria.si&gt;,Masahiko Kimura &lt;m.kimura@ana.co.jp&gt;,Robert Stephens &lt;robert.stephens@airnz.co.nz&gt;,Miroslaw Romanowski &lt;m.romanowski@lot.pl&gt;,Michael Burny &lt;michael.burny@united.com&gt;,Ahmed Imam &lt;ahmedimam@egyptair.de&gt;,Stefanie Bayard &lt;stefanie.bayard@swiss.com&gt;,Josef Geisseler &lt;josef.geisseler@swiss.com&gt;,Annika Dalsvall &lt;annika.dalsvall@sas.se&gt;,Kevin Hong &lt;kevin_hong@singaporeair.com.sg&gt;,Liu Peng &lt;liupeng@airchina.com&gt;,Peter LeBlanc &lt;peter.leblanc@aircanada.ca&gt;,Marina Beros &lt;marina.beros@croatiaairlines.hr&gt;,Denise Dalton &lt;denise.dalton@thaiairways.com.au&gt;,Geert Sciot &lt;geert.sciot@brusselsairlines.com&gt;,Ildiko Daranyi &lt;budmarketing@thy.com&gt;,Martin Friend &lt;martin_friend@singaporeair.com.sg&gt;,Jesada Chandrema &lt;paraa@thaiairways.fr&gt;,Reto Schmid &lt;reto.schmid@swiss.com&gt;,Cristina Ciolacu &lt;cristina.ciolacu@dlh.de&gt;,Claire Alexander &lt;claire.alexander@aircanada.ca&gt;,Haiping Peng &lt;penghaiping@airchina.com&gt;,Suzana Rodrigues &lt;smrodrigues@tap.pt&gt;,Andrea Engelhardt &lt;andrea.engelhardt@dlh.de&gt;,Mohamed Samir &lt;m.samir@egyptair.com&gt;,Chatchai Disson &lt;chatchai.d@thaiairways.com&gt;,Corinne Jessica Friedrich &lt;corinne-jessica.friedrich@dlh.de&gt;,Bart Debruyn &lt;bart.debruyn@brusselsairlines.com&gt;,Yuen Ling Haily Kwan &lt;haily.kwan@dlh.de&gt;,Raymond C. L. Ho &lt;raymond.ho@aircanada.ca&gt;,Birgitta Hedgaardh &lt;birgitta.hedgaardh@dlh.de&gt;,Matthias Hinze &lt;matthias.hinze@dlh.de&gt;,Ismini Riga &lt;ismini.riga@aegeanair.com&gt;,Carmen Noboa &lt;carmen.noboa@united.com&gt;,Wit Kitchathorn &lt;lonaatg@thaiairways.co.uk&gt;,Gabor Horvath &lt;gabor.horvath@dlh.de&gt;,Anna Karolina Johansson &lt;anna.johansson@dlh.de&gt;,Jeanette Ang &lt;jeanetteangpr@hotmail.com&gt;,Susanne Tewfik &lt;susanne.tewfik@dlh.de&gt;,Roxanne Mendez &lt;roxanne.mendez@coair.com&gt;,Frank Zimmermann &lt;frank.zimmermann@dlh.de&gt;,Natalia Klochkova &lt;natalia_klochkova@singaporeair.com.sg&gt;,Hyeong Eui Yoon &lt;heyun@flyasiana.com&gt;,Isabel Palma &lt;mpalma@tap.pt&gt;,Vichuda Sthalanand &lt;vichuda.s@thaiairways.com&gt;,Bill Meares &lt;bill.meares@united.com&gt;,Lena Barnes &lt;lbarnes@sasair.com&gt;,Marwa Taher &lt;marwa.taher@dlh.de&gt;,Tadashi Mikuri &lt;tadashi.mikuri@swiss.com&gt;,Christophe Bernheim &lt;christophe.bernheim@dlh.de&gt;,Edith Bezikofer &lt;bezikofer.edith@aegeanair.com&gt;,Marek Grabowski &lt;m.grabowski@lot.pl&gt;,Cynthia van der Wiel &lt;cwiel@tap.pt&gt;,Eloi Oliveira &lt;eloi.oliveira@tam.com.br-deactivated&gt;,Michael Fromm &lt;michael.fromm@dlh.de&gt;,Barbara Ahlers &lt;barbara.ahlers@dlh.de&gt;,Pascale Le Maillot &lt;lemaillot@ana.co.jp&gt;,Ana Maria Carriedo Scher &lt;ana.carriedo@dlh.de&gt;,Hironori Yamamoto &lt;hi.yamamoto@ana.co.jp&gt;,Gabriele Mannucci &lt;gabriele.mannucci@tam.com.br-deactivated&gt;,Maria da Salvacao Alves &lt;salves@tap.pt&gt;,Dina Labib &lt;dina.labib@dlh.de&gt;,Abdullah Sait SENLER &lt;asenler@thy.com&gt;,Danijela Kalmeta &lt;danijela.kalmeta@croatiaairlines.hr&gt;,Stuart Schofield &lt;stuart.schofield@united.com&gt;,Cunha Flavia &lt;flavia.cunha@tam.com.br-deactivated&gt;,Yp Jun &lt;ypjun@flyasiana.com&gt;,Maria Petalidou &lt;maria.petalidou@ana.co.jp&gt;,Karin Kroneisl &lt;karin.kroneisl@austrian.com&gt;,Irene Lee &lt;irene.lee@dlh.de&gt;,Ekaterina Seredneva &lt;ekaterina.seredneva@austrian.com&gt;,Kate Price &lt;kate.price@aircanada.ca&gt;,Srecko Simunovic &lt;srecko.simunovic@croatiaairlines.hr&gt;,Yvonne Frantzen &lt;yvonne.frantzen@dlh.de&gt;,Alice Acar &lt;alice.acar@dlh.de&gt;,Hrvoje Tkalcic &lt;hrvoje.tkalcic@croatiaairlines.hr&gt;,Iva Petrovic &lt;iva.petrovic@croatiaairlines.hr&gt;,Richard Holden &lt;richard.holden@airnz.co.nz&gt;,Wolfgang Wisberg &lt;wolfgang.wisberg@dlh.de&gt;,Christelle Perianin &lt;christelle.perianin@parnassus-accounting.com&gt;,Bruce Kim &lt;byungyul1@flyasiana.com&gt;,Susanna Rainsborough &lt;susanna.rainsborough@dlh.de&gt;" type="text" value=""
-
-                data-pat-autosuggest-classes='{"Brett Anderson &lt;brett.anderson@united.com&gt;": ["undecided"], "Steffen Harbarth &lt;steffen.harbarth@dlh.de&gt;": ["confirmed"], "Julie Pepiot &lt;julie.pepiot@swiss.com&gt;": ["tentative"], "Lillian Lautzenheiser-Page &lt;lillian.lautz-page@ual.com&gt;": ["declined"], "G7 &lt;g7@world.com&gt;": ["group"]}' placeholder="Names of invitees">
-
-                <span class="legend">
-                    <dfn class="undecided">Undecided</dfn>
-                    <dfn class="confirmed">Confirmed</dfn>
-                    <dfn class="tentative">Tentative</dfn>
-                    <dfn class="declined">Declined</dfn>
-                </span>
-
-            </label>
-
-            <fieldset class="attached-documents">Attached documents 
-                <ul class="attachment-list attachments" id="attachment-list">
-                    <li class="attached-file">
+                  <fieldset class="attached-documents">
+                    Attached documents
+                    <ul
+                      class="attachment-list attachments"
+                      id="attachment-list"
+                    >
+                      <li class="attached-file">
                         <span class="label pat-gallery">
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0001.jpg" class="icon-document">Boardbook</a>
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0002.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0003.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0004.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0005.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0006.jpg" hidden />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0001.jpg"
+                            class="icon-document"
+                            >Boardbook</a
+                          >
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0002.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0003.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0004.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0005.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0006.jpg"
+                            hidden
+                          />
                         </span>
-                        <a href="/feedback/panel-delete-attachment.html#document-content" class="icon-trash iconified pat-modal" title="Delete 'Scanned contract'">Delete</a>
-                        <a href="" class="icon-download iconified" title="Download this file">Download</a>
-                    </li>
-                    <li class="attached-file">
+                        <a
+                          href="/feedback/panel-delete-attachment.html#document-content"
+                          class="icon-trash iconified pat-modal"
+                          title="Delete 'Scanned contract'"
+                          >Delete</a
+                        >
+                        <a
+                          href=""
+                          class="icon-download iconified"
+                          title="Download this file"
+                          >Download</a
+                        >
+                      </li>
+                      <li class="attached-file">
                         <span class="label pat-gallery">
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0001.jpg" class="icon-document">Waste not want not</a>
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0002.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0003.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0004.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0005.jpg" hidden />
-                            <a title="Scanned contract" href="/media/Waste-not-want-not/page0006.jpg" hidden />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0001.jpg"
+                            class="icon-document"
+                            >Waste not want not</a
+                          >
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0002.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0003.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0004.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0005.jpg"
+                            hidden
+                          />
+                          <a
+                            title="Scanned contract"
+                            href="/media/Waste-not-want-not/page0006.jpg"
+                            hidden
+                          />
                         </span>
-                        <a href="/feedback/panel-delete-attachment.html#document-content" class="icon-trash iconified pat-modal" title="Delete 'Scanned contract'">Delete</a>
-                        <a href="" class="icon-download iconified" title="Download this file">Download</a>
-                    </li>
-                    <li class="upload-area">
-                        <form class="pat-inject pat-autosubmit" action="contracts-detail.html">
-                            <fieldset class="pat-upload group" data-pat-upload="label: Drop files here or click to attach more files…; trigger: auto;">
-                                <label class="accessibility-options">
-                                    <input type="file" name="file" multiple> Upload files
-                                </label>
-                            </fieldset>
-                            <button type="submit" hidden>Upload</button>
+                        <a
+                          href="/feedback/panel-delete-attachment.html#document-content"
+                          class="icon-trash iconified pat-modal"
+                          title="Delete 'Scanned contract'"
+                          >Delete</a
+                        >
+                        <a
+                          href=""
+                          class="icon-download iconified"
+                          title="Download this file"
+                          >Download</a
+                        >
+                      </li>
+                      <li class="upload-area">
+                        <form
+                          class="pat-inject pat-autosubmit"
+                          action="contracts-detail.html"
+                        >
+                          <fieldset
+                            class="pat-upload group"
+                            data-pat-upload="label: Drop files here or click to attach more files…; trigger: auto;"
+                          >
+                            <label class="accessibility-options">
+                              <input type="file" name="file" multiple /> Upload
+                              files
+                            </label>
+                          </fieldset>
+                          <button type="submit" hidden>Upload</button>
                         </form>
-                    </li>
-                </ul>
-            </fieldset>
+                      </li>
+                    </ul>
+                  </fieldset>
+                </fieldset>
+              </div>
+            </div>
 
-        </fieldset>
+            <div class="buttons panel-footer">
+              <div class="container">
+                <button type="submit" class="close-panel icon-ok-circle">
+                  Create event
+                </button>
 
+                <button type="button" class="close-panel icon-cancel-circle">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-</div>
-
-<div class="buttons panel-footer">
-    <div class="container">
-
-
-        <button type="submit" class="close-panel icon-ok-circle">
-            Create event
-        </button>
-
-
-
-        <button type="button" class="close-panel icon-cancel-circle">
-            Cancel
-        </button>
-
-
-    </div>
-</div>
-
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-
-</body>
+  </body>
 </html>

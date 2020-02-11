@@ -3,7 +3,8 @@
 ## 4.0.0-dev - unreleased
 
 Features
-~~~~~~~~
+
+```
 
 - Navigation:
   - Do not set the ``.navigation-in-path`` class for elenents already marked with ``.current``.
@@ -42,7 +43,7 @@ Fixes
 ## 3.0.0a5 - unreleased
 
 Features
-~~~~~~~~
+```
 
 - Added support for a push subsystem using reethinkdb and horizon.
   That allows us to trigger an injection by sending a push_marker to all connected browsers.
@@ -50,7 +51,8 @@ Features
 - pat-forward: understand the trigger auto option
 
 Fixes
-~~~~~
+
+```
 
 - pat-date-picker, pat-datetime-picker: Support the `first-day` parameter (#647)
 - pat-notification: fix how the close button is rendered (#639)
@@ -64,7 +66,7 @@ Fixes
 ## 3.0.0a1 - unreleased
 
 Breaking Changes
-~~~~~~~~~~~~~~~~
+```
 
 +++Big breaking upgrade changing the build system. Read the [version 2 to 3 upgrade guide](./UPGRADE-2-TO-3.md) for details.+++
 
@@ -75,6 +77,7 @@ Breaking Changes
 - Testrunner is now karma 1.7
 - Coverage reports are generated
 - Removed deprecated packages
+
   - jquery.tinymce
     Very big and unmaintained. We have never advertised it so we don't include it anymore to clean up.
   - requirejs
@@ -120,27 +123,25 @@ Breaking Changes
 ## 2.2 - unreleased
 
 - pat-masonry:
-  - Re-Layout on ``load`` events emitted on ``img`` nodes within the masonry scope.
-  - Do not depend on ``imagesloaded``.
+  - Re-Layout on `load` events emitted on `img` nodes within the masonry scope.
+  - Do not depend on `imagesloaded`.
   - Update masonry to version 4.2.0.
   - Align options with new version:
-    - Add options ``is-horizontal-order``, ``is-percent-position`` and ``is-resize``.
-    - Remove options ``visible-style`` and ``hidden-style``.
-    - Add Aliases from v4 (no ``is-*``) to v3 names (with ``is-`` for booleans), while keeping the v3 names. The patternslib parser does boolean casting for ``is-*`` options.
+    - Add options `is-horizontal-order`, `is-percent-position` and `is-resize`.
+    - Remove options `visible-style` and `hidden-style`.
+    - Add Aliases from v4 (no `is-*`) to v3 names (with `is-` for booleans), while keeping the v3 names. The patternslib parser does boolean casting for `is-*` options.
 - pat-datetime-picker: Add new pattern for setting the date and time.
-- pat-date-picker: Remove the dependency on ``moment-timezone-data`` - it's not used and there is no use in a date picker anyways.
-
-
+- pat-date-picker: Remove the dependency on `moment-timezone-data` - it's not used and there is no use in a date picker anyways.
 
 ## 2.1.2 - Aug. 29, 2017
 
 - pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
 
-
 ## 2.1.1 - Aug. 28, 2017
 
 Fixes
-~~~~~
+
+```
 
 - pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
 - pat-modal: Fix an issue where chrome is so quick that a modal is closed before the actual injection call can be sent.
@@ -746,3 +747,4 @@ Fixes
 ## 1.0.0 - Released January 28, 2013
 
 - First official release.
+```

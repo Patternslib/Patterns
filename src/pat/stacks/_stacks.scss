@@ -1,12 +1,12 @@
 nav.tabs {
-    a {
-        margin-right: 1em;
-        padding: 0.3em;
+  a {
+    margin-right: 1em;
+    padding: 0.3em;
 
-        &.current {
-            background: #85c5e5;
-            border: #85c5e5 solid 1px;
-            color: white;
-        }
+    &.current {
+      background: #85c5e5;
+      border: #85c5e5 solid 1px;
+      color: white;
     }
+  }
 }

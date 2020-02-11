@@ -18,7 +18,7 @@ div.pat-modal {
   .filter-bar {
     margin-bottom: 2em;
 
-    input[type=search] {
+    input[type="search"] {
       float: right;
       width: 14em;
     }
@@ -33,7 +33,10 @@ div.pat-modal {
     position: relative;
     z-index: 1;
 
-    h1, h2, h3, h4 {
+    h1,
+    h2,
+    h3,
+    h4 {
       margin: 0;
       font: 16px/20px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
       letter-spacing: 1px;
@@ -113,10 +116,10 @@ div.pat-modal {
     display: block;
     z-index: 1;
     border: 1px #dedede solid;
-    box-shadow: 0 0.1em 0.4em rgba(0,0,0,0.2);
-    -moz-pointer-events:none;
-    -webkit-pointer-events:none;
-    pointer-events:none;
+    box-shadow: 0 0.1em 0.4em rgba(0, 0, 0, 0.2);
+    -moz-pointer-events: none;
+    -webkit-pointer-events: none;
+    pointer-events: none;
 
     // Next line is a patch for Safari which inherits the animation on :before of the spinner even if the injection class has already been removed.
     -webkit-animation: none;
@@ -143,7 +146,6 @@ div.pat-modal {
   }
 
   &.max-height {
-
     .wizard-box {
       overflow: hidden;
     }
@@ -172,7 +174,7 @@ div.pat-modal {
     right: -10000px;
     bottom: -10000px;
     left: -10000px;
-    background-color: rgba(255,255,255,0.98);
+    background-color: rgba(255, 255, 255, 0.98);
     z-index: -1;
     opacity: 0.98;
 

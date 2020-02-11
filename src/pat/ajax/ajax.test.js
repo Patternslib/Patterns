@@ -2,9 +2,8 @@ define(["pat-ajax"], function(pattern) {
     var $lab;
 
     describe("pat-ajax", function() {
-
         beforeEach(function() {
-            $lab = $("<div/>", {id: "lab"}).appendTo(document.body);
+            $lab = $("<div/>", { id: "lab" }).appendTo(document.body);
         });
 
         afterEach(function() {
@@ -76,5 +75,4 @@ define(["pat-ajax"], function(pattern) {
             });
         });
     });
-
 });

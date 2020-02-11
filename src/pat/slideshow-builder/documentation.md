@@ -1,9 +1,10 @@
 ## Description
+
 This patterns provides a simple method to create custom slideshows.
 
 ## Documentation
 
-A user can generate slide shows by cherry picking stock slides from a form. This is desired in situations where you want to have stock slide shows where individual end users want to leave out specific slides based not he audience for the presentation. Or to create new slide shows out of individually stored stock slides. 
+A user can generate slide shows by cherry picking stock slides from a form. This is desired in situations where you want to have stock slide shows where individual end users want to leave out specific slides based not he audience for the presentation. Or to create new slide shows out of individually stored stock slides.
 
 A form that generates a slide show URL looks as follows:
 
@@ -23,7 +24,7 @@ The pattern will inject a Checklist at the beginning of the form based on the ID
         </fieldset>
         <button type="submit">Run</button>
     </form>
-    
+
 When the user clicks on the submit button, the slideshow is started with filters already applied in the URI based on the selection the user made.
 
 ## Customising the form
@@ -56,4 +57,3 @@ You can also put the `pat-slideshow-builder` class on another element inside the
 ### Options reference
 
 This pattern has no configurable properties.
-

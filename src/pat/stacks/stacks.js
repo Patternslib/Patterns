@@ -37,12 +37,15 @@ define([
                 $visible = [],
                 $invisible;
             if ($sheets.length < 2) {
-                log.warn("Stacks pattern: must have more than one sheet.", this.$el[0]);
+                log.warn(
+                    "Stacks pattern: must have more than one sheet.",
+                    this.$el[0]
+                );
                 return;
             }
             if (selected) {
                 try {
-                    $visible = $sheets.filter("#"+selected);
+                    $visible = $sheets.filter("#" + selected);
                 } catch (e) {
                     selected = undefined;
                 }
@@ -52,21 +55,26 @@ define([
                 selected = $visible[0].id;
             }
             $invisible = $sheets.not($visible);
-            utils.hideOrShow($visible, true, {transition: "none"}, this.name);
-            utils.hideOrShow($invisible, false, {transition: "none"}, this.name);
+            utils.hideOrShow($visible, true, { transition: "none" }, this.name);
+            utils.hideOrShow(
+                $invisible,
+                false,
+                { transition: "none" },
+                this.name
+            );
             this._updateAnchors(selected);
         },
 
-         _base_URL: function() {
+        _base_URL: function() {
             return this.document.URL.split("#")[0];
-         },
+        },
 
         _currentFragment: function() {
             var parts = this.document.URL.split("#");
             if (parts.length === 1) {
                 return null;
             }
-            return parts[parts.length-1];
+            return parts[parts.length - 1];
         },
 
         _onClick: function(e) {
@@ -76,7 +84,7 @@ define([
             if (base_url !== href_parts[0] || !href_parts[1]) {
                 return;
             }
-            if (!this.$el.has("#"+href_parts[1]).length) {
+            if (!this.$el.has("#" + href_parts[1]).length) {
                 return;
             }
             e.preventDefault();
@@ -91,12 +99,20 @@ define([
         _updateAnchors: function(selected) {
             var $sheets = this.$el.find(this.options.selector),
                 base_url = this._base_URL();
-            $sheets.each(function (idx, sheet) {
+            $sheets.each(function(idx, sheet) {
                 // This may appear odd, but: when querying a browser uses the
                 // original href of an anchor as it appeared in the document
                 // source, but when you access the href property you always get
                 // the fully qualified version.
-                var $anchors = $("a[href=\""+base_url+"#"+sheet.id+"\"],a[href=\"#"+sheet.id+"\"]");
+                var $anchors = $(
+                    'a[href="' +
+                        base_url +
+                        "#" +
+                        sheet.id +
+                        '"],a[href="#' +
+                        sheet.id +
+                        '"]'
+                );
                 if (sheet.id === selected) {
                     $anchors.addClass("current");
                 } else {
@@ -106,7 +122,7 @@ define([
         },
 
         _switch: function(sheet_id) {
-            var $sheet = this.$el.find("#"+sheet_id);
+            var $sheet = this.$el.find("#" + sheet_id);
             if (!$sheet.length || $sheet.hasClass("visible")) {
                 return;
             }

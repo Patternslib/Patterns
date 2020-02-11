@@ -1,9 +1,7 @@
 define(["pat-zoom"], function(pattern) {
-
     describe("pat-zoom", function() {
-
         beforeEach(function() {
-            $("<div/>", {id: "lab"}).appendTo(document.body);
+            $("<div/>", { id: "lab" }).appendTo(document.body);
         });
 
         afterEach(function() {
@@ -25,7 +23,7 @@ define(["pat-zoom"], function(pattern) {
             it("Tweak ranges", function() {
                 $("#lab").append("<div id=block/>");
                 var $block = $("#lab div");
-                pattern.init($block, {min: 0.5, max: 5});
+                pattern.init($block, { min: 0.5, max: 5 });
                 var $range = $block.prev();
                 expect($range[0].min).toBe("0.5");
                 expect($range[0].max).toBe("5");
@@ -41,11 +39,12 @@ define(["pat-zoom"], function(pattern) {
                 var $range = $block.prev();
                 $range.val("1.5").change();
                 // Fairly lax test so it passes in different browsers.
-                expect($block.attr("style").match(/zoom: 1.5(;.*)?/i)).toBeTruthy();
+                expect(
+                    $block.attr("style").match(/zoom: 1.5(;.*)?/i)
+                ).toBeTruthy();
             });
         });
     });
-
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

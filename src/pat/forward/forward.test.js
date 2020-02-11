@@ -1,9 +1,7 @@
 define(["pat-forward"], function(pattern) {
-
     describe("pat-forward", function() {
-
         beforeEach(function() {
-            $("<div/>", {id: "lab"}).appendTo(document.body);
+            $("<div/>", { id: "lab" }).appendTo(document.body);
         });
 
         afterEach(function() {
@@ -11,14 +9,16 @@ define(["pat-forward"], function(pattern) {
         });
 
         describe("Clicking on a button sends the click to another element", function() {
-            it("allows you to forward the click from an element to another one", function () {
+            it("allows you to forward the click from an element to another one", function() {
                 var $lab = $("#lab");
-                $lab.append($(
-                    "<form>" +
-                    '    <input id="checkbox" type="checkbox" />' +
-                    '    <button class="pat-forward" data-pat-forward="#checkbox">Button</button>' +
-                    "</form>"
-                ));
+                $lab.append(
+                    $(
+                        "<form>" +
+                            '    <input id="checkbox" type="checkbox" />' +
+                            '    <button class="pat-forward" data-pat-forward="#checkbox">Button</button>' +
+                            "</form>"
+                    )
+                );
 
                 pattern.init($(pattern.trigger));
                 expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
@@ -28,14 +28,16 @@ define(["pat-forward"], function(pattern) {
         });
 
         describe("Setting the trigger auto option triggers the click on init", function() {
-            it("allows you to forward the click authomatically when the pattern is initialized", function () {
+            it("allows you to forward the click authomatically when the pattern is initialized", function() {
                 var $lab = $("#lab");
-                $lab.append($(
-                    "<form>" +
-                    '    <input id="checkbox" type="checkbox" />' +
-                    '    <button class="pat-forward" data-pat-forward="#checkbox; trigger: auto">Button</button>' +
-                    "</form>"
-                ));
+                $lab.append(
+                    $(
+                        "<form>" +
+                            '    <input id="checkbox" type="checkbox" />' +
+                            '    <button class="pat-forward" data-pat-forward="#checkbox; trigger: auto">Button</button>' +
+                            "</form>"
+                    )
+                );
 
                 pattern.init($(pattern.trigger));
                 expect($lab.find("#checkbox").is(":checked")).toBeTruthy();
@@ -43,7 +45,5 @@ define(["pat-forward"], function(pattern) {
                 expect($lab.find("#checkbox").is(":checked")).toBeFalsy();
             });
         });
-
     });
-
 });

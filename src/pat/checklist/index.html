@@ -1,134 +1,178 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
-	<form class="vertical row">
-		<div class="six columns">
-			<h3>Checkboxes</h3>
-			  <fieldset class="pat-checklist checklist">
-			    <div class="functions">
-			      <button class="small pat-button select-all">Select all</button>
-			      <button class="small pat-button deselect-all">Deselect all</button>
-			    </div>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <form class="vertical row">
+      <div class="six columns">
+        <h3>Checkboxes</h3>
+        <fieldset class="pat-checklist checklist">
+          <div class="functions">
+            <button class="small pat-button select-all">Select all</button>
+            <button class="small pat-button deselect-all">Deselect all</button>
+          </div>
 
-			    <label><input type="checkbox" checked="checked"/> Option one</label>
-			    <label><input type="checkbox"/> Option two</label>
-			    <label><input type="checkbox"/> Option three</label>
-			    <label><input type="checkbox"/> Option four</label>
-			  </fieldset>
+          <label><input type="checkbox" checked="checked" /> Option one</label>
+          <label><input type="checkbox" /> Option two</label>
+          <label><input type="checkbox" /> Option three</label>
+          <label><input type="checkbox" /> Option four</label>
+        </fieldset>
 
-			  <h3>Radio buttons</h3>
-			  <fieldset class="pat-checklist checklist radio">
-			    <label><input type="radio" name="radio" /> Strawberry</label>
-			    <label><input type="radio" name="radio" /> Banana</label>
-			    <label><input type="radio" name="radio" /> Raspberry</label>
-			  </fieldset>
-		</div>
-	  	<div class="six columns">
-	  		 <h3>Buttons outside of .pat-checklist element</h3>
-			  <p>The buttons to select or deselect the checklist may lie outside
-			  of the .pat-checklist element. However, to avoid mismatches,
-			  the selectors then need to be disambiguated by starting with an object id.
-			  In other words, the selector needs to start with <em>#elementId</em>.
-			  </p>
-			  <div class="functions" id="ElemOutsidePatChecklist">
-			        <button class="small pat-button select-all">Select all</button>
-			        <button class="small pat-button deselect-all">Deselect all</button>
-			  </div>
-			  <fieldset class="pat-checklist checklist" data-pat-checklist="select: #ElemOutsidePatChecklist .select-all; deselect: #ElemOutsidePatChecklist .deselect-all" >
-				<label><input type="checkbox" checked="checked"/> Option one</label>
-				<label><input type="checkbox"/> Option two</label>
-				<label><input type="checkbox"/> Option three</label>
-				<label><input type="checkbox"/> Option four</label>
-			  </fieldset>
-	  	</div>
-	</form>
-	<form class="vertical row">
-		<div class="six columns">
-			<h3>Hierarchy of Checkboxes</h3>
-			<p> Clicking select all / deselect all only affects parent of buttons and its children.</p>
-			<fieldset class="pat-checklist unchecked">
-				<div class="toggles functions button-cluster">
-			        <button class="small select-all">Select all</button>
-			        <button class="small deselect-all" disabled="disabled">Deselect all</button>
-			    </div>
-				<ul class="download-tree">
-					<li>
-						<h4 class="label icon-squares">
-							Customer Experience
-					        <button class="small select-all">Select all</button>
-					        <button class="small deselect-all" disabled="disabled">Deselect all</button>
-						</h4>
-						<ul>
-							<li>
-								<h4 class="label icon-squares">
-									Airport Experience &amp; Servicing
-							        <button class="small select-all">Select all</button>
-							        <button class="small deselect-all" disabled="disabled">Deselect all</button>
-								</h4>
-								<ul>
-									<li>
-										<h4 class="label icon-squares">
-											1. Automation
-									        <button class="small select-all">Select all</button>
-									        <button class="small deselect-all" disabled="disabled">Deselect all</button>
-										</h4>
-										<ul>
-											<li>
-												<label class="unchecked"><input type="checkbox" name=""> A1.1 Fast Bag Drop</label>
-											</li>
-											<li>
-												<label class="unchecked"><input type="checkbox" name=""> A1.2 Self-bag tagging</label>
-											</li>
-										</ul>
-									</li>
-									<li>
-										<h4 class="label icon-squares">
-											2. Baggage
-									        <button class="small select-all">Select all</button>
-									        <button class="small deselect-all" disabled="disabled">Deselect all</button>
-										</h4>
-										<ul>
-											<li><label class="unchecked"><input type="checkbox" name="">A2.1	Special baggage procedures</label></li>
-											<li><label class="unchecked"><input type="checkbox" name="">A2.2	Baggage Tag Format</label></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-							<li>
-								<h4 class="label icon-squares">
-									Benefits &amp; Recognition
-							        <button class="small select-all">Select all</button>
-							        <button class="small deselect-all" disabled="disabled">Deselect all</button>
-								</h4>
-								<ul>
-									<li>
-										<h4 class="label icon-squares">
-											1. Benefits
-									        <button class="small select-all">Select all</button>
-									        <button class="small deselect-all" disabled="disabled">Deselect all</button>
-										</h4>
-										<ul>
-											<li><label class="unchecked"><input type="checkbox" name="">B1.1 Star Alliance Gold check-in &amp; Fast Bag Drop</label></li>
-											<li><label class="unchecked"><input type="checkbox" name="">B1.2 Star Alliance Gold Track Security / Immigration</label></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</fieldset>
-
-
-		</div>
-	  	<div class="six columns">
-	  	</div>
-	</form>	
-</body>
+        <h3>Radio buttons</h3>
+        <fieldset class="pat-checklist checklist radio">
+          <label><input type="radio" name="radio" /> Strawberry</label>
+          <label><input type="radio" name="radio" /> Banana</label>
+          <label><input type="radio" name="radio" /> Raspberry</label>
+        </fieldset>
+      </div>
+      <div class="six columns">
+        <h3>Buttons outside of .pat-checklist element</h3>
+        <p>
+          The buttons to select or deselect the checklist may lie outside of the
+          .pat-checklist element. However, to avoid mismatches, the selectors
+          then need to be disambiguated by starting with an object id. In other
+          words, the selector needs to start with <em>#elementId</em>.
+        </p>
+        <div class="functions" id="ElemOutsidePatChecklist">
+          <button class="small pat-button select-all">Select all</button>
+          <button class="small pat-button deselect-all">Deselect all</button>
+        </div>
+        <fieldset
+          class="pat-checklist checklist"
+          data-pat-checklist="select: #ElemOutsidePatChecklist .select-all; deselect: #ElemOutsidePatChecklist .deselect-all"
+        >
+          <label><input type="checkbox" checked="checked" /> Option one</label>
+          <label><input type="checkbox" /> Option two</label>
+          <label><input type="checkbox" /> Option three</label>
+          <label><input type="checkbox" /> Option four</label>
+        </fieldset>
+      </div>
+    </form>
+    <form class="vertical row">
+      <div class="six columns">
+        <h3>Hierarchy of Checkboxes</h3>
+        <p>
+          Clicking select all / deselect all only affects parent of buttons and
+          its children.
+        </p>
+        <fieldset class="pat-checklist unchecked">
+          <div class="toggles functions button-cluster">
+            <button class="small select-all">Select all</button>
+            <button class="small deselect-all" disabled="disabled">
+              Deselect all
+            </button>
+          </div>
+          <ul class="download-tree">
+            <li>
+              <h4 class="label icon-squares">
+                Customer Experience
+                <button class="small select-all">Select all</button>
+                <button class="small deselect-all" disabled="disabled">
+                  Deselect all
+                </button>
+              </h4>
+              <ul>
+                <li>
+                  <h4 class="label icon-squares">
+                    Airport Experience &amp; Servicing
+                    <button class="small select-all">Select all</button>
+                    <button class="small deselect-all" disabled="disabled">
+                      Deselect all
+                    </button>
+                  </h4>
+                  <ul>
+                    <li>
+                      <h4 class="label icon-squares">
+                        1. Automation
+                        <button class="small select-all">Select all</button>
+                        <button class="small deselect-all" disabled="disabled">
+                          Deselect all
+                        </button>
+                      </h4>
+                      <ul>
+                        <li>
+                          <label class="unchecked"
+                            ><input type="checkbox" name="" /> A1.1 Fast Bag
+                            Drop</label
+                          >
+                        </li>
+                        <li>
+                          <label class="unchecked"
+                            ><input type="checkbox" name="" /> A1.2 Self-bag
+                            tagging</label
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <h4 class="label icon-squares">
+                        2. Baggage
+                        <button class="small select-all">Select all</button>
+                        <button class="small deselect-all" disabled="disabled">
+                          Deselect all
+                        </button>
+                      </h4>
+                      <ul>
+                        <li>
+                          <label class="unchecked"
+                            ><input type="checkbox" name="" />A2.1 Special
+                            baggage procedures</label
+                          >
+                        </li>
+                        <li>
+                          <label class="unchecked"
+                            ><input type="checkbox" name="" />A2.2 Baggage Tag
+                            Format</label
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <h4 class="label icon-squares">
+                    Benefits &amp; Recognition
+                    <button class="small select-all">Select all</button>
+                    <button class="small deselect-all" disabled="disabled">
+                      Deselect all
+                    </button>
+                  </h4>
+                  <ul>
+                    <li>
+                      <h4 class="label icon-squares">
+                        1. Benefits
+                        <button class="small select-all">Select all</button>
+                        <button class="small deselect-all" disabled="disabled">
+                          Deselect all
+                        </button>
+                      </h4>
+                      <ul>
+                        <li>
+                          <label class="unchecked"
+                            ><input type="checkbox" name="" />B1.1 Star Alliance
+                            Gold check-in &amp; Fast Bag Drop</label
+                          >
+                        </li>
+                        <li>
+                          <label class="unchecked"
+                            ><input type="checkbox" name="" />B1.2 Star Alliance
+                            Gold Track Security / Immigration</label
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </fieldset>
+      </div>
+      <div class="six columns"></div>
+    </form>
+  </body>
 </html>

@@ -1,6 +1,5 @@
 # Upgrading from Patternslib 2 to 3
 
-
 ## Requirements
 
 You need to be on a recent node version and have yarn installed.
@@ -9,20 +8,17 @@ You need to be on a recent node version and have yarn installed.
 
 The change has been made with webpack 3.5.5. Patternslib is configured to fetch the latest version
 
-
 ## Reason for the Upgrade
 
 Bower (https://bower.io) is going slowly out of maintenance and now recommends webpack (https://webpack.js.org) as replacement.
 
 If you are using your own Makefile, bower.js and package.js, things should just continue to work but will eventually get out of sync as paths are going to change. Therefore we recommend changing your installation setup and here are the necessary steps:
 
-
 ## Resources to support you
 
 - There is a very good blog post describing the upgrade steps by Jamund: https://gist.github.com/xjamundx/b1c800e9282e16a6a18e
 - There is a tool to help convert: https://www.npmjs.com/package/requirejs-to-webpack-cli
 - But you can always look at the new webpack.config.js and compare it to the old build.js and main.js files for details.
-
 
 ## What has been changed?
 
@@ -36,6 +32,7 @@ If you are using your own Makefile, bower.js and package.js, things should just 
   **Action to take: If you have your own main.js and build.js, the module declarations now need to go into webpack.config.js. Copy webpack.config.js from patternslib and extend it with the declarations from your main.js. Note that the dependencies are now in node_modules instead of bower_components.**
 
 Once you are done, you can remove the following old files:
+
 - main.js
 - build.js
 - bower.json
@@ -57,12 +54,9 @@ You can now open the pattern demo pages and work on the js files. On save, dev s
 - https://jasmine.github.io/2.0/upgrading.html
 - http://thejsguy.com/2015/01/29/Upgrading-Jasmine-from-1.3-to-2.1.html
 
-
-
 # Changelog
 
 There has been some cleanup as well that might affect your project. Here is a list of changes. If something in here conflicts with your needs, don't upgrade just yet.
-
 
 ## Packages removed
 
@@ -81,7 +75,6 @@ There has been some cleanup as well that might affect your project. Here is a li
 - pat-validate
   Has been superceeded by pat-validation and is no longer maintained.
 
-
 ## Upgraded / converted
 
 - Anythingslider
@@ -93,10 +86,9 @@ There has been some cleanup as well that might affect your project. Here is a li
 - jcrop
   Has been upgraded from 0.9.14 to 2.0.4 to be npm compatible
 - chosen upgraded from "chosen": "https://github.com/syslabcom/chosen.git#4371e8fdabe16d4e8aaa3734421edc367e32a296",
- to chosen-js latest
+  to chosen-js latest
 - Showdown to 1.7.2
 - Jasmine to 2.8.0
-
 
 ## Other changes or potential issues
 
@@ -105,5 +97,3 @@ There has been some cleanup as well that might affect your project. Here is a li
 - in pat-gallery, replaced requirejs-text plugin with text-loader, see https://github.com/webpack/webpack/issues/1046
 - Webpack by default includes everything that is referenced in other files. Moment locale files ship with moment and get autoincluded which results in 100Kb more minified js. We are excluding moment locale files explicitly in webpack.config.js, so by default only english is included.
   XXX Check if that kills some of your localisations.
-
-

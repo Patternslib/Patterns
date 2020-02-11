@@ -1,8 +1,4 @@
-define([
-    "jquery",
-    "pat-registry",
-    "pat-parser"
-], function($, patterns, Parser) {
+define(["jquery", "pat-registry", "pat-parser"], function($, patterns, Parser) {
     var parser = new Parser("zoom");
 
     parser.addArgument("min", 0);
@@ -18,8 +14,13 @@ define([
                     options = parser.parse($block, opts),
                     $slider,
                     events;
-                $slider=$("<input/>", {type: "range", step: "any", value: 1,
-                                       min: options.min, max: options.max});
+                $slider = $("<input/>", {
+                    type: "range",
+                    step: "any",
+                    value: 1,
+                    min: options.min,
+                    max: options.max
+                });
 
                 if ("oninput" in window) {
                     events = "change input";
@@ -33,7 +34,7 @@ define([
         },
 
         onZoom: function(event) {
-            var $block=event.data;
+            var $block = event.data;
             $block.css("zoom", this.value);
         }
     };
