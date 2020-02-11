@@ -1,42 +1,64 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Depends demo</title>
-    	<link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-	<body>     
-		<form action="#">
-            <fieldset class="pat-button-bar">
-             	<button type="reset" class="pat-button">Reset</button>
-			</fieldset>
-			<fieldset class="horizontal">	
-				<fieldset class="group pat-checklist radio">
-					<legend>Flavour</legend>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Depends demo</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <form action="#">
+      <fieldset class="pat-button-bar">
+        <button type="reset" class="pat-button">Reset</button>
+      </fieldset>
+      <fieldset class="horizontal">
+        <fieldset class="group pat-checklist radio">
+          <legend>Flavour</legend>
 
-					<label><input type="radio" name="flavour" value="hawaii"/> Hawaii</label>
-					<label><input type="radio" name="flavour" value="bacon"/> Bacon Supreme</label>
-					<label><input type="radio" name="flavour" value="sea"/> Fruits de mer</label>
-				</fieldset>
+          <label
+            ><input type="radio" name="flavour" value="hawaii" /> Hawaii</label
+          >
+          <label
+            ><input type="radio" name="flavour" value="bacon" /> Bacon
+            Supreme</label
+          >
+          <label
+            ><input type="radio" name="flavour" value="sea" /> Fruits de
+            mer</label
+          >
+        </fieldset>
 
-				<fieldset class="group pat-checklist">
-					<legend>Add extra toppings</legend>
-					<label>
-						<input type="checkbox" name="custom"/> Add extra toppings
-					</label>
-				</fieldset>
+        <fieldset class="group pat-checklist">
+          <legend>Add extra toppings</legend>
+          <label>
+            <input type="checkbox" name="custom" /> Add extra toppings
+          </label>
+        </fieldset>
 
-				<fieldset class="pat-depends group pat-checklist" data-pat-depends="condition: custom; transition: slide">
-					<legend>Extra toppings</legend>
-					<label class="pat-depends" data-pat-depends="flavour!=hawaii"><input type="checkbox" name="pineapple"/> Pineapple</label>
-					<label><input type="checkbox" name="gorgonzola"/> Gorgonzola</label>
-					<label><input type="checkbox" name="peanuts"/> Peanuts</label>
-					<label><input type="checkbox" name="redonion"/> Red onions</label>
-				</fieldset>
-			</fieldset>
-		</form>
-		<strong class="pat-depends" data-pat-depends="condition: flavour=bacon; transition: fade">This pizza is bad for your health!</strong>
-        <p class="pat-depends" data-pat-depends="condition: flavour=bacon and gorgonzola">Bad, but <em>extremely</em> tasty!</p>   
-	</body>
+        <fieldset
+          class="pat-depends group pat-checklist"
+          data-pat-depends="condition: custom; transition: slide"
+        >
+          <legend>Extra toppings</legend>
+          <label class="pat-depends" data-pat-depends="flavour!=hawaii"
+            ><input type="checkbox" name="pineapple" /> Pineapple</label
+          >
+          <label><input type="checkbox" name="gorgonzola" /> Gorgonzola</label>
+          <label><input type="checkbox" name="peanuts" /> Peanuts</label>
+          <label><input type="checkbox" name="redonion" /> Red onions</label>
+        </fieldset>
+      </fieldset>
+    </form>
+    <strong
+      class="pat-depends"
+      data-pat-depends="condition: flavour=bacon; transition: fade"
+      >This pizza is bad for your health!</strong
+    >
+    <p
+      class="pat-depends"
+      data-pat-depends="condition: flavour=bacon and gorgonzola"
+    >
+      Bad, but <em>extremely</em> tasty!
+    </p>
+  </body>
 </html>

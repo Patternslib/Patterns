@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Demo page</title>
-		<link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-	</head>
-<body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Demo page</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
     <h3>The content below is rendered from Markdown</h3>
-    <hr/>
-	<article class="pat-rich">
-        <!--
+    <hr />
+    <article class="pat-rich">
+      <!--
 		<h3>Autoloading content from a separate Markdown file</h3>
 		<a href="content/content.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">
             This content will be replaced by the source content of the link, rendered as HTML.
         </a>
 		<hr/>
         -->
-            <pre class="pat-markdown"># Header 1
+      <pre class="pat-markdown">
+# Header 1
 ## Header 2
 
 Some _other_ __markdown__ ___content___.
@@ -32,26 +33,34 @@ And a list numbered list:
 | Felis | dui       | porttitor |
 |-------|-----------|-----------|
 | dui   | porttitor | eros      |
-				</pre>
-			<hr/>
+				</pre
+      >
+      <hr />
 
-            <!--
+      <!--
 	        <h2>Inject a page that has a self injecting link for Markdown content in it.</h2>
 	        <a href="injected-page.html" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">
 	            This content will be replaced by the source content of the link that is in the HTML this link links to, rendered as HTML.
 	        </a>
             <hr />
             -->
-            <h3><a href="content/content.md" class="pat-inject" data-pat-inject="target: #target">Click here to inject more markdown content</a></h3>
-            <!--
+      <h3>
+        <a
+          href="content/content.md"
+          class="pat-inject"
+          data-pat-inject="target: #target"
+          >Click here to inject more markdown content</a
+        >
+      </h3>
+      <!--
             <ol>
                 <li><a href="content/content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Inject markdown content with data-type declaration.</a></li>
                 <li><a href="content/content.md" class="pat-inject" data-pat-inject="target: #target">Inject markdown content, automatically detected as markdown based on the file name extension.</a></li>
             </ol>
             -->
-            <div id="target">
-                The content rendered from markdown will appear here.
-            </div>
-		</article>
-	</body>
+      <div id="target">
+        The content rendered from markdown will appear here.
+      </div>
+    </article>
+  </body>
 </html>

@@ -2,49 +2,48 @@
 @import "settings";
 
 .pat-checklist {
+  > br {
+    display: none;
+  }
 
-	> br {
-		display: none;
-	}
+  label {
+    padding-left: 1.5em;
+    position: relative;
+    display: block;
 
-	label {
-		padding-left: 1.5em;
-		position: relative;
-		display: block;
+    &.checked:before,
+    &.unchecked:before {
+      font-family: fontello;
+      content: "#{$glyph-checkbox}";
+      float: left;
+      position: absolute;
+      left: 0;
+      top: 0em;
+    }
 
-		&.checked:before,
-		&.unchecked:before {
-			font-family: fontello;
-			content: '#{$glyph-checkbox}';
-			float: left;
-			position: absolute;
-			left: 0;
-			top: 0em;
-		}
+    &.checked:before {
+      content: "#{$glyph-checkbox-active}";
+    }
 
-		&.checked:before {
-			content: '#{$glyph-checkbox-active}'
-		}
+    input[type="checkbox"],
+    input[type="radio"] {
+      opacity: 0;
+      position: absolute;
+    }
+  }
 
-		input[type="checkbox"],
-		input[type="radio"] {
-			opacity: 0;
-			position: absolute;
-		}
-	}
+  &.radio label {
+    &:before {
+      content: "#{$glyph-radio-button}";
+    }
+    &.checked:before {
+      content: "#{$glyph-radio-button-active}";
+    }
+  }
 
-	&.radio label {
-		&:before {
-			content: '#{$glyph-radio-button}';
-		}
-		&.checked:before {
-			content: '#{$glyph-radio-button-active}';
-		}
-	}
-
-	fieldset.composed {
-		padding-left: 0;
-		margin-bottom: 0;
-		position: relative;
-	}
+  fieldset.composed {
+    padding-left: 0;
+    margin-bottom: 0;
+    position: relative;
+  }
 }

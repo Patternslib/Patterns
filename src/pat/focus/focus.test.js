@@ -1,7 +1,5 @@
 define(["pat-focus", "pat-utils"], function(pattern, utils) {
-
     describe("pat-focus", function() {
-
         beforeEach(function() {
             $("<div/>", {
                 id: "lab"
@@ -22,7 +20,9 @@ define(["pat-focus", "pat-utils"], function(pattern, utils) {
             });
 
             it("Element with parent label", function() {
-                $("#lab").append("<label><input type='text' name='title'/></label>");
+                $("#lab").append(
+                    "<label><input type='text' name='title'/></label>"
+                );
                 var $input = $("#lab input"),
                     $relatives;
                 $relatives = utils.findRelatives($input[0]);
@@ -32,7 +32,9 @@ define(["pat-focus", "pat-utils"], function(pattern, utils) {
             });
 
             it("Element with parent fieldset", function() {
-                $("#lab").append("<fieldset><input type='text' name='title'/></fieldset>");
+                $("#lab").append(
+                    "<fieldset><input type='text' name='title'/></fieldset>"
+                );
                 var $input = $("#lab input"),
                     $relatives;
                 $relatives = utils.findRelatives($input[0]);
@@ -42,7 +44,9 @@ define(["pat-focus", "pat-utils"], function(pattern, utils) {
             });
 
             it("Element with non-parent label referenced by id", function() {
-                $("#lab").append("<label for='title'>Title</label><input id='title' title='text' name='ttl'/>");
+                $("#lab").append(
+                    "<label for='title'>Title</label><input id='title' title='text' name='ttl'/>"
+                );
                 var $input = $("#lab input"),
                     $relatives;
                 $relatives = utils.findRelatives($input[0]);
@@ -52,7 +56,9 @@ define(["pat-focus", "pat-utils"], function(pattern, utils) {
             });
 
             it("Element with non-parent label references by name", function() {
-                $("#lab").append("<label for='title'>Title</label><input title='text' name='title'/>");
+                $("#lab").append(
+                    "<label for='title'>Title</label><input title='text' name='title'/>"
+                );
                 var $input = $("#lab input"),
                     $relatives;
                 $relatives = utils.findRelatives($input[0]);
@@ -62,7 +68,9 @@ define(["pat-focus", "pat-utils"], function(pattern, utils) {
             });
 
             it("Ignore label outside of form", function() {
-                $("#lab").append("<label for='title'>Title</label><form><input title='text' name='title'/></form>");
+                $("#lab").append(
+                    "<label for='title'>Title</label><form><input title='text' name='title'/></form>"
+                );
                 var $input = $("#lab input"),
                     $relatives;
                 $relatives = utils.findRelatives($input[0]);
@@ -71,7 +79,6 @@ define(["pat-focus", "pat-utils"], function(pattern, utils) {
             });
         });
     });
-
 });
 
 // jshint indent: 4, browser: true, jquery: true, quotmark: double

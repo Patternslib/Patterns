@@ -18,13 +18,9 @@ What it doesn't:
 
 ### Examples
 
-
-
 ### What library is currently used?
 
 This pattern uses Stickyfill (https://github.com/wilddeer/stickyfill).
-
-
 
 ### Option reference
 

@@ -6,17 +6,17 @@
   padding: 0.5em;
   margin-bottom: 1em;
   //Instead of the line below you could use @includebox-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
-  box-shadow: 0 1px 0.2em rgba(0,0,0,0.6);
+  box-shadow: 0 1px 0.2em rgba(0, 0, 0, 0.6);
   display: block;
   //Instead of the line below you could use @includeborder-radius($radius, $vertical-radius)
   border-radius: 0.2em;
-  background-color: rgba(254,255,255,0.98);
+  background-color: rgba(254, 255, 255, 0.98);
   color: #6f5a44;
   // border: 1px solid white;
 
-	button {
-		@include pat-button();
-	}
+  button {
+    @include pat-button();
+  }
 
   a {
     text-decoration: underline;

@@ -17,7 +17,7 @@ define([
     parser.addArgument("healing", "5s");
     parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
     parser.addArgument("class");
-    parser.addArgument("close-text", 'Close');
+    parser.addArgument("close-text", "Close");
 
     var _ = {
         name: "notification",
@@ -25,10 +25,10 @@ define([
 
         // this is generic functionality and should be moved to lib
         parseUnit: function(value, unit) {
-            var unitRe = new RegExp(unit+"$"),
+            var unitRe = new RegExp(unit + "$"),
                 numericRe = new RegExp("^[0-9.]+");
 
-            if (!(unitRe.test(value))) {
+            if (!unitRe.test(value)) {
                 throw "value " + value + "is not in unit " + unit;
             }
 
@@ -79,7 +79,9 @@ define([
             var options = parser.parse($el, opts);
             var closetext = options.closeText;
 
-            $el = $el.wrap("<div/>").parent()
+            $el = $el
+                .wrap("<div/>")
+                .parent()
                 .attr("id", "pat-notification-" + _.count)
                 .addClass("pat-notification-panel")
                 .on("mouseenter.pat-notification", _.onMouseEnter)
@@ -90,17 +92,25 @@ define([
             }
 
             if (!Array.isArray(options.controls)) {
-                options.controls = [ options.controls ];
+                options.controls = [options.controls];
             }
 
             // add close icon if requested
             if (options.controls.indexOf("icons") >= 0) {
-                $el.append("<button type='button' class='close-panel'>" + closetext + "</button>");
+                $el.append(
+                    "<button type='button' class='close-panel'>" +
+                        closetext +
+                        "</button>"
+                );
             }
 
             // add close button if requested
             if (options.controls.indexOf("buttons") >= 0) {
-                $el.append("<div class='button-bar'><button type='button' class='close-panel'>" + closetext + "</button></div>");
+                $el.append(
+                    "<div class='button-bar'><button type='button' class='close-panel'>" +
+                        closetext +
+                        "</button></div>"
+                );
             }
 
             if ($el.find(".close-panel").length) {
@@ -112,17 +122,22 @@ define([
             if (options.type === "banner") {
                 var $container = $("#pat-notification-banners");
                 if (!$container.length) {
-                    $container = $("<div/>").attr("id", "pat-notification-banners").addClass("pat-notification-container").appendTo("body");
+                    $container = $("<div/>")
+                        .attr("id", "pat-notification-banners")
+                        .addClass("pat-notification-container")
+                        .appendTo("body");
                 }
                 $container.append($el);
             }
 
-            var healing = _.parseUnitOrOption(options.healing, "s", ["persistent"]);
+            var healing = _.parseUnitOrOption(options.healing, "s", [
+                "persistent"
+            ]);
 
             log.debug("Healing value is", healing);
             $el.data("healing", healing);
 
-            $el.animate({"opacity": 1}, "fast", function() {
+            $el.animate({ opacity: 1 }, "fast", function() {
                 _.initRemoveTimer($el);
             });
         },
@@ -133,9 +148,11 @@ define([
             };
             $el.on("pat-inject-success.pat-notification", function() {
                 var $trigger = $(this),
-                    cfg = parser.parse($trigger, { type: "banner"});
+                    cfg = parser.parse($trigger, { type: "banner" });
 
-                var $el = $("#pat-notification-temp").contents().wrapAll("<div/>")
+                var $el = $("#pat-notification-temp")
+                    .contents()
+                    .wrapAll("<div/>")
                     .parent()
                     .addClass("pat-notification");
 
@@ -159,9 +176,12 @@ define([
             var healing = $el.data("healing");
             if (healing !== "persistent") {
                 clearTimeout($el.data("timer"));
-                $el.data("timer", setTimeout(function() {
-                    _.remove($el);
-                }, healing * 1000));
+                $el.data(
+                    "timer",
+                    setTimeout(function() {
+                        _.remove($el);
+                    }, healing * 1000)
+                );
             }
         },
 
@@ -190,25 +210,28 @@ define([
 
             $el.data("removing", true);
 
-            $el.stop(true).animate({"opacity": 0}, {
-                step: function() {
-                    if ($el.data("persistent")) {
-                        // remove the timer and show notification
-                        clearTimeout($el.data("timer"));
-                        $el.stop(true).animate({"opacity": 1});
-                        $el.data("removing", false);
-                        return false;
-                    }
-                },
+            $el.stop(true).animate(
+                { opacity: 0 },
+                {
+                    step: function() {
+                        if ($el.data("persistent")) {
+                            // remove the timer and show notification
+                            clearTimeout($el.data("timer"));
+                            $el.stop(true).animate({ opacity: 1 });
+                            $el.data("removing", false);
+                            return false;
+                        }
+                    },
 
-                complete: function() {
-                    var $this = $(this);
-                    $this.off(".pat-notification");
-                    $this.slideUp("slow", function() {
-                        $this.remove();
-                    });
+                    complete: function() {
+                        var $this = $(this);
+                        $this.off(".pat-notification");
+                        $this.slideUp("slow", function() {
+                            $this.remove();
+                        });
+                    }
                 }
-            });
+            );
         }
     };
 

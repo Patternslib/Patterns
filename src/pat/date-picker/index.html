@@ -1,37 +1,70 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>pat-date-picker demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-    <link rel="stylesheet" href="date-picker.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <link rel="stylesheet" href="date-picker.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
-        <form action="">
-            <fieldset class="vertical">
-                <label>Falling back to the browser's HTML5 picker if available.
-                    <input class="pat-date-picker" type="date" data-pat-date-picker="behavior: native">
-                </label><br/>
-                <label>Enforcing the styled non-HTML5 picker universally.
-                    <input class="pat-date-picker" type="date">
-                </label><br/>
-                <label>Default value
-                    <input class="pat-date-picker" type="date" value="2015-01-01">
-                </label><br/>
-                <label>First day on Monday
-                  <input class="pat-date-picker" type="date" value="2015-01-01" data-pat-date-picker="first-day: 1">
-                </label><br/>
-                <label>Specifying the "min" and "max" attributes.
-                    <input class="pat-date-picker" min="2015-01-01" max="2015-12-31" type="date">
-                </label><br/>
-                <label>Show the week number.
-                    <input class="pat-date-picker" data-pat-date-picker="week-numbers: show;" type="date">
-                </label><br/>
-                <label>Multilingual support with German translations
-                    <input class="pat-date-picker" data-pat-date-picker="i18n: /src/pat/date-picker/i18n.json;" type="date">
-                </label>
-            </fieldset>
-        </form>
+    <form action="">
+      <fieldset class="vertical">
+        <label
+          >Falling back to the browser's HTML5 picker if available.
+          <input
+            class="pat-date-picker"
+            type="date"
+            data-pat-date-picker="behavior: native"
+          /> </label
+        ><br />
+        <label
+          >Enforcing the styled non-HTML5 picker universally.
+          <input class="pat-date-picker" type="date" /> </label
+        ><br />
+        <label
+          >Default value
+          <input
+            class="pat-date-picker"
+            type="date"
+            value="2015-01-01"
+          /> </label
+        ><br />
+        <label
+          >First day on Monday
+          <input
+            class="pat-date-picker"
+            type="date"
+            value="2015-01-01"
+            data-pat-date-picker="first-day: 1"
+          /> </label
+        ><br />
+        <label
+          >Specifying the "min" and "max" attributes.
+          <input
+            class="pat-date-picker"
+            min="2015-01-01"
+            max="2015-12-31"
+            type="date"
+          /> </label
+        ><br />
+        <label
+          >Show the week number.
+          <input
+            class="pat-date-picker"
+            data-pat-date-picker="week-numbers: show;"
+            type="date"
+          /> </label
+        ><br />
+        <label
+          >Multilingual support with German translations
+          <input
+            class="pat-date-picker"
+            data-pat-date-picker="i18n: /src/pat/date-picker/i18n.json;"
+            type="date"
+          />
+        </label>
+      </fieldset>
+    </form>
   </body>
 </html>

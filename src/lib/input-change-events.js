@@ -1,8 +1,5 @@
 // helper functions to make all input elements
-define([
-    "jquery",
-    "pat-logger"
-], function($, logging) {
+define(["jquery", "pat-logger"], function($, logging) {
     var namespace = "input-change-events",
         log = logging.getLogger(namespace);
 
@@ -98,7 +95,9 @@ define([
             if (patterns.indexOf(pat) === -1) {
                 log.warn("input-change-events were never installed for " + pat);
             } else {
-                patterns = patterns.filter(function(e){return e!==pat;});
+                patterns = patterns.filter(function(e) {
+                    return e !== pat;
+                });
                 if (patterns.length) {
                     $el.data(namespace, patterns);
                 } else {

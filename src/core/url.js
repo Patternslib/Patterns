@@ -5,7 +5,7 @@
  */
 define(function() {
     function UrlArgumentParser() {
-        this._cache=null;
+        this._cache = null;
         if (window.addEventListener)
             window.addEventListener("popstate", this._reset);
     }
@@ -15,7 +15,7 @@ define(function() {
         keyvalue_pattern: /^(.+?)(?:=(.*))/,
 
         _reset: function UrlArgumentParser_reset() {
-            this._cache=null;
+            this._cache = null;
         },
 
         _decodeQS: function UrlArgumentParser_decodeQS(bit) {
@@ -26,23 +26,26 @@ define(function() {
             var query = /\?(.+)/.exec(qs),
                 params = {};
 
-            if (query===null)
-                return params;
+            if (query === null) return params;
 
             var parameters = query[1].split("&"),
-                i, parts, key, value;
-                
-            for (i=0; i<parameters.length; i++) {
-                if ((parts=this.keyvalue_pattern.exec(parameters[i]))===null) {
-                    key=this._decodeQS(parameters[i]);
-                    value=null;
+                i,
+                parts,
+                key,
+                value;
+
+            for (i = 0; i < parameters.length; i++) {
+                if (
+                    (parts = this.keyvalue_pattern.exec(parameters[i])) === null
+                ) {
+                    key = this._decodeQS(parameters[i]);
+                    value = null;
                 } else {
-                    key=this._decodeQS(parts[1]);
-                    value=this._decodeQS(parts[2]);
+                    key = this._decodeQS(parts[1]);
+                    value = this._decodeQS(parts[2]);
                 }
 
-                if (params[key]===undefined)
-                    params[key]=[];
+                if (params[key] === undefined) params[key] = [];
                 params[key].push(value);
             }
 
@@ -50,8 +53,8 @@ define(function() {
         },
 
         get: function UrlArgumentParser_get() {
-            if (this._cache===null)
-                this._cache=this._parse(window.location.search);
+            if (this._cache === null)
+                this._cache = this._parse(window.location.search);
             return this._cache;
         }
     };

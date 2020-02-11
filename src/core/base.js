@@ -17,7 +17,6 @@ import logger from "./logger";
 import Registry from "./registry";
 import mockupParser from "./mockup-parser";
 
-
 export default (function($, Registry, mockupParser, logger) {
     "use strict";
     var log = logger.getLogger("Patternslib Base");

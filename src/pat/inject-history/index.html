@@ -1,23 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Injection history demo page</title>
-	<link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
-	<h2>This is the index</h2>
-	<a name="list"></a>
-	<ul>
-		<li><a href="index.html#injection-content" class="pat-inject" data-pat-inject="history: record">index</a></li>
-		<li><a href="page1.html#injection-content" class="pat-inject" data-pat-inject="history: record">page1</a></li>
-		<li><a href="page2.html#injection-content" class="pat-inject" data-pat-inject="history: record">page2</a></li>
-		<li><a href="page3.html#injection-content" class="pat-inject">page3 (no history)</a></li>
-	</ul>
-	<a class="anchor" href="#list">Anchors also trigger onpopstate events</a>
-	<div id="injection-content">
-		Content will appear here…
-	</div>
-</body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Injection history demo page</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <h2>This is the index</h2>
+    <a name="list"></a>
+    <ul>
+      <li>
+        <a
+          href="index.html#injection-content"
+          class="pat-inject"
+          data-pat-inject="history: record"
+          >index</a
+        >
+      </li>
+      <li>
+        <a
+          href="page1.html#injection-content"
+          class="pat-inject"
+          data-pat-inject="history: record"
+          >page1</a
+        >
+      </li>
+      <li>
+        <a
+          href="page2.html#injection-content"
+          class="pat-inject"
+          data-pat-inject="history: record"
+          >page2</a
+        >
+      </li>
+      <li>
+        <a href="page3.html#injection-content" class="pat-inject"
+          >page3 (no history)</a
+        >
+      </li>
+    </ul>
+    <a class="anchor" href="#list">Anchors also trigger onpopstate events</a>
+    <div id="injection-content">
+      Content will appear here…
+    </div>
+  </body>
 </html>

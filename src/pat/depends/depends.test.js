@@ -1,10 +1,8 @@
 define(["pat-depends"], function(Pattern) {
-
     describe("pat-depends", function() {
-
         describe("init", function() {
             beforeEach(function() {
-                $("<div/>", {id: "lab"}).appendTo(document.body);
+                $("<div/>", { id: "lab" }).appendTo(document.body);
             });
 
             afterEach(function() {
@@ -12,29 +10,33 @@ define(["pat-depends"], function(Pattern) {
             });
 
             it("Hide if condition is not met initially", function() {
-                $("#lab").html([
-                    "<input type=\"checkbox\" id=\"control\" value=\"yes\"/>",
-                    "<div id=\"slave\" class=\"pat-depends\"/>"
-                    ].join("\n"));
+                $("#lab").html(
+                    [
+                        '<input type="checkbox" id="control" value="yes"/>',
+                        '<div id="slave" class="pat-depends"/>'
+                    ].join("\n")
+                );
                 var $slave = $("#slave");
-                Pattern.init($slave, {condition: "control"});
+                Pattern.init($slave, { condition: "control" });
                 expect($slave.css("display")).toBe("none");
             });
 
             it("Show if condition is not met initially", function() {
-                $("#lab").html([
-                    "<input type=\"checkbox\" id=\"control\" value=\"yes\" checked=\"checked\"/>",
-                    "<div id=\"slave\" class=\"pat-depends\" style=\"display: none\"/>"
-                    ].join("\n"));
+                $("#lab").html(
+                    [
+                        '<input type="checkbox" id="control" value="yes" checked="checked"/>',
+                        '<div id="slave" class="pat-depends" style="display: none"/>'
+                    ].join("\n")
+                );
                 var $slave = $("#slave");
-                Pattern.init($slave, {condition: "control"});
+                Pattern.init($slave, { condition: "control" });
                 expect($slave.css("display")).not.toBe("none");
             });
         });
 
         describe("disable", function() {
             beforeEach(function() {
-                $("<div/>", {id: "lab"}).appendTo(document.body);
+                $("<div/>", { id: "lab" }).appendTo(document.body);
             });
 
             afterEach(function() {
@@ -42,11 +44,15 @@ define(["pat-depends"], function(Pattern) {
             });
 
             it("Input element", function() {
-                $("#lab").html([
-                    "<input type=\"checkbox\" id=\"control\" value=\"yes\" checked=\"checked\"/>",
-                    "<button id=\"slave\" class=\"pat-depends\" type=\"button\">Click me</button>"
-                    ].join("\n"));
-                var pat = Pattern.init($('.pat-depends'), {condition: "control"});
+                $("#lab").html(
+                    [
+                        '<input type="checkbox" id="control" value="yes" checked="checked"/>',
+                        '<button id="slave" class="pat-depends" type="button">Click me</button>'
+                    ].join("\n")
+                );
+                var pat = Pattern.init($(".pat-depends"), {
+                    condition: "control"
+                });
                 var $slave = $("#slave");
                 pat.disable();
                 expect($slave[0].disabled).toBeTruthy();
@@ -54,11 +60,15 @@ define(["pat-depends"], function(Pattern) {
             });
 
             it("Anchor", function() {
-                $("#lab").html([
-                    "<input type=\"checkbox\" id=\"control\" value=\"yes\" checked=\"checked\"/>",
-                    "<a class=\"pat-depends\" href=\"#target\">Click me</a>"
-                    ].join("\n"));
-                var pat = Pattern.init($('.pat-depends'), {condition: "control"});
+                $("#lab").html(
+                    [
+                        '<input type="checkbox" id="control" value="yes" checked="checked"/>',
+                        '<a class="pat-depends" href="#target">Click me</a>'
+                    ].join("\n")
+                );
+                var pat = Pattern.init($(".pat-depends"), {
+                    condition: "control"
+                });
                 var $slave = $("#lab a");
                 pat.disable();
                 var events = $._data($slave[0]).events;
@@ -70,7 +80,7 @@ define(["pat-depends"], function(Pattern) {
 
         describe("enable", function() {
             beforeEach(function() {
-                $("<div/>", {id: "lab"}).appendTo(document.body);
+                $("<div/>", { id: "lab" }).appendTo(document.body);
             });
 
             afterEach(function() {
@@ -78,11 +88,15 @@ define(["pat-depends"], function(Pattern) {
             });
 
             it("Input element", function() {
-                $("#lab").html([
-                    "<input type=\"checkbox\" id=\"control\" value=\"yes\" checked=\"checked\"/>",
-                    "<button disabled=\"disabled\" class=\"pat-depends disabled\" type=\"button\">Click me</button>"
-                    ].join("\n"));
-                var pat = Pattern.init($('.pat-depends'), {condition: "control"});
+                $("#lab").html(
+                    [
+                        '<input type="checkbox" id="control" value="yes" checked="checked"/>',
+                        '<button disabled="disabled" class="pat-depends disabled" type="button">Click me</button>'
+                    ].join("\n")
+                );
+                var pat = Pattern.init($(".pat-depends"), {
+                    condition: "control"
+                });
                 var $slave = $("#lab button");
                 pat.enable();
                 expect($slave[0].disabled).toBeFalsy();
@@ -90,11 +104,15 @@ define(["pat-depends"], function(Pattern) {
             });
 
             it("Anchor", function() {
-                $("#lab").html([
-                    "<input type=\"checkbox\" id=\"control\" value=\"yes\" checked=\"checked\"/>",
-                    "<a href=\"#target\" class=\"pat-depends disabled\">Click me</a>"
-                    ].join("\n"));
-                var pat = Pattern.init($('.pat-depends'), {condition: "control"});
+                $("#lab").html(
+                    [
+                        '<input type="checkbox" id="control" value="yes" checked="checked"/>',
+                        '<a href="#target" class="pat-depends disabled">Click me</a>'
+                    ].join("\n")
+                );
+                var pat = Pattern.init($(".pat-depends"), {
+                    condition: "control"
+                });
                 var $slave = $("#lab a");
                 $slave.on("click.patternDepends", false);
                 pat.enable();
@@ -102,7 +120,5 @@ define(["pat-depends"], function(Pattern) {
                 expect($._data($slave[0]).events).toBe(undefined);
             });
         });
-
     });
-
 });

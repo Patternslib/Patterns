@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Scroll demo</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-    <script src="/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script
+      src="/bundle-vendors.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
     <style type="text/css" media="screen">
       button:not(.pat-fullscreen-close-fullscreen) {
@@ -21,27 +25,45 @@
     <header>
       Fullscreen examples
       <ul>
-        <li><a class="pat-fullscreen" href="#fs1">Example 1: Define fullscreen element via href-target.</a></li>
-        <li><button class="pat-fullscreen" data-pat-fullscreen="selector:.fs2; close-button:show">Example 2: data-attr configuration: ``selector`` and ``close-button``.</button></li>
-        <li><button class="pat-fullscreen" data-pat-fullscreen="selector:.fs3">Example 3: Existing ``.close-fullscreen`` elements.</button></li>
-        <li class="pat-fullscreen">Example 4: No fullscreen element definition opens fullscreen on body.</li>
+        <li>
+          <a class="pat-fullscreen" href="#fs1"
+            >Example 1: Define fullscreen element via href-target.</a
+          >
+        </li>
+        <li>
+          <button
+            class="pat-fullscreen"
+            data-pat-fullscreen="selector:.fs2; close-button:show"
+          >
+            Example 2: data-attr configuration: ``selector`` and
+            ``close-button``.
+          </button>
+        </li>
+        <li>
+          <button class="pat-fullscreen" data-pat-fullscreen="selector:.fs3">
+            Example 3: Existing ``.close-fullscreen`` elements.
+          </button>
+        </li>
+        <li class="pat-fullscreen">
+          Example 4: No fullscreen element definition opens fullscreen on body.
+        </li>
       </ul>
     </header>
     <section id="fs1">
       <h2>Example 1</h2>
-      <p><img src="https://picsum.photos/600"/></p>
+      <p><img src="https://picsum.photos/600" /></p>
     </section>
     <section class="fs2">
       <h2>Example 2</h2>
-      <p><img src="https://picsum.photos/600"/></p>
+      <p><img src="https://picsum.photos/600" /></p>
     </section>
     <section class="fs3">
       <h2>Example 3</h2>
-      <p><img src="https://picsum.photos/600"/></p>
+      <p><img src="https://picsum.photos/600" /></p>
       <p>
-        <a class="close-fullscreen">Close fullscreen Link</a><br/>
-        <button class="close-fullscreen">Close Fullscreen Button</button><br/>
-        <a href=".">Reload site without close fullscreen.</a><br/>
+        <a class="close-fullscreen">Close fullscreen Link</a><br />
+        <button class="close-fullscreen">Close Fullscreen Button</button><br />
+        <a href=".">Reload site without close fullscreen.</a><br />
       </p>
     </section>
   </body>

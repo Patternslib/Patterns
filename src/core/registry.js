@@ -21,12 +21,11 @@ import _ from "underscore";
 import logger from "./logger";
 import utils from "./utils";
 
-
 // below here modules that are only loaded
 // "pat-compat",
 // "pat-jquery-ext";
-import "./compat"
-import "./jquery-ext"
+import "./compat";
+import "./jquery-ext";
 
 export default (function($, _, logger, utils) {
     var log = logger.getLogger("registry"),
