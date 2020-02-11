@@ -50,52 +50,38 @@
     "text-loader": "^0.0.1",
     "tippy.js": ">=5.2.0",
     "underscore": "^1.9.1",
-    "validate.js": "0.11.1"
+    "validate.js": "0.11.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "typescript": "~3.7.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0",
-    "babel-loader": "^8.0.6",
-    "duplicate-package-checker-webpack-plugin": "^3.0.0",
-    "expose-loader": "^0.7.5",
-    "imports-loader": "^0.8.0",
-    "jasmine-core": "^3.5.0",
-    "jasmine-webpack-plugin": "^0.1.1",
-    "jshint": "^2.10.2",
-    "karma": "^4.3.0",
-    "karma-babel-preprocessor": "^8.0.1",
-    "karma-chrome-launcher": "^3.1.0",
-    "karma-jasmine": "^2.0.1",
-    "karma-jasmine-html-reporter": "^1.4.2",
-    "karma-mocha-reporter": "^2.2.5",
-    "karma-webpack": "^4.0.2",
-    "pegjs": "^0.7.0",
-    "puppeteer": "^1.20.0",
-    "sass": "^1.22.12",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.1",
-    "webpack-merge": "^4.2.2",
-    "webpack-modernizr-loader": "^5.0.0",
-    "webpack-visualizer-plugin": "^0.1.11",
-    "wrapper-webpack-plugin": "^2.1.0"
-  },
-  "optionalDependencies": {
-    "fsevents": "^2.0.1"
-  },
-  "prettier": {
-    "singleQuote": false,
-    "htmlWhitespaceSensitivity": "ignore",
-    "trailingComma": "none",
-    "printWidth": 120
+    "react-scripts": "3.3.1"
   },
   "scripts": {
-    "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
-    "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
-    "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
-    "testonce": "karma start webpack/karma.config.js --single-run",
-    "test": "karma start webpack/karma.config.js"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",
@@ -114,6 +100,5 @@
       "email": "jc@opkode.com",
       "url": "https://www.opkode.com"
     }
-  ],
-  "browserslist": "> 0.25%, not dead"
+  ]
 }
