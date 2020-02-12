@@ -1,11 +1,11 @@
 define([
-    "jquery",
-    "underscore",
+    import $ from "jquery";,
+    import _ from "underscore";,
     "pat-ajax",
-    "pat-parser",
-    "pat-logger",
-    "pat-registry",
-    "pat-utils",
+    import Parser from "../../core/parser";
+    import logger from "../../core/logger";
+    import registry from "../../core/registry";
+    import utils from "../../core/utils";
     "pat-htmlparser",
     "intersection-observer",
     "pat-jquery-ext" // for :scrollable for autoLoading-visible

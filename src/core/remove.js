@@ -3,7 +3,7 @@
  *
  * Copyright 2012 Simplon B.V. - Wichert Akkerman
  */
-define(["jquery"], function($) {
+define([import $ from "jquery";], function($) {
     var real_cleanData = $.cleanData;
 
     $.cleanData = function remove_cleanData(elems) {

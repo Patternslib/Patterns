@@ -1,4 +1,4 @@
-define(["jquery", "pat-bumper", "modernizr"], function($, Bumper, Modernizr) {
+define([import $ from "jquery";, "pat-bumper", "modernizr"], function($, Bumper, Modernizr) {
     describe("pat-bumper", function() {
         beforeEach(function() {
             $("#lab").remove();

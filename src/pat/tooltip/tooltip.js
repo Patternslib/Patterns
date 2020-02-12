@@ -7,11 +7,11 @@
  * Copyright 2011 SYSLAB.COM GmbH
  */
 define([
-    "jquery",
-    "pat-logger",
-    "pat-registry",
-    "pat-utils",
-    "pat-parser",
+    import $ from "jquery";,
+    import logger from "../../core/logger";
+    import registry from "../../core/registry";
+    import utils from "../../core/utils";
+    import Parser from "../../core/parser";
     "pat-inject",
     "pat-remove"
 ], function($, logger, registry, utils, Parser, inject) {

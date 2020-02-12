@@ -4,7 +4,7 @@
  *
  * Copyright 2012 Simplon B.V.
  */
-define(["jquery", "pat-registry", "pat-utils"], function($, patterns, utils) {
+define([import $ from "jquery";, import registry from "../../core/registry"; import utils from "../../core/utils";], function($, patterns, utils) {
     var focus = {
         name: "focus",
 

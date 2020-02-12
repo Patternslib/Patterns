@@ -4,7 +4,7 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012 Simplon B.V. - Wichert Akkerman
  */
-define(["jquery", "pat-registry"], function($, registry) {
+define([import $ from "jquery";, import registry from "../../core/registry";], function($, registry) {
     var _ = {
         name: "breadcrumbs",
         trigger: "nav.pat-breadcrumbs",
