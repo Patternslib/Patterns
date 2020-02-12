@@ -7,8 +7,6 @@
  * Jed.js would be a good candidate. (http://slexaxton.github.io/Jed)
  */
 
-define([], function() {
-    return function translate(str) {
-        return str;
-    };
-});
+export default function translate(str) {
+    return str;
+};

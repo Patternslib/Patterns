@@ -1,20 +1,21 @@
 /**
- * Patterns pat-polyfill-colour - Polyfill for colour inputs.
- *
- * Copyright 2014 Marko Durkovic
- * Copyright 2014 Simplon B.V. - Wichert Akkerman
- */
-define([import registry from "../../core/registry"; "spectrum-colorpicker", import $ from "jquery";], function(registry) {
-    var _ = {
-        name: "polyfill-color",
-        trigger: "input.pat-colour-picker,input.pat-color-picker",
-        init: function($el) {
-            return $el.spectrum({ preferredFormat: "hex" });
-        }
-    };
+* Patterns pat-polyfill-colour - Polyfill for colour inputs.
+*
+* Copyright 2014 Marko Durkovic
+* Copyright 2014 Simplon B.V. - Wichert Akkerman
+*/
 
-    registry.register(_);
-    return _;
-});
+import registry from "../../core/registry";
+import $ from "jquery";
+import "spectrum-colorpicker";
 
-// vim: sw=4 expandtab
+var _ = {
+    name: "polyfill-color",
+    trigger: "input.pat-colour-picker,input.pat-color-picker",
+    init: function($el) {
+        return $el.spectrum({ preferredFormat: "hex" });
+    }
+};
+
+registry.register(_);
+export default _;

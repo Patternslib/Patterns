@@ -4,13 +4,15 @@
  * Copyright 2012 Humberto Sermeno
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define([
-    import $ from "jquery";,
-    import Base from "../../core/base";
-    import registry from "../../core/registry";
-    import Parser from "../../core/parser";
-    import _ from "underscore";
-], function($, Base, registry, Parser, _) {
+
+import $ from "jquery";
+import Base from "../../core/base";
+import registry from "../../core/registry";
+import Parser from "../../core/parser";
+import _ from "underscore";
+
+
+export default function($, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
     parser.addArgument("size", "width", [
@@ -148,4 +150,4 @@ define([
             return this;
         }
     });
-});
+};

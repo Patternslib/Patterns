@@ -4,23 +4,21 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
-define([import registry from "../../core/registry"; "jquery.chosen"], function(registry) {
-    var _ = {
-        name: "chosen",
-        trigger: "select.pat-chosen",
-        init: function($el) {
-            $el.chosen();
-            return $el;
-        },
+import registry from "../../core/registry";
+import "jquery.chosen";
 
-        destroy: function() {
-            // XXX
-        }
-    };
+var _ = {
+    name: "chosen",
+    trigger: "select.pat-chosen",
+    init: function($el) {
+        $el.chosen();
+        return $el;
+    },
 
-    registry.register(_);
-    return _;
-});
+    destroy: function() {
+        // XXX
+    }
+};
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
+registry.register(_);
+export default _;

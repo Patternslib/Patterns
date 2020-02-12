@@ -1,40 +1,41 @@
 /**
- * Patterns forward - Forward click events
- *
- * Copyright 2013 Simplon B.V. - Wichert Akkerman
- */
-define([import $ from "jquery";, import Parser from "../../core/parser"; import registry from "../../core/registry";], function($, Parser, registry) {
-    var parser = new Parser("forward");
+* Patterns forward - Forward click events
+*
+* Copyright 2013 Simplon B.V. - Wichert Akkerman
+*/
 
-    parser.addArgument("selector");
-    parser.addArgument("trigger", "click", ["click", "auto"]);
+import $ from "jquery";
+import Parser from "../../core/parser";
+import registry from "../../core/registry";
 
-    var _ = {
-        name: "forward",
-        trigger: ".pat-forward",
+var parser = new Parser("forward");
 
-        init: function($el, opts) {
-            return $el.each(function() {
-                var $el = $(this),
-                    options = parser.parse($el, opts);
+parser.addArgument("selector");
+parser.addArgument("trigger", "click", ["click", "auto"]);
 
-                if (!options.selector) return;
+var _ = {
+    name: "forward",
+    trigger: ".pat-forward",
 
-                $el.on("click", null, options.selector, _._onClick);
-                if (options.trigger === "auto") {
-                    $el.trigger("click");
-                }
-            });
-        },
+    init: function($el, opts) {
+        return $el.each(function() {
+            var $el = $(this),
+                options = parser.parse($el, opts);
 
-        _onClick: function(event) {
-            $(event.data).click();
-            event.preventDefault();
-            event.stopPropagation();
-        }
-    };
-    registry.register(_);
-    return _;
-});
+            if (!options.selector) return;
 
-// vim: sw=4 expandtab
+            $el.on("click", null, options.selector, _._onClick);
+            if (options.trigger === "auto") {
+                $el.trigger("click");
+            }
+        });
+    },
+
+    _onClick: function(event) {
+        $(event.data).click();
+        event.preventDefault();
+        event.stopPropagation();
+    }
+};
+registry.register(_);
+export default _;

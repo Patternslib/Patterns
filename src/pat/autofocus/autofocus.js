@@ -3,33 +3,33 @@
  *
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
-define([import $ from "jquery";, import registry from "../../core/registry";], function($, registry) {
-    var autofocus = {
-        name: "autofocus",
-        trigger: ":input.pat-autofocus,:input[autofocus]",
+import $ from "jquery";
+import registry from "../../core/registry";
 
-        init: function init($el) {
 
-            this.setFocus(this.trigger);
-            $(document).on("patterns-injected", function (e, data) {
-                autofocus.setFocus($(e.target).find(autofocus.trigger));
-            });
-            $(document).on("pat-update", function (e, data) {
-                autofocus.setFocus($(e.target).find(autofocus.trigger));
-            });
-        },
-        setFocus: function (target) {
-            var $all = $(target);
-            var $visible = $all.filter(function(index) {
-                if ($(this).is(":visible")) return true;
-            })
-            setTimeout(function() {$visible.get(0) && $visible.get(0).focus();}, 10);
-        }
+var autofocus = {
+    name: "autofocus",
+    trigger: ":input.pat-autofocus,:input[autofocus]",
 
-    };
+    init: function init($el) {
 
-    registry.register(autofocus);
-});
+        this.setFocus(this.trigger);
+        $(document).on("patterns-injected", function (e, data) {
+            autofocus.setFocus($(e.target).find(autofocus.trigger));
+        });
+        $(document).on("pat-update", function (e, data) {
+            autofocus.setFocus($(e.target).find(autofocus.trigger));
+        });
+    },
+    setFocus: function (target) {
+        var $all = $(target);
+        var $visible = $all.filter(function(index) {
+            if ($(this).is(":visible")) return true;
+        })
+        setTimeout(function() {$visible.get(0) && $visible.get(0).focus();}, 10);
+    }
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
+};
+
+registry.register(autofocus);
+export default autofocus;
