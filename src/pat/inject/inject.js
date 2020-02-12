@@ -1,14 +1,14 @@
 define([
-    import $ from "jquery";,
-    import _ from "underscore";,
+    "jquery",
+    "underscore",
     "pat-ajax",
-    import Parser from "../../core/parser";
-    import logger from "../../core/logger";
-    import registry from "../../core/registry";
-    import utils from "../../core/utils";
+    "pat-parser",
+    "pat-logger",
+    "pat-registry",
+    "pat-utils",
     "pat-htmlparser",
     "intersection-observer",
-    "pat-jquery-ext" // for :scrollable for autoLoading-visible
+    "pat-jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, _, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),
         parser = new Parser("inject"),
@@ -20,23 +20,10 @@ define([
     parser.addArgument("data-type", "html");
     parser.addArgument("next-href");
     parser.addArgument("source");
-    parser.addArgument("trigger", "default", [
-        "default",
-        "autoload",
-        "autoload-visible",
-        "idle"
-    ]);
-    parser.addArgument("delay"); // only used in autoload
-    parser.addArgument("confirm", "class", [
-        "never",
-        "always",
-        "form-data",
-        "class"
-    ]);
-    parser.addArgument(
-        "confirm-message",
-        "Are you sure you want to leave this page?"
-    );
+    parser.addArgument("trigger", "default", ["default", "autoload", "autoload-visible", "idle"]);
+    parser.addArgument("delay");    // only used in autoload
+    parser.addArgument("confirm", 'class', ['never', 'always', 'form-data', 'class']);
+    parser.addArgument("confirm-message", 'Are you sure you want to leave this page?');
     parser.addArgument("hooks", [], ["raptor"], true); // After injection, pat-inject will trigger an event for each hook: pat-inject-hook-$(hook)
     parser.addArgument("loading-class", "injecting"); // Add a class to the target while content is still loading.
     parser.addArgument("executing-class", "executing"); // Add a class to the element while content is still loading.
@@ -52,23 +39,17 @@ define([
 
     var inject = {
         name: "inject",
-        trigger:
-            ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
+        trigger: ".raptor-ui .ui-button.pat-inject, a.pat-inject, form.pat-inject, .pat-subform.pat-inject",
         init: function inject_init($el, opts) {
             var cfgs = inject.extractConfig($el, opts);
-            if (
-                cfgs.some(function(e) {
-                    return e.history === "record";
-                }) &&
-                !("pushState" in history)
-            ) {
+            if (cfgs.some(function(e){return e.history === "record";}) && !("pushState" in history)) {
                 // if the injection shall add a history entry and HTML5 pushState
                 // is missing, then don't initialize the injection.
                 return $el;
             }
             $el.data("pat-inject", cfgs);
 
-            if (cfgs[0].nextHref && cfgs[0].nextHref.indexOf("#") === 0) {
+            if (cfgs[0].nextHref && cfgs[0].nextHref.indexOf('#') === 0) {
                 // In case the next href is an anchor, and it already
                 // exists in the page, we do not activate the injection
                 // but instead just change the anchors href.
@@ -77,16 +58,9 @@ define([
                 // fullcalendars, it's sanity is wonky and we should
                 // probably solve it differently.
                 if ($el.is("a") && $(cfgs[0].nextHref).length > 0) {
-                    log.debug(
-                        "Skipping as next href is anchor, which already exists",
-                        cfgs[0].nextHref
-                    );
+                    log.debug("Skipping as next href is anchor, which already exists", cfgs[0].nextHref);
                     // XXX: reconsider how the injection enters exhausted state
-                    return $el.attr({
-                        href:
-                            (window.location.href.split("#")[0] || "") +
-                            cfgs[0].nextHref
-                    });
+                    return $el.attr({href: (window.location.href.split("#")[0] || "") + cfgs[0].nextHref});
                 }
             }
             if (cfgs[0].pushMarker) {
@@ -110,22 +84,15 @@ define([
                 }
 
                 var onInteraction = utils.debounce(function onInteraction() {
-                    clearTimeout(timer);
-                    timer = setTimeout(onTimeout, cfgs[0].trigger);
+                    clearTimeout(timer)
+                    timer = setTimeout(onTimeout, cfgs[0].trigger)
                 }, timeout);
 
                 function unsub() {
                     ["scroll", "resize"].forEach(function(e) {
                         window.removeEventListener(e, onInteraction);
                     });
-                    [
-                        "click",
-                        "keypress",
-                        "keyup",
-                        "mousemove",
-                        "touchstart",
-                        "touchend"
-                    ].forEach(function(e) {
+                    ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
                         document.removeEventListener(e, onInteraction);
                     });
                 }
@@ -135,75 +102,55 @@ define([
                 ["scroll", "resize"].forEach(function(e) {
                     window.addEventListener(e, onInteraction);
                 });
-                [
-                    "click",
-                    "keypress",
-                    "keyup",
-                    "mousemove",
-                    "touchstart",
-                    "touchend"
-                ].forEach(function(e) {
+                ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
                     document.addEventListener(e, onInteraction);
                 });
             } else {
                 switch (cfgs[0].trigger) {
-                    case "default":
-                        cfgs.forEach(function(cfg) {
-                            if (cfg.delay) {
-                                cfg.processDelay = cfg.delay;
-                            }
-                        });
-                        // setup event handlers
-                        if ($el.is("form")) {
-                            $el.on("submit.pat-inject", inject.onTrigger)
-                                .on(
-                                    "click.pat-inject",
-                                    "[type=submit]",
-                                    ajax.onClickSubmit
-                                )
-                                .on(
-                                    "click.pat-inject",
-                                    "[type=submit][formaction], [type=image][formaction]",
-                                    inject.onFormActionSubmit
-                                );
-                        } else if ($el.is(".pat-subform")) {
-                            log.debug("Initializing subform with injection");
-                        } else {
-                            $el.on("click.pat-inject", inject.onTrigger);
+                case "default":
+                    cfgs.forEach(function(cfg) {
+                        if (cfg.delay) {
+                            cfg.processDelay = cfg.delay;
                         }
-                        break;
-                    case "autoload":
-                        if (!cfgs[0].delay) {
+                    });
+                    // setup event handlers
+                    if ($el.is("form")) {
+                        $el.on("submit.pat-inject", inject.onTrigger)
+                            .on("click.pat-inject", "[type=submit]", ajax.onClickSubmit)
+                            .on("click.pat-inject", "[type=submit][formaction], [type=image][formaction]", inject.onFormActionSubmit);
+                    } else if ($el.is(".pat-subform")) {
+                        log.debug("Initializing subform with injection");
+                    } else {
+                        $el.on("click.pat-inject", inject.onTrigger);
+                    }
+                    break;
+                case "autoload":
+                    if (!cfgs[0].delay) {
+                        inject.onTrigger.apply($el[0], []);
+                    } else {
+                        // generate UID
+                        var uid = Math.random().toString(36);
+                        $el.attr('data-pat-inject-uid', uid);
+
+                        // function to trigger the autoload and mark as triggered
+                        function delayed_trigger(uid) {
+                            // Check if the element has been removed from the dom
+                            var still_there = $("[data-pat-inject-uid='"+uid+"']");
+                            if (still_there.length == 0) return false;
+
+                            $el.data("pat-inject-autoloaded", true);
                             inject.onTrigger.apply($el[0], []);
-                        } else {
-                            // generate UID
-                            var uid = Math.random().toString(36);
-                            $el.attr("data-pat-inject-uid", uid);
-
-                            // function to trigger the autoload and mark as triggered
-                            function delayed_trigger(uid) {
-                                // Check if the element has been removed from the dom
-                                var still_there = $(
-                                    "[data-pat-inject-uid='" + uid + "']"
-                                );
-                                if (still_there.length == 0) return false;
-
-                                $el.data("pat-inject-autoloaded", true);
-                                inject.onTrigger.apply($el[0], []);
-                                return true;
-                            }
-                            window.setTimeout(
-                                delayed_trigger.bind(null, uid),
-                                cfgs[0].delay
-                            );
+                            return true;
                         }
-                        break;
-                    case "autoload-visible":
-                        inject._initAutoloadVisible($el, cfgs);
-                        break;
-                    case "idle":
-                        inject._initIdleTrigger($el, cfgs[0].delay);
-                        break;
+                        window.setTimeout(delayed_trigger.bind(null, uid), cfgs[0].delay);
+                    }
+                    break;
+                case "autoload-visible":
+                    inject._initAutoloadVisible($el, cfgs);
+                    break;
+                case "idle":
+                    inject._initIdleTrigger($el, cfgs[0].delay);
+                    break;
                 }
             }
 
@@ -239,13 +186,11 @@ define([
             var $button = $(ev.target),
                 formaction = $button.attr("formaction"),
                 $form = $button.parents(".pat-inject").first(),
-                opts = { url: formaction },
+                opts = {url: formaction},
                 $cfg_node = $button.closest("[data-pat-inject]"),
                 cfgs = inject.extractConfig($cfg_node, opts);
 
-            $(cfgs).each(function(i, v) {
-                v.params = $.param($form.serializeArray());
-            });
+            $(cfgs).each(function(i, v) {v.params = $.param($form.serializeArray());});
 
             ev.preventDefault();
             $form.trigger("patterns-inject-triggered");
@@ -259,9 +204,7 @@ define([
                 cfgs = $sub.data("pat-inject");
 
             // store the params of the subform in the config, to be used by history
-            $(cfgs).each(function(i, v) {
-                v.params = $.param($sub.serializeArray());
-            });
+            $(cfgs).each(function(i, v) {v.params = $.param($sub.serializeArray());});
 
             try {
                 $el.trigger("patterns-inject-triggered");
@@ -277,12 +220,8 @@ define([
             var cfgs = parser.parse($el, opts, true);
             cfgs.forEach(function inject_extractConfig_each(cfg) {
                 // opts and cfg have priority, fallback to href/action
-                cfg.url =
-                    opts.url ||
-                    cfg.url ||
-                    $el.attr("href") ||
-                    $el.attr("action") ||
-                    $el.parents("form").attr("action") ||
+                cfg.url = opts.url || cfg.url || $el.attr("href") ||
+                    $el.attr("action") || $el.parents("form").attr("action") ||
                     "";
 
                 // separate selector from url
@@ -290,14 +229,10 @@ define([
                 cfg.url = urlparts[0];
 
                 // if no selector, check for selector as part of original url
-                var defaultSelector =
-                    (urlparts[1] && "#" + urlparts[1]) || "body";
+                var defaultSelector = urlparts[1] && "#" + urlparts[1] || "body";
 
                 if (urlparts.length > 2) {
-                    log.warn(
-                        "Ignoring additional source ids:",
-                        urlparts.slice(2)
-                    );
+                    log.warn("Ignoring additional source ids:", urlparts.slice(2));
                 }
 
                 cfg.defaultSelector = cfg.defaultSelector || defaultSelector;
@@ -305,7 +240,7 @@ define([
                     try {
                         cfg.delay = utils.parseTime(cfg.delay);
                     } catch (e) {
-                        log.warn("Invalid delay value: ", cfg.delay);
+                        log.warn("Invalid delay value: ", cfg.delay)
                         cfg.delay = null;
                     }
                 }
@@ -317,23 +252,23 @@ define([
         elementIsDirty: function(m) {
             /* Check whether the passed in form element contains a value.
              */
-            var data = $.map(m.find(":input:not(select)"), function(i) {
-                var val = $(i).val();
-                return Boolean(val) && val !== $(i).attr("placeholder");
-            });
-            return $.inArray(true, data) !== -1;
+            var data = $.map(m.find(":input:not(select)"),
+                function(i) {
+                    var val = $(i).val();
+                    return (Boolean(val) && val !== $(i).attr('placeholder'));
+                });
+            return $.inArray(true, data)!==-1;
         },
 
         askForConfirmation: function inject_askForConfirmation(cfgs) {
             /* If configured to do so, show a confirmation dialog to the user.
              * This is done before attempting to perform injection.
              */
-            var should_confirm = false,
-                message;
+            var should_confirm = false, message;
 
             _.each(cfgs, function(cfg) {
                 var _confirm = false;
-                if (cfg.confirm == "always") {
+                if (cfg.confirm == 'always') {
                     _confirm = true;
                 } else if (cfg.confirm === 'form-data') {
                     if (cfg.target  != 'none')
@@ -411,12 +346,10 @@ define([
              *
              * Verification for each cfg in the array needs to succeed.
              */
-            return cfgs.every(
-                _.partial(inject.verifySingleConfig, $el, cfgs[0].url)
-            );
+            return cfgs.every(_.partial(inject.verifySingleConfig, $el, cfgs[0].url));
         },
 
-        listenForFormReset: function(cfg) {
+        listenForFormReset: function (cfg) {
             /* if pat-inject is used to populate target in some form and when
              * Cancel button is pressed (this triggers reset event on the
              * form) you would expect to populate with initial placeholder
@@ -442,8 +375,7 @@ define([
                 target_re = /^(.*?)(::element)?(::after|::before)?$/,
                 source_match = source_re.exec(cfg.source),
                 target_match = target_re.exec(cfg.target),
-                targetMod,
-                targetPosition;
+                targetMod, targetPosition;
 
             cfg.source = source_match[1];
             cfg.sourceMod = source_match[2] ? "element" : "content";
@@ -452,10 +384,9 @@ define([
             targetPosition = (target_match[3] || "::").slice(2); // position relative to target
 
             if (cfg.loadingClass) {
-                cfg.loadingClass += " " + cfg.loadingClass + "-" + targetMod;
+                cfg.loadingClass += " "+ cfg.loadingClass + "-" + targetMod;
                 if (targetPosition && cfg.loadingClass) {
-                    cfg.loadingClass +=
-                        " " + cfg.loadingClass + "-" + targetPosition;
+                    cfg.loadingClass += " " + cfg.loadingClass + "-" + targetPosition;
                 }
             }
             cfg.action = targetMod + targetPosition;
@@ -464,34 +395,34 @@ define([
             return true;
         },
 
-        createTarget: function inject_createTarget(selector) {
+        createTarget: function inject_createTarget (selector) {
             /* create a target that matches the selector
              *
              * XXX: so far we only support #target and create a div with
              * that id appended to the body.
              */
             var $target;
-            if (selector.slice(0, 1) !== "#") {
+            if (selector.slice(0,1) !== "#") {
                 log.error("only id supported for non-existing target");
                 return null;
             }
-            $target = $("<div />").attr({ id: selector.slice(1) });
+            $target = $("<div />").attr({id: selector.slice(1)});
             $("body").append($target);
             return $target;
         },
 
-        stopBubblingFromRemovedElement: function($el, cfgs, ev) {
+        stopBubblingFromRemovedElement: function ($el, cfgs, ev) {
             /* IE8 fix. Stop event from propagating IF $el will be removed
-             * from the DOM. With pat-inject, often $el is the target that
-             * will itself be replaced with injected content.
-             *
-             * IE8 cannot handle events bubbling up from an element removed
-             * from the DOM.
-             *
-             * See: http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
-             */
+            * from the DOM. With pat-inject, often $el is the target that
+            * will itself be replaced with injected content.
+            *
+            * IE8 cannot handle events bubbling up from an element removed
+            * from the DOM.
+            *
+            * See: http://stackoverflow.com/questions/7114368/why-is-jquery-remove-throwing-attr-exception-in-ie8
+            */
             var s; // jquery selector
-            for (var i = 0; i < cfgs.length; i++) {
+            for (var i=0; i<cfgs.length; i++) {
                 s = cfgs[i].target;
                 if ($el.parents(s).addBack(s) && !ev.isPropagationStopped()) {
                     ev.stopPropagation();
@@ -500,7 +431,7 @@ define([
             }
         },
 
-        _performInjection: function($el, $source, cfg, trigger, title) {
+        _performInjection: function ($el, $source, cfg, trigger, title) {
             /* Called after the XHR has succeeded and we have a new $source
              * element to inject.
              */
@@ -509,11 +440,8 @@ define([
             }
             var $src;
             // $source.clone() does not work with shived elements in IE8
-            if (
-                document.all &&
-                document.querySelector &&
-                !document.addEventListener
-            ) {
+            if (document.all && document.querySelector &&
+                !document.addEventListener) {
                 $src = $source.map(function() {
                     return $(this.outerHTML)[0];
                 });
@@ -527,40 +455,31 @@ define([
                 $(this).trigger("pat-inject-content-loaded");
             });
             // Now the injection actually happens.
-            if (inject._inject(trigger, $src, $target, cfg)) {
-                inject._afterInjection($el, $injected, cfg);
-            }
+            if (inject._inject(trigger, $src, $target, cfg)) { inject._afterInjection($el, $injected, cfg); }
             // History support. if subform is submitted, append form params
-            var glue = "?";
-            if (cfg.history === "record" && "pushState" in history) {
+            var glue = '?';
+            if ((cfg.history === "record") && ("pushState" in history)) {
                 if (cfg.params) {
-                    if (cfg.url.indexOf("?") > -1) glue = "&";
-                    history.pushState(
-                        { url: cfg.url + glue + cfg.params },
-                        "",
-                        cfg.url + glue + cfg.params
-                    );
+                    if (cfg.url.indexOf('?') > -1)
+                        glue = '&';
+                    history.pushState({'url': cfg.url + glue + cfg.params}, "", cfg.url + glue + cfg.params);
                 } else {
-                    history.pushState({ url: cfg.url }, "", cfg.url);
+                    history.pushState({'url': cfg.url}, "", cfg.url);
                 }
                 // Also inject title element if we have one
                 if (title)
-                    inject._inject(trigger, title, $("title"), {
-                        action: "element"
-                    });
+                    inject._inject(trigger, title, $("title"), {action: 'element'});
             }
         },
 
-        _afterInjection: function($el, $injected, cfg) {
+        _afterInjection: function ($el, $injected, cfg) {
             /* Set a class on the injected elements and fire the
              * patterns-injected event.
              */
-            $injected
-                .filter(function() {
-                    // setting data on textnode fails in IE8
-                    return this.nodeType !== TEXT_NODE;
-                })
-                .data("pat-injected", { origin: cfg.url });
+            $injected.filter(function() {
+                // setting data on textnode fails in IE8
+                return this.nodeType !== TEXT_NODE;
+            }).data("pat-injected", {origin: cfg.url});
 
             if ($injected.length === 1 && $injected[0].nodeType == TEXT_NODE) {
                 // Only one element injected, and it was a text node.
@@ -568,19 +487,16 @@ define([
                 // The event handler should check whether the
                 // injected element and the triggered element are
                 // the same.
-                $injected
-                    .parent()
-                    .trigger("patterns-injected", [cfg, $el[0], $injected[0]]);
+                $injected.parent().trigger("patterns-injected", [cfg, $el[0], $injected[0]]);
             } else {
-                $injected.each(function() {
+                $injected.each(function () {
                     // patterns-injected event will be triggered for each injected (non-text) element.
                     if (this.nodeType !== TEXT_NODE) {
-                        $(this)
-                            .addClass(cfg["class"])
-                            .trigger("patterns-injected", [cfg, $el[0], this]);
+                        $(this).addClass(cfg["class"]).trigger("patterns-injected", [cfg, $el[0], this]);
                     }
                 });
             }
+
 
             if (cfg.scroll && cfg.scroll !== 'none') {
                 var scroll_container = cfg.$target.parents().addBack().filter(':scrollable');
@@ -644,7 +560,7 @@ define([
             $el.trigger("pat-inject-success");
         },
 
-        _onInjectSuccess: function($el, cfgs, ev) {
+        _onInjectSuccess: function ($el, cfgs, ev) {
             var sources$,
                 data = ev && ev.jqxhr && ev.jqxhr.responseText;
             if (!data) {
@@ -659,22 +575,15 @@ define([
                 $el.trigger("pat-inject-hook-"+hook);
             });
             inject.stopBubblingFromRemovedElement($el, cfgs, ev);
-            sources$ = inject.callTypeHandler(
-                cfgs[0].dataType,
-                "sources",
-                $el,
-                [cfgs, data, ev]
-            );
+            sources$ = inject.callTypeHandler(cfgs[0].dataType, "sources", $el, [cfgs, data, ev]);
             /* pick the title source for dedicated handling later
               Title - if present - is always appended at the end. */
             var title;
-            if (
-                sources$ &&
-                sources$[sources$.length - 1] &&
-                sources$[sources$.length - 1][0] &&
-                sources$[sources$.length - 1][0].nodeName == "TITLE"
-            ) {
-                title = sources$[sources$.length - 1];
+            if (sources$ &&
+                sources$[sources$.length-1] &&
+                sources$[sources$.length-1][0] &&
+                sources$[sources$.length-1][0].nodeName == "TITLE") {
+                title = sources$[sources$.length-1];
             }
             cfgs.forEach(function(cfg, idx) {
                 function perform_inject() {
@@ -694,42 +603,32 @@ define([
             if (cfgs[0].nextHref && $el.is("a")) {
                 // In case next-href is specified the anchor's href will
                 // be set to it after the injection is triggered.
-                $el.attr({ href: cfgs[0].nextHref.replace(/&amp;/g, "&") });
+                $el.attr({href: cfgs[0].nextHref.replace(/&amp;/g, '&')});
                 inject.destroy($el);
             }
             $el.off("pat-ajax-success.pat-inject");
             $el.off("pat-ajax-error.pat-inject");
         },
 
-        _onInjectError: function($el, cfgs, event) {
-            var explanation = "";
+        _onInjectError: function ($el, cfgs, event) {
+            var explanation = '';
             var timestamp = new Date();
             if (event.jqxhr.status % 100 == 4) {
-                explanation =
-                    "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
+                explanation = "Sorry! We couldn't find the page to load. Please make a screenshot and send it to support. Thank you!";
             } else if (event.jqxhr.status % 100 == 5) {
-                explanation =
-                    "I am very sorry! There was an error at the server. Please make a screenshot and contact support. Thank you!";
+                explanation = "I am very sorry! There was an error at the server. Please make a screenshot and contact support. Thank you!";
             } else if (event.jqxhr.status == 0) {
-                explanation =
-                    "It seems, the server is down. Please make a screenshot and contact support. Thank you!";
+                explanation = "It seems, the server is down. Please make a screenshot and contact support. Thank you!";
             }
-            var msg_attr =
-                explanation +
-                " Status is " +
-                event.jqxhr.status +
-                " " +
-                event.jqxhr.statusText +
-                ", time was " +
-                timestamp +
-                ". You can click to close this.";
-            $("body").attr("data-error-message", msg_attr);
-            $("body").on("click", function() {
-                $("body").removeAttr("data-error-message");
+            var msg_attr = explanation + ' Status is '+event.jqxhr.status + ' ' + event.jqxhr.statusText + ', time was ' + timestamp + '. You can click to close this.' ;
+            $("body").attr('data-error-message', msg_attr);
+            $('body').on('click', function() {
+                $('body').removeAttr('data-error-message');
                 window.location.href = window.location.href;
-            });
+            })
             cfgs.forEach(function(cfg) {
-                if ("$injected" in cfg) cfg.$injected.remove();
+                if ("$injected" in cfg)
+                    cfg.$injected.remove();
             });
             $el.off("pat-ajax-success.pat-inject");
             $el.off("pat-ajax-error.pat-inject");
@@ -742,31 +641,25 @@ define([
              * request when the content is readily available in the current page.
              */
             // get a kinda deep copy, we scribble on it
-            cfgs = cfgs.map(function(cfg) {
-                return $.extend({}, cfg);
-            });
+            cfgs = cfgs.map(function(cfg) { return $.extend({}, cfg); });
             if (!inject.verifyConfig(cfgs, $el)) {
                 return;
             }
             if (!inject.askForConfirmation(cfgs)) {
                 return;
             }
-            if ($el.data("pat-inject-triggered")) {
+            if ($el.data('pat-inject-triggered')) {
                 // Prevent double triggers;
                 return;
-            }
-            $el.data("pat-inject-triggered", true);
+            };
+            $el.data('pat-inject-triggered', true);
             // possibility for spinners on targets
             _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) {
                 if (cfg.target  != 'none')
                     cfg.$target.addClass(cfg.loadingClass);
             });
             // Put the execute class on the elem that has pat inject on it
-            _.chain(cfgs)
-                .filter(_.property("loadingClass"))
-                .each(function(cfg) {
-                    $el.addClass(cfg.executingClass);
-                });
+            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { $el.addClass(cfg.executingClass); });
 
             $el.on("pat-ajax-success.pat-inject", this._onInjectSuccess.bind(this, $el, cfgs));
             $el.on("pat-ajax-error.pat-inject", this._onInjectError.bind(this, $el, cfgs));
@@ -775,7 +668,7 @@ define([
             });
 
             if (cfgs[0].url.length) {
-                ajax.request($el, { url: cfgs[0].url });
+                ajax.request($el, {url: cfgs[0].url});
             } else {
                 // If there is no url specified, then content is being fetched
                 // from the same page.
@@ -784,7 +677,7 @@ define([
                 $el.trigger({
                     type: "pat-ajax-success",
                     jqxhr: {
-                        responseText: $("body").html()
+                        responseText:  $("body").html()
                     }
                 });
             }
@@ -795,9 +688,9 @@ define([
             // and "element"
             var method = {
                 contentbefore: "prepend",
-                contentafter: "append",
+                contentafter:  "append",
                 elementbefore: "before",
-                elementafter: "after"
+                elementafter:  "after"
             }[cfg.action];
 
             if (cfg.source === 'none') {
@@ -806,10 +699,9 @@ define([
             }
             if ($source.length === 0) {
                 log.warn("Aborting injection, source not found:", $source);
-                $(trigger).trigger("pat-inject-missingSource", {
-                    url: cfg.url,
-                    selector: cfg.source
-                });
+                $(trigger).trigger("pat-inject-missingSource",
+                        {url: cfg.url,
+                         selector: cfg.source});
                 return false;
             }
             if (cfg.target === "none")
@@ -817,9 +709,8 @@ define([
                 return true;
             if ($target.length === 0) {
                 log.warn("Aborting injection, target not found:", $target);
-                $(trigger).trigger("pat-inject-missingTarget", {
-                    selector: cfg.target
-                });
+                $(trigger).trigger("pat-inject-missingTarget",
+                        {selector: cfg.target});
                 return false;
             }
             if (cfg.action === "content") {
@@ -850,7 +741,7 @@ define([
                     }
                 }
 
-                $source.find('a[href^="#"]').each(function() {
+                $source.find("a[href^=\"#\"]").each(function () {
                     var href = this.getAttribute("href");
                     if (href.indexOf("#{1}") !== -1) {
                         // We ignore hrefs containing #{1} because they're not
@@ -860,11 +751,10 @@ define([
                     }
                     // Skip in-document links pointing to an id that is inside
                     // this fragment.
-                    if (href.length === 1) {
-                        // Special case for top-of-page links
-                        this.href = url;
+                    if (href.length === 1) { // Special case for top-of-page links
+                        this.href=url;
                     } else if (!$source.find(href).length) {
-                        this.href = url + href;
+                        this.href=url+href;
                     }
                 });
                 return $source;
@@ -879,40 +769,33 @@ define([
             VIDEO: "src"
         },
 
-        _rebaseHTML_via_HTMLParser: function inject_rebaseHTML_via_HTMLParser(
-            base,
-            html
-        ) {
+        _rebaseHTML_via_HTMLParser: function inject_rebaseHTML_via_HTMLParser(base, html) {
             var output = [],
-                i,
-                link_attribute,
-                value;
+                i, link_attribute, value;
 
             htmlparser.HTMLParser(html, {
                 start: function(tag, attrs, unary) {
-                    output.push("<" + tag);
+                    output.push("<"+tag);
                     link_attribute = inject._link_attributes[tag.toUpperCase()];
-                    for (i = 0; i < attrs.length; i++) {
+                    for (i=0; i<attrs.length; i++) {
                         if (attrs[i].name.toLowerCase() === link_attribute) {
                             value = attrs[i].value;
                             // Do not rewrite Zope views or in-document links.
                             // In-document links will be processed later after
                             // extracting the right fragment.
-                            if (
-                                value.slice(0, 2) !== "@@" &&
-                                value[0] !== "#"
-                            ) {
+                            if (value.slice(0, 2) !== "@@" && value[0] !== "#") {
                                 value = utils.rebaseURL(base, value);
-                                value = value.replace(/(^|[^\\])"/g, '$1\\"');
+                                value = value.replace(/(^|[^\\])"/g, "$1\\\"");
                             }
-                        } else value = attrs[i].escaped;
-                        output.push(" " + attrs[i].name + '="' + value + '"');
+                        }  else
+                            value = attrs[i].escaped;
+                        output.push(" " + attrs[i].name + "=\"" + value + "\"");
                     }
                     output.push(unary ? "/>" : ">");
                 },
 
                 end: function(tag) {
-                    output.push("</" + tag + ">");
+                    output.push("</"+tag+">");
                 },
 
                 chars: function(text) {
@@ -920,7 +803,7 @@ define([
                 },
 
                 comment: function(text) {
-                    output.push("<!--" + text + "-->");
+                    output.push("<!--"+text+"-->");
                 }
             });
             return output.join("");
@@ -955,21 +838,17 @@ define([
                     $this.attr(attrName, value);
                 }
             });
-
             // XXX: IE8 changes the order of attributes in html. The following
             // lines move data-pat-inject-rebase-src to src.
             $page.find("[data-pat-inject-rebase-src]").each(function() {
                 var $el = $(this);
-                $el.attr(
-                    "src",
-                    $el.attr("data-pat-inject-rebase-src")
-                ).removeAttr("data-pat-inject-rebase-src");
+                $el.attr("src", $el.attr("data-pat-inject-rebase-src"))
+                   .removeAttr("data-pat-inject-rebase-src");
             });
 
-            return $page
-                .html()
-                .replace(/src="" data-pat-inject-rebase-/g, "")
-                .trim();
+            return $page.html().replace(
+                    /src="" data-pat-inject-rebase-/g, ""
+                ).trim();
         },
 
         _parseRawHtml: function inject_parseRawHtml(html, url) {
@@ -978,13 +857,10 @@ define([
             // remove script tags and head and replace body by a div
             var title = html.match(/\<title\>(.*)\<\/title\>/);
             var clean_html = html
-                .replace(
-                    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-                    ""
-                )
-                .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
-                .replace(/<body([^>]*?)>/gi, '<div id="__original_body">')
-                .replace(/<\/body([^>]*?)>/gi, "</div>");
+                    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+                    .replace(/<head\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/head>/gi, "")
+                    .replace(/<body([^>]*?)>/gi, "<div id=\"__original_body\">")
+                    .replace(/<\/body([^>]*?)>/gi, "</div>");
             if (title && title.length == 2) {
                 clean_html = title[0] + clean_html;
             }
@@ -995,10 +871,7 @@ define([
             }
             var $html = $("<div/>").html(clean_html);
             if ($html.children().length === 0) {
-                log.warn(
-                    "Parsing html resulted in empty jquery object:",
-                    clean_html
-                );
+                log.warn("Parsing html resulted in empty jquery object:", clean_html);
             }
             return $html;
         },
@@ -1009,14 +882,13 @@ define([
                 // ignore executed autoloads
                 return false;
             }
-            var $scrollable = $el.parents(":scrollable"),
-                checkVisibility;
+            var $scrollable = $el.parents(":scrollable"), checkVisibility;
 
             // function to trigger the autoload and mark as triggered
             function trigger(event) {
                 if ($el.data("pat-inject-autoloaded")) {
                     return false;
-                }
+                };
                 $el.data("pat-inject-autoloaded", true);
                 inject.onTrigger.apply($el[0], []);
                 event && event.preventDefault();
@@ -1040,22 +912,16 @@ define([
                     if (target && target !== 'self' && $(target).length === 0) {
                         return false;
                     }
-                    var reltop =
-                            $el.safeOffset().top -
-                            $scrollable.safeOffset().top -
-                            1000,
+                    var reltop = $el.safeOffset().top - $scrollable.safeOffset().top - 1000,
                         doTrigger = reltop <= $scrollable.innerHeight();
                     if (doTrigger) {
                         // checkVisibility was possibly installed as a scroll
                         // handler and has now served its purpose -> remove
                         $($scrollable[0]).off("scroll", checkVisibility);
-                        $(window).off(
-                            "resize.pat-autoload",
-                            checkVisibility
-                        );
+                        $(window).off("resize.pat-autoload", checkVisibility);
                         return trigger();
                     }
-                        return false;
+                    return false;
                 }, 100);
                 if (checkVisibility()) {
                     return true;
@@ -1095,15 +961,15 @@ define([
                 // https://github.com/w3c/IntersectionObserver/tree/master/polyfill
                 if (IntersectionObserver) {
                     var observer = new IntersectionObserver(checkVisibility);
-                    $el.each(function(idx, el) {
-                        observer.observe(el);
-                    });
-                } else {
-                    $(window).on(
-                        "resize.pat-autoload scroll.pat-autoload",
-                        checkVisibility
+                    $el.each(
+                        function(idx, el) {
+                            observer.observe(el);
+                        }
                     );
+                } else {
+                    $(window).on("resize.pat-autoload scroll.pat-autoload", checkVisibility);
                 }
+
             }
             return false;
         },
@@ -1124,22 +990,15 @@ define([
                     unsub();
                     return;
                 }
-                clearTimeout(timer);
-                timer = setTimeout(onTimeout, timeout);
+                clearTimeout(timer)
+                timer = setTimeout(onTimeout, timeout)
             }, timeout);
 
             function unsub() {
                 ["scroll", "resize"].forEach(function(e) {
                     window.removeEventListener(e, onInteraction);
                 });
-                [
-                    "click",
-                    "keypress",
-                    "keyup",
-                    "mousemove",
-                    "touchstart",
-                    "touchend"
-                ].forEach(function(e) {
+                ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
                     document.removeEventListener(e, onInteraction);
                 });
             }
@@ -1149,37 +1008,19 @@ define([
             ["scroll", "resize"].forEach(function(e) {
                 window.addEventListener(e, onInteraction);
             });
-            [
-                "click",
-                "keypress",
-                "keyup",
-                "mousemove",
-                "touchstart",
-                "touchend"
-            ].forEach(function(e) {
+            ["click", "keypress", "keyup", "mousemove", "touchstart", "touchend"].forEach(function(e) {
                 document.addEventListener(e, onInteraction);
             });
         },
 
         // XXX: simple so far to see what the team thinks of the idea
-        registerTypeHandler: function inject_registerTypeHandler(
-            type,
-            handler
-        ) {
+        registerTypeHandler: function inject_registerTypeHandler(type, handler) {
             inject.handlers[type] = handler;
         },
 
-        callTypeHandler: function inject_callTypeHandler(
-            type,
-            fn,
-            context,
-            params
-        ) {
+        callTypeHandler: function inject_callTypeHandler(type, fn, context, params) {
             type = type || "html";
-            if (
-                inject.handlers[type] &&
-                $.isFunction(inject.handlers[type][fn])
-            ) {
+            if (inject.handlers[type] && $.isFunction(inject.handlers[type][fn])) {
                 return inject.handlers[type][fn].apply(context, params);
             } else {
                 return null;
@@ -1187,11 +1028,9 @@ define([
         },
 
         handlers: {
-            html: {
+            "html": {
                 sources: function(cfgs, data) {
-                    var sources = cfgs.map(function(cfg) {
-                        return cfg.source;
-                    });
+                    var sources = cfgs.map(function(cfg) { return cfg.source; });
                     sources.push("title");
                     return inject._sourcesFromHtml(data, cfgs[0].url, sources);
                 }
@@ -1199,12 +1038,7 @@ define([
         }
     };
 
-    $(document).on("patterns-injected.inject", function onInjected(
-        ev,
-        cfg,
-        trigger,
-        injected
-    ) {
+    $(document).on("patterns-injected.inject", function onInjected(ev, cfg, trigger, injected) {
         /* Listen for the patterns-injected event.
          *
          * Remove the "loading-class" classes from all injection targets and
@@ -1212,21 +1046,16 @@ define([
          */
         cfg.$target.removeClass(cfg.loadingClass);
         // Remove the executing class, add the executed class to the element with pat.inject on it.
-        $(trigger)
-            .removeClass(cfg.executingClass)
-            .addClass(cfg.executedClass);
+        $(trigger).removeClass(cfg.executingClass).addClass(cfg.executedClass);
         if (injected.nodeType !== TEXT_NODE && injected !== COMMENT_NODE) {
-            registry.scan(injected, null, {
-                type: "injection",
-                element: trigger
-            });
+            registry.scan(injected, null, {type: "injection", element: trigger});
             $(injected).trigger("patterns-injected-scanned");
         }
     });
 
-    $(window).on("popstate", function(event) {
+    $(window).on("popstate", function (event) {
         // popstate also triggers on traditional anchors
-        if (!event.originalEvent.state && "replaceState" in history) {
+        if (!event.originalEvent.state && ("replaceState" in history)) {
             try {
                 history.replaceState("anchor", "", document.location.href);
             } catch (e) {
@@ -1250,6 +1079,3 @@ define([
     registry.register(inject);
     return inject;
 });
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
