@@ -1,9 +1,9 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
 define([
-    "underscore",
-    "pat-parser",
-    "pat-registry",
-    "pat-base",
+    import _ from "underscore";,
+    import Parser from "../../core/parser";
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
     "pat-date-picker",
     "moment"
 ], function(_, Parser, registry, Base, DatePicker, moment) {

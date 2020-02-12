@@ -4,14 +4,14 @@
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define("pat-gallery", [
-    "jquery",
-    "pat-registry",
-    "pat-base",
-    "pat-parser",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import Parser from "../../core/parser";
     "photoswipe",
     "photoswipe-ui",
     "text!pat-gallery-template",
-    "underscore"
+    import _ from "underscore";
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser("gallery");
     parser.addArgument("item-selector", "a"); // selector for anchor element, which is added to the gallery.

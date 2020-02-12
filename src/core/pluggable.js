@@ -1,4 +1,4 @@
-define(["jquery", "pat-utils"], function($, utils) {
+define([import $ from "jquery";, import utils from "../../core/utils";], function($, utils) {
     var pluggable = {
         extend: function(attrs) {
             return utils.extend(this, attrs);

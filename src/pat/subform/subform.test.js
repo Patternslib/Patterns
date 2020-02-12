@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-subform"], function(registry, pattern) {
+define([import registry from "../../core/registry"; "pat-subform"], function(registry, pattern) {
     describe("pat-subform", function() {
         beforeEach(function() {
             jasmine.clock().install();

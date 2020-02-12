@@ -1,4 +1,4 @@
-define(["jquery", "pat-depends_parse"], function($, parser) {
+define([import $ from "jquery";, "pat-depends_parse"], function($, parser) {
     function DependsHandler($el, expression) {
         var $context = $el.closest("form");
         if (!$context.length) $context = $(document);

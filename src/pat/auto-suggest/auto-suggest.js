@@ -6,10 +6,10 @@
  * Copyright 2013 Marko Durkovic
  */
 define([
-    "jquery",
-    "pat-logger",
-    "pat-parser",
-    "pat-registry",
+    import $ from "jquery";,
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
+    import registry from "../../core/registry";
     "select2"
 ], function($, logger, Parser, registry) {
     "use strict";

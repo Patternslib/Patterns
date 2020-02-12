@@ -5,12 +5,12 @@
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "jquery",
+    import $ from "jquery";,
     "jquery.browser",
-    "pat-base",
-    "pat-registry",
-    "pat-parser",
-    "underscore"
+    import Base from "../../core/base";
+    import registry from "../../core/registry";
+    import Parser from "../../core/parser";
+    import _ from "underscore";
 ], function($, browser, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);

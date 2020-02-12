@@ -6,13 +6,13 @@
  * Copyright 2014 Syslab.com GmbH
  */
 define([
-    "jquery",
-    "pat-logger",
-    "pat-parser",
+    import $ from "jquery";,
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "pat-store",
-    "pat-utils",
-    "pat-registry",
-    "underscore",
+    import utils from "../../core/utils";
+    import registry from "../../core/registry";
+    import _ from "underscore";,
     "moment-timezone-data",
     "fullcalendar"
 ], function($, logger, Parser, store, utils, registry, _, momentTz) {

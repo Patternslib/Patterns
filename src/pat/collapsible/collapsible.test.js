@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-collapsible"], function(registry, Pattern) {
+define([import registry from "../../core/registry"; "pat-collapsible"], function(registry, Pattern) {
     describe("pat-collapsible", function() {
         beforeEach(function() {
             $("<div/>", { id: "lab" }).appendTo(document.body);

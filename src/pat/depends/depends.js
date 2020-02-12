@@ -5,13 +5,13 @@
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-base",
-    "pat-utils",
-    "pat-logger",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import utils from "../../core/utils";
+    import logger from "../../core/logger";
     "pat-dependshandler",
-    "pat-parser"
+    import Parser from "../../core/parser";
 ], function($, patterns, Base, utils, logging, DependsHandler, Parser) {
     var log = logging.getLogger("depends"),
         parser = new Parser("depends");
