@@ -1,4 +1,4 @@
-define(["jquery", "pat-registry", "pat-parser"], function($, patterns, Parser) {
+define([import $ from "jquery";, import registry from "../../core/registry"; import Parser from "../../core/parser";], function($, patterns, Parser) {
     var parser = new Parser("zoom");
 
     parser.addArgument("min", 0);

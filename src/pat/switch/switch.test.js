@@ -1,4 +1,4 @@
-define(["pat-switch", "jquery"], function(pattern, jQuery) {
+define(["pat-switch", import $ from "jquery";], function(pattern, jQuery) {
     describe("pat-switch", function() {
         beforeEach(function() {
             $("<div/>", { id: "lab" }).appendTo(document.body);

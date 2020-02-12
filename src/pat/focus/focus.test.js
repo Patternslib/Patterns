@@ -1,4 +1,4 @@
-define(["pat-focus", "pat-utils"], function(pattern, utils) {
+define(["pat-focus", import utils from "../../core/utils";], function(pattern, utils) {
     describe("pat-focus", function() {
         beforeEach(function() {
             $("<div/>", {

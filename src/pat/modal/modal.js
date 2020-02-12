@@ -1,9 +1,9 @@
 define([
-    "jquery",
-    "pat-parser",
-    "pat-registry",
-    "pat-base",
-    "pat-utils",
+    import $ from "jquery";,
+    import Parser from "../../core/parser";
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import utils from "../../core/utils";
     "pat-inject"
 ], function($, Parser, registry, Base, utils, inject) {
     var parser = new Parser("modal");

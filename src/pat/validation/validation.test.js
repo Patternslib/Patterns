@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-validation"], function(registry, pattern) {
+define([import registry from "../../core/registry"; "pat-validation"], function(registry, pattern) {
     describe("pat-validation", function() {
         beforeEach(function() {
             $("<div/>", { id: "lab" }).appendTo(document.body);

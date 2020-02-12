@@ -1,9 +1,9 @@
 define([
-    "jquery",
-    "pat-logger",
-    "pat-registry",
-    "pat-utils",
-    "pat-base",
+    import $ from "jquery";,
+    import logger from "../../core/logger";
+    import registry from "../../core/registry";
+    import utils from "../../core/utils";
+    import Base from "../../core/base";
     "pat-inject",
     "showdown"
 ], function($, logger, registry, utils, Base, inject, Showdown) {

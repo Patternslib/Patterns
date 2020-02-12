@@ -1,8 +1,8 @@
 define([
-    "jquery",
-    "pat-logger",
-    "pat-registry",
-    "pat-utils",
+    import $ from "jquery";,
+    import logger from "../../core/logger";
+    import registry from "../../core/registry";
+    import utils from "../../core/utils";
     "pat-modal",
     "pat-input-change-events"
 ], function($, logger, registry, utils, modal, input_change_events) {

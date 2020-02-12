@@ -5,10 +5,10 @@
  * Copyright 2012-2013 Florian Friesdorf
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-logger",
-    "pat-parser",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "jquery.anythingslider"
 ], function($, patterns, logger, Parser) {
     var log = logger.getLogger("pat.carousel-legacy"),

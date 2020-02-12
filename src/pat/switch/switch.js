@@ -6,12 +6,12 @@
  * Copyright 2012 SYSLAB.COM GmbH
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-logger",
-    "pat-parser",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "pat-store",
-    "pat-utils"
+    import utils from "../../core/utils";
 ], function($, patterns, logger, Parser, store, utils) {
     var log = logger.getLogger("pat.switch"),
         parser = new Parser("switch");

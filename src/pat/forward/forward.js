@@ -3,7 +3,7 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define(["jquery", "pat-parser", "pat-registry"], function($, Parser, registry) {
+define([import $ from "jquery";, import Parser from "../../core/parser"; import registry from "../../core/registry";], function($, Parser, registry) {
     var parser = new Parser("forward");
 
     parser.addArgument("selector");

@@ -1,9 +1,9 @@
 define([
-    "jquery",
-    "pat-base",
-    "pat-registry",
-    "pat-parser",
-    "pat-logger",
+    import $ from "jquery";,
+    import Base from "../../core/base";
+    import registry from "../../core/registry";
+    import Parser from "../../core/parser";
+    import logger from "../../core/logger";
     "moment"
 ], function($, Base, registry, Parser, logger, moment) {
     "use strict";

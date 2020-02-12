@@ -6,7 +6,7 @@
  * Copyright 2012 JC Brand
  * Copyright 2012-2013 Florian Friesdorf
  */
-define(["jquery", "pat-registry"], function($, patterns) {
+define([import $ from "jquery";, import registry from "../../core/registry";], function($, patterns) {
     var selectbox = {
         name: "selectbox",
         trigger: ".pat-select",

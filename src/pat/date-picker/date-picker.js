@@ -1,9 +1,9 @@
 /* pat-date-picker  - Polyfill for input type=date */
 define([
-    "underscore",
-    "pat-parser",
-    "pat-registry",
-    "pat-base",
+    import _ from "underscore";,
+    import Parser from "../../core/parser";
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
     "pikaday",
     "moment",
     "modernizr"

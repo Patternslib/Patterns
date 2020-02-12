@@ -1,10 +1,10 @@
 /* Clone pattern */
 define("pat-clone", [
-    "jquery",
-    "pat-parser",
-    "pat-registry",
-    "pat-base",
-    "pat-logger"
+    import $ from "jquery";,
+    import Parser from "../../core/parser";
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import logger from "../../core/logger";
 ], function($, Parser, registry, Base, logger) {
     "use strict";
     var log = logger.getLogger("pat-clone");

@@ -1,9 +1,9 @@
 define([
-    "jquery",
-    "pat-logger",
-    "pat-registry",
-    "pat-base",
-    "pat-utils",
+    import $ from "jquery";,
+    import logger from "../../core/logger";
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import utils from "../../core/utils";
     "google-code-prettify"
 ], function($, logger, registry, Base, utils, prettify) {
     var log = logger.getLogger("pat.markdown");

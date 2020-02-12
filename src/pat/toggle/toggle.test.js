@@ -1,4 +1,4 @@
-define(["pat-toggle", "pat-registry"], function(pattern, registry) {
+define(["pat-toggle", import registry from "../../core/registry";], function(pattern, registry) {
     describe("pat-toggle", function() {
         describe("ClassToggler", function() {
             var ClassToggler = pattern._ClassToggler;
