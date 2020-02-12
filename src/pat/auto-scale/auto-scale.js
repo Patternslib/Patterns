@@ -6,12 +6,11 @@
  */
 define([
     import $ from "jquery";,
-    "jquery.browser",
     import Base from "../../core/base";
     import registry from "../../core/registry";
     import Parser from "../../core/parser";
     import _ from "underscore";
-], function($, browser, Base, registry, Parser, _) {
+], function($, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
     parser.addArgument("method", "scale", ["scale", "zoom"]);
     parser.addArgument("size", "width", [
@@ -40,7 +39,7 @@ define([
         },
 
         _setup: function() {
-            if (browser.mozilla) {
+            if (document.createElement('div').style.zoom === undefined) {
                 // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 this.force_method = "scale";
             }
