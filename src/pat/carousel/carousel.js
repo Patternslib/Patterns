@@ -4,10 +4,10 @@
  * Copyright 2017 Syslab.com GmbH Alexander Pilz
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-logger",
-    "pat-parser",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "slick-carousel"
 ], function($, patterns, logger, Parser) {
     var log = logger.getLogger("pat.carousel"),

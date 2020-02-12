@@ -11,13 +11,13 @@
 import $ from "jquery";
 
 define([
-    "jquery",
+    import $ from "jquery";,
     "pat-inject",
-    "pat-logger",
-    "pat-parser",
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "pat-store",
-    "pat-registry",
-    "pat-base",
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
     "pat-jquery-ext"
 ], function($, inject, logger, Parser, store, registry, Base) {
     var log = logger.getLogger("pat.collapsible"),

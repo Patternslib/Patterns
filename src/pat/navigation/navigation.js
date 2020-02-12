@@ -1,4 +1,4 @@
-define(["jquery", "pat-logger", "pat-registry"], function($, logger, registry) {
+define([import $ from "jquery";, import logger from "../../core/logger"; import registry from "../../core/registry";], function($, logger, registry) {
     var log = logger.getLogger("pat.navigation");
 
     var _ = {

@@ -6,12 +6,12 @@
  * Copyright 2013-2014 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "jquery",
-    "underscore",
-    "pat-logger",
-    "pat-parser",
-    "pat-base",
-    "pat-registry",
+    import $ from "jquery";,
+    import _ from "underscore";,
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
+    import Base from "../../core/base";
+    import registry from "../../core/registry";
     "modernizr"
 ], function($, _, logger, Parser, Base, registry, Modernizr) {
     var parser = new Parser("bumper"),

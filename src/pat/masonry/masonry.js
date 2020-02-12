@@ -6,12 +6,12 @@
 (function(root, factory) {
     if (typeof define === "function" && define.amd) {
         define([
-            "jquery",
-            "pat-logger",
-            "pat-registry",
-            "pat-parser",
-            "pat-base",
-            "pat-utils",
+            import $ from "jquery";,
+            import logger from "../../core/logger";
+            import registry from "../../core/registry";
+            import Parser from "../../core/parser";
+            import Base from "../../core/base";
+            import utils from "../../core/utils";
             "masonry",
             "imagesloaded"
         ], function() {

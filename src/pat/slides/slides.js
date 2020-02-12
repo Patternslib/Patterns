@@ -4,10 +4,10 @@
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "jquery",
-    "pat-registry",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
     "patternslib.slides",
-    "pat-utils",
+    import utils from "../../core/utils";
     "pat-url",
     "pat-remove"
 ], function($, patterns, Presentation, utils, url) {

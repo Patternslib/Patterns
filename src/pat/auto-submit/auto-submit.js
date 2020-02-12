@@ -7,13 +7,13 @@
  * Copyright 2014-2015 Syslab.com GmbH - JC Brand
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-base",
-    "pat-logger",
-    "pat-parser",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "pat-input-change-events",
-    "pat-utils"
+    import utils from "../../core/utils";
 ], function($, registry, Base, logging, Parser, input_change_events, utils) {
     var log = logging.getLogger("autosubmit"),
         parser = new Parser("autosubmit");

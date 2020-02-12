@@ -1,4 +1,4 @@
-define(["pat-registry", "jquery.placeholder"], function(patterns) {
+define([import registry from "../../core/registry"; "jquery.placeholder"], function(patterns) {
     var pattern_spec = {
         name: "placeholder",
         trigger: ":input[placeholder]",

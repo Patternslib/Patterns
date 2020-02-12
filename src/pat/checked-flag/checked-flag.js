@@ -6,7 +6,7 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2014 Syslab.com GmBH
  */
-define(["jquery", "pat-registry", "pat-logger", "pat-utils"], function(
+define([import $ from "jquery";, import registry from "../../core/registry"; import logger from "../../core/logger"; import utils from "../../core/utils";], function(
     $,
     patterns,
     logger,

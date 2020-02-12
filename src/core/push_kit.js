@@ -4,7 +4,7 @@
  * Copyright 2018-2019 Alexander Pilz, Syslab.com GmbH
  */
 
-define(["jquery", "autobahn", "pat-utils"], function($, autobahn, utils) {
+define([import $ from "jquery";, "autobahn", import utils from "../../core/utils";], function($, autobahn, utils) {
     var push_kit = {
         init: function() {
             var pps = $("meta[name=patterns-push-server]").attr("content");

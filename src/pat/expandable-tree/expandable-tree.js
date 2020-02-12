@@ -1,4 +1,4 @@
-define(["jquery", "pat-inject", "pat-parser", "pat-registry"], function(
+define([import $ from "jquery";, "pat-inject", import Parser from "../../core/parser"; import registry from "../../core/registry";], function(
     $,
     inject,
     Parser,

@@ -1,4 +1,4 @@
-define(["pat-inject", "pat-utils"], function(pattern, utils) {
+define(["pat-inject", import utils from "../../core/utils";], function(pattern, utils) {
     describe("pat-inject", function() {
         var deferred;
 

@@ -4,7 +4,7 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2013 Marko Durkovic
  */
-define(["jquery", "pat-logger", "pat-parser", "pat-registry"], function(
+define([import $ from "jquery";, import logger from "../../core/logger"; import Parser from "../../core/parser"; import registry from "../../core/registry";], function(
     $,
     logger,
     Parser,

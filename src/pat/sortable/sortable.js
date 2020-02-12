@@ -1,4 +1,4 @@
-define(["jquery", "pat-base", "pat-parser"], function($, Base, Parser) {
+define([import $ from "jquery";, import Base from "../../core/base"; import Parser from "../../core/parser";], function($, Base, Parser) {
     var parser = new Parser("sortable");
     parser.addArgument("selector", "li");
     parser.addArgument("drag-class", "dragged"); // Class to apply to item that is being dragged.

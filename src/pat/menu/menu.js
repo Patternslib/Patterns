@@ -1,4 +1,4 @@
-define(["jquery", "pat-registry"], function($, patterns) {
+define([import $ from "jquery";, import registry from "../../core/registry";], function($, patterns) {
     var menu = {
         name: "menu",
         trigger: "ul.pat-menu",
