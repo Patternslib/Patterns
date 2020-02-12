@@ -1,22 +1,24 @@
-define([import $ from "jquery";, import utils from "../../core/utils";], function($, utils) {
-    var pluggable = {
-        extend: function(attrs) {
-            return utils.extend(this, attrs);
-        },
+import $ from "jquery";
+import utils from "../../core/utils";
 
-        registerPlugin: function(name, callback) {
-            this.plugins[name] = callback;
-        },
+var pluggable = {
+    extend: function(attrs) {
+        return utils.extend(this, attrs);
+    },
 
-        initializePlugins: function() {
-            var i,
-                keys = _.keys(this.plugins);
-            var args = arguments;
-            for (i = 0; i < keys.length; i++) {
-                $.proxy(this.plugins[keys[i]], this).apply(this, args);
-            }
-            return args;
+    registerPlugin: function(name, callback) {
+        this.plugins[name] = callback;
+    },
+
+    initializePlugins: function() {
+        var i,
+            keys = _.keys(this.plugins);
+        var args = arguments;
+        for (i = 0; i < keys.length; i++) {
+            $.proxy(this.plugins[keys[i]], this).apply(this, args);
         }
-    };
-    return pluggable;
-});
+        return args;
+    }
+};
+
+export default pluggable;

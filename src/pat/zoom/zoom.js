@@ -1,47 +1,46 @@
-define([import $ from "jquery";, import registry from "../../core/registry"; import Parser from "../../core/parser";], function($, patterns, Parser) {
-    var parser = new Parser("zoom");
+import $ from "jquery";
+import registry from "../../core/registry";
+import Parser from "../../core/parser";
 
-    parser.addArgument("min", 0);
-    parser.addArgument("max", 2);
+var parser = new Parser("zoom");
 
-    var zoom = {
-        name: "zoom",
-        trigger: ".pat-zoom",
+parser.addArgument("min", 0);
+parser.addArgument("max", 2);
 
-        init: function($el, opts) {
-            return $el.each(function() {
-                var $block = $(this),
-                    options = parser.parse($block, opts),
-                    $slider,
-                    events;
-                $slider = $("<input/>", {
-                    type: "range",
-                    step: "any",
-                    value: 1,
-                    min: options.min,
-                    max: options.max
-                });
+var zoom = {
+    name: "zoom",
+    trigger: ".pat-zoom",
 
-                if ("oninput" in window) {
-                    events = "change input";
-                } else {
-                    events = "change propertychange";
-                }
-                $slider
-                    .insertBefore($block)
-                    .on(events, null, $block, zoom.onZoom);
+    init: function($el, opts) {
+        return $el.each(function() {
+            var $block = $(this),
+                options = parser.parse($block, opts),
+                $slider,
+                events;
+            $slider = $("<input/>", {
+                type: "range",
+                step: "any",
+                value: 1,
+                min: options.min,
+                max: options.max
             });
-        },
 
-        onZoom: function(event) {
-            var $block = event.data;
-            $block.css("zoom", this.value);
-        }
-    };
+            if ("oninput" in window) {
+                events = "change input";
+            } else {
+                events = "change propertychange";
+            }
+            $slider
+                .insertBefore($block)
+                .on(events, null, $block, zoom.onZoom);
+        });
+    },
 
-    patterns.register(zoom);
-    return zoom;
-});
+    onZoom: function(event) {
+        var $block = event.data;
+        $block.css("zoom", this.value);
+    }
+};
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 sts=4 expandtab
+registry.register(zoom);
+export default zoom;
