@@ -4,12 +4,12 @@
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "jquery",
-    "pat-parser",
-    "pat-base",
-    "pat-logger",
-    "pat-utils",
-    "pat-registry"
+    import $ from "jquery";,
+    import Parser from "../../core/parser";
+    import Base from "../../core/base";
+    import logger from "../../core/logger";
+    import utils from "../../core/utils";
+    import registry from "../../core/registry";
 ], function($, Parser, Base, logging, utils, registry) {
     "use strict";
     var log = logging.getLogger("stacks"),

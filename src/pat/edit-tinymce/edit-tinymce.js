@@ -1,9 +1,9 @@
 define([
-    "jquery",
-    "pat-parser",
-    "pat-logger",
-    "pat-registry",
-    "pat-utils",
+    import $ from "jquery";,
+    import Parser from "../../core/parser";
+    import logger from "../../core/logger";
+    import registry from "../../core/registry";
+    import utils from "../../core/utils";
     "jquery.textchange",
     "tinymce"
 ], function($, Parser, logger, registry, utils) {

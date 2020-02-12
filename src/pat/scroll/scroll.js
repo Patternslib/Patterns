@@ -2,13 +2,13 @@
  * Copyright 2012-2013 Syslab.com GmbH - JC Brand
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-base",
-    "pat-utils",
-    "pat-logger",
-    "pat-parser",
-    "underscore",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import utils from "../../core/utils";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
+    import _ from "underscore";,
     "imagesloaded"
 ], function($, patterns, Base, utils, logging, Parser, _, imagesLoaded) {
     var log = logging.getLogger("scroll"),

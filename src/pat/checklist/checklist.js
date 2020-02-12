@@ -5,11 +5,11 @@
  * Copyright 2012-2013 Florian Friesdorf
  */
 define([
-    "jquery",
+    import $ from "jquery";,
     "pat-jquery-ext",
-    "pat-parser",
-    "pat-registry",
-    "pat-utils"
+    import Parser from "../../core/parser";
+    import registry from "../../core/registry";
+    import utils from "../../core/utils";
 ], function($, dummy, Parser, registry, utils) {
     var parser = new Parser("checklist");
     parser.addArgument("select", ".select-all");

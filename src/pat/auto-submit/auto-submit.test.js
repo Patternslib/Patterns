@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-autosubmit"], function(registry, pattern) {
+define([import registry from "../../core/registry"; "pat-autosubmit"], function(registry, pattern) {
     describe("pat-autosubmit", function() {
         beforeEach(function() {
             $("<div/>", { id: "lab" }).appendTo(document.body);

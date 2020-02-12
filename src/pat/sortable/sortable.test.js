@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-sortable"], function(registry, Sortable) {
+define([import registry from "../../core/registry"; "pat-sortable"], function(registry, Sortable) {
     describe("pat-sortable", function() {
         beforeEach(function() {
             $("div#lab").remove();

@@ -1,4 +1,4 @@
-define(["jquery", "pat-registry"], function($, registry) {
+define([import $ from "jquery";, import registry from "../../core/registry";], function($, registry) {
     var legend = {
         name: "legend",
         trigger: "legend",

@@ -4,10 +4,10 @@
  * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-logger",
-    "pat-parser",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "pat-store"
 ], function($, patterns, logger, Parser, store) {
     "use strict";

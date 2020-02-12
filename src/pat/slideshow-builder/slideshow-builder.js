@@ -3,7 +3,7 @@
  *
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
-define(["jquery", "pat-registry", "pat-logger"], function(
+define([import $ from "jquery";, import registry from "../../core/registry"; import logger from "../../core/logger";], function(
     $,
     patterns,
     logging

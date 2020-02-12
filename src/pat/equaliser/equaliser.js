@@ -4,10 +4,10 @@
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-parser",
-    "pat-utils",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import Parser from "../../core/parser";
+    import utils from "../../core/utils";
     "imagesloaded"
 ], function($, patterns, Parser, utils, imagesLoaded) {
     var parser = new Parser("equaliser");

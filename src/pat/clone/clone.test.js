@@ -1,4 +1,4 @@
-define(["pat-registry", "pat-clone"], function(registry) {
+define([import registry from "../../core/registry"; "pat-clone"], function(registry) {
     describe("pat-clone", function() {
         beforeEach(function() {
             $("div#lab").remove();

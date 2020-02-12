@@ -1,11 +1,11 @@
 /* pat-sticky - A pattern for a sticky polyfill */
 define([
-    "underscore",
-    "pat-parser",
-    "pat-registry",
-    "pat-base",
-    "pat-logger",
-    "pat-utils",
+    import _ from "underscore";,
+    import Parser from "../../core/parser";
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import logger from "../../core/logger";
+    import utils from "../../core/utils";
     "stickyfilljs"
 ], function(_, Parser, registry, Base, logger, utils, Stickyfill) {
     "use strict";

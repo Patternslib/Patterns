@@ -5,11 +5,11 @@
  * Copyright 2014-2015 Syslab.com GmBH  - JC Brand
  */
 define([
-    "jquery",
-    "underscore",
-    "pat-parser",
-    "pat-base",
-    "pat-utils",
+    import $ from "jquery";,
+    import _ from "underscore";,
+    import Parser from "../../core/parser";
+    import Base from "../../core/base";
+    import utils from "../../core/utils";
     "moment",
     "validate"
 ], function($, _, Parser, Base, utils, moment, validate) {
