@@ -1,84 +1,86 @@
 /**
- * @license
- * Patterns @VERSION@ focus - Manage focus class on fieldsets
- *
- * Copyright 2012 Simplon B.V.
- */
-define([import $ from "jquery";, import registry from "../../core/registry"; import utils from "../../core/utils";], function($, patterns, utils) {
-    var focus = {
-        name: "focus",
+* @license
+* Patterns @VERSION@ focus - Manage focus class on fieldsets
+*
+* Copyright 2012 Simplon B.V.
+*/
 
-        onNewContent: function() {
-            if ($(document.activeElement).is(":input"))
-                focus._doFocus(document.activeElement);
-        },
+import $ from "jquery";
+import registry from "../../core/registry";
+import utils from "../../core/utils";
 
-        transform: function($root) {
-            $root.find(":input[placeholder]").each(function(ix, el) {
-                var $relatives = utils.findRelatives(el);
-                if (el.placeholder)
-                    $relatives.attr("data-placeholder", el.placeholder);
-            });
-            $root.find(":input").each(focus.onChange);
-        },
 
-        onFocus: function() {
-            focus._doFocus(this);
-        },
+var focus = {
+    name: "focus",
 
-        _updateHasValue: function(el) {
+    onNewContent: function() {
+        if ($(document.activeElement).is(":input"))
+            focus._doFocus(document.activeElement);
+    },
+
+    transform: function($root) {
+        $root.find(":input[placeholder]").each(function(ix, el) {
             var $relatives = utils.findRelatives(el);
-            var hv = utils.hasValue(el);
+            if (el.placeholder)
+                $relatives.attr("data-placeholder", el.placeholder);
+        });
+        $root.find(":input").each(focus.onChange);
+    },
 
-            if (hv) {
-                $relatives.addClass("has-value").attr("data-value", el.value);
-            } else {
-                $relatives
-                    .filter(function(ix, e) {
-                        const inputs = $(":input", e);
-                        for (var i = 0; i < inputs.length; i++)
-                            if (utils.hasValue(inputs[i])) return false;
-                        return true;
-                    })
-                    .removeClass("has-value")
-                    .attr("data-value", null);
-            }
-        },
+    onFocus: function() {
+        focus._doFocus(this);
+    },
 
-        _doFocus: function(el) {
-            var $relatives = utils.findRelatives(el);
-            $relatives.addClass("focus");
-            this._updateHasValue($relatives);
-        },
+    _updateHasValue: function(el) {
+        var $relatives = utils.findRelatives(el);
+        var hv = utils.hasValue(el);
 
-        onBlur: function() {
-            var $relatives = utils.findRelatives(this);
-
-            $(document).one("mouseup keyup", function() {
-                $relatives
-                    .filter(":not(:has(:input:focus))")
-                    .removeClass("focus");
-            });
-        },
-
-        onChange: function() {
-            focus._updateHasValue(this);
+        if (hv) {
+            $relatives.addClass("has-value").attr("data-value", el.value);
+        } else {
+            $relatives
+                .filter(function(ix, e) {
+                    const inputs = $(":input", e);
+                    for (var i = 0; i < inputs.length; i++)
+                        if (utils.hasValue(inputs[i])) return false;
+                    return true;
+                })
+                .removeClass("has-value")
+                .attr("data-value", null);
         }
-    };
+    },
 
-    $(document)
-        .on("focus.patterns", ":input", focus.onFocus)
-        .on("blur.patterns", ":input", focus.onBlur)
-        .on("newContent", focus.onNewContent)
-        .on("change.pat-focus keyup.pat-focus", ":input", focus.onChange)
-        .on(
-            "input.pat-focus",
-            ":input[type=range]",
-            utils.debounce(focus.onChange, 50)
-        );
-    patterns.register(focus);
-    return focus;
-});
+    _doFocus: function(el) {
+        var $relatives = utils.findRelatives(el);
+        $relatives.addClass("focus");
+        this._updateHasValue($relatives);
+    },
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
+    onBlur: function() {
+        var $relatives = utils.findRelatives(this);
+
+        $(document).one("mouseup keyup", function() {
+            $relatives
+                .filter(":not(:has(:input:focus))")
+                .removeClass("focus");
+        });
+    },
+
+    onChange: function() {
+        focus._updateHasValue(this);
+    }
+};
+
+$(document)
+    .on("focus.patterns", ":input", focus.onFocus)
+    .on("blur.patterns", ":input", focus.onBlur)
+    .on("newContent", focus.onNewContent)
+    .on("change.pat-focus keyup.pat-focus", ":input", focus.onChange)
+    .on(
+        "input.pat-focus",
+        ":input[type=range]",
+        utils.debounce(focus.onChange, 50)
+    );
+
+registry.register(focus);
+export default focus;
