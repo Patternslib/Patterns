@@ -1,12 +1,12 @@
 import $ from "jquery";
 import _ from "underscore";
 
-export default (function($, _, browser) {
+export default (function($, _) {
     $.fn.safeClone = function() {
         var $clone = this.clone();
         // IE BUG : Placeholder text becomes actual value after deep clone on textarea
         // https://connect.microsoft.com/IE/feedback/details/781612/placeholder-text-becomes-actual-value-after-deep-clone-on-textarea
-        if (browser.msie !== undefined && true) {
+        if (window.document.documentMode) {
             $clone.findInclusive(":input[placeholder]").each(function(i, item) {
                 var $item = $(item);
                 if ($item.attr("placeholder") === $item.val()) {
@@ -548,4 +548,4 @@ export default (function($, _, browser) {
         getCSSValue: getCSSValue
     };
     return utils;
-})($, _, $.browser);
+})($, _);

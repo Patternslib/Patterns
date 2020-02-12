@@ -109,6 +109,5 @@ jquery(() => pat_registry.init());
 
 //     // Since we are in a non-AMD env, register a few useful utilites
 //     var window = require("window");
-//     require("imports-loader?this=>window!jquery.browser");
 
 export default { pat_fullscreen };
