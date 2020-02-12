@@ -1,70 +1,70 @@
-define([import $ from "jquery";, import registry from "../../core/registry";], function($, patterns) {
-    var menu = {
-        name: "menu",
-        trigger: "ul.pat-menu",
+import $ from "jquery";
+import registry from "../../core/registry";
 
-        init: function($root) {
-            return $root.each(function() {
-                var $menu = $(this),
-                    timer,
-                    closeMenu,
-                    openMenu,
-                    mouseOverHandler,
-                    mouseOutHandler;
+var menu = {
+    name: "menu",
+    trigger: "ul.pat-menu",
 
-                openMenu = function($li) {
-                    if (timer) {
-                        clearTimeout(timer);
-                        timer = null;
-                    }
+    init: function($root) {
+        return $root.each(function() {
+            var $menu = $(this),
+                timer,
+                closeMenu,
+                openMenu,
+                mouseOverHandler,
+                mouseOutHandler;
 
-                    if (!$li.hasClass("open")) {
-                        $li.siblings("li.open").each(function() {
-                            closeMenu($menu);
-                        });
-                        $li.addClass("open").removeClass("closed");
-                    }
-                };
+            openMenu = function($li) {
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
 
-                closeMenu = function($li) {
-                    $li.find("li.open")
-                        .addBack()
-                        .removeClass("open")
-                        .addClass("closed");
-                };
+                if (!$li.hasClass("open")) {
+                    $li.siblings("li.open").each(function() {
+                        closeMenu($menu);
+                    });
+                    $li.addClass("open").removeClass("closed");
+                }
+            };
 
-                mouseOverHandler = function() {
-                    var $li = $(this);
-                    openMenu($li);
-                };
+            closeMenu = function($li) {
+                $li.find("li.open")
+                    .addBack()
+                    .removeClass("open")
+                    .addClass("closed");
+            };
 
-                mouseOutHandler = function() {
-                    var $li = $(this);
+            mouseOverHandler = function() {
+                var $li = $(this);
+                openMenu($li);
+            };
 
-                    if (timer) {
-                        clearTimeout(timer);
-                        timer = null;
-                    }
+            mouseOutHandler = function() {
+                var $li = $(this);
 
-                    timer = setTimeout(function() {
-                        closeMenu($li);
-                    }, 1000);
-                };
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
 
-                $root
-                    .find("li")
-                    .addClass("closed")
-                    .filter(":has(ul)")
-                    .addClass("hasChildren")
-                    .end()
-                    .on("mouseover.pat-menu", mouseOverHandler)
-                    .on("mouseout.pat-menu", mouseOutHandler);
-            });
-        }
-    };
+                timer = setTimeout(function() {
+                    closeMenu($li);
+                }, 1000);
+            };
 
-    patterns.register(menu);
-});
+            $root
+                .find("li")
+                .addClass("closed")
+                .filter(":has(ul)")
+                .addClass("hasChildren")
+                .end()
+                .on("mouseover.pat-menu", mouseOverHandler)
+                .on("mouseout.pat-menu", mouseOutHandler);
+        });
+    }
+};
 
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
+registry.register(menu);
+
+export default menu;

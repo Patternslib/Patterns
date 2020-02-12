@@ -1,66 +1,66 @@
 /**
- * Patterns selectbox - Expose select option
- * for (un)checking.
- *
- * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
- * Copyright 2012 JC Brand
- * Copyright 2012-2013 Florian Friesdorf
- */
-define([import $ from "jquery";, import registry from "../../core/registry";], function($, patterns) {
-    var selectbox = {
-        name: "selectbox",
-        trigger: ".pat-select",
+* Patterns selectbox - Expose select option
+* for (un)checking.
+*
+* Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
+* Copyright 2012 JC Brand
+* Copyright 2012-2013 Florian Friesdorf
+*/
 
-        init: function($el) {
-            var $forms = $();
-            $el.each(function() {
-                if (this.form !== null) {
-                    var $form = $(this.form);
-                    if ($form.data("pat-selectbox.reset")) return;
-                    $form.data("pat-selectbox.reset", true);
-                    $forms = $forms.add(this.form);
-                }
-            });
+import $ from "jquery";
+import registry from "../../core/registry";
 
-            $el.find("select:not([multiple])")
-                .each(function() {
-                    var $el = $(this);
-                    // create parent span if not direct child of a label
-                    if ($el.parent("label").length === 0) $el.wrap("<span />");
-                    selectbox.onChangeSelect.call(this);
-                })
-                .on("change.pat-selectbox", selectbox.onChangeSelect);
+var selectbox = {
+    name: "selectbox",
+    trigger: ".pat-select",
 
-            $forms.on("reset.pat-selectbox", selectbox.onFormReset);
-        },
+    init: function($el) {
+        var $forms = $();
+        $el.each(function() {
+            if (this.form !== null) {
+                var $form = $(this.form);
+                if ($form.data("pat-selectbox.reset")) return;
+                $form.data("pat-selectbox.reset", true);
+                $forms = $forms.add(this.form);
+            }
+        });
 
-        destroy: function($el) {
-            return $el.off(".pat-selectbox");
-        },
+        $el.find("select:not([multiple])")
+            .each(function() {
+                var $el = $(this);
+                // create parent span if not direct child of a label
+                if ($el.parent("label").length === 0) $el.wrap("<span />");
+                selectbox.onChangeSelect.call(this);
+            })
+            .on("change.pat-selectbox", selectbox.onChangeSelect);
 
-        onFormReset: function() {
-            // This event is triggered before the form is reset, and we need
-            // the post-reset state to update our pattern. Use a small delay
-            // to fix this.
-            var form = this;
-            setTimeout(function() {
-                $("select:not([multiple])", form).each(
-                    selectbox.onChangeSelect
-                );
-            }, 50);
-        },
+        $forms.on("reset.pat-selectbox", selectbox.onFormReset);
+    },
 
-        onChangeSelect: function() {
-            var $select = $(this);
-            $select
-                .parent()
-                .attr("data-option", $select.find("option:selected").text());
-            $select.parent().attr("data-option-value", $select.val());
-        }
-    };
+    destroy: function($el) {
+        return $el.off(".pat-selectbox");
+    },
 
-    patterns.register(selectbox);
-    return selectbox;
-});
+    onFormReset: function() {
+        // This event is triggered before the form is reset, and we need
+        // the post-reset state to update our pattern. Use a small delay
+        // to fix this.
+        var form = this;
+        setTimeout(function() {
+            $("select:not([multiple])", form).each(
+                selectbox.onChangeSelect
+            );
+        }, 50);
+    },
 
-// vim: sw=4 expandtab
+    onChangeSelect: function() {
+        var $select = $(this);
+        $select
+            .parent()
+            .attr("data-option", $select.find("option:selected").text());
+        $select.parent().attr("data-option-value", $select.val());
+    }
+};
+
+registry.register(selectbox);
+export default selectbox;
