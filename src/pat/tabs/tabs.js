@@ -2,13 +2,13 @@
  * Copyright 2015 Syslab.com GmbH - witekdev
  */
 define([
-    "jquery",
-    "underscore",
-    "pat-registry",
-    "pat-base",
-    "pat-utils",
-    "pat-logger",
-    "pat-parser"
+    import $ from "jquery";,
+    import _ from "underscore";,
+    import registry from "../../core/registry";
+    import Base from "../../core/base";
+    import utils from "../../core/utils";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
 ], function($, _, patterns, Base, utils, logging, Parser) {
     var log = logging.getLogger("tabs"),
         parser = new Parser("tabs");

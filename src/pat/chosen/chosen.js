@@ -4,7 +4,7 @@
  * Copyright 2012-2013 Florian Friesdorf
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
-define(["pat-registry", "jquery.chosen"], function(registry) {
+define([import registry from "../../core/registry"; "jquery.chosen"], function(registry) {
     var _ = {
         name: "chosen",
         trigger: "select.pat-chosen",

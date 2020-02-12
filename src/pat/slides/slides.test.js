@@ -85,7 +85,7 @@ define(["pat-slides"], function(pattern) {
                     $("<div/>", { class: "slide", id: "slide" + i }).appendTo(
                         $show
                     );
-                var utils = require("pat-utils");
+                var utils = require(import utils from "../../core/utils";);
                 spyOn(utils, "debounce").and.callFake(function(func) {
                     return func;
                 });

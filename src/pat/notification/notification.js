@@ -4,10 +4,10 @@
  * Copyright 2013 Marko Durkovic
  */
 define([
-    "jquery",
-    "pat-registry",
-    "pat-logger",
-    "pat-parser",
+    import $ from "jquery";,
+    import registry from "../../core/registry";
+    import logger from "../../core/logger";
+    import Parser from "../../core/parser";
     "pat-inject"
 ], function($, patterns, logger, Parser, inject) {
     var log = logger.getLogger("notification"),
