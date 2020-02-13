@@ -13,7 +13,6 @@ JSHINTEXCEPTIONS = $(GENERATED) \
 		   src/lib/dependshandler.js \
 		   src/lib/htmlparser.js \
 		   src/pat/skeleton.js \
-		   src/modernizr.js \
 		   $(TESTSOURCES)
 CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
