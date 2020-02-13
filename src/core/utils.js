@@ -531,6 +531,9 @@ function checkInputSupport(type, invalid_value) {
     return support;
 }
 
+const timeout = ms => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 var utils = {
     // pattern pimping - own module?
@@ -551,7 +554,8 @@ var utils = {
     hasValue: hasValue,
     parseTime: parseTime,
     findRelatives: findRelatives,
-    checkInputSupport: checkInputSupport
+    checkInputSupport: checkInputSupport,
+    timeout: timeout
 };
 
 export default utils;
