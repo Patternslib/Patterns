@@ -12,7 +12,7 @@ import logger from "../../core/logger";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
 import registry from "../../core/registry";
-import Modernizr from "modernizr";
+import utils from "../../core/utils";
 
 var parser = new Parser("bumper"),
     log = logger.getLogger("bumper");
@@ -40,7 +40,7 @@ export default Base.extend({
         this.$container = this._findScrollContainer();
         var container = this.$container[0];
 
-        if (Modernizr.csspositionsticky) {
+        if (utils.checkCSSFeature('position', 'sticky')) {
             this.$el.addClass("sticky-supported");
         }
         this.$el[0].style.position = "relative";

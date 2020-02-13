@@ -2,14 +2,14 @@
 @import url("/style/fontello/css/fontello.css");
 @import url("/style/patterns.css");
 
-@font-face { 
-	font-family: "Patticons"; 
+@font-face {
+	font-family: "Patticons";
 	src: url('fonts/patticons/patticons.woff') format('woff');
   }
-  
+
 /*@font-face {
     font-family: 'Patticons';
-    src: url('fonts/patticons/patticons.svg') format('svg'); 
+    src: url('fonts/patticons/patticons.svg') format('svg');
 }*/
 
 body {
@@ -418,10 +418,6 @@ body.component-index #component-index > div {
 	background-position: 0 -100px;
 }
 
-.component-index a.modernizr:before {
-	background-position: -100px -100px;
-}
-
 .component-index a.ajax:before {
 	background-position: -300px 0;
 }
@@ -435,7 +431,7 @@ body.component-index #component-index > div {
 }
 
 .component-index a.auto-load:before {
-	
+
 }
 
 .component-index a.auto-submit:before {
@@ -468,7 +464,7 @@ body.component-index #component-index > div {
 }
 
 .component-index a.auto-scale:before {
-	
+
 }
 
 .component-index a.collapsible:before {
@@ -566,9 +562,9 @@ body.component-index #component-index > div {
 }
 
 .component-index a.tooltip:before {
-	
+
 	background-position: -450px -50px;
-	
+
 }
 
 .component-index a.zoom:before {
@@ -687,25 +683,25 @@ body.component-index #component-index > div {
 #download:target #global-navigation a.download,
 #documentation:target #global-navigation a.documentation {
 	background-color: #2F383F;
-	cursor: default;	
+	cursor: default;
 }
 
 #download:target #global-navigation a.download:before,
 #documentation:target #global-navigation a.documentation:before {
 	content: " ";
-	
-	width: 0; 
-	height: 0; 
+
+	width: 0;
+	height: 0;
 	border-left: 10px solid transparent;
 	border-right: 10px solid transparent;
-	
+
 	border-top: 10px solid #2c373e;
 	display: block;
 	position: absolute;
 	left: 50%;
 	top: 40px;
 	margin-left: -10px;
-	
+
 }
 
 @media only screen and (max-width: 767px) {
@@ -898,7 +894,7 @@ section h1 {
 	margin: 0 -8px;
 }
 
-h2, 
+h2,
 section section h1 {
 	font-size: 1.2em;
 	font-weight: bold;
@@ -911,14 +907,14 @@ section section h1 {
 	margin-bottom: 1em;
 }
 
-h3, 
+h3,
 section section section h1 {
 	font-size: 1.2em;
 	line-height: 1.4;
 	font-weight: bold;
 }
 
-h4, 
+h4,
 section section section section h1 {
 	font-size: 1.3em;
 	line-height: 1.6;
@@ -926,8 +922,8 @@ section section section section h1 {
 	font-style: normal;
 }
 
-h5, 
-section section section section h1 {	
+h5,
+section section section section h1 {
 	font-size: 1.2em;
 	line-height: 1.6;
 }
@@ -1217,7 +1213,7 @@ div.field {
 }
 
 .horizontal fieldset.group:not(.checklist) label {
-	
+
 }
 
 .horizontal fieldset.group .legend {
