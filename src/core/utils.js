@@ -542,6 +542,10 @@ function checkInputSupport(type, invalid_value) {
     return support;
 }
 
+const timeout = ms => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -562,7 +566,8 @@ var utils = {
     parseTime: parseTime,
     findRelatives: findRelatives,
     getCSSValue: getCSSValue,
-    checkInputSupport: checkInputSupport
+    checkInputSupport: checkInputSupport,
+    timeout: timeout
 };
 
 export default utils;
