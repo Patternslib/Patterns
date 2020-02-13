@@ -24,10 +24,11 @@ describe("pat-slides", function() {
 
     describe("_hook", function() {
         it("Return jQuery object", function() {
-            var jq = jasmine.createSpyObj("jQuery", ["off", "on"]);
-            jq.off.and.returnValue(jq);
-            jq.on.and.returnValue(jq);
-            expect(pattern._hook(jq)).toBe(jq);
+            const mock = {
+                on: function () { return this; },
+                off: function () { return this; },
+            };
+            expect(pattern._hook(mock)).toBe(mock);
         });
     });
 

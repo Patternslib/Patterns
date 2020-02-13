@@ -102,12 +102,15 @@ describe("pat-stacks", function() {
             var pattern = new Stacks($(".pat-stacks"));
             pattern.document = { URL: document.URL };
             pattern.document.URL = "http://www.example.com";
-            var e = jasmine.createSpyObj("e", ["preventDefault"]);
-            e.currentTarget = { href: "http://www.example.com#s1" };
-            var spy_update = spyOn(pattern, "_updateAnchors");
-            var spy_switch = spyOn(pattern, "_switch");
-            pattern._onClick(e);
-            expect(e.preventDefault).toHaveBeenCalled();
+            const e_mock = {
+                preventDefault: () => {},
+                currentTarget: { href: "http://www.example.com#s1" }
+            };
+            jest.spyOn(e_mock, 'preventDefault');
+            const spy_update = jest.spyOn(pattern, "_updateAnchors");
+            const spy_switch = jest.spyOn(pattern, "_switch");
+            pattern._onClick(e_mock);
+            expect(e_mock.preventDefault).toHaveBeenCalled();
             expect(spy_update).toHaveBeenCalled();
             expect(spy_switch).toHaveBeenCalled();
         });
