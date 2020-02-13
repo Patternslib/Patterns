@@ -542,6 +542,18 @@ function checkInputSupport(type, invalid_value) {
     return support;
 }
 
+const checkCSSFeature = (attribute, value, tag="div") => {
+    /* Check for browser support of specific CSS feature.
+    */
+    tag = document.createElement(tag);
+    let supported = tag.style[attribute] !== undefined;
+    if (supported && value !== undefined) {
+        tag.style[attribute] = value;
+        supported = tag.style[attribute] === value;
+    }
+    return supported;
+}
+
 const timeout = ms => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -567,6 +579,7 @@ var utils = {
     findRelatives: findRelatives,
     getCSSValue: getCSSValue,
     checkInputSupport: checkInputSupport,
+    checkCSSFeature: checkCSSFeature,
     timeout: timeout
 };
 
