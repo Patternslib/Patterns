@@ -513,6 +513,25 @@ function findRelatives(el) {
     return $relatives;
 }
 
+
+function checkInputSupport(type, invalid_value) {
+    /* Check input type support.
+    *  See: https://stackoverflow.com/a/10199306/1337474
+    */
+    let support = false;
+    const input = document.createElement("input");
+    input.setAttribute("type", type);
+    support = input.type == type;
+
+    if (invalid_value !== undefined) {
+        // Check for input type UI support
+        input.setAttribute('value', value);
+        support = input.value !== invalid_value;
+    }
+    return support;
+}
+
+
 var utils = {
     // pattern pimping - own module?
     jqueryPlugin: jqueryPlugin,
@@ -531,7 +550,8 @@ var utils = {
     isElementInViewport: isElementInViewport,
     hasValue: hasValue,
     parseTime: parseTime,
-    findRelatives: findRelatives
+    findRelatives: findRelatives,
+    checkInputSupport: checkInputSupport
 };
 
 export default utils;

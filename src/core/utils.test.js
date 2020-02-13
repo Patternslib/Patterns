@@ -177,6 +177,18 @@ describe("basic tests", function() {
             expect(utils.findLabel(input)).toBeNull();
         });
     });
+
+    describe("checkInputSupport", function() {
+        it("Supports basic input types", function() {
+            expect(utils.checkInputSupport('text')).toBe(true);
+        });
+
+        // Jest/JSDOM accepts any value for type.
+        it.skip("Supports doesnt support non-existent input types", function() {
+            expect(utils.checkInputSupport('invalid input type')).toBe(false);
+        });
+    });
+
 });
 
 describe("removeWildcardClass", function() {
