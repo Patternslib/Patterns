@@ -1,7 +1,6 @@
 import $ from "jquery";
 import Bumper from "./bumper";
-import Modernizr from "modernizr";
-
+import utils from "../../core/utils";
 
 describe("pat-bumper", function() {
     beforeEach(function() {
@@ -83,7 +82,7 @@ describe("pat-bumper", function() {
         var pattern = new Bumper($el);
         pattern.init();
         pattern._markBumped(true);
-        if (Modernizr.csspositionsticky) {
+        if (utils.checkCSSFeature('position', 'sticky')) {
             expect(pattern.$el.attr("class")).toBe(
                 "pat-bumper sticky-supported bumped"
             );
@@ -106,7 +105,7 @@ describe("pat-bumper", function() {
         var pattern = new Bumper($el);
         pattern.init();
         pattern._markBumped(false);
-        if (Modernizr.csspositionsticky) {
+        if (utils.checkCSSFeature('position', 'sticky')) {
             expect(pattern.$el.attr("class")).toBe(
                 "pat-bumper sticky-supported plain"
             );
