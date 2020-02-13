@@ -1,5 +1,6 @@
 import pattern from "./checked-flag";
 import $ from "jquery";
+import utils from "../../core/utils";
 
 describe("pat-checkedflag", function() {
     beforeEach(function() {
@@ -362,7 +363,7 @@ describe("pat-checkedflag", function() {
         });
     });
 
-    it("Handle form reset", function() {
+    it("Handle form reset", async function() {
         $("#lab").html(
             [
                 "<form>",
@@ -391,14 +392,12 @@ describe("pat-checkedflag", function() {
         $("#bar")
             .prop("checked", "checked")
             .change();
-        jasmine.clock().install();
         $input[0].form.reset();
-        jasmine.clock().tick(100);
+        await utils.timeout(100);
         expect($("label:has(#foo)").hasClass("checked")).toBe(true);
         expect($("label:has(#bar)").hasClass("unchecked")).toBe(true);
         expect($("#lab fieldset").hasClass("checked")).toBe(true);
         expect($("label:has(select)").attr("data-option")).toBe("one");
-        jasmine.clock().uninstall();
     });
 
     describe("setting value", function() {
