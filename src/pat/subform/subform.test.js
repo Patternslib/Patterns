@@ -2,15 +2,8 @@ import registry from "../../core/registry";
 import $ from "jquery";
 import pattern from "./subform";
 
-describe("pat-subform", function() {
-    beforeEach(function() {
-        jasmine.clock().install();
-    });
 
-    afterEach(function() {
-        jasmine.clock().uninstall();
-    });
-
+describe("subform base tests", function() {
     describe("Triggering of the pattern", function() {
         it("happens when a fieldset has the pat-subform class", function() {
             var $form = $(
@@ -45,7 +38,6 @@ describe("pat-subform", function() {
                 type: "keydown",
                 keyCode: 13
             });
-            jasmine.clock().tick(2000);
             expect(spy_keyboard_handler).toHaveBeenCalled();
             expect(spy_submit).not.toHaveBeenCalled();
         });
@@ -67,7 +59,6 @@ describe("pat-subform", function() {
                 type: "keydown",
                 keyCode: 13
             });
-            jasmine.clock().tick(2000);
             expect(spy_keyboard_handler).toHaveBeenCalled();
             expect(spy_submit).toHaveBeenCalled();
         });
@@ -91,7 +82,6 @@ describe("pat-subform", function() {
                 type: "keydown",
                 keyCode: 13
             });
-            jasmine.clock().tick(2000);
             expect(spy_keyboard_handler).toHaveBeenCalled();
             expect(spy_submit).toHaveBeenCalled();
             expect(spy_formsubmit).not.toHaveBeenCalled();
