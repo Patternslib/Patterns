@@ -15,7 +15,9 @@ import { parser as Parser } from "patternslib-core";
 import { store } from "patternslib-core";
 import { registry } from "patternslib-core";
 import { base as Base } from "patternslib-core";
-//import { jquery_ext } from "patternslib-core";
+import { jquery_ext } from "patternslib-core";
+
+jquery_ext();
 
 var log = logging.getLogger("pat.collapsible"),
     parser = new Parser("collapsible");

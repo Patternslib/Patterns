@@ -7,7 +7,9 @@ import { registry } from "patternslib-core";
 import { utils } from "patternslib-core";
 import { htmlparser } from "patternslib-core";
 import "intersection-observer";
-//import { jquery_ext } from "patternslib-core"; // for :scrollable for autoLoading-visible
+import { jquery_ext } from "patternslib-core"; // for :scrollable for autoLoading-visible
+
+jquery_ext();
 
 var log = logging.getLogger("pat.inject"),
     parser = new Parser("inject"),

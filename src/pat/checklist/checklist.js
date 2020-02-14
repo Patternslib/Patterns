@@ -8,8 +8,9 @@ import $ from "jquery";
 import { parser as Parser } from "patternslib-core";
 import { registry } from "patternslib-core";
 import { utils } from "patternslib-core";
-//import { jquery_ext } from "patternslib-core";
+import { jquery_ext } from "patternslib-core";
 
+jquery_ext();
 
 var parser = new Parser("checklist");
 parser.addArgument("select", ".select-all");

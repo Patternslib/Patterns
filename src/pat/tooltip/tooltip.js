@@ -12,8 +12,9 @@ import { registry } from "patternslib-core";
 import { utils } from "patternslib-core";
 import { parser as Parser } from "patternslib-core";
 import inject from "../inject/inject";
-//import { remove } from "remove";
+import { jquery_remove } from "remove";
 
+jquery_remove();
 
 var log = logging.getLogger("tooltip"),
     parser = new Parser("tooltip");

@@ -8,7 +8,9 @@ import { registry } from "patternslib-core";
 import Presentation from "slides";
 import { utils } from "patternslib-core";
 import { url } from "patternslib-core";
-//import { remove } from "remove";
+import { jquery_remove } from "remove";
+
+jquery_remove();
 
 var slides = {
     name: "slides",
