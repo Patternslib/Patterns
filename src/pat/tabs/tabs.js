@@ -3,10 +3,10 @@
 */
 import $ from "jquery";
 import _ from "underscore";
-import Base from "../../core/base";
-import utils from "../../core/utils";
-import logging from "../../core/logger";
-import Parser from "../../core/parser";
+import { base as Base } from "patternslib-core";
+import { utils } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 var log = logging.getLogger("tabs"),
     parser = new Parser("tabs");
 

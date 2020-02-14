@@ -8,12 +8,11 @@
  */
 
 import $ from "jquery";
-import registry from "../../core/registry";
-import Base from "../../core/base";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
-import input_change_events from "../../lib/input-change-events";
-import utils from "../../core/utils";
+import { base as Base } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
+import { input_change_events } from "patternslib-core";
+import { utils } from "patternslib-core";
 
 
 var log = logging.getLogger("autosubmit"),

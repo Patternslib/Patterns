@@ -1,5 +1,5 @@
 import $ from "jquery";
-import registry from "../../core/registry";
+import { registry } from "patternslib-core";
 
 var menu = {
     name: "menu",

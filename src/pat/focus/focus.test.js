@@ -1,6 +1,6 @@
 import $ from "jquery";
 import "./focus";
-import utils from "../../core/utils";
+import { utils } from "patternslib-core";
 
 describe("pat-focus", function() {
     beforeEach(function() {

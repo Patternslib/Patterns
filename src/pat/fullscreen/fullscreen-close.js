@@ -1,4 +1,4 @@
-import Base from "../../core/base";
+import { base as Base } from "patternslib-core";
 import screenful from "screenfull";
 
 export default (function(Base, screenful) {

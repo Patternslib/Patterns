@@ -1,8 +1,8 @@
 import $ from "jquery";
-import logger from "../../core/logger";
-import registry from "../../core/registry";
+import { logging } from "patternslib-core";
+import { registry } from "patternslib-core";
 
-var log = logger.getLogger("pat.navigation");
+var log = logging.getLogger("pat.navigation");
 
 var _ = {
     name: "navigation",

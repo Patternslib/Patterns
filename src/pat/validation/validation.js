@@ -6,9 +6,9 @@
 */
 import $ from "jquery";
 import _ from "underscore";
-import Parser from "../../core/parser";
-import Base from "../../core/base";
-import utils from "../../core/utils";
+import { parser as Parser } from "patternslib-core";
+import { base as Base } from "patternslib-core";
+import { utils } from "patternslib-core";
 import moment from "moment";
 import validate from "validate.js";
 

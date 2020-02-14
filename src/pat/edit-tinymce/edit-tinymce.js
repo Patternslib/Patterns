@@ -1,12 +1,12 @@
 import $ from "jquery";
-import Parser from "../../core/parser";
-import logger from "../../core/logger";
-import registry from "../../core/registry";
-import utils from "../../core/utils";
+import { parser as Parser } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { utils } from "patternslib-core";
 import "jquery.textchange";
 import "tinymce";
 
-var log = logger.getLogger("pat.editTinyMCE"),
+var log = logging.getLogger("pat.editTinyMCE"),
     parser = new Parser("edit-tinymce");
 
 parser.addArgument("tinymce-baseurl");

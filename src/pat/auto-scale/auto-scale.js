@@ -6,11 +6,11 @@
  */
 
 import $ from "jquery";
-import Base from "../../core/base";
-import registry from "../../core/registry";
-import Parser from "../../core/parser";
+import { base as Base } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 import _ from "underscore";
-import utils from "../../core/utils";
+import { utils } from "patternslib-core";
 
 export default function($, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");

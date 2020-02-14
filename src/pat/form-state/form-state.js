@@ -1,11 +1,10 @@
-import $ from "jquery";,
-import logger from "../../core/logger";
-import registry from "../../core/registry";
-import utils from "../../core/utils";
+import $ from "jquery";
+import { logging } from "patternslib-core";
+import { registry } from "patternslib-core";
 import modal from "../modal/modal";
-import input_change_events from "../../lib/input-change-events";
+import { input_change_events } from "patternslib-core";
 
-var log = logger.getLogger("form-state");
+var log = logging.getLogger("form-state");
 
 var _ = {
     name: "form-state",

@@ -4,15 +4,14 @@
 */
 
 import $ from "jquery";
-import logger from "../../core/logger";
-import registry from "../../core/registry";
-import Parser from "../../core/parser";
-import Base from "../../core/base";
-import utils from "../../core/utils";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
+import { base as Base } from "patternslib-core";
+import { utils } from "patternslib-core";
 import Masonry from "masonry-layout";
 import imagesLoaded from "imagesloaded";
 
-var log = logger.getLogger("pat.masonry");
+var log = logging.getLogger("pat.masonry");
 var parser = new Parser("masonry");
 
 // parser.addArgument("stagger", "");

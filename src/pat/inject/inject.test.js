@@ -1,6 +1,6 @@
 import pattern from "./inject";
 import $ from "jquery";
-import utils from "../../core/utils";
+import { utils } from "patternslib-core";
 
 describe("pat-inject", function() {
     var deferred;

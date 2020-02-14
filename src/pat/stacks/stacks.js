@@ -4,11 +4,11 @@
 * Copyright 2013 Simplon B.V. - Wichert Akkerman
 */
 import $ from "jquery";
-import Parser from "../../core/parser";
-import Base from "../../core/base";
-import logging from "../../core/logger";
-import utils from "../../core/utils";
-import registry from "../../core/registry";
+import { parser as Parser } from "patternslib-core";
+import { base as Base } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { utils } from "patternslib-core";
+import { registry } from "patternslib-core";
 
 var log = logging.getLogger("stacks"),
     parser = new Parser("stacks");

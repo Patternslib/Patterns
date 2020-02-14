@@ -1,7 +1,7 @@
 import pattern from "./tooltip";
 import $ from "jquery";
 import inject from "../inject/inject";
-import utils from "../../core/utils";
+import { utils } from "patternslib-core";
 
 
 const tooltip_utils = {

@@ -1,8 +1,8 @@
 import $ from "jquery";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
-import Base from "../../core/base";
-import utils from "../../core/utils";
+import { parser as Parser } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { base as Base } from "patternslib-core";
+import { utils } from "patternslib-core";
 import inject from "../inject/inject";
 
 var parser = new Parser("modal");

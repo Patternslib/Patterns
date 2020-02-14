@@ -10,14 +10,14 @@
 
 import $ from "jquery";
 import inject from "../inject/inject";
-import logger from "../../core/logger";
-import Parser from "../../core/parser";
-import store from "../../core/store";
-import registry from "../../core/registry";
-import Base from "../../core/base";
-import "../../core/jquery-ext";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
+import { store } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { base as Base } from "patternslib-core";
+//import { jquery_ext } from "patternslib-core";
 
-var log = logger.getLogger("pat.collapsible"),
+var log = logging.getLogger("pat.collapsible"),
     parser = new Parser("collapsible");
 
 parser.addArgument("load-content");

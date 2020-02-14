@@ -5,8 +5,8 @@
 */
 
 import $ from "jquery";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
+import { parser as Parser } from "patternslib-core";
+import { registry } from "patternslib-core";
 
 var parser = new Parser("forward");
 

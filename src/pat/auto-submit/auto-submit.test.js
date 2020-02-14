@@ -1,5 +1,5 @@
 import pattern from "./auto-submit";
-import registry from "../../core/registry";
+import { registry } from "patternslib-core";
 import $ from "jquery";
 
 describe("pat-autosubmit", function() {

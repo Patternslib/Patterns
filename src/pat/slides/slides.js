@@ -4,11 +4,11 @@
 * Copyright 2013 Simplon B.V. - Wichert Akkerman
 */
 import $ from "jquery";
-import registry from "../../core/registry";
+import { registry } from "patternslib-core";
 import Presentation from "slides";
-import utils from "../../core/utils";
-import url from "../../core/url";
-import remove from "../../core/remove";
+import { utils } from "patternslib-core";
+import { url } from "patternslib-core";
+//import { remove } from "remove";
 
 var slides = {
     name: "slides",

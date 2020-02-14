@@ -5,10 +5,10 @@
  * Copyright 2012-2013 Florian Friesdorf
  */
 import $ from "jquery";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
-import utils from "../../core/utils";
-import "../../core/jquery-ext";
+import { parser as Parser } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { utils } from "patternslib-core";
+//import { jquery_ext } from "patternslib-core";
 
 
 var parser = new Parser("checklist");

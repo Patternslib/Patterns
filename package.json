@@ -30,6 +30,7 @@
     "masonry-layout": "^4.2.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
+    "patternslib-core": "https://github.com/thet/patternslib-core.git",
     "parsleyjs": "^2.9.1",
     "photoswipe": "^4.1.3",
     "pikaday": "^1.8.0",

@@ -1,15 +1,15 @@
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
-import Parser from "../../core/parser";
-import logger from "../../core/logger";
-import registry from "../../core/registry";
-import utils from "../../core/utils";
-import htmlparser from "../../lib/htmlparser";
+import { parser as Parser } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { utils } from "patternslib-core";
+import { htmlparser } from "patternslib-core";
 import "intersection-observer";
-import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
+//import { jquery_ext } from "patternslib-core"; // for :scrollable for autoLoading-visible
 
-var log = logger.getLogger("pat.inject"),
+var log = logging.getLogger("pat.inject"),
     parser = new Parser("inject"),
     TEXT_NODE = 3,
     COMMENT_NODE = 8;

@@ -1,5 +1,5 @@
-import Base from "../../core/base";
-import utils from "../../core/utils";
+import { base as Base } from "patternslib-core";
+import { utils } from "patternslib-core";
 import prettify from "google-code-prettify";
 
 export default Base.extend({

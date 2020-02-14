@@ -1,11 +1,11 @@
 /* Clone pattern */
 import $ from "jquery";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
-import Base from "../../core/base";
-import logger from "../../core/logger";
+import { parser as Parser } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { base as Base } from "patternslib-core";
+import { logging } from "patternslib-core";
 
-var log = logger.getLogger("pat-clone");
+var log = logging.getLogger("pat-clone");
 var parser = new Parser("clone");
 parser.addArgument("max");
 parser.addArgument("template", ":first");

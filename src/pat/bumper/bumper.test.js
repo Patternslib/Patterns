@@ -1,6 +1,6 @@
 import $ from "jquery";
 import Bumper from "./bumper";
-import utils from "../../core/utils";
+import { utils } from "patternslib-core";
 
 describe("pat-bumper", function() {
     beforeEach(function() {

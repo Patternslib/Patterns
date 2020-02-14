@@ -4,9 +4,9 @@
 * Copyright 2013 Simplon B.V. - Wichert Akkerman
 */
 import $ from "jquery";
-import registry from "../../core/registry";
-import Parser from "../../core/parser";
-import utils from "../../core/utils";
+import { registry } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
+import { utils } from "patternslib-core";
 import imagesLoaded from "imagesloaded";
 
 var parser = new Parser("equaliser");

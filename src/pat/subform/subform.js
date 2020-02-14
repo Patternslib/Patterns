@@ -4,11 +4,10 @@
 * Copyright 2013 Marko Durkovic
 */
 import $ from "jquery";
-import registry from "../../core/registry";
-import logging from "../../core/logger";
-import Parser from "../../core/parser";
+import { registry } from "patternslib-core";
+import { logging } from "patternslib-core";
 import ajax from "../ajax/ajax";
-import injext from "../inject/inject";
+import inject from "../inject/inject";
 
 var log = logging.getLogger("subform");
 

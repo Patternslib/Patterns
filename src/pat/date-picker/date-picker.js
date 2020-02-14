@@ -1,9 +1,9 @@
 /* pat-date-picker  - Polyfill for input type=date */
 import $ from "jquery";
 import _ from "underscore";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
-import Base from "../../core/base";
+import { parser as Parser } from "patternslib-core";
+import { registry } from "patternslib-core";
+import { base as Base } from "patternslib-core";
 import Pikaday from "pikaday";
 import moment from "moment";
 

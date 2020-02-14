@@ -8,12 +8,12 @@
  */
 
 import $ from "jquery";
-import registry from "../../core/registry";
-import logger from "../../core/logger";
-import utils from "../../core/utils";
+import { registry } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { utils } from "patternslib-core";
 
 
-var log = logger.getLogger("checkedflag");
+var log = logging.getLogger("checkedflag");
 
 var checkedflag = {
     name: "checkedflag",

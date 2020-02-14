@@ -6,12 +6,11 @@
 */
 
 import $ from "jquery";
-import registry from "../../core/registry";
-import Base from "../../core/base";
-import utils from "../../core/utils";
-import logging from "../../core/logger";
-import DependsHandler from "../../lib/dependshandler";
-import Parser from "../../core/parser";
+import { base as Base } from "patternslib-core";
+import { utils } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { dependshandler as DependsHandler } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 
 var log = logging.getLogger("depends"),
     parser = new Parser("depends");

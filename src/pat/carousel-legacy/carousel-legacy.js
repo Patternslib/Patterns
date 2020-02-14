@@ -5,12 +5,12 @@
  * Copyright 2012-2013 Florian Friesdorf
  */
 import $ from "jquery";
-import registry from "../../core/registry";
-import logger from "../../core/logger";
-import Parser from "../../core/parser";
+import { registry } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 import "anythingslider";
 
-var log = logger.getLogger("pat.carousel-legacy"),
+var log = logging.getLogger("pat.carousel-legacy"),
     parser = new Parser("carousel-legacy");
 
 parser.addArgument("auto-play", false);

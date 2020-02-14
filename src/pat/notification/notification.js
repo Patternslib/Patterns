@@ -4,12 +4,12 @@
 * Copyright 2013 Marko Durkovic
 */
 import $ from "jquery";,
-import registry from "../../core/registry";
-import logger from "../../core/logger";
-import Parser from "../../core/parser";
+import { registry } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 import inject from "../inject/inject";
 
-var log = logger.getLogger("notification"),
+var log = logging.getLogger("notification"),
     parser = new Parser("notification");
 
 parser.addArgument("type", "static", ["static", "banner"]);

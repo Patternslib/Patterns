@@ -2,10 +2,10 @@
 * Copyright 2012-2013 Syslab.com GmbH - JC Brand
 */
 import $ from "jquery";
-import Base from "../../core/base";
-import utils from "../../core/utils";
-import logging from "../../core/logger";
-import Parser from "../../core/parser";
+import { base as Base } from "patternslib-core";
+import { utils } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 import _ from "underscore";
 import imagesLoaded from "imagesloaded";
 

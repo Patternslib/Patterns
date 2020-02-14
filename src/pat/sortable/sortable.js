@@ -1,6 +1,6 @@
 import $ from "jquery";
-import Base from "../../core/base";
-import Parser from "../../core/parser";
+import { base as Base } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 
 
 var parser = new Parser("sortable");

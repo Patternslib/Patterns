@@ -5,8 +5,8 @@
 */
 import $ from "jquery";,
 import _ from "underscore";
-import Base from "../../core/base";
-import Parser from "../../core/parser";
+import { base as Base } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 import PhotoSwipe from "photoswipe";
 import PhotoSwipeUI from "photoswipe-ui";
 import template from "text!pat-gallery-template";  // XXX

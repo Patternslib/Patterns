@@ -1,4 +1,4 @@
-import registry from "../../core/registry";
+import { registry } from "patternslib-core";
 import "./clone";
 import $ from "jquery";
 

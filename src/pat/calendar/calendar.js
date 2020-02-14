@@ -6,17 +6,17 @@
  * Copyright 2014 Syslab.com GmbH
  */
 import $ from "jquery";
-import logger from "../../core/logger";
-import Parser from "../../core/parser";
-import store from "../../core/store";
-import utils from "../../core/utils";
-import registry from "../../core/registry";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
+import { store } from "patternslib-core";
+import { utils } from "patternslib-core";
+import { registry } from "patternslib-core";
 import _ from "underscore";
 import momentTz from "./moment-timezone-with-data-2010-2020";
 import "fullcalendar";
 
 
-var log = logger.getLogger("calendar"),
+var log = logging.getLogger("calendar"),
     parser = new Parser("calendar");
 
 parser.addArgument("calendar-controls", ""); // Calendar controls must have "id" attr set

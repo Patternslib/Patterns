@@ -4,12 +4,12 @@
 * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
 */
 import $ from "jquery";
-import registry from "../../core/registry";
-import logger from "../../core/logger";
-import Parser from "../../core/parser";
-import store from "../../core/store";
+import { registry } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
+import { store } from "patternslib-core";
 
-var log = logger.getLogger("pat.toggle"),
+var log = logging.getLogger("pat.toggle"),
     parser = new Parser("toggle");
 
 parser.addArgument("selector");

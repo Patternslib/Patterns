@@ -5,7 +5,7 @@
 * Copyright 2014 Simplon B.V. - Wichert Akkerman
 */
 
-import registry from "../../core/registry";
+import { registry } from "patternslib-core";
 import $ from "jquery";
 import "spectrum-colorpicker";
 

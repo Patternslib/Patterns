@@ -6,8 +6,8 @@
 */
 
 import $ from "jquery";
-import registry from "../../core/registry";
-import utils from "../../core/utils";
+import { registry } from "patternslib-core";
+import { utils } from "patternslib-core";
 
 
 var focus = {

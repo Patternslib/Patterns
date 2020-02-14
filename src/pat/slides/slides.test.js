@@ -1,6 +1,6 @@
 import pattern from "./slides";
 import $ from "jquery";
-import utils from "../../core/utils";
+import { utils } from "patternslib-core";
 
 describe("pat-slides", function() {
     beforeEach(function() {

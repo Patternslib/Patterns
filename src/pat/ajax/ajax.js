@@ -5,11 +5,11 @@
  * Copyright 2012-2013 Marko Durkovic
  */
 import $ from "jquery";
-import logger from "../../core/logger";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
+import { registry } from "patternslib-core";
 
-var log = logger.getLogger("pat.ajax"),
+var log = logging.getLogger("pat.ajax"),
     parser = new Parser("ajax");
 parser.addArgument("url", function($el) {
     return ($el.is("a")

@@ -5,12 +5,12 @@
  */
 
 import $ from "jquery";
-import registry from "../../core/registry";
-import logger from "../../core/logger";
-import Parser from "../../core/parser";
+import { registry } from "patternslib-core";
+import { logging } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 import "slick-carousel";
 
-var log = logger.getLogger("pat.carousel"),
+var log = logging.getLogger("pat.carousel"),
     parser = new Parser("carousel");
 
 parser.addArgument("auto-play", false);

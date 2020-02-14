@@ -6,7 +6,7 @@
  */
 
 import $ from "jquery";
-import registry from "../../core/registry";
+import { registry } from "patternslib-core";
 
 var _ = {
     name: "breadcrumbs",

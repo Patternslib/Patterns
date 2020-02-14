@@ -1,7 +1,7 @@
 import $ from "jquery";
 import inject from "../inject/inject";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
+import { parser as Parser } from "patternslib-core";
+import { registry } from "patternslib-core";
 
 
 var parser = new Parser("expandable");

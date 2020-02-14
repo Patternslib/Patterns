@@ -1,6 +1,6 @@
 import $ from "jquery";
-import registry from "../../core/registry";
-import Parser from "../../core/parser";
+import { registry } from "patternslib-core";
+import { parser as Parser } from "patternslib-core";
 
 var parser = new Parser("zoom");
 

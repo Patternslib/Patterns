@@ -1,6 +1,6 @@
 import pattern from "./checked-flag";
 import $ from "jquery";
-import utils from "../../core/utils";
+import { utils } from "patternslib-core";
 
 describe("pat-checkedflag", function() {
     beforeEach(function() {
