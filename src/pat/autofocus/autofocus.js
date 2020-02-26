@@ -17,6 +17,9 @@ define([
             $(document).on("patterns-injected", function (e, data) {
                 autofocus.setFocus($(e.target).find(autofocus.trigger));
             });
+            $(document).on("pat-update", function (e, data) {
+                autofocus.setFocus($(e.target).find(autofocus.trigger));
+            });
         },
         setFocus: function (target) {
             var $all = $(target);
