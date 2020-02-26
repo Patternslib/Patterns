@@ -139,19 +139,22 @@
             const notImplemented = (name) => { log.error(`${name} not implemented`) },
 
                 placement = (pos) => {
+                    // note that Cornelis needs the positioning to be the placement of the thingy on the bubble
+                    // tippy though refers to positioning as the placement of the bubble relatively to the reference element
+                    // so we invert the meaning below. It's intentional.
                     const primary = (pos) => ({
-                            t: 'top',
-                            r: 'right',
-                            b: 'bottom',
-                            l: 'left',
+                            t: 'bottom',
+                            r: 'left',
+                            b: 'top',
+                            l: 'right',
                         }[pos])
 
                     const secondary = (pos) => ({
-                            l: '-start',
-                            r: '-end',
+                            l: '-end',
+                            r: '-start',
                             m: '',
-                            t: '-start',
-                            b: '-end',
+                            t: '-end',
+                            b: '-start',
                         }[pos])
 
                     return `${primary(pos[0])}${secondary(pos[1])}`
