@@ -529,12 +529,12 @@ define([
                     left = Math.abs(
                         scroll_target.getBoundingClientRect().left
                         - scroll_container_ref.getBoundingClientRect().left
-                        - utils.getCSSValue(scroll_container, 'border-left-width', true)
+                        - utils.getCSSValue(scroll_container_ref, 'border-left-width', true)
                     );
                     top = Math.abs(
                         scroll_target.getBoundingClientRect().top
                         - scroll_container_ref.getBoundingClientRect().top
-                        - utils.getCSSValue(scroll_container, 'border-top-width', true)
+                        - utils.getCSSValue(scroll_container_ref, 'border-top-width', true)
                     );
 
                 }
