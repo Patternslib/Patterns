@@ -107,7 +107,9 @@
                     'onShow': tooltip._onShow,
                     'onShown': tooltip._onShown,
                     'onTrigger': tooltip._onTrigger,
-                    'trigger': 'click'
+                    'trigger': 'click',
+                    'boundary': "window"
+
                 }
 
                 start = Date.now()
