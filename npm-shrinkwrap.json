@@ -11963,9 +11963,9 @@
       }
     },
     "tippy.js": {
-      "version": "5.1.1",
-      "resolved": "https://registry.npmjs.org/tippy.js/-/tippy.js-5.1.1.tgz",
-      "integrity": "sha512-ZrATAG/GX//w4aAWNyDeBTiNuDqwAqU5dnrkBxBcxdVQ+ywUs1CZOaQV/IT+8R9O3dqcPm7cZpUI9/iZ/OaU9Q==",
+      "version": "5.2.1",
+      "resolved": "https://registry.npmjs.org/tippy.js/-/tippy.js-5.2.1.tgz",
+      "integrity": "sha512-66UT6JRVn3dXNCORE+0UvUK3JZqV/VhLlU6HTDm3FmrweUUFUxUGvT8tUQ7ycMp+uhuLAwQw6dBabyC+iKf/MA==",
       "requires": {
         "popper.js": "^1.16.0"
       }

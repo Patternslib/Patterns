@@ -13,6 +13,7 @@ define([
     "moment",
     "modernizr",
     "prefixfree",
+    "scroll-detection",
 //    "push-kit",
     "pat-ajax",
     "pat-autofocus",

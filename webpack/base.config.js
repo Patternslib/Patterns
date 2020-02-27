@@ -161,6 +161,7 @@ module.exports = {
             // Core
             "pat-compat": path.resolve(__dirname, "../src/core/compat.js"),
             "pat-base": path.resolve(__dirname, "../src/core/base.js"),
+            "scroll-detection": path.resolve(__dirname, "../src/core/scroll_detection.js"),
             "pat-date-picker": path.resolve(__dirname, "../src/pat/date-picker/date-picker.js"),
             "pat-datetime-picker": path.resolve(__dirname, "../src/pat/datetime-picker/datetime-picker.js"),
             "pat-depends_parse": path.resolve(__dirname, "../src/lib/depends_parse.js"),
