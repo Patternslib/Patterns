@@ -152,11 +152,11 @@
                         }[pos])
 
                     const secondary = (pos) => ({
-                            l: '-end',
-                            r: '-start',
+                            l: '-start',
+                            r: '-end',
                             m: '',
-                            t: '-end',
-                            b: '-start',
+                            t: '-start',
+                            b: '-end',
                         }[pos])
 
                     return `${primary(pos[0])}${secondary(pos[1])}`
