@@ -329,7 +329,8 @@
 
         blockDefault(event) {
             if (event.preventDefault) {
-                event.preventDefault()
+                event.preventDefault();
+                event.stopPropagation();
             }
         },
 
