@@ -269,9 +269,11 @@ define([
                 if (cfg.confirm == 'always') {
                     _confirm = true;
                 } else if (cfg.confirm === 'form-data') {
-                    _confirm = inject.elementIsDirty(cfg.$target);
+                    if (cfg.target  != 'none')
+                        _confirm = inject.elementIsDirty(cfg.$target);
                 } else if (cfg.confirm === 'class') {
-                    _confirm = cfg.$target.hasClass('is-dirty');
+                    if (cfg.target  != 'none')
+                        _confirm = cfg.$target.hasClass('is-dirty');
                 }
                 if (_confirm) {
                     should_confirm = true;
@@ -291,6 +293,9 @@ define([
              * cfg.$target.
              */
             // make sure target exist
+            if (cfg.target === "none")
+                // special case, we don't want to inject anything
+                return true;
             cfg.$target = cfg.$target || (cfg.target==="self" ? $el : $(cfg.target));
             if (cfg.$target.length === 0) {
                 if (!cfg.target) {
@@ -347,6 +352,9 @@ define([
              * Cancel button is pressed (this triggers reset event on the
              * form) you would expect to populate with initial placeholder
              */
+            if (cfg.target === 'none')
+                // Special case, we don't want to display any return value.
+                return;
             var $form = cfg.$target.parents('form');
             if ($form.length !== 0 && cfg.$target.data('initial-value') === undefined) {
                 cfg.$target.data('initial-value', cfg.$target.html());
@@ -573,9 +581,10 @@ define([
             }
             cfgs.forEach(function(cfg, idx) {
                 function perform_inject() {
-                    cfg.$target.each(function() {
-                        inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target, title]);
-                    });
+                    if (cfg.target  != 'none')
+                        cfg.$target.each(function() {
+                            inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target, title]);
+                        });
                 }
                 if (cfg.processDelay) {
                     setTimeout(function() {
@@ -639,7 +648,10 @@ define([
             };
             $el.data('pat-inject-triggered', true);
             // possibility for spinners on targets
-            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
+            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { 
+                if (cfg.target  != 'none')
+                    cfg.$target.addClass(cfg.loadingClass); 
+            });
             // Put the execute class on the elem that has pat inject on it
             _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { $el.addClass(cfg.executingClass); });
 
@@ -682,6 +694,9 @@ define([
                          selector: cfg.source});
                 return false;
             }
+            if (cfg.target === "none")
+                // Special case. Don't do anything, we don't want any result
+                return true;
             if ($target.length === 0) {
                 log.warn("Aborting injection, target not found:", $target);
                 $(trigger).trigger("pat-inject-missingTarget",
