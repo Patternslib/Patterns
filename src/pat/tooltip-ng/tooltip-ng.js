@@ -130,7 +130,8 @@
                         .on('destroy.pat-tooltip-ng', tooltip._onDestroy)
 
                 this.options = tooltip.parseOptionsForTippy(this.options, $trigger)
-                tippy($trigger[0], this.options)
+                const instance = tippy($trigger[0], this.options)
+                $(instance.popper).css({'max-height': '90%', 'overflow-y': 'auto'})
                 tooltip.setupShowEvents($trigger)
             })
         },
