@@ -108,7 +108,7 @@
                     'onShown': tooltip._onShown,
                     'onTrigger': tooltip._onTrigger,
                     'trigger': 'click',
-                    'boundary': "window"
+                    'boundary': "viewport"
 
                 }
 
