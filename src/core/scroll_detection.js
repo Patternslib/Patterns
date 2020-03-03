@@ -10,7 +10,7 @@ define([
     var scroll_detection = {
 
       init: function () {
-        $(window).on('scroll', function(event) {
+        $(window).on('scroll touchmove', function(event) {
           if (window.scrollY == 0) {
             $("body").addClass("scroll-position-top");
           } else {
