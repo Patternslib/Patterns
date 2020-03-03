@@ -565,6 +565,10 @@ define([
                 log.warn("No response content, aborting", ev);
                 return;
             }
+            if (cfgs[0].source === 'none') {
+                // Special case, we want to call something, but we don't want to inject anything
+                data = '';
+            }
             $.each(cfgs[0].hooks || [], function (idx, hook) {
                 $el.trigger("pat-inject-hook-"+hook);
             });
@@ -660,7 +664,7 @@ define([
             $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", function() {
                 $el.removeData('pat-inject-triggered');
             });
-
+            
             if (cfgs[0].url.length) {
                 ajax.request($el, {url: cfgs[0].url});
             } else {
@@ -687,6 +691,10 @@ define([
                 elementafter:  "after"
             }[cfg.action];
 
+            if (cfg.source === 'none') {
+                $target.replaceWith('');
+                return true;                
+            }
             if ($source.length === 0) {
                 log.warn("Aborting injection, source not found:", $source);
                 $(trigger).trigger("pat-inject-missingSource",
@@ -714,10 +722,14 @@ define([
         },
 
         _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
+
             var $html = inject._parseRawHtml(html, url);
             return sources.map(function inject_sourcesFromHtml_map(source) {
                 if (source === "body") {
                     source = "#__original_body";
+                }
+                if (source === "none") {
+                    return $('<!-- -->');
                 }
                 var $source = $html.find(source);
 
@@ -802,6 +814,10 @@ define([
         },
 
         _rebaseHTML: function inject_rebaseHTML(base, html) {
+            if (html === '') {
+                // Special case, source is none
+                return '';
+            }
             var $page = $(html.replace(
                 /(\s)(src\s*)=/gi,
                 "$1src=\"\" data-pat-inject-rebase-$2="
