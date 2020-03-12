@@ -70,7 +70,7 @@ define([
             _._updatenavpath($el);
         },
         _updatenavpath: function($el) {
-            if (this.in_path === null) { return; }
+            if (this.in_path) { return; }
             $el.find(this.in_path).removeClass(this.in_path);
             $el.find("li:not(." + this.current + "):has(." + this.current + ")").addClass(this.in_path);
         },
