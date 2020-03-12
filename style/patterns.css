@@ -1,15 +1,15 @@
 @charset "UTF-8";
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
-@import url(/patternslib/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
+@import url(/style/fontello/css/fontello.css);
 .pat-button {
   font-family: "Source Sans Pro", sans-serif;
   margin: 0 0.5em 0 0;
@@ -43,7 +43,7 @@
   -webkit-appearance: none; }
 
 ::-webkit-search-cancel-button:hover {
-  color: #0198E1; }
+  color: #0198e1; }
 ::-webkit-search-cancel-button::after {
   content: '\e803';
   font-family: fontello;
@@ -173,7 +173,7 @@ form {
       color: black; }
     form .pat-message.notice,
     form .message.notice {
-      background-color: #FFFFD6; }
+      background-color: #ffffd6; }
     form .pat-message.warning,
     form .message.warning {
       background-color: orange;
@@ -209,7 +209,7 @@ form {
   form input[type=search]::-webkit-search-cancel-button {
     -webkit-appearance: none; }
   form input[type=search]::-webkit-search-cancel-button:hover {
-    color: #0198E1; }
+    color: #0198e1; }
   form input[type=search]::-webkit-search-cancel-button::after {
     content: '\e803';
     font-family: fontello;
@@ -240,7 +240,7 @@ form {
     height: 1.4em;
     width: 1.4em;
     border-radius: 50%;
-    background: #0198E1;
+    background: #0198e1;
     margin-top: -0.45em; }
   form input[type=range]::-moz-range-track {
     height: 0.5em;
@@ -252,7 +252,7 @@ form {
     height: 1.4em;
     width: 1.4em;
     border-radius: 50%;
-    background: #0198E1; }
+    background: #0198e1; }
   form input[type=range]:-moz-focusring {
     outline: 1px solid white;
     outline-offset: -1px; }
@@ -270,7 +270,7 @@ form {
     height: 1.4em;
     width: 1.4em;
     border-radius: 50%;
-    background: #0198E1; }
+    background: #0198e1; }
   form input[type=range]:focus::-ms-fill-lower {
     background: #888; }
   form input[type=range]:focus::-ms-fill-upper {
@@ -860,7 +860,7 @@ disabled look for disabled choices in the results dropdown
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  background-color: #0198E1;
+  background-color: #0198e1;
   font-size: 0.9em;
   font-weight: normal; }
   .select2-container-multi .select2-choices .select2-search-choice.confirmed {
@@ -2256,7 +2256,7 @@ p.carousel-nav a.current {
   -webkit-appearance: none; }
 
 ::-webkit-search-cancel-button:hover {
-  color: #0198E1; }
+  color: #0198e1; }
 ::-webkit-search-cancel-button::after {
   content: '\e803';
   font-family: fontello;
@@ -2803,7 +2803,7 @@ textarea {
   -webkit-appearance: none; }
 
 ::-webkit-search-cancel-button:hover {
-  color: #0198E1; }
+  color: #0198e1; }
 ::-webkit-search-cancel-button::after {
   content: '\e803';
   font-family: fontello;
@@ -2978,7 +2978,7 @@ button.pat-button[disabled="disabled"], button.pat-button:disabled {
 
 fieldset.focus > .legend,
 label.focus {
-  color: #0198E1; }
+  color: #0198e1; }
 
 :fullscreen {
   background-color: transparent; }
@@ -4596,7 +4596,7 @@ div.pat-modal {
   -webkit-appearance: none; }
 
 ::-webkit-search-cancel-button:hover {
-  color: #0198E1; }
+  color: #0198e1; }
 ::-webkit-search-cancel-button::after {
   content: '\e803';
   font-family: fontello;
@@ -4726,7 +4726,7 @@ button.pat-button[disabled="disabled"], button.pat-button:disabled {
   .pat-notification-panel a {
     text-decoration: underline; }
   .pat-notification-panel.notice {
-    background-color: #FFFFD6; }
+    background-color: #ffffd6; }
   .pat-notification-panel.success {
     background-color: green;
     color: black; }
@@ -4743,7 +4743,7 @@ button.pat-button[disabled="disabled"], button.pat-button:disabled {
     .pat-notification-panel.error * {
       color: white !important; }
   .pat-notification-panel.info {
-    background-color: #FFFFD6;
+    background-color: #ffffd6;
     color: #247fad; }
   .pat-notification-panel p:last-of-type {
     margin-bottom: 10px; }
@@ -4927,9 +4927,9 @@ li.mode-Blue {
   .tooltip-container.tr .pointer, .tooltip-container.br .pointer {
     margin-left: -20px; }
   .tooltip-container.info > div {
-    background-color: #FFFFD6; }
+    background-color: #ffffd6; }
   .tooltip-container.info .pointer {
-    background-color: #FFFFD6; }
+    background-color: #ffffd6; }
   .tooltip-container.rich > div:after {
     content: " ";
     display: table;
