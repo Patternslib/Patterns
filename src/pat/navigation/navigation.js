@@ -1,69 +1,78 @@
 define([
     "jquery",
+    "pat-registry",
+    "pat-parser",
     "pat-logger",
-    "pat-registry"
-], function($, logger, registry) {
-    var log = logger.getLogger("pat.navigation");
+], function($, registry, Parser, logger) {
+    var log = logger.getLogger("navigation");
+    var parser = new Parser("navigation");
+
+    parser.addArgument("in-path-class", "navigation-in-path");
+    parser.addArgument("current-class", "current");
 
     var _ = {
         name: "navigation",
         trigger: "nav, .navigation, .pat-navigation",
-        init: function($el) {
-            return $el.each(function() {
-                var $el = $(this);
-                var curpath = window.location.pathname;
-                log.debug("current path:", curpath);
+        current: null,
+        in_path: null,
+        init: function($el, opts) {
+            this.options = parser.parse($el, opts);
+            this.current = this.options.currentClass;
+            this.in_path = this.options.inPathClass;
 
-                // check whether to load
-                if ($el.hasClass("navigation-load-current")) {
-                    $el.find("a.current, .current a").click();
-                    // check for current elements injected here
-                    $el.on("patterns-injected-scanned", function(ev) {
-                        var $target = $(ev.target);
-                        if ($target.is("a.current"))
-                            $target.click();
-                        if ($target.is(".current"))
-                            $target.find("a").click();
-                        _._updatenavpath($el);
-                    });
-                }
+            var curpath = window.location.pathname;
+            log.debug("current path:", curpath);
 
-                // An anchor within this navigation triggered injection
-                $el.on("patterns-inject-triggered", "a", function(ev) {
+            // check whether to load
+            if ($el.hasClass("navigation-load-current")) {
+                $el.find("a." + this.current, "."  + this.current + " a").click();
+                // check for current elements injected here
+                $el.on("patterns-injected-scanned", function(ev) {
                     var $target = $(ev.target);
-                    // remove all set current classes
-                    $el.find(".current").removeClass("current");
-                    // set .current on target
-                    $target.addClass("current");
-                    // If target's parent is an LI, also set current there
-                    $target.parent("li").addClass("current");
+                    if ($target.is("a." + this.current))
+                        $target.click();
+                    if ($target.is("." + this.current))
+                        $target.find("a").click();
                     _._updatenavpath($el);
-                });
+                }.bind(this));
+            }
 
-                // set current class if it is not set
-                if ($el.find(".current").length === 0) {
-                    $el.find("li a").each(function() {
-                        var $a = $(this),
-                            $li = $a.parents("li:first"),
-                            url = $a.attr("href"),
-                            path;
-                        if (typeof url === "undefined") {
-                            return;
-                        }
-                        path = _._pathfromurl(url);
-                        log.debug("checking url:", url, "extracted path:", path);
-                        if (_._match(curpath, path)) {
-                            log.debug("found match", $li);
-                            $li.addClass("current");
-                        }
-                    });
-                }
+            // An anchor within this navigation triggered injection
+            $el.on("patterns-inject-triggered", "a", function(ev) {
+                var $target = $(ev.target);
+                // remove all set current classes
+                $el.find("." + this.current).removeClass(this.current);
+                // set current class on target
+                $target.addClass(this.current);
+                // If target's parent is an LI, also set current class there
+                $target.parent("li").addClass(this.current);
                 _._updatenavpath($el);
-            });
+            }.bind(this));
+
+            // Set current class if it is not set
+            if ($el.find(this.current).length === 0) {
+                document.querySelectorAll("li a").forEach(function (it) {
+                    var $a = $(it),
+                        $li = $a.parents("li:first"),
+                        url = $a.attr("href"),
+                        path;
+                    if (typeof url === "undefined") {
+                        return;
+                    }
+                    path = _._pathfromurl(url);
+                    log.debug("checking url:", url, "extracted path:", path);
+                    if (_._match(curpath, path)) {
+                        log.debug("found match", $li);
+                        $li.addClass(this.current);
+                    }
+                }.bind(this));
+            }
+            _._updatenavpath($el);
         },
         _updatenavpath: function($el) {
-            $el.find(".navigation-in-path").removeClass("navigation-in-path");
-            $el.find("li:has(.current)").addClass("navigation-in-path");
+            if (this.in_path === null) { return; }
+            $el.find(this.in_path).removeClass(this.in_path);
+            $el.find("li:not(." + this.current + "):has(." + this.current + ")").addClass(this.in_path);
         },
         _match: function(curpath, path) {
             if (!path) {

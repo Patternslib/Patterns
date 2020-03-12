@@ -1,46 +1,102 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Navigation demo</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css" media="screen">
+      a.current {
+        color: white;
+        background: green;
+      }
+      .navigation-in-path > a {
+        color: white;
+        background: blue;
+      }
+      #content-tab {
+        font-weight: bold;
+        font-size: 2em;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2>Navigation demos</h2>
+    </header>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>pat-navigation demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css">
-        <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
-</head>
-<body>
-	<section class="description">
-		<a href="description.md" class="pat-inject" data-pat-inject="source: ::element; target: self::element; trigger: autoload">Description</a>
-	</section>
-	<h2>Demo</h2>
-	<div id="demo">
-	<section class="demo">
-		<p>Testing tab .current behaviour</p>
-		<ul class="pat-navigation">
-			<li>
-				<a href="pattern-test-response.html#inject-tab-1" class="pat-inject"
-                    data-pat-inject="target: #content-tab">Tab 1</a>
+    <section>
+      <header>
+        <h3>Example 1</h3>
+      </header>
+      <ul class="pat-navigation">
+        <li>
+          <a
+            href="pattern-test-response.html#inject-tab-1"
+            class="pat-inject"
+            data-pat-inject="target: #content-tab"
+            >Tab 1</a
+          >
 
-			    <ul class="navigation">
-			      <li>
-				    <a href="pattern-test-response.html#inject-tab-1-1" class="pat-inject" 
-                        data-pat-inject="target: #content-tab">Link 1.1</a>
-				  </li>
-				  <li>
-					<a href="pattern-test-response.html#inject-tab-1-2" class="pat-inject"
-                        data-pat-inject="target: #content-tab">Link 1.2</a>
-                  </li>
-                </ul>
-			</li>
-			<li>
-				<a href="pattern-test-response.html#inject-tab-2" class="pat-inject"
-                    data-pat-inject="target: #content-tab">Tab 2</a>
-			</li>
-		</ul>
-		<div id="content-tab">Content will appear here</div>
-	</section>
-	</div>
-	<section class="documentation">
-        <a href="documentation.md" class="pat-inject" data-pat-inject="source: ## Documentation::element; target: self::element; trigger: autoload">Documentation</a>
-	</section>
-</body>
+          <ul>
+            <li>
+              <a
+                href="pattern-test-response.html#inject-tab-1-1"
+                class="pat-inject"
+                data-pat-inject="target: #content-tab"
+                >Link 1.1</a
+              >
+            </li>
+            <li>
+              <a
+                href="pattern-test-response.html#inject-tab-1-2"
+                class="pat-inject"
+                data-pat-inject="target: #content-tab"
+                >Link 1.2</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a
+            href="pattern-test-response.html#inject-tab-2"
+            class="pat-inject"
+            data-pat-inject="target: #content-tab"
+            >Tab 2</a
+          >
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <header>
+        <h3>
+          Example 2, same as above. Shows that multiple navigation patterns can
+          be used on same site.
+        </h3>
+      </header>
+      <ul class="pat-navigation">
+        <li>
+          <a
+            href="pattern-test-response.html#inject-tab-1"
+            class="pat-inject"
+            data-pat-inject="target: #content-tab"
+            >Tab 1</a
+          >
+        </li>
+
+        <li>
+          <a
+            href="pattern-test-response.html#inject-tab-2"
+            class="pat-inject"
+            data-pat-inject="target: #content-tab"
+            >Tab 2</a
+          >
+        </li>
+      </ul>
+    </section>
+
+    <div id="content-tab">Content will appear here</div>
+
+  </body>
 </html>

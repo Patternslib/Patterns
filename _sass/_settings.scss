@@ -2,7 +2,7 @@
 // with Fontello.com Make sure the fontello folder is placed in your
 // style folder
 
-@import "/patternslib/style/fontello/css/fontello.css";
+@import "/style/fontello/css/fontello.css";
 
 // Assets
 //@import url(http://fonts.googleapis.com/css?family=Sorts+Mill+Goudy:400,400italic);
@@ -14,11 +14,11 @@
 // $felt: #89AA74;
 $felt: #565656;
 
-$colour-accent: #0198E1 !default;
+$colour-accent: #0198e1 !default;
 $colour-base: #efefef !default;
 $colour-alert: red !default;
 $colour-success: green !default;
-$colour-notice: #FFFFD6 !default;
+$colour-notice: #ffffd6 !default;
 $colour-warning: orange !default;
 $colour-error: red !default;
 $colour-info: $colour-notice !default;
@@ -37,7 +37,7 @@ $glyph-radio-button-active: "\e2001";
 $glyph-close: "\e2005";
 
 // We use these to control various global styles
-$body-font-family: 'Source Sans Pro', sans-serif;
+$body-font-family: "Source Sans Pro", sans-serif;
 $body-font-weight: $font-weight-normal;
 $body-font-style: normal;
 
@@ -51,5 +51,3 @@ $cat-layout: #a1ced2;
 
 $break-small: 768px !default;
 $break-large: 769px !default;
-
-
