@@ -60,7 +60,7 @@ define([
         },
         _updatenavpath: function($el) {
             $el.find(".navigation-in-path").removeClass("navigation-in-path");
-            $el.find("li:has(.current)").addClass("navigation-in-path");
+            $el.find("li:not(.current):has(.current)").addClass("navigation-in-path");
         },
         _match: function(curpath, path) {
             if (!path) {
