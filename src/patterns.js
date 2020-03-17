@@ -69,6 +69,7 @@ define([
     "pat-tooltip-ng",
     "pat-url",
     "pat-validation",
+    "pat-videochat",
     "pat-zoom"
 ], function($, registry) {
 

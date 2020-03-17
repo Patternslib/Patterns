@@ -239,6 +239,7 @@ module.exports = {
             "pat-tooltip": path.resolve(__dirname, "../src/pat/tooltip/tooltip.js"),
             "pat-tooltip-ng": path.resolve(__dirname, "../src/pat/tooltip-ng/tooltip-ng.js"),
             "pat-validation": path.resolve(__dirname, "../src/pat/validation/validation.js"),
+            "pat-videochat": path.resolve(__dirname, "../src/pat/videochat/videochat.js"),
             "pat-zoom": path.resolve(__dirname, "../src/pat/zoom/zoom.js")
         }
     },
