@@ -7,6 +7,7 @@ define([
     var log = logger.getLogger("navigation");
     var parser = new Parser("navigation");
 
+    parser.addArgument("item-wrapper", "li");
     parser.addArgument("in-path-class", "navigation-in-path");
     parser.addArgument("current-class", "current");
 
@@ -45,15 +46,15 @@ define([
                 // set current class on target
                 $target.addClass(this.current);
                 // If target's parent is an LI, also set current class there
-                $target.parent("li").addClass(this.current);
+                $target.parents(this.options.item_wrapper).first().addClass(this.current);
                 _._updatenavpath($el);
             }.bind(this));
 
             // Set current class if it is not set
             if ($el.find(this.current).length === 0) {
-                document.querySelectorAll("li a").forEach(function (it) {
+                $el.querySelectorAll("a").forEach(function (it) {
                     var $a = $(it),
-                        $li = $a.parents("li:first"),
+                        $li = $a.parents(this.options.item_wrapper).first(),
                         url = $a.attr("href"),
                         path;
                     if (typeof url === "undefined") {
@@ -63,6 +64,7 @@ define([
                     log.debug("checking url:", url, "extracted path:", path);
                     if (_._match(curpath, path)) {
                         log.debug("found match", $li);
+                        $a.addClass(this.current);
                         $li.addClass(this.current);
                     }
                 }.bind(this));
