@@ -66,6 +66,16 @@ define([
                     }
                 }.bind(this));
             }
+
+            // Set current class on item-wrapper, if not set.
+            if (
+                this.options.itemWrapper
+                && $el[0].querySelectorAll('.' + current).length > 0
+                && $el[0].querySelectorAll(this.options.itemWrapper + '.' + current).length === 0
+            ) {
+                $('.' + current, $el).parents(this.options.itemWrapper).first().addClass(current);
+            }
+
             this._updatenavpath($el);
         },
         _updatenavpath: function($el) {

@@ -154,5 +154,32 @@ define(["pat-registry", "pat-navigation", "pat-inject"], function(Registry) {
             done();
         });
 
+        it("Test 2: Auto load current", function(done) {
+            var injection_area = document.querySelector('#injection_area');
+
+            var nav2 = document.querySelector('.nav2');
+            nav2.classList.add('navigation-load-current');
+
+            var w2 = nav2.querySelector('.w2');
+            var a2 = nav2.querySelector('.a2');
+            var w21 = nav2.querySelector('.w21');
+            var a21 = nav2.querySelector('.a21');
+            a21.classList.add('active');
+
+            Registry.scan('body');
+
+            expect(injection_area.textContent === 'test content').toBeTruthy();
+            expect(w2.classList.contains('active')).toBeFalsy();
+            expect(w2.classList.contains('in-path')).toBeTruthy();
+            expect(a2.classList.contains('active')).toBeFalsy();
+            expect(a2.classList.contains('in-path')).toBeFalsy();
+            expect(w21.classList.contains('active')).toBeTruthy();
+            expect(w21.classList.contains('in-path')).toBeFalsy();
+            expect(a21.classList.contains('active')).toBeTruthy();
+            expect(a21.classList.contains('in-path')).toBeFalsy();
+
+            done();
+        });
+
     });
 });
