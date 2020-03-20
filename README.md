@@ -81,6 +81,11 @@ This will install all required npm and bower packages and run the tests.
 
 To run the tests in a browser, open the ``tests.html`` file in the browser of your choice.
 
+To run automated tests in a browser instead of the defaul headless browser, run the following command:
+
+    karma start webpack/karma.config.js --browsers=Chrome --single-run=false
+
+
 ### Check bundle sizes
 
 We added a webpack plugin which helps in analyzing bundle sizes.
