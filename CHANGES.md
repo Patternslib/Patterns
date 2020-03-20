@@ -10,6 +10,7 @@ Features
   - Allow configuration of "in path" and "current" classes via ``in-path-class`` and ``current-class`` configuration options.
   - Allow empty ``in-path-class`` which then does not set the in-path class.
   - Allow configuration of ``item-wrapper`` element on which ``in-path-class`` or ``current-class`` are set. Defaults to ``li``.
+  - Set current class also on parent item-wrapper if not set.
 - Add ``utils.getCSSValue`` for retrieving CSS property values for DOM nodes.
 - Add configurable scrolling behavior to pat-inject.
 - Add ``webpack-visualizer-plugin`` for analyzation of generated bundles.
