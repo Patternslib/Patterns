@@ -108,7 +108,7 @@
                     'onShown': tooltip._onShown,
                     'onTrigger': tooltip._onTrigger,
                     'trigger': 'click',
-                    'boundary': "window"
+                    'boundary': "viewport"
 
                 }
 
@@ -130,7 +130,8 @@
                         .on('destroy.pat-tooltip-ng', tooltip._onDestroy)
 
                 this.options = tooltip.parseOptionsForTippy(this.options, $trigger)
-                tippy($trigger[0], this.options)
+                const instance = tippy($trigger[0], this.options)
+                $(instance.popper).css({'max-height': '90%', 'overflow-y': 'auto'})
                 tooltip.setupShowEvents($trigger)
             })
         },
@@ -152,11 +153,11 @@
                         }[pos])
 
                     const secondary = (pos) => ({
-                            l: '-end',
-                            r: '-start',
+                            l: '-start',
+                            r: '-end',
                             m: '',
-                            t: '-end',
-                            b: '-start',
+                            t: '-start',
+                            b: '-end',
                         }[pos])
 
                     return `${primary(pos[0])}${secondary(pos[1])}`
@@ -329,7 +330,8 @@
 
         blockDefault(event) {
             if (event.preventDefault) {
-                event.preventDefault()
+                event.preventDefault();
+                event.stopPropagation();
             }
         },
 

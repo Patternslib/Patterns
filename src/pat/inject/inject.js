@@ -269,9 +269,11 @@ define([
                 if (cfg.confirm == 'always') {
                     _confirm = true;
                 } else if (cfg.confirm === 'form-data') {
-                    _confirm = inject.elementIsDirty(cfg.$target);
+                    if (cfg.target  != 'none')
+                        _confirm = inject.elementIsDirty(cfg.$target);
                 } else if (cfg.confirm === 'class') {
-                    _confirm = cfg.$target.hasClass('is-dirty');
+                    if (cfg.target  != 'none')
+                        _confirm = cfg.$target.hasClass('is-dirty');
                 }
                 if (_confirm) {
                     should_confirm = true;
@@ -291,6 +293,9 @@ define([
              * cfg.$target.
              */
             // make sure target exist
+            if (cfg.target === "none")
+                // special case, we don't want to inject anything
+                return true;
             cfg.$target = cfg.$target || (cfg.target==="self" ? $el : $(cfg.target));
             if (cfg.$target.length === 0) {
                 if (!cfg.target) {
@@ -347,6 +352,9 @@ define([
              * Cancel button is pressed (this triggers reset event on the
              * form) you would expect to populate with initial placeholder
              */
+            if (cfg.target === 'none')
+                // Special case, we don't want to display any return value.
+                return;
             var $form = cfg.$target.parents('form');
             if ($form.length !== 0 && cfg.$target.data('initial-value') === undefined) {
                 cfg.$target.data('initial-value', cfg.$target.html());
@@ -528,15 +536,16 @@ define([
                     //      https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
                     left = Math.abs(
                         scroll_target.getBoundingClientRect().left
+                        + scroll_container_ref.scrollLeft
                         - scroll_container_ref.getBoundingClientRect().left
-                        - utils.getCSSValue(scroll_container, 'border-left-width', true)
+                        - utils.getCSSValue(scroll_container_ref, 'border-left-width', true)
                     );
                     top = Math.abs(
                         scroll_target.getBoundingClientRect().top
+                        + scroll_container_ref.scrollTop
                         - scroll_container_ref.getBoundingClientRect().top
-                        - utils.getCSSValue(scroll_container, 'border-top-width', true)
+                        - utils.getCSSValue(scroll_container_ref, 'border-top-width', true)
                     );
-
                 }
                 if (scroll_container === window) {
                     scroll_container.scrollTo(left, top);
@@ -556,6 +565,10 @@ define([
                 log.warn("No response content, aborting", ev);
                 return;
             }
+            if (cfgs[0].source === 'none') {
+                // Special case, we want to call something, but we don't want to inject anything
+                data = '';
+            }
             $.each(cfgs[0].hooks || [], function (idx, hook) {
                 $el.trigger("pat-inject-hook-"+hook);
             });
@@ -572,9 +585,10 @@ define([
             }
             cfgs.forEach(function(cfg, idx) {
                 function perform_inject() {
-                    cfg.$target.each(function() {
-                        inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target, title]);
-                    });
+                    if (cfg.target  != 'none')
+                        cfg.$target.each(function() {
+                            inject._performInjection.apply(this, [$el, sources$[idx], cfg, ev.target, title]);
+                        });
                 }
                 if (cfg.processDelay) {
                     setTimeout(function() {
@@ -638,7 +652,10 @@ define([
             };
             $el.data('pat-inject-triggered', true);
             // possibility for spinners on targets
-            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { cfg.$target.addClass(cfg.loadingClass); });
+            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { 
+                if (cfg.target  != 'none')
+                    cfg.$target.addClass(cfg.loadingClass); 
+            });
             // Put the execute class on the elem that has pat inject on it
             _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { $el.addClass(cfg.executingClass); });
 
@@ -647,7 +664,7 @@ define([
             $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", function() {
                 $el.removeData('pat-inject-triggered');
             });
-
+            
             if (cfgs[0].url.length) {
                 ajax.request($el, {url: cfgs[0].url});
             } else {
@@ -674,6 +691,10 @@ define([
                 elementafter:  "after"
             }[cfg.action];
 
+            if (cfg.source === 'none') {
+                $target.replaceWith('');
+                return true;                
+            }
             if ($source.length === 0) {
                 log.warn("Aborting injection, source not found:", $source);
                 $(trigger).trigger("pat-inject-missingSource",
@@ -681,6 +702,9 @@ define([
                          selector: cfg.source});
                 return false;
             }
+            if (cfg.target === "none")
+                // Special case. Don't do anything, we don't want any result
+                return true;
             if ($target.length === 0) {
                 log.warn("Aborting injection, target not found:", $target);
                 $(trigger).trigger("pat-inject-missingTarget",
@@ -698,10 +722,14 @@ define([
         },
 
         _sourcesFromHtml: function inject_sourcesFromHtml(html, url, sources) {
+
             var $html = inject._parseRawHtml(html, url);
             return sources.map(function inject_sourcesFromHtml_map(source) {
                 if (source === "body") {
                     source = "#__original_body";
+                }
+                if (source === "none") {
+                    return $('<!-- -->');
                 }
                 var $source = $html.find(source);
 
@@ -786,6 +814,10 @@ define([
         },
 
         _rebaseHTML: function inject_rebaseHTML(base, html) {
+            if (html === '') {
+                // Special case, source is none
+                return '';
+            }
             var $page = $(html.replace(
                 /(\s)(src\s*)=/gi,
                 "$1src=\"\" data-pat-inject-rebase-$2="

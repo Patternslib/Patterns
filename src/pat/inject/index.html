@@ -183,6 +183,22 @@
     </p>
   </section>
 
+  <section>
+    <h3>Call something without injecting anything</h3>
+    <p> You need to open your network inspector to actually validate that the request is sent. It works if you see a call to backend-action.html in the list of requested items.</p>
+
+    <a href="backend-action.html#something" class="pat-inject" data-pat-inject="target:none">Trigger something, but don't inject results</a>
+
+  </section>
+
+  <section>
+    <h3>Inject nothing into the target, effectively destroying whatever is in there.</h3>
+    <p> The source is nothing and the target is given, so when triggering the injection, the target is removed.</p>
+    <p id="to-be-killed">I will be killed once you click the link below</p>
+    <a href="backend-action.html#something" class="pat-inject" data-pat-inject="source:none; target: #to-be-killed">Do something, but don't replace any content, just kill the target.</a>
+
+  </section>
+
   <style>
 
     body {

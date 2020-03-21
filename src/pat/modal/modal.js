@@ -81,8 +81,10 @@ define([
 
         _init_handlers: function() {
             var $el = this.$el;
-            $(document).on("click.pat-modal", ".close-panel[type!=submit]", this.destroy.bind(this));
-            $(document).on("click.pat-modal", ".close-panel[type=submit]", this.destroy_inject.bind(this));
+            $(document).on("click.pat-modal", "#pat-modal .close-panel[type!=submit]", this.destroy.bind(this));
+            $(document).on("click.pat-modal", ".pat-modal .close-panel[type!=submit]", this.destroy.bind(this));
+            $(document).on("click.pat-modal", "#pat-modal .close-panel[type=submit]", this.destroy_inject.bind(this));
+            $(document).on("click.pat-modal", ".pat-modal .close-panel[type=submit]", this.destroy_inject.bind(this));
             $(document).on("keyup.pat-modal", this._onKeyUp.bind(this));
             if (this.options.closing.indexOf("outside")!==-1) {
                 $(document).on("click.pat-modal", this._onPossibleOutsideClick.bind(this));
