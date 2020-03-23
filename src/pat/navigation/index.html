@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/style/common.css" type="text/css" />
     <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
     <style type="text/css" media="screen">
+
+      /* example 1 styles */
       a.current {
         color: white;
         background: green;
@@ -14,9 +16,35 @@
         color: white;
         background: blue;
       }
-      #content-tab {
+
+      /* example 2 styles */
+      a.active {
+        color: blue;
+        background: red;
+      }
+      .in-path,
+      .in-path > a {
+        color: yellow;
+        background: grey;
+      }
+
+      .example2 div div {
+        margin-left: 1em;
+      }
+      .pat-navigation {
+        display: inline-block;
+        width: 10em;
+        vertical-align: top;
+      }
+      #content-tab-1,
+      #content-tab-2 {
         font-weight: bold;
         font-size: 2em;
+        display: inline-block;
+        vertical-align: top;
+      }
+      .injection_content {
+        display: none;
       }
     </style>
   </head>
@@ -32,26 +60,26 @@
       <ul class="pat-navigation">
         <li>
           <a
-            href="pattern-test-response.html#inject-tab-1"
+            href="#inject-tab-1"
             class="pat-inject"
-            data-pat-inject="target: #content-tab"
+            data-pat-inject="target: #content-tab-1"
             >Tab 1</a
           >
 
           <ul>
             <li>
               <a
-                href="pattern-test-response.html#inject-tab-1-1"
+                href="#inject-tab-1-1"
                 class="pat-inject"
-                data-pat-inject="target: #content-tab"
+                data-pat-inject="target: #content-tab-1"
                 >Link 1.1</a
               >
             </li>
             <li>
               <a
-                href="pattern-test-response.html#inject-tab-1-2"
+                href="#inject-tab-1-2"
                 class="pat-inject"
-                data-pat-inject="target: #content-tab"
+                data-pat-inject="target: #content-tab-1"
                 >Link 1.2</a
               >
             </li>
@@ -59,44 +87,74 @@
         </li>
         <li>
           <a
-            href="pattern-test-response.html#inject-tab-2"
+            href="#inject-tab-2"
             class="pat-inject"
-            data-pat-inject="target: #content-tab"
+            data-pat-inject="target: #content-tab-1"
             >Tab 2</a
           >
         </li>
       </ul>
+
+      <div id="content-tab-1">Example 1 Content will appear here</div>
+
     </section>
 
     <section>
       <header>
         <h3>
-          Example 2, same as above. Shows that multiple navigation patterns can
-          be used on same site.
+          Example 2
         </h3>
       </header>
-      <ul class="pat-navigation">
-        <li>
+      <nav
+        class="pat-navigation example2 navigation-load-current"
+        data-pat-navigation="item-wrapper: div; in-path-class: in-path; current-class: active">
+        <div>
           <a
-            href="pattern-test-response.html#inject-tab-1"
+            href="#inject-tab-1"
             class="pat-inject"
-            data-pat-inject="target: #content-tab"
-            >Tab 1</a
-          >
-        </li>
+            data-pat-inject="target: #content-tab-2"
+            >Tab 1
+          </a>
+          <div>
+            <a
+              href="#inject-tab-1-1"
+              class="pat-inject active"
+              data-pat-inject="target: #content-tab-2"
+              >Link 1.1
+            </a>
+          </div>
+        </div>
+        <div>
+          <a
+            href="#inject-tab-2"
+            class="pat-inject"
+            data-pat-inject="target: #content-tab-2"
+            >Tab 2
+          </a>
+        </div>
+      </nav>
 
-        <li>
-          <a
-            href="pattern-test-response.html#inject-tab-2"
-            class="pat-inject"
-            data-pat-inject="target: #content-tab"
-            >Tab 2</a
-          >
-        </li>
-      </ul>
+      <div id="content-tab-2">Example 2 Content will appear here</div>
+
     </section>
 
-    <div id="content-tab">Content will appear here</div>
+    <section class="injection_content">
+      <div id="inject-tab-1">
+        Content for tab 1
+      </div>
+
+      <div id="inject-tab-2">
+        Content for tab 2
+      </div>
+
+      <div id="inject-tab-1-1">
+        Content for tab 1.1
+      </div>
+
+      <div id="inject-tab-1-2">
+        Content for tab 1.2
+      </div>
+    </section>
 
   </body>
 </html>
