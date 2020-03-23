@@ -182,4 +182,73 @@ define(["pat-registry", "pat-navigation", "pat-inject"], function(Registry) {
         });
 
     });
+
+    describe("Navigation pattern tests - no predefined structure", function() {
+        it("Reacts on DOM change", function(done) {
+
+            var w1 = document.createElement('div');
+            w1.setAttribute('class', 'w1');
+
+            var a1 = document.createElement('a');
+            a1.setAttribute('href', '/path/to');
+            a1.setAttribute('class', 'a1');
+            a1.appendChild(document.createTextNode('link a1'))
+            w1.appendChild(a1);
+
+            var w11 = document.createElement('div');
+            w11.setAttribute('class', 'w11');
+            w1.appendChild(w11);
+
+            var a11 = document.createElement('a');
+            a11.setAttribute('href', '/path/to/test');
+            a11.setAttribute('class', 'a11');
+            a11.appendChild(document.createTextNode('link a11'))
+            w11.appendChild(a11);
+
+            var injected_nav = document.createElement('div');
+            injected_nav.setAttribute("id", "injected_nav");
+            injected_nav.appendChild(w1);
+            document.body.appendChild(injected_nav);
+
+            var load_nav = document.createElement('a');
+            load_nav.setAttribute('href', '#injected_nav');
+            load_nav.setAttribute('class', 'pat-inject');
+            load_nav.setAttribute("data-pat-inject", "target: #injection_target")
+            load_nav.appendChild(document.createTextNode('load navigation'))
+            document.body.appendChild(load_nav);
+
+            var nav = document.createElement('nav');
+            nav.setAttribute('id', 'injection_target');
+            nav.setAttribute('class', 'pat-navigation nav');
+            nav.setAttribute('data-pat-navigation', 'item-wrapper: div');
+            document.body.appendChild(nav);
+
+            // TODO: change when using Jest: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
+            history.pushState(null, '', "/path/to/test");
+
+            Registry.scan('body');
+
+            load_nav.click();
+
+            // wait for everything done until testing.
+            window.setTimeout(function () {
+                var w1 = nav.querySelector('.w1');
+                var a1 = nav.querySelector('.a1');
+                var w11 = nav.querySelector('.w11');
+                var a11 = nav.querySelector('.a11');
+                expect(w1.classList.contains('current')).toBeFalsy();
+                expect(w1.classList.contains('navigation-in-path')).toBeTruthy();
+                expect(a1.classList.contains('current')).toBeFalsy();
+                expect(a1.classList.contains('navigation-in-path')).toBeFalsy();
+                expect(w11.classList.contains('current')).toBeTruthy();
+                expect(w11.classList.contains('navigation-in-path')).toBeFalsy();
+                expect(a11.classList.contains('current')).toBeTruthy();
+                expect(a11.classList.contains('navigation-in-path')).toBeFalsy();
+
+                done();
+            }, 300);
+
+        });
+    });
+
 });

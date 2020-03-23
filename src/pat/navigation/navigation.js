@@ -17,10 +17,6 @@ define([
         init: function($el, opts) {
             this.options = parser.parse($el, opts);
             var current = this.options.currentClass;
-
-            var curpath = window.location.pathname;
-            log.debug("current path:", curpath);
-
             // check whether to load
             if ($el.hasClass("navigation-load-current")) {
                 $el.find("a." + current, "."  + current + " a").click();
@@ -47,6 +43,19 @@ define([
                 this._updatenavpath($el);
             }.bind(this));
 
+            var observer = new MutationObserver(this._initialSet.bind(this));
+            observer.observe($el[0], {
+                childList: true,
+                subtree: true,
+                attributes: false,
+                characterData: false,
+            });
+
+            this._initialSet();
+        },
+        _initialSet: function () {
+            var $el = this.$el;
+            var current = this.options.currentClass;
             // Set current class if it is not set
             if ($el[0].querySelectorAll('.' + current).length === 0) {
                 $el[0].querySelectorAll("a").forEach(function (it) {
@@ -59,7 +68,7 @@ define([
                     }
                     path = this._pathfromurl(url);
                     log.debug("checking url:", url, "extracted path:", path);
-                    if (this._match(curpath, path)) {
+                    if (this._match(window.location.pathname, path)) {
                         log.debug("found match", $li);
                         $a.addClass(current);
                         $li.addClass(current);
