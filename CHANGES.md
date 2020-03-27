@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- Modal: Allow passing of parameters ``url`` and ``trigger`` to pat-inject. This allows programmatic instantiation of a modal with injected content.
 - Navigation:
   - Do not set the ``.navigation-in-path`` class for elenents already marked with ``.current``.
   - Allow configuration of "in path" and "current" classes via ``in-path-class`` and ``current-class`` configuration options.

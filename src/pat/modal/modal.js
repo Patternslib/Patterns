@@ -11,6 +11,8 @@ define([
     parser.addArgument("closing", ["close-button"], ["close-button", "outside"], true);
     parser.addArgument("close-text", 'Close');
     parser.addArgument("panel-header-content", ":first:not(.header)");
+    parser.addArgument("url", null);  // inject-url
+    parser.addArgument("trigger", null);  // inject-trigger
 
     return Base.extend({
         name: "modal",
@@ -35,6 +37,13 @@ define([
                 target: "#pat-modal",
                 "class": "pat-modal" + (this.options["class"] ? " " + this.options["class"] : "")
             };
+            if (this.options.url) {
+                opts.url = this.options.url;
+            }
+            if (this.options.trigger) {
+                opts.trigger = this.options.trigger;
+            }
+
             // if $el is already inside a modal, do not detach #pat-modal,
             // because this would unnecessarily close the modal itself
             if (!this.$el.closest("#pat-modal")) {
