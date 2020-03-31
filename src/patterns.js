@@ -99,6 +99,7 @@ define([
     // Since we are in a non-AMD env, register a few useful utilites
     var window = require("window");
     window.jQuery = $;
+    window.patterns = registry;
     require("imports-loader?this=>window!jquery.browser");
 
     $(function () {
