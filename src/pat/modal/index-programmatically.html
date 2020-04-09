@@ -11,14 +11,29 @@
 	</head>
 	<body>
 
+  <button id="patternlessclicktest">Open Modal</button>
+
+  <a
+      id="modal_opener"
+      class="pat-modal"
+      href="http://0.0.0.0:3001/src/pat/modal/modal-sources.html"
+      style="display:none">
+    really open modal
+  </a>
+
   <script>
-    var modal = new patterns.patterns.modal(
-      $('<span/>'),
-      {
-        url: 'http://0.0.0.0:3001/src/pat/modal/index.html#modal_content',
-        trigger: 'autoload'
-      }
-    );
+    document.querySelector('#patternlessclicktest').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector('#modal_opener').click();
+    });
+
+    //var modal = new patterns.patterns.modal(
+    //  $('<span/>'),
+    //  {
+    //    url: 'http://0.0.0.0:3001/src/pat/modal/index.html#modal_content',
+    //    trigger: 'autoload'
+    //  }
+    //);
   </script>
 
 </html>
