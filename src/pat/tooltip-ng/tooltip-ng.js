@@ -131,7 +131,6 @@
 
                 this.options = tooltip.parseOptionsForTippy(this.options, $trigger)
                 const instance = tippy($trigger[0], this.options)
-                $(instance.popper).css({'max-height': '90%', 'overflow-y': 'auto'})
                 tooltip.setupShowEvents($trigger)
             })
         },
