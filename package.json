@@ -15,9 +15,9 @@
     "url": "https://github.com/Patternslib/patterns.git"
   },
   "dependencies": {
-    "@babel/cli": "^7.1.0",
-    "@babel/core": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "chokidar": "^3.3.1",
     "almond": "0.3.3",
     "anythingslider": "git+https://github.com/fulv/AnythingSlider.git",
@@ -117,10 +117,6 @@
     "webpack-visualizer-plugin": "^0.1.11",
     "wrapper-webpack-plugin": "^2.0.0",
     "yo": "^2.0.6"
-  },
-  "optionalDependencies": {
-    "chokidar": "3.3.1",
-    "fsevents": "2.1.2"
   },
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
