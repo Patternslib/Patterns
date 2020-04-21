@@ -46,6 +46,18 @@
       >.
     </p>
 
+    <p class="modal_open_button">
+      Open a modal via a Button which redirects the click to a hidden anchor element.
+      <button class="pat-forward" data-pat-forward="selector: .modal_open_button--opener">Open Modal</button>
+      <a
+          id="callbackbutton_modal_opener"
+          class="pat-modal modal_open_button--opener"
+          href="#modal-source"
+          style="display:none">
+        really open modal
+      </a>
+    </p>
+
     <div id="modal-source" hidden>
       <h3>
         Modal example
