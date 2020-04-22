@@ -1,4 +1,5 @@
-import { base as Base } from "patternslib-core";
+import Base from "patternslib-core/src/core/base";
+//import { base as Base } from "patternslib-core";
 import { parser as Parser } from "patternslib-core";
 import { logging } from "patternslib-core";
 import screenful from "screenfull";
