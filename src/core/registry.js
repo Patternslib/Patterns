@@ -18,14 +18,14 @@
 */
 import $ from "jquery";
 import _ from "underscore";
-import logger from "./logger";
+import logging from "./logging";
 import utils from "./utils";
 
 // below here modules that are only loaded
 import "./compat";
 import "./jquery-ext";
 
-var log = logger.getLogger("registry"),
+var log = logging.getLogger("registry"),
     disable_re = /patterns-disable=([^&]+)/g,
     dont_catch_re = /patterns-dont-catch/g,
     dont_catch = false,
@@ -97,7 +97,7 @@ var registry = {
         var $el = $(el);
         var pattern = registry.patterns[name];
         if (pattern.init) {
-            var plog = logger.getLogger("pat." + name);
+            var plog = logging.getLogger("pat." + name);
             if ($el.is(pattern.trigger)) {
                 plog.debug("Initialising:", $el);
                 try {

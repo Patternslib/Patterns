@@ -6,9 +6,8 @@
 import $ from "jquery";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
-import logging from "../../core/logger";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
-import registry from "../../core/registry";
 
 var log = logging.getLogger("stacks"),
     parser = new Parser("stacks");

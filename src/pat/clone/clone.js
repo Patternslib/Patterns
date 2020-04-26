@@ -3,9 +3,9 @@ import $ from "jquery";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import Base from "../../core/base";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 
-var log = logger.getLogger("pat-clone");
+var log = logging.getLogger("pat-clone");
 var parser = new Parser("clone");
 parser.addArgument("max");
 parser.addArgument("template", ":first");

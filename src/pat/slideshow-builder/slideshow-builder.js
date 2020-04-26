@@ -6,7 +6,7 @@
 
 import $ from "jquery";
 import registry from "../../core/registry";
-import logging from "../../core/logger";
+import logging from "../../core/logging";
 
 var log = logging.getLogger("slideshow-builder"),
     builder = {

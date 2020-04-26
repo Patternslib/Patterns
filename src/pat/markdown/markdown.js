@@ -1,11 +1,11 @@
 import $ from "jquery";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
 import Base from "../../core/base";
 import inject from "../inject/inject";
 import Showdown from "showdown";
 
-var log = logger.getLogger("pat.markdown");
+var log = logging.getLogger("pat.markdown");
 var is_markdown_resource = /\.md$/;
 
 var Markdown = Base.extend({

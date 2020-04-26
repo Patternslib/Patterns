@@ -8,14 +8,13 @@
 
 import $ from "jquery";
 import _ from "underscore";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
-import registry from "../../core/registry";
 import utils from "../../core/utils";
 
 var parser = new Parser("bumper"),
-    log = logger.getLogger("bumper");
+    log = logging.getLogger("bumper");
 
 parser.addArgument("margin", 0);
 parser.addArgument("selector");

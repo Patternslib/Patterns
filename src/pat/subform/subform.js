@@ -4,15 +4,13 @@
 * Copyright 2013 Marko Durkovic
 */
 import $ from "jquery";
-import registry from "../../core/registry";
-import logging from "../../core/logger";
-import Parser from "../../core/parser";
+import Base from "../../core/base";
+import logging from "../../core/logging";
 import ajax from "../ajax/ajax";
-import injext from "../inject/inject";
 
 var log = logging.getLogger("subform");
 
-var _ = {
+export default Base.extend({
     name: "subform",
     trigger: ".pat-subform",
 
@@ -122,7 +120,4 @@ var _ = {
             _.scopedSubmit($sub);
         }
     }
-};
-
-registry.register(_);
-export default _;
+});

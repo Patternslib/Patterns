@@ -1,9 +1,9 @@
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 
-const log = logger.getLogger("navigation");
+const log = logging.getLogger("navigation");
 const parser = new Parser("navigation");
 
 parser.addArgument("item-wrapper", "li");
