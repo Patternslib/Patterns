@@ -35,7 +35,7 @@ Not using the bundle, allows you to select patterns individually and gives you a
 For this example we will assume that you want only the `ajax` pattern as well as the custom pattern defined in the previous section.
 
 In this case, you will need to explicitly give the paths to all the modules you need.
-In the case of the `ajax` pattern we depend on `jquery`, `jquery.form`, `logging`, `logger`, `parser`, `utils`, `compat`, `jquery-ext`, `registry`.
+In the case of the `ajax` pattern we depend on `jquery`, `jquery.form`, `logging`, `parser`, `utils`, `compat`, `jquery-ext`, `registry`.
 
 Your `main.js` will look similar to:
 
@@ -47,7 +47,6 @@ require.config({
         logging: 'logging',
         'jquery.form': 'jquery.form',
 
-        logger: 'patterns_dir/core/logger',
         parser: 'patterns_dir/core/parser',
         utils: 'patterns_dir/core/utils',
         compat: 'patterns_dir/core/compat',

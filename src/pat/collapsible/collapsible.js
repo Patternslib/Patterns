@@ -10,14 +10,13 @@
 
 import $ from "jquery";
 import inject from "../inject/inject";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
-import registry from "../../core/registry";
 import Base from "../../core/base";
 import "../../core/jquery-ext";
 
-var log = logger.getLogger("pat.collapsible"),
+var log = logging.getLogger("pat.collapsible"),
     parser = new Parser("collapsible");
 
 parser.addArgument("load-content");

@@ -7,12 +7,12 @@
 */
 import $ from "jquery";
 import registry from "../../core/registry";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
 import utils from "../../core/utils";
 
-var log = logger.getLogger("pat.switch"),
+var log = logging.getLogger("pat.switch"),
     parser = new Parser("switch");
 
 parser.addArgument("selector");

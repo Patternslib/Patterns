@@ -2,14 +2,14 @@ import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
 import Parser from "../../core/parser";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 import htmlparser from "../../lib/htmlparser";
 import "intersection-observer";
 import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
 
-const log = logger.getLogger("pat.inject");
+const log = logging.getLogger("pat.inject");
 const parser = new Parser("inject");
 const TEXT_NODE = 3;
 const COMMENT_NODE = 8;

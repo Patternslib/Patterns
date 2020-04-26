@@ -4,13 +4,14 @@
 import $ from "jquery";
 import Base from "../../core/base";
 import utils from "../../core/utils";
-import logging from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import _ from "underscore";
 import imagesLoaded from "imagesloaded";
 
-var log = logging.getLogger("scroll"),
-    parser = new Parser("scroll");
+const log = logging.getLogger("scroll");
+const parser = new Parser("scroll");
+
 parser.addArgument("trigger", "click", ["click", "auto"]);
 parser.addArgument("direction", "top", ["top", "left"]);
 parser.addArgument("selector");

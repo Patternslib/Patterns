@@ -6,13 +6,13 @@
  * Copyright 2013 Marko Durkovic
  */
 import $ from "jquery";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import "select2";
 
 
-var log = logger.getLogger("autosuggest.");
+var log = logging.getLogger("autosuggest");
 var parser = new Parser("autosuggest");
 parser.addArgument("ajax-data-type", "JSON");
 parser.addArgument("ajax-search-index", "");
