@@ -10,11 +10,10 @@
 // // Imports for copy/paste
 // import pat_base from './core/base.js';
 // import pat_parser from './core/parser.js';
-// import pat_logger from './core/logger.js';
 
 // Import base
 import pat_registry from "./core/registry.js";
-import jquery from import $ from "jquery";;
+import jquery from import $ from "jquery";
 import "prefixfree";
 
 // Import all used patterns for the bundle to be generated

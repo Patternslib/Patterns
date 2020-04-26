@@ -14,15 +14,15 @@
 
 import $ from "jquery";
 import Registry from "./registry";
-import logger from "./logger";
+import logging from "./logging";
 import mockupParser from "./mockup-parser";
 
 
-var log = logger.getLogger("Patternslib Base");
+var log = logging.getLogger("Patternslib Base");
 
-var initBasePattern = function initBasePattern($el, options, trigger) {
+var initBasePattern = function($el, options, trigger) {
     var name = this.prototype.name;
-    var log = logger.getLogger("pat." + name);
+    var log = logging.getLogger("pat." + name);
     var pattern = $el.data("pattern-" + name);
     if (pattern === undefined && Registry.patterns[name]) {
         try {

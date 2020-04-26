@@ -9,7 +9,7 @@ import $ from "jquery";
 import registry from "../../core/registry";
 import Base from "../../core/base";
 import utils from "../../core/utils";
-import logging from "../../core/logger";
+import logging from "../../core/logging";
 import DependsHandler from "../../lib/dependshandler";
 import Parser from "../../core/parser";
 

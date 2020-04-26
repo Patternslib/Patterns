@@ -1,11 +1,11 @@
 import $ from "jquery";,
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 import modal from "../modal/modal";
 import input_change_events from "../../lib/input-change-events";
 
-var log = logger.getLogger("form-state");
+var log = logging.getLogger("form-state");
 
 var _ = {
     name: "form-state",

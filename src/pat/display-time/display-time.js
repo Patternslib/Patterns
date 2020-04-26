@@ -1,11 +1,9 @@
-import $ from "jquery";,
 import Base from "../../core/base";
-import registry from "../../core/registry";
 import Parser from "../../core/parser";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import moment from "moment";
 
-var log = logger.getLogger("pat-display-time");
+var log = logging.getLogger("pat-display-time");
 log.debug("pattern loaded");
 
 var lang = document.getElementsByTagName("html")[0].getAttribute("lang");

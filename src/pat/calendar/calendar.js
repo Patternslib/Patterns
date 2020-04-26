@@ -6,7 +6,7 @@
  * Copyright 2014 Syslab.com GmbH
  */
 import $ from "jquery";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
 import utils from "../../core/utils";
@@ -16,7 +16,7 @@ import momentTz from "./moment-timezone-with-data-2010-2020";
 import "fullcalendar";
 
 
-var log = logger.getLogger("calendar"),
+var log = logging.getLogger("calendar"),
     parser = new Parser("calendar");
 
 parser.addArgument("calendar-controls", ""); // Calendar controls must have "id" attr set

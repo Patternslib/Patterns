@@ -1,10 +1,10 @@
 import $ from "jquery";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import "jquery-jcrop";
 
-var log = logger.getLogger("pat.image-crop"),
+var log = logging.getLogger("pat.image-crop"),
     parser = new Parser("image-crop");
 
 parser.addArgument("preview-id", "");

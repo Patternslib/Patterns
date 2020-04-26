@@ -7,7 +7,7 @@
 * Copyright 2011 SYSLAB.COM GmbH
 */
 import $ from "jquery";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 import Parser from "../../core/parser";
@@ -15,7 +15,7 @@ import inject from "../inject/inject";
 import "../../core/remove";
 
 
-var log = logger.getLogger("tooltip"),
+var log = logging.getLogger("tooltip"),
     parser = new Parser("tooltip");
 
 var all_positions = [

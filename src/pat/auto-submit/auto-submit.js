@@ -8,9 +8,8 @@
  */
 
 import $ from "jquery";
-import registry from "../../core/registry";
-import Base from "../../core/base";
 import logging from "../../core/logging";
+import Base from "../../core/base";
 import Parser from "../../core/parser";
 import input_change_events from "../../lib/input-change-events";
 import utils from "../../core/utils";

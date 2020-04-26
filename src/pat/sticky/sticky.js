@@ -1,14 +1,13 @@
 /* pat-sticky - A pattern for a sticky polyfill */
-import _ from "underscore";,
+import _ from "underscore";
 import Parser from "../../core/parser";
-import registry from "../../core/registry";
 import Base from "../../core/base";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
 import Stickyfill from "stickyfilljs";
 "use strict";
 var parser = new Parser("sticky");
-var log = logger.getLogger("sticky");
+var log = logging.getLogger("sticky");
 parser.addArgument("selector", "");
 
 export default Base.extend({
