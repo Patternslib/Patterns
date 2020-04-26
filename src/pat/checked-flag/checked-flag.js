@@ -9,11 +9,11 @@
 
 import $ from "jquery";
 import registry from "../../core/registry";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import utils from "../../core/utils";
 
 
-var log = logger.getLogger("checkedflag");
+var log = logging.getLogger("checkedflag");
 
 var checkedflag = {
     name: "checkedflag",

@@ -3,13 +3,12 @@
 *
 * Copyright 2013 Marko Durkovic
 */
-import $ from "jquery";,
-import registry from "../../core/registry";
-import logger from "../../core/logger";
+import $ from "jquery";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import inject from "../inject/inject";
 
-var log = logger.getLogger("notification"),
+var log = logging.getLogger("notification"),
     parser = new Parser("notification");
 
 parser.addArgument("type", "static", ["static", "banner"]);
@@ -18,7 +17,7 @@ parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
 parser.addArgument("class");
 parser.addArgument("close-text", "Close");
 
-var _ = {
+export default Base.extend({
     name: "notification",
     trigger: ".pat-notification",
 
@@ -232,7 +231,4 @@ var _ = {
             }
         );
     }
-};
-
-patterns.register(_);
-export default _;
+});

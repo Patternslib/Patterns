@@ -1,9 +1,9 @@
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import screenful from "screenfull";
 
-const log = logger.getLogger("fullscreen");
+const log = logging.getLogger("fullscreen");
 const parser = new Parser("fullscreen");
 
 parser.addArgument("selector", null); // Selector for the fullscreen element.

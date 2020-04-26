@@ -180,7 +180,6 @@ module.exports = {
             "pat-htmlparser": path.resolve(__dirname, "../src/lib/htmlparser.js"),
             "pat-input-change-events": path.resolve(__dirname, "../src/lib/input-change-events.js"),
             "pat-jquery-ext": path.resolve(__dirname, "../src/core/jquery-ext.js"),
-            "pat-logger": path.resolve(__dirname, "../src/core/logger.js"),
             "pat-parser": path.resolve(__dirname, "../src/core/parser.js"),
             "pat-mockup-parser": path.resolve(__dirname, "../src/core/mockup-parser.js"),
             "pat-registry": path.resolve(__dirname, "../src/core/registry.js"),

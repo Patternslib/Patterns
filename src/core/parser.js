@@ -8,8 +8,7 @@
 import $ from "jquery";
 import _ from "underscore";
 import utils from "./utils.js";
-import logger from "./logger";
-
+import logging from "./logging";
 
 function ArgumentParser(name, opts) {
     opts = opts || {};
@@ -20,7 +19,7 @@ function ArgumentParser(name, opts) {
     this.enum_conflicts = [];
     this.groups = {};
     this.possible_groups = {};
-    this.log = logger.getLogger(name + ".parser");
+    this.log = logging.getLogger(name + ".parser");
 }
 
 ArgumentParser.prototype = {

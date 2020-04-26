@@ -4,11 +4,11 @@
 import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
-import utils from "../../core/utils";
-import logging from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
-var log = logging.getLogger("tabs"),
-    parser = new Parser("tabs");
+
+const log = logging.getLogger("tabs");
+const parser = new Parser("tabs");
 
 export default Base.extend({
     name: "tabs",

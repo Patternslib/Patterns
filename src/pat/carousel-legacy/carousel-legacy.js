@@ -6,11 +6,11 @@
  */
 import $ from "jquery";
 import registry from "../../core/registry";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import "anythingslider";
 
-var log = logger.getLogger("pat.carousel-legacy"),
+var log = logging.getLogger("pat.carousel-legacy"),
     parser = new Parser("carousel-legacy");
 
 parser.addArgument("auto-play", false);

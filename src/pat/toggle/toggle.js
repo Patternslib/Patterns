@@ -5,11 +5,11 @@
 */
 import $ from "jquery";
 import registry from "../../core/registry";
-import logger from "../../core/logger";
+import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import store from "../../core/store";
 
-var log = logger.getLogger("pat.toggle"),
+var log = logging.getLogger("pat.toggle"),
     parser = new Parser("toggle");
 
 parser.addArgument("selector");

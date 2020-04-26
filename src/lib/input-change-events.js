@@ -1,8 +1,8 @@
 // helper functions to make all input elements
 import $ from "jquery";
 import logging from "../core/logging";
-var namespace = "input-change-events",
-    log = logging.getLogger(namespace);
+var namespace = "input-change-events";
+const log = logging.getLogger(namespace);
 
 var _ = {
     setup: function($el, pat) {
