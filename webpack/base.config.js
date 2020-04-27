@@ -73,17 +73,6 @@ module.exports = {
                 ]
             },
             {
-                test: /jquery.chosen/,
-                use: [{
-                        loader: 'expose-loader',
-                        query: 'AbstractChosen'
-                    },
-                    {
-                        loader: 'imports-loader?chosen,jQuery=jquery,$=jquery,this=>window',
-                    }
-                ]
-            },
-            {
                 test: /showdown-prettify/,
                 use: [
                     {
@@ -119,7 +108,6 @@ module.exports = {
             "google-code-prettify": path.resolve(__dirname, "../node_modules/google-code-prettify/src/prettify.js"),
             "intersection-observer": path.resolve(__dirname, "../node_modules/intersection-observer/intersection-observer.js"),
             "jcrop": path.resolve(__dirname, "../node_modules/jquery-jcrop/js/jquery.Jcrop.min.js"),
-            "jquery.chosen": path.resolve(__dirname, "../node_modules/chosen-js/chosen.jquery.js"),
             "jquery.placeholder": path.resolve(__dirname, "../node_modules/jquery-placeholder/jquery.placeholder.js"),
             "jquery.textchange": path.resolve(__dirname, "../node_modules/jquery-textchange/jquery.textchange.js"),
             "logging": path.resolve(__dirname, "../node_modules/logging/src/logging.js"),
@@ -194,7 +182,6 @@ module.exports = {
             "pat-calendar": path.resolve(__dirname, "../src/pat/calendar/calendar.js"),
             "pat-carousel": path.resolve(__dirname, "../src/pat/carousel/carousel.js"),
             "pat-checklist": path.resolve(__dirname, "../src/pat/checklist/checklist.js"),
-            "pat-chosen": path.resolve(__dirname, "../src/pat/chosen/chosen.js"),
             "pat-clone": path.resolve(__dirname, "../src/pat/clone/clone.js"),
             "pat-collapsible": path.resolve(__dirname, "../src/pat/collapsible/collapsible.js"),
             "pat-colour-picker": path.resolve(__dirname, "../src/pat/colour-picker/colour-picker.js"),
