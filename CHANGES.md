@@ -1,5 +1,11 @@
 # Changelog
 
+
+## 5.0.0-dev - unreleased
+
+- Removed unused or obsolete patterns:
+  - pat-menu
+
 ## 4.0.0-dev - unreleased
 
 Features
