@@ -229,7 +229,6 @@ module.exports = {
             "pat-legend": path.resolve(__dirname, "../src/pat/legend/legend.js"),
             "pat-markdown": path.resolve(__dirname, "../src/pat/markdown/markdown.js"),
             "pat-masonry": path.resolve(__dirname, "../src/pat/masonry/masonry.js"),
-            "pat-menu": path.resolve(__dirname, "../src/pat/menu/menu.js"),
             "pat-modal": path.resolve(__dirname, "../src/pat/modal/modal.js"),
             "pat-navigation": path.resolve(__dirname, "../src/pat/navigation/navigation.js"),
             "pat-notification": path.resolve(__dirname, "../src/pat/notification/notification.js"),
