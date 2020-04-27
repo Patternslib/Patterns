@@ -7,6 +7,7 @@
   - pat-menu
   - pat-carousel-legacy
   - pat-checked-flag
+  - pat-chosen
 
 
 ## 4.0.0-dev - unreleased
