@@ -72,7 +72,6 @@ import pat_validation from './pat/validation/validation.js';
 import pat_zoom from './pat/zoom/zoom.js';
 import scroll_detection from './core/scroll_detection.js';
 import pat_push_kit from './core/push_kit.js';
-// import pat_chosen from './pat/chosen/chosen.js';
 */
 
 import pat_fullscreen from "./pat/fullscreen/fullscreen.js";
