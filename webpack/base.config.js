@@ -193,8 +193,6 @@ module.exports = {
             "pat-bumper": path.resolve(__dirname, "../src/pat/bumper/bumper.js"),
             "pat-calendar": path.resolve(__dirname, "../src/pat/calendar/calendar.js"),
             "pat-carousel": path.resolve(__dirname, "../src/pat/carousel/carousel.js"),
-            "pat-checkedflag": path.resolve(__dirname, "../src/pat/checked-flag/checked-flag.js"),
-            "pat-checked-flag": path.resolve(__dirname, "../src/pat/checked-flag/checked-flag.js"),
             "pat-checklist": path.resolve(__dirname, "../src/pat/checklist/checklist.js"),
             "pat-chosen": path.resolve(__dirname, "../src/pat/chosen/chosen.js"),
             "pat-clone": path.resolve(__dirname, "../src/pat/clone/clone.js"),
