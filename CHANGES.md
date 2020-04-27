@@ -9,6 +9,7 @@
   - pat-checked-flag
   - pat-chosen
   - pat-edit-tinymce
+  - pat-placeholder and simplePlaceholder from jquery-ext.
 
 
 ## 4.0.0-dev - unreleased

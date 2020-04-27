@@ -52,7 +52,6 @@ import pat_modal from './pat/modal/modal.js';
 import pat_navigation from './pat/navigation/navigation.js';
 import pat_notification from './pat/notification/notification.js';
 import pat_masonry from './pat/masonry/masonry.js';
-import pat_placeholder from './pat/placeholder/placeholder.js';
 import pat_scroll from './pat/scroll/scroll.js';
 import pat_selectbox from './pat/selectbox/selectbox.js';
 import pat_slides from './pat/slides/slides.js';
