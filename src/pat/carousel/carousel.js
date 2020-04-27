@@ -67,7 +67,6 @@ var carousel = {
             return;
         }
         var $carousel = $el.slick(settings),
-            // control = $carousel.data("AnythingSlider"),
             $panel_links = $();
 
         $carousel
