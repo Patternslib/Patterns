@@ -6,6 +6,8 @@
 - Removed unused or obsolete patterns:
   - pat-menu
   - pat-carousel-legacy
+  - pat-checked-flag
+
 
 ## 4.0.0-dev - unreleased
 
