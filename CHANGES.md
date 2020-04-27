@@ -8,6 +8,7 @@
   - pat-carousel-legacy
   - pat-checked-flag
   - pat-chosen
+  - pat-edit-tinymce
 
 
 ## 4.0.0-dev - unreleased
