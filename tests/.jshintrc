@@ -26,6 +26,5 @@
         "requireDependencies",
         "requirejs",
         "spyOn",
-        "tinyMCE"
     ]
 }
