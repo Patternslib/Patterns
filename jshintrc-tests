@@ -20,7 +20,6 @@
         "module",
         "require",
         "requirejs",
-        "tinyMCE",
         "runs",
         "waits",
         "describe",

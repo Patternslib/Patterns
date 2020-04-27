@@ -41,7 +41,6 @@ src/pat/collapsible/collapsible.css
 src/pat/date-picker/date-picker.css
 src/pat/datetime-picker/datetime-picker.css
 src/pat/depends/depends.css
-src/pat/edit-tinymce/edit-tinymce.css
 src/pat/equaliser/equaliser.css
 src/pat/expandable-tree/expandable-tree.css
 src/pat/focus/focus.css

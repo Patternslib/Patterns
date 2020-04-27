@@ -17,7 +17,6 @@
         "module",
         "require",
         "requirejs",
-        "tinyMCE"
     ],
     "globals": {
       "esversion": 6
