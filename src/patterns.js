@@ -27,7 +27,6 @@ import pat_breadcrumbs from './pat/breadcrumbs/breadcrumbs.js';
 import pat_bumper from './pat/bumper/bumper.js';
 import pat_calendar from './pat/calendar/calendar.js';
 import pat_carousel from './pat/carousel/carousel.js';
-import pat_carousel_legacy from './pat/carousel-legacy/carousel-legacy.js';
 import pat_checklist from './pat/checklist/checklist.js';
 import pat_clone from './pat/clone/clone.js';
 import pat_collapsible from './pat/collapsible/collapsible.js';

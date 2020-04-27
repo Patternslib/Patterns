@@ -84,14 +84,6 @@ module.exports = {
                 ]
             },
             {
-                test: /jquery.anythingslider|jcrop|jquery.placeholder|jquery.textchange|parsley|parsley.extend|select2|spectrum|spectrum-colorpicker/,
-                use: [
-                    {
-                      loader: 'imports-loader?jquery',
-                    }
-                ]
-            },
-            {
                 test: /showdown-prettify/,
                 use: [
                     {
@@ -127,7 +119,6 @@ module.exports = {
             "google-code-prettify": path.resolve(__dirname, "../node_modules/google-code-prettify/src/prettify.js"),
             "intersection-observer": path.resolve(__dirname, "../node_modules/intersection-observer/intersection-observer.js"),
             "jcrop": path.resolve(__dirname, "../node_modules/jquery-jcrop/js/jquery.Jcrop.min.js"),
-            "jquery.anythingslider": path.resolve(__dirname, "../node_modules/anythingslider/js/jquery.anythingslider.min.js"),
             "jquery.chosen": path.resolve(__dirname, "../node_modules/chosen-js/chosen.jquery.js"),
             "jquery.placeholder": path.resolve(__dirname, "../node_modules/jquery-placeholder/jquery.placeholder.js"),
             "jquery.textchange": path.resolve(__dirname, "../node_modules/jquery-textchange/jquery.textchange.js"),
@@ -202,7 +193,6 @@ module.exports = {
             "pat-bumper": path.resolve(__dirname, "../src/pat/bumper/bumper.js"),
             "pat-calendar": path.resolve(__dirname, "../src/pat/calendar/calendar.js"),
             "pat-carousel": path.resolve(__dirname, "../src/pat/carousel/carousel.js"),
-            "pat-carousel-legacy": path.resolve(__dirname, "../src/pat/carousel-legacy/carousel-legacy.js"),
             "pat-checkedflag": path.resolve(__dirname, "../src/pat/checked-flag/checked-flag.js"),
             "pat-checked-flag": path.resolve(__dirname, "../src/pat/checked-flag/checked-flag.js"),
             "pat-checklist": path.resolve(__dirname, "../src/pat/checklist/checklist.js"),
