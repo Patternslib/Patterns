@@ -65,7 +65,6 @@ all_css:: css
 	@$(SASS) -I . -I _sass src/pat/bumper/_bumper.scss src/pat/bumper/bumper.css
 	@$(SASS) -I . -I _sass src/pat/calendar/_calendar.scss src/pat/calendar/calendar.css
 	@$(SASS) -I . -I _sass src/pat/carousel/_carousel.scss src/pat/carousel/carousel.css
-	@$(SASS) -I . -I _sass src/pat/carousel/_carousel-legacy.scss src/pat/carousel-legacy/carousel-legacy.css
 	@$(SASS) -I . -I _sass src/pat/checklist/_checklist.scss src/pat/checklist/checklist.css
 	@$(SASS) -I . -I _sass src/pat/clone/_clone.scss src/pat/clone/clone.css
 	@$(SASS) -I . -I _sass src/pat/collapsible/_collapsible.scss src/pat/collapsible/collapsible.css

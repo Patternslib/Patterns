@@ -5,6 +5,7 @@
 
 - Removed unused or obsolete patterns:
   - pat-menu
+  - pat-carousel-legacy
 
 ## 4.0.0-dev - unreleased
 
