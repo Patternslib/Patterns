@@ -34,7 +34,6 @@ src/pat/autofocus/autofocus.css
 src/pat/bumper/bumper.css
 src/pat/calendar/calendar.css
 src/pat/carousel/carousel.css
-src/pat/checked-flag/checked-flag.css
 src/pat/checklist/checklist.css
 src/pat/clone/clone.css
 src/pat/collapsible/_collapsible.css
