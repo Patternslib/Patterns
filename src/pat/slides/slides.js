@@ -5,7 +5,7 @@
 */
 import $ from "jquery";
 import registry from "../../core/registry";
-import Presentation from "slides";
+import Presentation from "slides/src/slides";
 import utils from "../../core/utils";
 import url from "../../core/url";
 import remove from "../../core/remove";
