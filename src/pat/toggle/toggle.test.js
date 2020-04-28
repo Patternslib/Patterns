@@ -234,9 +234,9 @@ describe("Pattern implementation", function() {
         });
     });
 
-    describe("Toggle default event", function() {
-        beforeEach(function() {
-            this.$el = $(
+    describe("Toggle event triggers", function() {
+        it("by default on click event", function() {
+            $(
                 "" +
                     '<div id="lab">' +
                     ' <a class="pat-toggle"' +
@@ -247,28 +247,19 @@ describe("Pattern implementation", function() {
                     " </div>" +
                     "</div>"
             ).appendTo(document.body);
+
+            expect($(".toggled").length).toEqual(0);
+            pattern.init($('.pat-toggle'));
+
+            expect($(".toggled").length).toEqual(0);
+            $(".pat-toggle").click();
+            expect($(".toggled").length).toEqual(1);
+            $(".pat-toggle").click();
+            expect($(".toggled").length).toEqual(0);
         });
 
-        afterEach(function() {
-            this.$el.remove();
-        });
-
-        it("by default toggles on click event", function() {
-            expect($(".toggled", this.$el).length).toEqual(0);
-
-            // scan dom for patterns
-            registry.scan(this.$el);
-            expect($(".toggled", this.$el).length).toEqual(0);
-            $(".pat-toggle", this.$el).trigger("click");
-            expect($(".toggled", this.$el).length).toEqual(1);
-            $(".pat-toggle", this.$el).trigger("click");
-            expect($(".toggled", this.$el).length).toEqual(0);
-        });
-    });
-
-    describe("Toggle custom event", function() {
-        beforeEach(function() {
-            this.$el = $(
+        it("can also listen to custom event", function() {
+            $(
                 "" +
                     '<div id="lab">' +
                     ' <a class="pat-toggle"' +
@@ -279,18 +270,13 @@ describe("Pattern implementation", function() {
                     " </div>" +
                     "</div>"
             ).appendTo(document.body);
-        });
 
-        afterEach(function() {
-            this.$el.remove();
-        });
+            expect($(".toggled").length).toEqual(0);
+            pattern.init($('.pat-toggle'));
 
-        it("can also listen to custom event", function() {
-            expect($(".toggled", this.$el).length).toEqual(0);
-            registry.scan(this.$el);
-            expect($(".toggled", this.$el).length).toEqual(0);
-            $(".pat-toggle", this.$el).trigger("onmouseenter");
-            expect($(".toggled", this.$el).length).toEqual(1);
+            expect($(".toggled").length).toEqual(0);
+            $(".pat-toggle").trigger("onmouseenter");
+            expect($(".toggled").length).toEqual(1);
         });
     });
 });
