@@ -38,7 +38,16 @@
         <p>
         Even images can have tooltips. Click on the image below to show a tooltip.
         </p>
-		<img src="http://farm8.staticflickr.com/7123/7591044464_e593c023df_z_d.jpg" class="float-before pat-tooltip" width="200" data-pat-tooltip="closing: sticky" title="This is a sticky tooltip for an image." alt="starwars meeting"/>
+        <img src="http://farm8.staticflickr.com/7123/7591044464_e593c023df_z_d.jpg" class="float-before pat-tooltip" width="200" data-pat-tooltip="closing: sticky" title="This is a sticky tooltip for an image." alt="starwars meeting"/>
+
+      <h3>Nested tooltips</h3>
+      <div class="nested-tooltip-container">
+        <a href="#nested-tooltip-content" title="tooltip title attribute" class="pat-tooltip" data-pat-tooltip="trigger: click; source: content">Parent tooltip</a>
+        <div id="nested-tooltip-content">
+          <a href="#nested-tooltip-content" title="nested tooltip title attribute" class="pat-tooltip" data-pat-tooltip="trigger: click; source: content">Nested tooltip</a>
+        </div>
+      </div>
     </section>
+
 </body>
 </html>
