@@ -289,19 +289,18 @@ describe("pat-tooltip", function() {
             tooltip_utils.removeTooltip();
         });
         it("will not close if the contained trigger is clicked", async function() {
-            var spy = spyOn(pattern, "show").and.callThrough();
+            var spy_show = spyOn(pattern, "show").and.callThrough();
+            var spy_hide = spyOn(pattern, "hide").and.callThrough();
             var $el = $("a#tooltip");
             pattern.init($el);
             pattern.init($("a#nested-tooltip"));
             $el.trigger(tooltip_utils.click);
-            expect(spy).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
 
             await utils.timeout(100); // hide events get registered 50 ms after show
 
             $(".tooltip-container a#nested-tooltip").trigger(tooltip_utils.click);
-            expect(
-                $(".tooltip-container a#nested-tooltip").css("visibility")
-            ).toBe("visible");
+            expect(spy_hide).not.toHaveBeenCalled();
         });
     });
 });
