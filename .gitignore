@@ -57,7 +57,6 @@ src/pat/navigation/navigation.css
 src/pat/notification/notification.css
 src/pat/slides/style/fontello/css/fontello-embedded.css
 src/pat/slides/style/fontello/css/fontello.css
-src/pat/slideshow-builder/slideshow-builder.css
 src/pat/sortable/sortable.css
 src/pat/stacks/stacks.css
 src/pat/switch/switch.css

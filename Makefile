@@ -86,7 +86,6 @@ all_css:: css
 	@$(SASS) -I . -I _sass src/pat/masonry/_masonry.scss src/pat/masonry/masonry.css
 	@$(SASS) -I . -I _sass src/pat/modal/_modal.scss src/pat/modal/modal.css
 	@$(SASS) -I . -I _sass src/pat/notification/_notification.scss src/pat/notification/notification.css
-	@$(SASS) -I . -I _sass src/pat/slideshow-builder/_slideshow-builder.scss src/pat/slideshow-builder/slideshow-builder.css
 	@$(SASS) -I . -I _sass src/pat/sortable/_sortable.scss src/pat/sortable/sortable.css
 	@$(SASS) -I . -I _sass src/pat/stacks/_stacks.scss src/pat/stacks/stacks.css
 	@$(SASS) -I . -I _sass src/pat/switch/_switch.scss src/pat/switch/switch.css
