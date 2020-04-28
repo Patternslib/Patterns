@@ -57,7 +57,6 @@ import pat_scroll from './pat/scroll/scroll.js';
 import pat_scroll_box from './pat/scroll-box/scroll-box.js';
 import pat_selectbox from './pat/selectbox/selectbox.js';
 import pat_slides from './pat/slides/slides.js';
-import pat_slideshow_builder from './pat/slideshow-builder/slideshow-builder.js';
 import pat_sortable from './pat/sortable/sortable.js';
 import pat_stacks from './pat/stacks/stacks.js';
 import pat_sticky from './pat/sticky/sticky.js';

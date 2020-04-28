@@ -10,6 +10,7 @@
   - pat-chosen
   - pat-edit-tinymce
   - pat-placeholder and simplePlaceholder from jquery-ext.
+  - pat-slideshow-builder
 
 
 ## 4.0.0-dev - unreleased
