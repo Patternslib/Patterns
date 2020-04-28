@@ -208,7 +208,6 @@ module.exports = {
             "pat-selectbox": path.resolve(__dirname, "../src/pat/selectbox/selectbox.js"),
             "pat-skeleton": path.resolve(__dirname, "../src/pat/skeleton/skeleton.js"),
             "pat-slides": path.resolve(__dirname, "../src/pat/slides/slides.js"),
-            "pat-slideshow-builder": path.resolve(__dirname, "../src/pat/slideshow-builder/slideshow-builder.js"),
             "pat-sortable": path.resolve(__dirname, "../src/pat/sortable/sortable.js"),
             "pat-stacks": path.resolve(__dirname, "../src/pat/stacks/stacks.js"),
             "pat-sticky": path.resolve(__dirname, "../src/pat/sticky/sticky.js"),
