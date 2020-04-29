@@ -88,6 +88,25 @@ To run automated tests in a browser instead of the defaul headless browser, run 
     karma start webpack/karma.config.js --browsers=Chrome --single-run=false
 
 
+    yarn test
+
+
+### Debugging tests
+
+Eventually add to tests:
+
+    import "core-js/stable";
+    import "regenerator-runtime/runtime";
+
+Then:
+
+    node --inspect-brk node_modules/.bin/jest --runInBand ./src/pat/tooltip/tooltip.test.js -t will.be.closed.when
+
+Connect in chrome via:
+
+    chrome://inspect
+
+
 ### Check bundle sizes
 
 We added a webpack plugin which helps in analyzing bundle sizes.
