@@ -89,7 +89,10 @@ ConsoleWriter.prototype = {
         } else if (level <= Level.INFO)
             console.info.apply(console, messages);
         else if (level <= Level.WARN) console.warn.apply(console, messages);
-        else console.error.apply(console, messages);
+        else {
+            console.error.apply(console, messages);
+            console.trace();
+        }
     }
 };
 
