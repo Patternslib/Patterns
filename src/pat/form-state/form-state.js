@@ -1,7 +1,6 @@
-import $ from "jquery";,
+import $ from "jquery";
 import logging from "../../core/logging";
 import registry from "../../core/registry";
-import utils from "../../core/utils";
 import modal from "../modal/modal";
 import input_change_events from "../../lib/input-change-events";
 
