@@ -1,7 +1,6 @@
-const webpack = require('webpack');
-const path = require('path');
 const merge = require('webpack-merge');
 const baseConfig = require('./base.config.js');
+const path = require('path');
 
 module.exports = merge(baseConfig, {
   mode: 'production',
