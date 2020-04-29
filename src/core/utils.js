@@ -536,7 +536,7 @@ function checkInputSupport(type, invalid_value) {
 
     if (invalid_value !== undefined) {
         // Check for input type UI support
-        input.setAttribute('value', value);
+        input.setAttribute('value', invalid_value);
         support = input.value !== invalid_value;
     }
     return support;

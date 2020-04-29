@@ -3,7 +3,7 @@
 *
 * Copyright 2013 Simplon B.V. - Wichert Akkerman
 */
-import $ from "jquery";,
+import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";

@@ -21,10 +21,9 @@ export default Base.extend({
 
     init($el, opts) {
         this.options = parser.parse(this.$el, opts);
-
-        const el = this.$el[0];
-        this.$el.on("click", this.fullscreen_handler.bind(this));
+        //const el = this.$el[0];
         //el.addEventListener('click', function (e) {  // TODO: doesn't work in karma for href links
+        this.$el.on("click", this.fullscreen_handler.bind(this));
     },
 
     fullscreen_handler(event) {
