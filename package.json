@@ -44,18 +44,29 @@
     "slides": "https://github.com/Patternslib/slides.git",
     "spectrum-colorpicker": "1.8.0",
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
-    "terser-webpack-plugin": "^2.1.0",
-    "text-loader": "^0.0.1",
     "tippy.js": ">=5.2.0",
     "typescript": "~3.7.2",
     "underscore": "^1.9.1",
     "validate.js": "0.11.1"
   },
   "devDependencies": {
-    "react-scripts": "3.3.1",
-    "regenerator-runtime": "^0.13.5"
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.3",
+    "expose-loader": "^0.7.5",
+    "imports-loader": "^0.8.0",
+    "raw-loader": "^4.0.1",
+    "react-scripts": "^3.4.1",
+    "regenerator-runtime": "^0.13.5",
+    "style-loader": "^1.2.1",
+    "terser-webpack-plugin": "^2.3.6",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2",
+    "webpack-visualizer-plugin": "^0.1.11"
   },
   "scripts": {
+    "serve": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
