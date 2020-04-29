@@ -161,7 +161,7 @@ var registry = {
     },
 
     register: function registry_register(pattern, name) {
-        var plugin_name, jquery_plugin;
+        var plugin_name;
         name = name || pattern.name;
         if (!name) {
             log.error("Pattern lacks a name:", pattern);
