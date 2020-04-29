@@ -1,6 +1,6 @@
+const baseConfig = require('./base.config.js');
+const BundleVisualizer = require('webpack-visualizer-plugin');
 const merge = require('webpack-merge');
-var baseConfig = require('./base.config.js');
-var JasmineWebpackPlugin = require('jasmine-webpack-plugin');
 
 
 module.exports = merge(baseConfig, {
@@ -11,7 +11,7 @@ module.exports = merge(baseConfig, {
         port: '3001',
         host: '0.0.0.0'
     },
-	plugins: [
-        new JasmineWebpackPlugin(),
-    ],
+    plugins: [
+        new BundleVisualizer(),
+    ]
 });
