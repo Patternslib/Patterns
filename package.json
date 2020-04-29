@@ -34,6 +34,8 @@
     "pikaday": "^1.8.0",
     "popper.js": "1.16.1",
     "prefixfree": "1.0.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "screenfull": "^5.0.0",
     "select2": "3.5.1",
     "showdown": "1.9.0",
@@ -45,21 +47,13 @@
     "terser-webpack-plugin": "^2.1.0",
     "text-loader": "^0.0.1",
     "tippy.js": ">=5.2.0",
+    "typescript": "~3.7.2",
     "underscore": "^1.9.1",
-    "validate.js": "0.11.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "typescript": "~3.7.2"
+    "validate.js": "0.11.1"
   },
   "devDependencies": {
-    "react-scripts": "3.3.1"
+    "react-scripts": "3.3.1",
+    "regenerator-runtime": "^0.13.5"
   },
   "scripts": {
     "start": "react-scripts start",
