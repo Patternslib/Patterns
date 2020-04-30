@@ -1,6 +1,6 @@
 import Base from "../../core/base";
 import utils from "../../core/utils";
-import prettify from "google-code-prettify";
+import prettify from "google-code-prettify/src/prettify";
 
 export default Base.extend({
     name: "syntax-highlight",
