@@ -144,6 +144,7 @@ var registry = {
         });
         $match = $(content).findInclusive(selectors.join(",")); // Find all DOM elements belonging to a pattern
         $match = $match.filter(function() {
+            // Filter out code examples wrapped in <pre> elements.
             return $(this).parents("pre").length === 0;
         });
         $match = $match.filter(":not(.cant-touch-this)");
