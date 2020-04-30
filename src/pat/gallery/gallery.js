@@ -8,8 +8,8 @@ import _ from "underscore";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import PhotoSwipe from "photoswipe";
-import PhotoSwipeUI from "photoswipe-ui";
-import template from "text!pat-gallery-template";  // XXX
+import PhotoSwipeUI from "photoswipe/dist/photoswipe-ui-default";
+import template from "./template.html";
 
 
 var parser = new Parser("gallery");
