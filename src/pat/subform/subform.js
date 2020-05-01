@@ -14,24 +14,20 @@ export default Base.extend({
     name: "subform",
     trigger: ".pat-subform",
 
-    init: function($el) {
-        return $el.each(function() {
-            var $el = $(this);
-            $el.submit(_.submit);
-            $el.find("input").on(
-                "keyup keypress keydown",
-                _.keyboard_handler
-            );
-            $el.find("button[type=submit]").on("click", _.submitClicked);
-            return $el;
-        });
+    init($el) {
+        $el.submit(this.submit.bind(this));
+        $el.find("input").on(
+            "keyup keypress keydown",
+            this.keyboard_handler.bind(this)
+        );
+        $el.find("button[type=submit]").on("click", this.submitClicked);
     },
 
-    destroy: function($el) {
+    destroy($el) {
         $el.off("submit");
     },
 
-    scopedSubmit: function($el) {
+    scopedSubmit($el) {
         var $form = $el.parents("form"),
             $exclude = $form.find(":input").filter(function() {
                 return !$(this).is($el.find("*"));
@@ -61,32 +57,31 @@ export default Base.extend({
         });
     },
 
-    submit: function(ev) {
+    submit(ev) {
         ev.stopPropagation();
-
-        var $this = $(this),
+        var $this = $(ev.target),
             $button = $this.find("button[type=submit][formaction]").first();
         if ($button.length) {
             $button.trigger("click");
         } else {
-            _.scopedSubmit($this);
+            this.scopedSubmit($this);
         }
     },
 
-    keyboard_handler: function(ev) {
+    keyboard_handler(ev) {
         // If the user presses the enter key and
         // we have an autosubmit form trigger the subform submission
         if (ev.keyCode != 13) {
             return;
         }
-        var $subform = $(this).parents(".pat-subform");
+        var $subform = $(ev.target).parents(".pat-subform");
         if (!$subform.is(".pat-autosubmit")) {
             return;
         }
         return $subform.submit();
     },
 
-    submitClicked: function(ev) {
+    submitClicked(ev) {
         ev.preventDefault();
         ev.stopPropagation();
         ajax.onClickSubmit(ev); // make sure the submitting button is sent with the form
@@ -103,7 +98,7 @@ export default Base.extend({
                     "pat-inject",
                     inject.extractConfig($sub, { url: formaction })
                 );
-                _.scopedSubmit($sub);
+                this.scopedSubmit($sub);
                 $sub.data("pat-inject", previousValue);
             } else if ($sub.is(".pat-modal")) {
                 $sub.data("pat-inject", [
@@ -111,13 +106,13 @@ export default Base.extend({
                         url: formaction
                     })
                 ]);
-                _.scopedSubmit($sub);
+                this.scopedSubmit($sub);
             } else {
                 $sub.parents("form").attr("action", formaction);
-                _.scopedSubmit($sub);
+                this.scopedSubmit($sub);
             }
         } else {
-            _.scopedSubmit($sub);
+            this.scopedSubmit($sub);
         }
     }
 });
