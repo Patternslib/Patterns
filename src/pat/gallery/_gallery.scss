@@ -4,7 +4,7 @@ $pswp__background-color: #000 !default;
 $pswp__placeholder-color: #222 !default;
 $pswp__box-sizing-border-box: true !default; // disable .pswp * { box-sizing:border-box } (in case you already have it in your site css)
 $pswp__root-z-index: 1500 !default;
-$pswp__assets-path: "/patternslib/src/pat/gallery/" !default; // path to skin assets folder (preloader, PNG and SVG sprite)
+$pswp__assets-path: "/src/pat/gallery/" !default; // path to skin assets folder (preloader, PNG and SVG sprite)
 $pswp__error-text-color: #ccc !default; // "Image not loaded" text color
 $pswp__include-minimal-style: true !default;
 
@@ -528,7 +528,7 @@ a.pswp__share--download {
 }
 
 /*
-	
+
 	4. Caption
 
  */
@@ -626,8 +626,8 @@ a.pswp__share--download {
   }
 
   .pswp__preloader__cut {
-    /* 
-			The idea of animating inner circle is based on Polymer ("material") loading indicator 
+    /*
+			The idea of animating inner circle is based on Polymer ("material") loading indicator
 			 by Keanu Lee https://blog.keanulee.com/2014/10/20/the-tale-of-three-spinners.html
 		*/
     position: relative;
@@ -684,7 +684,7 @@ a.pswp__share--download {
 }
 
 /*
-	
+
 	6. Additional styles
 
  */
