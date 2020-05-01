@@ -9,7 +9,6 @@
 @import "/style/fontello/css/fontello.css";
 @import "/style/fontello/css/fontello.css";
 @import "/style/fontello/css/fontello.css";
-@import "/style/fontello/css/fontello.css";
 .pat-button {
   font-family: "Source Sans Pro", sans-serif;
   margin: 0 0.5em 0 0;
@@ -637,7 +636,8 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
   height: auto !important;
 }
 
-.select2-container, .select2-drop {
+.select2-container,
+.select2-drop {
   box-sizing: border-box;
 }
 
@@ -814,7 +814,8 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
   background: white url("select2-spinner.gif") no-repeat 100%;
 }
 
-.select2-container-active .select2-choice, .select2-container-active .select2-choices {
+.select2-container-active .select2-choice,
+.select2-container-active .select2-choices {
   border: 1px solid #5897fb;
   outline: none;
 }
@@ -827,7 +828,8 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
   border-bottom-right-radius: 0;
   background-color: #eee;
 }
-.select2-dropdown-open.select2-drop-above .select2-choice, .select2-dropdown-open.select2-drop-above .select2-choices {
+.select2-dropdown-open.select2-drop-above .select2-choice,
+.select2-dropdown-open.select2-drop-above .select2-choices {
   border: 1px solid #5897fb;
   border-top-color: transparent;
 }
@@ -909,7 +911,9 @@ Version: 3.4.3 Timestamp: Tue Sep 17 06:47:14 PDT 2013
   background: #fff;
   color: #000;
 }
-.select2-results .select2-no-results, .select2-results .select2-searching, .select2-results .select2-selection-limit {
+.select2-results .select2-no-results,
+.select2-results .select2-searching,
+.select2-results .select2-selection-limit {
   background: #f4f4f4;
   display: list-item;
 }
@@ -1071,7 +1075,8 @@ disabled look for disabled choices in the results dropdown
   left: 0.4em;
   top: 0em;
 }
-.select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover, .select2-container-multi .select2-choices .select2-search-choice-focus .select2-search-choice-close {
+.select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover,
+.select2-container-multi .select2-choices .select2-search-choice-focus .select2-search-choice-close {
   background-position: right -11px;
 }
 .select2-container-multi.select2-container-disabled .select2-choices {
@@ -1141,7 +1146,8 @@ disabled look for disabled choices in the results dropdown
 }
 
 /* end multiselect */
-.select2-result-selectable .select2-match, .select2-result-unselectable .select2-match {
+.select2-result-selectable .select2-match,
+.select2-result-unselectable .select2-match {
   text-decoration: underline;
 }
 
@@ -1187,13 +1193,15 @@ disabled look for disabled choices in the results dropdown
 
 /* Retina-ize icons */
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi) {
-  .select2-search input, .select2-search-choice-close {
+  .select2-search input,
+.select2-search-choice-close {
     background-image: url("select2x2.png") !important;
     background-repeat: no-repeat !important;
     background-size: 60px 40px !important;
   }
 
-  .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
+  .select2-container .select2-choice abbr,
+.select2-container .select2-choice .select2-arrow b {
     background-image: url("select2x2.png") !important;
     background-repeat: no-repeat !important;
     background-size: 60px 40px !important;
@@ -1237,29 +1245,38 @@ disabled look for disabled choices in the results dropdown
  * Docs & License: http://fullcalendar.io/
  * (c) 2016 Adam Shaw
  */
-.fc-bgevent, .fc-highlight {
+.fc-bgevent,
+.fc-highlight {
   opacity: 0.3;
   filter: alpha(opacity=30);
 }
 
-.fc-icon, body .fc {
+.fc-icon,
+body .fc {
   font-size: 1em;
 }
 
-.fc-button-group, .fc-icon {
+.fc-button-group,
+.fc-icon {
   display: inline-block;
 }
 
-.fc-bg, .fc-row .fc-bgevent-skeleton, .fc-row .fc-highlight-skeleton {
+.fc-bg,
+.fc-row .fc-bgevent-skeleton,
+.fc-row .fc-highlight-skeleton {
   bottom: 0;
 }
 
-.fc-icon, .fc-unselectable {
+.fc-icon,
+.fc-unselectable {
   -khtml-user-select: none;
   -webkit-touch-callout: none;
 }
 
-.fc .fc-axis, .fc button, .fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-content {
+.fc .fc-axis,
+.fc button,
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event.fc-short .fc-content {
   white-space: nowrap;
 }
 
@@ -1272,11 +1289,21 @@ disabled look for disabled choices in the results dropdown
   text-align: right;
 }
 
-.fc th, .fc-basic-view .fc-week-number, .fc-icon, .fc-toolbar {
+.fc th,
+.fc-basic-view .fc-week-number,
+.fc-icon,
+.fc-toolbar {
   text-align: center;
 }
 
-.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
+.fc-unthemed .fc-content,
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-popover,
+.fc-unthemed .fc-row,
+.fc-unthemed tbody,
+.fc-unthemed td,
+.fc-unthemed th,
+.fc-unthemed thead {
   border-color: #ddd;
 }
 
@@ -1284,7 +1311,8 @@ disabled look for disabled choices in the results dropdown
   background-color: #fff;
 }
 
-.fc-unthemed .fc-divider, .fc-unthemed .fc-popover .fc-header {
+.fc-unthemed .fc-divider,
+.fc-unthemed .fc-popover .fc-header {
   background: #eee;
 }
 
@@ -1422,7 +1450,10 @@ disabled look for disabled choices in the results dropdown
   vertical-align: middle;
 }
 
-.fc-state-active, .fc-state-disabled, .fc-state-down, .fc-state-hover {
+.fc-state-active,
+.fc-state-disabled,
+.fc-state-down,
+.fc-state-hover {
   color: #333;
   background-color: #e6e6e6;
 }
@@ -1437,7 +1468,8 @@ disabled look for disabled choices in the results dropdown
   transition: background-position 0.1s linear;
 }
 
-.fc-state-active, .fc-state-down {
+.fc-state-active,
+.fc-state-down {
   background-color: #ccc;
   background-image: none;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -1451,7 +1483,9 @@ disabled look for disabled choices in the results dropdown
   box-shadow: none;
 }
 
-.fc-event.fc-draggable, .fc-event[href], .fc-popover .fc-header .fc-close {
+.fc-event.fc-draggable,
+.fc-event[href],
+.fc-popover .fc-header .fc-close {
   cursor: pointer;
 }
 
@@ -1477,11 +1511,13 @@ disabled look for disabled choices in the results dropdown
   margin: 0 2px;
 }
 
-.fc-ltr .fc-popover .fc-header .fc-title, .fc-rtl .fc-popover .fc-header .fc-close {
+.fc-ltr .fc-popover .fc-header .fc-title,
+.fc-rtl .fc-popover .fc-header .fc-close {
   float: left;
 }
 
-.fc-ltr .fc-popover .fc-header .fc-close, .fc-rtl .fc-popover .fc-header .fc-title {
+.fc-ltr .fc-popover .fc-header .fc-close,
+.fc-rtl .fc-popover .fc-header .fc-title {
   float: right;
 }
 
@@ -1511,7 +1547,9 @@ hr.fc-divider {
   border-width: 1px 0;
 }
 
-.fc-bg table, .fc-row .fc-bgevent-skeleton table, .fc-row .fc-highlight-skeleton table {
+.fc-bg table,
+.fc-row .fc-bgevent-skeleton table,
+.fc-row .fc-highlight-skeleton table {
   height: 100%;
 }
 
@@ -1519,7 +1557,10 @@ hr.fc-divider {
   clear: both;
 }
 
-.fc-bg, .fc-bgevent-skeleton, .fc-helper-skeleton, .fc-highlight-skeleton {
+.fc-bg,
+.fc-bgevent-skeleton,
+.fc-helper-skeleton,
+.fc-highlight-skeleton {
   position: absolute;
   top: 0;
   left: 0;
@@ -1535,7 +1576,8 @@ hr.fc-divider {
   font-size: 1em;
 }
 
-.fc td, .fc th {
+.fc td,
+.fc th {
   border-style: solid;
   border-width: 1px;
   padding: 0;
@@ -1569,7 +1611,8 @@ hr.fc-divider {
   z-index: 1;
 }
 
-.fc-row .fc-bgevent-skeleton td, .fc-row .fc-highlight-skeleton td {
+.fc-row .fc-bgevent-skeleton td,
+.fc-row .fc-highlight-skeleton td {
   border-color: transparent;
 }
 
@@ -1591,13 +1634,15 @@ hr.fc-divider {
   z-index: 5;
 }
 
-.fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td {
+.fc-row .fc-content-skeleton td,
+.fc-row .fc-helper-skeleton td {
   background: 0 0;
   border-color: transparent;
   border-bottom: 0;
 }
 
-.fc-row .fc-content-skeleton tbody td, .fc-row .fc-helper-skeleton tbody td {
+.fc-row .fc-content-skeleton tbody td,
+.fc-row .fc-helper-skeleton tbody td {
   border-top: 0;
 }
 
@@ -1605,11 +1650,13 @@ hr.fc-divider {
   -webkit-overflow-scrolling: touch;
 }
 
-.fc-row.fc-rigid, .fc-time-grid-event {
+.fc-row.fc-rigid,
+.fc-time-grid-event {
   overflow: hidden;
 }
 
-.fc-scroller > .fc-day-grid, .fc-scroller > .fc-time-grid {
+.fc-scroller > .fc-day-grid,
+.fc-scroller > .fc-time-grid {
   position: relative;
   width: 100%;
 }
@@ -1625,12 +1672,15 @@ hr.fc-divider {
   font-weight: 400;
 }
 
-.fc-event, .fc-event:hover, .ui-widget .fc-event {
+.fc-event,
+.fc-event:hover,
+.ui-widget .fc-event {
   color: #fff;
   text-decoration: none;
 }
 
-.fc-not-allowed, .fc-not-allowed .fc-event {
+.fc-not-allowed,
+.fc-not-allowed .fc-event {
   cursor: not-allowed;
 }
 
@@ -1652,7 +1702,8 @@ hr.fc-divider {
   display: none;
 }
 
-.fc-event.fc-allow-mouse-resize .fc-resizer, .fc-event.fc-selected .fc-resizer {
+.fc-event.fc-allow-mouse-resize .fc-resizer,
+.fc-event.fc-selected .fc-resizer {
   display: block;
 }
 
@@ -1687,7 +1738,8 @@ hr.fc-divider {
   right: 0;
 }
 
-.fc-ltr .fc-h-event.fc-not-start, .fc-rtl .fc-h-event.fc-not-end {
+.fc-ltr .fc-h-event.fc-not-start,
+.fc-rtl .fc-h-event.fc-not-end {
   margin-left: 0;
   border-left-width: 0;
   padding-left: 1px;
@@ -1695,7 +1747,8 @@ hr.fc-divider {
   border-bottom-left-radius: 0;
 }
 
-.fc-ltr .fc-h-event.fc-not-end, .fc-rtl .fc-h-event.fc-not-start {
+.fc-ltr .fc-h-event.fc-not-end,
+.fc-rtl .fc-h-event.fc-not-start {
   margin-right: 0;
   border-right-width: 0;
   padding-right: 1px;
@@ -1703,12 +1756,14 @@ hr.fc-divider {
   border-bottom-right-radius: 0;
 }
 
-.fc-ltr .fc-h-event .fc-start-resizer, .fc-rtl .fc-h-event .fc-end-resizer {
+.fc-ltr .fc-h-event .fc-start-resizer,
+.fc-rtl .fc-h-event .fc-end-resizer {
   cursor: w-resize;
   left: -1px;
 }
 
-.fc-ltr .fc-h-event .fc-end-resizer, .fc-rtl .fc-h-event .fc-start-resizer {
+.fc-ltr .fc-h-event .fc-end-resizer,
+.fc-rtl .fc-h-event .fc-start-resizer {
   cursor: e-resize;
   right: -1px;
 }
@@ -1731,11 +1786,13 @@ hr.fc-divider {
   margin-top: -4px;
 }
 
-.fc-ltr .fc-h-event.fc-selected .fc-start-resizer, .fc-rtl .fc-h-event.fc-selected .fc-end-resizer {
+.fc-ltr .fc-h-event.fc-selected .fc-start-resizer,
+.fc-rtl .fc-h-event.fc-selected .fc-end-resizer {
   margin-left: -4px;
 }
 
-.fc-ltr .fc-h-event.fc-selected .fc-end-resizer, .fc-rtl .fc-h-event.fc-selected .fc-start-resizer {
+.fc-ltr .fc-h-event.fc-selected .fc-end-resizer,
+.fc-rtl .fc-h-event.fc-selected .fc-start-resizer {
   margin-right: -4px;
 }
 
@@ -1766,11 +1823,13 @@ hr.fc-divider {
   font-weight: 700;
 }
 
-.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer, .fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer {
+.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer,
+.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer {
   margin-left: -2px;
 }
 
-.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer, .fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer {
+.fc-ltr .fc-day-grid-event.fc-allow-mouse-resize .fc-end-resizer,
+.fc-rtl .fc-day-grid-event.fc-allow-mouse-resize .fc-start-resizer {
   margin-right: -2px;
 }
 
@@ -1848,7 +1907,8 @@ a.fc-more:hover {
   position: relative;
 }
 
-.fc-toolbar .fc-state-hover, .fc-toolbar .ui-state-hover {
+.fc-toolbar .fc-state-hover,
+.fc-toolbar .ui-state-hover {
   z-index: 2;
 }
 
@@ -1856,7 +1916,8 @@ a.fc-more:hover {
   z-index: 3;
 }
 
-.fc-toolbar .fc-state-active, .fc-toolbar .ui-state-active {
+.fc-toolbar .fc-state-active,
+.fc-toolbar .ui-state-active {
   z-index: 4;
 }
 
@@ -1864,18 +1925,22 @@ a.fc-more:hover {
   z-index: 5;
 }
 
-.fc-view-container *, .fc-view-container :after, .fc-view-container :before {
+.fc-view-container *,
+.fc-view-container :after,
+.fc-view-container :before {
   -webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 
-.fc-view, .fc-view > table {
+.fc-view,
+.fc-view > table {
   position: relative;
   z-index: 1;
 }
 
-.fc-basicDay-view .fc-content-skeleton, .fc-basicWeek-view .fc-content-skeleton {
+.fc-basicDay-view .fc-content-skeleton,
+.fc-basicWeek-view .fc-content-skeleton {
   padding-top: 1px;
   padding-bottom: 1em;
 }
@@ -1891,11 +1956,13 @@ a.fc-more:hover {
   right: 0;
 }
 
-.fc-basic-view .fc-day-number, .fc-basic-view .fc-week-number {
+.fc-basic-view .fc-day-number,
+.fc-basic-view .fc-week-number {
   padding: 0 2px;
 }
 
-.fc-basic-view td.fc-day-number, .fc-basic-view td.fc-week-number span {
+.fc-basic-view td.fc-day-number,
+.fc-basic-view td.fc-week-number span {
   padding-top: 2px;
   padding-bottom: 2px;
 }
@@ -1949,7 +2016,8 @@ a.fc-more:hover {
   font-weight: 400;
 }
 
-.fc-time-grid, .fc-time-grid-container {
+.fc-time-grid,
+.fc-time-grid-container {
   position: relative;
   z-index: 1;
 }
@@ -1966,7 +2034,8 @@ a.fc-more:hover {
   z-index: 1;
 }
 
-.fc-time-grid .fc-slats, .fc-time-grid > hr {
+.fc-time-grid .fc-slats,
+.fc-time-grid > hr {
   position: relative;
   z-index: 2;
 }
@@ -2039,7 +2108,8 @@ a.fc-more:hover {
   margin: 0 2px 0 2.5%;
 }
 
-.fc-time-grid .fc-bgevent, .fc-time-grid .fc-event {
+.fc-time-grid .fc-bgevent,
+.fc-time-grid .fc-event {
   position: absolute;
   z-index: 1;
 }
@@ -2075,7 +2145,8 @@ a.fc-more:hover {
   overflow: hidden;
 }
 
-.fc-time-grid-event .fc-time, .fc-time-grid-event .fc-title {
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event .fc-title {
   padding: 0 1px;
 }
 
@@ -2083,7 +2154,8 @@ a.fc-more:hover {
   font-size: 0.85em;
 }
 
-.fc-time-grid-event.fc-short .fc-time, .fc-time-grid-event.fc-short .fc-title {
+.fc-time-grid-event.fc-short .fc-time,
+.fc-time-grid-event.fc-short .fc-title {
   display: inline-block;
   vertical-align: top;
 }
@@ -2274,372 +2346,6 @@ a.fc-more:hover {
   display: none;
 }
 
-/* @group Anything slider */
-/*
-	AnythingSlider v1.8+ Default theme
-	By Chris Coyier: http://css-tricks.com
-	with major improvements by Doug Neiner: http://pixelgraphics.us/
-	based on work by Remy Sharp: http://jqueryfordesigners.com/
-*/
-/*****************************
-  SET DEFAULT DIMENSIONS HERE
- *****************************/
-/* change the ID & dimensions to match your slider */
-#slider {
-  width: 700px;
-  height: 390px;
-  list-style: none;
-  /* Prevent FOUC (see FAQ page) and keep things readable if javascript is disabled */
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-/******************
-  SET STYLING HERE
- ******************
- =================================
- Default state (no keyboard focus)
- ==================================*/
-/* Overall Wrapper */
-.anythingSlider-default {
-  margin: 0 auto;
-  /* 45px right & left padding for the arrows, 28px @ bottom for navigation */
-  padding: 0 45px 28px 45px;
-}
-
-/* slider window - top & bottom borders, default state */
-/* Navigation buttons + start/stop button, default state */
-.anythingSlider-default .anythingControls a {
-  /* top shadow */
-  background: #777 url(/src/pat/carousel/carousel-arrows.png) center -288px repeat-x;
-  color: #000;
-  border-radius: 0 0 5px 5px;
-  -moz-border-radius: 0 0 5px 5px;
-  -webkit-border-radius: 0 0 5px 5px;
-}
-
-/* Make sure navigation text is visible */
-.anythingSlider-default .anythingControls a span {
-  visibility: visible;
-}
-
-/* Navigation current button, default state */
-.anythingSlider-default .anythingControls a.cur {
-  background: #888;
-  color: #000;
-}
-
-/* start-stop button, stopped, default state */
-.anythingSlider-default .anythingControls a.start-stop {
-  background-color: #040;
-  color: #ddd;
-}
-
-/* start-stop button, playing, default state */
-.anythingSlider-default .anythingControls a.start-stop.playing {
-  background-color: #800;
-}
-
-/* start-stop button, default hovered text color (when visible) */
-/* hide nav/start-stop background image shadow on hover - makes the button appear to come forward */
-.anythingSlider-default .anythingControls a.start-stop:hover,
-.anythingSlider-default .anythingControls a.start-stop.hover,
-.anythingSlider-default .anythingControls a.start-stop .anythingControls ul a:hover {
-  background-image: none;
-  color: #ddd;
-}
-
-/*
- =================================
- Active State (has keyboard focus)
- =================================
-*/
-/* slider window - top & bottom borders, active state */
-.anythingSlider-default.activeSlider .anythingWindow {
-  border-color: #7C9127;
-}
-
-/* Navigation buttons, active state */
-.anythingSlider-default.activeSlider .anythingControls a {
-  /* background image = top shadow */
-  background-color: #7C9127;
-}
-
-/* Navigation current & hovered button, active state */
-.anythingSlider-default.activeSlider .anythingControls a.cur,
-.anythingSlider-default.activeSlider .anythingControls a:hover {
-  /* background image removed */
-  background: #7C9127;
-}
-
-/* start-stop button, stopped, active state */
-.anythingSlider-default.activeSlider .anythingControls a.start-stop {
-  background-color: #080;
-  color: #fff;
-}
-
-/* start-stop button, playing, active state */
-.anythingSlider-default.activeSlider .anythingControls a.start-stop.playing {
-  background-color: #d00;
-  color: #fff;
-}
-
-/* start-stop button, active slider hovered text color (when visible) */
-.anythingSlider-default.activeSlider .start-stop:hover,
-.anythingSlider-default.activeSlider .start-stop.hover {
-  color: #fff;
-}
-
-/************************
-  NAVIGATION POSITIONING
- ************************/
-/* Navigation Arrows */
-.anythingSlider-default .arrow {
-  top: 50%;
-  position: absolute;
-  display: block;
-}
-
-.anythingSlider-default .arrow a {
-  display: block;
-  width: 45px;
-  height: 140px;
-  margin: -70px 0 0 0;
-  /* half height of image */
-  text-align: center;
-  outline: 0;
-  background: url(/src/pat/carousel/carousel-arrows.png) no-repeat;
-}
-
-/* back arrow */
-.anythingSlider-default .back {
-  left: 0;
-}
-
-.anythingSlider-default .back a {
-  background-position: left top;
-}
-
-.anythingSlider-default .back a:hover,
-.anythingSlider-default .back a.hover {
-  background-position: left -140px;
-}
-
-/* forward arrow */
-.anythingSlider-default .forward {
-  right: 0;
-}
-
-.anythingSlider-default .forward a {
-  background-position: right top;
-}
-
-.anythingSlider-default .forward a:hover,
-.anythingSlider-default .forward a.hover {
-  background-position: right -140px;
-}
-
-/* Navigation Links */
-.anythingSlider-default .anythingControls {
-  outline: 0;
-  display: none;
-}
-
-.anythingSlider-default .anythingControls ul {
-  margin: 0;
-  padding: 0;
-  float: left;
-}
-
-.anythingSlider-default .anythingControls ul li {
-  display: inline;
-}
-
-.anythingSlider-default .anythingControls ul a {
-  font: 11px/18px Georgia, Serif;
-  display: inline-block;
-  text-decoration: none;
-  padding: 2px 8px;
-  height: 18px;
-  margin: 0 5px 0 0;
-  text-align: center;
-  outline: 0;
-}
-
-/* navigationSize window */
-.anythingSlider-default .anythingControls .anythingNavWindow {
-  overflow: hidden;
-  float: left;
-}
-
-/* Autoplay Start/Stop button */
-.anythingSlider-default .anythingControls .start-stop {
-  padding: 2px 5px;
-  width: 40px;
-  text-align: center;
-  text-decoration: none;
-  float: right;
-  z-index: 100;
-  outline: 0;
-}
-
-/***********************
-  IE8 AND OLDER STYLING
- ***********************/
-/* Navigation Arrows */
-.as-oldie .anythingSlider-default .arrow {
-  top: 30%;
-}
-
-.as-oldie .anythingSlider-default .arrow a {
-  margin: 0;
-}
-
-/* margin between nav buttons just looks better */
-.as-oldie .anythingSlider-default .anythingControls li {
-  margin-left: 3px;
-}
-
-/* When using the navigationSize option, the side margins need to be zero
-	None of the navigation panels look good in IE7 now =( */
-.as-oldie .anythingSlider-default .anythingControls a {
-  margin: 0;
-}
-
-.as-oldie .anythingSlider-default .anythingNavWindow {
-  margin: 0 2px;
-}
-
-.as-oldie .anythingSlider-default .anythingNavWindow li {
-  padding: 3px 0 0 0;
-}
-
-/***********************
-  COMMON SLIDER STYLING
- ***********************/
-/* Overall Wrapper */
-.anythingSlider {
-  display: block;
-  overflow: visible !important;
-  position: relative;
-}
-
-/* anythingSlider viewport window */
-.anythingSlider .anythingWindow {
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-/* anythingSlider base (original element) */
-.anythingSlider .anythingBase {
-  background: transparent;
-  list-style: none;
-  position: absolute;
-  overflow: visible !important;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 0;
-}
-
-/* Navigation arrow text; indent moved to span inside "a", for IE7;
-  apparently, a negative text-indent on an "a" link moves the link as well as the text */
-.anythingSlider .arrow span {
-  display: block;
-  visibility: hidden;
-}
-
-/* disabled arrows, hide or reduce opacity: opacity: .5; filter: alpha(opacity=50); */
-.anythingSlider .arrow.disabled {
-  display: none;
-}
-
-/* all panels inside the slider; horizontal mode */
-.pat-carousel > .panel {
-  background: transparent;
-  display: block;
-  overflow: hidden;
-  float: left;
-  margin: 0;
-  padding: 0;
-}
-
-/* vertical mode */
-.anythingSlider .vertical .panel {
-  float: none;
-}
-
-/* fade mode */
-.anythingSlider .fade .panel {
-  float: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
-
-/* fade mode active page - visible & on top */
-.anythingSlider .fade .activePage {
-  z-index: 0;
-}
-
-/***********************
-  RTL STYLING
- ***********************/
-/* slider autoplay right-to-left, reverse order of nav links to look better */
-.anythingSlider.rtl .anythingWindow {
-  direction: ltr;
-  unicode-bidi: bidi-override;
-}
-
-.anythingSlider.rtl .anythingControls ul {
-  float: left;
-}
-
-/* move nav link group to left */
-.anythingSlider.rtl .anythingControls ul a {
-  float: right;
-}
-
-/* reverse order of nav links */
-.anythingSlider.rtl .start-stop {
-  /* float: right; */
-}
-
-/* move start/stop button - in case you want to switch sides */
-/* probably not necessary, but added just in case */
-.anythingSlider,
-.anythingSlider .anythingWindow,
-.anythingSlider .anythingControls ul a,
-.anythingSlider .arrow a,
-.anythingSlider .start-stop {
-  transition-duration: 0;
-  -o-transition-duration: 0;
-  -moz-transition-duration: 0;
-  -webkit-transition-duration: 0;
-}
-
-p.carousel-nav a {
-  background-color: white;
-  color: #247fad;
-  display: inline-block;
-  text-decoration: none;
-  padding-right: 12px;
-  padding-left: 12px;
-  border-radius: 14px;
-  line-height: 22px;
-  border: #85c5e5 solid 1px;
-}
-
-p.carousel-nav a.current {
-  background: #85c5e5;
-  border: #85c5e5 solid 1px;
-  color: white;
-}
-
-/* @end */
 .pat-checklist > br {
   display: none;
 }
@@ -3300,7 +3006,8 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
   border-radius: 3px;
 }
 
-.datetime-picker-wrapper .date, .datetime-picker-wrapper .time {
+.datetime-picker-wrapper .date,
+.datetime-picker-wrapper .time {
   position: relative;
   display: inline-block;
   margin-right: 0.5em;
@@ -3315,13 +3022,6 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
   margin-right: 0.2em;
 }
 
-/* @group edit-tinymce */
-textarea {
-  width: 600px;
-  height: 300px;
-}
-
-/* @end */
 .pat-button {
   font-family: "Source Sans Pro", sans-serif;
   margin: 0 0.5em 0 0;
@@ -3558,7 +3258,8 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
   padding: 0;
   display: none;
 }
-.pat-expandable li.open > ul, .pat-expandable li a {
+.pat-expandable li.open > ul,
+.pat-expandable li a {
   display: block;
 }
 .pat-expandable span.toggle:before {
@@ -3797,11 +3498,11 @@ label.focus {
   font-size: 14px;
   line-height: 16px;
   margin-top: -8px;
-  color: #CCC;
+  color: #ccc;
 }
 
 .pswp__error-msg a {
-  color: #CCC;
+  color: #ccc;
   text-decoration: underline;
 }
 
@@ -3854,7 +3555,7 @@ label.focus {
 .pswp__button,
 .pswp__button--arrow--left:before,
 .pswp__button--arrow--right:before {
-  background: url(/patternslib/src/pat/gallery/default-skin.png) 0 0 no-repeat;
+  background: url(/src/pat/gallery/default-skin.png) 0 0 no-repeat;
   background-size: 264px 88px;
   width: 44px;
   height: 44px;
@@ -3865,7 +3566,7 @@ label.focus {
   .pswp--svg .pswp__button,
 .pswp--svg .pswp__button--arrow--left:before,
 .pswp--svg .pswp__button--arrow--right:before {
-    background-image: url(/patternslib/src/pat/gallery/default-skin.svg);
+    background-image: url(/src/pat/gallery/default-skin.svg);
   }
 
   .pswp--svg .pswp__button--arrow--left,
@@ -3989,7 +3690,7 @@ label.focus {
 .pswp__share-tooltip {
   z-index: 1620;
   position: absolute;
-  background: #FFF;
+  background: #fff;
   top: 56px;
   border-radius: 2px;
   display: block;
@@ -4042,31 +3743,31 @@ a.pswp__share--facebook:before {
   top: -12px;
   right: 15px;
   border: 6px solid rgba(0, 0, 0, 0);
-  border-bottom-color: #FFF;
+  border-bottom-color: #fff;
   -webkit-pointer-events: none;
   -moz-pointer-events: none;
   pointer-events: none;
 }
 a.pswp__share--facebook:hover {
-  background: #3E5C9A;
-  color: #FFF;
+  background: #3e5c9a;
+  color: #fff;
 }
 a.pswp__share--facebook:hover:before {
-  border-bottom-color: #3E5C9A;
+  border-bottom-color: #3e5c9a;
 }
 
 a.pswp__share--twitter:hover {
-  background: #55ACEE;
-  color: #FFF;
+  background: #55acee;
+  color: #fff;
 }
 
 a.pswp__share--pinterest:hover {
-  background: #CCC;
-  color: #CE272D;
+  background: #ccc;
+  color: #ce272d;
 }
 
 a.pswp__share--download:hover {
-  background: #DDD;
+  background: #ddd;
 }
 
 /*
@@ -4081,7 +3782,7 @@ a.pswp__share--download:hover {
   height: 44px;
   font-size: 13px;
   line-height: 44px;
-  color: #FFF;
+  color: #fff;
   opacity: 0.75;
   padding: 0 10px;
 }
@@ -4100,7 +3801,7 @@ a.pswp__share--download:hover {
 }
 .pswp__caption small {
   font-size: 11px;
-  color: #BBB;
+  color: #bbb;
 }
 
 .pswp__caption__center {
@@ -4110,7 +3811,7 @@ a.pswp__share--download:hover {
   font-size: 13px;
   padding: 10px;
   line-height: 20px;
-  color: #CCC;
+  color: #ccc;
 }
 
 .pswp__caption--empty {
@@ -4153,7 +3854,7 @@ a.pswp__share--download:hover {
 }
 .pswp__preloader--active .pswp__preloader__icn {
   /* We use .gif in browsers that don't support CSS animation */
-  background: url(/patternslib/src/pat/gallery/preloader.gif) 0 0 no-repeat;
+  background: url(/src/pat/gallery/preloader.gif) 0 0 no-repeat;
 }
 
 .pswp--css_animation .pswp__preloader--active {
@@ -4176,8 +3877,8 @@ a.pswp__share--download:hover {
   margin: 0;
 }
 .pswp--css_animation .pswp__preloader__cut {
-  /* 
-  	The idea of animating inner circle is based on Polymer ("material") loading indicator 
+  /*
+  	The idea of animating inner circle is based on Polymer ("material") loading indicator
   	 by Keanu Lee https://blog.keanulee.com/2014/10/20/the-tale-of-three-spinners.html
   */
   position: relative;
@@ -4189,7 +3890,7 @@ a.pswp__share--download:hover {
   box-sizing: border-box;
   width: 14px;
   height: 14px;
-  border: 2px solid #FFF;
+  border: 2px solid #fff;
   border-radius: 50%;
   border-left-color: transparent;
   border-bottom-color: transparent;
@@ -4319,7 +4020,8 @@ This code is based on Zurb Foundation's grid framework.
 
 Copyright (c) 2012 Mark Hayes
 */
-.row, .columns {
+.row,
+.columns {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -4337,7 +4039,8 @@ Copyright (c) 2012 Mark Hayes
   margin: 0 -15px;
 }
 
-.row.collapse .column, .row.collapse .columns {
+.row.collapse .column,
+.row.collapse .columns {
   padding: 0;
 }
 
@@ -4352,14 +4055,16 @@ Copyright (c) 2012 Mark Hayes
   margin: 0;
 }
 
-.column, .columns {
+.column,
+.columns {
   float: left;
   min-height: 1px;
   padding: 0 15px;
   position: relative;
 }
 
-.column.centered, .columns.centered {
+.column.centered,
+.columns.centered {
   float: none;
   margin: 0 auto;
 }
@@ -4372,51 +4077,63 @@ Copyright (c) 2012 Mark Hayes
   float: left;
 }
 
-.one, .row .one {
+.one,
+.row .one {
   width: 8.33333%;
 }
 
-.two, .row .two {
+.two,
+.row .two {
   width: 16.66667%;
 }
 
-.three, .row .three {
+.three,
+.row .three {
   width: 25%;
 }
 
-.four, .row .four {
+.four,
+.row .four {
   width: 33.33333%;
 }
 
-.five, .row .five {
+.five,
+.row .five {
   width: 41.66667%;
 }
 
-.six, .row .six {
+.six,
+.row .six {
   width: 50%;
 }
 
-.seven, .row .seven {
+.seven,
+.row .seven {
   width: 58.33333%;
 }
 
-.eight, .row .eight {
+.eight,
+.row .eight {
   width: 66.66667%;
 }
 
-.nine, .row .nine {
+.nine,
+.row .nine {
   width: 75%;
 }
 
-.ten, .row .ten {
+.ten,
+.row .ten {
   width: 83.33333%;
 }
 
-.eleven, .row .eleven {
+.eleven,
+.row .eleven {
   width: 91.66667%;
 }
 
-.twelve, .row .twelve {
+.twelve,
+.row .twelve {
   width: 100%;
 }
 
@@ -4539,7 +4256,8 @@ Copyright (c) 2012 Mark Hayes
   *zoom: 1;
 }
 
-.row:before, .row:after {
+.row:before,
+.row:after {
   content: " ";
   display: table;
 }
@@ -4567,12 +4285,14 @@ Copyright (c) 2012 Mark Hayes
     min-width: 0;
   }
 
-  .column, .columns {
+  .column,
+.columns {
     width: auto !important;
     float: none;
   }
 
-  .column:last-child, .columns:last-child {
+  .column:last-child,
+.columns:last-child {
     float: none;
   }
 
@@ -4580,24 +4300,53 @@ Copyright (c) 2012 Mark Hayes
     float: none;
   }
 
-  .column:before, .columns:before, .column:after, .columns:after {
+  .column:before,
+.columns:before,
+.column:after,
+.columns:after {
     content: "";
     display: table;
   }
 
-  .column:after, .columns:after {
+  .column:after,
+.columns:after {
     clear: both;
   }
 
-  .offset-by-one, .offset-by-two, .offset-by-three, .offset-by-four, .offset-by-five, .offset-by-six, .offset-by-seven, .offset-by-eight, .offset-by-nine, .offset-by-ten {
+  .offset-by-one,
+.offset-by-two,
+.offset-by-three,
+.offset-by-four,
+.offset-by-five,
+.offset-by-six,
+.offset-by-seven,
+.offset-by-eight,
+.offset-by-nine,
+.offset-by-ten {
     margin-left: 0 !important;
   }
 
-  .push-two, .push-three, .push-four, .push-five, .push-six, .push-seven, .push-eight, .push-nine, .push-ten {
+  .push-two,
+.push-three,
+.push-four,
+.push-five,
+.push-six,
+.push-seven,
+.push-eight,
+.push-nine,
+.push-ten {
     left: auto;
   }
 
-  .pull-two, .pull-three, .pull-four, .pull-five, .pull-six, .pull-seven, .pull-eight, .pull-nine, .pull-ten {
+  .pull-two,
+.pull-three,
+.pull-four,
+.pull-five,
+.pull-six,
+.pull-seven,
+.pull-eight,
+.pull-nine,
+.pull-ten {
     right: auto;
   }
 
@@ -4811,12 +4560,15 @@ Copyright (c) 2012 Mark Hayes
     margin: 20px -15px 0px -15px;
   }
 
-  .tabs.mobile dt, .tabs.mobile li, .tabs.mobile dd {
+  .tabs.mobile dt,
+.tabs.mobile li,
+.tabs.mobile dd {
     float: none;
     height: auto;
   }
 
-  .tabs.mobile dd a, .tabs.mobile li a {
+  .tabs.mobile dd a,
+.tabs.mobile li a {
     font-size: 15px;
     display: block;
     width: auto;
@@ -4832,7 +4584,8 @@ Copyright (c) 2012 Mark Hayes
     background: #fff;
   }
 
-  .tabs.mobile dd a.active, .tabs.mobile li a.active {
+  .tabs.mobile dd a.active,
+.tabs.mobile li a.active {
     border: none;
     background: #2ba6cb;
     color: #fff;
@@ -4842,7 +4595,8 @@ Copyright (c) 2012 Mark Hayes
     height: auto;
   }
 
-  .tabs.mobile dd:first-child a.active, .tabs.mobile li:first-child a.active {
+  .tabs.mobile dd:first-child a.active,
+.tabs.mobile li:first-child a.active {
     margin: 0;
   }
 
@@ -4859,7 +4613,8 @@ Copyright (c) 2012 Mark Hayes
     margin-bottom: 0;
   }
 
-  .contained.tabs.mobile dd a, .contained.tabs.mobile li a {
+  .contained.tabs.mobile dd a,
+.contained.tabs.mobile li a {
     padding: 18px 20px;
   }
 
@@ -4873,59 +4628,70 @@ Copyright (c) 2012 Mark Hayes
 }
 /* Pretty printing styles. Used with prettify.js. */
 /* Vim sunburst theme by David Leibovic */
-pre .str, code .str {
-  color: #65B042;
+pre .str,
+code .str {
+  color: #65b042;
 }
 
 /* string  - green */
-pre .kwd, code .kwd {
-  color: #E28964;
+pre .kwd,
+code .kwd {
+  color: #e28964;
 }
 
 /* keyword - dark pink */
-pre .com, code .com {
+pre .com,
+code .com {
   color: lightblue;
   font-style: italic;
 }
 
 /* comment - gray */
-pre .typ, code .typ {
+pre .typ,
+code .typ {
   color: #89bdff;
 }
 
 /* type - light blue */
-pre .lit, code .lit {
-  color: #3387CC;
+pre .lit,
+code .lit {
+  color: #3387cc;
 }
 
 /* literal - blue */
-pre .pun, code .pun {
+pre .pun,
+code .pun {
   color: #fff;
 }
 
 /* punctuation - white */
-pre .pln, code .pln {
+pre .pln,
+code .pln {
   color: #fff;
 }
 
 /* plaintext - white */
-pre .tag, code .tag {
+pre .tag,
+code .tag {
   color: #89bdff;
 }
 
 /* html/xml tag    - light blue */
-pre .atn, code .atn {
+pre .atn,
+code .atn {
   color: #bdb76b;
 }
 
 /* html/xml attribute name  - khaki */
-pre .atv, code .atv {
-  color: #65B042;
+pre .atv,
+code .atv {
+  color: #65b042;
 }
 
 /* html/xml attribute value - green */
-pre .dec, code .dec {
-  color: #3387CC;
+pre .dec,
+code .dec {
+  color: #3387cc;
 }
 
 /* decimal - blue */
@@ -4956,57 +4722,74 @@ pre.prettyprint {
 ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
-  color: #AEAEAE;
+  color: #aeaeae;
 }
 
 /* IE indents via margin-left */
-li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L5,
+li.L6,
+li.L7,
+li.L8 {
   list-style-type: none;
 }
 
 /* Alternate shading for lines */
 @media print {
-  pre .str, code .str {
+  pre .str,
+code .str {
     color: #060;
   }
 
-  pre .kwd, code .kwd {
+  pre .kwd,
+code .kwd {
     color: #006;
     font-weight: bold;
   }
 
-  pre .com, code .com {
+  pre .com,
+code .com {
     color: #600;
     font-style: italic;
   }
 
-  pre .typ, code .typ {
+  pre .typ,
+code .typ {
     color: #404;
     font-weight: bold;
   }
 
-  pre .lit, code .lit {
+  pre .lit,
+code .lit {
     color: #044;
   }
 
-  pre .pun, code .pun {
+  pre .pun,
+code .pun {
     color: #440;
   }
 
-  pre .pln, code .pln {
+  pre .pln,
+code .pln {
     color: #000;
   }
 
-  pre .tag, code .tag {
+  pre .tag,
+code .tag {
     color: #006;
     font-weight: bold;
   }
 
-  pre .atn, code .atn {
+  pre .atn,
+code .atn {
     color: #404;
   }
 
-  pre .atv, code .atv {
+  pre .atv,
+code .atv {
     color: #060;
   }
 }
@@ -5042,7 +4825,7 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 
 .preview {
   width: 120px;
-  border: 1px solid #DFDFDF;
+  border: 1px solid #dfdfdf;
   float: left;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   height: 120px;
@@ -5062,8 +4845,9 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
   text-align: left;
 }
 
-.jcrop-vline, .jcrop-hline {
-  background: #FFF url(Jcrop.gif) top left repeat;
+.jcrop-vline,
+.jcrop-hline {
+  background: #fff url(Jcrop.gif) top left repeat;
   font-size: 0;
   position: absolute;
 }
@@ -5156,12 +4940,14 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
   margin-left: -4px;
 }
 
-.jcrop-dragbar.ord-n, .jcrop-dragbar.ord-s {
+.jcrop-dragbar.ord-n,
+.jcrop-dragbar.ord-s {
   height: 7px;
   width: 100%;
 }
 
-.jcrop-dragbar.ord-e, .jcrop-dragbar.ord-w {
+.jcrop-dragbar.ord-e,
+.jcrop-dragbar.ord-w {
   height: 100%;
   width: 7px;
 }
@@ -5184,8 +4970,9 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
   margin-left: -4px;
 }
 
-.jcrop-light .jcrop-vline, .jcrop-light .jcrop-hline {
-  background: #FFF;
+.jcrop-light .jcrop-vline,
+.jcrop-light .jcrop-hline {
+  background: #fff;
   filter: Alpha(opacity=70) !important;
   opacity: 0.7 !important;
 }
@@ -5194,11 +4981,12 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   background-color: #000;
-  border-color: #FFF;
+  border-color: #fff;
   border-radius: 3px;
 }
 
-.jcrop-dark .jcrop-vline, .jcrop-dark .jcrop-hline {
+.jcrop-dark .jcrop-vline,
+.jcrop-dark .jcrop-hline {
   background: #000;
   filter: Alpha(opacity=70) !important;
   opacity: 0.7 !important;
@@ -5207,12 +4995,13 @@ li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
 .jcrop-dark .jcrop-handle {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  background-color: #FFF;
+  background-color: #fff;
   border-color: #000;
   border-radius: 3px;
 }
 
-.jcrop-holder img, img.jcrop-preview {
+.jcrop-holder img,
+img.jcrop-preview {
   max-width: none;
 }
 
@@ -5309,7 +5098,10 @@ div.pat-modal .header {
   position: relative;
   z-index: 1;
 }
-div.pat-modal .header h1, div.pat-modal .header h2, div.pat-modal .header h3, div.pat-modal .header h4 {
+div.pat-modal .header h1,
+div.pat-modal .header h2,
+div.pat-modal .header h3,
+div.pat-modal .header h4 {
   margin: 0;
   font: 16px/20px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
   letter-spacing: 1px;
@@ -5721,42 +5513,6 @@ button.pat-button[disabled=disabled], button.pat-button:disabled {
   top: 0.5em;
   right: 0.5em;
 }
-.pat-checklist > br {
-  display: none;
-}
-.pat-checklist label {
-  padding-left: 1.5em;
-  position: relative;
-  display: block;
-}
-.pat-checklist label.checked:before, .pat-checklist label.unchecked:before {
-  font-family: fontello;
-  content: "󢀂";
-  float: left;
-  position: absolute;
-  left: 0;
-  top: 0em;
-}
-.pat-checklist label.checked:before {
-  content: "󢀃";
-}
-.pat-checklist label input[type=checkbox],
-.pat-checklist label input[type=radio] {
-  opacity: 0;
-  position: absolute;
-}
-.pat-checklist.radio label:before {
-  content: "󢀀";
-}
-.pat-checklist.radio label.checked:before {
-  content: "󢀁";
-}
-.pat-checklist fieldset.composed {
-  padding-left: 0;
-  margin-bottom: 0;
-  position: relative;
-}
-
 .pat-sortable .sortable-item.dragged {
   color: #dedede;
 }
@@ -5822,7 +5578,9 @@ li.mode-Blue {
   background-color: #cf6400;
 }
 
-.blue, .red, .green {
+.blue,
+.red,
+.green {
   display: inline-block;
   padding: 5px 15px;
   color: white;
