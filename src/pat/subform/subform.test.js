@@ -28,11 +28,9 @@ describe("subform base tests", function() {
                     "  </fieldset>" +
                     "</form>"
             );
-            var spy_keyboard_handler = spyOn(
-                pattern,
-                "keyboard_handler"
-            ).and.callThrough();
-            var spy_submit = spyOn(pattern, "submit");
+            const pat = new pattern($('.pat-subform', $form));
+            const spy_keyboard_handler = spyOn(pat.__proto__, "keyboard_handler").and.callThrough();
+            const spy_submit = spyOn(pat.__proto__, "submit");
             registry.scan($form);
             $form.find("[name=q]").trigger({
                 type: "keydown",
@@ -49,11 +47,9 @@ describe("subform base tests", function() {
                     "  </fieldset>" +
                     "</form>"
             );
-            var spy_keyboard_handler = spyOn(
-                pattern,
-                "keyboard_handler"
-            ).and.callThrough();
-            var spy_submit = spyOn(pattern, "submit");
+            const pat = new pattern($('.pat-subform', $form));
+            const spy_keyboard_handler = spyOn(pat.__proto__, "keyboard_handler").and.callThrough();
+            const spy_submit = spyOn(pat.__proto__, "submit");
             registry.scan($form);
             $form.find("[name=q]").trigger({
                 type: "keydown",
@@ -71,12 +67,10 @@ describe("subform base tests", function() {
                     '  <button type="submit" name="submit">Submit</button>' +
                     "</form>"
             );
-            var spy_keyboard_handler = spyOn(
-                pattern,
-                "keyboard_handler"
-            ).and.callThrough();
-            var spy_submit = spyOn(pattern, "submit");
-            var spy_formsubmit = spyOn($form, "submit");
+            const pat = new pattern($('.pat-subform', $form));
+            const spy_keyboard_handler = spyOn(pat.__proto__, "keyboard_handler").and.callThrough();
+            const spy_submit = spyOn(pat.__proto__, "submit");
+            const spy_formsubmit = spyOn($form, "submit");
             registry.scan($form);
             $form.find("[name=q]").trigger({
                 type: "keydown",
