@@ -98,7 +98,7 @@ import "moment/locale/de";
 
 
 window.jQuery = jquery;
-jquery(() => registry.init());
+registry.init();
 
 //     // Since we are in a non-AMD env, register a few useful utilites
 //     var window = require("window");
