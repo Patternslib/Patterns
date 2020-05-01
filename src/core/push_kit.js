@@ -5,7 +5,7 @@
 */
 
 import $ from "jquery";
-import "autobahn";
+import autobahn from "autobahn";
 
 var push_kit = {
     init: function() {
