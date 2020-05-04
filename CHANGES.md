@@ -4,7 +4,6 @@
 ## 5.0.0-dev - unreleased
 
 - Removed unused or obsolete patterns:
-  - pat-menu
   - pat-carousel-legacy
   - pat-checked-flag
   - pat-chosen
