@@ -1,61 +1,60 @@
 define([
+    "pat-base",
+    "pat-parser",
     "jquery",
-    "pat-registry"
-], function($, patterns) {
-    var menu = {
+], function(Base, Parser, $) {
+
+    var parser = new Parser('menu');
+
+    parser.addArgument('nav-item-selector', 'li'); // CSS Selector for navigation items.
+
+    return Base.extend({
         name: "menu",
-        trigger: "ul.pat-menu",
+        trigger: ".pat-menu",
 
-        init: function($root) {
-            return $root.each(function() {
-                var $menu = $(this),
-                    timer,
-                    closeMenu, openMenu,
-                    mouseOverHandler, mouseOutHandler;
+        timer: null,
 
-                openMenu = function($li) {
-                    if (timer) {
-                        clearTimeout(timer);
-                        timer = null;
-                    }
-
-                    if (!$li.hasClass("open")) {
-                        $li.siblings("li.open").each(function() { closeMenu($menu);});
-                        $li.addClass("open").removeClass("closed");
-                    }
+        init: function($el, opts) {
+            this.options = parser.parse(this.$el, opts);
+            var self = this;
+            $el.find(this.options.navItemSelector).each(function() {
+                var $it = $(this);
+                $it.addClass("closed")
+                    .on("mouseover", self.mouseOverHandler.bind(self))
+                    .on("mouseout", self.mouseOutHandler.bind(self));
+                if($it.children(self.options.navItemSelector).length > 0) {
+                    $it.addClass("hasChildren");
                 };
-
-                closeMenu = function($li) {
-                    $li.find("li.open").addBack().removeClass("open").addClass("closed");
-                };
-
-                mouseOverHandler = function() {
-                    var $li = $(this);
-                    openMenu($li);
-                };
-
-                mouseOutHandler = function() {
-                    var $li = $(this);
-
-                    if (timer) {
-                        clearTimeout(timer);
-                        timer=null;
-                    }
-
-                    timer = setTimeout(function() { closeMenu($li); }, 1000);
-                };
-
-                $root.find("li")
-                    .addClass("closed")
-                    .filter(":has(ul)").addClass("hasChildren").end()
-                    .on("mouseover.pat-menu", mouseOverHandler)
-                    .on("mouseout.pat-menu", mouseOutHandler);
             });
+        },
+
+        openMenu: function(it) {
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+            it = $(it);
+            if (!it.hasClass("open")) {
+                it.siblings(".open").each(function() { this.closeMenu(this.$el);}.bind(this));
+                it.addClass("open").removeClass("closed");
+            }
+        },
+
+        closeMenu: function(it) {
+            $(it).find(".open").addBack().removeClass("open").addClass("closed");
+        },
+
+        mouseOverHandler: function(ev) {
+            this.openMenu(ev.target);
+        },
+
+        mouseOutHandler: function(ev) {
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+            this.timer = setTimeout(function() { this.closeMenu(ev.target); }.bind(this), 1000);
         }
-    };
 
-    patterns.register(menu);
+    });
 });
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
