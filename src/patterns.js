@@ -47,6 +47,7 @@ import pat_inject from './pat/inject/inject.js';
 import pat_input_change_events from './lib/input-change-events.js';
 import pat_legend from './pat/legend/legend.js';
 import pat_markdown from './pat/markdown/markdown.js';
+import pat_menu from './pat/menu/menu.js';
 import pat_modal from './pat/modal/modal.js';
 import pat_navigation from './pat/navigation/navigation.js';
 import pat_notification from './pat/notification/notification.js';

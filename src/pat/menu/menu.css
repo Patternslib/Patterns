@@ -1,0 +1,10 @@
+li.open {
+  background-color: grey;
+  color: white;
+  font-size: 20px;
+}
+
+li.closed {
+  background-color: beige;
+  color: black;
+}
