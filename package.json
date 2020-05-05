@@ -34,8 +34,6 @@
     "pikaday": "^1.8.0",
     "popper.js": "1.16.1",
     "prefixfree": "1.0.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
     "sass": "^1.26.5",
     "screenfull": "^5.0.0",
     "select2": "3.5.1",
@@ -46,17 +44,20 @@
     "spectrum-colorpicker": "1.8.0",
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
     "tippy.js": ">=5.2.0",
-    "typescript": "~3.7.2",
     "underscore": "^1.9.1",
     "validate.js": "0.11.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.9.6",
+    "@testing-library/jest-dom": "^5.5.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
     "expose-loader": "^0.7.5",
     "imports-loader": "^0.8.0",
+    "jest": "^26.0.1",
+    "jest-watch-typeahead": "^0.6.0",
+    "playwright": "^0.16.0",
     "raw-loader": "^4.0.1",
-    "react-scripts": "^3.4.1",
     "regenerator-runtime": "^0.13.5",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^2.3.6",
@@ -67,11 +68,20 @@
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "scripts": {
-    "serve": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
+    "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
+    "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
+    "test": "jest --watch"
+  },
+  "jest": {
+    "rootDir": "./src",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.js"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
   },
   "browserslist": {
     "production": [
