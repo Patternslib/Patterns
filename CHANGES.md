@@ -4,11 +4,11 @@
 ## 5.0.0-dev - unreleased
 
 - Removed unused or obsolete patterns:
-  - pat-carousel-legacy
-  - pat-checked-flag
-  - pat-chosen
+  - pat-carousel-legacy - use pat-carousel instead.
+  - pat-checked-flag - use pat-checklist instead.
+  - pat-chosen - use pat-autosuggest instead.
   - pat-edit-tinymce
-  - pat-placeholder and simplePlaceholder from jquery-ext.
+  - pat-placeholder and simplePlaceholder from jquery-ext - placeholder fully supported since IE10.
   - pat-slideshow-builder
 
 
