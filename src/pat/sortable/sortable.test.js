@@ -41,7 +41,7 @@ describe("pat-sortable", function() {
         var $handles = $("li a.sortable-handle");
         expect($handles.length).toBe(4);
         if ("draggable" in document.createElement("span")) {
-            expect($handles.attr("draggable"), "true");
+            expect($handles.attr("draggable")).toEqual("true");
         }
     });
 
