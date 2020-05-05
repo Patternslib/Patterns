@@ -1,5 +1,6 @@
 import pattern from "./zoom";
 import $ from "jquery";
+import utils from "../../core/utils";
 
 describe("pat-zoom", function() {
     beforeEach(function() {
@@ -39,11 +40,10 @@ describe("pat-zoom", function() {
             var $block = $("#lab div");
             pattern.init($block);
             var $range = $block.prev();
-            $range.val("1.5").change();
+            $range.val("1.5");
+            $range.change();
             // Fairly lax test so it passes in different browsers.
-            expect(
-                $block.attr("style").match(/zoom: 1.5(;.*)?/i)
-            ).toBeTruthy();
+            expect($block[0].style.zoom).toBe("1.5");
         });
     });
 });

@@ -25,14 +25,9 @@ var zoom = {
                 max: options.max
             });
 
-            if ("oninput" in window) {
-                events = "change input";
-            } else {
-                events = "change propertychange";
-            }
             $slider
                 .insertBefore($block)
-                .on(events, null, $block, zoom.onZoom);
+                .on("change input", null, $block, zoom.onZoom);
         });
     },
 
