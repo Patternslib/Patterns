@@ -65,7 +65,9 @@ const inject = {
         }
         if (cfgs[0].pushMarker) {
             $('body').on('push', function(event, data) {
+                console.log(`received push message: ${data}`);
                 if (data == cfgs[0].pushMarker) {
+                    console.log(`re-injecting ${data}`);
                     inject.onTrigger.apply($el[0], []);
                 }
             });

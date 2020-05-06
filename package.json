@@ -15,7 +15,7 @@
     "url": "https://github.com/Patternslib/patterns.git"
   },
   "dependencies": {
-    "autobahn": "^18.10.2",
+    "@stomp/stompjs": "^5.4.4",
     "chokidar": "^3.3.1",
     "core-js": "3",
     "ev-emitter": "1.1.0",
