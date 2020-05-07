@@ -12,7 +12,6 @@ define([
 const push_kit = {
 
     init() {
-        document.querySelector('meta[name="patterns-push-server"]').content
         const push_url = $("meta[name=patterns-push-server]").attr("content");
         const push_path = $("meta[name=patterns-push-path]").attr("content");
         const push_user = $("meta[name=patterns-push-user-TODO]").attr("content");
