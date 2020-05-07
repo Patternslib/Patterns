@@ -110,8 +110,7 @@ module.exports = {
     resolve: {
         alias: {
             "jquery": path.resolve(__dirname, "../node_modules/jquery/dist/jquery.js"),
-            "autobahn": path.resolve(__dirname, "../node_modules/autobahn/lib/autobahn.js"),
-            "push-kit": path.resolve(__dirname, "../node_modules/core/push_kit.js"),
+            "stompjs": path.resolve(__dirname, "../node_modules/@stomp/stompjs/bundles/stomp.umd.js"),
             "google-code-prettify": path.resolve(__dirname, "../node_modules/google-code-prettify/src/prettify.js"),
             "intersection-observer": path.resolve(__dirname, "../node_modules/intersection-observer/intersection-observer.js"),
             "jcrop": path.resolve(__dirname, "../node_modules/jquery-jcrop/js/jquery.Jcrop.min.js"),
@@ -178,6 +177,7 @@ module.exports = {
             "pat-store": path.resolve(__dirname, "../src/core/store.js"),
             "pat-url": path.resolve(__dirname, "../src/core/url.js"),
             "pat-utils": path.resolve(__dirname, "../src/core/utils.js"),
+            "push-kit": path.resolve(__dirname, "../src/core/push_kit.js"),
 
             // Patterns
             "pat-ajax": path.resolve(__dirname, "../src/pat/ajax/ajax.js"),

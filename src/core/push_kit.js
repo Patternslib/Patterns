@@ -6,103 +6,110 @@
 
 define([
     "jquery",
-    "autobahn",
-    "pat-utils"
-], function($, autobahn, utils) {
-    var push_kit = {
+    "stompjs",
+], function($, stompjs) {
 
-    	init: function () {
-    		var pps = $('meta[name=patterns-push-server]').attr("content");
-    		if (!pps) return;
+const push_kit = {
 
-    		var connection = new autobahn.Connection({
-   				url: pps,  
-   				realm: 'quaivecloud',
-				on_user_error: function (error, customErrorMessage) {
-		           // here comes your custom error handling, when a 
-		           // something went wrong in a user defined callback.
-			      console.log("User error: ", error);},
-		        on_internal_error: function (error, customErrorMessage) {
-		           // here comes your custom error handling, when a 
-		           // something went wrong in the autobahn core.
-			      console.log("Internal error: ", error);}
-			    }
-			);
-			connection.onopen = function (session) {
+    init() {
+        document.querySelector('meta[name="patterns-push-server"]').content
+        const push_url = $("meta[name=patterns-push-server]").attr("content");
+        const push_path = $("meta[name=patterns-push-path]").attr("content");
+        const push_user = $("meta[name=patterns-push-user-TODO]").attr("content");
+        const push_pass = $("meta[name=patterns-push-pass-TODO]").attr("content");
+        if (!push_url || !push_path) {
+            return;
+        }
 
-			   function oneventPushMarker(args, kwargs, details) {
-			   	  var item = args[0];
-			      console.log("Received push event: ", item);
-				  if (!item) return;
-		          // only show if the notification is max 1 sec old
-		          if (item['datetime'] > new Date().getTime()-1000)
-					$('body').trigger('push', [ item['title'] ]);
+        const client = new stompjs.Client({
+            brokerURL: push_url,
+            connectHeaders: {
+                login: push_user,
+                passcode: push_pass,
+            },
+            debug: function (str) {
+                console.log(str);
+            },
+            //reconnectDelay: 5000,
+            //heartbeatIncoming: 4000,
+            //heartbeatOutgoing: 4000,
+        });
 
-			   }
+        let subscription_push_marker;
+        let subscription_desktop_notification;
 
-			   session.subscribe('push_marker', oneventPushMarker);
-			   
+        client.onConnect = (frame) => {
+            subscription_push_marker = client.subscribe(
+                push_path + "/push_marker",
+                this.on_push_marker.bind(this)
+            );
+            subscription_desktop_notification = client.subscribe(
+                push_path + "/desktop_notification",
+                this.on_desktop_notification.bind(this)
+            );
+        };
 
-			   function oneventDesktopNotification(args, kwargs, details) {
-			   	  var item = args[0];
-			      console.log("Received push event: ", item);
-				  if (!item) return;
-		          // only show if the notification is max 1 sec old
-		          if (item['datetime'] > new Date().getTime()-1000)
-					push_kit.createNotification(item['title']);
+        client.onStompError = (frame) => {
+            console.log("Broker reported error: " + frame.headers["message"]);
+            console.log("Additional details: " + frame.body);
+        };
 
-			   }
+        client.activate();
+        console.log("StompJS push support initialised on " + push_url);
+    },
 
-			   session.subscribe('desktop_notification', oneventDesktopNotification);
+    on_push_marker(message) {
+        console.log("Received push marker: ", message);
+        if (!message || !message.body) {
+            return;
+        }
+        $("body").trigger("push", [message.body]);
+    },
 
+    on_desktop_notification(message) {
+        console.log("Received desktop notification: ", message);
+        if (!message || !message.body) {
+            return;
+        }
+        this.create_notification(message.body);
+    },
 
-			};
+    create_notification(text) {
+        const img = $("meta[name=desktop-notification-image]").attr("content");
 
-			connection.open();
-	        console.log("Crossbar push support initialised on " + pps)
+        // Let's check if the browser supports notifications
+        if (!"Notification" in window) {
+            console.log("This browser does not support notifications.");
+            return;
+        }
 
-    	},
+        // If not yet permitted, we need to ask the user for permission.
+        // Note, Chrome does not implement the permission static property
+        // So we have to check for NOT 'denied' instead of 'default'
+        if (! Notification.permission in ["denied", "granted"]) {
+            Notification.requestPermission((permission) => {
+                // Whatever the user answers, we make sure Chrome stores the information
+                if (!("permission" in Notification)) {
+                    Notification.permission = permission;
+                }
+            });
+        }
 
+        // Let's check if the user is okay to get some notification
+        if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            const message = {
+                body: text
+            }
+            if (img) {
+                message.icon = img;
+            }
+            new Notification("Update", message);
+        }
+    }
 
-	    createNotification: function(text) {
-    		var img = $('meta[name=desktop-notification-image]').attr("content");
+};
 
-	        // Let's check if the browser supports notifications
-	        if (!"Notification" in window) {
-	          console.log("This browser does not support notifications.");
-	        }
-
-	        // Let's check if the user is okay to get some notification
-	        else if (Notification.permission === "granted") {
-	          // If it's okay let's create a notification
-
-	          var notification = new Notification('Update', { body: text, icon: img });
-
-	        }
-
-	        // Otherwise, we need to ask the user for permission
-	        // Note, Chrome does not implement the permission static property
-	        // So we have to check for NOT 'denied' instead of 'default'
-	        else if (Notification.permission !== 'denied') {
-	          Notification.requestPermission(function (permission) {
-
-	            // Whatever the user answers, we make sure Chrome stores the information
-	            if(!('permission' in Notification)) {
-	              Notification.permission = permission;
-	            }
-
-	            // If the user is okay, let's create a notification
-	            if (permission === "granted") {
-	              var notification = new Notification('Update', { body: text, icon: img });
-
-	            }
-	          });
-	        }
-	    }     
-
-
-    };
     push_kit.init();
     return push_kit;
 });
-
