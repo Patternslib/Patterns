@@ -3,7 +3,11 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="patterns-push-server" content="ws://push.quaivecloud.com/ws" />
+  <!--meta name="patterns-push-server" content="ws://push.quaivecloud.com/ws" /-->
+  <!--meta name="patterns-push-server" content="ws://localhost:15674/ws" /-->
+  <meta name="patterns-push-path" content="/exchange/quaive" />
+  <meta name="patterns-push-user-TODO" content="admin" />
+  <meta name="patterns-push-pass-TODO" content="admin" />
   <title>Injection pattern</title>
   <link rel="stylesheet" href="/style/common.css" type="text/css">
   <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
@@ -48,10 +52,10 @@
         <a hidden href="inject-sources.html#pos-2" data-pat-inject="source: #pos-2; target: #pos-1; trigger: autoload; trigger: idle; delay: 2000" class="pat-inject">Load</a>
         <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; data-pat-inject=&quot;source: #pos-2; target: #pos-4; trigger: autload; delay: 2000&quot; class=&quot;pat-inject&quot;&gt;Autoloads &quot;Wilde&quot; in frame 4 after a 2 second delay&lt;/a&gt;</code></em>
       </li>
-      <!-- <li>
-					<a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="push-marker: content-updated">Place "Wilde" in frame 2 on push (push_marker: content-updated)</a>
-					<em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;push-marker: content-updated&quot;&gt;</code></em>
-				</li> -->
+      <li>
+        <a href="inject-sources.html#pos-2" class="pat-inject" data-pat-inject="push-marker: content-updated">Place "Wilde" in frame 2 on push (push_marker: content-updated)</a>
+        <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;inject-sources.html#pos-2&quot; class=&quot;pat-inject&quot; data-pat-inject=&quot;push-marker: content-updated&quot;&gt;</code></em>
+      </li>
       <li>
         <a href="page-that-doesnt-exist#nothing" class="pat-inject">Trigger an inject that fails. (Puts an error message in a data attribute on the body tag)</a>
         <em class="iconified icon-info-circle pat-tooltip" data-pat-tooltip="trigger: click; source: content; class: large code"><code class="pat-syntax-highlight">&lt;a href=&quot;page-that-doesnt-exist&quot; class=&quot;pat-inject&quot;&gt;</code></em>

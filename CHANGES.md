@@ -5,6 +5,8 @@
 Features
 ~~~~~~~~
 
+- Rework push message support for the STOMP message protocoll instead of backends instead of WAMP.
+  We are using the RabbitMQ message broker for push support instead of crossbar.io.
 - Navigation:
   - Do not set the ``.navigation-in-path`` class for elenents already marked with ``.current``.
   - Allow configuration of "in path" and "current" classes via ``in-path-class`` and ``current-class`` configuration options.
