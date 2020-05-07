@@ -14,7 +14,7 @@ define([
     "modernizr",
     "prefixfree",
     "scroll-detection",
-//    "push-kit",
+    "push-kit",
     "pat-ajax",
     "pat-autofocus",
     "pat-autoscale",

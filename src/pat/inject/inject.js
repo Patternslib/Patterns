@@ -65,7 +65,9 @@ define([
             }
             if (cfgs[0].pushMarker) {
                 $('body').on('push', function(event, data) {
+                    console.log('received push message: ' + data);
                     if (data == cfgs[0].pushMarker) {
+                        console.log('re-injecting ' + data);
                         inject.onTrigger.apply($el[0], []);
                     }
                 });
@@ -652,9 +654,9 @@ define([
             };
             $el.data('pat-inject-triggered', true);
             // possibility for spinners on targets
-            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { 
+            _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) {
                 if (cfg.target  != 'none')
-                    cfg.$target.addClass(cfg.loadingClass); 
+                    cfg.$target.addClass(cfg.loadingClass);
             });
             // Put the execute class on the elem that has pat inject on it
             _.chain(cfgs).filter(_.property('loadingClass')).each(function(cfg) { $el.addClass(cfg.executingClass); });
@@ -664,7 +666,7 @@ define([
             $el.on("pat-ajax-success.pat-inject pat-ajax-error.pat-inject", function() {
                 $el.removeData('pat-inject-triggered');
             });
-            
+
             if (cfgs[0].url.length) {
                 ajax.request($el, {url: cfgs[0].url});
             } else {
@@ -693,7 +695,7 @@ define([
 
             if (cfg.source === 'none') {
                 $target.replaceWith('');
-                return true;                
+                return true;
             }
             if ($source.length === 0) {
                 log.warn("Aborting injection, source not found:", $source);
