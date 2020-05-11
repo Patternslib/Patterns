@@ -122,6 +122,11 @@ describe("pat-checklist", function() {
             expect($(".deselect-all").prop("disabled")).toBe(true);
         });
 
+        it("is enabled when all checkboxes are checked", function() {
+            utils.checkAllBoxes();
+            expect($(".deselect-all").prop("disabled")).toBe(false);
+        });
+
         it("is enabled when at least one checkbox is checked", function() {
             utils.uncheckAllBoxes();
             expect($(".deselect-all").prop("disabled")).toBe(true);
