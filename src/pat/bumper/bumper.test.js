@@ -131,6 +131,7 @@ describe("pat-bumper", function () {
         expect(spy_update).toHaveBeenCalled();
     });
 
+    // TODO: JSDOM incompatibility
     it.skip("correctly transitions an element to bumped at the top", function () {
         $("#lab").html(
             [
@@ -161,6 +162,7 @@ describe("pat-bumper", function () {
         expect(pattern.$el[0].style.top).toBe("13px");
     });
 
+    // TODO: JSDOM incompatibility
     it.skip("correctly transitions an element to bumped at the leftside", function () {
         $("#lab").html(
             [
