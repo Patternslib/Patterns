@@ -4,10 +4,8 @@
  * Copyright 2018-2019 Alexander Pilz, Syslab.com GmbH
  */
 
-define([
-    "jquery",
-    "stompjs",
-], function($, stompjs) {
+import $ from "jquery";
+import { Client } from "@stomp/stompjs";
 
 const push_kit = {
 
@@ -20,7 +18,7 @@ const push_kit = {
             return;
         }
 
-        const client = new stompjs.Client({
+        const client = new Client({
             brokerURL: push_url,
             connectHeaders: {
                 login: push_user,
@@ -109,7 +107,6 @@ const push_kit = {
 
 };
 
-    push_kit.init();
-    return push_kit;
-});
+push_kit.init();
 
+export default push_kit;
