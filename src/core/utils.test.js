@@ -232,7 +232,6 @@ describe("removeWildcardClass", function() {
 describe("hideOrShow", function() {
     beforeEach(function() {
         $("<div/>", {id: "lab"}).appendTo(document.body);
-        $("<div/>", {id: "lab"}).appendTo(document.body);
     });
 
     afterEach(function() {
@@ -381,9 +380,13 @@ describe("parseTime", function() {
 
 
 describe("getCSSValue", function() {
-    it("Return values for CSS properties of a HTML node", function() {
-        var el1 = document.createElement('div');
-        var el2 = document.createElement('div');
+
+    beforeEach(function() {
+        const el1 = document.createElement('div');
+        const el2 = document.createElement('div');
+
+        el1.setAttribute('id', 'el1');
+        el2.setAttribute('id', 'el2');
         el1.appendChild(el2);
 
         // Need to attach element to body to make CSS calculation work.
@@ -394,21 +397,47 @@ describe("getCSSValue", function() {
         el1.style.border = '1em solid black';
         el1.style.position = 'relative';
         el2.style['margin-bottom'] = '2em';
+    });
 
+    afterEach(function() {
+        document.querySelector('#el1').remove();
+    });
+
+    it("Return values for CSS properties of a HTML node", function() {
+        const el1 = document.querySelector('#el1');
         expect(utils.getCSSValue(el1, 'font-size')).toBe('12px');
         expect(utils.getCSSValue(el1, 'font-size', true)).toBe(12.0);
-        expect(utils.getCSSValue(el2, 'font-size')).toBe('12px');
+        expect(utils.getCSSValue(el1, 'position')).toBe('relative');
+    });
 
+    it.skip("Return inherited values for CSS properties", function() {
+        // Missing JSDOM support for style inheritance yet. See:
+        // https://github.com/jsdom/jsdom/issues/2160
+        // https://github.com/jsdom/jsdom/pull/2668
+        // https://github.com/jsdom/jsdom/blob/master/Changelog.md
+
+        const el2 = document.querySelector('#el2');
+        expect(utils.getCSSValue(el2, 'font-size')).toBe('12px');
+    });
+
+    it.skip("Shorthand properties are split up", function () {
+        // Missing JSDOM support for property split yet.
+
+        const el1 = document.querySelector('#el1');
         // ``em`` are parsed to pixel values.
         // shorthand property sets like ``border`` are split up into their
         // individual properties, like ``border-top-width``.
         expect(utils.getCSSValue(el1, 'border-top-width')).toBe('12px');
         expect(utils.getCSSValue(el1, 'border-top-style')).toBe('solid');
         expect(utils.getCSSValue(el1, 'border-top-color')).toBe('rgb(0, 0, 0)');
+    });
 
-        expect(utils.getCSSValue(el1, 'position')).toBe('relative');
+    it.skip("Values with relative units are converted to pixels", function () {
+        // Missing JSDOM support for unit conversion yet.
 
-        // again, relative length-type values are converted to absolute pixels.
+        const el1 = document.querySelector('#el1');
+        const el2 = document.querySelector('#el2');
+        // Relative length-type values are converted to absolute pixels.
         expect(utils.getCSSValue(el1, 'margin-top')).toBe('12px');
         expect(utils.getCSSValue(el1, 'margin-top', true)).toBe(12.0);
         expect(utils.getCSSValue(el2, 'margin-top', true)).toBe(0.0);
