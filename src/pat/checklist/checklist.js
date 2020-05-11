@@ -81,7 +81,7 @@ var _ = {
         var parents = $(elem).parents();
         for (var i = 0; i < parents.length; i++) {
             $parent = $(parents[i]);
-            checkbox_children = $(parents[i]).find(sel);
+            checkbox_children = $parent.find(sel);
             if (checkbox_children.length != 0) {
                 return checkbox_children;
             }
