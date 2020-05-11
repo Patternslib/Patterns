@@ -29,10 +29,8 @@
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
 
-define([
-    "jquery",
-    "stompjs",
-], function($, stompjs) {
+import $ from "jquery";
+import { Client } from "@stomp/stompjs";
 
 const push_kit = {
 
@@ -46,7 +44,7 @@ const push_kit = {
             return;
         }
 
-        const client = new stompjs.Client({
+        const client = new Client({
             brokerURL: push_url,
             connectHeaders: {
                 login: push_login,
@@ -136,7 +134,6 @@ const push_kit = {
 
 };
 
-    push_kit.init();
-    return push_kit;
-});
+push_kit.init();
 
+export default push_kit;
