@@ -99,11 +99,11 @@ export default Base.extend({
     },
 
     _updateStatus: function() {
-        var sticker = this.$el[0],
-            margin = this.options ? this.options.margin : 0,
-            frame,
-            box = this._getBoundingBox(this.$el, margin),
-            delta = {};
+        const sticker = this.$el[0];
+        const margin = this.options ? this.options.margin : 0;
+        const box = this._getBoundingBox(this.$el, margin);
+        const delta = {};
+        let frame;
 
         if (this.$container.length) {
             frame = this._getBoundingBox(this.$container, 0); // Scrolling on a container
@@ -111,10 +111,8 @@ export default Base.extend({
             frame = this._getViewport(); // Scrolling on the window
         }
 
-        delta.top = sticker.style.top ? parseFloat(this.$el.css("top")) : 0;
-        delta.left = sticker.style.left
-            ? parseFloat(this.$el.css("left"))
-            : 0;
+        delta.top = utils.getCSSValue(sticker, 'top', true) || 0;
+        delta.left = utils.getCSSValue(sticker, 'left', true) || 0;
 
         box.top -= delta.top;
         box.bottom -= delta.top;
@@ -142,11 +140,11 @@ export default Base.extend({
     _getViewport: function getViewport() {
         /* Calculates the bounding box for the current viewport
          */
-        var $win = $(window),
-            view = {
-                top: $win.scrollTop(),
-                left: $win.scrollLeft()
-            };
+        const $win = $(window);
+        let view = {
+            top: $win.scrollTop(),
+            left: $win.scrollLeft()
+        };
         view.right = view.left + $win.width();
         view.bottom = view.top + $win.height();
         return view;
