@@ -55,7 +55,9 @@
     "expose-loader": "^0.7.5",
     "imports-loader": "^0.8.0",
     "jest": "^26.0.1",
+    "jest-dev-server": "",
     "jest-watch-typeahead": "^0.6.0",
+    "playwright": "^0.16.0",
     "raw-loader": "^4.0.1",
     "regenerator-runtime": "^0.13.5",
     "style-loader": "^1.2.1",
@@ -80,7 +82,9 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
-    ]
+    ],
+    "globalSetup": "<rootDir>/src/testGlobalSetup.js",
+    "globalTeardown": "<rootDir>/src/testGlobalTeardown.js"
   },
   "browserslist": {
     "production": [

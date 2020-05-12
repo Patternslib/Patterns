@@ -1,6 +1,7 @@
 import $ from "jquery";
 import Bumper from "./bumper";
 import utils from "../../core/utils";
+import playwright from "playwright";
 
 describe("pat-bumper", function () {
     beforeEach(function () {
@@ -130,7 +131,6 @@ describe("pat-bumper", function () {
         expect(spy_update).toHaveBeenCalled();
     });
 
-    // TODO: JSDOM incompatibility
     it.skip("correctly transitions an element to bumped at the top", function () {
         $("#lab").html(
             [
@@ -161,7 +161,6 @@ describe("pat-bumper", function () {
         expect(pattern.$el[0].style.top).toBe("13px");
     });
 
-    // TODO: JSDOM incompatibility
     it.skip("correctly transitions an element to bumped at the leftside", function () {
         $("#lab").html(
             [
@@ -197,3 +196,39 @@ describe("pat-bumper", function () {
         });
     });
 });
+
+
+const PAGE_URL = "http://localhost:3001";
+
+for (const browserType of ["chromium", "firefox", "webkit"]) {
+    describe(`(${browserType}): Test bumping`, () => {
+        let browser = null;
+        let page = null;
+
+        /**
+         * Create the browser and page context
+         */
+        beforeAll(async () => {
+            browser = await playwright[browserType].launch();
+            page = await browser.newPage();
+
+            if (!page) {
+                throw new Error("Connection wasn't established");
+            }
+
+            // Open the page
+            await page.goto(PAGE_URL, {
+                waitUntil: "networkidle0",
+            });
+        });
+
+        afterAll(async () => {
+            await browser.close();
+        });
+
+        test(`(${browserType}): Should load page`, async () => {
+            expect(page).not.toBeNull();
+            expect(await page.title()).not.toBeNull();
+        });
+    });
+}
