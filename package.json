@@ -50,8 +50,10 @@
   "devDependencies": {
     "@babel/preset-env": "^7.9.6",
     "@testing-library/jest-dom": "^5.5.0",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
+    "eslint": "^7.0.0",
     "expose-loader": "^0.7.5",
     "imports-loader": "^0.8.0",
     "jest": "^26.0.1",
@@ -71,7 +73,18 @@
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "testonce": "jest"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "browser": true,
+      "node": true,
+      "jest": true
+    },
+    "parser": "babel-eslint",
+    "rules": {}
   },
   "jest": {
     "rootDir": "./src",
@@ -106,11 +119,6 @@
     {
       "name": "Cornelis Kolbach",
       "url": "http://cornae.com"
-    },
-    {
-      "name": "JC Brand",
-      "email": "jc@opkode.com",
-      "url": "https://www.opkode.com"
     }
   ]
 }
