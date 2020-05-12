@@ -1,20 +1,10 @@
-JSHINT 		?= node_modules/.bin/jshint
+ESLINT 		?= node_modules/.bin/eslint
 PEGJS		?= node_modules/.bin/pegjs
 SASS		?= node_modules/.bin/sass
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
-BUNDLES		= bundles/patterns.js bundles/patterns.min.js
-
 GENERATED	= src/lib/depends_parse.js
 
-TESTSOURCES	= $(wildcard tests/specs/*/*.js) \
-			  $(wildcard src/pat/*/tests.js)
-JSHINTEXCEPTIONS = $(GENERATED) \
-		   src/lib/dependshandler.js \
-		   src/lib/htmlparser.js \
-		   src/pat/skeleton.js \
-		   $(TESTSOURCES)
-CHECKSOURCES	= $(filter-out $(JSHINTEXCEPTIONS),$(SOURCES))
 
 all:: bundle.js css
 
@@ -31,13 +21,11 @@ clean::
 ########################################################################
 ## Tests
 
-jshint: stamp-yarn
-	$(JSHINT) --config jshintrc $(CHECKSOURCES)
-	$(JSHINT) --config jshintrc-tests $(TESTSOURCES)
-
+eslint: stamp-yarn
+	$(ESLINT) ./src
 
 .PHONY: check
-check:: stamp-yarn jshint
+check:: stamp-yarn eslint
 	yarn run testonce
 
 
@@ -111,4 +99,4 @@ _serve:
 
 designerhappy:: serve
 
-.PHONY: all bundle clean jshint
+.PHONY: all bundle clean eslint
