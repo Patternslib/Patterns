@@ -34,7 +34,8 @@ check:: stamp-yarn eslint
 
 build:: bundle all_css
 
-bundle bundle.js: $(GENERATED) $(SOURCES) stamp-yarn
+# bundle bundle.js: $(GENERATED) $(SOURCES) stamp-yarn
+bundle bundle.js: stamp-yarn
 	yarn run build
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
