@@ -736,7 +736,9 @@ define([
                 var $source = $html.find(source);
 
                 if ($source.length === 0) {
-                    log.warn("No source elements for selector:", source, $html);
+                    if (source != "title") {
+                        log.warn("No source elements for selector:", source, $html);
+                    }
                 }
 
                 $source.find("a[href^=\"#\"]").each(function () {
