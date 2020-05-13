@@ -137,7 +137,7 @@ define([
                     fragment = this.options.selector;
                 } else {
                     href = this.$el.attr('href');
-                    fragment = href.indexOf('#') !== -1 && '#' + href.split('#').pop() || undefined;                    
+                    fragment = href.indexOf('#') !== -1 ? '#' + href.split('#').pop() : undefined;
                 }
                 var target = $(fragment);
                 if (target.length === 0) {
@@ -145,8 +145,11 @@ define([
                 }
 
                 scrollable = $(target.parents().filter(function() {
-                    return ( $(this).css('overflow') === 'auto' ||
-                             $(this).css('overflow') === 'scroll' );
+                    return (
+                        ['auto', 'scroll'].indexOf($(this).css('overflow')) > -1 ||
+                        (scroll === 'scrollTop' && ['auto', 'scroll'].indexOf($(this).css('overflow-y')) > -1) ||
+                        (scroll === 'scrollLeft' && ['auto', 'scroll'].indexOf($(this).css('overflow-x')) > -1)
+                    );
                 }).first())
 
                 if ( typeof scrollable[0] === 'undefined' ) {
