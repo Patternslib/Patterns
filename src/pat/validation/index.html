@@ -7,10 +7,10 @@
         <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
-      <form class="pat-validation vertical" method="get" action="#" novalidate>
+      <form class="pat-validation vertical" data-pat-validation="disable-selector: .pat-button" method="get" action="#" novalidate>
           <fieldset class="horizontal">
             <label>Full name <input type="text" name="name" required="required"/></label>
-            
+
             <label>Age <input type="number" name="age" min="16" max="65" required="required"/></label>
 
             <fieldset class="group pat-checklist radio">
@@ -39,7 +39,24 @@
                     id="planning-end"
                     value="2015-09-10"/>
             </label>
-            
+
+            <label>Required date
+                <input
+                    type="date"
+                    required="required"
+                    name="measure.date-required:records"
+                    id="date-required"
+                    />
+            </label>
+
+            <label>Optional date
+                <input
+                    type="date"
+                    name="measure.date-optional:records"
+                    id="date-optional"
+                    />
+            </label>
+
             <fieldset class="buttons">
               <button class="pat-button">Test</button>
             </fieldset>

@@ -11,8 +11,9 @@ define([
     "pat-base",
     "pat-utils",
     "moment",
-    "validate"
-], function($, _, Parser, Base, utils, moment, validate) {
+    "validate",
+    "modernizr"
+], function($, _, Parser, Base, utils, moment, validate, Modernizr) {
     "use strict";
     validate.moment = moment;
     var parser = new Parser("validation");
@@ -93,14 +94,15 @@ define([
                 type = this.getFieldType(input),
                 c = constraints[name][type];
 
-            if (typeof opts == "undefined") {
+            if (!c || typeof opts == "undefined") {
                 return constraints;
             }
+
             _.each(['before', 'after'], function (relation) {
                 var isDate = validate.moment.isDate,
                     relative = opts.not && opts.not[relation] || undefined,
                     arr, constraint, $ref;
-                if (typeof relative == "undefined") {
+                if (typeof relative === "undefined") {
                     return;
                 }
                 constraint = relation === "before" ? 'earliest' : 'latest';
@@ -118,13 +120,10 @@ define([
                         $ref.data('pat-validation-refs', arr);
                     }
                     c[constraint] = $ref.val();
-                    /* This is a workaround to allow empty values as dates and only validate 
-                       if values are provided. There is probably a better way in validate, but
-                       I still have to find it.
-                       The following code removes the date validation constraint in case there 
-                       is no date to validate for. */
-                    if ($ref.val() === "") {
-                        constraints[name].date = false;
+                    if (! $ref.val()) {
+                        // do not validate empty reference dates
+                        constraints[name][type] = false;
+                        return;
                     }
                 }
             });
@@ -142,7 +141,7 @@ define([
                 opts = parser.parse($(input)),
                 constraint = constraints[name];
             if (_.contains(['datetime', 'date'], type)) {
-                this.setLocalDateConstraints(input, opts, constraints);
+                constraints = this.setLocalDateConstraints(input, opts, constraints);
             } else if (type == 'number') {
                 _.each(['min', 'max'], function (limit) {
                     // TODO: need to figure out how to add local validation
@@ -184,12 +183,34 @@ define([
             if (!name) { return; }
             constraints[name.replace(/\./g, '\\.')] = {
                 'presence': input.getAttribute('required') ? { 'message': '^'+this.options.message.required, allowEmpty: false } : false,
-                'email': type == 'email' ? { 'message': '^'+this.options.message.email } : false,
-                'numericality': type == 'number' ? true : false,
-                'datetime': type == 'datetime' ? { 'message': '^'+this.options.message.datetime } : false,
-                'date': type == 'date' ? { 'message': '^'+this.options.message.date } : false
+                'email': type === 'email' ? { 'message': '^'+this.options.message.email } : false,
+                'numericality': type === 'number' ? true : false,
+                'datetime': type === 'datetime' && this.doDateCheck(input) ? { 'message': '^'+this.options.message.datetime } : false,
+                'date': type === 'date' && this.doDateCheck(input) ? { 'message': '^'+this.options.message.date } : false
             };
-            return this.setLocalConstraints(input, constraints);
+            constraints = this.setLocalConstraints(input, constraints);
+            return constraints;
+        },
+
+        doDateCheck: function (input) {
+            // Returns true if a date check should be done.
+            // Don't check if there is no input - this should be handled by
+            // the ``required`` attribute.
+            // In case of HTML5 ``date``/``datetime-local`` support we
+            // implicitly check this if the input is ``badInput``, which is
+            // only set in case of an invalid date but not on empty values.
+            // Note that in case of HTML5 ``date``/``datetime-local`` support
+            // the value is empty on invalid input.
+            var type = input.getAttribute('type');  // we need the raw type here
+            if (Modernizr.inputtypes.date && type.indexOf('date') === 0) {
+                // Do the date check if the input is invalid (actually
+                // double-checking here - HTML5 and validate.js).
+                return input.validity.badInput;
+            } else {
+                // Do the date check if input is not empty (Safari has yet no
+                // date support at all)
+                return !!input.value;
+            }
         },
 
         getValueDict: function (input) {
@@ -200,7 +221,7 @@ define([
             var name = input.getAttribute('name');
             var value = input.value;
             if (input.getAttribute('type') == 'number') {
-		if (value !== '') {
+            if (value !== '') {
                     try {
                         value = Number(input.value);
                     } catch (e) {
