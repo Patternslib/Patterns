@@ -45,14 +45,11 @@ define([
                 log.error("Invalid condition: " + e.message, slave);
                 return;
             }
-
             state=handler.evaluate();
             switch (options.action) {
                 case "show":
-                    if (state)
-                        this.show();
-                    else
-                        this.hide();
+                    utils.hideOrShow($el, state, options, this.name);
+                    this.updateModal();
                     break;
                 case "enable":
                     if (state)
@@ -62,10 +59,12 @@ define([
                     break;
                 case "both":
                     if (state) {
-                        this.show();
+                        utils.hideOrShow($el, state, options, this.name);
+                        this.updateModal();
                         this.enable();
                     } else {
-                        this.hide();
+                        utils.hideOrShow($el, state, options, this.name);
+                        this.updateModal();
                         this.disable();
                     }
                     break;
@@ -110,16 +109,6 @@ define([
             if (this.$modal.length) {
                 $(document).trigger("pat-update", {pattern: "depends"});
             }
-        },
-
-        show: function () {
-            this.$el.show();
-            this.updateModal();
-        },
-
-        hide: function () {
-            this.$el.hide();
-            this.updateModal();
         },
 
         enable: function() {
