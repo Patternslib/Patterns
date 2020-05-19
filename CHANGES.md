@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- pat-scroll: Implement new special `selector:top` attribute value to scroll the scroll container just to the top of the page. Ref: #721.
 - pat-scroll: To define the scrollable target search also for `overflow-x` and `overflow-y` declarations.
 - Rework push message support for the STOMP message protocoll instead of backends instead of WAMP.
   We are using the RabbitMQ message broker for push support instead of crossbar.io.
