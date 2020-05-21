@@ -15,7 +15,7 @@ define([
         TEXT_NODE = 3,
         COMMENT_NODE = 8;
 
-    parser.addArgument("selector");
+    parser.addArgument("default-selector");
     parser.addArgument("target");
     parser.addArgument("data-type", "html");
     parser.addArgument("next-href");
@@ -235,7 +235,7 @@ define([
                     log.warn("Ignoring additional source ids:", urlparts.slice(2));
                 }
 
-                cfg.selector = cfg.selector || defaultSelector;
+                cfg.defaultSelector = cfg.defaultSelector || defaultSelector;
                 if (cfg.delay) {
                     try {
                         cfg.delay = utils.parseTime(cfg.delay);
@@ -323,8 +323,8 @@ define([
                 return false;
             }
             // defaults
-            cfg.source = cfg.source || cfg.selector;
-            cfg.target = cfg.target || cfg.selector;
+            cfg.source = cfg.source || cfg.defaultSelector;
+            cfg.target = cfg.target || cfg.defaultSelector;
 
             if (!inject.extractModifiers(cfg)) {
                 return false;
@@ -908,7 +908,7 @@ define([
                         return false;
                     }
                     // check if the target element still exists. Otherwise halt and catch fire
-                    var target = ($el.data("pat-inject")[0].target || cfgs[0].selector).replace(/::element/, '');
+                    var target = ($el.data("pat-inject")[0].target || cfgs[0].defaultSelector).replace(/::element/, '');
                     if (target && target !== 'self' && $(target).length === 0) {
                         return false;
                     }
@@ -948,7 +948,7 @@ define([
                         return false;
                     }
                     // check if the target element still exists. Otherwise halt and catch fire
-                    var target = ($el.data("pat-inject")[0].target || cfgs[0].selector).replace(/::element/, '');
+                    var target = ($el.data("pat-inject")[0].target || cfgs[0].defaultSelector).replace(/::element/, '');
                     if (target && target !== 'self' && $(target).length === 0) {
                         return false;
                     }
