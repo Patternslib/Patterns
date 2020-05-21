@@ -120,6 +120,20 @@ define([
             }
         },
 
+        findScrollContainer: function(el) {
+            var scrollable = $(el).parents().filter(function() {
+                return (
+                    ['auto', 'scroll'].indexOf($(this).css('overflow')) > -1 ||
+                    (scroll === 'scrollTop' && ['auto', 'scroll'].indexOf($(this).css('overflow-y')) > -1) ||
+                    (scroll === 'scrollLeft' && ['auto', 'scroll'].indexOf($(this).css('overflow-x')) > -1)
+                );
+            }).first();
+            if ( typeof scrollable[0] === 'undefined' ) {
+                scrollable = $('html, body');
+            }
+            return scrollable;
+        },
+
         smoothScroll: function() {
             var href, fragment;
             var scroll = this.options.direction == "top" ? 'scrollTop' : 'scrollLeft',
@@ -128,6 +142,10 @@ define([
                 // apply scroll options directly
                 scrollable = this.options.selector ? $(this.options.selector) : this.$el;
                 options[scroll] = this.options.offset;
+            } else if (this.options.selector === "top") {
+                // Just scroll up, period.
+                scrollable = this.findScrollContainer(target);
+                options['scrollTop'] = 0;
             } else {
                 // Get the first element with overflow (the scroll container)
                 // starting from the *target*
@@ -144,23 +162,9 @@ define([
                     return;
                 }
 
-                scrollable = $(target.parents().filter(function() {
-                    return (
-                        ['auto', 'scroll'].indexOf($(this).css('overflow')) > -1 ||
-                        (scroll === 'scrollTop' && ['auto', 'scroll'].indexOf($(this).css('overflow-y')) > -1) ||
-                        (scroll === 'scrollLeft' && ['auto', 'scroll'].indexOf($(this).css('overflow-x')) > -1)
-                    );
-                }).first())
+                scrollable = this.findScrollContainer(target);
 
-                if ( typeof scrollable[0] === 'undefined' ) {
-                    scrollable = $('html, body');
-                    // positioning context is document
-                    if ( scroll === "scrollTop" ) {
-                        options[scroll] = Math.floor(target.safeOffset().top);
-                    } else {
-                        options[scroll] = Math.floor(target.safeOffset().left);
-                    }
-                } else if ( scroll === "scrollTop" ) {
+                if ( scroll === "scrollTop" ) {
                     // difference between target top and scrollable top becomes 0
                     options[scroll] = Math.floor(scrollable.scrollTop()
                                                  + target.safeOffset().top
