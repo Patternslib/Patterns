@@ -121,11 +121,12 @@ define([
         },
 
         findScrollContainer: function(el) {
+            var direction = this.options.direction;
             var scrollable = $(el).parents().filter(function() {
                 return (
                     ['auto', 'scroll'].indexOf($(this).css('overflow')) > -1 ||
-                    (scroll === 'scrollTop' && ['auto', 'scroll'].indexOf($(this).css('overflow-y')) > -1) ||
-                    (scroll === 'scrollLeft' && ['auto', 'scroll'].indexOf($(this).css('overflow-x')) > -1)
+                    (direction === 'top' && ['auto', 'scroll'].indexOf($(this).css('overflow-y')) > -1) ||
+                    (direction === 'left' && ['auto', 'scroll'].indexOf($(this).css('overflow-x')) > -1)
                 );
             }).first();
             if ( typeof scrollable[0] === 'undefined' ) {
@@ -144,7 +145,7 @@ define([
                 options[scroll] = this.options.offset;
             } else if (this.options.selector === "top") {
                 // Just scroll up, period.
-                scrollable = this.findScrollContainer(target);
+                scrollable = this.findScrollContainer(this.$el);
                 options['scrollTop'] = 0;
             } else {
                 // Get the first element with overflow (the scroll container)
