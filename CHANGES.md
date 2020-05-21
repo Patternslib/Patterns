@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- pat-inject: Rename undocumented ``selector`` property to ``defaultSelector``.
 - pat-inject: Fix typo in docs for the ``source`` property.
 - pat-scroll: To define the scrollable target search also for `overflow-x` and `overflow-y` declarations.
 - Rework push message support for the STOMP message protocoll instead of backends instead of WAMP.
