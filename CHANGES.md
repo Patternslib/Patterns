@@ -5,6 +5,8 @@
 Features
 ~~~~~~~~
 
+- pat-inject: Rename undocumented ``selector`` property to ``defaultSelector``.
+- pat-inject: Fix typo in docs for the ``source`` property.
 - scroll detection: Rework and optimize, set scroll classes on any scrolling event, fix problem with IE and set initial state. Fixes #701
 - pat-scroll: Implement new special `selector:top` attribute value to scroll the scroll container just to the top of the page. Ref: #721.
 - pat-scroll: To define the scrollable target search also for `overflow-x` and `overflow-y` declarations.
