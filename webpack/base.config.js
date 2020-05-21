@@ -1,8 +1,11 @@
 // Organised as described in https://simonsmith.io/organising-webpack-config-environments/
 process.traceDeprecation = true;
 const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
+
+// plugins
+const BundleVisualizer = require('webpack-visualizer-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 
 module.exports = {
@@ -86,6 +89,7 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery",
             jquery: "jquery"
-        })
+        }),
+        new BundleVisualizer(),
     ]
 };
