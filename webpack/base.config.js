@@ -36,7 +36,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll|scroll-box|tooltip-ng)\.js$/,
+                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push|push_kit|scroll|scroll-box|tooltip-ng)\.js$/,
                 loader: 'babel-loader',
                 query: {
                     presets: [["@babel/env", {
@@ -223,6 +223,7 @@ module.exports = {
             "pat-navigation": path.resolve(__dirname, "../src/pat/navigation/navigation.js"),
             "pat-notification": path.resolve(__dirname, "../src/pat/notification/notification.js"),
             "pat-placeholder": path.resolve(__dirname, "../src/pat/placeholder/placeholder.js"),
+            "pat-push": path.resolve(__dirname, "../src/pat/push/push.js"),
             "pat-selectbox": path.resolve(__dirname, "../src/pat/selectbox/selectbox.js"),
             "pat-skeleton": path.resolve(__dirname, "../src/pat/skeleton/skeleton.js"),
             "pat-slides": path.resolve(__dirname, "../src/pat/slides/slides.js"),

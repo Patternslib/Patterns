@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- pat-push: New pattern for replacing html content on push events.
 - pat-scroll-box: New pattern for scrolling detection. Replaces the previous "scroll detection" module.
 - pat-inject: Rename undocumented ``selector`` property to ``defaultSelector``.
 - pat-inject: Fix typo in docs for the ``source`` property.
