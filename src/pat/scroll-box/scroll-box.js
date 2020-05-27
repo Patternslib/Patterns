@@ -4,63 +4,84 @@
  * Copyright 2020- Alexander Pilz, Syslab.com GmbH
  */
 
-define([
-    "jquery"
-], function($) {
-    var scroll_detection = {
+define(["jquery", "pat-base"], function ($, Base) {
+  return Base.extend({
+    name: "scroll-box",
+    trigger: ".pat-scroll-box",
+    timeout: 200,
 
-      init: function () {
-
-        let last_known_scroll_position = 0;
-        let scroll_y = 0;
-        let ticking = false;
-
-        let set_scroll_classes = (scroll_pos) => {
-          document.body.classList.remove("scroll-up");
-          document.body.classList.remove("scroll-down");
-          document.body.classList.remove("scroll-position-top");
-          document.body.classList.remove("scroll-position-bottom");
-
-          if (scroll_pos < last_known_scroll_position) {
-            document.body.classList.add("scroll-up");
-          } else if (last_known_scroll_position < scroll_pos) {
-            document.body.classList.add("scroll-down");
-          }
-
-          if (scroll_pos === 0) {
-            document.body.classList.add("scroll-position-top");
-          } else if ((window.innerHeight + scroll_pos) >= document.body.offsetHeight) {
-            document.body.classList.add("scroll-position-bottom");
-          }
-        }
-
-        window.addEventListener('scroll', (e) => {
-          // In case that's needed sometime:
-          // ``e.target.scrollTop`` would be the scrolling position of the DOM element.
-          // We're interested in the window scrolling position though.
-          if (!ticking) {
-            // Don't redo while we're already modifying the DOM.
-            window.requestAnimationFrame(() => {
-              scroll_y = this.get_scroll_y();
-              set_scroll_classes(scroll_y);
-              last_known_scroll_position = scroll_y;
-              ticking = false;
-            });
-            ticking = true;
-          }
-        });
-
-        // Set initial state
-        $().ready(() => set_scroll_classes(this.get_scroll_y()));
-
-      },
-
-      get_scroll_y: () => {
-        return window.scrollY !== undefined ? window.scrollY : window.pageYOffset;  // pageYOffset for IE
+    init: function ($el) {
+      const el = $el[0];
+      let scroll_listener = el;
+      if (scroll_listener === document.body) {
+        scroll_listener = window;
       }
 
-    };
+      // If scolling is not possible, exit.
+      if (
+        ! scroll_listener == window && (
+            ['auto', 'scroll'].indexOf(getComputedStyle(el).overflow) === -1 ||
+            ['auto', 'scroll'].indexOf(getComputedStyle(el).overflowY) === -1
+          )
+        ) {
+          return;
+      }
 
-    scroll_detection.init();
-    return scroll_detection;
+      let last_known_scroll_position = 0;
+      let scroll_y = 0;
+      let timeout_id = null;
+
+
+      let set_scroll_classes = (scroll_pos) => {
+        el.classList.remove("scroll-up");
+        el.classList.remove("scroll-down");
+        el.classList.remove("scroll-position-top");
+        el.classList.remove("scroll-position-bottom");
+
+        if (scroll_pos < last_known_scroll_position) {
+          el.classList.add("scroll-up");
+        } else if (last_known_scroll_position < scroll_pos) {
+          el.classList.add("scroll-down");
+        }
+
+        if (scroll_pos === 0) {
+          el.classList.add("scroll-position-top");
+        } else if (
+          scroll_listener === window &&
+          window.innerHeight + scroll_pos >=
+          el.scrollHeight
+        ) {
+          el.classList.add("scroll-position-bottom");
+        } else if (
+          scroll_listener !== window &&
+          el.clientHeight + scroll_pos >=
+          el.scrollHeight
+        ) {
+          el.classList.add("scroll-position-bottom");
+        }
+
+      };
+
+      scroll_listener.addEventListener("scroll", (e) => {
+        if (!timeout_id) {
+          scroll_y = this.get_scroll_y(scroll_listener);
+          set_scroll_classes(scroll_y);
+          last_known_scroll_position = scroll_y;
+        }
+        timeout_id = window.setTimeout(() => { timeout_id = null; }, this.timeout);
+      });
+
+      // Set initial state
+      $().ready(() => set_scroll_classes(this.get_scroll_y(scroll_listener)));
+    },
+
+    get_scroll_y: (el) => {
+      if (el === window) {
+        // scrolling the window
+        return window.scrollY !== undefined ? window.scrollY : window.pageYOffset; // pageYOffset for IE
+      }
+      // scrolling a DOM element
+      return el.scrollTop;
+    },
+  });
 });
