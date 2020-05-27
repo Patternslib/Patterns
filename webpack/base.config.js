@@ -36,7 +36,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll|scroll_detection|tooltip-ng)\.js$/,
+                test: /(bumper|patterns|calendar|display-time|equaliser|focus|masonry|push_kit|scroll|scroll-box|tooltip-ng)\.js$/,
                 loader: 'babel-loader',
                 query: {
                     presets: [["@babel/env", {
@@ -160,7 +160,6 @@ module.exports = {
             // Core
             "pat-compat": path.resolve(__dirname, "../src/core/compat.js"),
             "pat-base": path.resolve(__dirname, "../src/core/base.js"),
-            "scroll-detection": path.resolve(__dirname, "../src/core/scroll_detection.js"),
             "pat-date-picker": path.resolve(__dirname, "../src/pat/date-picker/date-picker.js"),
             "pat-datetime-picker": path.resolve(__dirname, "../src/pat/datetime-picker/datetime-picker.js"),
             "pat-depends_parse": path.resolve(__dirname, "../src/lib/depends_parse.js"),
@@ -234,6 +233,7 @@ module.exports = {
             "pat-subform": path.resolve(__dirname, "../src/pat/subform/subform.js"),
             "pat-switch": path.resolve(__dirname, "../src/pat/switch/switch.js"),
             "pat-scroll": path.resolve(__dirname, "../src/pat/scroll/scroll.js"),
+            "pat-scroll-box": path.resolve(__dirname, "../src/pat/scroll-box/scroll-box.js"),
             "pat-tabs": path.resolve(__dirname, "../src/pat/tabs/tabs.js"),
             "pat-toggle": path.resolve(__dirname, "../src/pat/toggle/toggle.js"),
             "pat-tooltip": path.resolve(__dirname, "../src/pat/tooltip/tooltip.js"),

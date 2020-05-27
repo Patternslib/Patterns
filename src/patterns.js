@@ -13,7 +13,6 @@ define([
     "moment",
     "modernizr",
     "prefixfree",
-    "scroll-detection",
     "push-kit",
     "pat-ajax",
     "pat-autofocus",
@@ -54,6 +53,7 @@ define([
     "pat-masonry",
     "pat-placeholder",
     "pat-scroll",
+    "pat-scroll-box",
     "pat-selectbox",
     "pat-slides",
     "pat-slideshow-builder",
@@ -102,7 +102,7 @@ define([
     require("imports-loader?this=>window!jquery.browser");
 
     $(function () {
-        registry.init();
+      registry.init();
     });
     return registry;
 });
