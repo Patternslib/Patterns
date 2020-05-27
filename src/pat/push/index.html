@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!--meta name="patterns-push-server" content="ws://push.quaivecloud.com/ws" /-->
+    <meta name="patterns-push-server" content="ws://localhost:15674/ws" />
+    <meta name="patterns-push-path" content="/exchange/quaive" />
+    <meta name="patterns-push-user-TODO" content="admin" />
+    <meta name="patterns-push-pass-TODO" content="admin" />
+    <title>Injection pattern</title>
+    <link rel="stylesheet" href="/style/common.css" type="text/css" />
+    <script src="/bundle.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+
+  <body>
+
+    <h1>Push examples</h1>
+
+    <p>
+      The examples here listen to <code>push</code> events on the body which are thrown by the <code>push_kit</code> service.<br/>
+      The <code>push_kit</code> service subscribes to the <code>push_marker</code> topic (currently hard-coded) on an exchange and address as configured in the meta tags.<br/>
+      This is: <code>ws://localhost:15674/ws/exchange/quaive</code>.<br/>
+      If a message is sent through rabbitmq on the "quaive" exchange type on the <code>push_marker</code> topic containing the message "message_counter" or "message_counter2" the messages badge below will be updated.
+    </p>
+
+
+    <h2>push-id: message_counter</h2>
+    <div
+        class="pat-push"
+        data-pat-push="push-id: message_counter; url: index-push-content.html">
+        Messages <sup class="counter digit-1">1</sup>
+    </div>
+
+
+    <h2>push-id: message_counter2</h2>
+    <div
+        class="pat-push"
+        data-pat-push="push-id: message_counter2; url: index-push-content.html">
+        messages <sup class="counter digit-1">1</sup>
+    </div>
+
+  </body>
+</html>

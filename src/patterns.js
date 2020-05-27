@@ -52,6 +52,7 @@ define([
     "pat-notification",
     "pat-masonry",
     "pat-placeholder",
+    "pat-push",
     "pat-scroll",
     "pat-scroll-box",
     "pat-selectbox",
