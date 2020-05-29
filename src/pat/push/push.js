@@ -2,7 +2,7 @@ define(
   ["jquery", "pat-base", "pat-parser", "pat-logger"],
   function ($, Base, Parser, logging) {
 
-  var log = logging.getLogger("push");
+  var logger = logging.getLogger("push");
   var parser = new Parser("push");
 
   parser.addArgument("url", null);
@@ -15,7 +15,7 @@ define(
     init: function ($el, opts) {
       this.options = parser.parse($el, opts);
       $(document.body).on("push", function (e, data) {
-        console.log('received push marker');
+        logger.debug('received push marker');
         if (data === this.options.pushId) {
           this.perform_inject();
         }
