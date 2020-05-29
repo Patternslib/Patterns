@@ -31,8 +31,6 @@ bundle-vendors.js.map
 stats.json
 stats.html
 test-reports
-/.DS_Store
-
 src/pat/auto-scale/auto-scale.css
 src/pat/auto-submit/auto-submit.css
 src/pat/autofocus/autofocus.css
