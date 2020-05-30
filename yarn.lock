@@ -969,6 +969,14 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@patternslib/core@https://github.com/patternslib/patternslib-core#bb9747145b6a8065e5cb6d2889ceef12a54eb9bf":
+  version "1.0.0-dev"
+  resolved "https://github.com/patternslib/patternslib-core#bb9747145b6a8065e5cb6d2889ceef12a54eb9bf"
+  dependencies:
+    "@stomp/stompjs" "^5.4.4"
+    jquery "^3.5.1"
+    underscore "^1.9.1"
+
 "@popperjs/core@^2.3.2":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.0.tgz#0e1bdf8d021e7ea58affade33d9d607e11365915"
