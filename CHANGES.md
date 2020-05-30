@@ -3,6 +3,8 @@
 
 ## 5.0.0-dev - unreleased
 
+- Split patternslib into "@patternslib/core" and "@patternslib/patterns" packages.
+
 - Removed unused or obsolete patterns:
   - pat-carousel-legacy - use pat-carousel instead.
   - pat-checked-flag - use pat-checklist instead.
