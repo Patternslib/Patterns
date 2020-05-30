@@ -4,7 +4,7 @@
  * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
  */
 import $ from "jquery";
-import registry from "../../core/registry";
+import { registry } from "@patternslib/core";
 
 
 var autofocus = {

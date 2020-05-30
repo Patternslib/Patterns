@@ -4,10 +4,10 @@
 * Copyright 2013 Marko Durkovic
 */
 import $ from "jquery";
-import Base from "../../core/base";
 import inject from "../inject/inject";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
 
 var log = logging.getLogger("notification"),
     parser = new Parser("notification");

@@ -1,7 +1,7 @@
 import $ from "jquery";
-import Base from "../../core/base";
-import Parser from "../../core/parser";
-import logging from "../../core/logging";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
 
 const log = logging.getLogger("navigation");
 const parser = new Parser("navigation");

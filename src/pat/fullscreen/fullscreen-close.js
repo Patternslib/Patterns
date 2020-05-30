@@ -1,7 +1,7 @@
-import Base from "../../core/base";
+import { base } from "@patternslib/core";
 import screenful from "screenfull";
 
-export default (function(Base, screenful) {
+export default (function(base, screenful) {
     return Base.extend({
         name: "fullscreen-close",
         trigger: ".close-fullscreen",

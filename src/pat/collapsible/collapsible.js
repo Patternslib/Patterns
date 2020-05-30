@@ -10,11 +10,12 @@
 
 import $ from "jquery";
 import inject from "../inject/inject";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
-import store from "../../core/store";
-import Base from "../../core/base";
-import "../../core/jquery-ext";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { store } from "@patternslib/core";
+import { jquery_ext } from "@patternslib/core";
+
 
 var log = logging.getLogger("pat.collapsible"),
     parser = new Parser("collapsible");

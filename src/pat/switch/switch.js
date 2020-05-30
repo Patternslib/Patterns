@@ -6,11 +6,12 @@
 * Copyright 2012 SYSLAB.COM GmbH
 */
 import $ from "jquery";
-import registry from "../../core/registry";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
-import store from "../../core/store";
-import utils from "../../core/utils";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { registry } from "@patternslib/core";
+import { store } from "@patternslib/core";
+import { utils } from "@patternslib/core";
+
 
 var log = logging.getLogger("pat.switch"),
     parser = new Parser("switch");

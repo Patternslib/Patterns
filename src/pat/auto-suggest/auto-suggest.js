@@ -6,9 +6,9 @@
  * Copyright 2013 Marko Durkovic
  */
 import $ from "jquery";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
+import { registry } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
 import "select2";
 
 

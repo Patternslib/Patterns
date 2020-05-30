@@ -1,9 +1,8 @@
 /* pat-datetime-picker  - Polyfill for input type=datetime-local */
 import $ from "jquery";
 import _ from "underscore";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
-import Base from "../../core/base";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
 import DatePicker from "../date-picker/date-picker";
 import moment from "moment";
 

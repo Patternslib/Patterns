@@ -4,10 +4,12 @@
 * Copyright 2012-2014 Simplon B.V. - Wichert Akkerman
 */
 import $ from "jquery";
-import registry from "../../core/registry";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
-import store from "../../core/store";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { registry } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { store } from "@patternslib/core";
+
 
 var log = logging.getLogger("pat.toggle"),
     parser = new Parser("toggle");
@@ -17,6 +19,7 @@ parser.addArgument("event");
 parser.addArgument("attr", "class");
 parser.addArgument("value");
 parser.addArgument("store", "none", ["none", "session", "local"]);
+
 
 function ClassToggler(values) {
     this.values = values.slice(0);

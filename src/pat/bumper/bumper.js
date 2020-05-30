@@ -8,10 +8,11 @@
 
 import $ from "jquery";
 import _ from "underscore";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
-import Base from "../../core/base";
-import utils from "../../core/utils";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { utils } from "@patternslib/core";
+
 
 var parser = new Parser("bumper"),
     log = logging.getLogger("bumper");

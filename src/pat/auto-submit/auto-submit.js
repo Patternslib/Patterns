@@ -8,21 +8,20 @@
  */
 
 import $ from "jquery";
-import logging from "../../core/logging";
-import Base from "../../core/base";
-import Parser from "../../core/parser";
-import input_change_events from "../../lib/input-change-events";
-import utils from "../../core/utils";
+import { base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { input_change_events } from "@patternslib/core";
+import { utils } from "@patternslib/core";
 
-var log = logging.getLogger("autosubmit"),
-    parser = new Parser("autosubmit");
-
+const log = logging.getLogger("autosubmit");
+const parser = new Parser("autosubmit");
 // - 400ms -> 400
 // - 400 -> 400
 // - defocus
 parser.addArgument("delay", "400ms");
 
-export default Base.extend({
+export default base.extend({
     name: "autosubmit",
     trigger: ".pat-autosubmit, .pat-auto-submit",
     parser: {

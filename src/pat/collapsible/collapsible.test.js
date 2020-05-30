@@ -1,5 +1,5 @@
-import registry from "../../core/registry";
-import pattern from "./collapsible";
+import { registry } from "@patternslib/core";
+import { pattern } from "./collapsible";
 import $ from "jquery";
 
 describe("pat-collapsible", function() {

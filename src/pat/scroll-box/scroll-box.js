@@ -1,5 +1,5 @@
 import $ from "jquery";
-import Base from "../../core/base";
+import { base as Base } from "@patternslib/core";
 
 
 export default Base.extend({

@@ -1,7 +1,7 @@
 import $ from "jquery";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { registry } from "@patternslib/core";
 import "jquery-jcrop";
 
 var log = logging.getLogger("pat.image-crop"),

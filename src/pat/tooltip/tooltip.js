@@ -7,12 +7,12 @@
 * Copyright 2011 SYSLAB.COM GmbH
 */
 import $ from "jquery";
-import logging from "../../core/logging";
-import registry from "../../core/registry";
-import utils from "../../core/utils";
-import Parser from "../../core/parser";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { registry } from "@patternslib/core";
+import { remove } from "@patternslib/core";
+import { utils } from "@patternslib/core";
 import inject from "../inject/inject";
-import "../../core/remove";
 
 
 var log = logging.getLogger("tooltip"),

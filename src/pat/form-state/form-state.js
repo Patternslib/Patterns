@@ -1,8 +1,8 @@
 import $ from "jquery";
-import logging from "../../core/logging";
-import registry from "../../core/registry";
+import { logging } from "@patternslib/core";
+import { registry } from "@patternslib/core";
+import { input_change_events } from "@patternslib/core";
 import modal from "../modal/modal";
-import input_change_events from "../../lib/input-change-events";
 
 var log = logging.getLogger("form-state");
 

@@ -3,9 +3,9 @@
 */
 import $ from "jquery";
 import _ from "underscore";
-import Base from "../../core/base";
-import logging from "../../core/logging";
-import Parser from "../../core/parser";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
 
 const log = logging.getLogger("tabs");
 const parser = new Parser("tabs");

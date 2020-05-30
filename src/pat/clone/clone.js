@@ -1,9 +1,10 @@
 /* Clone pattern */
 import $ from "jquery";
-import Parser from "../../core/parser";
-import registry from "../../core/registry";
-import Base from "../../core/base";
-import logging from "../../core/logging";
+import { base as Base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { registry } from "@patternslib/core";
+
 
 var log = logging.getLogger("pat-clone");
 var parser = new Parser("clone");

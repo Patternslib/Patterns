@@ -1,4 +1,4 @@
-import pattern from "./validation";
+import { pattern } from "./validation";
 import $ from "jquery";
 
 describe("pat-validation", function() {

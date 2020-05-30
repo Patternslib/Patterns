@@ -1,12 +1,12 @@
 import $ from "jquery";
 import _ from "underscore";
 import ajax from "../ajax/ajax";
-import Parser from "../../core/parser";
-import logging from "../../core/logging";
-import registry from "../../core/registry";
-import utils from "../../core/utils";
-import htmlparser from "../../lib/htmlparser";
-import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { registry } from "@patternslib/core";
+import { utils } from "@patternslib/core";
+import { htmlparser } from "@patternslib/core";
+import { jquery_ext } from "@patternslib/core"; // for :scrollable for autoLoading-visible
 
 const log = logging.getLogger("pat.inject");
 const parser = new Parser("inject");

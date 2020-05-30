@@ -4,8 +4,8 @@
 * Copyright 2013 Marko Durkovic
 */
 import $ from "jquery";
-import Base from "../../core/base";
-import logging from "../../core/logging";
+import { base as Base } from "@patternslib/core";
+import { logging } from "@patternslib/core";
 import ajax from "../ajax/ajax";
 
 var log = logging.getLogger("subform");

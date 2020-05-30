@@ -1,6 +1,6 @@
-import Base from "../../core/base";
-import Parser from "../../core/parser";
-import logging from "../../core/logging";
+import { base } from "@patternslib/core";
+import { parser as Parser } from "@patternslib/core";
+import { logging } from "@patternslib/core";
 import screenful from "screenfull";
 
 const log = logging.getLogger("fullscreen");
@@ -15,7 +15,7 @@ class Fullscreen extends Base {
 }
 */
 
-export default Base.extend({
+export default base.extend({
     name: "fullscreen",
     trigger: ".pat-fullscreen",
 

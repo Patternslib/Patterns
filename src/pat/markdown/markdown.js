@@ -1,7 +1,7 @@
 import $ from "jquery";
-import logging from "../../core/logging";
-import utils from "../../core/utils";
-import Base from "../../core/base";
+import { base as Base } from "@patternslib/core";
+import { logging } from "@patternslib/core";
+import { utils } from "@patternslib/core";
 import inject from "../inject/inject";
 import Showdown from "showdown";
 
