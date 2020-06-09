@@ -1,7 +1,25 @@
 /**
  * Patterns Push Kit - client to support websocket connection push
  *
- * Copyright 2018-2019 Alexander Pilz, Syslab.com GmbH
+ * Copyright 2018-2020 Johannes Raggam, Alexander Pilz, Syslab.com GmbH
+ *
+ * Basic push support connects to a push server and an exchange prefix.
+ * it reads the name of the server and the exchange prefix from entries 
+ * in the meta header of the page
+ * Then it sets up two bindings to two different exchanges, one to receive 
+ * push markers and one to receive desktop notifications. 
+ * It assumes that the exchanges are named [prefix]_event and [prefix]_notification
+ * 
+ * If a message comes in on the [prefix]_event exchange, a javascript push event is triggered
+ * which is listened to by all dom elements with class .pat-push on them. 
+ * pat-push will then compare the sent message with its own push_marker value and execute on match.
+ *
+ * If a message comes in on the [prefix]_notification exchange, a desktop notification is triggered
+ * which will show a desktop marker.
+ *  
+ * User filtering
+ * all subscriptions are topic subscriptions and will only bind to topics that start with the userid
+ * that way, users will only receive updates explicitly directed to them.
  */
 
 define([
@@ -13,25 +31,26 @@ const push_kit = {
 
     init() {
         const push_url = $("meta[name=patterns-push-server]").attr("content");
-        const push_path = $("meta[name=patterns-push-path]").attr("content");
-        const push_user = $("meta[name=patterns-push-user-TODO]").attr("content");
+        const push_exchange = $("meta[name=patterns-push-exchange]").attr("content");
+        const push_user_id = $("meta[name=patterns-push-user-id]").attr("content");
+        const push_login = $("meta[name=patterns-push-login-TODO]").attr("content");
         const push_pass = $("meta[name=patterns-push-pass-TODO]").attr("content");
-        if (!push_url || !push_path) {
+        if (!push_url || !push_exchange) {
             return;
         }
 
         const client = new stompjs.Client({
             brokerURL: push_url,
             connectHeaders: {
-                login: push_user,
+                login: push_login,
                 passcode: push_pass,
             },
             debug: function (str) {
                 console.log(str);
             },
             //reconnectDelay: 5000,
-            //heartbeatIncoming: 4000,
-            //heartbeatOutgoing: 4000,
+            heartbeatIncoming: 20000,
+            heartbeatOutgoing: 20000,
         });
 
         let subscription_push_marker;
@@ -39,11 +58,11 @@ const push_kit = {
 
         client.onConnect = (frame) => {
             subscription_push_marker = client.subscribe(
-                push_path + "/push_marker",
+                "/topic/" + push_exchange + "_event/" + push_user_id,
                 this.on_push_marker.bind(this)
             );
             subscription_desktop_notification = client.subscribe(
-                push_path + "/desktop_notification",
+                push_exchange + "_notification/" + push_user_id,
                 this.on_desktop_notification.bind(this)
             );
         };
