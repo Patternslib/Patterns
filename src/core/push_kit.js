@@ -20,6 +20,13 @@
  * User filtering
  * all subscriptions are topic subscriptions and will only bind to topics that start with the userid
  * that way, users will only receive updates explicitly directed to them.
+ *
+ * This pattern expects the following meta tags to be available in the page to get the necessary configuration
+ * - patterns-push-server-url containing a url pointing to a message queue server. Eg. ws://127.0.0.1:15674/ws
+ * - patterns-push-exchange-base-name containing a text prefix. It will append _event and _notification to that prefix and attempt to contact these two message exchanges.
+ * - patterns-push-user-id containing the user id of the currently logged in user. This is necessary to subscribe to updates only for this specific user.
+ * - patterns-push-login containing the name of a read only user on the message queue server used to connect.
+ * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
 
 define([
@@ -30,11 +37,11 @@ define([
 const push_kit = {
 
     init() {
-        const push_url = $("meta[name=patterns-push-server]").attr("content");
-        const push_exchange = $("meta[name=patterns-push-exchange]").attr("content");
+        const push_url = $("meta[name=patterns-push-server-url]").attr("content");
+        const push_exchange = $("meta[name=patterns-push-exchange-base-name]").attr("content");
         const push_user_id = $("meta[name=patterns-push-user-id]").attr("content");
-        const push_login = $("meta[name=patterns-push-login-TODO]").attr("content");
-        const push_pass = $("meta[name=patterns-push-pass-TODO]").attr("content");
+        const push_login = $("meta[name=patterns-push-login]").attr("content");
+        const push_pass = $("meta[name=patterns-push-password]").attr("content");
         if (!push_url || !push_exchange) {
             return;
         }
@@ -58,11 +65,11 @@ const push_kit = {
 
         client.onConnect = (frame) => {
             subscription_push_marker = client.subscribe(
-                "/topic/" + push_exchange + "_event/" + push_user_id,
+                "/exchange/" + push_exchange + "_event/" + push_user_id + ".#",
                 this.on_push_marker.bind(this)
             );
             subscription_desktop_notification = client.subscribe(
-                push_exchange + "_notification/" + push_user_id,
+                "/exchange/" + push_exchange + "_notification/" + push_user_id + ".#",
                 this.on_desktop_notification.bind(this)
             );
         };
