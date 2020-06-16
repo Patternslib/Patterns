@@ -56,7 +56,7 @@ const push_kit = {
                 console.log(str);
             },
             //reconnectDelay: 5000,
-            heartbeatIncoming: 20000,
+            heartbeatIncoming: 0,
             heartbeatOutgoing: 20000,
         });
 
@@ -68,10 +68,11 @@ const push_kit = {
                 "/exchange/" + push_exchange + "_event/" + push_user_id + ".#",
                 this.on_push_marker.bind(this)
             );
-            subscription_desktop_notification = client.subscribe(
-                "/exchange/" + push_exchange + "_notification/" + push_user_id + ".#",
-                this.on_desktop_notification.bind(this)
-            );
+            // Only one subscription per connection is allowed. Otherwise the connection will terminate right away again.
+            // subscription_desktop_notification = client.subscribe(
+            //     "/exchange/" + push_exchange + "_notification/" + push_user_id + ".#",
+            //     this.on_desktop_notification.bind(this)
+            // );
         };
 
         client.onStompError = (frame) => {
