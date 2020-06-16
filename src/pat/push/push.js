@@ -19,19 +19,21 @@ define(
         if (data === this.options.pushId) {
           // TODO: use async / await in here in the future and simplify code
           if (this.$el.is("form")) {
-            var url = this.options.url || this.$el.attr("action") || false;
-            if (url) {
-              var action = this.$el.attr("method").toLowerCase() === "post" ? "post" : "get";
-              $[action]({
-                url: url,
-                data: $(this).serializeArray()
-              }).success(() => this.perform_inject());
-              // injection already done in case of successful submit.
-              // return now.
-              return;
-            }
+            this.$el.submit();
+            // var url = this.options.url || this.$el.attr("action") || false;
+            // if (url) {
+            //   var action = this.$el.attr("method") && this.$el.attr("method").toLowerCase() === "post" ? "post" : "get";
+            //   $[action]({
+            //     url: url,
+            //     data: $(this).serializeArray()
+            //   }).success(() => this.perform_inject());
+            //   // injection already done in case of successful submit.
+            //   // return now.
+            //   return;
+            // }
+          } else {
+            this.perform_inject();
           }
-          this.perform_inject();
         }
       }.bind(this));
     },
