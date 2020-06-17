@@ -10,6 +10,6 @@ docker run\
     -p 15674:15674\
     -e RABBITMQ_DEFAULT_USER=admin\
     -e RABBITMQ_DEFAULT_PASS=admin\
-    --mount type=bind,source="$(pwd)"/enabled_plugins,target=/etc/rabbitmq/enabled_plugins\
+    --mount type=bind,source="$(pwd)"/rabbitmq_enabled_plugins,target=/etc/rabbitmq/enabled_plugins\
     rabbitmq:management
 
