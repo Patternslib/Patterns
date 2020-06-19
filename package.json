@@ -83,6 +83,17 @@
     "parser": "babel-eslint",
     "rules": {}
   },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "entry",
+          "corejs": 3
+        }
+      ]
+    ]
+  },
   "jest": {
     "rootDir": "./src",
     "setupFilesAfterEnv": [
