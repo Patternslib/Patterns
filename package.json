@@ -67,9 +67,9 @@
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "scripts": {
-    "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
-    "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
-    "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
+    "start": "webpack-dev-server --config webpack/dev.config.js --open --env.NODE_ENV=development",
+    "build": "webpack --config webpack/prod.config.js --env.NODE_ENV=production",
+    "showwhy": "webpack --config webpack/prod.config.js --display-modules --display-reasons --env.NODE_ENV=production",
     "test": "jest --watch",
     "testonce": "jest"
   },
