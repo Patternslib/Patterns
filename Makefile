@@ -100,4 +100,15 @@ _serve:
 
 designerhappy:: serve
 
+
+# Checkout patternslib development sources
+dev:
+	cd devsrc/@patternslib; test -x core || git clone git@github.com:patternslib/patternslib-core.git core --branch master
+
+
+# Update checkouts
+devup:
+	git -C devsrc/@patternslib/core pull
+
+
 .PHONY: all bundle clean eslint

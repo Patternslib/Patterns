@@ -86,6 +86,12 @@ module.exports = env => {
                 },
             ]
         },
+        resolve: {
+            modules: [
+                path.resolve(__dirname, '../devsrc'),
+                path.resolve(__dirname, '../node_modules'),
+            ]
+        },
         plugins: [
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new webpack.ProvidePlugin({

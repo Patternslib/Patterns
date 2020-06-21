@@ -68,3 +68,5 @@ src/pat/tooltip/tooltip.css
 src/pat/validate/validate.css
 src/pat/zoom/zoom.css
 .DS_Store
+/devsrc/
+!/devsrc/.gitkeep
