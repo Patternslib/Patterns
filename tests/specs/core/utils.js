@@ -27,14 +27,14 @@ define(["underscore", "pat-utils"], function(_, utils) {
 
             it("Rebase with absolute base url", function() {
                 expect(
-                    utils.rebaseURL("/foo/", "me/page.html"))
-                    .toBe("/foo/me/page.html");
+                    utils.rebaseURL("/foo/", "me/page.html").indexOf("/foo/me/page.html") > 0)
+                    .toBe(true);
             });
 
-            it("Don't rebase with wrong base url", function() {
+            it("Rebase with relative base url", function() {
                 expect(
-                    utils.rebaseURL("example.com/foo/", "me/page.html"))
-                    .toBe("me/page.html");
+                    utils.rebaseURL("example.com/foo/", "me/page.html").indexOf('example.com/foo/me/page.html') > 0)
+                    .toBe(true);
             });
 
             it("Doesn't rebase data: urls", function() {
