@@ -184,7 +184,7 @@ define([
     function rebaseURL(base, url) {
         if (url.indexOf("://")!==-1 || url[0]==="/" || url.indexOf("data:")===0)
             return url;
-        return new URL(base.slice(0, base.lastIndexOf("/")+1) + url, window.location);
+        return base.slice(0, base.lastIndexOf("/")+1) + url;
     }
 
     function findLabel(input) {
