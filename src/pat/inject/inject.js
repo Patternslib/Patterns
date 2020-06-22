@@ -766,7 +766,8 @@ define([
             FORM: "action",
             IMG: "src",
             SOURCE: "src",
-            VIDEO: "src"
+            VIDEO: "src",
+            OBJECT: "data"
         },
 
         _rebaseHTML_via_HTMLParser: function inject_rebaseHTML_via_HTMLParser(base, html) {
