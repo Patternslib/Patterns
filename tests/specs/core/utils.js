@@ -24,6 +24,19 @@ define(["underscore", "pat-utils"], function(_, utils) {
                     utils.rebaseURL("http://example.com/foo/", "me/page.html"))
                     .toBe("http://example.com/foo/me/page.html");
             });
+
+            it("Rebase with absolute base url", function() {
+                expect(
+                    utils.rebaseURL("/foo/", "me/page.html"))
+                    .toBe("/foo/me/page.html");
+            });
+
+            it("Don't rebase with wrong base url", function() {
+                expect(
+                    utils.rebaseURL("example.com/foo/", "me/page.html"))
+                    .toBe("me/page.html");
+            });
+
             it("Doesn't rebase data: urls", function() {
                 expect(
                     utils.rebaseURL("http://example.com/foo/", "data:image-base64gibberish"))

@@ -317,40 +317,32 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
             });
 
             it("Element with link attribute", function() {
-                var spy_rebaseURL = spyOn(utils, "rebaseURL").and.returnValue(
-                    "REBASED"
-                );
                 expect(
                     pattern._rebaseHTML(
-                        "base",
-                        '<a href="example.com">This is a test</a>'
+                        "http://example.com/test/",
+                        '<a href="subsite/page.html">This is a test</a>'
                     )
-                ).toBe('<a href="REBASED">This is a test</a>');
-                expect(spy_rebaseURL).toHaveBeenCalledWith(
-                    "base",
-                    "example.com"
-                );
+                ).toBe('<a href="http://example.com/test/subsite/page.html">This is a test</a>');
             });
 
             it("Automatically fix casing of attribute", function() {
-                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML(
-                        "base",
-                        '<a HrEf="example.com">This is a test</a>'
+                        "http://example.com/test/",
+                        '<a HrEF="subsite/page.html">This is a test</a>'
                     )
-                ).toBe('<a href="REBASED">This is a test</a>');
+                ).toBe('<a href="http://example.com/test/subsite/page.html">This is a test</a>');
             });
 
             it("Check if image is rebased correctly", function() {
-                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
-                    pattern._rebaseHTML("base", '<img src="example.com">')
-                ).toBe('<img src="REBASED">');
+                    pattern._rebaseHTML(
+                        "http://example.com/test/",
+                        '<img src="image.png">')
+                ).toBe('<img src="http://example.com/test/image.png">');
             });
 
             it("Leave non attribute occurences of src intact", function() {
-                spyOn(utils, "rebaseURL").and.returnValue("REBASED");
                 expect(
                     pattern._rebaseHTML(
                         "base",
