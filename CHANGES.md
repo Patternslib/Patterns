@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- core/utils rebaseURL: Do not rebase if the base URL isn't absolute or doesn't start with an URL scheme.
 - pat-push: New pattern for replacing html content on push events.
 - pat-scroll-box: New pattern for scrolling detection. Replaces the previous "scroll detection" module.
 - pat-inject: Rename undocumented ``selector`` property to ``defaultSelector``.
