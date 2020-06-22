@@ -182,8 +182,13 @@ define([
     // END: Taken from Underscore.js until here.
 
     function rebaseURL(base, url) {
-        if (url.indexOf("://")!==-1 || url[0]==="/" || url.indexOf("data:")===0)
+        if (
+            (base.indexOf("://") === -1 && base[0] !== "/") ||
+            url.indexOf("://") !== -1 ||
+            url[0] === "/" ||
+            url.indexOf("data:") === 0) {
             return url;
+        }
         return base.slice(0, base.lastIndexOf("/")+1) + url;
     }
 
