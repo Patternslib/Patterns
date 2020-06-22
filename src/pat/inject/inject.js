@@ -814,6 +814,7 @@ define([
             A: "href",
             FORM: "action",
             IMG: "data-pat-inject-rebase-src",
+            OBJECT: "data",
             SOURCE: "data-pat-inject-rebase-src",
             VIDEO: "data-pat-inject-rebase-src"
         },
@@ -828,22 +829,17 @@ define([
                 "$1src=\"\" data-pat-inject-rebase-$2="
             ).trim()).wrapAll("<div>").parent();
 
-            if (
-                base.indexOf("://") !== -1 ||
-                base[0] === "/"
-            ) {
-                $page.find(Object.keys(inject._rebaseAttrs).join(",")).each(function() {
-                    var $this = $(this),
-                        attrName = inject._rebaseAttrs[this.tagName],
-                        value = $this.attr(attrName);
+            $page.find(Object.keys(inject._rebaseAttrs).join(",")).each(function() {
+                var $this = $(this),
+                    attrName = inject._rebaseAttrs[this.tagName],
+                    value = $this.attr(attrName);
 
-                    if (value && value.slice(0, 2) !== "@@" && value[0] !== "#" &&
-                        value.slice(0, 7) !== "mailto:" && value.slice(0, 11) !== "javascript:") {
-                        value = utils.rebaseURL(base, value);
-                        $this.attr(attrName, value);
-                    }
-                });
-            }
+                if (value && value.slice(0, 2) !== "@@" && value[0] !== "#" &&
+                    value.slice(0, 7) !== "mailto:" && value.slice(0, 11) !== "javascript:") {
+                    value = utils.rebaseURL(base, value);
+                    $this.attr(attrName, value);
+                }
+            });
             // XXX: IE8 changes the order of attributes in html. The following
             // lines move data-pat-inject-rebase-src to src.
             $page.find("[data-pat-inject-rebase-src]").each(function() {
