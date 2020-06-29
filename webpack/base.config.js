@@ -17,6 +17,7 @@ const BundleVisualizer = require('webpack-visualizer-plugin');
 module.exports = {
     entry: {
         "bundle": "./src/patterns.js",
+        "bundle-polyfills": "./src/polyfills.js",
     },
     externals: [{
         "window": "window"
@@ -132,6 +133,7 @@ module.exports = {
             "text": path.resolve(__dirname, "../node_modules/requirejs-text/text.js"),
 	        "tippy": path.resolve(__dirname, "../node_modules/tippy.js/umd/index.all.js"),
 	        "tippy-theme.css": path.resolve(__dirname, "../node_modules/tippy.js/themes/light-border.css"),
+            "url-polyfill": path.resolve(__dirname, "../node_modules/url-polyfill/url-polyfill.js"),
             "validate": path.resolve(__dirname, "../node_modules/validate.js/validate.js"),
             "moment-locale-bg": path.resolve(__dirname, "../node_modules/moment/locale/bg"),
             "moment-locale-hr": path.resolve(__dirname, "../node_modules/moment/locale/hr"),
@@ -157,6 +159,7 @@ module.exports = {
             "moment-locale-sv": path.resolve(__dirname, "../node_modules/moment/locale/sv"),
             "moment-timezone-data": path.resolve(__dirname, "../src/pat/calendar/moment-timezone-with-data-2010-2020.js"),
             // Core
+            "pat-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
             "pat-compat": path.resolve(__dirname, "../src/core/compat.js"),
             "pat-base": path.resolve(__dirname, "../src/core/base.js"),
             "pat-date-picker": path.resolve(__dirname, "../src/pat/date-picker/date-picker.js"),
@@ -262,9 +265,6 @@ module.exports = {
             footer: footerWrap
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        new webpack.ProvidePlugin({
-            Promise: 'es6-promise-promise',
-        }),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
