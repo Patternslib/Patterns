@@ -7,10 +7,10 @@ const baseConfig = require('./base.config.js');
 module.exports = merge(baseConfig, {
   mode: 'production',
   entry: {
-    "bundle": "./src/patterns.js",
-    "bundle.min": "./src/patterns.js",
-    "bundle-polyfills": "./src/polyfills.js",
-    "bundle-polyfills.min": "./src/polyfills.js",
+    "bundle": path.resolve(__dirname, "../src/patterns.js"),
+    "bundle.min": path.resolve(__dirname, "../src/patterns.js"),
+    "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
+    "bundle-polyfills.min": path.resolve(__dirname, "../src/polyfills.js"),
   },
 
   plugins: [
