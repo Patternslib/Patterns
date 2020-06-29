@@ -58,8 +58,9 @@ define([
             var current = this.options.currentClass;
             // Set current class if it is not set
             if ($el[0].querySelectorAll('.' + current).length === 0) {
-                $el[0].querySelectorAll("a").forEach(function (it) {
-                    var $a = $(it),
+                var ael = $el[0].querySelectorAll("a");
+                for (var cnt=0; cnt<ael.length; cnt++) {
+                    var $a = $(ael[cnt]),
                         $li = $a.parents(this.options.itemWrapper).first(),
                         url = $a.attr("href"),
                         path;
@@ -73,7 +74,7 @@ define([
                         $a.addClass(current);
                         $li.addClass(current);
                     }
-                }.bind(this));
+                }
             }
 
             // Set current class on item-wrapper, if not set.
