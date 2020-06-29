@@ -17,7 +17,6 @@
   "dependencies": {
     "@stomp/stompjs": "^5.4.4",
     "anythingslider": "git+https://github.com/fulv/AnythingSlider.git",
-    "es6-promise-promise": "^1.0.0",
     "fullcalendar": "2.9.1",
     "google-code-prettify": "1.0.5",
     "imagesloaded": "4.1.4",
@@ -45,6 +44,7 @@
     "stickyfilljs": "https://github.com/syslabcom/stickyfill.git",
     "tippy.js": "5.2.0",
     "underscore": "1.9.1",
+    "url-polyfill": "^1.1.9",
     "validate.js": "0.11.1"
   },
   "devDependencies": {
