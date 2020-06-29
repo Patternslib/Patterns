@@ -7,7 +7,6 @@ define([
     "pat-registry",
     "pat-utils",
     "pat-htmlparser",
-    "intersection-observer",
     "pat-jquery-ext"  // for :scrollable for autoLoading-visible
 ], function($, _, ajax, Parser, logger, registry, utils, htmlparser) {
     var log = logger.getLogger("pat.inject"),

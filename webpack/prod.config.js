@@ -8,7 +8,9 @@ module.exports = merge(baseConfig, {
   mode: 'production',
   entry: {
     "bundle": "./src/patterns.js",
-    "bundle.min": "./src/patterns.js"
+    "bundle.min": "./src/patterns.js",
+    "bundle-polyfills": "./src/polyfills.js",
+    "bundle-polyfills.min": "./src/polyfills.js",
   },
 
   plugins: [
