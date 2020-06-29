@@ -738,11 +738,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($form);
                     $form.trigger("submit");
 
-                    //var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
                     expect($.ajax).toHaveBeenCalled();
-                    // Commenting this out because phantomjs doesn't support formdata
-                    // https://github.com/ariya/phantomjs/issues/14867
-                    //expect(ajaxargs.data.get('param')).toContain("somevalue");
+                    expect(ajaxargs.data.get('param')).toContain("somevalue");
                 });
                 it("pass submit button value in ajax call as data", function() {
                     var $submit = $(
@@ -755,11 +753,9 @@ define(["pat-inject", "pat-utils"], function(pattern, utils) {
                     pattern.init($form);
                     $submit.trigger("click");
 
-                    //var ajaxargs = $.ajax.calls.mostRecent().args[0];
+                    var ajaxargs = $.ajax.calls.mostRecent().args[0];
                     expect($.ajax).toHaveBeenCalled();
-                    // Commenting this out because phantomjs doesn't support formdata
-                    // https://github.com/ariya/phantomjs/issues/14867
-                    //expect(ajaxargs.data.get('submit')).toContain("label");
+                    expect(ajaxargs.data.get('submit')).toContain("label");
                 });
 
                 describe("formaction attribute on submit buttons", function() {
