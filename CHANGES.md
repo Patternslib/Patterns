@@ -5,6 +5,7 @@
 Features
 ~~~~~~~~
 
+- Simplify package.json and remove unused.
 - Upgrade moment and moment-timezone.
 - core/utils rebaseURL: Change a relative base url to an absolute URL using window.location.
 - pat-push: New pattern for replacing html content on push events.
