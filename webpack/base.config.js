@@ -43,8 +43,7 @@ module.exports = {
                       "targets": {
                         "browsers": ["last 2 versions", "ie >= 11"]
                       }
-                    }]],
-                    plugins: ["dynamic-import-webpack"]
+                    }]]
                 }
             },
             {

@@ -5,6 +5,9 @@
 Features
 ~~~~~~~~
 
+- Remove PhantomJS - we're using ChromeHeadless already.
+- Simplify package.json and remove unused.
+- Upgrade moment and moment-timezone.
 - core/utils rebaseURL: Change a relative base url to an absolute URL using window.location.
 - pat-push: New pattern for replacing html content on push events.
 - pat-scroll-box: New pattern for scrolling detection. Replaces the previous "scroll detection" module.
