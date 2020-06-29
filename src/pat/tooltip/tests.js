@@ -194,16 +194,11 @@ define(["pat-tooltip", "pat-inject"], function(pattern, inject) {
                     setTimeout(function() {
                         expect(spy_show).toHaveBeenCalled();
                         expect(spy_execute).toHaveBeenCalled();
+                        var $container = $el.data("patterns.tooltip.container");
+                        // Content is fetched from ./tests/content.html#content
+                        expect($container.text()).toBe("External content fetched via an HTTP request.");
                     }, 2000);
 
-                    /* XXX: The ajax call works fine in the browser but not
-                    * via PhantomJS. Will have to debug later.
-                    *
-                    var $container = $el.data("patterns.tooltip.container");
-                    // Content is fetched from ./tests/content.html#content
-                    expect($container.text()).toBe(
-                    "External content fetched via an HTTP request.");
-                    */
                 });
             });
 

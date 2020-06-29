@@ -3,7 +3,7 @@ define(["pat-store"], function(store) {
     describe("Core / store", function() {
 
         describe("store API", function() {
-            it("PhantomJS supports storage", function() {
+            it("Supports storage", function() {
                 expect(store.supported).toBe(true);
             });
 
