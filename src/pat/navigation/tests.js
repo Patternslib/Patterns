@@ -97,7 +97,6 @@ define(["pat-registry", "pat-navigation", "pat-inject"], function(Registry) {
 
             Registry.scan('body');
 
-            console.log('a1 click');
             a1.click();
             expect(injection_area.textContent === 'test content').toBeTruthy();
             expect(w1.classList.contains('current')).toBeTruthy();
@@ -111,7 +110,6 @@ define(["pat-registry", "pat-navigation", "pat-inject"], function(Registry) {
 
             injection_area.innerHTML = '';
 
-            console.log('a11 click');
             a11.click();
             expect(injection_area.textContent === 'test content').toBeTruthy();
             expect(w1.classList.contains('current')).toBeFalsy();
@@ -125,7 +123,6 @@ define(["pat-registry", "pat-navigation", "pat-inject"], function(Registry) {
 
             injection_area.innerHTML = '';
 
-            console.log('a2 click');
             a2.click();
             expect(injection_area.textContent === 'test content').toBeTruthy();
             expect(w2.classList.contains('active')).toBeTruthy();
@@ -139,7 +136,6 @@ define(["pat-registry", "pat-navigation", "pat-inject"], function(Registry) {
 
             injection_area.innerHTML = '';
 
-            console.log('a21 click');
             a21.click();
             expect(injection_area.textContent === 'test content').toBeTruthy();
             expect(w2.classList.contains('active')).toBeFalsy();
