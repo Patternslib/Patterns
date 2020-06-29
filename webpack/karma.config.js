@@ -59,7 +59,6 @@ module.exports = function(config) {
         },
         babelPreprocessor: {
             options: {
-                plugins: ['syntax-dynamic-import'],
                 presets: [["@babel/env", {
                       "targets": {
                         "browsers": ["last 2 versions", "ie >= 11"]
