@@ -16,8 +16,8 @@ const BundleVisualizer = require('webpack-visualizer-plugin');
 
 module.exports = {
     entry: {
-        "bundle": "./src/patterns.js",
-        "bundle-polyfills": "./src/polyfills.js",
+        "bundle": path.resolve(__dirname, "../src/patterns.js"),
+        "bundle-polyfills": path.resolve(__dirname, "../src/polyfills.js"),
     },
     externals: [{
         "window": "window"
