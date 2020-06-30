@@ -10,7 +10,8 @@
             'pat-parser',
             'pat-markdown',
             'pat-logger',
-            'tippy.js'
+            'tippy.js',
+            'underscore'
         ], function() {
             return factory.apply(this, arguments)
         })
@@ -18,10 +19,10 @@
         // If require.js is not available, you'll need to make sure that these
         // global variables are available.
 //        factory($, patterns.Base, patterns, patterns.Parser, patterns.logger, tippy, tippytheme)
-        factory($, patterns.Base, patterns, patterns.utils, patterns.Parser, patterns.markdown, patterns.logger, tippy)
+        factory($, patterns.Base, patterns, patterns.utils, patterns.Parser, patterns.markdown, patterns.logger, tippy, _)
     }
 //}(this, function($, Base, registry, Parser, logger, tippy, tippytheme) {
-}(this, function($, Base, registry, utils, Parser, Markdown, logger, tippy) {
+}(this, function($, Base, registry, utils, Parser, Markdown, logger, tippy, _) {
     'use strict'
 
     let start = 0
@@ -126,7 +127,7 @@
                  * attribute, those values will already be set.
                  */
 
-                $trigger.data('patterns.tooltip-ng', tooltip._mutateOptions(this.options))
+                $trigger.data('patterns.tooltip-ng', _.clone(this.options))
                         .on('destroy.pat-tooltip-ng', tooltip._onDestroy)
 
                 this.options = tooltip.parseOptionsForTippy(this.options, $trigger)
@@ -332,11 +333,6 @@
                 event.preventDefault();
                 event.stopPropagation();
             }
-        },
-
-        _mutateOptions(opts) {
-            // shallow copy
-            return Object.assign({}, opts)
         },
 
         _addClassHandler(klass) {
