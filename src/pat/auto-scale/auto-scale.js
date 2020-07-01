@@ -10,7 +10,7 @@ import Base from "../../core/base";
 import registry from "../../core/registry";
 import Parser from "../../core/parser";
 import _ from "underscore";
-
+import utils from "../../core/utils";
 
 export default function($, Base, registry, Parser, _) {
     var parser = new Parser("auto-scale");
@@ -41,7 +41,7 @@ export default function($, Base, registry, Parser, _) {
         },
 
         _setup: function() {
-            if (document.createElement('div').style.zoom === undefined) {
+            if (!utils.checkCSSFeature('zoom')) {
                 // See https://bugzilla.mozilla.org/show_bug.cgi?id=390936
                 this.force_method = "scale";
             }
