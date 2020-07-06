@@ -14,7 +14,7 @@ all:: bundle.js css
 stamp-yarn: package.json
 	yarn install
 
-clean::
+clean_all: clean
 	rm -f stamp-yarn
 	rm -rf node_modules
 
@@ -42,8 +42,8 @@ src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
-clean::
-	rm -f bundle.js bundle.min.js
+clean:
+	rm -rf bundle* chunks
 
 all_css:: css
 	@echo "Hang tight!"
