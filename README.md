@@ -100,12 +100,27 @@ You can pass Jest any parameter it accepts, like ``-t TESTPATTERN``::
     node --inspect-brk node_modules/.bin/jest --runInBand ./src/pat/tooltip/tooltip.test.js -t will.be.closed.when
 
 
-### Check bundle sizes
+### Bundle build analyzation
 
-We added a webpack plugin which helps in analyzing bundle sizes.
-Check if the bundle size doesn't grow much bigger.
-After running webpack via `make build`, `make serve` or `make check` stats.json and stats.html file are created.
-Open stats.html in a browser to interactively check the payload each package contributes to the generated bundle.
+https://survivejs.com/webpack/optimizing/build-analysis/
+https://formidable.com/blog/2018/finding-webpack-duplicates-with-inspectpack-plugin/
+
+Build the stats.json file:
+
+    yarn build:stats
+
+
+Check dependency tree and why which package was included:
+https://www.npmjs.com/package/whybundled
+
+    whybundled stats.json
+
+
+Visualize dependency tree and analyze bundle size:
+https://www.npmjs.com/package/webpack-bundle-analyzer
+
+    webpack-bundle-analyzer stats.json
+
 
 ### Organisations and projects which use Patternslib
 
