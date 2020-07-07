@@ -4,9 +4,8 @@ const path = require('path');
 const webpack = require('webpack');
 
 // plugins
-const BundleVisualizer = require('webpack-visualizer-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-
+const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
 module.exports = env => {
 
@@ -101,7 +100,10 @@ module.exports = env => {
                 jQuery: "jquery",
                 jquery: "jquery"
             }),
-            new BundleVisualizer(),
+            new DuplicatePackageCheckerPlugin({
+                verbose: true,
+                emitError: true
+            }),
         ]
     };
 };
