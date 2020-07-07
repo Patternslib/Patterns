@@ -88,6 +88,12 @@ module.exports = env => {
                 },
             ]
         },
+        resolve: {
+            alias: {
+                'moment': path.resolve(__dirname, '../node_modules/moment'),
+                'moment-timezone': path.resolve(__dirname, '../node_modules/moment-timezone'),
+            }
+        },
         plugins: [
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new webpack.ProvidePlugin({
