@@ -60,7 +60,7 @@
     "jasmine-core": "^3.4.0",
     "jasmine-webpack-plugin": "^0.1.1",
     "jshint": "^2.10.2",
-    "karma": "^4.1.0",
+    "karma": "^5.1.0",
     "karma-babel-preprocessor": "^8.0.0-beta.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
@@ -75,11 +75,12 @@
     "karma-sourcemap-loader": "0.3.7",
     "karma-webpack": "^4.0.0-rc.5",
     "node-sass": "^4.12.0",
+    "npm-force-resolutions": "0.0.3",
     "pegjs": "0.7.0",
     "puppeteer": "1.14.0",
     "style-loader": "^0.23.1",
     "text-loader": "0.0.1",
-    "uglifyjs-webpack-plugin": "^2.0.1",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.3.1",
@@ -89,7 +90,13 @@
     "webpack-visualizer-plugin": "^0.1.11",
     "wrapper-webpack-plugin": "^2.0.0"
   },
+  "resolutions": {
+    "clean-css": "4.2.3",
+    "lodash": "4.17.19",
+    "serialize-javascript": "4.0.0"
+  },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
