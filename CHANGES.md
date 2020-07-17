@@ -4,7 +4,7 @@
 
 Features
 ~~~~~~~~
-
+- Prevent "Modernizr.inputtypes is undefined" error
 - Remove PhantomJS - we're using ChromeHeadless already.
 - Simplify package.json and remove unused.
 - Upgrade moment and moment-timezone.
