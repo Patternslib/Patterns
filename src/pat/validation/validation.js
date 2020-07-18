@@ -57,8 +57,8 @@ define([
         init: function($el, opts) {
             this.errors = 0;
             this.options = parser.parse(this.$el, opts);
-            this.$inputs = this.$el.find(':input[name]');
-            this.$el.find(":input[type=number]").on('keyup mouseup', _.debounce(function (ev) {
+            this.$inputs = this.$el.find('input[name], select[name], textarea[name]');
+            this.$el.find("input[type=number]").on('keyup mouseup', _.debounce(function (ev) {
                 this.validateElement(ev.target);
             }.bind(this), 500));
             this.$inputs.on('change.pat-validation', function (ev) { this.validateElement(ev.target); }.bind(this));
@@ -282,7 +282,7 @@ define([
         },
 
         validateElement: function (input, no_recurse) {
-            /* Handler which gets called when a single form :input element
+            /* Handler which gets called when a single form input element
              * needs to be validated. Will prevent the event's default action
              * if validation fails.
              */

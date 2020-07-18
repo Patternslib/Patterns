@@ -4,6 +4,7 @@
 
 Features
 ~~~~~~~~
+- pat-validation: Dont use :input jquery extension for better performance
 - pat-validation: Update validate.js to 0.13.1
 - Prevent "Modernizr.inputtypes is undefined" error
 - Remove PhantomJS - we're using ChromeHeadless already.
