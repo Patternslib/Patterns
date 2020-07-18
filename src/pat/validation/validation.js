@@ -80,6 +80,9 @@ define([
             if (_.contains(['datetime', 'date'], opts.type)) {
                 type = opts.type;
             }
+            if (type === 'datetime-local') {
+                type = 'datetime';
+            }
             return type;
         },
 
