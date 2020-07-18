@@ -58,20 +58,21 @@ define([
             this.errors = 0;
             this.options = parser.parse(this.$el, opts);
             this.$inputs = this.$el.find(':input[name]');
-            this.$el.find(":input[type=number]").on('keyup mouseup', _.debounce(function (ev) {
+
+            // Fire - debounced - when value of input elements changes
+            // See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/input_event
+            this.$el.find("input:not([type=button]):not([type=reset]):not([type=submit]:not([type=checkbox]):not([type=radio])), select, textarea, *[contenteditable]:not([contenteditable=false])").on('input', _.debounce(function (ev) {
                 this.validateElement(ev.target);
             }.bind(this), 500));
-            this.$inputs.on('change.pat-validation', function (ev) { this.validateElement(ev.target); }.bind(this));
-            // formaction causes form validation to be skipped, so validate on
-            // submit button click instead.
-            this.$el.find('button[type=submit][formaction]').on('click.pat-validation', this.validateForm.bind(this));
-            this.$el.on('submit.pat-validation', this.validateForm.bind(this));
+            // See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/change_event
+            this.$el.find("input[type=checkbox]), input[type=radio]").on('change', _.debounce(function (ev) {
+                this.validateElement(ev.target);
+            }.bind(this), 500));
+
+            // Validate on form submit.
+            this.$el.on('submit', this.validateForm.bind(this));
+
             this.$el.on('pat-update.pat-validation', this.onPatternUpdate.bind(this));
-            this.$el.on("click.pat-validation", ".close-panel", function (ev) {
-                if (!$(ev.target).hasClass('validate-ignore')) {
-                    this.validateForm(ev);
-                }
-            }.bind(this));
         },
 
         getFieldType: function (input) {
@@ -115,10 +116,10 @@ define([
                         $ref.data('pat-validation-refs', arr);
                     }
                     c[constraint] = $ref.val();
-                    /* This is a workaround to allow empty values as dates and only validate 
+                    /* This is a workaround to allow empty values as dates and only validate
                        if values are provided. There is probably a better way in validate, but
                        I still have to find it.
-                       The following code removes the date validation constraint in case there 
+                       The following code removes the date validation constraint in case there
                        is no date to validate for. */
                     if ($ref.val() === "") {
                         constraints[name].date = false;
