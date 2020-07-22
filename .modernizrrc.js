@@ -126,6 +126,7 @@ module.exports = {
     "forms/placeholder",
     "forms/requestautocomplete",
     "forms/validation",
+    "inputtypes",
     "fullscreen-api",
     "hashchange",
     "hiddenscroll",

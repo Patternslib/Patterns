@@ -4,7 +4,11 @@
 
 Features
 ~~~~~~~~
+- pat-validation: Dont use :input jquery extension for better performance
+- pat-validation: Update validate.js to 0.13.1
+- Prevent "Modernizr.inputtypes is undefined" error
 
+- pat-validation: Do not trigger on empty dates. Fixes: #711
 - Remove PhantomJS - we're using ChromeHeadless already.
 - Simplify package.json and remove unused.
 - Upgrade moment and moment-timezone.

@@ -127,28 +127,57 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($el.find('em.warning').text()).toBe("Slegs heelgetalle");
         });
 
-        it("validates dates", function() {
-            var $el = $(
-                '<form class="pat-validation">'+
-                    '<input type="date" name="date" data-pat-validation="type: date;">'+
-                '</form>');
-            var $input = $el.find(':input');
-            $input.val('2000-02-30');
-            pattern.init($el);
-            $input.trigger('change');
-            expect($el.find('em.warning').length).toBe(1);
-            expect($el.find('em.warning').text()).toBe("This value must be a valid date");
+        // Unfortunately date validation cannot be tested using the Constraints
+        // API. ``ValidityState`` information is not updated after
+        // programmatically setting values.
+        // See whole discussion here: https://twitter.com/thetetet/status/1285239806205755393
+        // and: https://stackoverflow.com/questions/53226031/html-input-validity-not-checked-when-value-is-changed-by-javascript
 
-            $el = $(
-                '<form class="pat-validation">'+
-                    '<input type="date" name="date" data-pat-validation="type: date;">'+
-                '</form>');
-            $input = $el.find(':input');
-            $input.val('2000-02-28');
-            pattern.init($el);
-            $input.trigger('change');
-            expect($el.find('em.warning').length).toBe(0);
-        });
+        //it("validates dates", function() {
+        //    var $el = $(
+        //        '<form class="pat-validation">'+
+        //            '<input type="date" name="date">'+
+        //        '</form>');
+        //    var input = $el[0].querySelector('input');
+        //    input.value = '2000-02-30';
+        //    var pat = pattern.init($el);
+        //    pat.validateForm();
+        //    debugger;
+        //    expect($el.find('em.warning').length).toBe(1);
+        //    expect($el.find('em.warning').text()).toBe("This value must be a valid date");
+
+        //    $el = $(
+        //        '<form class="pat-validation">'+
+        //            '<input type="date" name="date">'+
+        //        '</form>');
+        //    input = $el[0].querySelector('input');
+        //    input.value = '2000-02-28';
+        //    pat = pattern.init($el);
+        //    pat.validateForm();
+        //    expect($el.find('em.warning').length).toBe(0);
+        //});
+
+        //it("doesn't validate empty optional dates", function() {
+        //    var $el = $(
+        //        '<form class="pat-validation">'+
+        //            '<input type="date" name="date">'+
+        //        '</form>');
+        //    var pat = pattern.init($el);
+        //    pat.validateForm();
+        //    expect($el.find('em.warning').length).toBe(0);
+        //});
+
+        //it("do require-validate non-empty required dates", function() {
+        //    var $el = $(
+        //        '<form class="pat-validation">'+
+        //            '<input type="date" name="date" required>'+
+        //            '<button type="submit" name="date" required>'+
+        //        '</form>');
+        //    var pat = pattern.init($el);
+        //    pat.validateForm();
+        //    expect($el.find('em.warning').length).toBe(1);
+        //    expect($el.find('em.warning').text()).toBe("This field is required");
+        //});
 
         it("doesn't validate disabled elements", function() {
             var $el = $(
