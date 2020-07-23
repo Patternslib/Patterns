@@ -57,6 +57,23 @@
                     />
             </label>
 
+            <label>Password
+              <input
+                  id="password"
+                  type="password"
+                  name="password"
+              />
+            </label>
+
+            <label>Password confirmation
+              <input
+                  id="password-confirmation"
+                  type="password"
+                  name="password-confirmation"
+                  data-pat-validation="equality: password; message-equality: I would like this to be equal to %{attribute}"
+              />
+            </label>
+
             <fieldset class="buttons">
               <button class="pat-button">Test</button>
             </fieldset>

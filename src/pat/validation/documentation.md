@@ -8,7 +8,7 @@ The validation pattern is triggered by a single class `pat-validation` on the fo
 This pattern has several advantages over standard HTML 5 form validation:
 
 - it supports older browsers
-- it uses simple documented HTML markup to allow non-browser-specific styling of error messages 
+- it uses simple documented HTML markup to allow non-browser-specific styling of error messages
 - it supports extra validation rules
 
 ### The following attributes may be used.
@@ -68,6 +68,7 @@ Error messages can also be overridden on a per-field basis, for example:
 | Property          | Description                                                                        | Default | Type |
 |-------------------|------------------------------------------------------------------------------------|---------|------|
 | disable-selector  | A selector for elements that should be disabled when there are errors in the form. |         | CSS Selector |
+| equality          | Field-specific. The name of another input this input should equal to (useful for password confirmation). | | String |
 | message-date      | The error message for date fields.        | This value must be a valid date | String |
 | message-datetime  | The error message for datetime fields.    | This value must be a valid date and time | String |
 | message-email     | The error message for email fields.       | This value must be a valid email address | String |
