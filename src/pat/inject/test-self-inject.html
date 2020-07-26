@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Demo page</title>
+    <link rel="stylesheet" href="../base.css" type="text/css" />
+    <link rel="stylesheet" href="inject.css" type="text/css" />
+    <script
+      data-main="../main"
+      src="../../src/bower_components/requirejs/require.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+  </head>
 
-<head>
-  <title>Demo page</title>
-  <link rel="stylesheet" href="../base.css" type="text/css">
-  <link rel="stylesheet" href="inject.css" type="text/css">
-  <script data-main="../main" src="../../src/bower_components/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
-</head>
-
-<body>
-  <a href="../../README.md" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Documentation</a>
-  <a href="../../index.html#global-navigation" class="pat-inject" data-pat-inject="target: self::element; trigger: autoload">Global navigation</a>
-</body>
-
+  <body>
+    <a
+      href="../../README.md"
+      class="pat-inject"
+      data-pat-inject="target: self::element; trigger: autoload"
+      >Documentation</a
+    >
+    <a
+      href="../../index.html#global-navigation"
+      class="pat-inject"
+      data-pat-inject="target: self::element; trigger: autoload"
+      >Global navigation</a
+    >
+  </body>
 </html>

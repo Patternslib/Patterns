@@ -1,4 +1,5 @@
 ## Description
+
 Injection makes it trivial to load content from a server and display it on a web page with a rich, modern web experience without any page reloads. Pat-inject works on existing infra structures, is designed with respect for accessibility and follows the principles of progressive enhancement.
 
 ## Documentation
@@ -46,7 +47,7 @@ In another situation you may not want to replace content but add new content. Yo
       …
     </section>
 
-In this example clicking on the *Tell me more* link will load the latest news content and inject it before the content of `#news`.
+In this example clicking on the _Tell me more_ link will load the latest news content and inject it before the content of `#news`.
 
 Perhaps inserting a single block of content is not enough for your needs? Don't worry! Let's give you another example:
 
@@ -75,7 +76,6 @@ Admittedly, this is a rare use case. However, it is ideal for understanding the 
 >
 > The default selector is `body` and will be used as target and source
 > selector, unless one or both of them are overridden.
-
 
 > By default we work with/on content
 >
@@ -121,7 +121,7 @@ The source id specified as part of `href`/`action` is the default source selecto
 
 Sometimes it is useful to use the triggering element itself as a target.
 
-This can be done by using the special *self* target:
+This can be done by using the special _self_ target:
 
     <a class="pat-inject" href="sources.html" data-pat-inject="target: #self">
       Replace me with sources.html.
@@ -249,8 +249,7 @@ After the injection:
     </div>
     </body>
 
-Trigger
--------
+## Trigger
 
 By default injection is triggered on click for anchors and on submit for forms. Further, it can be triggered upon initialisation (`autoload`) and when coming into view (`autoload-visible`). `autoload` injection is useful to deliver a page skeleton, where e.g. header, body, and sidebar load their content in parallel. `autoload-visible` injection is useful
 to build infinite lists, where the injection element replaces itself with the next 10 entries and a new `autoload-visible` injection link.
@@ -270,10 +269,9 @@ A `autoload` may be delayed, by providing a `delay` argument in `data-pat-inject
 XXX: example infinite list
 -->
 
-
 ### Change href after injection
 
-*Note: This feature is experimental*
+_Note: This feature is experimental_
 
 For anchors, you can specify an href to point to, after the injection was triggered. If that element exists already during initialisation, the injection is not initialised and the href changed to next-href.
 
