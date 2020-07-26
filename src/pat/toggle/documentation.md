@@ -1,9 +1,10 @@
 ## Description
-Toggle allows for toggling between 2 different attribute values. For instance to show or hide a sidebar with a CSS class on the body tag. 
+
+Toggle allows for toggling between 2 different attribute values. For instance to show or hide a sidebar with a CSS class on the body tag.
 
 ## Documentation
 
-The *toggle* pattern can be used to toggle attribute values for objects.
+The _toggle_ pattern can be used to toggle attribute values for objects.
 It is most commonly used to toggle a CSS class.
 
     <a href="#" class="pat-toggle" data-pat-toggle="selector: #work; attr: class; value: active">Start working</a>
@@ -11,7 +12,7 @@ It is most commonly used to toggle a CSS class.
       Working…
     </div>
 
-If a user clicks on the *Start working* link the `active` class is added
+If a user clicks on the _Start working_ link the `active` class is added
 to the div. If the link is clicked again the `active` class is removed
 again. You can also use shorthand notation for this pattern:
 
@@ -20,7 +21,7 @@ again. You can also use shorthand notation for this pattern:
       Working…
     </div>
 
-The default attribute is *class*, so you do not need to specify that manually.
+The default attribute is _class_, so you do not need to specify that manually.
 
 When updating attributes the value is set if the attribute does not
 exist or has a different value, or removed if the attribute already has
@@ -62,6 +63,6 @@ To use this you requirements must be met:
 
 The possible values for the `store` parameter are:
 
--   `none`: do not remember the toggle state (default).
--   `local`: remember the state as part of the local storage.
--   `session`: remember the status as part of the session storage.
+- `none`: do not remember the toggle state (default).
+- `local`: remember the state as part of the local storage.
+- `session`: remember the status as part of the session storage.
