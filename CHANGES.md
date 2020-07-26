@@ -9,6 +9,7 @@
   - pat-chosen - use pat-autosuggest instead.
   - pat-edit-tinymce
   - pat-placeholder - placeholder fully supported since IE10.
+  - pat-slideshow-builder
 
 
 ## 4.0.0-dev - unreleased
