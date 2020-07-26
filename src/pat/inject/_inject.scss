@@ -12,10 +12,10 @@ form.pat-inject,
 fieldset.pat-inject {
   &.executing {
     [type="submit"] {
-          -ms-pointer-events: none;
-         -moz-pointer-events: none;
+      -ms-pointer-events: none;
+      -moz-pointer-events: none;
       -webkit-pointer-events: none;
-              pointer-events: none;
+      pointer-events: none;
       opacity: 0.5;
     }
   }
@@ -23,10 +23,10 @@ fieldset.pat-inject {
 
 a.pat-inject {
   &.executing {
-        -ms-pointer-events: none;
-       -moz-pointer-events: none;
+    -ms-pointer-events: none;
+    -moz-pointer-events: none;
     -webkit-pointer-events: none;
-            pointer-events: none;
+    pointer-events: none;
     opacity: 0.5;
   }
 }
