@@ -15,7 +15,7 @@ Here is a simple example:
 
 Upon seeing the `pat-zoom` class, Patternslib will prepend an input element with type `"range"`.
 
-The user can use this range input to change the *zoom* CSS property for the zoomable element.
+The user can use this range input to change the _zoom_ CSS property for the zoomable element.
 
 For example:
 
