@@ -1,6 +1,6 @@
 ## Description
 
-The *tabs* pattern allows you to collect tabs that do not fit in the width of the window, in a drop down menu.
+The _tabs_ pattern allows you to collect tabs that do not fit in the width of the window, in a drop down menu.
 
 ## Documentation
 
