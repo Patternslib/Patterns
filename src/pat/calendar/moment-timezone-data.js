@@ -1,13 +1,11 @@
-define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
-    "zones": {
-        "Africa/Abidjan": [
-            "-0:16:8 - LMT 1912 -0:16:8",
-            "0 - GMT"
-        ],
-        "Africa/Accra": [
-            "-0:0:52 - LMT 1918 -0:0:52",
-            "0 Ghana %s"
-        ],
+import moment from "moment";
+import "moment-timezone";
+
+
+moment.tz.add({
+    zones: {
+        "Africa/Abidjan": ["-0:16:8 - LMT 1912 -0:16:8", "0 - GMT"],
+        "Africa/Accra": ["-0:0:52 - LMT 1918 -0:0:52", "0 Ghana %s"],
         "Africa/Addis_Ababa": [
             "2:34:48 - LMT 1870 2:34:48",
             "2:35:20 - ADMT 1936_4_5 2:35:20",
@@ -37,10 +35,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-1 - WAT 1960_5_20 -1",
             "0 - GMT"
         ],
-        "Africa/Bangui": [
-            "1:14:20 - LMT 1912 1:14:20",
-            "1 - WAT"
-        ],
+        "Africa/Bangui": ["1:14:20 - LMT 1912 1:14:20", "1 - WAT"],
         "Africa/Banjul": [
             "-1:6:36 - LMT 1912 -1:6:36",
             "-1:6:36 - BMT 1935 -1:6:36",
@@ -52,22 +47,10 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-1 - WAT 1975 -1",
             "0 - GMT"
         ],
-        "Africa/Blantyre": [
-            "2:20 - LMT 1903_2 2:20",
-            "2 - CAT"
-        ],
-        "Africa/Brazzaville": [
-            "1:1:8 - LMT 1912 1:1:8",
-            "1 - WAT"
-        ],
-        "Africa/Bujumbura": [
-            "1:57:28 - LMT 1890 1:57:28",
-            "2 - CAT"
-        ],
-        "Africa/Cairo": [
-            "2:5:9 - LMT 1900_9 2:5:9",
-            "2 Egypt EE%sT"
-        ],
+        "Africa/Blantyre": ["2:20 - LMT 1903_2 2:20", "2 - CAT"],
+        "Africa/Brazzaville": ["1:1:8 - LMT 1912 1:1:8", "1 - WAT"],
+        "Africa/Bujumbura": ["1:57:28 - LMT 1890 1:57:28", "2 - CAT"],
+        "Africa/Cairo": ["2:5:9 - LMT 1900_9 2:5:9", "2 Egypt EE%sT"],
         "Africa/Casablanca": [
             "-0:30:20 - LMT 1913_9_26 -0:30:20",
             "0 Morocco WE%sT 1984_2_16",
@@ -101,14 +84,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2:45 - BEAUT 1961 2:45",
             "3 - EAT"
         ],
-        "Africa/Djibouti": [
-            "2:52:36 - LMT 1911_6 2:52:36",
-            "3 - EAT"
-        ],
-        "Africa/Douala": [
-            "0:38:48 - LMT 1912 0:38:48",
-            "1 - WAT"
-        ],
+        "Africa/Djibouti": ["2:52:36 - LMT 1911_6 2:52:36", "3 - EAT"],
+        "Africa/Douala": ["0:38:48 - LMT 1912 0:38:48", "1 - WAT"],
         "Africa/El_Aaiun": [
             "-0:52:48 - LMT 1934_0 -0:52:48",
             "-1 - WAT 1976_3_14 -1",
@@ -127,10 +104,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "3 - CAST 1944_2_19_2 3",
             "2 - CAT"
         ],
-        "Africa/Harare": [
-            "2:4:12 - LMT 1903_2 2:4:12",
-            "2 - CAT"
-        ],
+        "Africa/Harare": ["2:4:12 - LMT 1903_2 2:4:12", "2 - CAT"],
         "Africa/Johannesburg": [
             "1:52 - LMT 1892_1_8 1:52",
             "1:30 - SAST 1903_2 1:30",
@@ -153,58 +127,31 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2 Sudan CA%sT 2000_0_15_12 2",
             "3 - EAT"
         ],
-        "Africa/Kigali": [
-            "2:0:16 - LMT 1935_5 2:0:16",
-            "2 - CAT"
-        ],
-        "Africa/Kinshasa": [
-            "1:1:12 - LMT 1897_10_9 1:1:12",
-            "1 - WAT"
-        ],
-        "Africa/Lagos": [
-            "0:13:36 - LMT 1919_8 0:13:36",
-            "1 - WAT"
-        ],
-        "Africa/Libreville": [
-            "0:37:48 - LMT 1912 0:37:48",
-            "1 - WAT"
-        ],
-        "Africa/Lome": [
-            "0:4:52 - LMT 1893 0:4:52",
-            "0 - GMT"
-        ],
+        "Africa/Kigali": ["2:0:16 - LMT 1935_5 2:0:16", "2 - CAT"],
+        "Africa/Kinshasa": ["1:1:12 - LMT 1897_10_9 1:1:12", "1 - WAT"],
+        "Africa/Lagos": ["0:13:36 - LMT 1919_8 0:13:36", "1 - WAT"],
+        "Africa/Libreville": ["0:37:48 - LMT 1912 0:37:48", "1 - WAT"],
+        "Africa/Lome": ["0:4:52 - LMT 1893 0:4:52", "0 - GMT"],
         "Africa/Luanda": [
             "0:52:56 - LMT 1892 0:52:56",
             "0:52:4 - AOT 1911_4_26 0:52:4",
             "1 - WAT"
         ],
-        "Africa/Lubumbashi": [
-            "1:49:52 - LMT 1897_10_9 1:49:52",
-            "2 - CAT"
-        ],
-        "Africa/Lusaka": [
-            "1:53:8 - LMT 1903_2 1:53:8",
-            "2 - CAT"
-        ],
+        "Africa/Lubumbashi": ["1:49:52 - LMT 1897_10_9 1:49:52", "2 - CAT"],
+        "Africa/Lusaka": ["1:53:8 - LMT 1903_2 1:53:8", "2 - CAT"],
         "Africa/Malabo": [
             "0:35:8 - LMT 1912 0:35:8",
             "0 - GMT 1963_11_15",
             "1 - WAT"
         ],
-        "Africa/Maputo": [
-            "2:10:20 - LMT 1903_2 2:10:20",
-            "2 - CAT"
-        ],
+        "Africa/Maputo": ["2:10:20 - LMT 1903_2 2:10:20", "2 - CAT"],
         "Africa/Maseru": [
             "1:50 - LMT 1903_2 1:50",
             "2 - SAST 1943_8_19_2 2",
             "3 - SAST 1944_2_19_2 3",
             "2 - SAST"
         ],
-        "Africa/Mbabane": [
-            "2:4:24 - LMT 1903_2 2:4:24",
-            "2 - SAST"
-        ],
+        "Africa/Mbabane": ["2:4:24 - LMT 1903_2 2:4:24", "2 - SAST"],
         "Africa/Mogadishu": [
             "3:1:28 - LMT 1893_10 3:1:28",
             "3 - EAT 1931 3",
@@ -242,10 +189,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-1 - WAT 1960_10_28 -1",
             "0 - GMT"
         ],
-        "Africa/Ouagadougou": [
-            "-0:6:4 - LMT 1912 -0:6:4",
-            "0 - GMT"
-        ],
+        "Africa/Ouagadougou": ["-0:6:4 - LMT 1912 -0:6:4", "0 - GMT"],
         "Africa/Porto-Novo": [
             "0:10:28 - LMT 1912 0:10:28",
             "0 - GMT 1934_1_26",
@@ -733,14 +677,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-5:7:12 - KMT 1912_1 -5:7:12",
             "-5 TC E%sT"
         ],
-        "America/Grenada": [
-            "-4:7 - LMT 1911_6 -4:7",
-            "-4 - AST"
-        ],
-        "America/Guadeloupe": [
-            "-4:6:8 - LMT 1911_5_8 -4:6:8",
-            "-4 - AST"
-        ],
+        "America/Grenada": ["-4:7 - LMT 1911_6 -4:7", "-4 - AST"],
+        "America/Guadeloupe": ["-4:6:8 - LMT 1911_5_8 -4:6:8", "-4 - AST"],
         "America/Guatemala": [
             "-6:2:4 - LMT 1918_9_5 -6:2:4",
             "-6 Guat C%sT"
@@ -1301,10 +1239,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-4:4 - CMT 1912 -4:4",
             "-4 - AST"
         ],
-        "America/St_Thomas": [
-            "-4:19:44 - LMT 1911_6 -4:19:44",
-            "-4 - AST"
-        ],
+        "America/St_Thomas": ["-4:19:44 - LMT 1911_6 -4:19:44", "-4 - AST"],
         "America/St_Vincent": [
             "-4:4:56 - LMT 1890 -4:4:56",
             "-4:4:56 - KMT 1912 -4:4:56",
@@ -1363,10 +1298,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-5 Toronto E%sT 1974 -5",
             "-5 Canada E%sT"
         ],
-        "America/Tortola": [
-            "-4:18:28 - LMT 1911_6 -4:18:28",
-            "-4 - AST"
-        ],
+        "America/Tortola": ["-4:18:28 - LMT 1911_6 -4:18:28", "-4 - AST"],
         "America/Vancouver": [
             "-8:12:28 - LMT 1884 -8:12:28",
             "-8 Vanc P%sT 1987 -8",
@@ -1436,28 +1368,16 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "6 - MAWT 2009_9_18_2 6",
             "5 - MAWT"
         ],
-        "Antarctica/McMurdo": [
-            "0 - zzz 1956",
-            "12 NZAQ NZ%sT"
-        ],
+        "Antarctica/McMurdo": ["0 - zzz 1956", "12 NZAQ NZ%sT"],
         "Antarctica/Palmer": [
             "0 - zzz 1965",
             "-4 ArgAQ AR%sT 1969_9_5 -4",
             "-3 ArgAQ AR%sT 1982_4 -3",
             "-4 ChileAQ CL%sT"
         ],
-        "Antarctica/Rothera": [
-            "0 - zzz 1976_11_1",
-            "-3 - ROTT"
-        ],
-        "Antarctica/Syowa": [
-            "0 - zzz 1957_0_29",
-            "3 - SYOT"
-        ],
-        "Antarctica/Vostok": [
-            "0 - zzz 1957_11_16",
-            "6 - VOST"
-        ],
+        "Antarctica/Rothera": ["0 - zzz 1976_11_1", "-3 - ROTT"],
+        "Antarctica/Syowa": ["0 - zzz 1957_0_29", "3 - SYOT"],
+        "Antarctica/Vostok": ["0 - zzz 1957_11_16", "6 - VOST"],
         "Europe/Oslo": [
             "0:43 - LMT 1895_0_1 0:43",
             "1 Norway CE%sT 1940_7_10_23 1",
@@ -1465,10 +1385,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1 Norway CE%sT 1980 1",
             "1 EU CE%sT"
         ],
-        "Asia/Aden": [
-            "2:59:54 - LMT 1950 2:59:54",
-            "3 - AST"
-        ],
+        "Asia/Aden": ["2:59:54 - LMT 1950 2:59:54", "3 - AST"],
         "Asia/Almaty": [
             "5:7:48 - LMT 1924_4_2 5:7:48",
             "5 - ALMT 1930_5_21 5",
@@ -1477,10 +1394,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "6 RussiaAsia ALM%sT 2005_2_15 6",
             "6 - ALMT"
         ],
-        "Asia/Amman": [
-            "2:23:44 - LMT 1931 2:23:44",
-            "2 Jordan EE%sT"
-        ],
+        "Asia/Amman": ["2:23:44 - LMT 1931 2:23:44", "2 Jordan EE%sT"],
         "Asia/Anadyr": [
             "11:49:56 - LMT 1924_4_2 11:49:56",
             "12 - ANAT 1930_5_21 12",
@@ -1548,10 +1462,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "6:42:4 - BMT 1920_3 6:42:4",
             "7 - ICT"
         ],
-        "Asia/Beirut": [
-            "2:22 - LMT 1880 2:22",
-            "2 Lebanon EE%sT"
-        ],
+        "Asia/Beirut": ["2:22 - LMT 1880 2:22", "2 Lebanon EE%sT"],
         "Asia/Bishkek": [
             "4:58:24 - LMT 1924_4_2 4:58:24",
             "5 - FRUT 1930_5_21 5",
@@ -1588,10 +1499,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "6 - LKT 2006_3_15_0_30 6",
             "5:30 - IST"
         ],
-        "Asia/Damascus": [
-            "2:25:12 - LMT 1920 2:25:12",
-            "2 Syria EE%sT"
-        ],
+        "Asia/Damascus": ["2:25:12 - LMT 1920 2:25:12", "2 Syria EE%sT"],
         "Asia/Dhaka": [
             "6:1:40 - LMT 1890 6:1:40",
             "5:53:20 - HMT 1941_9 5:53:20",
@@ -1610,10 +1518,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "8 - CIT 2000_8_17_00 8",
             "9 - TLT"
         ],
-        "Asia/Dubai": [
-            "3:41:12 - LMT 1920 3:41:12",
-            "4 - GST"
-        ],
+        "Asia/Dubai": ["3:41:12 - LMT 1920 3:41:12", "4 - GST"],
         "Asia/Dushanbe": [
             "4:35:12 - LMT 1924_4_2 4:35:12",
             "5 - DUST 1930_5_21 5",
@@ -1778,10 +1683,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "8 - BORT 1982_0_1 8",
             "8 - MYT"
         ],
-        "Asia/Kuwait": [
-            "3:11:56 - LMT 1950 3:11:56",
-            "3 - AST"
-        ],
+        "Asia/Kuwait": ["3:11:56 - LMT 1950 3:11:56", "3 - AST"],
         "Asia/Macau": [
             "7:34:20 - LMT 1912 7:34:20",
             "8 Macau MO%sT 1999_11_20 8",
@@ -1809,10 +1711,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "9 - JST 1944_10 9",
             "8 Phil PH%sT"
         ],
-        "Asia/Muscat": [
-            "3:54:24 - LMT 1920 3:54:24",
-            "4 - GST"
-        ],
+        "Asia/Muscat": ["3:54:24 - LMT 1920 3:54:24", "4 - GST"],
         "Asia/Nicosia": [
             "2:13:28 - LMT 1921_10_14 2:13:28",
             "2 Cyprus EE%sT 1998_8 3",
@@ -1907,10 +1806,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "9 - JST 1945_4_3 9",
             "6:30 - MMT"
         ],
-        "Asia/Riyadh": [
-            "3:6:52 - LMT 1950 3:6:52",
-            "3 - AST"
-        ],
+        "Asia/Riyadh": ["3:6:52 - LMT 1950 3:6:52", "3 - AST"],
         "Asia/Sakhalin": [
             "9:30:48 - LMT 1905_7_23 9:30:48",
             "9 - CJT 1938 9",
@@ -1958,10 +1854,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "7:30 - SGT 1982_0_1 7:30",
             "8 - SGT"
         ],
-        "Asia/Taipei": [
-            "8:6 - LMT 1896 8:6",
-            "8 Taiwan C%sT"
-        ],
+        "Asia/Taipei": ["8:6 - LMT 1896 8:6", "8 Taiwan C%sT"],
         "Asia/Tashkent": [
             "4:37:12 - LMT 1924_4_2 4:37:12",
             "5 - TAST 1930_5_21 5",
@@ -2196,39 +2089,17 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "10 Aus EST 1971 10",
             "10 AN EST"
         ],
-        "CET": [
-            "1 C-Eur CE%sT"
-        ],
-        "CST6CDT": [
-            "-6 US C%sT"
-        ],
-        "EET": [
-            "2 EU EE%sT"
-        ],
-        "EST": [
-            "-5 - EST"
-        ],
-        "EST5EDT": [
-            "-5 US E%sT"
-        ],
-        "HST": [
-            "-10 - HST"
-        ],
-        "MET": [
-            "1 C-Eur ME%sT"
-        ],
-        "MST": [
-            "-7 - MST"
-        ],
-        "MST7MDT": [
-            "-7 US M%sT"
-        ],
-        "PST8PDT": [
-            "-8 US P%sT"
-        ],
-        "WET": [
-            "0 EU WE%sT"
-        ],
+        CET: ["1 C-Eur CE%sT"],
+        CST6CDT: ["-6 US C%sT"],
+        EET: ["2 EU EE%sT"],
+        EST: ["-5 - EST"],
+        EST5EDT: ["-5 US E%sT"],
+        HST: ["-10 - HST"],
+        MET: ["1 C-Eur ME%sT"],
+        MST: ["-7 - MST"],
+        MST7MDT: ["-7 US M%sT"],
+        PST8PDT: ["-8 US P%sT"],
+        WET: ["0 EU WE%sT"],
         "Europe/Amsterdam": [
             "0:19:32 - LMT 1835 0:19:32",
             "0:19:32 Neth %s 1937_6_1 1:19:32",
@@ -2650,43 +2521,19 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "5 - IOT 1996 5",
             "6 - IOT"
         ],
-        "Indian/Christmas": [
-            "7:2:52 - LMT 1895_1 7:2:52",
-            "7 - CXT"
-        ],
-        "Indian/Cocos": [
-            "6:27:40 - LMT 1900 6:27:40",
-            "6:30 - CCT"
-        ],
-        "Indian/Comoro": [
-            "2:53:4 - LMT 1911_6 2:53:4",
-            "3 - EAT"
-        ],
-        "Indian/Kerguelen": [
-            "0 - zzz 1950",
-            "5 - TFT"
-        ],
-        "Indian/Mahe": [
-            "3:41:48 - LMT 1906_5 3:41:48",
-            "4 - SCT"
-        ],
+        "Indian/Christmas": ["7:2:52 - LMT 1895_1 7:2:52", "7 - CXT"],
+        "Indian/Cocos": ["6:27:40 - LMT 1900 6:27:40", "6:30 - CCT"],
+        "Indian/Comoro": ["2:53:4 - LMT 1911_6 2:53:4", "3 - EAT"],
+        "Indian/Kerguelen": ["0 - zzz 1950", "5 - TFT"],
+        "Indian/Mahe": ["3:41:48 - LMT 1906_5 3:41:48", "4 - SCT"],
         "Indian/Maldives": [
             "4:54 - LMT 1880 4:54",
             "4:54 - MMT 1960 4:54",
             "5 - MVT"
         ],
-        "Indian/Mauritius": [
-            "3:50 - LMT 1907 3:50",
-            "4 Mauritius MU%sT"
-        ],
-        "Indian/Mayotte": [
-            "3:0:56 - LMT 1911_6 3:0:56",
-            "3 - EAT"
-        ],
-        "Indian/Reunion": [
-            "3:41:52 - LMT 1911_5 3:41:52",
-            "4 - RET"
-        ],
+        "Indian/Mauritius": ["3:50 - LMT 1907 3:50", "4 Mauritius MU%sT"],
+        "Indian/Mayotte": ["3:0:56 - LMT 1911_6 3:0:56", "3 - EAT"],
+        "Indian/Reunion": ["3:41:52 - LMT 1911_5 3:41:52", "4 - RET"],
         "Pacific/Apia": [
             "12:33:4 - LMT 1879_6_5 12:33:4",
             "-11:26:56 - LMT 1911 -11:26:56",
@@ -2707,10 +2554,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "12:13:48 - LMT 1957_0_1 12:13:48",
             "12:45 Chatham CHA%sT"
         ],
-        "Pacific/Chuuk": [
-            "10:7:8 - LMT 1901 10:7:8",
-            "10 - CHUT"
-        ],
+        "Pacific/Chuuk": ["10:7:8 - LMT 1901 10:7:8", "10 - CHUT"],
         "Pacific/Easter": [
             "-7:17:44 - LMT 1890 -7:17:44",
             "-7:17:28 - EMT 1932_8 -7:17:28",
@@ -2736,19 +2580,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "11:55:44 - LMT 1915_9_26 11:55:44",
             "12 Fiji FJ%sT"
         ],
-        "Pacific/Funafuti": [
-            "11:56:52 - LMT 1901 11:56:52",
-            "12 - TVT"
-        ],
+        "Pacific/Funafuti": ["11:56:52 - LMT 1901 11:56:52", "12 - TVT"],
         "Pacific/Galapagos": [
             "-5:58:24 - LMT 1931 -5:58:24",
             "-5 - ECT 1986 -5",
             "-6 - GALT"
         ],
-        "Pacific/Gambier": [
-            "-8:59:48 - LMT 1912_9 -8:59:48",
-            "-9 - GAMT"
-        ],
+        "Pacific/Gambier": ["-8:59:48 - LMT 1912_9 -8:59:48", "-9 - GAMT"],
         "Pacific/Guadalcanal": [
             "10:39:48 - LMT 1912_9 10:39:48",
             "11 - SBT"
@@ -2768,9 +2606,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-10:30 - HST 1947_5_8_2 -10:30",
             "-10 - HST"
         ],
-        "Pacific/Johnston": [
-            "-10 - HST"
-        ],
+        "Pacific/Johnston": ["-10 - HST"],
         "Pacific/Kiritimati": [
             "-10:29:20 - LMT 1901 -10:29:20",
             "-10:40 - LINT 1979_9 -10:40",
@@ -2794,10 +2630,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "11 - MHT 1969_9 11",
             "12 - MHT"
         ],
-        "Pacific/Marquesas": [
-            "-9:18 - LMT 1912_9 -9:18",
-            "-9:30 - MART"
-        ],
+        "Pacific/Marquesas": ["-9:18 - LMT 1912_9 -9:18", "-9:30 - MART"],
         "Pacific/Midway": [
             "-11:49:28 - LMT 1901 -11:49:28",
             "-11 - NST 1956_5_3 -11",
@@ -2836,19 +2669,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "-11 - BST 1983_10_30 -11",
             "-11 - SST"
         ],
-        "Pacific/Palau": [
-            "8:57:56 - LMT 1901 8:57:56",
-            "9 - PWT"
-        ],
+        "Pacific/Palau": ["8:57:56 - LMT 1901 8:57:56", "9 - PWT"],
         "Pacific/Pitcairn": [
             "-8:40:20 - LMT 1901 -8:40:20",
             "-8:30 - PNT 1998_3_27_00 -8:30",
             "-8 - PST"
         ],
-        "Pacific/Pohnpei": [
-            "10:32:52 - LMT 1901 10:32:52",
-            "11 - PONT"
-        ],
+        "Pacific/Pohnpei": ["10:32:52 - LMT 1901 10:32:52", "11 - PONT"],
         "Pacific/Port_Moresby": [
             "9:48:40 - LMT 1880 9:48:40",
             "9:48:32 - PMMT 1895 9:48:32",
@@ -2866,35 +2693,23 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "10 - MPT 2000_11_23 10",
             "10 - ChST"
         ],
-        "Pacific/Tahiti": [
-            "-9:58:16 - LMT 1912_9 -9:58:16",
-            "-10 - TAHT"
-        ],
-        "Pacific/Tarawa": [
-            "11:32:4 - LMT 1901 11:32:4",
-            "12 - GILT"
-        ],
+        "Pacific/Tahiti": ["-9:58:16 - LMT 1912_9 -9:58:16", "-10 - TAHT"],
+        "Pacific/Tarawa": ["11:32:4 - LMT 1901 11:32:4", "12 - GILT"],
         "Pacific/Tongatapu": [
             "12:19:20 - LMT 1901 12:19:20",
             "12:20 - TOT 1941 12:20",
             "13 - TOT 1999 13",
             "13 Tonga TO%sT"
         ],
-        "Pacific/Wake": [
-            "11:6:28 - LMT 1901 11:6:28",
-            "12 - WAKT"
-        ],
-        "Pacific/Wallis": [
-            "12:15:20 - LMT 1901 12:15:20",
-            "12 - WFT"
-        ]
+        "Pacific/Wake": ["11:6:28 - LMT 1901 11:6:28", "12 - WAKT"],
+        "Pacific/Wallis": ["12:15:20 - LMT 1901 12:15:20", "12 - WFT"]
     },
-    "rules": {
-        "Ghana": [
+    rules: {
+        Ghana: [
             "1936 1942 8 1 7 0 0 0:20 GHST",
             "1936 1942 11 31 7 0 0 0 GMT"
         ],
-        "Algeria": [
+        Algeria: [
             "1916 1916 5 14 7 23 2 1 S",
             "1916 1919 9 1 0 23 2 0",
             "1917 1917 2 24 7 23 2 1 S",
@@ -2918,7 +2733,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1980 1980 3 25 7 0 0 1 S",
             "1980 1980 9 31 7 2 0 0"
         ],
-        "Egypt": [
+        Egypt: [
             "1940 1940 6 15 7 0 0 1 S",
             "1940 1940 9 1 7 0 0 0",
             "1941 1941 3 15 7 0 0 1 S",
@@ -2948,7 +2763,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2010 2010 8 10 7 0 0 1 S",
             "2010 2010 8 4 8 23 2 0"
         ],
-        "Morocco": [
+        Morocco: [
             "1939 1939 8 12 7 0 0 1 S",
             "1939 1939 10 19 7 0 0 0",
             "1940 1940 1 25 7 0 0 1 S",
@@ -2995,7 +2810,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2022 2022 4 3 7 2 0 1 S",
             "2023 9999 3 0 8 2 0 1 S"
         ],
-        "Spain": [
+        Spain: [
             "1917 1917 4 5 7 23 2 1 S",
             "1917 1919 9 6 7 23 2 0",
             "1918 1918 3 15 7 23 2 1 S",
@@ -3028,7 +2843,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1977 1978 3 2 7 23 0 1 S",
             "1978 1978 9 1 7 1 0 0"
         ],
-        "SpainAfrica": [
+        SpainAfrica: [
             "1967 1967 5 3 7 12 0 1 S",
             "1967 1967 9 1 7 0 0 0",
             "1974 1974 5 24 7 0 0 1 S",
@@ -3039,7 +2854,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1978 1978 5 1 7 0 0 1 S",
             "1978 1978 7 4 7 0 0 0"
         ],
-        "EU": [
+        EU: [
             "1977 1980 3 1 0 1 1 1 S",
             "1977 1977 8 0 8 1 1 0",
             "1978 1978 9 1 7 1 1 0",
@@ -3047,23 +2862,20 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1981 9999 2 0 8 1 1 1 S",
             "1996 9999 9 0 8 1 1 0"
         ],
-        "SL": [
+        SL: [
             "1935 1942 5 1 7 0 0 0:40 SLST",
             "1935 1942 9 1 7 0 0 0 WAT",
             "1957 1962 5 1 7 0 0 1 SLST",
             "1957 1962 8 1 7 0 0 0 GMT"
         ],
-        "SA": [
-            "1942 1943 8 15 0 2 0 1",
-            "1943 1944 2 15 0 2 0 0"
-        ],
-        "Sudan": [
+        SA: ["1942 1943 8 15 0 2 0 1", "1943 1944 2 15 0 2 0 0"],
+        Sudan: [
             "1970 1970 4 1 7 0 0 1 S",
             "1970 1985 9 15 7 0 0 0",
             "1971 1971 3 30 7 0 0 1 S",
             "1972 1985 3 0 8 0 0 1 S"
         ],
-        "Libya": [
+        Libya: [
             "1951 1951 9 14 7 2 0 1 S",
             "1952 1952 0 1 7 0 0 0",
             "1953 1953 9 9 7 2 0 1 S",
@@ -3082,7 +2894,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2013 9999 2 5 8 1 0 1 S",
             "2013 9999 9 5 8 2 0 0"
         ],
-        "Tunisia": [
+        Tunisia: [
             "1939 1939 3 15 7 23 2 1 S",
             "1939 1939 10 18 7 23 2 0",
             "1940 1940 1 25 7 23 2 1 S",
@@ -3109,11 +2921,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2006 2008 2 0 8 2 2 1 S",
             "2006 2008 9 0 8 2 2 0"
         ],
-        "Namibia": [
-            "1994 9999 8 1 0 2 0 1 S",
-            "1995 9999 3 1 0 2 0 0"
-        ],
-        "US": [
+        Namibia: ["1994 9999 8 1 0 2 0 1 S", "1995 9999 3 1 0 2 0 0"],
+        US: [
             "1918 1919 2 0 8 2 0 1 D",
             "1918 1919 9 0 8 2 0 0 S",
             "1942 1942 1 9 7 2 0 1 W",
@@ -3128,7 +2937,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 9999 2 8 0 2 0 1 D",
             "2007 9999 10 1 0 2 0 0 S"
         ],
-        "Brazil": [
+        Brazil: [
             "1931 1931 9 3 7 11 0 1 S",
             "1932 1933 3 1 7 0 0 0",
             "1932 1932 9 3 7 0 0 1 S",
@@ -3194,7 +3003,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2037 2037 1 22 0 0 0 0",
             "2038 9999 1 15 0 0 0 0"
         ],
-        "Arg": [
+        Arg: [
             "1930 1930 11 1 7 0 0 1 S",
             "1931 1931 3 1 7 0 0 0",
             "1931 1931 9 15 7 0 0 1 S",
@@ -3225,11 +3034,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2008 2009 2 15 0 0 0 0",
             "2008 2008 9 15 0 0 0 1 S"
         ],
-        "SanLuis": [
-            "2008 2009 2 8 0 0 0 0",
-            "2007 2009 9 8 0 0 0 1 S"
-        ],
-        "Para": [
+        SanLuis: ["2008 2009 2 8 0 0 0 0", "2007 2009 9 8 0 0 0 1 S"],
+        Para: [
             "1975 1988 9 1 7 0 0 1 S",
             "1975 1978 2 1 7 0 0 0",
             "1979 1991 3 1 7 0 0 0",
@@ -3253,7 +3059,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2010 2012 3 8 0 0 0 0",
             "2013 9999 2 22 0 0 0 0"
         ],
-        "Canada": [
+        Canada: [
             "1918 1918 3 14 7 2 0 1 D",
             "1918 1918 9 27 7 2 0 0 S",
             "1942 1942 1 9 7 2 0 1 W",
@@ -3265,7 +3071,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 9999 2 8 0 2 0 1 D",
             "2007 9999 10 1 0 2 0 0 S"
         ],
-        "Mexico": [
+        Mexico: [
             "1939 1939 1 5 7 0 0 1 D",
             "1939 1939 5 25 7 0 0 0 S",
             "1940 1940 11 9 7 0 0 1 D",
@@ -3281,14 +3087,14 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2002 9999 3 1 0 2 0 1 D",
             "2002 9999 9 0 8 2 0 0 S"
         ],
-        "Barb": [
+        Barb: [
             "1977 1977 5 12 7 2 0 1 D",
             "1977 1978 9 1 0 2 0 0 S",
             "1978 1980 3 15 0 2 0 1 D",
             "1979 1979 8 30 7 2 0 0 S",
             "1980 1980 8 25 7 2 0 0 S"
         ],
-        "Belize": [
+        Belize: [
             "1918 1942 9 2 0 0 0 0:30 HD",
             "1919 1943 1 9 0 0 0 0 S",
             "1973 1973 11 5 7 0 0 1 D",
@@ -3296,11 +3102,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1982 1982 11 18 7 0 0 1 D",
             "1983 1983 1 12 7 0 0 0 S"
         ],
-        "CO": [
-            "1992 1992 4 3 7 0 0 1 S",
-            "1993 1993 3 4 7 0 0 0"
-        ],
-        "NT_YK": [
+        CO: ["1992 1992 4 3 7 0 0 1 S", "1993 1993 3 4 7 0 0 0"],
+        NT_YK: [
             "1918 1918 3 14 7 2 0 1 D",
             "1918 1918 9 27 7 2 0 0 S",
             "1919 1919 4 25 7 2 0 1 D",
@@ -3314,7 +3117,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1980 2006 9 0 8 2 0 0 S",
             "1987 2006 3 1 0 2 0 1 D"
         ],
-        "Chicago": [
+        Chicago: [
             "1920 1920 5 13 7 2 0 1 D",
             "1920 1921 9 0 8 2 0 0 S",
             "1921 1921 2 0 8 2 0 1 D",
@@ -3322,14 +3125,14 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1922 1954 8 0 8 2 0 0 S",
             "1955 1966 9 0 8 2 0 0 S"
         ],
-        "CR": [
+        CR: [
             "1979 1980 1 0 8 0 0 1 D",
             "1979 1980 5 1 0 0 0 0 S",
             "1991 1992 0 15 6 0 0 1 D",
             "1991 1991 6 1 7 0 0 0 S",
             "1992 1992 2 15 7 0 0 0 S"
         ],
-        "Vanc": [
+        Vanc: [
             "1918 1918 3 14 7 2 0 1 D",
             "1918 1918 9 27 7 2 0 0 S",
             "1942 1942 1 9 7 2 0 1 W",
@@ -3340,20 +3143,20 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1947 1961 8 0 8 2 0 0 S",
             "1962 2006 9 0 8 2 0 0 S"
         ],
-        "Denver": [
+        Denver: [
             "1920 1921 2 0 8 2 0 1 D",
             "1920 1920 9 0 8 2 0 0 S",
             "1921 1921 4 22 7 2 0 0 S",
             "1965 1966 3 0 8 2 0 1 D",
             "1965 1966 9 0 8 2 0 0 S"
         ],
-        "Detroit": [
+        Detroit: [
             "1948 1948 3 0 8 2 0 1 D",
             "1948 1948 8 0 8 2 0 0 S",
             "1967 1967 5 14 7 2 0 1 D",
             "1967 1967 9 0 8 2 0 0 S"
         ],
-        "Edm": [
+        Edm: [
             "1918 1919 3 8 0 2 0 1 D",
             "1918 1918 9 27 7 2 0 0 S",
             "1919 1919 4 27 7 2 0 0 S",
@@ -3372,11 +3175,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1972 1986 3 0 8 2 0 1 D",
             "1972 2006 9 0 8 2 0 0 S"
         ],
-        "Salv": [
-            "1987 1988 4 1 0 0 0 1 D",
-            "1987 1988 8 0 8 0 0 0 S"
-        ],
-        "Halifax": [
+        Salv: ["1987 1988 4 1 0 0 0 1 D", "1987 1988 8 0 8 0 0 0 S"],
+        Halifax: [
             "1916 1916 3 1 7 0 0 1 D",
             "1916 1916 9 1 7 0 0 0 S",
             "1920 1920 4 9 7 0 0 1 D",
@@ -3419,7 +3219,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1962 1973 3 0 8 2 0 1 D",
             "1962 1973 9 0 8 2 0 0 S"
         ],
-        "StJohns": [
+        StJohns: [
             "1917 1917 3 8 7 2 0 1 D",
             "1917 1917 8 17 7 2 0 0 S",
             "1919 1919 4 5 7 23 0 1 D",
@@ -3440,14 +3240,14 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 2011 2 8 0 0:1 0 1 D",
             "2007 2010 10 1 0 0:1 0 0 S"
         ],
-        "TC": [
+        TC: [
             "1979 1986 3 0 8 2 0 1 D",
             "1979 2006 9 0 8 2 0 0 S",
             "1987 2006 3 1 0 2 0 1 D",
             "2007 9999 2 8 0 2 0 1 D",
             "2007 9999 10 1 0 2 0 0 S"
         ],
-        "Guat": [
+        Guat: [
             "1973 1973 10 25 7 0 0 1 D",
             "1974 1974 1 24 7 0 0 0 S",
             "1983 1983 4 21 7 0 0 1 D",
@@ -3457,7 +3257,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2006 2006 3 30 7 0 0 1 D",
             "2006 2006 9 1 7 0 0 0 S"
         ],
-        "Cuba": [
+        Cuba: [
             "1928 1928 5 10 7 0 0 1 D",
             "1928 1928 9 10 7 0 0 0 S",
             "1940 1942 5 1 0 0 0 1 D",
@@ -3497,31 +3297,31 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2012 9999 10 1 0 0 2 0 S",
             "2013 9999 2 8 0 0 2 1 D"
         ],
-        "Indianapolis": [
+        Indianapolis: [
             "1941 1941 5 22 7 2 0 1 D",
             "1941 1954 8 0 8 2 0 0 S",
             "1946 1954 3 0 8 2 0 1 D"
         ],
-        "Starke": [
+        Starke: [
             "1947 1961 3 0 8 2 0 1 D",
             "1947 1954 8 0 8 2 0 0 S",
             "1955 1956 9 0 8 2 0 0 S",
             "1957 1958 8 0 8 2 0 0 S",
             "1959 1961 9 0 8 2 0 0 S"
         ],
-        "Marengo": [
+        Marengo: [
             "1951 1951 3 0 8 2 0 1 D",
             "1951 1951 8 0 8 2 0 0 S",
             "1954 1960 3 0 8 2 0 1 D",
             "1954 1960 8 0 8 2 0 0 S"
         ],
-        "Pike": [
+        Pike: [
             "1955 1955 4 1 7 0 0 1 D",
             "1955 1960 8 0 8 2 0 0 S",
             "1956 1964 3 0 8 2 0 1 D",
             "1961 1964 9 0 8 2 0 0 S"
         ],
-        "Perry": [
+        Perry: [
             "1946 1946 3 0 8 2 0 1 D",
             "1946 1946 8 0 8 2 0 0 S",
             "1953 1954 3 0 8 2 0 1 D",
@@ -3532,7 +3332,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1961 1961 8 0 8 2 0 0 S",
             "1962 1963 9 0 8 2 0 0 S"
         ],
-        "Vincennes": [
+        Vincennes: [
             "1946 1946 3 0 8 2 0 1 D",
             "1946 1946 8 0 8 2 0 0 S",
             "1953 1954 3 0 8 2 0 1 D",
@@ -3543,13 +3343,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1961 1961 8 0 8 2 0 0 S",
             "1962 1963 9 0 8 2 0 0 S"
         ],
-        "Pulaski": [
+        Pulaski: [
             "1946 1960 3 0 8 2 0 1 D",
             "1946 1954 8 0 8 2 0 0 S",
             "1955 1956 9 0 8 2 0 0 S",
             "1957 1960 8 0 8 2 0 0 S"
         ],
-        "Louisville": [
+        Louisville: [
             "1921 1921 4 1 7 2 0 1 D",
             "1921 1921 8 1 7 2 0 0 S",
             "1941 1961 3 0 8 2 0 1 D",
@@ -3558,7 +3358,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1950 1955 8 0 8 2 0 0 S",
             "1956 1960 9 0 8 2 0 0 S"
         ],
-        "Peru": [
+        Peru: [
             "1938 1938 0 1 7 0 0 1 S",
             "1938 1938 3 1 7 0 0 0",
             "1938 1939 8 0 8 0 0 1 S",
@@ -3570,14 +3370,14 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1994 1994 0 1 7 0 0 1 S",
             "1994 1994 3 1 7 0 0 0"
         ],
-        "CA": [
+        CA: [
             "1948 1948 2 14 7 2 0 1 D",
             "1949 1949 0 1 7 2 0 0 S",
             "1950 1966 3 0 8 2 0 1 D",
             "1950 1961 8 0 8 2 0 0 S",
             "1962 1966 9 0 8 2 0 0 S"
         ],
-        "Nic": [
+        Nic: [
             "1979 1980 2 16 0 0 0 1 D",
             "1979 1980 5 23 1 0 0 0 S",
             "2005 2005 3 10 7 0 0 1 D",
@@ -3585,13 +3385,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2006 2006 3 30 7 2 0 1 D",
             "2006 2006 9 1 0 1 0 0 S"
         ],
-        "Menominee": [
+        Menominee: [
             "1946 1946 3 0 8 2 0 1 D",
             "1946 1946 8 0 8 2 0 0 S",
             "1966 1966 3 0 8 2 0 1 D",
             "1966 1966 9 0 8 2 0 0 S"
         ],
-        "Moncton": [
+        Moncton: [
             "1933 1935 5 8 0 1 0 1 D",
             "1933 1935 8 8 0 1 0 0 S",
             "1936 1938 5 1 0 1 0 1 D",
@@ -3606,7 +3406,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1993 2006 3 1 0 0:1 0 1 D",
             "1993 2006 9 0 8 0:1 0 0 S"
         ],
-        "Uruguay": [
+        Uruguay: [
             "1923 1923 9 2 7 0 0 0:30 HS",
             "1924 1926 3 1 7 0 0 0",
             "1924 1925 9 1 7 0 0 0:30 HS",
@@ -3653,7 +3453,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2006 9999 9 1 0 2 0 1 S",
             "2007 9999 2 8 0 2 0 0"
         ],
-        "Mont": [
+        Mont: [
             "1917 1917 2 25 7 2 0 1 D",
             "1917 1917 3 24 7 0 0 0 S",
             "1919 1919 2 31 7 2:30 0 1 D",
@@ -3678,18 +3478,15 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1951 1956 8 0 8 2 0 0 S",
             "1957 1973 9 0 8 2 0 0 S"
         ],
-        "Bahamas": [
-            "1964 1975 9 0 8 2 0 0 S",
-            "1964 1975 3 0 8 2 0 1 D"
-        ],
-        "NYC": [
+        Bahamas: ["1964 1975 9 0 8 2 0 0 S", "1964 1975 3 0 8 2 0 1 D"],
+        NYC: [
             "1920 1920 2 0 8 2 0 1 D",
             "1920 1920 9 0 8 2 0 0 S",
             "1921 1966 3 0 8 2 0 1 D",
             "1921 1954 8 0 8 2 0 0 S",
             "1955 1966 9 0 8 2 0 0 S"
         ],
-        "Haiti": [
+        Haiti: [
             "1983 1983 4 8 7 0 0 1 D",
             "1984 1987 3 0 8 0 0 1 D",
             "1983 1987 9 0 8 0 0 0 S",
@@ -3700,7 +3497,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2012 9999 2 8 0 2 0 1 D",
             "2012 9999 10 1 0 2 0 0 S"
         ],
-        "Regina": [
+        Regina: [
             "1918 1918 3 14 7 2 0 1 D",
             "1918 1918 9 27 7 2 0 0 S",
             "1930 1934 4 1 0 0 0 1 D",
@@ -3719,7 +3516,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1959 1959 3 0 8 2 0 1 D",
             "1959 1959 9 0 8 2 0 0 S"
         ],
-        "Chile": [
+        Chile: [
             "1927 1932 8 1 7 0 0 1 S",
             "1928 1932 3 1 7 0 0 0",
             "1942 1942 5 1 7 4 1 0",
@@ -3758,7 +3555,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2012 9999 3 23 0 3 1 0",
             "2012 9999 8 2 0 4 1 1 S"
         ],
-        "DR": [
+        DR: [
             "1966 1966 9 30 7 0 0 1 D",
             "1967 1967 1 28 7 0 0 0 S",
             "1969 1973 9 0 8 0 0 0:30 HD",
@@ -3785,20 +3582,20 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1981 9999 2 0 8 2 2 1 S",
             "1996 9999 9 0 8 2 2 0"
         ],
-        "Swift": [
+        Swift: [
             "1957 1957 3 0 8 2 0 1 D",
             "1957 1957 9 0 8 2 0 0 S",
             "1959 1961 3 0 8 2 0 1 D",
             "1959 1959 9 0 8 2 0 0 S",
             "1960 1961 8 0 8 2 0 0 S"
         ],
-        "Hond": [
+        Hond: [
             "1987 1988 4 1 0 0 0 1 D",
             "1987 1988 8 0 8 0 0 0 S",
             "2006 2006 4 1 0 0 0 1 D",
             "2006 2006 7 1 1 0 0 0 S"
         ],
-        "Thule": [
+        Thule: [
             "1991 1992 2 0 8 2 0 1 D",
             "1991 1992 8 0 8 2 0 0 S",
             "1993 2006 3 1 0 2 0 1 D",
@@ -3806,7 +3603,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 9999 2 8 0 2 0 1 D",
             "2007 9999 10 1 0 2 0 0 S"
         ],
-        "Toronto": [
+        Toronto: [
             "1919 1919 2 30 7 23:30 0 1 D",
             "1919 1919 9 26 7 0 0 0 S",
             "1920 1920 4 2 7 2 0 1 D",
@@ -3832,7 +3629,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1951 1956 8 0 8 2 0 0 S",
             "1957 1973 9 0 8 2 0 0 S"
         ],
-        "Winn": [
+        Winn: [
             "1916 1916 3 23 7 0 0 1 D",
             "1916 1916 8 17 7 0 0 0 S",
             "1918 1918 3 14 7 2 0 1 D",
@@ -3858,7 +3655,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1966 2005 9 0 8 2 2 0 S",
             "1987 2005 3 1 0 2 2 1 D"
         ],
-        "Aus": [
+        Aus: [
             "1917 1917 0 1 7 0:1 0 1",
             "1917 1917 2 25 7 2 0 0",
             "1942 1942 0 1 7 2 0 1",
@@ -3867,7 +3664,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1943 1944 2 0 8 2 0 0",
             "1943 1943 9 3 7 2 0 1"
         ],
-        "AT": [
+        AT: [
             "1967 1967 9 1 0 2 2 1",
             "1968 1968 2 0 8 2 2 0",
             "1968 1985 9 0 8 2 2 1",
@@ -3888,7 +3685,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 2007 2 0 8 2 2 0",
             "2008 9999 3 1 0 2 2 0"
         ],
-        "NZAQ": [
+        NZAQ: [
             "1974 1974 10 3 7 2 2 1 D",
             "1975 1988 9 0 8 2 2 1 D",
             "1989 1989 9 8 7 2 2 1 D",
@@ -3899,7 +3696,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 9999 8 0 8 2 2 1 D",
             "2008 9999 3 1 0 2 2 0 S"
         ],
-        "ArgAQ": [
+        ArgAQ: [
             "1964 1966 2 1 7 0 0 0",
             "1964 1966 9 15 7 0 0 1 S",
             "1967 1967 3 2 7 0 0 0",
@@ -3908,7 +3705,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1974 1974 0 23 7 0 0 1 S",
             "1974 1974 4 1 7 0 0 0"
         ],
-        "ChileAQ": [
+        ChileAQ: [
             "1972 1986 2 9 0 3 1 0",
             "1974 1987 9 9 0 4 1 1 S",
             "1987 1987 3 12 7 3 1 0",
@@ -3933,7 +3730,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2012 9999 3 23 0 3 1 0",
             "2012 9999 8 2 0 4 1 1 S"
         ],
-        "Norway": [
+        Norway: [
             "1916 1916 4 22 7 1 0 1 S",
             "1916 1916 8 30 7 0 0 0",
             "1945 1945 3 2 7 2 2 1 S",
@@ -3942,7 +3739,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1959 1965 8 15 0 2 2 0",
             "1965 1965 3 25 7 2 2 1 S"
         ],
-        "RussiaAsia": [
+        RussiaAsia: [
             "1981 1984 3 1 7 0 0 1 S",
             "1981 1983 9 1 7 0 0 0",
             "1984 1991 8 0 8 2 2 0",
@@ -3953,7 +3750,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1993 1995 8 0 8 2 2 0",
             "1996 9999 9 0 8 2 2 0"
         ],
-        "Jordan": [
+        Jordan: [
             "1973 1973 5 6 7 0 0 1 S",
             "1973 1975 9 1 7 0 0 0",
             "1974 1977 4 1 7 0 0 1 S",
@@ -3984,7 +3781,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2006 2011 9 5 8 0 2 0",
             "2013 9999 9 5 8 0 2 0"
         ],
-        "Russia": [
+        Russia: [
             "1917 1917 6 1 7 23 0 1 MST",
             "1917 1917 11 28 7 0 0 0 MMT",
             "1918 1918 4 31 7 22 0 2 MDST",
@@ -4006,7 +3803,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1993 1995 8 0 8 2 2 0",
             "1996 2010 9 0 8 2 2 0"
         ],
-        "Iraq": [
+        Iraq: [
             "1982 1982 4 1 7 0 0 1 D",
             "1982 1984 9 1 7 0 0 0 S",
             "1983 1983 2 31 7 0 0 1 D",
@@ -4016,16 +3813,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1991 2007 3 1 7 3 2 1 D",
             "1991 2007 9 1 7 3 2 0 S"
         ],
-        "EUAsia": [
+        EUAsia: [
             "1981 9999 2 0 8 1 1 1 S",
             "1979 1995 8 0 8 1 1 0",
             "1996 9999 9 0 8 1 1 0"
         ],
-        "Azer": [
-            "1997 9999 2 0 8 4 0 1 S",
-            "1997 9999 9 0 8 5 0 0"
-        ],
-        "Lebanon": [
+        Azer: ["1997 9999 2 0 8 4 0 1 S", "1997 9999 9 0 8 5 0 0"],
+        Lebanon: [
             "1920 1920 2 28 7 0 0 1 S",
             "1920 1920 9 25 7 0 0 0",
             "1921 1921 3 3 7 0 0 1 S",
@@ -4051,13 +3845,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1993 1998 8 0 8 0 0 0",
             "1999 9999 9 0 8 0 0 0"
         ],
-        "Kyrgyz": [
+        Kyrgyz: [
             "1992 1996 3 7 0 0 2 1 S",
             "1992 1996 8 0 8 0 0 0",
             "1997 2005 2 0 8 2:30 0 1 S",
             "1997 2004 9 0 8 2:30 0 0"
         ],
-        "Mongol": [
+        Mongol: [
             "1983 1984 3 1 7 0 0 1 S",
             "1983 1983 9 1 7 0 0 0",
             "1985 1998 2 0 8 0 0 1 S",
@@ -4066,12 +3860,12 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2001 2006 8 6 8 2 0 0",
             "2002 2006 2 6 8 2 0 1 S"
         ],
-        "PRC": [
+        PRC: [
             "1986 1986 4 4 7 0 0 1 D",
             "1986 1991 8 11 0 0 0 0 S",
             "1987 1991 3 10 0 0 0 1 D"
         ],
-        "Syria": [
+        Syria: [
             "1920 1923 3 15 0 2 0 1 S",
             "1920 1923 9 1 0 2 0 0",
             "1962 1962 3 29 7 2 0 1 S",
@@ -4114,11 +3908,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2012 9999 2 5 8 0 0 1 S",
             "2009 9999 9 5 8 0 0 0"
         ],
-        "Dhaka": [
-            "2009 2009 5 19 7 23 0 1 S",
-            "2009 2009 11 31 7 23:59 0 0"
-        ],
-        "Zion": [
+        Dhaka: ["2009 2009 5 19 7 23 0 1 S", "2009 2009 11 31 7 23:59 0 0"],
+        Zion: [
             "1940 1940 5 1 7 0 0 1 D",
             "1942 1944 10 1 7 0 0 0 S",
             "1943 1943 3 1 7 2 0 1 D",
@@ -4208,7 +3999,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2027 2027 9 3 1 2 0 0 S",
             "2028 9999 9 2 0 2 0 0 S"
         ],
-        "EgyptAsia": [
+        EgyptAsia: [
             "1957 1957 4 10 7 0 0 1 S",
             "1957 1958 9 1 7 0 0 0",
             "1958 1958 4 1 7 0 0 1 S",
@@ -4216,7 +4007,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1959 1965 8 30 7 3 0 0",
             "1966 1966 9 1 7 3 0 0"
         ],
-        "Palestine": [
+        Palestine: [
             "1999 2005 3 15 5 0 0 1 S",
             "1999 2003 9 15 5 0 0 0",
             "2004 2004 9 1 7 1 0 0",
@@ -4236,7 +4027,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2012 9999 2 4 8 24 0 1 S",
             "2012 9999 8 21 5 1 0 0"
         ],
-        "HK": [
+        HK: [
             "1941 1941 3 1 7 3:30 0 1 S",
             "1941 1941 8 30 7 3:30 0 0",
             "1946 1946 3 20 7 3:30 0 1 S",
@@ -4257,7 +4048,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1979 1979 4 8 0 3:30 0 1 S",
             "1979 1979 9 16 0 3:30 0 0"
         ],
-        "Pakistan": [
+        Pakistan: [
             "2002 2002 3 2 0 0:1 0 1 S",
             "2002 2002 9 2 0 0:1 0 0",
             "2008 2008 5 1 7 0 0 1 S",
@@ -4265,11 +4056,11 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2009 2009 3 15 7 0 0 1 S",
             "2009 2009 10 1 7 0 0 0"
         ],
-        "NBorneo": [
+        NBorneo: [
             "1935 1941 8 14 7 0 0 0:20 TS",
             "1935 1941 11 14 7 0 0 0"
         ],
-        "Macau": [
+        Macau: [
             "1961 1962 2 16 0 3:30 0 1 S",
             "1961 1964 10 1 0 3:30 0 0",
             "1963 1963 2 16 0 0 0 1 S",
@@ -4285,7 +4076,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1978 1980 3 15 0 0 0 1 S",
             "1978 1980 9 15 0 0 0 0"
         ],
-        "Phil": [
+        Phil: [
             "1936 1936 10 1 7 0 0 1 S",
             "1937 1937 1 1 7 0 0 0",
             "1954 1954 3 12 7 0 0 1 S",
@@ -4293,7 +4084,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1978 1978 2 22 7 0 0 1 S",
             "1978 1978 8 21 7 0 0 0"
         ],
-        "Cyprus": [
+        Cyprus: [
             "1975 1975 3 13 7 0 0 1 S",
             "1975 1975 9 12 7 0 0 0",
             "1976 1976 4 15 7 0 0 1 S",
@@ -4304,18 +4095,18 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1979 1997 8 0 8 0 0 0",
             "1981 1998 2 0 8 0 0 1 S"
         ],
-        "ROK": [
+        ROK: [
             "1960 1960 4 15 7 0 0 1 D",
             "1960 1960 8 13 7 0 0 0 S",
             "1987 1988 4 8 0 0 0 1 D",
             "1987 1988 9 8 0 0 0 0 S"
         ],
-        "Shang": [
+        Shang: [
             "1940 1940 5 3 7 0 0 1 D",
             "1940 1941 9 1 7 0 0 0 S",
             "1941 1941 2 16 7 0 0 1 D"
         ],
-        "Taiwan": [
+        Taiwan: [
             "1945 1951 4 1 7 0 0 1 D",
             "1945 1951 9 1 7 0 0 0 S",
             "1952 1952 2 1 7 0 0 1 D",
@@ -4333,7 +4124,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1979 1995 8 0 8 0 0 0",
             "1996 9999 9 0 8 0 0 0"
         ],
-        "Iran": [
+        Iran: [
             "1978 1980 2 21 7 0 0 1 D",
             "1978 1978 9 21 7 0 0 0 S",
             "1979 1979 8 19 7 0 0 0 S",
@@ -4384,13 +4175,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2036 2037 2 21 7 0 0 1 D",
             "2036 2037 8 21 7 0 0 0 S"
         ],
-        "Japan": [
+        Japan: [
             "1948 1948 4 1 0 2 0 1 D",
             "1948 1951 8 8 6 2 0 0 S",
             "1949 1949 3 1 0 2 0 1 D",
             "1950 1951 4 1 0 2 0 1 D"
         ],
-        "Port": [
+        Port: [
             "1916 1916 5 17 7 23 0 1 S",
             "1916 1916 10 1 7 1 0 0",
             "1917 1917 1 28 7 23 2 1 S",
@@ -4450,7 +4241,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1981 9999 2 0 8 1 2 1 S",
             "1996 9999 9 0 8 1 2 0"
         ],
-        "Iceland": [
+        Iceland: [
             "1917 1918 1 19 7 23 0 1 S",
             "1917 1917 9 21 7 1 0 0",
             "1918 1918 10 16 7 1 0 0",
@@ -4469,7 +4260,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1950 1966 9 22 0 1 2 0",
             "1967 1967 9 29 7 1 2 0"
         ],
-        "Falk": [
+        Falk: [
             "1937 1938 8 0 8 0 0 1 S",
             "1938 1942 2 19 0 0 0 0",
             "1939 1939 9 1 7 0 0 1 S",
@@ -4483,7 +4274,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2001 2010 3 15 0 2 0 0",
             "2001 2010 8 1 0 2 0 1 S"
         ],
-        "AS": [
+        AS: [
             "1971 1985 9 0 8 2 2 1",
             "1986 1986 9 19 7 2 2 1",
             "1987 2007 9 0 8 2 2 1",
@@ -4500,13 +4291,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2008 9999 3 1 0 2 2 0",
             "2008 9999 9 1 0 2 2 1"
         ],
-        "AQ": [
+        AQ: [
             "1971 1971 9 0 8 2 2 1",
             "1972 1972 1 0 8 2 2 0",
             "1989 1991 9 0 8 2 2 1",
             "1990 1992 2 1 0 2 2 0"
         ],
-        "AN": [
+        AN: [
             "1971 1985 9 0 8 2 2 1",
             "1972 1972 1 27 7 2 2 0",
             "1973 1981 2 1 0 2 2 0",
@@ -4524,7 +4315,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2008 9999 3 1 0 2 2 0",
             "2008 9999 9 1 0 2 2 1"
         ],
-        "AW": [
+        AW: [
             "1974 1974 9 0 8 2 2 1",
             "1975 1975 2 1 0 2 2 0",
             "1983 1983 9 0 8 2 2 1",
@@ -4535,11 +4326,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 2009 2 0 8 2 2 0",
             "2007 2008 9 0 8 2 2 1"
         ],
-        "Holiday": [
-            "1992 1993 9 0 8 2 2 1",
-            "1993 1994 2 1 0 2 2 0"
-        ],
-        "LH": [
+        Holiday: ["1992 1993 9 0 8 2 2 1", "1993 1994 2 1 0 2 2 0"],
+        LH: [
             "1981 1984 9 0 8 2 0 1",
             "1982 1985 2 1 0 2 0 0",
             "1985 1985 9 0 8 2 0 0:30",
@@ -4555,7 +4343,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2008 9999 3 1 0 2 0 0",
             "2008 9999 9 1 0 2 0 0:30"
         ],
-        "AV": [
+        AV: [
             "1971 1985 9 0 8 2 2 1",
             "1972 1972 1 0 8 2 2 0",
             "1973 1985 2 1 0 2 2 0",
@@ -4571,7 +4359,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2008 9999 3 1 0 2 2 0",
             "2008 9999 9 1 0 2 2 1"
         ],
-        "Neth": [
+        Neth: [
             "1916 1916 4 1 7 0 0 1 NST",
             "1916 1916 9 1 7 0 0 0 AMT",
             "1917 1917 3 16 7 2 2 1 NST",
@@ -4593,7 +4381,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1945 1945 3 2 7 2 2 1 S",
             "1945 1945 8 16 7 2 2 0"
         ],
-        "Greece": [
+        Greece: [
             "1932 1932 6 7 7 0 0 1 S",
             "1932 1932 8 1 7 0 0 0",
             "1941 1941 3 7 7 0 0 1 S",
@@ -4614,12 +4402,12 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1980 1980 3 1 7 0 0 1 S",
             "1980 1980 8 28 7 0 0 0"
         ],
-        "SovietZone": [
+        SovietZone: [
             "1945 1945 4 24 7 2 0 2 M",
             "1945 1945 8 24 7 3 0 1 S",
             "1945 1945 10 18 7 2 2 0"
         ],
-        "Germany": [
+        Germany: [
             "1946 1946 3 14 7 2 2 1 S",
             "1946 1946 9 7 7 2 2 0",
             "1947 1949 9 1 0 2 2 0",
@@ -4629,7 +4417,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1948 1948 3 18 7 2 2 1 S",
             "1949 1949 3 10 7 2 2 1 S"
         ],
-        "Czech": [
+        Czech: [
             "1945 1945 3 8 7 2 2 1 S",
             "1945 1945 10 18 7 2 2 0",
             "1946 1946 4 6 7 2 2 1 S",
@@ -4638,7 +4426,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1948 1948 3 18 7 2 2 1 S",
             "1949 1949 3 9 7 2 2 1 S"
         ],
-        "Belgium": [
+        Belgium: [
             "1918 1918 2 9 7 0 2 1 S",
             "1918 1919 9 1 6 23 2 0",
             "1919 1919 2 1 7 23 2 1 S",
@@ -4674,7 +4462,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1946 1946 4 19 7 2 2 1 S",
             "1946 1946 9 7 7 2 2 0"
         ],
-        "Romania": [
+        Romania: [
             "1932 1932 4 21 7 0 2 1 S",
             "1932 1939 9 1 0 0 2 0",
             "1933 1939 3 2 0 0 2 1 S",
@@ -4693,7 +4481,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1981 9999 2 0 8 0 0 1 S",
             "1996 9999 9 0 8 0 0 0"
         ],
-        "Hungary": [
+        Hungary: [
             "1918 1918 3 1 7 3 0 1 S",
             "1918 1918 8 29 7 3 0 0",
             "1919 1919 3 15 7 3 0 1 S",
@@ -4715,11 +4503,8 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1957 1957 8 0 8 3 0 0",
             "1980 1980 3 6 7 1 0 1 S"
         ],
-        "Swiss": [
-            "1941 1942 4 1 1 1 0 1 S",
-            "1941 1942 9 1 1 2 0 0"
-        ],
-        "Denmark": [
+        Swiss: ["1941 1942 4 1 1 1 0 1 S", "1941 1942 9 1 1 2 0 0"],
+        Denmark: [
             "1916 1916 4 14 7 23 0 1 S",
             "1916 1916 8 30 7 23 0 0",
             "1940 1940 4 15 7 0 0 1 S",
@@ -4799,13 +4584,13 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1981 1989 9 23 0 1 1 0 GMT",
             "1990 1995 9 22 0 1 1 0 GMT"
         ],
-        "Finland": [
+        Finland: [
             "1942 1942 3 3 7 0 0 1 S",
             "1942 1942 9 3 7 0 0 0",
             "1981 1982 2 0 8 2 0 1 S",
             "1981 1982 8 0 8 3 0 0"
         ],
-        "Turkey": [
+        Turkey: [
             "1916 1916 4 1 7 0 0 1 S",
             "1916 1916 9 1 7 0 0 0",
             "1920 1920 2 28 7 0 0 1 S",
@@ -4861,7 +4646,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1991 1995 8 0 8 1 2 0",
             "1996 2006 9 0 8 1 2 0"
         ],
-        "Poland": [
+        Poland: [
             "1918 1919 8 16 7 2 2 0",
             "1919 1919 3 15 7 2 2 1 S",
             "1944 1944 3 3 7 2 2 1 S",
@@ -4883,7 +4668,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1961 1964 4 0 8 1 2 1 S",
             "1962 1964 8 0 8 1 2 0"
         ],
-        "Lux": [
+        Lux: [
             "1916 1916 4 14 7 23 0 1 S",
             "1916 1916 9 1 7 1 0 0",
             "1917 1917 3 28 7 23 0 1 S",
@@ -4908,7 +4693,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1928 1928 3 14 7 23 0 1 S",
             "1929 1929 3 20 7 23 0 1 S"
         ],
-        "Italy": [
+        Italy: [
             "1916 1916 5 3 7 0 2 1 S",
             "1916 1916 9 1 7 0 2 0",
             "1917 1917 3 1 7 0 2 1 S",
@@ -4946,7 +4731,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1978 1978 9 1 7 0 2 0",
             "1979 1979 8 30 7 0 2 0"
         ],
-        "Malta": [
+        Malta: [
             "1973 1973 2 31 7 0 2 1 S",
             "1973 1973 8 29 7 0 2 0",
             "1974 1974 3 21 7 0 2 1 S",
@@ -4955,7 +4740,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1975 1980 8 15 0 2 0 0",
             "1980 1980 2 31 7 2 0 1 S"
         ],
-        "France": [
+        France: [
             "1916 1916 5 14 7 23 2 1 S",
             "1916 1919 9 1 0 23 2 0",
             "1917 1917 2 24 7 23 2 1 S",
@@ -4999,18 +4784,15 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1976 1976 2 28 7 1 0 1 S",
             "1976 1976 8 26 7 1 0 0"
         ],
-        "Latvia": [
-            "1989 1996 2 0 8 2 2 1 S",
-            "1989 1996 8 0 8 2 2 0"
-        ],
-        "Bulg": [
+        Latvia: ["1989 1996 2 0 8 2 2 1 S", "1989 1996 8 0 8 2 2 0"],
+        Bulg: [
             "1979 1979 2 31 7 23 0 1 S",
             "1979 1979 9 1 7 1 0 0",
             "1980 1982 3 1 6 23 0 1 S",
             "1980 1980 8 29 7 1 0 0",
             "1981 1981 8 27 7 2 0 0"
         ],
-        "Albania": [
+        Albania: [
             "1940 1940 5 16 7 0 0 1 S",
             "1942 1942 10 2 7 3 0 0",
             "1943 1943 2 29 7 2 0 1 S",
@@ -5037,7 +4819,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1983 1983 9 1 7 0 0 0",
             "1984 1984 3 1 7 0 0 1 S"
         ],
-        "Austria": [
+        Austria: [
             "1920 1920 3 5 7 2 2 1 S",
             "1920 1920 8 13 7 2 2 0",
             "1946 1946 3 14 7 2 2 1 S",
@@ -5047,17 +4829,14 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1980 1980 3 6 7 0 0 1 S",
             "1980 1980 8 28 7 0 0 0"
         ],
-        "Mauritius": [
+        Mauritius: [
             "1982 1982 9 10 7 0 0 1 S",
             "1983 1983 2 21 7 0 0 0",
             "2008 2008 9 0 8 2 0 1 S",
             "2009 2009 2 0 8 2 0 0"
         ],
-        "WS": [
-            "2012 9999 8 0 8 3 0 1 D",
-            "2012 9999 3 1 0 4 0 0"
-        ],
-        "NZ": [
+        WS: ["2012 9999 8 0 8 3 0 1 D", "2012 9999 3 1 0 4 0 0"],
+        NZ: [
             "1927 1927 10 6 7 2 0 1 S",
             "1928 1928 2 4 7 2 0 0 M",
             "1928 1933 9 8 0 2 0 0:30 S",
@@ -5075,7 +4854,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 9999 8 0 8 2 2 1 D",
             "2008 9999 3 1 0 2 2 0 S"
         ],
-        "Chatham": [
+        Chatham: [
             "1974 1974 10 1 0 2:45 2 1 D",
             "1975 1975 1 0 8 2:45 2 0 S",
             "1975 1988 9 0 8 2:45 2 1 D",
@@ -5086,7 +4865,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2007 9999 8 0 8 2:45 2 1 D",
             "2008 9999 3 1 0 2:45 2 0 S"
         ],
-        "Vanuatu": [
+        Vanuatu: [
             "1983 1983 8 25 7 0 0 1 S",
             "1984 1991 2 23 0 0 0 0",
             "1984 1984 9 23 7 0 0 1 S",
@@ -5094,7 +4873,7 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "1992 1993 0 23 0 0 0 0",
             "1992 1992 9 23 0 0 0 1 S"
         ],
-        "Fiji": [
+        Fiji: [
             "1998 1999 10 1 0 2 0 1 S",
             "1999 2000 1 0 8 3 0 0",
             "2009 2009 10 29 7 2 0 1 S",
@@ -5103,25 +4882,25 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
             "2011 2011 2 1 0 3 0 0",
             "2012 9999 0 18 0 3 0 0"
         ],
-        "NC": [
+        NC: [
             "1977 1978 11 1 0 0 0 1 S",
             "1978 1979 1 27 7 0 0 0",
             "1996 1996 11 1 7 2 2 1 S",
             "1997 1997 2 2 7 2 2 0"
         ],
-        "Cook": [
+        Cook: [
             "1978 1978 10 12 7 0 0 0:30 HS",
             "1979 1991 2 1 0 0 0 0",
             "1979 1990 9 0 8 0 0 0:30 HS"
         ],
-        "Tonga": [
+        Tonga: [
             "1999 1999 9 7 7 2 2 1 S",
             "2000 2000 2 19 7 2 2 0",
             "2000 2001 10 1 0 2 0 1 S",
             "2001 2002 0 0 8 2 0 0"
         ]
     },
-    "links": {
+    links: {
         "America/Kralendijk": "America/Curacao",
         "America/Lower_Princes": "America/Curacao",
         "America/Marigot": "America/Guadeloupe",
@@ -5155,4 +4934,4 @@ define(["moment", "moment-timezone"], function (moment) { moment.tz.add({
         "Canada/Saskatchewan": "America/Regina",
         "Brazil/East": "America/Sao_Paulo"
     }
-}); });
+});
