@@ -5,6 +5,7 @@
 
 - Removed unused or obsolete patterns:
   - pat-carousel-legacy - use pat-carousel instead.
+  - pat-checked-flag - use pat-checklist instead.
 
 
 ## 4.0.0-dev - unreleased
