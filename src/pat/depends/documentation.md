@@ -1,10 +1,10 @@
 ## Description
 
-The *depends* pattern makes it possible to make visibility of content conditional on form data.
+The _depends_ pattern makes it possible to make visibility of content conditional on form data.
 
 ## Documentation
 
-The *depends* pattern makes it possible to make visibility of content
+The _depends_ pattern makes it possible to make visibility of content
 conditional on form data. A common use case is to only show parts of a
 form when relevant. Here is an example from a hypothetical pizza order
 form:
@@ -40,7 +40,7 @@ Another common use case is filtering a list based on some options:
 
 ### Dependency expressions
 
-Dependencies are specified via *dependency expression*. These are
+Dependencies are specified via _dependency expression_. These are
 expressions that specify when an item should be visible or not.
 
 The simplest form of a dependency expression is `<input name>` which
@@ -48,26 +48,26 @@ indicates that an input element with the given name (or id) must have a
 value (if it is a checkbox must be checked). You can also test for a
 specific value:
 
--   `<input name> = <value>`: indicates that an input element must have a
-    specific value. This is most useful when used to check which radio
-    button is checked.
--   `<input name> != <value>`: indicates that an input element must not
-    have a specific value. This is most useful when used to check if a
-    specific radio button is not checked.
--   `<input name> <= <value>`: indicates that an input element must have
-    a value less than or equal than the given value. This is most useful
-    for number and range inputs.
--   `<input name> < <value>`: indicates that an input element must have
-    a value less than the given value. This is most useful for number
-    and range inputs. inputs.
--   `<input name> > <value>`: indicates that an input element must have
-    a value greater than the given value. This is most useful for number
-    and range inputs. inputs.
--   `<input name> >= <value>`: indicates that an input element must have
-    a value greater than or equal than the given value. This is most
-    useful for number and range inputs.
--   `<input name> ~= <value>`: check if the value is a substring of the
-    current value of the input.
+- `<input name> = <value>`: indicates that an input element must have a
+  specific value. This is most useful when used to check which radio
+  button is checked.
+- `<input name> != <value>`: indicates that an input element must not
+  have a specific value. This is most useful when used to check if a
+  specific radio button is not checked.
+- `<input name> <= <value>`: indicates that an input element must have
+  a value less than or equal than the given value. This is most useful
+  for number and range inputs.
+- `<input name> < <value>`: indicates that an input element must have
+  a value less than the given value. This is most useful for number
+  and range inputs. inputs.
+- `<input name> > <value>`: indicates that an input element must have
+  a value greater than the given value. This is most useful for number
+  and range inputs. inputs.
+- `<input name> >= <value>`: indicates that an input element must have
+  a value greater than or equal than the given value. This is most
+  useful for number and range inputs.
+- `<input name> ~= <value>`: check if the value is a substring of the
+  current value of the input.
 
 You can also revert a test by putting the `not` keyword in front of it.
 Here are some examples:
@@ -126,16 +126,16 @@ has no value.
 
 The available actions are:
 
--  `show`: make an item's visibility conditional, based on the
-   dependencies. If the dependencies are not met the item will
-   be made invisible. In addition a CSS class of `hidden` or
-   `visible` will be set.
--  `enable`: disables items and adds a `disabled` class if the
-   dependencies are not met. Input elements are disabled by setting
-   their disabled property. Links are disabled by registered a
-   temporary event handler that blocks their default behaviour.
--  `both`: both the `enable` and `show` actions will be applied. Conversely, an
-   element will be both hidden and disabled when the condition is not met.
+- `show`: make an item's visibility conditional, based on the
+  dependencies. If the dependencies are not met the item will
+  be made invisible. In addition a CSS class of `hidden` or
+  `visible` will be set.
+- `enable`: disables items and adds a `disabled` class if the
+  dependencies are not met. Input elements are disabled by setting
+  their disabled property. Links are disabled by registered a
+  temporary event handler that blocks their default behaviour.
+- `both`: both the `enable` and `show` actions will be applied. Conversely, an
+  element will be both hidden and disabled when the condition is not met.
 
 ### Transitions
 
@@ -176,10 +176,10 @@ class will be set on the element.
 The depends can be configured through a `data-pat-depends` attribute.
 The available options are:
 
-| Field | Default | Description |
-| ----- | ------- | ----------- |
-| `condition` | | The dependency condition. |
-| `action` | `show` | Action to perform. One of `show`, `enable` or `both`. |
-| `transition` | `show` | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`. |
-| `effect-duration` | `fast` | Duration of transition. This is ignored if the transition is `none` or `css`. |
-| `effect-easing`  | `swing` | Easing to use for the transition. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
+| Field             | Default | Description                                                                                                                                                |
+| ----------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `condition`       |         | The dependency condition.                                                                                                                                  |
+| `action`          | `show`  | Action to perform. One of `show`, `enable` or `both`.                                                                                                      |
+| `transition`      | `show`  | Transition effect to use if the action is `show`. Must be one of `none`, `css`, `fade` or `slide`.                                                         |
+| `effect-duration` | `fast`  | Duration of transition. This is ignored if the transition is `none` or `css`.                                                                              |
+| `effect-easing`   | `swing` | Easing to use for the transition. This must be a known jQuery easing method. jQuery includes `swing` and `linear`, but more can be included via jQuery UI. |
