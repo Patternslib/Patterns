@@ -1,4 +1,3 @@
-
 ## Description
 
 Modal panels, also known as modal dialogs or popups, can be created using standard links or buttons with the `pat-modal` class.
@@ -16,9 +15,8 @@ This will load the page at `/status/server1`, extract the element with id `conte
 
 You can customise the behaviour of modals through options in the `data-pat-modal` attribute.
 
-
-| Property | Default value | Values | Description | Type |
-| ----- | --------| -------- | ------- | ----------- |
-| `class` | | | A class name to be applied to the modal. | String. |
-| `closing` | "close-button" | ["close-button", "outside"] | Show a "close" button for closing the modal, or let it be closed by clicking outside of the modal area. | One of the mutually exclusive available string values. |
-| `close-text` | "Close" | | Specify a custom string for the close button. | String. |
+| Property     | Default value   | Values                       | Description                                                                                             | Type                                                   |
+| ------------ | --------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `class`      |                 |                              | A class name to be applied to the modal.                                                                | String.                                                |
+| `closing`    |  "close-button" |  ["close-button", "outside"] | Show a "close" button for closing the modal, or let it be closed by clicking outside of the modal area. | One of the mutually exclusive available string values. |
+| `close-text` |  "Close"        |                              | Specify a custom string for the close button.                                                           | String.                                                |
