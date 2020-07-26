@@ -1,13 +1,13 @@
-.pat-auto-scale {   
-    -moz-transform-origin: left top;
-    -webkit-transform-origin: left top;
-    transform-origin: left top;
-    opacity: 0;
-    -moz-transition: opacity 0.2s;
-    -webkit-transition: opacity 0.2s;
-    transition: opacity 0.2s;
+.pat-auto-scale {
+  -moz-transform-origin: left top;
+  -webkit-transform-origin: left top;
+  transform-origin: left top;
+  opacity: 0;
+  -moz-transition: opacity 0.2s;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
 }
 
 .pat-auto-scale.scaled {
-    opacity: 1;
+  opacity: 1;
 }
