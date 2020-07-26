@@ -1,7 +1,9 @@
 ## Description
-Produce web content while only focussing on the content itself instead of on tags or tools. That's markdown. With the Patterns Markdown pattern you can easily disclose Markdown based content in a prototype or production environment. 
+
+Produce web content while only focussing on the content itself instead of on tags or tools. That's markdown. With the Patterns Markdown pattern you can easily disclose Markdown based content in a prototype or production environment.
 
 ## Documentation
+
 The markdown pattern can render [Markdown](http://en.wikipedia.org/wiki/Markdown) in a HTML page. This is done by putting markdown text in an element and adding a pat-markdown class.
 
     <pre class="pat-markdown">
@@ -41,7 +43,7 @@ injection pattern that it is loading markdown content through its
 
     <a href="content" class="pat-inject" data-pat-inject="target: #target; data-type: markdown">Show me the money!</a>
 
-You can also extract specific sections of your markdown source by specifying a 
+You can also extract specific sections of your markdown source by specifying a
 `source` option which points to a heading in your markdown source. For example
 if your markdown looks like this:
 
