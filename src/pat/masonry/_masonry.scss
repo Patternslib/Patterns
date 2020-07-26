@@ -1,17 +1,17 @@
 .pat-masonry {
-	position: relative;
+  position: relative;
 
-	.item {
-        opacity: 0;
+  .item {
+    opacity: 0;
 
-        -moz-transition: opacity 0.5s;
-        -webkit-transition: opacity 0.5s;
-        transition: opacity 0.5s;
-	}
+    -moz-transition: opacity 0.5s;
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+  }
 
-	&.masonry-ready {
-		.item {
-			opacity: 1;
-		}
-	}
+  &.masonry-ready {
+    .item {
+      opacity: 1;
+    }
+  }
 }
