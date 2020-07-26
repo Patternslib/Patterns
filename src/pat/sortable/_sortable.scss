@@ -1,42 +1,41 @@
 .pat-sortable {
-	
-	.sortable-item {
-		&.dragged {
-			color: #dedede;
-		}
+  .sortable-item {
+    &.dragged {
+      color: #dedede;
+    }
 
-		&.drop-target-above {
-			border-top: 3px solid #ff0000;
-		}
+    &.drop-target-above {
+      border-top: 3px solid #ff0000;
+    }
 
-		&.drop-target-below {
-			border-bottom: 3px solid #ff0000;
-		}
+    &.drop-target-below {
+      border-bottom: 3px solid #ff0000;
+    }
 
-		.handle {
-			background-color: #808080;
-			display: none;
-			float: right;
-			height: 1.5em;
-			// width: 1.5em;
-			margin: 0.1em;
-			cursor: move;
-			line-height: 1.5em;
-			text-decoration: none;
-			border-radius: 0.8em;
+    .handle {
+      background-color: #808080;
+      display: none;
+      float: right;
+      height: 1.5em;
+      // width: 1.5em;
+      margin: 0.1em;
+      cursor: move;
+      line-height: 1.5em;
+      text-decoration: none;
+      border-radius: 0.8em;
 
-			&:before {
-				content: "Drag";
-				// width: 100%;
-				text-align: center;
-				padding: 0 0.8em;
-				color: white;
-				display: inline-block;
-			}
-		}
+      &:before {
+        content: "Drag";
+        // width: 100%;
+        text-align: center;
+        padding: 0 0.8em;
+        color: white;
+        display: inline-block;
+      }
+    }
 
-		&:hover .handle {
-			display: inline-block;
-		}
-	}
+    &:hover .handle {
+      display: inline-block;
+    }
+  }
 }
