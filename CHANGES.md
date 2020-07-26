@@ -7,6 +7,7 @@
 - Upgrade to ES6 style imports and remove RequireJS.
 - Removed unused or obsolete patterns:
   - pat-carousel-legacy - use pat-carousel instead.
+  - pat-checked-flag - use pat-checklist instead.
 
 ### Features
 
