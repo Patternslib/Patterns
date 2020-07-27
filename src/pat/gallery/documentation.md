@@ -40,7 +40,7 @@ or an HTML5 `nav` container:
 
 The contents of the `title` attribute of an image will be used as the caption.
 
-If you just want individual images to be opened in the gallery overlay but want to disallow navigation between them you can also add the ``pat-gallery`` class directly to the link element:
+If you just want individual images to be opened in the gallery overlay but want to disallow navigation between them you can also add the `pat-gallery` class directly to the link element:
 
     <nav>
       <a class="pat-gallery" href="images/full/1.jpg"><img src="images/thumb/1.jpg"/></a>
