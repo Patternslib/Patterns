@@ -10,6 +10,7 @@
   - pat-checked-flag - use pat-checklist instead.
   - pat-chosen - use pat-autosuggest instead.
   - pat-edit-tinymce
+  - pat-placeholder - placeholder fully supported since IE10.
 
 ### Features
 
