@@ -9,6 +9,7 @@
   - pat-carousel-legacy - use pat-carousel instead.
   - pat-checked-flag - use pat-checklist instead.
   - pat-chosen - use pat-autosuggest instead.
+  - pat-edit-tinymce
 
 ### Features
 
