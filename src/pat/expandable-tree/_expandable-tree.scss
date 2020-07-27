@@ -4,43 +4,44 @@
   padding: 10px;
   margin-left: 0;
 
-    .current {
-        font-weight: bold;
-        display: inline-block;
-        color: red;
+  .current {
+    font-weight: bold;
+    display: inline-block;
+    color: red;
+  }
+
+  li {
+    li {
+      display: block;
+      padding-left: 30px;
+    }
+    span.toggle {
+      width: 1.2em;
+      height: 1.2em;
+      float: left;
+      font-size: 1em;
+      line-height: 1.2em;
     }
 
-	li {
-		li {
-		  display: block;
-		  padding-left: 30px;
-		}
-		span.toggle {
-		  width: 1.2em;
-		  height: 1.2em;
-		  float: left;
-		  font-size: 1em;
-		  line-height: 1.2em;
-		}
+    ul {
+      margin-bottom: 0;
+      margin-left: 0;
+      margin-top: 0;
+      padding: 0;
+      display: none;
+    }
+    &.open > ul,
+    a {
+      display: block;
+    }
+  }
 
-		ul {
-			margin-bottom: 0;
-			margin-left: 0;
-			margin-top: 0;
-			padding: 0;
-			display: none;
-		}
-		&.open > ul, a {
-			display: block;
-		}
-	}
+  span.toggle:before {
+    content: "▶";
+  }
 
-	span.toggle:before {
-	  content: "▶";
-	}
-
-	.open > span.toggle:before {
-	  content: "▼";
-	  display: inline-block;
-	}
+  .open > span.toggle:before {
+    content: "▼";
+    display: inline-block;
+  }
 }
