@@ -72,6 +72,7 @@ Error messages can also be overridden on a per-field basis, for example:
 | message-date      | The error message for date fields.        | This value must be a valid date | String |
 | message-datetime  | The error message for datetime fields.    | This value must be a valid date and time | String |
 | message-email     | The error message for email fields.       | This value must be a valid email address | String |
+| message-equality  | The error message for fields required to be equal | is not equal to %{attribute} | String|
 | message-integer   | The error message for integers.           | This value must be an integer | String |
 | message-max       | The error message for max number values.  | This value must be less than or equal to %{count} | String |
 | message-min       | The error message for min number values.  | This value must be greater than or equal to %{count} | String |
