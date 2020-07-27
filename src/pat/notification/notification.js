@@ -3,218 +3,232 @@
  *
  * Copyright 2013 Marko Durkovic
  */
-define([
-    "jquery",
-    "pat-registry",
-    "pat-logger",
-    "pat-parser",
-    "pat-inject"
-], function($, patterns, logger, Parser, inject) {
-    var log = logger.getLogger("notification"),
-        parser = new Parser("notification");
+import $ from "jquery";
+import Base from "../../core/base";
+import inject from "../inject/inject";
+import logging from "../../core/logging";
+import Parser from "../../core/parser";
 
-    parser.addArgument("type", "static", ["static", "banner"]);
-    parser.addArgument("healing", "5s");
-    parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
-    parser.addArgument("class");
-    parser.addArgument("close-text", 'Close');
+var log = logging.getLogger("notification"),
+    parser = new Parser("notification");
 
-    var _ = {
-        name: "notification",
-        trigger: ".pat-notification",
+parser.addArgument("type", "static", ["static", "banner"]);
+parser.addArgument("healing", "5s");
+parser.addArgument("controls", "icons", ["icons", "buttons", "none"]);
+parser.addArgument("class");
+parser.addArgument("close-text", "Close");
 
-        // this is generic functionality and should be moved to lib
-        parseUnit: function(value, unit) {
-            var unitRe = new RegExp(unit+"$"),
-                numericRe = new RegExp("^[0-9.]+");
+export default Base.extend({
+    name: "notification",
+    trigger: ".pat-notification",
 
-            if (!(unitRe.test(value))) {
-                throw "value " + value + "is not in unit " + unit;
+    // this is generic functionality and should be moved to lib
+    parseUnit(value, unit) {
+        var unitRe = new RegExp(unit + "$"),
+            numericRe = new RegExp("^[0-9.]+");
+
+        if (!unitRe.test(value)) {
+            throw "value " + value + "is not in unit " + unit;
+        }
+
+        var mod = value.replace(numericRe, "");
+        mod = mod.replace(unitRe, "");
+
+        value = parseFloat(value);
+        if (!mod.length) {
+            return value;
+        }
+
+        var factors = {
+            M: 1000000,
+            k: 1000,
+            m: 0.001,
+            u: 0.000001,
+        };
+
+        return value * factors[mod];
+    },
+
+    parseUnitOrOption(value, unit, options) {
+        if (options.indexOf(value) >= 0) {
+            return value;
+        }
+
+        return this.parseUnit(value, unit);
+    },
+
+    count: 0,
+
+    init($el, opts) {
+        if ($el.is("a,form")) {
+            this._init_inject($el, opts);
+        } else {
+            this._initNotification($el, opts);
+        }
+    },
+
+    _initNotification($el, opts) {
+        this.count++;
+
+        var options = parser.parse($el, opts);
+        var closetext = options.closeText;
+
+        $el = $el
+            .wrap("<div/>")
+            .parent()
+            .attr("id", "pat-notification-" + this.count)
+            .addClass("pat-notification-panel")
+            .on("mouseenter.pat-notification", this.onMouseEnter.bind(this))
+            .on("mouseleave.pat-notification", this.onMouseLeave.bind(this));
+
+        if (options["class"]) {
+            $el.addClass(options["class"]);
+        }
+
+        if (!Array.isArray(options.controls)) {
+            options.controls = [options.controls];
+        }
+
+        // add close icon if requested
+        if (options.controls.indexOf("icons") >= 0) {
+            $el.append(
+                "<button type='button' class='close-panel'>" +
+                    closetext +
+                    "</button>"
+            );
+        }
+
+        // add close button if requested
+        if (options.controls.indexOf("buttons") >= 0) {
+            $el.append(
+                "<div class='button-bar'><button type='button' class='close-panel'>" +
+                    closetext +
+                    "</button></div>"
+            );
+        }
+
+        if ($el.find(".close-panel").length) {
+            $el.on(
+                "click.pat-notification",
+                ".close-panel",
+                this.onClick.bind(this)
+            );
+        } else {
+            $el.on("click.pat-notification", this.onClick.bind(this));
+        }
+
+        if (options.type === "banner") {
+            var $container = $("#pat-notification-banners");
+            if (!$container.length) {
+                $container = $("<div/>")
+                    .attr("id", "pat-notification-banners")
+                    .addClass("pat-notification-container")
+                    .appendTo("body");
             }
+            $container.append($el);
+        }
 
-            var mod = value.replace(numericRe, "");
-            mod = mod.replace(unitRe, "");
+        var healing = this.parseUnitOrOption(options.healing, "s", [
+            "persistent",
+        ]);
 
-            value = parseFloat(value);
-            if (!mod.length) {
-                return value;
-            }
+        log.debug("Healing value is", healing);
+        $el.data("healing", healing);
 
-            var factors = {
-                M: 1000000,
-                k: 1000,
-                m: 0.001,
-                u: 0.000001
-            };
+        $el.animate({ opacity: 1 }, "fast", () => {
+            this.initRemoveTimer($el);
+        });
+    },
 
-            return value * factors[mod];
-        },
+    _init_inject($el) {
+        var inject_opts = {
+            target: "#pat-notification-temp",
+        };
+        $el.on("pat-inject-success.pat-notification", (e) => {
+            var $trigger = $(e.target),
+                cfg = parser.parse($trigger, { type: "banner" });
 
-        parseUnitOrOption: function(value, unit, options) {
-            if (options.indexOf(value) >= 0) {
-                return value;
-            }
+            var $el = $("#pat-notification-temp")
+                .contents()
+                .wrapAll("<div/>")
+                .parent()
+                .addClass("pat-notification");
 
-            return _.parseUnit(value, unit);
-        },
-
-        count: 0,
-
-        init: function($el, opts) {
-            return $el.each(function() {
-                var $el = $(this);
-
-                if ($el.is("a,form")) {
-                    _._init_inject($el, opts);
-                } else {
-                    _._initNotification($el, opts);
-                }
-                return $el;
-            });
-        },
-
-        _initNotification: function($el, opts) {
-            _.count++;
-
-            var options = parser.parse($el, opts);
-            var closetext = options.closeText;
-
-            $el = $el.wrap("<div/>").parent()
-                .attr("id", "pat-notification-" + _.count)
-                .addClass("pat-notification-panel")
-                .on("mouseenter.pat-notification", _.onMouseEnter)
-                .on("mouseleave.pat-notification", _.onMouseLeave);
-
-            if (options["class"]) {
-                $el.addClass(options["class"]);
-            }
-
-            if (!Array.isArray(options.controls)) {
-                options.controls = [ options.controls ];
-            }
-
-            // add close icon if requested
-            if (options.controls.indexOf("icons") >= 0) {
-                $el.append("<button type='button' class='close-panel'>" + closetext + "</button>");
-            }
-
-            // add close button if requested
-            if (options.controls.indexOf("buttons") >= 0) {
-                $el.append("<div class='button-bar'><button type='button' class='close-panel'>" + closetext + "</button></div>");
-            }
-
-            if ($el.find(".close-panel").length) {
-                $el.on("click.pat-notification", ".close-panel", _.onClick);
+            if ($trigger.is("a")) {
+                $trigger.after($el);
             } else {
-                $el.on("click.pat-notification", _.onClick);
+                $el.prependTo($trigger);
             }
+            this._initNotification($el, cfg);
 
-            if (options.type === "banner") {
-                var $container = $("#pat-notification-banners");
-                if (!$container.length) {
-                    $container = $("<div/>").attr("id", "pat-notification-banners").addClass("pat-notification-container").appendTo("body");
-                }
-                $container.append($el);
-            }
+            // XXX: Do this later as inject tries to access its target afterwards.
+            // This should be fixed in injection.
+            setTimeout(() => {
+                $("#pat-notification-temp").remove();
+            }, 0);
+        });
+        inject.init($el, inject_opts);
+    },
 
-            var healing = _.parseUnitOrOption(options.healing, "s", ["persistent"]);
+    initRemoveTimer($el) {
+        var healing = $el.data("healing");
+        if (healing !== "persistent") {
+            clearTimeout($el.data("timer"));
+            $el.data(
+                "timer",
+                setTimeout(() => {
+                    this.remove($el);
+                }, healing * 1000)
+            );
+        }
+    },
 
-            log.debug("Healing value is", healing);
-            $el.data("healing", healing);
+    onMouseEnter(e) {
+        $(e.target).data("persistent", true);
+    },
 
-            $el.animate({"opacity": 1}, "fast", function() {
-                _.initRemoveTimer($el);
-            });
-        },
+    onMouseLeave(e) {
+        var $this = $(e.target);
 
-        _init_inject: function($el) {
-            var inject_opts = {
-                target: "#pat-notification-temp"
-            };
-            $el.on("pat-inject-success.pat-notification", function() {
-                var $trigger = $(this),
-                    cfg = parser.parse($trigger, { type: "banner"});
+        $this.data("persistent", false);
+        this.initRemoveTimer($this);
+    },
 
-                var $el = $("#pat-notification-temp").contents().wrapAll("<div/>")
-                    .parent()
-                    .addClass("pat-notification");
+    onClick(e) {
+        var $this = $(e.delegateTarget);
 
-                if ($trigger.is("a")) {
-                    $trigger.after($el);
-                } else {
-                    $el.prependTo($trigger);
-                }
-                _._initNotification($el, cfg);
+        $this.data("persistent", false);
+        this.remove($this);
+    },
 
-                // XXX: Do this later as inject tries to access its target afterwards.
-                // This should be fixed in injection.
-                setTimeout(function() {
-                    $("#pat-notification-temp").remove();
-                }, 0);
-            });
-            inject.init($el, inject_opts);
-        },
+    remove($el) {
+        if ($el.data("persistent") || $el.data("removing")) {
+            return;
+        }
 
-        initRemoveTimer: function($el) {
-            var healing = $el.data("healing");
-            if (healing !== "persistent") {
-                clearTimeout($el.data("timer"));
-                $el.data("timer", setTimeout(function() {
-                    _.remove($el);
-                }, healing * 1000));
-            }
-        },
+        $el.data("removing", true);
 
-        onMouseEnter: function() {
-            $(this).data("persistent", true);
-        },
-
-        onMouseLeave: function() {
-            var $this = $(this);
-
-            $this.data("persistent", false);
-            _.initRemoveTimer($this);
-        },
-
-        onClick: function(event) {
-            var $this = $(event.delegateTarget);
-
-            $this.data("persistent", false);
-            _.remove($this);
-        },
-
-        remove: function($el) {
-            if ($el.data("persistent") || $el.data("removing")) {
-                return;
-            }
-
-            $el.data("removing", true);
-
-            $el.stop(true).animate({"opacity": 0}, {
-                step: function() {
+        $el.stop(true).animate(
+            { opacity: 0 },
+            {
+                step() {
                     if ($el.data("persistent")) {
                         // remove the timer and show notification
                         clearTimeout($el.data("timer"));
-                        $el.stop(true).animate({"opacity": 1});
+                        $el.stop(true).animate({ opacity: 1 });
                         $el.data("removing", false);
                         return false;
                     }
                 },
 
-                complete: function() {
+                complete() {
                     var $this = $(this);
                     $this.off(".pat-notification");
-                    $this.slideUp("slow", function() {
+                    $this.slideUp("slow", () => {
                         $this.remove();
                     });
-                }
-            });
-        }
-    };
-
-    patterns.register(_);
-    return _;
+                },
+            }
+        );
+    },
 });
-
-// jshint indent: 4, browser: true, jquery: true, quotmark: double
-// vim: sw=4 expandtab
