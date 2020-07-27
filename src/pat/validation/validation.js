@@ -168,7 +168,7 @@ define([
             }
 
             // Handle fields equality
-            if (opts.equality && input.value) {
+            if (opts.equality) {
                 this.$el.find("[name=" + opts.equality + "]").each(
                     function (idx, el) {
                         if (input.value !== el.value) {
