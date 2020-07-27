@@ -88,7 +88,6 @@ all-css:: css
 	@$(SASS) -I . -I _sass src/pat/switch/_switch.scss src/pat/switch/switch.css
 	@$(SASS) -I . -I _sass src/pat/toggle/_toggle.scss src/pat/toggle/toggle.css
 	@$(SASS) -I . -I _sass src/pat/tooltip/_tooltip.scss src/pat/tooltip/tooltip.css
-	@$(SASS) -I . -I _sass src/pat/validate/_validate.scss src/pat/validate/validate.css
 	@$(SASS) -I . -I _sass src/pat/zoom/_zoom.scss src/pat/zoom/zoom.css
 	@echo "Done. Each pattern now has a CSS file."
 
