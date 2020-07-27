@@ -4,19 +4,15 @@
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  * Copyright 2014-2015 Syslab.com GmBH  - JC Brand
  */
-define([
-    "jquery",
-    "underscore",
-    "pat-parser",
-    "pat-base",
-    "pat-utils",
-    "moment",
-    "validate",
-    "modernizr"
-], function($, _, Parser, Base, utils, moment, validate, Modernizr) {
-    "use strict";
-    validate.moment = moment;
-    var parser = new Parser("validation");
+import $ from "jquery";
+import _ from "underscore";
+import Parser from "../../core/parser";
+import Base from "../../core/base";
+import utils from "../../core/utils";
+import moment from "moment";
+import validate from "validate.js";
+
+const parser = new Parser("validation");
     parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
     parser.addArgument("message-date", "This value must be a valid date");
     parser.addArgument("message-datetime", "This value must be a valid date and time");
@@ -32,7 +28,8 @@ define([
     parser.addArgument("not-before");
     parser.addArgument("equality");
     parser.addArgument("type", undefined, ["integer", "date", "datetime"]);
-    var VALIDATION_TYPE_MAP = {
+
+const VALIDATION_TYPE_MAP = {
         'required': 'presence',
         'email': 'email',
         'datetime': 'datetime',
@@ -41,6 +38,7 @@ define([
 
     // Before using it we must add the parse and format functions
     // Here is a sample implementation using moment.js
+validate.moment = moment;
     validate.extend(validate.validators.datetime, {
       // The value is guaranteed not to be null or undefined but otherwise it
       // could be anything.
@@ -54,7 +52,7 @@ define([
       }
     });
 
-    return Base.extend({
+export default Base.extend({
         name: "validation",
         trigger: "form.pat-validation",
 
@@ -213,7 +211,7 @@ define([
             // empty ``value``.
             var type = input.getAttribute('type');  // we need the raw type here
             if (
-                Modernizr.inputtypes.date &&
+            utils.checkInputSupport('date', 'wrong value') &&
                 type.indexOf('date') === 0 &&
                 typeof input.validity.badInput !== "undefined"
             ) {
@@ -414,4 +412,3 @@ define([
             $position.trigger("pat-update", {pattern: "validation"});
         }
     });
-});
