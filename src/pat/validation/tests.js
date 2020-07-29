@@ -263,5 +263,33 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($el.find('em.warning').length).toBe(0);
             expect($el.find('#form-buttons-create')[0].disabled).toBe(false);
         });
+
+        it("can check for password confirmation", function() {
+            var $el = $(
+                '<form class="pat-validation" data-pat-validation="disable-selector:#form-buttons-create">'+
+                '  <input type="password" name="password">' +
+                '  <input type="password" name="password-confirmation"' +
+                '         data-pat-validation="equality: password; message-equality: I would like this to be equal to %{attribute}"' +
+                '  > ' +
+                '  <button id="form-buttons-create" type="submit">Submit</button>' +
+                '</form>'
+            );
+            $('#lab').append($el);
+            var $password = $el.find('[name=password]');
+            var $password_confirmation = $el.find('[name=password-confirmation]');
+            $password.val('foo');
+            $password_confirmation.val('bar');
+            pattern.init($el);
+            $password_confirmation.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("I would like this to be equal to password");
+            expect($el.find('#form-buttons-create')[0].disabled).toBe(true);
+
+            $password_confirmation.val('foo');
+            $password_confirmation.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+            expect($el.find('#form-buttons-create')[0].disabled).toBe(false);
+        });
+
     });
 });

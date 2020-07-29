@@ -26,8 +26,11 @@ define([
     parser.addArgument("message-min", "This value must be greater than or equal to %{count}");
     parser.addArgument("message-number", "This value must be a number");
     parser.addArgument("message-required", "This field is required");
+    parser.addArgument("message-equality", "is not equal to %{attribute}");
+    parser.addArgument("message-confirm", "This field is required");
     parser.addArgument("not-after");
     parser.addArgument("not-before");
+    parser.addArgument("equality");
     parser.addArgument("type", undefined, ["integer", "date", "datetime"]);
     var VALIDATION_TYPE_MAP = {
         'required': 'presence',
@@ -163,6 +166,18 @@ define([
                     constraint.numericality.onlyInteger = true;
                 }
             }
+
+            // Handle fields equality
+            if (opts.equality) {
+                this.$el.find("[name=" + opts.equality + "]").each(
+                    function (idx, el) {
+                        if (input.value !== el.value) {
+                            constraint.equality = {'attribute': opts.equality, 'message': '^'+opts.message["equality"]};
+                        }
+                    }
+                );
+            }
+
             // Set local validation messages.
             _.each(Object.keys(VALIDATION_TYPE_MAP), function (type) {
                 var c = constraints[name][VALIDATION_TYPE_MAP[type]];
