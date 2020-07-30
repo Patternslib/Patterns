@@ -96,7 +96,8 @@
     "serialize-javascript": "4.0.0"
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
+    "postshrinkwrap": "npx --quiet npm-force-resolutions && npm install --no-package-lock --no-audit --no-fund --no-progress --silent",
+    "xpreinstall": "npx npm-force-resolutions",
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
