@@ -10,6 +10,7 @@
   - pat-edit-tinymce
   - pat-placeholder - placeholder fully supported since IE10.
   - pat-slideshow-builder
+  - simplePlaceholder from jquery-ext.
 
 
 ## 4.0.0-dev - unreleased
