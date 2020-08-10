@@ -93,40 +93,37 @@ define([
         setLocalDateConstraints: function (input, opts, constraints) {
             /* Set the relative date constraints, i.e. not-after and not-before, as well as custom messages.
              */
-            var name = input.getAttribute('name').replace(/\./g, '\\.'),
-                type = this.getFieldType(input),
-                c = constraints[name][type];
+            var name = input.getAttribute('name').replace(/\./g, '\\.');
+            var type = this.getFieldType(input);
+            var c = constraints[name][type];
 
             if (!c || typeof opts == "undefined") {
                 return constraints;
             }
 
             _.each(['before', 'after'], function (relation) {
-                var isDate = validate.moment.isDate,
-                    relative = opts.not && opts.not[relation] || undefined,
-                    arr, constraint, $ref;
+                var relative = opts.not ? opts.not[relation] : undefined;
+                var $ref;
                 if (typeof relative === "undefined") {
                     return;
                 }
-                constraint = relation === "before" ? 'earliest' : 'latest';
-                if (isDate(relative)) {
-                    c[constraint] = relative;
+                var relative_constraint = relation === "before" ? 'earliest' : 'latest';
+                if (validate.moment.isDate(relative)) {
+                    c[relative_constraint] = relative;
                 } else {
                     try {
                         $ref = $(relative);
                     } catch (e) {
                         console.log(e);
                     }
-                    arr = $ref.data('pat-validation-refs') || [];
+                    var arr = $ref.data('pat-validation-refs') || [];
                     if (!_.contains(arr, input)) {
                         arr.unshift(input);
                         $ref.data('pat-validation-refs', arr);
                     }
-                    c[constraint] = $ref.val();
-                    if (! $ref.val()) {
-                        // do not validate empty reference dates
-                        constraints[name][type] = false;
-                        return;
+                    if ($ref && $ref.val()) {
+                        // relative constraint validation
+                        c[relative_constraint] = $ref.val();
                     }
                 }
             });
@@ -211,16 +208,18 @@ define([
             // Returns true if a date check should be done.
             // Don't check if there is no input - this should be handled by
             // the ``required`` attribute.
-            // In case of HTML5 ``date``/``datetime-local`` support we
-            // implicitly check this if the input is ``badInput``, which is
-            // only set in case of an invalid date but not on empty values.
-            // Note that in case of HTML5 ``date``/``datetime-local`` support
-            // the value is empty on invalid input.
+            // In case of HTML5 date/datetime-local support we also have to
+            // check for ``badInput`` as invalid date input will result in an
+            // empty ``value``.
             var type = input.getAttribute('type');  // we need the raw type here
-            if (Modernizr.inputtypes.date && type.indexOf('date') === 0) {
-                // Do the date check if the input is invalid (actually
-                // double-checking here - HTML5 and validate.js).
-                return input.validity.badInput;
+            if (
+                Modernizr.inputtypes.date &&
+                type.indexOf('date') === 0 &&
+                typeof input.validity.badInput !== "undefined"
+            ) {
+                // Do the date check if the input is invalid or not missing
+                // (actually double-checking here - HTML5 and validate.js).
+                return input.validity.badInput || !!input.value;
             } else {
                 // Do the date check if input is not empty (Safari has yet no
                 // date support at all)
