@@ -7,6 +7,8 @@ Features
 - pat-gallery: Allow adding images directly to the gallery.
 - pat-validation: Allow for HTML5 style ``required`` attributes without a value.
 - pat-validation: Added the possibility to check for fields equality
+### Features
+
 - pat-validation: Dont use :input jquery extension for better performance
 - pat-validation: Update validate.js to 0.13.1
 - Prevent "Modernizr.inputtypes is undefined" error
@@ -36,6 +38,8 @@ Features
 - Add ``utils.getCSSValue`` for retrieving CSS property values for DOM nodes.
 - Add configurable scrolling behavior to pat-inject.
 - Add ``webpack-visualizer-plugin`` for analyzation of generated bundles.
+- Fix ``pat-auto-scale`` not correctly rescaling after fullscreen changes. Fixes #673
+- Use babel for all files, allowing latest JavaScript features everywhere.
 - Add ``pat-fullscreen`` pattern to allow any element to be displayed in fullscreen-mode.
   A second pattern ``pat-fullscreen-close`` which is triggered on ``close-fullscreen`` CSS class allows for closing the fullscreen with custom buttons.
 - Runs now on jQuery 3.
@@ -45,11 +49,11 @@ Features
 - Fixed an issue with pat-inject scroll that would scroll too much (#694)
 - Modal: Add example on how to open a modal on a button via a proxy anchor element.
 
-Fixes
-~~~~~
+### Fixes
 
 - Fix ``pat-auto-suggest`` to not show a placeholder if none is defined. Fixes #675
 - Fix ``pat-auto-scale`` not correctly rescaling after fullscreen changes. Fixes #673
+- Update build infrastructure and packages.
 - Fix heisenbug with pat-scroll on testruns.
 - Fix minimum input length default so that you can display select results already on click.
 - Fix ``pat-validation`` to not skip ``pat-autosuggest`` inputs even though they're
@@ -58,16 +62,14 @@ Fixes
 
 ## 3.0.0a5 - unreleased
 
-Features
-~~~~~~~~
+### Features
 
 - Added support for a push subsystem using reethinkdb and horizon.
   That allows us to trigger an injection by sending a push_marker to all connected browsers.
   (This is still in an evaluation state)
 - pat-forward: understand the trigger auto option
 
-Fixes
-~~~~~
+### Fixes
 
 - pat-date-picker, pat-datetime-picker: Support the `first-day` parameter (#647)
 - pat-notification: fix how the close button is rendered (#639)
@@ -80,8 +82,7 @@ Fixes
 
 ## 3.0.0a1 - unreleased
 
-Breaking Changes
-~~~~~~~~~~~~~~~~
+### Breaking Changes
 
 +++Big breaking upgrade changing the build system. Read the [version 2 to 3 upgrade guide](./UPGRADE-2-TO-3.md) for details.+++
 
@@ -92,6 +93,7 @@ Breaking Changes
 - Testrunner is now karma 1.7
 - Coverage reports are generated
 - Removed deprecated packages
+
   - jquery.tinymce
     Very big and unmaintained. We have never advertised it so we don't include it anymore to clean up.
   - requirejs
@@ -137,27 +139,23 @@ Breaking Changes
 ## 2.2 - unreleased
 
 - pat-masonry:
-  - Re-Layout on ``load`` events emitted on ``img`` nodes within the masonry scope.
-  - Do not depend on ``imagesloaded``.
+  - Re-Layout on `load` events emitted on `img` nodes within the masonry scope.
+  - Do not depend on `imagesloaded`.
   - Update masonry to version 4.2.0.
   - Align options with new version:
-    - Add options ``is-horizontal-order``, ``is-percent-position`` and ``is-resize``.
-    - Remove options ``visible-style`` and ``hidden-style``.
-    - Add Aliases from v4 (no ``is-*``) to v3 names (with ``is-`` for booleans), while keeping the v3 names. The patternslib parser does boolean casting for ``is-*`` options.
+    - Add options `is-horizontal-order`, `is-percent-position` and `is-resize`.
+    - Remove options `visible-style` and `hidden-style`.
+    - Add Aliases from v4 (no `is-*`) to v3 names (with `is-` for booleans), while keeping the v3 names. The patternslib parser does boolean casting for `is-*` options.
 - pat-datetime-picker: Add new pattern for setting the date and time.
-- pat-date-picker: Remove the dependency on ``moment-timezone-data`` - it's not used and there is no use in a date picker anyways.
-
-
+- pat-date-picker: Remove the dependency on `moment-timezone-data` - it's not used and there is no use in a date picker anyways.
 
 ## 2.1.2 - Aug. 29, 2017
 
 - pat-modal: Followup fix for the issue where chrome is so quick that a modal is closed before the actual injection call can be sent. Now modals can be closed again. (pilz)
 
-
 ## 2.1.1 - Aug. 28, 2017
 
-Fixes
-~~~~~
+### Fixes
 
 - pat-modal: Only add a panel-header to the first panel-content element within pat-modal, not everyone. Otherwise this may collide with pat-collapsible which also creates a panel-content class further down the DOM (pilz)
 - pat-modal: Fix an issue where chrome is so quick that a modal is closed before the actual injection call can be sent.
