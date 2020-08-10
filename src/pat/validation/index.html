@@ -9,16 +9,16 @@
   <body>
       <form class="pat-validation vertical" data-pat-validation="disable-selector: .pat-button" method="get" action="#" novalidate>
           <fieldset class="horizontal">
-            <label>Full name <input type="text" name="name" required="required"/></label>
+            <label>Full name <input type="text" name="name" required/></label>
 
-            <label>Age <input type="number" name="age" min="16" max="65" required="required"/></label>
+            <label>Age <input type="number" name="age" min="16" max="65" required/></label>
 
             <fieldset class="group pat-checklist radio">
               <legend>Favourite colour</legend>
-              <label><input name="colour" required="required" type="radio" value="blue"/> Blue</label>
-              <label><input name="colour" required="required" type="radio" value="pink"/> Pink</label>
-              <label><input name="colour" required="required" type="radio" value="red"/> Red</label>
-              <label><input name="colour" required="required" type="radio" value="yellow"/> yellow</label>
+              <label><input name="colour" required type="radio" value="blue"/> Blue</label>
+              <label><input name="colour" required type="radio" value="pink"/> Pink</label>
+              <label><input name="colour" required type="radio" value="red"/> Red</label>
+              <label><input name="colour" required type="radio" value="yellow"/> yellow</label>
             </fieldset>
 
             <label>Planning start
@@ -43,7 +43,7 @@
             <label>Required date
                 <input
                     type="date"
-                    required="required"
+                    required
                     name="measure.date-required:records"
                     id="date-required"
                     />

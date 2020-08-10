@@ -27,6 +27,16 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($el.find('em.warning').length).toBe(0);
         });
 
+        it("validates required inputs with HTML5 required attribute style", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                '<input type="text" name="name" required>'+
+                '</form>');
+            pattern.init($el);
+            $el.find(':input').trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+        });
+
         it("can show custom validation messages", function() {
             var $el = $(
                 '<form class="pat-validation" data-pat-validation="message-required: I\'m sorry Dave, I can\'t let you do that.">'+
