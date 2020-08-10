@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 5.0.0-dev - unreleased
+
+- Removed unused or obsolete patterns:
+  - pat-carousel-legacy - use pat-carousel instead.
+
+
 ## 4.0.0-dev - unreleased
 
 Features
