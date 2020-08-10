@@ -5,5 +5,3 @@ node_js:
 before_script: travis_retry make stamp-yarn
 script: make check
 sudo: required
-addons:
-  chrome: beta
