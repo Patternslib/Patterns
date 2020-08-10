@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@stomp/stompjs": "^5.4.4",
-    "anythingslider": "git+https://github.com/fulv/AnythingSlider.git",
     "core-js": "3",
     "fullcalendar": "^2.9.1",
     "google-code-prettify": "^1.0.5",
