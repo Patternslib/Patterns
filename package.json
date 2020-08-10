@@ -17,92 +17,112 @@
   "dependencies": {
     "@stomp/stompjs": "^5.4.4",
     "anythingslider": "git+https://github.com/fulv/AnythingSlider.git",
-    "fullcalendar": "2.9.1",
-    "google-code-prettify": "1.0.5",
-    "imagesloaded": "4.1.4",
-    "intersection-observer": "^0.5.1",
-    "jquery": "3.5.0",
-    "jquery-jcrop": "0.9.13",
-    "jquery-placeholder": "2.0.7",
-    "jquery.browser": "0.1.0",
+    "core-js": "3",
+    "fullcalendar": "^2.9.1",
+    "google-code-prettify": "^1.0.5",
+    "imagesloaded": "^4.1.4",
+    "intersection-observer": "^0.7.0",
+    "jquery": "^3.5.1",
+    "jquery-jcrop": "^0.9.13",
+    "jquery-placeholder": "^2.3.1",
     "logging": "git+https://github.com/Patternslib/logging.git",
-    "masonry-layout": "4.2.0",
-    "modernizr": "^3.11.3",
-    "moment": "~2.27.0",
-    "moment-timezone": "~0.5.31",
-    "photoswipe": "4.1.3",
+    "masonry-layout": "^4.2.2",
+    "moment": "^2.27.0",
+    "moment-timezone": "^0.5.31",
+    "photoswipe": "^4.1.3",
     "pikaday": "^1.8.0",
-    "prefixfree": "1.0.0",
+    "prefixfree": "^1.0.0",
     "promise-polyfill": "^8.1.0",
+    "sass": "^1.26.5",
     "screenfull": "^5.0.0",
-    "select2": "3.5.1",
+    "select2": "^3.5.1",
     "showdown": "^1.9.1",
-    "showdown-prettify": "1.3.0",
-    "slick-carousel": "1.8.1",
+    "showdown-prettify": "^1.3.0",
+    "slick-carousel": "^1.8.1",
     "slides": "git+https://github.com/Patternslib/slides.git",
-    "spectrum-colorpicker": "1.8.0",
+    "spectrum-colorpicker": "^1.8.0",
     "stickyfilljs": "git+https://github.com/syslabcom/stickyfill.git",
-    "tippy.js": "5.2.0",
-    "underscore": "1.9.1",
+    "tippy.js": "^6.2.3",
+    "underscore": "^1.9.1",
     "url-polyfill": "^1.1.9",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
-    "babel-loader": "8.0.2",
-    "css-loader": "^3.0.0",
-    "duplicate-package-checker-webpack-plugin": "^3.0.0",
+    "@babel/preset-env": "^7.9.6",
+    "@testing-library/jest-dom": "^5.5.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.3",
+    "eslint": "^7.0.0",
     "expose-loader": "^0.7.5",
     "imports-loader": "^0.8.0",
-    "jasmine": "^3.4.0",
-    "jasmine-core": "^3.4.0",
-    "jasmine-webpack-plugin": "^0.1.1",
-    "jshint": "^2.10.2",
-    "karma": "^5.1.0",
-    "karma-babel-preprocessor": "^8.0.0-beta.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-coverage": "^1.1.2",
-    "karma-edge-launcher": "^0.4.2",
-    "karma-firefox-launcher": "^1.1.0",
-    "karma-ie-launcher": "^1.0.0",
-    "karma-jasmine": "^2.0.1",
-    "karma-jasmine-html-reporter": "^1.4.2",
-    "karma-mocha-reporter": "^2.2.5",
-    "karma-opera-launcher": "^1.0.0",
-    "karma-safari-launcher": "^1.0.0",
-    "karma-sourcemap-loader": "0.3.7",
-    "karma-webpack": "^4.0.0-rc.5",
-    "node-sass": "^4.12.0",
-    "npm-force-resolutions": "0.0.3",
-    "pegjs": "0.7.0",
-    "puppeteer": "1.14.0",
-    "style-loader": "^0.23.1",
-    "text-loader": "0.0.1",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.3.1",
-    "webpack-jasmine-html-runner-plugin": "^0.9.0",
-    "webpack-merge": "^4.1.2",
-    "webpack-modernizr-loader": "^5.0.0",
-    "webpack-visualizer-plugin": "^0.1.11",
-    "wrapper-webpack-plugin": "^2.0.0"
+    "jest": "^26.0.1",
+    "jest-watch-typeahead": "^0.6.0",
+    "raw-loader": "^4.0.1",
+    "regenerator-runtime": "^0.13.5",
+    "style-loader": "^1.2.1",
+    "terser-webpack-plugin": "^2.3.6",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2",
+    "webpack-visualizer-plugin": "^0.1.11"
   },
   "resolutions": {
     "clean-css": "4.2.3",
-    "lodash": "4.17.19",
+    "jquery": "3.5.1",
+    "lodash": "4.17.20",
     "serialize-javascript": "4.0.0"
   },
   "scripts": {
-    "postshrinkwrap": "npx --quiet npm-force-resolutions && npm install --no-package-lock --no-audit --no-fund --no-progress --silent",
-    "xpreinstall": "npx npm-force-resolutions",
     "start": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js --open",
     "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
     "showwhy": "NODE_ENV=production webpack --config webpack/prod.config.js --display-modules --display-reasons",
-    "testonce": "karma start webpack/karma.config.js --single-run",
-    "test": "karma start webpack/karma.config.js"
+    "test": "jest --watch",
+    "testonce": "jest"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "browser": true,
+      "node": true,
+      "jest": true
+    },
+    "parser": "babel-eslint",
+    "rules": {}
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "useBuiltIns": "entry",
+          "corejs": 3
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "rootDir": "./src",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.js"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "homepage": "https://gitub.com/Patternslib/Patterns",
   "docs": "http://patternslib.com/",
@@ -115,11 +135,6 @@
     {
       "name": "Cornelis Kolbach",
       "url": "http://cornae.com"
-    },
-    {
-      "name": "JC Brand",
-      "email": "jc@opkode.com",
-      "url": "https://www.opkode.com"
     }
   ]
 }
