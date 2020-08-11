@@ -194,7 +194,7 @@ define([
                 constraints = {};
             if (!name) { return; }
             constraints[name.replace(/\./g, '\\.')] = {
-                'presence': input.getAttribute('required') ? { 'message': '^'+this.options.message.required, allowEmpty: false } : false,
+                'presence': input.hasAttribute('required') ? { 'message': '^'+this.options.message.required, allowEmpty: false } : false,
                 'email': type === 'email' ? { 'message': '^'+this.options.message.email } : false,
                 'numericality': type === 'number' ? true : false,
                 'datetime': type === 'datetime' && this.doDateCheck(input) ? { 'message': '^'+this.options.message.datetime } : false,
