@@ -127,57 +127,107 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
             expect($el.find('em.warning').text()).toBe("Slegs heelgetalle");
         });
 
-        // Unfortunately date validation cannot be tested using the Constraints
-        // API. ``ValidityState`` information is not updated after
-        // programmatically setting values.
-        // See whole discussion here: https://twitter.com/thetetet/status/1285239806205755393
-        // and: https://stackoverflow.com/questions/53226031/html-input-validity-not-checked-when-value-is-changed-by-javascript
+        // Using ``type="text"`` for date validation as Constraints API
+        // ``ValidityState`` information is not updated after programmatically
+        // setting values.
+        // See: https://twitter.com/thetetet/status/1285239806205755393
 
-        //it("validates dates", function() {
-        //    var $el = $(
-        //        '<form class="pat-validation">'+
-        //            '<input type="date" name="date">'+
-        //        '</form>');
-        //    var input = $el[0].querySelector('input');
-        //    input.value = '2000-02-30';
-        //    var pat = pattern.init($el);
-        //    pat.validateForm();
-        //    debugger;
-        //    expect($el.find('em.warning').length).toBe(1);
-        //    expect($el.find('em.warning').text()).toBe("This value must be a valid date");
+        it("validates dates", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="text" name="date" data-pat-validation="type: date">'+
+                '</form>');
 
-        //    $el = $(
-        //        '<form class="pat-validation">'+
-        //            '<input type="date" name="date">'+
-        //        '</form>');
-        //    input = $el[0].querySelector('input');
-        //    input.value = '2000-02-28';
-        //    pat = pattern.init($el);
-        //    pat.validateForm();
-        //    expect($el.find('em.warning').length).toBe(0);
-        //});
+            var $input = $el.find(':input');
+            $input.val('2000-02-30');
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This value must be a valid date");
 
-        //it("doesn't validate empty optional dates", function() {
-        //    var $el = $(
-        //        '<form class="pat-validation">'+
-        //            '<input type="date" name="date">'+
-        //        '</form>');
-        //    var pat = pattern.init($el);
-        //    pat.validateForm();
-        //    expect($el.find('em.warning').length).toBe(0);
-        //});
+            $input.val('2000-02-28');
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+        });
 
-        //it("do require-validate non-empty required dates", function() {
-        //    var $el = $(
-        //        '<form class="pat-validation">'+
-        //            '<input type="date" name="date" required>'+
-        //            '<button type="submit" name="date" required>'+
-        //        '</form>');
-        //    var pat = pattern.init($el);
-        //    pat.validateForm();
-        //    expect($el.find('em.warning').length).toBe(1);
-        //    expect($el.find('em.warning').text()).toBe("This field is required");
-        //});
+        it("validates dates with before/after constraints", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="text" id="start" name="start" data-pat-validation="type: date; not-after: #end; message-date: The start date must on or before the end date.">'+
+                    '<input type="text" id="end" name="end" data-pat-validation="type: date; not-before: #start; message-date: The end date must on or before the start date.">'+
+                '</form>');
+            $('#lab').append($el);
+
+            pattern.init($el);
+
+            var $start = $el.find('#start');
+            var $end = $el.find('#end');
+
+            // Before/after constraints still allow for normal date validation
+            // (wasn't before this commit)
+            $start.val('2020-02-30');
+            $start.trigger('change');
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("The start date must on or before the end date.");
+
+            // Before/after without required allows for empty dates of the
+            // relation.
+            $start.val('2020-10-10');
+            $start.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+
+            // Violate the before/after constraint
+            $end.val('2020-10-05');
+            $end.trigger('change');
+            expect($el.find('em.warning').length).toBe(2);
+            expect($el.find('em.warning').text().indexOf("The start date must on or before the end date.") !== -1).toBe(true);
+            expect($el.find('em.warning').text().indexOf("The end date must on or before the start date.") !== -1).toBe(true);
+
+            // Fulfill the before/after constraint - same date
+            $end.val('2020-10-10');
+            $end.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+
+            // Fulfill the before/after constraint - start before end
+            $start.val('2020-10-01');
+            $start.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+
+            // Before/after without required allows for empty dates of the
+            // relation.
+            $start.val('');
+            $start.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+
+        });
+
+        it("doesn't validate empty optional dates", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="text" name="date" data-pat-validation="type: date">'+
+                '</form>');
+
+            var $input = $el.find(':input');
+            $input.val('');
+            pattern.init($el);
+            $input.trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+        });
+
+        it("do require-validate non-empty required dates", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                    '<input type="text" name="date" required="required" data-pat-validation="type: date">'+
+                '</form>');
+
+            var $input = $el.find(':input');
+            $input.val('');
+            pattern.init($el);
+            $input.trigger('change');
+
+            expect($el.find('em.warning').length).toBe(1);
+            expect($el.find('em.warning').text()).toBe("This field is required");
+        });
 
         it("doesn't validate disabled elements", function() {
             var $el = $(
