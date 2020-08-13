@@ -1,51 +1,59 @@
 ESLINT 		?= node_modules/.bin/eslint
 PEGJS		?= node_modules/.bin/pegjs
 SASS		?= node_modules/.bin/sass
+YARN 		?= node_modules/.bin/yarn
 
 SOURCES		= $(wildcard src/*.js) $(wildcard src/pat/*.js) $(wildcard src/lib/*.js)
 GENERATED	= src/lib/depends_parse.js
 
 
-all:: bundle.js css
+all:: bundle css
 
 ########################################################################
 ## Install dependencies
 
-stamp-yarn: package.json
-	yarn install
+stamp-yarn:
+	npm install --no-package-lock --no-save yarn
+	$(YARN) install
+	touch stamp-yarn
 
-clean_all: clean
-	rm -f stamp-yarn
+.PHONY: clean
+clean:
+	rm -rf bundle* chunks
+
+.PHONY: clean-all
+clean-all: clean
+	rm stamp-yarn
 	rm -rf node_modules
 
 ########################################################################
 ## Tests
 
+.PHONY: eslint
 eslint: stamp-yarn
 	$(ESLINT) ./src
 
 .PHONY: check
 check:: stamp-yarn eslint
-	yarn run testonce
+	$(YARN) run testonce
 
 
 ########################################################################
 ## Builds
 
-build:: bundle all_css
+.PHONY: build
+build:: bundle all-css
 
-# bundle bundle.js: $(GENERATED) $(SOURCES) stamp-yarn
-bundle bundle.js: stamp-yarn
-	yarn run build
+.PHONY: bundle
+bundle: stamp-yarn
+	$(YARN) run build
 
 src/lib/depends_parse.js: src/lib/depends_parse.pegjs stamp-yarn
 	$(PEGJS) $<
 	sed -i~ -e '1s/.*/define(function() {/' -e '$$s/()//' $@ || rm -f $@
 
-clean:
-	rm -rf bundle* chunks
-
-all_css:: css
+.PHONY: all-css
+all-css:: css
 	@echo "Hang tight!"
 	@$(SASS) -I . -I _sass src/pat/auto-scale/_auto-scale.scss src/pat/auto-scale/auto-scale.css
 	@$(SASS) -I . -I _sass src/pat/auto-submit/_auto-submit.scss src/pat/auto-submit/auto-submit.css
@@ -87,20 +95,21 @@ all_css:: css
 	@$(SASS) -I . -I _sass src/pat/zoom/_zoom.scss src/pat/zoom/zoom.css
 	@echo "Done. Each pattern now has a CSS file."
 
+.PHONY: css
 css::
 	@$(SASS) -I style -I _sass -I . _sass/_patterns.scss style/patterns.css
 
+.PHONY: watch
 watch::
 	$(SASS) --watch -I style -I . -I _sass _sass/_patterns.scss:style/patterns.css
 
 ########################################################################
 
-serve:: all _serve
-
-_serve:
-	yarn run start
+.PHONY: serve
+serve: bundle css
+	$(YARN) run start
 	@printf "\nBundle built\n\n"
 
+.PHONY: designerhappy
 designerhappy:: serve
 
-.PHONY: all bundle clean eslint

@@ -68,7 +68,8 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "webpack-merge": "^4.2.2",
-    "whybundled": "^1.4.3"
+    "whybundled": "^1.4.3",
+    "yarn": "^1.22.4"
   },
   "resolutions": {
     "clean-css": "4.2.3",
