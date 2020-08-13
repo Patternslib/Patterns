@@ -15,6 +15,7 @@
       <a href="full-2.jpg"><img src="thumb-2.jpg" title="Photo by Doug88888"/></a>
       <a href="full-3.jpg"><img src="thumb-3.jpg" title="Photy by Paulo Brandao"/></a>
     </nav>
+
     <h1>Gallery with mixed content</h1>
     <p>Only items which match the selecor ``a.add-to-gallery`` are added.</p>
     <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery">
@@ -23,12 +24,21 @@
       <a href="">Link only</a>
       <a href="full-3.jpg" class="add-to-gallery"><img src="thumb-3.jpg" title="Photy by Paulo Brandao"/></a>
     </nav>
+
     <h1>Image popups, not collected in a gallery</h1>
     <nav>
       <a href="full-1.jpg" class="pat-gallery"><img src="thumb-1.jpg" title="Aurora Borealis. Photo by Beverly &amp; Pack"/></a>
       <a href="full-2.jpg" class="pat-gallery"><img src="thumb-2.jpg" title="Photo by Doug88888"/></a>
       <a href="full-3.jpg" class="pat-gallery"><img src="thumb-3.jpg" title="Photy by Paulo Brandao"/></a>
     </nav>
+
+    <h1>Gallery with auto wrapped content</h1>
+    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery; autoadd-enabled: true; autoadd-src-replace-from: thumb-; autoadd-src-replace-to: full-;">
+      <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-1.jpg" title="Aurora Borealis. Photo by Beverly &amp; Pack"/></a>
+      <img src="thumb-2.jpg" title="Photo by Doug88888"/>
+      <img src="thumb-3.jpg" title="Photy by Paulo Brandao"/>
+    </nav>
+
 (Timestamp to see if page has reloaded: <script>document.write(Math.round(new Date().getTime()/1000));</script>)
   </body>
 </html>

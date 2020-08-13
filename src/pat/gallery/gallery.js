@@ -15,6 +15,9 @@ define('pat-gallery', [
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser('gallery');
     parser.addArgument('item-selector', 'a');  // selector for anchor element, which is added to the gallery.
+    parser.addArgument('autoadd-enabled', false);  // Automatically wrap img elements withing pat-gallery's scope if they are not match item-selector.
+    parser.addArgument('autoadd-src-replace-from', null);  // For auto wrapped imgages, regex match the src attribute's value...
+    parser.addArgument('autoadd-src-replace-to', '');  // and replace it with this value. If not defined, delete the matched value part.
     parser.addArgument('loop', true);
     parser.addArgument('scale-method', 'fit', ['fit', 'fitNoUpscale', 'zoom']);
     parser.addArgument('delay', 30000);
@@ -30,9 +33,33 @@ define('pat-gallery', [
             if ($('#photoswipe-template').length === 0) {
                 $('body').append(_.template(template)());
             }
+            var auto_selector = 'autoadd-gallery-selector';
+
+            // Search for elements to be auto-wrapped. Do not include current item because the current item can just have the correct markup.
+            if (this.options.autoadd.enabled === true) {
+                var rsrc;
+                var rpl_from;
+                var rpl_to;
+                var wrapped;
+
+                if (this.options.autoadd['src-replace-from']) {
+                    rpl_from = new RegExp(this.options.autoadd['src-replace-from']);
+                    rpl_to = this.options.autoadd['src-replace-to'];
+                }
+                // All images not wrapped in itemSelector and all images directly under $el.
+                $(':not(' + this.options.itemSelector + ') img, > img', this.$el).each(function () {
+                    rsrc = this.src;
+                    if (rpl_from) {
+                        rsrc = rsrc.replace(rpl_from, rpl_to);
+                    }
+                    wrapped = '<a href="' + rsrc + '" class="' + auto_selector + '">' + this.outerHTML + '</a>';
+                    this.outerHTML = wrapped;
+                });
+            }
+
             // Search for itemSelector including the current node
             // See: https://stackoverflow.com/a/17538213/1337474
-            var image_wrapper = this.$el.find(this.options.itemSelector).addBack(this.options.itemSelector);
+            var image_wrapper = this.$el.find(this.options.itemSelector + ', .' + auto_selector).addBack(this.options.itemSelector);
             var images = image_wrapper.map(function () {
                 return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
             });
@@ -55,7 +82,7 @@ define('pat-gallery', [
                     options.index = 0;
                 }
                 options.history = false;  // this fixes the reload on gallery close which was induced by a history back call.
-                
+
                 var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, images, options);
                 gallery.listen('gettingData', function(index, item) {
                     // Workaround for the fact that we don't know the image sizes.
