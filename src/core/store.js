@@ -31,7 +31,14 @@ Storage.prototype._allKeys = function Storage_allKeys() {
 Storage.prototype.get = function Storage_get(name) {
     var key = this._key(name),
         value = this.backend.getItem(key);
-    if (value !== null) value = JSON.parse(value);
+    if (value !== null) {
+        try {
+            value = JSON.parse(value);
+        } catch {
+            console.log(`Cannot parse storage value for key ${key}`);
+            return;
+        }
+    }
     return value;
 };
 
