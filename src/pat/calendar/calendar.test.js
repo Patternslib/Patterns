@@ -34,6 +34,7 @@ describe("Calendar tests", () => {
         el.setAttribute("class", "root-element");
         el.innerHTML = `
           <div class="pat-calendar">
+            <h1 class="cal-title">title</h1>
             <div class="cal-toolbar">
               <fieldset class="cal-nav">
                 <button class="jump-prev" title="Back" type="button">&lt;</button>
@@ -96,6 +97,49 @@ describe("Calendar tests", () => {
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
         expect(el.querySelector(".fc-timeGridDay-view")).toBeTruthy();
+        done();
+    });
+
+    it("Updates title according to display", async (done) => {
+        const el = document.querySelector(".pat-calendar");
+        el.setAttribute(
+            "data-pat-calendar",
+            "initial-date: 2000-10-10; initial-view: month"
+        );
+
+        const title_el = el.querySelector(".cal-title");
+        let title = title_el.innerHTML;
+
+        registry.scan(document.body);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        el.querySelector(".view-week").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        el.querySelector(".view-day").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        el.querySelector(".view-month").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        el.querySelector(".jump-next").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        el.querySelector(".jump-prev").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
+        el.querySelector(".jump-today").click();
+        expect(title_el.innerHTML === title).toBeFalsy();
+        title = title_el.innerHTML;
+
         done();
     });
 

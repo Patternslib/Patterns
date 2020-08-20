@@ -138,6 +138,7 @@ export default Base.extend({
         this.el_view_list_week = el.querySelector(".view-listWeek");
         this.el_view_list_day = el.querySelector(".view-listDay");
         this.el_timezone = el.querySelector("select[name='timezone']");
+        this.el_title = el.querySelector(".cal-title");
 
         const config = {};
         opts = this.options = store.updateOptions(el, parser.parse($el, opts));
@@ -146,7 +147,7 @@ export default Base.extend({
                 ? null
                 : store[opts.store](this.name + el.id));
 
-        //config.headerToolbar = false;
+        config.headerToolbar = false;
         config.initialDate =
             (storage && storage.get("date")) || opts.initial.date;
         config.initialView =
@@ -201,6 +202,10 @@ export default Base.extend({
 
         calendar.on("datesSet", this._viewChanged.bind(this));
         calendar.on("dateClick", this._viewChanged.bind(this));
+
+        if (this.el_title) {
+            this.el_title.innerHTML = calendar.view.title;
+        }
 
         this._registerCalendarControls();
     },
@@ -263,6 +268,10 @@ export default Base.extend({
     },
 
     _viewChanged(data) {
+        // Set title
+        if (this.el_title) {
+            this.el_title.innerHTML = data.view.title;
+        }
         // store current date and view
         this.storage && this.storage.set("date", data.dateStr || data.startStr);
         this.storage && this.storage.set("view", data.view.type);
