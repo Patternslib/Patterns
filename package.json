@@ -79,7 +79,7 @@
     "serialize-javascript": "4.0.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --config webpack/dev.config.js --open --env.NODE_ENV=development",
+    "start": "webpack-dev-server --config webpack/dev.config.js --env.NODE_ENV=development",
     "build": "webpack --config webpack/prod.config.js --env.NODE_ENV=production",
     "build:stats": "webpack --config webpack/prod.config.js --env.NODE_ENV=production --json > stats.json",
     "test": "jest --watch",
