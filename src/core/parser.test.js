@@ -331,11 +331,21 @@ describe("The Patterns parser", function() {
             });
 
             it("Value from data attribute", function() {
-                var parser=new ArgumentParser("mypattern");
+                var parser = new ArgumentParser("mypattern");
                 parser.addArgument("selector", "default");
                 var opts = parser.parse($("<div data-pat-mypattern=\"element\"/>"));
                 expect(opts.selector).toBe("element");
             });
+
+            it("Value from data attribute from a plain DOM object", function() {
+                var parser = new ArgumentParser("mypattern");
+                parser.addArgument("selector", "default");
+                const node = document.createElement("div");
+                node.setAttribute("data-pat-mypattern", "element");
+                const opts = parser.parse(node);
+                expect(opts.selector).toBe("element");
+            });
+
 
             it("Inherit value from parent data attribute", function() {
                 var parser=new ArgumentParser("mypattern");
