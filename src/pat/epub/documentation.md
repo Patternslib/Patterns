@@ -17,7 +17,7 @@ Pat-epub uses EPUB.js from [FuturePress](http://futurepress.org).
 | Property | Default value | Values   | Description |
 | -------- | ------------- | -------- | ----------- |
 | `width` | `100%` | A numeric value in % or px | The width of the book may set with with this property. Example: `width: 100%` or `width: 400px`. |
-| `height` | `400px` | A numeric value in % or px | The height of the book may set with with this property. Example: `height: 60%` or `height: 400px`. |
+| `height` | `100%` | A numeric value in % or px | The height of the book may set with with this property. Example: `height: 60%` or `height: 400px`. |
 | `flow` | `paginated` | `single`, `double`, `scroll` | The option to choose between a single page view, a double page view or a scrolling document. |
 | `toc` |  | CSS selector | The CSS selector of the element that should be replaced by a select element that allows for jumping to a certain topic. |
 | `next` |  | CSS selector | The CSS selector of the element that should act as the next page button. |
