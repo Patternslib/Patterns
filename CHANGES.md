@@ -3,6 +3,10 @@
 
 ## 5.0.0-dev - unreleased
 
+- Upgrade pat-calendar to use lates fullcalendar version (5.3.0).
+
+- Core: Allow plain DOM nodes for initalization in base and parser.
+
 - Removed unused or obsolete patterns:
   - pat-carousel-legacy - use pat-carousel instead.
   - pat-checked-flag - use pat-checklist instead.

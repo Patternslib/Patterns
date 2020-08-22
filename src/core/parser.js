@@ -448,6 +448,9 @@ ArgumentParser.prototype = {
     },
 
     parse: function argParserParse($el, options, multiple, inherit) {
+        if(!$el.jquery) {
+            $el = $($el);
+        }
         if (typeof options === "boolean" && multiple === undefined) {
             multiple = options;
             options = {};
