@@ -87,30 +87,7 @@ export default Base.extend({
     },
     dayNames: ["su", "mo", "tu", "we", "th", "fr", "sa"],
 
-    _parseSearchString: function () {
-        var context = {};
-        window.location.search
-            .substr(1)
-            .split("&")
-            .forEach(function (str) {
-                if (str) {
-                    var keyValue = str.split("="),
-                        key = keyValue[0],
-                        value = decodeURIComponent(keyValue[1]);
-                    if (
-                        value &&
-                        (value.match(/^\[.*\]$/) || value.match(/^\{.*\}$/))
-                    ) {
-                        context[key] = JSON.parse(value);
-                    } else {
-                        context[key] = value;
-                    }
-                }
-            });
-        return context;
-    },
-
-    async init($el, opts) {
+    async init(el, opts) {
         let Calendar = await import("@fullcalendar/core");
         Calendar = Calendar.Calendar;
         let fcDayGrid = await import("@fullcalendar/daygrid");
@@ -124,7 +101,10 @@ export default Base.extend({
         fcLuxon = fcLuxon.default;
         fcTimeGrid = fcTimeGrid.default;
 
-        const el = (this.el = $el[0]);
+        if (el.jquery) {
+            el = el[0];
+        }
+        this.el = el;
 
         // Save some UI elements for reuse.
         this.el_jump_next = el.querySelector(".jump-next");
@@ -141,17 +121,23 @@ export default Base.extend({
         this.el_title = el.querySelector(".cal-title");
 
         const config = {};
-        opts = this.options = store.updateOptions(el, parser.parse($el, opts));
+        opts = this.options = store.updateOptions(el, parser.parse(el, opts));
         const storage = (this.storage =
             opts.store === "none"
                 ? null
                 : store[opts.store](this.name + el.id));
 
+        const query_string = new URLSearchParams(window.location.search);
+
         config.headerToolbar = false;
         config.initialDate =
-            (storage && storage.get("date")) || opts.initial.date;
+            query_string.get("date") ||
+            (storage && storage.get("date")) ||
+            opts.initial.date;
         config.initialView =
-            (storage && storage.get("view")) || opts.initial.view;
+            query_string.get("view") ||
+            (storage && storage.get("view")) ||
+            opts.initial.view;
         config.initialView =
             this.viewMap[config.initialView] || config.initialView;
         config.plugins = [
@@ -188,7 +174,6 @@ export default Base.extend({
 
         if (opts.url) {
             config.events = { url: opts.url };
-            console.log(opts.events);
         }
 
         // Need to create a sub-element of ``pat-calendar`` to allow custom
@@ -273,8 +258,15 @@ export default Base.extend({
             this.el_title.innerHTML = data.view.title;
         }
         // store current date and view
-        this.storage && this.storage.set("date", data.dateStr || data.startStr);
-        this.storage && this.storage.set("view", data.view.type);
+        const date = data.view.currentStart.toISOString();
+        const view = data.view.type;
+        this.storage && this.storage.set("date", date);
+        this.storage && this.storage.set("view", view);
+
+        const query = new URLSearchParams(window.location.search);
+        query.set("date", date);
+        query.set("view", view);
+        history.replaceState(null, null, "?" + query.toString());
     },
 
     _addNewEvent: function ($el, $event, data) {
@@ -527,16 +519,6 @@ export default Base.extend({
             var match = cfg.tooltipConfig.match(/url:[ ](.*?)(;|$)/);
             cfg.tooltipConfig = cfg.tooltipConfig.replace(match[0], "");
             cfg.newEventURL = match[1];
-        }
-
-        if (!this.options.ignoreUrl) {
-            var search = calendar._parseSearchString();
-            if (search["default-date"]) {
-                cfg.defaultDate = search["default-date"];
-            }
-            if (search["default-view"]) {
-                cfg.defaultView = search["default-view"];
-            }
         }
 
         var calOpts = {

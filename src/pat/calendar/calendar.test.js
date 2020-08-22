@@ -1,3 +1,4 @@
+import pattern from "./calendar";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
@@ -30,6 +31,7 @@ const mockXHR = {
 
 describe("Calendar tests", () => {
     beforeEach(() => {
+        // create container
         const el = document.createElement("div");
         el.setAttribute("class", "root-element");
         el.innerHTML = `
@@ -62,7 +64,11 @@ describe("Calendar tests", () => {
     });
 
     afterEach(() => {
+        // remove container
         document.body.removeChild(document.querySelector(".root-element"));
+
+        // reset query string
+        history.replaceState(null, null, "?"); // empty string doesn't reset, so "?"...
     });
 
     it("Initializes correctly", async (done) => {
@@ -210,6 +216,23 @@ describe("Calendar tests", () => {
         expect(titles.includes("Event 1")).toBeTruthy();
         expect(titles.includes("Event 2")).toBeTruthy();
         expect(titles.includes("Event 3")).toBeTruthy();
+
+        done();
+    });
+
+    it("Loads correct date if set in query string", async (done) => {
+        const el = document.querySelector(".pat-calendar");
+        el.setAttribute("data-pat-calendar", "timezone: Europe/Berlin");
+        window.history.replaceState(
+            null,
+            null,
+            "?date=2020-02-29T23%3A00%3A00.000Z&view=dayGridMonth"
+        );
+        pattern.init(el);
+        await utils.timeout(1); // wait a tick for async to settle.
+
+        const title_el = el.querySelector(".cal-title");
+        expect(title_el.innerHTML).toEqual("March 2020");
 
         done();
     });
