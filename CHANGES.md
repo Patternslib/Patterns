@@ -16,11 +16,13 @@
 
 ### Features
 
+- Upgrade pat-calendar to use lates fullcalendar version (5.3.0).
 
 ### Technical
 
 - Use Babel for all files, allowing latest JavaScript features everywhere.
 - Update build infrastructure and packages.
+- Core: Allow plain DOM nodes for initalization in base and parser.
 
 
 ## 3.0.0-dev - unreleased

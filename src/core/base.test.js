@@ -32,6 +32,28 @@ describe("pat-base: The Base class for patterns", function() {
         expect(tmp instanceof Tmp).toBeTruthy();
     });
 
+    it("Accepts jQuery objects on initialization", function () {
+        const Tmp = Base.extend({
+            name: "example",
+            trigger: "pat-example",
+            init: () => {},
+        });
+        const tmp = new Tmp($('<div class="pat-example"/>'));
+        expect(tmp instanceof Tmp).toBeTruthy();
+    });
+
+    it("Accepts plain DOM nodes on initialization", function () {
+        const Tmp = Base.extend({
+            name: "example",
+            trigger: "pat-example",
+            init: () => {},
+        });
+        const node = document.createElement("div");
+        node.setAttribute("class", "pat-example");
+        const tmp = new Tmp(node);
+        expect(tmp instanceof Tmp).toBeTruthy();
+    });
+
     it("will automatically register a pattern in the registry when extended", function() {
         spyOn(registry, "register").and.callThrough();
         var NewPattern = Base.extend({

@@ -21,6 +21,9 @@ import mockupParser from "./mockup-parser";
 var log = logging.getLogger("Patternslib Base");
 
 var initBasePattern = function($el, options, trigger) {
+    if(!$el.jquery) {
+        $el = $($el);
+    }
     var name = this.prototype.name;
     var log = logging.getLogger("pat." + name);
     var pattern = $el.data("pattern-" + name);
@@ -43,6 +46,9 @@ var initBasePattern = function($el, options, trigger) {
 };
 
 var Base = function($el, options, trigger) {
+    if(!$el.jquery) {
+        $el = $($el);
+    }
     this.$el = $el;
     this.options = $.extend(true, {}, this.defaults || {}, options || {});
     this.init($el, options, trigger);
