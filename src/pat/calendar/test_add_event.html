@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  <body>
+    <h1>Create event</h1>
+    <form
+      class="pat-form pat-validation"
+      id="sheet-event"
+      action="./@@add_event"
+      method="post"
+      data-pat-validation="disable-selector:#form-buttons-create-1598286082"
+    >
+      <fieldset class="vertical">
+        <fieldset class="vertical">
+          <input name="portal_type" value="Event" type="hidden" />
+          <label>
+            Event title
+            <input
+              class="required"
+              autofocus="autofocus"
+              maxlength="70"
+              name="title"
+              placeholder="Event title"
+              required="required"
+              type="text"
+            />
+          </label>
+          <br />
+
+          <fieldset class="description">
+            <legend>Description</legend>
+            <div class="textarea group">
+              <p class="mirror-target" id="ticket-description"></p>
+              <textarea
+                name="description"
+                class="pat-content-mirror focus"
+                data-pat-content-mirror="target: #ticket-description"
+                placeholder="Event description"
+                rows="6"
+              ></textarea>
+            </div>
+          </fieldset>
+
+          <br />
+
+          <label class="location">
+            Location
+            <input
+              placeholder="Enter a location"
+              name="location"
+              type="text"
+              value=""
+            />
+          </label>
+          <br />
+
+          <br />
+          <fieldset class="pat-checklist options">
+            <label>
+              <input
+                name="whole_day"
+                value="selected"
+                type="checkbox"
+              />
+              <input
+                name="whole_day-empty-marker"
+                type="hidden"
+                value="1"
+              />
+              All day event
+            </label>
+          </fieldset>
+
+          <br />
+          <fieldset class="group date-time">
+            <fieldset class="row group">
+              <fieldset class="group six columns">
+                <legend>From</legend>
+
+                <div class="row">
+                  <label class="eight columns">
+                    <input
+                      class="date pat-date-picker"
+                      id="event-start-date-1598286082384"
+                      name="start"
+                      type="date"
+                      required="required"
+                      size="10"
+                      placeholder="Date"
+                      value="2020-08-24"
+                      data-pat-date-picker="i18n: http://localhost:8080/Plone/@@date-picker-i18n.json;first-day: 7"
+                      data-pat-validation="type: date; not-after: #event-end-date-1598286082384; message-date: This date must be on or before the end date."
+                    />
+                  </label>
+                  <label
+                    class="four columns pat-depends"
+                    data-pat-depends="condition: not whole_day"
+                  >
+                    <input
+                      type="time"
+                      size="10"
+                      class="time pat-depends"
+                      name="start"
+                      placeholder="Time"
+                      value="09:00"
+                    />
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="group six columns">
+                <legend>Until</legend>
+                <div class="row">
+                  <label class="eight columns">
+                    <input
+                      class="date pat-date-picker"
+                      id="event-end-date-1598286082384"
+                      name="end"
+                      type="date"
+                      required="required"
+                      size="10"
+                      placeholder="Date"
+                      value="2020-08-24"
+                      data-pat-date-picker="i18n: http://localhost:8080/Plone/@@date-picker-i18n.json;first-day: 7"
+                      data-pat-validation="type: date; not-before: #event-start-date-1598286082384; message-date: This date must be on or after the start date."
+                    />
+                  </label>
+                  <label
+                    class="four columns pat-depends"
+                    data-pat-depends="condition: not whole_day"
+                  >
+                    <input
+                      type="time"
+                      size="10"
+                      class="time"
+                      name="end"
+                      placeholder="Time"
+                      value="10:00"
+                    />
+                  </label>
+                </div>
+              </fieldset>
+            </fieldset>
+
+            <label class="timezone"
+              >Timezone
+              <select class="timezone" name="timezone">
+                <option
+                  selected="Europe/Berlin"
+                  value="Europe/Berlin"
+                  >Europe/Berlin</option
+                >
+                <option
+                  value="Europe/London"
+                  >Europe/London</option
+                >
+                <option
+                  value="Europe/Moscow"
+                  >Europe/Moscow</option
+                >
+              </select>
+            </label>
+          </fieldset>
+
+      <fieldset class="button-bar">
+        <button
+          id="form-buttons-create-1598286082"
+          name="form.buttons.create"
+          type="submit"
+          value="Create"
+        >
+          Create event
+        </button>
+
+        <button
+          class="validate-ignore"
+          type="button"
+        >
+          Cancel
+        </button>
+      </fieldset>
+    </form>
+  </body>
+</html>

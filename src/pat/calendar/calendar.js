@@ -10,6 +10,7 @@ import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
 import logging from "../../core/logging";
+import Modal from "../modal/modal";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
 import store from "../../core/store";
@@ -63,6 +64,7 @@ parser.addArgument("title-month", "MMMM YYYY");
 parser.addArgument("title-week", "MMM D YYYY");
 
 parser.addArgument("url", null);
+parser.addArgument("add-url", null);
 
 parser.addAlias("default-date", "initial-date");
 parser.addAlias("default-view", "initial-view");
@@ -140,6 +142,7 @@ export default Base.extend({
             opts.initial.view;
         config.initialView =
             this.viewMap[config.initialView] || config.initialView;
+        config.editable = opts.editable || false;
         config.plugins = [
             fcDayGrid,
             fcInteraction,
@@ -147,6 +150,8 @@ export default Base.extend({
             fcLuxon,
             fcTimeGrid,
         ];
+
+        config.dateClick = this.addNewEvent.bind(this);
 
         let lang =
             opts.lang ||
@@ -181,6 +186,11 @@ export default Base.extend({
         const cal_el = document.createElement("div");
         cal_el.setAttribute("class", "pat-calendar__fc");
         el.appendChild(cal_el);
+
+        // Create a element for modals/injections
+        this.mod_el = document.createElement("section");
+        this.mod_el.setAttribute("class", "pat-calendar__modal");
+        el.appendChild(this.mod_el);
 
         let calendar = (this.calendar = new Calendar(cal_el, config));
         calendar.render();
@@ -220,6 +230,26 @@ export default Base.extend({
             event_url: event.event_url,
         };
         return ret;
+    },
+
+    update_event(event, data) {
+        // Updated an existing event with new event properties.
+        event.setDates(data.start, data.end);
+        event.setAllDay(data.allDay);
+        event.setProp("id", data.id);
+        event.setProp("title", data.title);
+        event.setProp("url", data.url);
+
+        event.setExtendedProp("description", data.description);
+        event.setExtendedProp("text", data.text);
+        event.setExtendedProp("location", data.location);
+        event.setExtendedProp("open_end", data.open_end);
+        event.setExtendedProp("recurrence", data.recurrence);
+        event.setExtendedProp("attendees", data.attendees);
+        event.setExtendedProp("contact_name", data.contact_name);
+        event.setExtendedProp("contact_phone", data.contact_phone);
+        event.setExtendedProp("contact_email", data.contact_email);
+        event.setExtendedProp("event_url", data.event_url);
     },
 
     async _fetch_events(info, success, failure) {
@@ -380,6 +410,64 @@ export default Base.extend({
         history.replaceState(null, null, "?" + query.toString());
 
         this.setActiveClasses();
+    },
+
+    async addNewEvent(info) {
+        let addUrl = this.options.addUrl;
+        if (!addUrl) {
+            return;
+        }
+
+        let start, end, allDay;
+        if (this.calendar.view.type === "timeGridMonth") {
+            start = info.date;
+            end = info.date;
+            allDay = true;
+        } else {
+            start = info.date;
+            end = new Date(start.getTime() + 1 * 60 * 60 * 1000); // same as start, 1h offset
+            allDay = false;
+        }
+        addUrl = addUrl
+            .replace("${start_str}", start)
+            .replace("${end_str}", end)
+            .replace("${all_day}", allDay ? "1" : "0");
+
+        const event = this.calendar.addEvent(
+            {
+                title: "New Event",
+                start: start,
+                end: end,
+            },
+            true
+        );
+
+        await new Modal(this.mod_el, {
+            url: addUrl,
+            trigger: "autoload",
+        });
+
+        //const mod_el = document.querySelector("#pat-modal form");
+        //mod_el.addEventListener("submit", (e) => {
+        document.addEventListener("submit", async (e) => {
+            const form = e.target;
+            const form_data = new FormData(form);
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: form_data,
+                });
+                let data = await response.json();
+                data = this.event_mapper(data);
+                this.update_event(event, data);
+            } catch (error) {
+                log.error(error);
+                event.remove();
+            }
+        });
     },
 
     _addNewEvent: function ($el, $event, data) {
