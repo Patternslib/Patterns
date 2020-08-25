@@ -33,10 +33,10 @@ export default Base.extend({
     },
 
     init: function ($el, opts) {
-        const depdendent = this.$el[0],
-            options = parser.parse(this.$el, opts),
-            handler,
-            state;
+        const depdendent = this.$el[0];
+        const options = parser.parse(this.$el, opts);
+        let handler;
+        let state;
         this.$modal = this.$el.parents(".pat-modal");
 
         try {
@@ -69,34 +69,36 @@ export default Base.extend({
                 break;
         }
 
-        var data = { handler: handler, options: options, depdendent: depdendent };
+        var data = {
+            handler: handler,
+            options: options,
+            depdendent: depdendent,
+        };
 
-        var that = this;
-        handler.getAllInputs().each(
-            function (idx, input) {
-                if (input.form) {
-                    var $form = $(input.form);
-                    var depdendents = $form.data("patDepends.depdendents");
-                    if (!depdendents) {
-                        depdendents = [data];
-                        $form.on("reset.pat-depends", that.onReset);
-                    } else if (depdendents.indexOf(data) === -1) depdendents.push(data);
-                    $form.data("patDepends.depdendents", depdendents);
-                }
-                $(input).on(
-                    "change.pat-depends",
-                    null,
-                    data,
-                    this.onChange.bind(this)
-                );
-                $(input).on(
-                    "keyup.pat-depends",
-                    null,
-                    data,
-                    this.onChange.bind(this)
-                );
-            }.bind(this)
-        );
+        for (let input of handler.getAllInputs()) {
+            if (input.form) {
+                var $form = $(input.form);
+                var depdendents = $form.data("patDepends.depdendents");
+                if (!depdendents) {
+                    depdendents = [data];
+                    $form.on("reset.pat-depends", this.onReset.bind(this));
+                } else if (depdendents.indexOf(data) === -1)
+                    depdendents.push(data);
+                $form.data("patDepends.depdendents", depdendents);
+            }
+            $(input).on(
+                "change.pat-depends",
+                null,
+                data,
+                this.onChange.bind(this)
+            );
+            $(input).on(
+                "keyup.pat-depends",
+                null,
+                data,
+                this.onChange.bind(this)
+            );
+        }
     },
 
     onReset: function (event) {
