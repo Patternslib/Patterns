@@ -257,7 +257,7 @@ define([
             // Ignore invisible elements (otherwise pat-clone template
             // elements get validated). Not aware of other cases where this
             // might cause problems.
-            var $single = this.$inputs.filter(':visible:enabled:not(:checkbox):not(:radio)');
+            var $single = this.$inputs.filter(':visible:enabled:not(:checkbox):not(:radio), .pat-autosuggest:not(:visible)');
             var group_names = this.$inputs
                     .filter(':enabled:checkbox, :enabled:radio')
                     .map(function () { return this.getAttribute('name'); });

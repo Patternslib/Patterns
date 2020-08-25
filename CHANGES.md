@@ -49,6 +49,8 @@ Fixes
 - Fix ``pat-auto-scale`` not correctly rescaling after fullscreen changes. Fixes #673
 - Fix heisenbug with pat-scroll on testruns.
 - Fix minimum input length default so that you can display select results already on click.
+- Fix ``pat-validation`` to not skip ``pat-autosuggest`` inputs even though they're
+  hidden. Fixes #683
 
 
 ## 3.0.0a5 - unreleased

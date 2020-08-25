@@ -23,7 +23,27 @@ define(["pat-registry", "pat-validation"], function(registry, pattern) {
                 '<form class="pat-validation">'+
                 '<input type="text" name="name">'+
                 '</form>');
+            pattern.init($el);
             $el.find(':input').trigger('change');
+            expect($el.find('em.warning').length).toBe(0);
+        });
+
+        it("validates required pat-autosuggest inputs on form submit", function() {
+            var $el = $(
+                '<form class="pat-validation">'+
+                '<input type="hidden" name="name" required="required" class="pat-autosuggest" data-pat-autosuggest="words: one, two">'+
+                '</form>');
+            pattern.init($el);
+            $el.submit();
+            expect($el.find('em.warning').length).toBe(1);
+
+            // Check that validation passes when required is not here.
+            $el = $(
+                '<form class="pat-validation">'+
+                '<input type="hidden" name="name" class="pat-autosuggest" data-pat-autosuggest="words: one, two">'+
+                '</form>');
+            pattern.init($el);
+            $el.submit();
             expect($el.find('em.warning').length).toBe(0);
         });
 
