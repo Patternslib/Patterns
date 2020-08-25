@@ -47,6 +47,14 @@ If you just want individual images to be opened in the gallery overlay but want 
       <a class="pat-gallery" href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a>
     </nav>
 
+You can also auto-add images within a pat-gallery container:
+
+    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery; autoadd: true;">
+      <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-1.jpg"/></a>
+      <img src="thumb-2.jpg"/>
+      <img src="thumb-3.jpg"/>
+    </nav>
+
 
 ### Option reference
 
@@ -60,6 +68,7 @@ You can customise the behaviour of a gallery through options in the
 | Property | Default value | Values | Description | Type |
 | ----- | --------| -------- | ------- | ----------- |
 | `item-selector` | `a` | | The selector for the link element, which contains the images to be added to the gallery. For example, you can set the `item-selector` to `a.add-to-gallery` and have only images wrapped in an anchor element with the class `add-to-gallery` added to the gallery.
+| `autoadd` | false | `true` `false` `yes` `no` | Automatically add img elements to the gallery. |Mutually exclusive|
 | `loop` | true | `true` `false` | Indicates if a slideshow should loop back to the beginning.|Mutually exclusive|
 | `scale-method` | `fit` | `fit` `fitNoUpscale` `zoom` | How images will fit onto the screen. `fit` ensures the image always fits the screen. `fitNoUpscale` works like `fit` but will never upscale the image. `zoom` the image will always fill the full screen, this may cause the image to be "zoomed" in and cropped.|Mutually exclusive |
 | `delay` | `30000` | | The delay, in milliseconds, an image is shown in a slideshow.|Number|

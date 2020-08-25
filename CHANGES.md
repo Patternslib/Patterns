@@ -4,6 +4,7 @@
 
 Features
 ~~~~~~~~
+- pat-gallery: Add feature to automatically add images to the gallery.
 - pat-validation: Allow for HTML5 style ``required`` attributes without a value.
 - pat-validation: Added the possibility to check for fields equality
 - pat-validation: Dont use :input jquery extension for better performance

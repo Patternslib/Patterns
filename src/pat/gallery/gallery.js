@@ -15,6 +15,7 @@ define('pat-gallery', [
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser('gallery');
     parser.addArgument('item-selector', 'a');  // selector for anchor element, which is added to the gallery.
+    parser.addArgument('autoadd', false);
     parser.addArgument('loop', true);
     parser.addArgument('scale-method', 'fit', ['fit', 'fitNoUpscale', 'zoom']);
     parser.addArgument('delay', 30000);
@@ -30,11 +31,21 @@ define('pat-gallery', [
             if ($('#photoswipe-template').length === 0) {
                 $('body').append(_.template(template)());
             }
+
             // Search for itemSelector including the current node
             // See: https://stackoverflow.com/a/17538213/1337474
-            var image_wrapper = this.$el.find(this.options.itemSelector).addBack(this.options.itemSelector);
+            var item_selector = this.options.itemSelector;
+            if (this.options.autoadd) {
+                // auto add images not already added and those directly under $el
+                item_selector = item_selector + ', :not(' + item_selector + ') img, > img';
+            }
+            var image_wrapper = this.$el.find(item_selector).addBack(this.options.itemSelector);
             var images = image_wrapper.map(function () {
-                return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
+                if (this.tagName.toLowerCase() === 'img') {
+                    return { 'w': 0, 'h': 0, 'src': this.src, 'title': this.title };
+                } else {
+                    return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
+                }
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
             var options = {
@@ -48,14 +59,16 @@ define('pat-gallery', [
                 closeOnScroll: false
             };
             image_wrapper.click(function (ev) {
-                ev.preventDefault();
-                if (this.href) {
-                    options.index = _.indexOf(_.pluck(images, 'src'), this.href);
-                } else {
-                    options.index = 0;
+                if (this.tagName.toLowerCase() === 'img' && $(this).closest('a').length !== 0) {
+                    // Do not open auto-added images in gallery if they are wrapped in an anchor element.
+                    return;
                 }
-                options.history = false;  // this fixes the reload on gallery close which was induced by a history back call.
-                
+                ev.preventDefault();
+                // Get the index of the clicked gallery item in the list of images.
+                options.index = _.indexOf(_.pluck(images, 'src'), this.href || this.src) || 0;
+                // Fix reload on gallery close which was induced by a history back call.
+                options.history = false;
+
                 var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, images, options);
                 gallery.listen('gettingData', function(index, item) {
                     // Workaround for the fact that we don't know the image sizes.
