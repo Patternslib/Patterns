@@ -1,12 +1,11 @@
 /**
-* Patterns depends - show/hide/disable content based on form status
-*
-* Copyright 2012-2013 Florian Friesdorf
-* Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
-*/
+ * Patterns depends - show/hide/disable content based on form status
+ *
+ * Copyright 2012-2013 Florian Friesdorf
+ * Copyright 2012-2013 Simplon B.V. - Wichert Akkerman
+ */
 
 import $ from "jquery";
-import registry from "../../core/registry";
 import Base from "../../core/base";
 import utils from "../../core/utils";
 import logging from "../../core/logging";
@@ -30,11 +29,11 @@ export default Base.extend({
     transitions: {
         none: { hide: "hide", show: "show" },
         fade: { hide: "fadeOut", show: "fadeIn" },
-        slide: { hide: "slideUp", show: "slideDown" }
+        slide: { hide: "slideUp", show: "slideDown" },
     },
 
-    init: function($el, opts) {
-        var slave = this.$el[0],
+    init: function ($el, opts) {
+        const depdendent = this.$el[0],
             options = parser.parse(this.$el, opts),
             handler,
             state;
@@ -43,11 +42,11 @@ export default Base.extend({
         try {
             handler = new DependsHandler(this.$el, options.condition);
         } catch (e) {
-            log.error("Invalid condition: " + e.message, slave);
+            log.error("Invalid condition: " + e.message, depdendent);
             return;
         }
 
-        state=handler.evaluate();
+        state = handler.evaluate();
         switch (options.action) {
             case "show":
                 utils.hideOrShow($el, state, options, this.name);
@@ -70,20 +69,19 @@ export default Base.extend({
                 break;
         }
 
-        var data = { handler: handler, options: options, slave: slave };
+        var data = { handler: handler, options: options, depdendent: depdendent };
 
         var that = this;
         handler.getAllInputs().each(
-            function(idx, input) {
+            function (idx, input) {
                 if (input.form) {
                     var $form = $(input.form);
-                    var slaves = $form.data("patDepends.slaves");
-                    if (!slaves) {
-                        slaves = [data];
+                    var depdendents = $form.data("patDepends.depdendents");
+                    if (!depdendents) {
+                        depdendents = [data];
                         $form.on("reset.pat-depends", that.onReset);
-                    } else if (slaves.indexOf(data) === -1)
-                        slaves.push(data);
-                    $form.data("patDepends.slaves", slaves);
+                    } else if (depdendents.indexOf(data) === -1) depdendents.push(data);
+                    $form.data("patDepends.depdendents", depdendents);
                 }
                 $(input).on(
                     "change.pat-depends",
@@ -101,22 +99,17 @@ export default Base.extend({
         );
     },
 
-    onReset: function(event) {
-        var slaves = $(event.target).data("patDepends.slaves"),
-            i;
-
-        setTimeout(
-            function() {
-                for (i = 0; i < slaves.length; i++) {
-                    event.data = slaves[i];
-                    this.onChange(event);
-                }
-            }.bind(this),
-            50
-        );
+    onReset: function (event) {
+        const depdendents = $(event.target).data("patDepends.depdendents");
+        setTimeout(() => {
+            for (let depdendent of depdendents) {
+                event.data = depdendent;
+                this.onChange(event);
+            }
+        }, 50);
     },
 
-    updateModal: function() {
+    updateModal: function () {
         /* If we're in a modal, make sure that it gets resized.
          */
         if (this.$modal.length) {
@@ -124,7 +117,7 @@ export default Base.extend({
         }
     },
 
-    enable: function() {
+    enable: function () {
         if (this.$el.is(":input")) this.$el[0].disabled = null;
         else if (this.$el.is("a")) this.$el.off("click.patternDepends");
         else if (this.$el.hasClass("pat-autosuggest")) {
@@ -132,13 +125,13 @@ export default Base.extend({
                 .findInclusive("input.pat-autosuggest")
                 .trigger("pat-update", {
                     pattern: "depends",
-                    enabled: true
+                    enabled: true,
                 });
         }
         this.$el.removeClass("disabled");
     },
 
-    disable: function() {
+    disable: function () {
         if (this.$el.is(":input")) this.$el[0].disabled = "disabled";
         else if (this.$el.is("a"))
             this.$el.on("click.patternDepends", this.blockDefault);
@@ -147,22 +140,22 @@ export default Base.extend({
                 .findInclusive("input.pat-autosuggest")
                 .trigger("pat-update", {
                     pattern: "depends",
-                    enabled: false
+                    enabled: false,
                 });
         }
         this.$el.addClass("disabled");
     },
 
-    onChange: function(event) {
+    onChange: function (event) {
         var handler = event.data.handler,
             options = event.data.options,
-            slave = event.data.slave,
-            $slave = $(slave),
+            depdendent = event.data.depdendent,
+            $depdendent = $(depdendent),
             state = handler.evaluate();
 
         switch (options.action) {
             case "show":
-                utils.hideOrShow($slave, state, options, this.name);
+                utils.hideOrShow($depdendent, state, options, this.name);
                 this.updateModal();
                 break;
             case "enable":
@@ -170,7 +163,7 @@ export default Base.extend({
                 else this.disable();
                 break;
             case "both":
-                utils.hideOrShow($slave, state, options, this.name);
+                utils.hideOrShow($depdendent, state, options, this.name);
                 this.updateModal();
                 if (state) this.enable();
                 else this.disable();
@@ -178,7 +171,7 @@ export default Base.extend({
         }
     },
 
-    blockDefault: function(event) {
+    blockDefault: function (event) {
         event.preventDefault();
-    }
+    },
 });
