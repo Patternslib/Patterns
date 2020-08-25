@@ -31,7 +31,7 @@ When looking for images to show in the gallery the pattern looks for links conta
       <li><a href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a></li>
     </ul>
 
-or a HTML5 `nav` container:
+or an HTML5 `nav` container:
 
     <nav class="pat-gallery">
       <a href="images/full/1.jpg"><img src="images/thumb/1.jpg"/></a>
@@ -47,13 +47,14 @@ If you just want individual images to be opened in the gallery overlay but want 
       <a class="pat-gallery" href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a>
     </nav>
 
-Sometimes it's not possible to modify content with images to fullfill pat-gallery's markup requirements.
-In this case you can auto-add these images and also change the ``src`` value via search/replace.
+Sometimes it's not possible to have links around your images. In this case you can just add a selector that directly refers to an image instead of a link that points to an image. Pat-gallery will scan for either an href attribute or an src attribute and take its value.
 
-    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery; autoadd-enabled: true; autoadd-src-replace-from: thumb-; autoadd-src-replace-to: full-;">
+    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery,img;">
       <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-1.jpg"/></a>
-      <img src="thumb-2.jpg"/>
-      <img src="thumb-3.jpg"/>
+      <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-2.jpg"/></a>
+      <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-3.jpg"/></a>
+
+      <img src="full4.jpg" alt="">
     </nav>
 
 
@@ -66,13 +67,10 @@ You can customise the behaviour of a gallery through options in the
       ...
     </ul>
 
-| Property | Default value | Values | Description | Type |
-| ----- | --------| -------- | ------- | ----------- |
-| `item-selector` | `a` | | The selector for the link element, which contains the images to be added to the gallery. For example, you can set the `item-selector` to `a.add-to-gallery` and have only images wrapped in an anchor element with the class `add-to-gallery` added to the gallery.
-| `autoadd-enabled` | false | `true` `false` | Automatically add img elements to the gallery. |Mutually exclusive|
-| `autoadd-src-replace-from` | null | | For automatically added images search the ``src`` attributes's value for ... |String (RegEx)|
-| `autoadd-src-replace-to` | '' | | and replace it with this value. |String|
-| `loop` | true | `true` `false` | Indicates if a slideshow should loop back to the beginning.|Mutually exclusive|
+| Property | Default value | Values | Type |
+| -------- | ------------- | ------ | ---- |
+| `item-selector` | `a` | Any CSS selector | The selector for the link element, which contains the images to be added to the gallery. For example, you can set the `item-selector` to `a.add-to-gallery` and have only images wrapped in an anchor element with the class `add-to-gallery` added to the gallery. |
+| `loop` | true | `true` `false` | Indicates if a slideshow should loop back to the beginning.|Mutually exclusive |
 | `scale-method` | `fit` | `fit` `fitNoUpscale` `zoom` | How images will fit onto the screen. `fit` ensures the image always fits the screen. `fitNoUpscale` works like `fit` but will never upscale the image. `zoom` the image will always fill the full screen, this may cause the image to be "zoomed" in and cropped.|Mutually exclusive |
-| `delay` | `30000` | | The delay, in milliseconds, an image is shown in a slideshow.|Number|
-| `effect-duration` | | `250` | How long it will take in milliseconds for an image to slide into view.|Number|
+| `delay` | `30000` | | The delay, in milliseconds, an image is shown in a slideshow. | Number |
+| `effect-duration` | | `250` | How long it will take in milliseconds for an image to slide into view. | Number |
