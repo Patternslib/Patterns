@@ -49,14 +49,21 @@ If you just want individual images to be opened in the gallery overlay but want 
 
 Sometimes it's not possible to have links around your images. In this case you can just add a selector that directly refers to an image instead of a link that points to an image. Pat-gallery will scan for either an href attribute or an src attribute and take its value.
 
-    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery,img;">
+    <nav class="pat-gallery" data-pat-gallery="item-selector: img;">
+      <img src="thumb-1.jpg"/>
+      <img src="thumb-2.jpg"/>
+      <img src="thumb-3.jpg"/>
+    </nav>
+
+Or for a mixed situation:
+
+    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery, :not(a.add-to-gallery) img, > img">
       <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-1.jpg"/></a>
       <a href="full-2.jpg" class="add-to-gallery"><img src="thumb-2.jpg"/></a>
       <a href="full-3.jpg" class="add-to-gallery"><img src="thumb-3.jpg"/></a>
 
       <img src="full4.jpg" alt="">
     </nav>
-
 
 ### Option reference
 
