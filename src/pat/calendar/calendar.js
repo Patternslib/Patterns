@@ -173,7 +173,7 @@ export default Base.extend({
         }
 
         if (opts.url) {
-            config.events = { url: opts.url };
+            config.events = this._fetch_events.bind(this);
         }
 
         // Need to create a sub-element of ``pat-calendar`` to allow custom
@@ -194,6 +194,69 @@ export default Base.extend({
 
         this._registerCalendarControls();
         this.setActiveClasses();
+    },
+
+    event_mapper(event) {
+        // Maps backend results to the fullcalendar event schema.
+        // Default implementation confirms to plone.restapi conventions.
+        const ret = {
+            id: event.UID,
+            title: event.title,
+            start: new Date(event.start),
+            end: new Date(event.end),
+            allDay: event.whole_day,
+            url: event["@id"],
+
+            // non fullcalendar standard fields
+            description: event.description,
+            text: event.text,
+            location: event.location,
+            open_end: event.open_end,
+            recurrence: event.recurrence,
+            attendees: event.attendees,
+            contact_name: event.contact_name,
+            contact_phone: event.contact_phone,
+            contact_email: event.contact_email,
+            event_url: event.event_url,
+        };
+        return ret;
+    },
+
+    async _fetch_events(info, success, failure) {
+        let url = this.options.url;
+        if (!url) {
+            failure();
+            return;
+        }
+
+        let results = [];
+        while (url) {
+            url = url
+                .replace("${start_str}", info.startStr.split("T")[0])
+                .replace("${end_str}", info.endStr.split("T")[0]);
+
+            let response;
+            try {
+                response = await fetch(url, {
+                    method: "GET",
+                    mode: "cors",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                });
+            } catch (e) {
+                failure(e);
+                return;
+            }
+            let result = await response.json();
+            let results_ = result.items?.map(this.event_mapper) || [];
+            results = results.concat(results_);
+
+            // resolve all ``next`` batching urls
+            url = result.batching?.next || null;
+        }
+        success(results);
     },
 
     _registerCalendarControls() {

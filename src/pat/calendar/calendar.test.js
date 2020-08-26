@@ -2,32 +2,29 @@ import pattern from "./calendar";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
 
-const mockXHR = {
-    open: jest.fn(),
-    send: function () {
-        // need function for pointing to correct ``this``.
-        return this.onload();
-    },
-    status: 200,
-    setRequestHeader: jest.fn(),
-    responseText: JSON.stringify([
-        {
-            title: "Event 1",
-            start: "2020-10-10T10:00:00Z",
-            end: "2020-10-10T12:00:00Z",
-        },
-        {
-            title: "Event 2",
-            start: "2020-10-12",
-            end: "2020-10-12",
-        },
-        {
-            title: "Event 3",
-            start: "2020-10-14",
-            end: "2020-10-16",
-        },
-    ]),
-};
+const mockFetch = () =>
+    Promise.resolve({
+        json: () =>
+            Promise.resolve({
+                items: [
+                    {
+                        title: "Event 1",
+                        start: "2020-10-10T10:00:00Z",
+                        end: "2020-10-10T12:00:00Z",
+                    },
+                    {
+                        title: "Event 2",
+                        start: "2020-10-12",
+                        end: "2020-10-12",
+                    },
+                    {
+                        title: "Event 3",
+                        start: "2020-10-14",
+                        end: "2020-10-16",
+                    },
+                ],
+            }),
+    });
 
 describe("Calendar tests", () => {
     beforeEach(() => {
@@ -213,7 +210,7 @@ describe("Calendar tests", () => {
             "initial-date: 2020-10-10; url: ./test.json;"
         );
 
-        window.XMLHttpRequest = jest.fn(() => mockXHR);
+        global.fetch = jest.fn().mockImplementation(mockFetch);
 
         registry.scan(document.body);
         await utils.timeout(1); // wait a tick for async to settle.
@@ -226,6 +223,8 @@ describe("Calendar tests", () => {
         expect(titles.includes("Event 2")).toBeTruthy();
         expect(titles.includes("Event 3")).toBeTruthy();
 
+        global.fetch.mockClear();
+        delete global.fetch;
         done();
     });
 
