@@ -15,7 +15,6 @@ define('pat-gallery', [
 ], function($, patterns, Base, Parser, PhotoSwipe, PhotoSwipeUI, template, _) {
     var parser = new Parser('gallery');
     parser.addArgument('item-selector', 'a');  // selector for anchor element, which is added to the gallery.
-    parser.addArgument('autoadd', false);
     parser.addArgument('loop', true);
     parser.addArgument('scale-method', 'fit', ['fit', 'fitNoUpscale', 'zoom']);
     parser.addArgument('delay', 30000);
@@ -34,18 +33,14 @@ define('pat-gallery', [
 
             // Search for itemSelector including the current node
             // See: https://stackoverflow.com/a/17538213/1337474
-            var item_selector = this.options.itemSelector;
-            if (this.options.autoadd) {
-                // auto add images not already added and those directly under $el
-                item_selector = item_selector + ', :not(' + item_selector + ') img, > img';
-            }
-            var image_wrapper = this.$el.find(item_selector).addBack(this.options.itemSelector);
+            var image_wrapper = this.$el.find(this.options.itemSelector).addBack(this.options.itemSelector);
             var images = image_wrapper.map(function () {
-                if (this.tagName.toLowerCase() === 'img') {
-                    return { 'w': 0, 'h': 0, 'src': this.src, 'title': this.title };
-                } else {
-                    return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
-                }
+                return {
+                    'w': 0,
+                    'h': 0,
+                    'src': this.src || this.href,
+                    'title': this.title || $(this).find('img').attr('title')
+                };
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
             var options = {
