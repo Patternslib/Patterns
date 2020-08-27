@@ -30,11 +30,17 @@ define('pat-gallery', [
             if ($('#photoswipe-template').length === 0) {
                 $('body').append(_.template(template)());
             }
+
             // Search for itemSelector including the current node
             // See: https://stackoverflow.com/a/17538213/1337474
             var image_wrapper = this.$el.find(this.options.itemSelector).addBack(this.options.itemSelector);
             var images = image_wrapper.map(function () {
-                return { 'w': 0, 'h': 0, 'src': this.href, 'title': $(this).find('img').attr('title') };
+                return {
+                    'w': 0,
+                    'h': 0,
+                    'src': this.src || this.href,
+                    'title': this.title || $(this).find('img').attr('title')
+                };
             });
             var pswpElement = document.querySelectorAll('.pswp')[0];
             var options = {
@@ -48,14 +54,16 @@ define('pat-gallery', [
                 closeOnScroll: false
             };
             image_wrapper.click(function (ev) {
-                ev.preventDefault();
-                if (this.href) {
-                    options.index = _.indexOf(_.pluck(images, 'src'), this.href);
-                } else {
-                    options.index = 0;
+                if (this.tagName.toLowerCase() === 'img' && $(this).closest('a').length !== 0) {
+                    // Do not open auto-added images in gallery if they are wrapped in an anchor element.
+                    return;
                 }
-                options.history = false;  // this fixes the reload on gallery close which was induced by a history back call.
-                
+                ev.preventDefault();
+                // Get the index of the clicked gallery item in the list of images.
+                options.index = _.indexOf(_.pluck(images, 'src'), this.href || this.src) || 0;
+                // Fix reload on gallery close which was induced by a history back call.
+                options.history = false;
+
                 var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI, images, options);
                 gallery.listen('gettingData', function(index, item) {
                     // Workaround for the fact that we don't know the image sizes.

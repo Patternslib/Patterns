@@ -31,7 +31,7 @@ When looking for images to show in the gallery the pattern looks for links conta
       <li><a href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a></li>
     </ul>
 
-or a HTML5 `nav` container:
+or an HTML5 `nav` container:
 
     <nav class="pat-gallery">
       <a href="images/full/1.jpg"><img src="images/thumb/1.jpg"/></a>
@@ -47,6 +47,23 @@ If you just want individual images to be opened in the gallery overlay but want 
       <a class="pat-gallery" href="images/full/2.jpg"><img src="images/thumb/2.jpg"/></a>
     </nav>
 
+Sometimes it's not possible to have links around your images. In this case you can just add a selector that directly refers to an image instead of a link that points to an image. Pat-gallery will scan for either an href attribute or an src attribute and take its value.
+
+    <nav class="pat-gallery" data-pat-gallery="item-selector: img;">
+      <img src="full-1.jpg"/>
+      <img src="full-2.jpg"/>
+      <img src="full-3.jpg"/>
+    </nav>
+
+Or for a mixed situation:
+
+    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery, :not(a.add-to-gallery) img, > img">
+      <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-1.jpg"/></a>
+      <a href="full-2.jpg" class="add-to-gallery"><img src="thumb-2.jpg"/></a>
+      <a href="full-3.jpg" class="add-to-gallery"><img src="thumb-3.jpg"/></a>
+
+      <img src="full4.jpg" alt="">
+    </nav>
 
 ### Option reference
 
@@ -57,10 +74,10 @@ You can customise the behaviour of a gallery through options in the
       ...
     </ul>
 
-| Property | Default value | Values | Description | Type |
-| ----- | --------| -------- | ------- | ----------- |
-| `item-selector` | `a` | | The selector for the link element, which contains the images to be added to the gallery. For example, you can set the `item-selector` to `a.add-to-gallery` and have only images wrapped in an anchor element with the class `add-to-gallery` added to the gallery.
-| `loop` | true | `true` `false` | Indicates if a slideshow should loop back to the beginning.|Mutually exclusive|
+| Property | Default value | Values | Type |
+| -------- | ------------- | ------ | ---- |
+| `item-selector` | `a` | Any CSS selector | The selector for the link element, which contains the images to be added to the gallery. For example, you can set the `item-selector` to `a.add-to-gallery` and have only images wrapped in an anchor element with the class `add-to-gallery` added to the gallery. |
+| `loop` | true | `true` `false` | Indicates if a slideshow should loop back to the beginning.|Mutually exclusive |
 | `scale-method` | `fit` | `fit` `fitNoUpscale` `zoom` | How images will fit onto the screen. `fit` ensures the image always fits the screen. `fitNoUpscale` works like `fit` but will never upscale the image. `zoom` the image will always fill the full screen, this may cause the image to be "zoomed" in and cropped.|Mutually exclusive |
-| `delay` | `30000` | | The delay, in milliseconds, an image is shown in a slideshow.|Number|
-| `effect-duration` | | `250` | How long it will take in milliseconds for an image to slide into view.|Number|
+| `delay` | `30000` | | The delay, in milliseconds, an image is shown in a slideshow. | Number |
+| `effect-duration` | | `250` | How long it will take in milliseconds for an image to slide into view. | Number |
