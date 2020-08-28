@@ -89,7 +89,7 @@ define([
             var $el = $(el);
             var pattern = registry.patterns[name];
             if (pattern.init) {
-                plog = logger.getLogger("pat." + name);
+                var plog = logger.getLogger("pat." + name);
                 if ($el.is(pattern.trigger)) {
                     plog.debug("Initialising:", $el);
                     try {

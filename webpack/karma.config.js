@@ -18,8 +18,9 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'tests/specs/*/*.js',
-            'src/pat/*/tests.js',
+          //'tests/specs/*/*.js',
+          //'src/pat/*/tests.js',
+            'src/pat/scroll-box/tests.js',
             {
                 pattern: 'src/pat/date-picker/i18n.json',
                 served: true,
@@ -56,6 +57,7 @@ module.exports = function(config) {
             // list here the files that you want transpiled by babel
             'src/pat/masonry/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
             'src/pat/calendar/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
+            'src/pat/scroll-box/tests.js': ['webpack', 'sourcemap', 'babel' /*, 'coverage'*/ ],
         },
         babelPreprocessor: {
             options: {
