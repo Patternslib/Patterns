@@ -57,7 +57,7 @@ Sometimes it's not possible to have links around your images. In this case you c
 
 Or for a mixed situation:
 
-    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery, :not(a.add-to-gallery) img, > img">
+    <nav class="pat-gallery" data-pat-gallery="item-selector: a.add-to-gallery, :not(a.add-to-gallery) > img, > img">
       <a href="full-1.jpg" class="add-to-gallery"><img src="thumb-1.jpg"/></a>
       <a href="full-2.jpg" class="add-to-gallery"><img src="thumb-2.jpg"/></a>
       <a href="full-3.jpg" class="add-to-gallery"><img src="thumb-3.jpg"/></a>
