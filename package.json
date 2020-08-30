@@ -90,7 +90,13 @@
       "jest": true
     },
     "parser": "babel-eslint",
-    "rules": {}
+    "rules": {
+      "quote-props": "consistent-as-needed"
+    }
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "quoteProps": "consistent"
   },
   "babel": {
     "presets": [
