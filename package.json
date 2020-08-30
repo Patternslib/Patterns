@@ -91,7 +91,16 @@
       "jest": true
     },
     "parser": "babel-eslint",
-    "rules": {}
+    "rules": {
+      "quote-props": [
+        1,
+        "consistent-as-needed"
+      ]
+    }
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "quoteProps": "consistent"
   },
   "babel": {
     "presets": [
