@@ -4,6 +4,33 @@ A day, week and month view to display events as a calendar.
 
 ## Documentation
 
+
+### Connecting to a backend
+
+The calendar pattern expects a plone.restapi compatible data structure by default.
+An example is given in the demo which uses the ``test_event_source.json`` file to provide some example events.
+
+The ``url`` parameter allows two variables to be passed to it: the start and end date as ISO 8601 strings to limit the list of events which should be shown.
+The calendar pattern automatically replaces them with the start and end date of the current view - the beginning or the end of the month, week or day.
+
+For connecting to a plone.restapi backend you can provide a url like this one:
+
+`http://localhost:8080/Plone/@search?portal_type=Event&start.query=${end_str}&start.range=max&end.query=${start_str}&end.range=min&metadata_fields=start&metadata_fields=end&metadata_fields=whole_day&metadata_fields=location;`
+
+It searches for events starting as early as the given ``end_str`` and latest as the given ``start_str``.
+
+This is the full initialization tag:
+```
+  <div id="calendar" class="pat-calendar"
+      data-pat-calendar="
+        url: http://localhost:8080/Plone/@search?portal_type=Event&start.query=${end_str}&start.range=max&end.query=${start_str}&end.range=min&metadata_fields=start&metadata_fields=end&metadata_fields=whole_day&metadata_fields=location;
+        initial-date: 2020-10-10;
+        lang: de;
+        store: session;"
+  >
+```
+
+
 ### Options reference
 
 The calendar can be configured through a `data-pat-calendar` attribute. The available options are:

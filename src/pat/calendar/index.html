@@ -11,6 +11,13 @@
     ></script>
 </head>
 <body>
+    <!--div id="calendar" class="pat-calendar"
+      data-pat-calendar="
+        url: http://localhost:8080/Plone/@search?portal_type=Event&start.query=${end_str}&start.range=max&end.query=${start_str}&end.range=min&metadata_fields=start&metadata_fields=end&metadata_fields=whole_day&metadata_fields=location;
+        initial-date: 2020-10-10;
+        lang: de;
+        store: session;"
+  -->
   <div id="calendar" class="pat-calendar"
       data-pat-calendar="
         url: ./test_event_source.json;
@@ -18,7 +25,6 @@
         lang: de;
         store: session;"
   >
-
     <h1 class="cal-title">title</h1>
     <div class="cal-toolbar">
       <fieldset class="cal-nav">
