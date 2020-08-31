@@ -26,6 +26,7 @@
 
 -   Implenent lazy loading for external libraries via dynamic imports. Leads to significantly reduced bundle sizes.
 -   Upgrade pat-calendar to use latest fullcalendar version (5.3.0).
+-   pat calendar: Add fullcalendar list views.
 -   pat tooltip: Use tippy v6 based implementation.
 -   Allow overriding the public path from outside via the definition of a ``window.__patternslib_public_path__`` global variable.
 

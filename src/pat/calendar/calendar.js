@@ -29,12 +29,18 @@ parser.addArgument("initial-view", "month", [
     "month",
     "week",
     "day",
+    "list",
     // FC 5 names
     "dayGridMonth",
     "dayGridWeek",
     "dayGridDay",
     "timeGridWeek",
     "timeGridDay",
+    "listDay",
+    "listWeek",
+    "listMonth",
+    "listYear",
+    "listWeek",
     // FC 3 names
     "basicWeek",
     "basicDay",
@@ -73,6 +79,7 @@ export default Base.extend({
         month: "dayGridMonth",
         week: "timeGridWeek",
         day: "timeGridDay",
+        list: "listMonth",
         basicWeek: "dayGridWeek",
         basicDay: "dayGridDay",
         agendaWeek: "timeGridWeek",
@@ -126,6 +133,10 @@ export default Base.extend({
         this.el_view_month = el.querySelector(".view-month");
         this.el_view_week = el.querySelector(".view-week");
         this.el_view_day = el.querySelector(".view-day");
+        this.el_view_list_year = el.querySelector(".view-listYear");
+        this.el_view_list_month = el.querySelector(".view-listMonth");
+        this.el_view_list_week = el.querySelector(".view-listWeek");
+        this.el_view_list_day = el.querySelector(".view-listDay");
         this.el_timezone = el.querySelector("select[name='timezone']");
 
         const config = {};
@@ -223,6 +234,26 @@ export default Base.extend({
         this.el_view_day?.addEventListener("click", (event) => {
             event.preventDefault();
             this.calendar.changeView("timeGridDay");
+        });
+
+        this.el_view_list_year?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listYear");
+        });
+
+        this.el_view_list_month?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listMonth");
+        });
+
+        this.el_view_list_week?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listWeek");
+        });
+
+        this.el_view_list_day?.addEventListener("click", (event) => {
+            event.preventDefault();
+            this.calendar.changeView("listDay");
         });
 
         this.el_timezone?.addEventListener("change", (event) => {
