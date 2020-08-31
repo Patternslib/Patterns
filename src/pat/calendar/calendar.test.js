@@ -155,16 +155,25 @@ describe("Calendar tests", () => {
         await utils.timeout(1); // wait a tick for async to settle.
 
         el.querySelector(".view-week").click();
+        expect(el.querySelector(".view-week.active")).toBeTruthy();
+        expect(el.querySelector(".view-day.active")).toBeFalsy();
+        expect(el.querySelector(".view-month.active")).toBeFalsy();
         expect(el.querySelector(".fc-dayGridMonth-view")).toBeFalsy();
         expect(el.querySelector(".fc-timeGridWeek-view")).toBeTruthy();
         expect(el.querySelector(".fc-timeGridDay-view")).toBeFalsy();
 
         el.querySelector(".view-day").click();
+        expect(el.querySelector(".view-week.active")).toBeFalsy();
+        expect(el.querySelector(".view-day.active")).toBeTruthy();
+        expect(el.querySelector(".view-month.active")).toBeFalsy();
         expect(el.querySelector(".fc-dayGridMonth-view")).toBeFalsy();
         expect(el.querySelector(".fc-timeGridWeek-view")).toBeFalsy();
         expect(el.querySelector(".fc-timeGridDay-view")).toBeTruthy();
 
         el.querySelector(".view-month").click();
+        expect(el.querySelector(".view-week.active")).toBeFalsy();
+        expect(el.querySelector(".view-day.active")).toBeFalsy();
+        expect(el.querySelector(".view-month.active")).toBeTruthy();
         expect(el.querySelector(".fc-dayGridMonth-view")).toBeTruthy();
         expect(el.querySelector(".fc-timeGridWeek-view")).toBeFalsy();
         expect(el.querySelector(".fc-timeGridDay-view")).toBeFalsy();

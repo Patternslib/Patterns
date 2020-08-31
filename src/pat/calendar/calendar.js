@@ -193,6 +193,7 @@ export default Base.extend({
         }
 
         this._registerCalendarControls();
+        this.setActiveClasses();
     },
 
     _registerCalendarControls() {
@@ -252,6 +253,53 @@ export default Base.extend({
         });
     },
 
+    setActiveClasses() {
+        // Set active classes of UI elements.
+
+        this.el_jump_today?.classList.remove("active");
+        this.el_view_month?.classList.remove("active");
+        this.el_view_week?.classList.remove("active");
+        this.el_view_day?.classList.remove("active");
+        this.el_view_list_year?.classList.remove("active");
+        this.el_view_list_month?.classList.remove("active");
+        this.el_view_list_week?.classList.remove("active");
+        this.el_view_list_day?.classList.remove("active");
+
+        const cdate = this.calendar.currentData.currentDate;
+        const today = new Date();
+        if (
+            cdate.getYear() === today.getYear() &&
+            cdate.getMonth() === today.getMonth() &&
+            cdate.getDate() === today.getDate()
+        ) {
+            this.el_jump_today?.classList.add("active");
+        }
+
+        switch (this.calendar.view.type) {
+            case "dayGridMonth":
+                this.el_view_month?.classList.add("active");
+                break;
+            case "timeGridWeek":
+                this.el_view_week?.classList.add("active");
+                break;
+            case "timeGridDay":
+                this.el_view_day?.classList.add("active");
+                break;
+            case "listYear":
+                this.el_view_list_year?.classList.add("active");
+                break;
+            case "listMonth":
+                this.el_view_list_month?.classList.add("active");
+                break;
+            case "listWeek":
+                this.el_view_list_week?.classList.add("active");
+                break;
+            case "listDay":
+                this.el_view_list_day?.classList.add("active");
+                break;
+        }
+    },
+
     _viewChanged(data) {
         // Set title
         if (this.el_title) {
@@ -267,6 +315,8 @@ export default Base.extend({
         query.set("date", date);
         query.set("view", view);
         history.replaceState(null, null, "?" + query.toString());
+
+        this.setActiveClasses();
     },
 
     _addNewEvent: function ($el, $event, data) {
