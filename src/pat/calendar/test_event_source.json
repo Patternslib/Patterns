@@ -14,6 +14,24 @@
       "title": "Event 3",
       "start": "2020-10-14",
       "end": "2020-10-16"
+    },
+    {
+      "title": "Event 4",
+      "start": "2020-11-01",
+      "end": "2020-11-02",
+      "color": "green"
+    },
+    {
+      "title": "Event 5",
+      "start": "2020-11-04",
+      "end": "2020-11-05",
+      "color": "#00FFFF"
+    },
+    {
+      "title": "Event 6",
+      "start": "2020-11-08",
+      "end": "2020-11-10",
+      "color": "#AAAAAA"
     }
   ]
 }

@@ -57,4 +57,4 @@ The calendar can be configured through a `data-pat-calendar` attribute. The avai
 | `title-month`             | MMMM YYYY         |                                                   |
 | `title-week`              | MMM D YYYY        |                                                   |
 | `url`                     |                   |                                                   | URL to an event source as JSON feed.
-
+| `event-color`             | blue              | Any CSS color value                               | Default color of events.

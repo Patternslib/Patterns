@@ -62,6 +62,7 @@ parser.addArgument("timezone", null);
 parser.addArgument("title-day", "dddd, MMM d, YYYY");
 parser.addArgument("title-month", "MMMM YYYY");
 parser.addArgument("title-week", "MMM D YYYY");
+parser.addArgument("event-color", "blue");
 
 parser.addArgument("url", null);
 parser.addArgument("add-url", null);
@@ -150,6 +151,7 @@ export default Base.extend({
             fcLuxon,
             fcTimeGrid,
         ];
+        config.eventColor = opts.eventColor;
 
         config.dateClick = this.addNewEvent.bind(this);
 
@@ -217,6 +219,9 @@ export default Base.extend({
             allDay: event.whole_day,
             url: event["@id"],
 
+            backgroundColor: event.color,
+            borderColor: event.color,
+
             // non fullcalendar standard fields
             description: event.description,
             text: event.text,
@@ -239,6 +244,9 @@ export default Base.extend({
         event.setProp("id", data.id);
         event.setProp("title", data.title);
         event.setProp("url", data.url);
+
+        event.setProp("backgroundColor", data.color);
+        event.setProp("borderColor", data.color);
 
         event.setExtendedProp("description", data.description);
         event.setExtendedProp("text", data.text);
