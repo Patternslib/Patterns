@@ -19,12 +19,9 @@ stamp-yarn:
 
 .PHONY: clean
 clean:
-	rm -rf bundle* chunks
-
-.PHONY: clean-all
-clean-all: clean
 	rm stamp-yarn
-	rm -rf node_modules
+	rm -Rf node_modules/
+	rm -Rf dist/
 
 ########################################################################
 ## Tests
