@@ -4,6 +4,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 // plugins
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
 
@@ -22,8 +23,8 @@ module.exports = env => {
         output: {
             filename: "[name].js",
             chunkFilename: 'chunks/[name].[contenthash].js',
-            publicPath: '/',
-            path: path.resolve(__dirname, '../'),
+            publicPath: '/dist',
+            path: path.resolve(__dirname, '../dist'),
         },
         optimization: {
             splitChunks: {
@@ -94,6 +95,7 @@ module.exports = env => {
             }
         },
         plugins: [
+            new CleanWebpackPlugin(),
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new webpack.ProvidePlugin({
                 $: "jquery",
