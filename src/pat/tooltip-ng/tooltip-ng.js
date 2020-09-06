@@ -43,10 +43,13 @@ parser.addArgument("source", "title", [
 ]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
 parser.addArgument("delay");
-parser.addArgument("distance");
 parser.addArgument("mark-inactive", true);
 parser.addArgument("class");
 parser.addArgument("target", "body");
+
+parser.addArgument("height", "auto", ["auto", "max"]);
+parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
+parser.addArgument("distance");
 
 export default Base.extend({
     name: "tooltip-ng",
@@ -56,11 +59,16 @@ export default Base.extend({
 
     tippy: null,
 
-    init($el, opts, debuglevel = 20) {
+    init(el, opts, debuglevel = 20) {
+        if (el.jquery) {
+            el = el[0];
+        }
+        this.el = el;
+
         log.setLevel(debuglevel);
+        start = Date.now();
 
         const defaultProps = {
-            allowHTML: true,
             animation: false,
             arrow: true,
             //'delay': [0, 1800],
@@ -70,36 +78,45 @@ export default Base.extend({
             hideOnClick: true,
             ignoreAttributes: true,
             interactive: false,
-            onHidden: this._onHidden.bind(this),
             onHide: this._onHide.bind(this),
             onMount: this._onMount.bind(this),
             onShow: this._onShow.bind(this),
-            onShown: this._onShown.bind(this),
-            onTrigger: this._onTrigger.bind(this),
             trigger: "click",
             boundary: "viewport",
         };
 
-        start = Date.now();
+        this.options = parser.parse(el, opts);
+        this.tippy_options = this.parseOptionsForTippy(this.options);
 
         tippy.setDefaults(defaultProps);
-        this.options = parser.parse($el, opts);
+        this.tippy = tippy(el, this.tippy_options);
 
-        $el.data("patterns.tooltip-ng", _.clone(this.options)).on(
-            "destroy.pat-tooltip-ng",
-            this._onDestroy.bind(this)
-        );
+        if (el.getAttribute("title")) {
+            // Remove title attribute to disable browser's built-in tooltip feature
+            el.removeAttribute("title");
+        }
 
-        this.options = this.parseOptionsForTippy(this.options, $el);
-        this.tippy = tippy($el[0], this.options);
-        this.setupShowEvents($el);
+        if (this.options.markInactive) {
+            // Initially mark "inactive"
+            el.classList.add("inactive");
+        }
+
+        if (this.options.class) {
+            this.el.addEventListener("pat-tippy-mount", (event) => {
+                event.detail.tooltip.classList.add(this.options.class);
+            });
+        }
+
+        if (this.options.trigger === "click") {
+            // prevent default action for "click" and "mouseenter click"
+            el.addEventListener("click", (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+            });
+        }
     },
 
-    _returnBody: function _returnBody(args) {
-        return document.body;
-    },
-
-    parseOptionsForTippy(opts, $trigger) {
+    parseOptionsForTippy(opts) {
         const notImplemented = (name) => {
             log.error(`${name} not implemented`);
         };
@@ -127,25 +144,29 @@ export default Base.extend({
             return `${primary(pos[0])}${secondary(pos[1])}`;
         };
         const flipBehavior = (pos) => placement(`${pos[0]}m`);
+
+        const tippy_options = {};
+
         const parsers = {
             position: () => {
-                if (opts.hasOwnProperty("position")) {
+                if (opts.position) {
                     const prefs = opts.position.list;
                     if (prefs.length > 0) {
                         const pos = prefs[0];
-                        opts.placement = placement(pos);
+                        tippy_options.placement = placement(pos);
 
                         if (prefs.length > 1) {
-                            opts.flipBehavior = prefs.map(flipBehavior);
-                            opts.flip = true;
-                            opts.flipOnUpdate = true;
+                            tippy_options.flipBehavior = prefs.map(
+                                flipBehavior
+                            );
+                            tippy_options.flip = true;
+                            tippy_options.flipOnUpdate = true;
                         }
                     }
                     if (opts.position.policy === "force") {
-                        opts.flip = false;
-                        opts.flipOnUpdate = false;
+                        tippy_options.flip = false;
+                        tippy_options.flipOnUpdate = false;
                     }
-                    delete opts.position;
                 }
             },
 
@@ -153,110 +174,87 @@ export default Base.extend({
 
             trigger() {
                 if (opts.trigger === "hover") {
-                    opts.trigger = "mouseenter focus";
+                    tippy_options.trigger = "mouseenter focus";
                 }
             },
 
             closing: notImplemented,
 
             source: () => {
-                if (opts.hasOwnProperty("source")) {
-                    if (opts.source === "title") {
-                        opts.content = $trigger.attr("title");
+                if (opts.source === "auto") {
+                    const href = this.el.getAttribute("href");
+                    if (typeof href !== "string") {
+                        log.error(
+                            `href must be specified if 'source' is set to 'auto'`
+                        );
+                        return;
                     }
-                    if (opts.source === "auto") {
-                        const href = $trigger.attr("href");
-                        if (typeof href !== "string") {
-                            log.error(
-                                `href must be specified if 'source' is set to 'auto'`
-                            );
-                            return;
-                        }
-                        if (href.indexOf("#") === 0) {
-                            this._setSource(opts, "content");
-                        } else {
-                            this._setSource(opts, "ajax");
-                        }
+                    if (href.indexOf("#") === 0) {
+                        opts.source = "content";
+                    } else {
+                        opts.source = "ajax";
                     }
-                    if (opts.source === "content") {
-                        const href = $trigger.attr("href"),
-                            is_string = typeof href === "string",
-                            has_hash = href.indexOf("#") !== -1,
-                            has_more = href.length > 1;
-                        let $content;
-
-                        if (is_string && has_hash && has_more) {
-                            $content = $("#" + href.split("#")[1])
-                                .children()
-                                .clone();
-                        } else {
-                            $content = $trigger.children().clone();
-                            if (!$content.length) {
-                                $content = $("<p/>").text($trigger.text());
-                            }
-                        }
-                        opts.content = $content[0];
-                        registry.scan($content[0]);
-                    }
-                    if (opts.source === "ajax") {
-                        const $p = $("<progress/>")[0];
-
-                        opts.content = $p;
-                        opts.onShow = this._onAjax($trigger);
-                        opts.onHidden = (instance) => {
-                            timelog("ONAJAXHIDDEN");
-                            instance.setContent($p);
-                            instance.state.ajax.canFetch = true;
-                        };
-                    }
-                    delete opts.source;
                 }
-            },
-
-            ajaxDataType() {
-                delete opts.ajaxDataType;
+                let content;
+                if (opts.source === "title") {
+                    // Tooltip content from title attribute
+                    content = this.el.getAttribute("title");
+                }
+                if (opts.source === "content") {
+                    // Tooltip content from current DOM tree.
+                    content = document.createElement("div");
+                    tippy_options.allowHTML = true;
+                    const href = this.el.getAttribute("href");
+                    const is_string = typeof href === "string";
+                    const has_hash = href.indexOf("#") !== -1;
+                    const has_more = href.length > 1;
+                    if (is_string && has_hash && has_more) {
+                        content.innerHTML = document.querySelector(
+                            "#" + href.split("#")[1]
+                        ).innerHTML;
+                    } else {
+                        content.innerHTML = this.el.innerHTML;
+                    }
+                    registry.scan(content.innerHTML); // TODO: this won't work...
+                }
+                if (opts.source === "ajax") {
+                    // Tooltiop content from AJAX request.
+                    content = document.createElement("progress");
+                    tippy_options.allowHTML = true;
+                    tippy_options.onShow = this._onAjax();
+                    tippy_options.onHidden = (instance) => {
+                        timelog("ONAJAXHIDDEN");
+                        instance.setContent(content);
+                        instance.state.ajax.canFetch = true;
+                    };
+                }
+                tippy_options.content = content;
             },
 
             delay() {
-                if (opts.hasOwnProperty("delay")) {
-                    opts.delay = [utils.parseTime(opts.delay), 0];
+                if (opts.delay) {
+                    tippy_options.delay = [utils.parseTime(opts.delay), 0];
                 }
             },
 
             distance() {
-                if (opts.hasOwnProperty("distance")) {
-                    opts.distance = [parseInt(opts.distance), 20];
-                }
-            },
-
-            markInactive() {
-                if (opts.markInactive) {
-                    $trigger.addClass("inactive");
-                }
-                delete opts.markInactive;
-            },
-
-            class: () => {
-                if (opts.hasOwnProperty("class")) {
-                    const klass = opts.class,
-                        handler = this._addClassHandler(klass);
-
-                    $trigger.on("pat-tippy-mount", handler);
-                    delete opts.class;
+                if (opts.distance) {
+                    tippy_options.distance = [parseInt(opts.distance), 20];
                 }
             },
 
             target: () => {
-                if (opts.hasOwnProperty("target")) {
-                    if (opts.target === "parent") {
-                        opts.appendTo = "parent";
-                    } else if (opts.target !== "body") {
-                        opts.appendTo = $(opts.target)[0];
-                    } else {
-                        opts.appendTo = this._returnBody;
-                    }
-
-                    delete opts.target;
+                if (!opts.target) {
+                    return;
+                }
+                if (opts.target === "parent") {
+                    tippy_options.appendTo = "parent";
+                } else if (opts.target === "body") {
+                    tippy_options.appendTo = document.body;
+                } else {
+                    tippy_options.appendTo = document.querySelector(
+                        opts.target
+                    );
                 }
             },
         };
@@ -271,105 +269,40 @@ export default Base.extend({
                     break;
             }
             log.debug(arg);
-            parsers[arg](arg);
+            parsers[arg] && parsers[arg](arg);
         }
 
-        if ($trigger.attr("title")) {
-            $trigger.removeAttr("title");
-        }
-
-        return opts;
+        return tippy_options;
     },
 
-    setupShowEvents($trigger) {
-        $trigger.on("click.pat-tooltip-ng", this.blockDefault);
-    },
-
-    removeShowEvents($trigger) {},
-
-    setupHideEvents($trigger) {
-        $trigger.on("click.pat-tooltip-ng", this.blockdefault);
-    },
-
-    removeHideEvents($trigger) {},
-
-    blockDefault(event) {
-        if (event.preventDefault) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-    },
-
-    _addClassHandler(klass) {
-        return (event, tooltip) => {
-            $(tooltip).addClass(klass);
-        };
-    },
-
-    _setSource(opts, source) {
-        opts.source = source;
-    },
-
-    _onDestroy(event) {
-        timelog("ONDESTROY");
-        this.tippy?.destroy();
-    },
-
-    _onClick(instance, event) {
-        timelog("ONCLICK");
-        if (event.type === "click") {
-            timelog(`it's click`);
-            event.stopPropagation();
-            event.preventDefault();
-        }
-    },
-
-    _onTrigger(instance, event) {
-        timelog("ONTRIGGER");
-    },
-
-    _onMount(instance) {
+    _onMount() {
         timelog("ONMOUNT");
-        $(instance.reference).trigger(
-            "pat-tippy-mount",
-            instance.popperChildren.tooltip
+        this.el.dispatchEvent(
+            new CustomEvent("pat-tippy-mount", {
+                detail: { tooltip: this.tippy.popperChildren.tooltip },
+            })
         );
     },
 
-    _onShow(instance) {
+    _onShow() {
         timelog("ONSHOW");
-    },
-
-    _onShown(instance) {
-        timelog("ONSHOWN");
-        const $trigger = $(instance.reference);
-        const options = $trigger.data("patterns.tooltip-ng");
-        this.removeShowEvents($trigger);
-        this.setupHideEvents($trigger);
-        if (options.markInactive) {
-            $trigger.removeClass("inactive").addClass("active");
+        if (this.options.markInactive) {
+            this.el.classList.remove("inactive");
+            this.el.classList.add("active");
         }
     },
 
-    _onHide(instance) {
+    _onHide() {
         timelog("ONHIDE");
-        const $trigger = $(instance.reference);
-        this.removeHideEvents($trigger);
-        this.setupShowEvents($trigger);
-    },
-
-    _onHidden(instance) {
-        timelog("ONHIDDEN");
-        const $trigger = $(instance.reference);
-        const options = $trigger.data("patterns.tooltip-ng");
-        if (options.markInactive) {
-            $trigger.removeClass("active").addClass("inactive");
+        if (this.options.markInactive) {
+            this.el.classList.remove("active");
+            this.el.classList.add("inactive");
         }
     },
 
-    _onAjax($trigger) {
+    _onAjax() {
         timelog("OnAJAX");
-        const source = $trigger.attr("href").split("#");
+        const source = this.el.getAttribute("href").split("#");
         return (instance) => {
             timelog("in ajax content function");
             timelog(
@@ -399,9 +332,7 @@ export default Base.extend({
 
     _onAjaxCallback(instance, src) {
         timelog("AJAXCALLBACK");
-        const $trigger = $(instance.reference),
-            options = $trigger.data("patterns.tooltip-ng"),
-            handler = this._ajaxDataTypeHandlers[options.ajaxDataType];
+        const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
         fetch(src[0]).then((response) => {
             return response
                 .text()
