@@ -98,7 +98,7 @@ describe("pat-tooltip-ng", () => {
         });
 
         describe(`if the 'class' parameter exists`, () => {
-            it("will assign a class to the tooltip container", (done) => {
+            it("will assign a class to the tooltip container", async (done) => {
                 const $el = testutils.createTooltip({
                     data: "source: title; trigger: hover; class: wasabi",
                 });
@@ -118,18 +118,19 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.mouseenter($el);
+                await utils.timeout(1);
                 expect(spy_show).toHaveBeenCalled();
                 const container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(1);
+                expect(container[0].classList.contains("wasabi")).toBeTruthy();
                 const expected = container[0].querySelector(".tippy-content")
                     .textContent;
                 expect(expected).toBe(title);
-                expect(container[0].classList.contains("wasabi")).toBeTruthy();
 
                 done();
             });
 
-            it("and only to the corresponding container", (done) => {
+            it("and only to the corresponding container", async (done) => {
                 const $el1 = testutils.createTooltip({
                     data: "source: title; trigger: click; class: wasabi",
                     id: "tooltip1",
@@ -157,6 +158,8 @@ describe("pat-tooltip-ng", () => {
                 let container, visible_container;
 
                 testutils.click($el1);
+                await utils.timeout(1);
+
                 expect(spy_show1).toHaveBeenCalled();
                 expect(spy_show2).not.toHaveBeenCalled();
                 container = document.querySelectorAll(".tippy-box");
@@ -170,6 +173,8 @@ describe("pat-tooltip-ng", () => {
                 spy_show2.calls.reset();
 
                 testutils.click($el2);
+                await utils.timeout(1);
+
                 expect(spy_show1).not.toHaveBeenCalled();
                 expect(spy_show2).toHaveBeenCalled();
                 container = document.querySelectorAll(".tippy-box");
@@ -190,6 +195,8 @@ describe("pat-tooltip-ng", () => {
                 spy_show2.calls.reset();
 
                 testutils.click($el1);
+                await utils.timeout(1);
+
                 expect(spy_show1).toHaveBeenCalled();
                 expect(spy_show2).not.toHaveBeenCalled();
                 container = document.querySelectorAll(".tippy-box");
@@ -232,6 +239,7 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.mouseenter($el);
                 await utils.timeout(1000);
+
                 expect(spy_show).toHaveBeenCalled();
                 const container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(1);
@@ -251,7 +259,7 @@ describe("pat-tooltip-ng", () => {
             testutils.cleanup();
         });
 
-        it(`'lt' will place the tooltip as 'right-start'`, (done) => {
+        it(`'lt' will place the tooltip as 'right-start'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: lt",
                 title: LOREM,
@@ -263,6 +271,8 @@ describe("pat-tooltip-ng", () => {
             const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
+            await utils.timeout(1);
+
             expect(spy_show).toHaveBeenCalled();
             const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
@@ -275,7 +285,7 @@ describe("pat-tooltip-ng", () => {
 
             done();
         });
-        it(`'lb' will place the tooltip as 'right-end'`, (done) => {
+        it(`'lb' will place the tooltip as 'right-end'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: lb",
                 title: LOREM,
@@ -287,6 +297,8 @@ describe("pat-tooltip-ng", () => {
             const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
+            await utils.timeout(1);
+
             expect(spy_show).toHaveBeenCalled();
             const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
@@ -299,7 +311,7 @@ describe("pat-tooltip-ng", () => {
 
             done();
         });
-        it(`'lm' will place the tooltip as 'right'`, (done) => {
+        it(`'lm' will place the tooltip as 'right'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: lm",
                 title: LOREM,
@@ -311,6 +323,8 @@ describe("pat-tooltip-ng", () => {
             const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
+            await utils.timeout(1);
+
             expect(spy_show).toHaveBeenCalled();
             const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
@@ -323,7 +337,7 @@ describe("pat-tooltip-ng", () => {
 
             done();
         });
-        it(`'bl' will place the tooltip as 'top-start'`, (done) => {
+        it(`'bl' will place the tooltip as 'top-start'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: bl",
                 title: LOREM,
@@ -335,6 +349,8 @@ describe("pat-tooltip-ng", () => {
             const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
+            await utils.timeout(1);
+
             expect(spy_show).toHaveBeenCalled();
             const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
@@ -347,7 +363,7 @@ describe("pat-tooltip-ng", () => {
 
             done();
         });
-        it(`'br' will place the tooltip as 'top-end'`, (done) => {
+        it(`'br' will place the tooltip as 'top-end'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: br",
                 title: LOREM,
@@ -359,6 +375,8 @@ describe("pat-tooltip-ng", () => {
             const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
+            await utils.timeout(1);
+
             expect(spy_show).toHaveBeenCalled();
             const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
@@ -371,7 +389,7 @@ describe("pat-tooltip-ng", () => {
 
             done();
         });
-        it(`'bm' will place the tooltip as 'top'`, (done) => {
+        it(`'bm' will place the tooltip as 'top'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: bm",
                 title: LOREM,
@@ -383,6 +401,8 @@ describe("pat-tooltip-ng", () => {
             const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
+            await utils.timeout(1);
+
             expect(spy_show).toHaveBeenCalled();
             const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
@@ -396,7 +416,7 @@ describe("pat-tooltip-ng", () => {
             done();
         });
         describe(`and 'position-policy' is 'force'`, () => {
-            it(`'tl;force' will place the tooltip as 'bottom-start'`, (done) => {
+            it(`'tl;force' will place the tooltip as 'bottom-start'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tl; position-policy: force",
                     title: LOREM,
@@ -408,6 +428,8 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -422,7 +444,7 @@ describe("pat-tooltip-ng", () => {
 
                 done();
             });
-            it(`'tr;force' will place the tooltip as 'bottom-end'`, (done) => {
+            it(`'tr;force' will place the tooltip as 'bottom-end'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tr; position-policy: force",
                     title: LOREM,
@@ -434,6 +456,8 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -448,7 +472,7 @@ describe("pat-tooltip-ng", () => {
 
                 done();
             });
-            it(`'tm;force' will place the tooltip as 'bottom'`, (done) => {
+            it(`'tm;force' will place the tooltip as 'bottom'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tm; position-policy: force",
                     title: LOREM,
@@ -460,6 +484,8 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -472,7 +498,7 @@ describe("pat-tooltip-ng", () => {
 
                 done();
             });
-            it(`'rt;force' will place the tooltip as 'left-start'`, (done) => {
+            it(`'rt;force' will place the tooltip as 'left-start'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rt; position-policy: force",
                     title: LOREM,
@@ -484,6 +510,8 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -498,7 +526,7 @@ describe("pat-tooltip-ng", () => {
 
                 done();
             });
-            it(`'rb;force' will place the tooltip as 'left-end'`, (done) => {
+            it(`'rb;force' will place the tooltip as 'left-end'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rb; position-policy: force",
                     title: LOREM,
@@ -510,6 +538,8 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -522,7 +552,7 @@ describe("pat-tooltip-ng", () => {
 
                 done();
             });
-            it(`'rm;force' will place the tooltip as 'left'`, (done) => {
+            it(`'rm;force' will place the tooltip as 'left'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rm; position-policy: force",
                     title: LOREM,
@@ -534,6 +564,8 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -576,6 +608,8 @@ describe("pat-tooltip-ng", () => {
                 expect(el.classList.contains("inactive")).toBeTruthy();
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -620,6 +654,8 @@ describe("pat-tooltip-ng", () => {
                 expect(el.classList.contains("inactive")).toBeFalsy();
 
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(spy_show).toHaveBeenCalled();
                 containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
@@ -644,7 +680,7 @@ describe("pat-tooltip-ng", () => {
         });
         describe(`if the 'trigger' parameter is 'hover'`, () => {
             describe(`if the 'source' parameter is 'title'`, () => {
-                it(`will show the contents of the 'title' attribute`, (done) => {
+                it(`will show the contents of the 'title' attribute`, async (done) => {
                     const $el = testutils.createTooltip({
                         data: "source: title; trigger: hover",
                     });
@@ -659,6 +695,8 @@ describe("pat-tooltip-ng", () => {
                     expect(el.hasAttribute("title")).toBeFalsy();
 
                     testutils.mouseenter($el);
+                    await utils.timeout(1);
+
                     expect(spy_show).toHaveBeenCalled();
 
                     const container = document.querySelectorAll(".tippy-box");
@@ -678,6 +716,8 @@ describe("pat-tooltip-ng", () => {
                     const spy_hide = spyOn(instance.tippy.props, "onHide");
 
                     testutils.mouseenter($el);
+                    await utils.timeout(1);
+
                     expect(spy_hide).not.toHaveBeenCalled();
 
                     expect(
@@ -686,6 +726,7 @@ describe("pat-tooltip-ng", () => {
 
                     testutils.mouseleave($el);
                     await utils.timeout(200);
+
                     expect(spy_hide).toHaveBeenCalled();
 
                     // TODO: not removed.
@@ -698,7 +739,7 @@ describe("pat-tooltip-ng", () => {
             });
             describe(`if the 'source' parameter is 'content'`, () => {
                 describe("if the href attribute is hashtag", () => {
-                    it("will show the content of the link", (done) => {
+                    it("will show the content of the link", async (done) => {
                         const content = "Local content";
                         const $el = testutils.createTooltip({
                             data: "source: content; trigger: hover",
@@ -712,6 +753,8 @@ describe("pat-tooltip-ng", () => {
                         ).and.callThrough();
 
                         testutils.mouseenter($el);
+                        await utils.timeout(1);
+
                         expect(spy_show).toHaveBeenCalled();
                         expect(
                             document.querySelector(".tippy-box").textContent
@@ -721,7 +764,7 @@ describe("pat-tooltip-ng", () => {
                     });
                 });
                 describe("if the href attribute is #tooltip-source", () => {
-                    it("will clone a DOM element from the page", (done) => {
+                    it("will clone a DOM element from the page", async (done) => {
                         const content = "Local content";
                         const $el = testutils.createTooltip({
                             data: "source: content; trigger: hover",
@@ -735,6 +778,8 @@ describe("pat-tooltip-ng", () => {
                         ).and.callThrough();
 
                         testutils.mouseenter($el);
+                        await utils.timeout(1);
+
                         expect(spy_show).toHaveBeenCalled();
                         expect(
                             document.querySelector(".tippy-box strong")
@@ -747,13 +792,15 @@ describe("pat-tooltip-ng", () => {
             });
         });
         describe(`if the 'target' parameter is 'body'`, () => {
-            it("will append the .tippy-box to the document.body", (done) => {
+            it("will append the .tippy-box to the document.body", async (done) => {
                 const $el = testutils.createTooltip({
                     data: "target: body",
                     href: "#",
                 });
                 const instance = new pattern($el);
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(
                     document.querySelectorAll("body > .tippy-box").length
                 ).toEqual(1);
@@ -762,13 +809,15 @@ describe("pat-tooltip-ng", () => {
             });
         });
         describe(`if the 'target' parameter is 'parent'`, () => {
-            it(`will append the .tippy-box to the reference element's parent node`, (done) => {
+            it(`will append the .tippy-box to the reference element's parent node`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "target: parent",
                     href: "#",
                 });
                 const instance = new pattern($el);
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(
                     document.querySelectorAll("#lab > .tippy-box").length
                 ).toEqual(1);
@@ -777,7 +826,7 @@ describe("pat-tooltip-ng", () => {
             });
         });
         describe(`if the 'target' parameter is a selector`, () => {
-            it("will append the .tippy-box to the selected element", (done) => {
+            it("will append the .tippy-box to the selected element", async (done) => {
                 const $el = testutils.createTooltip({
                     data: "target: #child3",
                     href: "#",
@@ -795,6 +844,8 @@ describe("pat-tooltip-ng", () => {
 
                 const instance = new pattern($el);
                 testutils.click($el);
+                await utils.timeout(1);
+
                 expect(
                     document.querySelectorAll("#child3 > .tippy-box").length
                 ).toEqual(1);
@@ -906,8 +957,8 @@ describe("pat-tooltip-ng", () => {
             ).and.callThrough();
 
             testutils.click($el);
-
             await utils.timeout(1); // wait a tick for async fetch
+
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
             expect(
@@ -944,8 +995,8 @@ describe("pat-tooltip-ng", () => {
             ).and.callThrough();
 
             testutils.click($el);
-
             await utils.timeout(1); // wait a tick for async fetch
+
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
             expect(
@@ -977,8 +1028,8 @@ describe("pat-tooltip-ng", () => {
             ).and.callThrough();
 
             testutils.click($el);
-
             await utils.timeout(1); // wait a tick for async fetch
+
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
             const content = document.querySelector(
@@ -1022,8 +1073,8 @@ this will be extracted.
             ).and.callThrough();
 
             testutils.click($el);
-
             await utils.timeout(1); // wait a tick for async fetch
+
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
             const content = document.querySelector(".tippy-box .tippy-content");
