@@ -358,14 +358,21 @@ export default Base.extend({
 
     _ajaxDataTypeHandlers: {
         html(text, src) {
-            const $tmp = $("<div/>").append($.parseHTML(text));
-            return $tmp.find("#".concat(src[1])).prop("innerHTML");
+            const tmp = document.createElement("div");
+            tmp.innerHTML = text;
+            if (src[1]) {
+                return tmp.querySelector(`#${src[1]}`)?.innerHTML || "";
+            }
+            return tmp.innerHTML;
         },
 
         markdown(text, src) {
-            const [url, source] = src,
-                cfg = { url, source: `#${source}` },
-                pat = pat_markdown.init($("<div/>"));
+            const pat = pat_markdown.init($("<div/>"));
+            const [url, source] = src;
+            const cfg = { url };
+            if (source) {
+                cfg.source = `#${source}`;
+            }
             return pat.renderForInjection(cfg, text)[0];
         },
     },
