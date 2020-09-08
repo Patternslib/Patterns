@@ -67,10 +67,10 @@ import "./pat/switch/switch.js";
 import "./pat/syntax-highlight/syntax-highlight.js";
 import "./pat/tabs/tabs.js";
 import "./pat/toggle/toggle.js";
+import "./pat/tooltip-ng/tooltip-ng.js";
 import "./pat/tooltip/tooltip.js";
 import "./pat/validation/validation.js";
 import "./pat/zoom/zoom.js";
-// import "./pat/tooltip-ng/tooltip-ng.js";
 
 // example pattern
 import "./pat/minimalpattern/minimalpattern";
