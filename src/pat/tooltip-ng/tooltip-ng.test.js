@@ -146,72 +146,22 @@ describe("pat-tooltip-ng", () => {
 
                 const instance1 = new pattern($el1);
                 const instance2 = new pattern($el2);
-                const spy_show1 = spyOn(
-                    instance1.tippy.props,
-                    "onShow"
-                ).and.callThrough();
-                const spy_show2 = spyOn(
-                    instance2.tippy.props,
-                    "onShow"
-                ).and.callThrough();
 
                 let container, visible_container;
 
                 testutils.click($el1);
                 await utils.timeout(1);
 
-                expect(spy_show1).toHaveBeenCalled();
-                expect(spy_show2).not.toHaveBeenCalled();
                 container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(1);
                 expect(container[0].classList.contains("wasabi")).toBeTruthy();
-                expect(
-                    container[0].querySelector(".tippy-content").textContent
-                ).toBe(title1);
-
-                spy_show1.calls.reset();
-                spy_show2.calls.reset();
 
                 testutils.click($el2);
                 await utils.timeout(1);
 
-                expect(spy_show1).not.toHaveBeenCalled();
-                expect(spy_show2).toHaveBeenCalled();
                 container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(2);
-                visible_container = [...container].filter((el) => {
-                    return el.style.visibility === "visible";
-                });
-                expect(visible_container.length).toEqual(1);
-                expect(
-                    visible_container[0].classList.contains("wasabi")
-                ).toBeFalsy();
-                expect(
-                    visible_container[0].querySelector(".tippy-content")
-                        .textContent
-                ).toBe(title2);
-
-                spy_show1.calls.reset();
-                spy_show2.calls.reset();
-
-                testutils.click($el1);
-                await utils.timeout(1);
-
-                expect(spy_show1).toHaveBeenCalled();
-                expect(spy_show2).not.toHaveBeenCalled();
-                container = document.querySelectorAll(".tippy-box");
-                expect(container.length).toEqual(2);
-                visible_container = [...container].filter((el) => {
-                    return el.style.visibility === "visible";
-                });
-                expect(visible_container.length).toEqual(1);
-                expect(
-                    visible_container[0].classList.contains("wasabi")
-                ).toBeTruthy();
-                expect(
-                    visible_container[0].querySelector(".tippy-content")
-                        .textContent
-                ).toBe(title1);
+                expect(container[1].classList.contains("wasabi")).toBeFalsy();
 
                 done();
             });
@@ -254,6 +204,63 @@ describe("pat-tooltip-ng", () => {
         });
     });
 
+    describe(`multiple tooltips...`, () => {
+        it("...no problem", async (done) => {
+            const $el1 = testutils.createTooltip({
+                data: "source: title; trigger: click",
+                id: "tooltip1",
+                title: "tooltip1",
+            });
+            const $el2 = testutils.createTooltip({
+                data: "source: title; trigger: click",
+                id: "tooltip2",
+                title: "tooltip2",
+            });
+            const title1 = $el1.attr("title");
+            const title2 = $el2.attr("title");
+
+            const instance1 = new pattern($el1);
+            const instance2 = new pattern($el2);
+            const spy_show1 = spyOn(
+                instance1.tippy.props,
+                "onShow"
+            ).and.callThrough();
+            const spy_show2 = spyOn(
+                instance2.tippy.props,
+                "onShow"
+            ).and.callThrough();
+
+            let container, visible_container;
+
+            testutils.click($el1);
+            await utils.timeout(1);
+
+            expect(spy_show1).toHaveBeenCalled();
+            expect(spy_show2).not.toHaveBeenCalled();
+            container = document.querySelectorAll(".tippy-box");
+            expect(container.length).toEqual(1);
+            expect(
+                container[0].querySelector(".tippy-content").textContent
+            ).toBe(title1);
+
+            spy_show1.calls.reset();
+            spy_show2.calls.reset();
+
+            testutils.click($el2);
+            await utils.timeout(1);
+
+            expect(spy_show1).not.toHaveBeenCalled();
+            expect(spy_show2).toHaveBeenCalled();
+            container = document.querySelectorAll(".tippy-box");
+            expect(container.length).toEqual(2);
+            expect(
+                container[1].querySelector(".tippy-content").textContent
+            ).toBe(title2);
+
+            done();
+        });
+    });
+
     describe(`if the 'position-list' parameter exists`, () => {
         afterEach(() => {
             testutils.cleanup();
@@ -262,156 +269,90 @@ describe("pat-tooltip-ng", () => {
         it(`'lt' will place the tooltip as 'right-start'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: lt",
-                title: LOREM,
             });
-            const el = $el[0];
-            const title = el.title;
-
             const instance = new pattern($el);
-            const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1);
 
-            expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-box");
-            expect(containers.length).toEqual(1);
-            const container = containers[0];
-            const expected = container.querySelector(".tippy-content")
-                .textContent;
-            expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-box");
-            expect(container2.getAttribute("x-placement")).toBe("right-start");
+            const container = document.querySelector(".tippy-box");
+            expect(container.getAttribute("data-placement")).toBe(
+                "right-start"
+            );
 
             done();
         });
         it(`'lb' will place the tooltip as 'right-end'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: lb",
-                title: LOREM,
             });
-            const el = $el[0];
-            const title = el.title;
-
             const instance = new pattern($el);
-            const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1);
 
-            expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-box");
-            expect(containers.length).toEqual(1);
-            const container = containers[0];
-            const expected = container.querySelector(".tippy-content")
-                .textContent;
-            expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-box");
-            expect(container2.getAttribute("x-placement")).toBe("right-end");
+            const container = document.querySelector(".tippy-box");
+            expect(container.getAttribute("data-placement")).toBe("right-end");
 
             done();
         });
         it(`'lm' will place the tooltip as 'right'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: lm",
-                title: LOREM,
             });
-            const el = $el[0];
-            const title = el.title;
 
             const instance = new pattern($el);
-            const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1);
 
-            expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-box");
-            expect(containers.length).toEqual(1);
-            const container = containers[0];
-            const expected = container.querySelector(".tippy-content")
-                .textContent;
-            expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-box");
-            expect(container2.getAttribute("x-placement")).toBe("right");
+            const container = document.querySelector(".tippy-box");
+            expect(container.getAttribute("data-placement")).toBe("right");
 
             done();
         });
         it(`'bl' will place the tooltip as 'top-start'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: bl",
-                title: LOREM,
             });
-            const el = $el[0];
-            const title = el.title;
 
             const instance = new pattern($el);
-            const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1);
 
-            expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-box");
-            expect(containers.length).toEqual(1);
-            const container = containers[0];
-            const expected = container.querySelector(".tippy-content")
-                .textContent;
-            expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-box");
-            expect(container2.getAttribute("x-placement")).toBe("top-start");
+            const container = document.querySelector(".tippy-box");
+            expect(container.getAttribute("data-placement")).toBe("top-start");
 
             done();
         });
         it(`'br' will place the tooltip as 'top-end'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: br",
-                title: LOREM,
             });
-            const el = $el[0];
-            const title = el.title;
 
             const instance = new pattern($el);
-            const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1);
 
-            expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-box");
-            expect(containers.length).toEqual(1);
-            const container = containers[0];
-            const expected = container.querySelector(".tippy-content")
-                .textContent;
-            expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-box");
-            expect(container2.getAttribute("x-placement")).toBe("top-end");
+            const container = document.querySelector(".tippy-box");
+            expect(container.getAttribute("data-placement")).toBe("top-end");
 
             done();
         });
         it(`'bm' will place the tooltip as 'top'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: bm",
-                title: LOREM,
             });
-            const el = $el[0];
-            const title = el.title;
 
             const instance = new pattern($el);
-            const spy_show = spyOn(instance.tippy.props, "onShow");
 
             testutils.click($el);
             await utils.timeout(1);
 
-            expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-box");
-            expect(containers.length).toEqual(1);
-            const container = containers[0];
-            const expected = container.querySelector(".tippy-content")
-                .textContent;
-            expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-box");
-            expect(container2.getAttribute("x-placement")).toBe("top");
+            const container = document.querySelector(".tippy-box");
+            expect(container.getAttribute("data-placement")).toBe("top");
 
             done();
         });
@@ -419,26 +360,15 @@ describe("pat-tooltip-ng", () => {
             it(`'tl;force' will place the tooltip as 'bottom-start'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tl; position-policy: force",
-                    title: LOREM,
                 });
-                const el = $el[0];
-                const title = el.title;
 
                 const instance = new pattern($el);
-                const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
                 await utils.timeout(1);
 
-                expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-box");
-                expect(containers.length).toEqual(1);
-                const container = containers[0];
-                const expected = container.querySelector(".tippy-content")
-                    .textContent;
-                expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-box");
-                expect(container2.getAttribute("x-placement")).toBe(
+                const container = document.querySelector(".tippy-box");
+                expect(container.getAttribute("data-placement")).toBe(
                     "bottom-start"
                 );
 
@@ -447,26 +377,13 @@ describe("pat-tooltip-ng", () => {
             it(`'tr;force' will place the tooltip as 'bottom-end'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tr; position-policy: force",
-                    title: LOREM,
                 });
-                const el = $el[0];
-                const title = el.title;
-
-                const instance = new pattern($el);
-                const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
                 await utils.timeout(1);
 
-                expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-box");
-                expect(containers.length).toEqual(1);
-                const container = containers[0];
-                const expected = container.querySelector(".tippy-content")
-                    .textContent;
-                expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-box");
-                expect(container2.getAttribute("x-placement")).toBe(
+                const container = document.querySelector(".tippy-box");
+                expect(container.getAttribute("data-placement")).toBe(
                     "bottom-end"
                 );
 
@@ -475,52 +392,26 @@ describe("pat-tooltip-ng", () => {
             it(`'tm;force' will place the tooltip as 'bottom'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tm; position-policy: force",
-                    title: LOREM,
                 });
-                const el = $el[0];
-                const title = el.title;
-
-                const instance = new pattern($el);
-                const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
                 await utils.timeout(1);
 
-                expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-box");
-                expect(containers.length).toEqual(1);
-                const container = containers[0];
-                const expected = container.querySelector(".tippy-content")
-                    .textContent;
-                expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-box");
-                expect(container2.getAttribute("x-placement")).toBe("bottom");
+                const container = document.querySelector(".tippy-box");
+                expect(container.getAttribute("data-placement")).toBe("bottom");
 
                 done();
             });
             it(`'rt;force' will place the tooltip as 'left-start'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rt; position-policy: force",
-                    title: LOREM,
                 });
-                const el = $el[0];
-                const title = el.title;
-
-                const instance = new pattern($el);
-                const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
                 await utils.timeout(1);
 
-                expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-box");
-                expect(containers.length).toEqual(1);
-                const container = containers[0];
-                const expected = container.querySelector(".tippy-content")
-                    .textContent;
-                expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-box");
-                expect(container2.getAttribute("x-placement")).toBe(
+                const container = document.querySelector(".tippy-box");
+                expect(container.getAttribute("data-placement")).toBe(
                     "left-start"
                 );
 
@@ -529,52 +420,28 @@ describe("pat-tooltip-ng", () => {
             it(`'rb;force' will place the tooltip as 'left-end'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rb; position-policy: force",
-                    title: LOREM,
                 });
-                const el = $el[0];
-                const title = el.title;
-
-                const instance = new pattern($el);
-                const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
                 await utils.timeout(1);
 
-                expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-box");
-                expect(containers.length).toEqual(1);
-                const container = containers[0];
-                const expected = container.querySelector(".tippy-content")
-                    .textContent;
-                expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-box");
-                expect(container2.getAttribute("x-placement")).toBe("left-end");
+                const container = document.querySelector(".tippy-box");
+                expect(container.getAttribute("data-placement")).toBe(
+                    "left-end"
+                );
 
                 done();
             });
             it(`'rm;force' will place the tooltip as 'left'`, async (done) => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rm; position-policy: force",
-                    title: LOREM,
                 });
-                const el = $el[0];
-                const title = el.title;
-
-                const instance = new pattern($el);
-                const spy_show = spyOn(instance.tippy.props, "onShow");
 
                 testutils.click($el);
                 await utils.timeout(1);
 
-                expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-box");
-                expect(containers.length).toEqual(1);
-                const container = containers[0];
-                const expected = container.querySelector(".tippy-content")
-                    .textContent;
-                expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-box");
-                expect(container2.getAttribute("x-placement")).toBe("left");
+                const container = document.querySelector(".tippy-box");
+                expect(container.getAttribute("data-placement")).toBe("left");
 
                 done();
             });
