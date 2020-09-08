@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
@@ -8,13 +9,7 @@ import registry from "../../core/registry";
 import tippy from "tippy.js";
 import utils from "../../core/utils";
 
-let start = 0;
 const log = logging.getLogger("pat-tooltip-ng");
-const timelog = (msg) => {
-    log.debug(`${Date.now() - start} ${msg}`);
-};
-log.setLevel(20);
-timelog("Initializing pat-tooltip-ng");
 
 const parser = new Parser("tooltip-ng");
 const all_positions = [
@@ -42,13 +37,13 @@ parser.addArgument("source", "title", [
     "title",
 ]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
+parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
 parser.addArgument("delay");
 parser.addArgument("mark-inactive", true);
 parser.addArgument("class");
 parser.addArgument("target", "body");
 
-parser.addArgument("height", "auto", ["auto", "max"]);
-parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
+// parser.addArgument("height", "auto", ["auto", "max"]);
 
 export default Base.extend({
     name: "tooltip-ng",
@@ -58,31 +53,31 @@ export default Base.extend({
 
     tippy: null,
 
-    init(el, opts, debuglevel = 20) {
+    ajax_state: {
+        isFetching: false,
+        canFetch: true,
+    },
+
+    init(el, opts) {
         if (el.jquery) {
             el = el[0];
         }
         this.el = el;
-
-        log.setLevel(debuglevel);
-        start = Date.now();
+        this.options = parser.parse(el, opts);
+        this.tippy_options = this.parseOptionsForTippy(this.options);
 
         const defaultProps = {
             animation: false,
             arrow: true,
             //'delay': [0, 1800],
             //'duration': [325, 275],
-            hideOnClick: true,
+            hideOnClick: this.options.closing === "close-button" ? false : true,
             ignoreAttributes: true,
             interactive: true,
             onHide: this._onHide.bind(this),
-            onMount: this._onMount.bind(this),
             onShow: this._onShow.bind(this),
             trigger: "click",
         };
-
-        this.options = parser.parse(el, opts);
-        this.tippy_options = this.parseOptionsForTippy(this.options);
 
         tippy.setDefaultProps(defaultProps);
         this.tippy = tippy(el, this.tippy_options);
@@ -97,12 +92,6 @@ export default Base.extend({
             el.classList.add("inactive");
         }
 
-        if (this.options.class) {
-            this.el.addEventListener("pat-tippy-mount", (event) => {
-                event.detail.tooltip.classList.add(this.options.class);
-            });
-        }
-
         if (this.options.trigger === "click") {
             // prevent default action for "click" and "mouseenter click"
             el.addEventListener("click", (event) => {
@@ -113,9 +102,6 @@ export default Base.extend({
     },
 
     parseOptionsForTippy(opts) {
-        const notImplemented = (name) => {
-            log.error(`${name} not implemented`);
-        };
         const placement = (pos) => {
             // note that Cornelis needs the positioning to be the placement of the thingy on the bubble
             // tippy though refers to positioning as the placement of the bubble relatively to the reference element
@@ -183,15 +169,11 @@ export default Base.extend({
                 }
             },
 
-            height: notImplemented,
-
             trigger() {
                 if (opts.trigger === "hover") {
                     tippy_options.trigger = "mouseenter focus";
                 }
             },
-
-            closing: notImplemented,
 
             source: () => {
                 if (opts.source === "auto") {
@@ -228,18 +210,11 @@ export default Base.extend({
                     } else {
                         content.innerHTML = this.el.innerHTML;
                     }
-                    registry.scan(content.innerHTML); // TODO: this won't work...
                 }
                 if (opts.source === "ajax") {
                     // Tooltiop content from AJAX request.
                     content = document.createElement("progress");
                     tippy_options.allowHTML = true;
-                    tippy_options.onShow = this._onAjax();
-                    tippy_options.onHidden = (instance) => {
-                        timelog("ONAJAXHIDDEN");
-                        instance.setContent(content);
-                        instance.state.ajax.canFetch = true;
-                    };
                 }
                 tippy_options.content = content;
             },
@@ -275,92 +250,108 @@ export default Base.extend({
                     arg = "markInactive";
                     break;
             }
-            log.debug(arg);
             parsers[arg] && parsers[arg](arg);
         }
 
         return tippy_options;
     },
 
-    _onMount() {
-        timelog("ONMOUNT");
-        this.el.dispatchEvent(
-            new CustomEvent("pat-tippy-mount", {
-                detail: { tooltip: this.tippy.popper.firstElementChild },
-            })
+    _initializeContent() {
+        // Initialize all .close-panel elements
+        const close_els = this.tippy.popper.querySelectorAll(".close-panel");
+        const close_buttons = this.tippy.popper.querySelectorAll(
+            "pat-tooltip--close-button"
         );
+        for (let close_el of close_els) {
+            close_el.addEventListener("click", () => {
+                for (let close_button of close_buttons) {
+                    // Also remove the close button
+                    close_button.parentNode.removeChild(close_el);
+                }
+                this.tippy.hide();
+            });
+        }
+
+        // Initialize any other patterns.
+        registry.scan(this.tippy.popper);
     },
 
-    _onShow() {
-        timelog("ONSHOW");
+    async _onShow() {
+        if (
+            this.options.closing !== "auto" &&
+            this.options.trigger === "hover"
+        ) {
+            // no auto-close when hovering when closing mode is "sticky" or "close-button".
+            this.tippy.setProps({ trigger: "click" });
+        }
+
+        if (this.options.source === "ajax") {
+            await this._onAjax();
+        }
+
+        if (this.options.closing === "close-button") {
+            const close_button = document.createElement("button");
+            close_button.setAttribute(
+                "class",
+                "close-panel pat-tooltip--close-button"
+            );
+            const content = this.tippy.popper.querySelector(".tippy-content");
+            content.parentNode.insertBefore(close_button, content);
+        }
+
         if (this.options.markInactive) {
             this.el.classList.remove("inactive");
             this.el.classList.add("active");
         }
+
+        if (this.options.class) {
+            this.tippy.popper.firstElementChild.classList.add(
+                this.options.class
+            );
+        }
+
+        this._initializeContent();
     },
 
     _onHide() {
-        timelog("ONHIDE");
         if (this.options.markInactive) {
             this.el.classList.remove("active");
             this.el.classList.add("inactive");
         }
+
+        if (
+            this.options.closing !== "auto" &&
+            this.options.trigger === "hover"
+        ) {
+            // re-set hover behavior
+            this.tippy.setProps({ trigger: "mouseenter focus" });
+        }
+
+        if (this.options.source === "ajax") {
+            this.tippy.setContent(document.createElement("progress"));
+            this.ajax_state.canFetch = true;
+        }
     },
 
-    _onAjax() {
-        timelog("OnAJAX");
-        const source = this.el.getAttribute("href").split("#");
-        return (instance) => {
-            timelog("in ajax content function");
-            timelog(
-                `instance.state.ajax ${JSON.stringify(instance.state.ajax)}`
-            );
-            if (instance.state.ajax === undefined) {
-                instance.state.ajax = {
-                    isFetching: false,
-                    canFetch: true,
-                };
-            }
-
-            if (
-                instance.state.ajax.isFetching ||
-                !instance.state.ajax.canFetch
-            ) {
-                return this._onAjaxBypass();
-            }
-
-            instance.state.ajax = {
-                isFetching: true,
-                canFetch: false,
-            };
-            this._onAjaxCallback(instance, source);
+    async _onAjax() {
+        if (this.ajax_state.isFetching || !this.ajax_state.canFetch) {
+            return undefined;
+        }
+        this.ajax_state = {
+            isFetching: true,
+            canFetch: false,
         };
-    },
 
-    _onAjaxCallback(instance, src) {
-        timelog("AJAXCALLBACK");
+        const source = this.el.getAttribute("href").split("#");
         const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
-        fetch(src[0]).then((response) => {
-            return response
-                .text()
-                .then((text) => {
-                    instance.setContent(handler(text, src));
-                })
-                .finally(() => {
-                    this._onAjaxContentSet(instance);
-                    registry.scan(instance.popper);
-                });
-        });
-    },
-
-    _onAjaxBypass() {
-        timelog("AJAX BYPASSED");
-        return undefined;
-    },
-
-    _onAjaxContentSet(instance) {
-        timelog("AJAXCONTENTSET");
-        instance.state.ajax.isFetching = false;
+        try {
+            const response = await fetch(source[0]);
+            const text = await response.text();
+            this.tippy.setContent(handler(text, source));
+        } catch (e) {
+            log.error(`Error on ajax request ${e}`);
+        }
+        this.ajax_state.isFetching = false;
     },
 
     _ajaxDataTypeHandlers: {
