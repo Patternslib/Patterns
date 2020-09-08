@@ -7,6 +7,21 @@
     <script src="/dist/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
     <script src="/dist/bundle.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="../../../node_modules/tippy.js/dist/tippy.css" type="text/css">
+    <style type="text/css" media="screen">
+      button.close-panel {
+        border: 2px solid red;
+        width: 1em;
+        height: 1em;
+      }
+
+      .wasabi {
+        border: 6px dotted green;
+      }
+
+      .active {
+        background: lightskyblue;
+      }
+    </style>
 </head>
 <body role="document">
     <div class="container">
@@ -38,6 +53,21 @@
         <p>
         <code>trigger: hover</code>. A tooltip is displayed when hovering the mouse pointer over the <a href="#" title="well done!" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: hover">element</a>.
         </p>
+
+        <h4>close button</h4>
+        <p>
+        <code>closing: auto</code> (default). A tooltip is closed when <a href="#" title="closed by hovering outside" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: hover; closing: auto">hovering outside</a> or <a href="#" title="closed by hovering outside" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click; closing: auto">clicking outside or the trigger</a>.
+        </p>
+        <p>
+        <code>closing: sticky</code>. In hover mode, the tooltip is only closed when <a href="#" title="closed by hovering outside" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: hover; closing: sticky">clicking outside</a>. For click mode, there is <a href="#" title="closed by hovering outside" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click; closing: sticky">no different behavior</a>.
+        </p>
+        <p>
+        <code>closing: close-button</code>. The tooltip is only closed when clicking the close button in both trigger modes <a href="#" title="closed by close button" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: hover; closing: close-button">hover</a> and <a href="#" title="closed by hovering outside" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click; closing: close-button">click</a>.
+        </p>
+        <p>
+        In any case, the tooltip is closed when a element has a ``.close-panel`` class on it. Example <a href="#tooltip-source-closing" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click; closing: close-button; source: content">with close button</a> and <a href="#tooltip-source-closing" class="pat-tooltip-ng" data-pat-tooltip-ng="trigger: click; source: content">without close button</a>.
+        </p>
+
         <h4>source</h4>
         <p>
         <code>source: title</code> (default).  Click <a href="#" title="Normally, tooltips will use the title attribute as text source." class="pat-tooltip-ng" data-pat-tooltip-ng="source: title">here</a> to see the title attribute in the tooltip.
@@ -103,6 +133,13 @@
     </div>
     <div id="tooltip-source" class="sources" style="display:none;">
         <strong>Hello there</strong>
+    </div>
+    <div id="tooltip-source-closing" class="sources" style="display:none;">
+        <strong>Hello there</strong>
+        <ul>
+          <li class="close-panel">Clicking me closes the panel</li>
+          <li>Clicking me has no effect</li>
+        </ul>
     </div>
     <div id="tooltip-container">
     </div>
