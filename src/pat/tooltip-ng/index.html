@@ -130,6 +130,19 @@
         Try <a href="#" title="This tooltip refers to be in the top-left or right-top." class="pat-tooltip-ng" data-pat-tooltip-ng="position-list: tl, rt">this tooltip</a> and then scroll the page up and down.
         </p>
 
+        <h4>works with other patterns</h4>
+        <form action="./index.html" class="pat-inject" id="test-tooltip-w-submit" data-pat-inject="source: #test-tooltip-w-submit--content; target: #test-tooltip-w-submit">
+          <button type="submit"
+                name="like_button"
+                value="like"
+                class="like pat-tooltip-ng"
+                data-pat-tooltip-ng="trigger: hover; position-list: tm"
+                title="Liked by: Jacques du Pont, Liz Baker, Jeff Peters.">Like</button>
+        </form>
+        <p>
+            The following should be injected:
+            <section id="test-tooltip-w-submit--content">Liked</section>
+        </p>
     </div>
     <div id="tooltip-source" class="sources" style="display:none;">
         <strong>Hello there</strong>
