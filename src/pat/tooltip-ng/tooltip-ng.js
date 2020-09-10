@@ -49,7 +49,6 @@ parser.addArgument("target", "body");
 
 parser.addArgument("height", "auto", ["auto", "max"]);
 parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
-parser.addArgument("distance");
 
 export default Base.extend({
     name: "tooltip-ng",
@@ -73,22 +72,19 @@ export default Base.extend({
             arrow: true,
             //'delay': [0, 1800],
             //'duration': [325, 275],
-            distance: 20,
-            flipOnUpdate: true,
             hideOnClick: true,
             ignoreAttributes: true,
-            interactive: false,
+            interactive: true,
             onHide: this._onHide.bind(this),
             onMount: this._onMount.bind(this),
             onShow: this._onShow.bind(this),
             trigger: "click",
-            boundary: "viewport",
         };
 
         this.options = parser.parse(el, opts);
         this.tippy_options = this.parseOptionsForTippy(this.options);
 
-        tippy.setDefaults(defaultProps);
+        tippy.setDefaultProps(defaultProps);
         this.tippy = tippy(el, this.tippy_options);
 
         if (el.getAttribute("title")) {
@@ -155,17 +151,34 @@ export default Base.extend({
                         const pos = prefs[0];
                         tippy_options.placement = placement(pos);
 
-                        if (prefs.length > 1) {
-                            tippy_options.flipBehavior = prefs.map(
-                                flipBehavior
-                            );
-                            tippy_options.flip = true;
-                            tippy_options.flipOnUpdate = true;
+                        if (
+                            opts.position.policy !== "force" &&
+                            prefs.length > 1
+                        ) {
+                            tippy_options.popperOptions = {
+                                modifiers: [
+                                    {
+                                        name: "flip",
+                                        enabled: true,
+                                        options: {
+                                            fallbackPlacements: prefs.map(
+                                                flipBehavior
+                                            ),
+                                        },
+                                    },
+                                ],
+                            };
                         }
                     }
                     if (opts.position.policy === "force") {
-                        tippy_options.flip = false;
-                        tippy_options.flipOnUpdate = false;
+                        tippy_options.popperOptions = {
+                            modifiers: [
+                                {
+                                    name: "flip",
+                                    enabled: false,
+                                },
+                            ],
+                        };
                     }
                 }
             },
@@ -237,12 +250,6 @@ export default Base.extend({
                 }
             },
 
-            distance() {
-                if (opts.distance) {
-                    tippy_options.distance = [parseInt(opts.distance), 20];
-                }
-            },
-
             target: () => {
                 if (!opts.target) {
                     return;
@@ -279,7 +286,7 @@ export default Base.extend({
         timelog("ONMOUNT");
         this.el.dispatchEvent(
             new CustomEvent("pat-tippy-mount", {
-                detail: { tooltip: this.tippy.popperChildren.tooltip },
+                detail: { tooltip: this.tippy.popper.firstElementChild },
             })
         );
     },
