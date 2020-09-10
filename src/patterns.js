@@ -72,6 +72,9 @@ import "./pat/validation/validation.js";
 import "./pat/zoom/zoom.js";
 // import "./pat/tooltip-ng/tooltip-ng.js";
 
+// example pattern
+import "./pat/minimalpattern/minimalpattern";
+
 // Import locales for moment
 import "moment/locale/de";
 // import 'moment/locale/bg';
