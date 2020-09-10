@@ -119,7 +119,7 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.mouseenter($el);
                 expect(spy_show).toHaveBeenCalled();
-                const container = document.querySelectorAll(".tippy-tooltip");
+                const container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(1);
                 const expected = container[0].querySelector(".tippy-content")
                     .textContent;
@@ -159,16 +159,12 @@ describe("pat-tooltip-ng", () => {
                 testutils.click($el1);
                 expect(spy_show1).toHaveBeenCalled();
                 expect(spy_show2).not.toHaveBeenCalled();
-                container = document.querySelectorAll(".tippy-popper");
+                container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(1);
+                expect(container[0].classList.contains("wasabi")).toBeTruthy();
                 expect(
                     container[0].querySelector(".tippy-content").textContent
                 ).toBe(title1);
-                expect(
-                    container[0]
-                        .querySelector(".tippy-tooltip")
-                        .classList.contains("wasabi")
-                ).toBeTruthy();
 
                 spy_show1.calls.reset();
                 spy_show2.calls.reset();
@@ -176,21 +172,19 @@ describe("pat-tooltip-ng", () => {
                 testutils.click($el2);
                 expect(spy_show1).not.toHaveBeenCalled();
                 expect(spy_show2).toHaveBeenCalled();
-                container = document.querySelectorAll(".tippy-popper");
+                container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(2);
                 visible_container = [...container].filter((el) => {
                     return el.style.visibility === "visible";
                 });
                 expect(visible_container.length).toEqual(1);
                 expect(
+                    visible_container[0].classList.contains("wasabi")
+                ).toBeFalsy();
+                expect(
                     visible_container[0].querySelector(".tippy-content")
                         .textContent
                 ).toBe(title2);
-                expect(
-                    visible_container[0]
-                        .querySelector(".tippy-tooltip")
-                        .classList.contains("wasabi")
-                ).toBeFalsy();
 
                 spy_show1.calls.reset();
                 spy_show2.calls.reset();
@@ -198,21 +192,19 @@ describe("pat-tooltip-ng", () => {
                 testutils.click($el1);
                 expect(spy_show1).toHaveBeenCalled();
                 expect(spy_show2).not.toHaveBeenCalled();
-                container = document.querySelectorAll(".tippy-popper");
+                container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(2);
                 visible_container = [...container].filter((el) => {
                     return el.style.visibility === "visible";
                 });
                 expect(visible_container.length).toEqual(1);
                 expect(
+                    visible_container[0].classList.contains("wasabi")
+                ).toBeTruthy();
+                expect(
                     visible_container[0].querySelector(".tippy-content")
                         .textContent
                 ).toBe(title1);
-                expect(
-                    visible_container[0]
-                        .querySelector(".tippy-tooltip")
-                        .classList.contains("wasabi")
-                ).toBeTruthy();
 
                 done();
             });
@@ -241,7 +233,7 @@ describe("pat-tooltip-ng", () => {
                 testutils.mouseenter($el);
                 await utils.timeout(1000);
                 expect(spy_show).toHaveBeenCalled();
-                const container = document.querySelectorAll(".tippy-tooltip");
+                const container = document.querySelectorAll(".tippy-box");
                 expect(container.length).toEqual(1);
                 const expected = container[0].querySelector(".tippy-content")
                     .textContent;
@@ -272,13 +264,13 @@ describe("pat-tooltip-ng", () => {
 
             testutils.click($el);
             expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-tooltip");
+            const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
             const container = containers[0];
             const expected = container.querySelector(".tippy-content")
                 .textContent;
             expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-popper");
+            const container2 = document.querySelector(".tippy-box");
             expect(container2.getAttribute("x-placement")).toBe("right-start");
 
             done();
@@ -296,13 +288,13 @@ describe("pat-tooltip-ng", () => {
 
             testutils.click($el);
             expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-tooltip");
+            const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
             const container = containers[0];
             const expected = container.querySelector(".tippy-content")
                 .textContent;
             expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-popper");
+            const container2 = document.querySelector(".tippy-box");
             expect(container2.getAttribute("x-placement")).toBe("right-end");
 
             done();
@@ -320,13 +312,13 @@ describe("pat-tooltip-ng", () => {
 
             testutils.click($el);
             expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-tooltip");
+            const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
             const container = containers[0];
             const expected = container.querySelector(".tippy-content")
                 .textContent;
             expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-popper");
+            const container2 = document.querySelector(".tippy-box");
             expect(container2.getAttribute("x-placement")).toBe("right");
 
             done();
@@ -344,13 +336,13 @@ describe("pat-tooltip-ng", () => {
 
             testutils.click($el);
             expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-tooltip");
+            const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
             const container = containers[0];
             const expected = container.querySelector(".tippy-content")
                 .textContent;
             expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-popper");
+            const container2 = document.querySelector(".tippy-box");
             expect(container2.getAttribute("x-placement")).toBe("top-start");
 
             done();
@@ -368,13 +360,13 @@ describe("pat-tooltip-ng", () => {
 
             testutils.click($el);
             expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-tooltip");
+            const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
             const container = containers[0];
             const expected = container.querySelector(".tippy-content")
                 .textContent;
             expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-popper");
+            const container2 = document.querySelector(".tippy-box");
             expect(container2.getAttribute("x-placement")).toBe("top-end");
 
             done();
@@ -392,13 +384,13 @@ describe("pat-tooltip-ng", () => {
 
             testutils.click($el);
             expect(spy_show).toHaveBeenCalled();
-            const containers = document.querySelectorAll(".tippy-tooltip");
+            const containers = document.querySelectorAll(".tippy-box");
             expect(containers.length).toEqual(1);
             const container = containers[0];
             const expected = container.querySelector(".tippy-content")
                 .textContent;
             expect(expected).toBe(title);
-            const container2 = document.querySelector(".tippy-popper");
+            const container2 = document.querySelector(".tippy-box");
             expect(container2.getAttribute("x-placement")).toBe("top");
 
             done();
@@ -417,13 +409,13 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-tooltip");
+                const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 const container = containers[0];
                 const expected = container.querySelector(".tippy-content")
                     .textContent;
                 expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-popper");
+                const container2 = document.querySelector(".tippy-box");
                 expect(container2.getAttribute("x-placement")).toBe(
                     "bottom-start"
                 );
@@ -443,13 +435,13 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-tooltip");
+                const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 const container = containers[0];
                 const expected = container.querySelector(".tippy-content")
                     .textContent;
                 expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-popper");
+                const container2 = document.querySelector(".tippy-box");
                 expect(container2.getAttribute("x-placement")).toBe(
                     "bottom-end"
                 );
@@ -469,13 +461,13 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-tooltip");
+                const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 const container = containers[0];
                 const expected = container.querySelector(".tippy-content")
                     .textContent;
                 expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-popper");
+                const container2 = document.querySelector(".tippy-box");
                 expect(container2.getAttribute("x-placement")).toBe("bottom");
 
                 done();
@@ -493,13 +485,13 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-tooltip");
+                const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 const container = containers[0];
                 const expected = container.querySelector(".tippy-content")
                     .textContent;
                 expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-popper");
+                const container2 = document.querySelector(".tippy-box");
                 expect(container2.getAttribute("x-placement")).toBe(
                     "left-start"
                 );
@@ -519,13 +511,13 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-tooltip");
+                const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 const container = containers[0];
                 const expected = container.querySelector(".tippy-content")
                     .textContent;
                 expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-popper");
+                const container2 = document.querySelector(".tippy-box");
                 expect(container2.getAttribute("x-placement")).toBe("left-end");
 
                 done();
@@ -543,13 +535,13 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                const containers = document.querySelectorAll(".tippy-tooltip");
+                const containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 const container = containers[0];
                 const expected = container.querySelector(".tippy-content")
                     .textContent;
                 expect(expected).toBe(title);
-                const container2 = document.querySelector(".tippy-popper");
+                const container2 = document.querySelector(".tippy-box");
                 expect(container2.getAttribute("x-placement")).toBe("left");
 
                 done();
@@ -585,7 +577,7 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                containers = document.querySelectorAll(".tippy-popper");
+                containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 expected = containers[0].querySelector(".tippy-content")
                     .textContent;
@@ -600,7 +592,7 @@ describe("pat-tooltip-ng", () => {
                 expect(spy_hide).toHaveBeenCalled();
 
                 // TODO: inspect, why container are not removed.
-                //containers = document.querySelectorAll(".tippy-popper");
+                //containers = document.querySelectorAll(".tippy-box");
                 //expect(containers.length).toEqual(0);
                 expect(el.classList.contains("active")).toBeFalsy();
                 expect(el.classList.contains("inactive")).toBeTruthy();
@@ -629,7 +621,7 @@ describe("pat-tooltip-ng", () => {
 
                 testutils.click($el);
                 expect(spy_show).toHaveBeenCalled();
-                containers = document.querySelectorAll(".tippy-popper");
+                containers = document.querySelectorAll(".tippy-box");
                 expect(containers.length).toEqual(1);
                 expect(el.classList.contains("active")).toBeFalsy();
                 expect(el.classList.contains("inactive")).toBeFalsy();
@@ -642,7 +634,7 @@ describe("pat-tooltip-ng", () => {
                 expect(spy_hide).toHaveBeenCalled();
 
                 // TODO: inspect, why container are not removed.
-                //containers = document.querySelectorAll(".tippy-popper");
+                //containers = document.querySelectorAll(".tippy-box");
                 //expect(containers.length).toEqual(0);
                 expect(el.classList.contains("active")).toBeFalsy();
                 expect(el.classList.contains("inactive")).toBeFalsy();
@@ -669,9 +661,7 @@ describe("pat-tooltip-ng", () => {
                     testutils.mouseenter($el);
                     expect(spy_show).toHaveBeenCalled();
 
-                    const container = document.querySelectorAll(
-                        ".tippy-popper"
-                    );
+                    const container = document.querySelectorAll(".tippy-box");
                     expect(container.length).toEqual(1);
                     expect(
                         container[0].querySelector(".tippy-content").textContent
@@ -691,7 +681,7 @@ describe("pat-tooltip-ng", () => {
                     expect(spy_hide).not.toHaveBeenCalled();
 
                     expect(
-                        document.querySelectorAll(".tippy-popper").length
+                        document.querySelectorAll(".tippy-box").length
                     ).toEqual(1);
 
                     testutils.mouseleave($el);
@@ -700,7 +690,7 @@ describe("pat-tooltip-ng", () => {
 
                     // TODO: not removed.
                     //expect(
-                    //    document.querySelectorAll(".tippy-popper").length
+                    //    document.querySelectorAll(".tippy-box").length
                     //).toEqual(0);
 
                     done();
@@ -724,7 +714,7 @@ describe("pat-tooltip-ng", () => {
                         testutils.mouseenter($el);
                         expect(spy_show).toHaveBeenCalled();
                         expect(
-                            document.querySelector(".tippy-popper").textContent
+                            document.querySelector(".tippy-box").textContent
                         ).toBe(content);
 
                         done();
@@ -747,7 +737,7 @@ describe("pat-tooltip-ng", () => {
                         testutils.mouseenter($el);
                         expect(spy_show).toHaveBeenCalled();
                         expect(
-                            document.querySelector(".tippy-popper strong")
+                            document.querySelector(".tippy-box strong")
                                 .textContent
                         ).toBe(content);
 
@@ -757,7 +747,7 @@ describe("pat-tooltip-ng", () => {
             });
         });
         describe(`if the 'target' parameter is 'body'`, () => {
-            it("will append the .tippy-popper to the document.body", (done) => {
+            it("will append the .tippy-box to the document.body", (done) => {
                 const $el = testutils.createTooltip({
                     data: "target: body",
                     href: "#",
@@ -765,14 +755,14 @@ describe("pat-tooltip-ng", () => {
                 const instance = new pattern($el);
                 testutils.click($el);
                 expect(
-                    document.querySelectorAll("body > .tippy-popper").length
+                    document.querySelectorAll("body > .tippy-box").length
                 ).toEqual(1);
 
                 done();
             });
         });
         describe(`if the 'target' parameter is 'parent'`, () => {
-            it(`will append the .tippy-popper to the reference element's parent node`, (done) => {
+            it(`will append the .tippy-box to the reference element's parent node`, (done) => {
                 const $el = testutils.createTooltip({
                     data: "target: parent",
                     href: "#",
@@ -780,14 +770,14 @@ describe("pat-tooltip-ng", () => {
                 const instance = new pattern($el);
                 testutils.click($el);
                 expect(
-                    document.querySelectorAll("#lab > .tippy-popper").length
+                    document.querySelectorAll("#lab > .tippy-box").length
                 ).toEqual(1);
 
                 done();
             });
         });
         describe(`if the 'target' parameter is a selector`, () => {
-            it("will append the .tippy-popper to the selected element", (done) => {
+            it("will append the .tippy-box to the selected element", (done) => {
                 const $el = testutils.createTooltip({
                     data: "target: #child3",
                     href: "#",
@@ -806,7 +796,7 @@ describe("pat-tooltip-ng", () => {
                 const instance = new pattern($el);
                 testutils.click($el);
                 expect(
-                    document.querySelectorAll("#child3 > .tippy-popper").length
+                    document.querySelectorAll("#child3 > .tippy-box").length
                 ).toEqual(1);
 
                 done();
@@ -921,8 +911,7 @@ describe("pat-tooltip-ng", () => {
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
             expect(
-                document.querySelector(".tippy-popper .tippy-content")
-                    .textContent
+                document.querySelector(".tippy-box .tippy-content").textContent
             ).toBe("External content fetched via an HTTP request.");
 
             global.fetch.mockClear();
@@ -960,8 +949,7 @@ describe("pat-tooltip-ng", () => {
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
             expect(
-                document.querySelector(".tippy-popper .tippy-content")
-                    .textContent
+                document.querySelector(".tippy-box .tippy-content").textContent
             ).toBe("this will be extracted");
 
             global.fetch.mockClear();
@@ -994,7 +982,7 @@ describe("pat-tooltip-ng", () => {
             expect(spy_ajax).toHaveBeenCalled();
             expect(spy_show).toHaveBeenCalled();
             const content = document.querySelector(
-                ".tippy-popper .tippy-content h2"
+                ".tippy-box .tippy-content h2"
             );
             expect(content).toBeTruthy();
             expect(content.textContent).toBe("hello.");
@@ -1100,7 +1088,7 @@ this will be extracted.
                 expect(spy_show).toHaveBeenCalledTimes(1);
 
                 expect(
-                    document.querySelector(".tippy-popper .tippy-content")
+                    document.querySelector(".tippy-box .tippy-content")
                         .textContent
                 ).toBe("External content fetched via an HTTP request.");
 
@@ -1157,7 +1145,7 @@ this will be extracted.
                 expect(spy_show).toHaveBeenCalledTimes(1);
 
                 expect(
-                    document.querySelector(".tippy-popper .tippy-content")
+                    document.querySelector(".tippy-box .tippy-content")
                         .textContent
                 ).toBe("External content fetched via an HTTP request.");
 
@@ -1219,7 +1207,7 @@ this will be extracted.
         //        expect(spy_show).toHaveBeenCalledTimes(1);
 
         //        expect(
-        //            document.querySelector(".tippy-popper .tippy-content")
+        //            document.querySelector(".tippy-box .tippy-content")
         //                .textContent
         //        ).toBe("External content fetched via an HTTP request.");
 
@@ -1254,7 +1242,7 @@ this will be extracted.
         //        setTimeout(() => {
         //            expect(spy_byps).toHaveBeenCalledBefore(spy_cset);
         //            expect(spy_shown).toHaveBeenCalled();
-        //            var $container = $(".tippy-popper .tippy-content");
+        //            var $container = $(".tippy-box .tippy-content");
         //            expect($container.text()).toBe(
         //                "External content fetched via an HTTP request."
         //            );
