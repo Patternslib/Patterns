@@ -9,9 +9,9 @@ import registry from "../../core/registry";
 import tippy from "tippy.js";
 import utils from "../../core/utils";
 
-const log = logging.getLogger("pat-tooltip-ng");
+const log = logging.getLogger("pat-tooltip");
 
-const parser = new Parser("tooltip-ng");
+const parser = new Parser("tooltip");
 const all_positions = [
     "tl",
     "tm",
@@ -46,8 +46,8 @@ parser.addArgument("target", "body");
 // parser.addArgument("height", "auto", ["auto", "max"]);
 
 export default Base.extend({
-    name: "tooltip-ng",
-    trigger: ".pat-tooltip-ng",
+    name: "tooltip",
+    trigger: ".pat-tooltip, .pat-tooltip-ng",
 
     jquery_plugin: true,
 

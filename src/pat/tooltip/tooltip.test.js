@@ -1,6 +1,6 @@
 import $ from "jquery";
 import logging from "../../core/logging";
-import pattern from "./tooltip-ng";
+import pattern from "./tooltip";
 import utils from "../../core/utils";
 
 const mockFetch = (text = "") => () =>
@@ -9,7 +9,7 @@ const mockFetch = (text = "") => () =>
     });
 
 let start;
-const log = logging.getLogger("pat-tooltip-ng.tests");
+const log = logging.getLogger("pat-tooltip.tests");
 const testutils = {
     createTooltip(c) {
         var cfg = c || {};
@@ -20,8 +20,8 @@ const testutils = {
             "id": cfg.id || "tooltip",
             "href": cfg.href || "#anchor",
             "title": cfg.title || "tooltip title attribute",
-            "data-pat-tooltip-ng": "" || cfg.data,
-            "class": "pat-tooltip-ng",
+            "data-pat-tooltip": "" || cfg.data,
+            "class": "pat-tooltip",
         })
             .text(cfg.content)
             .appendTo($("div#lab"));
@@ -80,7 +80,7 @@ const testutils = {
 
 log.setLevel(20);
 
-describe("pat-tooltip-ng", () => {
+describe("pat-tooltip", () => {
     beforeEach(() => {
         testutils.cleanup();
         $("<div/>", { id: "lab" }).appendTo(document.body);
@@ -170,7 +170,7 @@ describe("pat-tooltip-ng", () => {
                 testutils.createTooltip({
                     data: "delay: 500; trigger: hover",
                 });
-                const el = document.querySelector("a.pat-tooltip-ng");
+                const el = document.querySelector("a.pat-tooltip");
                 const $el = $(el);
                 const title = el.title;
                 const instance = new pattern($el);
