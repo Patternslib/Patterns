@@ -106,66 +106,61 @@ export default Base.extend({
             // note that Cornelis needs the positioning to be the placement of the thingy on the bubble
             // tippy though refers to positioning as the placement of the bubble relatively to the reference element
             // so we invert the meaning below. It's intentional.
-            const primary = (pos) =>
+            const primary = (pos0) =>
                 ({
                     t: "bottom",
                     r: "left",
                     b: "top",
                     l: "right",
-                }[pos]);
+                }[pos0]);
 
-            const secondary = (pos) =>
+            const secondary = (pos1) =>
                 ({
                     l: "-start",
                     r: "-end",
                     m: "",
                     t: "-start",
                     b: "-end",
-                }[pos]);
+                }[pos1]);
 
             return `${primary(pos[0])}${secondary(pos[1])}`;
         };
-        const flipBehavior = (pos) => placement(`${pos[0]}m`);
 
         const tippy_options = {};
 
         const parsers = {
             position: () => {
-                if (opts.position) {
-                    const prefs = opts.position.list;
-                    if (prefs.length > 0) {
-                        const pos = prefs[0];
-                        tippy_options.placement = placement(pos);
+                if (!opts.position?.list?.length) {
+                    return;
+                }
+                tippy_options.placement = placement(opts.position.list[0]); // main position
 
-                        if (
-                            opts.position.policy !== "force" &&
-                            prefs.length > 1
-                        ) {
-                            tippy_options.popperOptions = {
-                                modifiers: [
-                                    {
-                                        name: "flip",
-                                        enabled: true,
-                                        options: {
-                                            fallbackPlacements: prefs.map(
-                                                flipBehavior
-                                            ),
-                                        },
-                                    },
-                                ],
-                            };
-                        }
-                    }
-                    if (opts.position.policy === "force") {
-                        tippy_options.popperOptions = {
-                            modifiers: [
-                                {
-                                    name: "flip",
-                                    enabled: false,
-                                },
-                            ],
+                if (opts.position.policy !== "force") {
+                    tippy_options.popperOptions = {
+                        modifiers: [
+                            {
+                                name: "flip",
+                                enabled: true,
+                            },
+                        ],
+                    };
+                    if (opts.position.length > 1) {
+                        const fallbacks = opts.position.list
+                            .slice(1)
+                            .map(placement);
+                        tippy_options.popperOptions.modifiers[0].options = {
+                            fallbackPlacements: fallbacks,
                         };
                     }
+                } else {
+                    tippy_options.popperOptions = {
+                        modifiers: [
+                            {
+                                name: "flip",
+                                enabled: false,
+                            },
+                        ],
+                    };
                 }
             },
 
