@@ -28,8 +28,6 @@ const testutils = {
     },
 
     cleanup() {
-        var $el = $("a#tooltip");
-        $el.trigger("destroy.pat-tooltip-ng");
         document.body.innerHTML = "";
     },
 
@@ -84,6 +82,7 @@ log.setLevel(20);
 
 describe("pat-tooltip-ng", () => {
     beforeEach(() => {
+        testutils.cleanup();
         $("<div/>", { id: "lab" }).appendTo(document.body);
         start = Date.now();
     });
@@ -93,10 +92,6 @@ describe("pat-tooltip-ng", () => {
     });
 
     describe("A tooltip", () => {
-        afterEach(() => {
-            testutils.cleanup();
-        });
-
         describe(`if the 'class' parameter exists`, () => {
             it("will assign a class to the tooltip container", async (done) => {
                 const $el = testutils.createTooltip({
@@ -115,7 +110,10 @@ describe("pat-tooltip-ng", () => {
                 // NOTE 2:
                 // spu on "onShow" because "onShown" isn't reached due to CSS
                 // animations won't work in jsDOM.
-                const spy_show = spyOn(instance.tippy.props, "onShow");
+                const spy_show = spyOn(
+                    instance.tippy.props,
+                    "onShow"
+                ).and.callThrough();
 
                 testutils.mouseenter($el);
                 await utils.timeout(1);
@@ -205,10 +203,6 @@ describe("pat-tooltip-ng", () => {
     });
 
     describe("Tooltip closing behavior", () => {
-        afterEach(() => {
-            testutils.cleanup();
-        });
-
         describe("with the default `closing: auto`", () => {
             it("with `trigger: click` it will only close when clicking outside the tooltip element", async (done) => {
                 const $el = testutils.createTooltip({
@@ -249,22 +243,19 @@ describe("pat-tooltip-ng", () => {
                 const spy_show = spyOn(tp, "onShow").and.callThrough();
                 const spy_hide = spyOn(tp, "onHide").and.callThrough();
 
+                // Shortcut any checks for mouse positions and just hide.
+                spyOn(instance.tippy, "hideWithInteractivity").and.callFake(
+                    instance.tippy.hide
+                );
+
                 testutils.mouseenter($el);
                 await utils.timeout(1);
                 expect(spy_show).toHaveBeenCalled();
                 expect(spy_hide).not.toHaveBeenCalled();
 
-                //TODO: onHide not being called. investigate.
-                //testutils.mouseleave($el);
-
-                //testutils.dispatchEvent($el, "mouseleave");
-                //await utils.timeout(100);
-                //instance.tippy.popper.dispatchEvent(new Event("mouseleave"));
-                //await utils.timeout(100);
-                //document.dispatchEvent(new Event("mousemove"));
-
-                //await utils.timeout(100);
-                //expect(spy_hide).toHaveBeenCalled();
+                testutils.mouseleave($el);
+                await utils.timeout(1);
+                expect(spy_hide).toHaveBeenCalled();
 
                 done();
             });
@@ -455,10 +446,6 @@ describe("pat-tooltip-ng", () => {
     });
 
     describe(`if the 'position-list' parameter exists`, () => {
-        afterEach(() => {
-            testutils.cleanup();
-        });
-
         it(`'lt' will place the tooltip as 'right-start'`, async (done) => {
             const $el = testutils.createTooltip({
                 data: "position-list: lt",
@@ -572,6 +559,8 @@ describe("pat-tooltip-ng", () => {
                     data: "position-list: tr; position-policy: force",
                 });
 
+                const instance = new pattern($el);
+
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -587,6 +576,8 @@ describe("pat-tooltip-ng", () => {
                     data: "position-list: tm; position-policy: force",
                 });
 
+                const instance = new pattern($el);
+
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -599,6 +590,8 @@ describe("pat-tooltip-ng", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rt; position-policy: force",
                 });
+
+                const instance = new pattern($el);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -615,6 +608,8 @@ describe("pat-tooltip-ng", () => {
                     data: "position-list: rb; position-policy: force",
                 });
 
+                const instance = new pattern($el);
+
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -630,6 +625,8 @@ describe("pat-tooltip-ng", () => {
                     data: "position-list: rm; position-policy: force",
                 });
 
+                const instance = new pattern($el);
+
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -642,10 +639,6 @@ describe("pat-tooltip-ng", () => {
     });
 
     describe(`and ...`, () => {
-        afterEach(() => {
-            testutils.cleanup();
-        });
-
         describe(`the 'mark-inactive' paramater`, () => {
             it("when true, toggles the active/inactive class on the trigger", async (done) => {
                 const $el = testutils.createTooltip({
@@ -775,24 +768,24 @@ describe("pat-tooltip-ng", () => {
                     const instance = new pattern($el);
                     const spy_hide = spyOn(instance.tippy.props, "onHide");
 
+                    // Shortcut any checks for mouse positions and just hide.
+                    spyOn(instance.tippy, "hideWithInteractivity").and.callFake(
+                        instance.tippy.hide
+                    );
+
                     testutils.mouseenter($el);
                     await utils.timeout(1);
-
                     expect(spy_hide).not.toHaveBeenCalled();
-
                     expect(
                         document.querySelectorAll(".tippy-box").length
                     ).toEqual(1);
 
                     testutils.mouseleave($el);
-                    await utils.timeout(200);
-
+                    await utils.timeout(1);
                     expect(spy_hide).toHaveBeenCalled();
-
-                    // TODO: not removed.
-                    //expect(
-                    //    document.querySelectorAll(".tippy-box").length
-                    //).toEqual(0);
+                    expect(
+                        document.querySelectorAll(".tippy-box").length
+                    ).toEqual(0);
 
                     done();
                 });
@@ -862,7 +855,7 @@ describe("pat-tooltip-ng", () => {
                 await utils.timeout(1);
 
                 expect(
-                    document.querySelectorAll("body > .tippy-box").length
+                    document.querySelectorAll("body > [data-tippy-root]").length
                 ).toEqual(1);
 
                 done();
@@ -879,7 +872,7 @@ describe("pat-tooltip-ng", () => {
                 await utils.timeout(1);
 
                 expect(
-                    document.querySelectorAll("#lab > .tippy-box").length
+                    document.querySelectorAll("#lab > [data-tippy-root]").length
                 ).toEqual(1);
 
                 done();
@@ -907,7 +900,8 @@ describe("pat-tooltip-ng", () => {
                 await utils.timeout(1);
 
                 expect(
-                    document.querySelectorAll("#child3 > .tippy-box").length
+                    document.querySelectorAll("#child3 > [data-tippy-root]")
+                        .length
                 ).toEqual(1);
 
                 done();
@@ -951,16 +945,6 @@ describe("pat-tooltip-ng", () => {
     });
 
     describe(`if the 'source' parameter is 'ajax'`, () => {
-        afterEach((done) => {
-            testutils.log("afterEach begins!");
-            setTimeout(() => {
-                testutils.log("afterEach timeout is over!");
-                testutils.cleanup();
-                jest.restoreAllMocks();
-                done();
-            }, 600);
-        });
-
         it("the default click action is prevented", (done) => {
             global.fetch = jest.fn().mockImplementation(mockFetch());
 
@@ -976,8 +960,8 @@ describe("pat-tooltip-ng", () => {
             spyOn(click, "preventDefault").and.callFake(() =>
                 call_order.push("preventDefault")
             );
-            spyOn(instance, "_onAjaxCallback").and.callFake(() =>
-                call_order.push("_onAjaxCallback")
+            spyOn(instance, "_onAjax").and.callFake(() =>
+                call_order.push("_onAjax")
             );
 
             $el[0].dispatchEvent(click);
@@ -985,7 +969,7 @@ describe("pat-tooltip-ng", () => {
             $el[0].dispatchEvent(click);
 
             //expect(spy_ajax).toHaveBeenCalledBefore(spy_prevented);
-            expect(call_order.indexOf("_onAjaxCallback")).toEqual(0);
+            expect(call_order.indexOf("_onAjax")).toEqual(0);
             expect(call_order.includes("preventDefault")).toBeTruthy();
 
             global.fetch.mockClear();
@@ -1007,10 +991,7 @@ describe("pat-tooltip-ng", () => {
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(
-                instance,
-                "_onAjaxCallback"
-            ).and.callThrough();
+            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1045,10 +1026,7 @@ describe("pat-tooltip-ng", () => {
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(
-                instance,
-                "_onAjaxCallback"
-            ).and.callThrough();
+            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1078,10 +1056,7 @@ describe("pat-tooltip-ng", () => {
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(
-                instance,
-                "_onAjaxCallback"
-            ).and.callThrough();
+            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1123,10 +1098,7 @@ this will be extracted.
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(
-                instance,
-                "_onAjaxCallback"
-            ).and.callThrough();
+            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1167,14 +1139,8 @@ this will be extracted.
                 });
                 const instance = new pattern($el);
 
-                const spy_ajax = spyOn(
-                    instance,
-                    "_onAjaxCallback"
-                ).and.callThrough();
-                const spy_byps = spyOn(
-                    instance,
-                    "_onAjaxBypass"
-                ).and.callThrough();
+                const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+                const spy_fetch = spyOn(window, "fetch").and.callThrough();
                 const spy_show = spyOn(
                     instance.tippy.props,
                     "onShow"
@@ -1192,11 +1158,9 @@ this will be extracted.
                 testutils.click($el);
                 await utils.timeout(1); // wait a tick for async fetch
 
-                //expect(spy_ajax).toHaveBeenCalledBefore(spy_byps);
-                expect(spy_ajax).toHaveBeenCalledTimes(1);
-                // TODO: check why spy_byps not called.
-                //expect(spy_byps).toHaveBeenCalledTimes(2);
                 expect(spy_show).toHaveBeenCalledTimes(1);
+                expect(spy_ajax).toHaveBeenCalledTimes(1);
+                expect(spy_fetch).toHaveBeenCalledTimes(1);
 
                 expect(
                     document.querySelector(".tippy-box .tippy-content")
@@ -1224,14 +1188,8 @@ this will be extracted.
                 });
                 const instance = new pattern($el);
 
-                const spy_ajax = spyOn(
-                    instance,
-                    "_onAjaxCallback"
-                ).and.callThrough();
-                const spy_byps = spyOn(
-                    instance,
-                    "_onAjaxBypass"
-                ).and.callThrough();
+                const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+                const spy_fetch = spyOn(window, "fetch").and.callThrough();
                 const spy_show = spyOn(
                     instance.tippy.props,
                     "onShow"
@@ -1249,11 +1207,9 @@ this will be extracted.
                 testutils.mouseenter($el);
                 await utils.timeout(1); // wait a tick for async fetch
 
-                //expect(spy_ajax).toHaveBeenCalledBefore(spy_byps);
-                expect(spy_ajax).toHaveBeenCalledTimes(1);
-                // TODO: check why spy_byps not called.
-                //expect(spy_byps).toHaveBeenCalledTimes(2);
                 expect(spy_show).toHaveBeenCalledTimes(1);
+                expect(spy_ajax).toHaveBeenCalledTimes(1);
+                expect(spy_fetch).toHaveBeenCalledTimes(1);
 
                 expect(
                     document.querySelector(".tippy-box .tippy-content")
@@ -1266,100 +1222,5 @@ this will be extracted.
                 done();
             });
         });
-
-        //describe("will not fetch again until ajax is answered", () => {
-        //    it("with click", async (done) => {
-        //        global.fetch = jest
-        //            .fn()
-        //            .mockImplementation(
-        //                mockFetch(
-        //                    "External content fetched via an HTTP request.",
-        //                    200
-        //                )
-        //            );
-
-        //        const $el = testutils.createTooltip({
-        //            data: "source: ajax; trigger: click",
-        //            href: "http://test.com",
-        //        });
-        //        const instance = new pattern($el);
-
-        //        const spy_cset = spyOn(
-        //            instance,
-        //            "_onAjaxContentSet"
-        //        ).and.callThrough();
-        //        const spy_byps = spyOn(
-        //            instance,
-        //            "_onAjaxBypass"
-        //        ).and.callThrough();
-        //        const spy_show = spyOn(
-        //            instance.tippy.props,
-        //            "onShow"
-        //        ).and.callThrough();
-
-        //        // 1
-        //        testutils.click($el);
-        //        await utils.timeout(1); // wait a tick for async fetch
-        //        expect(spy_cset).not.toHaveBeenCalled();
-
-        //        // 2
-        //        testutils.click($el);
-        //        await utils.timeout(1); // wait a tick for async fetch
-
-        //        // 3
-        //        testutils.click($el);
-
-        //        await utils.timeout(300); // wait until delayed ajax request has finished
-
-        //        //expect(spy_byps).toHaveBeenCalledBefore(spy_cset);
-        //        expect(spy_cset).toHaveBeenCalledTimes(1);
-        //        // TODO: check why spy_byps not called.
-        //        //expect(spy_byps).toHaveBeenCalledTimes(2);
-        //        expect(spy_show).toHaveBeenCalledTimes(1);
-
-        //        expect(
-        //            document.querySelector(".tippy-box .tippy-content")
-        //                .textContent
-        //        ).toBe("External content fetched via an HTTP request.");
-
-        //        global.fetch.mockClear();
-        //        delete global.fetch;
-
-        //        done();
-        //    });
-
-        //    it("with hover", (done) => {
-        //        var $el = testutils.createTooltip({
-        //                data: "source: ajax; trigger: hover",
-        //                href: "tests/content.html#content",
-        //            }),
-        //            spy_shown = spyOn(pattern, _OSN).and.callThrough(),
-        //            spy_byps = spyOn(pattern, _OAB).and.callThrough(),
-        //            spy_cset = spyOn(pattern, _OACS).and.callThrough();
-
-        //        spyOn(pattern, _OAC).and.callFake(testutils.delayed(_OAC, 500));
-        //        testutils.log("pattern init");
-        //        pattern.init($el);
-        //        testutils.mouseenter($el);
-        //        expect(spy_cset).not.toHaveBeenCalled();
-        //        setTimeout(() => {
-        //            testutils.log("leaving");
-        //            testutils.mouseleave($el);
-        //            setTimeout(() => {
-        //                testutils.log("entering");
-        //                testutils.mouseenter($el);
-        //            }, 20);
-        //        }, 10);
-        //        setTimeout(() => {
-        //            expect(spy_byps).toHaveBeenCalledBefore(spy_cset);
-        //            expect(spy_shown).toHaveBeenCalled();
-        //            var $container = $(".tippy-box .tippy-content");
-        //            expect($container.text()).toBe(
-        //                "External content fetched via an HTTP request."
-        //            );
-        //            done();
-        //        }, 600);
-        //    });
-        //});
     });
 });
