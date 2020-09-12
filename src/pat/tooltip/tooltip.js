@@ -305,6 +305,9 @@ export default Base.extend({
             );
         }
 
+        // Add a generic non-tippy related class to identify the tooltip container
+        this.tippy.popper.classList.add("tooltip-container");
+
         this._initializeContent();
     },
 
