@@ -92,6 +92,23 @@ describe("pat-tooltip", () => {
     });
 
     describe("A tooltip", () => {
+        it("always gets the ``tooltip-container`` class set", async (done) => {
+            const $el = testutils.createTooltip({
+                data: "trigger: click",
+                title: "tooltip",
+            });
+            const instance = new pattern($el);
+
+            testutils.click($el);
+            await utils.timeout(1);
+
+            expect(
+                instance.tippy.popper.classList.contains("tooltip-container")
+            ).toBeTruthy();
+
+            done();
+        });
+
         describe(`if the 'class' parameter exists`, () => {
             it("will assign a class to the tooltip container", async (done) => {
                 const $el = testutils.createTooltip({
