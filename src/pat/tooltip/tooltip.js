@@ -1,11 +1,11 @@
+import "../inject/inject"; // Register ``patterns-injected`` event handler
 import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
-import logging from "../../core/logging";
 import Parser from "../../core/parser";
+import logging from "../../core/logging";
 import pat_markdown from "../markdown/markdown";
-import registry from "../../core/registry";
 import tippy from "tippy.js";
 import utils from "../../core/utils";
 
@@ -41,7 +41,7 @@ parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
 parser.addArgument("delay");
 parser.addArgument("mark-inactive", true);
 parser.addArgument("class");
-parser.addArgument("target", "body");
+parser.addArgument("target", "parent");
 
 // parser.addArgument("height", "auto", ["auto", "max"]);
 
@@ -267,8 +267,15 @@ export default Base.extend({
             });
         }
 
-        // Initialize any other patterns.
-        registry.scan(this.tippy.popper);
+        // 1) Initialize other patterns.
+        // 2) Notify parent patterns about injected content.
+        // NOTE: Revisit this hack and define patterns-injected to be the
+        // generic event for re-applying patterns on changed content.
+        $(this.tippy.popper).trigger("patterns-injected", [
+            null,
+            this.el,
+            this.tippy.popper,
+        ]);
     },
 
     async _onShow() {
@@ -341,9 +348,11 @@ export default Base.extend({
         const source = this.el.getAttribute("href").split("#");
         const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
         try {
+            // TODO: use pat-inject, once it supports async
             const response = await fetch(source[0]);
             const text = await response.text();
-            this.tippy.setContent(handler(text, source));
+            const content = handler(text, source);
+            this.tippy.setContent(content);
         } catch (e) {
             log.error(`Error on ajax request ${e}`);
         }
