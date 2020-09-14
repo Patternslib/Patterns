@@ -143,6 +143,20 @@
             The following should be injected:
             <section id="test-tooltip-w-submit--content">Liked</section>
         </p>
+
+        <h4>works with other patterns / pt2 </h4>
+        This opens a <a href="#tooltip-source-form" class="pat-tooltip" data-pat-tooltip="trigger: click; closing: close-button; source: content">Tooltip form with other patterns</a>.
+        <form
+          id="tooltip-source-form"
+          action="./index.html"
+          class="pat-inject"
+          data-pat-inject="source: #test-tooltip-w-submit--content; target: #test-tooltip-w-submit">
+          <button type="submit"
+                name="like_button"
+                value="like"
+                title="Liked by: Jacques du Pont, Liz Baker, Jeff Peters.">Like</button>
+          <li><a class="close-panel pat-modal" href="./pattern-test-response.html#message">Open a modal.</a></li>
+        </form>
     </div>
     <div id="tooltip-source" class="sources" style="display:none;">
         <strong>Hello there</strong>
@@ -152,6 +166,7 @@
         <ul>
           <li class="close-panel">Clicking me closes the panel</li>
           <li>Clicking me has no effect</li>
+          <li><a class="close-panel pat-modal" href="./pattern-test-response.html#message">Open a modal.</a></li>
         </ul>
     </div>
     <div id="tooltip-container">

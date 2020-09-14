@@ -135,7 +135,9 @@ describe("pat-tooltip", () => {
                 testutils.mouseenter($el);
                 await utils.timeout(1);
                 expect(spy_show).toHaveBeenCalled();
-                const container = document.querySelectorAll(".tippy-box");
+                const container = document.querySelectorAll(
+                    ".tooltip-container"
+                );
                 expect(container.length).toEqual(1);
                 expect(container[0].classList.contains("wasabi")).toBeTruthy();
                 const expected = container[0].querySelector(".tippy-content")
@@ -167,14 +169,14 @@ describe("pat-tooltip", () => {
                 testutils.click($el1);
                 await utils.timeout(1);
 
-                container = document.querySelectorAll(".tippy-box");
+                container = document.querySelectorAll(".tooltip-container");
                 expect(container.length).toEqual(1);
                 expect(container[0].classList.contains("wasabi")).toBeTruthy();
 
                 testutils.click($el2);
                 await utils.timeout(1);
 
-                container = document.querySelectorAll(".tippy-box");
+                container = document.querySelectorAll(".tooltip-container");
                 expect(container.length).toEqual(2);
                 expect(container[1].classList.contains("wasabi")).toBeFalsy();
 
