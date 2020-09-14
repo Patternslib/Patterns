@@ -255,13 +255,13 @@ export default Base.extend({
         // Initialize all .close-panel elements
         const close_els = this.tippy.popper.querySelectorAll(".close-panel");
         const close_buttons = this.tippy.popper.querySelectorAll(
-            "pat-tooltip--close-button"
+            ".pat-tooltip--close-button"
         );
         for (let close_el of close_els) {
             close_el.addEventListener("click", () => {
                 for (let close_button of close_buttons) {
                     // Also remove the close button
-                    close_button.parentNode.removeChild(close_el);
+                    close_button.parentNode.removeChild(close_button);
                 }
                 this.tippy.hide();
             });
