@@ -1,7 +1,9 @@
 import $ from "jquery";
+import autosubmit from "../auto-submit/auto-submit";
 import logging from "../../core/logging";
 import pattern from "./tooltip";
 import utils from "../../core/utils";
+import registry from "../../core/registry";
 
 const mockFetch = (text = "") => () =>
     Promise.resolve({
@@ -1310,6 +1312,81 @@ this will be extracted.
                     document.querySelector(".tippy-box .tippy-content")
                         .innerHTML
                 ).toBe("External content");
+
+                global.fetch.mockClear();
+                delete global.fetch;
+
+                done();
+            });
+        });
+
+        describe("patterns-injected events", () => {
+            it("it throws the ``patterns-injected`` event", async (done) => {
+                global.fetch = jest
+                    .fn()
+                    .mockImplementation(mockFetch("External content"));
+
+                let called = false;
+                $(document.body).on("patterns-injected", () => {
+                    called = true;
+                });
+
+                const $el = testutils.createTooltip({
+                    data: "source: ajax; trigger: click",
+                    href: "http://test.com",
+                });
+                const instance = new pattern($el);
+
+                testutils.click($el);
+                await utils.timeout(1); // wait a tick for async fetch
+
+                expect(called).toBeTruthy();
+
+                global.fetch.mockClear();
+                delete global.fetch;
+
+                done();
+            });
+
+            it.skip("triggers event handlers in other patterns", async (done) => {
+                // TODO: fix tests
+                global.fetch = jest
+                    .fn()
+                    .mockImplementation(
+                        mockFetch(`<input type="checkbox" name="test"/>`)
+                    );
+
+                const form = document.createElement("form");
+                form.setAttribute("action", "test.html");
+                form.setAttribute("class", "pat-autosubmit");
+                document.body.appendChild(form);
+
+                const $el = testutils.createTooltip({
+                    data: "source: ajax; trigger: click; target: form",
+                    href: "http://test.com",
+                });
+                const instance = new pattern($el);
+
+                const instance2 = new autosubmit($(form));
+                const spy_handler1 = spyOn(
+                    instance2,
+                    "refreshListeners"
+                ).and.callThrough();
+                const spy_handler2 = spyOn(
+                    instance2,
+                    "onInputChange"
+                ).and.callThrough();
+
+                testutils.click($el);
+                await utils.timeout(1); // wait a tick for async fetch
+
+                document.body.querySelector("input[name=test]").click();
+                await utils.timeout(1); // wait a tick for async fetch
+
+                // TODO: check why this isn't called
+                // manual tests show expected behavior.
+                expect(spy_handler1).toHaveBeenCalled();
+                expect(spy_handler2).toHaveBeenCalled();
 
                 global.fetch.mockClear();
                 delete global.fetch;
