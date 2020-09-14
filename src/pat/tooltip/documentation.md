@@ -104,6 +104,14 @@ option:
 This will load the contents of the `#myTip` element of
 balloon-contents.html and display it in a tooltip.
 
+You can also use the ``::element`` modifier after a document fragment to select
+the element itself instead of it's contents. E.g.:
+
+    <a href="balloon-contents.html#myTip::element" class="pat-tooltip" data-pat-tooltip="source: ajax">
+     …
+    </a>
+
+
 ### Generated markup
 
 The first time the tooltip is shown the tip itself will be wrapped in a

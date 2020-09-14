@@ -357,7 +357,12 @@ export default Base.extend({
             const tmp = document.createElement("div");
             tmp.innerHTML = text;
             if (src[1]) {
-                return tmp.querySelector(`#${src[1]}`)?.innerHTML || "";
+                // ::element modifier, as defined in pat-inject
+                const selector = src[1].split("::");
+                const selector_mode =
+                    selector[1] === "element" ? "outerHTML" : "innerHTML";
+                const el = tmp.querySelector(`#${selector[0]}`);
+                return el ? el[selector_mode] : "";
             }
             return tmp.innerHTML;
         },

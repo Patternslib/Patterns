@@ -1261,5 +1261,61 @@ this will be extracted.
                 done();
             });
         });
+
+        describe("::element modifier support", () => {
+            it("it fetches the outerHTML with the ::element modifier", async (done) => {
+                global.fetch = jest
+                    .fn()
+                    .mockImplementation(
+                        mockFetch('<div id="outer">External content</div>')
+                    );
+
+                const $el = testutils.createTooltip({
+                    data: "source: ajax; trigger: click",
+                    href: "http://test.com/#outer::element",
+                });
+                const instance = new pattern($el);
+
+                testutils.click($el);
+                await utils.timeout(1); // wait a tick for async fetch
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content")
+                        .innerHTML
+                ).toBe('<div id="outer">External content</div>');
+
+                global.fetch.mockClear();
+                delete global.fetch;
+
+                done();
+            });
+
+            it("it fetches the innerHTML without the ::element modifier", async (done) => {
+                global.fetch = jest
+                    .fn()
+                    .mockImplementation(
+                        mockFetch('<div id="outer">External content</div>')
+                    );
+
+                const $el = testutils.createTooltip({
+                    data: "source: ajax; trigger: click",
+                    href: "http://test.com/#outer",
+                });
+                const instance = new pattern($el);
+
+                testutils.click($el);
+                await utils.timeout(1); // wait a tick for async fetch
+
+                expect(
+                    document.querySelector(".tippy-box .tippy-content")
+                        .innerHTML
+                ).toBe("External content");
+
+                global.fetch.mockClear();
+                delete global.fetch;
+
+                done();
+            });
+        });
     });
 });
