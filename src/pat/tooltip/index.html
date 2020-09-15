@@ -18,6 +18,14 @@
         border: 6px dotted green;
       }
 
+      .kohlrabi {
+        background: lightgreen;
+      }
+
+      .class-example .tooltip-container {
+        box-shadow: 1em 1em 1em black;
+      }
+
       .active {
         background: lightskyblue;
       }
@@ -37,6 +45,16 @@
         <h4>class</h4>
         <p>
         <code>class: wasabi</code>. A tooltip with CSS class <code>wasabi</code> is displayed when the <a href="#" title="well done!" class="pat-tooltip" data-pat-tooltip="class: wasabi">element</a> is clicked.
+        </p>
+        <p class="class-example">
+        <code>class: wasabi kohlrabi</code>.
+        A tooltip with CSS classes <code class="wasabi">wasabi</code>,
+        <code class="kohlrabi">kohlrabi</code> and
+        <code class="tooltip-container">tooltip-container</code> (which is always applied):
+        <a href="#"
+          title="well done!"
+          class="pat-tooltip"
+          data-pat-tooltip="class: wasabi kohlrabi">click here</a>.
         </p>
         <h4>delay</h4>
         <p>

@@ -182,6 +182,26 @@ describe("pat-tooltip", () => {
 
                 done();
             });
+
+            it("with multiple values, all will be applied.", async (done) => {
+                const $el = testutils.createTooltip({
+                    data:
+                        "source: title; trigger: click; class: wasabi kohlrabi",
+                });
+                const instance = new pattern($el);
+
+                testutils.click($el);
+                await utils.timeout(1);
+
+                const container = document.querySelector(".tooltip-container");
+                expect(container.classList.contains("wasabi")).toBeTruthy();
+                expect(container.classList.contains("kohlrabi")).toBeTruthy();
+                expect(
+                    container.classList.contains("tooltip-container")
+                ).toBeTruthy();
+
+                done();
+            });
         });
 
         describe(`if the 'delay' parameter exists`, () => {
