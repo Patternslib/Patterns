@@ -300,9 +300,7 @@ export default Base.extend({
         }
 
         if (this.options.class) {
-            this.tippy.popper.firstElementChild.classList.add(
-                this.options.class
-            );
+            this.tippy.popper.classList.add(this.options.class);
         }
 
         // Add a generic non-tippy related class to identify the tooltip container
