@@ -958,10 +958,6 @@ describe("pat-tooltip", () => {
                     // options.source is changed to "content"
                     expect(instance.options.source).toEqual("content");
 
-                    expect(instance.tippy_options.content.textContent).toEqual(
-                        "Local content"
-                    );
-
                     done();
                 });
             });
@@ -998,8 +994,8 @@ describe("pat-tooltip", () => {
             spyOn(click, "preventDefault").and.callFake(() =>
                 call_order.push("preventDefault")
             );
-            spyOn(instance, "_onAjax").and.callFake(() =>
-                call_order.push("_onAjax")
+            spyOn(instance, "_getContent").and.callFake(() =>
+                call_order.push("_getContent")
             );
 
             $el[0].dispatchEvent(click);
@@ -1007,7 +1003,7 @@ describe("pat-tooltip", () => {
             $el[0].dispatchEvent(click);
 
             //expect(spy_ajax).toHaveBeenCalledBefore(spy_prevented);
-            expect(call_order.indexOf("_onAjax")).toEqual(0);
+            expect(call_order.indexOf("_getContent")).toEqual(0);
             expect(call_order.includes("preventDefault")).toBeTruthy();
 
             global.fetch.mockClear();
@@ -1029,7 +1025,7 @@ describe("pat-tooltip", () => {
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1064,7 +1060,7 @@ describe("pat-tooltip", () => {
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1094,7 +1090,7 @@ describe("pat-tooltip", () => {
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1136,7 +1132,7 @@ this will be extracted.
             });
             const instance = new pattern($el);
 
-            const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
             const spy_show = spyOn(
                 instance.tippy.props,
                 "onShow"
@@ -1177,7 +1173,10 @@ this will be extracted.
                 });
                 const instance = new pattern($el);
 
-                const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+                const spy_ajax = spyOn(
+                    instance,
+                    "_getContent"
+                ).and.callThrough();
                 const spy_fetch = spyOn(window, "fetch").and.callThrough();
                 const spy_show = spyOn(
                     instance.tippy.props,
@@ -1226,7 +1225,10 @@ this will be extracted.
                 });
                 const instance = new pattern($el);
 
-                const spy_ajax = spyOn(instance, "_onAjax").and.callThrough();
+                const spy_ajax = spyOn(
+                    instance,
+                    "_getContent"
+                ).and.callThrough();
                 const spy_fetch = spyOn(window, "fetch").and.callThrough();
                 const spy_show = spyOn(
                     instance.tippy.props,
