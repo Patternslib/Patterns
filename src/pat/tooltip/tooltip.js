@@ -195,14 +195,14 @@ export default Base.extend({
                     // Tooltip content from current DOM tree.
                     content = document.createElement("div");
                     tippy_options.allowHTML = true;
-                    const href = this.el.getAttribute("href");
-                    const is_string = typeof href === "string";
-                    const has_hash = href.indexOf("#") !== -1;
-                    const has_more = href.length > 1;
-                    if (is_string && has_hash && has_more) {
-                        content.innerHTML = document.querySelector(
-                            "#" + href.split("#")[1]
-                        ).innerHTML;
+                    const { selector, modifier } = this.get_url_parts(
+                        this.el.getAttribute("href")
+                    );
+                    if (selector) {
+                        const _content = document.querySelector(selector);
+                        if (_content) {
+                            content.innerHTML = _content[modifier];
+                        }
                     } else {
                         content.innerHTML = this.el.innerHTML;
                     }
@@ -350,13 +350,18 @@ export default Base.extend({
             canFetch: false,
         };
 
-        const source = this.el.getAttribute("href").split("#");
+        const { url, selector, modifier } = this.get_url_parts(
+            this.el.getAttribute("href")
+        );
+        if (!url) {
+            return;
+        }
         const handler = this._ajaxDataTypeHandlers[this.options.ajaxDataType];
         try {
             // TODO: use pat-inject, once it supports async
-            const response = await fetch(source[0]);
+            const response = await fetch(url);
             const text = await response.text();
-            const content = handler(text, source);
+            const content = handler(text, url, selector, modifier);
             this.tippy.setContent(content);
         } catch (e) {
             log.error(`Error on ajax request ${e}`);
@@ -364,27 +369,38 @@ export default Base.extend({
         this.ajax_state.isFetching = false;
     },
 
+    get_url_parts(href) {
+        // Return the URL, a CSS ID selector and a DOM query modifier.
+        // The modifier is a as defined in pat-inject:
+        // ::element selects the element itself and not it's children.
+        let url, selector, modifier;
+        if (!href) {
+            return { url, selector, modifier };
+        }
+        url = (href.split("#")[0] || "").split("::")[0] || undefined;
+        selector = (href.split("#")[1] || "").split("::")[0] || undefined;
+        selector = selector ? `#${selector}` : undefined;
+        modifier = (href.split("#")[1] || "").split("::")[1] || undefined;
+        modifier = modifier === "element" ? "outerHTML" : "innerHTML";
+        return { url, selector, modifier };
+    },
+
     _ajaxDataTypeHandlers: {
-        html(text, src) {
+        html(text, url, selector, modifier) {
             const tmp = document.createElement("div");
             tmp.innerHTML = text;
-            if (src[1]) {
-                // ::element modifier, as defined in pat-inject
-                const selector = src[1].split("::");
-                const selector_mode =
-                    selector[1] === "element" ? "outerHTML" : "innerHTML";
-                const el = tmp.querySelector(`#${selector[0]}`);
-                return el ? el[selector_mode] : "";
+            if (selector) {
+                const el = tmp.querySelector(selector);
+                return el ? el[modifier] : "";
             }
             return tmp.innerHTML;
         },
 
-        markdown(text, src) {
+        markdown(text, url, selector, modifier) {
             const pat = pat_markdown.init($("<div/>"));
-            const [url, source] = src;
             const cfg = { url };
-            if (source) {
-                cfg.source = `#${source}`;
+            if (selector) {
+                cfg.source = selector;
             }
             return pat.renderForInjection(cfg, text)[0];
         },
