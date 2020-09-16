@@ -10,6 +10,8 @@ const mockFetch = (text = "") => () =>
         text: () => Promise.resolve(text),
     });
 
+jest.setTimeout(1000000);
+
 let start;
 const log = logging.getLogger("pat-tooltip.tests");
 const testutils = {
@@ -832,56 +834,51 @@ describe("pat-tooltip", () => {
                 });
             });
             describe(`if the 'source' parameter is 'content'`, () => {
-                describe("if the href attribute is hashtag", () => {
-                    it("will show the content of the link", async (done) => {
-                        const content = "Local content";
-                        const $el = testutils.createTooltip({
-                            data: "source: content; trigger: hover",
-                            href: "#",
-                            content: content,
-                        });
-                        const instance = new pattern($el);
-                        const spy_show = spyOn(
-                            instance.tippy.props,
-                            "onShow"
-                        ).and.callThrough();
-
-                        testutils.mouseenter($el);
-                        await utils.timeout(1);
-
-                        expect(spy_show).toHaveBeenCalled();
-                        expect(
-                            document.querySelector(".tippy-box").textContent
-                        ).toBe(content);
-
-                        done();
+                it("and the href-hashtag reference cannot be found, it will show the content of the link", async (done) => {
+                    const content = "Local content";
+                    const $el = testutils.createTooltip({
+                        data: "source: content; trigger: hover",
+                        href: "#",
+                        content: content,
                     });
+                    const instance = new pattern($el);
+                    const spy_show = spyOn(
+                        instance.tippy.props,
+                        "onShow"
+                    ).and.callThrough();
+
+                    testutils.mouseenter($el);
+                    await utils.timeout(1);
+
+                    expect(spy_show).toHaveBeenCalled();
+                    expect(
+                        document.querySelector(".tippy-box").textContent
+                    ).toBe(content);
+
+                    done();
                 });
-                describe("if the href attribute is #tooltip-source", () => {
-                    it("will clone a DOM element from the page", async (done) => {
-                        const content = "Local content";
-                        const $el = testutils.createTooltip({
-                            data: "source: content; trigger: hover",
-                            href: "#tooltip-source",
-                        });
-                        testutils.createTooltipSource();
-                        const instance = new pattern($el);
-                        const spy_show = spyOn(
-                            instance.tippy.props,
-                            "onShow"
-                        ).and.callThrough();
-
-                        testutils.mouseenter($el);
-                        await utils.timeout(1);
-
-                        expect(spy_show).toHaveBeenCalled();
-                        expect(
-                            document.querySelector(".tippy-box strong")
-                                .textContent
-                        ).toBe(content);
-
-                        done();
+                it("and the href-reference can be found, it will show that in the modal", async (done) => {
+                    const content = "Local content";
+                    const $el = testutils.createTooltip({
+                        data: "source: content; trigger: hover",
+                        href: "#tooltip-source",
                     });
+                    testutils.createTooltipSource();
+                    const instance = new pattern($el);
+                    const spy_show = spyOn(
+                        instance.tippy.props,
+                        "onShow"
+                    ).and.callThrough();
+
+                    testutils.mouseenter($el);
+                    await utils.timeout(1);
+
+                    expect(spy_show).toHaveBeenCalled();
+                    expect(
+                        document.querySelector(".tippy-box strong").textContent
+                    ).toBe(content);
+
+                    done();
                 });
             });
         });
@@ -1264,62 +1261,6 @@ this will be extracted.
             });
         });
 
-        describe("::element modifier support", () => {
-            it("it fetches the outerHTML with the ::element modifier", async (done) => {
-                global.fetch = jest
-                    .fn()
-                    .mockImplementation(
-                        mockFetch('<div id="outer">External content</div>')
-                    );
-
-                const $el = testutils.createTooltip({
-                    data: "source: ajax; trigger: click",
-                    href: "http://test.com/#outer::element",
-                });
-                const instance = new pattern($el);
-
-                testutils.click($el);
-                await utils.timeout(1); // wait a tick for async fetch
-
-                expect(
-                    document.querySelector(".tippy-box .tippy-content")
-                        .innerHTML
-                ).toBe('<div id="outer">External content</div>');
-
-                global.fetch.mockClear();
-                delete global.fetch;
-
-                done();
-            });
-
-            it("it fetches the innerHTML without the ::element modifier", async (done) => {
-                global.fetch = jest
-                    .fn()
-                    .mockImplementation(
-                        mockFetch('<div id="outer">External content</div>')
-                    );
-
-                const $el = testutils.createTooltip({
-                    data: "source: ajax; trigger: click",
-                    href: "http://test.com/#outer",
-                });
-                const instance = new pattern($el);
-
-                testutils.click($el);
-                await utils.timeout(1); // wait a tick for async fetch
-
-                expect(
-                    document.querySelector(".tippy-box .tippy-content")
-                        .innerHTML
-                ).toBe("External content");
-
-                global.fetch.mockClear();
-                delete global.fetch;
-
-                done();
-            });
-        });
-
         describe("patterns-injected events", () => {
             it("it throws the ``patterns-injected`` event", async (done) => {
                 global.fetch = jest
@@ -1393,6 +1334,150 @@ this will be extracted.
 
                 done();
             });
+        });
+    });
+
+    describe("::element modifier support", () => {
+        it("ajax mode: it fetches the outerHTML with the ::element modifier", async (done) => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch('<div id="outer">External content</div>')
+                );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax; trigger: click",
+                href: "http://test.com/#outer::element",
+            });
+            const instance = new pattern($el);
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(
+                document.querySelector(".tippy-box .tippy-content").innerHTML
+            ).toBe('<div id="outer">External content</div>');
+
+            global.fetch.mockClear();
+            delete global.fetch;
+
+            done();
+        });
+
+        it("ajax mode: it fetches the innerHTML without the ::element modifier", async (done) => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch('<div id="outer">External content</div>')
+                );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax; trigger: click",
+                href: "http://test.com/#outer",
+            });
+            const instance = new pattern($el);
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(
+                document.querySelector(".tippy-box .tippy-content").innerHTML
+            ).toBe("External content");
+
+            global.fetch.mockClear();
+            delete global.fetch;
+
+            done();
+        });
+
+        it("local content: it uses the outerHTML with the ::element modifier", async (done) => {
+            const content = document.createElement("div");
+            content.setAttribute("id", "local-content");
+            content.innerHTML = '<strong class="testinner">okay</strong>';
+            document.body.appendChild(content);
+
+            const $el = testutils.createTooltip({
+                data: "source: content; trigger: click",
+                href: "#local-content::element",
+            });
+            const instance = new pattern($el);
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(
+                document.querySelector(
+                    ".tippy-box .tippy-content #local-content"
+                )
+            ).toBeTruthy();
+
+            done();
+        });
+
+        it("local content: it uses the innerHTML without the ::element modifier", async (done) => {
+            const content = document.createElement("div");
+            content.setAttribute("id", "local-content");
+            content.innerHTML = '<strong class="testinner">okay</strong>';
+            document.body.appendChild(content);
+
+            const $el = testutils.createTooltip({
+                data: "source: content; trigger: click",
+                href: "#local-content",
+            });
+            const instance = new pattern($el);
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(
+                document.querySelector(
+                    ".tippy-box .tippy-content #local-content"
+                )
+            ).toBeFalsy();
+
+            expect(
+                document.querySelector(".tippy-box .tippy-content .testinner")
+            ).toBeTruthy();
+
+            done();
+        });
+    });
+
+    describe("URL splitting", () => {
+        it("it extracts the correct parts from any url", (done) => {
+            const $el = testutils.createTooltip({});
+            const instance = new pattern($el);
+
+            let parts = instance.get_url_parts(
+                "https://text.com/#selector::modifier"
+            );
+            expect(parts.url === "https://text.com/").toBeTruthy();
+            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.modifier === "innerHTML").toBeTruthy();
+
+            parts = instance.get_url_parts(
+                "https://text.com/#selector::element"
+            );
+            expect(parts.url === "https://text.com/").toBeTruthy();
+            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.modifier === "outerHTML").toBeTruthy();
+
+            parts = instance.get_url_parts("#selector::element");
+            expect(typeof parts.url === "undefined").toBeTruthy();
+            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.modifier === "outerHTML").toBeTruthy();
+
+            parts = instance.get_url_parts("#selector");
+            expect(typeof parts.url === "undefined").toBeTruthy();
+            expect(parts.selector === "#selector").toBeTruthy();
+            expect(parts.modifier === "innerHTML").toBeTruthy();
+
+            parts = instance.get_url_parts("https://text.com/");
+            expect(parts.url === "https://text.com/").toBeTruthy();
+            expect(typeof parts.selector === "undefined").toBeTruthy();
+            expect(parts.modifier === "innerHTML").toBeTruthy();
+
+            done();
         });
     });
 });
