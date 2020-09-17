@@ -2,8 +2,8 @@ import $ from "jquery";
 import autosubmit from "../auto-submit/auto-submit";
 import logging from "../../core/logging";
 import pattern from "./tooltip";
-import utils from "../../core/utils";
 import registry from "../../core/registry";
+import utils from "../../core/utils";
 
 const mockFetch = (text = "") => () =>
     Promise.resolve({
@@ -1333,6 +1333,24 @@ this will be extracted.
 
                 global.fetch.mockClear();
                 delete global.fetch;
+
+                done();
+            });
+
+            it("only scans the tooltip content once", async (done) => {
+                const $el = testutils.createTooltip({
+                    data: "source: content; trigger: click",
+                });
+                const instance = new pattern($el);
+
+                const spy_scan = spyOn(registry, "scan");
+
+                testutils.click($el);
+                await utils.timeout(1); // wait a tick for async fetch
+
+                // Test, if registry.scan isn't invoked twice - another time by
+                // pat-inject.
+                expect(spy_scan).toHaveBeenCalledTimes(1);
 
                 done();
             });
