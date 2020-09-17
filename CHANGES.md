@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.0.0-dev - unreleased
+## 3.0.0-dev - unreleased
 
 Features
 ~~~~~~~~
