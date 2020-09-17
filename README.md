@@ -37,19 +37,19 @@ The individual patterns are located in their own folders in `./src/pat/`.
 
 Each pattern folder contains some or all of the following files:
 
-- *index.html* which contains HTML markup that shows a demonstration of the pattern.
-- *documentation.md* which is a Markdown file that documents the pattern's purpose, how to use it and how to configure it.
+- _index.html_ which contains HTML markup that shows a demonstration of the pattern.
+- _documentation.md_ which is a Markdown file that documents the pattern's purpose, how to use it and how to configure it.
 - A javascript file which implements the pattern's functionality.
 - A Sass (.scss) file which provides the CSS associated with the pattern.
 
-To generate CSS files from the pattern's included Sass files, type ``make all_css``
+To generate CSS files from the pattern's included Sass files, type `make all_css`
 and the css files will be generated in the same location as the Sass files.
 
 You'll need to have a Sass compiler installed.
 
 ## How to demo patterns
 
-To demo the patterns, simply type ``make serve`` to install the necessary
+To demo the patterns, simply type `make serve` to install the necessary
 dependencies and to start a simple Node.js HTTP server.
 
 You can then visit http://localhost:4001 to see a site with demos.
@@ -79,18 +79,32 @@ The simplest way to run the tests are to use make:
 
 This will install all required npm and bower packages and run the tests.
 
-To run the tests in a browser, open the ``tests.html`` file in the browser of your choice.
 
-To run automated tests in a browser instead of the defaul headless browser, run the following command:
+### Debugging tests
 
-    karma start webpack/karma.config.js --browsers=Chrome --single-run=false
+Eventually add to tests:
+
+    import "core-js/stable";
+    import "regenerator-runtime/runtime";
+
+Then:
+
+    node --inspect-brk node_modules/.bin/jest --runInBand ./src/pat/tooltip/tooltip.test.js
+
+Connect in chrome via:
+
+    chrome://inspect
+
+You can pass Jest any parameter it accepts, like ``-t TESTPATTERN``::
+
+    node --inspect-brk node_modules/.bin/jest --runInBand ./src/pat/tooltip/tooltip.test.js -t will.be.closed.when
 
 
 ### Check bundle sizes
 
 We added a webpack plugin which helps in analyzing bundle sizes.
 Check if the bundle size doesn't grow much bigger.
-After running webpack via ``make build``, ``make serve`` or ``make check`` stats.json and stats.html file are created.
+After running webpack via `make build`, `make serve` or `make check` stats.json and stats.html file are created.
 Open stats.html in a browser to interactively check the payload each package contributes to the generated bundle.
 
 ### Organisations and projects which use Patternslib
@@ -104,5 +118,3 @@ Open stats.html in a browser to interactively check the payload each package con
 
 - [The Plone Intranet prototype](http://prototype.ploneintranet.net/dashboard.html)
 - The [Patternslib.com](http://patternslib.com) website uses Patternslib and is based upon a prototype, which can be found [here](https://github.com/patternslib/Patterns-site).
-
-
