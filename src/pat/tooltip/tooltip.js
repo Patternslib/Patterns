@@ -3,9 +3,10 @@ import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import Base from "../../core/base";
-import Parser from "../../core/parser";
 import logging from "../../core/logging";
+import Parser from "../../core/parser";
 import pat_markdown from "../markdown/markdown";
+import registry from "../../core/registry";
 import tippy from "tippy.js";
 import utils from "../../core/utils";
 
@@ -251,15 +252,16 @@ export default Base.extend({
                 this.tippy.hide();
             });
         }
+        // Initialize any other patterns.
+        registry.scan(this.tippy.popper);
     },
 
     _onMount() {
-        // 1) Initialize other patterns.
-        // 2) Notify parent patterns about injected content.
-        // NOTE: Revisit this hack and define patterns-injected to be the
-        // generic event for re-applying patterns on changed content.
+        // Notify parent patterns about injected content.
+        // Do not call pat-inject's handler, because all necessary
+        // initialization after injection is done here.
         $(this.tippy.popper).trigger("patterns-injected", [
-            null,
+            { skipPatInjectHandler: true },
             this.el,
             this.tippy.popper,
         ]);

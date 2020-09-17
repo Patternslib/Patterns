@@ -1045,6 +1045,11 @@ $(document).on("patterns-injected.inject", function onInjected(ev, cfg, trigger,
      * Remove the "loading-class" classes from all injection targets and
      * then scan the injected content for new patterns.
      */
+    if (cfg && cfg.skipPatInjectHandler) {
+        // Allow skipping this handler but still have other handlers in other
+        // patterns listen to ``patterns-injected``.
+        return;
+    }
     if (cfg) {
         cfg.$target.removeClass(cfg.loadingClass);
         // Remove the executing class, add the executed class to the element with pat.inject on it.
