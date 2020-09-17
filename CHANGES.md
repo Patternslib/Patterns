@@ -13,16 +13,32 @@
   - pat-placeholder - placeholder fully supported since IE10.
   - pat-slideshow-builder
   - simplePlaceholder from jquery-ext.
+- IE11 is not supported by default anymore. There is a ``polyfills`` bundle, which adds IE11 support for the time being.
 
 ### Features
 
 - Upgrade pat-calendar to use lates fullcalendar version (5.3.0).
+- pat tooltip: Use tippy v6 based implementation.
 
 ### Technical
 
 - Use Babel for all files, allowing latest JavaScript features everywhere.
+- Add example ``minimalpattern``.
+- Replace ``slave`` terminology with ``dependent``.
 - Update build infrastructure and packages.
+- Use yarn instead of npm.
+- Use node-sass instead of Ruby sass.
+- Use eslint instead jshint.
+- Use Jest with jsdom as testing framework instead of Karma/Jasmine.
+- Do not automatically start a browser when starting the development server.
+- Allow for the JavaScript feature "optional chaining" via Babel.
+- Do not depend on ``modernizr``.
+- Core store: Ignore invalid JSON values.
+- Core utils: Add method to check input type support.
+- Core utils: Add new async timeout function. Used for waiting in tests.
+- Core utils: Add ``checkCSSFeature`` method to be used instead of ``modernizr`` feature detection.
 - Core: Allow plain DOM nodes for initalization in base and parser.
+- Build infrastructure: Build into /dist and cleanup before building.
 
 
 ## 3.0.0-dev - unreleased
