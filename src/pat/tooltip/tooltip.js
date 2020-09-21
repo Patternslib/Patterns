@@ -30,21 +30,13 @@ const all_positions = [
 parser.addArgument("position-list", [], all_positions, true);
 parser.addArgument("position-policy", "auto", ["auto", "force"]);
 parser.addArgument("trigger", "click", ["click", "hover"]);
-parser.addArgument("source", "title", [
-    "auto",
-    "ajax",
-    "content",
-    "content-html",
-    "title",
-]);
+parser.addArgument("source", "title", ["auto", "ajax", "content", "title"]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
 parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
 parser.addArgument("delay");
 parser.addArgument("mark-inactive", true);
 parser.addArgument("class");
 parser.addArgument("target", "body");
-
-// parser.addArgument("height", "auto", ["auto", "max"]);
 
 export default Base.extend({
     name: "tooltip",

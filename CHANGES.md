@@ -14,6 +14,7 @@
   - pat-slideshow-builder
   - simplePlaceholder from jquery-ext.
 - IE11 is not supported by default anymore. There is a ``polyfills`` bundle, which adds IE11 support for the time being.
+- pat tooltip: Remove undocumented "souce: content-html" parameter.
 
 ### Features
 
