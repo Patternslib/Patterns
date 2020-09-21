@@ -30,7 +30,7 @@ const all_positions = [
 parser.addArgument("position-list", [], all_positions, true);
 parser.addArgument("position-policy", "auto", ["auto", "force"]);
 parser.addArgument("trigger", "click", ["click", "hover"]);
-parser.addArgument("source", "title", ["auto", "ajax", "content", "title"]);
+parser.addArgument("source", "title", ["ajax", "content", "title", "auto"]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
 parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
 parser.addArgument("delay");
@@ -86,7 +86,10 @@ export default Base.extend({
             el.classList.add("inactive");
         }
 
-        if (this.options.trigger === "click") {
+        if (
+            this.options.trigger === "click" &&
+            this.options.source === "ajax"
+        ) {
             // prevent default action for "click" and "mouseenter click"
             el.addEventListener("click", (event) => {
                 event.preventDefault();
@@ -183,8 +186,11 @@ export default Base.extend({
                 if (opts.source === "title") {
                     // Tooltip content from title attribute
                     content = this.el.getAttribute("title");
-                }
-                if (["content", "ajax"].includes(opts.source)) {
+                } else if (opts.source === "content") {
+                    // Tooltiop content from trigger child content.
+                    content = this.el.innerHTML;
+                    tippy_options.allowHTML = true;
+                } else if (opts.source === "ajax") {
                     // Tooltiop content from AJAX request.
                     content = document.createElement("progress");
                     tippy_options.allowHTML = true;
@@ -268,7 +274,7 @@ export default Base.extend({
             this.tippy.setProps({ trigger: "click" });
         }
 
-        if (["content", "ajax"].includes(this.options.source)) {
+        if (this.options.source === "ajax") {
             await this._getContent();
         }
 
@@ -313,7 +319,7 @@ export default Base.extend({
             this.tippy.setProps({ trigger: "mouseenter focus" });
         }
 
-        if (["content", "ajax"].includes(this.options.source)) {
+        if (this.options.source === "ajax") {
             this.tippy.setContent(document.createElement("progress"));
             this.ajax_state.canFetch = true;
         }
@@ -326,6 +332,7 @@ export default Base.extend({
         const { url, selector, modifier } = this.get_url_parts(
             this.el.getAttribute("href")
         );
+        let content;
         if (url) {
             // Tooltip from remote page.
             this.ajax_state = {
@@ -339,21 +346,18 @@ export default Base.extend({
                 // TODO: use pat-inject, once it supports async
                 const response = await fetch(url);
                 const text = await response.text();
-                const content = handler(text, url, selector, modifier);
-                this.tippy.setContent(content);
+                content = handler(text, url, selector, modifier);
             } catch (e) {
                 log.error(`Error on ajax request ${e}`);
             }
             this.ajax_state.isFetching = false;
         } else if (selector) {
             // Tooltip content from current DOM tree.
-            const content = document.querySelector(selector);
-            if (!content) {
-                return;
-            }
-            this.tippy.setContent(content[modifier]);
-        } else {
-            this.tippy.setContent(this.el.innerHTML);
+            content = document.querySelector(selector);
+            content = content ? content[modifier] : undefined;
+        }
+        if (content) {
+            this.tippy.setContent(content);
         }
     },
 

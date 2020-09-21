@@ -834,11 +834,11 @@ describe("pat-tooltip", () => {
                 });
             });
             describe(`if the 'source' parameter is 'content'`, () => {
-                it("and the href-hashtag reference cannot be found, it will show the content of the link", async (done) => {
+                it("it will show the content of the link", async (done) => {
                     const content = "Local content";
                     const $el = testutils.createTooltip({
                         data: "source: content; trigger: hover",
-                        href: "#",
+                        href: "#lab",
                         content: content,
                     });
                     const instance = new pattern($el);
@@ -853,29 +853,6 @@ describe("pat-tooltip", () => {
                     expect(spy_show).toHaveBeenCalled();
                     expect(
                         document.querySelector(".tippy-box").textContent
-                    ).toBe(content);
-
-                    done();
-                });
-                it("and the href-reference can be found, it will show that in the modal", async (done) => {
-                    const content = "Local content";
-                    const $el = testutils.createTooltip({
-                        data: "source: content; trigger: hover",
-                        href: "#tooltip-source",
-                    });
-                    testutils.createTooltipSource();
-                    const instance = new pattern($el);
-                    const spy_show = spyOn(
-                        instance.tippy.props,
-                        "onShow"
-                    ).and.callThrough();
-
-                    testutils.mouseenter($el);
-                    await utils.timeout(1);
-
-                    expect(spy_show).toHaveBeenCalled();
-                    expect(
-                        document.querySelector(".tippy-box strong").textContent
                     ).toBe(content);
 
                     done();
@@ -945,35 +922,146 @@ describe("pat-tooltip", () => {
                 done();
             });
         });
-        describe(`if the "source" parameter is "auto"`, () => {
-            describe(`if the "href" points to a document fragment`, () => {
-                it(`will revert to "content"`, (done) => {
-                    const $el = testutils.createTooltip({
-                        data: "source: auto",
-                        href: "#tooltip-source",
-                    });
-                    testutils.createTooltipSource();
-                    const instance = new pattern($el);
+    });
 
-                    // options.source is changed to "content"
-                    expect(instance.options.source).toEqual("content");
-
-                    done();
-                });
+    describe("test the different `source` parameters", () => {
+        it("source: title will use the title attribute", async (done) => {
+            const $el = testutils.createTooltip({
+                data: "source: title; trigger: click",
             });
-            describe(`if the "href" points to an external URL`, () => {
-                it(`will revert to "ajax"`, (done) => {
-                    const $el = testutils.createTooltip({
-                        data: "source: auto",
-                        href: "/tests/content.html#content",
-                    });
-                    const instance = new pattern($el);
+            const title = $el[0].title;
+            const instance = new pattern($el);
 
-                    // options.source is changed to "ajax"
-                    expect(instance.options.source).toEqual("ajax");
+            testutils.click($el);
+            await utils.timeout(1);
 
-                    done();
+            const expected = document.querySelector(
+                ".tooltip-container .tippy-content"
+            ).textContent;
+            expect(expected).toBe(title);
+
+            done();
+        });
+
+        it("source: content use the content of the link", async (done) => {
+            const content = "Local content";
+            const $el = testutils.createTooltip({
+                data: "source: content; trigger: click",
+                content: content,
+            });
+            const instance = new pattern($el);
+
+            testutils.click($el);
+            await utils.timeout(1);
+
+            expect(document.querySelector(".tippy-box").textContent).toBe(
+                content
+            );
+
+            done();
+        });
+
+        it("source: ajax and an external url will fetch its contents via ajax", async (done) => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch("External content fetched via an HTTP request.")
+                );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "http://test.com",
+            });
+            const instance = new pattern($el);
+
+            const spy_content = spyOn(
+                instance,
+                "_getContent"
+            ).and.callThrough();
+            const spy_show = spyOn(
+                instance.tippy.props,
+                "onShow"
+            ).and.callThrough();
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(global.fetch).toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(
+                document.querySelector(".tippy-box .tippy-content").textContent
+            ).toBe("External content fetched via an HTTP request.");
+
+            global.fetch.mockClear();
+            delete global.fetch;
+
+            done();
+        });
+
+        it("source: ajax with a local selector will not use ajax but get the contents from the current DOM", async (done) => {
+            global.fetch = jest
+                .fn()
+                .mockImplementation(
+                    mockFetch("External content fetched via an HTTP request.")
+                );
+
+            const $el = testutils.createTooltip({
+                data: "source: ajax",
+                href: "#lab",
+            });
+            const instance = new pattern($el);
+
+            const spy_content = spyOn(
+                instance,
+                "_getContent"
+            ).and.callThrough();
+            const spy_show = spyOn(
+                instance.tippy.props,
+                "onShow"
+            ).and.callThrough();
+
+            testutils.click($el);
+            await utils.timeout(1); // wait a tick for async fetch
+
+            expect(global.fetch).not.toHaveBeenCalled();
+            expect(spy_content).toHaveBeenCalled();
+            expect(spy_show).toHaveBeenCalled();
+            expect(
+                document.querySelector(".tippy-box .tippy-content .pat-tooltip")
+            ).toBeTruthy();
+
+            global.fetch.mockClear();
+            delete global.fetch;
+
+            done();
+        });
+
+        describe("test source:auto", () => {
+            it(`source: auto and a document fragment will revert to "content"`, (done) => {
+                const $el = testutils.createTooltip({
+                    data: "source: auto",
+                    href: "#tooltip-source",
                 });
+                testutils.createTooltipSource();
+                const instance = new pattern($el);
+
+                // options.source is changed to "content"
+                expect(instance.options.source).toEqual("content");
+
+                done();
+            });
+            it(`source: auto and a external url will revert to "ajax"`, (done) => {
+                const $el = testutils.createTooltip({
+                    data: "source: auto",
+                    href: "/tests/content.html#content",
+                });
+                const instance = new pattern($el);
+
+                // options.source is changed to "ajax"
+                expect(instance.options.source).toEqual("ajax");
+
+                done();
             });
         });
     });
@@ -1005,40 +1093,6 @@ describe("pat-tooltip", () => {
             //expect(spy_ajax).toHaveBeenCalledBefore(spy_prevented);
             expect(call_order.indexOf("_getContent")).toEqual(0);
             expect(call_order.includes("preventDefault")).toBeTruthy();
-
-            global.fetch.mockClear();
-            delete global.fetch;
-
-            done();
-        });
-
-        it("will fetch its contents via ajax", async (done) => {
-            global.fetch = jest
-                .fn()
-                .mockImplementation(
-                    mockFetch("External content fetched via an HTTP request.")
-                );
-
-            const $el = testutils.createTooltip({
-                data: "source: ajax",
-                href: "http://test.com",
-            });
-            const instance = new pattern($el);
-
-            const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
-            const spy_show = spyOn(
-                instance.tippy.props,
-                "onShow"
-            ).and.callThrough();
-
-            testutils.click($el);
-            await utils.timeout(1); // wait a tick for async fetch
-
-            expect(spy_ajax).toHaveBeenCalled();
-            expect(spy_show).toHaveBeenCalled();
-            expect(
-                document.querySelector(".tippy-box .tippy-content").textContent
-            ).toBe("External content fetched via an HTTP request.");
 
             global.fetch.mockClear();
             delete global.fetch;
@@ -1417,7 +1471,7 @@ this will be extracted.
             document.body.appendChild(content);
 
             const $el = testutils.createTooltip({
-                data: "source: content; trigger: click",
+                data: "source: ajax; trigger: click",
                 href: "#local-content::element",
             });
             const instance = new pattern($el);
@@ -1441,7 +1495,7 @@ this will be extracted.
             document.body.appendChild(content);
 
             const $el = testutils.createTooltip({
-                data: "source: content; trigger: click",
+                data: "source: ajax; trigger: click",
                 href: "#local-content",
             });
             const instance = new pattern($el);
