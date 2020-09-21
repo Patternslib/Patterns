@@ -30,7 +30,7 @@ const all_positions = [
 parser.addArgument("position-list", [], all_positions, true);
 parser.addArgument("position-policy", "auto", ["auto", "force"]);
 parser.addArgument("trigger", "click", ["click", "hover"]);
-parser.addArgument("source", "title", ["ajax", "content", "title", "auto"]);
+parser.addArgument("source", "title", ["ajax", "content", "title"]);
 parser.addArgument("ajax-data-type", "html", ["html", "markdown"]);
 parser.addArgument("closing", "auto", ["auto", "sticky", "close-button"]);
 parser.addArgument("delay");
@@ -168,20 +168,6 @@ export default Base.extend({
             },
 
             source: () => {
-                if (opts.source === "auto") {
-                    const href = this.el.getAttribute("href");
-                    if (typeof href !== "string") {
-                        log.error(
-                            `href must be specified if 'source' is set to 'auto'`
-                        );
-                        return;
-                    }
-                    if (href.indexOf("#") === 0) {
-                        opts.source = "content";
-                    } else {
-                        opts.source = "ajax";
-                    }
-                }
                 let content;
                 if (opts.source === "title") {
                     // Tooltip content from title attribute

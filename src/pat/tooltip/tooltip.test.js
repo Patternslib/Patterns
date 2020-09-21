@@ -1036,34 +1036,6 @@ describe("pat-tooltip", () => {
 
             done();
         });
-
-        describe("test source:auto", () => {
-            it(`source: auto and a document fragment will revert to "content"`, (done) => {
-                const $el = testutils.createTooltip({
-                    data: "source: auto",
-                    href: "#tooltip-source",
-                });
-                testutils.createTooltipSource();
-                const instance = new pattern($el);
-
-                // options.source is changed to "content"
-                expect(instance.options.source).toEqual("content");
-
-                done();
-            });
-            it(`source: auto and a external url will revert to "ajax"`, (done) => {
-                const $el = testutils.createTooltip({
-                    data: "source: auto",
-                    href: "/tests/content.html#content",
-                });
-                const instance = new pattern($el);
-
-                // options.source is changed to "ajax"
-                expect(instance.options.source).toEqual("ajax");
-
-                done();
-            });
-        });
     });
 
     describe(`if the 'source' parameter is 'ajax'`, () => {
