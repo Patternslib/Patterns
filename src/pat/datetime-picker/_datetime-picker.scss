@@ -2,19 +2,19 @@
 @import "../date-picker/_date-picker.scss";
 
 .datetime-picker-wrapper {
-  .date,
-  .time {
-    position: relative;
-    display: inline-block;
-    margin-right: 0.5em;
-  }
-  .date {
-    width: auto;
-  }
-  .time {
-    width: 10em;
-  }
-  button.now {
-    margin-right: 0.2em;
-  }
+    .date,
+    .time {
+        position: relative;
+        display: inline-block;
+        margin-right: 0.5em;
+    }
+    .date {
+        width: auto;
+    }
+    .time {
+        width: 10em;
+    }
+    button.now {
+        margin-right: 0.2em;
+    }
 }
