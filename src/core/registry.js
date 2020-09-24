@@ -22,7 +22,6 @@ import logging from "./logging";
 import utils from "./utils";
 
 // below here modules that are only loaded
-import "./compat";
 import "./jquery-ext";
 
 var log = logging.getLogger("registry"),

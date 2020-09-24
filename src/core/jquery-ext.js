@@ -278,20 +278,6 @@ $.fn.positionAncestor = function (selector) {
     };
 };
 
-// XXX: In compat.js we include things for browser compatibility,
-// but these two seem to be only convenience. Do we really want to
-// include these as part of patterns?
-if (!String.prototype.startsWith) {
-    String.prototype.startsWith = function (str) {
-        return this.match("^" + str) !== null;
-    };
-}
-if (!String.prototype.endsWith) {
-    String.prototype.endsWith = function (str) {
-        return this.match(str + "$") !== null;
-    };
-}
-
 $.fn.findInclusive = function (selector) {
     return this.find("*").addBack().filter(selector);
 };
@@ -313,7 +299,7 @@ $.fn.scopedFind = function (selector) {
     /*  If the selector starts with an object id do a global search,
      *  otherwise do a local search.
      */
-    if (selector.startsWith("#")) {
+    if (selector.indexOf("#") === 0) {
         return $(selector);
     } else {
         return this.find(selector);
