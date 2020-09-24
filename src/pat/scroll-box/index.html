@@ -1,55 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Demo for pat-scroll</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css" />
-    <script src="/dist/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dist/bundle.js" type="text/javascript" charset="utf-8"></script>
-    <style type="text/css" media="screen">
-      body {
-        height: 200vh;
-      }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Demo for pat-scroll</title>
+        <link rel="stylesheet" href="/style/common.css" type="text/css" />
+        <script
+            src="/dist/bundle-vendors.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+        <script
+            src="/dist/bundle.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+        <style type="text/css" media="screen">
+            body {
+                height: 200vh;
+            }
 
-      body .pat-scroll-box {
-        overflow-y: auto;
-        border: 1px solid black;
-        height: 5em;
-        margin: 4em 0;
-      }
-      .pat-scroll-box--inner {
-        height: 20em;
-      }
+            body .pat-scroll-box {
+                overflow-y: auto;
+                border: 1px solid black;
+                height: 5em;
+                margin: 4em 0;
+            }
+            .pat-scroll-box--inner {
+                height: 20em;
+            }
 
-      .scroll-up::before,
-      .scroll-down::before,
-      .scroll-position-top::before,
-      .scroll-position-bottom::before {
-        position: fixed;
-        display: block;
-        font-size: 2em;
-      }
+            .scroll-up::before,
+            .scroll-down::before,
+            .scroll-position-top::before,
+            .scroll-position-bottom::before {
+                position: fixed;
+                display: block;
+                font-size: 2em;
+            }
 
-      .scroll-up::before {
-        content: "↑";
-      }
-      .scroll-down::before {
-        content: "↓";
-      }
-      .scroll-position-top::before {
-        content: "↥";
-      }
-      .scroll-position-bottom::before {
-        content: "↧";
-      }
-    </style>
-  </head>
-  <body class="pat-scroll-box">
-    <div class="pat-scroll-box">
-      <div class="pat-scroll-box--inner">
-        hello.
-      </div>
-    </div>
-  </body>
+            .scroll-up::before {
+                content: "↑";
+            }
+            .scroll-down::before {
+                content: "↓";
+            }
+            .scroll-position-top::before {
+                content: "↥";
+            }
+            .scroll-position-bottom::before {
+                content: "↧";
+            }
+        </style>
+    </head>
+    <body class="pat-scroll-box">
+        <div class="pat-scroll-box">
+            <div class="pat-scroll-box--inner">hello.</div>
+        </div>
+    </body>
 </html>

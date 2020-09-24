@@ -1,88 +1,155 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Form validation</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css" />
-    <script src="/dist/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dist/bundle.js" type="text/javascript" charset="utf-8"></script>
-  </head>
-  <body>
-      <form class="pat-validation vertical" data-pat-validation="disable-selector: .pat-button" method="get" action="#" novalidate>
-          <fieldset class="horizontal">
-            <label>Full name <input type="text" name="name" required/></label>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Form validation</title>
+        <link rel="stylesheet" href="/style/common.css" type="text/css" />
+        <script
+            src="/dist/bundle-vendors.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+        <script
+            src="/dist/bundle.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+    </head>
+    <body>
+        <form
+            class="pat-validation vertical"
+            data-pat-validation="disable-selector: .pat-button"
+            method="get"
+            action="#"
+            novalidate
+        >
+            <fieldset class="horizontal">
+                <label
+                    >Full name <input type="text" name="name" required
+                /></label>
 
-            <label>Age <input type="number" name="age" min="16" max="65" required/></label>
+                <label
+                    >Age
+                    <input type="number" name="age" min="16" max="65" required
+                /></label>
 
-            <fieldset class="group pat-checklist radio">
-              <legend>Favourite colour</legend>
-              <label><input name="colour" required type="radio" value="blue"/> Blue</label>
-              <label><input name="colour" required type="radio" value="pink"/> Pink</label>
-              <label><input name="colour" required type="radio" value="red"/> Red</label>
-              <label><input name="colour" required type="radio" value="yellow"/> yellow</label>
-            </fieldset>
+                <fieldset class="group pat-checklist radio">
+                    <legend>Favourite colour</legend>
+                    <label
+                        ><input
+                            name="colour"
+                            required
+                            type="radio"
+                            value="blue"
+                        />
+                        Blue</label
+                    >
+                    <label
+                        ><input
+                            name="colour"
+                            required
+                            type="radio"
+                            value="pink"
+                        />
+                        Pink</label
+                    >
+                    <label
+                        ><input
+                            name="colour"
+                            required
+                            type="radio"
+                            value="red"
+                        />
+                        Red</label
+                    >
+                    <label
+                        ><input
+                            name="colour"
+                            required
+                            type="radio"
+                            value="yellow"
+                        />
+                        yellow</label
+                    >
+                </fieldset>
 
-            <label>Planning start
-                <input
-                    type="date" class="pat-date-picker"
-                    name="measure.planning_start:records"
-                    data-pat-date-picker="behavior: native"
-                    data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
-                    id="planning-start"
-                    value="2015-10-10"/>
-            </label>
-
-            <label>Planning end
-                <input
-                    type="date" class="pat-date-picker" name="measure.planning_end:records"
-                    data-pat-date-picker="behavior: native"
-                    data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
-                    id="planning-end"
-                    value="2015-09-10"/>
-            </label>
-
-            <label>Required date
-                <input
-                    type="date"
-                    required
-                    name="measure.date-required:records"
-                    id="date-required"
+                <label
+                    >Planning start
+                    <input
+                        type="date"
+                        class="pat-date-picker"
+                        name="measure.planning_start:records"
+                        data-pat-date-picker="behavior: native"
+                        data-pat-validation="type: date; not-after: #planning-end; message-date: This date must be on or before the end date."
+                        id="planning-start"
+                        value="2015-10-10"
                     />
-            </label>
+                </label>
 
-            <label>Optional date
-                <input
-                    type="date"
-                    name="measure.date-optional:records"
-                    id="date-optional"
+                <label
+                    >Planning end
+                    <input
+                        type="date"
+                        class="pat-date-picker"
+                        name="measure.planning_end:records"
+                        data-pat-date-picker="behavior: native"
+                        data-pat-validation="type: date; not-before: #planning-start; message-date: This date must be on or after the start date."
+                        id="planning-end"
+                        value="2015-09-10"
                     />
-            </label>
+                </label>
 
-            <label>Password
-              <input
-                  id="password"
-                  type="password"
-                  name="password"
-              />
-            </label>
+                <label
+                    >Required date
+                    <input
+                        type="date"
+                        required
+                        name="measure.date-required:records"
+                        id="date-required"
+                    />
+                </label>
 
-            <label>Password confirmation
-              <input
-                  id="password-confirmation"
-                  type="password"
-                  name="password-confirmation"
-                  data-pat-validation="equality: password; message-equality: I would like this to be equal to %{attribute}"
-              />
-            </label>
+                <label
+                    >Optional date
+                    <input
+                        type="date"
+                        name="measure.date-optional:records"
+                        id="date-optional"
+                    />
+                </label>
 
-            <label>Food preference
-                <input id="a1" name="a1" class="pat-autosuggest" placeholder="Pick some fruit" required="required" data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas; maximum-selection-size: 1" type="text"></input>
-            </label>
+                <label
+                    >Password
+                    <input id="password" type="password" name="password" />
+                </label>
 
-            <fieldset class="buttons">
-              <button class="pat-button">Test</button>
+                <label
+                    >Password confirmation
+                    <input
+                        id="password-confirmation"
+                        type="password"
+                        name="password-confirmation"
+                        data-pat-validation="equality: password; message-equality: I would like this to be equal to %{attribute}"
+                    />
+                </label>
+
+                <label
+                    >Food preference
+                    <input
+                        id="a1"
+                        name="a1"
+                        class="pat-autosuggest"
+                        placeholder="Pick some fruit"
+                        required="required"
+                        data-pat-autosuggest="words: Apples, Oranges, Pears, Bananas; maximum-selection-size: 1"
+                        type="text"
+                    />
+                </label>
+
+                <fieldset class="buttons">
+                    <button class="pat-button">Test</button>
+                </fieldset>
             </fieldset>
-          </fieldset>
-      </form>
-  </body>
+        </form>
+    </body>
 </html>

@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Demo page</title>
-    <link rel="stylesheet" href="/style/common.css" type="text/css" />
-    <script src="/dist/bundle-vendors.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/dist/bundle.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" href="inject.css" type="text/css" />
-  </head>
+    <head>
+        <title>Demo page</title>
+        <link rel="stylesheet" href="/style/common.css" type="text/css" />
+        <script
+            src="/dist/bundle-vendors.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+        <script
+            src="/dist/bundle.js"
+            type="text/javascript"
+            charset="utf-8"
+        ></script>
+        <link rel="stylesheet" href="inject.css" type="text/css" />
+    </head>
 
-  <body>
-    <a
-      href="../../README.md"
-      class="pat-inject"
-      data-pat-inject="target: self::element; trigger: autoload"
-      >Documentation</a
-    >
-    <a
-      href="../../index.html#global-navigation"
-      class="pat-inject"
-      data-pat-inject="target: self::element; trigger: autoload"
-      >Global navigation</a
-    >
-  </body>
+    <body>
+        <a
+            href="../../README.md"
+            class="pat-inject"
+            data-pat-inject="target: self::element; trigger: autoload"
+            >Documentation</a
+        >
+        <a
+            href="../../index.html#global-navigation"
+            class="pat-inject"
+            data-pat-inject="target: self::element; trigger: autoload"
+            >Global navigation</a
+        >
+    </body>
 </html>
