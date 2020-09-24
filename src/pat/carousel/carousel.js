@@ -3,12 +3,11 @@
  *
  * Copyright 2017 Syslab.com GmbH Alexander Pilz
  */
-
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import registry from "../../core/registry";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
-import "slick-carousel";
 
 var log = logging.getLogger("pat.carousel"),
     parser = new Parser("carousel");
@@ -28,7 +27,8 @@ var carousel = {
     name: "carousel",
     trigger: ".pat-carousel",
 
-    init: function ($el, opts) {
+    async init($el, opts) {
+        await import("slick-carousel");
         return $el.each(function () {
             var $carousel = $(this),
                 options = parser.parse($carousel, opts),

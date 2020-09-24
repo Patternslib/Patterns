@@ -1,9 +1,12 @@
 /* pat-sticky - A pattern for a sticky polyfill */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Base from "../../core/base";
 import Parser from "../../core/parser";
-import Stickyfill from "stickyfilljs";
 import utils from "../../core/utils";
+
+// Lazy loading modules.
+let Stickyfill;
 
 var parser = new Parser("sticky");
 parser.addArgument("selector", "");
@@ -11,7 +14,9 @@ parser.addArgument("selector", "");
 export default Base.extend({
     name: "sticky",
     trigger: ".pat-sticky",
-    init: function () {
+    async init() {
+        Stickyfill = await import("stickyfilljs");
+        Stickyfill = Stickyfill.default;
         this.options = parser.parse(this.$el);
         this.makeSticky();
         $("body").on(
@@ -36,8 +41,10 @@ export default Base.extend({
         } else {
             this.$stickies = this.$el.find(this.options.selector);
         }
-        this.$stickies.each(function (idx, elem) {
-            Stickyfill.add(elem);
-        });
+        this.$stickies.each(
+            function (idx, elem) {
+                Stickyfill.add(elem);
+            }.bind(this)
+        );
     },
 });

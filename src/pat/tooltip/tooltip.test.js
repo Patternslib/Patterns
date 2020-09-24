@@ -102,6 +102,7 @@ describe("pat-tooltip", () => {
                 title: "tooltip",
             });
             const instance = new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -122,6 +123,7 @@ describe("pat-tooltip", () => {
                 const title = el.title;
 
                 const instance = new pattern($el);
+                await utils.timeout(1);
 
                 // NOTE 1:
                 // spy on tippy instance's "onShow", which holds the reference
@@ -165,6 +167,7 @@ describe("pat-tooltip", () => {
 
                 new pattern($el1);
                 new pattern($el2);
+                await utils.timeout(1);
 
                 let container;
 
@@ -191,6 +194,7 @@ describe("pat-tooltip", () => {
                         "source: title; trigger: click; class: wasabi kohlrabi",
                 });
                 new pattern($el);
+                await utils.timeout(1);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -215,6 +219,8 @@ describe("pat-tooltip", () => {
                 const $el = $(el);
                 const title = el.title;
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const timer = {};
 
                 const spy_trigger = spyOn(instance.tippy.props, "onTrigger");
@@ -250,6 +256,8 @@ describe("pat-tooltip", () => {
                     data: "trigger: click; closing: auto",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const tp = instance.tippy.props;
                 const spy_show = spyOn(tp, "onShow").and.callThrough();
                 const spy_hide = spyOn(tp, "onHide").and.callThrough();
@@ -280,6 +288,8 @@ describe("pat-tooltip", () => {
                     data: "trigger: hover; closing: auto",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const tp = instance.tippy.props;
                 const spy_show = spyOn(tp, "onShow").and.callThrough();
                 const spy_hide = spyOn(tp, "onHide").and.callThrough();
@@ -308,6 +318,8 @@ describe("pat-tooltip", () => {
                     data: "trigger: click; closing: sticky",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const tp = instance.tippy.props;
                 const spy_show = spyOn(tp, "onShow").and.callThrough();
                 const spy_hide = spyOn(tp, "onHide").and.callThrough();
@@ -338,6 +350,8 @@ describe("pat-tooltip", () => {
                     data: "trigger: hover; closing: sticky",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const tp = instance.tippy.props;
                 const spy_show = spyOn(tp, "onShow").and.callThrough();
                 const spy_hide = spyOn(tp, "onHide").and.callThrough();
@@ -365,6 +379,8 @@ describe("pat-tooltip", () => {
                     data: "trigger: click; closing: close-button",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const tp = instance.tippy.props;
                 const spy_show = spyOn(tp, "onShow").and.callThrough();
                 const spy_hide = spyOn(tp, "onHide").and.callThrough();
@@ -401,6 +417,7 @@ describe("pat-tooltip", () => {
                     data: "trigger: hover; closing: close-button",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
                 const tp = instance.tippy.props;
                 const spy_show = spyOn(tp, "onShow").and.callThrough();
                 const spy_hide = spyOn(tp, "onHide").and.callThrough();
@@ -446,6 +463,8 @@ describe("pat-tooltip", () => {
 
             const instance1 = new pattern($el1);
             const instance2 = new pattern($el2);
+            await utils.timeout(1);
+
             const spy_show1 = spyOn(
                 instance1.tippy.props,
                 "onShow"
@@ -492,6 +511,7 @@ describe("pat-tooltip", () => {
                 data: "position-list: lt",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -508,6 +528,7 @@ describe("pat-tooltip", () => {
                 data: "position-list: lb",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -521,8 +542,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: lm",
             });
-
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -536,8 +557,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bl",
             });
-
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -551,8 +572,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: br",
             });
-
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -566,8 +587,8 @@ describe("pat-tooltip", () => {
             const $el = testutils.createTooltip({
                 data: "position-list: bm",
             });
-
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -582,8 +603,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tl; position-policy: force",
                 });
-
                 new pattern($el);
+                await utils.timeout(1);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -599,8 +620,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tr; position-policy: force",
                 });
-
                 new pattern($el);
+                await utils.timeout(1);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -616,8 +637,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: tm; position-policy: force",
                 });
-
                 new pattern($el);
+                await utils.timeout(1);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -631,8 +652,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rt; position-policy: force",
                 });
-
                 new pattern($el);
+                await utils.timeout(1);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -648,8 +669,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rb; position-policy: force",
                 });
-
                 new pattern($el);
+                await utils.timeout(1);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -665,8 +686,8 @@ describe("pat-tooltip", () => {
                 const $el = testutils.createTooltip({
                     data: "position-list: rm; position-policy: force",
                 });
-
                 new pattern($el);
+                await utils.timeout(1);
 
                 testutils.click($el);
                 await utils.timeout(1);
@@ -687,6 +708,8 @@ describe("pat-tooltip", () => {
                 });
                 const el = $el[0];
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const spy_show = spyOn(
                     instance.tippy.props,
                     "onShow"
@@ -731,6 +754,8 @@ describe("pat-tooltip", () => {
                 });
                 const el = $el[0];
                 const instance = new pattern($el);
+                await utils.timeout(1);
+
                 const spy_show = spyOn(
                     instance.tippy.props,
                     "onShow"
@@ -780,6 +805,8 @@ describe("pat-tooltip", () => {
                     const title = el.title;
 
                     const instance = new pattern($el);
+                    await utils.timeout(1);
+
                     const spy_show = spyOn(instance.tippy.props, "onShow");
 
                     // The 'title' attr gets removed, otherwise the browser's
@@ -805,6 +832,8 @@ describe("pat-tooltip", () => {
                     });
 
                     const instance = new pattern($el);
+                    await utils.timeout(1);
+
                     const spy_hide = spyOn(instance.tippy.props, "onHide");
 
                     // Shortcut any checks for mouse positions and just hide.
@@ -838,6 +867,8 @@ describe("pat-tooltip", () => {
                         content: content,
                     });
                     const instance = new pattern($el);
+                    await utils.timeout(1);
+
                     const spy_show = spyOn(
                         instance.tippy.props,
                         "onShow"
@@ -862,6 +893,8 @@ describe("pat-tooltip", () => {
                     href: "#",
                 });
                 new pattern($el);
+                await utils.timeout(1);
+
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -879,6 +912,8 @@ describe("pat-tooltip", () => {
                     href: "#",
                 });
                 new pattern($el);
+                await utils.timeout(1);
+
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -907,6 +942,8 @@ describe("pat-tooltip", () => {
                 document.body.appendChild(container);
 
                 new pattern($el);
+                await utils.timeout(1);
+
                 testutils.click($el);
                 await utils.timeout(1);
 
@@ -927,6 +964,9 @@ describe("pat-tooltip", () => {
             });
             const title = $el[0].title;
             new pattern($el);
+            await utils.timeout(1);
+
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -946,6 +986,7 @@ describe("pat-tooltip", () => {
                 content: content,
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1);
@@ -969,6 +1010,7 @@ describe("pat-tooltip", () => {
                 href: "http://test.com",
             });
             const instance = new pattern($el);
+            await utils.timeout(1);
 
             const spy_content = spyOn(
                 instance,
@@ -1007,6 +1049,7 @@ describe("pat-tooltip", () => {
                 href: "#lab",
             });
             const instance = new pattern($el);
+            await utils.timeout(1);
 
             const spy_content = spyOn(
                 instance,
@@ -1035,7 +1078,7 @@ describe("pat-tooltip", () => {
     });
 
     describe(`if the 'source' parameter is 'ajax'`, () => {
-        it("the default click action is prevented", (done) => {
+        it("the default click action is prevented", async (done) => {
             global.fetch = jest.fn().mockImplementation(mockFetch());
 
             const $el = testutils.createTooltip({
@@ -1043,6 +1086,8 @@ describe("pat-tooltip", () => {
                 href: "tests/content.html#content",
             });
             const instance = new pattern($el);
+            await utils.timeout(1);
+
             const click = new Event("click");
 
             const call_order = [];
@@ -1081,6 +1126,7 @@ describe("pat-tooltip", () => {
                 href: "http://test.com#content",
             });
             const instance = new pattern($el);
+            await utils.timeout(1);
 
             const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
             const spy_show = spyOn(
@@ -1110,7 +1156,8 @@ describe("pat-tooltip", () => {
                 data: "source: ajax; ajax-data-type: markdown",
                 href: "http://test.com",
             });
-            const instance = new pattern($el);
+            const instance = await new pattern($el);
+            await utils.timeout(1);
 
             const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
             const spy_show = spyOn(
@@ -1153,6 +1200,7 @@ this will be extracted.
                 href: "http://test.com/#hello",
             });
             const instance = new pattern($el);
+            await utils.timeout(1);
 
             const spy_ajax = spyOn(instance, "_getContent").and.callThrough();
             const spy_show = spyOn(
@@ -1194,6 +1242,7 @@ this will be extracted.
                     href: "http://test.com",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
 
                 const spy_ajax = spyOn(
                     instance,
@@ -1246,6 +1295,7 @@ this will be extracted.
                     href: "http://test.com",
                 });
                 const instance = new pattern($el);
+                await utils.timeout(1);
 
                 const spy_ajax = spyOn(
                     instance,
@@ -1302,6 +1352,7 @@ this will be extracted.
                 href: "http://test.com",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1332,6 +1383,7 @@ this will be extracted.
                 href: "http://test.com",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             const instance2 = new autosubmit($(form));
             const spy_handler1 = spyOn(
@@ -1365,6 +1417,7 @@ this will be extracted.
                 data: "source: content; trigger: click",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             const spy_scan = spyOn(registry, "scan");
 
@@ -1392,6 +1445,7 @@ this will be extracted.
                 href: "http://test.com/#outer::element",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1418,6 +1472,7 @@ this will be extracted.
                 href: "http://test.com/#outer",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1443,6 +1498,7 @@ this will be extracted.
                 href: "#local-content::element",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1467,6 +1523,7 @@ this will be extracted.
                 href: "#local-content",
             });
             new pattern($el);
+            await utils.timeout(1);
 
             testutils.click($el);
             await utils.timeout(1); // wait a tick for async fetch
@@ -1486,9 +1543,10 @@ this will be extracted.
     });
 
     describe("URL splitting", () => {
-        it("it extracts the correct parts from any url", (done) => {
+        it("it extracts the correct parts from any url", async (done) => {
             const $el = testutils.createTooltip({});
             const instance = new pattern($el);
+            await utils.timeout(1);
 
             let parts = instance.get_url_parts(
                 "https://text.com/#selector::modifier"

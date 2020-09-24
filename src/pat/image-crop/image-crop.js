@@ -1,8 +1,8 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import logging from "../../core/logging";
 import Parser from "../../core/parser";
 import registry from "../../core/registry";
-import "jquery-jcrop";
 
 var log = logging.getLogger("pat.image-crop"),
     parser = new Parser("image-crop");
@@ -23,7 +23,9 @@ var _ = {
     bounds: [0, 0],
     inputNames: ["x1", "y1", "x2", "y2", "w", "h"],
 
-    init: function ($el, options) {
+    async init($el, options) {
+        await import("jquery-jcrop");
+
         // initialize the elements
         return $el.each(function () {
             var $this = $(this),

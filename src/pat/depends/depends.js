@@ -9,8 +9,10 @@ import $ from "jquery";
 import Base from "../../core/base";
 import utils from "../../core/utils";
 import logging from "../../core/logging";
-import DependsHandler from "../../lib/dependshandler";
 import Parser from "../../core/parser";
+
+// Lazy loading modules.
+let DependsHandler;
 
 var log = logging.getLogger("depends"),
     parser = new Parser("depends");
@@ -32,12 +34,15 @@ export default Base.extend({
         slide: { hide: "slideUp", show: "slideDown" },
     },
 
-    init: function ($el, opts) {
+    async init($el, opts) {
         const depdendent = this.$el[0];
         const options = parser.parse(this.$el, opts);
         let handler;
         let state;
         this.$modal = this.$el.parents(".pat-modal");
+
+        DependsHandler = await import("../../lib/dependshandler");
+        DependsHandler = DependsHandler.default;
 
         try {
             handler = new DependsHandler(this.$el, options.condition);
@@ -101,7 +106,7 @@ export default Base.extend({
         }
     },
 
-    onReset: function (event) {
+    onReset(event) {
         const depdendents = $(event.target).data("patDepends.depdendents");
         setTimeout(() => {
             for (let depdendent of depdendents) {
@@ -111,7 +116,7 @@ export default Base.extend({
         }, 50);
     },
 
-    updateModal: function () {
+    updateModal() {
         /* If we're in a modal, make sure that it gets resized.
          */
         if (this.$modal.length) {
@@ -119,7 +124,7 @@ export default Base.extend({
         }
     },
 
-    enable: function () {
+    enable() {
         if (this.$el.is(":input")) this.$el[0].disabled = null;
         else if (this.$el.is("a")) this.$el.off("click.patternDepends");
         else if (this.$el.hasClass("pat-autosuggest")) {
@@ -133,7 +138,7 @@ export default Base.extend({
         this.$el.removeClass("disabled");
     },
 
-    disable: function () {
+    disable() {
         if (this.$el.is(":input")) this.$el[0].disabled = "disabled";
         else if (this.$el.is("a"))
             this.$el.on("click.patternDepends", this.blockDefault);
@@ -148,7 +153,7 @@ export default Base.extend({
         this.$el.addClass("disabled");
     },
 
-    onChange: function (event) {
+    onChange(event) {
         var handler = event.data.handler,
             options = event.data.options,
             depdendent = event.data.depdendent,
@@ -173,7 +178,7 @@ export default Base.extend({
         }
     },
 
-    blockDefault: function (event) {
+    blockDefault(event) {
         event.preventDefault();
     },
 });

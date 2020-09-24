@@ -28,23 +28,27 @@
  * - patterns-push-login containing the name of a read only user on the message queue server used to connect.
  * - patterns-push-password containing the password of a read only user on the message queue server used to connect.
  */
-
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
-import { Client } from "@stomp/stompjs";
+
+// Lazy loading modules.
+let StompJS;
 
 const push_kit = {
-    init() {
+    async init() {
         const push_url = $("meta[name=patterns-push-server-url]").attr("content"); // prettier-ignore
         const push_exchange = $("meta[name=patterns-push-exchange-base-name]").attr("content"); // prettier-ignore
-        const push_user_id = $("meta[name=patterns-push-user-id]").attr("content"); // prettier-ignore
-        const push_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
-        const push_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
 
         if (!push_url || !push_exchange) {
             return;
         }
 
-        const client = new Client({
+        const push_user_id = $("meta[name=patterns-push-user-id]").attr("content"); // prettier-ignore
+        const push_login = $("meta[name=patterns-push-login]").attr("content"); // prettier-ignore
+        const push_pass = $("meta[name=patterns-push-password]").attr("content"); // prettier-ignore
+
+        StompJS = await import("@stomp/stompjs");
+        const client = new StompJS.Client({
             brokerURL: push_url,
             connectHeaders: {
                 login: push_login,

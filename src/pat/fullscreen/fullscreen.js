@@ -1,7 +1,10 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
 import Parser from "../../core/parser";
 import logging from "../../core/logging";
-import screenful from "screenfull";
+
+// Lazy loading modules.
+let Screenfull;
 
 const log = logging.getLogger("fullscreen");
 const parser = new Parser("fullscreen");
@@ -19,7 +22,10 @@ export default Base.extend({
     name: "fullscreen",
     trigger: ".pat-fullscreen",
 
-    init($el, opts) {
+    async init($el, opts) {
+        Screenfull = await import("screenfull");
+        Screenfull = Screenfull.default;
+
         this.options = parser.parse(this.$el, opts);
         //const el = this.$el[0];
         //el.addEventListener('click', function (e) {  // TODO: doesn't work in karma for href links
@@ -39,7 +45,7 @@ export default Base.extend({
         const fs_el = document.querySelector(fs_el_sel);
         if (fs_el) {
             // setting page to fullscreen
-            screenful.request(fs_el);
+            Screenfull.request(fs_el);
             if (this.options.closeButton === "show") {
                 this.setup_exit_button(fs_el);
             }
@@ -58,14 +64,14 @@ export default Base.extend({
             exit_el.appendChild(document.createTextNode("Exit fullscreen"));
             exit_el.addEventListener("click", (e) => {
                 e.preventDefault();
-                screenful.exit();
+                Screenfull.exit();
             });
         }
         fs_el.appendChild(exit_el);
-        screenful.on("change", () => {
+        Screenfull.on("change", () => {
             // Removing exit button.
             // The button is also removed when pressing the <ESC> button.
-            if (!screenful.isFullscreen) {
+            if (!Screenfull.isFullscreen) {
                 fs_el.removeChild(exit_el);
             }
         });

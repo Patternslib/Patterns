@@ -1,9 +1,12 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import logging from "../../core/logging";
 import utils from "../../core/utils";
 import Base from "../../core/base";
 import inject from "../inject/inject";
-import Showdown from "showdown";
+
+// Lazy loading modules.
+let Showdown;
 
 var log = logging.getLogger("pat.markdown");
 var is_markdown_resource = /\.md$/;
@@ -12,7 +15,7 @@ var Markdown = Base.extend({
     name: "markdown",
     trigger: ".pat-markdown",
 
-    init: function () {
+    async init() {
         if (this.$el.is(this.trigger)) {
             /* This pattern can either be used standalone or as an enhancement
              * to pat-inject. The following only applies to standalone, when
@@ -21,21 +24,46 @@ var Markdown = Base.extend({
             var source = this.$el.is(":input")
                 ? this.$el.val()
                 : this.$el.text();
-            this.render(source).replaceAll(this.$el);
+            let rendered = await this.render(source);
+            rendered.replaceAll(this.$el);
         }
     },
 
-    render: function (text) {
-        var $rendering = $("<div/>"),
-            converter = new Showdown.Converter({
-                tables: true,
-                extensions: ["prettify"],
-            });
+    async render(text) {
+        Showdown = await import("showdown");
+        Showdown = Showdown.default;
+
+        // Add support for syntax highlighting via pat-syntax-highlight
+        Showdown.extensions.prettify = function () {
+            return [
+                {
+                    type: "output",
+                    filter: function (source) {
+                        return source.replace(/(<pre>)?<code>/gi, function (
+                            match,
+                            pre
+                        ) {
+                            if (pre) {
+                                return '<pre class="pat-syntax-highlight" tabIndex="0"><code data-inner="1">';
+                            } else {
+                                return '<code class="pat-syntax-highlight">';
+                            }
+                        });
+                    },
+                },
+            ];
+        };
+
+        const $rendering = $("<div/>");
+        const converter = new Showdown.Converter({
+            tables: true,
+            extensions: ["prettify"],
+        });
         $rendering.html(converter.makeHtml(text));
         return $rendering;
     },
 
-    renderForInjection: function (cfg, data) {
+    async renderForInjection(cfg, data) {
         var header,
             source = data;
         if (cfg.source && (header = /^#+\s*(.*)/.exec(cfg.source)) !== null) {
@@ -48,13 +76,14 @@ var Markdown = Base.extend({
             }
             source += "\n"; // Needed for some markdown syntax
         }
-        return this.render(source).attr(
+        const rendered = await this.render(source);
+        return rendered.attr(
             "data-src",
             cfg.source ? cfg.url + cfg.source : cfg.url
         );
     },
 
-    extractSection: function (text, header) {
+    extractSection(text, header) {
         var pattern, level;
         header = utils.escapeRegExp(header);
         var matcher = new RegExp(
@@ -95,27 +124,6 @@ var Markdown = Base.extend({
     },
 });
 
-// Add support for syntax highlighting via pat-syntax-highlight
-Showdown.extensions.prettify = function () {
-    return [
-        {
-            type: "output",
-            filter: function (source) {
-                return source.replace(/(<pre>)?<code>/gi, function (
-                    match,
-                    pre
-                ) {
-                    if (pre) {
-                        return '<pre class="pat-syntax-highlight" tabIndex="0"><code data-inner="1">';
-                    } else {
-                        return '<code class="pat-syntax-highlight">';
-                    }
-                });
-            },
-        },
-    ];
-};
-
 $(document).ready(function () {
     $(document.body).on(
         "patterns-inject-triggered.pat-markdown",
@@ -135,11 +143,14 @@ $(document).ready(function () {
 });
 
 inject.registerTypeHandler("markdown", {
-    sources: function (cfgs, data) {
-        return cfgs.map(function (cfg) {
-            var pat = Markdown.init(cfg.$target);
-            return pat.renderForInjection(cfg, data);
-        });
+    async sources(cfgs, data) {
+        return await Promise.all(
+            cfgs.map(async function (cfg) {
+                var pat = Markdown.init(cfg.$target);
+                const rendered = await pat.renderForInjection(cfg, data);
+                return rendered;
+            })
+        );
     },
 });
 

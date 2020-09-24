@@ -4,13 +4,16 @@
  * Copyright 2013 Simplon B.V. - Wichert Akkerman
  * Copyright 2014-2015 Syslab.com GmBH  - JC Brand
  */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import _ from "underscore";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
 import utils from "../../core/utils";
-import moment from "moment";
-import validate from "validate.js";
+
+// Lazy loading modules.
+let Validate;
+let Moment;
 
 const parser = new Parser("validation");
 parser.addArgument("disable-selector"); // Elements which must be disabled if there are errors
@@ -45,27 +48,18 @@ const VALIDATION_TYPE_MAP = {
     date: "date",
 };
 
-// Before using it we must add the parse and format functions
-// Here is a sample implementation using moment.js
-validate.moment = moment;
-validate.extend(validate.validators.datetime, {
-    // The value is guaranteed not to be null or undefined but otherwise it
-    // could be anything.
-    parse: function (value) {
-        return +moment.utc(value);
-    },
-    // Input is a unix timestamp
-    format: function (value, options) {
-        var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DD hh:mm:ss";
-        return moment.utc(value).format(format);
-    },
-});
-
 export default Base.extend({
     name: "validation",
     trigger: "form.pat-validation",
 
-    init: function ($el, opts) {
+    async init($el, opts) {
+        Validate = await import("validate.js");
+        Validate = Validate.default;
+        Moment = await import("moment");
+        Moment = Moment.default;
+
+        this.extend_validate();
+
         this.errors = 0;
         this.options = parser.parse(this.$el, opts);
         this.$inputs = this.$el.find(
@@ -107,6 +101,26 @@ export default Base.extend({
         );
     },
 
+    extend_validate() {
+        // Before using it we must add the parse and format functions
+        // Here is a sample implementation using moment.js
+        Validate.moment = Moment;
+        Validate.extend(Validate.validators.datetime, {
+            // The value is guaranteed not to be null or undefined but otherwise it
+            // could be anything.
+            parse: function (value) {
+                return +Moment.utc(value);
+            },
+            // Input is a unix timestamp
+            format: function (value, options) {
+                var format = options.dateOnly
+                    ? "YYYY-MM-DD"
+                    : "YYYY-MM-DD hh:mm:ss";
+                return Moment.utc(value).format(format);
+            },
+        });
+    },
+
     getFieldType: function (input) {
         var opts = parser.parse($(input));
         var type = input.getAttribute("type");
@@ -138,7 +152,7 @@ export default Base.extend({
             }
             var relative_constraint =
                 relation === "before" ? "earliest" : "latest";
-            if (validate.moment.isDate(relative)) {
+            if (Validate.moment.isDate(relative)) {
                 c[relative_constraint] = relative;
             } else {
                 try {
@@ -350,11 +364,11 @@ export default Base.extend({
          */
         var opts = parser.parse($(input));
         if (msg.indexOf("must be greater than or equal to") != -1) {
-            return validate.format(opts.message.min, {
+            return Validate.format(opts.message.min, {
                 count: input.getAttribute("min"),
             });
         } else if (msg.indexOf("must be less than or equal to") != -1) {
-            return validate.format(opts.message.max, {
+            return Validate.format(opts.message.max, {
                 count: input.getAttribute("max"),
             });
         } else if (msg.indexOf("is not a number") != -1) {
@@ -368,8 +382,8 @@ export default Base.extend({
     validateGroupedElement: function (name) {
         /* Handler which gets called for :checkbox and :radio elments. */
         var input = this.$el.find('[name="' + name + '"]')[0];
-        var error = validate(
-            _.pick(validate.collectFormValues(this.$el), name),
+        var error = Validate(
+            _.pick(Validate.collectFormValues(this.$el), name),
             this.getConstraints(input)
         );
         if (!error) {
@@ -393,7 +407,7 @@ export default Base.extend({
         if (input.disabled) {
             return;
         }
-        var error = validate(
+        var error = Validate(
             this.getValueDict(input),
             this.getConstraints(input)
         );

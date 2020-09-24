@@ -1,14 +1,20 @@
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import Base from "../../core/base";
-import screenful from "screenfull";
+
+// Lazy loading modules.
+let Screenfull;
 
 export default Base.extend({
     name: "fullscreen-close",
     trigger: ".close-fullscreen",
-    init: function () {
+    async init() {
+        Screenfull = await import("screenfull");
+        Screenfull = Screenfull.default;
+
         this.$el[0].addEventListener("click", function () {
             // no prevent-default nor stop propagation to let
             // the button also do other stuff.
-            screenful.exit();
+            Screenfull.exit();
         });
     },
 });

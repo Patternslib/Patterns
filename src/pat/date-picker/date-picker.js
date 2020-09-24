@@ -1,10 +1,13 @@
 /* pat-date-picker  - Polyfill for input type=date */
+import "regenerator-runtime/runtime"; // needed for ``await`` support
 import $ from "jquery";
 import Parser from "../../core/parser";
 import Base from "../../core/base";
-import Pikaday from "pikaday";
-import moment from "moment";
 import utils from "../../core/utils";
+
+// Lazy loading modules.
+let Pikaday;
+let Moment;
 
 var parser = new Parser("date-picker");
 parser.addArgument("behavior", "styled", ["native", "styled"]);
@@ -25,12 +28,18 @@ parser.addAlias("behaviour", "behavior");
 export default Base.extend({
     name: "date-picker",
     trigger: ".pat-date-picker",
-    init: function () {
+    async init() {
         this.options = $.extend(parser.parse(this.$el), this.options);
         this.polyfill = this.options.behavior === "native";
         if (this.polyfill && utils.checkInputSupport("date", "invalid date")) {
             return;
         }
+
+        Pikaday = await import("pikaday");
+        Pikaday = Pikaday.default;
+        Moment = await import("moment");
+        Moment = Moment.default;
+
         if (this.$el.attr("type") === "date") {
             this.$el.attr("type", "text");
         }
@@ -41,7 +50,7 @@ export default Base.extend({
             firstDay: this.options.firstDay,
             showWeekNumber: this.options.weekNumbers === "show",
             toString: function (date, format) {
-                return moment(date).format(format);
+                return Moment(date).format(format);
             },
             onSelect: function () {
                 $(this._o.field).closest("form").trigger("input-change");
@@ -51,10 +60,10 @@ export default Base.extend({
         };
 
         if (this.$el.attr("min")) {
-            config.minDate = moment(this.$el.attr("min")).toDate();
+            config.minDate = Moment(this.$el.attr("min")).toDate();
         }
         if (this.$el.attr("max")) {
-            config.maxDate = moment(this.$el.attr("max")).toDate();
+            config.maxDate = Moment(this.$el.attr("max")).toDate();
         }
 
         if (this.options.i18n) {
