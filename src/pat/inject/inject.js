@@ -5,7 +5,6 @@ import Parser from "../../core/parser";
 import logging from "../../core/logging";
 import registry from "../../core/registry";
 import utils from "../../core/utils";
-import htmlparser from "../../lib/htmlparser";
 import "../../core/jquery-ext"; // for :scrollable for autoLoading-visible
 
 const log = logging.getLogger("pat.inject");
@@ -895,59 +894,6 @@ const inject = {
             });
             return $source;
         });
-    },
-
-    _link_attributes: {
-        A: "href",
-        FORM: "action",
-        IMG: "src",
-        SOURCE: "src",
-        VIDEO: "src",
-        OBJECT: "data",
-    },
-
-    _rebaseHTML_via_HTMLParser: function inject_rebaseHTML_via_HTMLParser(
-        base,
-        html
-    ) {
-        var output = [],
-            i,
-            link_attribute,
-            value;
-
-        htmlparser.HTMLParser(html, {
-            start: function (tag, attrs, unary) {
-                output.push("<" + tag);
-                link_attribute = inject._link_attributes[tag.toUpperCase()];
-                for (i = 0; i < attrs.length; i++) {
-                    if (attrs[i].name.toLowerCase() === link_attribute) {
-                        value = attrs[i].value;
-                        // Do not rewrite Zope views or in-document links.
-                        // In-document links will be processed later after
-                        // extracting the right fragment.
-                        if (value.slice(0, 2) !== "@@" && value[0] !== "#") {
-                            value = utils.rebaseURL(base, value);
-                            value = value.replace(/(^|[^\\])"/g, '$1\\"');
-                        }
-                    } else value = attrs[i].escaped;
-                    output.push(" " + attrs[i].name + '="' + value + '"');
-                }
-                output.push(unary ? "/>" : ">");
-            },
-
-            end: function (tag) {
-                output.push("</" + tag + ">");
-            },
-
-            chars: function (text) {
-                output.push(text);
-            },
-
-            comment: function (text) {
-                output.push("<!--" + text + "-->");
-            },
-        });
-        return output.join("");
     },
 
     _rebaseAttrs: {
